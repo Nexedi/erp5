@@ -213,7 +213,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         # delivery) is took
         business_process = business_process_list[0]
         business_path_list = business_process.getPathValueList(trade_phase=
-            self.getTradePhase())
+            self.getTradePhase(), context=context)
         if len(business_path_list) > 1:
           raise NotImplementedError, 'For now, it can not support more '\
               'than one business_path with same trade_phase. '\
