@@ -378,7 +378,9 @@ class BusinessPath(Path, Predicate):
     """
     if not self.getTestMethodId():
       return True
-    return Predicate.test(self, *args, **kw)
+    test_method_id = self.getTestMethodId()
+    method = getattr(self, test_method_id)
+    return method(*args, **kw)
 
   # IBusinessPath implementation
   security.declareProtected(Permissions.AccessContentsInformation,
