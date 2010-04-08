@@ -1441,11 +1441,21 @@ class TestERP5Base(ERP5TypeTestCase):
     comment = 'some comment'
     person = self.portal.person_module.newContent(portal_type='Person')
     person.edit(comment = comment)
-    edit_workflow = self.getWorkflowHistory(person, 'edit_workflow')
+    workflow_history = self.getWorkflowHistory(person, 'edit_workflow')
     # person has property comment with value
     self.assertEqual(person.comment, comment)
     # workflow has no artificial comment
-    self.assertFalse(comment in [q['comment'] for q in edit_workflow ])
+    self.assertFalse(comment in [q['comment'] for q in workflow_history ])
+
+  def test_comment_validation_workflow(self):
+    comment = 'some comment'
+    person = self.portal.person_module.newContent(portal_type='Person')
+    person.validate(comment = comment)
+    workflow_history = self.getWorkflowHistory(person, 'validation_workflow')
+    # person os not changed
+    self.assertEqual(getattr(person, 'comment', None), None)
+    # workflow is impacted
+    self.assertTrue(comment in [q['comment'] for q in workflow_history])
 
 def test_suite():
   suite = unittest.TestSuite()
