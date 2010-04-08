@@ -42,6 +42,7 @@ from ZPublisher.HTTPRequest import FileUpload
 from StringIO import StringIO
 from Products.ERP5Form.Selection import Selection
 from Products.ERP5Form.Form import ERP5Form
+from Products.Formulator.TALESField import TALESMethod
 
 
 class DummyFieldStorage:
@@ -296,6 +297,45 @@ return []
 
     # Make sure that word is there
     self.assertEqual(rendered_listbox.find(word) > 0, True)
+
+  def testCellKeywordInProxifiedListboxColumn(self):
+    """
+    Test that cell keyword is correctly interpreted when used in TALES
+    to render a cell of a ListBox.
+    First use cell in the ProxyField context, then use it in the listbox_xxx
+    context
+    """
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+
+    form = portal.Foo_viewListBoxProxyField
+    portal.foo_module.FooModule_createObjects()
+    here = portal.foo_module['0']
+    here.Foo_createObjects()
+
+    request = get_request()
+    request['here'] = here
+
+    transaction.commit()
+
+    listbox_title_column = form.listbox_title
+
+    self.assertTrue(listbox_title_column.is_delegated('default'))
+    self.assertEquals(listbox_title_column.get_recursive_tales('default')._text,
+                      'python: cell.getTitle()')
+    listboxline_list = form.listbox.get_value('default', render_format = 'list',
+                                              REQUEST = request)
+    first_item = dict(listboxline_list[1].getColumnItemList())
+    self.assertEquals(first_item['title'], 'Title 0')
+
+    # Use "cell" locally
+    listbox_title_column.manage_tales_surcharged_xmlrpc(
+        dict(default=TALESMethod('python: cell.getTitle() + " local"')))
+
+    listboxline_list = form.listbox.get_value('default', render_format = 'list',
+                                              REQUEST = request)
+    first_item = dict(listboxline_list[1].getColumnItemList())
+    self.assertEquals(first_item['title'], 'Title 0 local')
 
   def _helperExtraAndCssInListboxLine(self, field_type, editable):
     """
