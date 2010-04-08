@@ -457,8 +457,9 @@ class EmailDocument(File, TextDocument):
         part_encoding = part.get_content_charset()
         part_html = part.get_payload(decode=1)
         # Invoke Document class HTML stripper
-        html_result = self.convert(format='html', text_content=part_html,
-                                   charset=part_encoding)
+        mime, html_result = self.convert(format='html',
+                                         text_content=part_html,
+                                         charset=part_encoding)
     if html_result:
       # Give priority to HTML
       text_result = html_result
