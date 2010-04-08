@@ -2092,6 +2092,8 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           # compare object to see it there is changes
           new_object = self._objects[path]
           old_object = installed_item._objects[path]
+          new_object.sort()
+          old_object.sort()
           if new_object != old_object:
             modified_object_list.update({path : ['Modified', self.getTemplateTypeName()]})
         else: # new object
