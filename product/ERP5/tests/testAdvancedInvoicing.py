@@ -901,7 +901,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     self.portal.portal_workflow.doActionFor(invoice, 'confirm_action')
 
     # We could generate a better reference here.
-    self.assertEquals('SIT 1', invoice.getReference())
+    self.assertEquals('1', invoice.getReference())
 
   def test_10_ManuallyAddedMovements(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
