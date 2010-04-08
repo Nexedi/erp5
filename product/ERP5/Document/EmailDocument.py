@@ -216,35 +216,42 @@ class EmailDocument(File, TextDocument):
     **kw - support for listbox (TODO: improve it)
     """
     result = []
-    i = 0
-    for part in self._getMessage().walk():
+    for i, part in enumerate(self._getMessage().walk()):
       if not part.is_multipart():
         kw = dict(part.items())
         kw['uid'] = 'part_%s' % i
         kw['index'] = i
-        if kw.has_key('Content-Disposition'):
-          content_disposition = kw['Content-Disposition']
-          if content_disposition.split(';')[0] == 'attachment':
-            file_name = re.findall(file_name_regexp, content_disposition, re.MULTILINE)
-            if file_name:
-              kw['file_name'] = file_name[0]
-            else:
-              kw['file_name'] = 'attachment_%s' % i
-          elif content_disposition.split(';')[0] == 'inline':
-            file_name = re.findall(file_name_regexp, content_disposition, re.MULTILINE)
-            if file_name:
-              kw['file_name'] = file_name[0]
-            else:
-              kw['file_name'] = 'inline_%s' % i
-          else:
-            kw['file_name'] = 'part_%s' % i
-        if kw.has_key('Content-Type'):
-          content_type = kw['Content-Type']
-          file_name = re.findall(file_name_regexp, content_type, re.MULTILINE)
-          if file_name: kw['file_name'] = file_name[0]
-          kw['content_type'] = content_type.split(';')[0]
+        file_name = part.get_filename()
+        if not file_name:
+          # get_filename return name only from Content-Disposition header
+          # of the message but sometimes this value is stored in
+          # Content-Type header
+          if 'Content-Type' in kw:
+            content_type_header = kw['Content-Type']
+          elif 'Content-type' in kw:
+            content_type_header = kw['Content-Type']
+          file_name_list = re.findall(file_name_regexp,
+                                      content_type_header,
+                                      re.MULTILINE)
+          if file_name_list:
+            file_name = file_name_list[0]
+        if file_name:
+          kw['file_name'] = file_name
+        else:
+          content_disposition = None
+          prefix = 'part_'
+          if 'Content-Disposition' in kw:
+            content_disposition = kw['Content-Disposition']
+          elif 'Content-disposition' in kw:
+            content_disposition = kw['Content-disposition']
+          if content_disposition:
+            if content_disposition.split(';')[0] == 'attachment':
+              prefix = 'attachment_'
+            elif content_disposition.split(';')[0] == 'inline':
+              prefix = 'inline_'
+          kw['file_name'] = '%s%s' % (prefix, i)
+        kw['content_type'] = part.get_content_type()
         result.append(kw)
-      i += 1
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getAttachmentData')
@@ -256,34 +263,27 @@ class EmailDocument(File, TextDocument):
       if index == i:
         # This part should be handled in skin script
         # but it was a bit easier to access items here
+        kw = dict(part.items())
+        content_type = part.get_content_type()
         if REQUEST is not None:
-          kw = dict(part.items())
+          file_name = part.get_filename()
+          if not file_name:
+            # get_filename return name only from Content-Disposition header
+            # of the message but sometimes this value is stored in
+            # Content-Type header
+            if 'Content-Type' in kw:
+              content_type_header = kw['Content-Type']
+            elif 'Content-type' in kw:
+              content_type_header = kw['Content-Type']
+            file_name_list = re.findall(file_name_regexp,
+                                        content_type_header,
+                                        re.MULTILINE)
+            if file_name_list:
+              file_name = file_name_list[0]
           RESPONSE = REQUEST.RESPONSE
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          if kw.has_key('Content-Type'):
-            content_type = kw['Content-Type']
+          if content_type and file_name:
             RESPONSE.setHeader('Content-Type', content_type)
-          elif kw.has_key('Content-type'):
-            content_type = kw['Content-type']
-            RESPONSE.setHeader('Content-Type', content_type)
-          else:
-            content_type = None
-          if kw.has_key('Content-Disposition'):
-            content_disposition = kw['Content-Disposition']
-          elif kw.has_key('Content-disposition'):
-            content_disposition = kw['Content-disposition']
-          else:
-            content_disposition = None
-          file_name = None
-          if content_type:
-            file_name = re.findall(file_name_regexp, content_type, re.MULTILINE)
-          if content_disposition:
-            if not file_name:
-              file_name = re.findall(file_name_regexp,
-                                     content_disposition,
-                                     re.MULTILINE)
-          if file_name:
-            file_name = file_name[0]
             RESPONSE.setHeader('Content-disposition',
                                'attachment; filename="%s"' % file_name)
         if 'text/html' in content_type:
