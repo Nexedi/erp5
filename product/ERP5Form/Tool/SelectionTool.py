@@ -595,10 +595,13 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         # XXX-Luke: As this is not possible to do form_id -> action_id the
         # only way to know if form_id is implemented by action of document
         # is to use string matching.
-        # Current matching is not perfect - if action url is defined like:
-        #     bla/bla/[form_id]?q
-        # it will not match. re hacker will be able to improve
-        if url.endswith(form_id):
+        # This re will (form_id = Base_view):
+        # qdsqdsq/Base_view --> match
+        # qdsqdsq/Base_view?qsdsqd --> matches
+        # qdsqdsq/Base_view/qsdsqd --> matches
+        # qdsqdsq/Base_viewAaa --> doesn't match
+        # qdsqdsq/Umpa_view --> doesn't match
+        if re.search('/%s($|\W+)' % form_id, url):
           return form_id
       return 'view'
 
