@@ -1266,7 +1266,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     cbt = pw._chains_by_type
     if cbt is not None:
       for id, wf_ids in cbt.items():
-        self.failUnless(id!="Geek Object")
+        if id == "Geek Object":
+          self.assertEqual(len(wf_ids), 0)
 
   def stepCheckWorkflowChainExists(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1299,6 +1300,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     wf_chain_ids = ['Geek Object | %s' % sequence.get('workflow_id', '')]
+    bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
+
+  def stepAddRemovedWorkflowChainToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add workflow to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    wf_chain_ids = ['Geek Object | -%s' % sequence.get('workflow_id', '')]
     bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
   def stepRemoveWorkflow(self, sequence=None, sequence_list=None, **kw):
@@ -3137,6 +3147,75 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowRemoved \
                        CheckWorkflowChainRemoved \
                        SaveWorkflowChain \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_043_BusinessTemplateWithWorkflowChainRemoved(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template With Remove Of Workflow Chain'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateWorkflow \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveWorkflow \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckWorkflowExists \
+                       CheckWorkflowChainExists \
+                       CreateSecondBusinessTemplate \
+                       UseSecondBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddRemovedWorkflowChainToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       Tic \
+                       InstallWithRemoveCheckedBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckSkinsLayers \
+                       CheckWorkflowExists \
+                       CheckWorkflowChainRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
