@@ -136,7 +136,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Open the created periods</string> </value>
+                    <value> <string>Start the created periods</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -160,7 +160,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Open Periods ?</string> </value>
+                    <value> <string>Start Periods ?</string> </value>
                 </item>
               </dictionary>
             </value>
