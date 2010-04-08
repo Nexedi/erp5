@@ -511,7 +511,13 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
         self.manage_delObjects([file_name]) # For compatibility with old implementation
       if file_name.endswith('html'):
         mime = 'text/html'
-        data = zip_file.read(file_name)
+        # call portal_transforms to strip HTML in safe mode
+        portal = self.getPortalObject()
+        transform_tool = getToolByName(portal, 'portal_transforms')
+        data = transform_tool.convertToData('text/xhtml-safe',
+                                            zip_file.read(file_name),
+                                            object=self, context=self,
+                                            mimetype=mime)
       else:
         mime = guess_content_type(file_name)[0]
         data = Pdata(zip_file.read(file_name))
