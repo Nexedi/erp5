@@ -37,18 +37,14 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
 import pickle
-from xml.sax.saxutils import escape, unescape
-from cStringIO import StringIO
+from xml.sax.saxutils import unescape
 import re
-import cStringIO
-import string
 from lxml import etree
 from lxml.etree import Element
 parser = etree.XMLParser(remove_blank_text=True)
 from xml.marshal.generic import loads as unmarshaler
 from zLOG import LOG, INFO, DEBUG
 from base64 import standard_b64decode
-from OFS.Image import Pdata
 from zope.interface import implements
 from copy import deepcopy
 
@@ -147,31 +143,15 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                     simulate=simulate,
                                     reset=reset, **kw)['conflict_list']
     elif xml.xpath('local-name()') == self.xml_object_tag:
-      if object_id is None:
-        object_id = self.getAttribute(xml, 'id')
-      if object_id is not None:
-        if sub_object is None:
-          try:
-            sub_object = object._getOb(object_id)
-          except (AttributeError, KeyError, TypeError):
-            sub_object = None
-        if sub_object is None: # If so, it doesn't exist
-          portal_type = ''
-          if xml.xpath('local-name()') == self.xml_object_tag:
-            portal_type = self.getObjectType(xml)
-          elif xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD: # Deprecated ???
-            portal_type = self.getXupdateObjectType(xml) # Deprecated ???
-          sub_object, reset_local_roles, reset_workflow = self.constructContent(
-                                                                  object,
-                                                                  object_id,
-                                                                  portal_type)
-        self.newObject(
-                  object=sub_object,
-                  xml=xml,
-                  simulate=simulate,
-                  reset=reset,
-                  reset_local_roles=reset_local_roles,
-                  reset_workflow=reset_workflow)
+      sub_object = self._createContent(xml=xml,
+                                      object=object,
+                                      object_id=object_id,
+                                      sub_object=sub_object,
+                                      reset=reset,
+                                      reset_local_roles=reset_local_roles,
+                                      reset_workflow=reset_workflow,
+                                      simulate=simulate,
+                                      **kw)
     elif xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD \
          and self.getSubObjectDepth(xml) >= 1:
       sub_object_id = self.getSubObjectId(xml)
@@ -242,7 +222,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
           pass
     if object_id is not None: # We do have an object_id
-      self.deleteObject(object, object_id)
+      self._deleteContent(object=object, object_id=object_id)
     # In the case where we have to delete an user role
     # If we are still there, this means the delete is for this node
     elif xml.xpath('name()') in self.XUPDATE_DEL:
@@ -318,7 +298,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               keyword = subnode.attrib.get('name', None)
               data_xml = subnode
         else:
-          #We can call add node
+          # We can call add node
           conflict_list += self.addNode(xml=xml,
                                         object=object,
                                         force=force,
@@ -326,7 +306,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                         reset=reset,
                                         **kw)
           return conflict_list
-
+        
         if xml.xpath('name()') in self.XUPDATE_DEL:
           conflict_list += self.deleteNode(xml=xml,
                                            object=object,
@@ -380,7 +360,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           # We will now apply the argument with the method edit
           if args != {} and (isConflict == 0 or force) and \
               (not simulate or reset):
-            self.editDocument(object=object, **args)
+            self._updateContent(object=object, **args)
             # It is sometimes required to do something after an edit
             if getattr(object, 'manage_afterEdit', None) is not None:
               object.manage_afterEdit()
@@ -448,7 +428,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                              **kw)
     return conflict_list
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
       'getFormatedArgs')
   def getFormatedArgs(self, args=None):
     """
@@ -517,7 +497,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
             return -1
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
       'isSubObjectModification')
   def isSubObjectModification(self, xml):
     """
@@ -531,7 +511,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           return 1
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
       'getSubObjectDepth')
   def getSubObjectDepth(self, xml):
     """
@@ -579,7 +559,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       select = new_value
     xml.attrib['select'] = select
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
       'getSubObjectId')
   def getSubObjectId(self, xml):
     """
@@ -595,7 +575,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         return object_id
     return object_id
 
-  security.declareProtected(Permissions.AccessContentsInformation, 
+  security.declareProtected(Permissions.AccessContentsInformation,
       'getHistoryIdFromSelect')
   def getHistoryIdFromSelect(self, xml):
     """
@@ -1061,6 +1041,50 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return object.getId()
 
+  def _createContent(self, xml=None, object=None, object_id=None, sub_object=None,
+      reset=0, reset_local_roles=0, reset_workflow=0, simulate=0, **kw):
+    """
+      This is the method calling to create an object
+    """
+    if object_id is None:
+      object_id = self.getAttribute(xml, 'id')
+    if object_id is not None:
+      if sub_object is None:
+        try:
+          sub_object = object._getOb(object_id)
+        except (AttributeError, KeyError, TypeError):
+          sub_object = None
+      if sub_object is None: # If so, it doesn't exist
+        portal_type = ''
+        if xml.xpath('local-name()') == self.xml_object_tag:
+          portal_type = self.getObjectType(xml)
+        elif xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD: # Deprecated ???
+          portal_type = self.getXupdateObjectType(xml) # Deprecated ???
+        sub_object, reset_local_roles, reset_workflow = self.constructContent(
+                                                        object,
+                                                        object_id,
+                                                        portal_type)
+      self.newObject(object=sub_object,
+                     xml=xml,
+                     simulate=simulate,
+                     reset=reset,
+                     reset_local_roles=reset_local_roles,
+                     reset_workflow=reset_workflow)
+    return sub_object
+
+  def _updateContent(self, object=None, **args):
+    """
+      This is the method for update the object
+    """
+    return self.editDocument(object=object, **args)
+
+  def _deleteContent(self, object=None, object_id=None):
+    """
+      This is the method for delete the object
+    """
+    return self.deleteObject(object, object_id)
+
+
 #  def getGidFromXML(self, xml, namespace, gid_from_xml_list):
 #    """
 #    return the Gid composed with xml informations
@@ -1069,4 +1093,3 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 #    if gid in gid_from_xml_list or gid == ' ':
 #      return False
 #    return gid
-
