@@ -99,7 +99,7 @@ class TestBug(ERP5TypeTestCase):
   def stepLoginUsualUser(self, **kw):
     portal = self.getPortal()
     uf = portal.acl_users
-    uf._doAddUser('ERP5TypeTestCase', '', ['Assignor','Assignee'], [])
+    uf._doAddUser('mame', '', ['Assignor','Assignee'], [])
     if not uf.getUser('dummy'):
       uf._doAddUser('manager', '', ['Manager'], [])
       self.login('manager')
@@ -143,14 +143,6 @@ class TestBug(ERP5TypeTestCase):
       portal.portal_caches.clearAllCache()
 
     self.login('dummy')
-
-  def changeUser(self, user_id):
-    """
-      Change the current user to user_id
-    """
-    user_folder = self.getPortal().acl_users
-    user = user_folder.getUserById(user_id).__of__(user_folder)
-    newSecurityManager(None, user)
 
 
   def stepCreateProject(self,sequence=None, sequence_list=None, \
@@ -585,7 +577,7 @@ class TestBug(ERP5TypeTestCase):
     verify that we can still resolve a bug with a
     deleted bug line
     """
-    self.login('ERP5TypeTestCase')
+    self.login('mame')
     bug_portal_type = 'Bug'
     bug_line_portal_type = 'Bug Line'
     module = self.portal.getDefaultModule(portal_type=bug_portal_type)
