@@ -490,7 +490,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
   href_parser = re.compile('<a[^>]*href=[\'"](.*?)[\'"]',re.IGNORECASE)
   body_parser = re.compile('<body[^>]*>(.*?)</body>', re.IGNORECASE + re.DOTALL)
   title_parser = re.compile('<title[^>]*>(.*?)</title>', re.IGNORECASE + re.DOTALL)
-  base_parser = re.compile('<base[^>]*href=[\'"](.*?)[\'"][^>]*>', re.IGNORECASE + re.DOTALL)
   charset_parser = re.compile('charset="?([a-z0-9\-]+)', re.IGNORECASE)
 
   # Declarative security
@@ -1151,14 +1150,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     """
     if not self.hasBaseData():
       raise ConversionError('This document has not been processed yet.')
-    try:
-      # FIXME: no substitution may occur in this case.
-      mime, data = self.getConversion(format='base-html')
-      return data
-    except KeyError:
-      kw['format'] = 'html'
-      mime, html = self.convert(**kw)
-      return html
+    kw['format'] = 'html'
+    mime, html = self.convert(**kw)
+    return html
 
   security.declareProtected(Permissions.View, 'asStrippedHTML')
   def asStrippedHTML(self, **kw):
@@ -1167,16 +1161,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       (without html and body tags, etc.) which can be used to inline
       a preview of the document.
     """
-    if not self.hasBaseData():
-      return ''
-    try:
-      # FIXME: no substitution may occur in this case.
-      mime, data = self.getConversion(format='stripped-html')
-      return data
-    except KeyError:
-      kw['format'] = 'html'
-      mime, html = self.convert(**kw)
-      return self._stripHTML(str(html))
+    return self._stripHTML(self._asHTML(**kw))
 
   def _guessEncoding(self, string):
     """
@@ -1199,48 +1184,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       stripped_html = body_list[0]
     else:
       stripped_html = html
-    # find charset and convert to utf-8
-    charset_list = self.charset_parser.findall(str(html)) # XXX - Not efficient if this
-                                         # is datastream instance but hard to do better
-    if charset and not charset_list:
-      # Use optional parameter is we can not find encoding in HTML
-      charset_list = [charset]
-    if charset_list and charset_list[0] not in ('utf-8', 'UTF-8'):
-      try:
-        stripped_html = unicode(str(stripped_html),
-                                charset_list[0]).encode('utf-8')
-      except (UnicodeDecodeError, LookupError):
-        return str(stripped_html)
     return stripped_html
-
-  def _safeHTML(self, html, format='text/x-html-safe', charset=None):
-    """
-      A private method to strip HTML content in safe mode,
-      w/o emmbed javascript, forms and any external plugins imports.
-      This should be used when we do not trust the user (Anonymous)
-      who push data into database.
-      - html: content to strip
-      - format: destination format
-      - charset: charset used to encode string. Take precedence
-      on charset values found in html string
-    """
-    portal = self.getPortalObject()
-    if charset is None:
-      # find charset
-      charset_list = self.charset_parser.findall(html)
-      if charset_list:
-        charset = charset_list[0]
-    if charset and charset not in ('utf-8', 'UTF-8'):
-      try:
-        safe_html_string = html.decode(charset).encode('utf-8')
-      except (UnicodeDecodeError, LookupError):
-        pass
-      else:
-        charset = 'utf-8' # Override charset if convertion succeeds
-    transform_tool = getToolByName(portal, 'portal_transforms')
-    safe_html_string = transform_tool.convertToData(format, html,
-                                                    encoding=charset)
-    return safe_html_string
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):

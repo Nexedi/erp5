@@ -202,7 +202,8 @@ class TextDocument(Document, TextContent):
                                          **substitution_method_parameter_dict)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-    def convert(self, format, substitution_method_parameter_dict=None, safe_substitute=True, **kw):
+    def convert(self, format, substitution_method_parameter_dict=None,
+                safe_substitute=True, charset=None, text_content=None, **kw):
       """
         Convert text using portal_transforms or oood
       """
@@ -212,35 +213,55 @@ class TextDocument(Document, TextContent):
       if format == 'raw':
         return 'text/plain', self.getTextContent()
       portal = self.getPortalObject()
-      mime_type = getToolByName(portal, 'mimetypes_registry').lookupExtension('name.%s' % format)
-      mime_type = str(mime_type)
+      mime_type = getToolByName(portal, 'mimetypes_registry').\
+                                            lookupExtension('name.%s' % format)
+      original_mime_type = mime_type = str(mime_type)
       src_mimetype = self.getTextFormat(DEFAULT_TEXT_FORMAT)
       if not src_mimetype.startswith('text/'):
         src_mimetype = 'text/%s' % src_mimetype
-      # check if document has set text_content and convert if necessary
-      text_content = self.getTextContent()
+      if text_content is None:
+        # check if document has set text_content and convert if necessary
+        text_content = self.getTextContent()
       if text_content:
         if not self.hasConversion(format=format):
           portal_transforms = getToolByName(portal, 'portal_transforms')
           filename = self.getSourceReference(self.getTitleOrId())
+          if mime_type == 'text/html':
+            mime_type = 'text/x-html-safe'
+            if charset is None:
+              # find charset
+              charset_list = self.charset_parser.findall(text_content)
+              if charset_list:
+                charset = charset_list[0]
+            if charset and charset not in ('utf-8', 'UTF-8'):
+              try:
+                text_content = text_content.decode(charset).encode('utf-8')
+              except (UnicodeDecodeError, LookupError):
+                pass
+              else:
+                charset = 'utf-8' # Override charset if convertion succeeds
+                # change charset value in html_document as well
+                self.charset_parser.sub('utf-8', text_content)
           result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
                                                    filename=filename,
-                                                   mimetype=src_mimetype)
+                                                   mimetype=src_mimetype,
+                                                   encoding=charset)
           if result is None:
             raise ConversionError('TextDocument conversion error. '
-                                  'portal_transforms failed to convert to %s: %r' % (mime_type, self))
-          self.setConversion(result, mime_type, format=format)
+                                  'portal_transforms failed to convert'\
+                                  'to %s: %r' % (mime_type, self))
+          self.setConversion(result, original_mime_type, format=format)
         else:
           mime_type, result = self.getConversion(format=format)
         if substitution_method_parameter_dict is None:
           substitution_method_parameter_dict = {}
         result = self._substituteTextContent(result, safe_substitute=safe_substitute,
                                              **substitution_method_parameter_dict)
-        return mime_type, result
+        return original_mime_type, result
       else:
         # text_content is not set, return empty string instead of None
-        return mime_type, ''
+        return original_mime_type, ''
 
     def __call__(self):
       _setCacheHeaders(_ViewEmulator().__of__(self), {})
