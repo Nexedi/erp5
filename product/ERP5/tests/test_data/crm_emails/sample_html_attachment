@@ -1,0 +1,258 @@
+Return-Path: <nicolas@nexedi.com>
+X-Original-To: nicolas@nexedi.com
+Delivered-To: nicolas@nexedi.com
+Received: from [127.0.0.1] (unknown [127.0.0.1])
+  by nexedi.com (Postfix) with ESMTP id 2A5283D9A2
+  for <nicolas@nexedi.com>; Thu,  8 Apr 2010 13:35:56 +0200 (CEST)
+Message-ID: <4BBDBF9B.8070208@nexedi.com>
+Date: Thu, 08 Apr 2010 13:35:55 +0200
+From: Nicolas Delaby <nicolas@nexedi.com>
+Organization: Nexedi
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1.9) Gecko/20100322 Mandriva/3.0.4-69.1mib2010.0 (2010.0) Thunderbird/3.0.4
+MIME-Version: 1.0
+To: Nicolas Delaby <nicolas@nexedi.com>
+Subject: TEST HTML attachments
+Content-Type: multipart/mixed;
+ boundary="------------070709040206070202090603"
+
+This is a multi-part message in MIME format.
+--------------070709040206070202090603
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+Hi, this is the Message.
+ERP5 is a free software.
+
+
+--------------070709040206070202090603
+Content-Type: text/html; charset=UTF-8;
+ name="erp5.html"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="erp5.html"
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+  
+  
+  
+    
+  
+  
+    
+
+
+
+    
+      
+    
+      
+    
+  
+      
+      
+        
+          <!-- base href="http://127.0.0.1:6060/erp5/" -->
+          <meta name="generator" content="ERP5 - Copyright (C) 2001 - 2008. All rights reserved.">
+          <meta name="description" content="EPR5">
+          <meta name="keywords" content="">
+          <meta name="robots" content="index, follow">
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+          <meta http-equiv="Content-Script-Type" content="text/javascript">
+          <meta http-equiv="Content-Style-Type" content="text/css">
+          <title>EPR5 | EPR5</title>
+          
+            <link type="text/css" rel="stylesheet" href="erp5_fichiers/erp5.css">
+          
+          
+          
+          
+            <script type="text/javascript" src="erp5_fichiers/MochiKit.js"></script>
+          
+          
+            <script type="text/javascript" src="erp5_fichiers/erp5.js"></script>
+          
+          
+            <script type="text/javascript" src="erp5_fichiers/erp5_xhtml_appearance.js"></script>
+          
+          <link rel="icon" type="image/x-icon" href="http://127.0.0.1:6060/erp5/favicon.ico">
+          <link rel="shortcut icon" type="image/x-icon" href="http://127.0.0.1:6060/erp5/favicon.ico">
+          
+            <!-- this is a placeholder for different extensions to head which could be required by web themes -->
+          
+        </head><body>
+          <form id="main_form" class="main_form" onsubmit="changed=false; return true" action="http://127.0.0.1:6060/erp5" method="post">
+            <fieldset id="hidden_fieldset" class="hidden_fieldset">
+              
+              
+    <input name="cancel_url" value="http://127.0.0.1:6060/erp5/view" type="hidden">
+  
+            </fieldset>
+            
+              <div id="bars" class="bars">
+                <div id="main_bar" class="main_bar">
+  
+    <span class="first">
+      <span id="favourites" class="favourites">
+        <select name="select_favorite" onchange="submitAction(this.form,'Base_doFavorite')">
+          <option selected="selected" value="">My Favourites</option>
+          
+            <option disabled="disabled">-- Others --</option>
+            
+          
+          
+            
+            
+              
+              <option value="http://127.0.0.1:6060/erp5/portal_templates/view">Manage Business Templates</option>
+            
+          
+          
+            
+            
+              
+              <option value="http://127.0.0.1:6060/erp5/portal_categories/view">Configure Categories</option>
+            
+          
+          
+            
+            
+              
+              <option value="http://127.0.0.1:6060/erp5/ERP5Site_viewCreateModuleDialog">Create Module</option>
+            
+          
+          
+            
+            
+              
+              <option value="http://127.0.0.1:6060/erp5/portal_types/view">Configure Portal Types</option>
+            
+          
+          
+            
+            
+              
+              <option value="http://127.0.0.1:6060/erp5/undo_form">Undo</option>
+            
+          
+          
+            <option disabled="disabled">-- User --</option>
+            <option value="http://127.0.0.1:6060/erp5/personalize_form">Preferences</option>
+            <option value="http://127.0.0.1:6060/erp5/logout">Log out</option>
+          
+        </select>
+        <button type="submit" name="Base_doFavorite:method" title="Select Favourite">
+          <span class="image"></span>
+          <span class="description">Select Favourite</span>
+        </button>
+      </span>
+      <span class="separator"><!--separator--></span>
+      <span id="modules" class="modules">
+        <select name="select_module" onchange="submitAction(this.form,'Base_doModule')">
+          <option selected="selected" value="">Modules</option>
+          <option value="/erp5/currency_module">Currencies</option>
+          <option value="/erp5/notification_message_module">Notification Messages</option>
+          <option value="/erp5/organisation_module">Organisations</option>
+          <option value="/erp5/person_module">Persons</option>
+          <option value="/erp5/query_module">Queries</option>
+        </select>
+        <button type="submit" name="Base_doModule:method" title="Select Module">
+          <span class="image"></span>
+          <span class="description">Select Module</span>
+        </button>
+      </span>
+    </span>
+    <span class="second">
+      <span id="language" class="language">
+        <select name="select_language" onchange="submitAction(this.form,'Base_doLanguage')">
+          <option value="">My Language</option>
+          
+          <option selected="selected" value="en">English</option>
+          
+        </select>
+        <button type="submit" name="Base_doLanguage:method" title="Select Language">
+          <span class="image"></span>
+          <span class="description">Select Language</span>
+        </button>
+      </span>
+      <span class="separator"><!--separator--></span>
+      <span id="search" class="search">
+        <input name="all_languages" value="1" type="hidden">
+        <input class="quick_search_field" accesskey="4" name="field_your_search_text" value="Search" onfocus="if (this.value=='Search') this.value=''" onkeypress="submitFormOnEnter(event, this.form, 'ERP5Site_viewQuickSearchResultList');" type="text">
+        <button type="submit" name="ERP5Site_viewQuickSearchResultList:method" title="Search">
+          <span class="image"></span>
+          <span class="description">Search</span>
+        </button>
+      </span>
+    </span>
+    <p class="clear"></p>
+  
+
+
+</div>
+                <div id="context_bar" class="context_bar">
+                  
+          
+        
+                </div>
+              </div>
+              <div id="status" class="status">
+                <div id="breadcrumb" class="breadcrumb">
+                  
+    
+      <a href="http://127.0.0.1:6060/erp5/view">EPR5</a>
+      /
+    
+  
+                </div>
+                <div id="logged_in_as" class="logged_in_as">
+                  
+                    <span class="logged_txt">Logged In as :</span>
+                    nicolas
+                  
+                </div>
+                <p class="clear"></p>
+                
+                <div id="transition_message" class="transition_message"></div>
+                
+              </div>
+              <div id="master" class="master">
+                
+          
+    
+    <div class="index_html">
+      <h2>Welcome to ERP5</h2>
+      <table border="1">
+        <tbody><tr>
+          <td><a href="http://www.erp5.org/"><img src="erp5_fichiers/erp5_logo.png" alt="ERP5 Logo"></a></td>
+          
+            <td class="ModuleShortcut" valign="top">
+              
+                <div><a href="http://127.0.0.1:6060/erp5/currency_module/view">Currencies</a></div>
+              
+              
+                <div><a href="http://127.0.0.1:6060/erp5/notification_message_module/view">Notification Messages</a></div>
+              
+              
+                <div><a href="http://127.0.0.1:6060/erp5/organisation_module/view">Organisations</a></div>
+              
+              
+                <div><a href="http://127.0.0.1:6060/erp5/person_module/view">Persons</a></div>
+              
+              
+                <div><a href="http://127.0.0.1:6060/erp5/query_module/view">Queries</a></div>
+              
+            </td>
+          
+        </tr>
+      </tbody></table>
+    </div>
+  
+        
+              </div>
+            
+          </form>
+        </body></html>
+
+--------------070709040206070202090603--
+

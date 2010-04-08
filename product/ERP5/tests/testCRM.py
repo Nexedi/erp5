@@ -618,6 +618,40 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEqual(document.getTextContent(), 'cöntént\n')
 
 
+  def test_HTML_multipart_attachments(self):
+    """Test that html attachments are cleaned up.
+    and check the behaviour of getTextContent
+    if multipart/alternative return html
+    if multipart/mixed return text
+    """
+    document = self._ingestMail(filename='sample_multipart_mixed_and_alternative')
+    transaction.commit()
+    self.tic()
+    stripped_html = document.asStrippedHTML()
+    self.assertTrue('<form' not in stripped_html)
+    self.assertTrue('<form' not in document.getAttachmentData(4))
+    self.assertEquals('This is my content.\n*ERP5* is a Free _Software_\n',
+                      document.getAttachmentData(2))
+    self.assertEquals('text/html', document.getTextFormat())
+    self.assertEquals('\n<html>\n<head>\n\n<meta http-equiv="content-type"'\
+                      ' content="text/html; charset=utf-8" />\n'\
+                      '</head>\n<body text="#000000"'\
+                      ' bgcolor="#ffffff">\nThis is my content.<br />\n'\
+                      '<b>ERP5</b> is a Free <u>Software</u><br />'\
+                      '\n\n</body>\n</html>\n', document.getAttachmentData(3))
+    self.assertEquals(document.getAttachmentData(3), document.getTextContent())
+
+    # now check a message with multipart/mixed
+    mixed_document = self._ingestMail(filename='sample_html_attachment')
+    transaction.commit()
+    self.tic()
+    self.assertEquals(mixed_document.getAttachmentData(1),
+                      mixed_document.getTextContent())
+    self.assertEquals('Hi, this is the Message.\nERP5 is a free software.\n\n',
+                      mixed_document.getTextContent())
+    self.assertEquals('text/plain', mixed_document.getTextFormat())
+
+
 ## TODO:
 ##
 ##  def test_attachements(self):
