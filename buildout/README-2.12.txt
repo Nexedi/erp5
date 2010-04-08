@@ -91,7 +91,8 @@ Please refer to the 'helpers' directory for other distributions.
 Instances
 =========
 
-Note: Instance generation is still a work in progress.
+Note: Instance generation is still a work in progress. In particular, these
+instructions should be much simplified.
 
 After the software components are built, we can generate ERP5 instance
 buildouts from that software.
