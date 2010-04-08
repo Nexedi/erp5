@@ -230,9 +230,7 @@ class TextDocument(Document, TextContent):
             mime_type = 'text/x-html-safe'
             if charset is None:
               # find charset
-              charset_list = self.charset_parser.findall(text_content)
-              if charset_list:
-                charset = charset_list[0]
+              charset = self.charset_parser.search(text_content).group('charset')
             if charset and charset not in ('utf-8', 'UTF-8'):
               try:
                 text_content = text_content.decode(charset).encode('utf-8')
@@ -241,7 +239,16 @@ class TextDocument(Document, TextContent):
               else:
                 charset = 'utf-8' # Override charset if convertion succeeds
                 # change charset value in html_document as well
-                self.charset_parser.sub('utf-8', text_content)
+                def subCharset(matchobj):
+                  keyword = matchobj.group('keyword')
+                  charset = matchobj.group('charset')
+                  if not (keyword or charset):
+                    # no match, return same string
+                    return matchobj.group(0)
+                  elif keyword:
+                    # if keyword is present, replace charset just after
+                    return keyword + 'utf-8'
+                text_content = self.charset_parser.sub(subCharset, text_content)
           result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
                                                    filename=filename,
