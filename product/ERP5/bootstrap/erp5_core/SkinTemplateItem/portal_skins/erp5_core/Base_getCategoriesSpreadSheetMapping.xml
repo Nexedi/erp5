@@ -220,6 +220,9 @@ for table_name in spreadsheet_list.keys():\n
     for cell_index, cell in enumerate(line):\n
       # Get the property corresponding to the cell data\n
       property_id = property_map[cell_index]\n
+      if cell is not None and cell.strip()==\'\':\n
+        # empty string is NOT a valid identifier\n
+        cell=None\n
       line_data[property_id] = cell\n
       if cell and property_id.startswith(\'path_\'):\n
         path_defined.append(cell)\n
