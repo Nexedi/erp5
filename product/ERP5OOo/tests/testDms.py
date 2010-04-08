@@ -1473,6 +1473,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue('<head>' in entire_html)
     self.assertTrue('<style' in entire_html)
     self.assertTrue('#FFAA44' in entire_html)
+    self.assertTrue('charset=utf-8' in entire_html)
 
     # now check converted value is stored in cache
     format = 'html'
