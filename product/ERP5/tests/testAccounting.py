@@ -519,6 +519,32 @@ class TestTransactionValidation(AccountingTestCase):
     accounting_transaction.setSourcePaymentValue(bank_account)
     self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
 
+  def test_PaymentTransactionValidationCheckBankAccountPriceCurrency(self):
+    # we have to declare a transaction with price_currency different from the
+    # bank account
+    bank_account = self.section.newContent(portal_type='Bank Account',
+        price_currency_value=self.currency_module.euro)
+    accounting_transaction = self._makeOne(
+               portal_type='Payment Transaction',
+               start_date=DateTime('2007/01/02'),
+               destination_section_value=self.person_module.john_smith,
+               payment_mode='default',
+               resource_value=self.currency_module.usd,
+               source_payment_value=bank_account,
+               lines=(dict(source_value=self.account_module.bank,
+                           destination_value=self.account_module.bank,
+                           source_debit=500),
+                      dict(source_value=self.account_module.receivable,
+                           destination_value=self.account_module.receivable,
+                           source_credit=500)))
+    # refused because bank account currency different from transaction resource
+    self.assertRaises(ValidationFailed,
+        self.portal.portal_workflow.doActionFor,
+        accounting_transaction, 'stop_action')
+    # with same currency in bank account and transaction, it's OK
+    accounting_transaction.setResourceValue(self.currency_module.euro)
+    self.portal.portal_workflow.doActionFor(accounting_transaction, 'stop_action')
+
   def test_NonBalancedAccountingTransaction(self):
     # Accounting Transactions have to be balanced to be validated
     accounting_transaction = self._makeOne(
