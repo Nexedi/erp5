@@ -523,7 +523,7 @@ class Subscription(Folder, XMLSyncUtils, File):
       o_id = signature.getObjectId()
       #try with id param too, because gid is not catalogged
       object_list = self.getObjectList(gid=b16decode(gid), id=o_id)
-      if o is not None and o in object_list:
+      if o is not None and o.getId() in [document.getId() for document in object_list]:
         return o
     #LOG('entering in the slow loop of getObjectFromGid !!!',0,'')
     object_list = self.getObjectList(gid=b16decode(gid))
