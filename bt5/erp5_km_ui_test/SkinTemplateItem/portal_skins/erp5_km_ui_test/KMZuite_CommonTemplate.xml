@@ -57,9 +57,17 @@
       <td></td>\n
       <td></td>\n
     </tr>\n
-   <span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/wait_for_activities">\n
-Wait for activities</span>\n
-\n
+    <!-- Wait for activities to finish -->\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/Zuite_waitForActivities</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>verifyTextPresent</td>\n
+      <td>Done.</td>\n
+      <td></td>\n
+    </tr> \n
   </tal:block>\n
 </tal:block>\n
 \n
