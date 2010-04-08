@@ -111,6 +111,7 @@
                         <string>my_similar_title_list</string>
                         <string>my_successor_title_list</string>
                         <string>my_effective_date</string>
+                        <string>my_thumbnail</string>
                       </list>
                     </value>
                 </item>
