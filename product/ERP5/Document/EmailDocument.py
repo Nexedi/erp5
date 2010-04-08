@@ -252,8 +252,7 @@ class EmailDocument(File, TextDocument):
     """
     Returns the decoded data of an attachment.
     """
-    i = 0
-    for part in self._getMessage().walk():
+    for i, part in enumerate(self._getMessage().walk()):
       if index == i:
         # This part should be handled in skin script
         # but it was a bit easier to access items here
@@ -262,11 +261,11 @@ class EmailDocument(File, TextDocument):
           RESPONSE = REQUEST.RESPONSE
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
           if kw.has_key('Content-Type'):
-            RESPONSE.setHeader('Content-Type', kw['Content-Type'])
             content_type = kw['Content-Type']
+            RESPONSE.setHeader('Content-Type', content_type)
           elif kw.has_key('Content-type'):
-            RESPONSE.setHeader('Content-Type', kw['Content-type'])
             content_type = kw['Content-type']
+            RESPONSE.setHeader('Content-Type', content_type)
           else:
             content_type = None
           if kw.has_key('Content-Disposition'):
@@ -280,12 +279,22 @@ class EmailDocument(File, TextDocument):
             file_name = re.findall(file_name_regexp, content_type, re.MULTILINE)
           if content_disposition:
             if not file_name:
-              file_name = re.findall(file_name_regexp, content_disposition, re.MULTILINE)
+              file_name = re.findall(file_name_regexp,
+                                     content_disposition,
+                                     re.MULTILINE)
           if file_name:
             file_name = file_name[0]
-            RESPONSE.setHeader('Content-disposition', 'attachment; filename="%s"' % file_name)
-        return part.get_payload(decode=1)
-      i += 1
+            RESPONSE.setHeader('Content-disposition',
+                               'attachment; filename="%s"' % file_name)
+        if 'text/html' in content_type:
+          # Strip out html content in safe mode.
+          mime, content = self.convert(format='html',
+                                       text_content=part.get_payload(decode=1),
+                                       index=index) # add index to generate
+                                       # a unique cache key per attachment
+        else:
+          content = part.get_payload(decode=1)
+        return content
     return KeyError, "No attachment with index %s" % index
 
   # Helper methods which override header property sheet
@@ -448,7 +457,8 @@ class EmailDocument(File, TextDocument):
         part_encoding = part.get_content_charset()
         part_html = part.get_payload(decode=1)
         # Invoke Document class HTML stripper
-        html_result = self._safeHTML(part_html, charset=part_encoding)
+        html_result = self.convert(format='html', text_content=part_html,
+                                   charset=part_encoding)
     if html_result:
       # Give priority to HTML
       text_result = html_result
