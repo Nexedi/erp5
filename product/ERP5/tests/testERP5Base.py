@@ -1447,14 +1447,24 @@ class TestERP5Base(ERP5TypeTestCase):
     # workflow has no artificial comment
     self.assertFalse(comment in [q['comment'] for q in workflow_history ])
 
+  def test_comment_edit_workflow_store_workflow(self):
+    comment = 'some comment'
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.portal.portal_workflow.doActionFor(person, 'edit_action', comment=comment)
+    workflow_history = self.getWorkflowHistory(person, 'edit_workflow')
+    # person is not changed
+    self.assertEqual(getattr(person, 'comment', None), None)
+    # workflow is affected
+    self.assertTrue(comment in [q['comment'] for q in workflow_history ])
+
   def test_comment_validation_workflow(self):
     comment = 'some comment'
     person = self.portal.person_module.newContent(portal_type='Person')
     person.validate(comment = comment)
     workflow_history = self.getWorkflowHistory(person, 'validation_workflow')
-    # person os not changed
+    # person is not changed
     self.assertEqual(getattr(person, 'comment', None), None)
-    # workflow is impacted
+    # workflow is affected
     self.assertTrue(comment in [q['comment'] for q in workflow_history])
 
 def test_suite():
