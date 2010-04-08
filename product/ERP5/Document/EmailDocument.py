@@ -415,7 +415,11 @@ class EmailDocument(File, TextDocument):
     """
     Returns the content of the email as text. This is useful
     to display the content of an email.
-    
+
+    According to rfc, (http://tools.ietf.org/html/rfc2046#section-5.1.4)
+    getTextContent should return html part of multipart/alternative couple
+    If multipart/mixed, the html part is an attachement. So return the
+    main content (text/plain).
     TODO: add support for legacy objects
     """
     if not self.hasFile() or self._baseGetTextContent() is not None:
@@ -429,8 +433,14 @@ class EmailDocument(File, TextDocument):
     # find from mail message
     text_result = None
     html_result = None
+    is_alternative = False
     for part in self._getMessage().walk():
-      if part.get_content_type() == 'text/plain' and not text_result and not part.is_multipart():
+      if part.is_multipart():
+        if part.get_content_type() == 'multipart/alternative':
+          is_alternative = True
+        else:
+          is_alternative = False
+      elif part.get_content_type() == 'text/plain' and not is_alternative:
         part_encoding = part.get_content_charset()
         message_text = part.get_payload(decode=1)
         if part_encoding != 'utf-8':
@@ -453,16 +463,16 @@ class EmailDocument(File, TextDocument):
               text_result = repr(message_text)
         else:
           text_result = message_text
-      elif part.get_content_type() == 'text/html' and not html_result and not part.is_multipart():
+        break
+      elif part.get_content_type() == 'text/html' and is_alternative:
         part_encoding = part.get_content_charset()
         part_html = part.get_payload(decode=1)
         # Invoke Document class HTML stripper
-        mime, html_result = self.convert(format='html',
+        mime, text_result = self.convert(format='html',
                                          text_content=part_html,
                                          charset=part_encoding)
-    if html_result:
-      # Give priority to HTML
-      text_result = html_result
+        break
+
     if default is _MARKER:
       return text_result
     return text_result or default
@@ -480,8 +490,14 @@ class EmailDocument(File, TextDocument):
         return self._baseGetTextFormat()
       else:
         return self._baseGetTextFormat(default)
+    is_alternative = False
     for part in self._getMessage().walk():
-      if part.get_content_type() == 'text/html' and not part.is_multipart():
+      if part.is_multipart():
+        if part.get_content_type() == 'multipart/alternative':
+          is_alternative = True
+        else:
+          is_alternative = False
+      elif part.get_content_type() == 'text/html' and is_alternative:
         return 'text/html'
     return 'text/plain'
 
