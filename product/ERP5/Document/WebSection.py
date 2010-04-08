@@ -34,6 +34,7 @@ from Products.ERP5.Document.Document import PermanentURLMixIn
 from Acquisition import aq_base, aq_inner
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized
+from OFS.Traversable import NotFound
 
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
@@ -112,7 +113,16 @@ class WebSection(Domain, PermanentURLMixIn):
             else:
               request.set(web_param, False)
 
-      return PermanentURLMixIn.__bobo_traverse__(self, request, name)
+      try:
+        document = PermanentURLMixIn.__bobo_traverse__(self, request, name)
+      except NotFound:
+        not_found_page_ref = self.getLayoutProperty('layout_not_found_page_reference')
+        document = PermanentURLMixIn.getDocumentValue(self, name=not_found_page_ref)
+        if document is None:
+          # if no document found, fallback on default page template
+          document = PermanentURLMixIn.__bobo_traverse__(self, request,
+            '404.error.page')
+      return document
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getLayoutProperty')
     def getLayoutProperty(self, key, default=None):
