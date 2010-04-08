@@ -1433,6 +1433,20 @@ class TestERP5Base(ERP5TypeTestCase):
                                      translated_portal_type='Personne')])
     transaction.abort()
 
+  def getWorkflowHistory(self, document, workflow_id):
+    return self.portal.portal_workflow.getInfoFor(ob=document, name='history',
+        wf_id=workflow_id)
+
+  def test_comment_edit_workflow(self):
+    comment = 'some comment'
+    person = self.portal.person_module.newContent(portal_type='Person')
+    person.edit(comment = comment)
+    edit_workflow = self.getWorkflowHistory(person, 'edit_workflow')
+    # person has property comment with value
+    self.assertEqual(person.comment, comment)
+    # workflow has no artificial comment
+    self.assertFalse(comment in [q['comment'] for q in edit_workflow ])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Base))
