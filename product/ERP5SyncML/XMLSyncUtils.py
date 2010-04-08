@@ -748,7 +748,7 @@ class XMLSyncUtilsMixin(SyncCode):
         result['finished'] = 0
         break
       #LOG('getSyncMLData object_path', INFO, object_path)
-      object = self.unrestrictedTraverse(object_path)
+      object = self.getPortalObject().unrestrictedTraverse(object_path)
       status = self.SENT
       object_gid = domain.getGidFromObject(object)
       if not object_gid:
@@ -756,7 +756,7 @@ class XMLSyncUtilsMixin(SyncCode):
       local_gid_list += [object_gid]
       force = 0
       if ''.join(syncml_data_list).count('\n') < self.MAX_LINES and not \
-          object.id.startswith('.'):
+          object.getId().startswith('.'):
         # If not we have to cut
         #LOG('getSyncMLData', 0, 'object_path: %s' % '/'.join(object_path))
         #LOG('getSyncMLData', 0, 'xml_mapping: %s' % str(domain.getXMLMapping()))
@@ -1005,7 +1005,8 @@ class XMLSyncUtilsMixin(SyncCode):
           if object is None:
             add_data = conduit.addNode(xml=data_subnode,
                                        object=destination,
-                                       object_id=object_id)
+                                       object_id=object_id,
+                                       domain=domain)
             conflict_list.extend(add_data['conflict_list'])
             # Retrieve directly the object from addNode
             object = add_data['object']
