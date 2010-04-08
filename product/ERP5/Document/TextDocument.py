@@ -223,7 +223,7 @@ class TextDocument(Document, TextContent):
         # check if document has set text_content and convert if necessary
         text_content = self.getTextContent()
       if text_content:
-        if not self.hasConversion(format=format):
+        if not self.hasConversion(format=format, **kw):
           portal_transforms = getToolByName(portal, 'portal_transforms')
           filename = self.getSourceReference(self.getTitleOrId())
           if mime_type == 'text/html':
@@ -251,9 +251,9 @@ class TextDocument(Document, TextContent):
             raise ConversionError('TextDocument conversion error. '
                                   'portal_transforms failed to convert'\
                                   'to %s: %r' % (mime_type, self))
-          self.setConversion(result, original_mime_type, format=format)
+          self.setConversion(result, original_mime_type, format=format, **kw)
         else:
-          mime_type, result = self.getConversion(format=format)
+          mime_type, result = self.getConversion(format=format, **kw)
         if substitution_method_parameter_dict is None:
           substitution_method_parameter_dict = {}
         result = self._substituteTextContent(result, safe_substitute=safe_substitute,
