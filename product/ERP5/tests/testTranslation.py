@@ -287,6 +287,62 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     self.assertTrue(len(self.portal.portal_catalog(
                             translated_validation_state_title="En bon usage")))
 
+  def test_07_NegatedQueryForTranslation(self, quiet=0, run=run_all_test):
+    """
+    Check that catalog search with a negated query parameter doesn't return
+    unexpected results.
+     - get a portal type ans its related workflow
+     - add a new context translation for the original state
+     - update the catalog tables
+     - verify the catalog result
+    """
+    self.lang = 'en'
+    # Get one portal type and its related workflow
+    portal_type_id = 'Bug'
+    workflow_id = 'bug_workflow'
+    assert(workflow_id in \
+            self.portal.portal_workflow.getChainFor(portal_type_id))
+    bug = self.portal.getDefaultModule(portal_type_id).newContent(
+        portal_type=portal_type_id)
+    state_title = bug.getSimulationStateTitle()
+
+    # add a new context translation for the original state
+    message_catalog = self.portal.Localizer.erp5_ui
+    message_catalog.gettext(state_title, add=1)
+    message_catalog.gettext(getMessageIdWithContext(state_title,
+                                                    'state',
+                                                    workflow_id),
+                            add=1)
+    assert(bug.getTranslatedSimulationStateTitle() == state_title)
+
+    try:
+      message_catalog.message_edit(getMessageIdWithContext(state_title,
+                                                           'state',
+                                                           workflow_id),
+                                   self.lang, "%s in context" % state_title, '')
+      assert(bug.getTranslatedSimulationStateTitle() == \
+                                    "%s in context" % state_title)
+
+      # Update the translation table
+      self.portal.ERP5Site_updateTranslationTable()
+      transaction.commit()
+      self.tic()
+
+      # Check the catalog result
+      assert(len(self.portal.portal_catalog(portal_type=portal_type_id)) == 1)
+      result = self.portal.portal_catalog(portal_type=portal_type_id,
+          translated_simulation_state_title='!="%s in context"' % state_title)
+      self.assertEquals(len(result), 0)
+    finally:
+      # Clean the new context message
+      message_catalog.message_del(getMessageIdWithContext(state_title,
+                                                      'state',
+                                                      workflow_id))
+      # Update the translation table
+      self.portal.ERP5Site_updateTranslationTable()
+      transaction.commit()
+      self.tic()
+
 class LanguageGetter(MethodObject.Method):
 
   def __init__(self, lang):
