@@ -106,6 +106,10 @@
                           <string>start_date</string>
                           <string>Start Date</string>
                         </tuple>
+                        <tuple>
+                          <string>constant_string_field</string>
+                          <string>Constant</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

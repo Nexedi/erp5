@@ -114,6 +114,13 @@
   <td></td>\n
 </tr>\n
 \n
+<!-- proxyfield should retrieve TALES recursively -->\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id=\'listbox_data_line_0\']/td[6]</td>\n
+  <td>a constant of forty-two is still the answer</td>\n
+</tr>\n
+\n
 <!-- Search row is here -->\n
 \n
 <tr>\n
