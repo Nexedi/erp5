@@ -53,7 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.activate(activate_kw={\'tag\':\'after_amortisation_build\',\'after_tag\':\'build_amortisation_transaction\'}).AmortisationTransaction_afterBuild(**kw)\n
+            <value> <string>context.activate(\n
+  tag=\'after_amortisation_build\',\n
+  after_tag=(\'build_amortisation_transaction\',\n
+             \'disconnect_amortisation_transaction\'),\n
+).AmortisationTransaction_afterBuild(**kw)\n
 </string> </value>
         </item>
         <item>
