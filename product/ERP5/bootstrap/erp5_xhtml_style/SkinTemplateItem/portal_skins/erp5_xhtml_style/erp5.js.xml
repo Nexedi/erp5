@@ -250,7 +250,8 @@ var resizeIFrameOnLoad = function() {\n
 var changed = false;\n
 function installUnsavedChangesWarning(warning_message) {\n
   window.onbeforeunload = function() {\n
-    if (changed) \n
+    if ((changed)&&(getFirstElementByTagAndClassName("button", "save")))\n
+      // show an warning box only if save button do exists\n
       return warning_message;\n
   };\n
 };\n
