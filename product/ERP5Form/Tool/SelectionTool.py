@@ -588,6 +588,19 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         return getattr(aq_base(selection), 'stats', default_stats)
       return default_stats
 
+    def _getExistingFormId(self, document, form_id):
+      portal = document.getPortalObject()
+      for url in [q['url'] for q in portal.portal_actions\
+          .listFilteredActionsFor(document).get('object_view', [])]:
+        # XXX-Luke: As this is not possible to do form_id -> action_id the
+        # only way to know if form_id is implemented by action of document
+        # is to use string matching.
+        # Current matching is not perfect - if action url is defined like:
+        #     bla/bla/[form_id]?q
+        # it will not match. re hacker will be able to improve
+        if url.endswith(form_id):
+          return form_id
+      return 'view'
 
     security.declareProtected(ERP5Permissions.View, 'viewFirst')
     def viewFirst(self, selection_index='', selection_name='', form_id='view', REQUEST=None):
@@ -603,6 +616,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         if len(selection_list):
           o = selection_list[0]
           url = o.absolute_url()
+          form_id = self._getExistingFormId(o.getObject(), form_id)
         else:
           url = REQUEST.getURL()
       else:
@@ -625,6 +639,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         if len(selection_list):
           o = selection_list[-1]
           url = o.absolute_url()
+          form_id = self._getExistingFormId(o.getObject(), form_id)
         else:
           url = REQUEST.getURL()
       else:
@@ -647,6 +662,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         if len(selection_list):
           o = selection_list[(int(selection_index) + 1) % len(selection_list)]
           url = o.absolute_url()
+          form_id = self._getExistingFormId(o.getObject(), form_id)
         else:
           url = REQUEST.getURL()
       else:
@@ -669,6 +685,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
         if len(selection_list):
           o = selection_list[(int(selection_index) - 1) % len(selection_list)]
           url = o.absolute_url()
+          form_id = self._getExistingFormId(o.getObject(), form_id)
         else:
           url = REQUEST.getURL()
       else:
