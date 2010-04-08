@@ -190,7 +190,7 @@ class OldTypesTool(OFSFolder):
       elif k == '_roles':
         for role in v:
           new_type._importRole(role.__getstate__())
-      else:
+      elif k != 'uid':
         if k == '_property_domain_dict':
           v = dict((k, t.__class__(property_name=t.property_name,
                                    domain_name=t.domain_name))
