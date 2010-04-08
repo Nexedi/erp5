@@ -230,7 +230,9 @@ class TextDocument(Document, TextContent):
             mime_type = 'text/x-html-safe'
             if charset is None:
               # find charset
-              charset = self.charset_parser.search(text_content).group('charset')
+              re_match = self.charset_parser.search(text_content)
+              if re_match is not None:
+                charset = re_match.group('charset')
             if charset and charset not in ('utf-8', 'UTF-8'):
               try:
                 text_content = text_content.decode(charset).encode('utf-8')
