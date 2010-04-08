@@ -184,11 +184,9 @@ if allowClassTool():
       # replace it by a method that delegates to portal classes
       return self._folder.write(self.getId(), data, create=False)
 
-    def wl_lockmapping(self, killinvalids=0, create=0):
+    def wl_lockmapping(self, *args, **kw):
       # We store web dav locks on portal classes itself
-      return self.aq_parent.aq_parent.wl_lockmapping(
-                      killinvalids=killinvalids,
-                      create=create)
+      return self.aq_parent.aq_parent.wl_lockmapping(*args, **kw)
 
   InitializeClass(FileProxy)
 
@@ -220,6 +218,7 @@ if allowClassTool():
     def reimport(self, status, class_id):
       if status and self.__importer is not None:
         self.__importer(class_id)
+        _aq_reset()
       
     def _getOb(self, key, default=_MARKER ):
       if key in self.objectIds():
