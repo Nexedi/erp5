@@ -553,8 +553,22 @@ class MultiSelectionValidator(Validator):
 MultiSelectionValidatorInstance = MultiSelectionValidator()
 
 class FileValidator(Validator):
+    required = fields.CheckBoxField('required',
+                                    title='Required',
+                                    description=(
+                                      "Checked if the field is required; the "
+                                      "user has to fill in some data."),
+                                    default=0)
+    property_names = Validator.property_names + ['required']
+
+    message_names = Validator.message_names + ['required_not_found']
+    required_not_found = 'Input is required but no input given.'
+
     def validate(self, field, key, REQUEST):
-        return REQUEST.get(key, None)
+        value = REQUEST.get(key, None) 
+        if field.get_value('required') and value in (None, ''):
+	          self.raise_error('required_not_found', field)
+        return value
     
 FileValidatorInstance = FileValidator()
 
