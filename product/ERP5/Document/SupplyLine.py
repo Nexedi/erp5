@@ -35,7 +35,7 @@ from Products.ERP5.Document.Path import Path
 from Products.ERP5Type.Utils import convertToUpperCase
 
 
-class SupplyLine(Path, XMLMatrix):
+class SupplyLine(XMLMatrix, Path):
     """A Supply Line is a path to define price 
     """
 

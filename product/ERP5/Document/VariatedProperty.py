@@ -33,7 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
-class VariatedProperty(XMLObject, XMLMatrix):
+class VariatedProperty(XMLMatrix, XMLObject):
     """
         VariatedReference defines a reference which
         can take multiples values depending of the variations of a resource

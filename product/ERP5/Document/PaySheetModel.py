@@ -33,7 +33,7 @@ from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.PaySheetTransaction import PaySheetTransaction
 
-class PaySheetModel(TradeCondition, XMLMatrix):
+class PaySheetModel(XMLMatrix, TradeCondition):
   """A PaySheetModel defines calculation rules for paysheets.
 
     PaySheetModel are used to define calculating rules specific to a

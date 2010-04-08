@@ -36,7 +36,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 
-class Project(XMLObject, XMLMatrix):
+class Project(XMLMatrix, XMLObject):
     """
     Project is a class which describes a typical project in consulting firm.
     A project has a client, an invoiced client. A project has also a start

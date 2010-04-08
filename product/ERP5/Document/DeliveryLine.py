@@ -38,7 +38,7 @@ from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Variated import Variated
 from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
 
-class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
+class DeliveryLine(XMLMatrix, Movement, XMLObject, Variated,
                    ImmobilisationMovement):
     """
       A DeliveryLine object allows to implement lines in

@@ -40,7 +40,7 @@ from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,
                                                         TARGET_LEVEL_DELIVERY)
 import zope.interface
 
-class TradeModelLine(Predicate, XMLMatrix, Amount):
+class TradeModelLine(XMLMatrix, Predicate, Amount):
   """Trade Model Line is a way to represent trade transformation for movements"""
   meta_type = 'ERP5 Trade Model Line'
   portal_type = 'Trade Model Line'

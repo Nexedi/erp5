@@ -35,7 +35,7 @@ from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.Variated import Variated
 
 
-class BudgetLine(Predicate, XMLMatrix, Variated):
+class BudgetLine(XMLMatrix, Predicate, Variated):
     """
     BudgetLine  a line of budget...
     """
