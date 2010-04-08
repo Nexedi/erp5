@@ -194,10 +194,6 @@
                     <key> <string>script</string> </key>
                     <value> <string>1</string> </value>
                 </item>
-                <item>
-                    <key> <string>style</string> </key>
-                    <value> <string>1</string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -407,6 +403,10 @@
                 </item>
                 <item>
                     <key> <string>strong</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>style</string> </key>
                     <value> <string>1</string> </value>
                 </item>
                 <item>
