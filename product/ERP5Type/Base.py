@@ -1812,15 +1812,7 @@ class Base( CopyContainer,
       for the implementation of the ZSQLCatalog based listing
       of objects.
     """
-    parent = self.aq_inner.aq_parent
-    uid = getattr(aq_base(parent), 'uid', None)
-    if uid is None:
-      parent.immediateReindexObject() # Required with deferred indexing
-      uid = getattr(aq_base(parent), 'uid', None)
-      if uid is None:
-        LOG('Failed twice getParentUid', 0, str((self.getPhysicalPath(),parent.getPhysicalPath())))
-        raise DeferredCatalogError('Could neither access parent uid nor generate it', self)
-    return uid
+    return self.aq_inner.aq_parent.getUid()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentTitleOrId' )

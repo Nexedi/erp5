@@ -4038,6 +4038,42 @@ VALUES
         ' AS catalog' % (module_uid, ),
     })[0][0], module_len)
 
+  def test_getParentUid(self, quiet=quiet):
+    from Products.ERP5Type.Document.Person import Person
+    from Products.ERP5Type.Document.Assignment import Assignment
+    person_module = self.getPersonModule()
+
+    person = Person(person_module.generateNewId())
+    person.setDefaultReindexParameters(activate_kw={'after_tag': self.id()})
+    person = person_module[person_module._setObject(person.id, person)]
+    self.assertFalse('uid' in person.__dict__)
+    person.uid = None
+    assignment = Assignment(person.generateNewId())
+    assignment.setDefaultReindexParameters(activate_kw={'tag': self.id()})
+    assignment = person[person._setObject(assignment.id, assignment)]
+    self.assertFalse('uid' in assignment.__dict__)
+    assignment.uid = None
+    get_transaction().commit()
+
+    person_uid_list = []
+    catalog_result_list = []
+    Assignment_getParentUid = Assignment.getParentUid
+    def getParentUid(self):
+      person_uid_list.append(person.uid)
+      uid = Assignment_getParentUid(self)
+      catalog_result_list.append(len(self.portal_catalog(uid=uid)))
+      return uid
+    Assignment.getParentUid = getParentUid
+    try:
+      self.tic()
+    finally:
+      Assignment.getParentUid = Assignment_getParentUid
+    self.assertEqual(catalog_result_list[0], 0)
+    self.assertEqual(person_uid_list[0], None)
+    self.assertTrue(int(person.uid))
+    self.assertEqual(person.uid, assignment.getParentUid())
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
