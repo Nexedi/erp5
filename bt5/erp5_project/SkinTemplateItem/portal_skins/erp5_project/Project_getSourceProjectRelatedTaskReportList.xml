@@ -56,7 +56,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 source_project_uid_list = [x.uid for x in context.portal_catalog(\n
-     relative_url=\'%s/%%\' % context.getRelativeUrl())]\n
+     relative_url=\'%s/%%\' % context.getRelativeUrl())] + [context.getUid()]\n
 \n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n

@@ -65,7 +65,7 @@ worker_column_list = []\n
 \n
 # find all Tasks\n
 source_project_uid_list = [x.uid for x in context.portal_catalog(\n
-     relative_url=\'%s/%%\' % context.getRelativeUrl())]\n
+     relative_url=\'%s/%%\' % context.getRelativeUrl())] + [context.getUid()]\n
 \n
 from_date = request.get(\'from_date\', None)\n
 if from_date is None:\n
