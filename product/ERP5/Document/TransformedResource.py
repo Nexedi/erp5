@@ -41,7 +41,7 @@ from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
 from Products.ERP5.Document.Predicate import Predicate
 
-class TransformedResource(XMLMatrix, Predicate, XMLObject, Amount):
+class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
     """
         TransformedResource defines which
         resource is being transformed

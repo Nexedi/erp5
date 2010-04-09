@@ -33,7 +33,7 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Document.MappedValue import MappedValue
 
-class PortalTest(XMLMatrix, MappedValue):
+class PortalTest(MappedValue, XMLMatrix):
     """
       Container for test descriptions (funtionnal test scenarii,...).
     """

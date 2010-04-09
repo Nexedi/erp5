@@ -35,7 +35,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Variated import Variated
 
-class Consumption(XMLMatrix, XMLObject, Variated):
+class Consumption(XMLObject, XMLMatrix, Variated):
     """
       A matrix which provides default quantities
       for a given quantity

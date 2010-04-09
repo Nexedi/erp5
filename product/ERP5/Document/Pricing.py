@@ -33,7 +33,7 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 
 from Products.ERP5.Document.MappedValue import MappedValue
 
-class Pricing(XMLMatrix, MappedValue):
+class Pricing(MappedValue, XMLMatrix):
     """
       Un element de tarif est un prix pour un ensemble de conditions d'application...
     """
