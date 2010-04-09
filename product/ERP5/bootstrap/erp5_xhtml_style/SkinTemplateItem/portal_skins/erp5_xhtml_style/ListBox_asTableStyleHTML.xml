@@ -333,36 +333,7 @@
                    onkeypress="submitFormOnEnter(event, this.form, \'ERP5Site_processAdvancedSearchBottom\');"/>\n
             <input class="button" value="Search" name="ERP5Site_processAdvancedSearchBottom:method" type="submit" />\n
           </div>\n
-\n
-          <!-- Copy / Paste buttons -->\n
-          <div class="bottom_actions" \n
-               tal:condition="python:not is_gadget_mode and show_select_column and not is_dialog_mode">\n
-\n
-            <button type="submit" class="cut_button" title="Cut"\n
-                    name="Folder_cut:method"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description" i18n:translate="" i18n:domain="ui">Cut</span>\n
-            </button>\n
-            <button type="submit" class="copy_button" title="Copy"\n
-                    name="Folder_copy:method"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description" i18n:translate="" i18n:domain="ui">Copy</span>\n
-            </button>\n
-            <button type="submit" class="paste_button" title="Paste"\n
-                    name="Folder_paste:method"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description" i18n:translate="" i18n:domain="ui">Paste</span>\n
-            </button>\n
-            <button type="submit" class="trash_button" title="Delete"\n
-                    name="Folder_deleteObjectList:method"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>\n
-            </button>\n
-          </div>\n
+        \n
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
