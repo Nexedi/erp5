@@ -179,6 +179,7 @@
                         <string>my_integer_field</string>
                         <string>my_report_box</string>
                         <string>your_captcha</string>
+                        <string>my_view_mode_module_listbox</string>
                       </list>
                     </value>
                 </item>
