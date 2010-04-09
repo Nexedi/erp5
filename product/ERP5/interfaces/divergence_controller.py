@@ -66,7 +66,7 @@ class IDivergenceController(Interface):
                 or a list thereof
     """
 
-  def getDivergenceList(self, movement=None):
+  def getDivergenceList(movement=None):
     """
     Returns a list of divergences of the movements provided
     in delivery_or_movement.

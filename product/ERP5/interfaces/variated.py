@@ -78,7 +78,7 @@ class IVariated(Interface):
     omit_individual_variation --
     """
 
-  def getVariationBaseCategoryItemList(self, display_id='title_or_id',
+  def getVariationBaseCategoryItemList(display_id='title_or_id',
         omit_optional_variation=0, omit_individual_variation=0):
     """
     returns a list of (base_category.id, base_category.display_id())
@@ -94,7 +94,7 @@ class IVariated(Interface):
     omit_individual_variation --
     """
 
-  def getVariationCategoryList(self, base_category_list=(),
+  def getVariationCategoryList(base_category_list=(),
         omit_optional_variation=0, omit_individual_variation=0):
     """
     returns a list or relative URLs which defines
@@ -238,7 +238,7 @@ class IVariated(Interface):
     """
 
   # Serialization API
-  def getVariationText(self):
+  def getVariationText():
     """
     returns a human readable, computer parsable,
     non ambiguous string representation of the variation

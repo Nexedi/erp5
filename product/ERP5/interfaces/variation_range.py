@@ -81,7 +81,7 @@ class IVariationRange(Interface):
     XXX - missing default display ID
     """
 
-  def getMatrixVariationRangeBaseCategoryList(self):
+  def getMatrixVariationRangeBaseCategoryList():
     """
     return possible variation dimensions for a matrix
 

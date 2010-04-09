@@ -89,6 +89,6 @@ class IBusinessProcess(IBusinessCompletable, IBusinessBuildable):
     cause of a root applied rule in the simulation
     """
 
-  def getTradePhaseList(self):
+  def getTradePhaseList():
     """Returns list of all trade_phase of this Business Process
     """

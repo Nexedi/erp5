@@ -37,8 +37,8 @@ class IRule(IMovementCollectionUpdater):
   Documents which implement IRule can be used to
   expand applied rules in ERP5 simulation.
   """
-  def constructNewAppliedRule(self, context, id=None, 
-                                    activate_kw=None, **kw):
+  def constructNewAppliedRule(context, id=None,
+                              activate_kw=None, **kw):
     """
     Create a new applied rule in the context.
 
