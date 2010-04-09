@@ -53,16 +53,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>\'\'\'Adds an accounting transaction line in an accounting transaction\n
-and redirects to the accounting transaction view which is easyier to\n
+            <value> <string>\'\'\'Adds accounting transaction lines in an accounting transaction\n
+and redirects to the accounting transaction view which is easier to\n
 use.\n
 \'\'\'\n
-Base_translateString = context.Base_translateString\n
-context.newContent(portal_type=portal_type)\n
-return context.Base_redirect(form_id, keep_items=dict(\n
-       portal_status_message=Base_translateString(\'Accounting Transaction Line added.\'),\n
-       selection_name=selection_name,\n
-       selection_index=selection_index))\n
+from Products.ERP5Type.Message import translateString\n
+request = container.REQUEST\n
+\n
+for i in range(line_count):\n
+  context.newContent(portal_type=portal_type)\n
+\n
+request.set(\'portal_status_message\',\n
+    translateString(\'Accounting Transaction Lines added.\'),)\n
+return getattr(context, form_id)()\n
 </string> </value>
         </item>
         <item>
@@ -73,7 +76,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>portal_type=\'Accounting Transaction Line\', selection_name=\'\', selection_index=0, form_id=\'view\'</string> </value>
+            <value> <string>form_id=\'view\', portal_type=\'Accounting Transaction Line\', line_count=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,20 +96,25 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>portal_type</string>
-                            <string>selection_name</string>
-                            <string>selection_index</string>
                             <string>form_id</string>
+                            <string>portal_type</string>
+                            <string>line_count</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>_getattr_</string>
+                            <string>container</string>
+                            <string>request</string>
+                            <string>_getiter_</string>
+                            <string>range</string>
+                            <string>i</string>
                             <string>context</string>
-                            <string>Base_translateString</string>
-                            <string>dict</string>
+                            <string>getattr</string>
                           </tuple>
                         </value>
                     </item>
@@ -119,10 +127,9 @@ return context.Base_redirect(form_id, keep_items=dict(\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <string>Accounting Transaction Line</string>
-                <string></string>
-                <int>0</int>
                 <string>view</string>
+                <string>Accounting Transaction Line</string>
+                <int>1</int>
               </tuple>
             </value>
         </item>
