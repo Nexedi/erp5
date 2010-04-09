@@ -82,6 +82,7 @@ class BusinessPath(Path, Predicate):
                     , PropertySheet.Chain
                     , PropertySheet.SortIndex
                     , PropertySheet.BusinessPath
+                    , PropertySheet.Reference
                     )
 
   # Declarative interfaces
