@@ -8,6 +8,7 @@ import getopt
 import unittest
 import shutil
 import errno
+import random
 
 import backportUnittest
 
@@ -79,21 +80,28 @@ Options:
                              for performance reasons. Provide list of documents
                              (delimited with comas) for which we want to force
                              indexing. This can only be for now 'portal_types'
-  
+
   --conversion_server_hostname=STRING
-                            Hostname used to connect to conversion server (Oood), 
-			    this value will stored at default preference. By default 
-			    localhost is used. 
+                             Hostname used to connect to conversion server (Oood),
+                             this value will stored at default preference.
+                             By default localhost is used.
 
   --conversion_server_port=STRING
-                            Port number used to connect to conversion server
-			    (Oood), the value will be stored at default preference. 
-			    By default 8008 is used.
+                             Port number used to connect to conversion server
+                             (Oood), the value will be stored at default preference.
+                             By default 8008 is used.
 
   --use_dummy_mail_host
-                            Replace the MailHost by DummyMailHost. This prevent
-			    the instance send emails. By default Original MailHost 
-			    is used.
+                             Replace the MailHost by DummyMailHost.
+                             This prevent the instance send emails.
+                             By default Original MailHost is used.
+
+  --random_activity_priority=[SEED]
+                             Force activities to have a random priority, to make
+                             random failures (due to bad activity dependencies)
+                             almost always reproducible. A random number
+                             generator with the specified seed (or a random one
+                             otherwise) is created for this purpose.
 
 """
 
@@ -515,12 +523,14 @@ def main():
         "enable_full_indexing=",
         "run_only=",
         "update_only=",
-        "use_dummy_mail_host", 
-        "update_business_templates"] )
+        "use_dummy_mail_host",
+        "update_business_templates",
+        "random_activity_priority=",
+        ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
     sys.exit(2)
-  
+
   if WIN:
     os.environ["erp5_tests_bt5_path"] = os.path.join(real_instance_home, 'bt5')
 
@@ -582,6 +592,9 @@ def main():
       os.environ["conversion_server_port"] = arg
     elif opt == "--use_dummy_mail_host":
       os.environ["use_dummy_mail_host"] = "1"
+    elif opt == "--random_activity_priority":
+      os.environ["random_activity_priority"] = arg or \
+        str(random.randrange(0, 1<<16))
 
   test_list = args
   if not test_list:

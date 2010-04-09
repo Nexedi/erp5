@@ -1331,5 +1331,17 @@ def fortify():
     dumps(value)
     CacheEntry__init__(self, value, *args, **kw)
   CacheEntry.__init__ = __init__
+  # randomize priorities of activities in a deterministic way
+  seed = os.environ.get("random_activity_priority")
+  if seed is not None:
+    ZopeTestCase._print("RNG seed for priorities of activities is %r\n" % seed)
+    rng = random.Random(seed)
+    from Products.CMFActivity.ActivityTool import Message
+    Message__init__ = Message.__init__
+    def __init__(self, obj, active_process, activity_kw, *args, **kw):
+      activity_kw['priority'] = rng.randint(-128, 127)
+      Message__init__(self, obj, active_process, activity_kw, *args, **kw)
+    Message.__init__ = __init__
+
 
 fortify()
