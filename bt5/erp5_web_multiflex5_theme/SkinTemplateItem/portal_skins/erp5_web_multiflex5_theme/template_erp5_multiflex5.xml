@@ -89,13 +89,14 @@
                            dummy python: request.set(\'dialog_mode\', dialog_mode);\n
                            dummy python: request.set(\'list_mode\', list_mode);\n
                            aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
-                                             [\'header\', \'navbar\', \'headline\', \'subcontent\', \'footer\']);\n
+                                             [\'header\', \'navbar\', \'headline\', \'subcontent\', \'footer\', \'bottom\']);\n
                            aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
                            header_area python:aggregate.get(\'header\', []);\n
                            navbar_area python:aggregate.get(\'navbar\', []);\n
                            headline_area python:aggregate.get(\'headline\', []);\n
                            subcontent_area python:aggregate.get(\'subcontent\', []);\n
                            footer_area python:aggregate.get(\'footer\', []);\n
+                           bottom_area python:aggregate.get(\'bottom\', []);\n
                            global header_title python:\'%s | %s\' % (here.getTranslatedTitleOrId(), website.getTranslatedTitleOrId());\n
                            global description python:here.getDescription() or here.getLayoutProperty(\'description\');\n
                            global subject_list python:here.getSubjectList() or here.getLayoutProperty(\'subject_list\') or [];\n
@@ -156,6 +157,15 @@
           <div id="transition_message" tal:condition="request/portal_status_message | nothing"\n
                tal:content="request/portal_status_message" />\n
           <tal:block metal:define-slot="main"/>\n
+\n
+          <!-- Bottom Area -->\n
+          <!-- Layout form rendering -->\n
+          <tal:block tal:condition="python: layout_form is not None">\n
+            <tal:block tal:repeat="aggregate python: [(\'bottom\', bottom_area)]">\n
+                <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+            </tal:block>\n
+          </tal:block>\n
+\n
         </div>\n
         <div class="corner-content-1col-bottom"></div>                       \n
       </div>           \n
