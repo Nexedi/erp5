@@ -143,9 +143,10 @@ class FormBoxValidator(Validator.Validator):
   """
   property_names = Validator.Validator.property_names
   message_names = Validator.Validator.message_names + \
-                  ['form_invalidated',]
+                  ['form_invalidated', 'required_not_found']
 
   form_invalidated = "Form invalidated."
+  required_not_found = 'Input is required but no input given.'
 
   def validate(self, field, key, REQUEST):
     # XXX hardcoded acquisition
