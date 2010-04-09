@@ -70,6 +70,7 @@
                 <string>headline</string>
                 <string>bottom gadget (Bottom Gadget)</string>
                 <string>right column gadget (Right Gadget)</string>
+                <string>bottom</string>
                 <string>footer</string>
               </list>
             </value>
@@ -78,6 +79,14 @@
             <key> <string>groups</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox_action_widget</string>
+                      </list>
+                    </value>
+                </item>
                 <item>
                     <key> <string>bottom gadget (Bottom Gadget)</string> </key>
                     <value>
