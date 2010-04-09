@@ -308,12 +308,11 @@ class XMLMatrix(Folder):
         asCellRange scripts should be unified if possible
       """
       script = self._getTypeBasedMethod('asCellRange', **kw)
-      try:
-        cell_range = script(base_id=base_id, matrixbox=0, **kw)
-      except UnboundLocalError:
+      if script is None:
         raise UnboundLocalError,\
-              "Did not find cell range script for portal type: %r" %\
-              self.getPortalType()
+               "Did not find cell range script for portal type: %r" %\
+               self.getPortalType()
+      cell_range = script(base_id=base_id, matrixbox=0, **kw)
       self._setCellRange(base_id=base_id, *cell_range)
 
     security.declareProtected(Permissions.ModifyPortalContent,
