@@ -13,13 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
                 <string>editable_columns</string>
-                <string>lines</string>
-                <string>list_method</string>
-                <string>selection_name</string>
-                <string>sort_columns</string>
                 <string>title</string>
+                <string>selection_name</string>
+                <string>list_method</string>
+                <string>sort_columns</string>
+                <string>columns</string>
               </list>
             </value>
         </item>
@@ -68,10 +67,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,27 +75,7 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>lines</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>sort_columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -110,12 +85,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
                 <item>
                     <key> <string>columns</string> </key>
                     <value>
@@ -168,11 +137,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

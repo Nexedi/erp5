@@ -302,6 +302,8 @@
                         <string>my_view_mode_preferred_supplier_role_list</string>
                         <string>my_view_mode_listbox_percent_price</string>
                         <string>my_view_mode_listbox_read_only_use_title_list</string>
+                        <string>my_view_mode_module_listbox</string>
+                        <string>my_view_mode_listbox</string>
                       </list>
                     </value>
                 </item>
