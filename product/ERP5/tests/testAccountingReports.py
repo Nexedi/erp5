@@ -2926,7 +2926,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 1',
           date=DateTime(2006, 2, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='AT 1',
+          Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
           debit=0, credit=100, running_total_price=-100, )
     
@@ -2935,7 +2935,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 2',
           date=DateTime(2006, 2, 1, 0, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference='AT 2',
+          Movement_getExplanationReference=None,
           Movement_getMirrorSectionTitle='Client 1',
           debit=200, credit=0, running_total_price=100, )
     

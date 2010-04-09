@@ -3300,7 +3300,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     self.portal.portal_workflow.doActionFor(invoice, 'confirm_action')
 
     # We could generate a better reference here.
-    self.assertEquals('SIT 1', invoice.getReference())
+    self.assertEquals('1', invoice.getReference())
 
   def test_16_ManuallyAddedMovements(self, quiet=quiet):
     """
