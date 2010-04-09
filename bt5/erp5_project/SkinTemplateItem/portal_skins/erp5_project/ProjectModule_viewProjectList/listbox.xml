@@ -117,11 +117,11 @@
                           <string>Supervisor</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Begin Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>End Date</string>
                         </tuple>
                         <tuple>
@@ -140,11 +140,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Begin Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>End Date</string>
                         </tuple>
                       </list>
@@ -190,11 +190,11 @@
                           <string>Supervisor</string>
                         </tuple>
                         <tuple>
-                          <string>start_date</string>
+                          <string>delivery.start_date</string>
                           <string>Begin Date</string>
                         </tuple>
                         <tuple>
-                          <string>stop_date</string>
+                          <string>delivery.stop_date</string>
                           <string>End Date</string>
                         </tuple>
                         <tuple>
