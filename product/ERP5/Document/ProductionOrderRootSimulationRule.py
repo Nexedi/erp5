@@ -44,9 +44,6 @@ class ProductionOrderRootSimulationRule(ProductionOrderRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  __implements = ( interfaces.IPredicate,
-                   interfaces.IRule )
-
   def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
       business_path, current_property_dict):
     """Order rule specific update dictionary"""

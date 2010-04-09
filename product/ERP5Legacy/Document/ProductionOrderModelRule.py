@@ -48,9 +48,6 @@ class ProductionOrderModelRule(TransformationModelRuleMixin, OrderRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  __implements = ( interfaces.IPredicate,
-                   interfaces.IRule )
-
   # Simulation workflow
   security.declareProtected(Permissions.AccessContentsInformation,
                             '_getExpandablePropertyDict')
