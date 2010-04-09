@@ -58,8 +58,7 @@
 \n
 object_type = context.getPortalType().replace(\' \', \'_\')\n
 parent_type = context.getParentValue().getPortalType().replace(\' \', \'_\')\n
-uppercase_list = [\'%c\' % x for x in range(ord(\'A\'), ord(\'Z\') + 1)]\n
-prefix = \'\'.join([x for x in object_type if x in uppercase_list])\n
+prefix = \'\'.join([x for x in object_type if x.isupper()])\n
 \n
 id_group = \'-\'.join((parent_type, object_type))\n
 \n
@@ -121,10 +120,7 @@ context.setReference(reference)\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>range</string>
-                            <string>ord</string>
                             <string>x</string>
-                            <string>uppercase_list</string>
                             <string>prefix</string>
                             <string>id_group</string>
                             <string>new_id</string>
