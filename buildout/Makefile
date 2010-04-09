@@ -6,6 +6,12 @@ endif
 ifndef $(PACKAGE_RELEASE)
 PACKAGE_RELEASE="None"
 endif
+ifndef $(PACKAGE_SOFTWARE_RELEASE)
+PACKAGE_SOFTWARE_RELEASE="None"
+endif
+ifndef $(PACKAGE_APPLICATION_RELEASE)
+PACKAGE_APPLICATION_RELEASE="None"
+endif
 
 software: bin/buildout
 	bin/buildout
@@ -41,7 +47,9 @@ rpm-appliance:
 	# set the correct version defined in the main buildout
 	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/buildout.cfg
 	# set the correct release
-	if [ $(PACKAGE_RELEASE) != 'None' ]; then sed -i "s,release = mdv2010.0,release = $(PACKAGE_RELEASE),g" rpmgen/buildout.cfg; fi
+	if [ $(PACKAGE_RELEASE) != 'None' ]; then sed -i "s,release = 001,release = $(PACKAGE_RELEASE),g" rpmgen/buildout.cfg; fi
+	if [ $(PACKAGE_APPLICATION_RELEASE) != 'None' ]; then sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/buildout.cfg; fi
+	if [ $(PACKAGE_SOFTWARE_RELEASE) != 'None' ]; then sed -i 's,release = 001, release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/buildout.cfg; fi
 	# it must use version defined in the main buildout
 	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt), `cat VERSION.txt`,g" rpmgen/Makefile
 	sudo helpers/mandriva2010.0.sh
