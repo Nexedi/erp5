@@ -1,3 +1,6 @@
+2010-04-09 kazuhiko
+* Allow Assignor to update validated Projects.
+
 2010-03-17 tatuya
 * Add a type based method so that Task document will find the applied rule.
 
