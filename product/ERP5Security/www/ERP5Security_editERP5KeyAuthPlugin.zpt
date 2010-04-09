@@ -1,0 +1,45 @@
+<h1 tal:replace="structure context/manage_page_header">PAGE HEADER</h1>
+<h2 tal:replace="structure here/manage_tabs"> TABS </h2>
+<h2 tal:define="form_title string:Edit ERP5 Key Authentification Plugin"
+    tal:replace="structure context/manage_form_title">FORM TITLE</h2>
+
+<p class="form-help">Please input the configuration for the radius host</p>
+
+<form action="manage_editKeyAuthPlugin" method="POST">
+
+<table tal:define="encryption_key request/encryption_key|context/encryption_key|string:;
+                   default_cookie_name request/default_cookie_name|context/default_cookie_name|string:;
+                   cookie_name request/cookie_name|context/cookie_name|string:;">
+
+<tr>
+   <td> Encryption Key </td>
+   <td>
+     <input type="text" name="encryption_key" value=""
+            tal:attributes="value encryption_key;" />
+   </td>
+</tr>
+<tr>
+   <td> Cookie Name </td>
+   <td>
+     <input type="text" name="cookie_name" value=""
+            tal:attributes="value cookie_name;" />
+   </td>
+</tr>
+<tr>
+   <td> Default Cookie Name </td>
+   <td>
+     <input type="text" name="default_cookie_name" value=""
+            tal:attributes="value default_cookie_name;" />
+   </td>
+</tr>
+<tr>
+   <td colspan="2"> 
+    <input type="submit" value="save"/>
+   </td>
+</tr>
+
+</table>
+
+</form>
+
+<h1 tal:replace="structure context/manage_page_footer">PAGE FOOTER</h1>

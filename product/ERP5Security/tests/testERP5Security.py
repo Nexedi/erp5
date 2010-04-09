@@ -619,6 +619,56 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                             basic='guest:guest')
     self.assertEqual(response.getStatus(), 401)
 
+  def testKeyAuthentication(self):
+    """
+     Make sure that we can grant security using a key.
+    """
+    # add key authentication PAS plugin
+    portal = self.portal
+    uf = portal.acl_users
+    uf.manage_addProduct['ERP5Security'].addERP5KeyAuthPlugin(
+         id="erp5_auth_key", \
+         title="ERP5 Auth key",\
+         encryption_key='fdgfhkfjhltylutyu',
+         cookie_name='__key',\
+         default_cookie_name='__ac')
+
+    erp5_auth_key_plugin = getattr(uf, "erp5_auth_key")
+    erp5_auth_key_plugin.manage_activateInterfaces(
+       interfaces=['IExtractionPlugin',
+                   'IAuthenticationPlugin',
+                   'ICredentialsUpdatePlugin',
+                   'ICredentialsResetPlugin'])
+    self.stepTic()
+
+    reference = 'UserReferenceTextWhichShouldBeHardToGeneratedInAnyHumanOrComputerLanguage'
+    loginable_person = self.getPersonModule().newContent(portal_type='Person',
+                                                         reference=reference,
+                                                         password='guest')
+    assignment = loginable_person.newContent(portal_type='Assignment',
+                                             function='another_subcat')
+    assignment.open()
+    self.stepTic()
+
+    # encrypt & decrypt works 
+    key = erp5_auth_key_plugin.encrypt(reference)
+    self.assertNotEquals(reference, key)
+    self.assertEquals(reference, erp5_auth_key_plugin.decrypt(key))
+    base_url = '%s/view' %portal.absolute_url(relative=1)
+
+    # without key we are Anonymous User so we should be redirected with proper HTML
+    # status code to login_form
+    response = self.publish(base_url)
+    self.assertEqual(response.getStatus(), 302)
+    self.assertTrue('location' in response.headers.keys())
+    self.assertTrue(response.headers['location'].endswith('login_form'))
+     
+    # view front page we should be logged in if we use authentication key
+    response = self.publish('%s?__ac_key=%s' %(base_url, key))
+    self.assertEqual(response.getStatus(), 200)
+    self.assertTrue(reference in response.getBody())
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestUserManagement))
