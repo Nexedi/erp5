@@ -186,7 +186,7 @@
                   <div id="km_left" \n
                        tal:attributes="class python:\'alone\' * is_right_area_empty;\n
                                        id python:is_front_layout * \'km_front\' or \'km_left\'">\n
-                    <tal:block tal:condition="python: layout_form is not None and not list_mode">\n
+                    <tal:block tal:condition="python: layout_form is not None">\n
                       <tal:block tal:repeat="aggregate python: [(\'headline\', headline_area)]">\n
                           <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
                       </tal:block>\n
