@@ -284,6 +284,19 @@ var addOnChangeEventHandler = function() {\n
               nodes[j].onchange = function() { changed = true; };\n
             }\n
           }\n
+        } \n
+        /* Listbox or MatrixBox */\n
+        if (nodes[j].nodeName == "DIV" && (\n
+            nodes[j].getAttribute("class") == "listbox" ||\n
+            nodes[j].getAttribute("class") == "MatrixContent")) {\n
+\n
+           inputs = nodes[j].getElementsByTagName(\'input\');\n
+           for (k=0; k<inputs.length; k++){\n
+             if (inputs[k].getAttribute("type") != "hidden" &&\n
+                 !inputs[k].onchange) {\n
+               inputs[k].onchange = function() { changed = true; };\n
+             }\n
+           }\n
         }\n
       }\n
     }\n
