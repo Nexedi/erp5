@@ -302,6 +302,41 @@ var addOnChangeEventHandler = function() {\n
     }\n
   }\n
 }\n
+/* \n
+* Under firefox, rewrite indented title categories using style definition.\n
+* This way we can select items by pressing the first letter of their name.\n
+*/\n
+var rewriteIndentedSelect = function() {\n
+  var master = document.getElementById("master");\n
+  selects = master.getElementsByTagName("select");\n
+  for (i=0; i<selects.length; i++) {\n
+    options = selects[i].childNodes;\n
+    for (j=0; j<options.length; j++) {\n
+      if (options[j].nodeName != "OPTION") {\n
+        continue;\n
+      }\n
+      text = options[j].innerHTML;\n
+      level = 0;\n
+      if (text.substring(0, 6) == \'&nbsp;\') {\n
+        for (idx=0; idx <= text.length; idx+=6) {\n
+          if (text.substring(idx, idx+6) == \'&nbsp;\') {\n
+            level += 1;\n
+          } else {\n
+            break;\n
+          }\n
+        }\n
+      }\n
+      level = level / 4.;\n
+      options[j].innerHTML = options[j].innerHTML.replace(/&nbsp;/g, "");\n
+      options[j].style.paddingLeft = level+"em";\n
+\n
+    }\n
+  }\n
+}\n
+\n
+\n
+if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
+  addLoadEvent(rewriteIndentedSelect);\n
 \n
 addLoadEvent(resizeIFrameOnLoad);\n
 addLoadEvent(addOnChangeEventHandler);\n
