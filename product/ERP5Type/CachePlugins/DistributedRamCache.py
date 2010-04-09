@@ -39,12 +39,11 @@ import zope.interface
 from base64 import encodestring
 
 try:
-  import memcache
   from Products.ERP5Type.Tool.MemcachedTool import MemcachedDict, SharedDict
 except ImportError:
   LOG('DistributedRamCache', 0, 'unable to import memcache')
 
-## global ditionary containing connection objects
+## global dictionary containing connection objects
 connection_pool = local()
 
 _MARKER = []
@@ -69,21 +68,29 @@ class DistributedRamCache(BaseCache):
     ## cache storage is a memcached server and no need to init it
     pass
 
-  def getCacheStorage(self, **kw):
-    ## if we use one connection object this causes 
-    ## "MemCached: while expecting 'STORED', got unexpected response 'END'"
-    ## messages in log files and can sometimes can block the thread. 
-    ## For the moment we create a new conn object for every thread.
+  def _getMemcachedDict(self):
+    """return a threading safe MemcachedDict instance
+    """
+    configuration_key = (self._servers, self._server_max_key_length,
+                         self._server_max_value_length,
+                         self._debug_level, self._key_prefix)
     try:
-      dictionary = connection_pool.memcached_dict
+      local_dict = connection_pool.local_dict
     except AttributeError:
-      dictionary = SharedDict(
-        MemcachedDict(self._servers.split('\n'),
+      local_dict = connection_pool.local_dict = {}
+    try:
+      dictionary = local_dict[configuration_key]
+    except KeyError:
+      dictionary = MemcachedDict(self._servers.split('\n'),
                       server_max_key_length=self._server_max_key_length,
-                      server_max_value_length=self._server_max_value_length),
-        prefix=self._key_prefix)
-      connection_pool.memcached_dict = dictionary
+                      server_max_value_length=self._server_max_value_length)
+      local_dict[configuration_key] = dictionary
     return dictionary
+
+  def getCacheStorage(self, **kw):
+    """Follow MemcachedTool.getMemcachedDict implementation
+    """
+    return SharedDict(self._getMemcachedDict(), prefix=self._key_prefix)
 
   def _getCacheId(self, cache_id, scope):
     return '%s_%s' % (scope, cache_id)

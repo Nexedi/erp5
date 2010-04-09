@@ -279,15 +279,19 @@ if memcache is not None:
         Create it if does not exist.
       """
       try:
-        dictionary = memcached_dict_pool.memcached_dict
+        local_dict = memcached_dict_pool.local_dict
       except AttributeError:
+        local_dict = memcached_dict_pool.local_dict = {}
+      try:
+        dictionary = local_dict[plugin_path]
+      except KeyError:
         memcached_plugin = self.restrictedTraverse(plugin_path, None)
         if memcached_plugin is None:
           raise ValueError, 'Memcached Plugin does not exists: %r' % (plugin_path,)
         dictionary = MemcachedDict((memcached_plugin.getUrlString(''),),
                    server_max_key_length=memcached_plugin.getServerMaxKeyLength(),
                    server_max_value_length=memcached_plugin.getServerMaxValueLength())
-        memcached_dict_pool.memcached_dict = dictionary
+        local_dict[plugin_path] = dictionary
       return dictionary
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getMemcachedDict')
