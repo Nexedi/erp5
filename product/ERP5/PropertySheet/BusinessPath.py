@@ -71,4 +71,4 @@ class BusinessPath:
             'mode'        : 'w' },
     )
     _categories = ( 'delivery_builder', 'order_builder', 'end_of',
-        'trade_phase' )
+        'trade_phase' , 'incoterm')
