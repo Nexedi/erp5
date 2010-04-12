@@ -45,7 +45,7 @@
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
 <tr><td rowspan="1" colspan="4">\n
-Test Simple view of an Accounting Transaction\n
+Test Simple view of an Accounting Transaction with Multiple partners\n
 </td></tr>\n
 <!-- XXX we do not need init method here ! -->\n
 </thead><tbody tal:define="init_method string:AccountingZuite_createAccountingTransactionList?add_draft_transactions:int=0">\n
