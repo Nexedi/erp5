@@ -35,6 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import to_utf8
 from Products.ERP5Type.Utils import getMessageIdWithContext
 from zLOG import LOG
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 # dependency order
 target_business_templates = (
@@ -287,6 +288,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     self.assertTrue(len(self.portal.portal_catalog(
                             translated_validation_state_title="En bon usage")))
 
+  @expectedFailure
   def test_07_NegatedQueryForTranslation(self, quiet=0, run=run_all_test):
     """
     Check that catalog search with a negated query parameter doesn't return
