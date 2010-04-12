@@ -53,14 +53,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal_preferences = context.portal_preferences\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
-preference = portal_preferences.getActivePreference()\n
-if preference is None or preference.getPreferenceState()!=\'enabled\':\n
-  p = portal_preferences.newContent(portal_type=\'Preference\')\n
+preference = portal.portal_preferences.getActivePreference()\n
+if preference is None\\\n
+    or preference.getPreferenceState() != \'enabled\'\\\n
+    or not portal.portal_membership.checkPermission(\n
+      \'Add portal content\', preference):\n
+  p = portal.portal_preferences.newContent(portal_type=\'Preference\')\n
   p.setTitle(\'Document Template Container\')\n
   p.enable()\n
   preference = p\n
+\n
+\n
+# if the preference already contains a template with the same name, making\n
+# another template will replace it\n
+document_title = context.getTitle()\n
+for existing_template in preference.contentValues(\n
+    portal_type=context.getPortalType()):\n
+  if existing_template.getTitle() == document_title:\n
+    preference.manage_delObjects(ids=[existing_template.getId()])\n
+    break\n
 \n
 parent = context.getParentValue()\n
 document_id = context.getId()\n
@@ -115,14 +128,16 @@ return context.Base_redirect(form_id,\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal_preferences</string>
+                            <string>portal</string>
                             <string>preference</string>
                             <string>None</string>
                             <string>p</string>
+                            <string>document_title</string>
+                            <string>_getiter_</string>
+                            <string>existing_template</string>
                             <string>parent</string>
                             <string>document_id</string>
                             <string>cp</string>
-                            <string>_getiter_</string>
                             <string>paste_info</string>
                             <string>getattr</string>
                             <string>_getitem_</string>
