@@ -331,7 +331,6 @@ def getMessageIdWithContext(msg_id, context, context_id):
 #Get translation of msg id
 def getTranslationStringWithContext(self, msg_id, context, context_id):
    portal = self.getPortalObject()
-   portal_workflow = portal.portal_workflow
    localizer = portal.Localizer
    selected_language = localizer.get_selected_language()
    msg_id_context = getMessageIdWithContext(msg_id, context, context_id)
