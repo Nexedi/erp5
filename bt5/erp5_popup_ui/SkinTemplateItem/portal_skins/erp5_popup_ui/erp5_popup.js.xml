@@ -68,7 +68,7 @@ jQuery(function() {\n
   // that a dialog is modal.\n
   var dialog = null;\n
 \n
-  var load = function(url, query) {\n
+  var load = function(url, query, method_name) {\n
     //dialog.empty();\n
 \n
     // Some bogus animations for having the user to feel easier.\n
@@ -84,7 +84,14 @@ jQuery(function() {\n
     jQuery(\'<div class="loading" style="background-color: #AAAAAA; opacity: 0.5; position: absolute; left: 0%; width: 100%; top: 0%; height: 100%; transparent;"><p class="loading" style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p></div>\').appendTo(dialog);\n
     animate();\n
 \n
-    jQuery.post(url, query, function(data, textStatus, XMLHttpRequest) {\n
+    // define  fallback values\n
+    if(method_name==undefined)\n
+      method_name = \'post\';\n
+    if(method_name==\'post\')\n
+      var caller = jQuery.post;\n
+    if(method_name==\'get\')\n
+      var caller = jQuery.get;\n
+    caller(url, query, function(data, textStatus, XMLHttpRequest) {\n
       if (textStatus == \'success\' || textStatus == \'notmodified\') {\n
         // Stop the animations above.\n
         dialog.empty();\n
@@ -94,6 +101,8 @@ jQuery(function() {\n
         // XXX Get rid of unneeded stuff in JavaScript for now.\n
         jQuery(\'.bars, .breadcrumb, .logged_in_as\', dialog).remove();\n
         jQuery(\'[id]\', dialog).removeAttr(\'id\');\n
+        // XXX Get rid of unneeded KM stuff in JavaScript for now.\n
+        jQuery(\'.wrapper\', dialog).remove();\n
 \n
         // Insert the same buttons as at the bottom into near the top.\n
         jQuery(\'div.bottom_actions\', dialog).clone().insertAfter(jQuery(\'div.dialog_box\', dialog)).css(\'margin-bottom\', \'1em\');\n
@@ -181,6 +190,24 @@ jQuery(function() {\n
     params[self.attr(\'name\')] = self.attr(\'value\');\n
     load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());\n
   });\n
+\n
+  // Make the Add gadget dialog work as pop-ups.\n
+  jQuery(\'a[id="add-gadgets"]\').click(function(event) {\n
+    event.preventDefault();\n
+    // Make sure that the dialog is present, and it is empty.\n
+    if (dialog != null) {\n
+      dialog.empty();\n
+      dialog.dialog(\'destroy\');\n
+    }\n
+    dialog = jQuery(\'<div id="dialog" />\').appendTo(\'body\');\n
+    dialog.dialog({ modal: true,\n
+                    width: jQuery(window).width() * 0.8,\n
+                    height: jQuery(window).height() * 0.8,\n
+                    title: jQuery(\'label\', this.parentNode.parentNode).text()\n
+    });\n
+    load(this.href, query={}, method_name=\'get\');\n
+  });\n
+\n
 });\n
 
 
