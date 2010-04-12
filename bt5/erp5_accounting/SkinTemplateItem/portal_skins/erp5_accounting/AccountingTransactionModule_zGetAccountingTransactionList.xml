@@ -663,7 +663,7 @@ destination_section_where_expression</string> </value>
         (\n
             SELECT\n
           <dtml-if stat>\n
-            stock.total_price, catalog.uid\n
+            stock.total_price, child.uid\n
           <dtml-elif count>\n
             catalog.uid\n
           <dtml-else>\n
@@ -851,7 +851,7 @@ UNION\n
         (\n
             SELECT\n
           <dtml-if stat>\n
-            stock.total_price, catalog.uid\n
+            stock.total_price, child.uid\n
           <dtml-elif count>\n
             catalog.uid\n
           <dtml-else>\n
@@ -1325,7 +1325,7 @@ UNION\n
         (\n
             SELECT\n
           <dtml-if stat>\n
-            stock.total_price, catalog.uid\n
+            stock.total_price, child.uid\n
           <dtml-elif count>\n
             catalog.uid\n
           <dtml-else>\n
@@ -1513,7 +1513,7 @@ UNION\n
         (\n
             SELECT\n
           <dtml-if stat>\n
-            stock.total_price, catalog.uid\n
+            stock.total_price, child.uid\n
           <dtml-elif count>\n
             catalog.uid\n
           <dtml-else>\n
