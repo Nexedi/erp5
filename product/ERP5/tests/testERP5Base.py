@@ -78,7 +78,6 @@ class TestERP5Base(ERP5TypeTestCase):
     self.portal_catalog    = self.getCatalogTool()
     self.portal_preferences = self.getPreferenceTool()
     self.createCategories()
-    # self.login_as_member()
 
   def beforeTearDown(self):
     transaction.abort()
@@ -106,12 +105,12 @@ class TestERP5Base(ERP5TypeTestCase):
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 
-  def login_as_member(self):
-    """Create a new member user and login.
+  def login_as_auditor(self):
+    """Create a new member user with Auditor role, and login
     """
     user_name = 'member_user'
     user_folder = self.getPortal().acl_users
-    user_folder._doAddUser(user_name, '', ['Member', 'Author', 'Assignor'], [])
+    user_folder._doAddUser(user_name, '', ['Member', 'Auditor'], [])
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
 
@@ -1432,6 +1431,41 @@ class TestERP5Base(ERP5TypeTestCase):
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
                                      translated_portal_type='Personne')])
     transaction.abort()
+
+  def test_Base_createCloneDocument(self):
+    module = self.portal.person_module
+    module.manage_permission('Add portal content', ['Member'], 0)
+    self.login_as_auditor()
+    person = module.newContent(portal_type='Person',)
+    self.assertEquals(1, len(module))
+    person.Base_createCloneDocument()
+    self.assertEquals(2, len(module))
+
+  def test_Base_createCloneDocument_document_in_document(self):
+    module = self.portal.person_module
+    module.manage_permission('Add portal content', ['Member'], 0)
+    self.login_as_auditor()
+    person = module.newContent(portal_type='Person',)
+    # An address is a document, it cannot contain anything
+    address = person.newContent(portal_type='Address')
+    self.assertEquals(0, len(address.allowedContentTypes()))
+
+    self.assertEquals(1, len(person))
+    address.Base_createCloneDocument()
+    self.assertEquals(2, len(person))
+
+  def test_Base_createCloneDocument_folder_in_document(self):
+    module = self.portal.person_module
+    module.manage_permission('Add portal content', ['Member'], 0)
+    self.login_as_auditor()
+    person = module.newContent(portal_type='Person',)
+    bank_account = person.newContent(portal_type='Bank Account')
+    # A bank account is a folder, it cannot contain other documents
+    self.assertNotEquals(0, len(bank_account.allowedContentTypes()))
+
+    self.assertEquals(1, len(person))
+    bank_account.Base_createCloneDocument()
+    self.assertEquals(2, len(person))
 
   def getWorkflowHistory(self, document, workflow_id):
     return self.portal.portal_workflow.getInfoFor(ob=document, name='history',
