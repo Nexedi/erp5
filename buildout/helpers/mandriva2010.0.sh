@@ -28,8 +28,9 @@ libldap-devel
 libncurses-devel
 libneon0.27-devel
 libopenssl-devel
-libtermcap-devel
+libreadline-devel
 libsasl2-devel
+libtermcap-devel
 libxml2-devel
 libxslt-devel
 make
