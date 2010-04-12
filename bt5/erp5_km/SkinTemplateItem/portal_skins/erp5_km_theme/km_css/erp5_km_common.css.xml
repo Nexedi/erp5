@@ -64,7 +64,7 @@
   display: none !important\n
 }\n
 \n
-fieldset#hidden_fieldset {\n
+fieldset.hidden_fieldset {\n
   display: none;\n
 }\n
 \n
