@@ -66,12 +66,22 @@ Test Accounting Transaction Template\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>label=Add Accounting Transaction Line</td>\n
+  <td>label=Add Accounting Transaction Lines</td>\n
 </tr>\n
 <tr>\n
-  <td>selectAndWait</td>\n
-  <td>select_action</td>\n
-  <td>label=Add Accounting Transaction Line</td>\n
+  <td>type</td>\n
+  <td>field_your_line_count</td>\n
+  <td>2</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertPortalStatusMessage</td>\n
+  <td>Accounting Transaction Lines added.</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
