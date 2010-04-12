@@ -78,8 +78,8 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
                         <string>your_active_pad_relative_url</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
