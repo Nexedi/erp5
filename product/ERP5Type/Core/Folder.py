@@ -29,12 +29,13 @@
 
 import transaction
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_self, aq_parent
+from Acquisition import aq_base, aq_self, aq_parent, aq_inner
 from OFS.History import Historical
 from OFS.Folder import Folder as OFSFolder
 import ExtensionClass
 
-from Products.CMFCore.utils import _getAuthenticatedUser
+from Products.CMFCore.utils import _getAuthenticatedUser, getToolByName
+from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Products.CMFCore.PortalFolder import ContentFilter
 
@@ -1506,6 +1507,41 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       if method is None:
         raise ValueError, "The method %s was not found" % method_id
       method(*args, **kw)
+
+  def _verifyObjectPaste(self, object, validate_src=1):
+    # To paste in an ERP5Type folder, we need to check 'Add permission'
+    # that might be defined on the sub object type information.
+    pt = getToolByName(self, 'portal_types')
+    subobject_type = pt.getTypeInfo(object)
+    if subobject_type is not None:
+      sm = getSecurityManager()
+      parent = aq_parent(aq_inner(object))
+
+      # check allowed content types
+      type_name = subobject_type.getId()
+      myType = pt.getTypeInfo(self)
+      if myType is not None and not myType.allowType(type_name):
+        raise ValueError('Disallowed subobject type: %s' % type_name)
+
+      # Check Add permission (ERPType addition)
+      add_permission = getattr(aq_base(subobject_type), 'permission', '')
+      if add_permission:
+        if not sm.checkPermission(add_permission, self):
+          raise AccessControl_Unauthorized, add_permission
+
+      # handle validate_src
+      if validate_src:
+        if not sm.validate(None, parent, None, object):
+          raise AccessControl_Unauthorized, object_id
+      if validate_src > 1:
+        if not sm.checkPermission(DeleteObjects, parent):
+          raise AccessControl_Unauthorized
+      # so far, everything OK
+      return
+    
+    # if we haven't been able to validate, pass through to parent class
+    Folder.inheritedAttribute(
+          '_verifyObjectPaste')(self, object, validate_src)
 
 
 # We browse all used class from btree and hbtree and set not implemented

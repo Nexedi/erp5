@@ -2564,7 +2564,16 @@ class TestPropertySheet:
 
       container.manage_permission('Manage portal', ['Anonymous'], 0)
       self.assertTrue(type_info in container.allowedContentTypes())
-      container.newContent(portal_type='Test Add Permission Document')
+      doc = container.newContent(portal_type='Test Add Permission Document')
+
+      # we can also clone such documents only with the permission registered on
+      # the type information
+      copy_data = container.manage_copyObjects([doc.getId()])
+      container.manage_pasteObjects(copy_data)
+
+      container.manage_permission('Manage portal', [], 0)
+      self.assertRaises(Unauthorized, container.manage_pasteObjects, copy_data)
+    
 
     def testPropertyListWithMonoValuedProperty(self):
       """
