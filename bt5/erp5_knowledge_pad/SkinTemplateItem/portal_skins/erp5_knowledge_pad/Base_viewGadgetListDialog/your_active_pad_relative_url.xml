@@ -307,7 +307,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: \'<input name="active_pad_relative_url" type="hidden" value="%s"/>\' %here.REQUEST.get(\'active_pad_relative_url\', \'niama\')
+python: \'<input name="active_pad_relative_url" type="hidden" value="%s"/>\' %here.REQUEST.get(\'active_pad_relative_url\', \'\')
 
 ]]></string> </value>
         </item>
