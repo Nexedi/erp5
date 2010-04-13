@@ -1532,9 +1532,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       # handle validate_src
       if validate_src:
         if not sm.validate(None, parent, None, object):
-          raise AccessControl_Unauthorized, object_id
+          raise AccessControl_Unauthorized, object.getId()
       if validate_src > 1:
-        if not sm.checkPermission(DeleteObjects, parent):
+        if not sm.checkPermission(Permissions.DeleteObjects, parent):
           raise AccessControl_Unauthorized
       # so far, everything OK
       return
