@@ -152,9 +152,11 @@ class BPMBuilder(Alarm):
     # We only search Simulation Movement - Luke do not know why...
     kw['portal_type'] = 'Simulation Movement' # blah!
 
-    select_method = getattr(self.getPortalObject(),
-        self.simulation_select_method_id or
-        self._getTypeBasedMethod('_selectDefaultMovement'))
+    method_id = self.getSimulationSelectMethodId()
+    if method_id:
+      select_method = getattr(self, method_id)
+    else:
+      select_method = self._getTypeBasedMethod('_selectDefaultMovement')
     input_movement_value_list = select_method(**kw)
 
     movement_dict = {}
