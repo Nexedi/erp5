@@ -2523,10 +2523,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
   # fix inheritance
   login = TestInvoiceMixin.login
 
-  def afterSetUp(self):
-    super(TestSaleInvoice, self).afterSetUp()
-    self.portal.portal_ids.setLastGeneratedId(0, id_group='Accounting_Transaction_Module-Sale_Invoice_Transaction')
-
   @UnrestrictedMethod
   def createCategories(self):
     TestPackingListMixin.createCategories(self)
