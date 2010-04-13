@@ -955,7 +955,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                                     'related_proxy_list': []}
       def iterate(document):
         for i in document.objectValues():
-          if i.meta_type == 'ERP5 Form' and '_view' in i.getId():
+          if i.meta_type == 'ERP5 Form':
             for field in i.objectValues():
               if field.meta_type == 'ProxyField':
                 key = "%s.%s" % (field.get_value('form_id'),
