@@ -53,8 +53,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.ERP5Site_redirect(cancel_url, **kw)\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+if \'?selection_name=\' in cancel_url or \'&selection_name=\' in cancel_url:\n
+  # if selection_name is already present in the cancel URL, we do not\n
+  # use erp5_xhtml_style script that would add it again.\n
+  return context.REQUEST.RESPONSE.redirect(cancel_url)\n
+return context.ERP5Site_redirect(cancel_url, **kw)\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -92,9 +100,9 @@
                           <tuple>
                             <string>cancel_url</string>
                             <string>kw</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
