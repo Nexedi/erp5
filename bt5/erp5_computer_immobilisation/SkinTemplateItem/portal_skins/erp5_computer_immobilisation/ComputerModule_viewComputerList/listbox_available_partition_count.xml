@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getRemainingQuantity()</string> </value>
+            <value> <string>python: cell.Computer_getRemainingQuantity()</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -13,9 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>default</string>
                 <string>editable</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -131,7 +131,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getRemainingQuantity|python:0</string> </value>
+            <value> <string>here/Computer_getRemainingQuantity|python:0</string> </value>
         </item>
       </dictionary>
     </pickle>
