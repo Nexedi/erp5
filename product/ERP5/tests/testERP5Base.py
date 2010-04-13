@@ -1460,7 +1460,7 @@ class TestERP5Base(ERP5TypeTestCase):
     self.login_as_auditor()
     person = module.newContent(portal_type='Person',)
     bank_account = person.newContent(portal_type='Bank Account')
-    # A bank account is a folder, it cannot contain other documents
+    # A bank account is a folder, it can contain other documents
     self.assertNotEquals(0, len(bank_account.allowedContentTypes()))
 
     self.assertEquals(1, len(person))
