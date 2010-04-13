@@ -979,6 +979,10 @@ form p,\n
 \n
 }\n
 \n
+/* ERP5 form listbox bottom */\n
+.bottom{\n
+  float:left;\n
+}\n
 \n
 .meta {\n
 \n
@@ -1245,14 +1249,10 @@ button.bt-med span img {\n
 \n
 \n
 .bottom_actions {\n
-\n
   float:right;\n
   width: auto;\n
   margin-right: 10px;\n
-\n
 }\n
-\n
-\n
 \n
 \n
 /* Login form  CSS */\n
