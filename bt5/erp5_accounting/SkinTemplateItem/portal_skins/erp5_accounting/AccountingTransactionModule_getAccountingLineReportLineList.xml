@@ -95,6 +95,19 @@ def getTitle(document):\n
     return document.getTitle()\n
   return \'\'\n
 \n
+accounting_currency_reference_cache = dict()\n
+def getAccountingCurrencyReference(section_relative_url):\n
+  try:\n
+    return accounting_currency_reference_cache[section_relative_url]\n
+  except KeyError:\n
+    reference = \'\'\n
+    if section_relative_url:\n
+      section = portal.restrictedTraverse(section_relative_url, None)\n
+      if section is not None:\n
+        reference = section.getProperty(\'price_currency_reference\')\n
+    accounting_currency_reference_cache[section_relative_url] = reference\n
+    return reference\n
+\n
 \n
 portal_type = context.getPortalAccountingMovementTypeList()\n
 for delivery in delivery_list:\n
@@ -119,6 +132,11 @@ for delivery in delivery_list:\n
         date=movement.getStartDate(),\n
         debit=movement.getSourceInventoriatedTotalAssetDebit(),\n
         credit=movement.getSourceInventoriatedTotalAssetCredit(),\n
+        currency=getAccountingCurrencyReference(movement.getSourceSection()),\n
+        debit_quantity=movement.getSourceDebit(),\n
+        credit_quantity=movement.getSourceCredit(),\n
+        resource=movement.getResourceReference(),\n
+        quantity_precision=movement.getQuantityPrecisionFromResource(movement.getResource()),\n
         translated_portal_type=movement.getTranslatedPortalType(),\n
         parent_translated_portal_type=delivery.getTranslatedPortalType(),\n
         translated_simulation_state_title=movement.getTranslatedSimulationStateTitle(),))\n
@@ -138,6 +156,11 @@ for delivery in delivery_list:\n
         date=movement.getStopDate(),\n
         debit=movement.getDestinationInventoriatedTotalAssetDebit(),\n
         credit=movement.getDestinationInventoriatedTotalAssetCredit(),\n
+        currency=getAccountingCurrencyReference(movement.getDestinationSection()),\n
+        debit_quantity=movement.getDestinationDebit(),\n
+        credit_quantity=movement.getDestinationCredit(),\n
+        resource=movement.getResourceReference(),\n
+        quantity_precision=movement.getQuantityPrecisionFromResource(movement.getResource()),\n
         translated_portal_type=movement.getTranslatedPortalType(),\n
         parent_translated_portal_type=delivery.getTranslatedPortalType(),\n
         translated_simulation_state_title=movement.getTranslatedSimulationStateTitle(),))\n
@@ -203,6 +226,8 @@ return line_list\n
                             <string>account_reference_cache</string>
                             <string>getAccountReference</string>
                             <string>getTitle</string>
+                            <string>accounting_currency_reference_cache</string>
+                            <string>getAccountingCurrencyReference</string>
                             <string>portal_type</string>
                             <string>delivery</string>
                             <string>is_source</string>

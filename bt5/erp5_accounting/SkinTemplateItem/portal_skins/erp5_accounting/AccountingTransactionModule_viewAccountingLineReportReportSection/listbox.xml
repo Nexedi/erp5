@@ -135,6 +135,22 @@
                           <string>Credit</string>
                         </tuple>
                         <tuple>
+                          <string>currency</string>
+                          <string>Accounting Currency</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit_quantity</string>
+                          <string>Original Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit_quantity</string>
+                          <string>Original Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>resource</string>
+                          <string>Original Currency</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_portal_type</string>
                           <string>Line Type</string>
                         </tuple>
@@ -164,6 +180,14 @@
                         <tuple>
                           <string>credit</string>
                           <string>Credit</string>
+                        </tuple>
+                        <tuple>
+                          <string>debit_quantity</string>
+                          <string>Original Debit</string>
+                        </tuple>
+                        <tuple>
+                          <string>credit_quantity</string>
+                          <string>Original Credit</string>
                         </tuple>
                       </list>
                     </value>
