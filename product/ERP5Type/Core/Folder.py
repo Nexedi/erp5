@@ -29,12 +29,11 @@
 
 import transaction
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base, aq_self, aq_parent, aq_inner
+from Acquisition import aq_base, aq_parent, aq_inner
 from OFS.History import Historical
-from OFS.Folder import Folder as OFSFolder
 import ExtensionClass
 
-from Products.CMFCore.utils import _getAuthenticatedUser, getToolByName
+from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Products.CMFCore.PortalFolder import ContentFilter
@@ -43,7 +42,6 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.CopySupport import CopyContainer
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLExportImport import Folder_asXML
-from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type.WebDAVSupport import Folder as WebDAVFolder
 
@@ -72,14 +70,13 @@ except ImportError:
 
 from AccessControl import getSecurityManager
 from Products.ERP5Type import Permissions
-from MethodObject import Method
 from DateTime import DateTime
 from random import randint
 
 
 import os
 
-from zLOG import LOG, PROBLEM, WARNING
+from zLOG import LOG, WARNING
 import warnings
 
 # variable to inform about migration process

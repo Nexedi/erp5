@@ -30,7 +30,6 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import PropertySheet
-from Products.ERP5Type.PropertySheet.MemcachedPlugin import MemcachedPlugin
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Tool.MemcachedTool import memcached_dict_pool
 

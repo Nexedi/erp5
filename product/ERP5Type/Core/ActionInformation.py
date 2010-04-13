@@ -32,7 +32,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base
 from Products.CMFCore.Expression import Expression
-from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
+from Products.ERP5Type import interfaces, Permissions, PropertySheet
 from Products.ERP5Type.Permissions import AccessContentsInformation
 from Products.ERP5Type.XMLObject import XMLObject
 

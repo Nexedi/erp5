@@ -32,9 +32,7 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import InitializeClass
-from OFS.SimpleItem import SimpleItem
 
-from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.Expression import Expression
 
 from Products.ERP5Type import interfaces, Permissions, PropertySheet
