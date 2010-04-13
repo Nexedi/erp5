@@ -179,6 +179,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
                      'destination_section',
                      'source',
                      'source_function',
+                     'destination',
                      'destination_function',
                      'source_project',
                      'destination_project',
