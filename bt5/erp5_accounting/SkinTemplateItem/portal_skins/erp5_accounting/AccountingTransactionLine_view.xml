@@ -85,8 +85,8 @@
                       <list>
                         <string>my_source_debit</string>
                         <string>my_source_title</string>
-                        <string>my_source_payment</string>
                         <string>my_source_section_title</string>
+                        <string>my_source_payment</string>
                       </list>
                     </value>
                 </item>
