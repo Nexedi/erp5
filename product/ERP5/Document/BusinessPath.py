@@ -370,19 +370,6 @@ class BusinessPath(Path, Predicate):
         portal_type='Simulation Movement'))
     return movement_list
 
-  # IPredicate implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'test')
-  def test(self, *args, **kw):
-    """
-    Returns whether the business path is used or not by a given movement context.
-    If test method is not defined in a business path, returns True
-    """
-    if not self.getTestMethodId():
-      return True
-    test_method_id = self.getTestMethodId()
-    method = getattr(self, test_method_id)
-    return method(*args, **kw)
-
   # IBusinessPath implementation
   security.declareProtected(Permissions.AccessContentsInformation,
       'getRelatedSimulationMovementValueList')
