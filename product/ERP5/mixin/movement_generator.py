@@ -128,6 +128,6 @@ class MovementGeneratorMixin:
       property_dict['stop_date'] = movement_stop_date
 
     # save a relation to business path
-    property_dict['causality_list'] = [business_path.getRelativeUrl()]
+    property_dict['causality'] = [business_path.getRelativeUrl()]
 
     return property_dict
