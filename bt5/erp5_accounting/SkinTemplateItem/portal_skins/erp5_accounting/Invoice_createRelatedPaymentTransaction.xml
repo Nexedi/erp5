@@ -98,6 +98,10 @@ related_payment = portal.accounting_module.newContent(\n
                                               \'utf8\', \'repr\')))),\n
   source_section=context.getSourceSection(),\n
   destination_section=context.getDestinationSection(),\n
+  source_project=context.getSourceProject(),\n
+  destination_project=context.getDestinationProject(),\n
+  source_function=context.getSourceFunction(),\n
+  destination_function=context.getDestinationFunction(),\n
   stop_date=date,\n
   start_date=date,\n
   resource=context.getResource(),\n
