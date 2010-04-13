@@ -67,7 +67,7 @@ Test quick search on the project module.\n
 <tr>\n
   <td>type</td>\n
   <td>//tr[@id="listbox_search_line"]/td[6]//input</td>\n
-  <td>&gt;==2010/02/01</td>\n
+  <td>&gt;=2010/02/01</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
