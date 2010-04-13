@@ -57,8 +57,7 @@
 \n
 If the section is an organisation, returns this organisation\'s accounting\n
 currency.\n
-If the section is a category, if the category have a mapping organisation,\n
-return this organisation\'s currency.\n
+If the section is a category, find the most suitable currency.\n
 """\n
 \n
 def getCurrencyForSection(section_url):\n
@@ -69,18 +68,30 @@ def getCurrencyForSection(section_url):\n
     return section.getPriceCurrency()\n
 \n
   if section.getPortalType() == \'Category\':\n
+    # first get the strict one\n
     member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                                                   strict_membership=True,\n
                                                    checked_permission=\'View\')\n
-    if len(member_list) == 1 and member_list[0].getPriceCurrency():\n
-      return member_list[0].getPriceCurrency()\n
+    for member in member_list:\n
+      currency = member.getPriceCurrency()\n
+      if currency:\n
+        return currency\n
+\n
+    # then from mapping category\n
     mapping = section.getMappingValue(portal_type=\'Organisation\')\n
     if mapping is not None and mapping.getPriceCurrency():\n
       return mapping.getPriceCurrency()\n
-    for member in member_list:\n
-      if member.getPriceCurrency():\n
-        return member.getPriceCurrency()\n
-  # nothing found ... returns the currency from preferences.\n
-  return portal.portal_preferences.getPreferredAccountingTransactionCurrency()\n
+\n
+    # otherwise, lookup all groups top down until we find one currency\n
+    for subsection in section.getCategoryChildValueList(local_sort_id=\'int_index\'):\n
+      member_list = section.getGroupRelatedValueList(portal_type=\'Organisation\',\n
+                                        strict_membership=True,\n
+                                        checked_permission=\'View\')\n
+      for member in member_list:\n
+        currency = member.getPriceCurrency()\n
+        if currency:\n
+          return currency\n
+\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 getCurrencyForSection = CachingMethod(getCurrencyForSection,\n
