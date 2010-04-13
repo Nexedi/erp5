@@ -96,13 +96,10 @@ class MovementGeneratorMixin:
       return property_dict
 
     # Arrow
-    for base_category in \
-        business_path.getSourceArrowBaseCategoryList() +\
-        business_path.getDestinationArrowBaseCategoryList():
-      category_url = business_path.getDefaultAcquiredCategoryMembership(
-          base_category, context=movement)
-      if category_url not in ['', None]:
-        property_dict[base_category] = [category_url]
+    for base_category, category_url_list in \
+            business_path.getArrowCategoryDict(context=movement).iteritems():
+      property_dict[base_category] = category_url_list
+
     # Amount
     if business_path.getQuantity():
       property_dict['quantity'] = business_path.getQuantity()

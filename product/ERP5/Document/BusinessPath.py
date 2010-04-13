@@ -141,6 +141,22 @@ class BusinessPath(Path, Predicate):
             #'destination_transport'
             )
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getArrowCategoryDict')
+  def getArrowCategoryDict(self, context=None, **kw):
+    result = {}
+    dynamic_category_list = self._getDynamicCategoryList(context)
+    for base_category in self.getSourceArrowBaseCategoryList() +\
+            self.getDestinationArrowBaseCategoryList():
+      category_url_list = Path._getAcquiredCategoryMembershipList(
+        self, base_category, **kw)
+      if len(category_url_list) == 0 and context is not None:
+        category_url_list = self._filterCategoryList(dynamic_category_list,
+                                                     base_category, **kw)
+      if len(category_url_list) > 0:
+        result[base_category] = category_url_list
+    return result
+
   # ICategoryAccessProvider overridden methods
   def _getCategoryMembershipList(self, category, **kw):
     """

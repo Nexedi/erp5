@@ -221,26 +221,20 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         if len(business_path_list) == 1:
           business_path = business_path_list[0]
           property_dict={
-            'source_value_list': business_path.getSourceValueList(context=context),
-            'destination_value_list':
-            business_path.getDestinationValueList(context=context),
-            'source_section_value_list':
-            business_path.getSourceSectionValueList(context=context),
-            'destination_section_value_list':
-            business_path.getDestinationSectionValueList(context=context),
-            'source_decision_value_list':
-            business_path.getSourceDecisionValueList(context=context),
-            'source_administration_value_list':
-            business_path.getSourceAdministrationValueList(context=context),
-            'source_payment_value_list':
-            business_path.getSourcePaymentValueList(context=context),
-            'destination_decision_value_list':
-            business_path.getDestinationDecisionValueList(context=context),
-            'destination_administration_value_list':
-            business_path.getDestinationAdministrationValueList(context=context),
-            'destination_payment_value_list':
-            business_path.getDestinationPaymentValueList(context=context)
+            'source':context.getSourceList(),
+            'destination':context.getDestinationList(),
+            'source_section':context.getSourceSectionList(),
+            'destination_section':context.getDestinationSectionList(),
+            'source_decision':context.getSourceDecisionList(),
+            'source_administration':context.getSourceAdministrationList(),
+            'source_payment':context.getSourcePaymentList(),
+            'destination_decision':context.getDestinationDecisionList(),
+            'destination_administration':
+            context.getDestinationAdministrationList(),
+            'destination_payment':context.getDestinationPaymentList()
           }
+          property_dict.update(
+            business_path.getArrowCategoryDict(context=context))
 
       common_params = {
         'title':self.getTitle(),
