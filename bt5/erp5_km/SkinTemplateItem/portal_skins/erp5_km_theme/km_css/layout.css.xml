@@ -982,6 +982,7 @@ form p,\n
 /* ERP5 form listbox bottom */\n
 .bottom{\n
   float:left;\n
+  width:100%;\n
 }\n
 \n
 .meta {\n
@@ -1236,8 +1237,8 @@ button.bt-med span img {\n
 #km_left {\n
 \n
   padding-top: 15px;\n
-\tfloat: left;\n
-\twidth:75%;\n
+  float: left;\n
+  width:75%;\n
 \n
 }\n
 \n
@@ -1252,8 +1253,8 @@ button.bt-med span img {\n
   float:right;\n
   width: auto;\n
   margin-right: 10px;\n
+  margin-top: 0.5em;\n
 }\n
-\n
 \n
 /* Login form  CSS */\n
 fieldset#fieldset_left_registration, \n
