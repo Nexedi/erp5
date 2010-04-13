@@ -105,6 +105,7 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
       return movement_list
 
     context_movement = context.getParentValue()
+    rule = context.getSpecialiseValue()
     for amount in trade_condition.getAggregatedAmountList(context_movement):
       # business path specific
       business_path_list = business_process.getPathValueList(
@@ -117,7 +118,8 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
 
       business_path = business_path_list[0]
 
-      kw = self._getPropertyAndCategoryList(context_movement, business_path)
+      kw = self._getPropertyAndCategoryList(context_movement, business_path,
+                                            rule)
 
       # rule specific
       kw['price'] = amount.getPrice() or amount.getEfficiency()
