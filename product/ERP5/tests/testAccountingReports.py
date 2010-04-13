@@ -161,6 +161,9 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                                self.portal.accounting_module,
                                'AccountingTransactionModule_viewJournalReport')
     self.assertEquals(1, len(report_section_list))
+    # currency is present in the report
+    self.assertEquals('currency_module/euro', self.portal.
+     AccountingTransactionModule_viewJournalReport.your_currency.get_value('default'))
     
     # precision is set in the REQUEST (so that fields know how to format)
     precision = self.portal.REQUEST.get('precision')
@@ -674,6 +677,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # precision is set in the REQUEST (so that fields know how to format)
     precision = self.portal.REQUEST.get('precision')
     self.assertEquals(2, precision)
+
+    # currency is present in the report
+    self.assertEquals('currency_module/euro', self.portal.
+        AccountModule_viewAccountStatementReport.your_currency.get_value('default'))
     
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
@@ -1743,6 +1750,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
     
+    # currency is present in the report
+    self.assertEquals('currency_module/euro', self.portal.
+        AccountModule_viewTrialBalanceReport.your_currency.get_value('default'))
+
     # all accounts are present
     self.assertEquals(
           len(self.portal.account_module.contentValues(portal_type='Account')),
@@ -2700,6 +2711,10 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           if field.getId() != 'listbox':
             self.fail('Field %s should not be visible' % field.getId())
     report_section.popReport(self.portal)
+
+    # currency is present in the report
+    self.assertEquals('currency_module/euro', self.portal.
+        AccountModule_viewGeneralLedgerReport.your_currency.get_value('default'))
     
     # report layout
     self.assertEquals(['Movement_getSpecificReference',
@@ -3038,6 +3053,9 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEquals(1, len(report_section_list))
     self.assertEquals(report_section_list[0].getTitle(),
                       self.organisation_module.client_1.getTitle())
+    # currency is present in the report
+    self.assertEquals('currency_module/euro', self.portal.
+        AccountModule_viewOtherPartiesReport.your_currency.get_value('default'))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
