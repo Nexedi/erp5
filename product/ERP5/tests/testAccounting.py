@@ -65,9 +65,9 @@ class AccountingTestCase(ERP5TypeTestCase):
   Like in erp5_accounting_ui_test, the testing environment is made of:
 
   Currencies:
-    * EUR with precision 2
-    * USD with precision 2
-    * JPY with precision 0
+    * currency_module/euro (EUR) with precision 2
+    * currency_module/usd (USD) with precision 2
+    * currency_module/yen (JPY) with precision 0
 
   Regions:
     * region/europe/west/france
@@ -2448,6 +2448,38 @@ class TestTransactions(AccountingTestCase):
                                   payment_mode='check',
                                   batch_mode=1)
     self._checkRelatedSalePayment(invoice, payment, payment_node, 100)
+
+  def test_Invoice_createRelatedPaymentTransactionDifferentCurrency(self):
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               resource_value=self.portal.currency_module.usd,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100,
+                           source_asset_debit=150),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100,
+                           source_asset_credit=150),))
+    
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    self.assertEquals(self.portal.currency_module.usd,
+                      payment.getResourceValue())
+    line_list = payment.getMovementList()
+    self.assertEquals(2, len(line_list))
+    for line in line_list:
+      if line.getSourceValue() == self.account_module.receivable:
+        self.assertEquals(100, line.getSourceDebit())
+        # there's no asset price
+        self.assertEquals(None, line.getSourceTotalAssetPrice())
+      else:
+        self.assertEquals(self.account_module.bank, line.getSourceValue())
+        self.assertEquals(100, line.getSourceCredit())
+        self.assertEquals(None, line.getSourceTotalAssetPrice())
+      
 
   # tests for Grouping References
   def test_GroupingReferenceResetedOnCopyPaste(self):
