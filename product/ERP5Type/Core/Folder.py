@@ -270,8 +270,7 @@ class FolderMixIn(ExtensionClass.Base):
       Search the content of a folder by calling
       the portal_catalog.
     """
-    if not kw.has_key('parent_uid'): #WHY ????
-      kw['parent_uid'] = self.getUid()
+    kw['parent_uid'] = self.getUid()
 
     # Make sure that if we use parent base category
     # We do not have conflicting parent uid values
@@ -303,8 +302,7 @@ class FolderMixIn(ExtensionClass.Base):
       Search the content of a folder by calling
       the portal_catalog.
     """
-    if not kw.has_key('parent_uid'): #WHY ????
-      kw['parent_uid'] = self.getUid()
+    kw['parent_uid'] = self.getUid()
 
     # Make sure that if we use parent base category
     # We do not have conflicting parent uid values
