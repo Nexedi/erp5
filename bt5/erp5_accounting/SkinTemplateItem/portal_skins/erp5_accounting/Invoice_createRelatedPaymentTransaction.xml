@@ -79,7 +79,8 @@ portal.portal_selections.setSelectionParamsFor(\n
 # Calculate the payable/receivable quantity, using\n
 # Invoice_getRemainingTotalPayablePrice script.\n
 total_payable_price_details = \\\n
-          context.Invoice_getRemainingTotalPayablePrice(detailed=True)\n
+          context.Invoice_getRemainingTotalPayablePrice(detailed=True,\n
+                                                        quantity=True)\n
 \n
 # if there\'s nothing more to pay, don\'t create an empty transaction\n
 if sum(total_payable_price_details.values()) == 0:\n
