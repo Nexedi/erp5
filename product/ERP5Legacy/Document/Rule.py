@@ -566,8 +566,6 @@ class Rule(Predicate, XMLObject):
           base_category, context=movement)
       if category_url not in ['', None]:
         property_dict['%s_list' % base_category] = [category_url]
-      else:
-        property_dict['%s_list' % base_category] = []
 
     # Amount
     property_dict['quantity'] = business_path.getExpectedQuantity(movement)

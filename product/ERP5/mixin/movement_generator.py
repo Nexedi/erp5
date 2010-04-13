@@ -103,8 +103,6 @@ class MovementGeneratorMixin:
           base_category, context=movement)
       if category_url not in ['', None]:
         property_dict[base_category] = [category_url]
-      else:
-        property_dict[base_category] = []
     # Amount
     if business_path.getQuantity():
       property_dict['quantity'] = business_path.getQuantity()
