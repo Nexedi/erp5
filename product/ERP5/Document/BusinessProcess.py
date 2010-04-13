@@ -128,7 +128,8 @@ class BusinessProcess(Path, XMLObject):
       Returns the list of Business Path which are ready to 
       be built
     """
-    return filter(lambda x:x.isBuildable(explanation), self.getPathValueList())
+    return filter(lambda x:x.isBuildable(explanation),
+                  self.objectValues(portal_type='Business Path'))
 
   def getCompletedStateValueList(self, explanation):
     """
