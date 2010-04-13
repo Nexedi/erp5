@@ -519,8 +519,6 @@ class Movement(XMLObject, Amount, CompositionMixin):
         return 1
     else:
       # conditional BPM enabled frozen state check
-      LOG("Movement.isFrozen", WARNING, "%s is using BPM experimental "
-          "evaluation" % self.getPath())
       # BPM dynamic configuration
       if self.getSimulationState() in business_path.getFrozenStateList():
         return True
