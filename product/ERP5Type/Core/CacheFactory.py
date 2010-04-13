@@ -30,6 +30,8 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.PropertySheet.CacheFactory import CacheFactory
+
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Cache import CachingMethod
@@ -56,7 +58,7 @@ class CacheFactory(XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
                     , PropertySheet.Folder
-                    , PropertySheet.CacheFactory
+                    , CacheFactory
                     )
 
 
