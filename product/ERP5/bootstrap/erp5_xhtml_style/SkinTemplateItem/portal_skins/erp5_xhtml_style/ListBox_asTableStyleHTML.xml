@@ -182,7 +182,7 @@
                 </span>\n
             </caption>\n
 \n
-              <tr class ="thead">\n
+              <tr class ="thead listbox_search_line">\n
                 <td tal:condition="python:not is_gadget_mode and show_select_column"\n
                     class="Data" style="width: 50px; text-align: center; vertical-align: middle; white-space: nowrap;">\n
                   <input id="listbox_check_all" type="image"\n
@@ -240,7 +240,7 @@
                   </tal:block>\n
                 </tal:block>\n
               </tr>\n
-              <tr class="thead" tal:condition="show_search_line">\n
+              <tr class="thead listbox_search_line" tal:condition="show_search_line">\n
                 <td tal:condition="python: show_select_column and show_search_line and not is_gadget_mode"\n
                     class="Data" style="width: 50px; text-align: center; vertical-align: middle">\n
                   <input id="listbox_select" type="image"\n
