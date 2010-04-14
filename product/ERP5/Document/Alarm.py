@@ -303,7 +303,7 @@ class Alarm(XMLObject, PeriodicityMixin):
         # later when creating an active process for example
         # We do some inspection to keep compatibility
         # (because fixit and tag were not set previously)
-        tag = str(self.portal_ids.generateNewLengthId(id_group=self.getId()))
+        tag = str(self.portal_ids.generateNewId(id_generator='uid', id_group=self.getId()))
         method = getattr(self, method_id)
         func_code = method.func_code
         try:

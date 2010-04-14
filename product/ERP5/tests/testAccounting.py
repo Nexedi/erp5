@@ -2092,13 +2092,7 @@ class TestTransactions(AccountingTestCase):
   """
   def _resetIdGenerator(self):
     # clear all existing ids in portal ids
-    if hasattr(self.portal.portal_ids, 'dict_ids'):
-      self.portal.portal_ids.dict_ids.clear()
-    if hasattr(self.portal.portal_ids, 'dict_length_ids'):
-      self.portal.portal_ids.dict_length_ids.clear()
-      self.portal.erp5_sql_transactionless_connection.manage_test(
-        """DELETE FROM portal_ids WHERE id_group LIKE '%accounting%'""")
-      self.portal.portal_catalog.getSQLCatalog().z_portal_ids_commit()
+      self.portal.portal_ids.clearGenerator(all=True)
   
   def test_SourceDestinationReference(self):
     # Check that source reference and destination reference are filled

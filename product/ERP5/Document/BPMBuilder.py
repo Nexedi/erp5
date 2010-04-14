@@ -136,7 +136,7 @@ class BPMBuilder(Alarm):
     # able to notify the user after all processes are ended
     # Tag is generated from portal_ids so that it can be retrieved
     # later when creating an active process for example
-    tag = str(self.portal_ids.generateNewLengthId(id_group=self.getId()))
+    tag = str(self.portal_ids.generateNewId(id_generator='uid', id_group=self.getId()))
     self.activate(tag=tag).build(tag=tag)
 
     if self.isAlarmNotificationMode():

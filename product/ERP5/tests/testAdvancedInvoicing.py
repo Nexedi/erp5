@@ -393,7 +393,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
 
   def afterSetUp(self):
     super(TestAdvancedSaleInvoice, self).afterSetUp()
-    self.portal.portal_ids.setLastGeneratedId(0, id_group='Accounting_Transaction_Module-Sale_Invoice_Transaction')
+    self.portal.portal_ids.clearGenerator(all=True)
 
   def stepCheckInvoicesAndTransactionsConsistency(self, sequence=None, sequence_list=None,
                                                   **kw):
