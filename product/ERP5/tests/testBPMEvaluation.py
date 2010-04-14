@@ -156,6 +156,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
   def _createDeliverySimulationRule(self):
     rule = self.rule_tool.newContent(portal_type='Delivery Simulation Rule',
       reference='default_delivering_rule',
+      trade_phase='default/delivery',
       test_method_id = ('SimulationMovement_testDeliverySimulationRule',)
       )
     # matching providers
