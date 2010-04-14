@@ -143,6 +143,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
   def _createOrderRootSimulationRule(self):
     rule = self._createTradeRootSimulationRule(portal_type='Order Root Simulation Rule',
+        trade_phase='default/order',                                       
         reference='default_order_rule')
     rule.validate()
     transaction.commit()
@@ -504,6 +505,14 @@ class TestBPMEvaluationDefaultProcessMixin:
     self.business_process = self.createBusinessProcess(title=self.id(),
         referential_date='start_date')
     self._createBusinessStateList()
+
+    self.order_path = self.createBusinessPath(self.business_process,
+        successor_value=self.ordered_state,
+        trade_phase='default/order',
+        deliverable=1,
+        completed_state_list=['confirmed'],
+        frozen_state_list=['confirmed'],
+        )
 
     self.delivery_path = self.createBusinessPath(self.business_process,
         predecessor_value=self.ordered_state,
