@@ -65,8 +65,6 @@ from pprint import pformat\n
 portal = context.getPortalObject()\n
 request= portal.REQUEST\n
 \n
-from Products.ERP5Type.Utils import cartesianProduct\n
-\n
 # this report can be called on a budget ...\n
 if context.getPortalType() == \'Budget\':\n
   defined_group = \'group\'\n
@@ -97,6 +95,14 @@ else:\n
 \n
 line_list = []\n
 \n
+target_currency_title = None\n
+target_currency = None\n
+conversion_ratio = None\n
+if request.get(\'price_currency\'):\n
+  target_currency = portal.restrictedTraverse(request[\'price_currency\'])\n
+  target_currency_title = target_currency.getReference()\n
+\n
+\n
 def isVisibleCell(cell):\n
   # can this cell be viewed by this user ?\n
   for category in cell.getMembershipCriterionCategoryList():\n
@@ -106,11 +112,35 @@ def isVisibleCell(cell):\n
   return True\n
 \n
 \n
+# in this report, level 1 is the budget line structure,\n
+# level 2 is the first variation category\n
+# level 3 is the second variation category\n
+# level 4 is the third variation category, or nothing\n
 for budget in budget_list:\n
+\n
+  if target_currency is not None:\n
+    conversion_ratio = target_currency.getPrice(\n
+         context=budget.asContext(\n
+                categories=[\n
+                  \'resource/%s\' % budget.getResourceRelativeUrl(),\n
+                  \'price_currency/%s\' %\n
+                    target_currency.getRelativeUrl()],\n
+               start_date=request.get(\'conversion_date\') or\n
+               budget.getStartDateRangeMin()))\n
+    if not conversion_ratio:\n
+      conversion_ratio = 1\n
+ \n
   line_list.append(dict(is_budget=True,\n
                         title=budget.getTitle().decode(\'utf8\'),\n
+                        target_currency_title=target_currency_title,\n
+                        conversion_ratio=conversion_ratio,\n
                         resource_title=budget.getResource() and\n
                                  budget.getResourceReference()))\n
+\n
+  # XXX to get the count of lines correct (for the print range)\n
+  if target_currency_title:\n
+    line_list.append(dict())\n
+\n
   for budget_line in budget.contentValues(sort_on=((\'int_index\', \'asc\'),)):\n
     total_level_1_initial_budget = 0\n
     total_level_1_current_budget = 0\n
@@ -119,24 +149,22 @@ for budget in budget_list:\n
     total_level_1_available_budget = 0\n
     \n
     level_1_line_list = []\n
-    variation_axis_list = []\n
-    for possible_axis in budget_line.getVariationBaseCategoryList():\n
-      for cell_range in budget_line.getCellRange():\n
-        if cell_range and cell_range[0].startswith(possible_axis):\n
-          variation_axis_list.append(possible_axis)\n
-          break\n
-    \n
+\n
     budget_line_cell_range = budget_line.BudgetLine_asCellRange()\n
-    if len(variation_axis_list) == 1:\n
+    if len(budget_line_cell_range) == 1:\n
       # if there\'s only one dimension, we add a virtual level 2, to keep the\n
       # same structure\n
       level_2_variation_category_list = [budget_line.getResource(base=1)]\n
-      level_3_variation_category_list = budget_line.getCellRange()[0]\n
+      level_3_variation_category_list = budget_line_cell_range[0]\n
+      level_4_variation_category_list = [None]\n
+    elif len(budget_line_cell_range) == 2:\n
+      level_2_variation_category_list = budget_line_cell_range[1]\n
+      level_3_variation_category_list = budget_line_cell_range[0]\n
+      level_4_variation_category_list = [None]\n
     else:\n
-      budget_line_vcl = budget_line.getVariationCategoryList()\n
-      \n
-      level_2_variation_category_list = budget_line.getCellRange()[0]\n
-      level_3_variation_category_list = budget_line.getCellRange()[1]\n
+      level_2_variation_category_list = budget_line_cell_range[2]\n
+      level_3_variation_category_list = budget_line_cell_range[1]\n
+      level_4_variation_category_list = budget_line_cell_range[0]\n
 \n
     # we use BudgetLine_asCellRange to get cell names, and have a default value\n
     # for "virtual level 2"\n
@@ -195,51 +223,87 @@ for budget in budget_list:\n
       is_higher_level2 = cell_depth_dict[level_2_category] == higher_depth\n
 \n
       for level_3_category in level_3_variation_category_list:\n
-        for cell_key in cartesianProduct(budget_line_cell_range):\n
+        total_level_3_initial_budget = 0\n
+        total_level_3_current_budget = 0\n
+        total_level_3_engaged_budget = 0\n
+        total_level_3_consumed_budget = 0\n
+        total_level_3_available_budget = 0\n
+\n
+        level_3_line_list = [dict(is_level_3=True,\n
+                                  title=cell_name_dict[level_3_category],)]\n
+\n
+        for level_4_category in level_4_variation_category_list:\n
+          # TODO: maybe fail if only 1 dimension ...\n
+          if level_4_category is None:\n
+            cell_key = (level_3_category, level_2_category)\n
+          else:\n
+            cell_key = (level_4_category, level_3_category, level_2_category)\n
+ \n
           cell = budget_line.getCell(*cell_key)\n
           if cell is None or not isVisibleCell(cell):\n
             continue\n
-          if level_3_category in cell_key and (\n
-               level_2_category in cell_key or\n
-               len(variation_axis_list) == 1):\n
-            initial_budget = cell.getQuantity() * sign\n
 \n
-            # XXX don\'t calculate current balance unless we use budget\n
-            # transactions\n
-            current_budget = initial_budget #cell.getCurrentBalance() * sign\n
+          initial_budget = cell.getQuantity() * sign\n
 \n
-            engaged_budget = cell.getEngagedBudget()\n
+          # XXX don\'t calculate current balance unless we use budget\n
+          # transactions\n
+          current_budget = initial_budget #cell.getCurrentBalance() * sign\n
 \n
-            # XXX stupid optimisation that may not always be true: \n
-            # if there\'s no engaged budget, there\'s no consumed budget\n
-            if engaged_budget:\n
-              consumed_budget = cell.getConsumedBudget()\n
-              # XXX calculate manually getAvailableBudget, because it calls\n
-              # getEngagedBudget again\n
-              # available_budget = cell.getAvailableBudget()\n
-              available_budget = current_budget - engaged_budget\n
-            else:\n
-              consumed_budget = 0\n
-              available_budget = current_budget\n
-            \n
-            total_level_2_initial_budget += initial_budget\n
-            total_level_2_current_budget += current_budget\n
-            total_level_2_engaged_budget += engaged_budget\n
-            total_level_2_consumed_budget += consumed_budget\n
-            total_level_2_available_budget += available_budget\n
+          engaged_budget = cell.getEngagedBudget()\n
 \n
-            consumed_ratio = 0\n
-            if current_budget:\n
-              consumed_ratio = consumed_budget / current_budget\n
+          # XXX stupid optimisation that may not always be true: \n
+          # if there\'s no engaged budget, there\'s no consumed budget\n
+          if engaged_budget:\n
+            consumed_budget = cell.getConsumedBudget()\n
+            # XXX calculate manually getAvailableBudget, because it calls\n
+            # getEngagedBudget again\n
+            # available_budget = cell.getAvailableBudget()\n
+            available_budget = current_budget - engaged_budget\n
+          else:\n
+            consumed_budget = 0\n
+            available_budget = current_budget\n
+          \n
+          total_level_3_initial_budget += initial_budget\n
+          total_level_3_current_budget += current_budget\n
+          total_level_3_engaged_budget += engaged_budget\n
+          total_level_3_consumed_budget += consumed_budget\n
+          total_level_3_available_budget += available_budget\n
 \n
-            level_2_line_list.append(dict(title=cell_name_dict[level_3_category],\n
-                                          is_level_3=True,\n
+          consumed_ratio = 0\n
+          if current_budget:\n
+            consumed_ratio = consumed_budget / current_budget\n
+\n
+          if level_4_category is not None:\n
+            level_3_line_list.append(dict(title=cell_name_dict[level_4_category],\n
+                                          is_level_4=True,\n
                                           initial_budget=initial_budget,\n
                                           current_budget=current_budget,\n
                                           engaged_budget=engaged_budget,\n
                                           consumed_budget=consumed_budget,\n
                                           available_budget=available_budget,\n
                                           consumed_ratio=consumed_ratio))\n
+\n
+\n
+        total_level_2_initial_budget += total_level_3_initial_budget\n
+        total_level_2_current_budget += total_level_3_current_budget\n
+        total_level_2_engaged_budget += total_level_3_engaged_budget\n
+        total_level_2_consumed_budget += total_level_3_consumed_budget\n
+        total_level_2_available_budget += total_level_2_available_budget\n
+\n
+        if len(level_3_line_list) > 1 or level_4_category is None:\n
+          consumed_ratio = 0\n
+          if total_level_3_current_budget:\n
+            consumed_ratio = total_level_3_consumed_budget / total_level_3_current_budget\n
+          level_2_line_list.append(dict(title=cell_name_dict[level_3_category],\n
+                                        is_level_3=True,\n
+                                        initial_budget=total_level_3_initial_budget,\n
+                                        current_budget=total_level_3_current_budget,\n
+                                        engaged_budget=total_level_3_engaged_budget,\n
+                                        consumed_budget=total_level_3_consumed_budget,\n
+                                        available_budget=total_level_3_available_budget,\n
+                                        consumed_ratio=consumed_ratio))\n
+          if level_4_category is not None:\n
+            level_2_line_list.append(level_3_line_list)\n
 \n
       if len(level_2_line_list) > 1:\n
         consumed_ratio = 0\n
@@ -287,7 +351,6 @@ for line in line_list:\n
 if not REQUEST:\n
   return line_list, line_count\n
 \n
-from pprint import pformat\n
 return pformat(line_list)\n
 
 
@@ -342,8 +405,6 @@ return pformat(line_list)\n
                             <string>context</string>
                             <string>portal</string>
                             <string>request</string>
-                            <string>Products.ERP5Type.Utils</string>
-                            <string>cartesianProduct</string>
                             <string>defined_group</string>
                             <string>_getiter_</string>
                             <string>category</string>
@@ -355,6 +416,10 @@ return pformat(line_list)\n
                             <string>new_budget_list</string>
                             <string>budget</string>
                             <string>line_list</string>
+                            <string>None</string>
+                            <string>target_currency_title</string>
+                            <string>target_currency</string>
+                            <string>conversion_ratio</string>
                             <string>isVisibleCell</string>
                             <string>dict</string>
                             <string>True</string>
@@ -365,14 +430,11 @@ return pformat(line_list)\n
                             <string>total_level_1_consumed_budget</string>
                             <string>total_level_1_available_budget</string>
                             <string>level_1_line_list</string>
-                            <string>variation_axis_list</string>
-                            <string>possible_axis</string>
-                            <string>cell_range</string>
                             <string>budget_line_cell_range</string>
                             <string>len</string>
                             <string>level_2_variation_category_list</string>
                             <string>level_3_variation_category_list</string>
-                            <string>budget_line_vcl</string>
+                            <string>level_4_variation_category_list</string>
                             <string>title</string>
                             <string>cell_name_dict</string>
                             <string>cell_style_dict</string>
@@ -394,10 +456,16 @@ return pformat(line_list)\n
                             <string>level_2_line_list</string>
                             <string>is_higher_level2</string>
                             <string>level_3_category</string>
+                            <string>total_level_3_initial_budget</string>
+                            <string>total_level_3_current_budget</string>
+                            <string>total_level_3_engaged_budget</string>
+                            <string>total_level_3_consumed_budget</string>
+                            <string>total_level_3_available_budget</string>
+                            <string>level_3_line_list</string>
+                            <string>level_4_category</string>
                             <string>cell_key</string>
                             <string>_apply_</string>
                             <string>cell</string>
-                            <string>None</string>
                             <string>initial_budget</string>
                             <string>current_budget</string>
                             <string>engaged_budget</string>

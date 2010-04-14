@@ -379,40 +379,83 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
      </tal:block>\n
     </table:table-row>\n
   \n
-    <tal:block tal:condition="python: same_type(line, [])">\n
+    <tal:block tal:condition="python: same_type(line, []) and len(line)">\n
       <table:table-row-group table:display="false">\n
         <tal:block tal:repeat="subline line">\n
-          <table:table-row table:style-name="Level3" \n
-            tal:attributes="table:visibility python: repeat[\'subline\'].first and \'collapse\' or None"\n
-            tal:condition="subline/is_level_3 | nothing">\n
-         <table:table-cell table:style-name="Level3Cell1" office:value-type="string">\n
-           <text:p><tal:block tal:replace="subline/title"/></text:p>\n
+          <tal:block tal:condition="python: not same_type(subline, [])">\n
+            <!--simple row level 2 -->\n
+            <table:table-row table:style-name="Level3" \n
+              tal:attributes="table:visibility python: repeat[\'subline\'].first and \'collapse\' or None"\n
+              tal:condition="subline/is_level_3 | nothing">\n
+           <table:table-cell table:style-name="Level3Cell1" office:value-type="string">\n
+             <text:p><tal:block tal:replace="subline/title"/></text:p>\n
+           </table:table-cell>\n
+           <table:table-cell table:style-name="Level3" office:value-type="float" office:value="1"  tal:attributes="office:value subline/initial_budget">\n
+            <text:p>1</text:p>\n
+           </table:table-cell>\n
+           <table:table-cell table:style-name="Level3" office:value-type="float" office:value="2" tal:attributes="office:value subline/current_budget">\n
+            <text:p>2</text:p>\n
+           </table:table-cell>\n
+           <table:table-cell table:style-name="Level3" office:value-type="float" office:value="3" tal:attributes="office:value subline/engaged_budget">\n
+            <text:p>3</text:p>\n
+           </table:table-cell>\n
+           <table:table-cell table:style-name="Level3" office:value-type="float" office:value="4" tal:attributes="office:value subline/consumed_budget">\n
+            <text:p>4</text:p>\n
+           </table:table-cell>\n
+           <table:table-cell table:style-name="Level3" office:value-type="float" office:value="5" tal:attributes="office:value subline/available_budget">\n
+            <text:p>5</text:p>\n
+           </table:table-cell>\n
+           <table:table-cell table:style-name="Level3" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value subline/consumed_ratio">\n
+            <text:p>6,00%</text:p>\n
+           </table:table-cell>\n
+           <table:table-cell table:number-columns-repeated="1016"/>\n
+          </table:table-row>\n
+        </tal:block>\n
+\n
+    <tal:block tal:condition="python: same_type(subline, []) and len(subline)">\n
+      <table:table-row-group table:display="false">\n
+        <tal:block tal:repeat="subsubline subline">\n
+          <table:table-row table:style-name="Level4" \n
+            tal:attributes="table:visibility python: repeat[\'subsubline\'].first and \'collapse\' or None"\n
+            tal:condition="subsubline/is_level_4 | nothing">\n
+         <table:table-cell table:style-name="Level4Cell1" office:value-type="string">\n
+           <text:p><tal:block tal:replace="subsubline/title"/></text:p>\n
          </table:table-cell>\n
-         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="1"  tal:attributes="office:value subline/initial_budget">\n
+         <table:table-cell table:style-name="Level4" office:value-type="float"\n
+           office:value="1"  tal:attributes="office:value subsubline/initial_budget">\n
           <text:p>1</text:p>\n
          </table:table-cell>\n
-         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="2" tal:attributes="office:value subline/current_budget">\n
+         <table:table-cell table:style-name="Level4" office:value-type="float"\n
+           office:value="2" tal:attributes="office:value subsubline/current_budget">\n
           <text:p>2</text:p>\n
          </table:table-cell>\n
-         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="3" tal:attributes="office:value subline/engaged_budget">\n
+         <table:table-cell table:style-name="Level4" office:value-type="float"\n
+           office:value="3" tal:attributes="office:value subsubline/engaged_budget">\n
           <text:p>3</text:p>\n
          </table:table-cell>\n
-         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="4" tal:attributes="office:value subline/consumed_budget">\n
+         <table:table-cell table:style-name="Level4" office:value-type="float"\n
+           office:value="4" tal:attributes="office:value subsubline/consumed_budget">\n
           <text:p>4</text:p>\n
          </table:table-cell>\n
-         <table:table-cell table:style-name="Level3" office:value-type="float" office:value="5" tal:attributes="office:value subline/available_budget">\n
+         <table:table-cell table:style-name="Level4" office:value-type="float"\n
+           office:value="5" tal:attributes="office:value subsubline/available_budget">\n
           <text:p>5</text:p>\n
          </table:table-cell>\n
-         <table:table-cell table:style-name="Level3" office:value-type="percentage" office:value="0.06"  tal:attributes="office:value subline/consumed_ratio">\n
+         <table:table-cell table:style-name="Level4"\n
+           office:value-type="percentage" office:value="0.06"\n
+           tal:attributes="office:value subsubline/consumed_ratio">\n
           <text:p>6,00%</text:p>\n
          </table:table-cell>\n
-         <table:table-cell table:number-columns-repeated="1016"/>\n
+         <!--       <table:table-cell table:number-columns-repeated="1016"/>-->\n
         </table:table-row>\n
-      </tal:block>\n
+       </tal:block>\n
       </table:table-row-group>\n
     </tal:block>\n
+    </tal:block>\n
+    </table:table-row-group>\n
+    </tal:block>\n
+    </tal:block>\n
 \n
-  </tal:block>\n
    </table:table>\n
   </office:spreadsheet>\n
  </office:body>\n
