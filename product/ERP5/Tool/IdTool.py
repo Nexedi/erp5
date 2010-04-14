@@ -322,7 +322,10 @@ class IdTool(BaseTool):
             'be found.'
     result = query(id_group=id_group)
     if len(result):
-      return result[0]['last_id'] - 1
+      try:
+        return result[0]['last_id']
+      except KeyError:
+        return result[0]['LAST_INSERT_ID()']
     return default
 
   #use in erp5_accounting
