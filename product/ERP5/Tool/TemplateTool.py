@@ -104,14 +104,28 @@ class TemplateTool (BaseTool):
     def getInstalledBusinessTemplate(self, title, **kw):
       """
         Return an installed version of business template of a certain title.
+
+        It not "installed" business template is found, look at replaced ones.
+        This is mostly usefull if we are looking for the installed business
+        template in a transaction replacing an existing business template
       """
       # This can be slow if, say, 10000 business templates are present.
       # However, that unlikely happens, and using a Z SQL Method has a
       # potential danger because business templates may exchange catalog
       # methods, so the database could be broken temporarily.
+      replaced_list = []
+      replaced_list_append = replaced_list.append
       for bt in self.contentValues(filter={'portal_type':'Business Template'}):
-        if bt.getInstallationState() == 'installed' and bt.getTitle() == title:
-          return bt
+        if bt.getTitle() == title:
+          installation_state = bt.getInstallationState()
+          if installation_state == 'installed':
+            return bt
+          elif installation_state == 'replaced':
+            replaced_list_append((bt.getId(), bt.getRevision()))
+      # still there means that we might search for a replaced bt
+      if len(replaced_list):
+        replaced_list.sort(key=lambda x: -int(x[1]))
+        return self._getOb(replaced_list[0][0])
       return None
 
     def getInstalledBusinessTemplatesList(self):
