@@ -73,7 +73,7 @@ class MovementGeneratorMixin:
     for input_movement in input_movement_list:
       for business_path in business_process.getPathValueList(
                           trade_phase_list,
-                          input_movement):
+                          input_movement) or [None]:
         input_movement_and_path_list.append((input_movement, business_path))
         business_path not in business_path_list and business_path_list \
             .append(business_path)

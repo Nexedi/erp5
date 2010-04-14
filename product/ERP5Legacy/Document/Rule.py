@@ -319,7 +319,7 @@ class Rule(Predicate, XMLObject):
     for input_movement in input_movement_list:
       for business_path in business_process.getPathValueList(
                           trade_phase_list,
-                          input_movement):
+                          input_movement) or [None]:
         input_movement_and_path_list.append((input_movement, business_path))
 
     return input_movement_and_path_list
