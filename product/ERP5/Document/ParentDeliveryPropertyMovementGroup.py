@@ -28,8 +28,6 @@
 from Products.ERP5.Document.PropertyMovementGroup import PropertyMovementGroup
 from Products.ERP5Type.Utils import UpperCase
 
-_MARKER = []
-
 class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
   """
   Parent Delivery Property Movement Group is similar to Property
@@ -47,7 +45,7 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
     parent_delivery = self._getParentDelivery(movement)
     if parent_delivery is not None:
       for prop in self.getTestedPropertyList():
-        property_dict['_%s' % prop] = self._getProperty(parent_delivery, prop, None)
+        property_dict['_%s' % prop] = self._getProperty(parent_delivery, prop)
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
@@ -57,9 +55,9 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
     else:
       target_property_list = self.getTestedPropertyList()
     for prop in target_property_list:
-      if property_dict['_%s' % prop] != self._getProperty(document, prop, None):
-        return False, property_dict
-    return True, property_dict
+      if property_dict['_%s' % prop] != self._getProperty(document, prop):
+        return False, {}
+    return True, {}
 
   def _getParentDelivery(self, movement):
     # try to find local payment conditions from the upper level delivery
@@ -72,9 +70,9 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
       delivery = movement.getDeliveryValue()
     return delivery
 
-  def _getProperty(self, document, property_id, d=_MARKER):
+  def _getProperty(self, document, property_id):
     # XXX here we don't use Base.getProperty() but try to call accessor
     # directly to make acquired property
     # (eg. payment_condition_efficiency) working.
     accessor_name = 'get' + UpperCase(property_id)
-    return getattr(document, accessor_name)(d)
+    return getattr(document, accessor_name)()
