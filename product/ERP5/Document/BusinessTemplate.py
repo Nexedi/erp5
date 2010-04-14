@@ -55,7 +55,7 @@ from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
@@ -591,6 +591,10 @@ class BaseTemplateItem(Implicit, Persistent):
         obj.deletePdfContent()
     elif meta_type == 'Script (Python)':
       obj._code = None
+    elif  interfaces.IIdGenerator.providedBy(obj):
+      for dict_name in ('last_max_id_dict', 'last_id_dict'):
+        if getattr(obj, dict_name, None) is not None:
+          setattr(obj, dict_name, None)
     return obj
 
   def getTemplateTypeName(self):
@@ -1064,6 +1068,14 @@ class ObjectTemplateItem(BaseTemplateItem):
                 obj._setProperty(
                     'business_template_registered_skin_selections',
                     skin_selection_list, type='tokens')
+          # in case the portal ids, we want keep the property dict
+          elif interfaces.IIdGenerator.providedBy(obj) and \
+            old_obj is not None:
+            for dict_name in ('last_max_id_dict', 'last_id_dict'):
+              # Keep previous last id dict
+              if getattr(old_obj, dict_name, None) is not None:
+                old_dict = getattr(old_obj, dict_name, None)
+                setattr(obj, dict_name, old_dict)
 
           recurse(restoreHook, obj)
       # now put original order group

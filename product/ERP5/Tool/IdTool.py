@@ -26,21 +26,27 @@
 #
 ##############################################################################
 
+import warnings
+import zope.interface
+
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type import Permissions
-from Products.CMFCore.utils import getToolByName
-from zLOG import LOG, WARNING
+from Products.ERP5Type.Cache import caching_instance_method
+from Products.ERP5Type import Permissions, interfaces
+from zLOG import LOG, WARNING, INFO, ERROR
 from Products.ERP5 import _dtmldir
 
 from BTrees.Length import Length
+
+_marker = object()
 
 class IdTool(BaseTool):
   """
     This tools handles the generation of IDs.
   """
+  zope.interface.implements(interfaces.IIdTool)
   id = 'portal_ids'
   meta_type = 'ERP5 Id Tool'
   portal_type = 'Id Tool'
@@ -51,19 +57,291 @@ class IdTool(BaseTool):
   security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainIdTool', _dtmldir )
 
+  def newContent(self, *args, **kw):
+    """
+      the newContent is overriden to not use generateNewId
+    """
+    if not kw.has_key(id):
+      new_id = self._generateNextId()
+      if new_id is not None:
+        kw['id'] = new_id
+      else:
+        raise ValueError('Failed to gererate id')
+    return BaseTool.newContent(self, *args, **kw)
+
+  def _get_id(self, id):
+    """
+      _get_id is overrided to not use generateNewId
+      It is used for example when an object is cloned
+    """
+    if self._getOb(id, None) is None :
+      return id
+    return self._generateNextId()
+
+  @caching_instance_method(id='IdTool._getLatestIdGenerator',
+    cache_factory='erp5_content_long')
+  def _getLatestIdGenerator(self, reference):
+    """
+      Tries to find the id_generator with the latest version
+      from the current object.
+      Use the low-level to create a site without catalog
+    """
+    assert reference
+    id_tool = self.getPortalObject().portal_ids
+    id_last_generator = None
+    version_last_generator = 0
+    for generator in id_tool.objectValues():
+      if generator.getReference() == reference:
+        version = generator.getVersion()
+        if version > version_last_generator:
+          id_last_generator = generator.getId()
+          version_last_generator = generator.getVersion()
+    if id_last_generator is None:
+      raise KeyError, 'The generator %s is not present' % (reference,)
+    return id_last_generator
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getLatestVersionValue')
+  def _getLatestGeneratorValue(self, id_generator):
+    """
+      Return the last generator with the reference
+    """
+    id_tool = self.getPortalObject().portal_ids
+    last_id_generator = self._getLatestIdGenerator(id_generator)
+    last_generator = id_tool._getOb(last_id_generator)
+    return last_generator
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'generateNewId')
+  def generateNewId(self, id_group=None, default=None, method=_marker,
+                    id_generator=None):
+    """
+      Generate the next id in the sequence of ids of a particular group
+    """
+    if id_group in (None, 'None'):
+      raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
+    # for compatibilty with sql data, must not use id_group as a list
+    if not isinstance(id_group, str):
+      id_group = repr(id_group)
+      warnings.warn('The id_group must be a string the other types '
+                    'is deprecated.', DeprecationWarning)
+    if id_generator is None:
+      id_generator = 'document'
+    if method is not _marker:
+      warnings.warn("The usage of 'method' argument is deprecated.\n"
+                    "use this method with a id generator without this"
+                    "argument", DeprecationWarning)
+    try:
+      #use _getLatestGeneratorValue here for that the technical level
+      #must not call the method
+      last_generator = self._getLatestGeneratorValue(id_generator)
+      new_id = last_generator.generateNewId(id_group=id_group, \
+                                            default=default)
+    except KeyError:
+      template_tool = getattr(self, 'portal_templates', None)
+      revision = template_tool.getInstalledBusinessTemplateRevision('erp5_core')
+      # XXX backward compatiblity
+      if revision > '1561':
+        LOG('generateNewId', ERROR, 'while generating id')
+        raise
+      else:
+        # Compatibility code below, in case the last version of erp5_core
+        # is not installed yet
+        warnings.warn("You use the old version of API which is deprecated.\n"
+                      "please, update the business template erp5_core "
+                      "to use the new API", DeprecationWarning)
+        dict_ids = getattr(aq_base(self), 'dict_ids', None)
+        if dict_ids is None:
+          dict_ids = self.dict_ids = PersistentMapping()
+        new_id = None
+        # Getting the last id
+        if default is None:
+          default = 0
+        marker = []
+        new_id = dict_ids.get(id_group, marker)
+        if method is _marker:
+          if new_id is marker:
+            new_id = default
+          else:
+            new_id = new_id + 1
+        else:
+          if new_id is marker:
+            new_id = default
+          new_id = method(new_id)
+        # Store the new value
+        dict_ids[id_group] = new_id
+    return new_id
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'generateNewIdList')
+  def generateNewIdList(self, id_group=None, id_count=1, default=None,
+                        store=_marker, id_generator=None):
+    """
+      Generate a list of next ids in the sequence of ids of a particular group
+    """
+    if id_group in (None, 'None'):
+      raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
+    # for compatibilty with sql data, must not use id_group as a list
+    if not isinstance(id_group, str):
+      id_group = repr(id_group)
+      warnings.warn('The id_group must be a string the other types '
+                    'is deprecated.', DeprecationWarning)
+    if id_generator is None:
+      id_generator = 'uid'
+    if store is not _marker:
+      warnings.warn("The usage of 'store' argument is deprecated.\n"
+                    "use this method with a id generator and without this."
+                    "argument", DeprecationWarning)
+    try:
+      #use _getLatestGeneratorValue here for that the technical level
+      #must not call the method
+      last_generator = self._getLatestGeneratorValue(id_generator)
+      new_id_list = last_generator.generateNewIdList(id_group=id_group,
+                         id_count=id_count, default=default)
+    except KeyError:
+      template_tool = getattr(self, 'portal_templates', None)
+      revision = template_tool.getInstalledBusinessTemplateRevision('erp5_core')
+      # XXX backward compatiblity
+      if revision > '1561':
+        LOG('generateNewIdList', ERROR, 'while generating id')
+        raise
+      else:
+        # Compatibility code below, in case the last version of erp5_core
+        # is not installed yet
+        warnings.warn("You use the old version of erp5_core to generate the ids.\n"
+                      "please, update the business template erp5_core "
+                      "to have the new id generators", DeprecationWarning)
+        new_id = None
+        if default is None:
+          default = 1
+        # XXX It's temporary, a New API will be implemented soon
+        #     the code will be change
+        portal = self.getPortalObject()
+        query = getattr(portal, 'IdTool_zGenerateId', None)
+        commit = getattr(portal, 'IdTool_zCommit', None)
+
+        if query is None or commit is None:
+          portal_catalog = getattr(self, 'portal_catalog').getSQLCatalog()
+          query = getattr(portal_catalog, 'z_portal_ids_generate_id')
+          commit = getattr(portal_catalog, 'z_portal_ids_commit')
+        if None in (query, commit):
+          raise AttributeError, 'Error while generating Id: ' \
+            'idTool_zGenerateId and/or idTool_zCommit could not ' \
+            'be found.'
+        try:
+          result = query(id_group=id_group, id_count=id_count, default=default)
+        finally:
+          commit()
+        new_id = result[0]['LAST_INSERT_ID()']
+        if store:
+          if getattr(aq_base(self), 'dict_length_ids', None) is None:
+            # Length objects are stored in a persistent mapping: there is one
+            # Length object per id_group.
+            self.dict_length_ids = PersistentMapping()
+          if self.dict_length_ids.get(id_group) is None:
+            self.dict_length_ids[id_group] = Length(new_id)
+          self.dict_length_ids[id_group].set(new_id)
+        new_id_list = range(new_id - id_count, new_id)
+    return new_id_list
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'initializeGenerator')
+  def initializeGenerator(self, id_generator=None, all=False):
+    """
+    Initialize generators. This is mostly used when a new ERP5 site
+    is created. Some generators will need to do some initialization like
+    creating SQL Database, prepare some data in ZODB, etc
+    """
+    if not all:
+      #Use _getLatestGeneratorValue here for that the technical level
+      #must not call the method
+      last_generator = self._getLatestGeneratorValue(id_generator)
+      last_generator.initializeGenerator()
+    else:
+      # recovery all the generators and initialize them
+      for generator in self.objectValues(\
+                       portal_type='Application Id Generator'):
+        generator.initializeGenerator()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'clearGenerator')
+  def clearGenerator(self, id_generator=None, all=False):
+    """
+    Clear generators data. This can be usefull when working on a
+    development instance or in some other rare cases. This will
+    loose data and must be use with caution
+
+    This can be incompatible with some particular generator implementation,
+    in this case a particular error will be raised (to be determined and
+    added here)
+    """
+    if not all:
+      #Use _getLatestGeneratorValue here for that the technical level
+      #must not call the method
+      last_generator = self._getLatestGeneratorValue(id_generator)
+      last_generator.clearGenerator()
+
+    else:
+      if len(self.objectValues()) == 0:
+        # compatibility with old API
+        self.getPortalObject().IdTool_zDropTable()
+        self.getPortalObject().IdTool_zCreateTable()
+      for generator in self.objectValues(\
+                       portal_type='Application Id Generator'):
+        generator.clearGenerator()
+
+  ## XXX Old API deprecated
+  #backward compatibility
+  generateNewLengthIdList = generateNewIdList
+
+  #use by alarm
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getLastLengthGeneratedId')
+  def getLastLengthGeneratedId(self, id_group, default=None):
+    """
+    Get the last length id generated
+    """
+    warnings.warn('The usage of this method is deprecated.\n'
+                   , DeprecationWarning)
+    # check in persistent mapping if exists
+    if getattr(aq_base(self), 'dict_length_ids', None) is not None:
+      last_id = self.dict_length_ids.get(id_group)
+      if last_id is not None:
+        return last_id.value - 1
+    # otherwise check in mysql
+    # XXX It's temporary, a New API will be implemented soon
+    #     the code will be change
+    portal = self.getPortalObject()
+    query = getattr(portal, 'IdTool_zGetLastId', None)
+    if query is None:
+      portal_catalog = getattr(self, 'portal_catalog').getSQLCatalog()
+      query = getattr(portal_catalog, 'z_portal_ids_get_last_id')
+    if query is None:
+      raise AttributeError, 'Error while getting last Id: ' \
+            'IdTool_zGetLastId could not ' \
+            'be found.'
+    result = query(id_group=id_group)
+    if len(result):
+      return result[0]['last_id'] - 1
+    return default
+
+  #use in erp5_accounting
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getLastGeneratedId')
   def getLastGeneratedId(self, id_group=None, default=None):
     """
     Get the last id generated
     """
+    warnings.warn('The usage of this method is deprecated.\n'
+                   , DeprecationWarning)
     if getattr(aq_base(self), 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
     last_id = None
     if id_group is not None and id_group != 'None':
       last_id = self.dict_ids.get(id_group, default)
     return last_id
-        
+
+  #use in the unit tests
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setLastGeneratedId')
   def setLastGeneratedId(self, new_id, id_group=None):
@@ -75,37 +353,21 @@ class IdTool(BaseTool):
       self.dict_ids = PersistentMapping()
     if id_group is not None and id_group != 'None':
       self.dict_ids[id_group] = new_id
-        
+
+  # use several files
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'generateNewId')
-  def generateNewId(self, id_group=None, default=None, method=None):
-    """
-      Generate a new Id
-    """
-
-    dict_ids = getattr(aq_base(self), 'dict_ids', None)
-    if dict_ids is None:
-      dict_ids = self.dict_ids = PersistentMapping()
-
-    new_id = None
-    if id_group is not None and id_group != 'None':
-      # Getting the last id
-      if default is None:
-        default = 0
-      marker = []
-      new_id = dict_ids.get(id_group, marker)
-      if method is None:
-        if new_id is marker:
-          new_id = default
-        else:
-          new_id = new_id + 1
-      else:
-        if new_id is marker:
-          new_id = default
-        new_id = method(new_id)
-      # Store the new value
-      dict_ids[id_group] = new_id
-    return new_id
+                           'generateNewLengthId')
+  def generateNewLengthId(self, id_group=None, default=None, store=1):
+     """
+       Generates an Id.
+       See generateNewLengthIdList documentation for details.
+     """
+     warnings.warn('The usage of this method is deprecated.\n'
+                   'use directly generateNewIdList'
+                   ' with a id_generator sql', DeprecationWarning)
+     new_id = self.generateNewIdList(id_group=id_group,
+      			     id_count=1, default=default, store=store)[0]
+     return new_id
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDictLengthIdsItems')
@@ -124,13 +386,8 @@ class IdTool(BaseTool):
     """
       Store persistently data from SQL table portal_ids.
     """
-    # XXX It's temporary, a New API will be implemented soon
-    #     the code will be change
-    portal = self.getPortalObject()
-    query = getattr(portal, 'IdTool_zDump', None)
-    if query is None:
-      portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
-      query = getattr(portal_catalog, 'z_portal_ids_dump')
+    portal_catalog = getattr(self, 'portal_catalog').getSQLCatalog()
+    query = getattr(portal_catalog, 'z_portal_ids_dump')
     dict_length_ids = getattr(aq_base(self), 'dict_length_ids', None)
     if dict_length_ids is None:
       dict_length_ids = self.dict_length_ids = PersistentMapping()
@@ -149,98 +406,5 @@ class IdTool(BaseTool):
             LOG('IdTool', WARNING, 'ZODB value (%r) for group %r is higher ' \
                 'than SQL value (%r). Keeping ZODB value untouched.' % \
                 (stored_last_id, id_group, last_id))
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getLastLengthGeneratedId')
-  def getLastLengthGeneratedId(self, id_group, default=None):
-    """
-    Get the last length id generated
-    """
-    # check in persistent mapping if exists
-    if getattr(aq_base(self), 'dict_length_ids', None) is not None:
-      last_id = self.dict_length_ids.get(id_group)
-      if last_id is not None:
-        return last_id.value - 1
-    # otherwise check in mysql
-    # XXX It's temporary, a New API will be implemented soon
-    #     the code will be change
-    portal = self.getPortalObject()
-    query = getattr(portal, 'IdTool_zGetLastId', None)
-    if query is None:
-      portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
-      query = getattr(portal_catalog, 'z_portal_ids_get_last_id')
-    if query is None:
-      raise AttributeError, 'Error while getting last Id: ' \
-            'IdTool_zGetLastId could not ' \
-            'be found.'
-    result = query(id_group=id_group)
-    if len(result):
-      return result[0]['last_id'] - 1
-    return default
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'generateNewLengthIdList')
-  def generateNewLengthIdList(self, id_group=None, id_count=1, default=None,
-                              store=True):
-    """
-      Generates a list of Ids.
-      The ids are generated using mysql and then stored in a Length object in a
-      persistant mapping to be persistent.
-      We use MySQL to generate IDs, because it is atomic and we don't want
-      to generate any conflict at zope level. The possible downfall is that
-      some IDs might be skipped because of failed transactions.
-      "Length" is because the id is stored in a python object inspired by
-      BTrees.Length. It doesn't have to be a length.
-
-      store : if we want to store the new id into the zodb, we want it
-              by default
-    """
-    new_id = None
-    if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
-    if not isinstance(id_group, str):
-      id_group = repr(id_group)
-    if default is None:
-      default = 1
-    # FIXME: A skin folder should be used to contain ZSQLMethods instead of
-    # default catalog, like activity tool (anyway, it uses activity tool
-    # ZSQLConnection, so hot reindexing is not helping here).
-    # XXX It's temporary, a New API will be implemented soon
-    #     the code will be change
-    portal = self.getPortalObject()
-    query = getattr(portal, 'IdTool_zGenerateId', None)
-    commit = getattr(portal, 'IdTool_zCommit', None)
-    if query is None or commit is None:
-      portal_catalog = getToolByName(self, 'portal_catalog').getSQLCatalog()
-      query = getattr(portal_catalog, 'z_portal_ids_generate_id')
-      commit = getattr(portal_catalog, 'z_portal_ids_commit')
-    if None in (query, commit):
-      raise AttributeError, 'Error while generating Id: ' \
-        'idTool_zGenerateId and/or idTool_zCommit could not ' \
-        'be found.'
-    try:
-      result = query(id_group=id_group, id_count=id_count, default=default)
-    finally:
-      commit()
-    new_id = result[0]['LAST_INSERT_ID()']
-    if store:
-      if getattr(aq_base(self), 'dict_length_ids', None) is None:
-        # Length objects are stored in a persistent mapping: there is one
-        # Length object per id_group.
-        self.dict_length_ids = PersistentMapping()
-      if self.dict_length_ids.get(id_group) is None:
-        self.dict_length_ids[id_group] = Length(new_id)
-      self.dict_length_ids[id_group].set(new_id)
-    return range(new_id - id_count, new_id)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'generateNewLengthId')
-  def generateNewLengthId(self, id_group=None, default=None, store=1):
-    """
-      Generates an Id.
-      See generateNewLengthIdList documentation for details.
-    """
-    return self.generateNewLengthIdList(id_group=id_group, id_count=1, 
-        default=default, store=store)[0]
 
 InitializeClass(IdTool)

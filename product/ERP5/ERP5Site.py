@@ -1848,15 +1848,11 @@ class ERP5Generator(PortalGenerator):
     # we don't want to make it crash
     if p.erp5_sql_connection_type is not None:
       setattr(p, 'isIndexable', ConstantGetter('isIndexable', value=True))
-      portal_catalog = p.portal_catalog
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site
-      # XXX It's temporary, a New API will be implemented soon
-      #     the code will be change
-      p.IdTool_zDropTable()
-      p.IdTool_zCreateTable()
+      p.portal_ids.initializeGenerator(all=True)
       # Then clear the catalog and reindex it
-      portal_catalog.manage_catalogClear()
+      p.portal_catalog.manage_catalogClear()
       # Calling ERP5Site_reindexAll is useless.
 
   def setupUserFolder(self, p):

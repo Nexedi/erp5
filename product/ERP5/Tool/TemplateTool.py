@@ -129,6 +129,14 @@ class TemplateTool (BaseTool):
           installed_bts.append(bt)
       return installed_bts
 
+    def getInstalledBusinessTemplateRevision(self, title, **kw):
+      """
+        Return the revision of business template installed with the title
+        given
+      """
+      bt = self.getInstalledBusinessTemplate(title)
+      return bt.getRevision()
+
     def getBuiltBusinessTemplatesList(self):
       """Deprecated.
       """
