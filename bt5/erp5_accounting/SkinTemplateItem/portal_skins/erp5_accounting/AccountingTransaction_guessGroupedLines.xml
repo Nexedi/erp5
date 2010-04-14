@@ -142,10 +142,8 @@ for (node, section, mirror_section), line_info_list in lines_per_node.items():\n
     total_price = round(total_price, default_currency.getQuantityPrecision())\n
   if total_price == 0 or allow_grouping_with_different_quantity:\n
     id_group = (\'grouping_reference\', node, section, mirror_section)\n
-    # before, we where using generateNewId, we are now using generateNewLengthId which\n
-    # is using another storage. Get the last value generated with generateNewId and use it as default.\n
     previous_default = context.portal_ids.getLastGeneratedId(id_group=id_group, default=0)\n
-    grouping_reference = portal.portal_ids.generateNewLengthId(\n
+    grouping_reference = portal.portal_ids.generateNewId(id_generator=\'uid\',\n
                                                   id_group=id_group,\n
                                                   default=previous_default + 1)\n
     \n
