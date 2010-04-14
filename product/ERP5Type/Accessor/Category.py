@@ -106,19 +106,14 @@ class SetSetter(BaseSetter):
       self.__name__ = id
       self._key = key
 
-    def __call__(self, instance, *args, **kw):
+    def __call__(self, instance, value, *args, **kw):
       """
       We should take care that the provided argument has no
       duplicate values
       """
-      if type(args[0]) in (type([]),type(())):
-        new_list = []
-        for item in args[0]:
-          if item not in new_list:
-            new_list.append(item)
-      else:
-        new_list = args[0]
-      instance._setCategoryMembership(self._key, new_list,
+      if type(value) not in (set, frozenset):
+        value = frozenset(value)
+      instance._setCategoryMembership(self._key, tuple(value),
                                       spec=kw.get('spec',()),
                                       filter=kw.get('filter', None),
                                       portal_type=kw.get('portal_type',()),
