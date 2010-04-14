@@ -56,6 +56,7 @@
             <value> <string>"""\n
  This script allows to create a new Discussion Post in context.\n
 """\n
+from DateTime import DateTime\n
 \n
 portal = context.getPortalObject()\n
 person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
@@ -73,6 +74,35 @@ discussion_post = context.newContent(\n
 # depending on security model Post can be submited for review\n
 portal_status_message = "New post created."\n
 discussion_post.release()\n
+if send_notification_text not in (\'\', None):\n
+  # we can send notifications\n
+  email_list = []\n
+  notification_list = send_notification_text.split(\'\\r\\n\')\n
+  for notification in notification_list:\n
+    if \'@\' in notification:\n
+      # user specified an email\n
+      email_list.append(notification)\n
+    else:\n
+      # we can assume user wanted to specify Person\'s title\n
+      person_list = portal.portal_catalog(portal_type=\'Person\',\n
+                                          title=notification)\n
+      email_list.extend([x.getDefaultEmailText() for x in person_list])\n
+  email_from = portal.email_from_address\n
+  email_subject = "New forum post"\n
+  email_template = """\n
+\n
+New forum post has been created at this url:\n
+\n
+${url}""" \n
+  email_body = context.Base_translateString(email_template, mapping={\'url\':discussion_post.absolute_url()})\n
+  for email_to in email_list:\n
+    mail_headers = """\n
+To: %s\n
+From: %s\n
+Subject: %s\n
+Date: %s"""  %(email_to, email_from, email_subject, DateTime().rfc822())\n
+    mail_source =\'%s\\n\\n%s\' %(mail_headers, email_body)\n
+    context.MailHost.send(mail_source)\n
 \n
 return context.Base_redirect(form_id,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
@@ -86,13 +116,14 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id, predecessor=None,**kw</string> </value>
+            <value> <string>title, text_content, form_id, send_notification_text=None, predecessor=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
                 <string>Assignor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
@@ -114,7 +145,7 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>5</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -123,8 +154,10 @@ return context.Base_redirect(form_id,\n
                             <string>title</string>
                             <string>text_content</string>
                             <string>form_id</string>
+                            <string>send_notification_text</string>
                             <string>predecessor</string>
                             <string>kw</string>
+                            <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -133,6 +166,22 @@ return context.Base_redirect(form_id,\n
                             <string>language</string>
                             <string>discussion_post</string>
                             <string>portal_status_message</string>
+                            <string>None</string>
+                            <string>email_list</string>
+                            <string>notification_list</string>
+                            <string>_getiter_</string>
+                            <string>notification</string>
+                            <string>person_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>email_from</string>
+                            <string>email_subject</string>
+                            <string>email_template</string>
+                            <string>email_body</string>
+                            <string>email_to</string>
+                            <string>mail_headers</string>
+                            <string>mail_source</string>
                             <string>dict</string>
                           </tuple>
                         </value>
@@ -146,6 +195,7 @@ return context.Base_redirect(form_id,\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <none/>
               </tuple>
             </value>
