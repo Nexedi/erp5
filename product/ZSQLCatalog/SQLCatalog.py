@@ -774,8 +774,8 @@ class Catalog(Folder,
           default = previous_security_uid() + 1
         else:
           default = previous_security_uid
-      security_uid = id_tool.generateNewLengthId(id_group='security_uid_index',
-                                        default=default)
+      security_uid = int(id_tool.generateNewId(id_generator='uid',
+          id_group='security_uid_index', default=default))
     else:
       previous_security_uid = getattr(self, 'security_uid_index', None)
       if previous_security_uid is None:
@@ -1052,7 +1052,7 @@ class Catalog(Folder,
       if id_tool is not None:
         if self._max_uid is None:
           self._max_uid = Length(1)
-        uid_list = id_tool.generateNewLengthIdList(id_group='catalog_uid',
+        uid_list = id_tool.generateNewIdList(id_generator='uid', id_group='catalog_uid',
                      id_count=UID_BUFFER_SIZE, default=self._max_uid())
         # TODO: if this method is kept and former uid allocation code is
         # discarded, self._max_uid duplicates work done by portal_ids: it

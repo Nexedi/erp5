@@ -78,9 +78,10 @@ class SQLQueue(RAMQueue, SQLBase):
     message_list = [m for m in message_list if m.is_registered]
     for i in xrange(0, len(message_list), MAX_MESSAGE_LIST_SIZE):
       registered_message_list = message_list[i:i + MAX_MESSAGE_LIST_SIZE]
-      uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(
-        id_group='portal_activity_queue', id_count=len(registered_message_list),
-        store=0)
+      # The uid_list also is store in the ZODB
+      uid_list = activity_tool.getPortalObject().portal_ids.generateNewIdList(
+                id_generator='uid', id_group='portal_activity_queue',
+                id_count=len(registered_message_list))
       path_list = ['/'.join(m.object_path) for m in registered_message_list]
       active_process_uid_list = [m.active_process_uid for m in registered_message_list]
       method_id_list = [m.method_id for m in registered_message_list]

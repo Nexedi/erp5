@@ -643,23 +643,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     __call__ = searchResults
 
-    security.declarePrivate('beforeCatalogClear')
-    def beforeCatalogClear(self):
-      """
-      Clears the catalog by calling a list of methods
-      """
-      id_tool = self.getPortalObject().portal_ids
-      try:
-        id_tool.dumpDictLengthIdsItems()
-      except ConflictError:
-        raise
-      except:
-        # Swallow exceptions to allow catalog clear to happen.
-        # For example, is portal_ids table does not exist and exception will
-        # be thrown by portal_id methods.
-        LOG('ERP5Catalog.beforeCatalogClear', WARNING,
-            'beforeCatalogClear failed', error=sys.exc_info())
-
     security.declarePrivate('unrestrictedSearchResults')
     def unrestrictedSearchResults(self, REQUEST=None, **kw):
         """Calls ZSQLCatalog.searchResults directly without restrictions.

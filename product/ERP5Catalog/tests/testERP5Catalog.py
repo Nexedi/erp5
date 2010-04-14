@@ -1973,7 +1973,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue("TRUNCATE(catalog.uid,2) = '2567.54'" in sql_src or \
                     'TRUNCATE(`catalog`.`uid`, 2) = 2567.54' in sql_src, sql_src)
 
-  @skip('Regression portal_ids must be delete of catalog')
   def test_56_CreateUidDuringClearCatalog(self, quiet=quiet,run=run_all_test):
     """
       Create a script in the catalog to generate a uid list
@@ -1982,7 +1981,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Add a script to create uid list
     catalog = self.getCatalogTool().getSQLCatalog()
     script_id = 'z0_zCreateUid'
-    script_content = "context.getPortalObject().portal_ids.generateNewLengthIdList(id_group='text_uid')"
+    script_content = "context.getPortalObject().portal_ids.generateNewIdList(id_generator='uid',\
+                                                                             id_group='text_uid')"
     script = createZODBPythonScript(catalog, script_id,
                           '*args,**kw', script_content)
     sql_clear_catalog = list(catalog.sql_clear_catalog)

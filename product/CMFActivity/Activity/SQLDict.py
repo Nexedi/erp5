@@ -82,8 +82,10 @@ class SQLDict(RAMDict, SQLBase):
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       serialization_tag_list = [message.activity_kw.get('serialization_tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
-      uid_list = activity_tool.getPortalObject().portal_ids.generateNewLengthIdList(id_group='portal_activity', 
-                   id_count=len(registered_message_list), store=0)
+      # The uid_list also is store in the ZODB
+      uid_list = activity_tool.getPortalObject().portal_ids.\
+                                           generateNewIdList(id_generator='uid', id_group='portal_activity',
+                                           id_count=len(registered_message_list))
       activity_tool.SQLDict_writeMessageList( uid_list = uid_list,
                                               path_list = path_list,
                                               active_process_uid_list=active_process_uid_list,

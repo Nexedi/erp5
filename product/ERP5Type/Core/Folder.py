@@ -254,9 +254,8 @@ class FolderMixIn(ExtensionClass.Base):
       while self.hasContent(my_id):
         my_id = idGenerator()
     else:
-      my_id = str(self.portal_ids.generateNewId( id_group=id_group,
-                                                 default=default,
-                                                 method=method ))
+      my_id = str(self.portal_ids.generateNewId(id_generator='document',
+                  id_group=id_group, default=default, method=method ))
     return my_id
 
   security.declareProtected(Permissions.View, 'hasContent')
