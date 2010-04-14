@@ -1363,9 +1363,7 @@ class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
             setattr(klass, security_property_id, None)
 
             return getattr(self, name)
-        else:
-          return aq_base_name
-      return aq_base_name
+      return SelectionTool.inheritedAttribute('_aq_dynamic')(self, name)
 
     def _getUserId(self):
       return self.portal_membership.getAuthenticatedMember().getUserName()
