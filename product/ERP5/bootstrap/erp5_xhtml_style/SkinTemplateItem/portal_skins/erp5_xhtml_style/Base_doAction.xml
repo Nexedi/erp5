@@ -84,11 +84,9 @@ if doAction0 in (\'object\', \'workflow\', \'folder\'):\n
     kw[\'dialog_category\'] = \'object_action\'\n
 # Otherwise, check if this is an automatic menu (add)\n
 elif doAction0 == \'add\':\n
-  new_id = context.generateNewId()\n
   type_name = \' \'.join(Base_doAction[1:])\n
   new_content = context.newContent(portal_type=type_name,\n
-                                   container=context,\n
-                                   id=str(new_id))\n
+                                   container=context)\n
   preserved_parameters[\'portal_status_message\'] = Base_translateString("Object created.")\n
   preserved_parameters[\'editable_mode\'] = 1\n
   redirect_url = \'%s/view\' % (new_content.absolute_url(), )\n
