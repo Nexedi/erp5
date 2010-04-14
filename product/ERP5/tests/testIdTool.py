@@ -159,8 +159,8 @@ class TestIdTool(ERP5TypeTestCase):
     # generate ids
     self.checkGenerateNewId('test_application_zodb')
     # check zodb dict
-    self.assertEqual(zodb_generator.last_id_dict['c02'], 1)
-    self.assertEqual(zodb_generator.last_id_dict['d02'], 20)
+    self.assertEqual(zodb_generator.last_id_dict['c02'], 0)
+    self.assertEqual(zodb_generator.last_id_dict['d02'], 21)
 
   def checkGenerateNewIdWithSQL(self, store):
     """
@@ -182,12 +182,12 @@ class TestIdTool(ERP5TypeTestCase):
     # generate ids
     self.checkGenerateNewId('test_application_sql')
     # check last_id in sql
-    self.assertEquals(last_id_method(id_group='c02')[0]['LAST_INSERT_ID()'], 1)
-    self.assertEquals(last_id_method(id_group='d02')[0]['LAST_INSERT_ID()'], 20)
+    self.assertEquals(last_id_method(id_group='c02')[0]['LAST_INSERT_ID()'], 0)
+    self.assertEquals(last_id_method(id_group='d02')[0]['LAST_INSERT_ID()'], 21)
     # check zodb dict
     if store:
-      self.assertEqual(sql_generator.last_max_id_dict['c02'].value, 1)
-      self.assertEqual(sql_generator.last_max_id_dict['d02'].value, 20)
+      self.assertEqual(sql_generator.last_max_id_dict['c02'].value, 0)
+      self.assertEqual(sql_generator.last_max_id_dict['d02'].value, 21)
     else:
       self.assertEqual(getattr(sql_generator, 'last_max_id_dict', None), None)
 
