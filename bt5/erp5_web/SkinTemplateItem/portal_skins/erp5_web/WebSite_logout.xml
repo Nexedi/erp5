@@ -193,7 +193,7 @@ return website.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_id=None, form_id=\'view\', **kw</string> </value>
+            <value> <string>dialog_id=None, form_id=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -247,7 +247,7 @@ return website.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
             <value>
               <tuple>
                 <none/>
-                <string>view</string>
+                <string></string>
               </tuple>
             </value>
         </item>
