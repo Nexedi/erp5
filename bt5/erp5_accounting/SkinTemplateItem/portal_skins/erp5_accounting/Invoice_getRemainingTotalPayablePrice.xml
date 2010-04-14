@@ -217,7 +217,7 @@ for related_transaction in related_transaction_list:\n
       line_section = line.getDestinationSection()\n
       mirror_section = line.getSourceSection()\n
       if quantity:\n
-        amount = -line.getQuantity()\n
+        amount = line.getQuantity()\n
       else:\n
         amount = line.getDestinationInventoriatedTotalAssetPrice() or 0\n
       date = line.getStopDate().earliestTime()\n
