@@ -65,14 +65,15 @@
 </tal:block> \n
 \n
 <tal:block metal:define-macro="add_new_gadget">\n
-   <a href="GadgetTool_viewPrettyGadgetList"\n
+   <a href="Base_viewGadgetListDialog"\n
    tal:condition="not: isKnowledgePadTemplateUsed"\n
    tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
                portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url())"\n
    tal:attributes="href python:\n
    \'Base_viewGadgetListDialog?reset=1&cancel_url=%s&active_pad_relative_url=%s&mode=%s&editable_mode:int=%d\'\n
     %(cancel_url, active_knowledge_pad.getRelativeUrl(), mode, editable_mode);"\n
-   title="Click to add portlets"\n
+   title="Add gadgets"\n
+   id="add-gadgets"\n
    class="bt-small"> \n
     <span i18n:translate="" i18n:domain="ui">\n
       <img alt="+" src="km_img/icon-add.png"\n
