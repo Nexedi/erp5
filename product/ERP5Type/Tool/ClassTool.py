@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002-2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -251,6 +252,7 @@ if allowClassTool():
       """
       id = 'portal_classes'
       meta_type = 'ERP5 Class Tool'
+      portal_type = 'Class Tool'
 
       # Declarative Security
       security = ClassSecurityInfo()
@@ -1094,6 +1096,7 @@ else:
       """
       id = 'portal_classes'
       meta_type = 'ERP5 Dummy Class Tool'
+      portal_type = 'Dummy Class Tool'
 
       # Declarative Security
       security = ClassSecurityInfo()
