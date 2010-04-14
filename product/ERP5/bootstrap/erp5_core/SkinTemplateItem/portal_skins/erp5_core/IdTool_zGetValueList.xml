@@ -46,11 +46,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>IdTool_zCommit</string> </value>
+            <value> <string>IdTool_zGetValueList</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>commit</string> </value>
+            <value> <string>select id_group, last_id from portal_ids</string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -86,7 +86,7 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>commit</string> </value>
+                        <value> <string>select id_group, last_id from portal_ids</string> </value>
                     </item>
                   </dictionary>
                 </state>

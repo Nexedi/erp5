@@ -14,6 +14,10 @@ Contribution Registry Tool | Contribution Predicate
 Domain Tool | Base Domain
 Domain | Domain
 Domain | Domain Generator
+Id Tool | Application Id Generator
+Id Tool | Conceptual Id Generator
+Id Tool | SQL Non Continuous Increasing Id Generator
+Id Tool | ZODB Continuous Increasing Id Generator
 Memcached Tool | Memcached Plugin
 Preference Tool | Preference
 Preference Tool | System Preference

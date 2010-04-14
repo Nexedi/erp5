@@ -39,6 +39,12 @@
  <portal_type id="Domain Tool">
   <item>Base Domain</item>
  </portal_type>
+ <portal_type id="Id Tool">
+  <item>Application Id Generator</item>
+  <item>Conceptual Id Generator</item>
+  <item>SQL Non Continuous Increasing Id Generator</item>
+  <item>ZODB Continuous Increasing Id Generator</item>
+ </portal_type>
  <portal_type id="Memcached Tool">
   <item>Memcached Plugin</item>
  </portal_type>

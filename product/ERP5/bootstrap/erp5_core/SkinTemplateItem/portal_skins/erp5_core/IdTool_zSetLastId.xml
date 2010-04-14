@@ -22,13 +22,38 @@
                     <item>
                         <key> <string>_data</string> </key>
                         <value>
-                          <dictionary/>
+                          <dictionary>
+                            <item>
+                                <key> <string>id_group</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>last_id</string> </key>
+                                <value>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>default</string> </key>
+                                        <value> <string>0</string> </value>
+                                    </item>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>int</string> </value>
+                                    </item>
+                                  </dictionary>
+                                </value>
+                            </item>
+                          </dictionary>
                         </value>
                     </item>
                     <item>
                         <key> <string>_keys</string> </key>
                         <value>
-                          <list/>
+                          <list>
+                            <string>id_group</string>
+                            <string>last_id</string>
+                          </list>
                         </value>
                     </item>
                   </dictionary>
@@ -38,7 +63,8 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string></string> </value>
+            <value> <string>id_group\r\n
+last_id:int=0</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -46,11 +72,21 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>IdTool_zCommit</string> </value>
+            <value> <string>IdTool_zSetLastId</string> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>commit</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+BEGIN\n
+<dtml-var sql_delimiter>\n
+INSERT INTO portal_ids (`id_group`, `last_id`)\n
+ VALUES (<dtml-sqlvar id_group type="string">, <dtml-sqlvar last_id type="int">)\n
+ ON DUPLICATE KEY UPDATE `last_id` = <dtml-sqlvar last_id type="int">\n
+<dtml-var sql_delimiter>\n
+COMMIT
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -86,7 +122,17 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>commit</string> </value>
+                        <value> <string encoding="cdata"><![CDATA[
+
+BEGIN\n
+<dtml-var sql_delimiter>\n
+INSERT INTO portal_ids (`id_group`, `last_id`)\n
+ VALUES (<dtml-sqlvar id_group type="string">, <dtml-sqlvar last_id type="int">)\n
+ ON DUPLICATE KEY UPDATE `last_id` = <dtml-sqlvar last_id type="int">\n
+<dtml-var sql_delimiter>\n
+COMMIT
+
+]]></string> </value>
                     </item>
                   </dictionary>
                 </state>

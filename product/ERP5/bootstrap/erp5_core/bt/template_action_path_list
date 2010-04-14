@@ -7,6 +7,7 @@ Alarm | periodicity
 Alarm | solve
 Alarm | standard_report
 Alarm | view
+Application Id Generator | view
 Applied Rule | view
 Base Category | view
 Base Domain | view
@@ -33,6 +34,7 @@ Category Tool | export_category_list
 Category Tool | fast_input
 Category Tool | view
 Category | view
+Conceptual Id Generator | view
 Contribution Predicate | view
 Contribution Registry Tool | view
 Distributed Ram Cache | view
@@ -41,6 +43,7 @@ Domain Generator | view
 Domain Tool | view
 Domain | view
 Folder | view
+Id Tool | view
 Memcached Plugin | view
 Memcached Tool | view
 Predicate | view
@@ -53,6 +56,7 @@ Ram Cache | statistics
 Ram Cache | view
 Role Information | view
 Rule Tool | view
+SQL Non Continuous Increasing Id Generator | view
 Simulation Movement | view
 Simulation Tool | view
 System Preference | view
@@ -71,6 +75,7 @@ Trash Bin | view
 Trash Folder | view
 Trash Tool | view
 Types Tool | view
+ZODB Continuous Increasing Id Generator | view
 portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module

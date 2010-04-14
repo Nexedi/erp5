@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZODBContinuousIncreasingIdGenerator" module="Products.ERP5Type.Document.ZODBContinuousIncreasingIdGenerator"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>zodb_continuous_increasing</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>3</string> </value>
+        </item>
+        <item>
+            <key> <string>last_id_dict</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>ZODB Continuous Increasing Id Generator</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -29,7 +29,7 @@
                                   <dictionary>
                                     <item>
                                         <key> <string>default</string> </key>
-                                        <value> <string>1</string> </value>
+                                        <value> <string>0</string> </value>
                                     </item>
                                     <item>
                                         <key> <string>type</string> </key>
@@ -81,11 +81,11 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>id_group\r\n
 id_count:int=1\r\n
-default:int=1</string> </value>
+default:int=0</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
-            <value> <string>erp5_sql_transactionless_connection</string> </value>
+            <value> <string>cmf_activity_sql_connection</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -101,7 +101,7 @@ default:int=1</string> </value>
 BEGIN\n
 <dtml-var sql_delimiter>\n
 INSERT INTO portal_ids (`id_group`, `last_id`)\n
- VALUES (<dtml-sqlvar id_group type="string">, <dtml-sqlvar expr="id_count + default" type="int">)\n
+ VALUES (<dtml-sqlvar id_group type="string">, <dtml-sqlvar expr="id_count - 1 + default" type="int">)\n
  ON DUPLICATE KEY UPDATE `last_id` = `last_id` + <dtml-sqlvar id_count type="int">\n
 <dtml-var sql_delimiter>\n
 SELECT `last_id` AS `LAST_INSERT_ID()` FROM portal_ids\n
@@ -152,7 +152,7 @@ SELECT `last_id` AS `LAST_INSERT_ID()` FROM portal_ids\n
 BEGIN\n
 <dtml-var sql_delimiter>\n
 INSERT INTO portal_ids (`id_group`, `last_id`)\n
- VALUES (<dtml-sqlvar id_group type="string">, <dtml-sqlvar expr="id_count + default" type="int">)\n
+ VALUES (<dtml-sqlvar id_group type="string">, <dtml-sqlvar expr="id_count - 1 + default" type="int">)\n
  ON DUPLICATE KEY UPDATE `last_id` = `last_id` + <dtml-sqlvar id_count type="int">\n
 <dtml-var sql_delimiter>\n
 SELECT `last_id` AS `LAST_INSERT_ID()` FROM portal_ids\n

@@ -37,8 +37,38 @@
             </value>
         </item>
         <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>allow_simple_one_argument_traversal</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>arguments_src</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>cache_time_</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>class_file_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>class_name_</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>connection_hook</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -46,11 +76,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>IdTool_zCommit</string> </value>
+            <value> <string>IdTool_zCreateEmptyTable</string> </value>
+        </item>
+        <item>
+            <key> <string>max_cache_</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>max_rows_</string> </key>
+            <value> <int>1000</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string>commit</string> </value>
+            <value> <string>CREATE TABLE `portal_ids` (\n
+  `id_group` VARBINARY(255),\n
+  `last_id` BIGINT UNSIGNED,\n
+  PRIMARY KEY  (`id_group`)\n
+) TYPE=InnoDB;</string> </value>
         </item>
         <item>
             <key> <string>template</string> </key>
@@ -86,7 +128,11 @@
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string>commit</string> </value>
+                        <value> <string>CREATE TABLE `portal_ids` (\n
+  `id_group` VARBINARY(255),\n
+  `last_id` BIGINT UNSIGNED,\n
+  PRIMARY KEY  (`id_group`)\n
+) TYPE=InnoDB;</string> </value>
                     </item>
                   </dictionary>
                 </state>
