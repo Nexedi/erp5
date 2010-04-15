@@ -34,6 +34,7 @@ import string
 import time
 import warnings
 import sys
+import persistent
 try:
   # Python 2.5 or later
   from hashlib import md5 as md5_new
@@ -70,7 +71,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from zLOG import LOG, BLATHER, PROBLEM, WARNING
+from zLOG import LOG, BLATHER, PROBLEM, WARNING, INFO
 
 #####################################################
 # Avoid importing from (possibly unpatched) Globals
@@ -3125,3 +3126,33 @@ def _setSuperSecurityManager(self, user_name=None):
     user = self.getWrappedOwner()
   newSecurityManager(self.REQUEST, user)
   return original_security_manager
+
+#####################################################
+# Processing of Conflict Resolver
+#####################################################
+
+class ScalarMaxConflictResolver(persistent.Persistent):
+  """
+    Store the last id generated
+    The object support application-level conflict resolution
+  """
+
+  def __init__(self, value=0):
+    self.value = value
+
+  def __getstate__(self):
+    return self.value
+
+  def __setstate__(self, value):
+    self.value = value
+
+  def set(self, value):
+    self.value = value
+
+  def _p_resolveConflict(self, old, first_id, second_id):
+    return max(first_id, second_id)
+
+  def _p_independent(self):
+    # My state doesn't depend on or materially effect the state of
+    # other objects.
+    return 1
