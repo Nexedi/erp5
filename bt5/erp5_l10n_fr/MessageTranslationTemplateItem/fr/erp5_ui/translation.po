@@ -422,6 +422,9 @@ msgstr "Le compte doit être défini"
 msgid "Accounting"
 msgstr "Comptabilité"
 
+msgid "Accounting Currency"
+msgstr "Devise de comptabilité"
+
 msgid "Accounting Date"
 msgstr "Journée comptable"
 
@@ -11690,6 +11693,9 @@ msgstr "Date"
 msgid "Trade description"
 msgstr "Libellé"
 
+msgid "Transaction Currency"
+msgstr "Devise de l'écriture"
+
 msgid "Transaction Reference"
 msgstr "N° d'écriture"
 
@@ -12208,6 +12214,9 @@ msgstr "Variantes prises en compte."
 
 msgid "Vendor"
 msgstr "Vendeur"
+
+msgid "Vendor Account"
+msgstr "Compte fournisseur"
 
 msgid "Vendor Transaction Reference"
 msgstr "Référence du vendeur"
