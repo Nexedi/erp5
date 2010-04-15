@@ -53,16 +53,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>account = None\n
-if account == \'\' :\n
+            <value> <string>node_uid=None\n
+if not account:\n
   if (hasattr(context, \'getPortalType\') and context.getPortalType() == \'Account\') :\n
-    account = context\n
+    node_uid = context.getUid()\n
 elif same_type(account, \'\') :\n
   account = context.getPortalObject().restrictedTraverse(account)\n
-\n
-node_uid = None\n
-if account is not None :\n
   node_uid = account.getUid()\n
+\n
 \n
 ptype_translated_dict = {}\n
 def translatePortalType(ptype) :\n
@@ -71,8 +69,15 @@ def translatePortalType(ptype) :\n
     ptype_translated_dict[ptype] = context.Base_translateString(ptype)\n
   return ptype_translated_dict[ptype]\n
 \n
+section_uid = []\n
+if section_category:\n
+  section_uid = context.Base_getSectionUidListForSectionCategory(\n
+            section_category, strict_membership=section_category_strict_membership)\n
+\n
+\n
 item_list = [("", "")]\n
-for entity in context.Account_zDistinctSectionList(node_uid = node_uid):\n
+for entity in context.Account_zDistinctSectionList(node_uid=node_uid,\n
+                                                   section_uid=section_uid):\n
   item_list.append(("%s (%s)" % ( entity[\'title\'],\n
                                   translatePortalType(entity[\'portal_type\'])),\n
                                   entity[\'relative_url\']))\n
@@ -88,7 +93,7 @@ return item_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>account = \'\'</string> </value>
+            <value> <string>account=\'\', section_category=\'\', section_category_strict_membership=True</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -108,21 +113,24 @@ return item_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>account</string>
+                            <string>section_category</string>
+                            <string>section_category_strict_membership</string>
                             <string>None</string>
+                            <string>node_uid</string>
                             <string>hasattr</string>
                             <string>context</string>
                             <string>_getattr_</string>
                             <string>same_type</string>
-                            <string>node_uid</string>
                             <string>ptype_translated_dict</string>
                             <string>translatePortalType</string>
+                            <string>section_uid</string>
                             <string>item_list</string>
                             <string>_getiter_</string>
                             <string>entity</string>
@@ -140,6 +148,8 @@ return item_list\n
             <value>
               <tuple>
                 <string></string>
+                <string></string>
+                <int>1</int>
               </tuple>
             </value>
         </item>
@@ -149,7 +159,7 @@ return item_list\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>TODO: rename as Account_getMirrorSectionItemList</string> </value>
+            <value> <string>TODO: rename into AccountModule_getMirrorSectionItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

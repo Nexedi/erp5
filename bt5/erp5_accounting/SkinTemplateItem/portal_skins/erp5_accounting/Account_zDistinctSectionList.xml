@@ -44,9 +44,14 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>section_category</string> </key>
+                                <key> <string>section_uid</string> </key>
                                 <value>
-                                  <dictionary/>
+                                  <dictionary>
+                                    <item>
+                                        <key> <string>type</string> </key>
+                                        <value> <string>list</string> </value>
+                                    </item>
+                                  </dictionary>
                                 </value>
                             </item>
                             <item>
@@ -69,7 +74,7 @@
                           <list>
                             <string>node_uid</string>
                             <string>at_date</string>
-                            <string>section_category</string>
+                            <string>section_uid</string>
                             <string>simulation_state</string>
                           </list>
                         </value>
@@ -132,7 +137,7 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>node_uid\r\n
 at_date\r\n
-section_category\r\n
+section_uid:list\r\n
 simulation_state:list</string> </value>
         </item>
         <item>
@@ -195,11 +200,17 @@ WHERE\n
   AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if simulation_state>\n
-  AND ( <dtml-in simulation_state>\n
-    stock.simulation_state = <dtml-sqlvar sequence-item type="string">\n
-                <dtml-unless sequence-end>OR </dtml-unless>\n
-  </dtml-in> )\n
+  AND ( stock.simulation_state IN (<dtml-in simulation_state><dtml-sqlvar sequence-item type="string">\n
+                <dtml-unless sequence-end>, </dtml-unless></dtml-in>) )\n
 </dtml-if>\n
+\n
+<dtml-if section_uid>\n
+  AND (\n
+    stock.section_uid IN ( <dtml-in section_uid><dtml-sqlvar sequence-item type="int">\n
+        <dtml-unless sequence-end>, </dtml-unless> </dtml-in> )\n
+  )\n
+</dtml-if>\n
+\n
   AND stock.portal_type in ( <dtml-in getPortalAccountingMovementTypeList><dtml-sqlvar\n
     sequence-item type="string"><dtml-unless sequence-end>, </dtml-unless></dtml-in> )\n
 <dtml-if "query[\'where_expression\']">\n
@@ -271,11 +282,17 @@ WHERE\n
   AND stock.date <= <dtml-sqlvar at_date type="datetime">\n
 </dtml-if>\n
 <dtml-if simulation_state>\n
-  AND ( <dtml-in simulation_state>\n
-    stock.simulation_state = <dtml-sqlvar sequence-item type="string">\n
-                <dtml-unless sequence-end>OR </dtml-unless>\n
-  </dtml-in> )\n
+  AND ( stock.simulation_state IN (<dtml-in simulation_state><dtml-sqlvar sequence-item type="string">\n
+                <dtml-unless sequence-end>, </dtml-unless></dtml-in>) )\n
 </dtml-if>\n
+\n
+<dtml-if section_uid>\n
+  AND (\n
+    stock.section_uid IN ( <dtml-in section_uid><dtml-sqlvar sequence-item type="int">\n
+        <dtml-unless sequence-end>, </dtml-unless> </dtml-in> )\n
+  )\n
+</dtml-if>\n
+\n
   AND stock.portal_type in ( <dtml-in getPortalAccountingMovementTypeList><dtml-sqlvar\n
     sequence-item type="string"><dtml-unless sequence-end>, </dtml-unless></dtml-in> )\n
 <dtml-if "query[\'where_expression\']">\n

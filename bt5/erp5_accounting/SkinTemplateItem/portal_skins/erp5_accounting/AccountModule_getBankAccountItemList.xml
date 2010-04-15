@@ -53,36 +53,52 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>"""Returns an item list of the acceptable bank accounts.\n
+If `organisation` is passed, then we only show bank accounts available for that\n
+organisation, using the following policy:\n
+ - if organisation contains bank accounts directly, only those bank accounts\n
+   can be selected\n
+ - if organisation higher in the group hierarchy contains bank accounts, bank\n
+   accounts from parent organisations can be selected\n
+ - it means a higher in the group cannot use bank account from organisations\n
+   below, maybe we\'ll want to change this ...\n
 \n
-if not organisation:\n
-  organisation = portal.portal_preferences\\\n
-               .getPreferredAccountingTransactionSourceSection()\n
+If organisation is not passed, this script will return all bank accounts\n
+applicable for section_category and section_category_strict_membership.\n
+"""\n
+portal = context.getPortalObject()\n
 \n
-if not organisation:\n
-  return [(\'\', \'\')]\n
-\n
-organisation_value = portal.restrictedTraverse(organisation)\n
-group_value = organisation_value.getGroupValue(None)\n
-\n
-search_kw = {\n
-  \'portal_type\': portal.getPortalPaymentNodeTypeList(),\n
-}\n
-\n
+search_kw = dict(portal_type=portal.getPortalPaymentNodeTypeList())\n
 if skip_invalidated_bank_accounts:\n
   search_kw[\'validation_state\'] = \'!=invalidated\'\n
 \n
-# if organisation contains bank accounts, only take into account those.\n
-bank_account_list = organisation_value.searchFolder(**search_kw)\n
+if organisation:\n
+  organisation_value = portal.restrictedTraverse(organisation)\n
 \n
-if not bank_account_list:\n
-  uid_list = []\n
-  while group_value.getPortalType() != \'Base Category\':\n
-    uid_list.append(group_value.getUid())\n
-    group_value = group_value.getParentValue()\n
-  search_kw[\'parent_strict_group_uid\'] = uid_list\n
-  search_kw[\'parent_portal_type\'] = \'Organisation\'\n
+  # if organisation contains bank accounts, only take into account those.\n
+  bank_account_list = organisation_value.searchFolder(**search_kw)\n
+\n
+    # else we lookup in parent organisations\n
+  if not bank_account_list:\n
+    group_value = organisation_value.getGroupValue(None)\n
+    uid_list = []\n
+    while group_value.getPortalType() != \'Base Category\':\n
+      uid_list.append(group_value.getUid())\n
+      group_value = group_value.getParentValue()\n
+    search_kw[\'parent_strict_group_uid\'] = uid_list\n
+    search_kw[\'parent_portal_type\'] = \'Organisation\'\n
+    bank_account_list = portal.portal_catalog(**search_kw)\n
+\n
+else:\n
+  if section_category is None:\n
+    section_category = portal.portal_preferences\\\n
+        .getPreferredAccountingTransactionSectionCategory()\n
+  section_uid = portal.Base_getSectionUidListForSectionCategory(\n
+                               section_category=section_category,\n
+                               strict_membership=section_category_strict_membership)\n
+  search_kw[\'parent_uid\'] = section_uid\n
   bank_account_list = portal.portal_catalog(**search_kw)\n
+\n
 \n
 item_list = [(\'\', \'\')]\n
 for bank in bank_account_list:\n
@@ -113,7 +129,7 @@ return item_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>organisation=None, skip_invalidated_bank_accounts=0</string> </value>
+            <value> <string>organisation=None, skip_invalidated_bank_accounts=0, section_category=None, section_category_strict_membership=False</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -133,7 +149,7 @@ return item_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -141,17 +157,21 @@ return item_list\n
                           <tuple>
                             <string>organisation</string>
                             <string>skip_invalidated_bank_accounts</string>
+                            <string>section_category</string>
+                            <string>section_category_strict_membership</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>organisation_value</string>
-                            <string>None</string>
-                            <string>group_value</string>
+                            <string>dict</string>
                             <string>search_kw</string>
                             <string>_write_</string>
+                            <string>organisation_value</string>
                             <string>_apply_</string>
                             <string>bank_account_list</string>
+                            <string>None</string>
+                            <string>group_value</string>
                             <string>uid_list</string>
+                            <string>section_uid</string>
                             <string>item_list</string>
                             <string>_getiter_</string>
                             <string>bank</string>
@@ -167,6 +187,8 @@ return item_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
+                <int>0</int>
                 <none/>
                 <int>0</int>
               </tuple>
