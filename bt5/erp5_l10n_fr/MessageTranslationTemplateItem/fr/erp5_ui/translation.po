@@ -464,8 +464,14 @@ msgstr "Écriture d'opérations diverses"
 msgid "Accounting Transaction Line"
 msgstr "Ligne d'écriture comptable"
 
-msgid "Accounting Transaction Line added."
-msgstr "Ligne comptable ajoutée"
+msgid "Accounting Transaction Lines added."
+msgstr "Lignes comptables ajoutées"
+
+msgid "Add Accounting Transaction Lines"
+msgstr "Ajouter des lignes comptables"
+
+msgid "Number of Lines to Add"
+msgstr "Nombre de lignes à ajouter"
 
 msgid "Accounting Transaction Lines"
 msgstr "Lignes comptables"
@@ -5624,11 +5630,14 @@ msgstr "Objets copiés"
 msgid "Items cut."
 msgstr "Objets coupés"
 
-msgid "Items pasted."
+msgid "Items paste in progress."
 msgstr "Objets collés"
 
 msgid "January"
 msgstr "Janvier"
+
+msgid "Accounting Line Report"
+msgstr "Export des lignes comptables"
 
 msgid "Journal"
 msgstr "Journal"
@@ -9119,7 +9128,7 @@ msgid "Search results"
 msgstr "Résultats de la recherche"
 
 msgid "Section"
-msgstr "Section"
+msgstr "Entité"
 
 msgid "Section Account"
 msgstr "Compte"
@@ -9128,7 +9137,7 @@ msgid "Section Bank Account"
 msgstr "Compte en banque"
 
 msgid "Section Category"
-msgstr "Catégorie de section"
+msgstr "Catégorie de l'entité"
 
 msgid "Section Content"
 msgstr "Contenu de la section"
@@ -9971,7 +9980,7 @@ msgid "Street Address"
 msgstr "Adresse"
 
 msgid "Strict Section Category"
-msgstr "Appartenance stricte à la catégorie de section"
+msgstr "Appartenance stricte à la catégorie de l'entité"
 
 msgid "String Fields Width"
 msgstr "Largeur des champs représentant une chaîne de caractères"
