@@ -60,12 +60,12 @@
               \'collected_vat\': -1,\n
               \'refundable_vat\': -1 }\n
 \n
-def sortInvoiceTransactionLine(a):\n
-  return sort_dict.get(a.getId(), a.getIntId())\n
+def getAccountingTransactionLineSortKey(line):\n
+  return sort_dict.get(line.getId(), line.getIntIndex() or line.getIntId())\n
 \n
 object_list = list(context.contentValues(\n
                       filter={\'portal_type\': portal_type}))\n
-object_list.sort(key=sortInvoiceTransactionLine)\n
+object_list.sort(key=getAccountingTransactionLineSortKey)\n
 return object_list\n
 </string> </value>
         </item>
@@ -106,7 +106,7 @@ return object_list\n
                             <string>portal_type</string>
                             <string>kw</string>
                             <string>sort_dict</string>
-                            <string>sortInvoiceTransactionLine</string>
+                            <string>getAccountingTransactionLineSortKey</string>
                             <string>list</string>
                             <string>_getattr_</string>
                             <string>context</string>
