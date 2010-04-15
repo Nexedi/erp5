@@ -554,6 +554,14 @@ class TestBPMEvaluationDifferentProcessMixin:
         referential_date='start_date')
     self._createBusinessStateList()
 
+    self.order_path = self.createBusinessPath(self.business_process,
+        successor_value=self.ordered_state,
+        trade_phase='default/order',
+        deliverable=1,
+        completed_state_list=['confirmed'],
+        frozen_state_list=['confirmed'],
+        )
+
     self.invoice_path = self.createBusinessPath(self.business_process,
         predecessor_value=self.ordered_state,
         successor_value=self.invoiced_state,
