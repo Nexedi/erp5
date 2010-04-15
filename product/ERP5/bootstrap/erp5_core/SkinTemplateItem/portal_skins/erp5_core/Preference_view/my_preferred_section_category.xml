@@ -13,8 +13,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -86,10 +86,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_category</string> </value>
                 </item>
@@ -128,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here.portal_categories.group, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\').replace(\'Translated\', \'\'))(local_sort_id="title", base=1)</string> </value>
+            <value> <string>python:here.Base_getPreferredCategoryChildItemList(here.portal_categories.group, base=True)</string> </value>
         </item>
       </dictionary>
     </pickle>
