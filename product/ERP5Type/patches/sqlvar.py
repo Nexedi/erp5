@@ -54,7 +54,9 @@ def SQLVar_render(self, md):
                 if v[-1:]=='L':
                     v=v[:-1]
                 atof(v)
-            else: v=str(float(v))
+            # ERP5 patch, we use repr that have better precision than str for
+            # floats
+            else: v=repr(float(v))
         except:
             if not v and args.has_key('optional') and args['optional']:
                 return 'null'
