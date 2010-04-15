@@ -31,32 +31,10 @@ from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Utils import ScalarMaxConflictResolver
 from Products.ERP5.Document.IdGenerator import IdGenerator
 from _mysql_exceptions import ProgrammingError
 from zLOG import LOG, INFO
-
-import persistent
-
-class LastMaxGeneratedId(persistent.Persistent):
-  """
-    Store the last id generated
-    The object support application-level conflict resolution
-  """
-
-  def __init__(self, value=0):
-    self.value = value
-
-  def __getstate__(self):
-    return self.value
-
-  def __setstate__(self, value):
-    self.value = value
-
-  def set(self, value):
-    self.value = value
-
-  def _p_resolveConflict(self, first_id, second_id):
-    return max(first_id, second_id)
 
 class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
   """
@@ -81,8 +59,9 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
       Return the next_id with the last_id with the sql method
       Store the last id on a database in the portal_ids table
-      If stored in zodb is enable, to store the last id use LastMaxGeneratedId inspired
-      by BTrees.Length to manage conflict in the zodb, use also a persistant
+      If stored in zodb is enable, to store the last id use
+      ScalarMaxConflictResolver inspired by BTrees.Length to manage
+      conflict in the zodb, use also a persistant
       mapping to be persistent
     """
     # Check the arguments
@@ -112,15 +91,16 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       self.initializeGenerator()
     if self.getStoredInZodb():
       # Store the new_id on ZODB if the checkbox storedInZodb is enabled
-      self.last_max_id_dict = getattr(aq_base(self), \
+      last_max_id_dict = getattr(aq_base(self), \
            'last_max_id_dict', None)
-      if self.last_max_id_dict is None:
+      if last_max_id_dict is None:
         # If the dictionary not exist, initialize the generator
         self.initializeGenerator()
+        last_max_id_dict = getattr(aq_base(self), 'last_max_id_dict')
       # Store the new value id
-      if self.last_max_id_dict.get(id_group, None) is None:
-        self.last_max_id_dict[id_group] = LastMaxGeneratedId(new_id)
-      self.last_max_id_dict[id_group].set(new_id)
+      if last_max_id_dict.get(id_group, None) is None:
+        last_max_id_dict[id_group] = ScalarMaxConflictResolver(new_id)
+      last_max_id_dict[id_group].set(new_id)
     return new_id
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -193,13 +173,13 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
             # Check value in dict
             if storage and (not self.last_max_id_dict.has_key(id_group) or \
                 self.last_max_id_dict.has_key[id_group] != last_insert_id):
-              self.last_max_id_dict[id_group] = LastMaxGeneratedId(last_insert_id)
+              self.last_max_id_dict[id_group] = ScalarMaxConflictResolver(last_insert_id)
               self.last_max_id_dict[id_group].set(last_insert_id)
             continue
         last_id = int(last_id.value)
         set_last_id_method(id_group=id_group, last_id=last_id)
         if storage:
-          self.last_max_id_dict[id_group] = LastMaxGeneratedId(last_id)
+          self.last_max_id_dict[id_group] = ScalarMaxConflictResolver(last_id)
           self.last_max_id_dict[id_group].set(last_id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
