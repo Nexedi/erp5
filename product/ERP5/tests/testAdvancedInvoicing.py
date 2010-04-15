@@ -393,7 +393,11 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
 
   def afterSetUp(self):
     super(TestAdvancedSaleInvoice, self).afterSetUp()
-    self.portal.portal_ids.clearGenerator(all=True)
+    # This is quite ugly, we should use late import/export functions of generators
+    self.portal.cmf_activity_sql_connection.manage_test(
+     "delete from portal_ids where \
+       id_group='Accounting_Transaction_Module-Sale_Invoice_Transaction'")
+    transaction.commit()
 
   def stepCheckInvoicesAndTransactionsConsistency(self, sequence=None, sequence_list=None,
                                                   **kw):
