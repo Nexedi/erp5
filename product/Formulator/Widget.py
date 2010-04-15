@@ -1650,13 +1650,10 @@ class FloatWidget(TextWidget):
         float_value = float(value)
         if precision not in (None, ''):
           float_value = round(float_value, precision)
-        value = str(float_value)
+        # we use repr that have a better precision than str
+        value = repr(float_value)
       except ValueError:
         return value
-      else:
-        if 'e' in value:
-          # %f will not use exponential format
-          value = '%f' % float(original_value)
       value_list = value.split('.')
       integer = value_list[0]
       
