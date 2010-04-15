@@ -128,11 +128,11 @@
                         </tuple>
                         <tuple>
                           <string>debit</string>
-                          <string>Debit</string>
+                          <string>Converted Debit</string>
                         </tuple>
                         <tuple>
                           <string>credit</string>
-                          <string>Credit</string>
+                          <string>Converted Credit</string>
                         </tuple>
                         <tuple>
                           <string>currency</string>
@@ -140,15 +140,15 @@
                         </tuple>
                         <tuple>
                           <string>debit_quantity</string>
-                          <string>Original Debit</string>
+                          <string>Debit</string>
                         </tuple>
                         <tuple>
                           <string>credit_quantity</string>
-                          <string>Original Credit</string>
+                          <string>Credit</string>
                         </tuple>
                         <tuple>
                           <string>resource</string>
-                          <string>Original Currency</string>
+                          <string>Transaction Currency</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
