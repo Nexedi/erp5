@@ -83,7 +83,7 @@ for divergence in divergence_list:\n
     value_list.append(prevision_value)\n
   if prevision_title not in prevision_title_list:\n
     prevision_title_list.append(prevision_title)\n
-  candidate_dict[prop] = [divergence.getProperty(\'message\'), candidate_list, value_list, decision_title_list, prevision_title_list]\n
+  candidate_dict[prop] = [divergence.getTranslatedMessage(), candidate_list, value_list, decision_title_list, prevision_title_list]\n
 \n
 for prop, candidate_list in candidate_dict.items():\n
   uid = \'new_%s\' % prop\n
