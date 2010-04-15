@@ -431,6 +431,9 @@ msgstr "Journée comptable"
 msgid "Accounting Dates"
 msgstr "Journées comptables"
 
+msgid "Accounting Line Report"
+msgstr "Export des lignes comptables"
+
 msgid "Accounting Lines"
 msgstr "Lignes de Comptabilité"
 
@@ -464,17 +467,11 @@ msgstr "Écriture d'opérations diverses"
 msgid "Accounting Transaction Line"
 msgstr "Ligne d'écriture comptable"
 
-msgid "Accounting Transaction Lines added."
-msgstr "Lignes comptables ajoutées"
-
-msgid "Add Accounting Transaction Lines"
-msgstr "Ajouter des lignes comptables"
-
-msgid "Number of Lines to Add"
-msgstr "Nombre de lignes à ajouter"
-
 msgid "Accounting Transaction Lines"
 msgstr "Lignes comptables"
+
+msgid "Accounting Transaction Lines added."
+msgstr "Lignes comptables ajoutées"
 
 msgid "Accounting Transaction Module"
 msgstr "Module des transactions comptables"
@@ -634,6 +631,9 @@ msgstr "Ajouter ${document_template}"
 
 msgid "Add ${portal_type}"
 msgstr "Ajouter ${portal_type}"
+
+msgid "Add Accounting Transaction Lines"
+msgstr "Ajouter des lignes comptables"
 
 msgid "Add Document with Requirements"
 msgstr "Ajouter un document avec des spécificités"
@@ -5636,9 +5636,6 @@ msgstr "Objets collés"
 msgid "January"
 msgstr "Janvier"
 
-msgid "Accounting Line Report"
-msgstr "Export des lignes comptables"
-
 msgid "Journal"
 msgstr "Journal"
 
@@ -6542,6 +6539,9 @@ msgstr "Nombre de lignes affichées en mode général"
 
 msgid "Number of Lines Displayed in View Mode ListBoxs"
 msgstr "Nombre de lignes affichées dans une listbox en mode view"
+
+msgid "Number of Lines to Add"
+msgstr "Nombre de lignes à ajouter"
 
 msgid "Number of Related Objects"
 msgstr "Nombre d'objets en relation"
@@ -8586,6 +8586,9 @@ msgstr "Format des rapports"
 
 msgid "Report Method"
 msgstr "Méthode d'affichage des résultats de l'alarme"
+
+msgid "Report Started"
+msgstr "Rapport en cours de calcul"
 
 msgid "Report Style"
 msgstr "Style des rapports"
