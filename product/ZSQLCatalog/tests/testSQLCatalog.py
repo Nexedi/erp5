@@ -425,7 +425,7 @@ class TestSQLCatalog(unittest.TestCase):
         ReferenceQuery(ReferenceQuery(operator='match', fulltext='b'),
       operator='not'), operator='and'), operator='and')
     self.catalog(reference_query, {'fulltext': 'a NOT b'})
-    # The same, with an order by, must raise
+    # The same, with an order by, must raise
     self.assertRaises(MergeConflictError, self.catalog, reference_query,
       {'fulltext': 'a NOT b', 'order_by_list': [('fulltext', ), ]},
       check_search_text=False)
