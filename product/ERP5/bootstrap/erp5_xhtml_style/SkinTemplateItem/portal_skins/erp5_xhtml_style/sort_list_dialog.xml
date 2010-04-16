@@ -54,7 +54,8 @@
                base_form python:getattr(here,request[\'form_id\']);\n
                groups base_form/get_groups;\n
                listbox python:base_form.Form_getListbox();\n
-               columns python:listbox.get_value(\'all_columns\');\n
+               default_columns python: listbox.get_value(\'columns\');\n
+               columns python: default_columns + [x for x in listbox.get_value(\'sort_columns\') if x not in default_columns];\n
                global row_index python:0;\n
                global row_keys python:[\'None\'];\n
                all_columns python: [(\'None\',\'\')] + columns;">\n
