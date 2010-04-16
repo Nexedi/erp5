@@ -354,28 +354,15 @@ class BusinessPath(Path, Predicate):
       return True
     return False
 
-  def _isDeliverySimulationMovementRelated(self, delivery, simulation_movement):
+  def _isDeliverySimulationMovementRelated(self, simulation_movement,
+                                           delivery_simulation_movement_list):
     """Helper method, which checks if simulation_movement is BPM like related
        with delivery"""
-    for delivery_simulation_movement in self \
-        ._getDeliverySimulationMovementList(delivery):
+    for delivery_simulation_movement in delivery_simulation_movement_list:
       if self.isMovementRelatedWithMovement(delivery_simulation_movement,
           simulation_movement):
         return True
     return False
-
-  def _getDeliverySimulationMovementList(self, delivery):
-    """Returns list of simulation movements related to delivery by applied rule
-       or delivery's movements"""
-    movement_list = []
-    for applied_rule in delivery.getCausalityRelatedValueList(
-        portal_type='Applied Rule'):
-      movement_list.extend(applied_rule.contentValues(
-        portal_type='Simulation Movement'))
-    for movement in delivery.getMovementList():
-      movement_list.extend(movement.getDeliveryRelatedValueList(
-        portal_type='Simulation Movement'))
-    return movement_list
 
   # IBusinessPath implementation
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -387,34 +374,28 @@ class BusinessPath(Path, Predicate):
       As business sequence is not related to simulation tree need to built
       full simulation trees per applied rule
     """
-    # FIXME: Needed better implementation, maybe use catalog?
-    simulation_movement_value_list = []
-    # first tree from root Applied Rules related to delivery itself
-    for applied_rule in explanation.getCausalityRelatedValueList(
-        portal_type='Applied Rule'):
-      simulation_movement_value_list.extend(self._recurseGetValueList(
-        applied_rule, 'Simulation Movement'))
-    # now tree from root Applied Rules related to movements used to build delivery
-    root_applied_rule_list = []
+    root_applied_rule_list = [explanation.getCausalityRelatedValueList(
+      portal_type='Applied Rule')]
+    delivery_simulation_movement_list = []
     for movement in explanation.getMovementList():
-      for simulation_movement in movement.getDeliveryRelatedValueList(
-          portal_type='Simulation Movement'):
+      simulation_movement_list = movement.getDeliveryRelatedValueList(
+          portal_type='Simulation Movement')
+      delivery_simulation_movement_list.extend(simulation_movement_list)
+      for simulation_movement in simulation_movement_list:
         applied_rule = simulation_movement.getRootAppliedRule()
         if applied_rule not in root_applied_rule_list:
           root_applied_rule_list.append(
               simulation_movement.getRootAppliedRule())
 
-    for applied_rule in root_applied_rule_list:
-      simulation_movement_value_list.extend(self._recurseGetValueList(
-        applied_rule, 'Simulation Movement'))
+    simulation_movement_list = self.getPortalObject().portal_catalog(
+      portal_type='Simulation Movement', causality_uid=self.getUid(),
+      path=['%s/%%' % x for x in root_applied_rule_list])
 
     return [simulation_movement.getObject() for simulation_movement
-          in simulation_movement_value_list
-          # this business path
-          if simulation_movement.getCausalityValue() == self
+          in simulation_movement_list
           # related with explanation
-          and self._isDeliverySimulationMovementRelated(
-            explanation, simulation_movement)]
+          if self._isDeliverySimulationMovementRelated(
+              simulation_movement, delivery_simulation_movement_list)]
 
   def getExpectedQuantity(self, explanation, *args, **kwargs):
     """
