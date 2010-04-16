@@ -823,6 +823,7 @@ class ERP5Site(FolderMixIn, CMFSite):
                  list(self.getPortalDeliveryMovementTypeList()) +
                  list(self.getPortalInvoiceMovementTypeList()) +
                  list(self.getPortalTaxMovementTypeList()) +
+                 list(self.getPortalAccountingMovementTypeList()) +
                  ['Simulation Movement'])
 
   security.declareProtected(Permissions.AccessContentsInformation,
