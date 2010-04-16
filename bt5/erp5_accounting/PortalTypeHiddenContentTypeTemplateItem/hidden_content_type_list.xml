@@ -9,9 +9,6 @@
  <portal_type id="Accounting Transaction Module">
   <item>Balance Transaction</item>
  </portal_type>
- <portal_type id="Balance Transaction">
-  <item>Balance Transaction Line</item>
- </portal_type>
  <portal_type id="Payment Transaction">
   <item>File</item>
   <item>Image</item>

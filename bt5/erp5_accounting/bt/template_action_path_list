@@ -48,7 +48,6 @@ Accounting Transaction | profile_view
 Accounting Transaction | source_asset
 Accounting Transaction | view
 Balance Transaction Line | view
-Balance Transaction | add_balance_transaction_line
 Balance Transaction | destination_asset
 Balance Transaction | view
 Bank Account | jump_active_accounting_pref
