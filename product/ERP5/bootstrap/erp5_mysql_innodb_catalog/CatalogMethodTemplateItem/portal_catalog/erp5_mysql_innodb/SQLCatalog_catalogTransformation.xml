@@ -69,8 +69,9 @@ from Products.ERP5Type.Document import newTempMovement\n
 #     row_dict_list: list of rows to insert; each row is represented as a dict.}\n
 row_dict_dict_list = []\n
 \n
+portal = context.getPortalObject()\n
 for transformation_relative_url, variation_list_list in transformation_item_list:\n
-  transformation = context.restrictedTraverse(transformation_relative_url)\n
+  transformation = portal.restrictedTraverse(transformation_relative_url)\n
   resource = transformation.getResourceValue()\n
 \n
   if resource is None:\n
@@ -137,11 +138,12 @@ context.z_catalog_transformation_list(row_dict_dict_list=row_dict_dict_list)\n
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempMovement</string>
                             <string>row_dict_dict_list</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>_getiter_</string>
                             <string>transformation_relative_url</string>
                             <string>variation_list_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>transformation</string>
                             <string>resource</string>
                             <string>None</string>
