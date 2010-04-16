@@ -3864,10 +3864,14 @@ VALUES
 
   def test_distinct_select_expression(self, quiet=quiet, run=run_all_test):
     if not run: return
+    person = self.portal.person_module.newContent(portal_type='Person')
+    get_transaction().commit()
+    self.tic()
     portal_catalog = self.getCatalogTool()
     res = portal_catalog.searchResults(
       select_expression='count(DISTINCT catalog.reference) AS count_reference',
       group_by_expression='catalog.reference',
+      portal_type='Person',
     )
     self.assertEquals(1, len(res))
 
