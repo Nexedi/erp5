@@ -2720,14 +2720,16 @@ class TestCMFActivity(ERP5TypeTestCase):
     try:
       Organisation.checkActivityCount = checkActivityCount
       # Adds two same activities.
-      organisation.activate(activity='SQLDict', tag='a').checkActivityCount(other_tag='a')
+      organisation.activate(activity='SQLDict', tag='a', priority=2).checkActivityCount(other_tag='a')
       get_transaction().commit()
-      organisation.activate(activity='SQLDict', tag='a').checkActivityCount(other_tag='a')
+      uid1, = [x.uid for x in activity_tool.getMessageList()]
+      organisation.activate(activity='SQLDict', tag='a', priority=1).checkActivityCount(other_tag='a')
       get_transaction().commit()
       self.assertEqual(len(activity_tool.getMessageList()), 2)
       activity_tool.distribute()
       # After distribute, duplicate is deleted.
-      self.assertEqual(len(activity_tool.getMessageList()), 1)
+      uid2, = [x.uid for x in activity_tool.getMessageList()]
+      self.assertNotEqual(uid1, uid2)
       self.tic()
       self.assertEqual(len(activity_tool.getMessageList()), 0)
       self.assertEqual(len(check_result_dict), 1)
@@ -2886,9 +2888,9 @@ class TestCMFActivity(ERP5TypeTestCase):
     self.assertEqual(len(result), 0)
     # Second scenario: activate, activate, distribute
     # Both messages must be distributed (this is different from regular tags)
-    organisation.activate(activity=activity, serialization_tag='1').getTitle()
+    organisation.activate(activity=activity, serialization_tag='1', priority=2).getTitle()
     # Use a different method just so that SQLDict doesn't merge both activities prior to insertion.
-    organisation.activate(activity=activity, serialization_tag='1').getId()
+    organisation.activate(activity=activity, serialization_tag='1', priority=1).getId()
     get_transaction().commit()
     result = activity_tool.getMessageList()
     self.assertEqual(len(result), 2)
@@ -2899,9 +2901,11 @@ class TestCMFActivity(ERP5TypeTestCase):
     # If activity is SQLQueue, this does not happen.
     if activity=='SQLDict':
       # one is validated.
-      self.assertEqual(len([x for x in result if x.processing_node == 0]), 1)
+      message, = [x for x in result if x.processing_node == 0]
+      self.assertEqual(message.method_id, 'getId')
       # the other one is still waiting for validation.
-      self.assertEqual(len([x for x in result if x.processing_node == -1]), 1)
+      message, = [x for x in result if x.processing_node == -1]
+      self.assertEqual(message.method_id, 'getTitle')
     else:
       # both are validated at once.
       self.assertEqual(len([x for x in result if x.processing_node == 0]), 2)
