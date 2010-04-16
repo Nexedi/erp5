@@ -2869,6 +2869,12 @@ msgstr "Créer un nouvel évènement pour la réponse"
 msgid "Create a Task"
 msgstr "Créer une tâche"
 
+msgid "Created After"
+msgstr "Crée après"
+
+msgid "Created Before"
+msgstr "Crée avant"
+
 msgid "Created Clone ${portal_type}."
 msgstr "${portal_type} cloné."
 
@@ -10489,6 +10495,9 @@ msgstr "Longueur des champs de type TextArea"
 msgid "TextArea Field Width"
 msgstr "Largeur des champs de type TextArea"
 
+msgid "The Account in the third party's accounting"
+msgstr "Le compte dans la comptabilité du tiers"
+
 msgid ""
 "The Accounting Period is closed. It is no longer possible to add accounting "
 "transactions in this period. A balance transaction has been created."
@@ -11389,7 +11398,7 @@ msgid "Third Party"
 msgstr "Tiers"
 
 msgid "Third Party Account"
-msgstr "Compte de tiers"
+msgstr "Compte chez le tiers"
 
 msgid "Third Party Bank Account"
 msgstr "Compte en banque chez le tiers"
