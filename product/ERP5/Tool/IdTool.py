@@ -101,7 +101,7 @@ class IdTool(BaseTool):
     return id_last_generator
 
   security.declareProtected(Permissions.AccessContentsInformation,
-      'getLatestVersionValue')
+      'getLatestGeneratorValue')
   def _getLatestGeneratorValue(self, id_generator):
     """
       Return the last generator with the reference
@@ -244,7 +244,7 @@ class IdTool(BaseTool):
         new_id_list = range(new_id - id_count, new_id)
     return new_id_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'initializeGenerator')
   def initializeGenerator(self, id_generator=None, all=False):
     """
@@ -263,7 +263,7 @@ class IdTool(BaseTool):
                        portal_type='Application Id Generator'):
         generator.initializeGenerator()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'clearGenerator')
   def clearGenerator(self, id_generator=None, all=False):
     """
@@ -294,7 +294,6 @@ class IdTool(BaseTool):
   #backward compatibility
   generateNewLengthIdList = generateNewIdList
 
-  #use by alarm
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getLastLengthGeneratedId')
   def getLastLengthGeneratedId(self, id_group, default=None):
@@ -328,7 +327,6 @@ class IdTool(BaseTool):
         return result[0]['LAST_INSERT_ID()']
     return default
 
-  #use in erp5_accounting
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getLastGeneratedId')
   def getLastGeneratedId(self, id_group=None, default=None):
@@ -344,7 +342,6 @@ class IdTool(BaseTool):
       last_id = self.dict_ids.get(id_group, default)
     return last_id
 
-  #use in the unit tests
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setLastGeneratedId')
   def setLastGeneratedId(self, new_id, id_group=None):
@@ -357,7 +354,6 @@ class IdTool(BaseTool):
     if id_group is not None and id_group != 'None':
       self.dict_ids[id_group] = new_id
 
-  # use several files
   security.declareProtected(Permissions.AccessContentsInformation,
                            'generateNewLengthId')
   def generateNewLengthId(self, id_group=None, default=None, store=1):
