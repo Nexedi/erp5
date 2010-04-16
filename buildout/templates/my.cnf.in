@@ -19,6 +19,8 @@ socket = ${configuration:mysql_sock}
 datadir = ${configuration:mysql_datadir}
 pid-file = ${configuration:mysql_pid}
 log-error = ${configuration:mysql_error_log}
+log-slow-queries = ${configuration:mysql_slow_query_log}
+long_query_time = ${configuration:mysql_slow_query_time}
 skip-locking
 key_buffer = 384M
 max_allowed_packet = 128M
