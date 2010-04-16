@@ -561,7 +561,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
             return False # related movement is not delivered yet
 
           business_path_movement_delivery_document = \
-              business_path_movement_delivery.getParentValue()
+              business_path_movement_delivery.getExplanationValue()
           # here we can optimise somehow, as
           # business_path_movement_delivery_document would repeat
           if not successor_related.isCompleted(
