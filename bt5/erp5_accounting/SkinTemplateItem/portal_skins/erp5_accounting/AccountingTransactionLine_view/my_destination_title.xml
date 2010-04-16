@@ -79,7 +79,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The Account in the supplier\'s accounting</string> </value>
+                    <value> <string>The Account in the third party\'s accounting</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -117,7 +117,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Supplier Account</string> </value>
+                    <value> <string>Third Party Account</string> </value>
                 </item>
               </dictionary>
             </value>
