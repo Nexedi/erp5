@@ -33,12 +33,24 @@
 
 import tarfile
 import os
+import os.path
 import sys
 import tempfile
 import shutil
 import cgi
 
-property_list = ('title', 'version', 'revision', 'description', 'license', 'dependency_list', 'provision_list', 'copyright_list')
+property_list = '''
+title
+version
+revision
+description
+license
+dependency_list
+provision_list
+copyright_list
+'''.strip().splitlines()
+
+bt_title_path = os.path.join('bt', 'title')
 
 def info(message):
   """Print a message to stdout.
@@ -50,22 +62,38 @@ def err(message):
   """
   sys.stderr.write(message)
 
+def readProperty(property_dict, property_name, property_file):
+    try:
+      text = property_file.read()
+      if property_name.endswith('_list'):
+        property_dict[property_name[:-5]] = text and text.split('\n') or []
+      else:
+        property_dict[property_name] = text
+    finally:
+      property_file.close()
+
 def readBusinessTemplate(tar):
-  """Read an archived Business Template.
+  """Read an archived Business Template info.
   """
   property_dict = {}
   for info in tar:
     name_list = info.name.split('/')
     if len(name_list) == 3 and name_list[1] == 'bt' and name_list[2] in property_list:
-      f = tar.extractfile(info)
-      try:
-        text = f.read()
-        if name_list[2].endswith('_list'):
-          property_dict[name_list[2][:-5]] = text and text.split('\n') or []
-        else:
-          property_dict[name_list[2]] = text
-      finally:
-        f.close()
+      property_file = tar.extractfile(info)
+      property_name = name_list[2]
+      readProperty(property_dict, property_name, property_file)
+
+  return property_dict
+
+def readBusinessTemplateDirectory(dir):
+  """Read Business Template Directory info.
+  """
+  property_dict = {}
+  for property_name in property_list:
+    filename = os.path.join(dir, 'bt', property_name)
+    if os.path.isfile(filename):
+      property_file = open(filename, 'rb')
+      readProperty(property_dict, property_name, property_file)
 
   return property_dict
 
@@ -83,23 +111,27 @@ def generateInformation(fd):
         continue
       try:
         property_dict = readBusinessTemplate(tar)
-        property_id_list = property_dict.keys()
-        property_id_list.sort()
-        os.write(fd, '  <template id="%s">\n' % (file,))
-        for property_id in property_id_list:
-          property_value = property_dict[property_id]
-          if type(property_value) == type(''):
-            os.write(fd, '    <%s>%s</%s>\n' % (
-                  property_id, cgi.escape(property_value), property_id))
-          else:
-            for value in property_value:
-              os.write(fd, '    <%s>%s</%s>\n' % (
-                    property_id, cgi.escape(value), property_id))
-        os.write(fd, '  </template>\n')
-        info('done\n')
       finally:
         tar.close()
-
+    elif os.path.isfile(os.path.join(file, bt_title_path)):
+      info('Reading Directory %s... ' % (file,))
+      property_dict = readBusinessTemplateDirectory(file)
+    else:
+      continue
+    property_id_list = property_dict.keys()
+    property_id_list.sort()
+    os.write(fd, '  <template id="%s">\n' % (file,))
+    for property_id in property_id_list:
+      property_value = property_dict[property_id]
+      if type(property_value) == type(''):
+        os.write(fd, '    <%s>%s</%s>\n' % (
+              property_id, cgi.escape(property_value), property_id))
+      else:
+        for value in property_value:
+          os.write(fd, '    <%s>%s</%s>\n' % (
+                property_id, cgi.escape(value), property_id))
+    os.write(fd, '  </template>\n')
+    info('done\n')
   os.write(fd, '</repository>\n')
 
 def main():
@@ -246,4 +278,5 @@ if sys.version_info[0:2] == (2, 4):
 
     TarFile.next = next
 
-main()
+if __name__ == "__main__":
+  main()
