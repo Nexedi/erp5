@@ -338,30 +338,21 @@ class BusinessPath(Path, Predicate):
     return return_list
 
   def isMovementRelatedWithMovement(self, movement_value_a, movement_value_b):
-    """Documentation in IBusinessPath"""
-    movement_a_path_list = movement_value_a.getRelativeUrl().split('/')
-    movement_b_path_list = movement_value_b.getRelativeUrl().split('/')
+    """Checks if self is parent or children to movement_value
 
-    if len(movement_a_path_list) == len(movement_b_path_list):
-      if movement_value_a == movement_value_b:
-        # same is related
-        return True
-      # same level, cannot be related
-      return False
+    This logic is Business Process specific for Simulation Movements, as
+    sequence of Business Process is not related appearance of Simulation Tree
 
-    index = 0
-    for movement_a_part in movement_a_path_list:
-      try:
-        movement_b_part = movement_b_path_list[index]
-      except IndexError:
-        # so far was good, they are related
-        return True
-      if movement_a_part != movement_b_part:
-        return False
-      index += 1
-    # movement_a_path_list was shorter than movement_b_path_list and matched
-    # so they are related
-    return True
+    movement_value_a, movement_value_b - movements to check relation between
+    """
+    movement_a_path = '%s/' % movement_value_a.getRelativeUrl()
+    movement_b_path = '%s/' % movement_value_b.getRelativeUrl()
+
+    if movement_a_path == movement_b_path or \
+       movement_a_path.startswith(movement_b_path) or \
+       movement_b_path.startswith(movement_a_path):
+      return True
+    return False
 
   def _isDeliverySimulationMovementRelated(self, delivery, simulation_movement):
     """Helper method, which checks if simulation_movement is BPM like related
