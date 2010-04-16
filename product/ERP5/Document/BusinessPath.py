@@ -379,6 +379,9 @@ class BusinessPath(Path, Predicate):
     for movement in explanation.getMovementList():
       simulation_movement_list = movement.getDeliveryRelatedValueList(
           portal_type='Simulation Movement')
+      if len(simulation_movement_list) == 0: # for legacy simulation hierarchy
+        simulation_movement_list = movement.getOrderRelatedValueList(
+            portal_type='Simulation Movement')
       delivery_simulation_movement_list.extend(simulation_movement_list)
       for simulation_movement in simulation_movement_list:
         applied_rule = simulation_movement.getRootAppliedRule()
