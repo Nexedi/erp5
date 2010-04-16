@@ -374,8 +374,7 @@ class BusinessPath(Path, Predicate):
       As business sequence is not related to simulation tree need to built
       full simulation trees per applied rule
     """
-    root_applied_rule_list = [explanation.getCausalityRelatedValueList(
-      portal_type='Applied Rule')]
+    root_applied_rule_list = []
     delivery_simulation_movement_list = []
     for movement in explanation.getMovementList():
       simulation_movement_list = movement.getDeliveryRelatedValueList(
