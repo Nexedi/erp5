@@ -856,11 +856,19 @@ class Catalog(Folder,
       raise
     self._last_clear_reserved_time += 1
 
-  def __getitem__(self, uid):
+  def getRecordForUid(self, uid):
     """
     Get an object by UID
     Note: brain is defined in Z SQL Method object
     """
+    # this method used to be __getitem__(self, uid) but was found to hurt more
+    # than it helped: It would be inadvertently called by 
+    # (un)restrictedTraverse and if there was any error in rendering the SQL
+    # expression or contacting the database, an error different from KeyError
+    # would be raised, causing confusion.
+    # It could also have a performance impact for traversals to objects in
+    # the acquisition context on Zope 2.12 even when it didn't raise a weird
+    # error.
     method = getattr(self,  self.sql_getitem_by_uid)
     search_result = method(uid = uid)
     if len(search_result) > 0:

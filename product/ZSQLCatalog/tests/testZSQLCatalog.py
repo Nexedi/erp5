@@ -89,6 +89,17 @@ class TestSQLCatalog(unittest.TestCase):
     self.assertFalse(
         self._catalog.isPortalTypeSelected('not_exists', 'Selected'))
 
+  def test_getRecordByUid(self):
+    class MyError(RuntimeError):
+      pass
+    # test that our method actually gets called while looking records up by
+    # uid by raising our own exception
+    self._catalog.sql_getitem_by_uid = 'z_dummy_lookup_method'
+    def z_dummy_lookup_method(uid):
+      raise MyError('foo')
+    self._catalog.z_dummy_lookup_method = z_dummy_lookup_method
+    self.assertRaises(MyError, self._catalog.getRecordForUid, 1)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSQLCatalog))
