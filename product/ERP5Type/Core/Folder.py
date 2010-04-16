@@ -127,9 +127,12 @@ class FolderMixIn(ExtensionClass.Base):
     # The only case where the id is unused (because the new object is not added
     # to its parent) is when a temp object is created inside a non-temp object.
     if id is None and (temp_container or not temp_object):
-      new_id = str(container.generateNewId( id_group=id_group,
-                                            default=default,
-                                            method=method))
+      new_id_kw = {}
+      if method is not None:
+        new_id_kw['method'] = method
+      new_id = str(container.generateNewId(id_group=id_group,
+                                           default=default,
+                                           **new_id_kw))
     else:
       new_id = str(id)
 
@@ -254,8 +257,11 @@ class FolderMixIn(ExtensionClass.Base):
       while self.hasContent(my_id):
         my_id = idGenerator()
     else:
+      new_id_kw = {}
+      if method is not None:
+        new_id_kw['method'] = method
       my_id = str(self.portal_ids.generateNewId(id_generator='document',
-                  id_group=id_group, default=default, method=method ))
+                  id_group=id_group, default=default, **new_id_kw))
     return my_id
 
   security.declareProtected(Permissions.View, 'hasContent')
