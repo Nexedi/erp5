@@ -588,6 +588,7 @@ class SQLDict(RAMDict, SQLBase):
       message_list = []
       for line in result:
         m = self.loadMessage(line.message,
+                             line=line,
                              uid=line.uid,
                              order_validation_text=line.order_validation_text,
                              date=line.date,
