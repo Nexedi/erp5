@@ -98,7 +98,7 @@
 \n
 <tal:block tal:repeat="check python: [{\'class\': x, \'translation\': y} for x, y in language[1].items()]">\n
   <tr>\n
-    <td>verifyText</td>\n
+    <td>verifyAttribute</td>\n
     <td tal:content="python: \'xpath=id(\\\'context_bar\\\')//a[@class=\\\'%s\\\']/@title\' % (check[\'class\'], )"/>\n
     <td tal:content="check/translation"/>\n
   </tr>\n
