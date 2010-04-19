@@ -163,44 +163,28 @@ class AmountGeneratorMixin:
         raise ValueError(
           'context must implement IMovementCollection, IAmount or IAmountList')
 
-    # Each amount in amount_list creates a new amount to take into account
-    # We thus need to start with a loop on amount_list
-    for delivery_amount in amount_list:
-      # Initialize base_amount with per amount properties
-      amount_property_dict = self._getAmountPropertyDict(delivery_amount,
-        amount_list=amount_list, rounding=rounding)
-      base_amount.update(amount_property_dict)
-
-      # Initialize base_amount with total_price for each amount applications
-      #for application in delivery_amount.getBaseApplicationList(): # Acquired from Resource - XXX-JPS ?
-      application_list = delivery_amount.getBaseContributionList() # or getBaseApplicationList ?
-      if application_list:
-        total_price = delivery_amount.getTotalPrice()
-        for application in application_list: # Acquired from Resource - seems more normal
-          base_amount[application] = total_price
-
-      # Browse recursively the trade model and accumulate
-      # applicable values - first define the recursive method
-      def accumulateAmountList(amount_generator_line):
-        amount_generator_line_list = amount_generator_line.contentValues(
-          portal_type=self.getPortalAmountGeneratorLineTypeList())
-        # Recursively feed base_amount
-        if len(amount_generator_line_list):
-          amount_generator_line_list.sort(key=lambda x: x.getIntIndex())
-          for amount_generator_line in amount_generator_line_list:
-            accumulateAmountList(amount_generator_line)
-          return
-        # Try to collect cells and aggregate their mapped properties
-        # using resource + variation as aggregation key or base_application
-        # for intermediate lines
-        amount_generator_cell_list = amount_generator_line.contentValues(
-          portal_type=self.getPortalAmountGeneratorCellTypeList())
-        if not amount_generator_cell_list:
-          # Consider the line as the unique cell
-          amount_generator_cell_list = [amount_generator_line]
-        resource_amount_aggregate = {} # aggregates final line information
-        value_amount_aggregate = {} # aggregates intermediate line information
-        for amount_generator_cell in amount_generator_cell_list:
+    # First define the method that will browses recursively
+    # the amount generator lines and accumulate applicable values
+    def accumulateAmountList(amount_generator_line):
+      amount_generator_line_list = amount_generator_line.contentValues(
+        portal_type=self.getPortalAmountGeneratorLineTypeList())
+      # Recursively feed base_amount
+      if len(amount_generator_line_list):
+        amount_generator_line_list.sort(key=lambda x: x.getIntIndex())
+        for amount_generator_line in amount_generator_line_list:
+          accumulateAmountList(amount_generator_line)
+        return
+      # Try to collect cells and aggregate their mapped properties
+      # using resource + variation as aggregation key or base_application
+      # for intermediate lines
+      amount_generator_cell_list = amount_generator_line.contentValues(
+        portal_type=self.getPortalAmountGeneratorCellTypeList())
+      if not amount_generator_cell_list:
+        # Consider the line as the unique cell
+        amount_generator_cell_list = [amount_generator_line]
+      resource_amount_aggregate = {} # aggregates final line information
+      value_amount_aggregate = {} # aggregates intermediate line information
+      for amount_generator_cell in amount_generator_cell_list:
           getBaseApplication = \
             getattr(amount_generator_cell, 'getBaseApplication', None)
           if (getBaseApplication is None or
@@ -258,49 +242,64 @@ class AmountGeneratorMixin:
             # For intermediate calculations,
             # base_contribution_list MUST be defined
             property_dict['base_contribution_list'] = base_contribution_list
-        for property_dict in resource_amount_aggregate.itervalues():
-          base_application = property_dict.pop('base_application')
-          # property_dict should include
-          #   resource - VAT service or a Component in MRP
-          #   quantity - quantity in component in MRP, (what else XXX)
-          #   variation params - color, size, employer share, etc.
-          #   price -  empty (like in Transformation) price of a product
-          #            (ex. a Stamp) or tax ratio (ie. price per value units)
-          #   base_contribution_list - needed to produce reports with
-          #                            getTotalPrice
-          #
-          # Quantity is used as a multiplier (like in transformations for MRP)
-          # net_converted_quantity is used preferrably to quantity since we
-          # need values converted to the default management unit
-          # If no quantity is provided, we consider that the value is 1.0
-          # (XXX is it OK ?) XXX-JPS Need careful review with taxes
-          property_dict['quantity'] = base_amount[base_application] * \
-            property_dict.pop('net_converted_quantity',
-                              property_dict.get('quantity', 1.0))
-          # Create an Amount object
-          # XXX-JPS Could we use a movement for safety ?
-          amount = newTempAmount(portal, property_dict.pop('id'),
-                                 **property_dict)
-          if rounding:
-            # We hope here that rounding is sufficient at line level
-            amount = portal_roundings.getRoundingProxy(amount,
-              context=amount_generator_line)
-          result.append(amount)
-        for base_application, property_dict in \
-            value_amount_aggregate.iteritems():
-          # property_dict should include
-          #   base_contribution_list - needed to produce reports with
-          #                            getTotalPrice
-          #   quantity - quantity in component in MRP, (what else XXX)
-          #   price -  empty (like in Transformation) price of a product
-          #            (ex. a Stamp) or tax ratio (ie. price per value units)
-          value = base_amount[base_application] * \
-            (property_dict.get('quantity') or 1.0) * \
-            (property_dict.get('price') or 1.0) # XXX-JPS is it really 1.0 ?
-            # Quantity is used as a multiplier
-            # Price is used as a ratio (also a kind of multiplier)
-          for base_key in property_dict['base_contribution_list']:
-            base_amount[base_key] += value
+      for property_dict in resource_amount_aggregate.itervalues():
+        base_application = property_dict.pop('base_application')
+        # property_dict should include
+        #   resource - VAT service or a Component in MRP
+        #   quantity - quantity in component in MRP, (what else XXX)
+        #   variation params - color, size, employer share, etc.
+        #   price -  empty (like in Transformation) price of a product
+        #            (ex. a Stamp) or tax ratio (ie. price per value units)
+        #   base_contribution_list - needed to produce reports with
+        #                            getTotalPrice
+        #
+        # Quantity is used as a multiplier (like in transformations for MRP)
+        # net_converted_quantity is used preferrably to quantity since we
+        # need values converted to the default management unit
+        # If no quantity is provided, we consider that the value is 1.0
+        # (XXX is it OK ?) XXX-JPS Need careful review with taxes
+        property_dict['quantity'] = base_amount[base_application] * \
+          property_dict.pop('net_converted_quantity',
+                            property_dict.get('quantity', 1.0))
+        # Create an Amount object
+        # XXX-JPS Could we use a movement for safety ?
+        amount = newTempAmount(portal, property_dict.pop('id'),
+                               **property_dict)
+        if rounding:
+          # We hope here that rounding is sufficient at line level
+          amount = portal_roundings.getRoundingProxy(amount,
+            context=amount_generator_line)
+        result.append(amount)
+      for base_application, property_dict in value_amount_aggregate.iteritems():
+        # property_dict should include
+        #   base_contribution_list - needed to produce reports with
+        #                            getTotalPrice
+        #   quantity - quantity in component in MRP, (what else XXX)
+        #   price -  empty (like in Transformation) price of a product
+        #            (ex. a Stamp) or tax ratio (ie. price per value units)
+        value = base_amount[base_application] * \
+          (property_dict.get('quantity') or 1.0) * \
+          (property_dict.get('price') or 1.0) # XXX-JPS is it really 1.0 ?
+          # Quantity is used as a multiplier
+          # Price is used as a ratio (also a kind of multiplier)
+        for base_key in property_dict['base_contribution_list']:
+          base_amount[base_key] += value
+
+    # Each amount in amount_list creates a new amount to take into account
+    # We thus need to start with a loop on amount_list
+    for delivery_amount in amount_list:
+      # Initialize base_amount with per amount properties
+      amount_property_dict = self._getAmountPropertyDict(delivery_amount,
+        amount_list=amount_list, rounding=rounding)
+      base_amount.update(amount_property_dict)
+
+      # Initialize base_amount with total_price for each amount applications
+      #for application in delivery_amount.getBaseApplicationList(): # Acquired from Resource - XXX-JPS ?
+      application_list = delivery_amount.getBaseContributionList() # or getBaseApplicationList ?
+      if application_list:
+        total_price = delivery_amount.getTotalPrice()
+        for application in application_list: # Acquired from Resource - seems more normal
+          base_amount[application] = total_price
 
       # Browse recursively the trade model and accumulate
       # applicable values - now execute the method
