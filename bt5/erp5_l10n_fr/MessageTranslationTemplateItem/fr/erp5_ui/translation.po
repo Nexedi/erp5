@@ -73,6 +73,9 @@ msgstr "${payment_mode} le ${payment_date}"
 msgid "${portal_type} created successfully."
 msgstr "${portal_type} créé avec succès."
 
+msgid "${portal_type} updated successfully."
+msgstr "${portal_type} mis à jour avec succès."
+
 msgid "${tax_category_title} (Amount or Percent)"
 msgstr "${tax_category_title} (Montant ou Taux)"
 
@@ -6428,6 +6431,9 @@ msgstr "Aucune ligne n'a pu être ajoutée."
 msgid "No pay sheet model."
 msgstr "Aucun modèle de fiche de paie."
 
+msgid "No person found for your user"
+msgstr "Pas de personne correspondante à votre utilisateur"
+
 msgid "No quantity is defined on this line."
 msgstr "Aucune quantité n'est indiquée !"
 
@@ -11852,6 +11858,9 @@ msgstr "URL"
 msgid "URL Crawler"
 msgstr "Récupérateur d'URL"
 
+msgid "URL contributed successfully."
+msgstr "URL contribuée avec succès."
+
 msgid "Unassigned"
 msgstr "Non assigné"
 
@@ -12619,6 +12628,9 @@ msgstr "Votre réf."
 
 msgid "Your account was successfully created."
 msgstr "Votre compte a été créé avec succès."
+
+msgid "Your report is attached.\n"
+msgstr "Votre rapport est en pièce jointes.\n"
 
 msgid "Your tab is empty."
 msgstr "Cet onglet ne contient aucun gadget"
