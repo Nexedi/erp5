@@ -288,7 +288,6 @@ if base_application == 'base_amount/special_discount_3cd':
     self.stepTic()
 
     # check the current amount
-    self.portal.pdb()
     #self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 8100)
     self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 405)
     #self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 8505)
