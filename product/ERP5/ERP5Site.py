@@ -1355,43 +1355,9 @@ class PortalGenerator:
         p.manage_addProduct['CMFCore'].manage_addCC(
             id='cookie_authentication')
 
-    def setupMembersFolder(self, p):
-        PortalFolder.manage_addPortalFolder(p, 'Members')
-        p.Members.manage_addProduct['OFSP'].manage_addDTMLMethod(
-            'index_html', 'Member list', '<dtml-return roster>')
-
     def setupRoles(self, p):
         # Set up the suggested roles.
         p.__ac_roles__ = ('Member', 'Reviewer',)
-
-    def setupPermissions(self, p):
-        # Set up some suggested role to permission mappings.
-        mp = p.manage_permission
-
-        mp(AccessFuturePortalContent, ['Reviewer','Manager',], 1)
-        mp(AddPortalContent,          ['Owner','Manager',],    1)
-        mp(AddPortalFolders,          ['Owner','Manager',],    1)
-        mp(ListPortalMembers,         ['Member','Manager',],   1)
-        mp(ListUndoableChanges,       ['Member','Manager',],   1)
-        mp(ReplyToItem,               ['Member','Manager',],   1)
-        mp(ReviewPortalContent,       ['Reviewer','Manager',], 1)
-        mp(SetOwnPassword,            ['Member','Manager',],   1)
-        mp(SetOwnProperties,          ['Member','Manager',],   1)
-
-        # Add some other permissions mappings that may be helpful.
-        mp(DeleteObjects,             ['Owner','Manager',],    1)
-        mp(FTPAccess,                 ['Owner','Manager',],    1)
-        mp(ManageProperties,          ['Owner','Manager',],    1)
-        mp(UndoChanges,               ['Owner','Manager',],    1)
-        mp(ViewManagementScreens,     ['Owner','Manager',],    1)
-
-    def setupTypes(self, p, initial_types=factory_type_information):
-        tool = getToolByName(p, 'portal_types', None)
-        if tool is None:
-            return
-        for t in initial_types:
-            fti = FactoryTypeInformation(**t)
-            tool._setObject(t['id'], fti)
 
     def setupMimetypes(self, p):
         p.manage_addProduct[ 'CMFCore' ].manage_addRegistry()
@@ -1416,38 +1382,6 @@ class PortalGenerator:
         reg.addPredicate( 'file', 'major_minor' )
         reg.getPredicate( 'file' ).edit( major="application", minor="" )
         reg.assignTypeName( 'file', 'File' )
-
-    def setup(self, p, create_userfolder):
-        from Products.CMFTopic import Topic
-        self.setupTools(p)
-        self.setupMailHost(p)
-        if int(create_userfolder) != 0:
-            self.setupUserFolder(p)
-        self.setupCookieAuth(p)
-        self.setupMembersFolder(p)
-        self.setupRoles(p)
-        self.setupPermissions(p)
-        self.setupDefaultSkins(p)
-
-        #   SkinnedFolders are only for customization;
-        #   they aren't a default type.
-        default_types = tuple( filter( lambda x: x['id'] != 'Skinned Folder'
-                                     , factory_type_information ) )
-        self.setupTypes(p, default_types )
-
-        self.setupTypes(p, PortalFolder.factory_type_information)
-        self.setupTypes(p, Topic.factory_type_information)
-        self.setupMimetypes(p)
-        self.setupWorkflow(p)
-
-    def create(self, parent, id, create_userfolder):
-        id = str(id)
-        portal = self.klass(id=id)
-        parent._setObject(id, portal)
-        # Return the fully wrapped object.
-        p = parent.this()._getOb(id)
-        self.setup(p, create_userfolder)
-        return p
 
     def setupDefaultProperties(self, p, title, description,
                                email_from_address, email_from_name,
@@ -1950,10 +1884,6 @@ class ERP5Generator(PortalGenerator):
     if not update:
       self.setupPermissions(p)
       self.setupDefaultSkins(p)
-
-    # Finish setup
-    if not p.hasObject('Members'):
-      self.setupMembersFolder(p)
 
     # ERP5 Design Choice is that all content should be user defined
     # Content is disseminated through business templates
