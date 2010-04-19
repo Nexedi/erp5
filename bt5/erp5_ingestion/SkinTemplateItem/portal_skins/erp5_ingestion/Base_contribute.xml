@@ -56,6 +56,7 @@
             <value> <string>"""\n
   Use to contribute file to ERP5.\n
 """\n
+from Products.ERP5Type.Message import translateString\n
 MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
 portal_contributions = portal.portal_contributions\n
@@ -78,7 +79,7 @@ if url is not None:\n
   # we contribute and URL, this happens entirely asynchronous\n
   document = portal_contributions.newContentFromURL(url = url, \n
                                                     **document_kw)\n
-  message = "URL contributed successfully."\n
+  message = translateString("URL contributed successfully.")\n
 else:\n
   # contribute file\n
   file_name = getattr(file, \'filename\', None)\n
@@ -115,16 +116,17 @@ else:\n
   # edit document   \n
   if document_edit_kw is not {}:\n
     document.edit(**document_edit_kw)\n
-  document_portal_type = document.getPortalType()\n
+  document_portal_type = document.getTranslatedPortalType()\n
   if not is_existing_document_updated:\n
-    message = \'%s created successfully.\' %document_portal_type\n
+    message = translateString(\'${portal_type} created successfully.\',\n
+                mapping=dict(portal_type=document_portal_type))\n
   else:\n
-    message = \'%s updated successfully.\' %document_portal_type\n
+    message = translateString(\'${portal_type} updated successfully.\',\n
+                mapping=dict(portal_type=document_portal_type))\n
 \n
 if redirect_to_document or redirect_url is not None:\n
   # this is an UI mode where script should handle HTTP redirects and is likely used\n
   # by ERP5 form\n
-  message = context.Base_translateString(message)\n
   if redirect_to_document and document is not None:\n
     # explicitly required to view ingested document\n
     context.REQUEST.set(\'portal_status_message\', message)\n
@@ -186,6 +188,8 @@ return document\n
                             <string>redirect_url</string>
                             <string>editable_mode</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>None</string>
                             <string>MARKER</string>
                             <string>_getattr_</string>
@@ -212,9 +216,9 @@ return document\n
                             <string>$append0</string>
                             <string>x</string>
                             <string>document_portal_type</string>
+                            <string>dict</string>
                             <string>ZTUtils</string>
                             <string>make_query</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
