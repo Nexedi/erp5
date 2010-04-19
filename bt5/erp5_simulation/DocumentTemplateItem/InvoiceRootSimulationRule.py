@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -123,7 +124,7 @@ class InvoiceRuleMovementGenerator(MovementGeneratorMixin):
       existing_movement_list = context.objectValues()
       for movement in delivery.getMovementList(
         portal_type=(delivery.getPortalInvoiceMovementTypeList() + \
-                     delivery.getPortalTaxMovementTypeList())):
+                     delivery.getPortalTaxMovementTypeList())): # This is bad XXX-JPS - use use
         simulation_movement = self._getDeliveryRelatedSimulationMovement(movement)
         if simulation_movement is None or \
                simulation_movement in existing_movement_list:

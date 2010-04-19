@@ -399,10 +399,6 @@ class Amount(Base, Variated):
       duration = None
     return duration
 
-  def getPrice(self):
-    pass
-  
-  
   security.declareProtected(Permissions.AccessContentsInformation, 'getTotalPrice')
   def getTotalPrice(self, **kw):
     """
@@ -411,7 +407,9 @@ class Amount(Base, Variated):
       Price is defined on 
       
     """
-    price = self.getResourcePrice()
+    price = self.getPrice()
+    if not price:
+      price = self.getResourcePrice()
     quantity = self.getNetConvertedQuantity()
     if isinstance(price, (int, float)) and isinstance(quantity, (int, float)):
       return quantity * price

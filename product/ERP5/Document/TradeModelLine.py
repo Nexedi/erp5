@@ -33,14 +33,14 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.Document.MappedValue import MappedValue
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,
                                                         TARGET_LEVEL_DELIVERY)
 import zope.interface
 
-class TradeModelLine(Predicate, XMLMatrix, Amount):
+class TradeModelLine(MappedValue, XMLMatrix, Amount):
   """Trade Model Line is a way to represent trade transformation for movements"""
   meta_type = 'ERP5 Trade Model Line'
   portal_type = 'Trade Model Line'
@@ -64,11 +64,35 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                   , PropertySheet.TradeModelLine
                   , PropertySheet.Reference
                   , PropertySheet.Predicate
+                  , PropertySheet.MappedValue
                   )
 
+  ### Mapped Value Definition
+  # Provide default mapped value properties and categories if
+  # not defined
+  def getMappedValuePropertyList(self):
+    """
+    """
+    result = self._baseGetMappedValuePropertyList()
+    if result:
+      return result
+    if self._baseGetQuantity(): # If quantity is defined, then tax works as transformed resource
+      return ('quantity', 'price', )
+    # Else tax provides only a ratio on amount
+    return ('price', 'efficiency')
+
+  def getMappedValueBaseCategoryList(self):
+    result = self._baseGetMappedValueBaseCategoryList()
+    if result:
+      return result
+    return ('base_contribution', 'trade_phase', )
+
+  #
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPrice')
   def getPrice(self):
+    """
+    """
     return self._baseGetPrice()
 
   def updateAggregatedAmountList(self, context, **kw):

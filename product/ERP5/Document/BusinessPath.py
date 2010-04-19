@@ -77,8 +77,10 @@ class BusinessPath(Path, Predicate):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
                     , PropertySheet.Folder
+                    , PropertySheet.Reference
                     , PropertySheet.Comment
                     , PropertySheet.Arrow
+                    , PropertySheet.Amount
                     , PropertySheet.Chain
                     , PropertySheet.SortIndex
                     , PropertySheet.BusinessPath

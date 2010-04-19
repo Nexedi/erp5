@@ -31,23 +31,21 @@
 ##############################################################################
 
 from collections import deque
+import zope.interface
+
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.mixin.composition import _getEffectiveModel
 from Products.ERP5.Document.Transformation import Transformation
-from Products.ERP5.Document.Path import Path
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ERP5.Document.MappedValue import MappedValue
 
-import zope.interface
+from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
+from Products.ERP5.mixin.variated import VariatedMixin
 
-# XXX TODO : getTradeModelLineComposedList and findSpecialiseValueList should
-# probably move to Transformation (better names should be used)
-# XXX TODO: review naming of new methods
-# XXX WARNING: current API naming may change although model should be stable.
-
-class TradeCondition(Path, Transformation):
+class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
     """
       Trade Conditions are used to store the conditions (payment, logistic,...)
       which should be applied (and used in the orders) when two companies make
@@ -80,45 +78,35 @@ class TradeCondition(Path, Transformation):
                               interfaces.IMovementGenerator,
                               interfaces.IMovementCollectionUpdater,)
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'updateAggregatedAmountList')
-    def updateAggregatedAmountList(self, context, movement_list=None, rounding=None, **kw):
-      existing_movement_list = context.getMovementList()
-      aggregated_amount_list = self.getAggregatedAmountList(context=context,
-          movement_list=movement_list, **kw)
 
-      modified_reference_list = []
-      # check if the existing movements are in aggregated movements
-      movement_to_delete_list = []
-      for movement in existing_movement_list:
-        keep_movement = False
-        # check if the movement is a generated one or entered by the user.
-        # If it has been entered by user, keep it.
-        if not movement.getBaseApplicationList():
-          continue
+    # Mapped Value implementation
+    #  Transformation itself provides no properties or categories
+    def getMappedValuePropertyList(self):
+      return ()
 
-        for amount in aggregated_amount_list:
-          # if movement is generated and if not exist, append to delete list
-          update_kw = {}
-          for p in self.edited_property_list:
-            update_kw[p] = amount.getProperty(p)
+    def getMappedValueBaseCategoryList(self):
+      return ()
 
-          if movement.getProperty('reference') == update_kw['reference'] and\
-              movement.getVariationCategoryList() == \
-              amount.getVariationCategoryList():
-            movement.edit(**update_kw)
-            modified_reference_list.append(update_kw['reference'])
-            keep_movement = True
+    # Amount Generator Mixin
+    def _getGlobalPropertyDict(self, context, amount_list=None, rounding=False):
+      """
+      No global properties needed
+      """
+      return {
+        'delivery_count' : 1, # Use a better category here if possible - XXX - System preference
+      }
 
-        if not keep_movement:
-          movement_to_delete_list.append(movement)
-
-      movement_to_add_list = AggregatedAmountList(
-                  [amount for amount in aggregated_amount_list if
-                    amount.getReference() not in modified_reference_list])
-
-      return {'movement_to_delete_list' : movement_to_delete_list,
-              'movement_to_add_list': movement_to_add_list}
+    def _getAmountPropertyDict(self, amount, amount_list=None, rounding=False):
+      """
+      Produced amount quantity is needed to initialize transformation
+      """
+      result = {
+        'quantity' : amount.getQuantity(), # Use a better category here if possible - XXX - System preference      
+                                           # and possibly make it extensible
+      }
+      for category in amount.getBaseContributionList():
+        result[category] = amount.getTotalPrice()
+      return result
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'findEffectiveSpecialiseValueList')
@@ -213,41 +201,12 @@ class TradeCondition(Path, Transformation):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAggregatedAmountList')
-    def getAggregatedAmountList(self, context, movement_list=None,
+    def getAggregatedAmountList(self, context, amount_list=None,
                                 force_create_line=False, **kw):
-      if movement_list is None:
-        movement_list = []
-      result = AggregatedAmountList()
-
-      trade_model_line_composed_list = \
-          self.getTradeModelLineComposedList(context)
-
-      # trade_model_line_composed_list is sorted in good way to have
-      # simple algorithm
-      for model_line in trade_model_line_composed_list:
-        result.extend(model_line.getAggregatedAmountList(context,
-          movement_list=movement_list,
-          current_aggregated_amount_list=result,
-          **kw))
-      movement_list = result
-
-      # remove amounts that should not be created, or with "incorrect" references.
-      # XXX what are incorrect references ???
-      # getTradeModelLineComposedList should have removed duplicate reference
-      # in the model graph
-      # TODO: review this part
-      aggregated_amount_list = AggregatedAmountList()
-      for movement in movement_list:
-        movement_reference = movement.getReference()
-        if movement_reference is None:
-            raise ValueError('Reference on Trade Model Line is None. '
-                'Reference must be set.')
-        for model_line in trade_model_line_composed_list:
-          if model_line.getReference() == movement_reference and\
-              (force_create_line or model_line.isCreateLine()):
-            aggregated_amount_list.append(movement)
-
-      return aggregated_amount_list
+      """
+      XXX-JPS - TODO
+      """
+      return self.getGeneratedAmountList(context, amount_list=amount_list, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
         'getEffectiveModel')
