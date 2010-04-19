@@ -191,19 +191,30 @@ if 'SOFTWARE_HOME' in os.environ:
   # software_home is zope_home/lib/python, remove lib/python
   zope_home = os.path.split(os.path.split(software_home)[0])[0]
 else:
+  common_paths = [
+    '/usr/lib/erp5/lib/python',
+    '/usr/lib64/zope/lib/python',
+    '/usr/lib/zope2.8/lib/python',
+    '/usr/lib/zope/lib/python',
+  ]
+  # maybe SOFTWARE_HOME is already in sys.path
+  try:
+    import Zope2
+  except ImportError:
+    pass
+  else:
+    common_paths.insert(0, os.path.dirname(os.path.dirname(Zope2.__file__)))
   if WIN:
     erp5_home = os.path.sep.join(
         tests_framework_home.split(os.path.sep)[:-4])
-    zope_home = os.path.join(erp5_home, 'Zope')
-  elif os.path.isdir('/usr/lib/erp5/lib/python'):
-    zope_home = '/usr/lib/erp5'
-  elif os.path.isdir('/usr/lib64/zope/lib/python'):
-    zope_home = '/usr/lib64/zope'
-  elif os.path.isdir('/usr/lib/zope2.8/lib/python'):
-    zope_home = '/usr/lib/zope2.8'
+    common_paths.insert(0, os.path.join(erp5_home, 'Zope', 'lib', 'python'))
+
+  for software_home in common_paths:
+    if os.path.isdir(software_home):
+      break
   else:
-    zope_home = '/usr/lib/zope'
-  software_home = os.path.join(zope_home, 'lib', 'python')
+    sys.exit('No Zope2 software_home found')
+  zope_home = os.path.dirname(os.path.dirname(software_home))
   os.environ['SOFTWARE_HOME'] = software_home
 
 # SOFTWARE_HOME must be early in sys.path, otherwise some products will
