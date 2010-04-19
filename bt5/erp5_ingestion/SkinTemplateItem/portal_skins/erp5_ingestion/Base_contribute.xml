@@ -60,19 +60,11 @@ MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
 portal_contributions = portal.portal_contributions\n
 \n
-system_preference = portal.portal_preferences.getActiveSystemPreference()\n
 if synchronous_metadata_discovery is None:\n
-  if system_preference is not None:\n
-    # not specified, fallback to site system preference configuration\n
-    synchronous_metadata_discovery = system_preference.isPreferredSynchronousMetadataDiscovery()\n
-  else:\n
-    synchronous_metadata_discovery = False\n
+  synchronous_metadata_discovery = portal.portal_preferences.isPreferredSynchronousMetadataDiscovery(False)\n
 \n
 if redirect_to_document is None:\n
-  if system_preference is not None:\n
-    redirect_to_document = system_preference.isPreferredRedirectToDocument()\n
-  else:\n
-    redirect_to_document = False\n
+  redirect_to_document = portal.portal_preferences.isPreferredRedirectToDocument(False)\n
 \n
 document_kw = {}\n
 if use_context_for_container:\n
@@ -200,7 +192,6 @@ return document\n
                             <string>context</string>
                             <string>portal</string>
                             <string>portal_contributions</string>
-                            <string>system_preference</string>
                             <string>False</string>
                             <string>document_kw</string>
                             <string>_write_</string>
