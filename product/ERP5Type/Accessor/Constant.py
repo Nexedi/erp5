@@ -38,6 +38,10 @@ class PropertyGetter:
   issues when we wish to make a property a method. For instance,
   we would like to change from isIndexable=1 to a method isIndexable().
   """
+  func_code = func_code()
+  func_code.co_varnames = ()
+  func_code.co_argcount = 0
+  func_defaults = ()
 
   def __init__(self, id, value=None):
     self._id = id

@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from types import MethodType
 import zope.interface
 from warnings import warn
 from AccessControl import ClassSecurityInfo
@@ -187,7 +188,7 @@ class Predicate(XMLObject):
           try:
             result = result and method(self)
           except TypeError:
-            if method.func_code.co_argcount != 0:
+            if method.func_code.co_argcount != isinstance(method, MethodType):
               raise
             # backward compatibilty with script that takes no argument
             warn('Predicate %s uses an old-style method (%s) that does not'
