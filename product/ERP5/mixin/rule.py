@@ -178,7 +178,7 @@ class RuleMixin:
 
      exclude_quantity -- if set to true, do not consider
                          quantity divergence testers
-     """
+    """
     if exclude_quantity:
       return filter(lambda x:x.isDivergenceProvider() and \
                     'quantity' not in x.getTestedPropertyList(), self.objectValues(
@@ -203,7 +203,7 @@ class RuleMixin:
 
     exclude_quantity -- if set to true, do not consider
                         quantity divergence testers
-     """
+    """
     if exclude_quantity:
       return filter(lambda x:x.isUpdatingProvider() and \
                     'quantity' not in x.getTestedPropertyList(), self.objectValues(

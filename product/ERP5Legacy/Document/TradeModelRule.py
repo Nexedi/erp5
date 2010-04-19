@@ -51,7 +51,8 @@ class TradeModelRule(Rule):
     """Generates list of movements (as dicts), and let parent class to decide
     which is to add, modify or delete"""
     movement_list = []
-    trade_condition = applied_rule.getTradeConditionValue()
+    trade_condition = applied_rule._getExplanationSpecialiseValue(
+        ('Purchase Trade Condition', 'Sale Trade Condition'))
     business_process = applied_rule.getBusinessProcessValue()
 
     if trade_condition is None or business_process is None:

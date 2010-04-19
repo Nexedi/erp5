@@ -220,16 +220,6 @@ class AppliedRule(XMLObject):
       movement = self.getParentValue()
       return findSpecialiseValueBySimulation(movement)
 
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                             'getTradeConditionValue')
-    def getTradeConditionValue(self):
-      """Return the trade condition that has been used in this
-      simulation, or None if none has been used.
-      """
-      return self._getExplanationSpecialiseValue(
-          ('Purchase Trade Condition', 'Sale Trade Condition'))
-
     security.declareProtected(Permissions.AccessContentsInformation,
                              'getBusinessProcessValue')
     def getBusinessProcessValue(self):

@@ -147,6 +147,26 @@ class PaySheetTransaction(Invoice):
         sub_object_list.extend([model._getOb(x) for x in id_list])
     return sub_object_list
 
+  security.declarePrivate('updateAggregatedAmountList')
+  def updateAggregatedAmountList(self, *args, **kw):
+    amount_dict = dict(((x.reference, tuple(x.getVariationCategoryList())), x)
+                       for x in self.getAggregatedAmountList(*args, **kw))
+    movement_to_delete_list = []
+    for movement in self.getMovementList():
+      if movement.getBaseApplication():
+        amount = amount_dict.pop((movement.getProperty('reference'),
+                                  tuple(movement.getVariationCategoryList())),
+                                 None)
+        if amount is None:
+          movement_to_delete_list.append(movement)
+        else:
+          movement.edit(**dict((x, amount.getProperty(x))
+              for x in ('price', 'resource', 'quantity',
+                        'base_application_list', 'base_contribution_list')))
+
+    return {'movement_to_delete_list': movement_to_delete_list,
+            'movement_to_add_list': amount_dict.values()}
+
   security.declareProtected(Permissions.ModifyPortalContent,
                             'applyTransformation')
   def applyTransformation(self):
@@ -155,7 +175,7 @@ class PaySheetTransaction(Invoice):
     '''
     portal = self.getPortalObject()
     paysheet_model = self.getSpecialiseValue()
-    movement_dict = paysheet_model.updateAggregatedAmountList(context=self)
+    movement_dict = self.updateAggregatedAmountList()
     for movement in movement_dict['movement_to_delete_list']:
       parent = movement.getParentValue()
       if parent.getPortalType() == 'Pay Sheet Line':

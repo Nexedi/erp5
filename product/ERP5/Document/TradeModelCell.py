@@ -72,13 +72,6 @@ class TradeModelCell(TradeModelLine, MappedValue):
       """
       return 0
 
-    def updateAggregatedAmountList(self, context, **kw):
-      raise NotImplementedError('TODO')
-
-    def getAggregatedAmountList(self, context, movement_list = None,
-        current_aggregated_amount_list = None, **kw):
-      raise NotImplementedError('TODO')
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getPrice')
     def getPrice(self):

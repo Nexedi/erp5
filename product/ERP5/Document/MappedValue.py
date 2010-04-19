@@ -29,6 +29,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Predicate import Predicate
 
@@ -83,7 +84,7 @@ class MappedValue(Predicate):
     - add unit tests
     """
     if key in self.getMappedValuePropertyList():
-      result = getattr(self, key, _MARKER)
+      result = getattr(aq_base(self), key, _MARKER)
       if result is not _MARKER:
         return result
     if d is _MARKER:
@@ -100,7 +101,7 @@ class MappedValue(Predicate):
     - add unit tests
     """
     if key in self.getMappedValuePropertyList():
-      result = getattr(self, key, _MARKER)
+      result = getattr(aq_base(self), key, _MARKER)
       if result is not _MARKER:
         return result
     if d is None:

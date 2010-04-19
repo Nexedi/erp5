@@ -57,6 +57,8 @@ class PaySheetModel(TradeCondition, XMLMatrix):
                     , PropertySheet.DublinCore
                     , PropertySheet.Folder
                     , PropertySheet.Comment
+                    , PropertySheet.Reference
+                    , PropertySheet.Version
                     , PropertySheet.Arrow
                     , PropertySheet.TradeCondition
                     , PropertySheet.Order

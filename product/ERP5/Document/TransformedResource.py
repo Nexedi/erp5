@@ -128,9 +128,6 @@ class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
       self._setVVariationBaseCategoryList(value)
       self.reindexObject()
 
-    def updateAggregatedAmountList(self, context, **kw):
-      raise NotImplementedError('TODO')
-
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context, REQUEST=None, **kw):

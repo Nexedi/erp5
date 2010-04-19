@@ -506,9 +506,9 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(quantity=1000, price=1, contribution_share='employer')
 
-  def checkUpdateAggregatedAmountListReturn(self, model, paysheet,
+  def checkUpdateAggregatedAmountListReturn(self, paysheet,
       expected_movement_to_delete_count, expected_movement_to_add_count):
-    movement_dict = model.updateAggregatedAmountList(context=paysheet)
+    movement_dict = paysheet.updateAggregatedAmountList()
     movement_to_delete = movement_dict['movement_to_delete_list']
     movement_to_add = movement_dict['movement_to_add_list']
     self.assertEquals(len(movement_to_delete),
@@ -516,27 +516,23 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     self.assertEquals(len(movement_to_add), expected_movement_to_add_count)
 
   def stepCheckUpdateAggregatedAmountListReturn(self, sequence=None, **kw):
-    model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 2)
+    self.checkUpdateAggregatedAmountListReturn(paysheet, 0, 2)
 
   def stepCheckUpdateAggregatedAmountListReturnUsingSlices(self,
       sequence=None, **kw):
-    model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 6)
+    self.checkUpdateAggregatedAmountListReturn(paysheet, 0, 6)
 
   def stepCheckUpdateAggregatedAmountListReturnUsingComplexSlices(self,
       sequence=None, **kw):
-    model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 4)
+    self.checkUpdateAggregatedAmountListReturn(paysheet, 0, 4)
 
   def stepCheckUpdateAggregatedAmountListReturnUsingPredicate(self,
       sequence=None, **kw):
-    model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 4)
+    self.checkUpdateAggregatedAmountListReturn(paysheet, 0, 4)
 
   def stepCheckUpdateAggregatedAmountListReturnAfterChangePredicate(self,
       sequence=None, **kw):
@@ -544,15 +540,13 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     # insurance model_line will not be applied but old age insurance yes.
     # So two movements will be deleted (from sickness insurance) and two should
     # be added (from old age insurance)
-    model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 2, 2)
+    self.checkUpdateAggregatedAmountListReturn(paysheet, 2, 2)
 
   def stepCheckUpdateAggregatedAmountListReturnAfterRemoveLine(self,
       sequence=None, **kw):
-    model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 2, 0)
+    self.checkUpdateAggregatedAmountListReturn(paysheet, 2, 0)
 
   def stepPaysheetApplyTransformation(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -836,8 +830,7 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
 
   def stepCheckUpdateAggregatedAmountListReturnNothing(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
-    model = sequence.get('model')
-    movement_dict = model.updateAggregatedAmountList(context=paysheet)
+    movement_dict = paysheet.updateAggregatedAmountList()
     movement_to_delete = movement_dict['movement_to_delete_list']
     movement_to_add = movement_dict['movement_to_add_list']
     self.assertEquals(len(movement_to_delete), 0)
@@ -1207,9 +1200,8 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
 
   def stepCheckUpdateAggregatedAmountListReturnWithModelLineOnPaysheet(self,
       sequence=None, **kw):
-    model = sequence.get('model')
     paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedAmountListReturn(model, paysheet, 0, 4)
+    self.checkUpdateAggregatedAmountListReturn(paysheet, 0, 4)
 
   def stepCheckPaysheetLineAreCreatedWithModelLineOnPaysheet(self,
       sequence=None, **kw):

@@ -217,9 +217,6 @@ class Transformation(XMLObject, Predicate, Variated):
                                                  render(object_list))
       return variation_category_item_list
 
-    def updateAggregatedAmountList(self, context, **kw):
-      raise NotImplementedError, 'need?'
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getAggregatedAmountList')
     def getAggregatedAmountList(self, context=None, REQUEST=None,

@@ -47,7 +47,7 @@ def _getEffectiveModel(self, start_date=None, stop_date=None):
   XXX Should we moved this function to a class ? Which one ?
       What about reusing IVersionable ?
   """
-  reference = self.getReference()
+  reference = self.getProperty('reference')
   if not reference:
     return self
 

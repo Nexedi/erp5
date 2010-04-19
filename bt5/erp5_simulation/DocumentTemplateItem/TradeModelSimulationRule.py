@@ -98,15 +98,18 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
     Generates list of movements
     """
     movement_list = []
-    trade_condition = context.getTradeConditionValue() # XXX-JPS - which API ?
     business_process = context.getBusinessProcessValue()
 
-    if trade_condition is None or business_process is None:
+    if business_process is None:
       return movement_list
 
     context_movement = context.getParentValue()
     rule = context.getSpecialiseValue()
-    for amount in trade_condition.getAggregatedAmountList(context_movement):
+    for amount in context_movement.getAggregatedAmountList(
+        # XXX add a 'trade_amount_generator' group type
+        amount_generator_type_list=('Purchase Trade Condition',
+                                    'Sale Trade Condition',
+                                    'Trade Model Line')):
       # business path specific
       business_path_list = business_process.getPathValueList(
           trade_phase=amount.getTradePhaseList()) # Why a list of trade phases ? XXX-JPS

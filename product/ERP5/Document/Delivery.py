@@ -36,12 +36,14 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
+from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from zLOG import LOG, PROBLEM
 
-class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
+class Delivery(XMLObject, ImmobilisationDelivery,
+               CompositionMixin, AmountGeneratorMixin):
     """
         Each time delivery is modified, it MUST launch a reindexing of
         inventories which are related to the resources contained in the Delivery
@@ -69,7 +71,9 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
                       )
 
     # Declarative interfaces
-    zope.interface.implements(interfaces.IDivergenceController,)
+    zope.interface.implements(interfaces.IAmountGenerator,
+                              interfaces.IDivergenceController,
+                              interfaces.IMovementCollection)
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isAccountable')
     def isAccountable(self):

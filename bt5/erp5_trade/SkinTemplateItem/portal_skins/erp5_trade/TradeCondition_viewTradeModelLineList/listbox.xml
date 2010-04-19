@@ -13,11 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>columns</string>
+                <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -83,6 +84,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Sort Index</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
@@ -122,6 +127,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>int_index</string>
+                          <string>int_index</string>
+                        </tuple>
+                        <tuple>
                           <string>price</string>
                           <string>price</string>
                         </tuple>
@@ -154,6 +163,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>trade_condition_view_trade_model_line_list_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string></string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

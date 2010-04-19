@@ -36,12 +36,13 @@ from Products.ERP5Type.Base import Base
 #from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
 
 from zLOG import LOG, WARNING
 
-class Movement(XMLObject, Amount, CompositionMixin):
+class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   """
     The Movement class allows to implement ERP5 universal accounting model.
 
@@ -181,8 +182,9 @@ class Movement(XMLObject, Amount, CompositionMixin):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements( interfaces.IVariated,
-                             interfaces.IMovement )
+  zope.interface.implements(interfaces.IAmountGenerator,
+                            interfaces.IVariated,
+                            interfaces.IMovement)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base

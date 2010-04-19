@@ -26,11 +26,14 @@
 #
 ##############################################################################
 
+import random
 import zope.interface
-from zLOG import LOG
+from zLOG import LOG, WARNING
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5.Document.Amount import Amount
+from Products.ERP5.Document.MappedValue import MappedValue
+
 
 class AmountGeneratorMixin:
   """
@@ -53,54 +56,9 @@ class AmountGeneratorMixin:
   # Declarative interfaces
   zope.interface.implements(interfaces.IAmountGenerator,)
 
-  def _getGlobalPropertyDict(self, context, amount_list=None, rounding=False):
-    """
-    This method must be overridden to define global
-    properties involved in trade model line or transformation calculation
-
-    TODO:
-      default implementation could use type based method
-    """
-    raise NotImplementedError
-    # Example of return value
-    return {
-      'delivery': 1,     # Sets the base_amount 'delivery' to 1
-                         # so that it is possible to create models based
-                         # on the number of deliveries (instead of quantity)
-      'employee': 100,   # Sets the base_amount 'employee' to 100
-                         # so that it is possible to create models based
-                         # on the number of employee (instead of quantity)
-    }
-
-  def _getAmountPropertyDict(self, amount, amount_list=None, rounding=False):
-    """
-    This method must be overridden to define per amount local
-    properties involved in trade model line or transformation calculation
-
-    TODO:
-      default implementation could use type based method
-    """
-    raise NotImplementedError
-    # Example of return value
-    return dict(
-        price=amount.getPrice(),
-          # Sets the base_amount 'price' to the price
-          # This base_amount often uses another name though
-        quantity=amount.getQuantity(),
-          # Sets the base_amount 'quantity' to the quantity
-          # This base_amount often uses another name though
-        unit=(amount.getQuantityUnit() == 'unit') * amount.getQuantity(),
-          # Sets the base_amount 'unit' to the number of units
-          # so that it is possible to create models based
-          # on the number of units
-        ton=(amount.getQuantityUnit() == 'ton') * amount.getQuantity(),
-          # Sets the base_amount 'ton' to the weight in tons
-          # so that it is possible to create models based
-          # on the weight in tons
-      )
-
-  def _getResourceAmountAggregateKey(self, amount_generator_cell):
-    """Define a key in order to aggregate amounts
+  # XXX to be specificied in an interface (IAmountGeneratorLine ?)
+  def getCellAggregateKey(self, amount_generator_cell):
+    """Define a key in order to aggregate amounts at cell level
 
       Transformed Resource (Transformation)
         key must be None because:
@@ -114,11 +72,9 @@ class AmountGeneratorMixin:
         usually resource and quantity provided together
 
       Payroll
-
         key = (payroll resource, payroll resource variation)
 
       Tax
-
         key = (tax resource, tax resource variation)
     """
     return (amount_generator_cell.getResource(),
@@ -126,7 +82,8 @@ class AmountGeneratorMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')
-  def getGeneratedAmountList(self, context, amount_list=None, rounding=False):
+  def getGeneratedAmountList(self, amount_list=None, rounding=False,
+                             amount_generator_type_list=None):
     """
     Implementation of a generic transformation algorithm which is
     applicable to payroll, tax generation and BOMs. Return the
@@ -140,12 +97,11 @@ class AmountGeneratorMixin:
     # It is the only place we can import this
     from Products.ERP5Type.Document import newTempAmount
     portal = self.getPortalObject()
-
-    # Initialize base_amount global properties (which can be modified
-    # during the calculation process)
-    base_amount = self._getGlobalPropertyDict(context, amount_list=amount_list,
-                                              rounding=rounding)
-    portal_roundings = self.portal_roundings
+    getRoundingProxy = portal.portal_roundings.getRoundingProxy
+    amount_generator_line_type_list = \
+      portal.getPortalAmountGeneratorLineTypeList()
+    amount_generator_cell_type_list = \
+      portal.getPortalAmountGeneratorCellTypeList()
 
     # Set empty result by default
     result = []
@@ -153,48 +109,98 @@ class AmountGeneratorMixin:
     # If amount_list is None, then try to collect amount_list from
     # the current context
     if amount_list is None:
-      if context.providesIMovementCollection():
-        amount_list = context.getMovementList()
-      elif context.providesIAmount():
-        amount_list = [context]
-      elif context.providesIAmountList():
-        amount_list = context
+      if self.providesIMovementCollection():
+        # Amounts are sorted to process deeper objects first.
+        movement_portal_type_list = self.getPortalMovementTypeList()
+        amount_list = [self]
+        amount_index = 0
+        while amount_index < len(amount_list):
+          amount_list += amount_list[amount_index].objectValues(
+              portal_type=movement_portal_type_list)
+          amount_index += 1
+        # Add only movement which are input (i.e. resource use category
+        # is in the normal resource use preference list). Output will
+        # be recalculated.
+        amount_list = [x for x in amount_list[:0:-1] # skip self
+                         if not x.getBaseApplication()] + [self]
+      elif self.providesIAmount():
+        amount_list = self,
+      elif self.providesIAmountList():
+        amount_list = self
       else:
         raise ValueError(
-          'context must implement IMovementCollection, IAmount or IAmountList')
+          'self must implement IMovementCollection, IAmount or IAmountList')
+
+    def getAmountProperty(amount_generator_line, base_application):
+      """Produced amount quantity is needed to initialize transformation"""
+      if base_application in base_contribution_set:
+        method = amount_generator_line._getTypeBasedMethod('getAmountProperty')
+        if method is not None:
+          value = method(delivery_amount, base_application, amount_list,
+                         rounding)
+          if value is not None:
+            return value
+        return amount_generator_line.getAmountProperty(
+            delivery_amount, base_application, amount_list, rounding)
 
     # First define the method that will browses recursively
     # the amount generator lines and accumulate applicable values
-    def accumulateAmountList(amount_generator_line):
-      amount_generator_line_list = amount_generator_line.contentValues(
-        portal_type=self.getPortalAmountGeneratorLineTypeList())
+    def accumulateAmountList(self):
+      amount_generator_line_list = self.contentValues(
+        portal_type=amount_generator_line_type_list)
       # Recursively feed base_amount
-      if len(amount_generator_line_list):
-        amount_generator_line_list.sort(key=lambda x: x.getIntIndex())
+      if amount_generator_line_list:
+        # Append lines with missing or duplicate int_index
+        if self in check_wrong_index_set:
+          check_wrong_index_set.update(amount_generator_line_list)
+        else:
+          index_dict = {}
+          for line in amount_generator_line_list:
+            index_dict.setdefault(line.getIntIndex(), []).append(line)
+          for line_list in index_dict.itervalues():
+            if len(line_list) > 1:
+              check_wrong_index_set.update(line_list)
+        amount_generator_line_list.sort(key=lambda x: (x.getIntIndex(),
+                                                       random.random()))
         for amount_generator_line in amount_generator_line_list:
           accumulateAmountList(amount_generator_line)
         return
       # Try to collect cells and aggregate their mapped properties
       # using resource + variation as aggregation key or base_application
       # for intermediate lines
-      amount_generator_cell_list = amount_generator_line.contentValues(
-        portal_type=self.getPortalAmountGeneratorCellTypeList())
-      if not amount_generator_cell_list:
-        # Consider the line as the unique cell
-        amount_generator_cell_list = [amount_generator_line]
+      amount_generator_cell_list = self.contentValues(
+        portal_type=amount_generator_cell_type_list)
       resource_amount_aggregate = {} # aggregates final line information
       value_amount_aggregate = {} # aggregates intermediate line information
-      for amount_generator_cell in amount_generator_cell_list:
-          getBaseApplication = \
-            getattr(amount_generator_cell, 'getBaseApplication', None)
-          if (getBaseApplication is None or
-              # XXX-JPS getTargetLevel not supported
-              not amount_generator_cell.test(delivery_amount)):
-            continue
-          resource = amount_generator_cell.getResource()
+      for amount_generator_cell in amount_generator_cell_list or (self,):
+        if not amount_generator_cell.test(delivery_amount):
+          continue
+        base_application_list = amount_generator_cell.getBaseApplicationList()
+        try:
+          base_contribution_list = \
+            amount_generator_cell.getBaseContributionList()
+        except AttributeError:
+          base_contribution_list = ()
+        resource = amount_generator_cell.getResource()
+        if resource or base_contribution_list: # case 1 & 2
+          applied_base_amount_set.update(base_application_list)
+        # XXX What should be done when there is no base_application ?
+        #     With the following code, it always applies, once, like in
+        #     the old implementation, but this is not consistent with
+        #     the way we ignore automatically created movements
+        #     (see above code when self provides IMovementCollection).
+        #     We should either do nothing if there is no base_application,
+        #     or find a criterion other than base_application to find
+        #     manually created movements.
+        for base_application in base_application_list or (None,):
+          if base_application not in base_amount:
+            value = getAmountProperty(self, base_application)
+            if value is None:
+              continue
+            base_amount[base_application] = value
           # Case 1: the cell defines a final amount of resource
           if resource:
-            key = self._getResourceAmountAggregateKey(amount_generator_cell)
+            key = self.getCellAggregateKey(amount_generator_cell)
             property_dict = resource_amount_aggregate.setdefault(key, {})
             # Then collect the mapped properties (net_converted_quantity,
             # resource, quantity, base_contribution_list, base_application...)
@@ -208,14 +214,12 @@ class AmountGeneratorMixin:
                                        []).extend(category_list)
             property_dict['resource'] = resource
             # For final amounts, base_application and id MUST be defined
-            property_dict['base_application'] = getBaseApplication() # Required
+            property_dict.setdefault('base_application_set',
+                                     set()).add(base_application)
             #property_dict['trade_phase_list'] = amount_generator_cell.getTradePhaseList() # Required moved to MappedValue
+            property_dict['reference'] = (amount_generator_cell.getReference()
+                                          or self.getReference()) # XXX
             property_dict['id'] = amount_generator_cell.getRelativeUrl().replace('/', '_')
-          try:
-            base_contribution_list = \
-              amount_generator_cell.getBaseContributionList()
-          except AttributeError:
-            continue
           # Case 2: the cell defines a temporary calculation line
           if base_contribution_list:
             # Define a key in order to aggregate amounts in cells
@@ -234,8 +238,8 @@ class AmountGeneratorMixin:
             #
             #  Use of a method to generate keys is probably better.
             #  than hardcoding it here
-            key = getBaseApplication()
-            property_dict = value_amount_aggregate.setdefault(key, {})
+            property_dict = value_amount_aggregate.setdefault(base_application,
+                                                              {})
             # Then collect the mapped properties
             for key in amount_generator_cell.getMappedValuePropertyList():
               property_dict[key] = amount_generator_cell.getProperty(key)
@@ -243,7 +247,7 @@ class AmountGeneratorMixin:
             # base_contribution_list MUST be defined
             property_dict['base_contribution_list'] = base_contribution_list
       for property_dict in resource_amount_aggregate.itervalues():
-        base_application = property_dict.pop('base_application')
+        base_application_set = property_dict['base_application_set']
         # property_dict should include
         #   resource - VAT service or a Component in MRP
         #   quantity - quantity in component in MRP, (what else XXX)
@@ -258,17 +262,22 @@ class AmountGeneratorMixin:
         # need values converted to the default management unit
         # If no quantity is provided, we consider that the value is 1.0
         # (XXX is it OK ?) XXX-JPS Need careful review with taxes
-        property_dict['quantity'] = base_amount[base_application] * \
+        property_dict['quantity'] = sum(base_amount[x]
+                                        for x in base_application_set) * \
           property_dict.pop('net_converted_quantity',
                             property_dict.get('quantity', 1.0))
+        base_application_set.discard(None)
+        # XXX Is it correct to generate nothing if the computed quantity is 0 ?
+        if not property_dict['quantity']:
+          continue
         # Create an Amount object
         # XXX-JPS Could we use a movement for safety ?
-        amount = newTempAmount(portal, property_dict.pop('id'),
-                               **property_dict)
+        amount = newTempAmount(portal, property_dict.pop('id'))
+        amount._setCategoryList(property_dict.pop('category_list', ()))
+        amount._edit(**property_dict)
         if rounding:
           # We hope here that rounding is sufficient at line level
-          amount = portal_roundings.getRoundingProxy(amount,
-            context=amount_generator_line)
+          amount = getRoundingProxy(amount, context=self)
         result.append(amount)
       for base_application, property_dict in value_amount_aggregate.iteritems():
         # property_dict should include
@@ -277,44 +286,51 @@ class AmountGeneratorMixin:
         #   quantity - quantity in component in MRP, (what else XXX)
         #   price -  empty (like in Transformation) price of a product
         #            (ex. a Stamp) or tax ratio (ie. price per value units)
+        # XXX Why price ? What about efficiency ?
         value = base_amount[base_application] * \
           (property_dict.get('quantity') or 1.0) * \
           (property_dict.get('price') or 1.0) # XXX-JPS is it really 1.0 ?
           # Quantity is used as a multiplier
           # Price is used as a ratio (also a kind of multiplier)
         for base_key in property_dict['base_contribution_list']:
+          if base_key in applied_base_amount_set:
+            if self in check_wrong_index_list:
+              raise ValueError("Duplicate or missing int_index on Amount"
+                               " Generator Lines while processing %r" % self)
+            else:
+              LOG("getGeneratedAmountList", WARNING, "%r contributes to %r"
+                  " but this base_amount was already applied. Order of Amount"
+                  " Generator Lines may be wrong." % (self, base_key))
+          if base_key not in base_amount:
+            base_amount[base_key] = getAmountProperty(self, base_key) or 0
           base_amount[base_key] += value
+
+    is_mapped_value = isinstance(self, MappedValue)
 
     # Each amount in amount_list creates a new amount to take into account
     # We thus need to start with a loop on amount_list
     for delivery_amount in amount_list:
-      # Initialize base_amount with per amount properties
-      amount_property_dict = self._getAmountPropertyDict(delivery_amount,
-        amount_list=amount_list, rounding=rounding)
-      base_amount.update(amount_property_dict)
-
-      # Initialize base_amount with total_price for each amount applications
-      #for application in delivery_amount.getBaseApplicationList(): # Acquired from Resource - XXX-JPS ?
-      application_list = delivery_amount.getBaseContributionList() # or getBaseApplicationList ?
-      if application_list:
-        total_price = delivery_amount.getTotalPrice()
-        for application in application_list: # Acquired from Resource - seems more normal
-          base_amount[application] = total_price
-
-      # Browse recursively the trade model and accumulate
+      if not is_mapped_value:
+        self = delivery_amount.asComposedDocument(amount_generator_type_list)
+      # XXX It should be possible to keep specific keys in base_amount dict.
+      #     This can be done by a preference listing base_amount categories
+      #     for which we want to accumulate quantities.
+      base_amount = {None: 1}
+      base_contribution_set = delivery_amount.getBaseContributionSet()
+      # Check that lines are sorted correctly
+      applied_base_amount_set = set()
+      # Check that lines with missing or duplicate int_index are independant
+      check_wrong_index_set = set()
+      # Browse recursively the amount generator lines and accumulate
       # applicable values - now execute the method
       accumulateAmountList(self)
-
-      # Purge base_amount of amount applications
-      for application in amount_property_dict:
-        del base_amount[application]
 
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
-  def getAggregatedAmountList(self, context, movement_list=None,
-                              rounding=False):
+  def getAggregatedAmountList(self, amount_list=None, rounding=False,
+                              amount_generator_type_list=None):
     """
     Implementation of a generic transformation algorith which is
     applicable to payroll, tax generation and BOMs. Return the
@@ -323,8 +339,33 @@ class AmountGeneratorMixin:
     TODO:
     - make working sample code
     """
+    generated_amount_list = self.getGeneratedAmountList(
+      amount_list=amount_list, rounding=rounding,
+      amount_generator_type_list=amount_generator_type_list)
+    aggregated_amount_dict = {}
+    result_list = []
+    for amount in generated_amount_list:
+      key = (amount.getPrice(), amount.getEfficiency(),
+             amount.reference, amount.categories)
+      aggregated_amount = aggregated_amount_dict.get(key)
+      if aggregated_amount is None:
+        aggregated_amount_dict[key] = amount
+        result_list.append(amount)
+      else:
+        # XXX How to aggregate rounded amounts ?
+        #     What to do if the total price is rounded ??
+        assert not rounding, "TODO"
+        aggregated_amount.quantity += amount.quantity
+    if 0:
+      print 'getAggregatedAmountList(%r) -> (%s)' % (
+        self.getRelativeUrl(),
+        ', '.join('(%s, %s, %s)'
+                  % (x.getResourceTitle(), x.getQuantity(), x.getPrice())
+                  for x in result_list))
+    return result_list
+
     raise NotImplementedError
     # Example of return code
-    result = self.getGeneratedAmountList(context, movement_list=movement_list,
+    result = self.getGeneratedAmountList(amount_list=amount_list,
                                          rounding=rounding)
     return SomeMovementGroup(result)

@@ -163,4 +163,5 @@ Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
 Sale Trade Condition | view_trade_model_line_list
 System Preference | trade_preference
+Trade Model Line | predicate_view
 Trade Model Line | view
