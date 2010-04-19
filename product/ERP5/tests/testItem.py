@@ -41,8 +41,15 @@ class TestItemMixin(TestSaleInvoiceMixin):
 
   def getBusinessTemplateList(self):
     """
+    custom list of business templates for testItem
+
+    erp5_trade_proxy_field_legacy is added only for a temporary
+    period until wrongly proxyfied business template (erp5_item here) stops
+    using obsolete field libraries. erp5_trade_proxy_field_legacy must be
+    removed as soon as possible.
     """
-    return TestSaleInvoiceMixin.getBusinessTemplateList(self) + ('erp5_item',)
+    return TestSaleInvoiceMixin.getBusinessTemplateList(self) + \
+         ('erp5_item',) + ('erp5_trade_proxy_field_legacy',)
   
   def login(self):
     uf = self.getPortal().acl_users
