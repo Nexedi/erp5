@@ -564,11 +564,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # but raises KeyError if object is not in catalog
     self.assertRaises(KeyError, portal_catalog.getObject, sys.maxint)
   
-  def test_getitem(self):
+  def test_getRecordForUid(self):
     portal_catalog = self.getCatalogTool()
     obj = self._makeOrganisation()
     self.assertEquals(obj,
-        portal_catalog.getSQLCatalog()[obj.getUid()].getObject())
+        portal_catalog.getSQLCatalog().getRecordForUid(obj.getUid()).getObject())
     
   def test_path(self):
     portal_catalog = self.getCatalogTool()
