@@ -76,11 +76,11 @@ def _getEffectiveModel(self, start_date=None, stop_date=None):
 
 
 @transactional_cached()
-def _findPredicateList(*container_list):
+def _findPredicateList(container_list, portal_type=None):
   predicate_list = []
   reference_dict = {}
   for container in container_list:
-    for ob in container.contentValues():
+    for ob in container.contentValues(portal_type=portal_type):
       if isinstance(ob, Predicate):
         # reference is used to hide lines on farther containers
         reference = ob.getProperty('reference')
@@ -102,21 +102,23 @@ class asComposedDocument(object):
   be accessed through contentValues/objectValues.
   """
 
-  def __new__(cls, orig_self):
-    self = orig_self.asContext()
+  def __new__(cls, orig_self, portal_type_list=None):
+    self = orig_self.asContext(_portal_type_list=portal_type_list)
     base_class = self.__class__
     self.__class__ = type(base_class.__name__, (cls, base_class), {})
-    self._effective_model_list = orig_self._findEffectiveSpecialiseValueList()
+    self._effective_model_list = \
+      orig_self._findEffectiveSpecialiseValueList(portal_type_list)
     return self
 
-  def __init__(self, orig_self):
+  def __init__(self, orig_self, portal_type_list=None):
     # __new__ does not call __init__ because returned object
     # is wrapped in an acquisition context.
     assert False
 
-  def asComposedDocument(self):
-    assert False, "not used yet (remove this line if needed)"
-    return self
+  def asComposedDocument(self, portal_type_list=None):
+    assert False, "not useful yet"
+    # If required, this must be implemented by calling 'asComposedDocument' on
+    # the original object (because the parameters may differ).
 
   @property
   def _folder_handler(self):
@@ -131,7 +133,8 @@ class asComposedDocument(object):
     assert spec is meta_type is checked_permission is None, "not useful yet"
     object_list = getattr(aq_base(self), '_predicate_list', None)
     if object_list is None:
-      object_list = _findPredicateList(*filter(len, self._effective_model_list))
+      container_list = tuple(filter(len, self._effective_model_list))
+      object_list = _findPredicateList(container_list, self._portal_type_list)
       self._predicate_list = object_list
     if portal_type is not None:
       if isinstance(portal_type, str):
@@ -156,7 +159,7 @@ class CompositionMixin:
   # XXX add accessors to get properties from '_effective_model_list' ?
   #     (cf PaySheetModel)
 
-  def _findEffectiveSpecialiseValueList(self):
+  def _findEffectiveSpecialiseValueList(self, specialise_type_list=None):
     """Return a list of effective specialised objects that is the
     inheritance tree.
     An effective object is an object which have start_date and stop_date
@@ -175,7 +178,8 @@ class CompositionMixin:
       model = model_list[model_index]
       model_index += 1
       # we don't use getSpecialiseValueList to avoid acquisition on the parent
-      for model in map(getEffectiveModel, model.getValueList('specialise')):
+      for model in map(getEffectiveModel, model.getValueList('specialise',
+                                      portal_type=specialise_type_list or ())):
         if model not in model_set:
           model_set.add(model)
           if 1: #model.test(self): # XXX
@@ -185,9 +189,9 @@ class CompositionMixin:
     except AttributeError:
       pass
     else:
-      model_list += [model
-        for model in parent_asComposedDocument()._effective_model_list
-        if model not in model_set]
+      model_list += [model for model in parent_asComposedDocument(
+                             specialise_type_list)._effective_model_list
+                           if model not in model_set]
     return model_list
 
 del asComposedDocument
