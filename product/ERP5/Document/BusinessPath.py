@@ -374,22 +374,22 @@ class BusinessPath(Path, Predicate):
       As business sequence is not related to simulation tree need to built
       full simulation trees per applied rule
     """
+    portal_catalog = self.getPortalObject().portal_catalog
     root_applied_rule_list = []
-    delivery_simulation_movement_list = []
-    for movement in explanation.getMovementList():
-      simulation_movement_list = movement.getDeliveryRelatedValueList(
-          portal_type='Simulation Movement')
-      if len(simulation_movement_list) == 0: # for legacy simulation hierarchy
-        simulation_movement_list = movement.getOrderRelatedValueList(
-            portal_type='Simulation Movement')
-      delivery_simulation_movement_list.extend(simulation_movement_list)
-      for simulation_movement in simulation_movement_list:
-        applied_rule = simulation_movement.getRootAppliedRule()
-        if applied_rule not in root_applied_rule_list:
-          root_applied_rule_list.append(
-              simulation_movement.getRootAppliedRule())
+    delivery_simulation_movement_list = portal_catalog(
+      delivery_uid=[x.getUid() for x in explanation.getMovementList()])
+    # 'order' category is deprecated. it is kept for compatibility.
+    if len(delivery_simulation_movement_list) == 0:
+      delivery_simulation_movement_list = portal_catalog(
+        order_uid=[x.getUid() for x in explanation.getMovementList()])
 
-    simulation_movement_list = self.getPortalObject().portal_catalog(
+    for simulation_movement in delivery_simulation_movement_list:
+      applied_rule = simulation_movement.getRootAppliedRule()
+      if applied_rule not in root_applied_rule_list:
+        root_applied_rule_list.append(
+          simulation_movement.getRootAppliedRule())
+
+    simulation_movement_list = portal_catalog(
       portal_type='Simulation Movement', causality_uid=self.getUid(),
       path=['%s/%%' % x for x in root_applied_rule_list])
 
