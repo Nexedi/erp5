@@ -378,10 +378,6 @@ class BusinessPath(Path, Predicate):
     root_applied_rule_list = []
     delivery_simulation_movement_list = portal_catalog(
       delivery_uid=[x.getUid() for x in explanation.getMovementList()])
-    # 'order' category is deprecated. it is kept for compatibility.
-    if len(delivery_simulation_movement_list) == 0:
-      delivery_simulation_movement_list = portal_catalog(
-        order_uid=[x.getUid() for x in explanation.getMovementList()])
 
     for simulation_movement in delivery_simulation_movement_list:
       applied_rule = simulation_movement.getRootAppliedRule()
