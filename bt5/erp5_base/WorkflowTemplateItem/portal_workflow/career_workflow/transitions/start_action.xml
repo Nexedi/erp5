@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>Career_checkUniqueActiveCareer</string> </value>
+            <value> <string>Career_checkConsistency</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
