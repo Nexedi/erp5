@@ -93,8 +93,10 @@ def createPreferenceToolAccessorList(portal) :
       # only properties marked as preference are used
       attribute = prop['id']
       attr_list = [ 'get%s' % convertToUpperCase(attribute)]
+      if prop['type'] == 'boolean':
+        attr_list.append('is%s' % convertToUpperCase(attribute))
       if prop['type'] in list_types :
-        attr_list +=  ['get%sList' % convertToUpperCase(attribute), ]
+        attr_list.append('get%sList' % convertToUpperCase(attribute))
       for attribute_name in attr_list:
         method = PreferenceMethod(attribute_name, prop.get('default'))
         setattr(PreferenceTool, attribute_name, method)

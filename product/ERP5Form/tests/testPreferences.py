@@ -509,6 +509,26 @@ class TestPreferences(ERP5TypeTestCase):
     self.assertEqual(user_pref, preference_tool.getActivePreference())
     self.assertEqual(system_pref, preference_tool.getActiveSystemPreference())
 
+  def test_boolean_accessor(self):
+    self._addPropertySheet('Preference', 'DummyPreference',
+        '''class DummyPreference:
+             _properties= ( {'id': 'dummy',
+                             'preference': True,
+                             'type': 'boolean',},)''')
+    portal_preferences = self.portal.portal_preferences
+    self.assertFalse(portal_preferences.getDummy())
+    self.assertFalse(portal_preferences.isDummy())
+
+    preference = portal_preferences.newContent(portal_type='Preference',
+                                               dummy=True)
+    preference.enable()
+    transaction.commit()
+    self.tic()
+
+    self.assertTrue(portal_preferences.getDummy())
+    self.assertTrue(portal_preferences.isDummy())
+    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPreferences))
