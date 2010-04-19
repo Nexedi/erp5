@@ -53,9 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setSpecialiseUidList(relation_uid_list, portal_type=portal_type)\n
+            <value> <string>context.setSpecialiseValueList(relation_value_list, portal_type=portal_type)\n
 \n
-if relation_uid_list:\n
+if relation_value_list:\n
   context.PaySheetTransaction_applyModel(force=1)\n
 </string> </value>
         </item>
@@ -67,7 +67,7 @@ if relation_uid_list:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>relation_uid_list, portal_type</string> </value>
+            <value> <string>relation_value_list, portal_type</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -93,7 +93,7 @@ if relation_uid_list:\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>relation_uid_list</string>
+                            <string>relation_value_list</string>
                             <string>portal_type</string>
                             <string>_getattr_</string>
                             <string>context</string>
