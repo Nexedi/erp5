@@ -69,7 +69,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     portal = self.getPortal()
     web_site_module = portal.web_site_module
     self.website = web_site_module.newContent(portal_type='Web Site')
-    #self.website.setSkinSelectionName('KM')
+    self.website.setSkinSelectionName('KM')
     self.websection = self.website.newContent(portal_type='Web Section')
     self.app.REQUEST.set('current_web_section', self.websection)
     self.webpage = portal.web_page_module.newContent(
