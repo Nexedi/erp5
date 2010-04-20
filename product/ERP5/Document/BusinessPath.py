@@ -380,10 +380,9 @@ class BusinessPath(Path, Predicate):
       delivery_uid=[x.getUid() for x in explanation.getMovementList()])
 
     for simulation_movement in delivery_simulation_movement_list:
-      applied_rule = simulation_movement.getRootAppliedRule()
+      applied_rule = simulation_movement.getRootAppliedRule().getPath()
       if applied_rule not in root_applied_rule_list:
-        root_applied_rule_list.append(
-          simulation_movement.getRootAppliedRule())
+        root_applied_rule_list.append(applied_rule)
 
     simulation_movement_list = portal_catalog(
       portal_type='Simulation Movement', causality_uid=self.getUid(),
