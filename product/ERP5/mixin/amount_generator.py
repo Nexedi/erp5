@@ -165,6 +165,8 @@ class AmountGeneratorMixin:
         for amount_generator_line in amount_generator_line_list:
           accumulateAmountList(amount_generator_line)
         return
+      elif (self.getPortalType() not in amount_generator_line_type_list):
+        return
       # Try to collect cells and aggregate their mapped properties
       # using resource + variation as aggregation key or base_application
       # for intermediate lines
@@ -173,11 +175,7 @@ class AmountGeneratorMixin:
       resource_amount_aggregate = {} # aggregates final line information
       value_amount_aggregate = {} # aggregates intermediate line information
 
-      if (not amount_generator_cell_list) and (self.getPortalType() in
-          amount_generator_line_type_list):
-        amount_generator_cell_list = (self,)
-      
-      for amount_generator_cell in amount_generator_cell_list:
+      for amount_generator_cell in amount_generator_cell_list or (self,):
         if not amount_generator_cell.test(delivery_amount):
           continue
         base_application_list = amount_generator_cell.getBaseApplicationList()
