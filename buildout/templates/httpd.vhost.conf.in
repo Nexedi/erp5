@@ -1,0 +1,18 @@
+<VirtualHost *:${configuration:httpd_port}>
+  ServerName       localhost
+  DocumentRoot     ${configuration:httpd_htdocs}
+  HostnameLookups  Off
+  UseCanonicalName Off
+  ServerSignature  Off
+  RewriteEngine    On
+  ProxyVia         on
+  ProxyTimeout     1200
+
+${configuration:httpd_vhost_rewrite_rules}
+
+  <Location "/">
+    Order Allow,Deny
+    Allow from all
+  </Location>
+
+</VirtualHost>
