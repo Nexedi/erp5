@@ -115,6 +115,9 @@ class EntireQuery(object):
       for alias, raw_column in self.select_dict.iteritems():
         if raw_column is None:
           column = alias
+          if '.' in alias:
+            # If given column is pre-mapped, strip table name from its alias.
+            _, alias = alias.replace('`', '').split('.')
         else:
           column = raw_column
         try:
