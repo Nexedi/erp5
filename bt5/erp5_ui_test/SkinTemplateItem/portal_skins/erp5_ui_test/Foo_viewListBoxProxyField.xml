@@ -95,6 +95,7 @@
                         <string>listbox_title</string>
                         <string>listbox_id</string>
                         <string>listbox_quantity</string>
+                        <string>listbox_constant_string_field</string>
                       </list>
                     </value>
                 </item>
