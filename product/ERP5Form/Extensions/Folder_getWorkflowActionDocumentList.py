@@ -76,9 +76,7 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
                        'catalog.%s is not NULL' % workflow_state
       params['group_by'] = ('catalog.portal_type',
                                       'catalog.%s' % workflow_state)
-      params['select_expression'] = (
-          'catalog.path, count(catalog.uid) as count, catalog.portal_type, catalog.%s'
-            % workflow_state)
+      params['select_dict'] = {'count': 'count(catalog.uid)'}
       
       for brain in selection_tool.callSelectionFor(selection_name, params=params):
         doc = brain.getObject()
