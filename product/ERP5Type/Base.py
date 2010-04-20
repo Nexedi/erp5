@@ -2004,7 +2004,7 @@ class Base( CopyContainer,
       # We have been provided a string
       path = target
       if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
-    elif isinstance(target, (tuple, list)):
+    elif isinstance(target, (tuple, list, set, frozenset)):
       # We have been provided a list or tuple
       path_list = []
       for target_item in target:

@@ -48,7 +48,8 @@ class SetSetter(BaseSetter):
     def __call__(self, instance, *args, **kw):
       if self._warning:
         LOG("ERP5Type Deprecated Setter Id:",0, self._id)
-      instance._setValue(self._key, args[0],
+      value = set(args[0])
+      instance._setValue(self._key, value,
                                                 spec=kw.get('spec',()),
                                                 filter=kw.get('filter', None),
                                                 portal_type=kw.get('portal_type',()),

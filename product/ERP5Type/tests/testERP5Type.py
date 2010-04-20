@@ -675,6 +675,7 @@ class TestPropertySheet:
       person.setRegionValueList([alpha, alpha])
       self.assertEquals(person.getRegionList(), ['alpha', 'alpha'])
       person.setRegionValueSet([alpha, alpha])
+      self.assertEquals(person.getRegionList(), ['alpha'])
       self.assertEquals(person.getRegionSet(), ['alpha'])
       person.setRegionValueList([alpha, beta, alpha])
       self.assertEquals(person.getRegionList(), ['alpha', 'beta', 'alpha'])
