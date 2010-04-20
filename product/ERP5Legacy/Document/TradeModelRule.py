@@ -61,7 +61,7 @@ class TradeModelRule(Rule):
     for amount in trade_condition.getAggregatedAmountList(context_movement):
       # business path specific
       business_path_list = business_process.getPathValueList(
-          trade_phase=amount.getTradePhaseList())
+          trade_phase=amount.getTradePhaseList(), context=context_movement)
       if len(business_path_list) == 0:
         raise ValueError('Cannot find Business Path')
 
