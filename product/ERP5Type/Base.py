@@ -3640,7 +3640,7 @@ class Base( CopyContainer,
               continue
             seen_properties.append(property)
             subdochelper = newTempDocumentationHelper(dochelper, k,
-                      title=property['id'], description=property['description'],
+                      title=property['id'], description=property.get('description', ''),
                       type=property['type'], security=property['mode'],
                       content=pformat(documented_item.getProperty(property['id'])))
             subdochelper_dynamic_accessor_list = []
