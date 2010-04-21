@@ -430,28 +430,37 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_Folder_delete_related_object(self):
     # deletion is refused if there are related objects
-    module = self.portal.newContent(portal_type='Folder', id='test_folder')
-    document_1 = module.newContent(portal_type='Folder', id='1')
-    document_2 = module.newContent(portal_type='Folder', id='2')
-    self.portal.portal_categories.setCategoryMembership(
-                                context=document_1,
-                                base_category_list=('source',),
-                                category_list=document_2.getRelativeUrl())
-    uid_list = [document_1.getUid(), document_2.getUid()]
-    self.portal.portal_selections.setSelectionParamsFor(
-                          'test_selection', dict(uids=uid_list))
+    organisation_module_len = len(self.portal.organisation_module)
+    person_module_len = len(self.portal.person_module)
+    organisation = self.portal.organisation_module.newContent()
+    person = self.portal.person_module.newContent(
+      default_career_subordination_value=organisation)
+    for obj in person, organisation:
+      obj.manage_addLocalRoles(self.manager_username, ['Assignor'])
     transaction.commit()
+    self.assertEqual(0, organisation.getRelationCountForDeletion())
     self.tic()
-    self.assertEquals([document_1],
-        self.portal.portal_categories.getRelatedValueList(document_2))
-    md5_string = md5.new(str(sorted([str(x) for x in uid_list]))).hexdigest()
-    redirect = module.Folder_delete(selection_name='test_selection',
-                                    uids=uid_list,
-                                    md5_object_uid_list=md5_string)
-    self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
-    transaction.savepoint(optimistic=True)
-    self.assertEquals(len(module.objectValues()), 2)
-
+    self.assertEqual(2, organisation.getRelationCountForDeletion())
+    self.assertEqual(0, person.getRelationCountForDeletion())
+    def delete(assert_deleted, obj):
+      uid_list = [obj.getUid()]
+      self.portal.portal_selections.setSelectionParamsFor(
+                          'test_selection', dict(uids=uid_list))
+      md5_string = md5.new(str(sorted(str(x) for x in uid_list))).hexdigest()
+      redirect = obj.getParentValue().Folder_delete(uids=uid_list,
+        selection_name='test_selection', md5_object_uid_list=md5_string)
+      self.assertTrue(('Sorry, 1 item is in use.', 'Deleted.')[assert_deleted]
+                      in redirect, redirect)
+      transaction.commit()
+      self.tic()
+    delete(0, organisation)
+    delete(1, person)
+    self.assertEqual(0, organisation.getRelationCountForDeletion())
+    delete(1, organisation)
+    self.assertEquals(organisation_module_len + 1,
+                      len(self.portal.organisation_module))
+    self.assertEquals(person_module_len + 1,
+                      len(self.portal.person_module))
 
   def test_Folder_delete_non_accessible_object(self):
     # deletion is refused if there are related objects, even if those related

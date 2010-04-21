@@ -70,25 +70,6 @@ error = portal.portal_selections.selectionHasChanged(md5_object_uid_list,\n
 \n
 REQUEST=context.REQUEST\n
 qs = \'\'\n
-ret_url = \'\'\n
-\n
-getRelatedPropertyList = portal.portal_categories.getRelatedPropertyList\n
-def Object_hasRelation(obj):\n
-  # Check if there is some related objets.\n
-  result = 0\n
-  for o in obj.getIndexableChildValueList():\n
-    for related_url in getRelatedPropertyList(o, property_name=\'relative_url\'):\n
-      if related_url.startswith(obj.getRelativeUrl()):\n
-        continue\n
-      elif related_url.startswith(\'portal_simulation\'):\n
-        continue\n
-      elif related_url.startswith(\'portal_trash\'):\n
-        continue\n
-      else:\n
-        result = 1\n
-        break\n
-  return result\n
-\n
 ret_url = context.absolute_url() + \'/\' + form_id\n
 if error:\n
   message = Base_translateString("Sorry, your selection has changed.")\n
@@ -98,7 +79,7 @@ elif uids is not None:\n
   object_used = 0\n
 \n
   object_list = [x.getObject() for x in context.Folder_getDeleteObjectList(uid=uids)]\n
-  object_used = sum([Object_hasRelation(x) for x in object_list])\n
+  object_used = sum([x.getRelationCountForDeletion() and 1 for x in object_list])\n
 \n
   if object_used > 0:\n
     if object_used == 1:\n
@@ -253,8 +234,6 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
                             <string>REQUEST</string>
                             <string>qs</string>
                             <string>ret_url</string>
-                            <string>getRelatedPropertyList</string>
-                            <string>Object_hasRelation</string>
                             <string>message</string>
                             <string>None</string>
                             <string>object_used</string>
