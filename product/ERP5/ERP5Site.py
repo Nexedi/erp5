@@ -890,6 +890,30 @@ class ERP5Site(FolderMixIn, CMFSite):
            self._getPortalConfiguration('portal_service_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalSaleTypeList')
+  def getPortalSaleTypeList(self):
+    """
+    Return sale types.
+    """
+    return self._getPortalGroupedTypeList('sale')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalPurchaseTypeList')
+  def getPortalPurchaseTypeList(self):
+    """
+    Return purchase types.
+    """
+    return self._getPortalGroupedTypeList('purchase')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalInternalTypeList')
+  def getPortalInternalTypeList(self):
+    """
+    Return internal types.
+    """
+    return self._getPortalGroupedTypeList('internal')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalAlarmTypeList')
   def getPortalAlarmTypeList(self):
     """
