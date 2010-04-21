@@ -387,7 +387,10 @@ class Rule(Predicate, XMLObject):
               if movement.isPropertyRecorded(k):
                 movement_value = movement.getRecordedProperty(k)
                 if isinstance(movement_value, list) and not isinstance(v, list):
-                  movement_value = movement_value[0]
+                  try:
+                    movement_value = movement_value[0]
+                  except IndexError:
+                    movement_value = None
               else:
                 movement_value = movement.getProperty(k)
               if k not in ('quantity',) and v != movement_value:
