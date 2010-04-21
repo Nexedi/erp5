@@ -103,6 +103,8 @@ dQEAAAAA</string> </value>
           </tal:block>\n
         </tal:block>\n
 \n
+        <!-- save the context for the macros -->\n
+        <tal:block tal:define="dummy python: request.set(\'here\', here)">\n
         <!-- Calculating by group the max length of columns to merge -->\n
         <tal:block tal:repeat="group python: [g for g in group_list if g not in (\'hidden\', )]">\n
             <!-- if we have other fields to display, calculate max column len, which will be used \n
@@ -129,6 +131,7 @@ dQEAAAAA</string> </value>
           <table:table-row>\n
             <table:table-cell table:style-name=\'Default\'/>\n
           </table:table-row>\n
+        </tal:block>\n
         </tal:block>\n
       </tal:block>\n
       </table:table>\n
