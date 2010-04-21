@@ -53,27 +53,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>translateString = context.Base_translateString\n
-person_module = context.person_module\n
+            <value> <string>"""\n
+  Create new Person object and redirect to it.\n
+"""\n
 \n
-# Create a new empty page\n
-person = person_module.newContent(portal_type = \'Person\')\n
-\n
-\n
+person = context.person_module.newContent(portal_type = \'Person\')\n
 keep_items = dict(editable_mode=1,\n
-              portal_status_message=translateString("New Person Created"))\n
-\n
+                  portal_status_message=context.Base_translateString("New Person Created"))\n
 return person.Base_redirect(\'view\', keep_items)\n
-\n
-\n
-request_form.update(keep_items)\n
-message = make_query(dict([(k, v) for k, v in request_form.items() if k and v is not None]))\n
-\n
-redirect_url = \'%s/%s/view?%s\' % (\n
-            context.absolute_url(), web_page.getRelativeUrl(),message)\n
-\n
-# return to the new page in the section context\n
-return context.REQUEST.RESPONSE.redirect(redirect_url)\n
 </string> </value>
         </item>
         <item>
@@ -112,22 +99,9 @@ return context.REQUEST.RESPONSE.redirect(redirect_url)\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>translateString</string>
-                            <string>person_module</string>
                             <string>person</string>
                             <string>dict</string>
                             <string>keep_items</string>
-                            <string>request_form</string>
-                            <string>make_query</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>k</string>
-                            <string>v</string>
-                            <string>None</string>
-                            <string>message</string>
-                            <string>web_page</string>
-                            <string>redirect_url</string>
                           </tuple>
                         </value>
                     </item>
