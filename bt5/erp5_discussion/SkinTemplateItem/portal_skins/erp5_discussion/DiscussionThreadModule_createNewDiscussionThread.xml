@@ -105,7 +105,7 @@ return discussion_thread.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, text_content, form_id, predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, reference=None,**kw</string> </value>
+            <value> <string>title, text_content, form_id=\'view\', predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, reference=None,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -174,6 +174,7 @@ return discussion_thread.Base_redirect(form_id,\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string>view</string>
                 <none/>
                 <none/>
                 <none/>
