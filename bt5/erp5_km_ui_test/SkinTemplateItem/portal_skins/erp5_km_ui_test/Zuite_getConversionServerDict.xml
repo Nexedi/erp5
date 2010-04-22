@@ -53,45 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
+            <value> <string>"""\n
+  Return the configuration for use into\n
+  preferences.\n
 """\n
-  Initialize a KM site.\n
-"""\n
-if site_id in context.objectIds():\n
-  context.manage_delObjects([site_id])\n
-km_website = context.newContent(id = site_id, \\\n
-                                title = title, \n
-                                portal_type = \'Web Site\')\n
-km_website.edit(skin_selection_name = \'KM\',\n
-                container_layout = \'erp5_km_minimal_layout\',\n
-                content_layout = \'erp5_km_minimal_content_layout\',\n
-                custom_render_method_id = \'WebSite_viewKnowledgePad\',\n
-                layout_configuration_form_id = \'WebSection_viewKMMinimalThemeConfiguration\',\n
-                static_language_selection = True,\n
-                visible = True,\n
-                site_map_section_parent = True)\n
-\n
-km_preference_id = \'km_site_test\'\n
-portal_preferences = context.portal_preferences\n
-if km_preference_id in portal_preferences.objectIds():\n
-  portal_preferences.manage_delObjects([km_preference_id])\n
-km_preference = portal_preferences.newContent(\n
-                  id = km_preference_id,\n
-                  portal_type = \'System Preference\',\n
-                  priority = 1,\n
-                  preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
-                  preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
-                  preferred_synchronous_metadata_discovery = False,\n
-                  preferred_redirect_to_document = False,\n
-                  preferred_ooodoc_server_address = context.Zuite_getConversionServerDict()["oood_hostname"],\n
-                  preferred_ooodoc_server_port_number = context.Zuite_getConversionServerDict()["oood_port"])\n
-km_preference.enable()\n
-\n
-return "Created Successfully."\n
-
-
-]]></string> </value>
+return dict(oood_hostname="localhost",\n
+            oood_port=8008)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -101,15 +69,7 @@ return "Created Successfully."\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>site_id=None, title=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,23 +89,13 @@ return "Created Successfully."\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>site_id</string>
-                            <string>title</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>km_website</string>
-                            <string>True</string>
-                            <string>km_preference_id</string>
-                            <string>portal_preferences</string>
-                            <string>False</string>
-                            <string>_getitem_</string>
-                            <string>km_preference</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -157,15 +107,12 @@ return "Created Successfully."\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSiteModule_createKMSite</string> </value>
+            <value> <string>Zuite_getConversionServerDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
