@@ -327,7 +327,7 @@ var rewriteIndentedSelect = function() {\n
         }\n
       }\n
       level = level / 4.;\n
-      options[j].innerHTML = options[j].innerHTML.replace(/&nbsp;/g, "");\n
+      options[j].innerHTML = options[j].innerHTML.replace(/^(&nbsp;)+/, "");\n
       options[j].style.paddingLeft = level+"em";\n
 \n
     }\n
