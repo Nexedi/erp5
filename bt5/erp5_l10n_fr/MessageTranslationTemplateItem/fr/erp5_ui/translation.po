@@ -6546,14 +6546,8 @@ msgstr "Numéro"
 msgid "Number of Lines Displayed in List Mode ListBoxes"
 msgstr "Nombre de lignes affichées en mode liste"
 
-msgid "Number of Lines Displayed in List Mode ListBoxs"
-msgstr "Nombre de lignes affichées dans une listbox en mode liste"
-
 msgid "Number of Lines Displayed in View Mode ListBoxes"
-msgstr "Nombre de lignes affichées en mode général"
-
-msgid "Number of Lines Displayed in View Mode ListBoxs"
-msgstr "Nombre de lignes affichées dans une listbox en mode view"
+msgstr "Nombre de lignes affichées en mode vue"
 
 msgid "Number of Lines to Add"
 msgstr "Nombre de lignes à ajouter"
