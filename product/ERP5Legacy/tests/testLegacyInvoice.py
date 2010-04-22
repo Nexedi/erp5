@@ -1964,8 +1964,10 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
                      portal_type=self.invoice_portal_type)
     self.assertEquals(len(related_invoice_list), 1)
     invoice = related_invoice_list[0]
-    self.assertEquals(packing_list.getSource(), invoice.getSource())
-    self.assertEquals(packing_list.getDestination(), invoice.getDestination())
+    self.assertEquals(packing_list.getSourceAdministration(),
+                                       invoice.getSource())
+    self.assertEquals(packing_list.getDestinationAdministration(),
+                                       invoice.getDestination())
     self.assertEquals(packing_list.getDestinationSection(), \
                                        invoice.getDestinationSection())
     self.assertEquals(packing_list.getSourceSection(), \
