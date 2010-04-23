@@ -1649,10 +1649,16 @@ class FloatWidget(TextWidget):
       try :
         float_value = float(value)
         if precision not in (None, ''):
-          float_value = round(float_value, precision)
-        # we use repr that have a better precision than str
-        value = repr(float_value)
+          # if we have a precision, then use it now
+          value = ('%%0.%sf' % precision) % float_value
+        else:
+          # if no precision, we use repr which have a better precision than str
+          value = repr(float_value)
       except ValueError:
+        return value
+      # if this number displayed in scientific notification, just return it as
+      # is
+      if 'e' in value:
         return value
       value_list = value.split('.')
       integer = value_list[0]
