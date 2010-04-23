@@ -375,12 +375,15 @@ class TestListField(ERP5TypeTestCase):
     """Create some categories into gender
     """
     category_tool = self.portal.portal_categories
-    category_dict = {'a':1, 'b':2, 'd':3, 'c':4, 'e':None, 'g':None, 'f':None}
     if len(category_tool.gender.contentValues()) == 0 :
-      for category_id, int_index in category_dict.items():
-        category_tool.gender.newContent(portal_type='Category',
-                                               id=category_id,
-                                               int_index=int_index)
+      category_tool.gender.newContent(portal_type='Category',
+                                      id='male',
+                                      title='Male',
+                                      int_index=1)
+      category_tool.gender.newContent(portal_type='Category',
+                                      id='female',
+                                      title='Female',
+                                      int_index=2)
 
   def test_render_odt(self):
     items = [('My first Line', '1'), ('My Second Line', '2')]
@@ -417,17 +420,15 @@ class TestListField(ERP5TypeTestCase):
 
     category_item_list = field.get_value('items')
     self.assertEquals(category_item_list,
-        [['', ''], ['e', 'e'], ['f', 'f'], ['g', 'g'], ['a', 'a'], ['b', 'b'],
-          ['d', 'd'], ['c', 'c']])
+        [['', ''], ['Male', 'male'], ['Female', 'female']])
 
     # try on a person to select on gender and check if the result is the same
     person_module = self.portal.getDefaultModule('Person')
     person = person_module.newContent(portal_type='Person')
-    person.setGender('b')
-    self.assertEquals(person.getGender(), 'b')
+    person.setGender('female')
+    self.assertEquals(person.getGender(), 'female')
     self.assertEquals(person.Person_view.my_gender.get_value('items'),
-        [['', ''], ['e', 'e'], ['f', 'f'], ['g', 'g'], ['a', 'a'], ['b', 'b'],
-          ['d', 'd'], ['c', 'c']])
+        [['', ''], ['Male', 'male'], ['Female', 'female']])
 
 
 class TestMultiListField(ERP5TypeTestCase):
