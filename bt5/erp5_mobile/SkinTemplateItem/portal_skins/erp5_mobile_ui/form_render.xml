@@ -96,8 +96,7 @@ It is possible to specify a group id and a group title by naming a group followi
     <tal:block tal:repeat="group group_list">\n
       <tal:block tal:define="gid     group/gid;">\n
         <fieldset tal:condition="python: gid.find(\'hidden\') < 0"\n
-                  tal:attributes="class gid;\n
-                                  id    python: \'fieldset_%s\' % (gid.replace(\' \', \'_\'), );"\n
+                  tal:attributes="class gid;"\n
                   tal:define="gtitle group/gtitle"\n
                   class="border">\n
           <legend tal:condition="python: gtitle != \'bottom\' and gtitle != \'left\' and gtitle != \'right\' and gtitle != \'center\'" tal:content="group/gtitle" class="group_title"/>\n
@@ -115,7 +114,8 @@ It is possible to specify a group id and a group title by naming a group followi
         <a class="link_white" tal:attributes="href python: \'%s%s%s%s\' % (context.REQUEST.URL0,\'?\', context.REQUEST.QUERY_STRING,\'#TOP\')" i18n:translate="" i18n:domain="ui">////////// Top of page \\\\\\\\\\\\\\\\\\\\</a>\n
        </div>\n
   </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

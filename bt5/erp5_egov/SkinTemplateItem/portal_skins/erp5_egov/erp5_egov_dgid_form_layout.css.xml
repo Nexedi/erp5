@@ -382,7 +382,7 @@ div#main_content > fieldset.webcontent {\n
 /* TODO: redo webcontent header spacing policy because lack of consistency\n
          (not tested with huge titles) */\n
 \n
-div#main_content > fieldset#fieldset_webcontent {padding: 2em}\n
+div#main_content > fieldset.webcontent {padding: 2em}\n
 \n
 div#main_content > fieldset.header {\n
   padding-bottom: 1em;\n
@@ -418,7 +418,8 @@ div#main_content fieldset.webcontent span.headline {\n
   text-shadow: .1em .1em .1em #eee;\n
   line-height: 140%;\n
   text-align: left;\n
-}
+}\n
+
 
 ]]></string> </value>
         </item>

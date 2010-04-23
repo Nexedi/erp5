@@ -107,8 +107,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             <tal:block tal:repeat="group group_list">\n
               <tal:block tal:define="gid    group/gid">\n
                 <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid"\n
-                          tal:attributes="class gid;\n
-                                          id    python: \'fieldset_\' + gid.replace(\' \', \'_\');"\n
+                          tal:attributes="class gid;"\n
                           tal:define="gtitle group/gtitle">\n
                   <legend tal:condition="python: gtitle != \'bottom\' and gtitle != \'left\' and gtitle != \'right\' and gtitle != \'center\'" tal:content="group/gtitle" class="group_title"/>\n
                   <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n

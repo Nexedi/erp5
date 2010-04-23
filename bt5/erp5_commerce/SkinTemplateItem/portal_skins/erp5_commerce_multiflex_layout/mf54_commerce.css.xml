@@ -80,18 +80,18 @@
 .main_content h3 {font-size:120% !important; color:#FF0000;}\n
 div.portal_status_message h3 {margin:0px;}\n
 \n
-#fieldset_left {padding:10px;}\n
-#fieldset_left div.field {margin-top:5px; margin-bottom: 10px;}\n
-#fieldset_left label {width: 135px !important; font-size: 120% !important; color:#505050; float:left;  width: <tal:block tal:replace="python: main_content_width / 5"/>px;}\n
-#fieldset_left label a {display:none;}\n
-#fieldset_right {padding:10px;}\n
-#fieldset_right div.field {margin-top:5px; margin-bottom: 10px;}\n
-#fieldset_right label {width: 135px !important; font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
-#fieldset_right label a {display:none;}\n
-#fieldset_center {padding:10px;}\n
-#fieldset_center div.field {margin-top:5px; margin-bottom: 10px;}\n
-#fieldset_center label {font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
-#fieldset_center label a {display:none;}\n
+fieldset.left {padding:10px;}\n
+fieldset.left div.field {margin-top:5px; margin-bottom: 10px;}\n
+fieldset.left label {width: 135px !important; font-size: 120% !important; color:#505050; float:left;  width: <tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+fieldset.left label a {display:none;}\n
+fieldset.right {padding:10px;}\n
+fieldset.right div.field {margin-top:5px; margin-bottom: 10px;}\n
+fieldset.right label {width: 135px !important; font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+fieldset.right label a {display:none;}\n
+fieldset.center {padding:10px;}\n
+fieldset.center div.field {margin-top:5px; margin-bottom: 10px;}\n
+fieldset.center label {font-size: 120% !important; color:#505050; float:left; width:<tal:block tal:replace="python: main_content_width / 5"/>px;}\n
+fieldset.center label a {display:none;}\n
 \n
 div.subcontent-box.cartbox fieldset.widget div.field label {display: none;}\n
 div.subcontent-box.cartbox h1.group_title {background: url(./mf54_image/icon_celltitle_cart.png) no-repeat; background-position:229px 5px;}\n
@@ -208,7 +208,8 @@ fieldset.editable div.input {padding:0px;}\n
 .main_content table tr.shopping_cart_end_lines td.used {border-bottom:solid 1px #CCC;}\n
 \n
 \n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
