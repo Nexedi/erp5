@@ -158,6 +158,7 @@ class TestFloatField(ERP5TypeTestCase):
     self.field.values['editable'] = 0
     self.assertEquals('10000000000000000000.00',
                       self.field.render(10000000000000000000))
+    self.assertEquals('1e+100', self.field.render(1e+100))
 
   def test_validate_thousand_separator_point(self):
     self.field.values['input_style'] = '-1 234.5'
