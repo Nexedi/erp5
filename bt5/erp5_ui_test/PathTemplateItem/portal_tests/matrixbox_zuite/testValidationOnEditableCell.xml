@@ -100,7 +100,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//fieldset[@id=\'fieldset_bottom\']/div[1]/div/div/table/tbody/tr[2]/td[2]</td>\n
+  <td>//fieldset[@class=\'bottom editable\']/div[1]/div/div/table/tbody/tr[2]/td[2]</td>\n
   <td>*You did not enter a floating point*</td>\n
 </tr>\n
 <tr>\n
@@ -164,7 +164,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//fieldset[@id=\'fieldset_bottom\']/div[1]/div/div/table/tbody/tr[2]/td[2]</td>\n
+  <td>//fieldset[@class=\'bottom editable\']/div[1]/div/div/table/tbody/tr[2]/td[2]</td>\n
   <td>*You did not enter a floating point*</td>\n
 </tr>\n
 <tr>\n
