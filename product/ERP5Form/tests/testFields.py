@@ -122,6 +122,10 @@ class TestFloatField(ERP5TypeTestCase):
     self.assertEquals('0.01', self.widget.format_value(self.field, 0.011))
     # value is rounded
     self.assertEquals('0.01', self.widget.format_value(self.field, 0.009999))
+    self.assertEquals('1.00',
+        self.widget.format_value(self.field, sum([0.1] * 10)))
+    self.assertEquals('566.30',
+        self.widget.format_value(self.field, 281.80 + 54.50 + 230.00))
   
   def test_render_view(self):
     self.field.values['input_style'] = '-1 234.5'
