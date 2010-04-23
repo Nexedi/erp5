@@ -151,10 +151,10 @@ function buildTables(element_list, rowPredicate, columnPredicate,\n
 \n
 function matchChunk(string, separator, chunk_value) {\n
   if (string != null) {\n
-    var id_chunks = string.split(separator);\n
+    var chunk_list = string.split(separator);\n
     var i;\n
-    for (i = 0; i < id_chunks.length; i++) {\n
-      if (id_chunks[i] == chunk_value)\n
+    for (i = 0; i < chunk_list.length; i++) {\n
+      if (chunk_list[i] == chunk_value)\n
         return true;\n
     }\n
   }\n
@@ -163,12 +163,12 @@ function matchChunk(string, separator, chunk_value) {\n
 \n
 function matchLeftFieldset(element) {\n
   return (element.tagName == "FIELDSET") &&\n
-          matchChunk(element.id, \'_\', "left");\n
+          matchChunk(element.className, \' \', "left");\n
 }\n
 \n
 function matchRightFieldset(element, ignored) {\n
   if ((element.tagName == "FIELDSET") &&\n
-       matchChunk(element.id, \'_\', "right"))\n
+       matchChunk(element.className, \' \', "right"))\n
     return 7; /* End row, table and use element */\n
   return 0;\n
 }\n
