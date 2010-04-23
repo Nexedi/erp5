@@ -486,7 +486,7 @@ div.input select, div.input textarea {\n
   margin:5px 0;\n
 }\n
 \n
-#fieldset_bottom > div.field > div.input > textarea {\n
+fieldset.bottom > div.field > div.input > textarea {\n
   width:<tal:block tal:replace="python:main_content_width-2"/>px;\n
 }\n
 \n
