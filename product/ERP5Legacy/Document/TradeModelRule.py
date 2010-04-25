@@ -62,14 +62,13 @@ class TradeModelRule(Rule):
       # business path specific
       business_path_list = business_process.getPathValueList(
           trade_phase=amount.getTradePhaseList(), context=context_movement)
-      if len(business_path_list) == 0:
-        raise ValueError('Cannot find Business Path')
-
-      if len(business_path_list) != 1:
+      if len(business_path_list) > 1:
         raise NotImplementedError('Only one Business Path is supported')
 
-      business_path = business_path_list[0]
-
+      if business_path_list:
+        business_path = business_path_list[0]
+      else:
+        business_path = None
       movement_kw = self._getExpandablePropertyDict(applied_rule,
         context_movement, business_path)
 
