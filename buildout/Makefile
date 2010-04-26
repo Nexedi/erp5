@@ -3,14 +3,11 @@ PACKAGE_INSTALL_PATH='opt/erp5/'`cat VERSION.txt`
 ifndef $(PACKAGE_VERSION)
 PACKAGE_VERSION=`cat VERSION.txt`
 endif
-ifndef $(PACKAGE_RELEASE)
-PACKAGE_RELEASE="None"
-endif
 ifndef $(PACKAGE_SOFTWARE_RELEASE)
-PACKAGE_SOFTWARE_RELEASE="None"
+PACKAGE_SOFTWARE_RELEASE="001"
 endif
 ifndef $(PACKAGE_APPLICATION_RELEASE)
-PACKAGE_APPLICATION_RELEASE="None"
+PACKAGE_APPLICATION_RELEASE="001"
 endif
 
 software: bin/buildout
@@ -25,20 +22,18 @@ assert: bin/python2.4
 
 debian-appliance:
 	svn co --ignore-externals https://svn.erp5.org/repos/public/spec/debian-erp5-appliance/ debian-erp5-appliance
-	sed -i "s,__PACKAGE_NAME__,erp5-`cat VERSION.txt`,g" debian-erp5-appliance/DEBIAN/control
-	sed -i "s,__VERSION__,$(PACKAGE_VERSION),g" debian-erp5-appliance/DEBIAN/control
-	sed -i "s,__VERSION__,`cat VERSION.txt`,g" debian-erp5-appliance/DEBIAN/prerm
+	sed -i "s,__PACKAGE_NAME__,erp5-$(PACKAGE_VERSION),g" debian-erp5-appliance/debian/control
+	sed -i "s,__PACKAGE_VERSION__,$(PACKAGE_VERSION),g" debian-erp5-appliance/debian/changelog
+	sed -i "s,__PACKAGE_RELEASE__,$(PACKAGE_SOFTWARE_RELEASE),g" debian-erp5-appliance/debian/changelog
 	sudo svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout $(SOFTWARE_BUILD_PATH)
 	sudo chown -R `whoami` $(SOFTWARE_BUILD_PATH)
 	sudo $(SOFTWARE_BUILD_PATH)/helpers/debian.lenny.sh
 	cd $(SOFTWARE_BUILD_PATH); $(MAKE) $(MFLAGS)
-	mkdir -p debian-erp5-appliance/$(PACKAGE_INSTALL_PATH)
-	mv $(SOFTWARE_BUILD_PATH)/* debian-erp5-appliance/$(PACKAGE_INSTALL_PATH)
-	rm -rf debian-erp5-appliance/*.txt
-	rm -rf debian-erp5-appliance/*.TXT
+	mkdir -p debian-erp5-appliance/debian/erp5-$(PACKAGE_VERSION)/$(PACKAGE_INSTALL_PATH)
+	mv $(SOFTWARE_BUILD_PATH)/* debian-erp5-appliance/debian/erp5-$(PACKAGE_VERSION)/$(PACKAGE_INSTALL_PATH)
 	rm -rf `find debian-erp5-appliance/ -type d -name .svn`
 	rm -rf `find debian-erp5-appliance/ -name *.pyc`
-	dpkg-deb -b debian-erp5-appliance/ .
+	cd debian-erp5-appliance/; sudo dpkg-buildpackage -b 
 
 rpm-appliance:
 	svn co https://svn.erp5.org/repos/public/erp5/trunk/utils/rpmgen rpmgen
@@ -47,9 +42,8 @@ rpm-appliance:
 	# set the correct version defined in the main buildout
 	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/buildout.cfg
 	# set the correct release
-	if [ $(PACKAGE_RELEASE) != 'None' ]; then sed -i "s,release = 001,release = $(PACKAGE_RELEASE),g" rpmgen/buildout.cfg; fi
-	if [ $(PACKAGE_APPLICATION_RELEASE) != 'None' ]; then sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/buildout.cfg; fi
-	if [ $(PACKAGE_SOFTWARE_RELEASE) != 'None' ]; then sed -i 's,release = 001,release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/buildout.cfg; fi
+	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/buildout.cfg
+	sed -i 's,release = 001,release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/buildout.cfg
 	# it must use version defined in the main buildout
 	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt), `cat VERSION.txt`,g" rpmgen/Makefile
 	sudo helpers/mandriva2010.0.sh
