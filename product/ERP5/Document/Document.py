@@ -784,13 +784,15 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       Returns a list of documents with same reference, same portal_type
       but different version and given language or any language if not given.
     """
-    catalog = getToolByName(self, 'portal_catalog', None)
+    catalog = getToolByName(self, 'portal_catalog')
     kw = dict(portal_type=self.getPortalType(),
                    reference=self.getReference(),
                    sort_on=(('version', 'descending', 'SIGNED'),)
                   )
-    if version: kw['version'] = version
-    if language: kw['language'] = language
+    if version:
+      kw['version'] = version
+    if language:
+      kw['language'] = language
     return catalog(**kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isVersionUnique')
@@ -801,8 +803,8 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       document has no reference.
     """
     if not self.getReference():
-      return 1
-    catalog = getToolByName(self, 'portal_catalog', None)
+      return True
+    catalog = getToolByName(self, 'portal_catalog')
     self_count = catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
                                             reference=self.getReference(),
                                             version=self.getVersion(),
@@ -865,21 +867,22 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       finishIngestion.
     """
     document = self
-    catalog = getToolByName(self, 'portal_catalog', None)
+    catalog = getToolByName(self, 'portal_catalog')
     if self.getReference():
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalDocumentTypeList(),
                 reference=self.getReference(),
                 where_expression=SQLQuery("validation_state NOT IN ('cancelled', 'deleted')"))
-      if self.getVersion(): kw['version'] = self.getVersion()
-      if self.getLanguage(): kw['language'] = self.getLanguage()
+      if self.getVersion():
+        kw['version'] = self.getVersion()
+      if self.getLanguage():
+        kw['language'] = self.getLanguage()
       document_list = catalog.unrestrictedSearchResults(**kw)
       existing_document = None
       # Select the first one which is not self and which
       # shares the same coordinates
       document_list = list(document_list)
       document_list.sort(key=lambda x: x.getId())
-      #LOG('[DMS] Existing documents for %s' %self.getSourceReference(), INFO, len(document_list))
       for o in document_list:
         if o.getRelativeUrl() != self.getRelativeUrl() and\
            o.getVersion() == self.getVersion() and\
@@ -910,10 +913,10 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       for the current user.
     """
     if not self.getReference(): return []
-    catalog = getToolByName(self, 'portal_catalog', None)
+    catalog = getToolByName(self, 'portal_catalog')
     kw = dict(portal_type=self.getPortalType(),
-                           reference=self.getReference(),
-                           group_by=('language',))
+              reference=self.getReference(),
+              group_by=('language',))
     if version is not None:
       kw['version'] = version
     return map(lambda o:o.getLanguage(), catalog(**kw))
@@ -932,7 +935,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     reference = self.getReference()
     if not reference:
       return
-    catalog = getToolByName(self, 'portal_catalog', None)
+    catalog = getToolByName(self, 'portal_catalog')
     res = catalog(reference=self.getReference(), sort_on=(('creation_date','ascending'),))
     # XXX this should be security-unaware - delegate to script with proxy roles
     return res[0].getLanguage() # XXX what happens if it is empty?
