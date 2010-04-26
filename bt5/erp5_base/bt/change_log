@@ -1,3 +1,6 @@
+2010-04-26 kazuhiko
+* Add Delivery_isSplitAndDeferPossible script, that should be just a temporary implementation before merging new simulation API, where we can control more flexibly.
+
 2010-04-02 yusei
 * Add precision field to rounding model view.
 
