@@ -314,7 +314,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
   @UnrestrictedMethod
   def buildDeliveryList(self, movement_group_node,
                         delivery_relative_url_list=None,
-                        movement_list=None, **kw):
+                        movement_list=None, update=True, **kw):
     """
       Build deliveries from a list of movements
     """
@@ -326,16 +326,19 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # Module where we can create new deliveries
     portal = self.getPortalObject()
     delivery_module = getattr(portal, self.getDeliveryModule())
-    delivery_to_update_list = [portal.restrictedTraverse(relative_url) for \
-                               relative_url in delivery_relative_url_list]
-    # Deliveries we are trying to update
-    delivery_select_method_id = self.getDeliverySelectMethodId()
-    if delivery_select_method_id not in ["", None]:
-      to_update_delivery_sql_list = getattr(self, delivery_select_method_id) \
+    if update:
+      delivery_to_update_list = [portal.restrictedTraverse(relative_url) for \
+                                 relative_url in delivery_relative_url_list]
+      # Deliveries we are trying to update
+      delivery_select_method_id = self.getDeliverySelectMethodId()
+      if delivery_select_method_id not in ["", None]:
+        to_update_delivery_sql_list = getattr(self, delivery_select_method_id) \
                                       (movement_list=movement_list)
-      delivery_to_update_list.extend([sql_delivery.getObject() \
-                                     for sql_delivery \
-                                     in to_update_delivery_sql_list])
+        delivery_to_update_list.extend([sql_delivery.getObject() \
+                                        for sql_delivery \
+                                        in to_update_delivery_sql_list])
+    else:
+      delivery_to_update_list = []
     # We do not want to update the same object more than twice in one
     # _deliveryGroupProcessing().
     self._resetUpdated()
