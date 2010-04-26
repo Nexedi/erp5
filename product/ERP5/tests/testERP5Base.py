@@ -108,8 +108,8 @@ class TestERP5Base(ERP5TypeTestCase):
   def login_as_auditor(self):
     """Create a new member user with Auditor role, and login
     """
-    user_name = 'member_user'
-    user_folder = self.getPortal().acl_users
+    user_name = 'auditor_user'
+    user_folder = self.portal.acl_users
     user_folder._doAddUser(user_name, '', ['Member', 'Auditor'], [])
     user = user_folder.getUserById(user_name).__of__(user_folder)
     newSecurityManager(None, user)
