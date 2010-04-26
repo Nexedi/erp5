@@ -66,6 +66,11 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
   def getTitle(self):
     return "Transformation"
 
+  def getBusinessTemplateList(self):
+    """
+    """
+    return list(TestOrderMixin.getBusinessTemplateList(self)) + ['erp5_mrp']
+
   def enableLightInstall(self):
     """
     You can override this. 
@@ -615,17 +620,20 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     """
       Verify aggregated data according to an expected structure
     """
-    from Products.ERP5Type.Document import newTempAmount
     produced_resource = transformation.getResource()
-
+    production_order_module = self.portal.getDefaultModule("Production Order")
+    production_order = production_order_module.newContent(
+                                      portal_type="Production Order")
     for i, expected in enumerate(expected_list):
-      context = newTempAmount(transformation, "temp_amount_%s" % i)
+      context = production_order.newContent(
+          portal_type="Production Order Line")
       context.edit(
           quantity = 1.0,
           variation_category_list = expected['id'],
           resource = produced_resource,
+          specialise=transformation.getRelativeUrl(),
       )
-      aggregated_amount_list = transformation.getAggregatedAmountList(context)
+      aggregated_amount_list = production_order.getAggregatedAmountList([context])
       expected_amount_list = expected['amount']
       
       expected_amount_list_len = len(expected_amount_list)
