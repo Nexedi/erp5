@@ -75,8 +75,8 @@ if memcache is not None:
         - make picklable ?
     """
 
-    def __init__(self, server_list=('127.0.0.1:11211',), server_max_key_length=MARKER,
-                 server_max_value_length=MARKER):
+    def __init__(self, server_list=('127.0.0.1:11211',), expiration_time=0,
+                 server_max_key_length=MARKER, server_max_value_length=MARKER):
       """
         Initialise properties :
         memcached_connection
@@ -96,6 +96,7 @@ if memcache is not None:
       self.scheduled_action_dict = {}
       init_dict = {}
       self.server_list = server_list
+      self.expiration_time = expiration_time
       if server_max_key_length is not MARKER:
         init_dict['server_max_key_length'] = server_max_key_length
       if server_max_value_length is not MARKER:
@@ -122,7 +123,9 @@ if memcache is not None:
             self.scheduled_action_dict[key] = UPDATE_ACTION
         for key, action in self.scheduled_action_dict.iteritems():
           if action is UPDATE_ACTION:
-            succeed = self.memcached_connection.set(encodeKey(key), self.local_cache[key], 0)
+            succeed = self.memcached_connection.set(encodeKey(key),
+                                                    self.local_cache[key], 
+                                                    self.expiration_time)
             if not succeed:
               LOG('MemcacheTool', 0, 'set command to memcached server (%r) failed' % (self.server_list,))
           elif action is DELETE_ACTION:
@@ -289,6 +292,7 @@ if memcache is not None:
         if memcached_plugin is None:
           raise ValueError, 'Memcached Plugin does not exists: %r' % (plugin_path,)
         dictionary = MemcachedDict((memcached_plugin.getUrlString(''),),
+                   expiration_time=memcached_plugin.getExpirationTime(),
                    server_max_key_length=memcached_plugin.getServerMaxKeyLength(),
                    server_max_value_length=memcached_plugin.getServerMaxValueLength())
         local_dict[plugin_path] = dictionary

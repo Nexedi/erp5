@@ -44,5 +44,11 @@ class MemcachedPlugin:
          'default'     :  1048576,
          'mode'        : 'w' ,
         },
+        {'id'          : 'expiration_time',
+         'description' : 'Time to live of stored value (in second)',
+         'type'        : 'int',
+         'default'     :  0,
+         'mode'        : 'w' ,
+        },
         )
 
