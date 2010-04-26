@@ -46,7 +46,7 @@ class OpenOrder(Delivery):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IExpandable, interfaces.IOpenOrderExpander)
+  zope.interface.implements(interfaces.IExpandable)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
