@@ -112,9 +112,9 @@ class FolderMixIn(ExtensionClass.Base):
 
   security.declarePublic('newContent')
   def newContent(self, id=None, portal_type=None, id_group=None,
-          default=None, method=None, immediate_reindex=0,
-          container=None, created_by_builder=0, activate_kw=None,
-          is_indexable=None, temp_object=0, reindex_kw=None, **kw):
+          default=None, method=None, container=None, created_by_builder=0,
+          activate_kw=None, is_indexable=None, temp_object=0, reindex_kw=None,
+          **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
@@ -167,8 +167,8 @@ class FolderMixIn(ExtensionClass.Base):
       # ERP5TypeInformation, because factory method often do not support
       # keywords arguments.
 
-    if kw != {} : new_instance._edit(force_update=1, **kw)
-    if immediate_reindex: new_instance.immediateReindexObject()
+    if kw:
+      new_instance._edit(force_update=1, **kw)
     return new_instance
 
   security.declareProtected(

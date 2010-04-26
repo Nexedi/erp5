@@ -1226,7 +1226,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     return None
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, id=None, portal_type=None, immediate_reindex=0, **kw):
+  def newContent(self, id=None, portal_type=None, **kw):
     """
       Creates a new content
     """
@@ -1240,10 +1240,8 @@ class ERP5Site(FolderMixIn, CMFSite):
                                        ) # **kw) removed due to CMF bug
     new_instance = self[id]
 
-    if kw is not None:
+    if kw:
       new_instance._edit(force_update=1, **kw)
-    if immediate_reindex:
-      new_instance.immediateReindexObject()
     return new_instance
 
   security.declarePublic('getVisibleAllowedContentTypeList')
