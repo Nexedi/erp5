@@ -39,6 +39,16 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 os.environ['erp5_tests_portal_id'] = 'erp5_portal'
 
+MSG = '''
+This "test file" is intended to be used with --save option, for use with
+runFunctionalTest.py.
+
+It will now enter an IPython prompt so you can explore the environment either
+through IPython or through the "ZServer port" reported above.
+
+Once you exit the IPython prompt, this "test" will finish.
+'''.strip()
+
 class TestZelenium(ERP5TypeTestCase):
     def getBusinessTemplateList(self):
         """
@@ -61,8 +71,9 @@ class TestZelenium(ERP5TypeTestCase):
                 )
 
     def testInformation(self):
-        self.assert_(False, 'This script is intended to be used with --save option.')
-
+        print MSG
+        import IPython.Shell
+        IPython.Shell.IPShellEmbed('')(local_ns=locals(), global_ns=globals())
 
 def test_suite():
     suite = unittest.TestSuite()
