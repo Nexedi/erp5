@@ -69,6 +69,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -167,7 +171,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:portal.getDefaultModuleId(\'Project Module\', None)</string> </value>
+            <value> <string>python: here.getPortalObject().getDefaultModuleId(\'Project Module\', None)</string> </value>
         </item>
       </dictionary>
     </pickle>

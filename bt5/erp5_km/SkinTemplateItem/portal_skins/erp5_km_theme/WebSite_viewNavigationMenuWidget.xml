@@ -107,6 +107,27 @@
           </a>\n
         </li>\n
       </tal:block>\n
+      <tal:block tal:condition="python: here.Base_checkPermission(\'person_module\', \'Add portal content\')">\n
+        <li>\n
+          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/PersonModule_createNewPerson">\n
+            New Contact\n
+          </a>\n
+        </li>\n
+      </tal:block>\n
+      <tal:block tal:condition="python: here.Base_checkPermission(\'project_module\', \'Add portal content\')">\n
+        <li>\n
+          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/ProjectModule_createNewProject">\n
+            New Project\n
+          </a>\n
+        </li>\n
+      </tal:block>\n
+      <tal:block tal:condition="python: here.Base_checkPermission(\'task_module\', \'Add portal content\')">\n
+        <li>\n
+          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/TaskModule_createNewTask">\n
+            New Task\n
+          </a>\n
+        </li>\n
+      </tal:block>\n
     </ul>\n
     <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
   </li>\n

@@ -95,10 +95,8 @@ class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
-    Input movement list comes from order
-
-    XXX This implementation is very primitive, and does not support BPM,
-    i.e. business paths are not taken into account.
+    In Invoice Simulation Rule, source should be source_administration
+    of the input movement or its order's source. Same for destination.
     """
     ret = []
     rule = context.getSpecialiseValue()
@@ -106,7 +104,13 @@ class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
             ._getInputMovementAndPathTupleList(context):
       kw = self._getPropertyAndCategoryList(input_movement, business_path,
                                             rule)
-      kw.update({'order':None,'delivery':None})
+      root_simulation_movement = input_movement.getRootSimulationMovement()
+      source = input_movement.getSourceAdministration() or \
+               root_simulation_movement.getSource()
+      destination = input_movement.getDestinationAdministration() or \
+                    root_simulation_movement.getDestination()
+      kw.update({'order':None, 'delivery':None,
+                 'source':source, 'destination':destination})
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,

@@ -105,8 +105,18 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//ul[@class=\'breadcrumb\']</td>\n
-  <td>Home Web Pages test page</td>\n
+  <td>//ul[@class=\'breadcrumb\']/li[1]/a</td>\n
+  <td>Home</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//ul[@class=\'breadcrumb\']/li[2]/a</td>\n
+  <td>Web Pages</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//ul[@class=\'breadcrumb\']/li[3]/a</td>\n
+  <td>test page</td>\n
 </tr>\n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n

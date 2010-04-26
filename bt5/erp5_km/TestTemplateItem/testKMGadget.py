@@ -69,7 +69,6 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     portal = self.getPortal()
     web_site_module = portal.web_site_module
     self.website = web_site_module.newContent(portal_type='Web Site')
-    #self.website.setSkinSelectionName('KM')
     self.websection = self.website.newContent(portal_type='Web Section')
     self.app.REQUEST.set('current_web_section', self.websection)
     self.webpage = portal.web_page_module.newContent(
@@ -610,6 +609,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     subsection = self.websection.newContent(portal_type='Web Section',  
                                        title='Sub Section 12345')
     self.stepTic()
+    self.changeSkin('KM')    
     self.failUnless(subsection.getTitle() in 
                     self.publish(self.base_url_pattern %(self.web_section_url,  
                                                          gadget_view_form_id, 

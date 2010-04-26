@@ -558,7 +558,15 @@ class OOoTemplate(ZopePageTemplate):
       ooo = ooo_builder.render()
     else:
       ooo = ooo_builder.render(name=self.title or self.id)
-    
+
+    if DevelopmentMode:
+      # Validate XML in development mode
+      from Products.ERP5OOo.tests.utils import Validator
+      err_list = Validator().validate(ooo)
+      if err_list:
+        LOG('ERP5OOo', PROBLEM,
+            'Validation of %s failed:\n%s' % (self.getId(), ''.join(err_list)))
+
     format = opts.get('format', request.get('format', None))
     if format:
       return self._asFormat(ooo, format, request, batch_mode)
@@ -569,15 +577,7 @@ class OOoTemplate(ZopePageTemplate):
       request.RESPONSE.setHeader('Content-disposition',
           'inline;filename="%s%s"' % (self._getFileName(),
                                       guess_extension(self.content_type) or ''))
-    
-    if DevelopmentMode:
-      # Validate XML in development mode
-      from Products.ERP5OOo.tests.utils import Validator
-      err_list = Validator().validate(ooo)
-      if err_list:
-        LOG('ERP5OOo', PROBLEM,
-            'Validation of %s failed:\n%s' % (self.getId(), ''.join(err_list)))
-    
+
     return ooo
   
   def om_icons(self):

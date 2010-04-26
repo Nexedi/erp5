@@ -122,6 +122,10 @@ class TestFloatField(ERP5TypeTestCase):
     self.assertEquals('0.01', self.widget.format_value(self.field, 0.011))
     # value is rounded
     self.assertEquals('0.01', self.widget.format_value(self.field, 0.009999))
+    self.assertEquals('1.00',
+        self.widget.format_value(self.field, sum([0.1] * 10)))
+    self.assertEquals('566.30',
+        self.widget.format_value(self.field, 281.80 + 54.50 + 230.00))
   
   def test_render_view(self):
     self.field.values['input_style'] = '-1 234.5'
@@ -154,6 +158,7 @@ class TestFloatField(ERP5TypeTestCase):
     self.field.values['editable'] = 0
     self.assertEquals('10000000000000000000.00',
                       self.field.render(10000000000000000000))
+    self.assertEquals('1e+100', self.field.render(1e+100))
 
   def test_validate_thousand_separator_point(self):
     self.field.values['input_style'] = '-1 234.5'
@@ -375,12 +380,15 @@ class TestListField(ERP5TypeTestCase):
     """Create some categories into gender
     """
     category_tool = self.portal.portal_categories
-    category_dict = {'a':1, 'b':2, 'd':3, 'c':4, 'e':None, 'g':None, 'f':None}
     if len(category_tool.gender.contentValues()) == 0 :
-      for category_id, int_index in category_dict.items():
-        category_tool.gender.newContent(portal_type='Category',
-                                               id=category_id,
-                                               int_index=int_index)
+      category_tool.gender.newContent(portal_type='Category',
+                                      id='male',
+                                      title='Male',
+                                      int_index=1)
+      category_tool.gender.newContent(portal_type='Category',
+                                      id='female',
+                                      title='Female',
+                                      int_index=2)
 
   def test_render_odt(self):
     items = [('My first Line', '1'), ('My Second Line', '2')]
@@ -417,17 +425,15 @@ class TestListField(ERP5TypeTestCase):
 
     category_item_list = field.get_value('items')
     self.assertEquals(category_item_list,
-        [['', ''], ['e', 'e'], ['f', 'f'], ['g', 'g'], ['a', 'a'], ['b', 'b'],
-          ['d', 'd'], ['c', 'c']])
+        [['', ''], ['Male', 'male'], ['Female', 'female']])
 
     # try on a person to select on gender and check if the result is the same
     person_module = self.portal.getDefaultModule('Person')
     person = person_module.newContent(portal_type='Person')
-    person.setGender('b')
-    self.assertEquals(person.getGender(), 'b')
+    person.setGender('female')
+    self.assertEquals(person.getGender(), 'female')
     self.assertEquals(person.Person_view.my_gender.get_value('items'),
-        [['', ''], ['e', 'e'], ['f', 'f'], ['g', 'g'], ['a', 'a'], ['b', 'b'],
-          ['d', 'd'], ['c', 'c']])
+        [['', ''], ['Male', 'male'], ['Female', 'female']])
 
 
 class TestMultiListField(ERP5TypeTestCase):

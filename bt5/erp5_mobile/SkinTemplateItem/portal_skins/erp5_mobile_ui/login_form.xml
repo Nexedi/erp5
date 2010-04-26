@@ -89,7 +89,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
               type="hidden" name="came_from"\n
               tal:attributes="value request/came_from" />\n
 \n
-      <fieldset id="fieldset_left" class="fielset_login">\n
+      <fieldset class="left fielset_login">\n
         <div class="field">\n
           <label for="name" class="required" i18n:translate="" i18n:domain="ui">Name</label>\n
           <div class="input"><input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'"/></div>\n
@@ -132,7 +132,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     </div>\n
   </tal:block>\n
 </tal:block>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

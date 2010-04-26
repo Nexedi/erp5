@@ -24,6 +24,11 @@ function show_help ( )
 MYSQL_OPT=$1
 INTERVAL=$2
 TIMEOUT=$3
+MYSQL_BIN=$MYSQL
+
+if [ "$MYSQL_BIN" == "" ] ; then
+  MYSQL_BIN='mysql'
+fi
 
 if [ "$MYSQL_OPT" == "" ] ; then
   show_help
@@ -41,8 +46,8 @@ TIME=0
 
 while true
 do
-    MESSAGE_VALUE=`echo "SELECT count(*) AS message_count FROM message;" | mysql $MYSQL_OPT | grep -v message`
-    MESSAGE_QUEUE_VALUE=`echo "SELECT count(*) AS message_count FROM message_queue;" | mysql $MYSQL_OPT | grep -v message`
+    MESSAGE_VALUE=`echo "SELECT count(*) AS message_count FROM message;" | $MYSQL_BIN $MYSQL_OPT | grep -v message`
+    MESSAGE_QUEUE_VALUE=`echo "SELECT count(*) AS message_count FROM message_queue;" | $MYSQL_BIN $MYSQL_OPT | grep -v message`
     if [ "$MESSAGE_VALUE" == "0" -a "$MESSAGE_QUEUE_VALUE" == 0 ] ; then
       exit 0
     fi

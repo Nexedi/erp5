@@ -53,8 +53,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].getResourceValue().reindexObject()\n
-</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+resource = state_change[\'object\'].getResourceValue()\n
+if len(context.portal_catalog(uid=resource.getUid())) > 0:\n
+  # Reindex resource only when resource is not unindexed.\n
+  resource.reindexObject()\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -93,6 +100,9 @@
                             <string>state_change</string>
                             <string>_getattr_</string>
                             <string>_getitem_</string>
+                            <string>resource</string>
+                            <string>len</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>

@@ -406,8 +406,8 @@ class DB(TM):
             self.db.query(query)
         except ProgrammingError, exception:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
-          if exception[0] == 1064:
-            # 1064 = You have an error in your SQL syntax
+          if exception[0] == ER.PARSE_ERROR:
+            # You have an error in your SQL syntax
             # Replace MySQL brain dead error message with a more meaningful
             # one. (MySQL only reports the SQL query *from* the error place,
             # which strips important contextual information).

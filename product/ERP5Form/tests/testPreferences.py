@@ -36,7 +36,7 @@ from AccessControl.SecurityManagement import getSecurityManager
 from zExceptions import Unauthorized
 from DateTime import DateTime
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from Products.ERP5Form.Document.Preference import Priority
 from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
 
@@ -45,7 +45,7 @@ default_large_image_height, = [pref.get('default')
                                if pref['id'] == 'preferred_large_image_height']
 
 
-class TestPreferences(ERP5TypeTestCase):
+class TestPreferences(PropertySheetTestCase):
 
   def getTitle(self):
     return "Portal Preferences"

@@ -626,8 +626,8 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     self.portal.deleteContent(id='testing_folder')
     self.stepTic()
 
-  completed_state = 'confirmed'
-  frozen_state = 'planned'
+  completed_state = 'delivered'
+  frozen_state = 'confirmed'
 
   completed_state_list = [completed_state, frozen_state]
   frozen_state_list = [frozen_state]
@@ -641,6 +641,12 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
 
     # path which is completed, as soon as related simulation movements are in
     # proper state
+    self.order_path = self.createBusinessPath(business_process,
+        successor_value = ordered,
+        trade_phase='default/order',
+        completed_state_list = self.completed_state_list,
+        frozen_state_list = self.frozen_state_list)
+
     self.delivery_path = self.createBusinessPath(business_process,
         predecessor_value = ordered, successor_value = delivered,
         trade_phase='default/delivery',
@@ -657,6 +663,12 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     ordered = self.createBusinessState(business_process)
     delivered = self.createBusinessState(business_process)
     invoiced = self.createBusinessState(business_process)
+
+    self.order_path = self.createBusinessPath(business_process,
+        successor_value = ordered,
+        trade_phase='default/order',
+        completed_state_list = self.completed_state_list,
+        frozen_state_list = self.frozen_state_list)
 
     self.invoice_path = self.createBusinessPath(business_process,
         predecessor_value = ordered, successor_value = invoiced,
@@ -689,12 +701,19 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
 
     simulation_movement = applied_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
-      causality_value = self.delivery_path
+      delivery_value = order_line,
+      causality_value = self.order_path
     )
 
     # second level rule with simulation movement
-    invoicing_rule = simulation_movement.newContent(
+    delivery_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    delivery_simulation_movement = delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    # third level rule with simulation movement
+    invoicing_rule = delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     invoicing_simulation_movement = invoicing_rule.newContent(
         portal_type='Simulation Movement',
@@ -702,22 +721,30 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
 
     # split simulation movement for first level applied rule
     split_simulation_movement = applied_rule.newContent(
-      portal_type = 'Simulation Movement', order_value = order_line,
-      causality_value = self.delivery_path)
+      portal_type = 'Simulation Movement', delivery_value = order_line,
+      causality_value = self.order_path)
 
     # second level rule with simulation movement for split parent movement
-    split_invoicing_rule = split_simulation_movement.newContent(
+    split_delivery_rule = split_simulation_movement.newContent(
+        portal_type='Applied Rule')
+    split_delivery_simulation_movement = split_delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    # third level rule with simulation movement for split parent movement
+    split_invoicing_rule = split_delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     split_invoicing_simulation_movement = split_invoicing_rule.newContent(
         portal_type='Simulation Movement',
         causality_value = self.invoice_path)
 
+    order.setSimulationState(self.completed_state)
     self.stepTic()
 
     # in the beginning only order related movements shall be buildable
     self.assertEquals(self.delivery_path.isBuildable(order), True)
-    self.assertEquals(simulation_movement.isBuildable(), True)
-    self.assertEquals(split_simulation_movement.isBuildable(), True)
+    self.assertEquals(delivery_simulation_movement.isBuildable(), True)
+    self.assertEquals(split_delivery_simulation_movement.isBuildable(), True)
 
     self.assertEquals(self.invoice_path.isBuildable(order), False)
     self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
@@ -729,7 +756,7 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     delivery_line = self._createMovement(delivery)
 
     # relate not split movement with delivery (deliver it)
-    simulation_movement.edit(delivery_value = delivery_line)
+    delivery_simulation_movement.edit(delivery_value = delivery_line)
 
     self.stepTic()
 
@@ -742,11 +769,11 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     # delivery_path (for delivery) is not buildable - delivery is already
     # built for those movements
     self.assertEquals(self.delivery_path.isBuildable(order), True)
-    self.assertEquals(split_simulation_movement.isBuildable(), True)
+    self.assertEquals(split_delivery_simulation_movement.isBuildable(), True)
 
     self.assertEquals(self.delivery_path.isBuildable(delivery), False)
     self.assertEquals(self.invoice_path.isBuildable(delivery), False)
-    self.assertEquals(simulation_movement.isBuildable(), False)
+    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
     self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
     self.assertEquals(self.invoice_path.isBuildable(order), False)
     self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
@@ -777,7 +804,7 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEquals(self.invoice_path.isBuildable(order), True)
 
     self.assertEquals(self.delivery_path.isBuildable(delivery), False)
-    self.assertEquals(simulation_movement.isBuildable(), False)
+    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
     self.assertEquals(split_invoicing_simulation_movement.isBuildable(),
         False)
 
@@ -799,20 +826,27 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
 
     simulation_movement = applied_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
-      causality_value = self.delivery_path
+      delivery_value = order_line,
+      causality_value = self.order_path
     )
 
-    invoicing_rule = simulation_movement.newContent(
+    delivery_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    delivery_simulation_movement = delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    invoicing_rule = delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     invoicing_simulation_movement = invoicing_rule.newContent(
         portal_type='Simulation Movement',
         causality_value = self.invoice_path)
 
+    order.setSimulationState(self.completed_state)
     self.stepTic()
 
     self.assertEquals(self.delivery_path.isBuildable(order), False)
-    self.assertEquals(simulation_movement.isBuildable(), False)
+    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
 
     self.assertEquals(self.invoice_path.isBuildable(order), True)
     self.assertEquals(invoicing_simulation_movement.isBuildable(), True)
@@ -828,7 +862,7 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
 
     self.assertEquals(self.delivery_path.isBuildable(delivery), False)
     self.assertEquals(self.invoice_path.isBuildable(delivery), False)
-    self.assertEquals(simulation_movement.isBuildable(), False)
+    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
     self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
     self.assertEquals(self.invoice_path.isBuildable(order), False)
 
@@ -846,13 +880,13 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
     self.assertEquals(self.invoice_path.isBuildable(delivery), False)
     self.assertEquals(self.invoice_path.isBuildable(order), False)
-    self.assertEquals(simulation_movement.isBuildable(), True)
+    self.assertEquals(delivery_simulation_movement.isBuildable(), True)
 
     # now simulate compensation
 
-    compensated_simulation_movement = applied_rule.newContent(
+    compensated_simulation_movement = delivery_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
+      delivery_value = order_line,
       causality_value = self.delivery_path
     )
 
@@ -868,16 +902,13 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     another_delivery = self._createDelivery(causality_value = delivery)
     another_delivery_line = self._createMovement(another_delivery)
 
-    simulation_movement.edit(delivery_value=another_delivery_line)
+    delivery_simulation_movement.edit(delivery_value=another_delivery_line)
 
     self.stepTic()
 
-    # XXX look at comments in BusinessPath.isBuildable
-    # in this case expected result if False for delivery_path.isBuildable(order)
-    self.assertEquals(self.delivery_path.isBuildable(order), True)
-    self.assertEquals(self.delivery_path.isBuildable(delivery), False)
+    self.assertEquals(self.delivery_path.isBuildable(order), False)
 
-    self.assertEquals(simulation_movement.isBuildable(), False)
+    self.assertEquals(delivery_simulation_movement.isBuildable(), False)
     self.assertEquals(invoicing_simulation_movement.isBuildable(), False)
 
     self.assertEquals(self.invoice_path.isBuildable(order), True)
@@ -901,12 +932,19 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
 
     simulation_movement = applied_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
-      causality_value = self.delivery_path
+      delivery_value = order_line,
+      causality_value = self.order_path
     )
 
     # second level rule with simulation movement
-    invoicing_rule = simulation_movement.newContent(
+    delivery_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    delivery_simulation_movement = delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    # third level rule with simulation movement
+    invoicing_rule = delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     invoicing_simulation_movement = invoicing_rule.newContent(
         portal_type='Simulation Movement',
@@ -914,11 +952,18 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
 
     # split simulation movement for first level applied rule
     split_simulation_movement = applied_rule.newContent(
-      portal_type = 'Simulation Movement', order_value = order_line,
-      causality_value = self.delivery_path)
+      portal_type = 'Simulation Movement', delivery_value = order_line,
+      causality_value = self.order_path)
 
     # second level rule with simulation movement for split parent movement
-    split_invoicing_rule = split_simulation_movement.newContent(
+    split_delivery_rule = split_simulation_movement.newContent(
+        portal_type='Applied Rule')
+    split_delivery_simulation_movement = split_delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    # third level rule with simulation movement for split parent movement
+    split_invoicing_rule = split_delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     split_invoicing_simulation_movement = split_invoicing_rule.newContent(
         portal_type='Simulation Movement',
@@ -937,7 +982,7 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
     delivery_line = self._createMovement(delivery)
 
     # relate not split movement with delivery (deliver it)
-    simulation_movement.edit(delivery_value = delivery_line)
+    delivery_simulation_movement.edit(delivery_value = delivery_line)
 
     self.stepTic()
 
@@ -988,11 +1033,17 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
 
     simulation_movement = applied_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
+      delivery_value = order_line,
       causality_value = self.delivery_path
     )
 
-    invoicing_rule = simulation_movement.newContent(
+    delivery_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    delivery_simulation_movement = delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    invoicing_rule = delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     invoicing_simulation_movement = invoicing_rule.newContent(
         portal_type='Simulation Movement',
@@ -1048,9 +1099,9 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
 
     # now simulate compensation
 
-    compensated_simulation_movement = applied_rule.newContent(
+    compensated_simulation_movement = delivery_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
+      delivery_value = order_line,
       causality_value = self.delivery_path
     )
 
@@ -1066,7 +1117,7 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
     another_delivery = self._createDelivery(causality_value = delivery)
     another_delivery_line = self._createMovement(another_delivery)
 
-    simulation_movement.edit(delivery_value=another_delivery_line)
+    delivery_simulation_movement.edit(delivery_value=another_delivery_line)
 
     self.stepTic()
 
@@ -1097,12 +1148,19 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
 
     simulation_movement = applied_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
+      delivery_value = order_line,
       causality_value = self.delivery_path
     )
 
     # second level rule with simulation movement
-    invoicing_rule = simulation_movement.newContent(
+    delivery_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    delivery_simulation_movement = delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    # third level rule with simulation movement
+    invoicing_rule = delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     invoicing_simulation_movement = invoicing_rule.newContent(
         portal_type='Simulation Movement',
@@ -1110,11 +1168,18 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
 
     # split simulation movement for first level applied rule
     split_simulation_movement = applied_rule.newContent(
-      portal_type = 'Simulation Movement', order_value = order_line,
-      causality_value = self.delivery_path)
+      portal_type = 'Simulation Movement', delivery_value = order_line,
+      causality_value = self.order_path)
 
     # second level rule with simulation movement for split parent movement
-    split_invoicing_rule = split_simulation_movement.newContent(
+    split_delivery_rule = split_simulation_movement.newContent(
+        portal_type='Applied Rule')
+    split_delivery_simulation_movement = split_delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    # third level rule with simulation movement for split parent movement
+    split_invoicing_rule = split_delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     split_invoicing_simulation_movement = split_invoicing_rule.newContent(
         portal_type='Simulation Movement',
@@ -1135,7 +1200,7 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
     delivery_line = self._createMovement(delivery)
 
     # relate not split movement with delivery (deliver it)
-    simulation_movement.edit(delivery_value = delivery_line)
+    delivery_simulation_movement.edit(delivery_value = delivery_line)
 
     self.stepTic()
 
@@ -1163,10 +1228,10 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
 
     self.assertEqual(self.delivery_path.isFrozen(order), False)
     self.assertEqual(self.invoice_path.isFrozen(order), False)
-    self.assertEqual(self.delivery_path.isFrozen(delivery), True)
+    self.assertEqual(self.delivery_path.isFrozen(delivery), False)
     self.assertEqual(self.invoice_path.isFrozen(delivery), False)
 
-    self.assertEqual(simulation_movement.isFrozen(), True)
+    self.assertEqual(delivery_simulation_movement.isFrozen(), True)
     self.assertEqual(invoicing_simulation_movement.isFrozen(), False)
     self.assertEqual(split_simulation_movement.isFrozen(), False)
     self.assertEqual(split_invoicing_simulation_movement.isFrozen(), False)
@@ -1183,11 +1248,17 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
 
     simulation_movement = applied_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
+      delivery_value = order_line,
       causality_value = self.delivery_path
     )
 
-    invoicing_rule = simulation_movement.newContent(
+    delivery_rule = simulation_movement.newContent(
+        portal_type='Applied Rule')
+    delivery_simulation_movement = delivery_rule.newContent(
+        portal_type='Simulation Movement',
+        causality_value = self.delivery_path)
+
+    invoicing_rule = delivery_simulation_movement.newContent(
         portal_type='Applied Rule')
     invoicing_simulation_movement = invoicing_rule.newContent(
         portal_type='Simulation Movement',
@@ -1235,9 +1306,9 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
 
     # now simulate compensation
 
-    compensated_simulation_movement = applied_rule.newContent(
+    compensated_simulation_movement = delivery_rule.newContent(
       portal_type = 'Simulation Movement',
-      order_value = order_line,
+      delivery_value = order_line,
       causality_value = self.delivery_path
     )
 
@@ -1253,7 +1324,7 @@ class TestBPMisFrozenImplementation(TestBPMDummyDeliveryMovementMixin):
     another_delivery = self._createDelivery(causality_value = delivery)
     another_delivery_line = self._createMovement(another_delivery)
 
-    simulation_movement.edit(delivery_value=another_delivery_line)
+    delivery_simulation_movement.edit(delivery_value=another_delivery_line)
 
     self.stepTic()
 

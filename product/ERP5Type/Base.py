@@ -2004,7 +2004,7 @@ class Base( CopyContainer,
       # We have been provided a string
       path = target
       if path.startswith(start_string): path = path[start_string_len:] # Prevent duplicating base category
-    elif isinstance(target, (tuple, list)):
+    elif isinstance(target, (tuple, list, set, frozenset)):
       # We have been provided a list or tuple
       path_list = []
       for target_item in target:
@@ -2816,6 +2816,45 @@ class Base( CopyContainer,
       return isTempDocument()
     else:
       return False
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isDeleted')
+  def isDeleted(self):
+    """Test if the context is in 'deleted' state"""
+    for wf in self.getPortalObject().portal_workflow.getWorkflowsFor(self):
+      state = wf._getWorkflowStateOf(self)
+      if state is not None and state.getId() == 'deleted':
+        return True
+    return False
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getRelationCountForDeletion')
+  def getRelationCountForDeletion(self):
+    """Count number of related objects preventing deletion"""
+    portal = self.getPortalObject()
+    getRelatedValueList = portal.portal_categories.getRelatedValueList
+    ignore_list = [x.getPhysicalPath() for x in (
+      portal.portal_simulation,
+      portal.portal_trash,
+      self)]
+    related_list = [(related.getPhysicalPath(), related)
+      for o in self.getIndexableChildValueList()
+      for related in getRelatedValueList(o)]
+    related_list.sort()
+    ignored = None
+    related_count = 0
+    for related_path, related in related_list:
+      if ignored is None or related_path[:len(ignored)] != ignored:
+        for ignored in ignore_list:
+          if related_path[:len(ignored)] == ignored:
+            break
+        else:
+          if related.isDeleted():
+            ignored = related_path
+          else:
+            ignored = None
+            related_count += 1
+    return related_count
 
   # Workflow Related Method
   security.declarePublic('getWorkflowStateItemList')
@@ -3640,7 +3679,7 @@ class Base( CopyContainer,
               continue
             seen_properties.append(property)
             subdochelper = newTempDocumentationHelper(dochelper, k,
-                      title=property['id'], description=property['description'],
+                      title=property['id'], description=property.get('description', ''),
                       type=property['type'], security=property['mode'],
                       content=pformat(documented_item.getProperty(property['id'])))
             subdochelper_dynamic_accessor_list = []

@@ -529,14 +529,14 @@ div#main_content fieldset {\n
   border:none;\n
 }\n
 \n
-.content #fieldset_center,\n
-.content #fieldset_left,\n
-.content #fieldset_bottom{\n
+.content fieldset.center,\n
+.content fieldset.left,\n
+.content fieldset.bottom{\n
   margin-left: 3em;\n
   margin-right: 3em;\n
 }\n
 \n
-.content #fieldset_left{\n
+.content fieldset.left{\n
   margin-top: 3em;\n
 }\n
 \n
@@ -653,12 +653,12 @@ fieldset.register_informations{\n
 }\n
 \n
 \n
-#main_form #main_content #fieldset_bottom .input .ListSummary{\n
+#main_form #main_content fieldset.bottom .input .ListSummary{\n
   margin-top: 100px;\n
 }\n
 \n
-#main_form #main_content #fieldset_bottom .input .ListSummary,\n
-#main_form #main_content #fieldset_bottom .input .ListContent{\n
+#main_form #main_content fieldset.bottom .input .ListSummary,\n
+#main_form #main_content fieldset.bottom .input .ListContent{\n
   margin-right: 10%;\n
   margin-left: 10%;\n
 }\n

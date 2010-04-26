@@ -87,6 +87,7 @@
                     <value>
                       <list>
                         <string>listbox_title</string>
+                        <string>my_constant_string_field</string>
                       </list>
                     </value>
                 </item>

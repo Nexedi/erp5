@@ -128,7 +128,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//fieldset[@id=\'fieldset_right\']/div[@class=\'field error\']/span[@class=\'error\']</td>\n
+  <td>//fieldset[@class=\'right editable\']/div[@class=\'field error\']/span[@class=\'error\']</td>\n
   <td/>\n
 </tr>\n
 <tr>\n
@@ -145,7 +145,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//fieldset[@id=\'fieldset_right\']/div[1]/div[@class=\'field error\']/span[@class=\'error\']</td>\n
+  <td>//fieldset[@class=\'right editable\']/div[1]/div[@class=\'field error\']/span[@class=\'error\']</td>\n
   <td/>\n
 </tr>\n
 <tr>\n

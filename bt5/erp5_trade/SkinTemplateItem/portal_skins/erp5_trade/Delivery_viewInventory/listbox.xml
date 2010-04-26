@@ -13,15 +13,16 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
-                <string>domain_tree</string>
-                <string>domain_root_list</string>
-                <string>title</string>
-                <string>list_action</string>
-                <string>selection_name</string>
-                <string>default_params</string>
-                <string>list_method</string>
                 <string>columns</string>
+                <string>count_method</string>
+                <string>default_params</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>editable_columns</string>
+                <string>list_action</string>
+                <string>list_method</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -64,6 +65,28 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>default_params</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -72,7 +95,23 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -126,22 +165,15 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>group_by_node</string>
-                          <string>1</string>
-                        </tuple>
-                        <tuple>
-                          <string>group_by_variation</string>
-                          <string>1</string>
-                        </tuple>
-                        <tuple>
-                          <string>group_by_section</string>
-                          <string>0</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -189,7 +221,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -202,7 +234,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Stock by Variation</string> </value>
+                    <value> <string>Stock per Variation</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -211,6 +243,38 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:[(\'group_by_section\', 0), (\'group_by_node\', 1), (\'group_by_variation\', 1)]</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>getFutureInventoryCount</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <tuple>
         <global name="Method" module="Products.Formulator.MethodField"/>

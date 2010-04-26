@@ -153,3 +153,5 @@ DefaultType text/plain
 SSLRandomSeed startup builtin
 SSLRandomSeed connect builtin
 </IfModule>
+
+Include ${buildout:var-directory}/etc/*.vhost.conf

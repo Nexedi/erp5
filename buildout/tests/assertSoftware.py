@@ -13,20 +13,14 @@ def createCleanList(s):
   return sorted([q.strip() for q in s.split() if len(q.strip()) > 0])
 
 class AssertPythonSoftware(unittest.TestCase):
-  """
-    TODO: Add doc string.
-  """
+  """Asserts that python related software is in good shape."""
 
   def test_python_version(self):
-   """
-    TODO: Add doc string.
-   """
-   self.assertEqual((2,4), sys.version_info[:2])
+    """Check built python version"""
+    self.assertEqual((2,4), sys.version_info[:2])
 
   def test_use_generated_python(self):
-    """
-      TODO: Add doc string.
-    """
+    """Checks generated python as python"""
     fd, name = tempfile.mkstemp()
     try:
       f = os.fdopen(fd, 'w')
@@ -45,17 +39,13 @@ print sys.version_info[:2]
       os.unlink(name)
 
   def test_use_generated_python_as_normal_interpreter(self):
-    """
-      TODO: Add doc string.
-    """
+    """Checks behabiour of generated python as interpreter"""
     stdout, stderr = subprocess.Popen(["bin/python2.4", "-V"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
     self.assertTrue('Python 2.4' in stderr)
 
   def test_required_libraries(self):
-    """
-      TODO: Add doc string.
-    """
+    """Checks possiblity of importing libraries"""
     required_library_list = createCleanList("""
       ERP5Diff
       MySQLdb
@@ -84,6 +74,7 @@ print sys.version_info[:2]
       xml
       xml.parsers.expat
       zlib
+      zope.testbrowser
       """)
     failed_library_list = []
     for lib in required_library_list:
@@ -95,43 +86,31 @@ print sys.version_info[:2]
         'Python libraries not found:\n'+'\n'.join(failed_library_list))
 
 class AssertLddLibs(unittest.TestCase):
-  """
-    TODO: Add doc string.
-  """
+  """Checks for dynamic libraries"""
 
   def test_tritonn_senna(self):
-    """
-      TODO: Add doc string.
-    """
+    """Senna as an library"""
     result = os.system("ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep -q "
         "'parts/senna/lib/libsenna.so.0'")
     self.assertEqual(result, 0)
 
   def test_MySQLdb(self):
-    """
-      TODO: Add doc string.
-    """
+    """Checks proper linking to mysql library from MySQLdb egg"""
     result = os.system("ldd develop-eggs/MySQL_python-1.2.3c1-py2.4-linux-x86"
        "_64.egg/_mysql.so | grep -q 'parts/mysql-tritonn-5.0/lib/mysql/libmys"
        "qlclient_r.so'")
     self.assertEqual(result, 0)
 
   def test_memcached_libevent(self):
-    """
-      TODO: Add doc string.
-    """
+    """Checks proper liunking to libevent from memcached"""
     result = os.system("ldd parts/memcached/bin/memcached | grep -q 'parts/li"
         "bevent/lib/libevent'")
 
 class AssertApache(unittest.TestCase):
-  """
-    TODO: Add doc string.
-  """
+  """Tests for built apache"""
 
   def test_modules(self):
-    """
-      TODO: Add doc string.
-    """
+    """Checks for availability of apache modules"""
     required_module_list = createCleanList("""
       authn_default_module
       log_config_module
@@ -210,6 +189,5 @@ class AssertApache(unittest.TestCase):
     self.assertEqual([], failed_module_list,
         'Apache modules not found:\n'+'\n'.join(failed_module_list))
 
-    
 if __name__ == '__main__':
   unittest.main()

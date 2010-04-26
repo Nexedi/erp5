@@ -675,6 +675,7 @@ class TestPropertySheet:
       person.setRegionValueList([alpha, alpha])
       self.assertEquals(person.getRegionList(), ['alpha', 'alpha'])
       person.setRegionValueSet([alpha, alpha])
+      self.assertEquals(person.getRegionList(), ['alpha'])
       self.assertEquals(person.getRegionSet(), ['alpha'])
       person.setRegionValueList([alpha, beta, alpha])
       self.assertEquals(person.getRegionList(), ['alpha', 'beta', 'alpha'])
@@ -2340,6 +2341,7 @@ class TestPropertySheet:
       """
       if not run: return
       folder = self.getOrganisationModule()
+      sql_catalog = self.portal.portal_catalog.getSQLCatalog()
       initial_id = 'foo'
       final_id = 'bar'
       subdocument_id = 'sub'
@@ -2353,8 +2355,8 @@ class TestPropertySheet:
       self.tic()
       folder = self.getOrganisationModule()
       subdocument = folder[final_id][subdocument_id]
-      subdocument_catalogged_path = self.getPortalObject().portal_catalog.getSQLCatalog()[subdocument.uid].path
-      self.assertEqual(subdocument.getPath(), subdocument_catalogged_path)
+      subdocument_record = sql_catalog.getRecordForUid(subdocument.uid)
+      self.assertEqual(subdocument.getPath(), subdocument_record.path)
 
     def test_getCreationDate(self, quiet=quiet, run=run_all_test):
       """

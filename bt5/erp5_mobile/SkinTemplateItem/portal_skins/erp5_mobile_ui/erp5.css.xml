@@ -1176,22 +1176,23 @@ body {\n
   font-weight: bold;\n
 }\n
 \n
-#fieldset_left,\n
-#fieldset_right,\n
-#fieldset_center,\n
-#fieldset_bottom {\n
+fieldset.left,\n
+fieldset.right,\n
+fieldset.center,\n
+fieldset.bottom {\n
   border-width: 1px;\n
   border-style: solid;\n
 }\n
 \n
-#fieldset_left legend,\n
-#fieldset_right legend,\n
-#fieldset_center legend,\n
-#fieldset_bottom legend {\n
+fieldset.left legend,\n
+fieldset.right legend,\n
+fieldset.center legend,\n
+fieldset.bottom legend {\n
   display: none;\n
 }\n
 \n
-</dtml-let>
+</dtml-let>\n
+
 
 ]]></string> </value>
         </item>

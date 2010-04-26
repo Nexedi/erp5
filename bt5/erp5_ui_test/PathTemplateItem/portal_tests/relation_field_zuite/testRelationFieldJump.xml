@@ -99,7 +99,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//fieldset[@id=\'fieldset_left\']/div[4]/div/a/img[@alt="jump"]</td>\n
+  <td>//fieldset[@class=\'left editable\']/div[4]/div/a/img[@alt="jump"]</td>\n
   <td></td>\n
   <td></td>\n
 </tr>\n
@@ -145,7 +145,7 @@ bar_category/foo_module/1</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//fieldset[@id=\'fieldset_left\']/div[4]/div/a/img[@alt="jump"]</td>\n
+  <td>//fieldset[@class=\'left editable\']/div[4]/div/a/img[@alt="jump"]</td>\n
   <td></td>\n
   <td></td>\n
 </tr>\n
