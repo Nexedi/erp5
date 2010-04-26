@@ -134,9 +134,9 @@ body {\n
 \n
 }\n
 \n
-#fieldset_left h4,\n
-#fieldset_center h4,\n
-#fieldset_right h4 {\n
+fieldset.left h4,\n
+fieldset.center h4,\n
+fieldset.right h4 {\n
 \n
 \tbackground-color:#efeee8;\n
 \n

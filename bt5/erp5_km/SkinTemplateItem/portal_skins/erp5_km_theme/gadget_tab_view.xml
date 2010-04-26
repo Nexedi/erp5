@@ -71,8 +71,7 @@
         <tal:block tal:define="gid     group/gid;">\n
           <fieldset tal:condition="python: gid.find(\'hidden\') &lt; 0"\n
                     tal:attributes="class python:gid + \n
-                             (\' editable\' * request.get(\'editable_mode\', 0) or \' viewable\');\n
-                                    id    python: \'fieldset_%s\' % (gid.replace(\' \', \'_\'), );">\n
+                             (\' editable\' * request.get(\'editable_mode\', 0) or \' viewable\');">\n
 \n
             <div class="inner">\n
               <h4 i18n:translate="" i18n:domain="ui" tal:condition="group/gtitle" tal:content="group/gtitle" class="group_title"></h4>\n

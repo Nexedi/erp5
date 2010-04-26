@@ -79,8 +79,7 @@ It is possible to specify a group id and a group title by naming a group followi
       <tal:block tal:repeat="group group_list">\n
         <tal:block tal:define="gid     group/gid;">\n
           <fieldset tal:condition="python: gid.find(\'hidden\') &lt; 0"\n
-                    tal:attributes="class python:gid + test(request.get(\'editable_mode\', 0), \' editable\', \' viewable\');\n
-                                    id    python: \'fieldset_%s\' % (gid.replace(\' \', \'_\'), );">\n
+                tal:attributes="class python:gid + test(request.get(\'editable_mode\', 0), \' editable\', \' viewable\');">\n
             <div class="box">\n
               <div class="text">\n
               <h4 i18n:translate="" i18n:domain="ui" tal:condition="group/gtitle" tal:content="group/gtitle" class="group_title"></h4>\n
