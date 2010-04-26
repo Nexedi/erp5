@@ -745,9 +745,10 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     """
     if not self.getReference():
       return self
-    catalog = getToolByName(self, 'portal_catalog', None)
+    catalog = getToolByName(self, 'portal_catalog')
     kw = dict(reference=self.getReference(), sort_on=(('version','descending'),))
-    if language is not None: kw['language'] = language
+    if language is not None:
+      kw['language'] = language
     res = catalog(**kw)
 
     original_language = self.getOriginalLanguage()
