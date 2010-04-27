@@ -29,6 +29,8 @@
 
 import unittest
 
+from Products.ERP5Type.tests.utils import LogInterceptor
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
@@ -51,6 +53,7 @@ import cPickle as pickle
 from Products.CMFActivity.ActivityTool import Message
 import random
 import threading
+import sys
 
 try:
   from transaction import get as get_transaction
@@ -71,7 +74,7 @@ def registerFailingTransactionManager(*args, **kw):
       pass
   dummy_tm()._register()
 
-class TestCMFActivity(ERP5TypeTestCase):
+class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
   run_all_test = 1
   # Different variables used for this test
@@ -3583,6 +3586,185 @@ class TestCMFActivity(ERP5TypeTestCase):
     # .. now now messages with this tag should apper
     self.assertEquals(0, portal.portal_activities.countMessageWithTag(tag))    
 
+  def TryNotificationSavedOnEventLogWhenNotifyUserRaises(self, activity):
+    activity_tool = self.getActivityTool()
+    get_transaction().commit()
+    self.tic()
+    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    original_notifyUser = Message.notifyUser
+    def failSendingEmail(self, *args, **kw):
+      raise MailHostError, 'Mail is not sent'
+    Message.notifyUser = failSendingEmail
+    class ActivityUnitTestError(Exception):
+      pass
+    activity_unit_test_error = ActivityUnitTestError()
+    def failingMethod(self):
+      raise activity_unit_test_error
+    Organisation.failingMethod = failingMethod
+    self._catch_log_errors(ignored_level=sys.maxint) 
+
+    try:
+      import traceback
+      obj.activate(activity=activity, priority=6).failingMethod()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)   
+      message_list = activity_tool.getMessageList()
+      self.assertEqual(len(message_list), 1)
+      message = message_list[0]
+      logged_errors = []
+      logged_errors = self.logged
+      get_transaction().commit()
+      for log_record in self.logged:
+        if log_record.name == 'ActivityTool' and log_record.levelname == 'WARNING':
+          type, value, trace = log_record.exc_info
+      get_transaction().commit()
+      self.assertTrue(activity_unit_test_error is value)
+    finally:
+      self._ignore_log_errors()
+      Message.notifyUser = original_notifyUser
+      delattr(Organisation, 'failingMethod')
+
+  def test_118_userNotificationSavedOnEventLogWhenNotifyUserRaisesWithSQLDict(self, quiet=0, run=run_all_test):
+    """
+      Check the error is saved on event log even if the mail notification is not sent.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck the error is saved on event log even if the mail notification is not sent (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryNotificationSavedOnEventLogWhenNotifyUserRaises('SQLDict')
+
+  def test_119_userNotificationSavedOnEventLogWhenNotifyUserRaisesWithSQLQueue(self, quiet=0, run=run_all_test):
+    """
+      Check the error is saved on event log even if the mail notification is not sent.
+    """
+    if not run: return
+    if not quiet:
+      message = '\nCheck the error is saved on event log even if the mail notification is not sent (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryNotificationSavedOnEventLogWhenNotifyUserRaises('SQLQueue') 
+
+  def TryUserMessageContainingNoTracebackIsStillSent(self, activity):
+    portal = self.getPortalObject()
+    activity_tool = self.getActivityTool()
+    # With Message.__call__
+    # 1: activity context does not exist when activity is executed
+    get_transaction().commit()
+    self.tic()
+    obj = self.getPortal().organisation_module.newContent(portal_type='Organisation')
+    get_transaction().commit()
+    self.tic()
+    notification_done = []
+    def fake_notifyUser(self, *args, **kw):
+      notification_done.append(True)
+      self.traceback = None
+    original_notifyUser = Message.notifyUser
+    def failingMethod(self):
+      raise ValueError, "This method always fail"
+    Message.notifyUser = fake_notifyUser
+    Organisation.failingMethod = failingMethod
+    try:
+      obj.activate(activity=activity).failingMethod()
+      get_transaction().commit()
+      self.flushAllActivities(silent=1, loop_size=100)
+      message_list = activity_tool.getMessageList()
+      self.assertEqual(len(message_list), 1)
+      self.assertEqual(len(notification_done), 1)
+      message = message_list[0]
+      self.assertEqual(message.traceback, None)
+      message(activity_tool)
+      activity_tool.manageCancel(message.object_path, message.method_id)
+    finally:
+      Message.notifyUser = original_notifyUser
+      delattr(Organisation, 'failingMethod')    
+
+  def test_120_sendMessageWithNoTracebackWithSQLQueue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck that message with no traceback is still sent (SQLQueue)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryUserMessageContainingNoTracebackIsStillSent('SQLQueue')
+
+  def test_121_sendMessageWithNoTracebackWithSQLDict(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck that message with no traceback is still sent (SQLDict)'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryUserMessageContainingNoTracebackIsStillSent('SQLDict')
+  
+  def TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises(self, activity):
+    # Make sure that no active object is installed.
+    activity_tool = self.getPortal().portal_activities
+    activity_tool.manageClearActivities(keep=0)
+
+    # Need an object.
+    organisation_module = self.getOrganisationModule()
+    if not organisation_module.hasContent(self.company_id):
+      organisation_module.newContent(id=self.company_id)
+    o = organisation_module._getOb(self.company_id)
+    get_transaction().commit()
+    self.flushAllActivities(silent = 1, loop_size = 10)
+    self.assertEquals(len(activity_tool.getMessageList()), 0)
+    class ActivityUnitTestError(Exception):
+      pass
+    activity_unit_test_error = ActivityUnitTestError()
+    def failingMethod(self):
+      raise activity_unit_test_error
+    from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
+    SiteErrorLog.original_raising = SiteErrorLog.raising
+
+    # Monkey patch Site Error to induce conflict errors artificially.
+    def raising(self, info):
+      from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
+      raise AttributeError
+      return self.original_raising(info)
+    from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
+    SiteErrorLog.original_raising = SiteErrorLog.raising
+    SiteErrorLog.raising = raising
+    Organisation.failingMethod = failingMethod
+    self._catch_log_errors(ignored_level=sys.maxint)
+
+    try:
+      o.activate(activity = activity).failingMethod()
+      get_transaction().commit()
+      self.assertEquals(len(activity_tool.getMessageList()), 1)
+      self.flushAllActivities(silent = 1)
+      SiteErrorLog.raising = SiteErrorLog.original_raising
+      logged_errors = self.logged
+      get_transaction().commit()
+      for log_record in self.logged:
+        if log_record.name == 'ActivityTool' and log_record.levelname == 'WARNING':
+          type, value, trace = log_record.exc_info     
+      self.assertTrue(activity_unit_test_error is value)
+    finally:
+      self._ignore_log_errors()
+      SiteErrorLog.raising = SiteErrorLog.original_raising
+      delattr(Organisation, 'failingMethod')
+      del SiteErrorLog.original_raising
+
+  def test_122_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLDict(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck that message not saved in site error logger is not lost'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLDict')
+
+  @expectedFailure
+  def test_123_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLQueue(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = '\nCheck that message not saved in site error logger is not lost'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0,message)
+    self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLQueue')
+  
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))
