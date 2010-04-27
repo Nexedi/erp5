@@ -170,12 +170,12 @@ class AmountGeneratorMixin:
       # Try to collect cells and aggregate their mapped properties
       # using resource + variation as aggregation key or base_application
       # for intermediate lines
-      amount_generator_cell_list = self.contentValues(
+      amount_generator_cell_list = [self] + self.contentValues(
         portal_type=amount_generator_cell_type_list)
       resource_amount_aggregate = {} # aggregates final line information
       value_amount_aggregate = {} # aggregates intermediate line information
 
-      for amount_generator_cell in amount_generator_cell_list or (self,):
+      for amount_generator_cell in amount_generator_cell_list:
         if not amount_generator_cell.test(delivery_amount):
           continue
         base_application_list = amount_generator_cell.getBaseApplicationList()
