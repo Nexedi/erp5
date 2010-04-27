@@ -1540,7 +1540,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    # transformation set, then unset
+    # transformation set, then not modified
     sequence_string = bootstrap_sequence_string + '\
                       CreateTransformation \
                       Tic \
@@ -1549,7 +1549,7 @@ class TestProductionOrder(TestProductionOrderMixin, ERP5TypeTestCase):
                       CheckOrderLineTransformationIsSet \
                       RemoveResourceFromOrderLine \
                       Tic \
-                      CheckOrderLineTransformationIsNotSet \
+                      CheckOrderLineTransformationIsSet \
                       '
     sequence_list.addSequenceString(sequence_string)
 
