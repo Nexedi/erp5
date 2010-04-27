@@ -57,11 +57,15 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5OOo.OOoUtils import OOoBuilder
+from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl import getSecurityManager
 from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 import os
+from threading import Thread
+import httplib
 
 QUIET = 0
 RUN_ALL_TEST = 1
@@ -1550,6 +1554,85 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     self.assertTrue('inside very broken HTML code' in safe_html)
     self.assertTrue('AZERTYY' not in safe_html)
     self.assertTrue('#FFAA44' in safe_html)
+
+  def test_parallel_conversion(self):
+    """Check that conversion engine is able to fill in
+    cache without overwrite previous conversion
+    when processed at the same time.
+    """
+    portal_type = 'PDF'
+    document_module = self.portal.getDefaultModule(portal_type)
+    document = document_module.newContent(portal_type=portal_type)
+
+    upload_file = makeFileUpload('Forty-Two.Pages-en-001.pdf')
+    document.edit(file=upload_file)
+    pages_number = int(document.getContentInformation()['Pages'])
+    transaction.commit()
+    self.tic()
+
+    document.clearConversionCache()
+    transaction.commit()
+    self.tic()
+
+    class ThreadWrappedConverter(Thread):
+      """Use this class to run different convertion
+      inside distinct Thread.
+      """
+      def __init__(self, publish_method, document_path,
+                   frame_list, credential):
+        self.publish_method = publish_method
+        self.document_path = document_path
+        self.frame_list = frame_list
+        self.credential = credential
+        Thread.__init__(self)
+
+      def run(self):
+        for frame in self.frame_list:
+          # Use publish method to dispatch conversion among
+          # all available Zserver threads.
+          response = self.publish_method('%s/index_html?format=png'\
+                              '&display=thumbnail&quality:int=75&resolution='\
+                              '&frame=%s' % (self.document_path, frame),
+                                                               self.credential)
+          assert response.getHeader('content-type') == 'image/png'
+          assert response.getStatus() ==  httplib.OK
+        transaction.commit()
+
+    # assume there is no password
+    credential = '%s:' % (getSecurityManager().getUser().getId(),)
+    tested_list = []
+    frame_list = list(xrange(pages_number))
+    # assume that ZServer is configured with 4 Threads
+    conversion_per_tread = pages_number / 4
+    while frame_list:
+      local_frame_list = [frame_list.pop() for i in\
+                            xrange(min(conversion_per_tread, len(frame_list)))]
+      instance = ThreadWrappedConverter(self.publish, document.getPath(),
+                                        local_frame_list, credential)
+      tested_list.append(instance)
+      instance.start()
+
+    # Wait until threads finishing
+    [tested.join() for tested in tested_list]
+
+    transaction.commit()
+    self.tic()
+
+    preference_tool = getToolByName(self.portal, 'portal_preferences')
+    image_size = preference_tool.getPreferredThumbnailImageHeight(),\
+                              preference_tool.getPreferredThumbnailImageWidth()
+    convert_kw = {'format': 'png',
+                  'display': 'thumbnail',
+                  'quality': 75,
+                  'image_size': image_size,
+                  'resolution': ''}
+    result_list = []
+    for i in xrange(pages_number):
+      # all conversions should succeeded and stored in cache storage
+      convert_kw['frame'] = str(i)
+      if not document.hasConversion(**convert_kw):
+        result_list.append(i)
+    self.assertEquals(result_list, [])
 
 class TestDocumentWithSecurity(ERP5TypeTestCase):
 
