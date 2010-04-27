@@ -178,9 +178,6 @@
   <td tal:content="python:\'%s - Title 0 | %s\' % (language[1][\'report\'], site_title)"/>\n
   <td></td>\n
 </tr>\n
-\n
-<!-- quad_form_view mode: title of the form - title of the object -->\n
-<!-- assumes that BusinessTemplate_view uses quad_form_view as a page template. -->\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/foo_module/0/BusinessTemplate_view</td>\n
