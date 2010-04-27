@@ -100,8 +100,6 @@ class IdTool(BaseTool):
       raise KeyError, 'The generator %s is not present' % (reference,)
     return id_last_generator
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getLatestGeneratorValue')
   def _getLatestGeneratorValue(self, id_generator):
     """
       Return the last generator with the reference

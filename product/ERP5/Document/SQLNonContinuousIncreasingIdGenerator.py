@@ -34,6 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Utils import ScalarMaxConflictResolver
 from Products.ERP5.Document.IdGenerator import IdGenerator
 from _mysql_exceptions import ProgrammingError
+from MySQLdb.constants.ER import NO_SUCH_TABLE
 from zLOG import LOG, INFO
 
 class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
@@ -86,7 +87,9 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       new_id = result_query[0]['LAST_INSERT_ID()']
       # Commit the changement of new_id
       commit_method()
-    except ProgrammingError:
+    except ProgrammingError, error:
+      if error[0] != NO_SUCH_TABLE:
+        raise
       # If the database not exist, initialise the generator
       self.initializeGenerator()
     if self.getStoredInZodb():
@@ -142,7 +145,9 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         'idTool_zGetValueList could not be found.'
     try:
       get_value_list()
-    except ProgrammingError:
+    except ProgrammingError, error:
+      if error[0] != NO_SUCH_TABLE:
+        raise
       drop_method = getattr(portal, 'IdTool_zDropTable', None)
       create_method = getattr(portal, 'IdTool_zCreateEmptyTable', None)
       if None in (drop_method, create_method):
@@ -161,9 +166,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         'idTool_zGetLastId and/or idTool_zSetLastId could not be found.'
     storage = self.getStoredInZodb()
     # Recovery last_max_id_dict datas in zodb if enabled and is in mysql
-    if len(self.last_max_id_dict) != 0:
-      dump_dict = self.last_max_id_dict
-    elif getattr(portal_ids, 'dict_length_ids', None) is not None:
+    if len(self.last_max_id_dict) == 0 and \
+      getattr(portal_ids, 'dict_length_ids', None) is not None:
       dump_dict = portal_ids.dict_length_ids
       for id_group, last_id in dump_dict.items():
         last_insert_id = get_last_id_method(id_group=id_group)
@@ -172,7 +176,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
           if last_insert_id > last_id.value:
             # Check value in dict
             if storage and (not self.last_max_id_dict.has_key(id_group) or \
-                self.last_max_id_dict.has_key[id_group] != last_insert_id):
+                self.last_max_id_dict[id_group].value < last_insert_id):
               self.last_max_id_dict[id_group] = ScalarMaxConflictResolver(last_insert_id)
               self.last_max_id_dict[id_group].set(last_insert_id)
             continue

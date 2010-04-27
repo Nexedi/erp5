@@ -105,7 +105,7 @@ class IdGenerator(Base):
     return specialise.getLatestVersionValue().generateNewIdList(id_group=id_group, \
                                               id_count=id_count, default=default)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
       'initializeGenerator')
   def initializeGenerator(self):
     """
@@ -119,7 +119,7 @@ class IdGenerator(Base):
                         self.getReference()
     specialise.getLatestVersionValue().initializeGenerator()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
       'clearGenerator')
   def clearGenerator(self):
     """
