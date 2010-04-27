@@ -202,6 +202,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         title = tr_resource_name,
         quantity = 2.,
         resource_value = component_dict[tr_resource_name],
+        int_index=1,
         )
     transformed_resource.edit(
        categories = transformed_resource.getCategoryList() + ['variation/' + component_dict[tr_resource_name]['1'].getRelativeUrl()])
@@ -217,7 +218,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     transformed_resource.edit(
         title = tr_resource_name,
         quantity = 1.,
-        resource_value = component_dict[tr_resource_name]
+        resource_value = component_dict[tr_resource_name],
+        int_index=2,
         )
     base_category_list = ['size']
     transformed_resource.setVariationBaseCategoryList(base_category_list)
@@ -282,7 +284,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     transformed_resource = transformation.newContent(portal_type=self.transformed_resource_portal_type)
     transformed_resource.edit(
         title = tr_resource_name,
-        resource_value = component_dict[tr_resource_name]
+        resource_value = component_dict[tr_resource_name],
+        int_index=3,
         )
     base_category_list = ['size', 'colour', 'morphology']
     transformed_resource.setVariationBaseCategoryList(base_category_list)
@@ -329,7 +332,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         title = op_name,
         quantity = 10.,
         categories = operation.getCategoryList() + [ 'resource/' + operation_dict[op_name].getRelativeUrl(),
-                                                     'quantity_unit/time/min' ]
+                                                     'quantity_unit/time/min'],
+        int_index=4,
         )
 
     # Operation 2 : 1 variation axis
@@ -343,7 +347,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     operation.edit(
         title = op_name,
         categories = operation.getCategoryList() + [ 'resource/' + operation_dict[op_name].getRelativeUrl(),
-                                                     'quantity_unit/time/min' ]
+                                                     'quantity_unit/time/min'],
+        int_index=5,
         )
     base_category_list = ['size']
     operation.setVariationBaseCategoryList(base_category_list)
@@ -370,6 +375,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     transformed_resource.edit(
         title = tr_resource_name,
         resource_value = component_dict[tr_resource_name],
+        int_index=6,
         )
     transformed_resource.edit(
        categories = transformed_resource.getCategoryList() + ['variation/' + component_dict[tr_resource_name]['1'].getRelativeUrl()])
