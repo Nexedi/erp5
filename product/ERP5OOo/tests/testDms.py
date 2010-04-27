@@ -107,6 +107,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
   ## setup
 
   def setUpOnce(self):
+    self.setDefaultSitePreference()
     self.setSystemPreference()
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
@@ -114,10 +115,11 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
     self.portal.document_module.manage_permission(
                            'Access contents information', ['Anonymous'], 1)
+    transaction.commit()
+    self.tic()
 
-  def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.newContent(portal_type='System Preference')
-    default_pref.setPriority(1)
+  def setDefaultSitePreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
     default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
@@ -125,6 +127,19 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()
     return default_pref
+
+  def setSystemPreference(self):
+    portal_type = 'System Preference'
+    preference_list = self.portal.portal_preferences.contentValues(
+                                                       portal_type=portal_type)
+    if not preference_list:
+      preference = self.portal.portal_preferences.newContent(
+                                                       portal_type=portal_type)
+    else:
+      preference = preference_list[0]
+    if preference.getPreferenceState() != 'global':
+      preference.enable()
+    return preference
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')
@@ -1544,6 +1559,7 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     return "DMS with security"
 
   def afterSetUp(self):
+    self.setDefaultSitePreference()
     self.setSystemPreference()
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
@@ -1551,9 +1567,11 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
     self.portal.document_module.manage_permission(
                            'Access contents information', ['Anonymous'], 1)
+    transaction.commit()
+    self.tic()
     self.login()
 
-  def setSystemPreference(self):
+  def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
     default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
@@ -1561,8 +1579,20 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()
-    transaction.commit()
-    self.tic()
+    return default_pref
+
+  def setSystemPreference(self):
+    portal_type = 'System Preference'
+    preference_list = self.portal.portal_preferences.contentValues(
+                                                       portal_type=portal_type)
+    if not preference_list:
+      preference = self.portal.portal_preferences.newContent(
+                                                       portal_type=portal_type)
+    else:
+      preference = preference_list[0]
+    if preference.getPreferenceState() != 'global':
+      preference.enable()
+    return preference
 
   def login(self):
     uf = self.getPortal().acl_users
