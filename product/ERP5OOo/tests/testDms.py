@@ -63,6 +63,8 @@ from AccessControl import getSecurityManager
 from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
+from Products.ERP5Form.Document.Preference import Priority
 import os
 from threading import Thread
 import httplib
@@ -1746,6 +1748,56 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     # check the size of the pdf conversion
     self.assertEquals(text_document.getConversionSize(format='pdf'), pdf_size)
 
+  def test_ImageSizePreference(self):
+    """
+    Tests that when user defines image sizes are already defined in preferences
+    those properties are taken into account when the user
+    views an image
+    """
+    ERP5TypeTestCase.login(self, 'yusei')
+    preference_tool = self.portal.portal_preferences
+    #get the thumbnail sizes defined by default on default site preference
+    default_thumbnail_image_height = \
+       preference_tool.default_site_preference.getPreferredThumbnailImageHeight()
+    default_thumbnail_image_width = \
+       preference_tool.default_site_preference.getPreferredThumbnailImageWidth()
+    self.assertTrue(default_thumbnail_image_height > 0)
+    self.assertTrue(default_thumbnail_image_width > 0)    
+    self.assertEqual(default_thumbnail_image_height,
+                     preference_tool.getPreferredThumbnailImageHeight())
+    self.assertEqual(default_thumbnail_image_width,
+                     preference_tool.getPreferredThumbnailImageWidth())
+    #create new user preference and set new sizes for image thumbnail display 
+    user_pref = preference_tool.newContent(
+                          portal_type='Preference',
+                          priority=Priority.USER)
+    self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
+    self.assertEqual(user_pref.getPreferenceState(), 'enabled')
+    transaction.commit()
+    self.tic()
+    user_pref.setPreferredThumbnailImageHeight(default_thumbnail_image_height + 10)
+    user_pref.setPreferredThumbnailImageWidth(default_thumbnail_image_width + 10)
+    #Verify that the new values defined are the ones used by default
+    self.assertEqual(default_thumbnail_image_height + 10,
+                     preference_tool.getPreferredThumbnailImageHeight())
+    self.assertEqual(default_thumbnail_image_height + 10,
+                     preference_tool.getPreferredThumbnailImageHeight(0))
+    self.assertEqual(default_thumbnail_image_width + 10,
+                     preference_tool.getPreferredThumbnailImageWidth())
+    self.assertEqual(default_thumbnail_image_width + 10,
+                     preference_tool.getPreferredThumbnailImageWidth(0))
+    #Now lets check that when we try to view an image as thumbnail, 
+    #the sizes of that image are the ones defined in user preference
+    image_portal_type = 'Image'
+    image_list = image = self.portal.getDefaultModule(image_portal_type)\
+         .contentValues()
+    image = image[0]
+    self.assertEqual('thumbnail',
+       image.Image_view._getOb("image_view", None).get_value('image_display'))
+    self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),
+                    user_pref.getPreferredThumbnailImageHeight()),
+                     image.getSizeFromImageDisplay('thumbnail'))
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
