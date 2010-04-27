@@ -84,7 +84,7 @@ for transformation_relative_url, variation_list_list in transformation_item_list
     base_row = dict(uid=resource.getUid(), variation_text=movement.getVariationText())\n
 \n
     row_dict_list = []\n
-    for amount in transformation.getAggregatedAmountList(movement):\n
+    for amount in transformation.getAggregatedAmountList([movement]):\n
       transformed_resource_uid = amount.getResourceUid()\n
       quantity = amount.getQuantity()\n
       if transformed_resource_uid is not None and quantity is not None:\n
