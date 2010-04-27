@@ -203,37 +203,9 @@ class SubversionTool(BaseTool, UniqueObject, Folder):
   # Declarative Security
   security = ClassSecurityInfo()
 
-  #
-  #   ZMI methods
-  #
-  manage_options = ( ( { 'label'      : 'Overview'
-                        , 'action'     : 'manage_overview'
-                        }
-                      ,
-                      )
-                    + Folder.manage_options
-                    )
-
   security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainSubversionTool', _dtmldir )
 
-  # Filter content (ZMI))
-  def __init__(self):
-    return Folder.__init__(self, SubversionTool.id)
-
-
-  def filtered_meta_types(self, user=None):
-    """
-     Filter content (ZMI))
-     Filters the list of available meta types.
-    """
-    all = SubversionTool.inheritedAttribute('filtered_meta_types')(self)
-    meta_types = []
-    for meta_type in self.all_meta_types():
-      if meta_type['name'] in self.allowed_types:
-        meta_types.append(meta_type)
-    return meta_types
-    
   # path is the path in svn working copy
   # return edit_path in zodb to edit it
   # return '#' if no zodb path is found
