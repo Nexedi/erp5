@@ -1,7 +1,6 @@
 Business Path | edit_workflow
 Business Process | edit_workflow
 Business Process | validation_workflow
-Business State | edit_workflow
 Container Cell | container_interaction_workflow
 Container Cell | edit_workflow
 Container Cell | pricing_interaction_workflow

@@ -100,7 +100,7 @@
                         <string>my_order_builder_list</string>
                         <string>my_source_method_id</string>
                         <string>my_completed_state_list</string>
-                        <string>my_predecessor_title</string>
+                        <string>my_predecessor</string>
                       </list>
                     </value>
                 </item>
@@ -112,7 +112,7 @@
                         <string>my_delivery_builder_list</string>
                         <string>my_destination_method_id</string>
                         <string>my_frozen_state_list</string>
-                        <string>my_successor_title</string>
+                        <string>my_successor</string>
                         <string>my_deliverable</string>
                       </list>
                     </value>

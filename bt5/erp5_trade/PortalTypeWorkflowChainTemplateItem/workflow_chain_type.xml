@@ -8,10 +8,6 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Business State</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Container</type>
   <workflow>edit_workflow, pricing_interaction_workflow</workflow>
  </chain>
