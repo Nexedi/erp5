@@ -810,10 +810,10 @@ msgstr "Il existe déjà une devise avec ce code devise."
 
 msgid ""
 "Another document ${document_reference} - ${document_language} - "
-"${document_version} already exists."
+"${document_version} already exists"
 msgstr ""
 "Un document ${document_reference} - ${document_language} - "
-"${document_version} existe déjà."
+"${document_version} existe déjà"
 
 msgid "Answer"
 msgstr "Réponse"
@@ -11726,8 +11726,8 @@ msgstr "Type d'écriture"
 msgid "Transaction With Grouping Reference"
 msgstr "Écritures lettrées"
 
-msgid "Transaction is not balanced."
-msgstr "L'écriture n'est pas équilibrée."
+msgid "Transaction is not balanced"
+msgstr "L'écriture n'est pas équilibrée"
 
 msgid "Transactions"
 msgstr "Transactions"
