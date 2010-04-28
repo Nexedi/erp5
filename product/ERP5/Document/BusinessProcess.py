@@ -256,3 +256,121 @@ class BusinessProcess(Path, XMLObject):
     for next_path in node.getPredecessorRelatedValueList():
       _list += self._getHeadPathValueList(next_path, trade_phase_set)
     return _list
+
+  def getRemainingTradePhaseList(self, explanation, trade_state, trade_phase_list=None):
+    """
+      Returns the list of remaining trade phase for this
+      state based on the explanation.
+
+      trade_phase_list -- if provide, the result is filtered by it after collected
+    """
+    remaining_trade_phase_list = []
+    for path in [x for x in self.objectValues(portal_type="Business Path") \
+        if x.getPredecessorValue() == trade_state]:
+      # XXX When no simulations related to path, what should path.isCompleted return?
+      #     if True we don't have way to add remaining trade phases to new movement
+      if not (path.getRelatedSimulationMovementValueList(explanation) and
+              path.isCompleted(explanation)):
+        remaining_trade_phase_list += path.getTradePhaseValueList()
+
+      # collect to successor direction recursively
+      state = path.getSuccessorValue()
+      if state is not None:
+        remaining_trade_phase_list.extend(
+          self.getRemainingTradePhaseList(explanation, state, None))
+
+    # filter just at once if given
+    if trade_phase_list is not None:
+      remaining_trade_phase_list = filter(
+        lambda x : x.getLogicalPath() in trade_phase_list,
+        remaining_trade_phase_list)
+
+    return remaining_trade_phase_list
+
+  def isStatePartiallyCompleted(self, explanation, trade_state):
+    """
+      If all path which reach this state are partially completed
+      then this state is completed
+    """
+    for path in [x for x in self.objectValues(portal_type="Business Path") \
+        if x.getSuccessorValue() == trade_state]:
+      if not path.isPartiallyCompleted(explanation):
+        return False
+    return True
+
+  def getExpectedStateCompletionDate(self, explanation, trade_state, *args, **kwargs):
+    """
+      Returns the expected completion date for this
+      state based on the explanation.
+
+      explanation -- the document
+    """
+    # Should be re-calculated?
+    # XXX : what is the purpose of the two following lines ? comment it until there is
+    # good answer
+    if 'predecessor_date' in kwargs:
+      del kwargs['predecessor_date']
+    successor_list = [x for x in self.objectValues(portal_type="Business Path") \
+        if x.getSuccessorValue() == trade_state]
+    date_list = self._getExpectedDateList(explanation,
+                                          successor_list,
+                                          self._getExpectedCompletionDate,
+                                          *args,
+                                          **kwargs)
+    if len(date_list) > 0:
+      return min(date_list)
+
+  def getExpectedStateBeginningDate(self, explanation, trade_state, *args, **kwargs):
+    """
+      Returns the expected beginning date for this
+      state based on the explanation.
+
+      explanation -- the document
+    """
+    # Should be re-calculated?
+    # XXX : what is the purpose of the two following lines ? comment it until there is
+    # good answer
+    if 'predecessor_date' in kwargs:
+      del kwargs['predecessor_date']
+    predecessor_list = [x for x in self.objectValues(portal_type="Business Path") \
+        if x.getPredecessorValue() == trade_state]
+    date_list = self._getExpectedDateList(explanation,
+                                          predecessor_list,
+                                          self._getExpectedBeginningDate,
+                                          *args,
+                                          **kwargs)
+    if len(date_list) > 0:
+      return min(date_list)
+
+  def _getExpectedBeginningDate(self, path, *args, **kwargs):
+    expected_date = path.getExpectedStartDate(*args, **kwargs)
+    if expected_date is not None:
+      return expected_date - path.getWaitTime()
+
+  def _getExpectedDateList(self, explanation, path_list, path_method,
+                           visited=None, *args, **kwargs):
+    """
+      getExpected(Beginning/Completion)Date are same structure
+      expected date of each path should be returned.
+
+      explanation -- the document
+      path_list -- list of target business path
+      path_method -- used to get expected date on each path
+      visited -- only used to prevent infinite recursion internally
+    """
+    if visited is None:
+      visited = []
+
+    expected_date_list = []
+    for path in path_list:
+      # filter paths without path of root explanation
+      if path not in visited or path.isDeliverable():
+        expected_date = path_method(path, explanation, visited=visited, *args, **kwargs)
+        if expected_date is not None:
+          expected_date_list.append(expected_date)
+
+    return expected_date_list
+
+  def _getExpectedCompletionDate(self, path, *args, **kwargs):
+    return path.getExpectedStopDate(*args, **kwargs)
+

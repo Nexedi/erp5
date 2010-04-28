@@ -68,6 +68,9 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.createCategoriesInCategory(category_tool.trade_phase, ['default',])
     self.createCategoriesInCategory(category_tool.trade_phase.default,
         ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
+    self.createCategoriesInCategory(category_tool.trade_state,
+        ['ordered', 'invoiced', 'delivered',
+         'state_a', 'state_b', 'state_c', 'state_d', 'state_e'])
 
   @reindex
   def createBusinessProcess(self, **kw):
@@ -86,14 +89,6 @@ class TestBPMMixin(ERP5TypeTestCase):
         'BusinessPath_getDefaultSourceList')
     business_path = business_process.newContent(
       portal_type=self.business_path_portal_type, **kw)
-    return business_path
-
-  @reindex
-  def createBusinessState(self, business_process=None, **kw):
-    if business_process is None:
-      business_process = self.createBusinessProcess()
-    business_path = business_process.newContent(
-        portal_type=self.business_state_portal_type, **kw)
     return business_path
 
   def createMovement(self):
@@ -348,17 +343,18 @@ class TestBPMImplementation(TestBPMMixin):
                                     c
     """
     # define business process
+    category_tool = self.getCategoryTool()
     business_process = self.createBusinessProcess()
     business_path_a_b = self.createBusinessPath(business_process)
     business_path_b_c = self.createBusinessPath(business_process)
     business_path_b_d = self.createBusinessPath(business_process)
     business_path_c_d = self.createBusinessPath(business_process)
     business_path_d_e = self.createBusinessPath(business_process)
-    business_state_a = self.createBusinessState(business_process)
-    business_state_b = self.createBusinessState(business_process)
-    business_state_c = self.createBusinessState(business_process)
-    business_state_d = self.createBusinessState(business_process)
-    business_state_e = self.createBusinessState(business_process)
+    business_state_a = category_tool.trade_state.state_a
+    business_state_b = category_tool.trade_state.state_b
+    business_state_c = category_tool.trade_state.state_c
+    business_state_d = category_tool.trade_state.state_d
+    business_state_e = category_tool.trade_state.state_e
     business_path_a_b.setPredecessorValue(business_state_a)
     business_path_b_c.setPredecessorValue(business_state_b)
     business_path_b_d.setPredecessorValue(business_state_b)
@@ -376,11 +372,6 @@ class TestBPMImplementation(TestBPMMixin):
     business_path_b_d.edit(title="b_d")
     business_path_c_d.edit(title="c_d")
     business_path_d_e.edit(title="d_e")
-    business_state_a.edit(title="a")
-    business_state_b.edit(title="b")
-    business_state_c.edit(title="c")
-    business_state_d.edit(title="d")
-    business_state_e.edit(title="e")
     
     # set trade_phase
     business_path_a_b.edit(trade_phase=['default/discount'],
@@ -427,23 +418,27 @@ class TestBPMImplementation(TestBPMMixin):
                            trade_phase.invoicing,
                            trade_phase.payment,
                            trade_phase.accounting]),
-                      set(business_state_a.getRemainingTradePhaseList(order)))
+                      set(business_process.getRemainingTradePhaseList(order,
+                          business_state_a)))
     self.assertEquals(set([trade_phase.delivery,
                            trade_phase.invoicing,
                            trade_phase.payment,
                            trade_phase.accounting]),
-                      set(business_state_b.getRemainingTradePhaseList(order)))
+                      set(business_process.getRemainingTradePhaseList(order,
+                          business_state_b)))
     self.assertEquals(set([trade_phase.payment,
                            trade_phase.accounting]),
-                      set(business_state_c.getRemainingTradePhaseList(order)))
+                      set(business_process.getRemainingTradePhaseList(order,
+                          business_state_c)))
     self.assertEquals(set([trade_phase.accounting]),
-                      set(business_state_d.getRemainingTradePhaseList(order)))
+                      set(business_process.getRemainingTradePhaseList(order,
+                          business_state_d)))
 
     # when trade_phase_list is defined in arguments, the result is filtered by base category.
     self.assertEquals(set([trade_phase.delivery,
                            trade_phase.accounting]),
-                      set(business_state_a\
-                          .getRemainingTradePhaseList(order,
+                      set(business_process\
+                          .getRemainingTradePhaseList(order, business_state_a,
                                                       trade_phase_list=['default/delivery',
                                                                         'default/accounting'])))
 
@@ -473,17 +468,18 @@ class TestBPMImplementation(TestBPMMixin):
                            c
     """
     # define business process
+    category_tool = self.getCategoryTool()
     business_process = self.createBusinessProcess()
     business_path_a_b = self.createBusinessPath(business_process)
     business_path_b_c = self.createBusinessPath(business_process)
     business_path_b_d = self.createBusinessPath(business_process)
     business_path_c_d = self.createBusinessPath(business_process)
     business_path_d_e = self.createBusinessPath(business_process)
-    business_state_a = self.createBusinessState(business_process)
-    business_state_b = self.createBusinessState(business_process)
-    business_state_c = self.createBusinessState(business_process)
-    business_state_d = self.createBusinessState(business_process)
-    business_state_e = self.createBusinessState(business_process)
+    business_state_a = category_tool.trade_state.state_a
+    business_state_b = category_tool.trade_state.state_b
+    business_state_c = category_tool.trade_state.state_c
+    business_state_d = category_tool.trade_state.state_d
+    business_state_e = category_tool.trade_state.state_e
     business_path_a_b.setPredecessorValue(business_state_a)
     business_path_b_c.setPredecessorValue(business_state_b)
     business_path_b_d.setPredecessorValue(business_state_b)
@@ -496,11 +492,6 @@ class TestBPMImplementation(TestBPMMixin):
     business_path_d_e.setSuccessorValue(business_state_e)
 
     business_process.edit(referential_date='stop_date')
-    business_state_a.edit(title='a')
-    business_state_b.edit(title='b')
-    business_state_c.edit(title='c')
-    business_state_d.edit(title='d')
-    business_state_e.edit(title='e')
     business_path_a_b.edit(title='a_b', lead_time=2, wait_time=1)
     business_path_b_c.edit(title='b_c', lead_time=2, wait_time=1)
     business_path_b_d.edit(title='b_d', lead_time=3, wait_time=1)
@@ -635,9 +626,10 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
   def _createOrderedDeliveredInvoicedBusinessProcess(self):
     # simple business process preparation
     business_process = self.createBusinessProcess()
-    ordered = self.createBusinessState(business_process)
-    delivered = self.createBusinessState(business_process)
-    invoiced = self.createBusinessState(business_process)
+    category_tool = self.getCategoryTool()
+    ordered = category_tool.trade_state.ordered
+    delivered = category_tool.trade_state.delivered
+    invoiced = category_tool.trade_state.invoiced
 
     # path which is completed, as soon as related simulation movements are in
     # proper state
@@ -660,9 +652,10 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
 
   def _createOrderedInvoicedDeliveredBusinessProcess(self):
     business_process = self.createBusinessProcess()
-    ordered = self.createBusinessState(business_process)
-    delivered = self.createBusinessState(business_process)
-    invoiced = self.createBusinessState(business_process)
+    category_tool = self.getCategoryTool()
+    ordered = category_tool.trade_state.ordered
+    delivered = category_tool.trade_state.delivered
+    invoiced = category_tool.trade_state.invoiced
 
     self.order_path = self.createBusinessPath(business_process,
         successor_value = ordered,

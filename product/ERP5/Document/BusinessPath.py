@@ -251,7 +251,7 @@ class BusinessPath(Path, Predicate):
     #
     # Such cases are Business Processes using sequence not related
     # to simulation tree with much of compensations
-    if predecessor.isPartiallyCompleted(explanation):
+    if self.isStatePartiallyCompleted(explanation, predecessor):
       return result
     return False
 
@@ -437,14 +437,16 @@ class BusinessPath(Path, Predicate):
     if predecessor_date is None:
       node = self.getPredecessorValue()
       if node is not None:
-        predecessor_date = node.getExpectedCompletionDate(explanation, *args, **kwargs)
+        predecessor_date = self.getParentValue().getExpectedStateCompletionDate(
+          explanation, node, *args, **kwargs)
     if predecessor_date is not None:
       return predecessor_date + self.getWaitTime()
 
   def _getSuccessorExpectedStartDate(self, explanation, *args, **kwargs):
     node = self.getSuccessorValue()
     if node is not None:
-      expected_date =  node.getExpectedBeginningDate(explanation, *args, **kwargs)
+      expected_date =  self.getParentValue().getExpectedStateBeginningDate(
+        explanation, node, *args, **kwargs)
       if expected_date is not None:
         return expected_date - self.getLeadTime()
 
@@ -474,14 +476,16 @@ class BusinessPath(Path, Predicate):
   def _getPredecessorExpectedStopDate(self, explanation, *args, **kwargs):
     node = self.getPredecessorValue()
     if node is not None:
-      expected_date = node.getExpectedCompletionDate(explanation, *args, **kwargs)
+      expected_date = self.getParentValue().getExpectedStateCompletionDate(
+         explanation, node, *args, **kwargs)
       if expected_date is not None:
         return expected_date + self.getWaitTime() + self.getLeadTime()
 
   def _getSuccessorExpectedStopDate(self, explanation, *args, **kwargs):
     node = self.getSuccessorValue()
     if node is not None:
-      return node.getExpectedBeginningDate(explanation, *args, **kwargs)
+      return self.getParentValue().getExpectedStateBeginningDate(
+         explanation, node, *args, **kwargs)
 
   def _getExpectedDate(self, explanation, root_explanation_method,
                        predecessor_method, successor_method,
