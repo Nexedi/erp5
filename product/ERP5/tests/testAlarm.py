@@ -592,12 +592,13 @@ class TestAlarm(ERP5TypeTestCase):
     transaction.commit()
     messages_list = self.getActivityTool().getMessageList()
     self.assertEquals(2, len(messages_list))
+    expected_tag = alarm.getRelativeUrl() + '_0'
     # check tags after activeSense
     for m in messages_list:
       if m.method_id == 'notify':
-        self.assertEquals(m.activity_kw.get('after_tag'), '0')
+        self.assertEqual(expected_tag, m.activity_kw.get('after_tag'))
       elif m.method_id == sense_method_id:
-        self.assertEquals(m.activity_kw.get('tag'), '0')
+        self.assertEqual(expected_tag, m.activity_kw.get('tag'))
       else:
         raise AssertionError, m.method_id
     # execute alarm sense script and check tags
@@ -606,9 +607,9 @@ class TestAlarm(ERP5TypeTestCase):
     messages_list = self.getActivityTool().getMessageList()
     for m in messages_list:
       if m.method_id == 'notify':
-        self.assertEquals(m.activity_kw.get('after_tag'), '0')
+        self.assertEqual(expected_tag, m.activity_kw.get('after_tag'))
       elif m.method_id == 'immediateReindexObject':
-        self.assertEquals(m.activity_kw.get('tag'), '0')
+        self.assertEqual(expected_tag, m.activity_kw.get('tag'))
       else:
         raise AssertionError, m.method_id
 
