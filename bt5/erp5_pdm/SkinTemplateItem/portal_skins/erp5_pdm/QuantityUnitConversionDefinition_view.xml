@@ -97,6 +97,7 @@
                     <value>
                       <list>
                         <string>my_quantity_unit</string>
+                        <string>my_inverse</string>
                       </list>
                     </value>
                 </item>

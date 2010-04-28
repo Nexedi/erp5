@@ -77,11 +77,11 @@
     if unit_uid is None:\n
       continue\n
 \n
-    quantity = definition.getQuantity()\n
-    if not quantity:\n
+    definition_ratio = definition.getConversionRatio()\n
+    if not definition_ratio:\n
       continue\n
 \n
-    result[unit_uid] = (definition.getUid(), quantity)\n
+    result[unit_uid] = (definition.getUid(), definition_ratio)\n
 \n
   return result\n
 \n
