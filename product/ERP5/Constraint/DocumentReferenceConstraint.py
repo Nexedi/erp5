@@ -54,7 +54,7 @@ class DocumentReferenceConstraint(Constraint):
       'Multiple (${document_count}) documents ${document_reference} - '
       '${document_language} - ${document_version} already exists')
 
-  def checkConsistency(self, object, fixit=0):
+  def checkConsistency(self, document, fixit=0):
     """
       Implement here the consistency checker
     """
@@ -63,8 +63,8 @@ class DocumentReferenceConstraint(Constraint):
     error_list = []
 
     for property_id in ('reference', 'language', 'version'):
-      if object.getProperty(property_id) in (None, ''):
-        error_list.append(self._generateError(object,
+      if document.getProperty(property_id) in (None, ''):
+        error_list.append(self._generateError(document,
              self._getMessage('message_property_not_defined'),
              mapping=dict(property_id=property_id)))
     if error_list:
@@ -72,26 +72,26 @@ class DocumentReferenceConstraint(Constraint):
 
     # XXX isn't it better to use unrestrictedSearchResults ?
     #   potential problem is that we would get deleted documents aswell
-    res = object.portal_catalog(reference=object.getReference(),
-                                language=object.getLanguage(),
-                                version=object.getVersion(),
-                                portal_type=object.getPortalDocumentTypeList())
+    res = document.portal_catalog(reference=document.getReference(),
+                                language=document.getLanguage(),
+                                version=document.getVersion(),
+                                portal_type=document.getPortalDocumentTypeList())
     res = list(res)
-    if len(res) == 2: # this object and another object
-      error_list.append(self._generateError(object,
+    if len(res) == 2: # this document and another document
+      error_list.append(self._generateError(document,
                 self._getMessage('message_another_document_exists'),
-                mapping=dict(document_reference=object.getReference(),
-                             document_language=object.getLanguage(),
-                             document_version=object.getVersion())))
+                mapping=dict(document_reference=document.getReference(),
+                             document_language=document.getLanguage(),
+                             document_version=document.getVersion())))
 
     if len(res) > 2:
-      # this is very serious since there are many objects with the same
+      # this is very serious since there are many document with the same
       # reference
-      error_list.append(self._generateError(object,
+      error_list.append(self._generateError(document,
                 self._getMessage('message_multiple_documents_exists'),
                 mapping=dict(document_count=len(res),
-                             document_reference=object.getReference(),
-                             document_language=object.getLanguage(),
-                             document_version=object.getVersion())))
+                             document_reference=document.getReference(),
+                             document_language=document.getLanguage(),
+                             document_version=document.getVersion())))
     return error_list
 
