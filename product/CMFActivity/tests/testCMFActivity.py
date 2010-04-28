@@ -2899,19 +2899,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(result), 2)
     activity_tool.distribute()
     result = activity_tool.getMessageList()
-    # If activity is SQLDict, serialization tag prevents validating the same
-    # serialization tagged messages simultaneously.
-    # If activity is SQLQueue, this does not happen.
-    if activity=='SQLDict':
-      # one is validated.
-      message, = [x for x in result if x.processing_node == 0]
-      self.assertEqual(message.method_id, 'getId')
-      # the other one is still waiting for validation.
-      message, = [x for x in result if x.processing_node == -1]
-      self.assertEqual(message.method_id, 'getTitle')
-    else:
-      # both are validated at once.
-      self.assertEqual(len([x for x in result if x.processing_node == 0]), 2)
+    # at most 1 activity for a given serialization tag can be validated
+    message, = [x for x in result if x.processing_node == 0]
+    self.assertEqual(message.method_id, 'getId')
+    # the other one is still waiting for validation
+    message, = [x for x in result if x.processing_node == -1]
+    self.assertEqual(message.method_id, 'getTitle')
     self.tic()
     result = activity_tool.getMessageList()
     self.assertEqual(len(result), 0)

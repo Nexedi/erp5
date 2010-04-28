@@ -35,8 +35,7 @@ from ZODB.POSException import ConflictError
 from types import ClassType
 import sys
 from time import time
-from sets import ImmutableSet
-from SQLBase import SQLBase
+from SQLBase import SQLBase, sort_message_key
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
 from zExceptions import ExceptionFormatter
@@ -406,13 +405,27 @@ class SQLQueue(RAMQueue, SQLBase):
           message.order_validation_text = self.getOrderValidationText(message)
           self.getExecutableMessageList(activity_tool, message, message_dict,
                                         validation_text_dict, now_date=now_date)
-        distributable_count = len(message_dict)
-        if distributable_count:
-          activity_tool.SQLBase_assignMessage(table=self.sql_table,
-            processing_node=0, uid=[m.uid for m in message_dict.itervalues()])
-          validated_count += distributable_count
-          if validated_count >= MAX_VALIDATED_LIMIT:
-            return
+        if message_dict:
+          distributable_uid_set = set()
+          serialization_tag_dict = {}
+          for message in message_dict.itervalues():
+            serialization_tag = message.activity_kw.get('serialization_tag')
+            if serialization_tag is None:
+              distributable_uid_set.add(message.uid)
+            else:
+              serialization_tag_dict.setdefault(serialization_tag,
+                                                []).append(message)
+          for message_list in serialization_tag_dict.itervalues():
+            # Sort list of messages to validate the message with highest score
+            message_list.sort(key=sort_message_key)
+            distributable_uid_set.add(message_list[0].uid)
+          distributable_count = len(distributable_uid_set)
+          if distributable_count:
+            activity_tool.SQLBase_assignMessage(table=self.sql_table,
+              processing_node=0, uid=tuple(distributable_uid_set))
+            validated_count += distributable_count
+            if validated_count >= MAX_VALIDATED_LIMIT:
+              return
         offset += READ_MESSAGE_LIMIT
 
   # Validation private methods

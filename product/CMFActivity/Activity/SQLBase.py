@@ -36,6 +36,11 @@ from Products.CMFActivity.ActiveObject import (
 from Queue import VALIDATION_ERROR_DELAY
 
 
+def sort_message_key(message):
+  # same sort key as in SQL{Dict,Queue}_readMessageList
+  return message.line.priority, message.line.date, message.uid
+
+
 class SQLBase:
   """
     Define a set of common methods for SQL-based storage of activities.

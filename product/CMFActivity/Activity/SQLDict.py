@@ -35,7 +35,7 @@ from ZODB.POSException import ConflictError
 import sys
 from types import ClassType
 #from time import time
-from SQLBase import SQLBase
+from SQLBase import SQLBase, sort_message_key
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
 from zExceptions import ExceptionFormatter
@@ -516,9 +516,6 @@ class SQLDict(RAMDict, SQLBase):
                                         validation_text_dict, now_date=now_date)
 
         if message_dict:
-          def sort_message_key(message):
-            # same sort key as in SQLDict_readMessageList
-            return message.line.priority, message.line.date, message.uid
           message_unique_dict = {}
           serialization_tag_dict = {}
           distributable_uid_set = set()
