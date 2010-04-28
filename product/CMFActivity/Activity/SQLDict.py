@@ -498,10 +498,13 @@ class SQLDict(RAMDict, SQLBase):
     readMessageList = getattr(activity_tool, 'SQLDict_readMessageList', None)
     if readMessageList is not None:
       now_date = self.getNow(activity_tool)
-      result = readMessageList(path=None, method_id=None, processing_node=-1,
-                               to_date=now_date, include_processing=0, offset=offset, count=READ_MESSAGE_LIMIT)
       validated_count = 0
-      while len(result) and validated_count < MAX_VALIDATED_LIMIT:
+      while 1:
+        result = readMessageList(path=None, method_id=None, processing_node=-1,
+                                 to_date=now_date, include_processing=0,
+                                 offset=offset, count=READ_MESSAGE_LIMIT)
+        if not result:
+          return
         get_transaction().commit()
 
         validation_text_dict = {'none': 1}
@@ -562,10 +565,9 @@ class SQLDict(RAMDict, SQLBase):
             activity_tool.SQLBase_assignMessage(table=self.sql_table,
               processing_node=0, uid=tuple(distributable_uid_set))
             validated_count += distributable_count
-        if validated_count < MAX_VALIDATED_LIMIT:
-          offset += READ_MESSAGE_LIMIT
-          result = readMessageList(path=None, method_id=None, processing_node=-1,
-                                   to_date=now_date, include_processing=0, offset=offset, count=READ_MESSAGE_LIMIT)
+            if validated_count >= MAX_VALIDATED_LIMIT:
+              return
+        offset += READ_MESSAGE_LIMIT
 
   # Validation private methods
   def _validate(self, activity_tool, method_id=None, message_uid=None, path=None, tag=None,
