@@ -49,6 +49,7 @@ class QuantityUnitConversionDefinition(XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.Amount
+                    , PropertySheet.QuantityUnitConversionDefinition
                     )
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -66,3 +67,13 @@ class QuantityUnitConversionDefinition(XMLObject):
 
     return default_title
 
+  def getConversionRatio(self):
+    """
+      Compute conversion ratio associated with this definition
+    """
+    quantity = self.getQuantity()
+
+    if quantity != 0 and self.isInverse():
+      quantity = 1.0/quantity
+
+    return quantity
