@@ -41,10 +41,9 @@
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal">\n
-  <tal:block metal:define-macro="init"\n
-            tal:define="global is_selenium_0_8 python: here.getPortalObject().portal_tests.getZeleniumVersion() &gt; \'Zelenium-0.8\'">\n
+  <tal:block metal:define-macro="init">\n
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
-    <tr tal:condition="is_selenium_0_8">\n
+    <tr>\n
       <td>setTimeout</td>\n
       <td>600000</td>\n
       <td></td>\n
