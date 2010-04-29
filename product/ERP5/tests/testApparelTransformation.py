@@ -639,7 +639,11 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
           resource = produced_resource,
           specialise=transformation.getRelativeUrl(),
       )
-      aggregated_amount_list = production_order.getAggregatedAmountList([context])
+      aggregated_amount_list = context.getAggregatedAmountList(
+                  amount_generator_type_list=("Transformation",
+                      "Transformation Transformed Resource",
+                      "Transformation Operation",
+                      ))
       expected_amount_list = expected['amount']
       
       expected_amount_list_len = len(expected_amount_list)
