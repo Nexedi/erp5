@@ -237,13 +237,15 @@ class ERP5TypeInformation(XMLObject,
       'alarm', 'rule',
       # ERP5 UBM (5 Classes)
       'resource', 'node', 'item',
-      'delivery', 'delivery_movement',
-      'order', 'order_movement',
-      'container', 'container_line',
-      'path',
+      'path', # movement is generated from all *_movement group above
       # Trade
       'discount', 'payment_condition', 'payment_node',
       'supply', 'supply_path', 'inventory_movement', 'tax_movement',
+      'delivery', 'delivery_movement',
+      'order', 'order_movement',
+      'container', 'container_line',
+      # Different Aspects
+      'sale', 'purchase', 'internal'
       # PDM
       'transformation', 'variation', 'sub_variation',
       'product', 'service', 'model_path',
@@ -259,7 +261,9 @@ class ERP5TypeInformation(XMLObject,
       # Solvers and simulation
       'divergence_tester', 'target_solver',
       'amount_generator',  'amount_generator_line', 'amount_generator_cell',
-      # MRP
+      # Movement Group
+      'movement_group',
+      # Calendar
       'calendar_period',
       # Project
       'project',
@@ -267,10 +271,6 @@ class ERP5TypeInformation(XMLObject,
       'budget_variation',
       # Module
       'module',
-      # Movement Group
-      'movement_group',
-      # Different Aspects
-      'sale', 'purchase', 'internal'
     )
     group_list = ()
 
