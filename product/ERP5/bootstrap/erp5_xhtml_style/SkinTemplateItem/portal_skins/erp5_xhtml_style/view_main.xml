@@ -60,6 +60,7 @@
         </tal:block>\n
         <tal:block metal:fill-slot="main">\n
           <script type="text/javascript"\n
+            tal:condition="portal/portal_preferences/getPreferredHtmlStyleUnsavedFormWarning"\n
             tal:define="message python:context.Base_translateString(\'You have unsaved changes\').replace(\'\\\'\', \'\\\\\\\'\')"\n
             tal:content="string:installUnsavedChangesWarning(\'$message\')">\n
           </script>\n

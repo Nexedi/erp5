@@ -33,7 +33,7 @@ class HtmlStylePreference:
   
   _properties = (
     { 'id'          : 'preferred_html_style_developper_mode',
-      'description' : 'When true, usefull links for developpers are shown in '\
+      'description' : 'When true, useful links for developers are shown in '\
                       'the interface.',
       'type'        : 'boolean',
       'preference'  : 1,
@@ -50,7 +50,7 @@ class HtmlStylePreference:
       'preference'  : 1,
       'mode'        : 'w' },
     { 'id'          : 'preferred_html_style_access_tab',
-      'description' : 'When true, access tab will used in front page.',
+      'description' : 'When true, access tab will be used in front page.',
       'type'        : 'boolean',
       'preference'  : 1,
       'mode'        : 'w' },
@@ -65,6 +65,14 @@ class HtmlStylePreference:
       'type'        : 'string',
       'preference'  : 1,
       'default'     : 'http://www.erp5.com/erp5_help/',
+      'mode'        : 'w' },
+    { 'id'          : 'preferred_html_style_unsaved_form_warning',
+      'description' : 'When true, display a javascript confirmation box if '\
+                      'the user tries to navigate away from a form that was '\
+                      'partially changed but is unsaved.',
+      'type'        : 'boolean',
+      'preference'  : 1,
+      'default'     : True,
       'mode'        : 'w' },
     { 'id'          : 'preferred_string_field_width',
       'description' : 'The default width of string fields',
