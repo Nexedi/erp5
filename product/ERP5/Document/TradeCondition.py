@@ -149,10 +149,6 @@ class TradeCondition(Path, Transformation):
       """
       if portal_type_list is None:
         portal_type_list = self.model_line_portal_type_list
-      try:
-        context = context.getExplanationValue()
-      except AttributeError:
-        pass
       trade_model_line_composed_list = \
         context.asComposedDocument().contentValues(portal_type=portal_type_list)
 
