@@ -116,6 +116,10 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
       warnings.warn("The API of getAggregatedAmountList has changed:"
                     " it must be called on the context instead of passing"
                     " the context as first parameter", DeprecationWarning)
+      # XXX add a 'trade_amount_generator' group type
+      kw['amount_generator_type_list'] = ('Purchase Trade Condition',
+                                          'Sale Trade Condition',
+                                          'Trade Model Line')
       return context.getAggregatedAmountList(*args, **kw)
 
     #deprecated # XXX
