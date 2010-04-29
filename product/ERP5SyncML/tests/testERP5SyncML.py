@@ -29,6 +29,7 @@
 
 import unittest
 from Testing import ZopeTestCase
+from runUnitTest import tests_home
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
@@ -38,6 +39,7 @@ from base64 import b64encode, b64decode, b16encode, b16decode
 import transaction
 from ERP5Diff import ERP5Diff
 from lxml import etree
+
 
 class TestERP5SyncMLMixin:
 
@@ -77,9 +79,15 @@ class TestERP5SyncMLMixin:
   nb_synchronization = 3
   nb_message_first_synchronization = 10
   nb_message_first_sync_max_lines = 10
-  subscription_url1 = 'file://tmp/sync_client1'
-  subscription_url2 = 'file://tmp/sync_client2'
-  publication_url = 'file://tmp/sync_server'
+  _subscription_url1 = tests_home + '/sync_client1'
+  _subscription_url2 = tests_home + '/sync_client2'
+  _publication_url = tests_home + '/sync_server'
+  # XXX Why the prefix is not 'file://' ? This is inconsistent with urlopen:
+  #     urlopen('file://tmp/foo') -> ERROR
+  #     urlopen('file:///tmp/foo') -> OK
+  subscription_url1 = 'file:/' + _subscription_url1
+  subscription_url2 = 'file:/' + _subscription_url2
+  publication_url = 'file:/' + _publication_url
   activity_enabled = False
   #publication_url = 'server@localhost'
   #subscription_url1 = 'client1@localhost'
@@ -204,13 +212,13 @@ class TestERP5SyncMLMixin:
         publication = pub
     self.assertTrue(publication is not None)
     # reset files, because we do sync by files
-    file = open('/tmp/sync_client1', 'w')
+    file = open(self._subscription_url1, 'w')
     file.write('')
     file.close()
-    file = open('/tmp/sync_client2', 'w')
+    file = open(self._subscription_url2, 'w')
     file.write('')
     file.close()
-    file = open('/tmp/sync_server', 'w')
+    file = open(self._publication_url, 'w')
     file.write('')
     file.close()
     nb_message = 1
@@ -241,13 +249,13 @@ class TestERP5SyncMLMixin:
         publication = pub
     self.assertTrue(publication is not None)
     # reset files, because we do sync by files
-    file = open('/tmp/sync_client1', 'w')
+    file = open(self._subscription_url1, 'w')
     file.write('')
     file.close()
-    file = open('/tmp/sync_client2', 'w')
+    file = open(self._subscription_url2, 'w')
     file.write('')
     file.close()
-    file = open('/tmp/sync_server', 'w')
+    file = open(self._publication_url, 'w')
     file.write('')
     file.close()
     nb_message = 1

@@ -30,6 +30,7 @@
 import os
 import unittest
 from Testing import ZopeTestCase
+from runUnitTest import tests_home
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5DocumentConduit import ERP5DocumentConduit
@@ -100,9 +101,9 @@ class TestERP5DocumentSyncMLMixin:
   pub_conduit = 'ERP5DocumentConduit'
   sub_conduit1 = 'ERP5DocumentConduit'
   activity_enabled = True
-  publication_url = 'file://tmp/sync_server'
-  subscription_url = { 'two_way' : 'file://tmp/sync_client1', \
-        'from_server' : 'file://tmp/sync_client_from_server'}
+  publication_url = 'file:/%s/sync_server' % tests_home
+  subscription_url = {'two_way': 'file:/%s/sync_client1' % tests_home,
+      'from_server': 'file:/%s/sync_client_from_server' % tests_home}
   #for this tests
   nb_message_first_synchronization = 12
   nb_message_multi_first_synchronization = 14
