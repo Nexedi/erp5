@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_portal_type_list</string> </value>
+            <value> <string>your_portal_type_group_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -196,7 +196,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Copy roles to the selected types</string> </value>
+                    <value> <string>Copy roles to the types members of the selected groups</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -238,7 +238,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Copy to Portal Types</string> </value>
+                    <value> <string>Copy to Portal Types Groups</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -269,7 +269,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x.getId(), x.getTitle()) for x in context.portal_types.contentValues(sort_on=((\'title\',),))]</string> </value>
+            <value> <string>python: context.getParentValue().newContent(portal_type=\'Base Type\', temp_object=True).getAvailableGroupList()</string> </value>
         </item>
       </dictionary>
     </pickle>
