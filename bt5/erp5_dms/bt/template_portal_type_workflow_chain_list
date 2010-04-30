@@ -1,3 +1,4 @@
+Document Ingestion Message | cached_convertible_interaction_workflow
 Document Ingestion Message | document_ingestion_interaction_workflow
 Document Ingestion Message | document_ingestion_workflow
 Document Ingestion Message | edit_workflow
@@ -14,20 +15,25 @@ Image | document_interaction_workflow
 Image | document_publication_workflow
 Image | local_permission_interaction_workflow
 Image | processing_status_workflow
+PDF | cached_convertible_interaction_workflow
 PDF | document_interaction_workflow
 PDF | document_publication_workflow
 PDF | edit_workflow
 PDF | local_permission_interaction_workflow
 PDF | processing_status_workflow
 Person | local_permission_interaction_workflow
+Presentation | cached_convertible_interaction_workflow
 Presentation | document_interaction_workflow
 Presentation | document_publication_workflow
 Presentation | edit_workflow
 Presentation | local_permission_interaction_workflow
 Presentation | processing_status_workflow
+RSS Feed | cached_convertible_interaction_workflow
 RSS Feed | document_publication_workflow
 RSS Feed | edit_workflow
 RSS Feed | local_permission_interaction_workflow
+Spreadsheet | cached_convertible_interaction_workflow
+Spreadsheet | cached_convertible_interaction_workflow
 Spreadsheet | document_interaction_workflow
 Spreadsheet | document_publication_workflow
 Spreadsheet | edit_workflow
