@@ -586,8 +586,6 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
     if not self.hasBaseData():
       raise NotConvertedError
 
-    self.clearConversionCache()
-
     server_proxy = self._mkProxy()
     response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
