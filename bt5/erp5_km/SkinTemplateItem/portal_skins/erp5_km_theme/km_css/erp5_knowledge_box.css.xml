@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts72634708.91</string> </value>
+            <value> <string>ts72636776.07</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -462,7 +462,10 @@ div.block .right{\n
 \n
 div.block div.box_inner_content div.worklist_list ul {\n
   list-style-image:url(bullet.png);\n
-  margin-left:8px\n
+  margin:0;\n
+  padding-bottom:0.5em;\n
+  padding-left: 0.5em;\n
+  padding-top:0.5em;\n
 \n
 }\n
 \n
@@ -544,7 +547,6 @@ div.gadget-subsection ul{\n
   padding: 0.5em;\n
 }\n
 \n
-\n
 </string> </value>
         </item>
         <item>
@@ -553,7 +555,7 @@ div.gadget-subsection ul{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9381</int> </value>
+            <value> <int>9442</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
