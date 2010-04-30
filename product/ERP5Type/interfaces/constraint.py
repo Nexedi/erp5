@@ -1,10 +1,10 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jerome Perrin <jerome@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
 # guarantees and support are strongly advised to contract a Free Software
@@ -22,7 +22,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
@@ -37,31 +37,31 @@ class IConstraint(Interface):
 
   Constraints are usually defined in PropertySheets, thus constraints are
   associated to all documents of a given portal type.
-  
+
   A property sheet can contain _constraints slot ( just like _properties and
   _categories ).  _constraints is a list of constraint definition represented
   as dictionnaries, for example we can have::
-  
+
     _constraints = (
       {   # we need to have an id
           'id': 'the_constraint',
-          
+
           # Specify the class name of the constraint. The class name must be
           # registered to ERP5Type. If the class is not found, a
           # ConstraintNotFound error will be raised when trying to use it.
           'type': 'MyConstraintClass',
-        
+
           # Constraint have a description.
-          'description': 'Constraint description', 
-         
+          'description': 'Constraint description',
+
           # XXX condition is a TALES Expression; is it part of the API ?
           # how to use condition based on a workflow state in a workflow before
           # script, where the document is not in that state yet ? /XXX
-          
+
           # You can add a condition, and this constraint will only be checked
           # if the condition evaluates to a true value.
           'condition': 'python: object.getPortalType() == "Foo"',
-  
+
           # Additional Constraint parameters are configured here.
           # Constraint docstring should provide a configuration example and a
           # documentation on parameter they accept.
@@ -82,9 +82,8 @@ class IConstraint(Interface):
   constraint defined on this document. If the document is a subclass of
   Products.ERP5Type.Core.Folder.Folder, checkConsistency will be called
   recursivly.
-    
   """
-    
+
   def checkConsistency(obj, fixit=0):
     """This method checks the consistency of object 'obj', and fix errors if
     the argument 'fixit' is true. Not all constraint have to support error
@@ -95,22 +94,22 @@ class IConstraint(Interface):
 
   _message_id_list = Attribute("The list of messages IDs that can be "
                                "overriden for this constraint.")
-  
+
   def _getMessage(message_id):
     """Returns the message for this message_id.
 
     A message_id can be overriden in the property sheet using this constraint.
     Default message values are defined in the constraint class.
     """
-    
+
   def _generateError(obj, error_message, mapping={}):
     """Generate an error for 'obj' with the corresponding 'error_message'.
     This method is usefull for Constraint authors, in case of an error, they
     can simply call::
-       
+
       >>> if something_is_wrong:
       >>>   error_list.append(self._generateError(obj, 'Something is wrong !')
-    
+
     Then this message ("Something is wrong !") will be translated when the
     caller of document.checkConsistency() calls getTranslatedMessage() on
     a ConsistencyMessage instance returned by checkConsistency.
@@ -118,23 +117,20 @@ class IConstraint(Interface):
     Possible messages should be defined in constraint definition, in the list
     _message_id_list, and a default message value should be defined as class
     attribute.
-    
+
     In the example, you would have in the constraint class definition::
-      
+
       # list of existing messages
       _message_id_list = ['message_something_wrong']
       # messages default value
       message_something_wrong = 'Something is wrong: ${what}'
-    
+
     We'll use _getMessage to get the corresponding message.
     The implementation uses ERP5Type's Messages, so it's possible to use a
     'mapping' for substitution, like this::
-    
+
       >>> if something_is_wrong:
       >>>   error_list.append(self._generateError(obj,
       ...      self._getMessage('message_something_wrong'),
       ...      mapping=dict(what=obj.getTheWrongThing())))
-
     """
-
-
