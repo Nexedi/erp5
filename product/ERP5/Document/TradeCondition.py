@@ -236,8 +236,8 @@ class TradeCondition(Path, Transformation):
       for movement in movement_list:
         movement_reference = movement.getReference()
         if movement_reference is None:
-            raise ValueError('Reference on Trade Model Line is None. '
-                'Reference must be set.')
+            raise ValueError('Reference on Trade Model Line %s is None. '
+                'Reference must be set.' % (movement.getPath(),))
         for model_line in trade_model_line_composed_list:
           if model_line.getReference() == movement_reference and\
               (force_create_line or model_line.isCreateLine()):
