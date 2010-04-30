@@ -745,7 +745,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     """
     if not self.getReference():
       return self
-    catalog = getToolByName(self, 'portal_catalog')
+    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     kw = dict(reference=self.getReference(), sort_on=(('version','descending'),))
     if language is not None:
       kw['language'] = language
@@ -757,25 +757,26 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     # if language was given return it (if there are any docs in this language)
     if language is not None:
       try:
-        return res[0].getObject()
+        return result_list[0].getObject()
       except IndexError:
         return None
     else:
-      first = res[0]
+      first = result_list[0].getObject()
       in_original = None
-      for ob in res:
-        if ob.getVersion() != first.getVersion():
+      for record in result_list:
+        document = record.getObject()
+        if document.getVersion() != first.getVersion():
           # we are out of the latest version - return in_original or first
           if in_original is not None:
-            return in_original.getObject()
+            return in_original
           else:
-            return first.getObject() # this shouldn't happen in real life
-        if ob.getLanguage() == user_language:
+            return first # this shouldn't happen in real life
+        if document.getLanguage() == user_language:
           # we found it in the user language
-          return ob.getObject()
-        if ob.getLanguage() == original_language:
+          return document
+        if document.getLanguage() == original_language:
           # this is in original language
-          in_original = ob
+          in_original = document
     # this is the only doc in this version
     return self
 
@@ -785,7 +786,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       Returns a list of documents with same reference, same portal_type
       but different version and given language or any language if not given.
     """
-    catalog = getToolByName(self, 'portal_catalog')
+    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     kw = dict(portal_type=self.getPortalType(),
                    reference=self.getReference(),
                    sort_on=(('version', 'descending', 'SIGNED'),)
@@ -805,7 +806,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     """
     if not self.getReference():
       return True
-    catalog = getToolByName(self, 'portal_catalog')
+    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     self_count = catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
                                             reference=self.getReference(),
                                             version=self.getVersion(),
@@ -830,13 +831,13 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       in order to be consistent with the property sheet
       definition.
     """
-    getInfoFor = getToolByName(self, 'portal_workflow').getInfoFor
+    getInfoFor = getToolByName(self.getPortalObject(),
+                                                  'portal_workflow').getInfoFor
     revision = len(getInfoFor(self, 'history', (), 'edit_workflow'))
     # XXX Also look at processing_status_workflow for compatibility.
-    for history_item in getInfoFor(self, 'history', (),
-                                   'processing_status_workflow'):
-      if history_item.get('action') == 'edit':
-        revision += 1
+    revision += len([history_item for history_item in\
+                 getInfoFor(self, 'history', (), 'processing_status_workflow')\
+                 if history_item.get('action') == 'edit'])
     return str(revision)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRevisionList')
@@ -868,7 +869,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       finishIngestion.
     """
     document = self
-    catalog = getToolByName(self, 'portal_catalog')
+    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     if self.getReference():
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalDocumentTypeList(),
@@ -914,7 +915,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       for the current user.
     """
     if not self.getReference(): return []
-    catalog = getToolByName(self, 'portal_catalog')
+    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     kw = dict(portal_type=self.getPortalType(),
               reference=self.getReference(),
               group_by=('language',))
@@ -936,7 +937,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     reference = self.getReference()
     if not reference:
       return
-    catalog = getToolByName(self, 'portal_catalog')
+    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
     res = catalog(reference=self.getReference(), sort_on=(('creation_date','ascending'),))
     # XXX this should be security-unaware - delegate to script with proxy roles
     return res[0].getLanguage() # XXX what happens if it is empty?
@@ -1232,7 +1233,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       return
     try:
       message = self._convertToBaseFormat() # Call implemetation method
-      self.clearConversionCache() # Conversion cache is now invalid
       if message is None:
         # XXX Need to translate.
         message = 'Converted to %s.' % self.getBaseContentType()
