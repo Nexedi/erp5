@@ -101,10 +101,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING = \
       COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
-              CreateBusinessState
-              ModifyBusinessStateTaxed
-              CreateBusinessState
-              ModifyBusinessStateInvoiced
               CreateBusinessPath
               ModifyBusinessPathTaxing
               CreateBusinessPath
@@ -199,14 +195,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         portal_type='Trade Model Line',
         **kw)
 
-  # Steps
-  def stepCreateBusinessState(self, sequence=None, **kw):
-    business_process = sequence.get('business_process')
-    sequence.edit(business_state=self.createBusinessState(business_process))
-
   def stepModifyBusinessPathDiscounting(self, sequence=None, **kw):
-    predecessor = sequence.get('business_state_invoiced')
-    successor = sequence.get('business_state_taxed')
+    category_tool = self.getCategoryTool()
+    predecessor = category_tool.trade_state.invoiced
+    successor = category_tool.trade_state.taxed
     business_path = sequence.get('business_path')
     self.assertNotEqual(None, predecessor)
     self.assertNotEqual(None, successor)
@@ -219,8 +211,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence.edit(business_path=None, business_path_discounting=business_path)
 
   def stepModifyBusinessPathTaxing(self, sequence=None, **kw):
-    predecessor = sequence.get('business_state_invoiced')
-    successor = sequence.get('business_state_taxed')
+    category_tool = self.getCategoryTool()
+    predecessor = category_tool.trade_state.invoiced
+    successor = category_tool.trade_state.taxed
     business_path = sequence.get('business_path')
     self.assertNotEqual(None, predecessor)
     self.assertNotEqual(None, successor)
@@ -231,17 +224,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       trade_phase = 'default/tax'
     )
     sequence.edit(business_path=None, business_path_taxing=business_path)
-
-  def stepModifyBusinessStateTaxed(self, sequence=None, **kw):
-    business_state = sequence.get('business_state')
-    business_state.edit(reference='taxed')
-    sequence.edit( business_state=None, business_state_taxed=business_state)
-
-  def stepModifyBusinessStateInvoiced(self, sequence=None,
-                sequence_string=None):
-    business_state = sequence.get('business_state')
-    business_state.edit(reference='invoiced')
-    sequence.edit(business_state=None, business_state_invoiced=business_state)
 
   def stepAcceptDecisionQuantityInvoice(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
@@ -1465,10 +1447,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING = \
       COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
-              CreateBusinessState
-              ModifyBusinessStateTaxed
-              CreateBusinessState
-              ModifyBusinessStateInvoiced
               CreateBusinessPath
               ModifyBusinessPathTaxing
               CreateBusinessPath
@@ -1898,10 +1876,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
-              CreateBusinessState
-              ModifyBusinessStateTaxed
-              CreateBusinessState
-              ModifyBusinessStateInvoiced
               CreateBusinessPath
               ModifyBusinessPathTaxing
               CreateBusinessPath
@@ -1963,10 +1937,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
-              CreateBusinessState
-              ModifyBusinessStateTaxed
-              CreateBusinessState
-              ModifyBusinessStateInvoiced
               CreateBusinessPath
               ModifyBusinessPathTaxing
               CreateBusinessPath

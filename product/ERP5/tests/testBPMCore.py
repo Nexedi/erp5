@@ -68,7 +68,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.createCategoriesInCategory(category_tool.trade_phase.default,
         ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
     self.createCategoriesInCategory(category_tool.trade_state,
-        ['ordered', 'invoiced', 'delivered',
+        ['ordered', 'invoiced', 'delivered', 'taxed',
          'state_a', 'state_b', 'state_c', 'state_d', 'state_e'])
 
   @reindex
