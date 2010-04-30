@@ -66,7 +66,8 @@ for p in portal.portal_preferences.searchFolder():\n
     if portal.portal_membership.getAuthenticatedMember().allowed(p, [\'Owner\', ]) :\n
       if p != pref and \\\n
          p.getPreferenceState() == \'enabled\' and \\\n
-         p.getPriority() == pref.getPriority() :\n
+         p.getPriority() == pref.getPriority() and \\\n
+         p.getPortalType() == pref.getPortalType() :\n
         p.portal_workflow.doActionFor(p,\n
            \'disable_action\',\n
            wf_id=\'preference_workflow\', \n
