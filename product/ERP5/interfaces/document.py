@@ -233,11 +233,6 @@ class IDocument(Interface):
     links (in combindation with populate).
     """
 
-  def clearConversionCache():
-    """Clear cache (invoked by interaction workflow upon file upload
-    needed here to overwrite class attribute with instance attrs
-    """
-
   def hasConversion(**kw):
     """Return a boolean if conversion is cached
     """
