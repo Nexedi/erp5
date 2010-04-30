@@ -33,7 +33,7 @@ import time
 
 import transaction
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from testDms import TestDocumentMixin
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from AccessControl.SecurityManagement import newSecurityManager
@@ -59,7 +59,7 @@ def makeFileUpload(name, as_name=None):
   return FileUpload(path, as_name)
 
 
-class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
+class TestDocumentConversionCache(TestDocumentMixin):
   """
     Test basic document - related operations
   """
@@ -76,39 +76,7 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
                        )
 
   def getTitle(self):
-    return "DMS"
-
-  ## setup
-
-  def afterSetUp(self):
-    self.setSystemPreference()
-    # set a dummy localizer (because normally it is cookie based)
-    self.portal.Localizer = DummyLocalizer()
-    # make sure every body can traverse document module
-    self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
-    self.portal.document_module.manage_permission(
-                           'Access contents information', ['Anonymous'], 1)
-
-  def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
-    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
-    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    default_pref.setPreferredConversionCacheFactory('document_cache_factory')
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
-
-  def getDocumentModule(self):
-    return getattr(self.getPortal(),'document_module')
-
-  def getBusinessTemplateList(self):
-    return ('erp5_base',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms')
-
-  def getNeededCategoryList(self):
-    return ()
+    return "OOo Conversion Cache"
 
   def beforeTearDown(self):
     """
@@ -116,18 +84,6 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
       - clear document module
     """
     self.clearDocumentModule()
-
-  def clearDocumentModule(self):
-    """
-      Remove everything after each run
-    """
-    transaction.abort()
-    self.tic()
-    doc_module = self.getDocumentModule()
-    ids = [i for i in doc_module.objectIds()]
-    doc_module.manage_delObjects(ids)
-    transaction.commit()
-    self.tic()
 
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()

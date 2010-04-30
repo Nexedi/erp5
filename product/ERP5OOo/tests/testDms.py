@@ -101,20 +101,8 @@ def makeFileUpload(name, as_name=None):
   path = makeFilePath(name)
   return FileUpload(path, as_name)
 
-
-class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
-  """
-    Test basic document - related operations
-  """
-
-  def getTitle(self):
-    return "DMS"
-
-  ## setup
-
+class TestDocumentMixin(ERP5TypeTestCase):
   def setUpOnce(self):
-    self.setDefaultSitePreference()
-    self.setSystemPreference()
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
     # make sure every body can traverse document module
@@ -124,13 +112,19 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     transaction.commit()
     self.tic()
 
+  def afterSetUp(self):
+    self.setDefaultSitePreference()
+    self.setSystemPreference()
+    transaction.commit()
+    self.tic()
+
   def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
     default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    if default_pref.getPreferenceState() != 'global':
+    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
       default_pref.enable()
     return default_pref
 
@@ -143,7 +137,7 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                        portal_type=portal_type)
     else:
       preference = preference_list[0]
-    if preference.getPreferenceState() != 'global':
+    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
       preference.enable()
     return preference
 
@@ -182,6 +176,17 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     transaction.commit()
     self.tic()
 
+class TestDocument(TestDocumentMixin):
+  """
+    Test basic document - related operations
+  """
+
+  def getTitle(self):
+    return "DMS"
+
+  ## setup
+
+  
   ## helper methods
 
   def createTestDocument(self, file_name=None, portal_type='Text', reference='TEST', version='002', language='en'):
@@ -1636,62 +1641,18 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
         result_list.append(i)
     self.assertEquals(result_list, [])
 
-class TestDocumentWithSecurity(ERP5TypeTestCase):
+class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
 
   def getTitle(self):
     return "DMS with security"
 
-  def afterSetUp(self):
-    self.setDefaultSitePreference()
-    self.setSystemPreference()
-    # set a dummy localizer (because normally it is cookie based)
-    self.portal.Localizer = DummyLocalizer()
-    # make sure every body can traverse document module
-    self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
-    self.portal.document_module.manage_permission(
-                           'Access contents information', ['Anonymous'], 1)
-    transaction.commit()
-    self.tic()
-    self.login()
-
-  def setDefaultSitePreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
-    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
-    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
-    return default_pref
-
-  def setSystemPreference(self):
-    portal_type = 'System Preference'
-    preference_list = self.portal.portal_preferences.contentValues(
-                                                       portal_type=portal_type)
-    if not preference_list:
-      preference = self.portal.portal_preferences.newContent(
-                                                       portal_type=portal_type)
-    else:
-      preference = preference_list[0]
-    if preference.getPreferenceState() != 'global':
-      preference.enable()
-    return preference
-
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Auditor', 'Author'], [])
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
-
-  def getDocumentModule(self):
-    return getattr(self.getPortal(),'document_module')
-
-  def getBusinessTemplateList(self):
-    return ('erp5_base',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms')
 
   def test_ShowPreviewAfterSubmitted(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
