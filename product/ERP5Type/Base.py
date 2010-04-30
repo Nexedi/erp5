@@ -2695,7 +2695,7 @@ class Base( CopyContainer,
 #     return self._recursiveApply(f)
 
   # Content consistency implementation
-  def _checkConsistency(self, fixit=0):
+  def _checkConsistency(self, fixit=False):
     """
     Check the constitency of objects.
 
@@ -2709,10 +2709,10 @@ class Base( CopyContainer,
 
     Private method.
     """
-    return self._checkConsistency(fixit=1)
+    return self._checkConsistency(fixit=True)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'checkConsistency')
-  def checkConsistency(self, fixit=0):
+  def checkConsistency(self, fixit=False, filter=None, **kw):
     """
     Check the constitency of objects.
 
@@ -2739,19 +2739,19 @@ class Base( CopyContainer,
     # We are looking inside all instances in constraints, then we check
     # the consistency for all of them
 
-    for constraint_instance in self.constraints:
+    for constraint_instance in self._filteredConstraintList(filter):
       if fixit:
         error_list2 = UnrestrictedMethod(
-          constraint_instance.fixConsistency)(self)
+          constraint_instance.fixConsistency)(self, **kw)
       else:
         error_list2 = UnrestrictedMethod(
-          constraint_instance.checkConsistency)(self)
+          constraint_instance.checkConsistency)(self, **kw)
       if len(error_list2) > 0:
         try:
           if fixit:
-            constraint_instance.fixConsistency(self)
+            constraint_instance.fixConsistency(self, **kw)
           else:
-            constraint_instance.checkConsistency(self)
+            constraint_instance.checkConsistency(self, **kw)
         except Unauthorized:
           error_list.append(getUnauthorizedErrorMessage(constraint_instance))
         else:
@@ -2763,11 +2763,24 @@ class Base( CopyContainer,
     return error_list
 
   security.declareProtected(Permissions.ManagePortal, 'fixConsistency')
-  def fixConsistency(self):
+  def fixConsistency(self, filter=None, **kw):
     """
     Fix the constitency of objects.
     """
-    return self.checkConsistency(fixit=1)
+    return self.checkConsistency(fixit=True, filter=filter, **kw)
+
+  def _filteredConstraintList(self, filt):
+    """
+    Returns a list of constraints filtered by filt argument.
+    """
+    # currently only 'id' is supported.
+    constraints = self.constraints
+    if filt is not None:
+      id_list = filt.get('id', None)
+      if isinstance(id_list, (list, tuple)):
+        id_list = [id_list]
+      constraints = filter(lambda x:x.id in id_list, constraints)
+    return constraints
 
   # Context related methods
   security.declarePublic('asContext')

@@ -84,12 +84,17 @@ class IConstraint(Interface):
   recursivly.
   """
 
-  def checkConsistency(obj, fixit=0):
+  def checkConsistency(obj, fixit=False, filter=None, **kw):
     """This method checks the consistency of object 'obj', and fix errors if
     the argument 'fixit' is true. Not all constraint have to support error
     repairing, in that case, simply ignore the fixit parameter.  This method
     should return a list of errors, which are a list of `ConsistencyMessage`,
     with a `getTranslatedMessage` method for user interaction.
+
+    If filter is specified, only constraints filtered by the filter
+    argument are checked.
+
+    Additional argument **kw is passed to each constraint.
     """
 
   _message_id_list = Attribute("The list of messages IDs that can be "

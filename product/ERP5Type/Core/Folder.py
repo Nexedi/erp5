@@ -1257,7 +1257,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'checkConsistency')
-  def checkConsistency(self, fixit=0):
+  def checkConsistency(self, fixit=False, filter=None, **kw):
     """
     Check the consistency of this object, then
     check recursively the consistency of every sub object.
@@ -1272,7 +1272,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         error_list += [(self.getRelativeUrl(), 'BTree Inconsistency',
                        199, '(fixed)')]
     # Call superclass
-    error_list += Base.checkConsistency(self, fixit=fixit)
+    error_list += Base.checkConsistency(self, fixit=fixit, filter=filter, **kw)
     # We must commit before listing folder contents
     # in case we erased some data
     if fixit:
@@ -1280,9 +1280,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     # Then check the consistency on all sub objects
     for obj in self.contentValues():
       if fixit:
-        extra_errors = obj.fixConsistency()
+        extra_errors = obj.fixConsistency(filter=filter, **kw)
       else:
-        extra_errors = obj.checkConsistency()
+        extra_errors = obj.checkConsistency(filter=filter, **kw)
       if len(extra_errors) > 0:
         error_list += extra_errors
     # We should also return an error if any
