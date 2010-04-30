@@ -42,22 +42,26 @@
 <tal:block metal:define-macro="renderer">\n
   <ul class="first_level">\n
     <li>\n
-      <a tal:content="section/Base_getTitle"\n
+      <a class="section-link"\n
+         tal:content="section/Base_getTitle"\n
          tal:attributes="href section/absolute_url;\n
                          title section/Base_getTitle;"/></li>\n
      <ul class="second_level">\n
 \n
-       <li tal:repeat="root_section python: filter(lambda x:x.isVisible(), section.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\'))">\n
+       <tal:block tal:repeat="root_section python: filter(lambda x:x.isVisible(), section.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\'))">\n
          <tal:block \n
             tal:define="section_dom_id python: root_section.getRelativeUrl().replace(\'/\', \'_\');\n
                         image_dom_id python: \'image_%s\' %section_dom_id;\n
-                        siblings python: filter(lambda x:x.isVisible(), root_section.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\'))">\n
-\n
-           <a tal:content="root_section/Base_getTitle"\n
-              tal:condition="python:not len(siblings)"\n
-              tal:attributes="href root_section/absolute_url;\n
-                              title section/Base_getTitle;"/>\n
-           <tal:block tal:condition="python:len(siblings)">\n
+                        siblings python: filter(lambda x:x.isVisible(), root_section.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\'));\n
+                        exists_siblings python: len(siblings)">\n
+           <li class="empty-list-node"\n
+               tal:condition="not: exists_siblings">\n
+             <a tal:content="root_section/Base_getTitle"\n
+                tal:attributes="href root_section/absolute_url;\n
+                                title section/Base_getTitle;"/>\n
+           </li>\n
+           <li class="non-empty-list-node"\n
+               tal:condition="exists_siblings">\n
              <img src="images/tree_closed.png" \n
                   alt=""\n
                   tal:attributes="id image_dom_id"/>\n
@@ -74,10 +78,10 @@
                  </li>\n
                </ul>\n
              </div>\n
-           </tal:block>           \n
+           </li>\n
 \n
           </tal:block>\n
-        </li>\n
+        </tal:block>\n
 \n
       </ul>\n
   </ul>\n

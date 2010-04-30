@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts70214048.17</string> </value>
+            <value> <string>ts72634708.91</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -492,34 +492,59 @@ div.block div.worklist_list ul li a:hover{\n
 }\n
 \n
 /* Gadget Browser */\n
-div.gadget_browser ul {\n
+div.gadget-website-browser {\n
+  margin-top: 0.5em;\n
+}\n
+div.gadget-website-browser ul {\n
   margin: 0em;\n
   padding: 0em;\n
 }\n
 \n
-div.gadget_browser li {\n
+div.gadget-website-browser li {\n
   padding-left: 0em;\n
 }\n
 \n
-div.gadget_browser ul.first_level, ul.second_level{\n
+div.gadget-website-browser ul.first_level, ul.second_level{\n
   list-style-type: none!important;\n
 }\n
 \n
-div.gadget_browser ul.first_level {\n
+div.gadget-website-browser ul.first_level {\n
   padding-bottom: 0.5em;\n
 }\n
-\n
-div.gadget_browser ul.second_level{\n
-  padding-left: 0.3em;\n
+div.gadget-website-browser .section-link{\n
+  font-size: 115%;\n
 }\n
 \n
-div.gadget_browser ul.third_level{\n
+div.gadget-website-browser ul.second_level{\n
   padding-left: 0.7em;\n
 }\n
 \n
-div.gadget_browser a {\n
-  font-weight:normal;\n
+div.gadget-website-browser ul.third_level{\n
+  padding-left: 1.4em;\n
 }\n
+\n
+div.gadget-website-browser a, a:link, a:active, a:visited {\n
+  font-weight: normal;\n
+  color: inherit;\n
+}\n
+div.gadget-website-browser .empty-list-node{\n
+   list-style-type: square;\n
+   margin-left: 1.4em;\n
+}\n
+\n
+/* Gadget SubSection */\n
+div.gadget-subsection {\n
+  margin-top: 0.5em;\n
+}\n
+div.gadget-subsection ul{\n
+  list-style-position:  outside!important;\n
+  list-style-type:square!important;\n
+  margin: 0.5em;\n
+  margin-top: 0em;\n
+  padding: 0.5em;\n
+}\n
+\n
+\n
 </string> </value>
         </item>
         <item>
@@ -528,7 +553,7 @@ div.gadget_browser a {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8829</int> </value>
+            <value> <int>9381</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
