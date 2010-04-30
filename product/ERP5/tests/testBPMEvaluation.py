@@ -400,13 +400,12 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     self.destination, self.destination_section = self._createNode() \
         , self._createNode()
 
-  def _createBusinessStateList(self):
+  def _setTradeStateList(self):
     """Creates list of defaults states, set them on self as name_state property"""
+    tool = self.getCategoryTool()
     for state_name in ('ordered', 'delivered', 'invoiced', 'accounted',
         'paid'):
-      state_document = self.createBusinessState(self.business_process,
-        title=state_name)
-      setattr(self,'%s_state' % state_name, state_document)
+      setattr(self,'%s_state' % state_name, tool.trade_state._getOb(state_name))
 
   def _createRootDocument(self):
     self.root_document = self._createDocument(self.root_document_portal_type,
@@ -504,7 +503,7 @@ class TestBPMEvaluationDefaultProcessMixin:
   def _createBusinessProcess(self):
     self.business_process = self.createBusinessProcess(title=self.id(),
         referential_date='start_date')
-    self._createBusinessStateList()
+    self._setTradeStateList()
 
     self.order_path = self.createBusinessPath(self.business_process,
         successor_value=self.ordered_state,
@@ -552,7 +551,7 @@ class TestBPMEvaluationDifferentProcessMixin:
   def _createBusinessProcess(self):
     self.business_process = self.createBusinessProcess(title=self.id(),
         referential_date='start_date')
-    self._createBusinessStateList()
+    self._setTradeStateList()
 
     self.order_path = self.createBusinessPath(self.business_process,
         successor_value=self.ordered_state,
