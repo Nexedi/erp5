@@ -225,7 +225,8 @@ class ContributionTool(BaseTool):
     # Temp objects use the standard newContent from Folder
     if temp_object:
       # For temp_object creation, use the standard method
-      return BaseTool.newContent(self, id=id, portal_type=portal_type, temp_object=1, **kw)
+      return BaseTool.newContent(self, id=id, portal_type=portal_type,
+                                 temp_object=temp_object, **kw)
 
     # Then put the file inside ourselves for a short while
     if container_path is not None:
