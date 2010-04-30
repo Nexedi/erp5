@@ -104,15 +104,16 @@ class BusinessProcess(Path, XMLObject):
       **kw parameters follows the API of searchValues / contentValues
     """
     # Naive implementation to redo XXX
-    kw['portal_type'] = "Business State"
-    return self.contentValues(*args, **kw)
+    kw['portal_type'] = "Business Path"
+    return [x for x in [y.getSuccessorValue() for y in \
+            self.contentValues(*args, **kw)] if x is not None]
 
   # Access to path and states of the business process
   def isCompleted(self, explanation):
     """
       True if all states are completed
     """
-    for state in self.getStateValueList():
+    for path in self.getStateValueList():
       if not state.isCompleted(explanation):
         return False
     return True

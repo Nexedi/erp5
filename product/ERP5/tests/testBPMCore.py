@@ -46,7 +46,6 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   business_process_portal_type = 'Business Process'
   business_path_portal_type = 'Business Path'
-  business_state_portal_type = 'Business State'
 
   normal_resource_use_category_list = ['normal']
   invoicing_resource_use_category_list = ['discount', 'tax']
