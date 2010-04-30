@@ -100,7 +100,6 @@
                     <value>
                       <list>
                         <string>your_title</string>
-                        <string>your_send_notification_text</string>
                       </list>
                     </value>
                 </item>
