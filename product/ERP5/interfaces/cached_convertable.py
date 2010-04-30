@@ -90,13 +90,3 @@ class ICachedConvertable(Interface):
 
     **kw -- conversion parameters
     """
-
-  def clearConversionCache():
-    """
-    Clear the conversion cache for the current document.
-
-    NOTE: clearing conversion cache should be implemented
-    also with non-clearable caching systems, for example
-    by automatically adding the revision number to the 
-    conversion keys.
-    """
