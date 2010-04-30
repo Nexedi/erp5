@@ -2777,7 +2777,7 @@ class Base( CopyContainer,
     constraints = self.constraints
     if filt is not None:
       id_list = filt.get('id', None)
-      if isinstance(id_list, (list, tuple)):
+      if not isinstance(id_list, (list, tuple)):
         id_list = [id_list]
       constraints = filter(lambda x:x.id in id_list, constraints)
     return constraints
