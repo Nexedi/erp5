@@ -124,15 +124,15 @@ class TestDocumentConversionCache(TestDocumentMixin):
       transaction.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
-    document.clearConversionCache()
+    document.edit(title='Foo')
     transaction.commit()
     #Test Cache is cleared
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertEqual(document.getConversionSize(format=format), 0)
-    document.clearConversionCache()
+    document.edit(title='Bar')
     transaction.commit()
-    #Test Conversion Cache after clearConversionCache
+    #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
       transaction.commit()
@@ -160,15 +160,15 @@ class TestDocumentConversionCache(TestDocumentMixin):
       transaction.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
-    document.clearConversionCache()
+    document.edit(title='Foo')
     transaction.commit()
     #Test Cache is cleared
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertEqual(document.getConversionSize(format=format), 0)
-    document.clearConversionCache()
+    document.edit(title='Bar')
     transaction.commit()
-    #Test Conversion Cache after clearConversionCache
+    #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
       transaction.commit()
@@ -217,26 +217,30 @@ class TestDocumentConversionCache(TestDocumentMixin):
     self.tic()
     document_url = document.getRelativeUrl()
     document = self.portal.restrictedTraverse(document_url)
-    format_list = [format for format in document.getTargetFormatList() if format not in self.failed_format_list]
+    format_list = [format for format in document.getTargetFormatList()\
+                                      if format not in self.failed_format_list]
     if not format_list:
       self.fail('Target format list is empty')
     #Test Conversion Cache
     for format in format_list:
       document.convert(format=format)
-      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertTrue(document.hasConversion(format=format),
+                                      'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
-    document.clearConversionCache()
+    document.edit(title='Foo')
     transaction.commit()
     #Test Cache is cleared
     for format in format_list:
-      self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertFalse(document.hasConversion(format=format),
+                                      'Cache Storage failed for %s' % (format))
       self.assertEqual(document.getConversionSize(format=format), 0)
-    document.clearConversionCache()
+    document.edit(title='Bar')
     transaction.commit()
-    #Test Conversion Cache after clearConversionCache
+    #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
-      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertTrue(document.hasConversion(format=format),
+                                      'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
 
   def test_05_checksum_conversion(self):
@@ -254,19 +258,19 @@ class TestDocumentConversionCache(TestDocumentMixin):
     kw = {'format': 'html'}
     #Generate one conversion
     document.convert(**kw)
-    cache_id = document.generateCacheId(**kw)
+    cache_id = '%s%s' % (document._getCacheKey(),
+                                                document.generateCacheId(**kw))
     cache_factory = document._getCacheFactory()
     for cache_plugin in cache_factory.getCachePluginList():
-      cache_entry = cache_plugin.get(document._getCacheKey(), DEFAULT_CACHE_SCOPE)
-      value = cache_entry.getValue()
-      md5sum, mime, data = value.get(cache_id)
+      cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
+      md5sum, mime, data = cache_entry.getValue()
       #get data from cache
       self.assertTrue(md5sum)
       self.assertTrue(mime)
       self.assertTrue(data)
-      #Change md5 manually
-      value.update({cache_id: ('Anything which is not md5', mime, data)})
-      cache_plugin.set(document.getPath(), DEFAULT_CACHE_SCOPE, value, 0, 0)
+      #Change md5 manualy
+      cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE,
+                               ('Anything which is not md5', mime, data), 0, 0)
     self.assertRaises(KeyError, document.getConversion, format='html')
 
   def test_06_check_md5_is_updated(self):
