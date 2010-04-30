@@ -1577,10 +1577,6 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     transaction.commit()
     self.tic()
 
-    document.clearConversionCache()
-    transaction.commit()
-    self.tic()
-
     class ThreadWrappedConverter(Thread):
       """Use this class to run different convertion
       inside distinct Thread.
@@ -1640,6 +1636,38 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
       if not document.hasConversion(**convert_kw):
         result_list.append(i)
     self.assertEquals(result_list, [])
+
+  def test_conversionCache_reseting(self):
+    """Chack that modifying a document with edit method,
+    compute a new cache key and refresh cached conversions.
+    """
+    web_page_portal_type = 'Web Page'
+    module = self.portal.getDefaultModule(web_page_portal_type)
+    web_page = module.newContent(portal_type=web_page_portal_type)
+    html_content = """<html>
+      <head>
+        <title>My dirty title</title>
+        <style type="text/css">
+          a {color: #FFAA44;}
+        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+     </head>
+      <body>
+        <div>
+          <h1>My splendid title</h1>
+        </div>
+        <script type="text/javascript" src="http://example.com/something.js"/>
+      </body>
+    </html>
+    """
+    web_page.edit(text_content=html_content)
+    web_page.convert(format='txt')
+    self.assertTrue(web_page.hasConversion(format='txt'))
+    web_page.edit(title='Bar')
+    self.assertFalse(web_page.hasConversion(format='txt'))
+    web_page.convert(format='txt')
+    web_page.edit()
+    self.assertFalse(web_page.hasConversion(format='txt'))
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
