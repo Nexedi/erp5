@@ -37,7 +37,7 @@
  </chain>
  <chain>
   <type>Site Message</type>
-  <workflow>edit_workflow, event_interaction_workflow, event_workflow</workflow>
+  <workflow>cached_convertible_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow</workflow>
  </chain>
  <chain>
   <type>Support Request</type>
