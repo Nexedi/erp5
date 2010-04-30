@@ -70,6 +70,9 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
                       , PropertySheet.Arrow
                       , PropertySheet.TradeCondition
                       , PropertySheet.Order
+                      , PropertySheet.Task # XXX It is probably wrong to have
+                             # Task propertysheet, however many tests fails
+                             # if not present. Cleaning required.
                       )
 
     zope.interface.implements(interfaces.IAmountGenerator,
