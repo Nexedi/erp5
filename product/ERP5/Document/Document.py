@@ -749,7 +749,7 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     kw = dict(reference=self.getReference(), sort_on=(('version','descending'),))
     if language is not None:
       kw['language'] = language
-    res = catalog(**kw)
+    result_list = catalog(**kw)
 
     original_language = self.getOriginalLanguage()
     user_language = self.Localizer.get_selected_language()
