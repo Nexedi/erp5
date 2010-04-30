@@ -113,7 +113,7 @@ class BusinessProcess(Path, XMLObject):
     """
       True if all states are completed
     """
-    for path in self.getStateValueList():
+    for state in self.getStateValueList():
       if not state.isCompleted(explanation):
         return False
     return True
