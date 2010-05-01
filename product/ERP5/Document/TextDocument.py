@@ -291,15 +291,6 @@ class TextDocument(Document, TextContent):
       """
       return self.hasTextContent()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getData')
-    def getData(self):
-      """
-        A TextDocument store its data in the "text_content" property. Since
-        there is no such thing as data in TextDocument, getting data
-        is equivalent to getting some text_content.
-      """
-      return self.getTextContent()
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
     def getMimeTypeAndContent(self):
       """This method returns a tuple which contains mimetype and content."""
