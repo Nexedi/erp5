@@ -64,7 +64,6 @@ if discussion_post_uid is not None:\n
                                                              discussion_post.getTextContent())\n
   context.REQUEST.set(\'discussion_post_title\', text_content)\n
   context.REQUEST.set(\'discussion_post_text_content\', text_content)\n
-  context.log(context.getRelativeUrl())\n
 \n
 return context.DiscussionThread_viewCreateNewDiscussionPostDialog()\n
 
