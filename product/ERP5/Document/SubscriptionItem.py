@@ -134,7 +134,7 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
   def getGeneratedMovementList(self, context, movement_list=None,
                                 rounding=False):
     """
-    Input movement list comes from Open Order
+    Input movement list comes from Open Order XXX this code is duplicated.
     """
     ret = []
     rule = context.getSpecialiseValue()
@@ -153,7 +153,11 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
 
   def _getInputMovementList(self, context):
     """
-      Input movement list comes from order
+      Generate the list of input movements by looking at all
+      open order lines relating to this subscription item.
+
+      TODO: clever handling of quantity (based on the nature
+      of resource, ie. float or unit)
     """
     result = []
     catalog_tool = getToolByName(self, 'portal_catalog')
