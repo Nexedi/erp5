@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import string, re
+import re
 import PatternChecker
 from DummyField import fields
 from DateTime import DateTime
@@ -102,10 +102,10 @@ class StringBaseValidator(Validator):
       if isinstance(value, str):
         if field.has_value('whitespace_preserve'):
           if not field.get_value('whitespace_preserve'):
-            value = string.strip(value)
+            value = value.strip()
         else:
           # XXX Compatibility: use to prevent KeyError exception from get_value
-          value = string.strip(value)
+          value = value.strip()
       if field.get_value('required') and value == "":
         self.raise_error('required_not_found', field)
 
@@ -181,7 +181,7 @@ class EmailValidator(StringValidator):
         if value == "" and not field.get_value('required'):
             return value
 
-        if self.pattern.search(string.lower(value)) == None:
+        if self.pattern.search(value.lower()) == None:
             self.raise_error('not_email', field)
         return value
 
@@ -376,7 +376,7 @@ class LinesValidator(StringBaseValidator):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
     # Added as a patch for hidden values
     if isinstance(value, (list, tuple)):
-      value = string.join(value, "\n")
+      value = value.join('\n')
     # we need to add this check again
     if value == "" and not field.get_value('required'):
       return []
@@ -387,7 +387,7 @@ class LinesValidator(StringBaseValidator):
     if max_length and len(value) > max_length:
       self.raise_error('too_long', field)
     # split input into separate lines
-    lines = string.split(value, "\n")
+    lines = value.split("\n")
 
     # check whether we have too many lines
     max_lines = field.get_value('max_lines') or 0
@@ -401,7 +401,7 @@ class LinesValidator(StringBaseValidator):
     whitespace_preserve = field.get_value('whitespace_preserve')
     for line in lines:
       if not whitespace_preserve:
-        line = string.strip(line)
+        line = line.strip()
       if max_linelength and len(line) > max_linelength:
         self.raise_error('line_too_long', field)
       result.append(line)
@@ -418,7 +418,7 @@ class TextValidator(LinesValidator):
             return ""
 
         # join everything into string again with \n and return
-        return string.join(value, "\n")
+        return "\n".join(value)
 
 TextValidatorInstance = TextValidator()
 
