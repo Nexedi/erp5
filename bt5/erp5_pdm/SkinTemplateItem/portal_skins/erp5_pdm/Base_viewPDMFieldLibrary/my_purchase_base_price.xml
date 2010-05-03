@@ -122,7 +122,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getQuantityPrecisionFromResource(here.getPurchaseSupplyLinePriceCurrency())</string> </value>
+            <value> <string>here/getPurchaseSupplyLinePricePrecision</string> </value>
         </item>
       </dictionary>
     </pickle>

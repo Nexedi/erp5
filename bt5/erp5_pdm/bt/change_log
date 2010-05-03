@@ -1,3 +1,6 @@
+2010-05-03 kazuhiko
+* make precision of base_price in Resource_viewDefaultSaleSupplyLine same as SaleSupplyLine_view's one, and same for Internal Supply Line and Purchase Supply Line.
+
 2010-04-22 yusei
 * Fix Measure_reindexResource in conversion_interaction_workflow. Reindex resource only when measure is unindexed but resource is not.
 
