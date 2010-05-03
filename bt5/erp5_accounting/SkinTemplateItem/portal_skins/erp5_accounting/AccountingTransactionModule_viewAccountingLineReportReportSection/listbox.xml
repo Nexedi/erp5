@@ -111,8 +111,20 @@
                           <string>Section</string>
                         </tuple>
                         <tuple>
+                          <string>payment_title</string>
+                          <string>Section Bank Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_mode</string>
+                          <string>Payment Mode</string>
+                        </tuple>
+                        <tuple>
                           <string>mirror_section_title</string>
                           <string>Third Party</string>
+                        </tuple>
+                        <tuple>
+                          <string>mirror_payment_title</string>
+                          <string>Third Party Bank Account</string>
                         </tuple>
                         <tuple>
                           <string>function_title</string>
@@ -121,6 +133,10 @@
                         <tuple>
                           <string>project_title</string>
                           <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>product_line</string>
+                          <string>Product Line</string>
                         </tuple>
                         <tuple>
                           <string>date</string>
