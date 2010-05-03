@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts72636776.07</string> </value>
+            <value> <string>ts72871051.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -547,7 +547,23 @@ div.gadget-subsection ul{\n
   padding: 0.5em;\n
 }\n
 \n
-</string> </value>
+/* Hide title in gadget list mode as it usually duplicates gadget title */\n
+fieldset.gadget div.list_style a.title{\n
+  display: none;\n
+}\n
+\n
+/* Decrease padding for gadgets\' text */\n
+fieldset.gadget div.text{\n
+  padding: 3px!important;\n
+}\n
+\n
+/* Gadget My Documents */\n
+div.gadget-my-documents{\n
+}\n
+\n
+/* Gadget Latest Documents */\n
+div.gadget-latest-documents{\n
+}</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -555,7 +571,7 @@ div.gadget-subsection ul{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9442</int> </value>
+            <value> <int>9787</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

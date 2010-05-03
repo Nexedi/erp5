@@ -16,6 +16,7 @@
                 <string>all_columns</string>
                 <string>columns</string>
                 <string>count_method</string>
+                <string>css_class</string>
                 <string>domain_root_list</string>
                 <string>domain_tree</string>
                 <string>editable_columns</string>
@@ -148,6 +149,10 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>hidden_label gadget-my-documents</string> </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
