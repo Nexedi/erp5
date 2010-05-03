@@ -460,6 +460,11 @@ class LinesValidatorTestCase(ValidatorTestCase):
             'f', {'f' : 'foo\r\nbar '})
         self.assertEqual(['foo', 'bar '], result)
 
+    def test_empty_lines(self):
+        result = self.v.validate(
+            TestField('f', whitespace_preserve=True),
+            'f', {'f' : '\r\nfoo\r\n\r\nbar\r\n'})
+        self.assertEqual(['', 'foo', '', 'bar', ''], result)
 
 def test_suite():
     suite = unittest.TestSuite()

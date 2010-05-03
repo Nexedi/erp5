@@ -387,7 +387,7 @@ class LinesValidator(StringBaseValidator):
     if max_length and len(value) > max_length:
       self.raise_error('too_long', field)
     # split input into separate lines
-    lines = value.splitlines()
+    lines = value.replace('\r\n', '\n').split('\n')
 
     # check whether we have too many lines
     max_lines = field.get_value('max_lines') or 0
