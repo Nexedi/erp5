@@ -376,7 +376,7 @@ class LinesValidator(StringBaseValidator):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
     # Added as a patch for hidden values
     if isinstance(value, (list, tuple)):
-      value = value.join('\n')
+      value = '\n'.join(value)
     # we need to add this check again
     if value == "" and not field.get_value('required'):
       return []
