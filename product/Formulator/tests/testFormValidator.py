@@ -444,6 +444,23 @@ class DateTimeValidatorTestCase(ValidatorTestCase):
         self.assertEquals(10, result.hour())
         self.assertEquals(30, result.minute())
 
+class LinesValidatorTestCase(ValidatorTestCase):
+    def setUp(self):
+        self.v = Validator.LinesValidatorInstance
+
+    def test_basic(self):
+        result = self.v.validate(
+            TestField('f',),
+            'f', {'f' : 'foo\r\nbar'})
+        self.assertEqual(['foo', 'bar'], result)
+
+    def test_preserve_whitespace(self):
+        result = self.v.validate(
+            TestField('f', whitespace_preserve=True),
+            'f', {'f' : 'foo\r\nbar '})
+        self.assertEqual(['foo', 'bar '], result)
+
+
 def test_suite():
     suite = unittest.TestSuite()
 
@@ -453,6 +470,7 @@ def test_suite():
     suite.addTest(unittest.makeSuite(IntegerValidatorTestCase, 'test'))
     suite.addTest(unittest.makeSuite(FloatValidatorTestCase, 'test'))
     suite.addTest(unittest.makeSuite(DateTimeValidatorTestCase, 'test'))
+    suite.addTest(unittest.makeSuite(LinesValidatorTestCase, 'test'))
     
     return suite
 
