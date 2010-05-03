@@ -62,7 +62,7 @@ if discussion_post_uid is not None:\n
   title = \'Re: %s\' %discussion_post.getTitle()\n
   text_content = \'<blockquote>From: %s<br/>%s</blockquote>\' %(author_dict[\'author_title\'],\n
                                                              discussion_post.getTextContent())\n
-  context.REQUEST.set(\'discussion_post_title\', text_content)\n
+  context.REQUEST.set(\'discussion_post_title\', title)\n
   context.REQUEST.set(\'discussion_post_text_content\', text_content)\n
 \n
 return context.DiscussionThread_viewCreateNewDiscussionPostDialog()\n

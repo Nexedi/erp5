@@ -84,6 +84,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -136,7 +140,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: " Re: %s" % (context.portal_catalog.getObject(here.DiscussionThread_getSelectedPost()).title)</string> </value>
+            <value> <string>python: context.REQUEST.get(\'discussion_post_title\',\'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
