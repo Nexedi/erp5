@@ -181,3 +181,5 @@ class CachedConvertableMixin:
     if data is not None:
       data = str(data) # Usefull for Pdata
       self._setContentMd5(md5.new(data).hexdigest()) # Reindex is useless
+    else:
+      self._setContentMd5(None)
