@@ -59,7 +59,7 @@ class BusinessState(XMLObject):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IBusinessState
+  zope.interface.implements(
                             )
 
   # IBusinessCompletable implementation
