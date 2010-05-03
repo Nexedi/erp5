@@ -16,9 +16,12 @@ Currency | edit_workflow
 Currency | validation_workflow
 Email | edit_workflow
 Fax | edit_workflow
+File | cached_convertible_interaction_workflow
 File | edit_workflow
+Image | cached_convertible_interaction_workflow
 Image | edit_workflow
 Link | edit_workflow
+Notification Message | cached_convertible_interaction_workflow
 Notification Message | edit_workflow
 Notification Message | notification_message_workflow
 Organisation | edit_workflow

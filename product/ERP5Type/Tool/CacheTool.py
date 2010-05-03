@@ -89,6 +89,7 @@ class CacheTool(BaseTool):
               server = memcached_plugin.getUrlString('')
               init_dict = {
                 'server': server,
+                'expiration_time': cf.getCacheDuration(),
                 'server_max_key_length': memcached_plugin.getServerMaxKeyLength(),
                 'server_max_value_length': memcached_plugin.getServerMaxValueLength(),
                 'key_prefix': getattr(self, 'erp5_site_global_id', '')

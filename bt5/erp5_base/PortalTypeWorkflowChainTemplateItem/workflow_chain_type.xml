@@ -49,11 +49,11 @@
  </chain>
  <chain>
   <type>File</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>cached_convertible_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Image</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>cached_convertible_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Link</type>
@@ -61,7 +61,7 @@
  </chain>
  <chain>
   <type>Notification Message</type>
-  <workflow>edit_workflow, notification_message_workflow</workflow>
+  <workflow>cached_convertible_interaction_workflow, edit_workflow, notification_message_workflow</workflow>
  </chain>
  <chain>
   <type>Organisation</type>

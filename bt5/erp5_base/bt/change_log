@@ -1,3 +1,12 @@
+2010-04-29 kazuhiko
+* Remove specialise base category because it already exists in erp5_core.
+
+2010-04-27 yusei
+* Add bank account holder name field to bank account view.
+
+2010-04-26 kazuhiko
+* Add Delivery_isSplitAndDeferPossible script, that should be just a temporary implementation before merging new simulation API, where we can control more flexibly.
+
 2010-04-02 yusei
 * Add precision field to rounding model view.
 

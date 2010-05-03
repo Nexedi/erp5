@@ -14,12 +14,6 @@
             <value> <string>style_cache</string> </value>
         </item>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -43,12 +37,6 @@
                   </dictionary>
                 </state>
               </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>_owner</string> </key>
-            <value>
-              <none/>
             </value>
         </item>
         <item>
@@ -448,7 +436,7 @@ div#main_content > fieldset.webcontent {\n
 /* TODO: redo webcontent header spacing policy because lack of consistency\n
          (not tested with huge titles) */\n
 \n
-div#main_content > fieldset#fieldset_webcontent {padding: 2em}\n
+div#main_content > fieldset.webcontent {padding: 2em}\n
 \n
 div#main_content > fieldset.header {\n
   padding-bottom: 1em;\n

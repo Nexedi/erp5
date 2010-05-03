@@ -34,6 +34,7 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import installRealMemcachedTool
+import time
 
 class TestMemcachedTool(ERP5TypeTestCase):
   """
@@ -42,6 +43,8 @@ class TestMemcachedTool(ERP5TypeTestCase):
            positive or negative if the value already exists in an existing
            memcached server.
   """
+
+  expiration_time = 10 # second
 
   def getBusinessTemplateList(self):
     return tuple()
@@ -59,6 +62,13 @@ class TestMemcachedTool(ERP5TypeTestCase):
                                 portal_type='Memcached Plugin',
                                 int_index=0,
                                 url_string='127.0.0.1:11211')
+    if getattr(memcached_tool, 'memcached_plugin_with_expiration', None) is None:
+      memcached_tool.newContent(id='memcached_plugin_with_expiration',
+                                portal_type='Memcached Plugin',
+                                int_index=1,
+                                expiration_time=self.expiration_time,
+                                url_string='127.0.0.1:11211')
+
     transaction.commit()
     self.tic()
 
@@ -74,6 +84,12 @@ class TestMemcachedTool(ERP5TypeTestCase):
   def getMemcachedDict(self):
     return self.getPortal().portal_memcached.getMemcachedDict(key_prefix='unit_test',
                                                               plugin_path='portal_memcached/default_memcached_plugin')
+
+  def getMemcachedDictWithExpiration(self):
+    return self.getPortal().portal_memcached.getMemcachedDict(
+                                                        key_prefix='unit_test',
+               plugin_path='portal_memcached/memcached_plugin_with_expiration')
+
 
   def test_00_MemcachedToolIsEnabled(self):
     """
@@ -182,6 +198,22 @@ class TestMemcachedTool(ERP5TypeTestCase):
       pass
     else:
       self.fail('No error was raised when assigning a value to a non-string key.')
+
+  def test_07_checkExpirationTimeOfMemcachedDict(self):
+    """
+    Test that expiration time parameter is well handle by memcached tool
+    """
+    tested_dict = self.getMemcachedDictWithExpiration()
+    key = 'my_key'
+    value = 'a'*100
+    tested_dict[key] = value
+    transaction.commit()
+    self.assertEquals(tested_dict.get(key), value)
+    transaction.commit()
+    # Sleep 10s
+    time.sleep(self.expiration_time)
+    # now value should have expired
+    self.assertRaises(KeyError, tested_dict.__getitem__, key)
 
 if __name__ == '__main__':
   unittest.main()

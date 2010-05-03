@@ -87,17 +87,7 @@ class CachedConvertableMixin:
     http://pypi.python.org/pypi/uuid/ to generate
     a uuid stored as private property.
     """
-    return aq_base(self).getUid()
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'clearConversionCache')
-  def clearConversionCache(self):
-    """
-    """
-    if self.isTempObject():
-      self.temp_conversion_data = {}
-      return
-    for cache_plugin in self._getCacheFactory().getCachePluginList():
-      cache_plugin.delete(self._getCacheKey(), DEFAULT_CACHE_SCOPE)
+    return '%s:%s' % (aq_base(self).getUid(), self.getRevision())
 
   security.declareProtected(Permissions.View, 'hasConversion')
   def hasConversion(self, **kw):
@@ -129,7 +119,7 @@ class CachedConvertableMixin:
   def setConversion(self, data, mime=None, calculation_time=None, **kw):
     """
     """
-    cache_id = self.generateCacheId(**kw)
+    cache_id = '%s%s' % (self._getCacheKey(), self.generateCacheId(**kw))
     if self.isTempObject():
       if getattr(aq_base(self), 'temp_conversion_data', None) is None:
         self.temp_conversion_data = {}
@@ -139,31 +129,27 @@ class CachedConvertableMixin:
     cache_duration = cache_factory.cache_duration
     if data is not None:
       for cache_plugin in cache_factory.getCachePluginList():
-        try:
-          cache_entry = cache_plugin.get(self._getCacheKey(), DEFAULT_CACHE_SCOPE)
-          cache_dict = cache_entry.getValue()
-        except KeyError:
-          cache_dict = {}
-        cache_dict.update({cache_id: (self.getContentMd5(), mime, aq_base(data))})
-        cache_plugin.set(self._getCacheKey(), DEFAULT_CACHE_SCOPE,
-                         cache_dict, calculation_time=calculation_time,
+        cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE,
+                         (self.getContentMd5(), mime, aq_base(data)),
+                         calculation_time=calculation_time,
                          cache_duration=cache_duration)
 
   security.declareProtected(Permissions.View, 'getConversion')
   def getConversion(self, **kw):
     """
     """
-    cache_id = self.generateCacheId(**kw)
+    cache_id = '%s%s' % (self._getCacheKey(), self.generateCacheId(**kw))
     if self.isTempObject():
       return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
     for cache_plugin in self._getCacheFactory().getCachePluginList():
-      cache_entry = cache_plugin.get(self._getCacheKey(), DEFAULT_CACHE_SCOPE)
-      data_list = cache_entry.getValue().get(cache_id)
-      if data_list:
-        md5sum, mime, data = data_list
-        if md5sum != self.getContentMd5():
-          raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
-        return mime, data
+      cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
+      if cache_entry is not None:
+        data_list = cache_entry.getValue()
+        if data_list:
+          md5sum, mime, data = data_list
+          if md5sum != self.getContentMd5():
+            raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
+          return mime, data
     raise KeyError, 'Conversion cache key does not exists for %r' % cache_id
 
   security.declareProtected(Permissions.View, 'getConversionSize')

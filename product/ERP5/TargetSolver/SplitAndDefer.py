@@ -104,10 +104,14 @@ class SplitAndDefer(CopyToTarget):
           movement_dict.update(**{
             prop: simulation_movement.getProperty(prop)})
       new_movement = applied_rule.newContent(**movement_dict)
-      new_movement.recordProperty('start_date')
-      new_movement.recordProperty('stop_date')
-      new_movement.edit(start_date=self.start_date,
-                        stop_date=self.stop_date)
+      start_date = getattr(self, 'start_date', None)
+      if start_date is not None:
+        new_movement.recordProperty('start_date')
+        new_movement.edit(start_date=start_date)
+      stop_date = getattr(self, 'stop_date', None)
+      if stop_date is not None:
+        new_movement.recordProperty('stop_date')
+        new_movement.edit(stop_date=stop_date)
       new_movement.activate(**self.additional_parameters).expand()
     # adopt new quantity on original simulation movement
     simulation_movement.edit(quantity=new_movement_quantity)

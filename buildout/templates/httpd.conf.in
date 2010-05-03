@@ -154,4 +154,6 @@ SSLRandomSeed startup builtin
 SSLRandomSeed connect builtin
 </IfModule>
 
+${configuration:httpd_extra_conf}
+
 Include ${buildout:var-directory}/etc/*.vhost.conf

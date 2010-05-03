@@ -33,7 +33,7 @@ import time
 
 import transaction
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from testDms import TestDocumentMixin
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from AccessControl.SecurityManagement import newSecurityManager
@@ -59,7 +59,7 @@ def makeFileUpload(name, as_name=None):
   return FileUpload(path, as_name)
 
 
-class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
+class TestDocumentConversionCache(TestDocumentMixin):
   """
     Test basic document - related operations
   """
@@ -76,39 +76,7 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
                        )
 
   def getTitle(self):
-    return "DMS"
-
-  ## setup
-
-  def afterSetUp(self):
-    self.setSystemPreference()
-    # set a dummy localizer (because normally it is cookie based)
-    self.portal.Localizer = DummyLocalizer()
-    # make sure every body can traverse document module
-    self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
-    self.portal.document_module.manage_permission(
-                           'Access contents information', ['Anonymous'], 1)
-
-  def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
-    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
-    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    default_pref.setPreferredConversionCacheFactory('document_cache_factory')
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
-
-  def getDocumentModule(self):
-    return getattr(self.getPortal(),'document_module')
-
-  def getBusinessTemplateList(self):
-    return ('erp5_base',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms')
-
-  def getNeededCategoryList(self):
-    return ()
+    return "OOo Conversion Cache"
 
   def beforeTearDown(self):
     """
@@ -116,18 +84,6 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
       - clear document module
     """
     self.clearDocumentModule()
-
-  def clearDocumentModule(self):
-    """
-      Remove everything after each run
-    """
-    transaction.abort()
-    self.tic()
-    doc_module = self.getDocumentModule()
-    ids = [i for i in doc_module.objectIds()]
-    doc_module.manage_delObjects(ids)
-    transaction.commit()
-    self.tic()
 
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
@@ -168,15 +124,15 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
       transaction.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
-    document.clearConversionCache()
+    document.edit(title='Foo')
     transaction.commit()
     #Test Cache is cleared
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertEqual(document.getConversionSize(format=format), 0)
-    document.clearConversionCache()
+    document.edit(title='Bar')
     transaction.commit()
-    #Test Conversion Cache after clearConversionCache
+    #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
       transaction.commit()
@@ -204,15 +160,15 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
       transaction.commit()
       self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
-    document.clearConversionCache()
+    document.edit(title='Foo')
     transaction.commit()
     #Test Cache is cleared
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
       self.assertEqual(document.getConversionSize(format=format), 0)
-    document.clearConversionCache()
+    document.edit(title='Bar')
     transaction.commit()
-    #Test Conversion Cache after clearConversionCache
+    #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
       transaction.commit()
@@ -261,26 +217,30 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
     document_url = document.getRelativeUrl()
     document = self.portal.restrictedTraverse(document_url)
-    format_list = [format for format in document.getTargetFormatList() if format not in self.failed_format_list]
+    format_list = [format for format in document.getTargetFormatList()\
+                                      if format not in self.failed_format_list]
     if not format_list:
       self.fail('Target format list is empty')
     #Test Conversion Cache
     for format in format_list:
       document.convert(format=format)
-      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertTrue(document.hasConversion(format=format),
+                                      'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
-    document.clearConversionCache()
+    document.edit(title='Foo')
     transaction.commit()
     #Test Cache is cleared
     for format in format_list:
-      self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertFalse(document.hasConversion(format=format),
+                                      'Cache Storage failed for %s' % (format))
       self.assertEqual(document.getConversionSize(format=format), 0)
-    document.clearConversionCache()
+    document.edit(title='Bar')
     transaction.commit()
-    #Test Conversion Cache after clearConversionCache
+    #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
-      self.assertTrue(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
+      self.assertTrue(document.hasConversion(format=format),
+                                      'Cache Storage failed for %s' % (format))
       self.assertTrue(document.getConversionSize(format=format))
 
   def test_05_checksum_conversion(self):
@@ -298,19 +258,19 @@ class TestDocumentConversionCache(ERP5TypeTestCase, ZopeTestCase.Functional):
     kw = {'format': 'html'}
     #Generate one conversion
     document.convert(**kw)
-    cache_id = document.generateCacheId(**kw)
+    cache_id = '%s%s' % (document._getCacheKey(),
+                                                document.generateCacheId(**kw))
     cache_factory = document._getCacheFactory()
     for cache_plugin in cache_factory.getCachePluginList():
-      cache_entry = cache_plugin.get(document._getCacheKey(), DEFAULT_CACHE_SCOPE)
-      value = cache_entry.getValue()
-      md5sum, mime, data = value.get(cache_id)
+      cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
+      md5sum, mime, data = cache_entry.getValue()
       #get data from cache
       self.assertTrue(md5sum)
       self.assertTrue(mime)
       self.assertTrue(data)
-      #Change md5 manually
-      value.update({cache_id: ('Anything which is not md5', mime, data)})
-      cache_plugin.set(document.getPath(), DEFAULT_CACHE_SCOPE, value, 0, 0)
+      #Change md5 manualy
+      cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE,
+                               ('Anything which is not md5', mime, data), 0, 0)
     self.assertRaises(KeyError, document.getConversion, format='html')
 
   def test_06_check_md5_is_updated(self):

@@ -9,7 +9,7 @@
  </chain>
  <chain>
   <type>Web Page</type>
-  <workflow>edit_workflow, publication_workflow</workflow>
+  <workflow>cached_convertible_interaction_workflow, edit_workflow, publication_workflow</workflow>
  </chain>
  <chain>
   <type>Web Section</type>

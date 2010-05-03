@@ -13,16 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>editable</string>
-                <string>enabled</string>
                 <string>title</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_send_notification_text</string> </value>
+            <value> <string>listbox_creation_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -59,14 +57,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -76,10 +66,6 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -90,28 +76,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Use this text area to specify email addresses or persons\' titles which should receive notification about this post\'s creation. Each on a new line. Wildcards like \'%\' are supported.</string> </value>
-                </item>
-                <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_area_field</string> </value>
+                    <value> <string>my_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -119,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Notification list</string> </value>
+                    <value> <string>Creation Date</string> </value>
                 </item>
               </dictionary>
             </value>

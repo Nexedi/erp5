@@ -13,9 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>selection_name</string>
                 <string>columns</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -85,24 +88,20 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_mirror_section_title</string>
-                          <string>Third Party</string>
+                          <string>source_section_title</string>
+                          <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Transaction Type</string>
+                          <string>destination_section_title</string>
+                          <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>operation_date</string>
-                          <string>Accounting Operation Date</string>
+                          <string>delivery.start_date</string>
+                          <string>Invoice Date</string>
                         </tuple>
                         <tuple>
                           <string>reference</string>
                           <string>Document Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>specific_reference</string>
-                          <string>Transaction Reference</string>
                         </tuple>
                         <tuple>
                           <string>translated_simulation_state_title</string>
@@ -120,8 +119,81 @@
                     <value> <string>Base_viewAdvancedInvoicingFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Invoice Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Document Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>sale_invoice_module_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>ASC</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>source_section_title</string>
+                          <string>Supplier</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Client</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery.start_date</string>
+                          <string>Invoice Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Document Reference</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

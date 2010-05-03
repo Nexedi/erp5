@@ -267,6 +267,16 @@ class Alarm(XMLObject, PeriodicityMixin):
     """
     return self.hasActivity(only_valid=1)
 
+  def __getTag(self, new):
+    # Tag is generated from portal_ids so that it can be retrieved
+    # later when creating an active process for example
+    portal_ids = self.getPortalObject().portal_ids
+    if new:
+      id = portal_ids.generateNewId(id_generator='uid', id_group=self.getId())
+    else:
+      id = portal_ids.getLastLengthGeneratedId(id_group=self.getId())
+    return '%s_%s' % (self.getRelativeUrl(), id)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'activeSense')
   def activeSense(self, fixit=0, params=None):
     """
@@ -299,11 +309,9 @@ class Alarm(XMLObject, PeriodicityMixin):
       if method_id not in (None, ''):
         # A tag is provided as a parameter in order to be
         # able to notify the user after all processes are ended
-        # Tag is generated from portal_ids so that it can be retrieved
-        # later when creating an active process for example
         # We do some inspection to keep compatibility
         # (because fixit and tag were not set previously)
-        tag = str(self.portal_ids.generateNewId(id_generator='uid', id_group=self.getId()))
+        tag = self.__getTag(True)
         method = getattr(self, method_id)
         func_code = method.func_code
         try:
@@ -526,10 +534,8 @@ Alarm Tool Node: %s
     new results, then this process will be added to the list
     of processes
     """
-    tag = self.portal_ids.getLastLengthGeneratedId(id_group=self.getId())
     activate_kw = kw.get('activate_kw', {})
-    if tag is not None:
-      activate_kw.setdefault('tag', str(tag))
+    activate_kw.setdefault('tag', self.__getTag(False))
     portal_activities = getToolByName(self,'portal_activities')
     active_process = portal_activities.newActiveProcess(start_date=DateTime(),
                                                         causality_value=self,

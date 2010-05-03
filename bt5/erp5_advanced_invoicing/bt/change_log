@@ -1,3 +1,8 @@
+2010-04-27 yusei
+* Fix list view forms for sale/purchase invoice module.
+* Fix purchase invoice default view action. View form for purchase invoice transaction was used.
+* Remove detail action from purchase invoice portal type. It was not an action for purchase invoice.
+
 2010-04-08 yusuke
 * Reverted previous change.
 

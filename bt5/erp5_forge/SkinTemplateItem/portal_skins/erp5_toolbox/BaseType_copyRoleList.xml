@@ -57,6 +57,15 @@
 cb_data = context.manage_copyObjects(\n
      ids=[r.getId() for r in context.contentValues(portal_type=\'Role Information\')])\n
 \n
+if portal_type_group_list:\n
+  for ti in context.portal_types.contentValues():\n
+    if ti == context or ti.getId() in portal_type_list:\n
+      continue\n
+    for group in ti.getTypeGroupList():\n
+      if group in portal_type_group_list:\n
+        portal_type_list.append(ti.getId())\n
+        break\n
+\n
 for ti in portal_type_list:\n
   destination_portal_type = context.portal_types[ti]\n
   if remove_existing_roles:\n
@@ -66,7 +75,8 @@ for ti in portal_type_list:\n
   destination_portal_type.manage_pasteObjects(cb_data)\n
  \n
 return context.Base_redirect(form_id,\n
-  keep_items=dict(portal_status_message=translateString(\'Roles copied\')))\n
+  keep_items=dict(portal_status_message=translateString(\'Roles copied in ${type_list}\',\n
+                          mapping=dict(type_list=\', \'.join(portal_type_list)))))\n
 </string> </value>
         </item>
         <item>
@@ -77,7 +87,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>remove_existing_roles, portal_type_list, form_id=\'view\'</string> </value>
+            <value> <string>remove_existing_roles, portal_type_list, portal_type_group_list, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -97,7 +107,7 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -105,7 +115,9 @@ return context.Base_redirect(form_id,\n
                           <tuple>
                             <string>remove_existing_roles</string>
                             <string>portal_type_list</string>
+                            <string>portal_type_group_list</string>
                             <string>form_id</string>
+                            <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>_getattr_</string>
@@ -116,6 +128,7 @@ return context.Base_redirect(form_id,\n
                             <string>r</string>
                             <string>cb_data</string>
                             <string>ti</string>
+                            <string>group</string>
                             <string>_getitem_</string>
                             <string>destination_portal_type</string>
                             <string>dict</string>

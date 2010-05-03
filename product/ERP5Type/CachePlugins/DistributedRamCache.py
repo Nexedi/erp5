@@ -57,6 +57,7 @@ class DistributedRamCache(BaseCache):
 
   def __init__(self, params={}):
     self._servers = params.get('server', '')
+    self._expiration_time = params.get('expiration_time', 0)
     self._server_max_key_length = params.get('server_max_key_length', 250)
     self._server_max_value_length = params.get('server_max_value_length', 1024*1024)
     self._debug_level = params.get('debug_level', 0)
@@ -71,7 +72,8 @@ class DistributedRamCache(BaseCache):
   def _getMemcachedDict(self):
     """return a threading safe MemcachedDict instance
     """
-    configuration_key = (self._servers, self._server_max_key_length,
+    configuration_key = (self._servers, self._expiration_time,
+                         self._server_max_key_length,
                          self._server_max_value_length,
                          self._debug_level, self._key_prefix)
     try:

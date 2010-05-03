@@ -1,30 +1,30 @@
 <allowed_content_type_list>
  <portal_type id="Contribution Tool">
-  <item>Spreadsheet</item>
-  <item>File</item>
-  <item>Text</item>
   <item>Document Ingestion Message</item>
-  <item>Web Page</item>
-  <item>Presentation</item>
   <item>Drawing</item>
-  <item>PDF</item>
+  <item>File</item>
   <item>Image</item>
+  <item>PDF</item>
+  <item>Presentation</item>
+  <item>Spreadsheet</item>
+  <item>Text</item>
+  <item>Web Page</item>
  </portal_type>
  <portal_type id="Document Ingestion Module">
   <item>Document Ingestion Message</item>
  </portal_type>
  <portal_type id="Document Module">
-  <item>File</item>
   <item>Drawing</item>
+  <item>File</item>
   <item>PDF</item>
-  <item>Text</item>
   <item>Presentation</item>
   <item>Spreadsheet</item>
+  <item>Text</item>
  </portal_type>
  <portal_type id="Drawing">
-  <item>Web Page</item>
-  <item>Role Definition</item>
   <item>Image</item>
+  <item>Role Definition</item>
+  <item>Web Page</item>
  </portal_type>
  <portal_type id="External Source Module">
   <item>RSS Feed</item>
@@ -43,28 +43,28 @@
   <item>Role Definition</item>
  </portal_type>
  <portal_type id="Presentation">
-  <item>Web Page</item>
-  <item>Role Definition</item>
   <item>Image</item>
+  <item>Role Definition</item>
+  <item>Web Page</item>
  </portal_type>
  <portal_type id="Spreadsheet">
+  <item>Image</item>
   <item>Role Definition</item>
   <item>Web Page</item>
-  <item>Image</item>
  </portal_type>
  <portal_type id="Text">
   <item>Image</item>
-  <item>Web Page</item>
   <item>Role Definition</item>
+  <item>Web Page</item>
  </portal_type>
  <portal_type id="URL Crawler">
-  <item>Presentation</item>
-  <item>Web Page</item>
-  <item>Spreadsheet</item>
-  <item>Image</item>
   <item>Drawing</item>
-  <item>Text</item>
   <item>File</item>
+  <item>Image</item>
   <item>PDF</item>
+  <item>Presentation</item>
+  <item>Spreadsheet</item>
+  <item>Text</item>
+  <item>Web Page</item>
  </portal_type>
 </allowed_content_type_list>

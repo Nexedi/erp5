@@ -114,6 +114,7 @@
                     <value>
                       <list>
                         <string>my_subject_list</string>
+                        <string>your_send_notification_text</string>
                       </list>
                     </value>
                 </item>

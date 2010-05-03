@@ -34,6 +34,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.CachePlugins.DummyCache import DummyCache
 from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.Cache import CachingMethod
 from zLOG import LOG
 import transaction
 
@@ -50,7 +51,8 @@ class TestingCache(DummyCache):
 
 class TestCacheTool(ERP5TypeTestCase):
 
-  py_script_id = "testCachedMethod"
+  cache_duration = 10 # second
+  python_script_id = "testCachedMethod"
 
   def getTitle(self):
     return "Cache Tool"
@@ -111,62 +113,68 @@ class TestCacheTool(ERP5TypeTestCase):
     # factories first ram_cache_factory (to test Ram Cache Plugin) 
     if getattr(portal_caches, 'ram_cache_factory', None) is None:
       ram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                   id='ram_cache_factory',
-                                                   container=portal_caches)
+                                            id='ram_cache_factory',
+                                            container=portal_caches,
+                                            cache_duration=self.cache_duration)
       ram_cache_plugin = ram_cache_factory.newContent(portal_type="Ram Cache")
       ram_cache_plugin.setIntIndex(0)
 
     if getattr(portal_caches, 'another_ram_cache_factory', None) is None:
       cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                   id='another_ram_cache_factory',
-                                                   container=portal_caches)
+                                            id='another_ram_cache_factory',
+                                            container=portal_caches,
+                                            cache_duration=self.cache_duration)
       cache_plugin = cache_factory.newContent(portal_type="Ram Cache")
       cache_plugin.setIntIndex(0)
 
     if getattr(portal_caches, 'distributed_ram_cache_factory', None) is None:
       ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
       dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                    id='distributed_ram_cache_factory',
-                                                    container=portal_caches)
+                                            id='distributed_ram_cache_factory',
+                                            container=portal_caches,
+                                            cache_duration=self.cache_duration)
       dram_cache_plugin = dram_cache_factory.newContent(
-              portal_type="Distributed Ram Cache", specialise='portal_memcached/default_memcached_plugin' )
+                        portal_type="Distributed Ram Cache",
+                        specialise='portal_memcached/default_memcached_plugin')
       dram_cache_plugin.setIntIndex(0)
 
     if getattr(portal_caches, 'distributed_persistent_cache_factory', None) is None:
       ## distributed_ram_cache_factory (to test Distributed Ram Cache Plugin) 
       dram_cache_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                    id='distributed_persistent_cache_factory',
-                                                    container=portal_caches)
+                                      id='distributed_persistent_cache_factory',
+                                      container=portal_caches,
+                                      cache_duration=self.cache_duration)
       dram_cache_plugin = dram_cache_factory.newContent(
-              portal_type="Distributed Ram Cache", specialise='portal_memcached/flare' )
+                                           portal_type="Distributed Ram Cache",
+                                           specialise='portal_memcached/flare')
       dram_cache_plugin.setIntIndex(0)
 
     if getattr(portal_caches, 'erp5_user_factory', None) is None:
 
       ## erp5_user_factory (to test a combination of all cache plugins)
       erp5_user_factory = portal_caches.newContent(portal_type="Cache Factory",
-                                                   id="erp5_user_factory")
+                                            id="erp5_user_factory",
+                                            cache_duration=self.cache_duration)
 
       ram_cache_plugin = erp5_user_factory.newContent(portal_type="Ram Cache")
       ram_cache_plugin.setIntIndex(0)
-      dram_cache_plugin = erp5_user_factory.newContent(portal_type="Distributed Ram Cache",
-                                                       specialise='portal_memcached/default_memcached_plugin')
+      dram_cache_plugin = erp5_user_factory.newContent(
+                        portal_type="Distributed Ram Cache",
+                        specialise='portal_memcached/default_memcached_plugin')
       dram_cache_plugin.setIntIndex(1)
     ## update Ram Cache structure
     portal_caches.updateCache()
 
-    from Products.ERP5Type.Cache import CachingMethod
-
     ## do we have the same structure we created above?
-    self.assert_('ram_cache_factory' in CachingMethod.factories)
-    self.assert_('another_ram_cache_factory' in CachingMethod.factories)
-    self.assert_('distributed_ram_cache_factory' in CachingMethod.factories)
-    self.assert_('distributed_persistent_cache_factory' in CachingMethod.factories)
-    self.assert_('erp5_user_factory' in CachingMethod.factories)
+    self.assertTrue('ram_cache_factory' in CachingMethod.factories)
+    self.assertTrue('another_ram_cache_factory' in CachingMethod.factories)
+    self.assertTrue('distributed_ram_cache_factory' in CachingMethod.factories)
+    self.assertTrue('distributed_persistent_cache_factory' in CachingMethod.factories)
+    self.assertTrue('erp5_user_factory' in CachingMethod.factories)
 
   def createCachedMethod(self):
     portal = self.getPortal()
-    if getattr(portal, 'testCachedMethod', None) is not None:
+    if getattr(portal, self.python_script_id, None) is not None:
       return
     ## add test cached method
     py_script_params = "value=10000, portal_path=('','erp5'), result=''"
@@ -184,15 +192,15 @@ veryExpensiveMethod(value)
 return result
 """
     portal.manage_addProduct['PythonScripts'].manage_addPythonScript(
-                                                id=self.py_script_id)
-    py_script_obj = getattr(portal, self.py_script_id)
+                                                id=self.python_script_id)
+    py_script_obj = getattr(portal, self.python_script_id)
     py_script_obj.ZPythonScript_edit(py_script_params, py_script_body)
+    return 
 
   def test_01_CacheFactoryOnePlugin(self):
     """ Test cache factory containing only one cache plugin. """
     portal = self.getPortal()
-    from Products.ERP5Type.Cache import CachingMethod
-    py_script_obj = getattr(portal, self.py_script_id)
+    py_script_obj = getattr(portal, self.python_script_id)
     for cf_name, clear_allowed in (('ram_cache_factory', True),
                     ('distributed_ram_cache_factory', False),
                     ('distributed_persistent_cache_factory', False),
@@ -205,8 +213,7 @@ return result
   def test_02_CacheFactoryMultiPlugins(self):
     """ Test a cache factory containing multiple cache plugins. """
     portal = self.getPortal()
-    from Products.ERP5Type.Cache import CachingMethod
-    py_script_obj = getattr(portal, self.py_script_id)
+    py_script_obj = getattr(portal, self.python_script_id)
     cf_name = 'erp5_user_factory'
     my_cache = CachingMethod(py_script_obj,
                              'py_script_obj',
@@ -300,7 +307,6 @@ return result
   def test_03_cachePersistentObjects(self):
     # storing persistent objects in cache is not allowed, but this check is
     # only performed in unit tests.
-    from Products.ERP5Type.Cache import CachingMethod
     def func():
       # return a persistent object
       return self.portal
@@ -322,8 +328,8 @@ return result
     portal = self.getPortal()
     nb_iterations = 30000
     result = 'Something short'
-    from Products.ERP5Type.Cache import CachingMethod
-    py_script_obj = getattr(portal, self.py_script_id)
+
+    py_script_obj = getattr(portal, self.python_script_id)
 
     ram_cached_method = CachingMethod(py_script_obj,
                              'py_script_obj',
@@ -381,8 +387,11 @@ return result
                                                                 connection_pool
     getattr(connection_pool, 'local_dict', {}).clear()
 
+    python_script_id = 'ERP5Site_getLargeStringValue'
+    portal.manage_addProduct['PythonScripts'].manage_addPythonScript(
+                                                           id=python_script_id)
     # Edit python script which return large value ie: 25 MB string
-    py_script_obj = getattr(portal, self.py_script_id)
+    py_script_obj = getattr(portal, python_script_id)
     py_script_params = "value=10000, long_parameter=''"
     py_script_body = """
 def veryExpensiveMethod(value):
@@ -401,9 +410,8 @@ return 'a' * 1024 * 1024 * 25
     nb_iterations = 30000
     result = 'a' * 1024 * 1024 * 25 # 25 MB
     long_parameter = 'a' * 1024
-    from Products.ERP5Type.Cache import CachingMethod
-    py_script_id = "testCachedMethod"
-    py_script_obj = getattr(portal, py_script_id)
+
+    py_script_obj = getattr(portal, python_script_id)
 
     # First, call a ram based distributed cache to
     # trig a bug which fill in the MemcachedDict connection pool
@@ -447,6 +455,57 @@ return 'a' * 1024 * 1024 * 25
     self.assert_(1.0 > calculation_time)
     self.assertEquals(cached, result)
     transaction.commit()
+
+  def test_06_CheckCacheExpiration(self):
+    """Check that expiracy is well handle by Cache Plugins
+    """
+    print
+    print "="*40
+    print "TESTING: Cache Expiration Time"
+    portal = self.getPortal()
+    nb_iterations = 30000
+
+    py_script_obj = getattr(portal, self.python_script_id)
+
+    cache_factory_list = ('ram_cache_factory', 'distributed_ram_cache_factory',
+                          'distributed_persistent_cache_factory')
+    for cache_factory in cache_factory_list:
+      print '\n\t==> %s' % cache_factory
+      cached_method = CachingMethod(py_script_obj,
+                               'py_script_obj',
+                               cache_factory=cache_factory)
+
+      # First call, fill the cache
+      start = time.time()
+      cached_method(nb_iterations, portal_path='something')
+      transaction.commit()
+      end = time.time()
+      calculation_time = end-start
+      print "\n\tCalculation time (1st call)", calculation_time
+      self.assertTrue(calculation_time > 1.0)
+
+      ## 2nd call - should be cached now
+      start = time.time()
+      cached = cached_method(nb_iterations, portal_path='something')
+      transaction.commit()
+      end = time.time()
+      calculation_time = end-start
+      print "\n\tCalculation time (2nd call)", calculation_time
+      self.assertTrue(calculation_time < 1.0)
+
+      # Wait expiration period then check that value is computed
+      time_left_to_wait = (self.cache_duration - calculation_time)
+      print "\n\tSleep %.2f seconds to wait expiration time" % time_left_to_wait
+      time.sleep(time_left_to_wait)
+
+      # Call conversion for ram_cache_factory
+      start = time.time()
+      cached = cached_method(nb_iterations, portal_path='something')
+      transaction.commit()
+      end = time.time()
+      calculation_time = end-start
+      print "\n\tCalculation time (3rd call)", calculation_time
+      self.assertTrue(calculation_time > 1.0)
 
   def test_99_CachePluginInterface(self):
     """Test Class against Interface

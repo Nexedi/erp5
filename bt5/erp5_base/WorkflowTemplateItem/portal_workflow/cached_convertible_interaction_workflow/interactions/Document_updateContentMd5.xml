@@ -31,13 +31,19 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>clearCacheUponUpload</string>
+                <string>updateContentMd5</string>
               </list>
             </value>
         </item>
         <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>This interaction clears the conversion cache of Text Document each time the text content is changed.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -47,26 +53,25 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TextDocument_setTextContent</string> </value>
+            <value> <string>Document_updateContentMd5</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
+                <string>_setFile,</string>
                 <string>_setTextContent</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>once_per_transaction</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Web Page</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
@@ -77,7 +82,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Update Text Content</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

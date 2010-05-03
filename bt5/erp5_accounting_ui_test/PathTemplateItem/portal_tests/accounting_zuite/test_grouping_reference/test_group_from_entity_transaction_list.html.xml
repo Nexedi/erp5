@@ -97,7 +97,7 @@ Grouping from entity transaction view\n
   <td>//label[contains(text(),"Total Selected Amount")]/../div[1]/</td>\n
   <td>0.00</td>\n
 </tr>\n
-<tr tal:condition="is_selenium_0_8">\n
+<tr>\n
   <td>verifySelectedLabel</td>\n
   <td>field_your_node</td>\n
   <td></td>\n
@@ -226,7 +226,7 @@ Grouping from entity transaction view\n
   <td>on</td>\n
 </tr>\n
 \n
-<tr tal:condition="is_selenium_0_8">\n
+<tr>\n
   <td>verifySelectedLabel</td>\n
   <td>field_your_node</td>\n
   <td>41 - Receivable</td>\n

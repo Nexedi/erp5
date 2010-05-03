@@ -149,7 +149,7 @@ div {\n
   width: 936px; /* XXX-JPS Related to front splash and page width - should become dynamic */\n
 }\n
 \n
-div.document div.content fieldset#fieldset_bottom div.input {\n
+div.document div.content fieldset.bottom div.input {\n
 \n
   margin-left:0;\n
   margin-top:0.2em;\n
@@ -162,20 +162,20 @@ div.document div.content fieldset#fieldset_bottom div.input {\n
 \n
 }\n
 \n
-.content #fieldset_left .field .input,\n
-.content #fieldset_right .field .input,\n
-.content #fieldset_center .field .input,\n
-.content #fieldset_bottom .field .input{\n
+.content fieldset.left .field .input,\n
+.content fieldset.right .field .input,\n
+.content fieldset.center .field .input,\n
+.content fieldset.bottom .field .input{\n
 \n
 float: left;\n
 \n
 }\n
 \n
-.content .field label, .content #fieldset_right .field .input,\n
-.content .field label, .content #fieldset_left .field .input,\n
-.content .field label, .content #fieldset_center .field .input,\n
-.content .field label, .content #fieldset_center_right .field .input,\n
-.content .field label, .content #fieldset_center_left .field .input {\n
+.content .field label, .content fieldset.right .field .input,\n
+.content .field label, .content fieldset.left .field .input,\n
+.content .field label, .content fieldset.center .field .input,\n
+.content .field label, .content fieldset.center_right .field .input,\n
+.content .field label, .content fieldset.center_left .field .input {\n
 \n
   width: auto;\n
 \n
@@ -208,8 +208,8 @@ width:30%;\n
 \n
 }\n
 \n
-#fieldset_left,\n
-#fieldset_right {\n
+fieldset.left,\n
+fieldset.right {\n
 \toverflow: hidden;\n
 \n
 \n
@@ -260,9 +260,9 @@ a img {\n
 \n
 }\n
 \n
-#fieldset_left h4,\n
-#fieldset_right h4,\n
-#fieldset_center h4{\n
+fieldset.left h4,\n
+fieldset.right h4,\n
+fieldset.center h4{\n
 \n
 \tmargin:0 0 20px 0;\n
 \tpadding:10px;\n
@@ -291,7 +291,7 @@ div#wrapper_headline span.header_title {\n
 }\n
 \n
 div.headline,\n
-#fieldset_webcontent_header_bottom{\n
+fieldset.webcontent_header_bottom{\n
 \n
   display:none;\n
 \n
@@ -898,17 +898,17 @@ table .right {\n
 \n
 }\n
 \n
-#fieldset_left .field,\n
-#fieldset_right .field,\n
-#fieldset_center .field,\n
-#fieldset_bottom .field {\n
+fieldset.left .field,\n
+fieldset.right .field,\n
+fieldset.center .field,\n
+fieldset.bottom .field {\n
 \n
   width: 98%;\n
 \n
 }\n
 \n
-#fieldset_left .gadget,\n
-#fieldset_right .gadget {\n
+fieldset.left .gadget,\n
+fieldset.right .gadget {\n
 \n
   margin-top:10px;\n
 \n
@@ -1048,8 +1048,8 @@ margin-top:11px;\n
 \n
 }\n
 \n
-#fieldset_left .field,\n
-#fieldset_right .field {\n
+fieldset.left .field,\n
+fieldset.right .field {\n
 \n
   margin: 5px 0;\n
   float: left;\n
@@ -1257,20 +1257,20 @@ button.bt-med span img {\n
 }\n
 \n
 /* Login form  CSS */\n
-fieldset#fieldset_left_registration, \n
-fieldset#fieldset_right_registration {\n
+fieldset.left_registration, \n
+fieldset.right_registration {\n
   width:50%;\n
   float: left;\n
   background-color: #D1D1D1;\n
 }\n
 \n
-fieldset#fieldset_left_registration {\n
+fieldset.left_registration {\n
   width: 49%;\n
   margin-right: 0.5em;\n
 }\n
 \n
-fieldset#fieldset_left_registration h4, \n
-fieldset#fieldset_right_registration h4 {\n
+fieldset.left_registration h4, \n
+fieldset.right_registration h4 {\n
   margin: 0 0 10px 0;\n
   font-weight: bold;\n
   padding: 0.1em 0.5em;\n
@@ -1280,21 +1280,21 @@ fieldset#fieldset_right_registration h4 {\n
   font-size: 1.2em;\n
 }\n
 \n
-fieldset#fieldset_left_registration > div,\n
-fieldset#fieldset_right_registration > div {\n
+fieldset.left_registration > div,\n
+fieldset.right_registration > div {\n
   clear:both;\n
   margin:0.1em 0pt;\n
   position:relative;\n
 }\n
 \n
-fieldset#fieldset_left_registration div.input, \n
-fieldset#fieldset_right_registration div.input {\n
+fieldset.left_registration div.input, \n
+fieldset.right_registration div.input {\n
   display:block;\n
   width: auto;\n
 }\n
  \n
-fieldset#fieldset_left_registration label, \n
-fieldset#fieldset_right_registration label {\n
+fieldset.left_registration label, \n
+fieldset.right_registration label {\n
   display:block;\n
   float:left;\n
   margin:0pt;\n
@@ -1303,18 +1303,18 @@ fieldset#fieldset_right_registration label {\n
   padding-right: 0.1em;\n
 }\n
 \n
-fieldset#fieldset_right_registration div.required label {\n
+fieldset.right_registration div.required label {\n
   background-image:url(km_img/required_mark.png) !important;\n
   background-position:left center !important;\n
   background-repeat:no-repeat !important;\n
 }\n
 \n
-fieldset#fieldset_left_registration input,\n
-fieldset#fieldset_left_registration textarea,\n
-fieldset#fieldset_left_registration select,\n
-fieldset#fieldset_right_registration input,\n
-fieldset#fieldset_right_registration textarea,\n
-fieldset#fieldset_right_registration select {\n
+fieldset.left_registration input,\n
+fieldset.left_registration textarea,\n
+fieldset.left_registration select,\n
+fieldset.right_registration input,\n
+fieldset.right_registration textarea,\n
+fieldset.right_registration select {\n
   border:1px solid #999999;\n
   color:#333333;\n
   font-family:Sans,Verdana,Tahoma,Georgia,Geneva,Arial,sans-serif;\n

@@ -57,8 +57,6 @@ Breaks strict compatibility:\n
   * Groups must be named one of "left", "right", "center", "bottom" otherwise they will not\n
       be rendered.\n
   * Group order doesn\'t matter. Case is sensitive.\n
-  * Groups names becomes "left_group", "right_group", "left1_group", "right1_group",\n
-      "bottom_group" for quad_form_view macro.\n
 \n
 It is possible to specify a group id and a group title by naming a group following the\n
   "group id (Group Title)" pattern. In this case the group id will be used as fieldset css\n

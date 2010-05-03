@@ -62,13 +62,7 @@ Test quantity steps for price on internal supply line\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_internal_supply_line_quantity_step_list</td>\n
-<tal:block tal:condition="is_selenium_0_8">\n
   <td>10<br />20</td>\n
-</tal:block>\n
-<tal:block tal:condition="not:is_selenium_0_8">\n
-  <td>10\n
-20</td>\n
-</tal:block>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -141,13 +135,7 @@ Test quantity steps for price on internal supply line\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_internal_supply_line_quantity_step_list</td>\n
-<tal:block tal:condition="is_selenium_0_8">\n
   <td>foo<br />bar</td>\n
-</tal:block>\n
-<tal:block tal:condition="not:is_selenium_0_8">\n
-  <td>foo\n
-bar</td>\n
-</tal:block>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n

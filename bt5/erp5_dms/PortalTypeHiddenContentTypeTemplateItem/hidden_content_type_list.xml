@@ -1,18 +1,18 @@
 <hidden_content_type_list>
  <portal_type id="Contribution Tool">
-  <item>Text</item>
   <item>Document Ingestion Message</item>
-  <item>Web Page</item>
   <item>Drawing</item>
-  <item>PDF</item>
-  <item>Spreadsheet</item>
   <item>File</item>
   <item>Image</item>
+  <item>PDF</item>
   <item>Presentation</item>
+  <item>Spreadsheet</item>
+  <item>Text</item>
+  <item>Web Page</item>
  </portal_type>
  <portal_type id="Drawing">
-  <item>Web Page</item>
   <item>Image</item>
+  <item>Web Page</item>
  </portal_type>
  <portal_type id="Presentation">
   <item>Image</item>

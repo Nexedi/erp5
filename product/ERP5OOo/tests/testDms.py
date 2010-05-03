@@ -57,11 +57,17 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5OOo.OOoUtils import OOoBuilder
+from Products.CMFCore.utils import getToolByName
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl import getSecurityManager
 from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
+from Products.ERP5Form.Document.Preference import Priority
 import os
+from threading import Thread
+import httplib
 
 QUIET = 0
 RUN_ALL_TEST = 1
@@ -95,36 +101,45 @@ def makeFileUpload(name, as_name=None):
   path = makeFilePath(name)
   return FileUpload(path, as_name)
 
-
-class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
-  """
-    Test basic document - related operations
-  """
-
-  def getTitle(self):
-    return "DMS"
-
-  ## setup
-
+class TestDocumentMixin(ERP5TypeTestCase):
   def setUpOnce(self):
-    self.setSystemPreference()
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
     # make sure every body can traverse document module
     self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
     self.portal.document_module.manage_permission(
                            'Access contents information', ['Anonymous'], 1)
+    transaction.commit()
+    self.tic()
 
-  def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.newContent(portal_type='System Preference')
-    default_pref.setPriority(1)
+  def afterSetUp(self):
+    self.setDefaultSitePreference()
+    self.setSystemPreference()
+    transaction.commit()
+    self.tic()
+
+  def setDefaultSitePreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
     default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
     default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    if default_pref.getPreferenceState() != 'global':
+    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
       default_pref.enable()
     return default_pref
+
+  def setSystemPreference(self):
+    portal_type = 'System Preference'
+    preference_list = self.portal.portal_preferences.contentValues(
+                                                       portal_type=portal_type)
+    if not preference_list:
+      preference = self.portal.portal_preferences.newContent(
+                                                       portal_type=portal_type)
+    else:
+      preference = preference_list[0]
+    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
+      preference.enable()
+    return preference
 
   def getDocumentModule(self):
     return getattr(self.getPortal(),'document_module')
@@ -161,6 +176,17 @@ class TestDocument(ERP5TypeTestCase, ZopeTestCase.Functional):
     transaction.commit()
     self.tic()
 
+class TestDocument(TestDocumentMixin):
+  """
+    Test basic document - related operations
+  """
+
+  def getTitle(self):
+    return "DMS"
+
+  ## setup
+
+  
   ## helper methods
 
   def createTestDocument(self, file_name=None, portal_type='Text', reference='TEST', version='002', language='en'):
@@ -1536,47 +1562,125 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     self.assertTrue('AZERTYY' not in safe_html)
     self.assertTrue('#FFAA44' in safe_html)
 
-class TestDocumentWithSecurity(ERP5TypeTestCase):
+  def test_parallel_conversion(self):
+    """Check that conversion engine is able to fill in
+    cache without overwrite previous conversion
+    when processed at the same time.
+    """
+    portal_type = 'PDF'
+    document_module = self.portal.getDefaultModule(portal_type)
+    document = document_module.newContent(portal_type=portal_type)
+
+    upload_file = makeFileUpload('Forty-Two.Pages-en-001.pdf')
+    document.edit(file=upload_file)
+    pages_number = int(document.getContentInformation()['Pages'])
+    transaction.commit()
+    self.tic()
+
+    class ThreadWrappedConverter(Thread):
+      """Use this class to run different convertion
+      inside distinct Thread.
+      """
+      def __init__(self, publish_method, document_path,
+                   frame_list, credential):
+        self.publish_method = publish_method
+        self.document_path = document_path
+        self.frame_list = frame_list
+        self.credential = credential
+        Thread.__init__(self)
+
+      def run(self):
+        for frame in self.frame_list:
+          # Use publish method to dispatch conversion among
+          # all available Zserver threads.
+          response = self.publish_method('%s/index_html?format=png'\
+                              '&display=thumbnail&quality:int=75&resolution='\
+                              '&frame=%s' % (self.document_path, frame),
+                                                               self.credential)
+          assert response.getHeader('content-type') == 'image/png'
+          assert response.getStatus() ==  httplib.OK
+        transaction.commit()
+
+    # assume there is no password
+    credential = '%s:' % (getSecurityManager().getUser().getId(),)
+    tested_list = []
+    frame_list = list(xrange(pages_number))
+    # assume that ZServer is configured with 4 Threads
+    conversion_per_tread = pages_number / 4
+    while frame_list:
+      local_frame_list = [frame_list.pop() for i in\
+                            xrange(min(conversion_per_tread, len(frame_list)))]
+      instance = ThreadWrappedConverter(self.publish, document.getPath(),
+                                        local_frame_list, credential)
+      tested_list.append(instance)
+      instance.start()
+
+    # Wait until threads finishing
+    [tested.join() for tested in tested_list]
+
+    transaction.commit()
+    self.tic()
+
+    preference_tool = getToolByName(self.portal, 'portal_preferences')
+    image_size = preference_tool.getPreferredThumbnailImageHeight(),\
+                              preference_tool.getPreferredThumbnailImageWidth()
+    convert_kw = {'format': 'png',
+                  'display': 'thumbnail',
+                  'quality': 75,
+                  'image_size': image_size,
+                  'resolution': ''}
+    result_list = []
+    for i in xrange(pages_number):
+      # all conversions should succeeded and stored in cache storage
+      convert_kw['frame'] = str(i)
+      if not document.hasConversion(**convert_kw):
+        result_list.append(i)
+    self.assertEquals(result_list, [])
+
+  def test_conversionCache_reseting(self):
+    """Chack that modifying a document with edit method,
+    compute a new cache key and refresh cached conversions.
+    """
+    web_page_portal_type = 'Web Page'
+    module = self.portal.getDefaultModule(web_page_portal_type)
+    web_page = module.newContent(portal_type=web_page_portal_type)
+    html_content = """<html>
+      <head>
+        <title>My dirty title</title>
+        <style type="text/css">
+          a {color: #FFAA44;}
+        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+     </head>
+      <body>
+        <div>
+          <h1>My splendid title</h1>
+        </div>
+        <script type="text/javascript" src="http://example.com/something.js"/>
+      </body>
+    </html>
+    """
+    web_page.edit(text_content=html_content)
+    web_page.convert(format='txt')
+    self.assertTrue(web_page.hasConversion(format='txt'))
+    web_page.edit(title='Bar')
+    self.assertFalse(web_page.hasConversion(format='txt'))
+    web_page.convert(format='txt')
+    web_page.edit()
+    self.assertFalse(web_page.hasConversion(format='txt'))
+
+class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
 
   def getTitle(self):
     return "DMS with security"
 
-  def afterSetUp(self):
-    self.setSystemPreference()
-    # set a dummy localizer (because normally it is cookie based)
-    self.portal.Localizer = DummyLocalizer()
-    # make sure every body can traverse document module
-    self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
-    self.portal.document_module.manage_permission(
-                           'Access contents information', ['Anonymous'], 1)
-    self.login()
-
-  def setSystemPreference(self):
-    default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
-    default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
-    default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
-    if default_pref.getPreferenceState() != 'global':
-      default_pref.enable()
-    transaction.commit()
-    self.tic()
-
   def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Auditor', 'Author'], [])
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
-
-  def getDocumentModule(self):
-    return getattr(self.getPortal(),'document_module')
-
-  def getBusinessTemplateList(self):
-    return ('erp5_base',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms')
 
   def test_ShowPreviewAfterSubmitted(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
@@ -1633,6 +1737,56 @@ class TestDocumentWithSecurity(ERP5TypeTestCase):
     # check the size of the pdf conversion
     self.assertEquals(text_document.getConversionSize(format='pdf'), pdf_size)
 
+  def test_ImageSizePreference(self):
+    """
+    Tests that when user defines image sizes are already defined in preferences
+    those properties are taken into account when the user
+    views an image
+    """
+    ERP5TypeTestCase.login(self, 'yusei')
+    preference_tool = self.portal.portal_preferences
+    #get the thumbnail sizes defined by default on default site preference
+    default_thumbnail_image_height = \
+       preference_tool.default_site_preference.getPreferredThumbnailImageHeight()
+    default_thumbnail_image_width = \
+       preference_tool.default_site_preference.getPreferredThumbnailImageWidth()
+    self.assertTrue(default_thumbnail_image_height > 0)
+    self.assertTrue(default_thumbnail_image_width > 0)    
+    self.assertEqual(default_thumbnail_image_height,
+                     preference_tool.getPreferredThumbnailImageHeight())
+    self.assertEqual(default_thumbnail_image_width,
+                     preference_tool.getPreferredThumbnailImageWidth())
+    #create new user preference and set new sizes for image thumbnail display 
+    user_pref = preference_tool.newContent(
+                          portal_type='Preference',
+                          priority=Priority.USER)
+    self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
+    self.assertEqual(user_pref.getPreferenceState(), 'enabled')
+    transaction.commit()
+    self.tic()
+    user_pref.setPreferredThumbnailImageHeight(default_thumbnail_image_height + 10)
+    user_pref.setPreferredThumbnailImageWidth(default_thumbnail_image_width + 10)
+    #Verify that the new values defined are the ones used by default
+    self.assertEqual(default_thumbnail_image_height + 10,
+                     preference_tool.getPreferredThumbnailImageHeight())
+    self.assertEqual(default_thumbnail_image_height + 10,
+                     preference_tool.getPreferredThumbnailImageHeight(0))
+    self.assertEqual(default_thumbnail_image_width + 10,
+                     preference_tool.getPreferredThumbnailImageWidth())
+    self.assertEqual(default_thumbnail_image_width + 10,
+                     preference_tool.getPreferredThumbnailImageWidth(0))
+    #Now lets check that when we try to view an image as thumbnail, 
+    #the sizes of that image are the ones defined in user preference
+    image_portal_type = 'Image'
+    image_list = image = self.portal.getDefaultModule(image_portal_type)\
+         .contentValues()
+    image = image[0]
+    self.assertEqual('thumbnail',
+       image.Image_view._getOb("image_view", None).get_value('image_display'))
+    self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),
+                    user_pref.getPreferredThumbnailImageHeight()),
+                     image.getSizeFromImageDisplay('thumbnail'))
+    
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))

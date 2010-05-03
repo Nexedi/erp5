@@ -111,6 +111,7 @@
                              global header_title python:\'%s | %s\' % (here.getTranslatedTitleOrId(), website.getTranslatedTitleOrId());\n
                              global css_list_template python:[\n
                                     \'%s/km_css/layout.css\' % portal_path,\n
+                                    \'%s/km_css/splash.css\' % portal_path,\n
                                     \'%s/km_css/color.css\' % portal_path,\n
                                     \'%s/km_css/pulldown.css\' % portal_path,\n
                                     \'%s/km_css/type.css\' % portal_path,\n

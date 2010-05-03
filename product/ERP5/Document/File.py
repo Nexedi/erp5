@@ -131,7 +131,6 @@ class File(Document, CMFFile, CachedConvertableMixin):
   getcontentlength = get_size
 
   def _setFile(self, data, precondition=None):
-    self.clearConversionCache()
     CMFFile._edit(self, precondition=precondition, file=data)
 
   security.declareProtected(Permissions.ModifyPortalContent,'setFile')
@@ -170,7 +169,6 @@ class File(Document, CMFFile, CachedConvertableMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
   def PUT(self, REQUEST, RESPONSE):
-    self.clearConversionCache()
     CMFFile.PUT(self, REQUEST, RESPONSE)
 
   # DAV Support

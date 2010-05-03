@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts70557220.29</string> </value>
+            <value> <string>ts72458028.86</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -89,7 +89,7 @@ a.discussion-post-creator-title-link{\n
 }\n
 \n
 div.discussion-post-body-container{\n
-  float: left;\n
+  /*float: left;*/\n
   margin-left: 10px;\n
   margin-top: 10px;\n
   margin-bottom: 10px;\n
@@ -117,7 +117,7 @@ button.discussion-post-action-button{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1329</int> </value>
+            <value> <int>1333</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

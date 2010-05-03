@@ -101,17 +101,17 @@ class Constraint:
           return 0 # a condition was defined and is False
       return 1 # no condition or a True condition was defined
 
-    def checkConsistency(self, obj, fixit=0):
+    def checkConsistency(self, obj, fixit=0, **kw):
       """
         Default method is to return no error.
       """
       errors = []
       return errors
 
-    def fixConsistency(self, obj):
+    def fixConsistency(self, obj, **kw):
       """
         Default method is to call checkConsistency with
         fixit set to 1
       """
-      return self.checkConsistency(obj, fixit=1)
+      return self.checkConsistency(obj, fixit=1, **kw)
 

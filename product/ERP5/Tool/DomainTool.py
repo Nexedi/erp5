@@ -32,7 +32,7 @@ from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ZSQLCatalog.SQLCatalog import SQLQuery
+from Products.ZSQLCatalog.SQLCatalog import SQLQuery, Query, ComplexQuery
 from zLOG import LOG
 from DateTime import DateTime
 
@@ -61,7 +61,7 @@ class DomainTool(BaseTool):
                             ignored_category_list=None,
                             tested_base_category_list=None,
                             filter_method=None, acquired=1,
-                            strict=True, sort_key_method=None, **kw):
+                            strict=True, sort_key_method=None, query=None, **kw):
       # XXX: about "strict" parameter: This is a transition parameter,
       # allowing someone hitting a bug to revert to original behaviour easily.
       # It is not a correct name, as pointed out by Jerome. But instead of
@@ -111,51 +111,62 @@ class DomainTool(BaseTool):
       expression_list = []
       checked_column_list = []
       sql_kw = {}
+      query_list = []
+      if query is not None:
+        query_list = [query]
+
       for column in column_list:
         if column not in checked_column_list:
           range_property = 0
           if (column.endswith('_range_min')) or \
              (column.endswith('_range_max')):
             range_property = 1
-            property = column[:-len('_range_min')]
+            property_name = column[:-len('_range_min')]
           if ('%s_range_min' % column) in column_list:
             range_property = 1
-            property = column
+            property_name = column
           if range_property:
             # We have to check a range property
-            base_name = 'predicate.%s' % property
-#             LOG('searchPredicateList, getPath', 0, context.getPath())
-#             LOG('searchPredicateList, base_name', 0, base_name)
-#             LOG('searchPredicateList, property', 0, property)
-#             LOG('searchPredicateList, getProperty', 0,
-#                 context.getProperty(property))
-            value = context.getProperty(property)
-            format_dict = {'base_name': base_name}
-            expression = "((%(base_name)s is NULL) AND " \
-                         "(%(base_name)s_range_min is NULL) AND " \
-                         "(%(base_name)s_range_max is NULL))" % format_dict
+            equality = 'predicate.%s' % property_name
+            range_min = 'predicate.%s_range_min' % property_name
+            range_max = 'predicate.%s_range_max' % property_name
+            
+            value = context.getProperty(property_name)
+
+            query = ComplexQuery(
+                Query(**{equality: None}),
+                Query(**{range_min: None}),
+                Query(**{range_max: None}),
+                logical_operator='AND')
+
             if value is not None:
-              # Handle Mysql datetime correctly
-              if isinstance(value, DateTime):
-                value = value.toZone('UTC').ISO()
-              format_dict['value'] = value
-              # Generate expression
-              expression += " OR (%(base_name)s = '%(value)s') " \
-                          "OR ((%(base_name)s_range_min <= '%(value)s') AND " \
-                              "(%(base_name)s_range_max is NULL)) " \
-                          "OR ((%(base_name)s_range_min is NULL) AND " \
-                              "%(base_name)s_range_max > '%(value)s') " \
-                          "OR ((%(base_name)s_range_min <= '%(value)s') AND " \
-                              "%(base_name)s_range_max > '%(value)s') " \
-                            % format_dict
-            expression = '( %s )' % expression
-            expression_list.append(expression)
-            checked_column_list.append('%s' % property)
-            checked_column_list.append('%s_range_min' % property)
-            checked_column_list.append('%s_range_max' % property)
-      # Add predicate.uid for automatic join
-      sql_kw['predicate.uid'] = '!=0'
-      where_expression = ' AND \n'.join(expression_list)
+              query = ComplexQuery(
+                  query,
+                  ComplexQuery(
+                    Query(**{equality: value}),
+                    ComplexQuery(
+                      ComplexQuery(
+                        Query(**{range_min: dict(query=value, range='ngt',)}),
+                        Query(**{range_max: None}),
+                        logical_operator='AND',),
+                      ComplexQuery(
+                        Query(**{range_min: None}),
+                        Query(**{range_max: dict(query=value, range='min',)}),
+                        logical_operator='AND',),
+                      ComplexQuery(
+                        Query(**{range_min: dict(query=value, range='ngt',)}),
+                        Query(**{range_max: dict(query=value, range='min',)}),
+                        logical_operator='AND',),
+                      logical_operator='OR',),
+                    logical_operator='OR',
+                    ),
+                  logical_operator='OR')
+
+            query_list.append(query)
+
+            checked_column_list.append('%s' % property_name)
+            checked_column_list.append('%s_range_min' % property_name)
+            checked_column_list.append('%s_range_max' % property_name)
 
       # Add category selection
       if tested_base_category_list is None:
@@ -177,44 +188,35 @@ class DomainTool(BaseTool):
                                            query_table='predicate_category',
                                            none_sql_value=0,
                                            strict=strict)
-        category_expression = category_expression_dict['where_expression']
+        where_expression = category_expression_dict['where_expression']
+        if where_expression:
+          sql_kw['where_expression'] = SQLQuery(where_expression)
+
         if 'from_expression' in category_expression_dict:
           sql_kw['from_expression'] = category_expression_dict['from_expression']
         else:
           # Add predicate_category.uid for automatic join
           sql_kw['predicate_category.uid'] = '!=NULL'
-        if len(where_expression) > 0:
-          where_expression = '(%s) AND \n(%s)' % \
-                                          (where_expression,category_expression)
-        else:
-          where_expression = category_expression
 
-      if len(where_expression):
-        sql_kw['where_expression'] = SQLQuery(where_expression)
-      else:
-        sql_kw['where_expression'] = ''
       kw.update(sql_kw)
-#       LOG('searchPredicateList, kw',0,kw)
+      if query_list:
+        kw['query'] = ComplexQuery(logical_operator='AND', *query_list)
 
       sql_result_list = portal_catalog.searchResults(**kw)
       if kw.get('src__'):
         return sql_result_list
       result_list = []
-#       LOG('searchPredicateList, result_list before test', 0,
-#           [x.getObject() for x in sql_result_list])
       for predicate in [x.getObject() for x in sql_result_list]:
         if (not test) or predicate.test(
                        context,
                        tested_base_category_list=tested_base_category_list):
           result_list.append(predicate)
-#       LOG('searchPredicateList, result_list before sort', 0, result_list)
       if filter_method is not None:
         result_list = filter_method(result_list)
       if sort_key_method is not None:
         result_list.sort(key=sort_key_method)
       elif sort_method is not None:
         result_list.sort(cmp=sort_method)
-#       LOG('searchPredicateList, result_list after sort', 0, result_list)
       return result_list
 
     # XXX FIXME method should not be public 

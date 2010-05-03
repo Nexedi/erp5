@@ -92,8 +92,7 @@
               <tal:block tal:repeat="group group_list">\n
                 <tal:block tal:define="gid    group/gid">\n
                   <fieldset tal:condition="python: \'hidden\' not in gid and \'bottom\' not in gid"\n
-                            tal:attributes="class gid;\n
-                            id    python: \'fieldset_\' + gid.replace(\' \', \'_\');">\n
+                            tal:attributes="class gid;">\n
                     <legend tal:content="group/gtitle" class="group_title" />\n
                     <tal:block tal:repeat="field python: form.get_fields_in_group(group[\'goid\'])">\n
                       <tal:block metal:use-macro="field_render" />\n

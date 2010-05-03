@@ -1019,11 +1019,12 @@ class Resource(XMLMatrix, Variated):
           if unit_uid is None:
             continue
 
-          quantity = definition.getQuantity()
-          if not quantity:
+          definition_ratio = definition.getConversionRatio()
+          if not definition_ratio:
             continue
 
-          result[unit_uid] = (definition.getUid(), quantity*reference_ratio)
+          result[unit_uid] = (definition.getUid(),
+                              definition_ratio*reference_ratio)
 
       return result
 

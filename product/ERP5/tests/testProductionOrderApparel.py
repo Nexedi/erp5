@@ -1151,7 +1151,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
                       '
     sequence_list.addSequenceString(sequence_string)
 
-    # transformation set, then unset
+    # transformation set, then not modified
     sequence_string = bootstrap_sequence_string + '\
                       CreateTransformation \
                       Tic \
@@ -1160,7 +1160,7 @@ class TestProductionOrderApparel(TestProductionOrderApparelMixin, ERP5TypeTestCa
                       CheckOrderLineTransformationIsSet \
                       RemoveResourceFromOrderLine \
                       Tic \
-                      CheckOrderLineTransformationIsNotSet \
+                      CheckOrderLineTransformationIsSet \
                       '
     sequence_list.addSequenceString(sequence_string)
 

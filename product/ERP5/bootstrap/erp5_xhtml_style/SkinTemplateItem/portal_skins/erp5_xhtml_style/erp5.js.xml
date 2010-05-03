@@ -149,26 +149,14 @@ function buildTables(element_list, rowPredicate, columnPredicate,\n
   }\n
 }\n
 \n
-function matchChunk(string, separator, chunk_value) {\n
-  if (string != null) {\n
-    var chunk_list = string.split(separator);\n
-    var i;\n
-    for (i = 0; i < chunk_list.length; i++) {\n
-      if (chunk_list[i] == chunk_value)\n
-        return true;\n
-    }\n
-  }\n
-  return false;\n
-}\n
-\n
 function matchLeftFieldset(element) {\n
-  return (element.tagName == "FIELDSET") &&\n
-          matchChunk(element.className, \' \', "left");\n
+  return (element.tagName == "FIELDSET" &&\n
+       element.className.toLowerCase().indexOf(\'left\') != -1)\n
 }\n
 \n
 function matchRightFieldset(element, ignored) {\n
-  if ((element.tagName == "FIELDSET") &&\n
-       matchChunk(element.className, \' \', "right"))\n
+  if (element.tagName == "FIELDSET" &&\n
+       element.className.toLowerCase().indexOf(\'right\') != -1)\n
     return 7; /* End row, table and use element */\n
   return 0;\n
 }\n

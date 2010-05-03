@@ -13,6 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>default</string>
                 <string>description</string>
                 <string>input_style</string>
               </list>
@@ -57,11 +58,25 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>input_style</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -75,6 +90,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>Amount of standard Quantity Unit</string> </value>
@@ -97,6 +116,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: context.getProperty(\'quantity\')</string> </value>
         </item>
       </dictionary>
     </pickle>

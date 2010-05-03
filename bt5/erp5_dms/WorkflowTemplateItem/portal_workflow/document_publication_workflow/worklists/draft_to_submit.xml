@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Documents to review (%(count)s)</string> </value>
+            <value> <string>Documents to Submit (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
@@ -27,7 +27,7 @@ ERP5Site_viewDocumentList?validation_state=draft&local_roles=%(local_roles)s&por
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Documents to review</string> </value>
+            <value> <string>Documents to Submit</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -37,7 +37,7 @@ ERP5Site_viewDocumentList?validation_state=draft&local_roles=%(local_roles)s&por
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft_to_review</string> </value>
+            <value> <string>draft_to_submit</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
