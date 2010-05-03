@@ -145,7 +145,7 @@ for line in kw.get(\'listbox\'):\n
       movement_to_update = context\n
 \n
     if item not in movement_to_update.getAggregateValueList():\n
-      movement_to_update.setAggregateValueSet(\n
+      movement_to_update.setAggregateValueList(\n
         movement_to_update.getAggregateValueList() + [item])\n
 \n
 \n
