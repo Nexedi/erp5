@@ -28,6 +28,8 @@
 ##############################################################################
 
 from DateTime import DateTime
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.DateUtils import addToDate, atTheEndOfPeriod
 

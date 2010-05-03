@@ -33,8 +33,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
+from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
-class SubscriptionItem(Item, MovementGeneratorMixin):
+class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
   """
     A SubscriptionItem is an Item which expands itself
     into simulation movements which represent the item future.
@@ -58,6 +59,7 @@ class SubscriptionItem(Item, MovementGeneratorMixin):
                     , PropertySheet.Item
                     , PropertySheet.Amount
                     , PropertySheet.Reference
+                    , PropertySheet.Periodicity
                     )
 
   # Declarative interfaces
@@ -153,13 +155,50 @@ class SubscriptionItem(Item, MovementGeneratorMixin):
     """
       Input movement list comes from order
     """
-    # Here, we just generate movements 
-    # as a time sries
-    return
+    result = []
+    catalog_tool = getToolByName(self, 'portal_catalog')
 
-    order = context.getDefaultCausalityValue()
-    if order is None:
-      return []
-    else:
-      return order.getMovementList(
-        portal_type=order.getPortalOrderMovementTypeList())
+    # Try to find the source open order
+    open_order_movement_list = self.getAggregateRelatedValueList(
+                portal_type="Open Order Line") # XXX-JPS Hard Coded    
+    if not open_order_movement_list: return result
+
+    # Find out which parent open orders
+    explanation_uid_list = map(lambda x:x.getParentUid(), open_order_movement_list) # Instead, should call getDeliveryValue or equivalent
+    open_order_list = catalog_tool.searchResults(uid = explanation_uid_list,
+                                                 validation_state = 'validated') # XXX-JPS hard coding
+
+    # Now generate movements for each valid open order
+    for movement in open_order_movement_list:
+      if movement.getParentValue().getValidationState() == 'open': # XXX-JPS hard coding
+        resource = movement.getResource()
+        start_date = movement.getStartDate()
+        stop_date = movement.getStopDate()
+        source = movement.getSource()
+        source_section = movement.getSourceSection()
+        destination = movement.getDestination()
+        destination_section = movement.getDestinationSection() # XXX More arrows ? use context instead ?
+        quantity = self.getQuantity() # Is it so ? XXX-JPS
+        quantity_unit = movement.getQuantityUnit()
+        price = movement.getPrice()
+        current_date = start_date
+        while current_date < stop_date:
+          next_date = self.getNextPeriodicalDate(current_date)
+          movement = self.newContent(temp_object=1,  
+                                     portal_type='Sale Order Line', # XXX-JPS Hard Coded
+                                     resource=resource,
+                                     quantity=quantity,
+                                     quantity_unit=quantity_unit,
+                                     price=price,
+                                     start_date=current_date,
+                                     stop_date=next_date,
+                                     source=source,
+                                     source_section=source_section,
+                                     destination=destination,
+                                     destination_section=destination_section,
+                                    )
+          result.append(movement)
+          current_date = next_date
+
+    # And now return result
+    return result

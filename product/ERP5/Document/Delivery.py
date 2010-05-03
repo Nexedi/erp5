@@ -696,7 +696,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
 
     ##########################################################################
     # Applied Rule stuff
-    @UnrestrictedMethod
+    @UnrestrictedMethod # XXX-JPS What is this ?
     def updateAppliedRule(self, rule_reference=None, rule_id=None, force=0,
                           **kw):
       """
@@ -785,6 +785,8 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         Reexpand applied rule
 
         Also reexpand all rules related to movements
+
+        NOTE: seems to be deprecated ?
       """
       excluded_rule_path_list = []
       if applied_rule_id is not None:

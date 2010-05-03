@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi KK, Nexedi SA and Contributors. All Rights Reserved.
@@ -28,8 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Path import Path
-from Products.ERP5.Document.Alarm import PeriodicityMixin
-
+from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
 class PeriodicityLineMixin(PeriodicityMixin):
   """
