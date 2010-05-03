@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts69330662.3</string> </value>
+            <value> <string>ts72889188.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -35,7 +35,19 @@
                           \'name\': \'delete_discussion_post_id\', \n
                           \'type\':\'hidden\'}));\n
   clickSaveButton(\'DiscussionThread_deleteDiscussionPost\');\n
-}</string> </value>
+}\n
+\n
+function redirectCreateCitedNewDiscussionPost(id){\n
+  /* this will add respective input box for reply post id (so multiple reply buttons can \n
+     safely coexist in one HTML page with one HTML form */\n
+  appendChildNodes(document.forms[0], \n
+                   INPUT({\'value\':id, \n
+                          \'name\': \'discussion_post_uid\', \n
+                          \'type\':\'hidden\'}));\n
+  clickSaveButton(\'DiscussionThread_redirectCreateNewDiscussionPost\');\n
+}\n
+\n
+</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -43,7 +55,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>435</long> </value>
+            <value> <int>893</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
