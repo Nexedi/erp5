@@ -87,6 +87,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Int Index</string>
+                        </tuple>
+                        <tuple>
                           <string>parent_description</string>
                           <string>Description</string>
                         </tuple>
@@ -137,6 +141,10 @@
                         <tuple>
                           <string>product_line</string>
                           <string>Product Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>string_index</string>
+                          <string>String Index</string>
                         </tuple>
                         <tuple>
                           <string>date</string>

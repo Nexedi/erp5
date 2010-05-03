@@ -139,6 +139,8 @@ for delivery in delivery_list:\n
       line_list.append(Object(\n
         title=movement.hasTitle() and movement.getTitle() or\n
                      delivery.getTitle(),\n
+        int_index=movement.getIntIndex(),\n
+        string_index=movement.getStringIndex(),\n
         parent_description=delivery.getDescription(),\n
         parent_reference=delivery.getReference(),\n
         specific_reference=delivery.getSourceReference(),\n
@@ -168,6 +170,8 @@ for delivery in delivery_list:\n
       line_list.append(Object(\n
         title=movement.hasTitle() and movement.getTitle() or\n
                      delivery.getTitle(),\n
+        int_index=movement.getIntIndex(),\n
+        string_index=movement.getStringIndex(),\n
         parent_description=delivery.getDescription(),\n
         parent_reference=delivery.getReference(),\n
         specific_reference=delivery.getDestinationReference(),\n
