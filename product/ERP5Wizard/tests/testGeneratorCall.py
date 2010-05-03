@@ -29,6 +29,7 @@
 import unittest
 import xmlrpclib
 
+from Products.ERP5 import PropertySheet
 from Products.ERP5Wizard.Tool.WizardTool import GeneratorCall
 
 
