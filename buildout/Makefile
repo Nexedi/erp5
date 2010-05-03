@@ -14,7 +14,7 @@ software: bin/buildout
 	bin/buildout
 
 bin/buildout:
-	python bootstrap/bootstrap.py
+	python -S bootstrap/bootstrap.py
 
 # run make assert to check that all is working
 assert: bin/python2.4
