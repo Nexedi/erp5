@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -31,11 +32,15 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Item import Item
+from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
 
-class SubscriptionItem(Item):
+class SubscriptionItem(Item, MovementGeneratorMixin):
   """
-    A SubscriptionItem is an Item which can be expanded
-    whenever it related to a valid Open Order
+    A SubscriptionItem is an Item which expands itself
+    into simulation movements which represent the item future.
+    Examples of subscription items (or subclasses) include: 
+    employee paysheet contracts, telecommunication subscriptions,
+    banking service subscriptions, etc
   """
   meta_type = 'ERP5 Subscription Item'
   portal_type = 'Subscription Item'
@@ -43,9 +48,6 @@ class SubscriptionItem(Item):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.IExpandable)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
@@ -58,16 +60,106 @@ class SubscriptionItem(Item):
                     , PropertySheet.Reference
                     )
 
-  # Expandable Interface Implementation
-  def expand(self, *args, **kw): 
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IExpandable,
+                            interfaces.IMovementGenerator,
+                           )
+
+  # IExpandable interface implementation
+  def expand(self, applied_rule_id=None, force=0, activate_kw=None, **kw):
     """
       Lookup start / stop properties in related Open Order
       or Path and expand.
     """
+    # only try to expand if we are not in draft state
+    if self.getValidationState() == 'draft': # XXX-JPS harcoded
+      return
 
-  security.declarePrivate('expandOpenOrderRule')
-  def expandOpenOrderRule(self, applied_rule_id=None, force=0, **kw):
-    """
-      Provides the default implementation of expand for Open Orders
-    """
+    # use hint if provided (but what for ?) XXX-JPS
+    if applied_rule_id is not None:
+      portal_simulation = getToolByName(self, 'portal_simulation')
+      my_applied_rule = portal_simulation[applied_rule_id]
+    else:
+      my_applied_rule = self._getRootAppliedRule(activate_kw=activate_kw)
 
+    # Pass expand
+    if my_applied_rule is not None:
+      my_applied_rule.expand(activate_kw=activate_kw, **kw) # XXX-JPS why **kw ?
+
+  def _getRootAppliedRule(self, tested_base_category_list=None,
+                                   activate_kw=None):
+    """
+      Returns existing root applied rule or, if none,
+      create a new one a return it
+    """
+    # Look up if existing applied rule
+    my_applied_rule_list = self.getCausalityRelatedValueList(
+        portal_type='Applied Rule')
+    my_applied_rule = None
+    if len(my_applied_rule_list) == 0:
+      if self.isSimulated():
+        # No need to create a DeliveryRule
+        # if we are already in the simulation process
+        pass
+      else:
+        # Create a new applied order rule (portal_rules.order_rule)
+        portal_rules = getToolByName(self, 'portal_rules')
+        portal_simulation = getToolByName(self, 'portal_simulation')
+        rule_value_list = portal_rules.searchRuleList(self, 
+                 tested_base_category_list=tested_base_category_list)
+        if len(rule_value_list) > 1:
+          raise "SimulationError", 'Expandable Document %s has more than one matching'\
+                                   ' rule.' % self.getRelativeUrl()
+        if len(rule_value_list):
+          rule_value = rule_value_list[0]
+          my_applied_rule = rule_value.constructNewAppliedRule(portal_simulation,
+                                    activate_kw=activate_kw)
+          # Set causality
+          my_applied_rule.setCausalityValue(self)
+          # We must make sure this rule is indexed
+          # now in order not to create another one later
+          my_applied_rule.reindexObject(activate_kw=activate_kw) # XXX-JPS removed **kw
+    elif len(my_applied_rule_list) == 1:
+      # Re expand the rule if possible
+      my_applied_rule = my_applied_rule_list[0]
+    else:
+      raise "SimulationError", 'Expandable Document %s has more than one root applied'\
+          ' rule.' % self.getRelativeUrl()
+
+    return my_applied_rule
+
+  # IMovementGenerator interface implementation
+  def getGeneratedMovementList(self, context, movement_list=None,
+                                rounding=False):
+    """
+    Input movement list comes from Open Order
+    """
+    ret = []
+    rule = context.getSpecialiseValue()
+    for input_movement, business_path in self \
+            ._getInputMovementAndPathTupleList(context):
+      kw = self._getPropertyAndCategoryList(input_movement, business_path,
+                                            rule)
+      input_movement_url = input_movement.getRelativeUrl()
+      kw.update({'delivery': input_movement_url})
+      simulation_movement = context.newContent(
+        portal_type=RuleMixin.movement_type,
+        temp_object=True,
+        **kw)
+      ret.append(simulation_movement)
+    return ret
+
+  def _getInputMovementList(self, context):
+    """
+      Input movement list comes from order
+    """
+    # Here, we just generate movements 
+    # as a time sries
+    return
+
+    order = context.getDefaultCausalityValue()
+    if order is None:
+      return []
+    else:
+      return order.getMovementList(
+        portal_type=order.getPortalOrderMovementTypeList())
