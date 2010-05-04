@@ -1,3 +1,6 @@
+2010-05-04 yo
+* Fix the template field of my_incoterm of BusinessPath_view, as it was impossible to edit a Business Path any more.
+
 2010-04-13 kazuhiko
 * Add predicate_view action in Business Path.
 
