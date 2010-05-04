@@ -36,11 +36,9 @@ from zope.interface import Interface
 class IAmountGenerator(Interface):
   """Amount Generator interface specification
 
-  Documents which implement IAmountGenerator
-  can be used to generate an IAmountList from
-  an existing IMovementCollection, IAmountList or
-  IAmount. Typical IAmountGenerator are Transformations
-  and Trade Conditions.
+  Documents which implement IAmountGenerator can be used to generate
+  an IAmountList from an existing IMovementCollection, IAmountList or
+  IAmount. Typical IAmountGenerator are Transformations and Trade Conditions.
   """
 
   def getAggregatedAmountList(amount_list=None, rounding=False,
