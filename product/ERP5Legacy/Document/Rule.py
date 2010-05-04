@@ -251,7 +251,44 @@ class Rule(Predicate, XMLObject):
   def _getInputMovementList(self, applied_rule):
     """Return list of movements for applied rule.
     This method might be overloaded"""
-    return [applied_rule.getParentValue()]
+    if applied_rule.isRootAppliedRule():
+      delivery = applied_rule.getDefaultCausalityValue()
+      movement_list = []
+      if delivery is not None:
+        existing_movement_list = applied_rule.objectValues()
+        for movement in delivery.getMovementList():
+          simulation_movement = self._getDeliveryRelatedSimulationMovement(
+            movement)
+          if simulation_movement is None or \
+                 simulation_movement in existing_movement_list:
+            movement_list.append(movement)
+      return movement_list
+    else:
+      return [applied_rule.getParentValue()]
+
+  def _getDeliveryRelatedSimulationMovement(self, delivery_movement):
+    """Helper method to get the delivery related simulation movement.
+    This method is more robust than simply calling getDeliveryRelatedValue
+    which will not work if simulation movements are not indexed.
+    """
+    simulation_movement = delivery_movement.getDeliveryRelatedValue()
+    if simulation_movement is not None:
+      return simulation_movement
+    # simulation movement was not found, maybe simply because it's not indexed
+    # yet. We'll look in the simulation tree and try to find it anyway before
+    # creating another simulation movement.
+    # Try to find the one from trade model rule, which is the most common case
+    # where we may expand again before indexation of simulation movements is
+    # finished.
+    delivery = delivery_movement.getExplanationValue()
+    for movement in delivery.getMovementList():
+      related_simulation_movement = movement.getDeliveryRelatedValue()
+      if related_simulation_movement is not None:
+        for applied_rule in related_simulation_movement.contentValues():
+          for simulation_movement in applied_rule.contentValues():
+            if simulation_movement.getDeliveryValue() == delivery_movement:
+              return simulation_movement
+    return None
 
   def _generatePrevisionList(self, applied_rule, **kw):
     """
