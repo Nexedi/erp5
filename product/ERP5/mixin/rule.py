@@ -90,8 +90,8 @@ class RuleMixin:
 
     XXX-JPS - I do not understand why 
     """
-    if not self.getTestMethodId():
-      return False # XXX-JPS - if people are stupid are enough not to configfure predicates, 
+    #if not self.getTestMethodId():
+    #  return False # XXX-JPS - if people are stupid enough not to configfure predicates, 
                    # it is not our role to be clever for them
                    # Rules have a workflow - make sure applicable rule system works
                    # if you wish, add a test here on workflow state to prevent using 
@@ -111,7 +111,7 @@ class RuleMixin:
     # Update movements
     #  NOTE-JPS: it is OK to make rounding a standard parameter of rules
     #            although rounding in simulation is not recommended at all
-    self.updateMovementCollection(applied_rule, movement_generator=self._getMovementGenerator())
+    self.updateMovementCollection(applied_rule, movement_generator=self._getMovementGenerator(applied_rule))
     # And forward expand
     for movement in applied_rule.getMovementList():
       movement.expand(**kw)
@@ -152,7 +152,7 @@ class RuleMixin:
     return result_list
 
   # Placeholder for methods to override
-  def _getMovementGenerator(self):
+  def _getMovementGenerator(self, applied_rule):
     """
     Return the movement generator to use in the expand process
     """
@@ -164,7 +164,7 @@ class RuleMixin:
     """
     raise NotImplementedError
 
-  def _getMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self, applied_rule):
     """
     Return the movement lists to provide to the movement generator
     """
@@ -230,7 +230,7 @@ class RuleMixin:
     """
     raise NotImplementedError
 
-  def _isProfitAndLossMovement(movement):
+  def _isProfitAndLossMovement(movement): # applied_rule XXX-JPS add this ?
     """
     Returns True if movement is a profit and loss movement.
     """
