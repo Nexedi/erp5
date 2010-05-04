@@ -30,6 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
@@ -74,7 +75,7 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
       or Path and expand.
     """
     # only try to expand if we are not in draft state
-    if self.getValidationState() == 'draft': # XXX-JPS harcoded
+    if self.getValidationState() in ('draft', ): # XXX-JPS harcoded
       return
 
     # use hint if provided (but what for ?) XXX-JPS
@@ -88,8 +89,14 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
     if my_applied_rule is not None:
       my_applied_rule.expand(activate_kw=activate_kw, **kw) # XXX-JPS why **kw ?
 
+  def isSimulated(self):
+    """
+      We are never simulated (unlike deliveries)
+    """
+    return False
+
   def _getRootAppliedRule(self, tested_base_category_list=None,
-                                   activate_kw=None):
+                                activate_kw=None):
     """
       Returns existing root applied rule or, if none,
       create a new one a return it
@@ -131,27 +138,7 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
     return my_applied_rule
 
   # IMovementGenerator interface implementation
-  def getGeneratedMovementList(self, context, movement_list=None,
-                                rounding=False):
-    """
-    Input movement list comes from Open Order XXX this code is duplicated.
-    """
-    ret = []
-    rule = context.getSpecialiseValue()
-    for input_movement, business_path in self \
-            ._getInputMovementAndPathTupleList(context):
-      kw = self._getPropertyAndCategoryList(input_movement, business_path,
-                                            rule)
-      input_movement_url = input_movement.getRelativeUrl()
-      kw.update({'delivery': input_movement_url})
-      simulation_movement = context.newContent(
-        portal_type=RuleMixin.movement_type,
-        temp_object=True,
-        **kw)
-      ret.append(simulation_movement)
-    return ret
-
-  def _getInputMovementList(self, context):
+  def _getInputMovementList(self, movement_list=None, rounding=None):
     """
       Generate the list of input movements by looking at all
       open order lines relating to this subscription item.
@@ -200,6 +187,7 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
                                      source_section=source_section,
                                      destination=destination,
                                      destination_section=destination_section,
+                                     delivery_value=movement # ???
                                     )
           result.append(movement)
           current_date = next_date
