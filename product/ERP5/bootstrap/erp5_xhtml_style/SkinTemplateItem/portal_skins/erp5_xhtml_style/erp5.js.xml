@@ -317,7 +317,7 @@ var rewriteIndentedSelect = function() {\n
           }\n
         }\n
       }\n
-      if (level >= 1 && !options[j].selected) {\n
+      if (level >= 1) {\n
         level = level / 4.;\n
         options[j].innerHTML = text.replace(/^(&nbsp;)+/, "");\n
         options[j].style.paddingLeft = level+"em";\n
