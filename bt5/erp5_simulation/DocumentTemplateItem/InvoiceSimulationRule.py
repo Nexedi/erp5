@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
@@ -68,11 +69,11 @@ class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
     PropertySheet.Rule
     )
 
-  def _getMovementGenerator(self):
+  def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process
     """
-    return InvoicingRuleMovementGenerator()
+    return InvoicingRuleMovementGenerator(applied_rule=context, rule=self)
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -80,7 +81,7 @@ class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
     """
     return context
 
-  def _getMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self, context, movement_list=None, rounding=None):
     """
     Return the movement lists to provide to the movement generator
     """
@@ -92,31 +93,16 @@ class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
-  def getGeneratedMovementList(self, context, movement_list=None,
-                                rounding=False):
-    """
-    In Invoice Simulation Rule, source should be source_administration
-    of the input movement or its order's source. Same for destination.
-    """
-    ret = []
-    rule = context.getSpecialiseValue()
-    for input_movement, business_path in self \
-            ._getInputMovementAndPathTupleList(context):
-      kw = self._getPropertyAndCategoryList(input_movement, business_path,
-                                            rule)
-      root_simulation_movement = input_movement.getRootSimulationMovement()
-      source = input_movement.getSourceAdministration() or \
-               root_simulation_movement.getSource()
-      destination = input_movement.getDestinationAdministration() or \
-                    root_simulation_movement.getDestination()
-      kw.update({'order':None, 'delivery':None,
-                 'source':source, 'destination':destination})
-      simulation_movement = context.newContent(
-        portal_type=RuleMixin.movement_type,
-        temp_object=True,
-        **kw)
-      ret.append(simulation_movement)
-    return ret
 
-  def _getInputMovementList(self, context):
-    return [context.getParentValue(),]
+  def _getUpdatePropertyDict(self, input_movement):
+    root_simulation_movement = input_movement.getRootSimulationMovement()
+    source = input_movement.getSourceAdministration() or \
+              root_simulation_movement.getSource()
+    destination = input_movement.getDestinationAdministration() or \
+                  root_simulation_movement.getDestination()
+    return {'portal_type': RuleMixin.movement_type,
+            'order':None, 'delivery':None,
+            'source':source, 'destination':destination})
+
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    return [self._applied_rule.getParentValue(),]

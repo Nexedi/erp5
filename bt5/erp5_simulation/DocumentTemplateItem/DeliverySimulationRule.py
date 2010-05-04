@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -71,11 +72,11 @@ class DeliverySimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicat
     PropertySheet.Rule
     )
 
-  def _getMovementGenerator(self):
+  def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process
     """
-    return DeliveryRuleMovementGenerator()
+    return DeliveryRuleMovementGenerator(applied_rule=context, rule=self)
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -83,7 +84,7 @@ class DeliverySimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicat
     """
     return context
 
-  def _getMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self, context):
     """
     Return the movement lists to provide to the movement generator
     """
@@ -95,24 +96,12 @@ class DeliverySimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicat
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
-  def getGeneratedMovementList(self, context, movement_list=None,
-                                rounding=False):
-    """
-    Input movement list comes from the parent
-    """
-    ret = []
-    rule = context.getSpecialiseValue()
-    for input_movement, business_path in self \
-            ._getInputMovementAndPathTupleList(context):
-      kw = self._getPropertyAndCategoryList(input_movement, business_path,
-                                            rule)
-      kw.update({'order':None,'delivery':None})
-      simulation_movement = context.newContent(
-        portal_type=RuleMixin.movement_type,
-        temp_object=True,
-        **kw)
-      ret.append(simulation_movement)
-    return ret
 
-  def _getInputMovementList(self, context):
-    return [context.getParentValue(),]
+  def _getUpdatePropertyDict(self, input_movement):
+    # Override default mixin implementation
+    return {'order': None,
+            'delivery': None,
+            'portal_type': RuleMixin.movement_type}
+
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    return [self._applied_rule.getParentValue(),]

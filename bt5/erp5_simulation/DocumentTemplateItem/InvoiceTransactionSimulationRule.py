@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
@@ -72,11 +73,11 @@ class InvoiceTransactionSimulationRule(RuleMixin, MovementCollectionUpdaterMixin
     PropertySheet.Rule
     )
 
-  def _getMovementGenerator(self):
+  def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process
     """
-    return InvoiceTransactionRuleMovementGenerator()
+    return InvoiceTransactionRuleMovementGenerator(applied_rule=context, rule=self)
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -84,7 +85,7 @@ class InvoiceTransactionSimulationRule(RuleMixin, MovementCollectionUpdaterMixin
     """
     return context
 
-  def _getMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self, context):
     """
     Return the movement lists to provide to the movement generator
     """
@@ -96,8 +97,7 @@ class InvoiceTransactionSimulationRule(RuleMixin, MovementCollectionUpdaterMixin
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
-  def getGeneratedMovementList(self, context, movement_list=None,
-                                rounding=False):
+  def getGeneratedMovementList(self, movement_list=None, rounding=False):
     """
     Input movement list comes from order
 
@@ -106,11 +106,11 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
     """
     ret = []
 
-    rule = context.getSpecialiseValue()
+    rule = self._rule
     # input_movement, business_path = rule._getInputMovementAndPathTupleList(
     #   applied_rule)[0]
-    input_movement = context.getParentValue()
-    parent_movement = context.getParentValue()
+    input_movement = self._applied_rule.getParentValue()
+    parent_movement = self._applied_rule.getParentValue()
 
     # Find a matching cell
     cell = rule._getMatchingCell(input_movement)
@@ -133,7 +133,7 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
         if resource is None :
           # search the resource on parents simulation movement's deliveries
           simulation_movement = parent_movement
-          portal_simulation = context.getPortalObject().portal_simulation
+          portal_simulation = self._applied_rule.getPortalObject().portal_simulation
           while resource is None and \
                       simulation_movement != portal_simulation :
             delivery = simulation_movement.getDeliveryValue()
@@ -191,7 +191,7 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
                 accounting_rule_cell_line.getGeneratePrevisionScriptId()
           kw.update(getattr(input_movement,
                             generate_prevision_script_id)(kw))
-        simulation_movement = context.newContent(
+        simulation_movement = self._applied_rule.newContent(
           portal_type=RuleMixin.movement_type,
           temp_object=True,
           **kw)

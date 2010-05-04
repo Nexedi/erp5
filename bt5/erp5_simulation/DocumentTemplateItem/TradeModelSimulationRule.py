@@ -68,11 +68,11 @@ class TradeModelSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predic
     PropertySheet.Rule
     )
 
-  def _getMovementGenerator(self):
+  def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process
     """
-    return TradeModelRuleMovementGenerator()
+    return TradeModelRuleMovementGenerator(applied_rule=context, rule=self)
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -80,7 +80,7 @@ class TradeModelSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predic
     """
     return context
 
-  def _getMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self, context):
     """
     Return the movement lists to provide to the movement generator
     """
@@ -92,16 +92,20 @@ class TradeModelSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predic
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
-  def getGeneratedMovementList(self, context, movement_list=None,
-                                rounding=False):
+
+  def getGeneratedMovementList(self, movement_list=None, rounding=False):
     """
     Generates list of movements
+    XXX-JPS This could become a good default implementation 
+            but I do not understand why input system not used here
+          (I will rewrite this)
     """
-    movement_list = []
-    business_process = context.getBusinessProcessValue()
+    result = []
+    simulation_movement = self._applied_rule.getParentValue()
+    trade_model = simulation_movement.asComposedDocument()
 
-    if business_process is None:
-      return movement_list
+    if trade_model is None:
+      return result
 
     context_movement = context.getParentValue()
     rule = context.getSpecialiseValue()
@@ -111,7 +115,7 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
                                     'Sale Trade Condition',
                                     'Trade Model Line')):
       # business path specific
-      business_path_list = business_process.getPathValueList(
+      business_path_list = trade_model.getPathValueList(
           trade_phase=amount.getTradePhaseList()) # Why a list of trade phases ? XXX-JPS
       if len(business_path_list) == 0:
         raise ValueError('Cannot find Business Path')
@@ -142,6 +146,6 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
         portal_type=RuleMixin.movement_type,
         temp_object=True,
         **kw)
-      movement_list.append(simulation_movement)
+      result.append(simulation_movement)
 
     return movement_list

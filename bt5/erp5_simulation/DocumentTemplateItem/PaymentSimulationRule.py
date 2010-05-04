@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
@@ -69,11 +70,11 @@ class PaymentSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
     PropertySheet.Rule
     )
 
-  def _getMovementGenerator(self):
+  def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process
     """
-    return PaymentRuleMovementGenerator()
+    return PaymentRuleMovementGenerator(applied_rule=context, rule=self)
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -81,7 +82,7 @@ class PaymentSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
     """
     return context
 
-  def _getMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self, context):
     """
     Return the movement lists to provide to the movement generator
     """
@@ -93,17 +94,16 @@ class PaymentSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class PaymentRuleMovementGenerator(MovementGeneratorMixin):
-  def getGeneratedMovementList(self, context, movement_list=None,
-                                rounding=False):
+  def getGeneratedMovementList(self, movement_list=None, rounding=False):
     """
     Input movement list comes from parent.
 
     XXX This implementation using Business Path, not Payment Condition.
     """
     ret = []
-    rule = context.getSpecialiseValue()
+    rule = self._rule
     for input_movement, business_path in self \
-            ._getInputMovementAndPathTupleList(context):
+            ._getInputMovementAndPathTupleList(movement_list=movement_list, rounding=rounding):
       # Payment Rule does not work with Business Path
       if business_path is None:
         continue
@@ -122,7 +122,7 @@ class PaymentRuleMovementGenerator(MovementGeneratorMixin):
       if stop_date is not None:
         kw.update({'stop_date':stop_date})
       # one for payable
-      simulation_movement = context.newContent(
+      simulation_movement = self._applied_rule.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
         quantity=-quantity,
@@ -131,7 +131,7 @@ class PaymentRuleMovementGenerator(MovementGeneratorMixin):
       # one for bank
       kw.update({'source':business_path.getSource(),
                  'destination':business_path.getDestination(),})
-      simulation_movement = context.newContent(
+      simulation_movement = self._applied_rule.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
         quantity=quantity,
@@ -139,5 +139,5 @@ class PaymentRuleMovementGenerator(MovementGeneratorMixin):
       ret.append(simulation_movement)
     return ret
 
-  def _getInputMovementList(self, context):
-    return [context.getParentValue(),]
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    return [self._applied_rule.getParentValue(),]

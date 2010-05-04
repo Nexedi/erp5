@@ -70,11 +70,11 @@ class InvoiceRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predi
     PropertySheet.Rule
     )
 
-  def _getMovementGenerator(self):
+  def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process
     """
-    return InvoiceRuleMovementGenerator()
+    return InvoiceRuleMovementGenerator(applied_rule=context, rule=self)
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -82,7 +82,7 @@ class InvoiceRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predi
     """
     return context
 
-  def _getMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self, context):
     """
     Return the movement lists to provide to the movement generator
     """
@@ -94,34 +94,15 @@ class InvoiceRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predi
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class InvoiceRuleMovementGenerator(MovementGeneratorMixin):
-  def getGeneratedMovementList(self, context, movement_list=None,
-                                rounding=False):
-    """
-    Input movement list comes from delivery
-    """
-    ret = []
-    rule = context.getSpecialiseValue()
-    for input_movement, business_path in self \
-            ._getInputMovementAndPathTupleList(context):
-      kw = self._getPropertyAndCategoryList(input_movement, business_path,
-                                            rule)
-      input_movement_url = input_movement.getRelativeUrl()
-      kw.update({'delivery':input_movement_url})
-      simulation_movement = context.newContent(
-        portal_type=RuleMixin.movement_type,
-        temp_object=True,
-        **kw)
-      ret.append(simulation_movement)
-    return ret
 
-  def _getInputMovementList(self, context):
+  def _getInputMovementList(self, movement_list=None, rounding=None):
     """Input movement list comes from delivery"""
-    delivery = context.getDefaultCausalityValue()
+    delivery = self._applied_rule.getDefaultCausalityValue()
     if delivery is None:
       return []
     else:
       ret = []
-      existing_movement_list = context.objectValues()
+      existing_movement_list = self._applied_rule.objectValues()
       for movement in delivery.getMovementList(
         portal_type=(delivery.getPortalInvoiceMovementTypeList() + \
                      delivery.getPortalTaxMovementTypeList())): # This is bad XXX-JPS - use use

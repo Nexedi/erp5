@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -71,11 +72,11 @@ class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predica
     PropertySheet.Rule
     )
 
-  def _getMovementGenerator(self):
+  def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process
     """
-    return OrderRuleMovementGenerator()
+    return OrderRuleMovementGenerator(applied_rule=context, rule=self)
 
   def _getMovementGeneratorContext(self, context):
     """
@@ -83,7 +84,7 @@ class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predica
     """
     return context
 
-  def _getMovementGeneratorMovementList(self):
+  def _getMovementGeneratorMovementList(self, context):
     """
     Return the movement lists to provide to the movement generator
     """
@@ -95,29 +96,10 @@ class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predica
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class OrderRuleMovementGenerator(MovementGeneratorMixin):
-  def getGeneratedMovementList(self, context, movement_list=None,
-                                rounding=False):
-    """
-    Input movement list comes from order
-    """
-    ret = []
-    rule = context.getSpecialiseValue()
-    for input_movement, business_path in self \
-            ._getInputMovementAndPathTupleList(context):
-      kw = self._getPropertyAndCategoryList(input_movement, business_path,
-                                            rule)
-      input_movement_url = input_movement.getRelativeUrl()
-      kw.update({'delivery':input_movement_url})
-      simulation_movement = context.newContent(
-        portal_type=RuleMixin.movement_type,
-        temp_object=True,
-        **kw)
-      ret.append(simulation_movement)
-    return ret
 
-  def _getInputMovementList(self, context):
+  def _getInputMovementList(self, movement_list=None, rounding=None):
     """Input movement list comes from order"""
-    order = context.getDefaultCausalityValue()
+    order = self._applied_rule.getDefaultCausalityValue()
     if order is None:
       return []
     else:
