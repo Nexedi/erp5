@@ -68,7 +68,7 @@ class MovementCollectionUpdaterMixin:
     decision_movement_list = context.getMovementList()
     prevision_movement_list = movement_generator.getGeneratedMovementList(
       self._getMovementGeneratorContext(context),
-      movement_list=self._getMovementGeneratorMovementList(), rounding=rounding)
+      movement_list=self._getMovementGeneratorMovementList(context), rounding=rounding)
 
     # Get divergence testers
     tester_list = self._getMatchingTesterList()
