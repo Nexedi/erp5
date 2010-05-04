@@ -15,9 +15,9 @@ class HyperLinkWidget(LabelWidget):
                            required=1)
 
     def render(self, field, key, value, REQUEST, render_prefix=None):
-        return self.render_view(self, field, value, REQUEST, render_prefix)
+        return self.render_view(field, value, REQUEST, render_prefix)
 
-    def render_view(self, field, value, REQUEST, render_prefix=None):
+    def render_view(self, field, value, REQUEST=None, render_prefix=None):
         return render_element("a",
                               href=field.get_value('href'),
                               css_class=field.get_value('css_class'),
