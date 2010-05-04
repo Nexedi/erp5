@@ -1,3 +1,6 @@
+2010-05-05 Jérome
+* Add an action to add create an initial balance transaction, from an accounting period.
+
 2010-04-09 Jérome
 * Add an action to add multiple accounting lines
 
