@@ -6,18 +6,17 @@ import ZODB
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments
+from runUnitTest import instance_home, static_dir_list
 
 def _print(message):
   sys.stderr.write(message + "\n")
 
-instance_home = os.environ.get('INSTANCE_HOME')
 data_fs_path = os.environ.get('erp5_tests_data_fs_path',
                               os.path.join(instance_home, 'Data.fs'))
 load = int(os.environ.get('erp5_load_data_fs', 0))
 save = int(os.environ.get('erp5_save_data_fs', 0))
 
 _print("Cleaning static files ... ")
-static_dir_list = 'Constraint', 'Document', 'PropertySheet', 'Extensions'
 for dir in static_dir_list:
   for f in glob.glob(os.path.join(instance_home, dir, '*')):
     os.remove(f)

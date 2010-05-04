@@ -9,6 +9,7 @@ import unittest
 import shutil
 import errno
 import random
+from glob import glob
 
 import backportUnittest
 
@@ -105,6 +106,8 @@ Options:
 
 """
 
+static_dir_list = 'Constraint', 'Document', 'Extensions', 'PropertySheet'
+
 def getUnitTestFile():
   """returns the absolute path of this script.
   This is used by template tool to run unit tests."""
@@ -122,43 +125,52 @@ def initializeInstanceHome(tests_framework_home,
                            instance_home):
   if not os.path.exists(instance_home):
     os.mkdir(instance_home)
+    if not WIN:
+      # Try to use relative symlinks
+      if tests_framework_home.startswith(os.path.join(real_instance_home,
+                                                      'Products', '')):
+        tests_framework_home = tests_framework_home[len(real_instance_home)+1:]
+      if real_instance_home == os.path.dirname(instance_home):
+        real_instance_home = 'real_instance'
+        os.symlink('..', os.path.join(instance_home, real_instance_home))
+  old_pwd = os.getcwd()
+  try:
+    os.chdir(instance_home)
+    # Before r23751, Extensions dir was initialized to be a symlink to real
+    # instance home Extensions folder, now it's initialized as an independant
+    # folder. If this test instance still have a symlink for Extensions, change
+    # it in a folder.
+    if os.path.islink('Extensions'):
+      os.remove('Extensions')
 
-  # Before r23751, Extensions dir was initialized to be a symlink to real
-  # instance home Extensions folder, now it's initialized as an independant
-  # folder. If this test instance still have a symlink for Extensions, change
-  # it in a foler.
-  extensions_path = os.path.join(instance_home, 'Extensions')
-  if os.path.islink(extensions_path):
-    os.unlink(extensions_path)
-
-  for d in ('Extensions', 'Constraint', 'Document', 'PropertySheet', 'bin', 'etc', 'tests', 'var', 'log'):
-    path = os.path.join(instance_home, d)
-    if not os.path.exists(path):
-      os.mkdir(path)
-  for d in ('Products', 'bt5', 'svn', 'lib'):
-    src = os.path.join(real_instance_home, d)
-    dst = os.path.join(instance_home, d)
-    if not os.path.exists(dst):
-      if os.path.islink(dst):
-        os.unlink(dst)
-      if WIN:
-        if d in ('Products', 'bt5', 'svn'):
-          os.mkdir(dst)
+    for d in static_dir_list + ('bin', 'etc', 'tests', 'var', 'log'):
+      if not os.path.exists(d):
+        os.mkdir(d)
+    for d in ('Products', 'bt5', 'svn', 'lib'):
+      if not os.path.exists(d):
+        src = os.path.join(real_instance_home, d)
+        if os.path.islink(d):
+          os.remove(d)
+        if WIN:
+          if d in ('Products', 'bt5', 'svn'):
+            os.mkdir(d)
+          else:
+            shutil.copytree(src, d)
         else:
-          shutil.copytree(src, dst)
+          os.symlink(src, d)
+    d = 'custom_zodb.py'
+    if not os.path.exists(d):
+      src = os.path.join(tests_framework_home, d)
+      if os.path.islink(d):
+        os.remove(d)
+      if WIN:
+        shutil.copy(src, d)
       else:
-        os.symlink(src, dst)
-  src = os.path.join(tests_framework_home, 'custom_zodb.py')
-  dst = os.path.join(instance_home, 'custom_zodb.py')
-  if not os.path.exists(dst):
-    if os.path.islink(dst):
-      os.unlink(dst)
-    if WIN:
-      shutil.copy(src, dst)
-    else:
-      os.symlink(src, dst)
+        os.symlink(src, d)
+  finally:
+    os.chdir(old_pwd)
   kw = {
-    "PYTHON":sys.executable,
+    "PYTHON": sys.executable,
     "INSTANCE_HOME": instance_home,
     "SOFTWARE_HOME": software_home,
     }
@@ -175,7 +187,7 @@ def initializeInstanceHome(tests_framework_home,
     import copyzopeskel
     kw['ZOPE_HOME'] = zope_home
     skeldir = 'skel'
-  skelsrc = os.path.abspath(os.path.join(os.path.dirname(__file__), skeldir))
+  skelsrc = os.path.abspath(os.path.join(tests_framework_home, skeldir))
   copyzopeskel.copyskel(skelsrc, instance_home, None, None, **kw)
 
 # site specific variables
@@ -239,9 +251,6 @@ real_tests_home = os.path.join(real_instance_home, 'tests')
 tests_home = os.path.join(instance_home, 'tests')
 
 initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
-
-if '__INSTANCE_HOME' not in globals().keys() :
-  __INSTANCE_HOME = instance_home
 
 
 class FilteredTestSuite(unittest.TestSuite):
@@ -404,9 +413,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     eventlog()
   except ImportError:
     pass
-  
+
   # allow unit tests of our Products or business templates to be reached.
-  from glob import glob
   product_test_list = glob(os.path.join(products_home, '*', 'tests'))
   sys.path.extend(product_test_list)
   erp5_tests_bt5_path = os.environ.get('erp5_tests_bt5_path',
@@ -488,19 +496,18 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   result = TestRunner(verbosity=verbosity).run(suite)
 
   if save:
+    os.chdir(instance_home)
     from Products.ERP5Type.tests.utils import getMySQLArguments
     # The output of mysqldump needs to merge many lines at a time
     # for performance reasons (merging lines is at most 10 times
     # faster, so this produce somewhat not nice to read sql
-    command = 'mysqldump %s > %s' % (getMySQLArguments(),
-                                     os.path.join(instance_home, 'dump.sql'))
+    command = 'mysqldump %s > dump.sql' % getMySQLArguments()
     if verbosity:
       _print('Dumping MySQL database with %s...\n' % command)
     os.system(command)
     if verbosity:
       _print('Dumping static files...\n')
-    for static_dir in 'Constraint', 'Document', 'Extensions', 'PropertySheet':
-      static_dir = os.path.join(instance_home, static_dir)
+    for static_dir in static_dir_list:
       try:
         shutil.rmtree(static_dir + '.bak')
       except OSError, e:
