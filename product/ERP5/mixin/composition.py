@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.Document.BusinessProcess import BusinessProcess
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 
@@ -75,7 +76,12 @@ def _getEffectiveModel(self, start_date=None, stop_date=None):
   return model_list[0].getObject()
 
 
-@transactional_cached()
+# XXX-JPS it is very likely that what must be cached is delivery based
+# since most lines do not "specialise" a delivery - clever caching
+# approach is possible, by keeping one cache at the delivery level 
+# and just accessing it from wherever needed. This could minimize number of
+# caches in RAM and at the same time make things fast
+@transactional_cached() 
 def _findPredicateList(container_list, portal_type=None):
   predicate_list = []
   reference_dict = {}
@@ -93,7 +99,7 @@ def _findPredicateList(container_list, portal_type=None):
   return predicate_list
 
 
-class asComposedDocument(object):
+class asComposedDocument(object):  # XXX-JPS bad name for a class - please follow conventions or explain
   """Return a temporary object which is the composition of all effective models
 
   The returned value is a temporary copy of the given object. The list of all
@@ -103,9 +109,11 @@ class asComposedDocument(object):
   """
 
   def __new__(cls, orig_self, portal_type_list=None):
-    self = orig_self.asContext(_portal_type_list=portal_type_list)
+    self = orig_self.asContext(_portal_type_list=portal_type_list) # XXX-JPS orig_self -> original_self - please follow conventions
     base_class = self.__class__
-    self.__class__ = type(base_class.__name__, (cls, base_class), {})
+    self.__class__ = type(base_class.__name__, (cls, base_class, BusinessProcess), {}) # XXX-JPS - cls is abbriviatoin - please follow naming conventoin
+              # here we could inherit many "useful" classes dynamically - héhé
+              # that would be a "real" abstract composition system
     self._effective_model_list = \
       orig_self._findEffectiveSpecialiseValueList(portal_type_list)
     return self
@@ -194,4 +202,4 @@ class CompositionMixin:
                            if model not in model_set]
     return model_list
 
-del asComposedDocument
+del asComposedDocument # Why ? (hide it ?)
