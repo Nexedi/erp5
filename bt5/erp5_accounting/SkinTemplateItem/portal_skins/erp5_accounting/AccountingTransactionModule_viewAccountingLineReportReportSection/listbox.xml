@@ -111,6 +111,14 @@
                           <string>Account Name</string>
                         </tuple>
                         <tuple>
+                          <string>node_account_type_title</string>
+                          <string>Account Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>node_financial_section_title</string>
+                          <string>Financial Section</string>
+                        </tuple>
+                        <tuple>
                           <string>section_title</string>
                           <string>Section</string>
                         </tuple>

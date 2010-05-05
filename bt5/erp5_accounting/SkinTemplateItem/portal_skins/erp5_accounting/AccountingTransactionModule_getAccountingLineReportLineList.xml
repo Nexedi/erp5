@@ -136,6 +136,16 @@ for delivery in delivery_list:\n
   for movement in delivery.getMovementList(portal_type=portal_type):\n
 \n
     if is_source:\n
+      node = movement.getSourceValue(portal_type=\'Account\')\n
+      node_title = \'\'\n
+      node_account_type_title = \'\'\n
+      node_financial_section_title = \'\'\n
+      if node is not None:\n
+        node_title = node.getTitle()\n
+        node_account_type_title = node.getAccountTypeTranslatedTitle()\n
+        node_financial_section_title = \\\n
+          node.getFinancialSectionTranslatedTitle()\n
+\n
       line_list.append(Object(\n
         title=movement.hasTitle() and movement.getTitle() or\n
                      delivery.getTitle(),\n
@@ -144,8 +154,10 @@ for delivery in delivery_list:\n
         parent_description=delivery.getDescription(),\n
         parent_reference=delivery.getReference(),\n
         specific_reference=delivery.getSourceReference(),\n
-        node_reference=getAccountReference(movement.getSource(portal_type=\'Account\')),\n
-        node_title=movement.getSourceTitle(),\n
+        node_reference=getAccountReference(node),\n
+        node_title=node_title,\n
+        node_account_type_title=node_account_type_title,\n
+        node_financial_section_title=node_financial_section_title,\n
         section_title=movement.getSourceSectionTitle(),\n
         payment_title=getBankAccountTitle(movement.getSourcePaymentValue()),\n
         payment_mode=movement.getPaymentModeTranslatedTitle(),\n
@@ -167,6 +179,16 @@ for delivery in delivery_list:\n
         translated_simulation_state_title=movement.getTranslatedSimulationStateTitle(),))\n
 \n
     if delivery.portal_type == \'Internal Invoice Transaction\' or not is_source:\n
+      node = movement.getDestinationValue(portal_type=\'Account\')\n
+      node_title = \'\'\n
+      node_account_type_title = \'\'\n
+      node_financial_section_title = \'\'\n
+      if node is not None:\n
+        node_title = node.getTitle()\n
+        node_account_type_title = node.getAccountTypeTranslatedTitle()\n
+        node_financial_section_title = \\\n
+          node.getFinancialSectionTranslatedTitle()\n
+\n
       line_list.append(Object(\n
         title=movement.hasTitle() and movement.getTitle() or\n
                      delivery.getTitle(),\n
@@ -175,8 +197,10 @@ for delivery in delivery_list:\n
         parent_description=delivery.getDescription(),\n
         parent_reference=delivery.getReference(),\n
         specific_reference=delivery.getDestinationReference(),\n
-        node_reference=getAccountReference(movement.getDestination(portal_type=\'Account\')),\n
-        node_title=movement.getDestinationTitle(),\n
+        node_reference=getAccountReference(node),\n
+        node_title=node_title,\n
+        node_account_type_title=node_account_type_title,\n
+        node_financial_section_title=node_financial_section_title,\n
         section_title=movement.getDestinationSectionTitle(),\n
         payment_title=getBankAccountTitle(movement.getDestinationPaymentValue()),\n
         payment_mode=movement.getPaymentModeTranslatedTitle(),\n
@@ -266,6 +290,11 @@ return line_list\n
                             <string>delivery</string>
                             <string>is_source</string>
                             <string>movement</string>
+                            <string>node</string>
+                            <string>node_title</string>
+                            <string>node_account_type_title</string>
+                            <string>node_financial_section_title</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
