@@ -80,21 +80,30 @@ class BusinessProcess(Path, XMLObject):
 
       **kw -- same parameters as for searchValues / contentValues
     """
-    # Naive implementation to redo XXX using contentValues
     if trade_phase is None:
-      trade_phase = []
+      trade_phase = set()
     elif not isinstance(trade_phase, (list, tuple)):
-      trade_phase = (trade_phase,)
+      trade_phase = set((trade_phase,))
+    else:
+      trade_phase = set(trade_phase)
     result = []
     if len(trade_phase) == 0:
       return result
-    business_path_list = sorted(self.objectValues(portal_type="Business Path"),
-                                key=lambda x:x.getIntIndex())
-    trade_phase = set(trade_phase)
-    for document in business_path_list:
-      if trade_phase.intersection(document.getTradePhaseList()) and \
-              document.test(context):
-        result.append(document)
+    # Separate the selection of business paths into twp steps
+    # for easier debugging.
+    # First, collect business paths which can be applicable to a given context.
+    business_path_list = []
+    for business_path in self.objectValues(portal_type='Business Path',
+                                           sort_on='int_index'):
+      if trade_phase.intersection(business_path.getTradePhaseList()):
+        business_path_list.append(business_path)
+    # Then, filter business paths by Predicate API.
+    # FIXME: Ideally, we should use the Domain Tool to search business paths,
+    # and avoid using the low level Predicate API. But the Domain Tool does
+    # support the condition above without scripting?
+    for business_path in business_path_list:
+      if business_path.test(context):
+        result.append(business_path)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getStateValueList')
