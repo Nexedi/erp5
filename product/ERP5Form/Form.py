@@ -324,8 +324,9 @@ def getFieldValue(self, field, id, **kw):
   return_value = StaticValue(value)(field, id, **kw)
   return return_value, isCacheable(return_value)
 
-def get_value(self, id, **kw):
-  REQUEST = kw.get('REQUEST', get_request())
+def get_value(self, id, REQUEST=None, **kw):
+  if REQUEST is None:
+    REQUEST = get_request()
   if REQUEST is not None:
     field = REQUEST.get(
       'field__proxyfield_%s_%s_%s' % (self.id, self._p_oid, id),
