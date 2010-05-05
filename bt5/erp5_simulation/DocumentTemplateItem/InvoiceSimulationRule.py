@@ -102,7 +102,7 @@ class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
                   root_simulation_movement.getDestination()
     return {'portal_type': RuleMixin.movement_type,
             'order':None, 'delivery':None,
-            'source':source, 'destination':destination})
+            'source':source, 'destination':destination}
 
   def _getInputMovementList(self, movement_list=None, rounding=None):
     return [self._applied_rule.getParentValue(),]
