@@ -1021,9 +1021,9 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Make sure document cache keeps converted content even if ID changes
     self.assertTrue(document.hasConversion(format='txt'))
-    document.edit(id='document_new_cache')
+    document.setId('document_new_cache')
     self.assertTrue(document.hasConversion(format='txt'))
-    document.edit(id='document_original_cache')
+    document.setId('document_original_cache')
     self.assertTrue(document.hasConversion(format='txt'))
 
   def test_13b_DocumentEditCacheKey(self, quiet=quiet, run=run_all_test):
