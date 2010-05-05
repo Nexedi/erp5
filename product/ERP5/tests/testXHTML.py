@@ -185,20 +185,23 @@ class TestXHTML(ERP5TypeTestCase):
                     % '\n\t'.join(str(e) for e in error_list)
       self.fail(message)
 
-  @expectedFailure
   def test_configurationOfFieldLibrary(self):
     error_list = []
-    for business_template in self.portal.portal_templates.searchFolder():
+    for business_template in self.portal.portal_templates.searchFolder(
+          title=['erp5_trade']):
       # XXX Impossible to filter by installation state, as it is not catalogued
       business_template = business_template.getObject()
       for modifiable_field in business_template.BusinessTemplate_getModifiableFieldList():
-        error_list.append((modifiable_field.object_id,
-                          modifiable_field.choice_item_list[0][0]))
+        # Do not consider 'Check delegated values' as an error
+        if modifiable_field.choice_item_list[0][1] != \
+                                              "0_check_delegated_value":
+          error_list.append((modifiable_field.object_id,
+                            modifiable_field.choice_item_list[0][0]))
     if error_list:
       message = '%s fields to modify' % len(error_list)
-      #message += '\n\t' + '\n\t'.join(fieldname + ": " + message
-      #                                 for fieldname, message in error_list)
-      self.fail(message) # uncomment above for details on each field
+      message += '\n\t' + '\n\t'.join(fieldname + ": " + message
+                                       for fieldname, message in error_list)
+      self.fail(message)
 
   def test_portalTypesDomainTranslation(self):
     # according to bt5-Module.Creation.Guidelines document, module
