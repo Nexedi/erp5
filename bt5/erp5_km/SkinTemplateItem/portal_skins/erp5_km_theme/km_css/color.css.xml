@@ -555,10 +555,10 @@ button#input-save-view span.image {\n
 /* ## form styling #################################### start # */\n
 \n
 .search_button {\n
-\n
+/*\n
 \tbackground: url(../km_img/bt-qsearch.gif) no-repeat transparent;\n
 \ttext-indent:-999999px;\n
-\n
+*/\n
 }\n
 \n
 .search_button:hover {\n

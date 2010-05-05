@@ -1038,7 +1038,9 @@ margin-top:11px;\n
 \tpadding:0;\n
 \twidth:20px;\n
 \theight:20px;\n
-\n
+\tbackground: url(../km_img/bt-qsearch.gif) no-repeat transparent;\n
+\tdisplay:block;\n
+\ttext-indent:-999999px;\n
 }\n
 \n
 #menu .navbar fieldset,\n
