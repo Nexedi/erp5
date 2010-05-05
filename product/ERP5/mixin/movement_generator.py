@@ -73,12 +73,14 @@ class MovementGeneratorMixin:
     # however it should be generic enough not to be overriden
     # by most classes
     # Results will be appended to result, objects created inside folder
+    from Products.ERP5Type.Document import newTempMovement
     result = []
     if self._applied_rule is None:
-      folder = self
+      folder = self # Really useful ?
     else:
       folder = self._applied_rule
     # Build a list of movement and business path
+    id_index = 0
     for input_movement, business_path in self \
             ._getInputMovementAndPathTupleList(movement_list=movement_list, 
                                                rounding=rounding):
@@ -87,16 +89,17 @@ class MovementGeneratorMixin:
       # Update movement properties (class overridable)
       kw.update(self._getUpdatePropertyDict(input_movement))
       # And build temp movement of appropriate type
-      simulation_movement = folder.newContent(
-        temp_object=True,
-        **kw)
+      simulation_movement = newTempMovement(folder,
+                                          'generated_movement_%s' % id_index)
+      simulation_movement._edit(**kw)
       result.append(simulation_movement)
+      id_index += 1
     return result
 
   def _getUpdatePropertyDict(self, input_movement):
     # Default implementation bellow can be overriden by subclasses
-    return {'delivery': input_movement.getRelativeUrl(),
-            'portal_type': RuleMixin.movement_type}
+    return {'delivery': input_movement.getRelativeUrl(), # XXX-JPS empty is better
+            }
 
   def _getTradePhaseList(self, input_movement, business_process):
     if self._trade_phase_list:
