@@ -5,6 +5,7 @@
  </portal_type>
  <portal_type id="Invoice Simulation Rule">
   <item>Category Divergence Tester</item>
+  <item>Mapped Property</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
@@ -18,6 +19,7 @@
  <portal_type id="Invoice Transaction Simulation Rule">
   <item>Accounting Rule Cell</item>
   <item>Category Divergence Tester</item>
+  <item>Mapped Property</item>
   <item>Predicate</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
@@ -42,6 +44,7 @@
  </portal_type>
  <portal_type id="Trade Model Simulation Rule">
   <item>Category Divergence Tester</item>
+  <item>Mapped Property</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
