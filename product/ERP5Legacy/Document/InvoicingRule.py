@@ -74,19 +74,6 @@ class InvoicingRule(Rule):
   def isDeliverable(self, movement):
     return movement.getResource() is not None
 
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
-      business_path, current_property_dict):
-    """
-    In Invoice Simulation Rule, source should be source_administration
-    of the input movement or its order's source. Same for destination.
-    """
-    root_simulation_movement = movement.getRootSimulationMovement()
-    source = movement.getSourceAdministration() or \
-             root_simulation_movement.getSource()
-    destination = movement.getDestinationAdministration() or \
-                  root_simulation_movement.getDestination()
-    return {'source':source, 'destination':destination}
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getExpandablePropertyList')
   def getExpandablePropertyList(self, default=None):
