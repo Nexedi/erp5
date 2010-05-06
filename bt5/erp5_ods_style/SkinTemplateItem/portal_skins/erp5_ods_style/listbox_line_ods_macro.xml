@@ -47,7 +47,7 @@
   <tal:block metal:use-macro="here/style_macros/macros/style_macro"/>\n
   <office:scripts/>\n
 \n
-  <office:body metal:define-macro="form_layout">\n
+  <office:body>\n
   <office:spreadsheet>\n
 \n
     <tal:block metal:define-macro="listbox_line">\n
@@ -55,47 +55,8 @@
       <tal:block tal:condition="python: listbox_line_structure[\'line\'] is not None"\n
                  tal:define="listboxline python: listbox_line_structure[\'line\']">\n
 \n
-        <tal:block metal:define-slot="for_form_list"\n
-                   tal:condition="listboxline/isTitleLine">\n
-          <tal:block metal:define-slot="list_header">\n
-            <table:table-row table:style-name=\'ro4\'>\n
-              <tal:block tal:condition="python: is_report_tree_mode">\n
-                <table:table-cell table:style-name=\'report-column-title\'\n
-                                  table:number-columns-spanned=\'1\'\n
-                                  office:value-type=\'string\'>\n
-                  <tal:block tal:condition="listboxline/getSectionName">\n
-                    <text:p tal:content="listboxline/getSectionName"/>\n
-                  </tal:block>\n
-                </table:table-cell>\n
-                <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth-1)">\n
-                  <table:table-cell table:style-name=\'report-column-title\'\n
-                                    table:number-columns-spanned=\'1\'\n
-                                    office:value-type=\'string\'>\n
-                  </table:table-cell>\n
-                </tal:block>\n
-              </tal:block>\n
-\n
-              <tal:block tal:condition="listboxline/isTitleLine">\n
-                <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
-                  <tal:block tal:define="column_property python: column_item[1];\n
-                                          column_id python: column_item[0]">\n
-                    <table:table-cell table:number-rows-spanned=\'1\' \n
-                                      table:style-name=\'report-column-title\'\n
-                                      table:number-columns-spanned=\'1\'\n
-                                      office:value-type=\'string\'>\n
-                      <text:p i18n:translate="" i18n:domain="ui"\n
-                              tal:content="python: column_property or \'\'">\n
-                      </text:p>\n
-                    </table:table-cell>\n
-                  </tal:block>\n
-                </tal:block>\n
-              </tal:block>\n
-            </table:table-row>\n
-          </tal:block>\n
-        </tal:block>\n
-\n
+        <!-- title line itself is rendered in listbox_ods_macro --> \n
         <tal:block tal:condition="not:listboxline/isTitleLine">\n
-\n
           <table:table-row>\n
             <tal:block tal:condition="python: listboxline.isDataLine()">\n
               <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth)">\n
