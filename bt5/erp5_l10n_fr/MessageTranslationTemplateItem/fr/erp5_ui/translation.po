@@ -382,6 +382,9 @@ msgstr "Compte"
 msgid "Account ${account_title} is not validated."
 msgstr "Le compte ${account_title} n'est pas validé."
 
+msgid "Account Code"
+msgstr "N° de compte"
+
 msgid "Account Module"
 msgstr "Module des comptes"
 
@@ -2791,6 +2794,9 @@ msgstr "Créer une page web par défaut"
 msgid "Create Document"
 msgstr "Créer un document"
 
+msgid "Create Initial Balance Transaction"
+msgstr "Créer la première écriture d'ouverture"
+
 msgid "Create Module"
 msgstr "Créer un module"
 
@@ -2897,6 +2903,16 @@ msgstr "Permet de diviser une livraison en créant plusieurs envois."
 
 msgid "Creating"
 msgstr "Création en cours"
+
+msgid ""
+"Creating a balance transaction is only required to set openning balances for "
+"the first period. Balance Transaction will be created automatically when "
+"closing accounting periods."
+msgstr ""
+"La première écriture d'ouverture n'est nécessaire uniquement que pour "
+"positionner les soldes initiaux de la première période. Pour les années "
+"suivantes, les écritures de reprise des à nouveaux seront crées "
+"automatiquement lors de la clôture des périodes comptables."
 
 msgid "Creation Date"
 msgstr "Date de création"
