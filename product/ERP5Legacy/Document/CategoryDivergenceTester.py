@@ -74,7 +74,10 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
     simulation_movement_getProperty = simulation_movement.getMappedProperty
     for tested_property_id, tested_property_title in \
                                   self._splitStringList(tested_property):
-      list_prop = '%s_list' % tested_property_id
+      if not tested_property_id.endswith('_list'):
+        list_prop = '%s_list' % tested_property_id
+      else:
+        list_prop = tested_property_id
       message = None
       delivery_mvt_category_list = delivery_mvt_getProperty(list_prop)
       simulation_category_list = simulation_movement_getProperty(list_prop)
