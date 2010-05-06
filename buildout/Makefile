@@ -34,6 +34,11 @@ debian-appliance:
 	rm -rf `find debian-erp5-appliance/ -type d -name .svn`
 	rm -rf `find debian-erp5-appliance/ -name *.pyc`
 	cd debian-erp5-appliance/; sudo dpkg-buildpackage -b 
+	svn co  https://svn.erp5.org/repos/public/spec/debian-tiolive-application/ debian-tiolive-application
+	sed -i "s,__PACKAGE_VERSION__,$(PACKAGE_VERSION),g" debian-tiolive-application/debian/rules
+	sed -i "s,__PACKAGE_VERSION__,$(PACKAGE_VERSION),g" debian-tiolive-application/debian/changelog
+	sed -i "s,__PACKAGE_RELEASE__,$(PACKAGE_SOFTWARE_RELEASE),g" debian-tiolive-application/debian/changelog
+	cd debian-tiolive-application; sudo dpkg-buildpackage -b
 
 rpm-appliance:
 	svn co https://svn.erp5.org/repos/public/erp5/trunk/utils/rpmgen rpmgen
