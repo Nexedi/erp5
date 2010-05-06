@@ -245,7 +245,7 @@ class ERP5TypeInformation(XMLObject,
       'order', 'order_movement',
       'container', 'container_line',
       # Different Aspects
-      'sale', 'purchase', 'internal'
+      'sale', 'purchase', 'internal',
       # PDM
       'transformation', 'variation', 'sub_variation',
       'product', 'service', 'model_path',
