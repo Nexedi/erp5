@@ -139,6 +139,10 @@
                           <string>Third Party Bank Account</string>
                         </tuple>
                         <tuple>
+                          <string>mirror_section_region_title</string>
+                          <string>Third Party Region</string>
+                        </tuple>
+                        <tuple>
                           <string>function_title</string>
                           <string>Function</string>
                         </tuple>
