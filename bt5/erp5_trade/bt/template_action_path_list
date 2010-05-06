@@ -14,6 +14,13 @@ Delivery Root Simulation Rule | view
 Delivery Rule | view
 Delivery Simulation Rule | view
 First Causality Movement Group | view
+Internal Order Cell | view
+Internal Order Line | price_view
+Internal Order Line | profile_view
+Internal Order Line | quantity_view
+Internal Order Line | view
+Internal Order Module | view
+Internal Order | view
 Internal Packing List Cell | view
 Internal Packing List Line | profile_view
 Internal Packing List Line | quantity_view

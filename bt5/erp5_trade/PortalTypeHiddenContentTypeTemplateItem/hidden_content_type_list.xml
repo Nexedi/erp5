@@ -2,6 +2,9 @@
  <portal_type id="Container Line">
   <item>Container Cell</item>
  </portal_type>
+ <portal_type id="Internal Order Line">
+  <item>Internal Order Cell</item>
+ </portal_type>
  <portal_type id="Internal Packing List Line">
   <item>Internal Packing List Cell</item>
  </portal_type>

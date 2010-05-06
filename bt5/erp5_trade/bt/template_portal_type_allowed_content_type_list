@@ -14,6 +14,11 @@ Delivery Rule | Quantity Divergence Tester
 Delivery Simulation Rule | Category Divergence Tester
 Delivery Simulation Rule | Property Divergence Tester
 Delivery Simulation Rule | Quantity Divergence Tester
+Internal Order Line | Internal Order Cell
+Internal Order Line | Internal Order Line
+Internal Order Module | Internal Order
+Internal Order | Internal Order Line
+Internal Order | Payment Condition
 Internal Packing List Line | Internal Packing List Cell
 Internal Packing List Module | Internal Packing List
 Internal Packing List | Internal Packing List Line

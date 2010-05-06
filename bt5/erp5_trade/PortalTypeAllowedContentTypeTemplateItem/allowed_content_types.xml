@@ -31,6 +31,17 @@
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
+ <portal_type id="Internal Order">
+  <item>Internal Order Line</item>
+  <item>Payment Condition</item>
+ </portal_type>
+ <portal_type id="Internal Order Line">
+  <item>Internal Order Cell</item>
+  <item>Internal Order Line</item>
+ </portal_type>
+ <portal_type id="Internal Order Module">
+  <item>Internal Order</item>
+ </portal_type>
  <portal_type id="Internal Packing List">
   <item>Internal Packing List Line</item>
   <item>Payment Condition</item>
