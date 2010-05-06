@@ -389,7 +389,9 @@ class Signature(Folder, SyncCode, File):
     chunk = list()
     chunk.append(self.partial_xml.data)
     size = chunk[0].count('\n')
-    current = next = self.partial_xml.next
+
+    current = self.partial_xml
+    next = current.next
     while size < size_lines and next is not None:
       current = next
       size += current.data.count('\n')
