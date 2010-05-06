@@ -404,11 +404,8 @@ class Signature(Folder, SyncCode, File):
       overflow = size - size_lines
       data_list = chunk[-1].split('\n')
       chunk[-1] = '\n'.join(data_list[:-overflow])
-      if current is not None:
-        current.data = '\n'.join(data_list[-overflow:])
-        self.partial_xml = current
-      else:
-        self.partial_xml.data = '\n'.join(data_list[-overflow:])
+      current.data = '\n'.join(data_list[-overflow:])
+      self.partial_xml = current
  
     return ''.join(chunk)
 
