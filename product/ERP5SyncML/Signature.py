@@ -401,13 +401,14 @@ class Signature(Folder, SyncCode, File):
     if size == size_lines:
       self.partial_xml = next
     elif size > size_lines:
+      overflow = size - size_lines
       data_list = chunk[-1].split('\n')
-      chunk[-1] = '\n'.join(data_list[:size_lines])
+      chunk[-1] = '\n'.join(data_list[:-overflow])
       if current is not None:
-        current.data = '\n'.join(data_list[size_lines:])
+        current.data = '\n'.join(data_list[-overflow:])
         self.partial_xml = current
       else:
-        self.partial_xml.data = '\n'.join(data_list[size_lines:])
+        self.partial_xml.data = '\n'.join(data_list[-overflow:])
  
     return ''.join(chunk)
 
