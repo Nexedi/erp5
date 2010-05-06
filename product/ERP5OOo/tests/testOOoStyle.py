@@ -187,7 +187,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('inline', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
-  def test_report_view(self):
+  def test_report_view_form_view(self):
+    # Test report view rendering forms using form_view
+    self.assertEquals('form_view', self.portal.Base_viewWorkflowHistory.pt)
     response = self.publish(
                    '/%s/person_module/pers/Base_viewHistory'
                     % self.portal.getId(), self.auth)
@@ -197,6 +199,26 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_disposition = response.getHeader('content-disposition')
     self.assertEquals('inline', content_disposition.split(';')[0])
     self._validate(response.getBody())
+
+  def test_report_view_form_list(self):
+    # Test report view rendering forms using form_list
+    self.portal.Base_viewWorkflowHistory.pt = 'form_list'
+    try:
+      # publish commits a transaction, so we have to restore the original page
+      # template on the form
+      response = self.publish(
+                   '/%s/person_module/pers/Base_viewHistory'
+                    % self.portal.getId(), self.auth)
+    finally:
+      self.portal.Base_viewWorkflowHistory.pt = 'form_view'
+      transaction.commit()
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
 
   def test_report_view_landscape(self):
     response = self.publish(
