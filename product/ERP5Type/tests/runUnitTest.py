@@ -106,6 +106,13 @@ Options:
 
 """
 
+# This script is usually executed directly, and is also imported using its full
+# doted name from other locations, such as custom_zodb.py . To prevent
+# reloading this module in such case, we store it in sys.modules under that
+# name.
+sys.modules['Products.ERP5Type.tests.runUnitTest'] = sys.modules[__name__]
+
+
 static_dir_list = 'Constraint', 'Document', 'Extensions', 'PropertySheet'
 
 def getUnitTestFile():

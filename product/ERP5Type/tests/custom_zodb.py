@@ -6,7 +6,7 @@ import ZODB
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments
-from runUnitTest import instance_home, static_dir_list
+from Products.ERP5Type.tests.runUnitTest import instance_home, static_dir_list
 
 def _print(message):
   sys.stderr.write(message + "\n")
