@@ -2506,7 +2506,8 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
     unit = base_unit.newContent(
             portal_type='Quantity Unit Conversion Definition',
             quantity_unit='unit/lot',
-            quantity=50,)
+            inverse=True,
+            quantity=1.0/50,)
     unit.validate()
 
     self._safeTic()
