@@ -27,7 +27,9 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager,\
+                          setSecurityManager, newSecurityManager
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from zLOG import LOG, PROBLEM
@@ -273,6 +275,22 @@ class PreferenceTool(BaseTool):
         if template is not None:
           template_list.append(template)
     return template_list
+
+  security.declareProtected(Permissions.ManagePortal,
+                            'createPreferenceForUser')
+  def createPreferenceForUser(self, username):
+    """Creates a preference for a given user.
+    """
+    security_manager = getSecurityManager()
+    try:
+      user_folder = self.getPortalObject().acl_users
+      user = user_folder.getUserById(username)
+      if user is None:
+        raise TypeError("User %r not found" % (username, ))
+      newSecurityManager(None, user.__of__(user_folder))
+      return self.newContent(portal_type='Preference')
+    finally:
+      setSecurityManager(security_manager)
 
 InitializeClass(PreferenceTool)
 
