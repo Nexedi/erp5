@@ -249,6 +249,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         'create_line': self.isCreateLine(),
         'trade_phase_list': self.getTradePhaseList(),
         'target_level': self.getTargetLevel(),
+        'use': self.getUse(),
       }
       common_params.update(property_dict)
 
