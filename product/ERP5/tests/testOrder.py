@@ -2192,7 +2192,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     # add cell to line, line is not a movement anymore
     order_line.setVariationCategoryList(order_line_vcl)
-    cell_key = order_line.getCellKeyList(base_id=base_id)[0]
+    cell_key_list = order_line.getCellKeyList(base_id=base_id)
+    self.assertTrue(len(cell_key_list) > 0)
+    cell_key = cell_key_list[0]
     cell = order_line.newCell(
         base_id=base_id,
         portal_type=self.order_cell_portal_type,
