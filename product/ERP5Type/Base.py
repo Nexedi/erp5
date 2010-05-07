@@ -31,6 +31,7 @@ from struct import unpack
 from copy import copy
 import warnings
 import types
+from threading import local
 
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
@@ -564,7 +565,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
     # Always do it before processing klass.property_sheets (for compatibility).
     # Because of the order we generate accessors, it is still possible
     # to overload data access for some accessors.
-    ptype_object = portal.portal_types._getOb(ptype, None)
+    ptype_object = portal.portal_types.getTypeInfo(ptype)
     if ptype_object is not None:
       ptype_object.updatePropertySheetDefinitionDict(ps_definition_dict)
 
@@ -755,6 +756,7 @@ class Base( CopyContainer,
 
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
+  aq_method_generating = local()
   aq_portal_type = {}
   aq_related_generated = 0
 
@@ -886,99 +888,107 @@ class Base( CopyContainer,
       return accessor
     except KeyError:
       property_holder = None
+      if getattr(Base.aq_method_generating, 'aq_key', None) == aq_key:
+        # We are already generating for this aq_key, return not to generate
+        # again.
+        return None
 
-    if id in ('portal_types', 'portal_url', 'portal_workflow'):
-      # This is required to precent infinite loop (we need to access portal_types tool)
-      return None
+    # Store that we are generating for this aq_key, then when we will recurse
+    # in _aq_dynamic during generation for this aq_key, we'll return to prevent
+    # infinite loops. While generating for one aq_key, we will probably have to
+    # generate for another aq_key, a typical example is that to generate
+    # methods for a document, we'll have to generate methods for Types Tool and
+    # Base Category portal.
+    Base.aq_method_generating.aq_key = aq_key
+    try:
+      # Proceed with property generation
+      if self.isTempObject():
+        # If self is a temporary object, generate methods for the base
+        # document class rather than for the temporary document class.
+        # Otherwise, instances of the base document class would fail
+        # in calling such methods, because they are not instances of
+        # the temporary document class.
+        klass = klass.__bases__[0]
 
-    # Proceed with property generation
-    if self.isTempObject():
-      # If self is a temporary object, generate methods for the base
-      # document class rather than for the temporary document class.
-      # Otherwise, instances of the base document class would fail
-      # in calling such methods, because they are not instances of
-      # the temporary document class.
-      klass = klass.__bases__[0]
-    generated = 0 # Prevent infinite loops
+      generated = False # Prevent infinite loops
 
-    # Generate class methods
-    if not Base.aq_method_generated.has_key(klass):
-      initializeClassDynamicProperties(self, klass)
-      generated = 1
+      # Generate class methods
+      if klass not in Base.aq_method_generated:
+        initializeClassDynamicProperties(self, klass)
+        generated = True
 
-    # Iterate until an ERP5 Site is obtained.
-    portal = self.getPortalObject()
-    while portal.portal_type != 'ERP5 Site':
-      portal = portal.aq_parent.aq_inner.getPortalObject()
+      # Iterate until an ERP5 Site is obtained.
+      portal = self.getPortalObject()
+      while portal.portal_type != 'ERP5 Site':
+        portal = portal.aq_parent.aq_inner.getPortalObject()
 
-    # Generate portal_type methods
-    if not Base.aq_portal_type.has_key(aq_key):
-      if ptype == 'Preference':
-        # XXX-JPS this should be moved to Preference class
-        from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
-        updatePreferenceClassPropertySheetList()
-      initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal)
-      generated = 1
+      # Generate portal_type methods
+      if aq_key not in Base.aq_portal_type:
+        if ptype == 'Preference':
+          # XXX-JPS this should be moved to Preference class
+          from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
+          updatePreferenceClassPropertySheetList()
+        initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal)
+        generated = True
 
-    # Generate Related Accessors
-    if not Base.aq_related_generated:
-      from Utils import createRelatedValueAccessors
-      generated = 1
-      portal_types = getToolByName(portal, 'portal_types', None)
-      generated_bid = {}
-      econtext = createExpressionContext(object=self, portal=portal)
-      for pid, ps in PropertySheet.__dict__.iteritems():
-        if pid[0] != '_':
-          base_category_list = []
-          for cat in getattr(ps, '_categories', ()):
-            if isinstance(cat, Expression):
-              result = cat(econtext)
-              if isinstance(result, (list, tuple)):
-                base_category_list.extend(result)
+      # Generate Related Accessors
+      if not Base.aq_related_generated:
+        from Utils import createRelatedValueAccessors
+        generated = True
+        portal_types = getToolByName(portal, 'portal_types', None)
+        generated_bid = {}
+        econtext = createExpressionContext(object=self, portal=portal)
+        for pid, ps in PropertySheet.__dict__.iteritems():
+          if pid[0] != '_':
+            base_category_list = []
+            for cat in getattr(ps, '_categories', ()):
+              if isinstance(cat, Expression):
+                result = cat(econtext)
+                if isinstance(result, (list, tuple)):
+                  base_category_list.extend(result)
+                else:
+                  base_category_list.append(result)
               else:
-                base_category_list.append(result)
-            else:
-              base_category_list.append(cat)
-          for bid in base_category_list:
-            if bid not in generated_bid:
-              #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
+                base_category_list.append(cat)
+            for bid in base_category_list:
+              if bid not in generated_bid:
+                createRelatedValueAccessors(property_holder, bid)
+                generated_bid[bid] = 1
+        for ptype in portal_types.listTypeInfo():
+          for bid in ptype.getTypeBaseCategoryList():
+            if bid not in generated_bid :
               createRelatedValueAccessors(property_holder, bid)
               generated_bid[bid] = 1
-      for ptype in portal_types.objectValues():
-        for bid in ptype.getTypeBaseCategoryList():
-          if bid not in generated_bid :
-            createRelatedValueAccessors(property_holder, bid)
-            generated_bid[bid] = 1
 
-      Base.aq_related_generated = 1
+        Base.aq_related_generated = 1
 
-    # Generate preference methods (since side effect is to reset Preference accessors)
-    # XXX-JPS - This should be moved to PreferenceTool
-    if not Base.aq_preference_generated:
-      try :
-        from Products.ERP5Form.PreferenceTool import createPreferenceToolAccessorList
-        from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
-        updatePreferenceClassPropertySheetList()
-        createPreferenceToolAccessorList(portal)
-      except ImportError, e :
-        LOG('Base._aq_dynamic', WARNING,
-            'unable to create methods for PreferenceTool', e)
-        raise
-      Base.aq_preference_generated = 1
+      # Generate preference methods (since side effect is to reset Preference accessors)
+      # XXX-JPS - This should be moved to PreferenceTool
+      if not Base.aq_preference_generated:
+        try :
+          from Products.ERP5Form.PreferenceTool import createPreferenceToolAccessorList
+          from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
+          updatePreferenceClassPropertySheetList()
+          createPreferenceToolAccessorList(portal)
+        except ImportError, e :
+          LOG('Base._aq_dynamic', WARNING,
+              'unable to create methods for PreferenceTool', e)
+          raise
+        Base.aq_preference_generated = 1
 
-    # Always try to return something after generation
-    if generated:
-      # We suppose that if we reach this point
-      # then it means that all code generation has succeeded
-      # (no except should hide that). We can safely return None
-      # if id does not exist as a dynamic property
-      # Baseline: accessor generation failures should always
-      #           raise an exception up to the user
-      #LOG('_aq_dynamic', 0, 'getattr self = %r, id = %r' % (self, id))
-      return getattr(self, id, None)
+      # Always try to return something after generation
+      if generated:
+        # We suppose that if we reach this point
+        # then it means that all code generation has succeeded
+        # (no except should hide that). We can safely return None
+        # if id does not exist as a dynamic property
+        # Baseline: accessor generation failures should always
+        #           raise an exception up to the user
+        return getattr(self, id, None)
+    finally:
+      Base.aq_method_generating.aq_key = None
 
     # Proceed with standard acquisition
-    #LOG('_aq_dynamic', 0, 'not generated; return None for id = %r, self = %r' % (id, self))
     return None
 
   psyco.bind(_aq_dynamic)
