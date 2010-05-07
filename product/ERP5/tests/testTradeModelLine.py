@@ -2763,7 +2763,8 @@ return current_movement
                                     price=100, quantity=1,
                                     resource_value=resource_A,
                                     base_contribution_list=['base_amount/tax'])
-    # create a movement which base contribution is empty.
+    # create a movement which base contribution is empty and shoud not be
+    # aggregated
     order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
                                     price=50, quantity=1,
                                     resource_value=resource_A,
