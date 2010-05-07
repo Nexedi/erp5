@@ -80,9 +80,11 @@ class FunctionalTestRunner:
     program = os.path.basename(sys.argv[0])
     print >>stream, __doc__ % {"program": program}
 
-  def parseArgs(self):
+  def parseArgs(self, arguments=None):
+    if arguments is None:
+      arguments = sys.argv[:1]
     try:
-      opts, args = getopt.getopt(sys.argv[1:],
+      opts, args = getopt.getopt(arguments,
             "hsd", ["help", "stdout", "debug",
                    "email_to_address=", "host=", "port=", 
                    "portal_name=", "run_only=", "user=", 
@@ -278,6 +280,12 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     self.setPreference()
     self.unsubscribeFromTimerService()
 
+  def getSvnRevision(self):
+    # get SVN revision used
+    os.chdir('%s/Products/ERP5' % self.instance_home)
+    revision = pysvn.Client().info('.').revision.number
+    return revision
+
   def sendResult(self):
     result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % self.portal_url).readline()
     print result_uri
@@ -293,9 +301,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     failures = failures_re.search(file_content).group(1)
     error_titles = [re.compile('\s+').sub(' ', x).strip()
                     for x in error_title_re.findall(file_content)]
-    # get SVN revision used
-    os.chdir('%s/Products/ERP5' % self.instance_home)
-    revision = pysvn.Client().info('.').revision.number
+    revision = self.getSvnRevision()
   
     subject = "%s r%s: Functional Tests, %s Passes, %s Failures" \
                 % (self.email_subject, revision, passes, failures)

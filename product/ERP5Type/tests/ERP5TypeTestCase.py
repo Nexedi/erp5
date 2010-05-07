@@ -991,7 +991,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
                 from Products import DeadlockDebugger
               except ImportError:
                 pass
-              self.startZServer()
+              self.serverhost, self.serverport = self.startZServer()
 
             self._updateConversionServerConfiguration()
             self._updateConnectionStrings()

@@ -32,10 +32,30 @@
 # usage: python runUnitTest.py --save [OPTION]... prepareFunctionalTest.py
 #
 
-import os
+import os, os.path
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
+from Products.ERP5Type.tests.runFunctionalTest import (
+    FunctionalTestRunner as FunctionalTestRunnerBase
+)
+
+class FunctionalTestRunner(FunctionalTestRunnerBase):
+
+  def __init__(self, host, port):
+    FunctionalTestRunnerBase.__init__(self, os.environ['INSTANCE_HOME'])
+    # local overrides
+    self.host = host
+    self.port = port
+  
+  def getSvnRevision(self):
+    # we should get the revision of a business template, but this is good
+    # enough for now.
+    import pysvn
+    revision = pysvn.Client().info(os.path.dirname(__file__)).revision.number
+    return revision
+
 
 os.environ['erp5_tests_portal_id'] = 'erp5_portal'
 
@@ -70,10 +90,22 @@ class TestZelenium(ERP5TypeTestCase):
                 # 'erp5_payroll_ui_test',
                 )
 
-    def testInformation(self):
-        print MSG
-        import IPython.Shell
-        IPython.Shell.IPShellEmbed('')(local_ns=locals(), global_ns=globals())
+    def testFunctional(self):
+      # first of all, abort to get rid of the mysql participation inn this
+      # transaction
+      self.portal._p_jar.sync()
+      self.runner = FunctionalTestRunner(self.serverhost, self.serverport)
+      # XXX weak parsing of arguments, avoid spaces in argument values:
+      runner_arguments = os.environ.get('erp5_functional_test_arguments',
+                                        '').split()
+      self.runner.parseArgs(runner_arguments)
+      self.logMessage('starting functional test runner with arguments: %s' %
+                      runner_arguments)
+      self.runner.main()
+      self.runner.sendResult()
+      #print MSG
+      #import IPython.Shell
+      #IPython.Shell.IPShellEmbed('')(local_ns=locals(), global_ns=globals())
 
 def test_suite():
     suite = unittest.TestSuite()
