@@ -1907,9 +1907,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # each portal type
     (default_chain, chain_dict) = getChainByType(context)
     # First convert all workflow_ids into list.
-    for key in chain_dict:
-      chain_dict.update({key: chain_dict[key].\
-                                          split(self._chain_string_separator)})
+    for key, value in chain_dict.iteritems():
+      chain_dict[key] = value.split(self._chain_string_separator)
     # Set the default chain to the empty string is probably the
     # best solution, by default it is 'default_workflow', which is
     # not very usefull
@@ -1966,9 +1965,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                                                , portal_type))
           chain_dict[chain_key] = self._objects[path]
     # convert workflow list into string only at the end.
-    for key in chain_dict:
-      chain_dict.update({key: self._chain_string_separator.\
-                                                        join(chain_dict[key])})
+    for key, value in chain_dict.iteritems():
+      chain_dict[key] =  self._chain_string_separator.join(value)
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
 
