@@ -62,9 +62,8 @@ dQEAAAAA</string> </value>
             table:default-cell-style-name=\'report-column-title\'/>\n
 \n
       <!-- macro form_layout -->\n
-      <tal:block metal:define-macro="form_layout">\n
+      <tal:block metal:define-macro="form_layout" tal:define="display_header python:False">\n
         <tal:block tal:define="global group_list python:form.get_groups()"/>\n
-        <!-- Use the user preferences -->\n
         <tal:block tal:repeat="group python: [g for g in group_list if g not in (\'hidden\', )]">\n
           <tal:block tal:define="field_list python: form.get_fields_in_group(group)">\n
             <tal:block tal:condition="python: field_list not in [None, []]">\n

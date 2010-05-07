@@ -59,7 +59,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_setFile,</string>
+                <string>_setFile</string>
                 <string>_setTextContent</string>
               </list>
             </value>

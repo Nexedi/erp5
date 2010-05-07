@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts72458028.86</string> </value>
+            <value> <string>ts72891835.3</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -89,7 +89,7 @@ a.discussion-post-creator-title-link{\n
 }\n
 \n
 div.discussion-post-body-container{\n
-  /*float: left;*/\n
+  float: left;\n
   margin-left: 10px;\n
   margin-top: 10px;\n
   margin-bottom: 10px;\n
@@ -105,11 +105,18 @@ div.discussion-post-author-signature-container{\n
 }\n
 \n
 button.discussion-post-action-button{\n
-  border: dashed 1px #3D6474; \n
-  background-color: #eee; \n
+  /*border: dashed 1px #3D6474; \n
+  background-color: #eee;\n
+  */\n
   padding: 3px;\n
 }\n
-</string> </value>
+\n
+blockquote {\n
+  background-color:#E9E9E9 ;\n
+  border:1px solid #8CACBB;\n
+  margin:5px;\n
+  padding:10px 15px;\n
+}</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -117,7 +124,7 @@ button.discussion-post-action-button{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1333</int> </value>
+            <value> <int>1442</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

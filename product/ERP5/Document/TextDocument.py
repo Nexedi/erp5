@@ -37,6 +37,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Document import Document, ConversionError
 from Products.ERP5Type.WebDAVSupport import TextContent
 import re
+import md5
 
 try:
   from string import Template
@@ -295,3 +296,19 @@ class TextDocument(Document, TextContent):
     def getMimeTypeAndContent(self):
       """This method returns a tuple which contains mimetype and content."""
       return (self.getTextFormat(), self.getTextContent())
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
+    def updateContentMd5(self):
+     """Update md5 checksum from the original file
+     
+     XXX-JPS - this method is not part of any interfacce.
+               should it be public or private. It is called
+               by some interaction workflow already. Is
+               it general or related to caching only ?
+     """
+     data = self.getTextContent()
+     if data is not None:
+       data = str(data) # Usefull for Pdata
+       self._setContentMd5(md5.new(data).hexdigest()) # Reindex is useless
+     else:
+       self._setContentMd5(None)

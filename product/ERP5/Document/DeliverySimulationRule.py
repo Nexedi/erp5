@@ -44,17 +44,6 @@ class DeliverySimulationRule(Rule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isAccountable')
-  def isAccountable(self, movement):
-    """
-    Tells whether generated movement needs to be accounted or not.
-
-    Invoice movement are never accountable, so simulation movement for
-    invoice movements should not be accountable either.
-    """
-    return 0
-
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, applied_rule, force=0, **kw):
     """

@@ -56,6 +56,7 @@ class AccountingTransactionLine(DeliveryLine):
                     , PropertySheet.Arrow
                     , PropertySheet.Price
                     , PropertySheet.AccountingTransactionLine
+                    , PropertySheet.PaymentCondition
                     )
 
 

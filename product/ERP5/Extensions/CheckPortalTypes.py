@@ -39,6 +39,10 @@ def updateBalanceTransactionClass(self):
     source_section_list = self.getValueList('destination_section')
     destination_payment_list = self.getValueList('source_payment')
     source_payment_list = self.getValueList('destination_payment')
+    destination_project_list = self.getValueList('source_project')
+    source_project_list = self.getValueList('destination_project')
+    destination_function_list = self.getValueList('source_function')
+    source_function_list = self.getValueList('destination_function')
     stop_date = self.getStartDate()
     start_date = self.getStopDate()
     source_reference = self.getDestinationReference()
@@ -49,6 +53,11 @@ def updateBalanceTransactionClass(self):
               destination_section_value_list=destination_section_list,
               source_section_value_list=source_section_list,
               destination_payment_value_list=destination_payment_list,
+              source_payment_value_list=source_payment_list,
+              destination_project_value_list=destination_project_list,
+              source_project_value_list=source_project_list,
+              destination_function_value_list=destination_function_list,
+              source_function_value_list=source_function_list,
               stop_date=stop_date,
               start_date=start_date,
               source_reference=source_reference,

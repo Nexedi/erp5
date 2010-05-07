@@ -94,8 +94,9 @@
 \n
 #menu ul.nav li:hover a {\n
 \n
+  background-color: #a8a799;\n
   color:#fff;\n
-  background: url(../km_img/nav-hover.png) repeat-x transparent;\n
+  text-shadow: 0 1px 0 #7a7964;\n
 \n
 }\n
 \n
@@ -113,7 +114,6 @@
 \n
 #menu ul.nav li:hover ul li a {\n
 \n
-  border-bottom: 1px solid #999999;\n
   text-align:left;\n
   display:block;\n
   background:#818363;\n

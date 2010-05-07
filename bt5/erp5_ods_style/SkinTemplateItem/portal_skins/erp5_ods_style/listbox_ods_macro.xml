@@ -65,13 +65,48 @@
                max_section_depth python: max([x.getSectionDepth() for x in listboxline_list]) + int(is_report_tree_mode);\n
                " i18n:domain="ui">\n
 \n
-            <!-- Define a slot specific for form_list, because in list mode we want to use a \n
-                 <table:table-header-rows> so that header is repeated on all pages, and we can\'t\n
-                 do this in form_view, because only one table-header-rows is allowed in <table:table>.\n
-             -->\n
-            <tal:block metal:define-slot="for_form_list"\n
-                       tal:condition="listboxline/isTitleLine">\n
-              <tal:block metal:define-slot="list_header">\n
+            <tal:block tal:condition="listboxline/isTitleLine">\n
+\n
+              <tal:block tal:condition="display_header | nothing">\n
+                <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
+                  <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
+                    <table:table-column table:style-name=\'co2\'\n
+                      table:default-cell-style-name=\'report-column-title\'/>\n
+                  </tal:block>\n
+                </tal:block> \n
+                \n
+                <table:table-header-rows>\n
+                  <table:table-row table:style-name=\'ro4\'>\n
+                    <tal:block tal:condition="python: is_report_tree_mode">\n
+                      <table:table-cell table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
+                        <tal:block tal:condition="listboxline/getSectionName">\n
+                          <text:p  tal:content="python: here.Localizer.erp5_ui.gettext(listboxline.getSectionName()).encode(\'utf-8\')"/>\n
+                        </tal:block>\n
+                      </table:table-cell>\n
+                    </tal:block>\n
+                    <tal:block tal:condition="listboxline/isTitleLine">\n
+                      <tal:block tal:repeat="column_item listboxline/getColumnItemList">\n
+                        <tal:block tal:define="column_property python: column_item[1]; column_id python: column_item[0]">\n
+                          <tal:block tal:condition="python: column_property is not None" >\n
+                            <table:table-cell table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-columns-spanned=\'1\' office:value-type=\'string\' >\n
+                              <text:p i18n:translate="" i18n:domain="ui" tal:content="column_property">\n
+                              </text:p>\n
+                            </table:table-cell>\n
+                          </tal:block>\n
+                          <tal:block tal:condition="python: column_property is None">\n
+                            <table:table-cell  table:number-rows-spanned=\'1\' table:style-name=\'report-column-title\' table:number-colwithdrawnumns-spanned=\'1\' office:value-type=\'string\'>\n
+                              <text:p tal:content="python: \'\'">\n
+                              </text:p>\n
+                            </table:table-cell>\n
+                          </tal:block>\n
+                        </tal:block>\n
+                      </tal:block>\n
+                    </tal:block>\n
+                  </table:table-row>\n
+                </table:table-header-rows>\n
+              </tal:block>\n
+\n
+              <tal:block tal:condition="not:display_header">\n
                 <table:table-row table:style-name=\'ro4\'>\n
                   <tal:block tal:repeat="empty_index python: xrange(0, max_section_depth)">\n
                     <table:table-cell table:style-name=\'report-column-title\'\n
@@ -92,7 +127,7 @@
                     </tal:block>\n
                   </tal:block>\n
                 </table:table-row>\n
-              </tal:block>\n
+              </tal:block> \n
             </tal:block>\n
 \n
         <tal:block metal:use-macro="here/listbox_line_ods_macro/macros/listbox_line"/>\n

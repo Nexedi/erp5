@@ -1539,7 +1539,7 @@ def render_element(tag, **kw):
   if kw.has_key('contents'):
     contents = kw['contents']
     del kw['contents']
-    return "%s>%s</%s>" % (apply(render_tag, (tag, ), kw), contents, tag)
+    return "%s>\n%s</%s>" % (apply(render_tag, (tag, ), kw), contents, tag)
   else:
     return apply(render_tag, (tag, ), kw) + " />"
 

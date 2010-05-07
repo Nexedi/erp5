@@ -87,6 +87,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Int Index</string>
+                        </tuple>
+                        <tuple>
                           <string>parent_description</string>
                           <string>Description</string>
                         </tuple>
@@ -107,12 +111,36 @@
                           <string>Account Name</string>
                         </tuple>
                         <tuple>
+                          <string>node_account_type_title</string>
+                          <string>Account Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>node_financial_section_title</string>
+                          <string>Financial Section</string>
+                        </tuple>
+                        <tuple>
                           <string>section_title</string>
                           <string>Section</string>
                         </tuple>
                         <tuple>
+                          <string>payment_title</string>
+                          <string>Section Bank Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>payment_mode</string>
+                          <string>Payment Mode</string>
+                        </tuple>
+                        <tuple>
                           <string>mirror_section_title</string>
                           <string>Third Party</string>
+                        </tuple>
+                        <tuple>
+                          <string>mirror_payment_title</string>
+                          <string>Third Party Bank Account</string>
+                        </tuple>
+                        <tuple>
+                          <string>mirror_section_region_title</string>
+                          <string>Third Party Region</string>
                         </tuple>
                         <tuple>
                           <string>function_title</string>
@@ -121,6 +149,14 @@
                         <tuple>
                           <string>project_title</string>
                           <string>Project</string>
+                        </tuple>
+                        <tuple>
+                          <string>product_line</string>
+                          <string>Product Line</string>
+                        </tuple>
+                        <tuple>
+                          <string>string_index</string>
+                          <string>String Index</string>
                         </tuple>
                         <tuple>
                           <string>date</string>

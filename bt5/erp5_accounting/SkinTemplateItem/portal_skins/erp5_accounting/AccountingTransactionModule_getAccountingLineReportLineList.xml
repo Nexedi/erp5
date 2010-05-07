@@ -77,23 +77,42 @@ else:\n
   delivery_list = \\\n
     portal_selections.callSelectionFor(selection_name, context=context)\n
 \n
+\n
 account_reference_cache = dict()\n
-def getAccountReference(relative_url):\n
+def getAccountReference(node):\n
   try:\n
-    return account_reference_cache[relative_url]\n
+    return account_reference_cache[node]\n
   except KeyError:\n
-    if relative_url:\n
-      reference = \\\n
-        portal.restrictedTraverse(relative_url).Account_getGapId()\n
+    if node is not None:\n
+      reference = node.Account_getGapId()\n
     else:\n
       reference = \'\'\n
-    account_reference_cache[relative_url] = reference\n
+    account_reference_cache[node] = reference\n
     return reference\n
 \n
 def getTitle(document):\n
   if document is not None:\n
     return document.getTitle()\n
   return \'\'\n
+\n
+bank_account_title_cache = dict()\n
+def getBankAccountTitle(bank_account):\n
+  try:\n
+    return bank_account_title_cache[bank_account]\n
+  except KeyError:\n
+    pass\n
+\n
+  if bank_account is not None:\n
+    reference = bank_account.getReference()\n
+    title = bank_account.getTitle()\n
+    if reference and reference != title:\n
+      value = "%s - %s" % (reference, title)\n
+    else:\n
+      value = title\n
+  else:\n
+    value = \'\'\n
+  bank_account_title_cache[bank_account] = value\n
+  return value\n
 \n
 accounting_currency_reference_cache = dict()\n
 def getAccountingCurrencyReference(section_relative_url):\n
@@ -117,18 +136,37 @@ for delivery in delivery_list:\n
   for movement in delivery.getMovementList(portal_type=portal_type):\n
 \n
     if is_source:\n
+      node = movement.getSourceValue(portal_type=\'Account\')\n
+      node_title = \'\'\n
+      node_account_type_title = \'\'\n
+      node_financial_section_title = \'\'\n
+      if node is not None:\n
+        node_title = node.getTitle()\n
+        node_account_type_title = node.getAccountTypeTranslatedTitle()\n
+        node_financial_section_title = \\\n
+          node.getFinancialSectionTranslatedTitle()\n
+\n
       line_list.append(Object(\n
         title=movement.hasTitle() and movement.getTitle() or\n
                      delivery.getTitle(),\n
+        int_index=movement.getIntIndex(),\n
+        string_index=movement.getStringIndex(),\n
         parent_description=delivery.getDescription(),\n
         parent_reference=delivery.getReference(),\n
         specific_reference=delivery.getSourceReference(),\n
-        node_reference=getAccountReference(movement.getSource(portal_type=\'Account\')),\n
-        node_title=movement.getSourceTitle(),\n
+        node_reference=getAccountReference(node),\n
+        node_title=node_title,\n
+        node_account_type_title=node_account_type_title,\n
+        node_financial_section_title=node_financial_section_title,\n
         section_title=movement.getSourceSectionTitle(),\n
+        payment_title=getBankAccountTitle(movement.getSourcePaymentValue()),\n
+        payment_mode=movement.getPaymentModeTranslatedTitle(),\n
         mirror_section_title=movement.getDestinationSectionTitle(),\n
+        mirror_payment_title=getBankAccountTitle(movement.getDestinationPaymentValue()),\n
+        mirror_section_region_title=movement.getDestinationRegionTranslatedTitle(),\n
         function_title=getTitle(movement.getSourceFunctionValue()),\n
         project_title=getTitle(movement.getSourceProjectValue()),\n
+        product_line=movement.getProductLineTranslatedTitle(),\n
         date=movement.getStartDate(),\n
         debit=movement.getSourceInventoriatedTotalAssetDebit(),\n
         credit=movement.getSourceInventoriatedTotalAssetCredit(),\n
@@ -140,19 +178,39 @@ for delivery in delivery_list:\n
         translated_portal_type=movement.getTranslatedPortalType(),\n
         parent_translated_portal_type=delivery.getTranslatedPortalType(),\n
         translated_simulation_state_title=movement.getTranslatedSimulationStateTitle(),))\n
+\n
     if delivery.portal_type == \'Internal Invoice Transaction\' or not is_source:\n
+      node = movement.getDestinationValue(portal_type=\'Account\')\n
+      node_title = \'\'\n
+      node_account_type_title = \'\'\n
+      node_financial_section_title = \'\'\n
+      if node is not None:\n
+        node_title = node.getTitle()\n
+        node_account_type_title = node.getAccountTypeTranslatedTitle()\n
+        node_financial_section_title = \\\n
+          node.getFinancialSectionTranslatedTitle()\n
+\n
       line_list.append(Object(\n
         title=movement.hasTitle() and movement.getTitle() or\n
                      delivery.getTitle(),\n
+        int_index=movement.getIntIndex(),\n
+        string_index=movement.getStringIndex(),\n
         parent_description=delivery.getDescription(),\n
         parent_reference=delivery.getReference(),\n
         specific_reference=delivery.getDestinationReference(),\n
-        node_reference=getAccountReference(movement.getDestination(portal_type=\'Account\')),\n
-        node_title=movement.getDestinationTitle(),\n
+        node_reference=getAccountReference(node),\n
+        node_title=node_title,\n
+        node_account_type_title=node_account_type_title,\n
+        node_financial_section_title=node_financial_section_title,\n
         section_title=movement.getDestinationSectionTitle(),\n
+        payment_title=getBankAccountTitle(movement.getDestinationPaymentValue()),\n
+        payment_mode=movement.getPaymentModeTranslatedTitle(),\n
         mirror_section_title=movement.getSourceSectionTitle(),\n
+        mirror_section_region_title=movement.getSourceRegionTranslatedTitle(),\n
+        mirror_payment_title=getBankAccountTitle(movement.getSourcePaymentValue()),\n
         function_title=getTitle(movement.getDestinationFunctionValue()),\n
         project_title=getTitle(movement.getDestinationProjectValue()),\n
+        product_line=movement.getProductLineTranslatedTitle(),\n
         date=movement.getStopDate(),\n
         debit=movement.getDestinationInventoriatedTotalAssetDebit(),\n
         credit=movement.getDestinationInventoriatedTotalAssetCredit(),\n
@@ -226,12 +284,19 @@ return line_list\n
                             <string>account_reference_cache</string>
                             <string>getAccountReference</string>
                             <string>getTitle</string>
+                            <string>bank_account_title_cache</string>
+                            <string>getBankAccountTitle</string>
                             <string>accounting_currency_reference_cache</string>
                             <string>getAccountingCurrencyReference</string>
                             <string>portal_type</string>
                             <string>delivery</string>
                             <string>is_source</string>
                             <string>movement</string>
+                            <string>node</string>
+                            <string>node_title</string>
+                            <string>node_account_type_title</string>
+                            <string>node_financial_section_title</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

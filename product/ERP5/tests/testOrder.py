@@ -747,7 +747,10 @@ class TestOrderMixin:
       Test if order cell acquired some order line properties
     """
     order_line = sequence.get('order_line')
-    cell = order_line.getCellValueList()[0]
+    cell_list = order_line.getCellValueList()
+    self.assertTrue(len(cell_list) > 0)
+    cell = cell_list[0]
+
     self.checkAcquisition(cell, order_line)
     # Test resource
     self.assertEquals(order_line.getResource(), \
@@ -1045,8 +1048,8 @@ class TestOrderMixin:
     """
     order_line = sequence.get('order_line')
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
-    if len(cell_list) > 0:
-      order_cell = cell_list[0].getObject()
+    self.assertTrue(len(cell_list) > 0)
+    order_cell = cell_list[0].getObject()
     order_cell.setStartDate(self.datetime + 99)
 
   def stepModifyOrderLineQuantity(self, sequence=None, sequence_list=None, \
@@ -2192,7 +2195,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     # add cell to line, line is not a movement anymore
     order_line.setVariationCategoryList(order_line_vcl)
-    cell_key = order_line.getCellKeyList(base_id=base_id)[0]
+    cell_key_list = order_line.getCellKeyList(base_id=base_id)
+    self.assertTrue(len(cell_key_list) > 0)
+    cell_key = cell_key_list[0]
     cell = order_line.newCell(
         base_id=base_id,
         portal_type=self.order_cell_portal_type,

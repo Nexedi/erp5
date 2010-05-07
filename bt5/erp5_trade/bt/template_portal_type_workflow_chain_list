@@ -18,6 +18,21 @@ Delivery Rule | edit_workflow
 Delivery Rule | rule_validation_workflow
 Delivery Simulation Rule | edit_workflow
 Delivery Simulation Rule | rule_validation_workflow
+Internal Order Cell | delivery_movement_causality_interaction_workflow
+Internal Order Cell | delivery_movement_simulation_interaction_workflow
+Internal Order Cell | edit_workflow
+Internal Order Cell | pricing_interaction_workflow
+Internal Order Line | delivery_movement_causality_interaction_workflow
+Internal Order Line | delivery_movement_simulation_interaction_workflow
+Internal Order Line | edit_workflow
+Internal Order Line | movement_base_contribution_interaction_workflow
+Internal Order Line | pricing_interaction_workflow
+Internal Order Line | trade_matrix_workflow
+Internal Order | delivery_causality_interaction_workflow
+Internal Order | delivery_causality_workflow
+Internal Order | delivery_simulation_interaction_workflow
+Internal Order | edit_workflow
+Internal Order | order_workflow
 Internal Packing List Cell | delivery_movement_causality_interaction_workflow
 Internal Packing List Cell | delivery_movement_simulation_interaction_workflow
 Internal Packing List Cell | pricing_interaction_workflow

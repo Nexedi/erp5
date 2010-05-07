@@ -153,7 +153,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       text_content -- the embedded text content
     """
     html_text = to_utf8(html_text)
-    match_string = """name="field_%s" >%s</textarea>""" % (field_id, text_content)
+    match_string = """name="field_%s" >\n%s</textarea>""" % (field_id, text_content)
     if html_text.find(match_string) == -1:
       print html_text
       print match_string

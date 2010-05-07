@@ -79,7 +79,9 @@ if state in [\'planned\', \'ordered\']:\n
     id=delivery_id,\n
     title=delivery_title,\n
     source=\'organisation_module/%s\' % source_node_id,\n
+    source_section=\'organisation_module/%s\' % source_node_id,\n
     destination=\'organisation_module/%s\' % destination_node_id,\n
+    destination_section=\'organisation_module/%s\' % destination_node_id,\n
     start_date=DateTime(),\n
   )\n
   order_line = order.newContent(\n

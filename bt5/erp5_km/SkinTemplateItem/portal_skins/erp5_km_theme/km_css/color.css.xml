@@ -55,7 +55,7 @@
 \n
 body {\n
 \n
-  background: url(../km_img/bg.png) repeat-x #e9e9e9;\n
+  background: #e9e9e9;\n
 \n
 }\n
 \n
@@ -68,7 +68,7 @@ body {\n
 \n
 #header {\n
 \n
-\tcolor:#fff;\n
+\tcolor:#a8a799;\n
 \n
 }\n
 \n
@@ -78,19 +78,7 @@ body {\n
 \n
 }\n
 \n
-#menu {\n
 \n
-\tbackground: url(../km_img/header.png) repeat-x #373737;\n
-\tborder-bottom:1px solid #080808;\n
-\n
-}\n
-\n
-#wrapper_path {\n
-\n
-\tbackground: url(../km_img/bg.png) repeat-x #373737;\n
-\tbackground-position: 0 -43px;\n
-\n
-}\n
 \n
 ::selection {\n
 \tbackground:#aaa;\n
@@ -359,9 +347,9 @@ a:hover { color: #000; }\n
 \n
 #header a:link, #header a:active, #header a:visited {\n
 \n
-\tcolor:#fff;\n
+\tcolor:#a8a799;\n
 \tfont-weight:bold;\n
-\n
+\ttext-shadow: 0 1px 0 #fff;\n
 }\n
 \n
 #header .meta div a:link, #header .meta div a:active, #header .meta div a:visited {\n
@@ -567,10 +555,10 @@ button#input-save-view span.image {\n
 /* ## form styling #################################### start # */\n
 \n
 .search_button {\n
-\n
+/*\n
 \tbackground: url(../km_img/bt-qsearch.gif) no-repeat transparent;\n
 \ttext-indent:-999999px;\n
-\n
+*/\n
 }\n
 \n
 .search_button:hover {\n

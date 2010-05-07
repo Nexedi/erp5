@@ -910,7 +910,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         return method()
       else:
         raise 'SimulationError', '%s_getRuleReference script is missing.' \
-              % self.getPortalType()
+              % self.getPortalType().replace(' ', '')
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootSpecialiseValue')

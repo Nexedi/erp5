@@ -957,13 +957,15 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
-    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
-      RESPONSE=request.RESPONSE).find(content), -1)
+    response = self.publish(path, '%s:%s' % (self.manager_username,
+                                                        self.manager_password))
+    self.assertNotEquals(response.getBody().find(content), -1)
 
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
-    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
-      RESPONSE=request.RESPONSE).find(content), -1)
+    response = self.publish(path, '%s:%s' % (self.manager_username,
+                                                        self.manager_password))
+    self.assertNotEquals(response.getBody().find(content), -1)
 
     # modified the web_page content
     document.edit(text_content=new_content)
@@ -1019,9 +1021,9 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Make sure document cache keeps converted content even if ID changes
     self.assertTrue(document.hasConversion(format='txt'))
-    document.edit(id='document_new_cache')
+    document.setId('document_new_cache')
     self.assertTrue(document.hasConversion(format='txt'))
-    document.edit(id='document_original_cache')
+    document.setId('document_original_cache')
     self.assertTrue(document.hasConversion(format='txt'))
 
   def test_13b_DocumentEditCacheKey(self, quiet=quiet, run=run_all_test):
@@ -1045,7 +1047,7 @@ Hé Hé Hé!""", page.asText().strip())
     web_section = website.newContent(portal_type=web_section_portal_type)
 
     content = '<p>initial text</p>'
-    new_content = '<p>modified text<p>'
+    new_content = '<p>modified text</p>'
     document = portal.web_page_module.newContent(portal_type='Web Page',
             id='document_cache',
             reference='NXD-Document.Cache',
@@ -1057,13 +1059,14 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
-    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
-      RESPONSE=request.RESPONSE).find(content), -1)
-
+    response = self.publish(path, '%s:%s' % (self.manager_username,
+                                                        self.manager_password))
+    self.assertNotEquals(response.getBody().find(content), -1)
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
-    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
-      RESPONSE=request.RESPONSE).find(content), -1)
+    response = self.publish(path, '%s:%s' % (self.manager_username,
+                                                        self.manager_password))
+    self.assertNotEquals(response.getBody().find(content), -1)
 
     # Modify the web_page content
     # Use unrestrictedTraverse (XXX-JPS reason unknown)
@@ -1093,15 +1096,17 @@ Hé Hé Hé!""", page.asText().strip())
     web_document = web_section.restrictedTraverse('NXD-Document.Cache')
     self.assertEquals(web_document.asText().strip(), 'modified text')
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
-    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
-      RESPONSE=request.RESPONSE).find(new_content), -1)
+    response = self.publish(path, '%s:%s' % (self.manager_username,
+                                                        self.manager_password))
+    self.assertNotEquals(response.getBody().find(new_content), -1)
 
     # Through a web_site.
     web_document = website.restrictedTraverse('NXD-Document.Cache')
     self.assertEquals(web_document.asText().strip(), 'modified text')
     path = website.absolute_url_path() + '/NXD-Document.Cache'
-    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
-      RESPONSE=request.RESPONSE).find(new_content), -1)
+    response = self.publish(path, '%s:%s' % (self.manager_username,
+                                                        self.manager_password))
+    self.assertNotEquals(response.getBody().find(new_content), -1)
 
 
   def test_14_AccessWebSiteForWithDifferentUserPreferences(self):

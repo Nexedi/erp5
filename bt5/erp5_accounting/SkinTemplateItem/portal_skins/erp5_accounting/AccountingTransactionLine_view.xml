@@ -74,6 +74,7 @@
                     <value>
                       <list>
                         <string>my_destination_section_title</string>
+                        <string>my_destination_payment</string>
                         <string>my_destination_title</string>
                         <string>my_title</string>
                         <string>my_int_index</string>

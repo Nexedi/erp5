@@ -10,6 +10,33 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_folders_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -34,7 +61,9 @@
         <item>
             <key> <string>acquisition_base_category</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>parent</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -53,7 +82,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: []</string> </value>
+            <value> <string>python: context.getPortalPaymentConditionTypeList() + context.getPortalMovementTypeList() + context.getPortalDeliveryTypeList()</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
@@ -79,7 +108,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>fallback_base_category</string> </key>

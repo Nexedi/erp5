@@ -5,6 +5,7 @@ Account | jump_active_accounting_pref
 Account | jump_to_accounting
 Account | transaction_list
 Account | view
+Accounting Period | create_initial_balance_transaction
 Accounting Period | create_secondary_periods
 Accounting Period | jump_related_balance_transaction
 Accounting Period | view
@@ -48,6 +49,7 @@ Accounting Transaction | profile_view
 Accounting Transaction | source_asset
 Accounting Transaction | view
 Balance Transaction Line | view
+Balance Transaction | add_accounting_transaction_line
 Balance Transaction | destination_asset
 Balance Transaction | view
 Bank Account | jump_active_accounting_pref

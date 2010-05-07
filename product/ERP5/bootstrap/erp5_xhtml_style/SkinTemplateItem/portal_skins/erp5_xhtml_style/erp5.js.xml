@@ -304,6 +304,9 @@ var rewriteIndentedSelect = function() {\n
         continue;\n
       }\n
       text = options[j].innerHTML;\n
+      if (text.substring(0, 1) == \'\\n\') {\n
+        text = text.substring(1, text.length);\n
+      }\n
       level = 0;\n
       if (text.substring(0, 6) == \'&nbsp;\') {\n
         for (idx=0; idx <= text.length; idx+=6) {\n
@@ -314,10 +317,11 @@ var rewriteIndentedSelect = function() {\n
           }\n
         }\n
       }\n
-      level = level / 4.;\n
-      options[j].innerHTML = options[j].innerHTML.replace(/^(&nbsp;)+/, "");\n
-      options[j].style.paddingLeft = level+"em";\n
-\n
+      if (level >= 1) {\n
+        level = level / 4.;\n
+        options[j].innerHTML = text.replace(/^(&nbsp;)+/, "");\n
+        options[j].style.paddingLeft = level+"em";\n
+      }\n
     }\n
   }\n
 }\n

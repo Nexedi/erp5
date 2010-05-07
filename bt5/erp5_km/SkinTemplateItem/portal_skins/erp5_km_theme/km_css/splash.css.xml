@@ -110,7 +110,7 @@
 \n
 }\n
 \n
-.document > .content .homebanner ul li {\n
+.homebanner ul li {\n
 \n
 \tmargin:0;\n
 \tpadding: 7px 10px 7px 30px;\n
@@ -158,7 +158,7 @@
 \n
 }\n
 \n
-.document > .content .homebanner ul li {\n
+.homebanner ul li {\n
 \t\n
 \tlist-style-image: none;\n
 \tlist-style-type: none;\n

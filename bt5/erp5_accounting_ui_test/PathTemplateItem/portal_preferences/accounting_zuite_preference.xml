@@ -13,7 +13,24 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -32,7 +49,6 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -112,6 +128,14 @@
             <value> <string>ymd</string> </value>
         </item>
         <item>
+            <key> <string>preferred_html_style_access_tab</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_html_style_acknowledgeable_message</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>preferred_html_style_contextual_help</string> </key>
             <value> <int>0</int> </value>
         </item>
@@ -124,12 +148,26 @@
             <value> <int>0</int> </value>
         </item>
         <item>
+            <key> <string>preferred_html_style_unsaved_form_warning</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>preferred_listbox_list_mode_line_count</string> </key>
             <value> <int>10</int> </value>
         </item>
         <item>
             <key> <string>preferred_listbox_view_mode_line_count</string> </key>
             <value> <int>20</int> </value>
+        </item>
+        <item>
+            <key> <string>preferred_max_user_inactivity_duration</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>preferred_medium_image_height</string> </key>
+            <value> <int>480</int> </value>
         </item>
         <item>
             <key> <string>preferred_report_format</string> </key>
@@ -158,25 +196,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -184,13 +210,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>

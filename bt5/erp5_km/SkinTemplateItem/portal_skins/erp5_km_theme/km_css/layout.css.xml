@@ -221,7 +221,7 @@ fieldset.right {\n
 \twidth:22.5%;\n
 \tposition:relative;\n
   margin-left: 19px;\n
-  padding-top: 15px;\n
+  padding-top: 10px;\n
 \n
 }\n
 \n
@@ -339,7 +339,7 @@ button, select, input {\n
 \tfloat:left;\n
 \twidth:100%;\n
 \tmargin:0;\n
-\tpadding:0;\n
+\tpadding:10px 0 0 0;\n
 \tz-index: 1;\n
 \n
 }\n
@@ -389,7 +389,7 @@ button, select, input {\n
 \tdisplay: block;\n
 \tclear: both;\n
 \twidth:100%;\n
-  padding: 10px 0;\n
+  padding: 5px 0;\n
 \n
 }\n
 \n
@@ -1038,7 +1038,9 @@ margin-top:11px;\n
 \tpadding:0;\n
 \twidth:20px;\n
 \theight:20px;\n
-\n
+\tbackground: url(../km_img/bt-qsearch.gif) no-repeat transparent;\n
+\tdisplay:block;\n
+\ttext-indent:-999999px;\n
 }\n
 \n
 #menu .navbar fieldset,\n
@@ -1236,7 +1238,6 @@ button.bt-med span img {\n
 \n
 #km_left {\n
 \n
-  padding-top: 15px;\n
   float: left;\n
   width:75%;\n
 \n

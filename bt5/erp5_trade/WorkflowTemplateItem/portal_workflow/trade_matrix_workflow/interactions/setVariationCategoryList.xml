@@ -72,6 +72,7 @@
             <value>
               <list>
                 <string>Container Line</string>
+                <string>Internal Order Line</string>
                 <string>Internal Packing List Line</string>
                 <string>Inventory Line</string>
                 <string>Invoice Line</string>

@@ -148,24 +148,28 @@
                      tal:content="author_signature"/>\n
                 <hr/>\n
               </tal:block>\n
-\n
-              <input type="hidden" \n
-                     name="good_uid" \n
-                     tal:attributes="value event_uid; id python: \'listbox_cb_%s\' % (event_uid)">\n
               <button tal:condition="isUserAllowedToPost" \n
                       type="submit" \n
                       title="Reply" \n
                       name="DiscussionThread_viewCreateNewDiscussionPostDialog:method"\n
                       class="discussion-post-action-button"\n
-                      tal:attributes="onClick python: \'getElementById(\\\'listbox_cb_%s\\\').checked = true\' % (event_object.getUid())">\n
-                Reply\n
+                      tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %event_id">\n
+                Cited Reply\n
               </button>\n
+              <button tal:condition="isUserAllowedToPost" \n
+                      type="submit" \n
+                      title="Reply" \n
+                      name="DiscussionThread_redirectCreateNewDiscussionPost:method"\n
+                      class="discussion-post-action-button">\n
+                New Reply\n
+              </button>\n
+      \n
               <tal:block tal:condition="python:real_context.portal_membership.checkPermission(\'Delete objects\', event_object)">\n
                 <button type="submit" \n
                         title="Delete" \n
                         name="DiscussionThread_deleteDiscussionPost:method"\n
                         class="discussion-post-action-button"\n
-                        tal:attributes="onClick python: \'deleteDiscussionPost(\\\'%s\\\')\' %event.getId()">\n
+                        tal:attributes="onClick python: \'deleteDiscussionPost(\\\'%s\\\')\' %event_id">\n
                   Delete\n
                 </button>\n
               </tal:block>\n

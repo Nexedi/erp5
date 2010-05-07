@@ -59,8 +59,7 @@
 <tr>\n
   <td>type</td>\n
   <td>//textarea[@name=\'field_my_lines_list\']</td>\n
-  <td>foo\n
-bar</td>\n
+  <td>foo<br/>bar</td>\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
@@ -72,8 +71,7 @@ bar</td>\n
 <tr>\n
   <td>assertValue</td>\n
   <td>//textarea[@name=\'field_my_lines_list\']</td>\n
-  <td>foo\n
-bar</td>\n
+  <td>foo<br/>bar</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -88,8 +86,7 @@ bar</td>\n
 <tr>\n
   <td>assertValue</td>\n
   <td>//textarea[@name=\'field_my_lines_list\']</td>\n
-  <td>foo\n
-bar</td>\n
+  <td>foo<br/>bar</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n

@@ -81,13 +81,14 @@ if organisation:\n
     # else we lookup in parent organisations\n
   if not bank_account_list:\n
     group_value = organisation_value.getGroupValue(None)\n
-    uid_list = []\n
-    while group_value.getPortalType() != \'Base Category\':\n
-      uid_list.append(group_value.getUid())\n
-      group_value = group_value.getParentValue()\n
-    search_kw[\'parent_strict_group_uid\'] = uid_list\n
-    search_kw[\'parent_portal_type\'] = \'Organisation\'\n
-    bank_account_list = portal.portal_catalog(**search_kw)\n
+    if group_value is not None:\n
+      uid_list = []\n
+      while group_value.getPortalType() != \'Base Category\':\n
+        uid_list.append(group_value.getUid())\n
+        group_value = group_value.getParentValue()\n
+      search_kw[\'parent_strict_group_uid\'] = uid_list\n
+      search_kw[\'parent_portal_type\'] = \'Organisation\'\n
+      bank_account_list = portal.portal_catalog(**search_kw)\n
 \n
 else:\n
   if section_category is None:\n

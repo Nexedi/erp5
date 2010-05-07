@@ -1,6 +1,7 @@
 Invoice Line | Invoice Cell
 Invoice Line | Invoice Line
 Invoice Simulation Rule | Category Divergence Tester
+Invoice Simulation Rule | Mapped Property
 Invoice Simulation Rule | Property Divergence Tester
 Invoice Simulation Rule | Quantity Divergence Tester
 Invoice Transaction Rule | Accounting Rule Cell
@@ -10,6 +11,7 @@ Invoice Transaction Rule | Property Divergence Tester
 Invoice Transaction Rule | Quantity Divergence Tester
 Invoice Transaction Simulation Rule | Accounting Rule Cell
 Invoice Transaction Simulation Rule | Category Divergence Tester
+Invoice Transaction Simulation Rule | Mapped Property
 Invoice Transaction Simulation Rule | Predicate
 Invoice Transaction Simulation Rule | Property Divergence Tester
 Invoice Transaction Simulation Rule | Quantity Divergence Tester
@@ -26,5 +28,6 @@ Trade Model Rule | Category Divergence Tester
 Trade Model Rule | Property Divergence Tester
 Trade Model Rule | Quantity Divergence Tester
 Trade Model Simulation Rule | Category Divergence Tester
+Trade Model Simulation Rule | Mapped Property
 Trade Model Simulation Rule | Property Divergence Tester
 Trade Model Simulation Rule | Quantity Divergence Tester

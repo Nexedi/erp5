@@ -51,6 +51,11 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     if not self.skin:
       raise NotImplementedError('Subclasses must define skin')
     
+    gender = self.portal.portal_categories.gender
+    if 'male' not in gender.objectIds():
+      gender.newContent(id='male')
+      self.portal.portal_caches.clearAllCache()
+
     self.auth = 'ERP5TypeTestCase:'
     person_module = self.portal.person_module
     if person_module._getOb('pers', None) is None:
@@ -58,6 +63,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       transaction.commit()
       self.tic()
     person_module.pers.setFirstName('Bob')
+    person_module.pers.setGender(None)
+    person_module.pers.setCareerRole(None)
+
     if person_module.pers._getOb('img', None) is None:
       person_module.pers.newContent(portal_type='Image', id='img')
 
@@ -179,7 +187,9 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals('inline', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
-  def test_report_view(self):
+  def test_report_view_form_view(self):
+    # Test report view rendering forms using form_view
+    self.assertEquals('form_view', self.portal.Base_viewWorkflowHistory.pt)
     response = self.publish(
                    '/%s/person_module/pers/Base_viewHistory'
                     % self.portal.getId(), self.auth)
@@ -189,6 +199,26 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_disposition = response.getHeader('content-disposition')
     self.assertEquals('inline', content_disposition.split(';')[0])
     self._validate(response.getBody())
+
+  def test_report_view_form_list(self):
+    # Test report view rendering forms using form_list
+    self.portal.Base_viewWorkflowHistory.pt = 'form_list'
+    try:
+      # publish commits a transaction, so we have to restore the original page
+      # template on the form
+      response = self.publish(
+                   '/%s/person_module/pers/Base_viewHistory'
+                    % self.portal.getId(), self.auth)
+    finally:
+      self.portal.Base_viewWorkflowHistory.pt = 'form_view'
+      transaction.commit()
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
 
   def test_report_view_landscape(self):
     response = self.publish(
@@ -214,6 +244,29 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def test_form_view_encoding(self):
     self.portal.person_module.pers.setFirstName('Jérome')
+    response = self.publish('/%s/person_module/pers/Person_view'
+                          % self.portal.getId(), basic=self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_form_view_category(self):
+    self.portal.person_module.pers.setGender('male')
+    response = self.publish('/%s/person_module/pers/Person_view'
+                          % self.portal.getId(), basic=self.auth)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    content_type = response.getHeader('content-type')
+    self.assertTrue(content_type.startswith(self.content_type), content_type)
+    content_disposition = response.getHeader('content-disposition')
+    self.assertEquals('inline', content_disposition.split(';')[0])
+    self._validate(response.getBody())
+
+  def test_form_view_broken_category(self):
+    self.portal.person_module.pers.setGender('not exist')
+    self.portal.person_module.pers.setCareerRole('not exist')
     response = self.publish('/%s/person_module/pers/Person_view'
                           % self.portal.getId(), basic=self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())

@@ -113,10 +113,12 @@ class TestDocumentMixin(ERP5TypeTestCase):
     self.tic()
 
   def afterSetUp(self):
+    TestDocumentMixin.login(self)
     self.setDefaultSitePreference()
     self.setSystemPreference()
     transaction.commit()
     self.tic()
+    self.login()
 
   def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference

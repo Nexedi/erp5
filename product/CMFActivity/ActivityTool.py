@@ -273,6 +273,10 @@ class Message(BaseMessage):
     try:
       obj = self.getObject(activity_tool)
     except KeyError:
+      LOG('CMFActivity', ERROR,
+          'Message failed in getting an object from the path %r' % \
+                  (self.object_path,),
+          error=sys.exc_info())
       self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
     else:
       try:
@@ -286,6 +290,10 @@ class Message(BaseMessage):
             # that method !
             method = getattr(obj, self.method_id)
           except:
+            LOG('CMFActivity', ERROR,
+                'Message failed in getting a method %r from an object %r' % \
+                       (self.method_id, obj,),
+                error=sys.exc_info())
             method = None
             self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
           else:
@@ -1180,6 +1188,10 @@ class ActivityTool (Folder, UniqueObject):
         try:
           obj = m.getObject(self)
         except KeyError:
+          LOG('CMFActivity', ERROR,
+              'Message failed in getting an object from the path %r' % \
+                  (m.object_path,),
+              error=sys.exc_info())
           m.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=self)
           continue
         try:
