@@ -22,7 +22,7 @@ gcc-c++
 groff
 libzip-devel
 gdbm-devel
-glib-devel
+glib2-devel
 libjpeg-devel
 libldapcpp-devel
 ncurses-devel
