@@ -747,7 +747,10 @@ class TestOrderMixin:
       Test if order cell acquired some order line properties
     """
     order_line = sequence.get('order_line')
-    cell = order_line.getCellValueList()[0]
+    cell_list = order_line.getCellValueList()
+    self.assertTrue(len(cell_list) > 0)
+    cell = cell_list[0]
+
     self.checkAcquisition(cell, order_line)
     # Test resource
     self.assertEquals(order_line.getResource(), \
