@@ -63,10 +63,12 @@ order.activate(tag=expand_tag, after_tag=previous_tag).updateAppliedRule(\n
 \n
 \n
 order_portal_type = order.getPortalType()\n
-if order_portal_type == \'Sale Order\':\n
-  delivery_builder = order.portal_deliveries.sale_packing_list_builder\n
-elif order_portal_type == \'Purchase Order\':\n
-  delivery_builder = order.portal_deliveries.purchase_packing_list_builder\n
+builder_dict = {\n
+  \'Sale Order\':\'sale_packing_list_builder\',\n
+  \'Purchase Order\':\'purchase_packing_list_builder\',\n
+  \'Internal Order\':\'internal_packing_list_builder\',\n
+}\n
+delivery_builder = getattr(order.portal_deliveries, builder_dict[order_portal_type])\n
 \n
 delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(explanation_uid=order.getUid())\n
 </string> </value>
@@ -113,6 +115,8 @@ delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(expl
                             <string>expand_tag</string>
                             <string>activate_kw</string>
                             <string>order_portal_type</string>
+                            <string>builder_dict</string>
+                            <string>getattr</string>
                             <string>delivery_builder</string>
                           </tuple>
                         </value>
