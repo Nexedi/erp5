@@ -1501,6 +1501,33 @@ class TestERP5Base(ERP5TypeTestCase):
     # workflow is affected
     self.assertTrue(comment in [q['comment'] for q in workflow_history])
 
+  def test_user_creation(self):
+    person = self.portal.person_module.newContent(portal_type='Person')
+    assignment = person.newContent(portal_type='Assignment',
+                                   group='nexedi')
+    self.assertNotEquals(None, assignment.getGroupValue())
+    assignment.open()
+    self.portal.portal_workflow.doActionFor(person, 'create_user_action',
+                  reference='user_login',
+                  password='pass',
+                  password_confirm='pass')
+    transaction.commit()
+    self.tic()
+
+    # a user is created
+    user = self.portal.acl_users.getUserById('user_login')
+    self.assertNotEquals(None, user)
+
+    # and this user has a preference created
+    newSecurityManager(None, user.__of__(self.portal.acl_users))
+    self.assertNotEquals(None,
+        self.portal.portal_catalog.getResultValue(portal_type='Preference',
+                                                  owner='user_login'))
+    # for his assignent group
+    self.assertEquals('group/nexedi',
+        self.portal.portal_preferences.getPreferredSectionCategory())
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Base))
