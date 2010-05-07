@@ -2740,6 +2740,46 @@ return current_movement
     self.assertEqual(2, len(amount_list))
     self.assertEqual(508.51000000000005, getTotalAmount(amount_list))
 
+  def test_tradeModelLineWithEmptyBaseContributionMovement(self):
+    """
+    Make sure that a movement which does not have any base_contribution values
+    does not match to any trade model lines.
+    """
+    trade_condition = self.createTradeCondition()
+
+    # create a model line
+    tax = self.createTradeModelLine(trade_condition,
+                                    reference='TAX',
+                                    base_application_list=['base_amount/tax'],
+                                    base_contribution_list=['base_amount/total_tax'])
+    tax.edit(price=0.05)
+
+    # create an order
+    resource_A = self.createResource('Product', title='A')
+    order = self.createOrder()
+    order.setSpecialiseValue(trade_condition)
+    # create a movement which should be aggregated
+    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
+                                    price=100, quantity=1,
+                                    resource_value=resource_A,
+                                    base_contribution_list=['base_amount/tax'])
+    # create a movement which base contribution is empty.
+    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
+                                    price=50, quantity=1,
+                                    resource_value=resource_A,
+                                    base_contribution_list=[])
+
+    transaction.commit()
+    self.tic()
+
+    # check the result
+    amount_list = trade_condition.getAggregatedAmountList(order)
+    self.assertEqual(1, len(amount_list))
+    self.assertEqual(set([order_line_1]),
+                     set(amount_list[0].getCausalityValueList()))
+    self.assertEqual(100*0.05, amount_list[0].getTotalPrice())
+
+
 class TestTradeModelLineSale(TestTradeModelLine):
   invoice_portal_type = 'Sale Invoice Transaction'
   invoice_line_portal_type = 'Invoice Line'
