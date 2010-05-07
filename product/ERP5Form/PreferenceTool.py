@@ -158,6 +158,8 @@ class PreferenceTool(BaseTool):
   allowed_types = ( 'ERP5 Preference',)
   security      = ClassSecurityInfo()
 
+  aq_preference_generated = False
+
   security.declareProtected(
        Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainPreferenceTool', _dtmldir )
@@ -186,6 +188,21 @@ class PreferenceTool(BaseTool):
     if method is not None:
       return method(default)
     return default
+
+  def _aq_dynamic(self, id):
+    base_value = PreferenceTool.inheritedAttribute('_aq_dynamic')(self, id)
+    if not PreferenceTool.aq_preference_generated:
+      updatePreferenceClassPropertySheetList()
+
+      portal = self.getPortalObject()
+      while portal.portal_type != 'ERP5 Site':
+        portal = portal.aq_parent.aq_inner.getPortalObject()
+      createPreferenceToolAccessorList(portal)
+
+      PreferenceTool.aq_preference_generated = True
+      if base_value is None:
+        return getattr(self, id)
+    return base_value
 
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :

@@ -293,7 +293,11 @@ def _aq_reset():
   Base.aq_method_generated = {}
   Base.aq_portal_type = {}
   Base.aq_related_generated = 0
-  Base.aq_preference_generated = 0
+  try:
+    from Products.ERP5Form.PreferenceTool import PreferenceTool
+    PreferenceTool.aq_preference_generated = False
+  except ImportError:
+    LOG('ERP5Type', LOG, "ERP5Form.PreferenceTool not found")
 
   # Some method generations are based on portal methods, and portal methods cache results.
   # So it is safer to invalidate the cache.
@@ -760,9 +764,6 @@ class Base( CopyContainer,
   aq_portal_type = {}
   aq_related_generated = 0
 
-  aq_preference_generated = 0
-  # FIXME: Preference should not be included in ERP5Type
-
   # Declarative security - in ERP5 we use AccessContentsInformation to
   # define the right of accessing content properties as opposed
   # to view which is the right to view the object with a form
@@ -961,20 +962,6 @@ class Base( CopyContainer,
               generated_bid[bid] = 1
 
         Base.aq_related_generated = 1
-
-      # Generate preference methods (since side effect is to reset Preference accessors)
-      # XXX-JPS - This should be moved to PreferenceTool
-      if not Base.aq_preference_generated:
-        try :
-          from Products.ERP5Form.PreferenceTool import createPreferenceToolAccessorList
-          from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
-          updatePreferenceClassPropertySheetList()
-          createPreferenceToolAccessorList(portal)
-        except ImportError, e :
-          LOG('Base._aq_dynamic', WARNING,
-              'unable to create methods for PreferenceTool', e)
-          raise
-        Base.aq_preference_generated = 1
 
       # Always try to return something after generation
       if generated:
