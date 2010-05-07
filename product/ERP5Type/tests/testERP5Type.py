@@ -147,13 +147,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       return str(randint(-10000000,100000000))
 
     def getTemplateTool(self):
-      return getattr(self.getPortal(), 'portal_templates', None)
+      return getattr(self.portal, 'portal_templates', None)
 
     def getCategoryTool(self):
-      return getattr(self.getPortal(), 'portal_categories', None)
+      return getattr(self.portal, 'portal_categories', None)
 
     def getTypeTool(self):
-      return getattr(self.getPortal(), 'portal_types', None)
+      return getattr(self.portal, 'portal_types', None)
 
     # Here are the tests
     def testHasTemplateTool(self):
@@ -2734,6 +2734,43 @@ class TestPropertySheet:
       method = getattr(person, 'providesICategoryAccessProvider', None)
       self.assertNotEquals(None, method)
       self.assertTrue(method())
+
+    def test_type_provider(self):
+      from Products.ERP5Type.Tool.TypesTool import TypeProvider
+      class DummyTypeProvider(TypeProvider):
+        id = 'dummy_type_provider'
+       # portal_type = 'Dummy Type Provider'
+      
+      self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+      types_tool = self.portal.portal_types
+      # register our dummy type provider
+      types_tool.type_provider_list = types_tool.type_provider_list + (
+                                            'dummy_type_provider',)
+      
+      # types created in our type provider are available
+      dummy_type = self.portal.dummy_type_provider.newContent(
+              portal_type='Base Type',
+              id='Dummy Type',
+              type_factory_method_id='addFolder', )
+
+      # our type is available from types tool
+      self.assertNotEquals(None, types_tool.getTypeInfo('Dummy Type'))
+      self.assertTrue('Dummy Type' in [ti.getId() for ti in
+                                        types_tool.listTypeInfo()])
+
+      # not existing types are not an error
+      self.assertEquals(None, types_tool.getTypeInfo(self.id()))
+
+      # we can create instances from our type provider
+      container = self.portal.newContent(portal_type='Folder', id='test_folder')
+      dummy_instance = container.newContent(portal_type='Dummy Type')
+      
+      # and use generated accessors on them
+      dummy_type.edit(type_property_sheet_list=('Reference', ))
+
+      dummy_instance.setReference('test')
+      self.assertEquals('test', dummy_instance.getReference())
+
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests

@@ -21,14 +21,26 @@ from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from OFS.Folder import Folder as OFSFolder
 import transaction
-from Products.CMFCore import TypesTool as CMFCore_TypesTool
+from Products.CMFCore import TypesTool as CMFCore_TypesToolModule
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
+from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
 
-class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
+
+CMFCore_TypesTool = CMFCore_TypesToolModule.TypesTool
+
+class TypeProvider(BaseTool, CMFCore_TypesTool):
+  """Provides portal content types
+  """
+  zope.interface.implements(ITypeProvider)
+
+
+_MARKER = []
+
+class TypesTool(TypeProvider):
   """Provides a configurable registry of portal content types
   """
   id = 'portal_types'
@@ -36,9 +48,40 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
   portal_type = 'Types Tool'
   allowed_types = ()
 
+  zope.interface.implements(ITypesTool)
+
+  # TODO: UI to configure this is missing
+  type_provider_list = ( 'portal_types', )
+
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def listTypeInfo(self, container=None):
+    """List type information from all providers
+    """
+    listTypeInfo = CMFCore_TypesTool.listTypeInfo
+    type_info_list = []
+    for provider in self.type_provider_list:
+      provider_value = getattr(self, provider, None)
+      if provider_value is not None:
+        type_info_list.extend(
+            listTypeInfo(provider_value, container=container))
+    return type_info_list
+
+  def _getOb(self, id, default=_MARKER):
+    """Get a type information from a provider
+    """
+    _getOb = CMFCore_TypesTool._getOb
+    for provider in self.type_provider_list:
+      provider_value = getattr(self, provider, None)
+      if provider_value is not None:
+        ob = _getOb(provider_value, id, default=default)
+        if ob is not default:
+          return ob
+    if ob is _MARKER:
+      raise AttributeError, id
+    return ob
+    
   security.declarePrivate('getActionListFor')
   def getActionListFor(self, ob=None):
     """Return all actions applicable to the object"""
@@ -238,4 +281,6 @@ class OldTypesTool(OFSFolder):
       return OFSFolder.__of__(self, parent)
     return UnrestrictedMethod(base_self._migrateTypesTool)(parent)
 
-CMFCore_TypesTool.TypesTool = OldTypesTool
+# Change the CMFCore's TypesTool to automatically migrate to ERP5Type's
+# TypesTool
+CMFCore_TypesToolModule.TypesTool = OldTypesTool
