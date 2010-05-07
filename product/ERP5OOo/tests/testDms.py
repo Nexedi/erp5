@@ -1780,9 +1780,8 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     #Now lets check that when we try to view an image as thumbnail, 
     #the sizes of that image are the ones defined in user preference
     image_portal_type = 'Image'
-    image_list = image = self.portal.getDefaultModule(image_portal_type)\
-         .contentValues()
-    image = image[0]
+    image_module = self.portal.getDefaultModule(image_portal_type)
+    image = image_module.newContent(portal_type=image_portal_type)
     self.assertEqual('thumbnail',
        image.Image_view._getOb("image_view", None).get_value('image_display'))
     self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),
