@@ -72,6 +72,9 @@ def _getEffectiveModel(self, start_date=None, stop_date=None):
   model_list = self.getPortalObject().portal_catalog.unrestrictedSearchResults(
       query=ComplexQuery(logical_operator='AND', *query_list),
       sort_on=(('version', 'descending'),))
+  if not model_list:
+    raise KeyError('No %s found with the reference %s between %s and %s' % \
+            (self.getPortalType(), reference, start_date, stop_date))
   return model_list[0].getObject()
 
 
