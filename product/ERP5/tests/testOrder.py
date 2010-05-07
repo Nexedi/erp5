@@ -1045,8 +1045,8 @@ class TestOrderMixin:
     """
     order_line = sequence.get('order_line')
     cell_list = order_line.objectValues(portal_type=self.order_cell_portal_type)
-    if len(cell_list) > 0:
-      order_cell = cell_list[0].getObject()
+    self.assertTrue(len(cell_list) > 0)
+    order_cell = cell_list[0].getObject()
     order_cell.setStartDate(self.datetime + 99)
 
   def stepModifyOrderLineQuantity(self, sequence=None, sequence_list=None, \
