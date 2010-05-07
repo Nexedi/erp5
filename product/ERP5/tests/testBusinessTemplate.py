@@ -43,6 +43,7 @@ from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
+from Products.ERP5Type.Tool.TypesTool import TypeProvider
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 import shutil
@@ -50,11 +51,17 @@ import os
 import gc
 import random
 import string
+import tempfile
+import glob
 
 from MethodObject import Method
 from Persistence import Persistent
 
 WORKFLOW_TYPE = 'erp5_workflow' 
+
+class DummyTypeProvider(TypeProvider):
+  id = 'dummy_type_provider'
+
 
 class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   """
@@ -6377,6 +6384,124 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # check both File instances no longer behave like being overriden
     self.assertFalse(getattr(portal.some_file, 'isClassOverriden', False))
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
+
+  def test_type_provider(self):
+    self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+    type_provider = self.portal.dummy_type_provider
+    types_tool = self.portal.portal_types
+
+    registered_type_provider_list = types_tool.type_provider_list
+    # register this type provider
+    types_tool.type_provider_list = (
+        'dummy_type_provider',) + registered_type_provider_list
+
+    dummy_type = type_provider.newContent(
+                             portal_type='Base Type',
+                             id='Dummy Type',
+                             type_factory_method_id='addFolder',
+                             type_property_sheet_list=('Reference',),
+                             type_base_category_list=('source',),
+                             type_allowed_content_type_list=('Dummy Type',),
+                             type_hidden_content_type_list=('Dummy Type',) )
+
+    dummy_type.newContent(portal_type='Action Information',
+                          reference='view',
+                          title='View', )
+
+    dummy_type.newContent(portal_type='Role Information',
+                          title='Dummy Role Definition',
+                          role_name_list=('Assignee', ))
+
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type.copy()
+    props = {}
+    for id, wf_ids in cbt.items():
+      props['chain_%s' % id] = ','.join(wf_ids)
+    props['chain_Dummy Type'] = 'edit_workflow'
+    pw.manage_changeWorkflows('', props=props)
+    self.assertEquals(('edit_workflow', ), pw.getChainFor('Dummy Type'))
+
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',
+                          template_tool_id_list=('dummy_type_provider', ),
+                          template_portal_type_id_list=('Dummy Type',),
+                          template_portal_type_role_list=('Dummy Type', ),
+                          template_portal_type_workflow_chain_list=(
+                             'Dummy Type | edit_workflow',),
+                          template_portal_type_allowed_content_type_list=(
+                             'Dummy Type | Dummy Type',),
+                          template_portal_type_hidden_content_type_list=(
+                             'Dummy Type | Dummy Type',),
+                          template_portal_type_property_sheet_list=(
+                             'Dummy Type | Reference',),
+                          template_portal_type_base_category_list=(
+                             'Dummy Type | source',),
+                          template_action_path_list=(
+                             'Dummy Type | view',),)
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      # portal type template item are exported in their physical location
+      for template_item in ('PortalTypeTemplateItem',
+                            'ActionTemplateItem',):
+        self.assertEquals(['dummy_type_provider'],
+            [os.path.basename(f) for f in
+              glob.glob('%s/%s/*' % (export_dir, template_item))])
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # uninstall the workflow chain 
+    pw._chains_by_type = cbt
+    # unregister type provider
+    types_tool.type_provider_list = registered_type_provider_list
+    # uninstall the type provider (this will also uninstall the contained types)
+    self.portal.manage_delObjects(['dummy_type_provider'])
+    self.stepTic()
+    
+    new_bt.install()
+
+    type_provider = self.portal._getOb('dummy_type_provider', None)
+    self.assertNotEqual(None, type_provider)
+
+    # This type provider, will be automatically registered on types tool during
+    # business template installation, because it contains type information
+    self.assertTrue('dummy_type_provider' in types_tool.type_provider_list)
+    # The type is reinstalled
+    self.assertTrue('Dummy Type' in type_provider.objectIds())
+    # is available from types tool
+    self.assertTrue('Dummy Type' in [ti.getId() for
+                    ti in types_tool.listTypeInfo()])
+    
+    dummy_type = types_tool.getTypeInfo('Dummy Type')
+    self.assertNotEquals(None, dummy_type)
+    # all the configuration from the type is still here
+    self.assertEquals(['Reference'], dummy_type.getTypePropertySheetList())
+    self.assertEquals(['source'], dummy_type.getTypeBaseCategoryList())
+    self.assertEquals(['Dummy Type'], dummy_type.getTypeAllowedContentTypeList())
+    self.assertEquals(['Dummy Type'], dummy_type.getTypeHiddenContentTypeList())
+
+    action_list = dummy_type.contentValues(portal_type='Action Information')
+    self.assertEquals(['View'], [action.getTitle() for action in action_list])
+    self.assertEquals(['view'], [action.getReference() for action in action_list])
+    
+    role_list = dummy_type.contentValues(portal_type='Role Information')
+    self.assertEquals(['Dummy Role Definition'],
+                      [role.getTitle() for role in role_list])
+    
+    self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
+    
+    # and our type can be used
+    instance = self.portal.newContent(portal_type='Dummy Type',
+                                      id='test_document')
+    instance.setSourceReference('OK')
+    self.assertEquals('OK', instance.getSourceReference())
 
 
 def test_suite():

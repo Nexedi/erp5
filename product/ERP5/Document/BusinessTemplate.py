@@ -31,7 +31,7 @@ import fnmatch, gc, imp, os, re, shutil, sys
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
-from Acquisition import Implicit, aq_base
+from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -854,11 +854,12 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     pass
 
-  def onNewObject(self):
+  def onNewObject(self, obj):
     """
       Installation hook.
       Called when installation process determined that object to install is
       new on current site (it's not replacing an existing object).
+      `obj` parameter is the newly created object in its acquisition context.
       Can be overridden by subclasses.
     """
     pass
@@ -947,9 +948,10 @@ class ObjectTemplateItem(BaseTemplateItem):
           saved_uid_dict = {}
           subobjects_dict = {}
           portal_type_dict = {}
-          # Object already exists
           old_obj = container._getOb(object_id, None)
+          object_existed = old_obj is not None
           if old_obj is not None:
+            # Object already exists
             recurse(saveHook, old_obj)
             if getattr(aq_base(old_obj), 'groups', None) is not None:
               # we must keep original order groups
@@ -969,8 +971,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               portal_type_dict['workflow_chain'] = \
                 getChainByType(context)[1].get('chain_' + object_id, '')
             container.manage_delObjects([object_id])
-          else:
-            self.onNewObject()
+
           # install object
           obj = self._objects[path]
           if getattr(obj, 'meta_type', None) == 'Script (Python)':
@@ -997,6 +998,11 @@ class ObjectTemplateItem(BaseTemplateItem):
             LOG("BT, install", 0, object_id)
             raise
           obj = container._getOb(object_id)
+
+          if not object_existed:
+            # A new object was added, call the hook
+            self.onNewObject(obj)
+
           # mark a business template installation so in 'PortalType_afterClone' scripts
           # we can implement logical for reseting or not attributes (i.e reference).
           self.REQUEST.set('is_business_template_installation', 1)
@@ -1414,7 +1420,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
   def beforeInstall(self):
     self._installed_new_category = False
 
-  def onNewObject(self):
+  def onNewObject(self, obj):
     self._installed_new_category = True
 
   def afterInstall(self):
@@ -1753,6 +1759,10 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
+      # normalize relative_url, not all type informations are stored in
+      # "portal_types"
+      relative_url = '%s/%s' % (obj.getPhysicalPath()[-2:])
+
       obj = obj._getCopy(context)
       # obj is in ghost state and an attribute must be accessed
       # so that obj.__dict__ does not return an empty dict
@@ -1768,6 +1778,17 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
           delattr(obj, attr)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
+  
+  def onNewObject(self, obj):
+    """ When we install a type which is contained in a type provider not
+    registered on types tool, register the type provider.
+    """
+    portal = obj.getPortalObject()
+    types_tool = portal.portal_types
+    type_container_id = obj.getParentId()
+    if type_container_id not in types_tool.type_provider_list:
+      types_tool.type_provider_list = tuple(types_tool.type_provider_list) + (
+          type_container_id,)
 
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information
@@ -1938,7 +1959,7 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                                   (wf_id, portal_type)
             chain_dict[chain_key] = self._objects[path]
         else:
-          if portal_type not in context.portal_types.objectIds():
+          if context.portal_types.getTypeInfo(portal_type) is None:
             raise ValueError('Cannot chain workflow %r to non existing '
                            'portal type %r' % (self._chain_string_separator\
                                                      .join(self._objects[path])
@@ -2043,16 +2064,15 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
     types_tool = getToolByName(self.getPortalObject(), 'portal_types')
-    types_list = list(types_tool.objectIds())
     for key in self._archive.keys():
       try:
         portal_type, allowed_type = key.split(' | ')
       except ValueError:
         raise ValueError('Invalid item %r in %s' % (key, self.name))
+      ob = types_tool.getTypeInfo(portal_type)
       # check properties corresponds to what is defined in site
-      if not portal_type in types_list:
+      if ob is None:
         raise ValueError, "Portal Type %s not found in site" %(portal_type,)
-      ob = types_tool._getOb(portal_type)
       prop_value = getattr(ob, self.class_property, ())
       if not allowed_type in prop_value and not self.is_bt_for_diff:
         raise ValueError, "%s %s not found in portal type %s" % (
@@ -2151,15 +2171,14 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           action = update_dict[key]
           if action == 'nothing':
             continue
-        try:
-          portal_id = key.split('/')[-1]
-          portal_type = types_tool._getOb(portal_id)
-        except (AttributeError, KeyError):
+        portal_id = key.split('/')[-1]
+        type_information = types_tool.getTypeInfo(portal_id)
+        if type_information is None:
           raise AttributeError, "Portal type '%s' not found while " \
               "installing %s" % (portal_id, self.getTitle())
         property_list = self._objects.get(key, [])
         old_property_list = old_objects.get(key, ())
-        object_property_list = getattr(portal_type, self.class_property, ())
+        object_property_list = getattr(type_information, self.class_property, ())
         # merge differences between portal types properties
         # for example:
         # * current value : [A,B,C]
@@ -2169,7 +2188,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         for id in object_property_list:
           if id not in property_list and id not in old_property_list:
             property_list.append(id)
-        setattr(portal_type, self.class_property, tuple(property_list))
+        setattr(type_information, self.class_property, tuple(property_list))
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
@@ -2180,19 +2199,19 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     else:
       object_key_list = self._objects.keys()
     for key in object_key_list:
-      try:
-        portal_id = key.split('/')[-1]
-        portal_type = types_tool._getOb(portal_id)
-      except (AttributeError,  KeyError):
-        LOG("portal types not found : ", 100, portal_id)
+      portal_id = key.split('/')[-1]
+      type_information = types_tool.getTypeInfo(portal_id)
+      if type_information is None:
+        LOG("BusinessTemplate", WARNING,
+            "Portal type %r not found while uninstalling" % (portal_id,))
         continue
       property_list = self._objects[key]
-      original_property_list = list(getattr(portal_type,
+      original_property_list = list(getattr(type_information,
                                     self.class_property, ()))
       for id in property_list:
         if id in original_property_list:
           original_property_list.remove(id)
-      setattr(portal_type, self.class_property, tuple(original_property_list))
+      setattr(type_information, self.class_property, tuple(original_property_list))
 
 
 class PortalTypeHiddenContentTypeTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
@@ -2588,7 +2607,7 @@ class ActionTemplateItem(ObjectTemplateItem):
     Gets action copy from action provider given the action id or reference
     """
     # Several tools still use CMF actions
-    if obj.getParentId() == 'portal_types':
+    if interfaces.ITypeProvider.providedBy(obj.getParentValue()):
       return self._getPortalTypeActionCopy(obj, value)
     else:
       return self._getPortalToolActionCopy(obj, context, value)
@@ -2600,6 +2619,8 @@ class ActionTemplateItem(ObjectTemplateItem):
       url, value = id.split(' | ')
       url = posixpath.split(url)
       obj = p.unrestrictedTraverse(url)
+      # normalize url
+      url = obj.getPhysicalPath()[-2:]
       action = self._getActionCopy(obj, context, value)
       if action is None:
         if self.is_bt_for_diff:
@@ -2625,7 +2646,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           path, id = id.rsplit('/', 1)
           container = p.unrestrictedTraverse(path)
 
-          if container.getParentId() == 'portal_types':
+          if interfaces.ITypeProvider.providedBy(aq_parent(aq_inner(container))):
             # XXX future BT should use 'reference' instead of 'id'
             reference = getattr(obj, 'reference', None) or obj.id
             portal_type_dict.setdefault(path, {})[reference] = obj
@@ -2742,7 +2763,7 @@ class ActionTemplateItem(ObjectTemplateItem):
         obj = p.unrestrictedTraverse(relative_url, None)
         # Several tools still use CMF actions
         if obj is not None:
-          is_new_action = obj.getParentId() == 'portal_types'
+          is_new_action = interfaces.ITypeProvider.providedBy(obj.getParentValue())
           key = is_new_action and 'reference' or 'id'
       else:
         relative_url, key, value = self._splitPath(id)
@@ -2753,8 +2774,8 @@ class ActionTemplateItem(ObjectTemplateItem):
           if getattr(action_list[index], key, None) == value:
             obj.deleteActions(selections=(index,))
             break
-      LOG('BusinessTemplate', 100,
-          'unable to uninstall action at %s, ignoring' % relative_url )
+      LOG('BusinessTemplate', WARNING,
+          'Unable to uninstall action at %s, ignoring' % relative_url )
     BaseTemplateItem.uninstall(self, context, **kw)
 
 class PortalTypeRolesTemplateItem(BaseTemplateItem):
@@ -2768,6 +2789,8 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse("portal_types/%s" %
           relative_url.split('/', 1)[1])
+      # normalize url
+      relative_url = '%s/%s' % (obj.getPhysicalPath()[-2:])
       self._objects[relative_url] = type_role_list = []
       for role in obj.getRoleInformationList():
         type_role_dict = {}
@@ -2880,6 +2903,9 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           type_roles_list = self._objects[roles_path] or []
           for role_property_dict in type_roles_list:
             obj._importRole(role_property_dict)
+        else:
+          raise AttributeError("Path '%r' not found while "
+                               "installing roles" % (path, ))
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
