@@ -62,6 +62,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>top login</string>
                 <string>menu navbar</string>
                 <string>menu meta</string>
                 <string>path tools</string>
@@ -116,7 +117,6 @@
                     <key> <string>menu meta</string> </key>
                     <value>
                       <list>
-                        <string>user_information_widget</string>
                         <string>your_search_text</string>
                         <string>your_search_portal_type</string>
                         <string>your_search_form_id</string>
@@ -161,6 +161,14 @@
                     <value>
                       <list>
                         <string>splash_widget</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>top login</string> </key>
+                    <value>
+                      <list>
+                        <string>user_information_widget</string>
                       </list>
                     </value>
                 </item>

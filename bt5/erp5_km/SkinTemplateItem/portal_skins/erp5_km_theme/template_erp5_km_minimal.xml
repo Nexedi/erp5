@@ -95,7 +95,7 @@
                              dummy python: request.set(\'dialog_mode\', dialog_mode);\n
                              dummy python: request.set(\'list_mode\', list_mode);\n
                              aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
-                                               [\'right\', \'bottom\', \'menu\', \'path\', \'splash\', \'headline\', \'footer\']);\n
+                                               [\'right\', \'bottom\', \'menu\', \'path\', \'splash\', \'headline\', \'footer\', \'top\']);\n
                              aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
                              right_area python:aggregate.get(\'right\', []);\n
                              menu_area python:aggregate.get(\'menu\', []);\n
@@ -104,6 +104,7 @@
                              headline_area python:aggregate.get(\'headline\', []);\n
                              footer_area python:aggregate.get(\'footer\', []);\n
                              bottom_area python:aggregate.get(\'bottom\', []);\n
+                             top_area python:aggregate.get(\'top\', []);\n
                              right_list python:len(right_area) and layout_form.get_fields_in_group(right_area[0][\'goid\']);\n
                              is_right_area_empty python:right_list == 0 or len(right_list) == 0;\n
                              is_front_layout python: layout_form is not None and\n
@@ -147,6 +148,7 @@
     <link rel="stylesheet" type="text/css" href="css/fix-ie.css" media="screen" />\n
     <![endif]-->\n
 \n
+            <div id="top-bar"></div>\n
 \n
             <div id="mainwrapper">\n
 \n
@@ -155,9 +157,17 @@
                 <!--index here//-->\n
                 <h1 id="index"><a href="/" title="ERP5" name="top">ERP5</a></h1>\n
                 <!--index here//-->\n
+                  <!-- Top Bar: navigation and search -->\n
+\n
+                <div id="top" tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
+                  <tal:block tal:condition="python: layout_form is not None">\n
+                    <tal:block tal:repeat="aggregate python: [(\'top\', top_area)]">\n
+                        <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+                    </tal:block>\n
+                  </tal:block>\n
+                </div>\n
 \n
                 <div id="menu" tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
-                  <!-- Top Bar: navigation and search -->\n
                   <tal:block tal:condition="python: layout_form is not None">\n
                     <tal:block tal:repeat="aggregate python: [(\'menu\', menu_area)]">\n
                         <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n

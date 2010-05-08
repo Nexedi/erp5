@@ -68,7 +68,7 @@ body {\n
 \n
 #header {\n
 \n
-\tcolor:#a8a799;\n
+\tcolor:#ffffff;\n
 \n
 }\n
 \n
@@ -347,9 +347,9 @@ a:hover { color: #000; }\n
 \n
 #header a:link, #header a:active, #header a:visited {\n
 \n
-\tcolor:#a8a799;\n
+\tcolor:#fff;\n
 \tfont-weight:bold;\n
-\ttext-shadow: 0 1px 0 #fff;\n
+\ttext-shadow: 0 1px 0 #a8a799;\n
 }\n
 \n
 #header .meta div a:link, #header .meta div a:active, #header .meta div a:visited {\n
@@ -397,10 +397,19 @@ a.pub:link, a.pub:active, a.pub:visited, .pub { color:#45cb45; }\n
 \n
 /* ## navigation ###################################### start # */\n
 \n
+#top-bar{\n
+\tbackground-color:#69654A;\n
+}\n
+\n
+#menu{\n
+\tbackground:#818363;\n
+\tborder-color:#37391E;\n
+}\n
+\n
 \n
 #menu ul li #n1:link, #menu ul li #n1:active, #menu ul li #n1:visited {\n
 \n
-\tbackground: url(../km_img/home.gif) no-repeat transparent;\n
+\tbackground: url(../km_img/home-2.gif) no-repeat transparent;\n
 \n
 }\n
 \n
