@@ -130,7 +130,11 @@ class FunctionalTestRunner:
     self.portal_url = "http://%s:%d/%s" % (self.host, self.port, self.portal_name)
   
   def openUrl(self, url):
-    f = urllib2.urlopen(url)
+    # Send Accept-Charset headers to activate the UnicodeConflictResolver
+    # (imitating firefox 3.5.9 here)
+    headers = { 'Accept-Charset' : 'ISO-8859-1,utf-8;q=0.7,*;q=0.7' }
+    request = urllib2.Request(url, headers=headers)
+    f = urllib2.urlopen(request)
     file_content = f.read()
     f.close()
     return file_content
