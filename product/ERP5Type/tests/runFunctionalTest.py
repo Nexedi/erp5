@@ -249,7 +249,8 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
   
     if self.run_only:
       url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % self.run_only, 1)
-    pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", self.profile_dir,
+    pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox",
+        "-no-remote", "-profile", self.profile_dir,
         url_string)
     os.environ['MOZ_NO_REMOTE'] = '0'
     print 'firefox : %d' % pid
