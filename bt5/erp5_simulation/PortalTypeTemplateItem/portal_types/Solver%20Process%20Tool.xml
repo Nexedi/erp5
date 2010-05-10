@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Solver Tool contains Solver Types</string> </value>
+            <value> <string>Solver Process Tool contains Solver Processes</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -60,7 +60,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Solver Tool</string> </value>
+            <value> <string>Solver Process Tool</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>

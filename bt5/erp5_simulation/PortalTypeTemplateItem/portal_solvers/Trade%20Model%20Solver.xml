@@ -36,7 +36,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>conflicting_solver/portal_types/Accept Solver</string>
+                <string>conflicting_solver/portal_solvers/Accept Solver</string>
               </tuple>
             </value>
         </item>
@@ -50,6 +50,12 @@
         </item>
         <item>
             <key> <string>configuration_property_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>contributor_list</string> </key>
             <value>
               <tuple/>
             </value>

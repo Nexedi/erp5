@@ -64,8 +64,11 @@
   <item>Trade Model Solver</item>
   <item>Unify Solver</item>
  </portal_type>
- <portal_type id="Solver Tool">
+ <portal_type id="Solver Process Tool">
   <item>Solver Process</item>
+ </portal_type>
+ <portal_type id="Solver Tool">
+  <item>Solver Type</item>
  </portal_type>
  <portal_type id="Solver Type">
   <item>Action Information</item>
@@ -78,8 +81,5 @@
   <item>Net Converted Quantity Divergence Tester</item>
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
- </portal_type>
- <portal_type id="Types Tool">
-  <item>Solver Type</item>
  </portal_type>
 </allowed_content_type_list>

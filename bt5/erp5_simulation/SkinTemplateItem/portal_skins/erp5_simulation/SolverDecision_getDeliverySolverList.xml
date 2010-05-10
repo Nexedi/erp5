@@ -56,7 +56,7 @@
             <value> <string>try:\n
   return [(\'Do Nothing\', \'\')] + [x for x in context.getPortalObject().portal_solvers.getDeliverySolverTranslatedItemList() \\\n
       if x[1] in context.getSolverValue().getDeliverySolverList()]\n
-except AttributeError:\n
+except AttributeError: # FIXME too wide\n
   return [(\'Do Nothing\', \'\')]\n
 </string> </value>
         </item>
