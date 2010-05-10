@@ -29,60 +29,29 @@
 
 import zope.interface
 
-from Products.CMFCore.utils import getToolByName
-
 from AccessControl import ClassSecurityInfo
-from Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.Tool.TypesTool import TypeProvider
 from Products.ERP5 import DeliverySolver
+from Products.ERP5Type.Message import translateString
 
-from Products.ERP5 import _dtmldir
 
-from zLOG import LOG
-
-class SolverTool(BaseTool):
-  """
-    The SolverTool provides API to find out which solver can
-    be applied in which case and contains SolverProcess instances
-    which are used to keep track of solver decisions, solver
-    history and global optimisation.
-
-    NOTE: this class is experimental and is subject to be removed
+class SolverTool(TypeProvider):
+  """ The SolverTool provides API to find out which solver can be applied in
+  which case and contains SolverProcess instances which are used to keep track
+  of solver decisions, solver history and global optimisation.
+  It also contains solvers.
   """
   id = 'portal_solvers'
   meta_type = 'ERP5 Solver Tool'
   portal_type = 'Solver Tool'
-  allowed_types = ( 'ERP5 Solver Process', )
+  allowed_types = ( 'ERP5 Solver Type', )
 
   # Declarative Security
   security = ClassSecurityInfo()
-
-  #
-  #   ZMI methods
-  #
-  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-  manage_overview = DTMLFile( 'explainSolverTool', _dtmldir )
-
+ 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IDeliverySolverFactory,
-                            interfaces.IDivergenceController,
-                           )
-
-  # Implementation
-  def filtered_meta_types(self, user=None):
-    # Filters the list of available meta types.
-    all = SolverTool.inheritedAttribute('filtered_meta_types')(self)
-    meta_types = []
-    for meta_type in self.all_meta_types():
-      if meta_type['name'] in self.allowed_types:
-        meta_types.append(meta_type)
-    return meta_types
-
-  def tpValues(self) :
-    """ show the content in the left pane of the ZMI """
-    return self.objectValues()
+  zope.interface.implements(interfaces.IDeliverySolverFactory, )
 
   # IDeliverySolverFactory implementation
   def newDeliverySolver(self, class_name, movement_list):
@@ -120,50 +89,6 @@ class SolverTool(BaseTool):
     __import__('%s.%s' % (DeliverySolver.__name__, class_name))
     return translateString(
       getattr(getattr(DeliverySolver, class_name), class_name).__doc__)
-
-  # IDivergenceController implementation
-  def isDivergent(self, delivery_or_movement=None):
-    """
-    Returns True if any of the movements provided 
-    in delivery_or_movement is divergent
-
-    delivery_or_movement -- a movement, a delivery, 
-                            or a list thereof
-    """
-    if not isinstance(delivery_or_movement, (tuple, list)):
-      delivery_or_movement = [delivery_or_movement]
-    for movement in delivery_or_movement:
-      if movement.isDivergent():
-        return True
-    return False
-
-  def newSolverProcess(self, delivery_or_movement=None, temp_object=False):
-    """
-    Builds a new solver process from the divergence
-    analaysis of delivery_or_movement. All movements
-    which are not divergence are placed in a Solver
-    Decision with no Divergence Tester specified.
-
-    delivery_or_movement -- a movement, a delivery, 
-                            or a list thereof
-    """
-    # Do not create a new solver process if no divergence
-    if not self.isDivergent(delivery_or_movement=delivery_or_movement):
-      return None
-
-    # Create an empty solver process
-    new_solver = self.newContent(portal_type='Solver Process',
-                                 temp_object=temp_object)
-    # And build decisions
-    new_solver.buildSolverDecisionList(delivery_or_movement=delivery_or_movement,
-                                       temp_object=temp_object)
-
-    # Append the solver process into the delivery's solver category
-    delivery = delivery_or_movement.getRootDeliveryValue()
-    solver_list = delivery.getSolverValueList()
-    solver_list.append(new_solver)
-    delivery.setSolverValueList(solver_list)
-    return new_solver
 
   def getSolverProcessValueList(self, delivery_or_movement=None, validation_state=None):
     """
