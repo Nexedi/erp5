@@ -816,7 +816,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document_1, document_2], \
       getAdvancedSearchTextResultList('make'))    
     self.assertSameSet([web_page, person], \
-      getAdvancedSearchTextResultList("Great"))
+      getAdvancedSearchTextResultList("Great", ('Person', 'Web Page')))
     # full text search with whole title of a document
     self.assertSameSet([document_3], \
       getAdvancedSearchTextResultList(document_3.getTitle()))
@@ -842,7 +842,8 @@ class TestDocument(TestDocumentMixin):
 
     # full text search with portal_type passed outside searchable_text
     self.assertSameSet([web_page, person],
-                       getAdvancedSearchTextResultList('Great'))
+                       getAdvancedSearchTextResultList('Great',
+                          ('Person', 'Web Page')))
     self.assertSameSet([web_page], \
                        getAdvancedSearchTextResultList('Great', web_page.getPortalType()))
     self.assertSameSet([person], \
