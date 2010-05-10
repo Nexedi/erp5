@@ -328,6 +328,7 @@ for node in getInventoryList(\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
               \'initial_credit_balance\', 0) + max(- total_price, 0)\n
 \n
+found_balance = False\n
 # Balance Transaction\n
 for node in getInventoryList(\n
                 node_category_strict_membership=[\n
@@ -350,7 +351,12 @@ for node in getInventoryList(\n
               \'initial_debit_balance\', 0) + max(total_price, 0)\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
               \'initial_credit_balance\', 0) + max(- total_price, 0)\n
+  found_balance = True\n
 \n
+period_movement_type_list = accounting_movement_type_list\n
+if not found_balance:\n
+  period_movement_type_list = accounting_movement_type_list +\\\n
+      balance_movement_type_list\n
 \n
 for node in getInventoryList(\n
                 node_category_strict_membership=\n
@@ -359,7 +365,7 @@ for node in getInventoryList(\n
                 omit_output=1,\n
                 from_date=period_start_date,\n
                 to_date=from_date,\n
-                portal_type=accounting_movement_type_list,\n
+                portal_type=period_movement_type_list,\n
                 **inventory_params):\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
@@ -375,7 +381,7 @@ for node in getInventoryList(\n
                 omit_input=1,\n
                 from_date=period_start_date,\n
                 to_date=from_date,\n
-                portal_type=accounting_movement_type_list,\n
+                portal_type=period_movement_type_list,\n
                 **inventory_params):\n
   account_props = line_per_account.setdefault(\n
                           (node[\'node_relative_url\'], MARKER, MARKER),\n
@@ -443,6 +449,7 @@ for node in getInventoryList(\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
                  \'initial_credit_balance\', 0) + max(-total_price, 0)\n
 \n
+found_balance=False\n
 # Balance Transactions\n
 for node in getInventoryList(\n
                 node_category_strict_membership=[\n
@@ -465,6 +472,14 @@ for node in getInventoryList(\n
               \'initial_debit_balance\', 0) + max(total_price, 0)\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
               \'initial_credit_balance\', 0) + max(- total_price, 0)\n
+  found_balance=True\n
+\n
+\n
+period_movement_type_list = accounting_movement_type_list\n
+if not found_balance:\n
+  period_movement_type_list = accounting_movement_type_list +\\\n
+      balance_movement_type_list\n
+\n
 \n
 if expand_accounts:\n
   for node in getInventoryList(\n
@@ -475,7 +490,7 @@ if expand_accounts:\n
                   omit_output=1,\n
                   from_date=period_start_date,\n
                   to_date=from_date,\n
-                  portal_type=accounting_movement_type_list,\n
+                  portal_type=period_movement_type_list,\n
                   **inventory_params):\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
@@ -492,7 +507,7 @@ if expand_accounts:\n
                   omit_input=1,\n
                   from_date=period_start_date,\n
                   to_date=from_date,\n
-                  portal_type=accounting_movement_type_list,\n
+                  portal_type=period_movement_type_list,\n
                   **inventory_params):\n
     account_props = line_per_account.setdefault(\n
             (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
@@ -523,6 +538,7 @@ if account_type_to_group_by_payment:\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
                    \'initial_credit_balance\', 0) + max(- total_price, 0)\n
 \n
+  found_balance = False\n
   # Balance Transaction\n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
@@ -542,7 +558,12 @@ if account_type_to_group_by_payment:\n
     total_price -= account_props.get(\'initial_credit_balance\', 0)\n
     account_props[\'initial_debit_balance\'] = max(total_price, 0)\n
     account_props[\'initial_credit_balance\'] = max(- total_price, 0)\n
+    found_balance = True\n
 \n
+  period_movement_type_list = accounting_movement_type_list\n
+  if not found_balance:\n
+    period_movement_type_list = accounting_movement_type_list +\\\n
+        balance_movement_type_list\n
   for node in getInventoryList(\n
                   node_category_strict_membership=\n
                           account_type_to_group_by_payment,\n
@@ -551,7 +572,7 @@ if account_type_to_group_by_payment:\n
                   omit_output=1,\n
                   from_date=period_start_date,\n
                   to_date=from_date,\n
-                  portal_type=accounting_movement_type_list,\n
+                  portal_type=period_movement_type_list,\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
@@ -569,7 +590,7 @@ if account_type_to_group_by_payment:\n
                   omit_input=1,\n
                   from_date=period_start_date,\n
                   to_date=from_date,\n
-                  portal_type=accounting_movement_type_list,\n
+                  portal_type=period_movement_type_list,\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
@@ -820,6 +841,10 @@ return new_line_list\n
                             <string>node_title_and_id_cache</string>
                             <string>getNodeTitleAndId</string>
                             <string>initial_balance_date</string>
+                            <string>False</string>
+                            <string>found_balance</string>
+                            <string>True</string>
+                            <string>period_movement_type_list</string>
                             <string>min</string>
                             <string>mirror_section_key</string>
                             <string>line_list</string>
