@@ -439,7 +439,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     def getTypeList(group):
       type_list = []
-      for pt in self.portal_types.objectValues():
+      for pt in self.portal_types.listTypeInfo():
         if group in getattr(pt, 'group_list', ()):
           type_list.append(pt.getId())
 
@@ -1563,8 +1563,6 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Memcached Tool', None)
     if not p.hasObject('portal_types'):
       addTool('ERP5 Types Tool', None)
-      #transaction.get().beforeCommitHook(lambda:
-      #  p.portal_types.Base_setDefaultSecurity())
 
     try:
       addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
