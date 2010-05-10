@@ -32,6 +32,8 @@ readline-devel
 libgsasl-devel
 termcap
 libxml2-devel
+libtool
+libcom_err-devel
 libxslt-devel
 make
 patch
