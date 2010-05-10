@@ -40,8 +40,10 @@ debian-appliance:
 	sed -i "s,__PACKAGE_RELEASE__,$(PACKAGE_SOFTWARE_RELEASE),g" debian-tiolive-application/debian/changelog
 	cd debian-tiolive-application; sudo dpkg-buildpackage -b
 
-mandriva-rpm-appliance:
+checkout-rpmgen:
 	svn co https://svn.erp5.org/repos/public/erp5/trunk/utils/rpmgen rpmgen
+
+mandriva-rpm-appliance: checkout-rpmgen
 	sed -i "s,name = erp5-official-buildout,name = erp5-`cat VERSION.txt`,g" rpmgen/profiles/mandriva.cfg
 	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/profiles/mandriva.cfg
 	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/profiles/mandriva.cfg
@@ -50,7 +52,7 @@ mandriva-rpm-appliance:
 	sudo helpers/mandriva2010.0.sh
 	cd rpmgen; make mandriva
 
-opensuse-rpm-appliance:
+opensuse-rpm-appliance: checkout-rpmgen
 	sed -i "s,mandriva,opensuse,g" rpmgen/buildout.cfg
 	sed -i "s,mandriva/,,g" rpmgen/find_provides.sh
 	sed -i "s,name = erp5-official-buildout,name = erp5-$(PACAKGE_VERSION),g" rpmgen/profiles/opensuse.cfg
