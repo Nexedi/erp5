@@ -62,15 +62,12 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
 from Products.ERP5Form.Document.Preference import Priority
 import os
 from threading import Thread
 import httplib
 
 QUIET = 0
-RUN_ALL_TEST = 1
 
 # Define the conversion server host
 conversion_server_host = ('127.0.0.1', 8008)
@@ -219,11 +216,10 @@ class TestDocument(TestDocumentMixin):
 
   ## tests
 
-  def test_01_HasEverything(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_HasEverything(self):
     """
       Standard test to make sure we have everything we need - all the tools etc
     """
-    if not run: return
     printAndLog('\nTest Has Everything ')
     self.assertNotEqual(self.getCategoryTool(), None)
     self.assertNotEqual(self.getSimulationTool(), None)
@@ -232,11 +228,10 @@ class TestDocument(TestDocumentMixin):
     self.assertNotEqual(self.getCatalogTool(), None)
     self.assertNotEqual(self.getWorkflowTool(), None)
 
-  def test_02_RevisionSystem(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_02_RevisionSystem(self):
     """
       Test revision mechanism
     """
-    if not run: return
     printAndLog('\nTest Revision System')
     # create a test document
     # revision should be 1
@@ -271,11 +266,10 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(getTestDocument().getRevision(), '4')
     self.assertEqual(getTestDocument().getRevisionList(), ['1', '2', '3', '4'])
 
-  def test_03_Versioning(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_03_Versioning(self):
     """
       Test versioning
     """
-    if not run: return
     printAndLog('\nTest Versioning System')
     # create a document 1, set coordinates (reference=TEST, version=002, language=en)
     # create a document 2, set coordinates (reference=TEST, version=002, language=en)
@@ -308,11 +302,10 @@ class TestDocument(TestDocumentMixin):
     version_list = [br.getRelativeUrl() for br in docs[2].getVersionValueList()]
     self.failUnless(version_list == [docs[3].getRelativeUrl(), docs[2].getRelativeUrl(), docs[1].getRelativeUrl()])
 
-  def test_04_VersioningWithLanguage(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_04_VersioningWithLanguage(self):
     """
       Test versioning with multi-language support
     """
-    if not run: return
     printAndLog('\nTest Versioning With Language')
     # create empty test documents, set their coordinates as follows:
     # (1) TEST, 002, en
@@ -365,13 +358,12 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.failUnless(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
 
-  def test_06_testExplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_06_testExplicitRelations(self):
     """
       Test explicit relations.
       Explicit relations are just like any other relation, so no need to test them here
       except for similarity cloud which we test.
     """
-    if not run: return
 
     printAndLog('\nTest Explicit Relations')
     # create test documents:
@@ -467,12 +459,11 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document8, document13],
                        document6.getSimilarCloudValueList())
 
-  def test_07_testImplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_07_testImplicitRelations(self):
     """
       Test implicit (wiki-like) relations.
     """
     # XXX this test should be extended to check more elaborate language selection
-    if not run: return
 
     def sqlresult_to_document_list(result):
       return [i.getObject() for i in result]
@@ -671,12 +662,11 @@ class TestDocument(TestDocumentMixin):
         self.portal.Base_getConversionFormatItemList(base_content_type=
                   'application/vnd.oasis.opendocument.text'))
 
-  def test_06_ProcessingStateOfAClonedDocument(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_06_ProcessingStateOfAClonedDocument(self):
     """
     Check that the processing state of a cloned document
     is not draft
     """
-    if not run: return
     printAndLog('\nProcessing State of a Cloned Document')
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
@@ -713,12 +703,11 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEquals('converted', new_document.getExternalProcessingState())
 
-  def test_07_EmbeddedDocumentOfAClonedDocument(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_07_EmbeddedDocumentOfAClonedDocument(self):
     """
     Check the validation state of embedded document when its container is
     cloned
     """
-    if not run: return
     printAndLog('\nValidation State of a Cloned Document')
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
@@ -745,11 +734,10 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEquals('embedded', new_sub_document.getValidationState())
 
-  def test_08_EmbeddedDocumentState(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_08_EmbeddedDocumentState(self):
     """
     Check the validation state of an embedded document
     """
-    if not run: return
     printAndLog('\nValidation State of an Embedded Document')
     filename = 'EmbeddedImage-en-002.odt'
     file = makeFileUpload(filename)
@@ -765,11 +753,10 @@ class TestDocument(TestDocumentMixin):
 #     image = image_list[0]
 #     self.assertEquals('embedded', image.getValidationState())
 
-  def test_09_SearchableText(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_09_SearchableText(self):
     """
     Check DMS SearchableText capabilities.
     """
-    if not run: return
     portal = self.portal
 
     # Create a document.
@@ -814,7 +801,7 @@ class TestDocument(TestDocumentMixin):
       getAdvancedSearchTextResultList('ScriptableKey'))
     self.assertEqual(len(getAdvancedSearchTextResultList('RelatedKey')), 0)
     self.assertSameSet([document_1, document_2], \
-      getAdvancedSearchTextResultList('make'))    
+      getAdvancedSearchTextResultList('make'))
     self.assertSameSet([web_page, person], \
       getAdvancedSearchTextResultList("Great", ('Person', 'Web Page')))
     # full text search with whole title of a document
@@ -873,11 +860,10 @@ class TestDocument(TestDocumentMixin):
                                          web_page.getLanguage(),
                                          web_page.getVersion())))
 
-  def test_10_SearchString(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_10_SearchString(self):
     """
     Test search string search generation and parsing.
     """
-    if not run: return
 
     portal = self.portal
     assemble = portal.Base_assembleSearchString
@@ -1029,12 +1015,10 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals(kw['newest'], parsed_string['newest'])
     self.assertEquals('boolean', parsed_string['mode'])
 
-  def test_11_SearchStringSearchCapability(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_11_SearchStringSearchCapability(self):
     """
     Test search string search search capabilities.
     """
-    if not run: return
-
     portal = self.portal
     assemble = portal.Base_assembleSearchString
     search = portal.Base_getAdvancedSearchResultList
@@ -1685,11 +1669,10 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
 
-  def test_ShowPreviewAfterSubmitted(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_ShowPreviewAfterSubmitted(self):
     """
     Make sure that uploader can preview document after submitted.
     """
-    if not run: return
     filename = 'REF-en-001.odt'
     upload_file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=upload_file)
