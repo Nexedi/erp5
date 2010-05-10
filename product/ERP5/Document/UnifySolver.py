@@ -62,7 +62,7 @@ class UnifySolver(AcceptSolver):
     original one recorded.
     """
     configuration_dict = self.getConfigurationPropertyDict()
-    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
+    portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
     solved_property_list = configuration_dict.get('tested_property_list',
                                                   portal_type.getTestedPropertyList())
     # XXX it does not support multiple tested properties.
