@@ -1786,7 +1786,8 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     portal = obj.getPortalObject()
     types_tool = portal.portal_types
     type_container_id = obj.getParentId()
-    if type_container_id not in types_tool.type_provider_list:
+    if type_container_id != 'portal_types' and \
+        type_container_id not in types_tool.type_provider_list:
       types_tool.type_provider_list = tuple(types_tool.type_provider_list) + (
           type_container_id,)
 

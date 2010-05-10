@@ -38,8 +38,6 @@ class TypeProvider(BaseTool, CMFCore_TypesTool):
   zope.interface.implements(ITypeProvider)
 
 
-_MARKER = []
-
 class TypesTool(TypeProvider):
   """Provides a configurable registry of portal content types
   """
@@ -51,7 +49,7 @@ class TypesTool(TypeProvider):
   zope.interface.implements(ITypesTool)
 
   # TODO: UI to configure this is missing
-  type_provider_list = ( 'portal_types', )
+  type_provider_list = ( )
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -60,28 +58,34 @@ class TypesTool(TypeProvider):
     """List type information from all providers
     """
     listTypeInfo = CMFCore_TypesTool.listTypeInfo
-    type_info_list = []
+    type_info_list = listTypeInfo(self, container=container)
+    portal = self.getPortalObject()
     for provider in self.type_provider_list:
-      provider_value = getattr(self, provider, None)
+      provider_value = portal._getOb(provider, None)
       if provider_value is not None:
         type_info_list.extend(
             listTypeInfo(provider_value, container=container))
     return type_info_list
-
-  def _getOb(self, id, default=_MARKER):
+  
+  def _aq_dynamic(self, id):
     """Get a type information from a provider
     """
-    _getOb = CMFCore_TypesTool._getOb
+    result = BaseTool._aq_dynamic(self, id)
+    if result is not None:
+      return result
+
+    if id in self.type_provider_list:
+      return None
+
+    default = []
     for provider in self.type_provider_list:
       provider_value = getattr(self, provider, None)
       if provider_value is not None:
-        ob = _getOb(provider_value, id, default=default)
+        ob = provider_value._getOb(id, default=default)
         if ob is not default:
           return ob
-    if ob is _MARKER:
-      raise AttributeError, id
-    return ob
-    
+    return None
+
   security.declarePrivate('getActionListFor')
   def getActionListFor(self, ob=None):
     """Return all actions applicable to the object"""
@@ -100,7 +104,7 @@ class TypesTool(TypeProvider):
         portal_type = aq_base(portal_type).getPortalType()
       except AttributeError:
         return None
-    return self._getOb(portal_type, None)
+    return getattr(self, portal_type, None)
 
   security.declareProtected(Permissions.AddPortalContent, 'listDefaultTypeInformation')
   def listDefaultTypeInformation(self):
