@@ -1425,7 +1425,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   def contentValues(self, *args, **kw):
     # Returns a list of documents contained in this folder.
     # ( no docstring to prevent publishing )
-    portal_type_id_list = self._getTypesTool().objectIds()
+    portal_type_id_list = self._getTypesTool().listContentTypes()
     filter_kw = kw.pop('filter', None) or {}
     portal_type = kw.pop('portal_type', None)
     if 'portal_type' in filter_kw:
