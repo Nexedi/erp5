@@ -49,6 +49,7 @@
             <value>
               <tuple>
                 <string>internal</string>
+                <string>module</string>
               </tuple>
             </value>
         </item>
