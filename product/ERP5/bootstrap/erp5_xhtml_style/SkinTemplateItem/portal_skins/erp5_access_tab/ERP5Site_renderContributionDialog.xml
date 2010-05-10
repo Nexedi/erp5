@@ -58,7 +58,7 @@
         <option value=""\n
                 i18n:translate="" \n
                 i18n:domain="ui">-- Select Classification --</option>\n
-        <option tal:repeat="item python:[c for c in here.portal_categories.classification.getCategoryChildTranslatedLogicalPathItemList(local_sort_id=\'translated_title\')[1:] if len(c[1].split(\'/\'))>1]" \n
+        <option tal:repeat="item python:context.portal_categories.classification.getCategoryChildTranslatedLogicalPathItemList(local_sort_id=\'translated_title\', filter_node=True, display_none_category=False)"\n
                 tal:content="python:item[0]" \n
                 tal:attributes="value python:item[1]"/>\n
       </select>\n
