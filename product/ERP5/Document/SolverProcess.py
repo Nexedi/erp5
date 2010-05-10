@@ -81,7 +81,6 @@ class SolverProcess(XMLObject, ActiveProcess):
       Builds target solvers from solver decisions
     """
     movement_dict = {}
-    types_tool = self.portal_types
     message_list = []
 
     # First create a mapping between delivery movements and solvers
@@ -154,8 +153,9 @@ class SolverProcess(XMLObject, ActiveProcess):
           if configuration_mapping not in movement_solver_configuration_list:
             movement_solver_configuration_list.append(configuration_mapping)
 
-    # Return empty list of conflicts
-    if message_list: return message_list
+    # If conflicts where detected, return them and do nothing
+    if message_list:
+      return message_list
 
     # Fourth, build target solvers
     for solver, solver_key_dict in grouped_solver_dict.items():
@@ -216,7 +216,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     # delivery lines. Let us group decisions in such way
     # that a single decision is created per divergence tester instance
     # and per application level list
-    solver_tool = self.getParentValue()
+    solver_tool = self.getPortalObject().portal_solvers
     solver_decision_dict = {}
     for movement in movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
