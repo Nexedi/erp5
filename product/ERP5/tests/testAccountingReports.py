@@ -2284,6 +2284,73 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         final_balance_if_debit=110, final_balance_if_credit=110)
 
 
+  def testTrialBalanceInitialBalanceBalanceTransactionDifferentFromDate(self):
+    # Test of trial balance and initial balance with balance transactions, but
+    # with a from_date which differs from the balance transaction date.
+    account_module = self.portal.account_module
+
+    self._makeOne(
+              portal_type='Balance Transaction',
+              title='Transaction 0',
+              destination_reference='0',
+              simulation_state='delivered',
+              source_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2007, 1, 1),
+              lines=(dict(destination_value=account_module.payable,
+                          destination_debit=100.0),
+                     dict(destination_value=account_module.receivable,
+                          destination_credit=100.0),))
+    self._makeOne(
+              portal_type='Accounting Transaction',
+              title='Transaction 1',
+              source_reference='1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2007, 1, 3),
+              lines=(dict(source_value=account_module.payable,
+                          source_debit=10.0),
+                     dict(source_value=account_module.receivable,
+                          source_credit=10.0),))
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2007, 1, 2)
+    request_form['at_date'] = DateTime(2007, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+    request_form['per_account_class_summary'] = 0
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    
+    self.assertEquals(2, len(data_line_list))
+
+    self.checkLineProperties(data_line_list[0], node_id='40',
+        node_title='Payable', initial_debit_balance=100,
+        initial_credit_balance=0, debit=10, credit=0,
+        final_debit_balance=110, final_credit_balance=0,
+        final_balance_if_debit=110, final_balance_if_credit=0)
+    
+    self.checkLineProperties(data_line_list[1], node_id='41',
+        node_title='Receivable', initial_debit_balance=0,
+        initial_credit_balance=100, debit=0, credit=10,
+        final_debit_balance=0, final_credit_balance=110,
+        final_balance_if_debit=0, final_balance_if_credit=110)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=100, initial_credit_balance=100, debit=10,
+        credit=10, final_debit_balance=110, final_credit_balance=110,
+        final_balance_if_debit=110, final_balance_if_credit=110)
+
+
   def testTrialBalanceInitialBalanceWithPeriod(self):
     # Test of trial balance and initial balance
     account_module = self.portal.account_module
