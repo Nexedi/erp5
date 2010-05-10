@@ -60,19 +60,25 @@ div.web-toolbar {\n
 }\n
 div.web-toolbar h3 {\n
   height:20px;\n
-  font-size:100%;\n
+  font-size:100%!important;\n
   font-weight:bold;\n
-  padding:3px 10px;\n
+  padding:0px 10px;\n
+  margin: 0em;\n
   cursor:pointer;\n
 }\n
 div.web-toolbar h3:hover {\n
   background:#ccf;\n
 }\n
-div.web-toolbar u1 {\n
+div.web-toolbar ul {\n
   margin:0;\n
   padding:0;\n
   list-style:none\n
 }\n
+div.web-toolbar ul li{\n
+  background: none;\n
+  font-size:12px;\n
+}\n
+\n
 li.toolboxSection {\n
   display:inline;\n
   float:left;\n
@@ -157,6 +163,7 @@ div.web-toolbar button {\n
   text-align:left;\n
   padding: .2em;\n
   display:block;\n
+  float:left;\n
 }\n
 \n
 div.web-toolbar li > a:hover,\n
