@@ -1,13 +1,70 @@
-#!/bin/sh
+#!${configuration:openoffice_python}
 
-# Verify if there is another oood running and flush if not
-# This will stop previous open offices running in the past.
-if [ ! -f ${configuration:oood_pid}];
-then
-    PYTHONPATH=${configuration:openoffice_uno} ${configuration:openoffice_python} ${software_definition:oood_software}/start.py --flush > /dev/null 2>&1 /dev/null
-fi
+import signal
+import time
+import subprocess
+import sys
+import os
 
-PYTHONPATH=${configuration:openoffice_uno} ${configuration:openoffice_python} ${software_definition:oood_software}/runserw.py $@
+PID_FILE = "${configuration:oood_pid}" 
 
-# After the previous command finish (--start or --stop), call start.py flush, this prevents leave openoffice and xvfb running after stop.
-PYTHONPATH=${configuration:openoffice_uno} ${configuration:openoffice_python} ${software_definition:oood_software}/start.py --flush > /dev/null 2>&1 /dev/null
+OOOD_COMMAND = " PYTHONPATH=${configuration:openoffice_uno} " + \
+               " ${configuration:openoffice_python} " + \
+               " ${software_definition:oood_software}/runserw.py "
+
+FLUSH_COMMAND = " PYTHONPATH=${configuration:openoffice_uno} " + \
+                " ${configuration:openoffice_python} " + \
+                " ${software_definition:oood_software}/start.py " + \
+                " --flush > /dev/null 2>&1 /dev/null"
+
+class Oood:
+    pid = None
+    def __init__(self):
+        self.setsignals()
+
+    def run(self):
+        subprocess.call(OOOD_COMMAND + "--start > /dev/null 2>&1 /dev/null &",
+                        shell=True)
+        subprocess.call(FLUSH_COMMAND, shell=True)
+        while 1:
+            if os.path.exists(PID_FILE):
+              self.pid = int(open(PID_FILE, "r").read())
+              time.sleep(40)
+            time.sleep(5)
+
+    def setsignals(self):
+        signal.signal(signal.SIGTERM, self.stop)
+        signal.signal(signal.SIGHUP, self.stop)
+        signal.signal(signal.SIGINT, self.stop)
+        signal.signal(signal.SIGUSR1, self.stop)
+        signal.signal(signal.SIGUSR2, self.stop)
+
+    def stop(self, sig, frame):
+        
+        if os.path.exists(PID_FILE):
+          self.pid = int(open(PID_FILE, "r").read())
+          #print self.pid
+        else: 
+          print "Pid File does not exist!"
+        
+        subprocess.call(OOOD_COMMAND + "--stop > /dev/null 2>&1 /dev/null ", 
+                        shell=True)
+        subprocess.call(FLUSH_COMMAND, shell=True)
+        if self.pid is not None:
+          try:
+            os.kill(self.pid, 9)
+            print "Kill pid (%s)" % self.pid
+          except OSError:
+            #print "Pid (%s) already stopped. " % self.pid
+            pass
+            # Ignore is ok, it means stop command works.
+            
+        sys.exit(0)
+        
+
+def main():
+    pp = Oood()
+    pp.run()
+
+if __name__ == '__main__':
+    main() 
