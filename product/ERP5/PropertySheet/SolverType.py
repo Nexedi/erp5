@@ -64,6 +64,7 @@ class SolverType:
          },
         { 'id':         'delivery_solver',
           'type':       'tokens',
+          'default':    (),
           'mode':       'w',
           'label':      'Delivery Solvers'
          },
