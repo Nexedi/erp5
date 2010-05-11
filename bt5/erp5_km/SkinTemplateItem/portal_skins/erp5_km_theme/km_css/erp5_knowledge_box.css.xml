@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts72871051.16</string> </value>
+            <value> <string>ts73067255.88</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -563,7 +563,8 @@ div.gadget-my-documents{\n
 \n
 /* Gadget Latest Documents */\n
 div.gadget-latest-documents{\n
-}</string> </value>
+}\n
+</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -571,7 +572,7 @@ div.gadget-latest-documents{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9787</int> </value>
+            <value> <int>9788</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -90,6 +90,7 @@
                     <key> <string>footer</string> </key>
                     <value>
                       <list>
+                        <string>toolbar</string>
                         <string>footer_widget</string>
                       </list>
                     </value>

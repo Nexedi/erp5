@@ -73,6 +73,7 @@
                 <string>right column gadget (Right Gadget)</string>
                 <string>bottom</string>
                 <string>footer</string>
+                <string>web-toolbar</string>
               </list>
             </value>
         </item>
@@ -169,6 +170,14 @@
                     <value>
                       <list>
                         <string>user_information_widget</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>web-toolbar</string> </key>
+                    <value>
+                      <list>
+                        <string>toolbar</string>
                       </list>
                     </value>
                 </item>
