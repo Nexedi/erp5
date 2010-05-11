@@ -54,6 +54,7 @@ import ZPublisher.HTTPRequest
 import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5OOo.OOoUtils import OOoBuilder
@@ -68,9 +69,6 @@ from threading import Thread
 import httplib
 
 QUIET = 0
-
-# Define the conversion server host
-conversion_server_host = ('127.0.0.1', 8008)
 
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
@@ -119,8 +117,9 @@ class TestDocumentMixin(ERP5TypeTestCase):
 
   def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
