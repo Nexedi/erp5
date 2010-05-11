@@ -243,13 +243,13 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def stepAcceptDecisionQuantityInvoice(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(invoice)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(invoice)
     for quantity_solver_decision in filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues()):
       # use Trade Model Solver.
-      quantity_solver_decision.setSolverValue(self.portal.portal_types['Trade Model Solver'])
+      quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Trade Model Solver'])
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
