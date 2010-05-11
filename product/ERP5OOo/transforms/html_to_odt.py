@@ -40,7 +40,8 @@ class HTMLToOdt:
       # parameter to True, should do the same things. But it does not.
       head = Element('head')
       html_node.insert(0, head)
-      SubElement(head, 'meta', **{'http-equiv': 'Content-Type', 'content': 'text/html; charset=utf-8'})
+      SubElement(head, 'meta', **{'http-equiv': 'Content-Type',
+                                  'content': 'text/html; charset=utf-8'})
     orig = html.tostring(html_tree, encoding='utf-8')
 
     doc = OOOdCommandTransform(context, filename, orig, self.inputs[0])
