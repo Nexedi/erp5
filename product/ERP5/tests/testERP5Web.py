@@ -51,6 +51,7 @@ class TestERP5Web(ERP5TypeTestCase):
   manager_password = 'zope'
   website_id = 'test'
 
+  credential = '%s:%s' % (manager_username, manager_password)
   def getTitle(self):
     return "ERP5Web"
 
@@ -957,14 +958,12 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
-    response = self.publish(path, '%s:%s' % (self.manager_username,
-                                                        self.manager_password))
+    response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(content), -1)
 
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
-    response = self.publish(path, '%s:%s' % (self.manager_username,
-                                                        self.manager_password))
+    response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(content), -1)
 
     # modified the web_page content
@@ -976,13 +975,13 @@ Hé Hé Hé!""", page.asText().strip())
     # check the cache doesn't send again the old content
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
-    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
-      RESPONSE=request.RESPONSE).find(new_content), -1)
+    response = self.publish(path, self.credential)
+    self.assertNotEquals(response.getBody().find(new_content), -1)
 
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
-    self.assertNotEquals(request.traverse(path)(REQUEST=request.REQUEST,
-      RESPONSE=request.RESPONSE).find(new_content), -1)
+    response = self.publish(path, self.credential)
+    self.assertNotEquals(response.getBody().find(new_content), -1)
 
 
   def test_13a_DocumentMovedCache(self, quiet=quiet, run=run_all_test):
@@ -1059,13 +1058,11 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Through the web_site.
     path = website.absolute_url_path() + '/NXD-Document.Cache'
-    response = self.publish(path, '%s:%s' % (self.manager_username,
-                                                        self.manager_password))
+    response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(content), -1)
     # Through a web_section.
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
-    response = self.publish(path, '%s:%s' % (self.manager_username,
-                                                        self.manager_password))
+    response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(content), -1)
 
     # Modify the web_page content
@@ -1096,16 +1093,14 @@ Hé Hé Hé!""", page.asText().strip())
     web_document = web_section.restrictedTraverse('NXD-Document.Cache')
     self.assertEquals(web_document.asText().strip(), 'modified text')
     path = web_section.absolute_url_path() + '/NXD-Document.Cache'
-    response = self.publish(path, '%s:%s' % (self.manager_username,
-                                                        self.manager_password))
+    response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(new_content), -1)
 
     # Through a web_site.
     web_document = website.restrictedTraverse('NXD-Document.Cache')
     self.assertEquals(web_document.asText().strip(), 'modified text')
     path = website.absolute_url_path() + '/NXD-Document.Cache'
-    response = self.publish(path, '%s:%s' % (self.manager_username,
-                                                        self.manager_password))
+    response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(new_content), -1)
 
 
