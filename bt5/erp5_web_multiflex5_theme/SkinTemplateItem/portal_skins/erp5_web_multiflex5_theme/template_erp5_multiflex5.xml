@@ -89,7 +89,7 @@
                            dummy python: request.set(\'dialog_mode\', dialog_mode);\n
                            dummy python: request.set(\'list_mode\', list_mode);\n
                            aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
-                                             [\'header\', \'navbar\', \'headline\', \'subcontent\', \'footer\', \'bottom\']);\n
+                                             [\'header\', \'navbar\', \'headline\', \'subcontent\', \'bottom\', \'footer\']);\n
                            aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
                            header_area python:aggregate.get(\'header\', []);\n
                            navbar_area python:aggregate.get(\'navbar\', []);\n
@@ -202,7 +202,8 @@
     </tal:block>\n
   </tal:block>\n
 </body>\n
-</html>
+</html>\n
+
 
 ]]></string> </value>
         </item>
