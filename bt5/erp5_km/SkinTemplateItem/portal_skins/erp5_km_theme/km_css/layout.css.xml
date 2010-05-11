@@ -938,6 +938,7 @@ fieldset.right .gadget {\n
 \toverflow: hidden;\n
 \tposition: relative;\n
 \tmargin-top: -4.6em;\n
+\tpadding-bottom: 20px;\n
 \n
 }\n
 \n
@@ -1390,6 +1391,19 @@ fieldset.right_registration select {\n
   max-width: 170px;\n
 \n
 }\n
+\n
+/* Web Toolbar */\n
+div.web-toolbar{\n
+  padding-left: 200px;\n
+  color: auto;\n
+  height: 30px;\n
+}\n
+\n
+div.web-toolbar h3{\n
+  color:#000000;\n
+  height: 30px;\n
+}\n
+\n
 
 
 ]]></string> </value>

@@ -71,8 +71,8 @@
                 <string>headline</string>
                 <string>bottom gadget (Bottom Gadget)</string>
                 <string>right column gadget (Right Gadget)</string>
-                <string>footer</string>
                 <string>web-toolbar</string>
+                <string>footer</string>
               </list>
             </value>
         </item>

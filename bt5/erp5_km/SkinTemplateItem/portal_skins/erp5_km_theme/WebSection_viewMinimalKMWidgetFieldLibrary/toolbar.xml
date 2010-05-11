@@ -151,7 +151,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -218,7 +220,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hiddenLabel</string> </value>
+                    <value> <string>hidden_label</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -306,6 +308,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>here/WebSection_viewToolbarWidget</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>not: here/portal_membership/isAnonymousUser</string> </value>
         </item>
       </dictionary>
     </pickle>
