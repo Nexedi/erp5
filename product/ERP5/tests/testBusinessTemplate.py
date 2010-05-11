@@ -6503,6 +6503,50 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     instance.setSourceReference('OK')
     self.assertEquals('OK', instance.getSourceReference())
 
+  def test_global_action(self):
+    # Tests that global actions are properly exported and reimported
+    self.portal.portal_actions.addAction(
+          id='test_global_action',
+          name='Test Global Action',
+          action='',
+          condition='',
+          permission='',
+          category='object_view')
+    action_idx = len(self.portal.portal_actions._actions)
+    
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',
+                          template_action_path_list=(
+                             'portal_actions | test_global_action',),)
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      # actions are exported in portal_types/ and then the id of the container
+      # tool
+      self.assertEquals(['portal_actions'],
+            [os.path.basename(f) for f in
+              glob.glob('%s/ActionTemplateItem/portal_types/*' % (export_dir, ))])
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    
+    # manually uninstall the action
+    self.portal.portal_actions.deleteActions(selections=[action_idx])
+    self.stepTic()
+
+    # install the business template and make sure the action is properly
+    # installed
+    new_bt.install()
+    self.stepTic()
+    self.assertNotEquals(None,
+        self.portal.portal_actions.getActionInfo('object_view/test_global_action'))
+
 
 def test_suite():
   suite = unittest.TestSuite()

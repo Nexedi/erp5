@@ -2619,7 +2619,11 @@ class ActionTemplateItem(ObjectTemplateItem):
       url = posixpath.split(url)
       obj = p.unrestrictedTraverse(url)
       # normalize url
-      url = obj.getPhysicalPath()[-2:]
+      url = p.portal_url.getRelativeContentPath(obj)
+      if len(url) == 1:
+        # global actions are stored under 'portal_types', mostly for
+        # compatibility
+        url = 'portal_types', url[0]
       action = self._getActionCopy(obj, context, value)
       if action is None:
         if self.is_bt_for_diff:
