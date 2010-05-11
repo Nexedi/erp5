@@ -132,7 +132,8 @@ div.web-toolbar fieldset {               /* Should be the same as "fieldset" rul
 }\n
 div.web-toolbar fieldset > div.field {   /* Should be similar to "fieldset > div" rule */\n
   padding: 0;\n
-  margin: 0;\n
+  margin: 0!important;\n
+  margin-top: 3px;\n
   border: none;\n
   width: 100%;\n
 }\n
@@ -192,6 +193,10 @@ div.web-toolbar ul li {\n
 div.web-toolbar li.toolboxSection label {\n
   display:block;\n
   margin:0.2em 0 0 0;\n
+}\n
+/* Menu items */\n
+div.web-toolbar div.menu ul{\n
+  margin-left:0.5em;\n
 }\n
 </tal:block>\n
 
