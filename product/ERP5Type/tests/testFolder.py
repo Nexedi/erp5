@@ -55,16 +55,16 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
         Executed before each test_*.
       """
       self.login()
-      self.folder = self.getPortal().newContent(id='TestFolder',
+      self.folder = self.portal.newContent(id='TestFolder',
                                                 portal_type='Folder')
-      self.other_folder = self.getPortal().newContent(
+      self.other_folder = self.portal.newContent(
                     id='OtherTestFolder', portal_type='Folder')
 
     def beforeTearDown(self):
       """
         Executed after each test_*.
       """
-      self.getPortal().manage_delObjects(ids=[self.folder.getId(),
+      self.portal.manage_delObjects(ids=[self.folder.getId(),
                                           self.other_folder.getId()])
       clearCache()
 
@@ -74,27 +74,19 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       """
       return self.folder.newContent(portal_type='Folder')
     
-    def test_01_folderType(self, quiet=0, run=1):
+    def test_01_folderType(self):
       """
         Test if the present Folder class is the ERP5 version of Folder, not
         CMF's.
       """
-      if not run : return
-      if not quiet:
-        message = 'Test folderType value'
-        LOG('Testing... ', 0, message)
       self.assertTrue(isinstance(self.getTypesTool()['Folder'],
                       ERP5TypeInformation))
 
-    def test_02_defaultGenerateNewId(self, quiet=0, run=1):
+    def test_02_defaultGenerateNewId(self):
       """
         Test the default Id generation method.
         Ids are incremented at content creation and start at 1.
       """
-      if not run : return
-      if not quiet:
-        message = 'Test default generateNewId'
-        LOG('Testing... ', 0, message)
       # No id generator defined
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -103,14 +95,10 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       obj = self.newContent()
       self.assertEquals(obj.getId(), '2')
     
-    def test_03_customGenerateNewId(self, quiet=0, run=1):
+    def test_03_customGenerateNewId(self):
       """
         Test that id_generator property is honored.
       """
-      if not run : return
-      if not quiet:
-        message = 'Test custom generateNewId'
-        LOG('Testing... ', 0, message)
       id_generator_script_name = 'testIdGenerator'
       id_generator_id_list = ['first_id', 'second_id']
       createZODBPythonScript(self.getPortal().portal_skins.erp5_core,

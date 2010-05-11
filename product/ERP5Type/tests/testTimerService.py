@@ -41,8 +41,6 @@ class TestTimerService(ERP5TypeTestCase):
   idea to put an ERP5-type test in it.
   """
 
-  run_all_test = 1
-
   def getTitle(self):
     return "TimerService"
 
@@ -51,34 +49,16 @@ class TestTimerService(ERP5TypeTestCase):
     """
     return ()
 
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
+  def afterSetUp(self):
+    uf = self.portal.acl_users
     uf._doAddUser('rc', '', ['Manager'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
 
-  def enableLightInstall(self):
-    """
-    You can override this. 
-    Return if we should do a light install (1) or not (0)
-    """
-    return 1
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
-  def afterSetUp(self, quiet=1):
-    self.login()
-
-  def test_01_checkAnonymousProcessing(self, quiet=0, run=run_all_test):
+  def test_01_checkAnonymousProcessing(self):
     """
       Test whether a timer can be invoked by anonymous.
     """
-    if not run: return
     noSecurityManager()
     timer_service = self.app.Control_Panel.timer_service
     process_timer = guarded_getattr(timer_service, 'process_timer')

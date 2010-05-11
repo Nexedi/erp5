@@ -26,12 +26,10 @@
 #
 ##############################################################################
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import installRealClassTool
 from App.config import getConfiguration
-from zLOG import LOG
 
 try:
   from transaction import get as get_transaction
@@ -39,50 +37,32 @@ except ImportError:
   pass
 
 class TestClassTool(ERP5TypeTestCase):
-
-  run_all_test = 1
-  quiet = 1
   
   def getTitle(self):
     return "Class Tool"
   
   def afterSetUp(self):
     self.login()
-    installRealClassTool(self.getPortal())
+    installRealClassTool(self.portal)
     
-  def login(self, quiet=0, run=run_all_test):
-    uf = self.getPortal().acl_users
+  def login(self):
+    uf = self.portal.acl_users
     uf._doAddUser('seb', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
 
-  def test_01_CheckClassTool(self, quiet=quiet, run=run_all_test):
+  def test_01_CheckClassTool(self):
     """
       Make sure that portal_classes exists
     """
-    if not run:
-      return
-    if not quiet:
-      message = '\nCheck ClassTool '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-      
-    portal = self.getPortal()
+    portal = self.portal
     self.assertNotEqual(None,getattr(portal,'portal_classes',None))
     get_transaction().commit()
 
 
-  def test_02_CheckFileWriteIsTransactional(self, quiet=quiet,
-                                            run=run_all_test):
-    if not run:
-      return
-    if not quiet:
-      message = '\nCheck File Transaction'
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-      
-    portal = self.getPortal()
+  def test_02_CheckFileWriteIsTransactional(self):
+    portal = self.portal
     portal_classes = portal.portal_classes
     
     self.assertEqual(portal_classes.getLocalDocumentList(), [],

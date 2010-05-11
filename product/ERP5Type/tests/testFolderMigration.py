@@ -32,7 +32,6 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Cache import clearCache
 
@@ -73,26 +72,18 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       """
       return self.folder.newContent(portal_type='Folder', *args, **kwargs)
 
-    def test_01_folderIsBtree(self, quiet=0, run=1):
+    def test_01_folderIsBtree(self):
       """
       Test the folder is a BTree
       """
-      if not run : return
-      if not quiet:
-        message = 'Test folderIsBtree'
-        LOG('Testing... ', 0, message)
       self.assertRaises(NotImplementedError, self.folder.getTreeIdList)
       self.assertEqual(self.folder.isBTree(), True)
       self.assertEqual(self.folder.isHBTree(), False)
 
-    def test_02_migrateFolder(self, quiet=0, run=1):
+    def test_02_migrateFolder(self):
       """
       migrate folder from btree to hbtree
       """
-      if not run : return
-      if not quiet:
-        message = 'Test migrateFolder'
-        LOG('Testing... ', 0, message)
       # Create some objects
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -116,9 +107,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectIds()), 3)
       # check params of objectIds in case of hbtree
       self.assertEqual(len(self.folder.objectIds(base_id=None)), 0)
-      LOG("test", 300, "rien")
       self.assertEqual(len(self.folder.objectValues()), 3)
-      LOG("test", 300, "base_id")
       self.assertEqual(len(self.folder.objectValues(base_id=None)), 0)
       # check object ids
       from DateTime import DateTime
@@ -131,39 +120,27 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       obj4 = self.newContent()
       self.assertEquals(obj4.getId().split('-')[0], date)
 
-    def test_03_emptyFolderIsBtree(self, quiet=0, run=1):
+    def test_03_emptyFolderIsBtree(self):
       """
       Test the folder is a BTree
       """
-      if not run : return
-      if not quiet:
-        message = 'Test EmptyFolderIsBtree'
-        LOG('Testing... ', 0, message)
       self.assertRaises(NotImplementedError, self.folder.getTreeIdList)
       self.assertEqual(self.folder.isBTree(), True)
       self.assertEqual(self.folder.isHBTree(), False)
 
-    def test_03a_filledFolderIsBtree(self, quiet=0, run=1):
+    def test_03a_filledFolderIsBtree(self):
       """
       Test the folder is a BTree
       """
-      if not run : return
-      if not quiet:
-        message = 'Test FilledFolderIsBtree'
-        LOG('Testing... ', 0, message)
       self.folder.newContent()
       self.assertRaises(NotImplementedError, self.folder.getTreeIdList)
       self.assertEqual(self.folder.isBTree(), True)
       self.assertEqual(self.folder.isHBTree(), False)
 
-    def test_04_migrateEmptyFolder(self, quiet=0, run=1):
+    def test_04_migrateEmptyFolder(self):
       """
       migrate empty folder from btree to hbtree
       """
-      if not run : return
-      if not quiet:
-        message = 'Test migrateEmptyFolder'
-        LOG('Testing... ', 0, message)
       # Create some objects
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -188,11 +165,10 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(self.folder.isHBTree(), True)
       self.assertEqual(len(self.folder.objectIds()), 1)
 
-    def test_05_migrateFolderWithoutIdChange(self, quiet=0, run=1):
+    def test_05_migrateFolderWithoutIdChange(self):
       """
       migrate folder from btree to hbtree, do not touch ids
       """
-      if not run : return
       # Create some objects
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -225,11 +201,10 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       obj4 = self.newContent()
       self.assertEquals(obj4.getId(), '4')
 
-    def test_06_migrateFolderChangeIdGenerationMethodLater(self, quiet=0, run=1):
+    def test_06_migrateFolderChangeIdGenerationMethodLater(self):
       """
       migrate folder from btree to hbtree, do not touch ids
       """
-      if not run : return
       # Create some objects
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -279,14 +254,10 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       obj5 = self.newContent()
       self.assertEquals(obj5.getId().split('-')[0], date)
 
-    def test_07_migrateFolderTwice(self, quiet=0, run=1):
+    def test_07_migrateFolderTwice(self):
       """
       migrate folder twice from btree to hbtree
       """
-      if not run : return
-      if not quiet:
-        message = 'Test migrateFolder'
-        LOG('Testing... ', 0, message)
       # Create some objects
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -310,9 +281,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectIds()), 3)
       # check params of objectIds in case of hbtree
       self.assertEqual(len(self.folder.objectIds(base_id=None)), 0)
-      LOG("test", 300, "rien")
       self.assertEqual(len(self.folder.objectValues()), 3)
-      LOG("test", 300, "base_id")
       self.assertEqual(len(self.folder.objectValues(base_id=None)), 0)
       # check object ids
       from DateTime import DateTime
@@ -336,14 +305,10 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEquals(obj3.getId(), '%s-3' %date)
       self.assertEquals(obj4.getId().split('-')[0], date)
 
-    def test_08_migrateFolderTwiceSimultaneously(self, quiet=0, run=1):
+    def test_08_migrateFolderTwiceSimultaneously(self):
       """
       migrate folder twice from btree to hbtree, simultaneously
       """
-      if not run : return
-      if not quiet:
-        message = 'Test migrateFolder'
-        LOG('Testing... ', 0, message)
       # Create some objects
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -370,9 +335,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectIds()), 3)
       # check params of objectIds in case of hbtree
       self.assertEqual(len(self.folder.objectIds(base_id=None)), 0)
-      LOG("test", 300, "rien")
       self.assertEqual(len(self.folder.objectValues()), 3)
-      LOG("test", 300, "base_id")
       self.assertEqual(len(self.folder.objectValues(base_id=None)), 0)
       # check object ids
       from DateTime import DateTime
@@ -385,12 +348,11 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       obj4 = self.newContent()
       self.assertEquals(obj4.getId().split('-')[0], date)
 
-    def test_09_migrateFolderCreateNewObjectAtOnce(self, quiet=0, run=1):
+    def test_09_migrateFolderCreateNewObjectAtOnce(self):
       """
       migrate folder from btree to hbtree, create object with base, without any
       previous checks
       """
-      if not run : return
       # Create some objects
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -414,12 +376,11 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectIds(base_id='BASE')), 1)
       self.assertEqual(len(self.folder.objectValues(base_id='BASE')), 1)
 
-    def test_10_migrateFolderCreateMoreObjectAtOnceDifferentBase(self, quiet=0, run=1):
+    def test_10_migrateFolderCreateMoreObjectAtOnceDifferentBase(self):
       """
       migrate folder from btree to hbtree, create objects with two bases,
       without any previous checks
       """
-      if not run : return
       # Create some objects
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -447,14 +408,10 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectIds(base_id='BASE-BELONG')), 1)
       self.assertEqual(len(self.folder.objectValues(base_id='BASE-BELONG')), 1)
 
-    def test_11_folderInMigratedFolderIsBTree(self, quiet=0, run=1):
+    def test_11_folderInMigratedFolderIsBTree(self):
       """
       Test the folder in HBTree folder is a BTree
       """
-      if not run : return
-      if not quiet:
-        message = 'Test folderIsBtree'
-        LOG('Testing... ', 0, message)
       self.folder.migrateToHBTree()
       transaction.commit()
       self.tic()
@@ -464,16 +421,11 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(infolder.isBTree(), True)
       self.assertEqual(infolder.isHBTree(), False)
 
-    def test_12_migrateFolderWithGoodIdsInIt(self, quiet=0, run=1):
+    def test_12_migrateFolderWithGoodIdsInIt(self):
       """
       migrate folder from btree to hbtree folder, which already has ids
       HBTree-friendly
       """
-      if not run : return
-      if not quiet:
-        message = 'Test migrateFolder'
-        LOG('Testing... ', 0, message)
-
       id_prefix = 'BASE'
       obj1_id = '%s-1'%(id_prefix,)
       obj2_id = '%s-2'%(id_prefix,)
@@ -506,12 +458,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(len(self.folder.objectValues()), 4)
       self.assertEqual(len(self.folder.objectValues(base_id=id_prefix)), 3)
 
-    def test_13_wrongFolderHandlerFix(self, quiet=0, run=1):
-      if not run : return
-      if not quiet:
-        message = 'Test migrateFolder'
-        LOG('Testing... ', 0, message)
-
+    def test_13_wrongFolderHandlerFix(self):
       self.assertEqual(self.folder.isBTree(), True)
       self.assertEqual(self.folder.isHBTree(), False)
 
@@ -535,12 +482,7 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEqual(self.folder.isBTree(), False)
       self.assertEqual(self.folder.isHBTree(), True)
 
-    def test_14_wrongFolderHandlerMigrate(self, quiet=0, run=1):
-      if not run : return
-      if not quiet:
-        message = 'Test migrateFolder'
-        LOG('Testing... ', 0, message)
-
+    def test_14_wrongFolderHandlerMigrate(self):
       self.assertEqual(self.folder.isBTree(), True)
       self.assertEqual(self.folder.isHBTree(), False)
 

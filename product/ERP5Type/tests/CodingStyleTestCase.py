@@ -34,8 +34,6 @@ from Acquisition import aq_base
 class CodingStyleTestCase(ERP5TypeTestCase):
   """XXX
   """
-  run_all_test = 1
-  quiet = 0
   manager_username = 'zope'
   manager_password = 'zope'
   website_id = 'test'
@@ -63,24 +61,18 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     return self.getBusinessTemplateList()[-1:]
 
   def afterSetUp(self):
-    portal = self.getPortal()
+    portal = self.portal
 
     uf = portal.acl_users
     uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
     self.login(self.manager_username)
 
-    self.portal_id = self.portal.getId()
 
-  def test_01_SkinCodingStyle(self, quiet=quiet, run=run_all_test):
+  def test_SkinCodingStyle(self):
     """
     Find all skin items of business templates to be checked
     and gather all consistency messages.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_01_CodingStyle'
-      ZopeTestCase._print(message)
-
     # Find the list if skins to test - we only test the last business template
     portal_templates = self.getPortal().portal_templates
     skin_id_list = []
@@ -92,7 +84,7 @@ class CodingStyleTestCase(ERP5TypeTestCase):
     message_list = []
 
     # Test skins
-    portal_skins = self.getPortal().portal_skins
+    portal_skins = self.portal.portal_skins
     for skin_id in skin_id_list:
       skin = portal_skins[skin_id]
       for document in skin.objectValues():
