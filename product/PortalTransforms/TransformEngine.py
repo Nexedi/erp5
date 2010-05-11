@@ -40,7 +40,7 @@ from zope.interface import implements
 
 __revision__ = '$Id: TransformEngine.py 6255 2006-04-11 15:29:29Z hannosch $'
 
-from zLOG import DEBUG
+from zLOG import WARNING
 
 class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
@@ -137,7 +137,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         orig_mt = str(orig_mt)
         if not orig_mt:
             log('Unable to guess input mime type (filename=%s, mimetype=%s)' %(
-                kwargs.get('mimetype'), kwargs.get('filename')), severity=DEBUG)
+                kwargs.get('mimetype'), kwargs.get('filename')), severity=WARNING)
             return None
 
         target_mt = registry.lookup(target_mimetype)
@@ -145,7 +145,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             target_mt = target_mt[0]
         else:
             log('Unable to match target mime type %s'% str(target_mimetype),
-                severity=DEBUG)
+                severity=WARNING)
             return None
 
         ## fastpath
@@ -167,12 +167,12 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
         path = self._findPath(orig_mt, target_mt, list(requirements))
         if not path and requirements:
             log('Unable to satisfy requirements %s' % ', '.join(requirements),
-                severity=DEBUG)
+                severity=WARNING)
             path = self._findPath(orig_mt, target_mt)
 
         if not path:
             log('NO PATH FROM %s TO %s : %s' % (orig_mt, target_mimetype, path),
-                severity=DEBUG)
+                severity=WARNING)
             return None #XXX raise TransformError
 
         if len(path) > 1:
@@ -315,7 +315,7 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
                         else:
                             log('Can\'t find transform %s from %s to %s' % (
                                 transform.name(), mti, mt),
-                                severity=DEBUG)
+                                severity=WARNING)
 
     def _findPath(self, orig, target, required_transforms=()):
         """return the shortest path for transformation from orig mimetype to
