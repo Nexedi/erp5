@@ -303,7 +303,7 @@ class PreferenceTool(BaseTool):
       user_folder = self.getPortalObject().acl_users
       user = user_folder.getUserById(username)
       if user is None:
-        raise TypeError("User %r not found" % (username, ))
+        raise ValueError("User %r not found" % (username, ))
       newSecurityManager(None, user.__of__(user_folder))
       return self.newContent(portal_type='Preference')
     finally:
