@@ -46,10 +46,6 @@ from Products.ERP5.Document.Document import Document, ConversionError,\
                                                          VALID_TEXT_FORMAT_LIST
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
-try:
-    from OFS.content_types import guess_content_type
-except ImportError:
-    from zope.contenttype import guess_content_type
 from zLOG import LOG, WARNING
 
 # import mixin
@@ -63,6 +59,7 @@ DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
 
 DEFAULT_QUALITY = 75
 
+_MARKER = []
 class Image(TextConvertableMixin, File, OFSImage):
   """
     An Image is a File which contains image data. It supports
@@ -176,14 +173,15 @@ class Image(TextConvertableMixin, File, OFSImage):
     return self.height
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
-  def getContentType(self, format=''):
+  def getContentType(self, default=_MARKER):
     """Original photo content_type."""
     self._upradeImage()
-    if self.get_size() and not self._baseGetContentType(): self._update_image_info()
-    if format == '':
+    if self.hasData() and not self.hasContentType():
+      self._update_image_info()
+    if default is _MARKER:
       return self._baseGetContentType()
     else:
-      return guess_content_type('myfile.' + format)[0]
+      return self._baseGetContentType(default)
 
   #
   # Photo display methods
