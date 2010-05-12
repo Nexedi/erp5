@@ -995,9 +995,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       set on the document by ContributionTool.newContent as soon
       as the document was created.
     """
-    if hasattr(self, '_backup_input'):
-      return getattr(self, '_backup_input')
-    kw = {}
+    kw = getattr(self, '_backup_input', {})
+    if kw:
+      return kw
     for id in self.propertyIds():
       # We should not consider file data
       if id not in ('data', 'categories_list', 'uid', 'id',
