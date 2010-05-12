@@ -218,6 +218,89 @@ class File(Document, CMFFile, CachedConvertableMixin):
 
     return (mime_type, content)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
+  def convert(self, format, **kw):
+    """According content_type of data we can proceed some Conversions.
+    The idea is to wrap data into TempDocument who support conversion
+    then return conversion from this temporary document.
+
+    mimetype                             Class of temp document
+
+    text/????                            newTempTextDocument
+    image/????                           newTempImage
+    application/pdf                      newTempPDFDocument
+    [ooo supported content_type list]    newTempOOoDocument
+    unknown                              no conversion supported
+
+    XXX Another idea of implementation from JPS: Changing dynamicaly the Class
+    of persistent_object.
+    for example any instance of File portal_type can follow TextDocument API
+    if content_type is 'text/html' and support conversion features of
+    TextDocument.
+    """
+    content_type = self.getContentType()
+
+    # Build the list of acceptable content_type for OOoDocument
+    # Hopefully this is cached
+    from Products.ERP5Type.Document import newTempOOoDocument
+    temp_odt = newTempOOoDocument(self, 'testOOoOdt')
+    temp_odt.edit(base_content_type='application/vnd.oasis.opendocument.text',
+                  base_data='not empty')
+    temp_ods = newTempOOoDocument(self, 'testOOoOds')
+    temp_ods.edit(
+            base_content_type='application/vnd.oasis.opendocument.spreadsheet',
+            base_data='not empty')
+    temp_odg = newTempOOoDocument(self, 'testOOoOdg')
+    temp_odg.edit(base_content_type='application/vnd.oasis.opendocument.draw',
+                  base_data='not empty')
+    temp_odb = newTempOOoDocument(self, 'testOOoOdb')
+    temp_odb.edit(base_content_type='application/vnd.oasis.opendocument.base',
+                  base_data='not empty')
+
+    supported_ooo_content_type_list = [item[0] for item in\
+                                           temp_odt.getTargetFormatItemList()]\
+                    + [item[0] for item in temp_ods.getTargetFormatItemList()]\
+                    + [item[0] for item in temp_odg.getTargetFormatItemList()]\
+                    + [item[0] for item in temp_odb.getTargetFormatItemList()]
+    if content_type.startswith('text'):
+      # We can wrap it into TextDocument
+      from Products.ERP5Type.Document import newTempTextDocument
+      temp_document = newTempTextDocument(self, 'temp_%s' % self.getId(),
+                                          text_content=self.getData(),
+                                          content_type=content_type)
+      return temp_document.convert(format=format, **kw)
+    elif content_type.startswith('image'):
+      # We can wrap it into Image
+      from Products.ERP5Type.Document import newTempImage
+      temp_document = newTempImage(self, 'temp_%s' % self.getId(),
+                                   data=self.getData(),
+                                   content_type=content_type)
+      return temp_document.convert(format=format, **kw)
+    elif content_type == 'application/pdf':
+      # We can wrap it into PDFDocument
+      from Products.ERP5Type.Document import newTempPDFDocument
+      temp_document = newTempPDFDocument(self, 'temp_%s' % self.getId(),
+                                         data=self.getData(),
+                                         content_type=content_type)
+      return temp_document.convert(format=format, **kw)
+    elif content_type in supported_ooo_content_type_list:
+      # We can wrap it into OOoDocument
+      temp_document = newTempOOoDocument(self, 'temp_%s' % self.getId(),
+                                         text_content=self.getData(),
+                                         content_type=content_type)
+      return temp_document.convert(format=format, **kw)
+    else:
+      # We didn't find suitable wrapper to convert this File
+      if format in VALID_TEXT_FORMAT_LIST:
+        # This is acceptable to return empty string
+        # for a File we can not convert
+        return 'text/plain', ''
+      elif format is None:
+        # No conversion is asked,
+        # we can return safely the file content itself
+        return content_type, self.getData()
+      raise NotImplementedError
+
 # CMFFile also brings the IContentishInterface on CMF 2.2, remove it.
 removeIContentishInterface(File)
 
