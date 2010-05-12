@@ -68,8 +68,6 @@ def buildAttachmentDictList(document_list, document_type_list=()):
       # is not (yet) part of Document API
       if getattr(attachment, 'getContentType', None) is not None:
         mime_type = attachment.getContentType()
-      elif getattr(attachment, 'getTextFormat', None) is not None:
-        mime_type = attachment.getTextFormat()
       else:
         raise ValueError, "Cannot find mimetype of the document."
 
@@ -350,7 +348,7 @@ class NotificationTool(BaseTool):
       event.setSourceValue(from_person)
       event.setDestinationValueList(to_person_list)
       event.setTitle(subject)
-      event.setTextFormat(message_text_format)
+      event.setContentType(message_text_format)
       event.setTextContent(message)
       event.setAggregateValueList(attachment_document_list)
       event_list.append(event)
