@@ -74,7 +74,8 @@ class TestDocumentationHelper(ERP5TypeTestCase):
 
   def test_02_BusinessTemplate(self):
     """Documentation of Business Template"""
-    bt_ui_test = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_ui_test')
+    bt_ui_test = self.portal.portal_templates.getInstalledBusinessTemplate(
+        'erp5_ui_test')
     bt_uri = bt_ui_test.getUrl()
     #do means documented_object
     bt_do = BusinessTemplateDocumentationHelper(bt_uri).__of__(self.portal)
@@ -91,7 +92,8 @@ class TestDocumentationHelper(ERP5TypeTestCase):
   def test_03_PortalType(self):
     """Documentation of Portal Type"""
     portal_type_uri = '%s/portal_types/Foo' % self.portal.getUrl()
-    portal_type_do = PortalTypeDocumentationHelper(portal_type_uri).__of__(self.portal)
+    portal_type_do = PortalTypeDocumentationHelper(portal_type_uri).__of__(
+        self.portal)
     self.assertTrue('Foo Line' in portal_type_do.getAllowedContentTypeList())
     self.assertTrue('foo_category' in portal_type_do.getBaseCategoryList())
     self.assertTrue('bar_category' in portal_type_do.getBaseCategoryList())
@@ -107,10 +109,13 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.portal.portal_classes.DocumentationHelper_viewReport()
     #test an instance of Foo Module
     instance_uri = '%s/foo_module' % self.portal.getUrl()
-    instance_foo = PortalTypeInstanceDocumentationHelper(instance_uri).__of__(self.portal)
-    self.assertTrue('getPropertyType__roles__' in instance_foo.getClassPropertyIdList())
+    instance_foo = PortalTypeInstanceDocumentationHelper(instance_uri).__of__(
+        self.portal)
+    self.assertTrue('getPropertyType__roles__' in instance_foo \
+        .getClassPropertyIdList())
     self.assertTrue('restrictedTraverse' in instance_foo.getClassMethodIdList())
-    self.assertTrue('_baseGetDescription' in instance_foo.getAccessorMethodIdList())
+    self.assertTrue('_baseGetDescription' in instance_foo \
+        .getAccessorMethodIdList())
     self.portal.portal_classes.getDocumentationHelper(
         instance_foo.getClassName(), instance_uri).view()
     self.portal.REQUEST['class_name'] = instance_foo.getClassName()
