@@ -794,7 +794,7 @@ class TestDocument(TestDocumentMixin):
       if portal_type is not None:
         kw['portal_type'] = portal_type
       return [x.getObject() for x in portal.portal_catalog(**kw)]
-    
+
     # full text search
     self.assertSameSet([document_1], \
       getAdvancedSearchTextResultList('ScriptableKey'))
@@ -1016,7 +1016,7 @@ class TestDocument(TestDocumentMixin):
 
   def test_11_SearchStringSearchCapability(self):
     """
-    Test search string search search capabilities.
+    Test search string search capabilities.
     """
     portal = self.portal
     assemble = portal.Base_assembleSearchString
@@ -1200,9 +1200,10 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('PDF', document.getPortalType())
+
     content_type, image_data = document.convert(format='png',
-                                           frame=0,
-                                           display='thumbnail')
+                                                frame=0,
+                                                display='thumbnail')
     # it's a valid PNG
     self.assertEquals('PNG', image_data[1:4])
 
@@ -1237,8 +1238,7 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('Image', document.getPortalType())
-    self.assertEquals('ERP5 is a free software.\n',
-                      document.SearchableText())
+    self.assertEquals('ERP5 is a free software.\n', document.asText())
 
   def test_Base_showFoundText(self):
     # Create document with good content
