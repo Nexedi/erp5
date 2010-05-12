@@ -41,8 +41,6 @@ from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from zLOG import LOG
 import os
 
-# Define the conversion server host
-conversion_server_host = ('127.0.0.1', 8008)
 
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
@@ -84,9 +82,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
       - clear document module
     """
     self.clearDocumentModule()
-
-  def clearCache(self):
-    self.portal.portal_caches.clearAllCache()
 
   ## tests
 
