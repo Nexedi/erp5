@@ -58,6 +58,7 @@ DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
                             'large', 'large', 'xlarge',)
 
+DEFAULT_QUALITY = 75
 
 class Image(File, OFSImage):
   """
