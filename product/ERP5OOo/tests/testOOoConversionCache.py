@@ -328,7 +328,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
                     'Presentation': 'TEST-en-002.sxi',
                     'Web Page': 'TEST-en-002.html',
                     'Image': 'TEST-en-002.gif',
-                    #'File': 'TEST-en-002.rtf',
+                    'File': 'TEST-en-002.rtf',
                     'PDF': 'TEST-en-002.pdf'}
     #Check that all portal_types are handled by test
     self.assertEqual(len(portal_type_list), len([pt for pt in portal_type_list if pt in data_mapping]))
