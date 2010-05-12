@@ -311,14 +311,18 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
     #XXX but I don't know what is a appropriate mime-type.(Yusei)
     if self.get_size() == 0:
       return 'text/plain', ''
-
+    # if no conversion asked (format empty)
+    # return raw data
+    if not format:
+      return self.getContentType(), self.getData()
+    # Check if we have already a base conversion
+    if not self.hasBaseData():
+      raise NotConvertedError
     # Make sure we can support html and pdf by default
     is_html = 0
     requires_pdf_first = 0
     original_format = format
     if format == 'base-data':
-      if not self.hasBaseData():
-        raise NotConvertedError
       return self.getBaseContentType(), str(self.getBaseData())
     if format == 'pdf':
       format_list = [x for x in self.getTargetFormatList()
@@ -356,9 +360,6 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
-    # Check if we have already a base conversion
-    if not self.hasBaseData():
-      raise NotConvertedError
     # Return converted file
     if requires_pdf_first:
       # We should use original_format whenever we wish to
