@@ -1662,6 +1662,32 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     web_page.edit()
     self.assertFalse(web_page.hasConversion(format='txt'))
 
+  def test_TextDocument_conversion_to_base_format(self):
+    """Check that any files is converted into utf-8
+    """
+    web_page_portal_type = 'Web Page'
+    module = self.portal.getDefaultModule(web_page_portal_type)
+    upload_file = makeFileUpload('TEST-text-iso8859-1.txt')
+    web_page = module.newContent(portal_type=web_page_portal_type,
+                                 file=upload_file)
+
+    text_content = web_page.getTextContent()
+    my_utf_eight_token = 'ùééàçèîà'
+    text_content = text_content.replace('\n', '\n%s\n' % my_utf_eight_token)
+    web_page.edit(text_content=text_content)
+    self.assertTrue(my_utf_eight_token in web_page.asStrippedHTML())
+    self.assertTrue(isinstance(web_page.asEntireHTML().decode('utf-8'), unicode))
+
+  def test_PDFDocument_asTextConversion(self):
+    """Test a PDF document with embedded images
+    To force usage of Ocropus portal_transform chain
+    """
+    portal_type = 'PDF'
+    module = self.portal.getDefaultModule(portal_type)
+    upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
+    document = module.newContent(portal_type=portal_type, file=upload_file)
+    self.assertEquals(document.asText(), 'ERP5 is a free software.\n')
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
