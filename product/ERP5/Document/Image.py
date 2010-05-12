@@ -42,8 +42,8 @@ from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import ConversionError
-
+from Products.ERP5.Document.Document import Document, ConversionError,\
+                                                         VALID_TEXT_FORMAT_LIST
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
 try:
@@ -54,11 +54,10 @@ from zLOG import LOG, WARNING
 
 from Products.CMFCore.utils import getToolByName
 
-default_displays_id_list = ('nano', 'micro', 'thumbnail',
+DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
                             'large', 'large', 'xlarge',)
 
-default_formats = ['jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm']
 
 class Image(File, OFSImage):
   """
@@ -255,7 +254,7 @@ class Image(File, OFSImage):
   security.declareProtected('Access contents information', 'displayIds')
   def displayIds(self, exclude=('thumbnail',)):
     """Return list of display Ids."""
-    id_list = list(default_displays_id_list)
+    id_list = list(DEFAULT_DISPLAY_ID_LIST)
     # Exclude specified displays
     if exclude:
       for id in exclude:
@@ -327,7 +326,7 @@ class Image(File, OFSImage):
     """
     Implementation of conversion for Image files
     """
-    if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
+    if format in VALID_TEXT_FORMAT_LIST:
       try:
         return self.getConversion(format=format)
       except KeyError:
@@ -504,7 +503,7 @@ class Image(File, OFSImage):
     Return the size for this image display, or None if this image display name
     is not known.
     """
-    if image_display in default_displays_id_list:
+    if image_display in DEFAULT_DISPLAY_ID_LIST:
       preference_tool = self.getPortalObject().portal_preferences
       height_preference = 'preferred_%s_image_height' % (image_display,)
       width_preference = 'preferred_%s_image_width' % (image_display,)
