@@ -600,7 +600,7 @@ class TestDocument(TestDocumentMixin):
     response = self.publish('%s/Base_download' % doc.getPath(),
                             basic='member_user1:secret')
     self.assertEquals(makeFileUpload('import_data_list.ods').read(),
-                      response.body)
+                      response.getBody())
     self.assertEquals('application/vnd.oasis.opendocument.spreadsheet',
                       response.headers['content-type'])
     self.assertEquals('attachment; filename="import_data_list.ods"',
@@ -626,9 +626,10 @@ class TestDocument(TestDocumentMixin):
 
     response = self.publish('%s/Document_convert?format=pdf' % doc.getPath(),
                             basic='member_user2:secret')
-    self.assertEquals('application/pdf', response.headers['content-type'])
+    self.assertEquals('application/pdf', response.getHeader('content-type'))
     self.assertEquals('attachment; filename="import.file.with.dot.in.filename.pdf"',
-                      response.headers['content-disposition'])
+                      response.getHeader('content-disposition'))
+    self.assertEquals(response.getBody(), str(doc.convert('pdf')[1]))
 
     # test Print icon works on OOoDocument
     response = self.publish('%s/OOoDocument_print' % doc.getPath())
