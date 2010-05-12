@@ -967,11 +967,11 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       Based on the document content, find out as many properties as needed.
       returns properties which should be set on the document
     """
-    if getattr(self, 'hasData', None) is not None and not self.hasData():
-      # if document is empty, we will not find anything in its content
-      return dict()
-    if not self.hasBaseData():
-      raise NotConvertedError
+    # accesss data through convert
+    mime, content = self.convert(None)
+    if not content:
+       # if document is empty, we will not find anything in its content
+      return {}
     method = self._getTypeBasedMethod('getPropertyDictFromContent',
         fallback_script_id='Document_getPropertyDictFromContent')
     return method()
