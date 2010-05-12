@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -49,7 +49,7 @@ def _unpackData(data):
   """
   return str(data)
 
-class File(Document, CMFFile, CachedConvertableMixin):
+class File(Document, CMFFile):
   """
       A File can contain raw data which can be uploaded and downloaded.
       It is the root class of Image, OOoDocument (ERP5OOo product),
@@ -92,11 +92,6 @@ class File(Document, CMFFile, CachedConvertableMixin):
                     , PropertySheet.Periodicity
     )
 
-  searchable_property_list = ('title', 'description', 'id', 'reference',
-                              'version', 'short_title',
-                              'subject', 'source_reference', 'source_project_title',)
-
-
   ### Special edit method
   security.declarePrivate( '_edit' )
   def _edit(self, **kw):
@@ -123,10 +118,7 @@ class File(Document, CMFFile, CachedConvertableMixin):
     """
     has to be overwritten here, otherwise WebDAV fails
     """
-    data_len = len(getattr(self, 'data', ''))
-    if not data_len:
-      data_len = len(self.getBaseData() or '')
-    return data_len
+    return self.getSize()
 
   getcontentlength = get_size
 
@@ -166,6 +158,38 @@ class File(Document, CMFFile, CachedConvertableMixin):
     else:
       content_type = None
     return content_type
+
+  security.declareProtected(Permissions.ModifyPortalContent, '_setData')
+  def _setData(self, data):
+    """
+    """
+    size = None
+    # update_data use len(data) when size is None, which breaks this method.
+    # define size = 0 will prevent len be use and keep the consistency of 
+    # getData() and setData()
+    if data is None:
+      size = 0
+    if not isinstance(data, Pdata) and data is not None:
+      file = cStringIO.StringIO(data)
+      data, size = self._read_data(file)
+    if getattr(self, 'update_data', None) is not None:
+      # We call this method to make sure size is set and caches reset
+      self.update_data(data, size=size)
+    else:
+      self._baseSetData(data) # XXX - It would be better to always use this accessor
+      self._setSize(size)
+      self.ZCacheable_invalidate()
+      self.ZCacheable_set(None)
+      self.http__refreshEtag()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
+  def getData(self, default=None):
+    """return Data as str."""
+    data = self._baseGetData()
+    if data is None:
+      return None
+    else:
+      return str(data)
 
   security.declareProtected(Permissions.ModifyPortalContent,'PUT')
   def PUT(self, REQUEST, RESPONSE):
