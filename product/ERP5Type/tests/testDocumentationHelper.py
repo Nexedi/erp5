@@ -28,7 +28,6 @@
 
 import unittest
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.DocumentationHelper.ERP5SiteDocumentationHelper \
     import ERP5SiteDocumentationHelper
@@ -38,7 +37,6 @@ from Products.ERP5Type.DocumentationHelper.PortalTypeDocumentationHelper \
     import PortalTypeDocumentationHelper
 from Products.ERP5Type.DocumentationHelper.PortalTypeInstanceDocumentationHelper \
         import PortalTypeInstanceDocumentationHelper
-from zLOG import LOG
 
 class TestDocumentationHelper(ERP5TypeTestCase):
   """
@@ -57,8 +55,7 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     return 'erp5_documentation', 'erp5_ui_test', 'erp5_odt_style'
 
   def test_01_ERP5Site(self):
-    ZopeTestCase._print('\nTest Documentation ERP5Site')
-    LOG('Testing... ', 0, 'Documentation of test_01_ERP5Site')
+    """Documentation of ERP5Site"""
     site_uri = self.portal.getUrl()
     site_do = ERP5SiteDocumentationHelper(site_uri).__of__(self.portal)
     bt_title_set = set(bt[1] for bt in site_do.getBusinessTemplateItemList())
@@ -76,8 +73,7 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.portal.portal_classes.DocumentationHelper_viewReport()
 
   def test_02_BusinessTemplate(self):
-    ZopeTestCase._print('\nTest Documentation Business Template')
-    LOG('Testing... ', 0, 'Documentation of test_02_BusinessTemplate')
+    """Documentation of Business Template"""
     bt_ui_test = self.portal.portal_templates.getInstalledBusinessTemplate('erp5_ui_test')
     bt_uri = bt_ui_test.getUrl()
     #do means documented_object
@@ -93,8 +89,7 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.portal.portal_classes.DocumentationHelper_viewReport()
 
   def test_03_PortalType(self):
-    ZopeTestCase._print('\nTest Documentation Portal Type')
-    LOG('Testing... ', 0, 'Documentation of test_03_PortalType')
+    """Documentation of Portal Type"""
     portal_type_uri = '%s/portal_types/Foo' % self.portal.getUrl()
     portal_type_do = PortalTypeDocumentationHelper(portal_type_uri).__of__(self.portal)
     self.assertTrue('Foo Line' in portal_type_do.getAllowedContentTypeList())
