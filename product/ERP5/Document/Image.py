@@ -160,7 +160,8 @@ class Image(TextConvertableMixin, File, OFSImage):
       Tries to get the width from the image data.
     """
     self._upradeImage()
-    if self.get_size() and not self.width: self._update_image_info()
+    if self.hasData() and not self.width:
+      self._update_image_info()
     return self.width
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getHeight')
@@ -169,7 +170,8 @@ class Image(TextConvertableMixin, File, OFSImage):
       Tries to get the height from the image data.
     """
     self._upradeImage()
-    if self.get_size() and not self.height: self._update_image_info()
+    if self.hasData() and not self.height:
+      self._update_image_info()
     return self.height
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
@@ -289,9 +291,10 @@ class Image(TextConvertableMixin, File, OFSImage):
         age = self._photos[(id,format)]._age()
       else:
         (photo_width, photo_height, bytes, age) = (None, None, None, None)
+      image_size = self.getSizeFromImageDisplay(id)
       displays.append({'id': id,
-                        'width': self.getSizeFromImageDisplay(id)[0],
-                        'height': self.getSizeFromImageDisplay(id)[1],
+                        'width': image_size[0],
+                        'height': image_size[1],
                         'photo_width': photo_width,
                         'photo_height': photo_height,
                         'bytes': bytes,
@@ -309,7 +312,7 @@ class Image(TextConvertableMixin, File, OFSImage):
                                 lookupExtension('name.%s' % format)
     mime_type = str(mime_type)
     src_mimetype = self.getContentType()
-    content = '%s' % self.getData()
+    content = self.getData()
     portal_transforms = getToolByName(self, 'portal_transforms')
     result = portal_transforms.convertToData(mime_type, content,
                                              object=self, context=self,
@@ -472,9 +475,8 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   security.declareProtected('View', 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
-    """
-    Return the size for this image display, or None if this image display name
-    is not known.
+    """Return the size for this image display,
+       or dimension of this image.
     """
     if image_display in DEFAULT_DISPLAY_ID_LIST:
       preference_tool = self.getPortalObject().portal_preferences
@@ -483,7 +485,7 @@ class Image(TextConvertableMixin, File, OFSImage):
       height = preference_tool.getPreference(height_preference)
       width = preference_tool.getPreference(width_preference)
       return (width, height)
-    return None
+    return self.getWidth(), self.getHeight()
 
   def _setFile(self, *args, **kw):
     """set the file content and reset image information.
