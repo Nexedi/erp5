@@ -126,27 +126,6 @@ class TextDocument(Document, TextContent):
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
     edit = WorkflowMethod( _edit )
 
-    # Default Display
-    security.declareProtected(Permissions.View, 'index_html')
-    def index_html(self, REQUEST, RESPONSE, format=None, **kw):
-      """
-        Unlike for images and files, we want to provide
-        in the case of HTML a nice standard display with
-        all the layout of a Web Site. If no format is provided,
-        the default rendering will use the standard ERP5 machinery.
-        By providing a format parameter, it is possible to
-        convert the text content into various formats.
-      """
-      if format is None:
-        # The default is to use ERP5 Forms to render the page
-        return self.view()
-      mime, data = self.convert(format=format) 
-      RESPONSE.setHeader('Content-Length', len(str(data))) # XXX - Not efficient 
-                                                           # if datastream instance
-      RESPONSE.setHeader('Content-Type', mime)
-      RESPONSE.setHeader('Accept-Ranges', 'bytes')
-      return data
-
     def _substituteTextContent(self, text, safe_substitute=True, **kw):
       # If a method for string substitutions of the text content, perform it.
       # Decode everything into unicode before the substitutions, in order to

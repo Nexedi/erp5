@@ -69,34 +69,6 @@ class PDFDocument(Image, CachedConvertableMixin):
                               'version', 'short_title',
                               'subject', 'source_reference', 'source_project_title',)
 
-  security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, 
-                                          resolution=None, frame=0):
-    """
-      Returns data in the appropriate format (graphical)
-      it is always a zip because multi-page pdfs are converted into a zip
-      file of many images
-    """
-    _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
-    if format is '':
-      if self.getSourceReference() is not None:
-        filename = self.getSourceReference()
-      else:
-        filename = self.getId()
-      RESPONSE.setHeader('Content-Disposition',
-                         'attachment; filename="%s"' % filename)
-      RESPONSE.setHeader('Content-Type', 'application/pdf')
-      return str(self.data)
-    if format in ('html', 'txt', 'text'):
-      mime, data = self.convert(format)
-      RESPONSE.setHeader('Content-Length', len(data))
-      RESPONSE.setHeader('Content-Type', '%s;charset=UTF-8' % mime)
-      RESPONSE.setHeader('Accept-Ranges', 'bytes')
-      return data
-    return Image.index_html(self, REQUEST, RESPONSE, display=display,
-                            format=format, quality=quality,
-                            resolution=resolution, frame=frame)
-
   # Conversion API
   security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   def convert(self, format, **kw):

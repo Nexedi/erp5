@@ -360,31 +360,13 @@ class Image(File, OFSImage):
 
   # Display
   security.declareProtected('View', 'index_html')
-  def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75,
-                       resolution=None, frame=None):
+  def index_html(self, REQUEST, RESPONSE, format=None, display=None,
+                      quality=DEFAULT_QUALITY, resolution=None, frame=None, **kw):
     """Return the image data."""
     self._upradeImage()
-
-    # display may be set from a cookie (?)
-    image_size = self.getSizeFromImageDisplay(display)
-    kw = dict(display=display, format=format, quality=quality,
-              resolution=resolution, frame=frame, image_size=image_size)
-    _setCacheHeaders(_ViewEmulator().__of__(self), kw)
-
-    if (display is not None or resolution is not None or quality != 75 or format != ''\
-                            or frame is not None) and image_size:
-      try:
-        mime, image = self.getConversion(**kw)
-      except KeyError:
-        # Generate photo on-the-fly
-        mime, image = self._makeDisplayPhoto(**kw)
-        self.setConversion(image, mime, **kw)
-      RESPONSE.setHeader('Content-Type', mime)
-      return image.index_html(REQUEST, RESPONSE)
-
-    # Return original image
-    return OFSImage.index_html(self, REQUEST, RESPONSE)
-
+    return Document.index_html(self, REQUEST, RESPONSE, format=format,
+                      display=display, quality=quality, resolution=resolution,
+                      frame=frame, **kw)
 
   #
   # Photo processing

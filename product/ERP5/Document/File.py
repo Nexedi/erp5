@@ -187,7 +187,6 @@ class File(Document, CMFFile):
     CMFFile.PUT(self, REQUEST, RESPONSE)
 
   # DAV Support
-  index_html = CMFFile.index_html 
   PUT = CMFFile.PUT
   security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
   manage_FTPget = CMFFile.manage_FTPget
