@@ -45,13 +45,15 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import PermanentURLMixIn
-from Products.ERP5.Document.Document import ConversionError
-from Products.ERP5.Document.Document import NotConvertedError
+from Products.ERP5.Document.Document import Document, PermanentURLMixIn,\
+VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from zLOG import LOG, ERROR
 
 # Mixin Import
-from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
+from Products.ERP5.mixin.base_convertable import BaseConvertableMixin
+from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+from Products.ERP5.mixin.base_convertable_and_file import\
+                                                    BaseConvertableAndFileMixin
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -88,7 +90,8 @@ class TimeoutTransport(SafeTransport):
     return SafeTransport.make_connection(self, h)
 
 
-class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
+class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
+                  BaseConvertableMixin, TextConvertableMixin, Document):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -129,10 +132,6 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
   meta_type = 'ERP5 OOo Document'
   portal_type = 'OOo Document'
 
-  searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
-                              'version', 'short_title',
-                              'subject', 'source_reference', 'source_project_title',)
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -163,57 +162,6 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
     OOoDocument is needed to conversion to base format.
     """
     return True
-
-  def _setFile(self, data, precondition=None):
-    File._setFile(self, data, precondition=precondition)
-    if self.hasBaseData():
-      # This is a hack - XXX - new accessor needed to delete properties
-      try:
-        delattr(self, 'base_data')
-      except AttributeError:
-        pass
-
-  security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, format=None, display=None, **kw):
-    """
-      Default renderer with conversion support. Format is
-      a string. The list of available formats can be obtained
-      by calling getTargetFormatItemList.
-    """
-    # Accelerate rendering in Web mode
-    _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
-
-    # Verify that the format is acceptable (from permission point of view)
-    method = self._getTypeBasedMethod('checkConversionFormatPermission', 
-        fallback_script_id = 'Document_checkConversionFormatPermission')
-    if not method(format=format):
-      raise Unauthorized("OOoDocument: user does not have enough permission to access document"
-                         " in %s format" % (format or 'original'))
-
-    # Return the original file by default
-    if self.getSourceReference() is not None:
-      filename = self.getSourceReference()
-    else:
-      filename = self.getId()
-    if format is None:
-      RESPONSE.setHeader('Content-Disposition',
-                         'attachment; filename="%s"' % filename)
-      return File.index_html(self, REQUEST, RESPONSE)
-    # Make sure file is converted to base format
-    if not self.hasBaseData():
-      raise NotConvertedError
-    # Else try to convert the document and return it
-    mime, result = self.convert(format=format, display=display, **kw)
-    converted_filename = '%s.%s'%('.'.join(filename.split('.')[:-1]),  format)
-    if not mime:
-      mime = getToolByName(self, 'mimetypes_registry').lookupExtension('name.%s' % format)
-    RESPONSE.setHeader('Content-Length', len(result))
-    RESPONSE.setHeader('Content-Type', mime)
-    RESPONSE.setHeader('Accept-Ranges', 'bytes')
-    if format not in STANDARD_IMAGE_FORMAT_LIST:
-      RESPONSE.setHeader('Content-Disposition',
-                         'attachment; filename="%s"' % converted_filename)
-    return result
 
   # Format conversion implementation
   def _getServerCoordinate(self):
@@ -473,18 +421,13 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
     else:
       return self.getConversion(format=original_format, display=display)
 
-  security.declareProtected(Permissions.View, 'asTextContent')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                               'asTextContent')
   def asTextContent(self):
     """
-      Extract plain text from ooo docs by stripping the XML file.
-      This is the simplest way, the most universal and it is compatible
-      will all formats.
+      Backward compatibility
     """
-    if not self.hasConversion(format='txt'):
-      mime, data = self._convert(format='text-content')
-      self.setConversion(data, mime, format='txt')
-      return mime, data
-    return self.getConversion(format='txt')
+    return self.asText()
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
@@ -532,15 +475,6 @@ class OOoDocument(PermanentURLMixIn, File, CachedConvertableMixin):
       return OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     except KeyError:
       return PermanentURLMixIn._getExtensibleContent(self, request, name)
-
-  # Base format implementation
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-  def hasBaseData(self):
-    """
-      OOo instances implement conversion to a base format. We should therefore
-      use the default accessor.
-    """
-    return self._baseHasBaseData()
 
   security.declarePrivate('_convertToBaseFormat')
   def _convertToBaseFormat(self):
