@@ -1113,12 +1113,10 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     """
       Converts the subject of the document to a textual representation.
     """
-    subject = self.getSubject()
+    subject = self.getSubject('')
     if not subject:
       # XXX not sure if this fallback is a good idea.
-      subject = self.getTitle()
-    if subject is None:
-      subject = ''
+      subject = self.getTitle('')
     return str(subject)
 
   security.declareProtected(Permissions.View, 'asText')
