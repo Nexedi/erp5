@@ -198,26 +198,18 @@ class File(Document, CMFFile):
     """This method returns a tuple which contains mimetype and content."""
     from Products.ERP5.Document.EmailDocument import MimeTypeException
     # return a tuple (mime_type, data)
-    mime_type = None
     content = None
+    mime_type = self.getContentType()
 
-    # WARNING - this could fail since getContentType
-    # is not (yet) part of Document API
-    if getattr(self, 'getContentType', None) is not None:
-      mime_type = self.getContentType()
-    elif getattr(self, 'getTextFormat', None) is not None:
-      mime_type = self.getTextFormat()
-    else:
-      raise ValueError, "Cannot find mimetype of the document."
-
-    if mime_type is not None:
-      try:
-        mime_type, content = self.convert(mime_type)
-      except ConversionError:
-        mime_type = self.getBaseContentType()
-        content = self.getBaseData()
-      except (NotImplementedError, MimeTypeException):
-        pass
+    if mime_type is None:
+      raise ValueError('Cannot find mimetype of the document.')
+    try:
+      mime_type, content = self.convert(None)
+    except ConversionError:
+      mime_type = self.getBaseContentType()
+      content = self.getBaseData()
+    except (NotImplementedError, MimeTypeException):
+      pass
 
     if content is None:
       if getattr(self, 'getTextContent', None) is not None:
