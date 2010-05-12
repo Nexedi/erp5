@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Bartek Gorny <bg@erp5.pl>
 #                    Jean-Paul Smets <jp@nexedi.com>
 #                    Ivan Tyagov <ivan@nexedi.com>
@@ -31,21 +31,20 @@
 
 import unittest
 import os, cStringIO, zipfile
-from xml.dom.minidom import parseString
+from lxml import etree
 import transaction
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+                                                       _getConversionServerDict
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
+from Products.ERP5OOo.OOoUtils import OOoBuilder
 from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
-
-# Define the conversion server host
-conversion_server_host = ('127.0.0.1', 8008)
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
@@ -125,8 +124,9 @@ class TestIngestion(ERP5TypeTestCase):
 
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() != 'global':
@@ -684,18 +684,15 @@ class TestIngestion(ERP5TypeTestCase):
     # need oood for getting/setting metadata...
     document = self.getDocument('one')
     newcontent = document.getBaseData()
-    cs = cStringIO.StringIO()
-    cs.write(str(newcontent))
-    z = zipfile.ZipFile(cs)
-    s = z.read('meta.xml')
-    xmlob = parseString(s)
-    title = xmlob.getElementsByTagName('dc:title')[0].childNodes[0].data
-    self.assertEquals(title, u'another title')
-    subject = xmlob.getElementsByTagName('meta:keyword')[0].childNodes[0].data
+    builder = OOoBuilder(newcontent)
+    xml_tree = etree.fromstring(builder.extract('meta.xml'))
+    title = xml_tree.find('*/{%s}title' % xml_tree.nsmap['dc']).text
+    self.assertEquals(title, 'another title')
+    subject = xml_tree.find('*/{%s}keyword' % xml_tree.nsmap['meta']).text
     self.assertEquals(subject, u'another subject')
-    description = xmlob.getElementsByTagName('dc:description')[0].childNodes[0].data
+    description = xml_tree.find('*/{%s}description' % xml_tree.nsmap['dc']).text
     self.assertEquals(description, u'another description')
-    
+
   def stepIngestTextFormats(self, sequence=None, sequence_list=None, **kw):
     """
       ingest all supported text formats
@@ -1010,8 +1007,9 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_01_PreferenceSetup')
     preference_tool = self.portal.portal_preferences
-    self.assertEquals(preference_tool.getPreferredOoodocServerAddress(), conversion_server_host[0])
-    self.assertEquals(preference_tool.getPreferredOoodocServerPortNumber(), conversion_server_host[1])
+    conversion_dict = _getConversionServerDict()
+    self.assertEquals(preference_tool.getPreferredOoodocServerAddress(), conversion_dict['hostname'])
+    self.assertEquals(preference_tool.getPreferredOoodocServerPortNumber(), conversion_dict['port'])
     self.assertEquals(preference_tool.getPreferredDocumentFileNameRegularExpression(), FILE_NAME_REGULAR_EXPRESSION)
     self.assertEquals(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
     
