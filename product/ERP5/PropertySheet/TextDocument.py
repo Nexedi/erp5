@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -42,10 +43,5 @@ class TextDocument:
             'type'        : 'string',
             'mode'        : 'w'
             },
-        {   'id'          : 'text_format',
-            'description' : 'The format of the text content of this document',
-            'type'        : 'string',
-            'mode'        : 'w'
-            }
         )
 

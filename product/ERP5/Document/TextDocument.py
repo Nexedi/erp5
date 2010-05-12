@@ -34,11 +34,17 @@ from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Document import Document, ConversionError
+from Products.ERP5.Document.Document import Document, ConversionError,\
+                                            NotConvertedError
+from Products.ERP5.Document.File import File
 from Products.ERP5Type.WebDAVSupport import TextContent
 import re
 import md5
 
+# Mixin Import
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
+from Products.ERP5.mixin.base_convertable import BaseConvertableMixin
+from Products.ERP5.mixin.base_convertable_and_file import BaseConvertableAndFileMixin
 try:
   from string import Template
 except ImportError:
@@ -46,26 +52,11 @@ except ImportError:
 
 DEFAULT_TEXT_FORMAT = 'text/html'
 
-class TextDocument(Document, TextContent):
-    """
-        A Document contains text which can be formatted using
-        *Structured Text* or *HTML*. Text can be automatically translated
-        through the use of 'message catalogs'.
-
-        Document inherits from XMLObject and can
-        be synchronized accross multiple sites.
-
-        Version Management: the notion of version depends on the
-        type of application. For example, in the case (1) of Transformation
-        (BOM), all versions are considered as equal and may be kept
-        indefinitely for both archive and usage purpose. In the case (2)
-        of Person data, the new version replaces the previous one
-        in place and is not needed for archive. In the case (3) of
-        a web page, the new version replaces the previous one,
-        the previous one being kept in place for archive.
-
-        Subcontent: documents may include subcontent (files, images, etc.)
-        so that publication of rich content can be path independent.
+class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
+                   CachedConvertableMixin, BaseConvertableMixin, TextContent,
+                   File):
+    """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
+    and ITextConvertable
     """
 
     meta_type = 'ERP5 Text Document'
@@ -87,44 +78,9 @@ class TextDocument(Document, TextContent):
                       , PropertySheet.ExternalDocument
                       , PropertySheet.Url
                       , PropertySheet.TextDocument
+                      , PropertySheet.Data
                       , PropertySheet.Reference
                       )
-
-    # Explicit inheritance
-    security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
-    PUT = TextContent.PUT # We have a security issue here with Zope < 2.8
-
-    security.declareProtected(Permissions.View, 'manage_FTPget')
-    manage_FTPget = TextContent.manage_FTPget
-
-    # File handling
-    security.declarePrivate( '_edit' )
-    def _edit(self, **kw):
-      """\
-        This is used to edit files which contain HTML content.
-      """
-      if kw.has_key('file'):
-        file = kw.get('file')
-        text_content = file.read()
-        headers, body, format = self.handleText(text=text_content)
-        kw.setdefault('text_format', format)
-        kw.setdefault('text_content', text_content)
-        del kw['file']
-      # The following has been commented because a TextDocument
-      # instance may contain something else than HTML
-      ## Check if it's safe to save HTML content
-      ## By default FCKEditor used to edit Web Pages wouldn't allow inserting
-      ## HTML tags (will replace them accordingly) so this is the last possible 
-      ## step where we can check if any other scripts wouldn't try to set manually
-      ## bad HTML content.
-      # if isHTMLSafe(kw.get('text_content', '')):
-      #  Document._edit(self, **kw)
-      # else:
-      #  raise ValueError, "HTML contains illegal tags."
-      Document._edit(self, **kw)
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-    edit = WorkflowMethod( _edit )
 
     def _substituteTextContent(self, text, safe_substitute=True, **kw):
       # If a method for string substitutions of the text content, perform it.
