@@ -1563,6 +1563,14 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     transaction.commit()
     self.tic()
 
+    preference_tool = getToolByName(self.portal, 'portal_preferences')
+    image_size = preference_tool.getPreferredThumbnailImageHeight(),\
+                              preference_tool.getPreferredThumbnailImageWidth()
+    convert_kw = {'format': 'png',
+                  'quality': 75,
+                  'display': 'thumbnail',
+                  'resolution': None}
+
     class ThreadWrappedConverter(Thread):
       """Use this class to run different convertion
       inside distinct Thread.
@@ -1578,13 +1586,15 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
       def run(self):
         for frame in self.frame_list:
           # Use publish method to dispatch conversion among
-          # all available Zserver threads.
-          response = self.publish_method('%s/index_html?format=png'\
-                              '&display=thumbnail&quality:int=75&resolution='\
-                              '&frame=%s' % (self.document_path, frame),
-                                                               self.credential)
-          assert response.getHeader('content-type') == 'image/png'
-          assert response.getStatus() ==  httplib.OK
+          # all available ZServer threads.
+          convert_kw['frame'] = frame
+          response = self.publish_method(self.document_path,
+                                         basic=self.credential,
+                                         extra=convert_kw)
+
+          assert response.getHeader('content-type') == 'image/png', \
+                                             response.getHeader('content-type')
+          assert response.getStatus() == httplib.OK
         transaction.commit()
 
     # assume there is no password
@@ -1607,18 +1617,15 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     transaction.commit()
     self.tic()
 
-    preference_tool = getToolByName(self.portal, 'portal_preferences')
-    image_size = preference_tool.getPreferredThumbnailImageHeight(),\
-                              preference_tool.getPreferredThumbnailImageWidth()
     convert_kw = {'format': 'png',
-                  'display': 'thumbnail',
                   'quality': 75,
                   'image_size': image_size,
-                  'resolution': ''}
+                  'resolution': None}
+
     result_list = []
     for i in xrange(pages_number):
       # all conversions should succeeded and stored in cache storage
-      convert_kw['frame'] = str(i)
+      convert_kw['frame'] = i
       if not document.hasConversion(**convert_kw):
         result_list.append(i)
     self.assertEquals(result_list, [])
