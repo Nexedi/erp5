@@ -624,7 +624,7 @@ class TestDocument(TestDocumentMixin):
     user = uf.getUserById('member_user2').__of__(uf)
     newSecurityManager(None, user)
 
-    response = self.publish('%s/Document_convert?format=pdf' % doc.getPath(),
+    response = self.publish('%s?format=pdf' % doc.getPath(),
                             basic='member_user2:secret')
     self.assertEquals('application/pdf', response.getHeader('content-type'))
     self.assertEquals('attachment; filename="import.file.with.dot.in.filename.pdf"',
