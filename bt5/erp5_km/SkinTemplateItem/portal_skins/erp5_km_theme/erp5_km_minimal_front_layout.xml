@@ -107,6 +107,7 @@
                     <key> <string>menu meta</string> </key>
                     <value>
                       <list>
+                        <string>user_information_widget</string>
                         <string>your_search_text</string>
                         <string>your_search_portal_type</string>
                         <string>your_search_form_id</string>
@@ -154,9 +155,7 @@
                 <item>
                     <key> <string>top login</string> </key>
                     <value>
-                      <list>
-                        <string>user_information_widget</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

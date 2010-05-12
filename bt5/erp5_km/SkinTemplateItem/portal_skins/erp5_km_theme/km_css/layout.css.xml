@@ -347,12 +347,13 @@ button, select, input {\n
 }\n
 #menu {\n
 \n
-\twidth:90%;\n
-\theight:30px;\n
-\tmargin:0 5% 0 5%;\n
-\tpadding:0px 0 0 0;\n
+\twidth:100%;\n
+\theight:45px;\n
+\tmargin:0em;\n
+\tpadding:0px;\n
+        padding-top: 4px;\n
 \tz-index: 1;\n
-\tborder-style:solid solid none;\n
+\tborder-style: none;\n
 \tborder-width:1px 1px 0;\n
 \n
 }\n
@@ -593,6 +594,7 @@ width: auto;\n
 \theight:22px;\n
 \tline-height:24px;\n
 \tpadding-right:40px;\n
+\tpadding-top: 0em;\n
 \tposition: relative;\n
 \n
 }\n
@@ -1394,7 +1396,6 @@ fieldset.right_registration select {\n
 \n
 /* Web Toolbar */\n
 div.web-toolbar{\n
-  padding-left: 200px;\n
   color: auto;\n
   height: 30px;\n
 }\n
@@ -1402,6 +1403,19 @@ div.web-toolbar{\n
 div.web-toolbar h3{\n
   color:#000000;\n
   height: 30px;\n
+}\n
+\n
+div.web-toolbar ul{\n
+  padding: 0em!important;\n
+  margin: 0em!important;\n
+  height: 30px;\n
+}\n
+div.web-toolbar ul li{\n
+  padding-top:5px;\n
+}\n
+\n
+div.web-toolbar ul li.toolboxSection:hover {\n
+  background:#ccf;\n
 }\n
 \n
 
