@@ -59,7 +59,6 @@ enc=base64.encodestring
 dec=base64.decodestring
 
 _MARKER = []
-STANDARD_IMAGE_FORMAT_LIST = ('png', 'jpg', 'gif', 'tiff', )
 
 class TimeoutTransport(SafeTransport):
   """A xmlrpc transport with configurable timeout.
@@ -325,7 +324,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
       format_list = [x for x in self.getTargetFormatList()
                                           if x.endswith('pdf')]
       format = format_list[0]
-    elif format in STANDARD_IMAGE_FORMAT_LIST:
+    elif format in VALID_IMAGE_FORMAT_LIST:
       format_list = [x for x in self.getTargetFormatList()
                                           if x.endswith(format)]
       if len(format_list):
@@ -369,7 +368,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
         has_format = self.hasConversion(format=original_format)
       else:
         has_format = self.hasConversion(format=original_format, display=display)
-    elif display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
+    elif display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
       has_format = self.hasConversion(format=original_format)
     else:
       has_format = self.hasConversion(format=original_format, display=display)
@@ -395,7 +394,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
                                          # better usability
         z.close()
         cs.close()
-      if (display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST) \
+      if (display is None or original_format not in VALID_IMAGE_FORMAT_LIST) \
         and not requires_pdf_first:
         self.setConversion(data, mime, format=original_format)
       else:
@@ -416,7 +415,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
             self.setConversion(data, mime, format=original_format, display=display)
     if requires_pdf_first:
       format = original_format
-    if display is None or original_format not in STANDARD_IMAGE_FORMAT_LIST:
+    if display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
       return self.getConversion(format=original_format)
     else:
       return self.getConversion(format=original_format, display=display)
