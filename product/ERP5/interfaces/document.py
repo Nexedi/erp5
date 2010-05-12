@@ -187,7 +187,7 @@ class IDocument(Interface):
 
   def convert(format, **kw):
     """Call a wrapped function with CachingMethod and
-    return always converted result.
+    return always converted result: ie. tuple(content_type, data)
 
     format - the format specied in the form of an extension
     string (ex. jpeg, html, text, txt, etc.)
@@ -217,22 +217,6 @@ class IDocument(Interface):
     Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
     """
 
-  def _convertToBaseFormat():
-    """Placeholder method. Must be subclassed by classes
-    which need a base format. Refer to OOoDocument
-    for an example of ODF base format which is used
-    as a way to convert about any file format into
-    about any file format.
-
-    Other possible applications: conversion of HTML
-    text to tiddy HTML such as described here:
-    http://www.xml.com/pub/a/2004/09/08/pyxml.html
-    so that resulting text can be processed more
-    easily by XSLT parsers. Conversion of internal
-    links to images of an HTML document to local
-    links (in combindation with populate).
-    """
-
   def hasConversion(**kw):
     """Return a boolean if conversion is cached
     """
@@ -250,10 +234,6 @@ class IDocument(Interface):
 
   def getConversionSize(**kw):
     """Returns the size of the converted document.
-    """
-
-  def _getCacheFactory():
-    """Return list of cache plugins
     """
 
   def isSupportBaseDataConversion():
