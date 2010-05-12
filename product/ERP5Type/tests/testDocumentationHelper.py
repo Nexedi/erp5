@@ -45,7 +45,6 @@ class TestDocumentationHelper(ERP5TypeTestCase):
   This is the list of test
 
   """
-  run_all_test = 1
 
   def getTitle(self):
     return "DocumentationHelper"
