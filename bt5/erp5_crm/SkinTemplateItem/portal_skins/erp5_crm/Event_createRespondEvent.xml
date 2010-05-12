@@ -72,7 +72,7 @@ respond_event = event_module.newContent(\n
       causality=context.getRelativeUrl(),\n
       follow_up=context.getFollowUp(),\n
       text_content=respond_event_text_content,\n
-      text_format=context.getTextFormat()\n
+      content_type=context.getContentType()\n
       )\n
 \n
 # Change the state to posted\n

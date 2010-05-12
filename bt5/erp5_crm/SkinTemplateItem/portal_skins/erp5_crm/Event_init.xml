@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Set preferred text format\n
-context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\n
+context.edit(content_type=context.portal_preferences.getPreferredTextFormat())\n
 </string> </value>
         </item>
         <item>
