@@ -168,3 +168,4 @@ if memcache is not None:
           buf += data
       self.buffer = buf[index+2:]
       return buf[:index]
+  memcache._Host.readline = readline
