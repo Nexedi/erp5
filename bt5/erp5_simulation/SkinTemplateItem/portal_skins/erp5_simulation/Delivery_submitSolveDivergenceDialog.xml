@@ -53,7 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
+\n
 request= context.REQUEST\n
 listbox = request.get(\'listbox\')\n
 line_list = context.Delivery_getSolverDecisionList(listbox=listbox)\n
@@ -75,15 +76,9 @@ solver_process = line.getParentValue()\n
 solver_process.buildTargetSolverList()\n
 solver_process.solve()\n
 \n
-redirect_url = \'%s/%s?%s\' % (\n
-  context.absolute_url(),\n
-  \'view\',\n
-  make_query({\'ignore_layout\':request.get(\'ignore_layout\', 1),\n
-              \'editable_mode\':request.get(\'editable_mode\', 1),\n
-              \'portal_status_message\':\'Divergence solvers started in background.\',\n
-              })\n
-  )\n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
+return context.Base_redirect(form_id,\n
+  keep_items=dict(portal_status_message=\n
+         translateString(\'Divergence solvers started in background.\')))\n
 </string> </value>
         </item>
         <item>
@@ -94,7 +89,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=[],**kw</string> </value>
+            <value> <string>form_id=\'view\', listbox=[], **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -114,16 +109,17 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>form_id</string>
                             <string>listbox</string>
                             <string>kw</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
@@ -144,7 +140,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>_write_</string>
                             <string>_apply_</string>
                             <string>solver_process</string>
-                            <string>redirect_url</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -157,6 +153,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string>view</string>
                 <list/>
               </tuple>
             </value>
