@@ -124,7 +124,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     #Test Cache is cleared
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertEqual(document.getConversionSize(format=format), 0)
+      self.assertEquals(document.getConversionSize(format=format), 0)
     document.edit(title='Bar')
     transaction.commit()
     #Test Conversion Cache after editing
