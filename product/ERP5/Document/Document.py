@@ -62,6 +62,11 @@ VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
 # these property ids are unchangable
 FIXED_PROPERTY_IDS =  ('id', 'uid', 'rid', 'sid')
 
+VALID_TEXT_FORMAT_LIST = ('text', 'txt', 'html', 'base_html',
+                          'stripped-html')
+
+VALID_IMAGE_FORMAT_LIST = ('jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm', 'tiff')
+
 class SnapshotMixin:
   """
     This class provides a generic API to store in the ZODB
