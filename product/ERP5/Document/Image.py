@@ -349,17 +349,6 @@ class Image(TextConvertableMixin, File, OFSImage):
       return mime, image.data
     return self.getContentType(), self.getData()
 
-  security.declareProtected(Permissions.View, 'getSearchableText')
-  def getSearchableText(self, md=None):
-    """
-      Converts the content of the document to a textual representation.
-    """
-    mime, data = self.convert(format='txt')
-    return str(data)
-
-  # Compatibility with CMF Catalog
-  SearchableText = getSearchableText
-
   # Display
   security.declareProtected('View', 'index_html')
   def index_html(self, REQUEST, RESPONSE, format=None, display=None,
