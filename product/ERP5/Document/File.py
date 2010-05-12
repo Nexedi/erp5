@@ -32,7 +32,7 @@ import mimetypes
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Document import Document
+from Products.ERP5.Document.Document import Document, VALID_TEXT_FORMAT_LIST
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
