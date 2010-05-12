@@ -299,7 +299,7 @@ class TestIngestion(ERP5TypeTestCase):
       if document.getPortalType() in NON_PROCESSABLE_PORTAL_TYPE_LIST:
         # File and images do not support conversion to text in DMS
         # PDF has not implemented _convertToBaseFormat() so can not be converted
-        self.assertEquals(document.getExternalProcessingState(), 'uploaded')
+        self.assertEquals(document.getExternalProcessingState(), 'empty')
       else:
         self.assertEquals(document.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
         self.assert_('magic' in document.SearchableText())
@@ -365,7 +365,8 @@ class TestIngestion(ERP5TypeTestCase):
       self.assertEquals(document.getReference(), 'TEST')
       if document.getPortalType() in NON_PROCESSABLE_PORTAL_TYPE_LIST:
         # Image, File and PDF are not converted to a base format
-        self.assertEquals(document.getExternalProcessingState(), 'uploaded')
+        # so they have to stay empty
+        self.assertEquals(document.getExternalProcessingState(), 'empty')
       else:
         # We check if conversion has succeeded by looking
         # at the external_processing workflow
@@ -962,7 +963,7 @@ class TestIngestion(ERP5TypeTestCase):
       if portal_type not in NON_PROCESSABLE_PORTAL_TYPE_LIST:
         self.assertEquals('converted', ingested_document.getExternalProcessingState())
       else:
-        self.assertEquals('uploaded', ingested_document.getExternalProcessingState())
+        self.assertEquals('empty', ingested_document.getExternalProcessingState())
       # check aggregate between 'Document Ingestion Message' and ingested document
       self.assertTrue(ingested_document in attachment_list)
     return attachment_list, ingested_document
