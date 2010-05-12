@@ -113,7 +113,7 @@ for attachment in context.getAggregateValueList(portal_type=document_type_list):
 \n
 # Build message per destination\n
 mail_message = None\n
-if context.getTextFormat()==\'text/html\':\n
+if context.getContentType() == \'text/html\':\n
   mail_template = context.Event_viewHtmlMimeMessage\n
 else:\n
   mail_template = context.Event_viewMimeMessage\n
