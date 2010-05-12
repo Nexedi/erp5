@@ -244,7 +244,6 @@ class TestDocument(TestDocumentMixin):
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
-    document.immediateReindexObject()
     transaction.commit()
     self.tic()
     document_url = document.getRelativeUrl()
