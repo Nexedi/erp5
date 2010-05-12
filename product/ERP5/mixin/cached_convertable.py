@@ -35,11 +35,28 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from OFS.Image import Pdata, Image as OFSImage
+from DateTime import DateTime
 
 def makeSortedTuple(kw):
   items = kw.items()
   items.sort()
   return tuple(items)
+
+def hashPdataObject(data):
+  """Pdata objects are iterable, use this feature strongly
+  to minimize memory footprint.
+  """
+  md5_hash = md5.new()
+  next = chunk = data.next
+  if next is None:
+    md5_hash.update(data.data)
+  while next is not None:
+    chunk = next
+    md5_hash.update(chunk)
+    next = data.next
+  return md5_hash.hexdigest()
 
 class CachedConvertableMixin:
   """
@@ -78,7 +95,7 @@ class CachedConvertableMixin:
       cache_tool.updateCache()
     return cache_tool.getRamCacheRoot().get(cache_factory_name)
 
-  def _getCacheKey(self):
+  def _getCacheKey(self, **kw):
     """
     Returns the key to use for the cache entries. For now,
     use the object uid. 
@@ -87,27 +104,14 @@ class CachedConvertableMixin:
     http://pypi.python.org/pypi/uuid/ to generate
     a uuid stored as private property.
     """
-    return '%s:%s' % (aq_base(self).getUid(), self.getRevision())
+    format_cache_id = str(makeSortedTuple(kw)).\
+                             translate(string.maketrans('', ''), '[]()<>\'", ')
+    return '%s:%s:%s' % (aq_base(self).getUid(), self.getRevision(),
+                         format_cache_id)
 
   security.declareProtected(Permissions.View, 'hasConversion')
   def hasConversion(self, **kw):
     """
-    If you want to get conversion cache value if exists, please write
-    the code like:
-
-      try:
-        mime, data = getConversion(**kw)
-      except KeyError:
-        ...
-
-    instead of:
-
-      if self.hasConversion(**kw):
-        mime, data = self.getConversion(**kw)
-      else:
-        ...
-
-    for better performance.
     """
     try:
       self.getConversion(**kw)
@@ -116,70 +120,115 @@ class CachedConvertableMixin:
       return False
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setConversion')
-  def setConversion(self, data, mime=None, calculation_time=None, **kw):
+  def setConversion(self, data, mime=None, date=None, **kw):
     """
     """
-    cache_id = '%s%s' % (self._getCacheKey(), self.generateCacheId(**kw))
+    cache_id = self._getCacheKey(**kw)
+    if data is None:
+      cached_value = None
+      conversion_md5 = None
+      size = 0
+    elif isinstance(data, Pdata):
+      cached_value = aq_base(data)
+      conversion_md5 = hashPdataObject(cached_value)
+      size = len(cached_value)
+    elif isinstance(data, OFSImage):
+      cached_value = data
+      conversion_md5 = md5.new(str(data.data)).hexdigest()
+      size = len(data.data)
+    else:
+      cached_value = data
+      conversion_md5 = md5.new(cached_value).hexdigest()
+      size = len(cached_value)
+    if date is None:
+      date = DateTime()
+    stored_data_dict = {'content_md5': self.getContentMd5(),
+                        'conversion_md5': conversion_md5,
+                        'mime': mime,
+                        'data': cached_value,
+                        'date': date,
+                        'size': size}
     if self.isTempObject():
       if getattr(aq_base(self), 'temp_conversion_data', None) is None:
         self.temp_conversion_data = {}
-      self.temp_conversion_data[cache_id] = (mime, aq_base(data))
+      self.temp_conversion_data[cache_id] = stored_data_dict
       return
     cache_factory = self._getCacheFactory()
     cache_duration = cache_factory.cache_duration
-    if data is not None:
-      for cache_plugin in cache_factory.getCachePluginList():
-        cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE,
-                         (self.getContentMd5(), mime, aq_base(data)),
-                         calculation_time=calculation_time,
-                         cache_duration=cache_duration)
+    # The purpose of this transaction cache is to help calls
+    # to the same cache value in the same transaction.
+    tv = getTransactionalVariable(None)
+    tv[cache_id] = stored_data_dict
+    for cache_plugin in cache_factory.getCachePluginList():
+      cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE,
+                       stored_data_dict, cache_duration=cache_duration)
+
+  security.declareProtected(Permissions.View, '_getConversionDataDict')
+  def _getConversionDataDict(self, **kw):
+    """
+    """
+    cache_id = self._getCacheKey(**kw)
+    if self.isTempObject():
+      return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
+    # The purpose of this cache is to help calls to the same cache value
+    # in the same transaction.
+    tv = getTransactionalVariable(None)
+    try:
+      return tv[cache_id]
+    except KeyError:
+      pass
+    for cache_plugin in self._getCacheFactory().getCachePluginList():
+      cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
+      if cache_entry is not None:
+        data_dict = cache_entry.getValue()
+        if data_dict:
+          content_md5 = data_dict['content_md5']
+          if content_md5 != self.getContentMd5():
+            raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
+          # Fill transactional cache in order to help
+          # querying real cache during same transaction
+          tv[cache_id] = data_dict
+          return data_dict
+    raise KeyError, 'Conversion cache key does not exists for %r' % cache_id
 
   security.declareProtected(Permissions.View, 'getConversion')
   def getConversion(self, **kw):
     """
     """
-    cache_id = '%s%s' % (self._getCacheKey(), self.generateCacheId(**kw))
-    if self.isTempObject():
-      return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
-    for cache_plugin in self._getCacheFactory().getCachePluginList():
-      cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
-      if cache_entry is not None:
-        data_list = cache_entry.getValue()
-        if data_list:
-          md5sum, mime, data = data_list
-          if md5sum != self.getContentMd5():
-            raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
-          return mime, data
-    raise KeyError, 'Conversion cache key does not exists for %r' % cache_id
+    cached_dict = self._getConversionDataDict(**kw)
+    return cached_dict['mime'], cached_dict['data']
 
   security.declareProtected(Permissions.View, 'getConversionSize')
   def getConversionSize(self, **kw):
     """
     """
     try:
-      mime, data = self.getConversion(**kw)
-      return len(data)
+      return self._getConversionDataDict(**kw)['size']
     except KeyError:
+      # If conversion doesn't exists return 0
       return 0
 
-  def generateCacheId(self, **kw):
-    """Generate proper cache id based on **kw.
-    Function inspired from ERP5Type.Cache
+  security.declareProtected(Permissions.View, 'getConversionDate')
+  def getConversionDate(self, **kw):
     """
-    return str(makeSortedTuple(kw)).translate(string.maketrans('', ''), '[]()<>\'", ')
+    """
+    return self._getConversionDataDict(**kw)['date']
+
+  security.declareProtected(Permissions.View, 'getConversionMd5')
+  def getConversionMd5(self, **kw):
+    """
+    """
+    return self._getConversionDataDict(**kw)['conversion_md5']
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
   def updateContentMd5(self):
     """Update md5 checksum from the original file
-    
-    XXX-JPS - this method is not part of any interfacce.
-              should it be public or private. It is called
-              by some interaction workflow already. Is
-              it general or related to caching only ?
     """
-    data = self.getData()
+    mime, data = self.convert(None)
     if data is not None:
-      data = str(data) # Usefull for Pdata
-      self._setContentMd5(md5.new(data).hexdigest()) # Reindex is useless
+      if isinstance(data, Pdata):
+        self._setContentMd5(hashPdataObject(aq_base(data)))
+      else:
+        self._setContentMd5(md5.new(data).hexdigest()) # Reindex is useless
     else:
       self._setContentMd5(None)
