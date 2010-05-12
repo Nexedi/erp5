@@ -788,7 +788,7 @@ class TestDocument(TestDocumentMixin):
                             reference = 'organisation-1',
                             title='Super nova organisation')
     self.stepTic()
-    
+
     def getAdvancedSearchTextResultList(searchable_text, portal_type=None):
       kw = {'SearchableText': searchable_text}
       if portal_type is not None:
