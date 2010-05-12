@@ -508,18 +508,3 @@ class Image(TextConvertableMixin, File, OFSImage):
     File.PUT(self, REQUEST, RESPONSE)
     self._update_image_info()
 
-  #
-  # FTP/WebDAV support
-  #
-
-      #if hasattr(self, '_original'):
-          ## Updating existing Photo
-          #self._original.manage_upload(file, self.content_type())
-          #if self._validImage():
-              #self._makeDisplayPhotos()
-
-  # Maybe needed
-  #def manage_afterClone(self, item):
-
-  # Maybe needed
-  #def manage_afterAdd(self, item, container):
