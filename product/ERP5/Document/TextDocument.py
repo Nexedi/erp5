@@ -33,6 +33,7 @@ from zLOG import LOG, WARNING
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
+from OFS.Image import Pdata
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Document import Document, ConversionError,\
                                             NotConvertedError
@@ -40,6 +41,7 @@ from Products.ERP5.Document.File import File
 from Products.ERP5Type.WebDAVSupport import TextContent
 import re
 import md5
+import cStringIO
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
@@ -50,7 +52,8 @@ try:
 except ImportError:
   from Products.ERP5Type.patches.string import Template
 
-DEFAULT_TEXT_FORMAT = 'text/html'
+DEFAULT_CONTENT_TYPE = 'text/html'
+_MARKER = []
 
 class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
                    CachedConvertableMixin, BaseConvertableMixin, TextContent,
@@ -136,8 +139,12 @@ class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
       """
         Convert text using portal_transforms or oood
       """
-      # Accelerate rendering in Web mode
-      _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
+      src_mimetype = self.getContentType()
+      if not format and src_mimetype == 'text/html':
+        format = 'html' # Force safe_html
+      if not format:
+        # can return document without conversion
+        return src_mimetype, self.getTextContent()
       # Return the raw content
       if format == 'raw':
         return 'text/plain', self.getTextContent()
@@ -145,41 +152,16 @@ class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
       mime_type = getToolByName(portal, 'mimetypes_registry').\
                                             lookupExtension('name.%s' % format)
       original_mime_type = mime_type = str(mime_type)
-      src_mimetype = self.getTextFormat(DEFAULT_TEXT_FORMAT)
-      if not src_mimetype.startswith('text/'):
-        src_mimetype = 'text/%s' % src_mimetype
       if text_content is None:
         # check if document has set text_content and convert if necessary
         text_content = self.getTextContent()
       if text_content:
-        if not self.hasConversion(format=format, **kw):
+        kw['format'] = format
+        if not self.hasConversion(**kw):
           portal_transforms = getToolByName(portal, 'portal_transforms')
           filename = self.getSourceReference(self.getTitleOrId())
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'
-            if charset is None:
-              # find charset
-              re_match = self.charset_parser.search(text_content)
-              if re_match is not None:
-                charset = re_match.group('charset')
-            if charset and charset not in ('utf-8', 'UTF-8'):
-              try:
-                text_content = text_content.decode(charset).encode('utf-8')
-              except (UnicodeDecodeError, LookupError):
-                pass
-              else:
-                charset = 'utf-8' # Override charset if convertion succeeds
-                # change charset value in html_document as well
-                def subCharset(matchobj):
-                  keyword = matchobj.group('keyword')
-                  charset = matchobj.group('charset')
-                  if not (keyword or charset):
-                    # no match, return same string
-                    return matchobj.group(0)
-                  elif keyword:
-                    # if keyword is present, replace charset just after
-                    return keyword + 'utf-8'
-                text_content = self.charset_parser.sub(subCharset, text_content)
           result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
                                                    filename=filename,
@@ -187,11 +169,11 @@ class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
                                                    encoding=charset)
           if result is None:
             raise ConversionError('TextDocument conversion error. '
-                                  'portal_transforms failed to convert'\
+                                  'portal_transforms failed to convert '\
                                   'to %s: %r' % (mime_type, self))
-          self.setConversion(result, original_mime_type, format=format, **kw)
+          self.setConversion(result, original_mime_type, **kw)
         else:
-          mime_type, result = self.getConversion(format=format, **kw)
+          mime_type, result = self.getConversion(**kw)
         if substitution_method_parameter_dict is None:
           substitution_method_parameter_dict = {}
         result = self._substituteTextContent(result, safe_substitute=safe_substitute,
@@ -211,7 +193,7 @@ class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
         Returns the content base URL based on the actual content
         (in HTML)
       """
-      if self.hasBaseData():
+      if self.hasTextContent():
         html = self._asHTML()
         base_list = re.findall(self.base_parser, str(html))
         if base_list:
@@ -221,29 +203,177 @@ class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
     security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
     def hasBaseData(self):
       """
-        A TextDocument store its data in the "text_content" property. Since
-        there is no such thing as base_data in TextDocument, having base_data
-        is equivalent to having some text_content.
+        A TextDocument store its base_data in the "text_content" property.
+        Having base_data is equivalent to having some text_content.
       """
       return self.hasTextContent()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
-    def getMimeTypeAndContent(self):
-      """This method returns a tuple which contains mimetype and content."""
-      return (self.getTextFormat(), self.getTextContent())
+    security.declareProtected(Permissions.ModifyPortalContent, 'setBaseData')
+    def setBaseData(self, value):
+      """Store base_data into text_content
+      """
+      self._setTextContent(value)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
-    def updateContentMd5(self):
-     """Update md5 checksum from the original file
-     
-     XXX-JPS - this method is not part of any interfacce.
-               should it be public or private. It is called
-               by some interaction workflow already. Is
-               it general or related to caching only ?
-     """
-     data = self.getTextContent()
-     if data is not None:
-       data = str(data) # Usefull for Pdata
-       self._setContentMd5(md5.new(data).hexdigest()) # Reindex is useless
-     else:
-       self._setContentMd5(None)
+    security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
+    _setBaseData = setBaseData
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                            '_baseSetBaseData')
+    _baseSetBaseData = _setBaseData
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                          'setBaseContentType')
+    def setBaseContentType(self, value):
+      """store value into content_type
+      """
+      self._setContentType(value)
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                         '_setBaseContentType')
+    _setBaseContentType = setBaseContentType
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                     '_baseSetBaseContentType')
+    _baseSetBaseContentType = _setBaseContentType
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                                 'getBaseData')
+    def getBaseData(self, default=_MARKER):
+      """
+      """
+      if default is _MARKER:
+        return self.getTextContent()
+      else:
+        return self.getTextContent(default=default)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                                 'hasBaseData')
+    def hasBaseData(self):
+      """
+      """
+      return self.hasTextContent()
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                                 'getContentType')
+    def getContentType(self, default=_MARKER):
+      """Backward compatibility, read content_type
+      from text_format property
+      """
+      if not self.hasContentType():
+        # getProperty can not be used
+        # because text_format is not registered in local_properties
+        if default is _MARKER:
+          return getattr(self, 'text_format', None)
+        else:
+          return getattr(self, 'text_format', default)
+      else:
+        if default is _MARKER:
+          return self._baseGetContentType()
+        else:
+          return self._baseGetContentType(default)
+
+    # base_convertable support
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                 'isSupportBaseDataConversion')
+    def isSupportBaseDataConversion(self):
+      """
+      """
+      return True
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
+    def convertToBaseFormat(self, **kw):
+      """
+      """
+      if not self.hasData():
+        # Empty document no need to convert into base format
+        return
+      try:
+        message = self._convertToBaseFormat() # Call implemetation method
+        if message is None:
+          message = self.Base_translateString('Converted to ${mime_type}.',
+                              mapping={'mime_type': self.getBaseContentType()})
+        self.convertFile(comment=message) # Invoke workflow method
+      except NotImplementedError:
+        message = ''
+      return message
+
+    def _convertToBaseFormat(self):
+      """Conversion to base format for TextDocument consist
+      to convert file content into utf-8
+      """
+      def guessCharsetAndConvert(document, text_content, content_type):
+        """
+        return encoded content_type and message if encoding
+        is not utf-8
+        """
+        codec = document._guessEncoding(text_content, content_type)
+        if codec is not None:
+          try:
+            text_content = text_content.decode(codec).encode('utf-8')
+          except (UnicodeDecodeError, LookupError):
+            message = 'Conversion to base format with codec %r fails' % codec
+            # try again with another guesser based on file command
+            codec = document._guessEncoding(text_content, 'text/plain')
+            if codec is not None:
+              try:
+                text_content = text_content.decode(codec).encode('utf-8')
+              except (UnicodeDecodeError, LookupError):
+                message = 'Conversion to base format with codec %r fails'\
+                                                                        % codec
+              else:
+                message = 'Conversion to base format with codec %r succeeds'\
+                                                                        % codec
+          else:
+            message = 'Conversion to base format with codec %r succeeds'\
+                                                                        % codec
+        else:
+          message = 'Conversion to base format without codec fails'
+        return text_content, message
+
+      content_type = self.getContentType() or DEFAULT_CONTENT_TYPE
+      text_content = self.getData()
+      if content_type == 'text/html':
+        re_match = self.charset_parser.search(text_content)
+        message = 'Conversion to base format succeeds'
+        if re_match is not None:
+          charset = re_match.group('charset')
+          if charset.lower() != 'utf-8':
+            try:
+              # Use encoding in html document
+              text_content = text_content.decode(charset).encode('utf-8')
+            except (UnicodeDecodeError, LookupError):
+              # Encoding read from document is wrong
+              text_content, message = guessCharsetAndConvert(self,
+                                                    text_content, content_type)
+            else:
+              message = 'Conversion to base format with charset %r succeeds'\
+                                                                      % charset
+              charset = 'utf-8' # Override charset if convertion succeeds
+              # change charset value in html_document as well
+              def subCharset(matchobj):
+                keyword = matchobj.group('keyword')
+                charset = matchobj.group('charset')
+                if not (keyword or charset):
+                  # no match, return same string
+                  return matchobj.group(0)
+                elif keyword:
+                  # if keyword is present, replace charset just after
+                  return keyword + 'utf-8'
+              text_content = self.charset_parser.sub(subCharset, text_content)
+        else:
+          text_content, message = guessCharsetAndConvert(self,
+                                                    text_content, content_type)
+      else:
+        # generaly text/plain
+        try:
+          # if succeeds, not need to change encoding
+          # it's already utf-8
+          text_content.decode('utf-8')
+        except (UnicodeDecodeError, LookupError), error_message:
+          text_content, message = guessCharsetAndConvert(self,
+                                                    text_content, content_type)
+        else:
+          message = 'Conversion to base format succeeds'
+      self._setBaseData(text_content)
+      self._setBaseContentType(content_type)
+      return message
