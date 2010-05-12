@@ -27,8 +27,6 @@
 #
 ##############################################################################
 
-import mimetypes
-
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
@@ -36,13 +34,9 @@ from Products.ERP5.Document.Document import Document, VALID_TEXT_FORMAT_LIST
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
+from Products.CMFCore.utils import getToolByName
 from OFS.Image import Pdata
 import cStringIO
-
-# Mixin Import
-from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
-
-mimetypes.init()
 
 def _unpackData(data):
   """
@@ -148,13 +142,16 @@ class File(Document, CMFFile):
     return self.hasData()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'guessMimeType')
-  def guessMimeType(self, fname=''):
+  def guessMimeType(self, fname=None):
     """
       get mime type from file name
     """
-    if fname == '': fname = self.getSourceReference()
+    if not fname:
+      fname = self.getSourceReference()
     if fname:
-      content_type,enc = mimetypes.guess_type(fname)
+      portal = self.getPortalObject()
+      content_type = getToolByName(portal, 'mimetypes_registry').\
+                                                         lookupExtension(fname)
       if content_type is not None:
         self.setContentType(content_type)
     else:
