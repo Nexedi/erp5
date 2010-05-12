@@ -34,10 +34,11 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Image import Image
-from Products.ERP5.Document.Document import ConversionError
-from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
+from Products.ERP5.Document.Document import ConversionError,\
+                                            VALID_TEXT_FORMAT_LIST
+from subprocess import Popen, PIPE
 
-class PDFDocument(Image, CachedConvertableMixin):
+class PDFDocument(Image):
   """
   PDFDocument is a subclass of Image which is able to
   extract text content from a PDF file either as text
@@ -107,15 +108,14 @@ class PDFDocument(Image, CachedConvertableMixin):
     if not self.data:
       return ''
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(str(self.data))
+    tmp.write(str(self.getData()))
     tmp.seek(0)
-    cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
-    r = os.popen(cmd)
-    h = r.read()
+    command_result = Popen(['pdftotext', '-layout', '-enc', 'UTF-8',
+                                                    '-nopgbrk', tmp.name, '-'],
+                                                  stdout=PIPE).communicate()[0]
+    h = command_result
     tmp.close()
-    r.close()
-    
-    if h != '':
+    if h:
       return h
     else:
       # Try to use OCR
@@ -189,13 +189,17 @@ class PDFDocument(Image, CachedConvertableMixin):
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(str(self.data))
     tmp.seek(0)
-    cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
-    r = os.popen(cmd)
-    h = r.read()
+    command_result = Popen(['pdftohtml', '-enc', 'UTF-8', '-stdout',
+                            '-noframes', '-i', tmp.name], stdout=PIPE)\
+                                                              .communicate()[0]
+
+    h = command_result
     tmp.close()
-    r.close()
-    h = h.replace('<BODY bgcolor="#A0A0A0"', '<BODY ') # Quick hack to remove bg color - XXX
-    h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1], 'href="asEntireHTML') # Make links relative
+    # Quick hack to remove bg color - XXX
+    h = h.replace('<BODY bgcolor="#A0A0A0"', '<BODY ')
+    # Make links relative
+    h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1],
+                                                          'href="asEntireHTML')
     return h
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
@@ -216,10 +220,9 @@ class PDFDocument(Image, CachedConvertableMixin):
     tmp.seek(0)
     try:
       # First, we use pdfinfo to get standard metadata
-      cmd = 'pdfinfo -meta -box %s' % tmp.name
-      r = os.popen(cmd)
-      h = r.read()
-      r.close()
+      command_result = Popen(['pdfinfo', '-meta', '-box', tmp.name],
+                                                  stdout=PIPE).communicate()[0]
+      h = command_result
       result = {}
       for line in h.splitlines():
         item_list = line.split(':')
@@ -228,10 +231,9 @@ class PDFDocument(Image, CachedConvertableMixin):
         result[key] = value
 
       # Then we use pdftk to get extra metadata
-      cmd = 'pdftk %s dump_data output' % tmp.name
-      r = os.popen(cmd)
-      h = r.read()
-      r.close()
+      command_result = Popen(['pdftk', tmp.name, 'dump_data', 'output'],
+                                                  stdout=PIPE).communicate()[0]
+      h = command_result
       line_list = (line for line in h.splitlines())
       while True:
         try:
@@ -256,4 +258,4 @@ class PDFDocument(Image, CachedConvertableMixin):
       del self._content_information
     except (AttributeError, KeyError):
       pass
-    Image._setFile(self, data, precondition)
+    Image._setFile(self, data, precondition=precondition)
