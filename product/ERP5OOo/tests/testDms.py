@@ -1459,6 +1459,7 @@ class TestDocument(TestDocumentMixin):
           <h1>My splendid title</h1>
         </div>
         <script type="text/javascript" src="http://example.com/something.js"/>
+        <p>éàèù</p>
       </body>
     </html>
     """.decode('utf-8').encode('iso-8859-1')
