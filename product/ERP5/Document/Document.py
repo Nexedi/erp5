@@ -1172,7 +1172,8 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     """
     return self._stripHTML(self._asHTML(**kw))
 
-  def _guessEncoding(self, string):
+  security.declarePrivate('_guessEncoding')
+  def _guessEncoding(self, string, mime='text/html'):
     """
       Try to guess the encoding for this string.
       Returns None if no encoding can be guessed.
@@ -1180,8 +1181,24 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     try:
       import chardet
     except ImportError:
-      return None
-    return chardet.detect(string).get('encoding', None)
+      chardet = None
+    if chardet is not None and (mime == 'text/html'\
+                                               or os.sys.platform != 'linux2'):
+      # chardet works fine on html document and its platform independent
+      return chardet.detect(string).get('encoding', None)
+    else:
+      # file command provide better result
+      # for text/plain documents
+      # store the content into tempfile
+      file_descriptor, path = tempfile.mkstemp()
+      file_object = os.fdopen(file_descriptor, 'w')
+      file_object.write(string)
+      file_object.close()
+      # run file command against tempfile to and read encoded
+      command_result = Popen(['file', '-b', '--mime-encoding', path],
+                                                  stdout=PIPE).communicate()[0]
+      # return detected encoding
+      return command_result.strip()
 
   def _stripHTML(self, html, charset=None):
     """
