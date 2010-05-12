@@ -65,10 +65,6 @@ class PDFDocument(Image, CachedConvertableMixin):
                     , PropertySheet.Periodicity
                     )
 
-  searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
-                              'version', 'short_title',
-                              'subject', 'source_reference', 'source_project_title',)
-
   # Conversion API
   security.declareProtected(Permissions.AccessContentsInformation, 'convert')
   def convert(self, format, **kw):
