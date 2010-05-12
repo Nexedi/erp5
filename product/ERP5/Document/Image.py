@@ -52,6 +52,9 @@ except ImportError:
     from zope.contenttype import guess_content_type
 from zLOG import LOG, WARNING
 
+# import mixin
+from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+
 from Products.CMFCore.utils import getToolByName
 
 DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
@@ -60,7 +63,7 @@ DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
 
 DEFAULT_QUALITY = 75
 
-class Image(File, OFSImage):
+class Image(TextConvertableMixin, File, OFSImage):
   """
     An Image is a File which contains image data. It supports
     various conversions of format, size, resolution through
