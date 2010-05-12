@@ -2,6 +2,7 @@ agent
 agent_privilege
 bank_account_type
 collect_order_group
+contributor
 currency_exchange_type
 delivery_builder
 destination_carrier

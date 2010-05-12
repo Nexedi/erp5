@@ -3,12 +3,18 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="InteractionWorkflowDefinition" module="Products.ERP5.InteractionWorkflow"/>
+        <global name="Scripts" module="Products.DCWorkflow.Scripts"/>
         <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_mapping</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
         <item>
             <key> <string>_objects</string> </key>
             <value>
@@ -16,14 +22,8 @@
             </value>
         </item>
         <item>
-            <key> <string>groups</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>cached_convertible_interaction_workflow</string> </value>
+            <value> <string>scripts</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,3 +1,9 @@
+2010-05-12 nicolas
+* add document_conversion_interaction_workflow
+* add document_security_interaction_workflow
+* move process_status_workflow from erp5_dms
+because Notification Message need it.
+
 2010-04-29 kazuhiko
 * Remove specialise base category because it already exists in erp5_core.
 

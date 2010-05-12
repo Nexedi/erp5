@@ -54,7 +54,21 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>document = state_change[\'object\']\n
-document.updateContentMd5()\n
+\n
+# calculate new conversion to base_format\n
+document.processFile()\n
+\n
+if document.getMetaType() == \'ERP5 OOo Document\':\n
+  # XXX How to filter documents which are implementing base_convertable \n
+  # and not text_document\n
+  # Clear base_data\n
+  document.setBaseData(None)\n
+  tag = \'document_%s_convert\' % document.getPath()\n
+  document.activate(tag=tag).Document_tryToConvertToBaseFormat()\n
+else:\n
+  # do not run it in activity but not with try except statement\n
+  # Transaction must fail, otherwise data will be lost\n
+  document.convertToBaseFormat()\n
 </string> </value>
         </item>
         <item>
@@ -95,6 +109,8 @@ document.updateContentMd5()\n
                             <string>_getitem_</string>
                             <string>document</string>
                             <string>_getattr_</string>
+                            <string>None</string>
+                            <string>tag</string>
                           </tuple>
                         </value>
                     </item>
@@ -111,7 +127,7 @@ document.updateContentMd5()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>updateContentMd5</string> </value>
+            <value> <string>Document_convertToBaseFormat</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
