@@ -28,6 +28,8 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from OFS.Image import Pdata
+import cStringIO
 
 _MARKER = []
 class BaseConvertableAndFileMixin:
