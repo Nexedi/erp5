@@ -1026,6 +1026,7 @@ form p,\n
 width: 20px;\n
 height: 20px;\n
 margin:5px 0 5px 5px;\n
+cursor:pointer;\n
 \n
 }\n
 \n
@@ -1256,6 +1257,7 @@ button.bt-med span img {\n
 \n
   float: left;\n
   width:75%;\n
+  padding-top: 0.3em;\n
 \n
 }\n
 \n
