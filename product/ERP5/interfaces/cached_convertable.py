@@ -90,3 +90,9 @@ class ICachedConvertable(Interface):
 
     **kw -- conversion parameters
     """
+
+  def updateContentMd5():
+    """
+    Udpate MD5 hash of non converted data in order
+    to check that returned cached result was computed from same origin.
+    """
