@@ -36,6 +36,8 @@ from Products.ERP5.Document.Document import Document, VALID_TEXT_FORMAT_LIST
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
+from OFS.Image import Pdata
+import cStringIO
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
