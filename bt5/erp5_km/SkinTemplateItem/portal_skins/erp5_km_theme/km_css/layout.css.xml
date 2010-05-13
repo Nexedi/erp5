@@ -348,7 +348,7 @@ button, select, input {\n
 #menu {\n
 \n
 \twidth:100%;\n
-\theight:45px;\n
+\theight:40px;\n
 \tmargin:0em;\n
 \tpadding:0px;\n
         padding-top: 4px;\n
@@ -1400,10 +1400,11 @@ fieldset.right_registration select {\n
 div.web-toolbar{\n
   color: auto;\n
   height: 30px;\n
+  background-color: #000000;\n
 }\n
 \n
 div.web-toolbar h3{\n
-  color:#000000;\n
+  color:#FFFFFF;\n
   height: 30px;\n
 }\n
 \n
@@ -1417,7 +1418,11 @@ div.web-toolbar ul li{\n
 }\n
 \n
 div.web-toolbar ul li.toolboxSection:hover {\n
-  background:#ccf;\n
+  background:#E9E9E9;\n
+}\n
+\n
+div.web-toolbar h3:hover {\n
+background:#E9E9E9;\n
 }\n
 \n
 
