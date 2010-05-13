@@ -59,3 +59,11 @@ class BaseConvertableMixin:
     """
     """
     raise NotImplementedError
+
+  def convertFile(self, **kw):
+    """
+    Workflow transition invoked when conversion occurs.
+    Usefull for document instances which are not associated
+    to processing_status_workflow like TempObject.
+    """
+  convertFile = WorkflowMethod(convertFile)
