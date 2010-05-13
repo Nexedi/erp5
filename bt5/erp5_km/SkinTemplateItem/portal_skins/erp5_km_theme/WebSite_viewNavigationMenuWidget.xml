@@ -93,7 +93,7 @@
       <tal:block tal:condition="python: here.Base_checkPermission(\'portal_contributions\', \'Add portal content\')">\n
         <li>\n
           <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/Base_viewContributeFileDialog">\n
-            New File\n
+            New Document\n
           </a>\n
         </li>\n
         <li>\n
@@ -102,6 +102,7 @@
           </a>\n
         </li>\n
       </tal:block>\n
+<!--\n
       <tal:block tal:condition="python: here.Base_checkPermission(\'web_page_module\', \'Add portal content\')">\n
         <li>\n
           <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/WebSection_createNewWebPage">\n
@@ -130,6 +131,7 @@
           </a>\n
         </li>\n
       </tal:block>\n
+-->\n
     </ul>\n
     <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
   </li>\n
