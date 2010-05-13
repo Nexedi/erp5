@@ -44,18 +44,15 @@ def makeSortedTuple(kw):
   items.sort()
   return tuple(items)
 
-def hashPdataObject(data):
+def hashPdataObject(pdata_object):
   """Pdata objects are iterable, use this feature strongly
   to minimize memory footprint.
   """
   md5_hash = md5.new()
-  next = chunk = data.next
-  if next is None:
-    md5_hash.update(data.data)
+  next = pdata_object
   while next is not None:
-    chunk = next
-    md5_hash.update(chunk)
-    next = data.next
+    md5_hash.update(next.data)
+    next = next.next
   return md5_hash.hexdigest()
 
 class CachedConvertableMixin:
