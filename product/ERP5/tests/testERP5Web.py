@@ -193,7 +193,7 @@ class TestERP5Web(ERP5TypeTestCase):
       ZopeTestCase._print(message)
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<b>OK</b>')
-    self.assertEquals('text/html', page.getTextFormat())
+    self.assertEquals('text/html', page.getContentType())
     self.assertEquals('<b>OK</b>', page.getTextContent())
 
   def test_02a_WebPageAsText(self, quiet=quiet, run=run_all_test):
