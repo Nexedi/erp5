@@ -86,7 +86,9 @@
         </a>\n
       </li>\n
       <li>\n
-        <a i18n:translate="" i18n:domain="ui" tal:attributes="href string:${search_area_url}/Base_viewAdvancedSearchDialog">Advanced Search</a>\n
+        <a i18n:translate="" i18n:domain="ui" tal:attributes="href string:${search_area_url}/Base_viewAdvancedSearchDialog">\n
+          Search\n
+        </a>\n
       </li>\n
       <tal:block tal:condition="python: here.Base_checkPermission(\'portal_contributions\', \'Add portal content\')">\n
         <li>\n
