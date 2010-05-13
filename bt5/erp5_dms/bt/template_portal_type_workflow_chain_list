@@ -8,10 +8,8 @@ Drawing | document_publication_workflow
 Drawing | document_security_interaction_workflow
 Drawing | edit_workflow
 Drawing | processing_status_workflow
-File | document_conversion_interaction_workflow
 File | document_publication_workflow
 File | document_security_interaction_workflow
-Image | document_conversion_interaction_workflow
 Image | document_publication_workflow
 Image | document_security_interaction_workflow
 PDF | document_conversion_interaction_workflow

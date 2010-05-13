@@ -9,11 +9,11 @@
  </chain>
  <chain>
   <type>File</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow</workflow>
+  <workflow>document_publication_workflow, document_security_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Image</type>
-  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow</workflow>
+  <workflow>document_publication_workflow, document_security_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>PDF</type>
