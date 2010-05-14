@@ -238,12 +238,8 @@ class EmailDocument(TextDocument):
           # get_filename return name only from Content-Disposition header
           # of the message but sometimes this value is stored in
           # Content-Type header
-          if 'Content-Type' in kw:
-            content_type_header = kw['Content-Type']
-          elif 'Content-type' in kw:
-            content_type_header = kw['Content-type']
-          else:
-            content_type_header = ''
+          content_type_header = kw.get('Content-Type',
+                                                    kw.get('Content-type', ''))
           file_name_list = re.findall(file_name_regexp,
                                       content_type_header,
                                       re.MULTILINE)
@@ -252,12 +248,9 @@ class EmailDocument(TextDocument):
         if file_name:
           kw['file_name'] = file_name
         else:
-          content_disposition = None
+          content_disposition = kw.get('Content-Disposition', 
+                                           kw.get('Content-disposition'), None)
           prefix = 'part_'
-          if 'Content-Disposition' in kw:
-            content_disposition = kw['Content-Disposition']
-          elif 'Content-disposition' in kw:
-            content_disposition = kw['Content-disposition']
           if content_disposition:
             if content_disposition.split(';')[0] == 'attachment':
               prefix = 'attachment_'
@@ -285,10 +278,8 @@ class EmailDocument(TextDocument):
             # get_filename return name only from Content-Disposition header
             # of the message but sometimes this value is stored in
             # Content-Type header
-            if 'Content-Type' in kw:
-              content_type_header = kw['Content-Type']
-            elif 'Content-type' in kw:
-              content_type_header = kw['Content-Type']
+            content_type_header = kw.get('Content-Type',
+                                                    kw.get('Content-type', ''))
             file_name_list = re.findall(file_name_regexp,
                                         content_type_header,
                                         re.MULTILINE)
