@@ -241,7 +241,9 @@ class EmailDocument(TextDocument):
           if 'Content-Type' in kw:
             content_type_header = kw['Content-Type']
           elif 'Content-type' in kw:
-            content_type_header = kw['Content-Type']
+            content_type_header = kw['Content-type']
+          else:
+            content_type_header = ''
           file_name_list = re.findall(file_name_regexp,
                                       content_type_header,
                                       re.MULTILINE)
