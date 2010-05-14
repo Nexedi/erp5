@@ -83,7 +83,8 @@ line = bug.newContent(title="%s %s was %s" % (bug.getPortalType(),\n
                                               bug.getReference(),\n
                                               state),\n
                       portal_type="Bug Line",\n
-                      text_content=comment)\n
+                      text_content=comment,\n
+                      content_type=\'text/plain\')\n
 if send_event:\n
   # This will post The message Automatically.\n
   line.start()\n
