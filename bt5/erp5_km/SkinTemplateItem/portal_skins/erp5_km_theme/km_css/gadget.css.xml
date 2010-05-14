@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts73820488.63</string> </value>
+            <value> <string>ts73833002.27</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -253,10 +253,17 @@ h3.handle span.handle {\n
   left:200px;\n
   top: 100px;\n
   width: 200px;\n
+  background-color: #C2C1C1!important;\n
+  border: 5px solid #C0BFB3!important;\n
+}\n
+\n
+.toggable_dialog h3{\n
+  color: #000000;\n
 }\n
 \n
 .toggable_dialog button{\n
-  padding: 0em;\n
+  padding: 0.1em;\n
+  margin-right: 0.2em;\n
   float:left;\n
 }\n
 \n
@@ -311,7 +318,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4652</int> </value>
+            <value> <int>4797</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

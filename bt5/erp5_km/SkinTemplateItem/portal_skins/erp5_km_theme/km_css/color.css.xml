@@ -52,7 +52,6 @@
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 \n
-\n
 body {\n
   background:#E9E9E9 url(../km_img/bg.png) repeat-x scroll 0 0;\n
 }\n
@@ -94,10 +93,10 @@ body {\n
 .draggable_wrapper #page_wrapper h3 {\n
 \n
 \tbackground: url(../km_img/widgethead.png) repeat-x #c1c0b4;\n
-  border-color:#C0BFB3 #C0BFB3 #9C9479;\n
-  border-style:solid;\n
-  border-width:1px;\n
-  color:#776D61;\n
+\tborder-color:#C0BFB3 #C0BFB3 #9C9479;\n
+\tborder-style:solid;\n
+\tborder-width:1px;\n
+\tcolor:#776D61;\n
 \n
 }\n
 \n
@@ -130,7 +129,6 @@ fieldset.right h4 {\n
 .document > .content ul li {\n
 \n
   background:transparent url(../km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
-  no-repeat scroll 0 0.5em;\n
   margin:0 0 0.3em 2px;\n
   padding:0 0 0 12px;\n
   list-style-image:none;\n
@@ -183,8 +181,8 @@ table tbody tr td {\n
 \tborder-top: 1px solid #ecebe2;\n
 \tbackground-color: #FFFFFF;\n
 \t-webkit-transition-property: background;\n
-    -webkit-transition-duration: 0.2s;\n
-    -webkit-transition-timing-function: linear;\n
+\t-webkit-transition-duration: 0.2s;\n
+\t-webkit-transition-timing-function: linear;\n
 \n
 }\n
 \n
@@ -209,7 +207,7 @@ table tbody tr:hover td {\n
 \n
 }\n
 \n
-h3 { color:#3f69be; }\n
+/*h3 { color:#3f69be; }*/\n
 \n
 .section {\n
 \n

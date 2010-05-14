@@ -113,15 +113,7 @@ div.searchBar input, div.extendedSearchBar input {\n
   width: auto;\n
 }\n
 \n
-/* Knowledge Pad dialogs */\n
-.toggable_dialog {\n
-  background-color: #C2C1C1!important;\n
-  border: 5px solid #C0BFB3!important;\n
-}\n
-\n
-.toggable_dialog h3{\n
-  color: #000000;\n
-}
+
 
 ]]></string> </value>
         </item>

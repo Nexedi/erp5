@@ -104,7 +104,7 @@ div {\n
 \n
 #mainwrapper {\n
 \n
-  min-height: 100%;\n
+\tmin-height: 100%;\n
 \twidth:952px;\n
 \tmargin: 0 auto;\n
 \n
@@ -114,7 +114,7 @@ div {\n
 #header {\n
 \n
 \tdisplay:block;\n
-  clear:both;\n
+\tclear:both;\n
 \n
 }\n
 \n
@@ -224,8 +224,8 @@ fieldset.right {\n
 \tfloat: left;\n
 \twidth:22.5%;\n
 \tposition:relative;\n
-  margin-left: 19px;\n
-  padding-top: 10px;\n
+\tmargin-left: 19px;\n
+\tpadding-top: 10px;\n
 \n
 }\n
 \n
@@ -233,7 +233,7 @@ fieldset.right {\n
 #km_front .text {\n
 \n
 \tpadding:10px;\n
-  width: auto;\n
+\twidth: auto;\n
 \n
 }\n
 \n
@@ -397,7 +397,7 @@ button, select, input {\n
 \n
 \tfloat:right;\n
 \twidth:auto;\n
-  margin-right: 10px;\n
+\tmargin-right: 10px;\n
 \n
 }\n
 \n
@@ -407,7 +407,7 @@ button, select, input {\n
 \tdisplay: block;\n
 \tclear: both;\n
 \twidth:100%;\n
-  padding: 5px 0;\n
+\tpadding: 5px 0;\n
 \n
 }\n
 \n
@@ -451,7 +451,7 @@ ul.breadcrumb {\n
 \tmargin:0 0 0 5px;\n
 \tpadding:0;\n
 \twidth:auto;\n
-  height:100%;\n
+\theight:100%;\n
 \tfloat: left;\n
 \tposition: relative;\n
 \tz-index: 11;\n
@@ -462,7 +462,7 @@ ul.breadcrumb li {\n
 \n
 \tfloat:left;\n
 \tmargin-left:5px;\n
-  height:100%;\n
+\theight:100%;\n
 \n
 }\n
 \n
@@ -470,7 +470,7 @@ ul.widget_management_box,\n
 ul.language_box{\n
 \n
 \tfloat:right;\n
-        margin:0;\n
+\tmargin:0;\n
 \tpadding: 0;\n
 \tz-index: 10;\n
 \tposition: relative;\n
@@ -585,7 +585,7 @@ width: auto;\n
 \tfloat:left;\n
 \toverflow: hidden;\n
 \tmargin: 0;\n
-  padding: 0 0 0 10px;\n
+\tpadding: 0 0 0 10px;\n
 \theight:22px;\n
 \twidth:auto;\n
 \tbackground: url(../km_img/tabs.png) no-repeat transparent;\n
@@ -755,9 +755,9 @@ div#mainwrapper div#wrapper_right fieldset.widget .minimize_wrapper .content{\n
 \n
 div#mainwrapper div#wrapper_right fieldset.widget iframe {width: 100%;}\n
 div#mainwrapper div#wrapper_right fieldset.widget table.gadget td div {\n
-padding: 0 !important;\n
-margin: 0 !important;\n
-border: 0 !important;\n
+\tpadding: 0 !important;\n
+\tmargin: 0 !important;\n
+\tborder: 0 !important;\n
 }\n
 \n
 div#mainwrapper div#wrapper_right fieldset.widget div.field ul{\n
@@ -894,8 +894,6 @@ table .right {\n
 }\n
 \n
 .gadget .inner .table-b{\n
-\n
-\n
 }\n
 \n
 .gadget .inner .table-b tr td{\n
@@ -907,16 +905,16 @@ table .right {\n
 #km_left .document > .content{\n
 \n
 \tfloat:left;\n
-  margin: 10px;\n
+\tmargin: 10px;\n
 \n
 }\n
 \n
 #km_front .document > .content{\n
 \n
 \tfloat:left;\n
-  padding: 10px;\n
-  width: auto;\n
-  min-width: 98%\n
+\tpadding: 10px;\n
+\twidth: auto;\n
+\tmin-width: 98%\n
 \n
 }\n
 \n
@@ -1030,10 +1028,10 @@ form p,\n
 }\n
 \n
 .meta .search_button {\n
-width: 20px;\n
-height: 20px;\n
-margin:5px 0 5px 5px;\n
-cursor:pointer;\n
+\twidth: 20px;\n
+\theight: 20px;\n
+\tmargin:5px 0 5px 5px;\n
+\tcursor:pointer;\n
 \n
 }\n
 \n
@@ -1237,14 +1235,6 @@ button.bt-med span img {\n
 \n
 /* ## buttons ######################################### end ### */\n
 \n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
 #main_form {\n
 \n
   height:100%;\n
@@ -1366,9 +1356,6 @@ fieldset.right_registration select {\n
 \n
 /* ## screen sizes #################################### end ### */\n
 \n
-\n
-\n
-\n
 .listbox input {\n
 \n
   width: auto;\n
@@ -1403,6 +1390,13 @@ fieldset.right_registration select {\n
 \n
 }\n
 \n
+/* Content formatting */\n
+div.document div.content div.text h1, h2, h3, h4, h5, h6, p{\n
+  /* XXX: generate it dynamically */\n
+}\n
+\n
+\n
+\n
 /* Web Toolbar */\n
 div.web-toolbar{\n
   color: auto;\n
@@ -1429,7 +1423,7 @@ div.web-toolbar ul li.toolboxSection:hover {\n
 }\n
 \n
 div.web-toolbar h3:hover {\n
-background:#E9E9E9;\n
+  background:#E9E9E9;\n
 }\n
 \n
 
