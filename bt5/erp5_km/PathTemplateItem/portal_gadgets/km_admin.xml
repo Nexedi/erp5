@@ -79,6 +79,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>comment</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -97,10 +107,14 @@
         <item>
             <key> <string>categories</string> </key>
             <value>
-              <tuple>
-                <string>gadget_type/web_section</string>
-              </tuple>
+              <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>comment</string> </key>
+            <value> <string>This gadget is obsolete as being replaced by bottom web toolbar.\r\n
+Still it\'s left as older system may still use it (but it\'s hidden from "Add gadgets" dialog).\r\n
+If for some reason one wants to use it set "Gadget Type" to Web Section"</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
