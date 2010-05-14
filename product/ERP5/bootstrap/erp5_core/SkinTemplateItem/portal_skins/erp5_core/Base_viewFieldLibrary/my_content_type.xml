@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_text_format</string> </value>
+            <value> <string>my_content_type</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -194,8 +194,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The text format used by default\n
-(Deprecated use content_type instead)</string> </value>
+                    <value> <string>The text format used by default</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
