@@ -297,7 +297,7 @@ class AmountGeneratorMixin:
           # Price is used as a ratio (also a kind of multiplier)
         for base_key in property_dict['base_contribution_list']:
           if base_key in applied_base_amount_set:
-            if self in check_wrong_index_list:
+            if self in check_wrong_index_set:
               raise ValueError("Duplicate or missing int_index on Amount"
                                " Generator Lines while processing %r" % self)
             else:
