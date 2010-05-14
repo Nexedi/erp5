@@ -299,7 +299,8 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     else:
       explanation_value = delivery_value
       portal = self.getPortalObject()
-      delivery_type_list = self.getPortalDeliveryTypeList()
+      delivery_type_list = self.getPortalDeliveryTypeList() \
+              + self.getPortalOrderTypeList()
       while explanation_value.getPortalType() not in delivery_type_list and \
           explanation_value != portal:
             explanation_value = explanation_value.getParentValue()
