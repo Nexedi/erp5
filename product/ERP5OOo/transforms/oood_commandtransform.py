@@ -2,6 +2,7 @@
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.interfaces import idatastream
 from Products.ERP5Type.Document import newTempOOoDocument
+from Products.ERP5.Document.Document import ConversionError
 from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_base
 from zope.interface import implements
@@ -25,9 +26,6 @@ except ImportError:
   from cgi import parse_qsl
 
 CLEAN_RELATIVE_PATH = re.compile('^../')
-
-class TransformError(Exception):
-  pass
 
 class OOoDocumentDataStream:
   """Handle OOoDocument in Portal Transforms"""
@@ -205,4 +203,4 @@ class OOOdCommandTransform(commandtransform):
         data = self.includeImageList(data)
       return data
     else:
-      raise TransformError
+      raise ConversionError('Format not allowed %s' % format)
