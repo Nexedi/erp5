@@ -56,5 +56,4 @@ class BaseConvertableAndFileMixin:
     if not isinstance(data, Pdata) and data is not None:
       file = cStringIO.StringIO(data)
       data, size = self._read_data(file)
-      self._setSize(size)
     self._baseSetBaseData(data)
