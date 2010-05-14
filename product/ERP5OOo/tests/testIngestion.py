@@ -50,7 +50,6 @@ from Products.CMFCore.utils import getToolByName
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
-NON_PROCESSABLE_PORTAL_TYPE_LIST = ('Image', 'File', 'PDF')
 
 def printAndLog(msg):
   """
@@ -296,12 +295,9 @@ class TestIngestion(ERP5TypeTestCase):
       document.edit(file=f)
       self.stepTic()
       self.failUnless(document.hasFile())
-      if document.getPortalType() in NON_PROCESSABLE_PORTAL_TYPE_LIST:
-        # File and images do not support conversion to text in DMS
-        # PDF has not implemented _convertToBaseFormat() so can not be converted
-        self.assertEquals(document.getExternalProcessingState(), 'empty')
-      else:
-        self.assertEquals(document.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
+      if document.isSupportBaseDataConversion():
+        # this is how we know if it was ok or not
+        self.assertEquals(document.getExternalProcessingState(), 'converted')
         self.assert_('magic' in document.SearchableText())
         self.assert_('magic' in str(document.asText()))
 
@@ -363,11 +359,7 @@ class TestIngestion(ERP5TypeTestCase):
       count+=1
       self.assertEquals(document.getPortalType(), portal_type)
       self.assertEquals(document.getReference(), 'TEST')
-      if document.getPortalType() in NON_PROCESSABLE_PORTAL_TYPE_LIST:
-        # Image, File and PDF are not converted to a base format
-        # so they have to stay empty
-        self.assertEquals(document.getExternalProcessingState(), 'empty')
-      else:
+      if document.isSupportBaseDataConversion():
         # We check if conversion has succeeded by looking
         # at the external_processing workflow
         self.assertEquals(document.getExternalProcessingState(), 'converted')
@@ -960,10 +952,8 @@ class TestIngestion(ERP5TypeTestCase):
                                language='en',
                                version='002')
       self.assertNotEquals(None, ingested_document)
-      if portal_type not in NON_PROCESSABLE_PORTAL_TYPE_LIST:
+      if ingested_document.isSupportBaseDataConversion():
         self.assertEquals('converted', ingested_document.getExternalProcessingState())
-      else:
-        self.assertEquals('empty', ingested_document.getExternalProcessingState())
       # check aggregate between 'Document Ingestion Message' and ingested document
       self.assertTrue(ingested_document in attachment_list)
     return attachment_list, ingested_document
