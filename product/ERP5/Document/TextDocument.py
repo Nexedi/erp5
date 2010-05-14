@@ -377,3 +377,30 @@ class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
       self._setBaseData(text_content)
       self._setBaseContentType(content_type)
       return message
+
+    # Backward compatibility for replacement of text_format by content_type
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                               'getTextFormat')
+    def getTextFormat(self, default=_MARKER):
+      """
+      """
+      LOG('TextDocument', WARNING,
+                'Usage of text_format is deprecated, use text_content instead')
+      return self.getContentType(default)
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setTextFormat')
+    def setTextFormat(self, value):
+      """
+      """
+      LOG('TextDocument', WARNING,
+                'Usage of text_format is deprecated, use text_content instead')
+      return self.setContentType(value)
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                              '_setTextFormat')
+    def _setTextFormat(self, value):
+      """
+      """
+      LOG('TextDocument', WARNING,
+                'Usage of text_format is deprecated, use text_content instead')
+      return self._setContentType(value)
