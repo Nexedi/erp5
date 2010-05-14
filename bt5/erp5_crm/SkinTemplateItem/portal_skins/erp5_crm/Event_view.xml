@@ -83,7 +83,7 @@
                         <string>my_description</string>
                         <string>my_aggregate_title_list</string>
                         <string>attachment_list</string>
-                        <string>my_text_format</string>
+                        <string>my_content_type</string>
                       </list>
                     </value>
                 </item>

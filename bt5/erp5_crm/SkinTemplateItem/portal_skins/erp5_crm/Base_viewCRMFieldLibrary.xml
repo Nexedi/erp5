@@ -147,6 +147,7 @@
                         <string>my_destination_project_title</string>
                         <string>my_source_project_title</string>
                         <string>your_format</string>
+                        <string>my_content_type</string>
                       </list>
                     </value>
                 </item>
