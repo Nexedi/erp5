@@ -249,7 +249,7 @@ class EmailDocument(TextDocument):
           kw['file_name'] = file_name
         else:
           content_disposition = kw.get('Content-Disposition', 
-                                           kw.get('Content-disposition'), None)
+                                           kw.get('Content-disposition', None))
           prefix = 'part_'
           if content_disposition:
             if content_disposition.split(';')[0] == 'attachment':
