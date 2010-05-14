@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts73833002.27</string> </value>
+            <value> <string>ts73840454.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -198,9 +198,12 @@ div.gadget-my-documents{\n
 div.gadget-latest-documents{\n
 }\n
 \n
+/* Gadget Documentation */\n
+div.gadget_documentation{\n
+  padding: 0.1em;\n
+}\n
 \n
 /*WEB*/\n
-\n
 .portal-column {\n
   margin-right: 1%;\n
 }\n
@@ -318,7 +321,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4797</int> </value>
+            <value> <int>4869</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

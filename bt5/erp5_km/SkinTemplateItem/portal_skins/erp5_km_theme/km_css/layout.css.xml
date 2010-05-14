@@ -1390,10 +1390,22 @@ fieldset.right_registration select {\n
 \n
 }\n
 \n
+/* gadget management block */\n
+div.gadget-management{\n
+}\n
+\n
+div.required label{\n
+  padding-top: 4px;\n
+  background:  url("../km_img/required_mark.png") no-repeat;\n
+}\n
+\n
 /* login form */\n
 fieldset.registration {\n
   float:left;\n
   width:42.5%;\n
+  background-color: #FFFFFF;\n
+  margin-right: 0.5%;\n
+  height: 775px;\n
 }\n
 \n
 /* Content formatting */\n
@@ -1427,13 +1439,34 @@ div.web-toolbar ul li{\n
 }\n
 \n
 div.web-toolbar ul li.toolboxSection:hover {\n
-  background:#E9E9E9;\n
+  background:#A8A799;\n
 }\n
 \n
 div.web-toolbar h3:hover {\n
-  background:#E9E9E9;\n
+  background:#A8A799;\n
+}\n
+div.web-toolbar div.menu{\n
+  background:#818364;\n
+  margin-bottom:8px;\n
+  border-style: none;\n
+}\n
+div.web-toolbar div.menu li > a span, div.web-toolbar div.menu button, div.web-toolbar div.menu label{\n
+  color: #FFFFFF;\n
+}\n
+div.web-toolbar div.menu label{\n
+  font-weight: bold;\n
 }\n
 \n
+div.web-toolbar div.menu button{\n
+  color: #FFFFFF!important;\n
+  background-color: transparent;\n
+  border-style: none;\n
+  padding-left: 1em;\n
+}\n
+\n
+div.web-toolbar li > a, div.web-toolbar button{\n
+  border-style: none;\n
+}\n
 \n
 /* Generic styles used in all ERP5 KM Styles */\n
 .doNotDisplay, \n
