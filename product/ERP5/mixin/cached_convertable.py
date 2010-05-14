@@ -181,6 +181,14 @@ class CachedConvertableMixin:
       if cache_entry is not None:
         data_dict = cache_entry.getValue()
         if data_dict:
+          if isinstance(data_dict, tuple):
+            # Backward compatibility: if cached value is a tuple
+            # as it was before refactoring
+            # http://svn.erp5.org?rev=35216&view=rev
+            # raise a KeyError to invalidate this cache entry and force
+            # calculation of a new conversion
+            raise KeyError('Old cache conversion format,'\
+                               'cache entry invalidated for key:%r' % cache_id)
           content_md5 = data_dict['content_md5']
           if content_md5 != self.getContentMd5():
             raise KeyError, 'Conversion cache key is compromised for %r' % cache_id
