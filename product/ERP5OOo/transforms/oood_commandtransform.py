@@ -111,19 +111,21 @@ class OOOdCommandTransform(commandtransform):
         if image is not None:
           odt_content_modified = True
           content_type = image.getContentType()
-          mimetype_list = getToolByName(self.context,
-                                        'mimetypes_registry').lookup(content_type)
-          #Need to improve default format handling
-          format = 'png'
-          if mimetype_list:
-            format = mimetype_list[0].minor()
+          mimetype_list = getToolByName(self.context.getPortalObject(),
+                                     'mimetypes_registry').lookup(content_type)
+
+          format = image_parameter_dict.pop('format', None)
+          for mimetype_object in mimetype_list:
+            if mimetype_object.extensions:
+              format = mimetype_object.extensions[0]
+              break
+            elif mimetype_object.globs:
+              format = mimetype_object.globs.strip('*.')
+              break
           if getattr(image, 'meta_type', None) == 'ERP5 Image':
             #ERP5 API
-            if 'format' in image_parameter_dict:
-              format = image_parameter_dict.pop('format')
-
-            # convert image according parameters
-            mime, image_data = image.convert(format, **image_parameter_dict)
+            # resize image according parameters
+            mime, image_data = image.convert(None, **image_parameter_dict)
             image = OFSImage(image.getId(), image.getTitle(), image_data)
 
           # image should be OFSImage
