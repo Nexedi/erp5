@@ -186,11 +186,15 @@ class OOOdCommandTransform(commandtransform):
 
   def convert(self):
     tmp_ooo = newTempOOoDocument(self.context, self.context.generateNewId())
+    # XXX We store the same content inside data and base_data
+    # otherwise conversion server fails to convert html=>odt for example.
+    # deeper investigation is required inside oood to understand this issue.
     tmp_ooo.edit( base_data=self.data,
+                  data=self.data,
                   fname=self.name(),
                   source_reference=self.name(),
-                  base_content_type=self.mimetype,)
-    tmp_ooo.oo_data = self.data
+                  base_content_type=self.mimetype,
+                  content_type=self.mimetype,)
     self.ooo = tmp_ooo
 
   def convertTo(self, format):
