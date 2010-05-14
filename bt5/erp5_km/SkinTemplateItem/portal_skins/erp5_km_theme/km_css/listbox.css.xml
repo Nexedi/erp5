@@ -63,7 +63,7 @@ width:250px;\n
 /******************/ \n
 /* Listbox action */\n
 /******************/\n
-.listbox_actions {\n
+.bottom_actions {\n
   float:none;\n
 }\n
 \n
@@ -89,7 +89,7 @@ width:250px;\n
 }\n
 \n
 /* Buttons */\n
-.listbox_actions button, .listbox_actions a.button {\n
+.bottom_actions button, .bottom_actions a.button {\n
   background-image: url(\'./km_img/button_background.png\') ;\n
   background-position: 100% 0;\n
   background-color: inherit;\n
@@ -101,18 +101,18 @@ width:250px;\n
   margin-right:3px;\n
   margin-bottom:3px;\n
 }\n
-.listbox_actions button:hover,.listbox_actions a:hover {\n
+.bottom_actions button:hover,.bottom_actions a:hover {\n
  background-position:100% 100%;\n
 }\n
 \n
 /* a as button */\n
-.listbox_actions a.button{\n
+.bottom_actions a.button{\n
   display:block;\n
   margin-left: 9px;\n
 }\n
 \n
 /* Image in button */\n
-.listbox_actions span.image{\n
+.bottom_actions span.image{\n
   background-repeat:no-repeat;\n
   background-position:center center;\n
   display:block;\n
@@ -126,12 +126,12 @@ width:250px;\n
 }\n
 \n
 /* Description of botton */\n
-.listbox_actions span.description{\n
+.bottom_actions span.description{\n
   font-size:10px;\n
 }\n
 \n
 /* Global button span */\n
-.listbox_actions button > span, .listbox_actions a > span{\n
+.bottom_actions button > span, .bottom_actions a > span{\n
   display:block;\n
   background-color:inherit;\n
   background-image:url(\'./km_img/button_background.png\');\n
@@ -146,10 +146,10 @@ width:250px;\n
   white-space:nowrap;\n
   width:100%;\n
 }\n
-.listbox_actions button:hover > span, .listbox_actions a:hover > span{\n
+.bottom_actions button:hover > span, .bottom_actions a:hover > span{\n
   background-position:0 100%;\n
 }\n
-.listbox_actions span.description span {\n
+.bottom_actions span.description span {\n
   left:4px;\n
   position:relative;\n
 }\n
