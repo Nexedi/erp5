@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts73585160.19</string> </value>
+            <value> <string>ts73820488.63</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -91,7 +91,7 @@ div.edit-form button{\n
 \n
 \n
 #add_new_tab_dialog_link{\n
-  line-height: 22px;\n
+  /*line-height: 22px;*/\n
   padding-left: 10px;\n
 }\n
 \n
@@ -311,7 +311,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4648</int> </value>
+            <value> <int>4652</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
