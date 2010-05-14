@@ -65,7 +65,9 @@ transaction = state_change[\'object\']\n
 site = transaction.getSite()\n
 date = transaction.getStartDate()\n
 # No need to check counter date, only accounting date\n
+transaction.Base_checkConsistency()\n
 transaction.Baobab_checkAccountingDateOpen(site=site, date=date)\n
+\n
 \n
 # Check some properties of document\n
 price = transaction.getSourceTotalAssetPrice()\n
