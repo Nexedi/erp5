@@ -1396,7 +1396,6 @@ div.document div.content div.text h1, h2, h3, h4, h5, h6, p{\n
 }\n
 \n
 \n
-\n
 /* Web Toolbar */\n
 div.web-toolbar{\n
   color: auto;\n
@@ -1426,6 +1425,66 @@ div.web-toolbar h3:hover {\n
   background:#E9E9E9;\n
 }\n
 \n
+\n
+/* Generic styles used in all ERP5 KM Styles */\n
+.doNotDisplay, \n
+.do_not_display  {\n
+  display: none\n
+}\n
+\n
+.hiddenLabel label,\n
+.hidden_label label { \n
+  display: none !important\n
+}\n
+\n
+fieldset.hidden_fieldset {\n
+  display: none;\n
+}\n
+\n
+input#hidden_button {\n
+  width: 0;\n
+  height: 0;\n
+  display: inline;\n
+  border-width: 0;\n
+  float: left;\n
+}\n
+\n
+/* Save button styling */\n
+div.actions button {\n
+  float: right;\n
+  z-index: 300;\n
+  top: -.5em;\n
+  right: 0;\n
+}\n
+\n
+/* Search Popup window */\n
+div.search_popup {\n
+  background-color: #FFFFFF;\n
+  border: 1px solid black;\n
+  display: none;\n
+  left: 500px;\n
+  padding: 10px;\n
+  position: fixed;\n
+  top: 130px;\n
+  width: 150px;\n
+  z-index: 100;\n
+}\n
+\n
+/* Search Bar */\n
+div.searchBar{\n
+  margin-bottom: 2em;\n
+  text-align: center;\n
+}\n
+\n
+div.extendedSearchBar{\n
+  margin-top: 1em;\n
+  padding: 0.2em;\n
+  text-align: center;\n
+}\n
+\n
+div.searchBar input, div.extendedSearchBar input {\n
+  width: auto;\n
+}\n
 
 
 ]]></string> </value>
