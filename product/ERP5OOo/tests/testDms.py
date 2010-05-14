@@ -1319,7 +1319,6 @@ class TestDocument(TestDocumentMixin):
     document_list = person.getFollowUpRelatedValueList()
     self.assertEquals(1, len(document_list))
     document = document_list[0]
-    self.assertEquals('empty', document.getExternalProcessingState())
     self.assertEquals('File', document.getPortalType())
     self.assertEquals(contributed_document, document)
 
