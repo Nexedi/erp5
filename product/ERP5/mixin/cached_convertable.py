@@ -92,6 +92,13 @@ class CachedConvertableMixin:
       cache_tool.updateCache()
     return cache_tool.getRamCacheRoot().get(cache_factory_name)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                             'generateCacheId')
+  def generateCacheId(self, **kw):
+    """
+    """
+    return self._getCacheKey(self, **kw)
+
   def _getCacheKey(self, **kw):
     """
     Returns the key to use for the cache entries. For now,
