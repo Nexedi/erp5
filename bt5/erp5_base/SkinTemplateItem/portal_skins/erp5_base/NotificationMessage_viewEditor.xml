@@ -91,7 +91,7 @@
                     <key> <string>left (Page Properties)</string> </key>
                     <value>
                       <list>
-                        <string>my_text_format</string>
+                        <string>my_content_type</string>
                         <string>my_text_content_substitution_mapping_method_id</string>
                       </list>
                     </value>
