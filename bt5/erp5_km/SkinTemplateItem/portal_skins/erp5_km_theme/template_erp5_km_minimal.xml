@@ -120,6 +120,7 @@
                                     \'%s/km_css/type.css\' % portal_path,\n
                                      \'%s/km_css/gadget.css\' % portal_path,\n
                                      \'%s/km_custom.css\' % portal_path,\n
+                                     \'%s/km_css/listbox.css\' % portal_path,\n
 ];\n
                              global js_list python:[\n
                                    \'%s/erp5_km_utils.js\' % portal_path,\n
