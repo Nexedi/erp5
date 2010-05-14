@@ -9,14 +9,11 @@ from zope.interface import implements
 from OFS.Image import Image as OFSImage
 from zLOG import LOG
 
-try:
-  from Products.ERP5OOo.OOoUtils import OOoBuilder
-  import re
-  from lxml import etree
-  from lxml.etree import ParseError, Element
-  import_succeed = 1
-except ImportError:
-  import_succeed = 0
+from Products.ERP5OOo.OOoUtils import OOoBuilder
+import re
+from lxml import etree
+from lxml.etree import ParseError, Element
+
 from urllib import unquote
 from urlparse import urlparse
 try:
@@ -69,7 +66,7 @@ class OOOdCommandTransform(commandtransform):
       self.__name__ = name
     self.mimetype = mimetype
     self.context = context
-    if import_succeed and self.mimetype == 'text/html':
+    if self.mimetype == 'text/html':
       data = self.includeExternalCssList(data)
     self.data = data
 
@@ -199,7 +196,7 @@ class OOOdCommandTransform(commandtransform):
   def convertTo(self, format):
     if self.ooo.isTargetFormatAllowed(format):
       mime, data = self.ooo.convert(format)
-      if import_succeed and self.mimetype == 'text/html':
+      if self.mimetype == 'text/html':
         data = self.includeImageList(data)
       return data
     else:
