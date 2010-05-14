@@ -138,7 +138,6 @@
                     <value>
                       <list>
                         <string>breadcrumb_widget</string>
-                        <string>widget_management</string>
                         <string>language_widget</string>
                       </list>
                     </value>
@@ -147,6 +146,7 @@
                     <key> <string>right column gadget (Right Gadget)</string> </key>
                     <value>
                       <list>
+                        <string>widget_management</string>
                         <string>right_gadget</string>
                       </list>
                     </value>

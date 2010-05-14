@@ -130,6 +130,10 @@ div {\n
 \n
 }\n
 \n
+#center{\n
+  padding-top: 5px;\n
+}\n
+\n
 #center,\n
 .document > .content{\n
 \n
@@ -466,14 +470,17 @@ ul.widget_management_box,\n
 ul.language_box{\n
 \n
 \tfloat:right;\n
-  margin:0;\n
+        margin:0;\n
 \tpadding: 0;\n
 \tz-index: 10;\n
 \tposition: relative;\n
-\tlist-style-type: none;\n
+\tlist-style-type: none!important;\n
 \n
 }\n
-\n
+ul.widget_management_box li{\n
+  float:right;\n
+  display: block;\n
+}\n
 ul.language_box li {\n
 \n
 \tfloat:left;\n
@@ -498,7 +505,7 @@ ul.language_box .selected img {\n
 \n
 }\n
 \n
-ul.widget_management_box{\tpadding: 0 10px 0 0;}\n
+ul.widget_management_box{\tpadding: 0 0px 0 0;}\n
 \n
 ul.widget_management_box a {float:left;}\n
 \n
