@@ -566,7 +566,7 @@ class TestDocument(TestDocumentMixin):
     # test get_size on temporary OOoDocument
     from Products.ERP5Type.Document import newTempOOoDocument
     doc = newTempOOoDocument(self.portal, 'tmp')
-    doc.edit(base_data='OOo')
+    doc.edit(data='OOo')
     self.assertEquals(len('OOo'), doc.get_size())
 
   def testOOoDocument_hasData(self):
