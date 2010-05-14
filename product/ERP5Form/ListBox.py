@@ -477,6 +477,7 @@ class ListBoxRenderer:
     self.field = field
     self.request = REQUEST
     self.render_prefix = render_prefix
+    self.displayed_column_id_list = None
 
   def getPhysicalPath(self):
     """
@@ -1030,13 +1031,46 @@ class ListBoxRenderer:
     return set(self.getCheckedUidList())
 
   getCheckedUidSet = lazyMethod(getCheckedUidSet)
+  
+  def setDisplayedColumnIdList(self, displayed_column_id_list):
+    """Set the column to be displayed.
+       Impact the result of getSelectedColumnList.
+       Parameter : 
+       displayed_column_id_list : List of id. Exemple : ('id', 'title')
+    """
+    self.displayed_column_id_list = displayed_column_id_list
+
+  def getDisplayedColumnIdList(self):
+    """Return the list of displayed column id
+    """
+    return self.displayed_column_id_list
 
   def getSelectedColumnList(self):
     """Return the list of selected columns.
     """
-    return self.getSelectionTool().getSelectionColumns(self.getSelectionName(),
+    column_list = []
+
+    #Parameter allow to select column temporary
+    if self.getDisplayedColumnIdList() != None:
+      available_column = self.getAllColumnList()
+
+      #Create a dict to make a easy search
+      available_column_dict = dict()
+      for id,title in available_column:
+        available_column_dict[id] = (id,title)
+
+      #We check columns are present
+      for id in self.getDisplayedColumnIdList():
+        if available_column_dict.has_key(id):
+          column_list.append(available_column_dict[id])
+        else:
+          raise AttributeError, "Column %s is not avaible" % id
+
+    else:
+      column_list = self.getSelectionTool().getSelectionColumns(self.getSelectionName(),
                                                        columns = self.getColumnList(),
                                                        REQUEST = self.request)
+    return column_list
 
   getSelectedColumnList = lazyMethod(getSelectedColumnList)
 
