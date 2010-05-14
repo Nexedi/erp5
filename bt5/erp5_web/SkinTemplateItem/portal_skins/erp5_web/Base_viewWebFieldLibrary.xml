@@ -111,6 +111,7 @@
                         <string>my_radio_field</string>
                         <string>my_title</string>
                         <string>my_editor_field</string>
+                        <string>my_content_type</string>
                       </list>
                     </value>
                 </item>
