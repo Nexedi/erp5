@@ -194,48 +194,6 @@ class IDocument(Interface):
     **kw can be various things - e.g. resolution
     """
 
-  def generateCacheId(**kw):
-    """Return string to identify Document in cache pool with
-    all arguments used to convert the document
-    """
-
-  def convertToBaseFormat(**kw):
-    """Converts the content of the document to a base format
-    which is later used for all conversions. This method
-    is common to all kinds of documents and handles
-    exceptions in a unified way.
-
-    Implementation is delegated to _convertToBaseFormat which
-    must be overloaded by subclasses of Document which
-    need a base format.
-
-    convertToBaseFormat is called upon file upload, document
-    ingestion by the processing_status_workflow.
-
-    NOTE: the data of the base format conversion should be stored
-    using the base_data property. Refer to Document.py propertysheet.
-    Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
-    """
-
-  def hasConversion(**kw):
-    """Return a boolean if conversion is cached
-    """
-
-  def setConversion(data, mime=None, calculation_time=None, **kw):
-    """Saves a version of the document in a given format; records mime type
-    and conversion time (which is right now).
-    """
-
-  def getConversion(**kw):
-    """Returns version of the document in a given format, if it has it; otherwise
-    returns empty string (the caller should check hasConversion before calling
-    this function.
-    """
-
-  def getConversionSize(**kw):
-    """Returns the size of the converted document.
-    """
-
   def isSupportBaseDataConversion():
     """This is a public interface to check a document that is support conversion
     to base format and can be overridden in subclasses.

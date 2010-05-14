@@ -37,6 +37,11 @@ class ICachedConvertable(Interface):
   interface can be cached efficiently and querried.
   """
 
+  def generateCacheId(**kw):
+    """Return string to identify Document in cache pool with
+    all arguments used to convert the document
+    """
+
   def hasConversion(**kw):
     """
     Return True if the conversion is already cache, False else.
