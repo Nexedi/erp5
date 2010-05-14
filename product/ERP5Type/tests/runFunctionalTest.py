@@ -82,7 +82,7 @@ class FunctionalTestRunner:
 
   def parseArgs(self, arguments=None):
     if arguments is None:
-      arguments = sys.argv[:1]
+      arguments = sys.argv[1:]
     try:
       opts, args = getopt.getopt(arguments,
             "hsd", ["help", "stdout", "debug",
