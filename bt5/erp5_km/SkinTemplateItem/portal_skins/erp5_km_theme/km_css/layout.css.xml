@@ -1390,10 +1390,17 @@ fieldset.right_registration select {\n
 \n
 }\n
 \n
+/* login form */\n
+fieldset.registration {\n
+  float:left;\n
+  width:42.5%;\n
+}\n
+\n
 /* Content formatting */\n
 div.document div.content div.text h1, h2, h3, h4, h5, h6, p{\n
   /* XXX: generate it dynamically */\n
 }\n
+\n
 div.document div.content div.text a{\n
   color: #686868;\n
 }\n
