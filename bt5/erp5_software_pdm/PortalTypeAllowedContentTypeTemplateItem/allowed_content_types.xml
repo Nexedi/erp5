@@ -1,0 +1,11 @@
+<allowed_content_type_list>
+ <portal_type id="Software License Module">
+  <item>Software License</item>
+ </portal_type>
+ <portal_type id="Software Product">
+  <item>Sale Supply Line</item>
+ </portal_type>
+ <portal_type id="Software Product Module">
+  <item>Software Product</item>
+ </portal_type>
+</allowed_content_type_list>
