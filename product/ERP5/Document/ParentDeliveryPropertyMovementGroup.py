@@ -55,13 +55,16 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
     else:
       target_property_list = self.getTestedPropertyList()
     if document == document.getDeliveryValue():
-      movement = document.getMovementList()[0].getDeliveryRelatedValue()
+      # XXX what is the expected behaviour of this movement group in
+      # delivery level?
+      pass
     else:
       movement = document.getDeliveryRelatedValue()
-    parent_delivery = self._getParentDelivery(movement)
+      if movement is None:
+        return False, {}
+      document = self._getParentDelivery(movement)
     for prop in target_property_list:
-      if property_dict['_%s' % prop] != self._getProperty(parent_delivery,
-                                                          prop):
+      if property_dict['_%s' % prop] != self._getProperty(document, prop):
         return False, {}
     return True, {}
 
