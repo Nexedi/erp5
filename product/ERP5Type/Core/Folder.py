@@ -28,7 +28,7 @@
 ##############################################################################
 
 import transaction
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_parent, aq_inner
 from OFS.History import Historical
 import ExtensionClass
@@ -44,6 +44,7 @@ from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLExportImport import Folder_asXML
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type.WebDAVSupport import Folder as WebDAVFolder
+from Products.ERP5Type import Permissions
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
@@ -1307,6 +1308,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       is needed.
     """
     portal = self.getPortalObject()
+
+    # If the user can manage the portal, do not hide any content types.
+    sm = getSecurityManager()
+    if sm.checkPermission(Permissions.ManagePortal, portal):
+      return [ti.id for ti in self.allowedContentTypes()]
 
     hidden_type_list = portal.portal_types.getTypeInfo(self)\
                                               .getTypeHiddenContentTypeList()
