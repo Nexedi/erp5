@@ -54,7 +54,6 @@ mandriva-rpm-appliance: checkout-rpmgen
 
 opensuse-rpm-appliance: checkout-rpmgen
 	sed -i "s,mandriva,opensuse,g" rpmgen/buildout.cfg
-	sed -i "s,mandriva/,,g" rpmgen/find_provides.sh
 	sed -i "s,name = erp5-official-buildout,name = erp5-$(PACKAGE_VERSION),g" rpmgen/profiles/opensuse.cfg
 	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/profiles/opensuse.cfg
 	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/profiles/opensuse.cfg
@@ -62,3 +61,4 @@ opensuse-rpm-appliance: checkout-rpmgen
 	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt),$(PACKAGE_VERSION),g" rpmgen/Makefile
 	sudo helpers/opensuse.sh
 	cd rpmgen; make opensuse
+
