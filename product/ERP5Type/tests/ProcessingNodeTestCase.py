@@ -1,22 +1,25 @@
-# This module must be imported before CMFActivity product is installed.
-
 import base64, errno, select, socket, time
 from threading import Thread
 import Lifetime
 import transaction
 from BTrees.OIBTree import OIBTree
 from Testing import ZopeTestCase
-from Products.CMFActivity import ActivityTool as _ActivityTool
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.ERP5Type.tests import backportUnittest
 from Products.ERP5Type.tests.utils import createZServer
 
 
-class ActivityTool(_ActivityTool.ActivityTool):
-  """Class redefining CMFActivity.ActivityTool.ActivityTool for unit tests
+def patchActivityTool():
+  """Redefine several methods of ActivityTool for unit tests
   """
+  from Products.CMFActivity.ActivityTool import ActivityTool
+  def patch(function):
+    name = function.__name__
+    setattr(ActivityTool, '_orig_' + name, getattr(ActivityTool, name))
+    setattr(ActivityTool, name, function)
 
   # When a ZServer can't be started, the node name ends with ':' (no port).
+  @patch
   def _isValidNodeName(self, node_name):
     return True
 
@@ -26,28 +29,31 @@ class ActivityTool(_ActivityTool.ActivityTool):
   # Properties at the root are:
   # - 'test_processing_nodes' to list processing nodes
   # - 'test_distributing_node' to select the distributing node
+  @patch
   def getNodeDict(self):
     app = self.getPhysicalRoot()
     if getattr(app, 'test_processing_nodes', None) is None:
       app.test_processing_nodes = OIBTree()
     return app.test_processing_nodes
 
+  @patch
   def getDistributingNode(self):
     return self.getPhysicalRoot().test_distributing_node
 
+  @patch
   def manage_setDistributingNode(self, distributingNode, REQUEST=None):
     # A property to catch setattr on 'distributingNode' doesn't work
     # because self would lose all acquisition wrappers.
     previous_node = self.distributingNode
     try:
-      super(ActivityTool, self).manage_setDistributingNode(distributingNode,
-                                                           REQUEST=REQUEST)
+      self._orig_manage_setDistributingNode(distributingNode, REQUEST=REQUEST)
       self.getPhysicalRoot().test_distributing_node = self.distributingNode
     finally:
       self.distributingNode = previous_node
 
   # When there is more than 1 node, prevent the distributing node from
   # processing activities.
+  @patch
   def tic(self, processing_node=1, force=0):
     processing_node_list = self.getProcessingNodeList()
     if len(processing_node_list) > 1 and \
@@ -56,9 +62,7 @@ class ActivityTool(_ActivityTool.ActivityTool):
       time.sleep(0.3)
       transaction.commit()
     else:
-      super(ActivityTool, self).tic(processing_node, force)
-
-_ActivityTool.ActivityTool = ActivityTool
+      self._orig_tic(processing_node, force)
 
 
 class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
@@ -98,6 +102,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
     try:
       activity_tool = self.portal.portal_activities
     except AttributeError:
+      from Products.CMFActivity.ActivityTool import ActivityTool
       activity_tool = ActivityTool().__of__(self.app)
     currentNode = activity_tool.getCurrentNode()
     if distributing:
@@ -166,7 +171,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         transaction.begin()
         try:
           portal = self.app[self.app.test_portal_name]
-        except AttributeError:
+        except (AttributeError, KeyError):
           continue
         portal.portal_activities.process_timer(None, None)
     except KeyboardInterrupt:

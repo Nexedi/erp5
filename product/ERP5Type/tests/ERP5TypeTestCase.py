@@ -155,7 +155,8 @@ except ImportError:
   pass
 
 from Products.ERP5Type.tests.ProcessingNodeTestCase import \
-  ProcessingNodeTestCase
+  ProcessingNodeTestCase, patchActivityTool
+onsetup(patchActivityTool)()
 
 ZopeTestCase.installProduct('TimerService', quiet=install_product_quiet)
 
