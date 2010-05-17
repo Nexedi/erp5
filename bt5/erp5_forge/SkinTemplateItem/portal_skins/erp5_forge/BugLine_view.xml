@@ -85,7 +85,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_content_type</string>
+                      </list>
                     </value>
                 </item>
                 <item>
