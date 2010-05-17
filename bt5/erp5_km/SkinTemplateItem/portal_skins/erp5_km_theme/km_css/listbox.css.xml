@@ -47,7 +47,7 @@
 \n
 /* Set new style for km left container */\n
 #km_left {\n
-  width:auto !important;\n
+  /*width:auto !important;*/\n
   min-width:75%;\n
   /*background-color:#FFFFFF;\n
   border:1px solid #D1D0C9;*/\n

@@ -323,7 +323,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not(context.portal_membership.isAnonymousUser())</string> </value>
+            <value> <string>here/Base_canUserAddGadget</string> </value>
         </item>
       </dictionary>
     </pickle>
