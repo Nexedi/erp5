@@ -70,7 +70,8 @@ km_website.edit(skin_selection_name = \'KM\',\n
                 layout_configuration_form_id = \'WebSection_viewKMMinimalThemeConfiguration\',\n
                 static_language_selection = True,\n
                 visible = True,\n
-                site_map_section_parent = True)\n
+                site_map_section_parent = True,\n
+                default_available_language = \'en\')\n
 \n
 km_preference_id = \'km_site_test\'\n
 portal_preferences = context.portal_preferences\n
