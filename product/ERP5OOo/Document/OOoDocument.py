@@ -309,7 +309,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
     """
     #XXX if document is empty, stop to try to convert.
     #XXX but I don't know what is a appropriate mime-type.(Yusei)
-    if not self.hasData():
+    if not self.get_size() == 0:
       return 'text/plain', ''
     # if no conversion asked (format empty)
     # return raw data
