@@ -33,8 +33,9 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
+import httplib
 
-HTTP_OK = 200
+HTTP_OK = httplib.OK
 
 # setting this to True allows the .publish() calls to provide tracebacks
 debug = False
@@ -113,7 +114,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_list_domain_tree(self):
@@ -133,7 +134,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view(self):
@@ -146,7 +147,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_empty_listbox(self):
@@ -160,7 +161,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_non_empty_listbox(self):
@@ -172,7 +173,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_format(self):
@@ -184,7 +185,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_report_view_form_view(self):
@@ -197,7 +198,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_report_view_form_list(self):
@@ -216,7 +217,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
 
@@ -228,7 +229,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_report_view_sheet_per_report_section(self):
@@ -239,7 +240,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_encoding(self):
@@ -250,7 +251,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_category(self):
@@ -261,7 +262,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_broken_category(self):
@@ -273,7 +274,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_view_embedded_image(self):
@@ -284,7 +285,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
     # without image
     response = self.publish('/%s/person_module/pers_without_image/Person_viewDetails'
@@ -293,7 +294,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_report_view_encoding(self):
@@ -304,7 +305,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_form_list_encoding(self):
@@ -316,7 +317,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_image_field_form_view(self):
@@ -328,7 +329,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_image_field_form_view_bottom_group(self):
@@ -341,7 +342,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     self._validate(response.getBody())
 
   def test_textarea_center_group(self):
@@ -356,7 +357,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)
     content_disposition = response.getHeader('content-disposition')
-    self.assertEquals('inline', content_disposition.split(';')[0])
+    self.assertEquals('attachment', content_disposition.split(';')[0])
     body = response.getBody()
     self._validate(body)
 
