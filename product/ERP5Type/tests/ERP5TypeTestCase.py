@@ -61,14 +61,15 @@ except ImportError:
 
 import transaction
 from Testing import ZopeTestCase
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase, user_name
+from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from zLOG import LOG, DEBUG
 
-import backportUnittest
+from Products.ERP5Type.tests.backportUnittest import SetupSiteError
+from Products.ERP5Type.tests.utils import DummyMailHost, parseListeningAddress
 
 # Quiet messages when installing products
 install_product_quiet = 1
@@ -152,6 +153,9 @@ try:
   patches.LocalizerStringIO = UnicodeSafeStringIO
 except ImportError:
   pass
+
+from Products.ERP5Type.tests.ProcessingNodeTestCase import \
+  ProcessingNodeTestCase
 
 ZopeTestCase.installProduct('TimerService', quiet=install_product_quiet)
 
@@ -268,7 +272,7 @@ def profile_if_environ(environment_var_name):
       # No profiling, return identity decorator
       return lambda self, method: method
 
-class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
+class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
     """TestCase for ERP5 based tests.
 
     This TestCase setups an ERP5Site and installs business templates.
@@ -566,7 +570,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
     def _setUpDummyMailHost(self):
       """Replace Original Mail Host by Dummy Mail Host.
       """
-      from Products.ERP5Type.tests.utils import DummyMailHost
       if 'MailHost' in self.portal.objectIds():
         self.portal.manage_delObjects(['MailHost'])
         self.portal._setObject('MailHost', DummyMailHost('MailHost'))
@@ -713,50 +716,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         if rule.getValidationState() != 'validated':
           rule.validate()
 
-    def tic(self, verbose=0):
-      """
-      Start all messages
-      """
-      portal_activities = getattr(self.getPortal(),'portal_activities',None)
-      if portal_activities is not None:
-        if verbose:
-          ZopeTestCase._print('Executing pending activities ...')
-          old_message_count = 0
-          start = time.time()
-        count = 1000
-        message_count = len(portal_activities.getMessageList())
-        while message_count:
-          if verbose and old_message_count != message_count:
-            ZopeTestCase._print(' %i' % message_count)
-            old_message_count = message_count
-          portal_activities.process_timer(None, None)
-          message_count = len(portal_activities.getMessageList())
-          # This prevents an infinite loop.
-          count -= 1
-          if count == 0:
-            # Get the last error message from error_log.
-            error_message = ''
-            error_log = self.getPortal().error_log._getLog()
-            if len(error_log):
-              last_log = error_log[-1]
-              error_message = '\nLast error message:\n%s\n%s\n%s\n' % (
-                last_log['type'],
-                last_log['value'],
-                last_log['tb_text'],
-                )
-            raise RuntimeError,\
-              'tic is looping forever. These messages are pending: %r %s' % (
-            [('/'.join(m.object_path), m.method_id, m.processing_node, m.retry)
-            for m in portal_activities.getMessageList()],
-            error_message
-            )
-          # This give some time between messages
-          if count % 10 == 0:
-            from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
-            portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
-        if verbose:
-          ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
-
     def createSimpleUser(self, title, reference, function):
       """
         Helper function to create a Simple ERP5 User.
@@ -832,37 +791,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       self.assertEqual(method(), reference_workflow_state)
       return workflow_error_message
 
-    def startZServer(self):
-      """Starts an HTTP ZServer thread."""
-      from Testing.ZopeTestCase import threadutils, utils
-      if utils._Z2HOST is None:
-        randint = random.Random(hash(os.environ['INSTANCE_HOME'])).randint
-        def zserverRunner():
-          try:
-            threadutils.zserverRunner(utils._Z2HOST, utils._Z2PORT)
-          except socket.error, e:
-            if e.args[0] != errno.EADDRINUSE:
-              raise
-            utils._Z2HOST = None
-        from ZServer import setNumberOfThreads
-        setNumberOfThreads(1)
-        port_list = []
-        for i in range(3):
-          utils._Z2HOST = '127.0.0.1'
-          utils._Z2PORT = randint(55000, 55500)
-          t = threadutils.QuietThread(target=zserverRunner)
-          t.setDaemon(1)
-          t.start()
-          time.sleep(0.1)
-          if utils._Z2HOST:
-            ZopeTestCase._print("Running ZServer on port %i\n" % utils._Z2PORT)
-            break
-          port_list.append(str(utils._Z2PORT))
-        else:
-          ZopeTestCase._print("Can't find free port to start ZServer"
-                              " (tried ports %s)\n" % ', '.join(port_list))
-      return utils._Z2HOST, utils._Z2PORT
-
     def _installBusinessTemplateList(self, business_template_list,
                                      light_install=True,
                                      quiet=True):
@@ -921,7 +849,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
       title = self.getTitle()
       from Products.ERP5Type.Base import _aq_reset
       if portal_name in failed_portal_installation:
-        raise backportUnittest.SetupSiteError(
+        raise SetupSiteError(
             'Installation of %s already failed, giving up' % portal_name)
       try:
         if app is None:
@@ -930,6 +858,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         # make it's REQUEST available during setup
         global current_app
         current_app = app
+        app.test_portal_name = portal_name
 
         global setup_done
         if not (hasattr(aq_base(app), portal_name) and
@@ -992,6 +921,7 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
               except ImportError:
                 pass
               self.serverhost, self.serverport = self.startZServer()
+              self._registerNode(distributing=1, processing=1)
 
             self._updateConversionServerConfiguration()
             self._updateConnectionStrings()
@@ -1073,11 +1003,6 @@ class ERP5TypeTestCase(backportUnittest.TestCase, PortalTestCase):
         if count:
           LOG('Products.ERP5Type.tests.ERP5TypeTestCase.beforeClose', DEBUG,
               'dropped %d left-over activity messages' % (count,))
-        # portal_activities.process_timer automatically registers current node
-        # (localhost:<random_port>). We must unregister it so that Data.fs can
-        # be reused without reconfiguring portal_activities.
-        del portal_activities.distributingNode
-        del portal_activities._nodes
         transaction.commit()
       except AttributeError:
         pass
@@ -1248,11 +1173,6 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
     if diff_list:
       self.fail('Lines differs:\n' + '\n'.join(diff_list))
 
-from unittest import _makeLoader, TestSuite
-
-def dummy_makeSuite(testCaseClass, prefix='dummy_test', sortUsing=cmp, suiteClass=TestSuite):
-  return _makeLoader(prefix, sortUsing, suiteClass).loadTestsFromTestCase(testCaseClass)
-
 def dummy_setUp(self):
   '''
   This one is overloaded so that it dos not execute beforeSetUp and afterSetUp
@@ -1275,6 +1195,34 @@ def dummy_tearDown(self):
   is enabled
   '''
   self._clear(1)
+
+class ZEOServerTestCase(ERP5TypeTestCase):
+  """TestCase class to run a ZEO storage
+
+  Main method is 'asyncore_loop' (inherited) since there is nothing to do
+  except processing I/O.
+  """
+
+  def setUp(self):
+    # Start ZEO storage and send address to parent process if any.
+    from Zope2.custom_zodb import zeo_client, Storage
+    from ZEO.StorageServer import StorageServer
+    storage = {'1': Storage}
+    for host_port in parseListeningAddress(os.environ.get('zeo_server')):
+      try:
+        self.zeo_server = StorageServer(host_port, storage)
+        break
+      except socket.error, e:
+        if e[0] != errno.EADDRINUSE:
+          raise
+    if zeo_client:
+      os.write(zeo_client, repr(host_port))
+      os.close(zeo_client)
+    ZopeTestCase._print("\nZEO Storage started at %s:%s ... " % host_port)
+
+  def tearDown(self):
+    self.zeo_server.close_server()
+
 
 @onsetup
 def optimize():

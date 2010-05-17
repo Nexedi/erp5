@@ -107,8 +107,6 @@ class TestCase(unittest.TestCase):
       _testMethodDoc = property(lambda self: self.__testMethodDoc)
 
     def run(self, result=None):
-        import pdb
-        #pdb.set_trace()
         orig_result = result
         if result is None:
             result = self.defaultTestResult()
@@ -138,6 +136,8 @@ class TestCase(unittest.TestCase):
                 result.addSkip(self, str(e))
             except SetupSiteError, e:
                 result.errors.append(None)
+            except (KeyboardInterrupt, SystemExit): # BACK: Not needed for
+                raise                               #       Python >= 2.5
             except Exception:
                 result.addError(self, sys.exc_info())
             else:
@@ -151,6 +151,8 @@ class TestCase(unittest.TestCase):
                     result.addUnexpectedSuccess(self)
                 except SkipTest, e:
                     result.addSkip(self, str(e))
+                except (KeyboardInterrupt, SystemExit): # BACK: Not needed for
+                    raise                               #       Python >= 2.5
                 except Exception:
                     result.addError(self, sys.exc_info())
                 else:
@@ -158,6 +160,8 @@ class TestCase(unittest.TestCase):
 
                 try:
                     self.tearDown()
+                except (KeyboardInterrupt, SystemExit): # BACK: Not needed for
+                    raise                               #       Python >= 2.5
                 except Exception:
                     result.addError(self, sys.exc_info())
                     success = False
@@ -252,7 +256,10 @@ class TextTestRunner(unittest.TextTestRunner):
         result = self._makeResult()
         startTime = time.time()
         # BACK: 2.7 implementation wraps run with result.(start|stop)TestRun
-        test(result)
+        try:
+          test(result)
+        except KeyboardInterrupt:
+          pass
         stopTime = time.time()
         timeTaken = stopTime - startTime
         result.printErrors()

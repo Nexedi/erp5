@@ -59,6 +59,7 @@ from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import make_hidden_input
+from Products.ERP5Type.patches import DemoStorage
 # BACK: Forward Compatibility with Zope 2.12 or CMF 2.2. Remove when we've
 # dropped support for older versions.
 from Products.ERP5Type.patches import TransactionAddBeforeCommitHook

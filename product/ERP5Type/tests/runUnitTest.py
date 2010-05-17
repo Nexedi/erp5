@@ -6,6 +6,7 @@ import re
 import time
 import getopt
 import unittest
+import signal
 import shutil
 import errno
 import random
@@ -58,52 +59,52 @@ Options:
                              dependency provider (ie, the name of the BT
                              containing ZSQLMethods matching the desired
                              catalog storage).
-  --run_only=STRING
-                             Run only specified test methods delimited with
+  --run_only=STRING          Run only specified test methods delimited with
                              commas (e.g. testFoo,testBar). This can be regular
                              expressions.
-  -D
-                             Invoke debugger on errors / failures.
+  -D                         Invoke debugger on errors / failures.
   --update_business_templates
                              Update all business templates prior to runing
                              tests. This only has a meaning when doing
                              upgratability checks, in conjunction with --load.
                              --update_only can be use to restrict the list of
                              templates to update.
-  --update_only=STRING
-                             Specify the list of business template to update if
+  --update_only=STRING       Specify the list of business template to update if
                              you don't want to update them all. You can give a list
                              delimited with commas (e.g. erp5_core,erp5_xhtml_style).
                              This can be regular expressions. 
-
   --enable_full_indexing=STRING
                              By default, unit test do not reindex everything
                              for performance reasons. Provide list of documents
                              (delimited with comas) for which we want to force
                              indexing. This can only be for now 'portal_types'
-
   --conversion_server_hostname=STRING
                              Hostname used to connect to conversion server (Oood),
                              this value will stored at default preference.
                              By default localhost is used.
-
   --conversion_server_port=STRING
                              Port number used to connect to conversion server
                              (Oood), the value will be stored at default preference.
                              By default 8008 is used.
-
-  --use_dummy_mail_host
-                             Replace the MailHost by DummyMailHost.
+  --use_dummy_mail_host      Replace the MailHost by DummyMailHost.
                              This prevent the instance send emails.
                              By default Original MailHost is used.
-
   --random_activity_priority=[SEED]
                              Force activities to have a random priority, to make
                              random failures (due to bad activity dependencies)
                              almost always reproducible. A random number
                              generator with the specified seed (or a random one
                              otherwise) is created for this purpose.
+  --activity_node=NUMBER     Create given number of ZEO clients, to process
+                             activities.
+  --zeo_server=[[HOST:]PORT] Bind the ZEO server to the given host/port.
+  --zeo_client=[HOST:]PORT   Use specified ZEO server as storage.
+  --zserver=[HOST:]PORT[,...]
+                             Make ZServer listen on given host:port
+                             If used with --activity_node=, this can be a
+                             comma-separated list of addresses.
 
+When no unit test is specified, only activities are processed.
 """
 
 # This script is usually executed directly, and is also imported using its full
@@ -260,17 +261,15 @@ tests_home = os.path.join(instance_home, 'tests')
 initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
 
 
-class FilteredTestSuite(unittest.TestSuite):
-  """Marker class to identify TestSuites that we have already filtered"""
-  pass
-
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
   """
-  def __init__(self, test_pattern_list=None):
-    super(ERP5TypeTestLoader, self).__init__()
-    if test_pattern_list is not None:
-      self.test_pattern_list = map(re.compile, test_pattern_list)
+  filter_test_list = None
+  _testMethodPrefix = 'test'
+
+  testMethodPrefix = property(
+    lambda self: self._testMethodPrefix,
+    lambda self, value: None)
 
   def loadTestsFromName(self, name, module=None):
     """This method is here for compatibility with old style arguments.
@@ -281,47 +280,32 @@ class ERP5TypeTestLoader(unittest.TestLoader):
     if name.endswith('.py'):
       name = name[:-3]
     name = name.replace(':', '.')
-    return unittest.TestLoader.loadTestsFromName(self, name, module)
+    return super(ERP5TypeTestLoader, self).loadTestsFromName(name, module)
 
   def loadTestsFromModule(self, module):
     """ERP5Type test loader supports a function named 'test_suite'
     """
     if hasattr(module, 'test_suite'):
       return self.suiteClass(module.test_suite())
-    return unittest.TestLoader.loadTestsFromModule(self, module)
+    return super(ERP5TypeTestLoader, self).loadTestsFromModule(module)
 
-  def _filterTestList(self, test_list):
-    """test_list is a list of TestCase or TestSuite instances.
-    Returns a list of objects that contain only TestCase/TestSuite
-    matching --run_only"""
-    filtered = []
+  def getTestCaseNames(self, testCaseClass):
+    """Return a sorted sequence of method names found within testCaseClass
 
-    # Using FilteredTestSuite as a marker ensures that each Test
-    # is checked only once.
-    for item in test_list:
-      if isinstance(item, unittest.TestCase):
-        test_method_name = item.id().rsplit('.', 1)[-1]
-        for valid_test_method_name_re in self.test_pattern_list:
-          if valid_test_method_name_re.search(test_method_name):
-            filtered.append(item)
-      elif isinstance(item, FilteredTestSuite):
-        # has already been filtered, dont check it again
-        filtered.append(item)
-      elif isinstance(item, unittest.TestSuite):
-        filtered.append(FilteredTestSuite(self._filterTestList(item)))
-      else:
-        # should not happen.
-        raise ValueError, "What what what?"
+    The returned list only contain names matching --run_only
+    """
+    name_list = super(ERP5TypeTestLoader, self).getTestCaseNames(testCaseClass)
+    if self.filter_test_list:
+      filtered_name_list = []
+      for name in name_list:
+        for test in self.filter_test_list:
+          if test(name):
+            filtered_name_list.append(name)
+            break
+      return filtered_name_list
+    return name_list
 
-    return filtered
-
-  def suiteClass(self, test_list):
-    """Constructs a Test Suite from test lists.
-    Keep only tests matching commandline parameter --run_only"""
-    if hasattr(self, 'test_pattern_list'):
-      test_list = self._filterTestList(test_list)
-
-    return FilteredTestSuite(test_list)
+unittest.TestLoader = ERP5TypeTestLoader
 
 class DebugTestResult:
   """Wrap an unittest.TestResult, invoking pdb on errors / failures
@@ -356,9 +340,10 @@ class DebugTestResult:
 _print = sys.stderr.write
 
 def runUnitTestList(test_list, verbosity=1, debug=0):
-  if not test_list:
-    _print("No test to run, exiting immediately.\n")
-    return
+  if "zeo_client" in os.environ and "zeo_server" in os.environ:
+    _print("conflicting options: --zeo_client and --zeo_server")
+    sys.exit(1)
+
   os.environ.setdefault('INSTANCE_HOME', instance_home)
   os.environ.setdefault('SOFTWARE_HOME', software_home)
   os.environ.setdefault('COPY_OF_INSTANCE_HOME', instance_home)
@@ -449,41 +434,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   # it is then possible to run the debugger by "import pdb; pdb.set_trace()"
   sys.path.insert(0, tests_framework_home)
 
-
-  save = int(os.environ.get('erp5_save_data_fs', 0))
-  dummy_test = save and (int(os.environ.get('update_business_templates', 0))
-                         or not int(os.environ.get('erp5_load_data_fs', 0)))
-  
-  TestRunner = backportUnittest.TextTestRunner
-
-  if dummy_test:
-    # Skip all tests in save mode and monkeypatch PortalTestCase.setUp
-    # to skip beforeSetUp and afterSetUp. Also patch unittest.makeSuite,
-    # as it's used in test_suite function in test cases.
-    from Products.ERP5Type.tests.ERP5TypeTestCase import \
-                  dummy_makeSuite, dummy_setUp, dummy_tearDown
-    from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
-    unittest.makeSuite = dummy_makeSuite
-    PortalTestCase.setUp = dummy_setUp
-    PortalTestCase.tearDown = dummy_tearDown
-    test_loader = ERP5TypeTestLoader()
-    test_loader.testMethodPrefix = 'dummy_test'
-  else:
-    # Hack the profiler to run only specified test methods, and wrap results when
-    # running in debug mode.
-    if debug:
-      class DebugTextTestRunner(TestRunner):
-        def _makeResult(self):
-          result = super(DebugTextTestRunner, self)._makeResult()
-          return DebugTestResult(result)
-
-      TestRunner = DebugTextTestRunner
-
-    test_method_list = os.environ.get('run_only', '').split(',')
-    test_loader = ERP5TypeTestLoader(test_method_list)
-
-  suite = test_loader.loadTestsFromNames(test_list)
-
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
   try:
@@ -499,28 +449,105 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     # ourselves
     layer.ZopeLite.setUp()
 
-  _print('done (%.3fs)' % (time.time() - _start))
-  result = TestRunner(verbosity=verbosity).run(suite)
+  TestRunner = backportUnittest.TextTestRunner
+
+  import Lifetime
+  from ZEO.ClientStorage import ClientStorage
+  from Zope2.custom_zodb import \
+      save_mysql, zeo_server_pid, zeo_client_pid_list, Storage
+  from Products.ERP5Type.tests.ERP5TypeTestCase import \
+      ProcessingNodeTestCase, ZEOServerTestCase, dummy_setUp, dummy_tearDown
+  def shutdown(signum, frame, signum_set=set()):
+    Lifetime.shutdown(0)
+    signum_set.add(signum)
+    if zeo_client_pid_list is None and len(signum_set) > 1:
+      # in case of ^C, a child should also receive a SIGHUP from the parent,
+      # so we merge the first 2 different signals in a single exception
+      signum_set.remove(signal.SIGHUP)
+    else:
+      raise KeyboardInterrupt
+  signal.signal(signal.SIGINT, shutdown)
+  signal.signal(signal.SIGHUP, shutdown)
+
+  try:
+    save = int(os.environ.get('erp5_save_data_fs', 0))
+    load = int(os.environ.get('erp5_load_data_fs', 0))
+    dummy = save and (int(os.environ.get('update_business_templates', 0))
+                      or not load)
+    if zeo_server_pid == 0:
+      suite = ZEOServerTestCase('asyncore_loop')
+    elif zeo_client_pid_list is None or not test_list:
+      suite = ProcessingNodeTestCase('processing_node')
+      if not (dummy or load):
+        _print('WARNING: either --save or --load should be used because static'
+               ' files are only reloaded by the node installing business'
+               ' templates.')
+    else:
+      if dummy:
+        # Skip all tests and monkeypatch PortalTestCase to skip
+        # afterSetUp/beforeTearDown.
+        ERP5TypeTestLoader._testMethodPrefix = 'dummy_test'
+        ZopeTestCase.PortalTestCase.setUp = dummy_setUp
+        ZopeTestCase.PortalTestCase.tearDown = dummy_tearDown
+      elif debug:
+        # Hack the profiler to run only specified test methods,
+        # and wrap results when running in debug mode.
+        class DebugTextTestRunner(TestRunner):
+          def _makeResult(self):
+            result = super(DebugTextTestRunner, self)._makeResult()
+            return DebugTestResult(result)
+        TestRunner = DebugTextTestRunner
+      suite = ERP5TypeTestLoader().loadTestsFromNames(test_list)
+
+    if not isinstance(Storage, ClientStorage):
+      # Remove nodes that were registered during previous execution.
+      # Set an empty dict (instead of delete the property)
+      # in order to avoid conflicts on / when several ZEO clients registers.
+      from BTrees.OIBTree import OIBTree
+      app = ZopeTestCase.app()
+      app.test_processing_nodes = OIBTree()
+      import transaction
+      transaction.commit()
+      ZopeTestCase.close(app)
+
+    if zeo_client_pid_list is None:
+      result = suite()
+    else:
+      _print('done (%.3fs)' % (time.time() - _start))
+      result = TestRunner(verbosity=verbosity).run(suite)
+  finally:
+    Storage.close()
+    if zeo_client_pid_list is not None:
+      # Wait that child processes exit. Stop ZEO storage (if any) after all
+      # other nodes disconnected.
+      for pid in zeo_client_pid_list:
+        os.kill(pid, signal.SIGHUP)
+      for pid in zeo_client_pid_list:
+        os.waitpid(pid, 0)
+      if zeo_server_pid:
+        os.kill(zeo_server_pid, signal.SIGHUP)
+        os.waitpid(zeo_server_pid, 0)
 
   if save:
     os.chdir(instance_home)
-    from Products.ERP5Type.tests.utils import getMySQLArguments
-    # The output of mysqldump needs to merge many lines at a time
-    # for performance reasons (merging lines is at most 10 times
-    # faster, so this produce somewhat not nice to read sql
-    command = 'mysqldump %s > dump.sql' % getMySQLArguments()
-    if verbosity:
-      _print('Dumping MySQL database with %s...\n' % command)
-    os.system(command)
-    if verbosity:
-      _print('Dumping static files...\n')
-    for static_dir in static_dir_list:
-      try:
-        shutil.rmtree(static_dir + '.bak')
-      except OSError, e:
-        if e.errno != errno.ENOENT:
-          raise
-      shutil.copytree(static_dir, static_dir + '.bak', symlinks=True)
+    if save_mysql:
+      save_mysql(verbosity)
+    if suite not in (ProcessingNodeTestCase, ZEOServerTestCase):
+      # Static files are modified by the node installing business templates,
+      # i.e. by the node running the unit test. There is no point saving them
+      # on a ZEO server, or on nodes that only process activities: this has to
+      # be done manually.
+      if verbosity:
+        _print('Dumping static files...\n')
+      for static_dir in static_dir_list:
+        try:
+          shutil.rmtree(static_dir + '.bak')
+        except OSError, e:
+          if e.errno != errno.ENOENT:
+            raise
+        shutil.copytree(static_dir, static_dir + '.bak', symlinks=True)
+    elif zeo_client_pid_list is not None:
+      _print('WARNING: No static files saved. You will have to do it manually.')
 
   return result
 
@@ -551,6 +578,10 @@ def main():
         "use_dummy_mail_host",
         "update_business_templates",
         "random_activity_priority=",
+        "activity_node=",
+        "zeo_client=",
+        "zeo_server=",
+        "zserver=",
         ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -605,7 +636,8 @@ def main():
     elif opt == "--erp5_catalog_storage":
       os.environ["erp5_catalog_storage"] = arg
     elif opt == "--run_only":
-      os.environ["run_only"] = arg
+      ERP5TypeTestLoader.filter_test_list = [re.compile(x).search
+                                             for x in arg.split(',')]
     elif opt == "--update_only":
       os.environ["update_only"] = arg
       os.environ["update_business_templates"] = "1"
@@ -620,13 +652,16 @@ def main():
     elif opt == "--random_activity_priority":
       os.environ["random_activity_priority"] = arg or \
         str(random.randrange(0, 1<<16))
+    elif opt == "--activity_node":
+      os.environ["activity_node"] = arg
+    elif opt == "--zeo_client":
+      os.environ["zeo_client"] = arg
+    elif opt == "--zeo_server":
+      os.environ["zeo_server"] = arg
+    elif opt == "--zserver":
+      os.environ["zserver"] = arg
 
-  test_list = args
-  if not test_list:
-    _print("No test to run, exiting immediately.\n")
-    sys.exit(1)
-
-  result = runUnitTestList(test_list=test_list,
+  result = runUnitTestList(test_list=args,
                            verbosity=verbosity,
                            debug=debug)
   try:
@@ -636,7 +671,7 @@ def main():
       _print("Profiler support is not available from ZopeTestCase in Zope 2.12\n")
   else:
     profiler.print_stats()
-  sys.exit(len(result.failures) + len(result.errors))
+  return result and len(result.failures) + len(result.errors) or 0
 
 if __name__ == '__main__':
   # Force stdout to be totally unbuffered.
@@ -644,5 +679,4 @@ if __name__ == '__main__':
     sys.stdout = os.fdopen(1, "wb", 0)
   except OSError:
     pass
-
-  main()
+  sys.exit(main())

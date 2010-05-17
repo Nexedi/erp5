@@ -28,10 +28,12 @@
 
 """Utility functions and classes for unit testing
 """
-
+import errno
 import os
 import logging
-
+import random
+import socket
+import sys
 import transaction
 import zLOG
 import Products.ERP5Type
@@ -248,6 +250,58 @@ def getExtraSqlConnectionStringList():
   """
   return os.environ.get('extra_sql_connection_string_list',
                         'test2 test2:test3 test3').split(':')
+
+instance_random = random.Random(hash(os.environ['INSTANCE_HOME']))
+
+def parseListeningAddress(host_port=None, default_host='127.0.0.1'):
+  """Parse string specifying the address to bind to
+
+  If the specified address is incomplete or missing, several (host, random_port)
+  will be returned. It must be used as follows (an appropriate error is raised
+  if all returned values failed):
+
+    for host, port in parseListeningAddress(os.environ.get('some_address')):
+      try:
+        s.bind((host, port))
+        break
+      except socket.error, e:
+        if e[0] != errno.EADDRINUSE:
+          raise
+  """
+  if host_port:
+    host_port = host_port.rsplit(':', 1)
+    if len(host_port) == 1:
+      host_port = default_host, host_port[0]
+    try:
+      yield host_port[0], int(host_port[1])
+      raise RuntimeError("Can't bind to %s:%s" % host_port)
+    except ValueError:
+      default_host = host_port[1]
+  port_list = []
+  for i in xrange(3):
+    port_list.append(instance_random.randint(55000, 55500))
+    yield default_host, port_list[-1]
+  raise RuntimeError("Can't find free port (tried ports %s)\n"
+                     % ', '.join(map(str, port_list)))
+
+def createZServer(log=os.devnull):
+  from ZServer import logger, zhttp_server, zhttp_handler
+  lg = logger.file_logger(log)
+  class new_zhttp_server:
+    # I can't use __new__ because zhttp_handler is an old-style class :(
+    def __init__(self):
+      self.__class__ = zhttp_server
+  for ip, port in parseListeningAddress(os.environ.get('zserver')):
+    hs = new_zhttp_server()
+    try:
+      hs.__init__(ip, port, resolver=None, logger_object=lg)
+      hs.install_handler(zhttp_handler(module='Zope2', uri_base=''))
+      sys.stderr.write("Running ZServer at %s:%s\n" % (ip, port))
+      return hs
+    except socket.error, e:
+      if e[0] != errno.EADDRINUSE:
+        raise
+      hs.close()
 
 # decorators
 class reindex(object):
