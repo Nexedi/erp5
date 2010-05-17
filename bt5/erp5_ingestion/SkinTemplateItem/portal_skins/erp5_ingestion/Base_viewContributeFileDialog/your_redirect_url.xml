@@ -92,7 +92,7 @@
               <dictionary>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden_fieldset</string> </value>
+                    <value> <string>hidden_fieldset hidden_label</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
