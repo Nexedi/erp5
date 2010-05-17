@@ -54,14 +54,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-This is a convenient method to call both convertToBaseFormat and\n
-discoverMetadata in good order in the same transaction. This method\n
-guarantees order of calling methods. convertToBaseFormat is called first,\n
-and discoverMetadata is called after.\n
+  This is a convenient method to call both convertToBaseFormat and\n
+  discoverMetadata in good order in the same transaction. \n
+  This method guarantees order of calling methods.\n
 """\n
-convertToBaseFormat = getattr(context, \'convertToBaseFormat\', None)\n
-if convertToBaseFormat is not None:\n
-  convertToBaseFormat()\n
+\n
+if context.isSupportBaseDataConversion():\n
+  context.convertToBaseFormat()\n
+\n
 return context.discoverMetadata(file_name, user_login)\n
 </string> </value>
         </item>
@@ -101,11 +101,8 @@ return context.discoverMetadata(file_name, user_login)\n
                           <tuple>
                             <string>file_name</string>
                             <string>user_login</string>
-                            <string>getattr</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>convertToBaseFormat</string>
                             <string>_getattr_</string>
+                            <string>context</string>
                           </tuple>
                         </value>
                     </item>
