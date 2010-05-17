@@ -602,11 +602,11 @@ class OOoTemplate(ZopePageTemplate):
     # Now create a temp OOoDocument to convert data to pdf
     from Products.ERP5Type.Document import newTempOOoDocument
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
-    tmp_ooo.edit(base_data=ooo,
+    tmp_ooo.edit(data=ooo,
                  fname=self.title_or_id(),
                  source_reference=self.title_or_id(),
-                 base_content_type=self.content_type,)
-    tmp_ooo.oo_data = ooo
+                 content_type=self.content_type,)
+    tmp_ooo.convertToBaseFormat()
     if format == 'pdf' and not batch_mode:
       # Slightly different implementation
       # now convert it to pdf
