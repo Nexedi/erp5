@@ -129,9 +129,9 @@ if redirect_to_document or redirect_url is not None:\n
   # by ERP5 form\n
   if redirect_to_document and document is not None:\n
     # explicitly required to view ingested document\n
-    context.REQUEST.set(\'portal_status_message\', message)\n
-    context.REQUEST.set(\'editable_mode\', editable_mode)\n
-    return document.view()\n
+    return document.Base_redirect(\'view\',  \n
+                      keep_items={\'portal_status_message\': message,\n
+                                  \'editable_mode\': editable_mode})\n
   elif redirect_url is not None:\n
     # redirect URL has been supplied by caller\n
     from ZTUtils import make_query\n
