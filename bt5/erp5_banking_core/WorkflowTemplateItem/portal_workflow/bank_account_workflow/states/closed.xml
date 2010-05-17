@@ -30,6 +30,15 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
+              <tuple>
+                <string>validate</string>
+                <string>validate_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
               <tuple/>
             </value>
         </item>
