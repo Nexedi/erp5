@@ -154,7 +154,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
 
   def afterSetUp(self):
     """Initialize a node that will only process activities"""
-    createZServer() #self.startZServer()
+    self.startZServer()
     self._registerNode(distributing=0, processing=1)
     transaction.commit()
 
