@@ -2853,6 +2853,7 @@ def createTranslationLanguageAccessors(property_holder, property,
     composed_id = '%s_translated_%s' % (language_key, property['id'])
     capitalised_compose_id = UpperCase(composed_id)
 
+    # get
     getter_accessor_args = (property['id'], property['type'], language, default)
     accessor_dict_list.append({'name': 'get' + capitalised_compose_id,
                                'class': Translation.TranslatedPropertyGetter,
@@ -2863,7 +2864,14 @@ def createTranslationLanguageAccessors(property_holder, property,
                                'argument': getter_accessor_args,
                                'permission': read_permission})
 
-    setter_accessor_args = (property['id'], property['type'], language)
+    # has
+    has_accessor_args = (property['id'], property['type'], language)
+    accessor_dict_list.append({'name': 'has' + capitalised_compose_id,
+                               'class': Translation.TranslatedPropertyTester,
+                               'argument': has_accessor_args,
+                               'permission': read_permission})
+
+    # set
     accessor_dict_list.append({'name':'set' + capitalised_compose_id,
                                'key': '_set' + capitalised_compose_id,
                                'class': Alias.Reindex,

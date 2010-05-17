@@ -31,7 +31,7 @@ from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 
-from Products.ERP5Type.Accessor.Base import func_code, ATTRIBUTE_PREFIX, evaluateTales, Getter as BaseGetter
+from Products.ERP5Type.Accessor.Base import func_code, ATTRIBUTE_PREFIX, evaluateTales, Getter as BaseGetter, Method
 from Products.ERP5Type.Accessor import Accessor, AcquiredProperty
 from Products.ERP5Type.Accessor.TypeDefinition import type_definition
 
@@ -217,3 +217,41 @@ class AcquiredPropertyGetter(AcquiredProperty.Getter):
         return value.getProperty(self._acquired_property, default, **kw)
       else:
         return default
+
+class TranslatedPropertyTester(Method):
+  """
+    Tests if an attribute value exists
+  """
+  _need__name__=1
+
+  # This is required to call the method form the Web
+  func_code = func_code()
+  func_code.co_varnames = ('self',)
+  func_code.co_argcount = 1
+  func_defaults = ()
+
+  def __init__(self, id, key, property_id, property_type, language, warning=0):
+    self._id = id
+    self.__name__ = id
+    self._property_id = property_id
+    self._property_type = property_type
+    self._null = type_definition[property_type]['null']
+    self._language = language
+    self._warning = warning
+
+  def __call__(self, instance, *args, **kw):
+    if self._warning:
+      LOG("ERP5Type Deprecated Tester Id:",0, self._id)
+    domain = instance.getProperty('%s_translation_domain' % self._property_id)
+
+    if domain==TRANSLATION_DOMAIN_CONTENT_TRANSLATION:
+      if self._language is None:
+        language = kw.get('language') or getToolByName(instance, 'Localizer').get_selected_language()
+      else:
+        language = self._language
+      try:
+        return instance.getPropertyTranslation(self._property_id, language) is not None
+      except KeyError:
+        return False
+    else:
+      return instance.getProperty(self._property_id) is not None
