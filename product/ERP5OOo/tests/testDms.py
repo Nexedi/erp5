@@ -1322,6 +1322,15 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals('File', document.getPortalType())
     self.assertEquals(contributed_document, document)
 
+  def test_Base_createNewFile_forced_type(self):
+    """Test contributing while forcing the portal type.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     portal_type='PDF',
+                                     file=makeFileUpload('TEST-en-002.odt'))
+    self.assertEquals('PDF', contributed_document.getPortalType())
+
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
     then to plain text.
