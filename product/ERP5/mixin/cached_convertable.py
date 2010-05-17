@@ -128,11 +128,6 @@ class CachedConvertableMixin:
     """
     """
     cache_id = self._getCacheKey(**kw)
-
-    if isinstance(data, OFSImage):
-      # data.data should be a Pdata object
-      data = data.data
-
     if data is None:
       cached_value = None
       conversion_md5 = None
@@ -141,11 +136,14 @@ class CachedConvertableMixin:
       cached_value = aq_base(data)
       conversion_md5 = hashPdataObject(cached_value)
       size = len(cached_value)
+    elif isinstance(data, OFSImage):
+      cached_value = data
+      conversion_md5 = md5.new(str(data.data)).hexdigest()
+      size = len(data.data)
     else:
       cached_value = data
       conversion_md5 = md5.new(cached_value).hexdigest()
       size = len(cached_value)
-
     if date is None:
       date = DateTime()
     stored_data_dict = {'content_md5': self.getContentMd5(),
