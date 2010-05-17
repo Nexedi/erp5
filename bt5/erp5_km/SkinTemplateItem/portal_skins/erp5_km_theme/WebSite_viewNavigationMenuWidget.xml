@@ -64,7 +64,8 @@
 \n
   <tal:block tal:replace="structure here/WebSite_viewBrowseNavigationMenuWidget"/>\n
 \n
-  <li tal:condition="not:anonymous_navigation_menu">\n
+  <li class="collapse-menu" \n
+      tal:condition="not:anonymous_navigation_menu">\n
     <a href="#" tal:attributes="href string:${search_area_url}/ERP5Site_viewSearchResult">\n
       Documents<!--[if IE 7]><!-->\n
     </a><!--<![endif]-->\n
@@ -135,8 +136,9 @@
     </ul>\n
     <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
   </li>\n
-  <li tal:condition="python: here.Base_checkPermission(\'person_module\', \'View\')"><a href="#" i18n:translate="" i18n:domain="ui"\n
-         tal:attributes="href string:${portal_path}/person_module/PersonModule_viewPersonList">Contacts<!--[if IE 7]><!--></a><!--<![endif]-->\n
+  <li class="collapse-menu" tal:condition="python: here.Base_checkPermission(\'person_module\', \'View\')">\n
+    <a href="#" i18n:translate="" i18n:domain="ui"\n
+      tal:attributes="href string:${portal_path}/person_module/PersonModule_viewPersonList">Contacts<!--[if IE 7]><!--></a><!--<![endif]-->\n
 <!--[if lte IE 6]><table><tr><td><![endif]-->\n
     <ul>\n
       <li><a href="#" i18n:translate="" i18n:domain="ui"\n
@@ -152,7 +154,8 @@
                          absolute_url  context/absolute_url;\n
                          count python: reduce(lambda x, y: x+(y.has_key(\'count\') and y[\'count\'] or 0), ordered_global_actions, 0);\n
                          portal_url python: context.portal_url();">\n
-    <li tal:condition="not:is_anonymous">\n
+    <li class="collapse-menu"\n
+        tal:condition="not:is_anonymous">\n
       <a href="#" i18n:translate="" i18n:domain="ui">\n
         <tal:block i18n:translate="" i18n:domain="ui">Tasks</tal:block>\n
         <tal:block tal:replace="python: \' (%s)\' % count"></tal:block>\n
@@ -181,7 +184,8 @@
     </li>\n
   </tal:block>\n
 \n
-  <li tal:condition="not:is_anonymous">\n
+  <li class="collapse-menu"\n
+      tal:condition="not:is_anonymous">\n
     <a href="#" i18n:translate="" i18n:domain="ui">Settings</a>\n
     <ul>\n
       <li>\n

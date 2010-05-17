@@ -51,7 +51,8 @@
                        is_anonymous here/portal_membership/isAnonymousUser;\n
                        anonymous_navigation_menu python:is_anonymous and current_web_site.getLayoutProperty(\'layout_anonymous_navigation_menu\');">\n
 \n
-  <li tal:condition="not:anonymous_navigation_menu">\n
+  <li class="collapse-menu"\n
+      tal:condition="not:anonymous_navigation_menu">\n
     <a href="#" >\n
       <tal:block i18n:translate="" i18n:domain="ui">Browse</tal:block>\n
       <!--[if IE 7]><!-->\n
