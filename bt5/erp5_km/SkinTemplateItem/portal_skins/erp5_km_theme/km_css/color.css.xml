@@ -402,14 +402,14 @@ a.pub:link, a.pub:active, a.pub:visited, .pub { color:#45cb45; }\n
 \n
 }\n
 \n
-#menu #n7:link, #menu #n7:active, #menu #n7:visited {\n
+#menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
 \n
 \tbackground: url(../km_img/login.gif) no-repeat transparent;\n
   background-position: 0 -3px;\n
 \n
 }\n
 \n
-#menu #n7:hover {\n
+#menu #login-logout-link:hover {\n
 \n
 \tbackground-position: 0 -23px;\n
 \n

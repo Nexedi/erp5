@@ -436,7 +436,7 @@ button, select, input {\n
 \n
 }\n
 \n
-#menu #n7:link, #menu #n7:active, #menu #n7:visited {\n
+#menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
 \n
 \theight:20px;\n
 \tposition: relative;\n
@@ -1527,7 +1527,10 @@ div.extendedSearchBar{\n
 div.searchBar input, div.extendedSearchBar input {\n
   width: auto;\n
 }\n
-
+\n
+div.centeredInner {\n
+  text-align: center;\n
+}
 
 ]]></string> </value>
         </item>

@@ -49,8 +49,8 @@
 #km_left {\n
   width:auto !important;\n
   min-width:75%;\n
-  background-color:#FFFFFF;\n
-  border:1px solid #D1D0C9;\n
+  /*background-color:#FFFFFF;\n
+  border:1px solid #D1D0C9;*/\n
 }\n
 \n
 /* Search popup fix*/\n
@@ -223,12 +223,12 @@ width:250px;\n
 \n
 /* Search bar */\n
 div.extendedSearchBar {\n
-  float:right;\n
+  float:left;\n
   margin-top:0;\n
-  padding:0;\n
-  right:5px;\n
+  padding:1em 0 0;\n
+  /*right:5px;\n
   text-align:right;\n
-  width:350px;\n
+  width:350px;*/\n
 }\n
 div.extendedSearchBar .button {\n
  background-image: url(\'./km_img/search_background.png\');\n
@@ -267,9 +267,12 @@ background-color:#EBEBE2;\n
 .listbox select {\n
   max-width: 145px;\n
 }\n
+\n
+/*\n
 .listbox input {\n
 width:96%;\n
 }\n
+*/\n
 \n
 button.sort_button_desc{\n
   background-image: url(\'./km_img/switch_desc.png\');\n
