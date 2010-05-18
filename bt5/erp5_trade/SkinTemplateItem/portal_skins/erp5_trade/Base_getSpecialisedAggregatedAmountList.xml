@@ -56,7 +56,7 @@
             <value> <string>specialise = context.getSpecialiseValue(portal_type=(\'Purchase Trade Condition\',\'Sale Trade Condition\'))\n
 \n
 if specialise is not None:\n
-  rounding = kwargs.get(\'rounding\', True)\n
+  rounding = kwargs.get(\'rounding\', False)\n
   return specialise.getAggregatedAmountList(context, rounding=rounding)\n
 \n
 return []\n
@@ -102,7 +102,7 @@ return []\n
                             <string>context</string>
                             <string>specialise</string>
                             <string>None</string>
-                            <string>True</string>
+                            <string>False</string>
                             <string>rounding</string>
                           </tuple>
                         </value>

@@ -1,4 +1,7 @@
 2010-05-18 yo
+* Change the default of rounding to False, as it is currently very slow to apply rounding models. So those who want to use this feature should enable it explicitly.
+
+2010-05-18 yo
 * Have Base_getSpecialisedAggregatedAmountList to pass the parameter rounding to getAggregatedAmountList. It defaults to True, as this method is used for UI, and rounding should be applied in the UI in most cases.
 
 2010-05-17 yo
