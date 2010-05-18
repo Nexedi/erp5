@@ -539,7 +539,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     os.chdir(instance_home)
     if save_mysql:
       save_mysql(verbosity)
-    if suite not in (ProcessingNodeTestCase, ZEOServerTestCase):
+    if suite.__class__ not in (ProcessingNodeTestCase, ZEOServerTestCase):
       # Static files are modified by the node installing business templates,
       # i.e. by the node running the unit test. There is no point saving them
       # on a ZEO server, or on nodes that only process activities: this has to
