@@ -376,7 +376,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   # patched by the layer.setUp() call.
   import OFS.Application
   import_products = OFS.Application.import_products
-  from Testing import ZopeTestCase # This will import custom_zodb.py
+  from Testing import ZopeTestCase # Zope 2.8: this will import custom_zodb.py
   OFS.Application.import_products = import_products
 
   try:
@@ -436,6 +436,12 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
 
   # change current directory to the test home, to create zLOG.log in this dir.
   os.chdir(tests_home)
+
+  # import ERP5TypeTestCase before calling layer.ZopeLite.setUp
+  # XXX What if the unit test itself uses 'onsetup' ? We should be able to call
+  #     remaining 'onsetup' hooks just before executing the test suite.
+  from Products.ERP5Type.tests.ERP5TypeTestCase import \
+      ProcessingNodeTestCase, ZEOServerTestCase, dummy_setUp, dummy_tearDown
   try:
     from Testing.ZopeTestCase import layer
   except ImportError:
@@ -447,7 +453,10 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     # FIXME: We should start using Zope layers. Our setup will probably
     # be faster and we could drop most of this code we currently maintain
     # ourselves
-    layer.ZopeLite.setUp()
+    layer.ZopeLite.setUp() # Zope 2.12: this will import custom_zodb.py
+    def assertFalse():
+      assert False
+    layer.onsetup = assertFalse
 
   TestRunner = backportUnittest.TextTestRunner
 
@@ -455,8 +464,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   from ZEO.ClientStorage import ClientStorage
   from Zope2.custom_zodb import \
       save_mysql, zeo_server_pid, zeo_client_pid_list, Storage
-  from Products.ERP5Type.tests.ERP5TypeTestCase import \
-      ProcessingNodeTestCase, ZEOServerTestCase, dummy_setUp, dummy_tearDown
   def shutdown(signum, frame, signum_set=set()):
     Lifetime.shutdown(0)
     signum_set.add(signum)
