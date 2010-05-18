@@ -126,6 +126,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
   
     # 2. test a normal case, change the language to 'en', 
     #    so that the stylesheet changes dynamically.
+    self.getPortal().Localizer = DummyLocalizer()
     self.getPortal().Localizer.changeLanguage('en')
     response = self.publish('/' + self.getPortal().Dynamic_viewAsOdt.absolute_url(1))
     self._validate(response.getBody()) 
