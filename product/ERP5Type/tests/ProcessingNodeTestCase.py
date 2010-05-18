@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import base64, errno, select, socket, time
 from threading import Thread
 import Lifetime
@@ -114,7 +115,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
 
   def tic(self, verbose=0):
     """Execute pending activities"""
-    portal_activities = self.portal.portal_activities
+    portal_activities = self.getPortal().portal_activities
     if 1:
       if verbose:
         ZopeTestCase._print('Executing pending activities ...')
