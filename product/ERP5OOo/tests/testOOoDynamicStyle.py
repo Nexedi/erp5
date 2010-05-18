@@ -123,7 +123,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     # 'Style sheet ja' text is in the odt document header, 
     # and the header is in the 'styles.xml'.
     self.assertTrue(styles_xml_body.find('Style sheet ja') > 0)
-  
+
     # 2. test a normal case, change the language to 'en', 
     #    so that the stylesheet changes dynamically.
     self.getPortal().Localizer = DummyLocalizer()
@@ -133,7 +133,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     ooo_builder = OOoBuilder(response.getBody())
     styles_xml_body = ooo_builder.extract('styles.xml')
     self.assertTrue(styles_xml_body.find('Style sheet en') > 0)
-    
+
     # 3. test a fail case, reset a not existed stylesheet
     Dynamic_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
                                  ooo_stylesheet='NotFound_getODTStyleSheet', 
@@ -174,7 +174,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     styles_xml_body = ooo_builder.extract('styles.xml')
     self.assertTrue(len(styles_xml_body) > 0)
     self.assertTrue(styles_xml_body.find('Style sheet ja') > 0)
-    
+
     # 2. test a normal case, change the style sheet
     self.assertTrue(self.getPortal().hasObject('Test_getODTStyleSheet_en'))
     Static_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
@@ -186,7 +186,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     styles_xml_body = ooo_builder.extract('styles.xml')
     self.assertTrue(len(styles_xml_body) > 0)
     self.assertTrue(styles_xml_body.find('Style sheet en') > 0)
- 
+
     # 3. test a fail case
     self.assertFalse(self.getPortal().hasObject('NotFound_getODTStyleSheet'))
     Static_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
@@ -194,7 +194,7 @@ return getattr(context, "%s_%s" % (parameter, current_language))
     response = self.publish('/' + self.getPortal().Static_viewAsOdt.absolute_url(1))
     self.assertFalse(response.getBody().startswith('PK'))
     self.assertTrue(500, response.getStatus())
-     
+
 
 def test_suite():
   suite = unittest.TestSuite()
