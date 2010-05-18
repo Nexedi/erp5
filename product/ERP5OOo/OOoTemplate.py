@@ -472,7 +472,7 @@ class OOoTemplate(ZopePageTemplate):
     # Retrieve master document
     ooo_document = None
     # If script is setting, call it
-    if (self.ooo_script_name is not None) and (self.ooo_script_name != ''):
+    if self.ooo_script_name:
       ooo_script = getattr(here, self.ooo_script_name)
       ooo_document = ooo_script(self.ooo_stylesheet)
     else:
