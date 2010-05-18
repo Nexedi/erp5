@@ -205,7 +205,8 @@ class OOoBuilder(Implicit):
     """
     request = get_request()
     if name:
-      request.response.setHeader('Content-Disposition', 'inline; filename=%s.%s' % (name, extension))
+      request.response.setHeader('Content-Disposition',
+                              'attachment; filename=%s.%s' % (name, extension))
 
     self._document.seek(0)
     return self._document.read()
