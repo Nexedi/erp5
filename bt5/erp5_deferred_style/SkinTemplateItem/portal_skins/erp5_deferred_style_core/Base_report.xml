@@ -78,9 +78,9 @@ report_data = context.restrictedTraverse(form_path).report_view.pt_render(\n
                          report_method=dummyReportMethod,\n
                          form=portal.restrictedTraverse(form_path)))\n
 \n
-attachment_name = [x[len(\'filename=\'):] for x in (request.RESPONSE.getHeader(\n
+attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
                         \'content-disposition\') or \'\').split(\';\')\n
-                      if x.startswith(\'filename=\')][0]\n
+                      if x.startswith(\' filename=\')][0]\n
 if attachment_name.startswith(\'"\'):\n
   attachment_name = attachment_name[1:]\n
 if attachment_name.endswith(\'"\'):\n
