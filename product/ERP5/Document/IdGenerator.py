@@ -91,7 +91,7 @@ class IdGenerator(Base):
     """
     # For compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
-      raise AttributeError, 'id_group is not a string'
+      raise TypeError, 'id_group is not a string'
     specialise = self.getSpecialiseValue()
     if specialise is None:
       raise ValueError, "the id generator %s doesn't have specialise value" %\
