@@ -259,18 +259,6 @@ class TestIdTool(ERP5TypeTestCase):
                                         id_generator='test_application_sql',
                                         id_group='a04', id_count=3))
 
-  def test_05_backwardCompatibility(self):
-    """
-      make keep API backward compatibility which are still described in the wiki.
-    """
-    self.assertEquals(1, self.id_tool.generateNewId(id_group='test_05', default=1))
-    self.assertEquals(2, self.id_tool.generateNewId(id_group='test_05', default=1))
-    self.assertEquals(3, self.id_tool.generateNewId(id_group='test_05', default=1))
-    self.assertEquals(3, self.id_tool.getLastGeneratedId(id_group='test_05', default=1))
-    self.id_tool.setLastGeneratedId(10, id_group='test_05')
-    self.assertEquals(11, self.id_tool.generateNewId(id_group='test_05', default=1))
-    self.assertEquals(12, self.id_tool.generateNewId(id_group='test_05', default=1))
-
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestIdTool))
