@@ -8,7 +8,6 @@ import ZODB
 from asyncore import socket_map
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
-from ZEO.ClientStorage import ClientStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments, instance_random
 from Products.ERP5Type.tests.runUnitTest import instance_home, static_dir_list
 
@@ -114,6 +113,8 @@ else:
       os.environ['zserver'] = i < len(zserver_list) and zserver_list[i] or ''
       break
     zeo_client_pid_list.append(pid)
+  # Zope 2.12: do not import ClientStorage before forking due to client trigger
+  from ZEO.ClientStorage import ClientStorage
   Storage = ClientStorage(zeo_client)
 
 if zeo_client_pid_list is not None:
