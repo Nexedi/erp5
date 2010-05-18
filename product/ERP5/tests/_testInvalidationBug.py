@@ -72,7 +72,15 @@ for x in xrange(0, 1):
 log('Created Organisations', (context,id_list))
 #log('All organisations', (context,[x for x in context.objectIds()]))
 context.activate(activity='SQLQueue').create_script()
-log('Organisation #', len(context))
+
+count = len(context)
+log('Organisation #', count)
+if not (count % 500):
+  if count == 500:
+    context.setProperty('perf_start', DateTime())
+  else:
+    log('creation speed: %s obj/s' % ((count - 500) /
+        (86400 * (DateTime() - context.getProperty('perf_start')))))
 """)
     for x in xrange(0,200):
       module.activate(activity='SQLQueue').create_script()
