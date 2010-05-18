@@ -72,10 +72,7 @@ class IdGenerator(Base):
      Use int to store the last_id, use also a persistant mapping for to be
      persistent.
     """
-    try:
-      specialise = self.getSpecialiseValue()
-    except AttributeError:
-      raise AttributeError, 'specialise is not defined'
+    specialise = self.getSpecialiseValue()
     if specialise is None:
       raise ValueError, "the id generator %s doesn't have specialise value" %\
                         self.getReference()
@@ -95,10 +92,7 @@ class IdGenerator(Base):
     # For compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       raise AttributeError, 'id_group is not a string'
-    try:
-      specialise = self.getSpecialiseValue()
-    except AttributeError:
-      raise AttributeError, 'specialise is not defined'
+    specialise = self.getSpecialiseValue()
     if specialise is None:
       raise ValueError, "the id generator %s doesn't have specialise value" %\
                         self.getReference()
