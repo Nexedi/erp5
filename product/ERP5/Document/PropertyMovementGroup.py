@@ -46,6 +46,8 @@ class PropertyMovementGroup(MovementGroup):
     return property_dict
 
   def test(self, document, property_dict, property_list=None, **kw):
+    if self.isForceUpdate():
+      return True, property_dict
     if property_list not in (None, []):
       target_property_list = [x for x in self.getTestedPropertyList() \
                               if x in property_list]
