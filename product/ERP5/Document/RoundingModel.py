@@ -29,7 +29,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.Utils import UpperCase
-
+import ExtensionClass
 
 class RoundingModel(Predicate):
   """
@@ -153,6 +153,11 @@ class RoundingModel(Predicate):
         else:
           return result
 
+      # XXX not sure why but getObject may return original_document
+      # unless it is overridden here.
+      def getObject(self, *args, **kw):
+        return self
+
       def __getattr__(self, name):
         attribute = getattr(original_document, name)
         if getattr(attribute, 'DUMMY_ROUNDING_METHOD_MARK', None) is DUMMY_ROUNDING_METHOD_MARK:
@@ -168,7 +173,9 @@ class RoundingModel(Predicate):
 
 DUMMY_ROUNDING_METHOD_MARK = object()
 
-class RoundingProxy(object):
+# Use the Extension Class only because it is necessary to allow an instance
+# of this class to be wrapped in an acquisition wrapper.
+class RoundingProxy(ExtensionClass.Base):
   """Super class of _RoundingProxy class defined above. Use this class for
   isinstance method to check if object is a real instance or a rounding proxy
   instance.
