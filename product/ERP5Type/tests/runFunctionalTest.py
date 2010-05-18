@@ -9,7 +9,6 @@ from time import sleep
 import urllib2
 from subprocess import Popen, PIPE
 from sendMail import sendMail
-import pysvn
 import atexit
 
 __doc__ = """%(program)s: Zelenium functional test runner for the ERP5 Project
@@ -287,6 +286,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
 
   def getSvnRevision(self):
     # get SVN revision used
+    import pysvn
     os.chdir('%s/Products/ERP5' % self.instance_home)
     revision = pysvn.Client().info('.').revision.number
     return revision
