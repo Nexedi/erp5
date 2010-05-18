@@ -14,22 +14,59 @@
 ##############################################################################
 
 from ZODB.DemoStorage import DemoStorage
+from ZODB.ConflictResolution import tryToResolveConflict, ResolvedSerial
 
 try:
     loadEx = DemoStorage.loadEx
-except AttributeError:
-    pass # XXX Zope 2.12 ?
-else:
+
+except AttributeError: # Zope 2.12
+    ##
+    # Implement conflict resolution for DemoStorage
+    #
+    import ZODB.POSException
+
+    def store(self, oid, serial, data, version, transaction):
+        assert version=='', "versions aren't supported"
+        if transaction is not self._transaction:
+            raise ZODB.POSException.StorageTransactionError(self, transaction)
+
+        # Since the OID is being used, we don't have to keep up with it any
+        # more. Save it now so we can forget it later. :)
+        self._stored_oids.add(oid)
+
+        # See if we already have changes for this oid
+        try:
+            old = self.changes.load(oid, '')[1]
+        except ZODB.POSException.POSKeyError:
+            try:
+                old = self.base.load(oid, '')[1]
+            except ZODB.POSException.POSKeyError:
+                old = serial
+                
+        if old != serial:
+            # <patch>
+            rdata = tryToResolveConflict(self, oid, old, serial, data)
+            if rdata is None:
+                raise ZODB.POSException.ConflictError(
+                    oid=oid, serials=(old, serial), data=data)
+            self.changes.store(oid, old, rdata, '', transaction)
+            return ResolvedSerial
+            # </patch>
+
+        return self.changes.store(oid, serial, data, '', transaction)
+
+    DemoStorage.store = store
+
+else: # Zope 2.8
     ##
     # Fix bug in DemoStorage.loadEx (it uses 'load' instead of 'loadEx')
     #
     DemoStorage.loadEx = lambda *args: (loadEx(*args) + ('',))[:3]
 
     ##
-    # Implemenent conflict resolution for DemoStorage
+    # Implement conflict resolution for DemoStorage
     #
     from ZODB import POSException
-    from ZODB.ConflictResolution import tryToResolveConflict, ResolvedSerial
 
     # copied from ZODB/DemoStorage.py and patched
     def store(self, oid, serial, data, version, transaction):
