@@ -53,7 +53,7 @@ class Copy(TargetSolver):
     if scope == 'quantity':
       property_id = 'quantity'
       delivery_quantity = delivery.getQuantity()
-      delivery_ratio = simulation_movement.getDeliveryRatio(0.0)
+      delivery_ratio = simulation_movement.getDeliveryRatio()
       old_quantity = simulation_movement.getQuantity(0.0)
       new_quantity = delivery_quantity * delivery_ratio
       quantity_ratio = 0
