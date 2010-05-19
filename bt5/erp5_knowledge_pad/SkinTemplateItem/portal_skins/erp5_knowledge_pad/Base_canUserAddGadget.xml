@@ -59,10 +59,12 @@
 """\n
 request = context.REQUEST\n
 portal = context.getPortalObject()\n
-list_mode = request.get(\'list_mode\', None)\n
+list_mode = request.get(\'list_mode\', False)\n
+dialog_mode = request.get(\'dialog_mode\', False)\n
 \n
 if portal.portal_membership.isAnonymousUser() or \\\n
-  list_mode is not None:\n
+  list_mode == True or \\\n
+  dialog_mode == True:\n
   return False\n
 \n
 return True\n
@@ -73,6 +75,10 @@ return True\n
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -102,9 +108,9 @@ return True\n
                             <string>context</string>
                             <string>request</string>
                             <string>portal</string>
-                            <string>None</string>
-                            <string>list_mode</string>
                             <string>False</string>
+                            <string>list_mode</string>
+                            <string>dialog_mode</string>
                             <string>True</string>
                           </tuple>
                         </value>
