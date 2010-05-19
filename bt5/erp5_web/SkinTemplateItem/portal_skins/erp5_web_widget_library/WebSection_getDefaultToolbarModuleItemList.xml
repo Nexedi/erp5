@@ -53,35 +53,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
-# by default we use following modules in toolbar.\n
-if module_id_list is None:\n
-  module_id_list = context.WebSection_getDefaultToolbarModuleItemList()\n
-\n
-portal = context.getPortalObject()\n
-user = portal.portal_membership.getAuthenticatedMember().getUserName()\n
-web_site_id = getattr(context, \'getWebSiteValue\', None) is not None and \\\n
-    context.getWebSiteValue().getId()\n
-\n
-def getModuleItemList(user=None):\n
-  gettext = portal.Localizer.erp5_ui.gettext\n
-\n
-  item_list = []\n
-  for module_id in module_id_list:\n
-    module = portal.restrictedTraverse(module_id, None)\n
-    if module is not None:\n
-      if portal.portal_membership.checkPermission(\'View\', module):\n
-        item_list.append((gettext(module.getTitleOrId()), module.absolute_url_path()))\n
-\n
-  item_list.sort(key=lambda x: x[0])\n
-  return item_list\n
-\n
-getModuleItemList = CachingMethod(getModuleItemList,\n
-  id=(\'WebSection_getToolbarModuleItemList\', portal.Localizer.get_selected_language(), portal.portal_url(), web_site_id),\n
-      cache_factory=\'erp5_ui_short\')\n
-\n
-return getModuleItemList(user=user)\n
+            <value> <string>"""\n
+  Return default list of modules which a Web Site should make accessible for UI in web mode.\n
+  XXX: Turn into introspection script.\n
+"""\n
+return [\'image_module\', \\\n
+        \'document_module\', \\\n
+        \'web_page_module\']\n
 </string> </value>
         </item>
         <item>
@@ -89,10 +67,6 @@ return getModuleItemList(user=user)\n
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>_params</string> </key>
-            <value> <string>module_id_list=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -112,24 +86,12 @@ return getModuleItemList(user=user)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>module_id_list</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>None</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>user</string>
-                            <string>getattr</string>
-                            <string>web_site_id</string>
-                            <string>getModuleItemList</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -140,14 +102,12 @@ return getModuleItemList(user=user)\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getToolbarModuleItemList</string> </value>
+            <value> <string>WebSection_getDefaultToolbarModuleItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
