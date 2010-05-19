@@ -31,6 +31,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.Formulator.FormToXML import formToXML
+from Products.Formulator.TALESField import TALESMethod
 import transaction
 import unittest
 from lxml import etree
@@ -303,3 +304,52 @@ return printed
     # Test objectification of XML
     XMLToForm(xml_string, form)
     self.assertTrue(form.my_title.get_value('title'), my_title)
+
+  def test_proxifyParallelListField(self):
+    """ParallelListField has its own get_value method and the method does
+    different from the original one. This test checks if ProxyField can
+    behave the same as ParallelListField.
+    """
+    # Setup
+    if getattr(self.portal.portal_categories, 'colour', None) is None:
+      self.portal.portal_categories.newContent('colour')
+    if getattr(self.portal.portal_categories, 'size', None) is None:
+      self.portal.portal_categories.newContent('size')
+
+    portal_skins = self.getSkinsTool()
+    # Create skin folder
+    portal_skins.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
+    skin_folder = portal_skins._getOb('erp5_geek')
+
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form('Base_viewGeek1',
+                                                          'View')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form('Base_viewGeek2',
+                                                          'View')
+
+    form_1 = skin_folder.Base_viewGeek1
+    # Add a parallel list field
+    form_1.manage_addField('my_field', '', 'ParallelListField')
+    form_1.my_field.manage_tales_xmlrpc(
+      dict(default="python:['colour/blue']",
+           items="python: [['Blue', 'colour/blue'], ['Red', 'colour/red'], ['Large', 'size/large'], ['Small', 'size/small']]"))
+    form_1.my_field.manage_edit_xmlrpc(
+      dict(hash_script_id="Base_getMultiListFieldPropertyDictList"))
+
+    form_2 = skin_folder.Base_viewGeek2
+    # Add a proxy field which has the same configuration as above field.
+    form_2.manage_addField('my_field', '', 'ProxyField')
+    form_2.my_field.manage_edit_xmlrpc(dict(form_id='Base_viewFieldLibrary',
+                                            field_id='my_parallel_list_field'))
+    form_2.my_field._surcharged_edit(
+      dict(hash_script_id="Base_getMultiListFieldPropertyDictList"),
+      ['hash_script_id'])
+    form_2.my_field._surcharged_tales(
+      dict(default=TALESMethod("python:['colour/blue']"),
+           items=TALESMethod("python: [['Blue', 'colour/blue'], ['Red', 'colour/red'], ['Large', 'size/large'], ['Small', 'size/small']]")),
+      ['default', 'items', 'hash_script_id'])
+
+    # Compare
+    # XXX Remove new lines. An extra new line is inserted by unknown reason.
+    form_1_html = form_1.my_field.render(REQUEST=self.app.REQUEST).replace('\n', '')
+    form_2_html = form_2.my_field.render(REQUEST=self.app.REQUEST).replace('\n', '')
+    self.assertEqual(form_1_html, form_2_html)
