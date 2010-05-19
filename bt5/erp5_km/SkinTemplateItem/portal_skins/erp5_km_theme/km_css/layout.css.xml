@@ -1369,6 +1369,13 @@ fieldset.right_registration select {\n
 \n
 }\n
 \n
+/* Listbox page navigation */\n
+td.pageNavigation{\n
+  padding-bottom:0.5em;\n
+  padding-right:0.5em;\n
+  padding-top:1em;\n
+}\n
+\n
 .pageNavigation .input input[type="image"] {\n
 \n
   vertical-align: middle;\n
@@ -1381,6 +1388,11 @@ fieldset.right_registration select {\n
 \n
 }\n
 \n
+#listbox_set_page, #listbox_next_page, #listbox_last_page, #listbox_first_page, #listbox_previous_page{\n
+  margin: 0em;\n
+  padding: 0em;\n
+  \n
+}\n
 \n
 #wrapper_splash .input img{\n
 \n
