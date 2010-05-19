@@ -225,7 +225,7 @@ width:250px;\n
 div.extendedSearchBar {\n
   float:left;\n
   margin-top:0;\n
-  padding:1em 0 0;\n
+  padding:1em 0 0.5em;\n
   /*right:5px;\n
   text-align:right;\n
   width:350px;*/\n

@@ -124,6 +124,7 @@
                     <value>
                       <list>
                         <string>left_menu_widget</string>
+                        <string>listbox_action_widget</string>
                       </list>
                     </value>
                 </item>
