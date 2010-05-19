@@ -64,8 +64,8 @@ dialog_mode = request.get(\'dialog_mode\', False)\n
 list_style = request.get(\'list_style\', None)\n
 \n
 if portal.portal_membership.isAnonymousUser() or \\\n
-  list_mode == True or \\\n
-  dialog_mode == True:\n
+  dialog_mode == True or \\\n
+  (list_mode and list_style==\'search\'):\n
   return False\n
 \n
 return True\n
