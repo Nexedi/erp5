@@ -2609,7 +2609,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
       self.fail(''.join(err_list))
     # The name of the printout is the reference of the order
     content_disposition = self.portal.REQUEST.RESPONSE.getHeader('content-disposition')
-    self.assertEquals(content_disposition, 'inline;filename="OrderReference.odt"')
+    self.assertEquals(content_disposition, 'attachent; filename="OrderReference.odt"')
 
   def test_Order_viewAsODT_person(self):
     # test order printout with a person as destination
