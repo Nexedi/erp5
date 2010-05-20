@@ -1220,6 +1220,29 @@ Hé Hé Hé!""", page.asText().strip())
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
 
+  def test_16_404ErrorPageIsReturned(self, quiet=quiet, run=run_all_test):
+    """
+      Test that when we try to access a non existing url trought a web site, a
+      404 error page is returned
+    """
+    if not run: return
+    if not quiet:
+      message = '\ntest_16_404ErrorPageIsReturned'
+      ZopeTestCase._print(message)
+
+    portal = self.getPortal()
+    request = portal.REQUEST
+    request['PARENTS'] = [self.app]
+    website = self.setupWebSite()
+    path = website.absolute_url_path() + '/a_non_existing_page'
+    absolute_url = website.absolute_url() + '/a_non_existing_page'
+    request = portal.REQUEST
+
+    # Check a Not Found page is returned
+    self.assertTrue('Not Found' in request.traverse(path)())
+    # Check that we try to display a page with 404.error.page reference
+    self.assertEqual(request.traverse(path).absolute_url().split('/')[-1],
+    '404.error.page')
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
