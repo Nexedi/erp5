@@ -242,7 +242,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       # test content type : application/vnd.oasis.opendocument.graphics
       self.assertTrue(content_type.startswith(self.content_type), content_type)
       content_disposition = response.getHeader('content-disposition')
-      self.assertEquals('inline', content_disposition.split(';')[0])
+      self.assertEquals('attachment', content_disposition.split(';')[0])
       # Test ODG (zip)
       body = response.getBody()
       # Test Validation Relax NG
