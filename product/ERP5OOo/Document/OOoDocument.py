@@ -401,6 +401,8 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
       else:
         temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
+                                       file=cStringIO.StringIO(),
+                                       file_name=self.getId(),
                                        temp_object=1)
         temp_image._setData(data)
         mime, data = temp_image.convert(original_format, display=display)
