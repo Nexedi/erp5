@@ -258,8 +258,6 @@ instance_home = os.path.join(real_instance_home, 'unit_test')
 real_tests_home = os.path.join(real_instance_home, 'tests')
 tests_home = os.path.join(instance_home, 'tests')
 
-initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
-
 
 class ERP5TypeTestLoader(unittest.TestLoader):
   """Load test cases from the name passed on the command line.
@@ -667,6 +665,8 @@ def main():
       os.environ["zeo_server"] = arg
     elif opt == "--zserver":
       os.environ["zserver"] = arg
+  
+  initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
 
   result = runUnitTestList(test_list=args,
                            verbosity=verbosity,
