@@ -72,6 +72,7 @@ Purchase Order | jump_to_related_purchase_packing_list
 Purchase Order | order_print
 Purchase Order | payment_condition
 Purchase Order | profile_view
+Purchase Order | reset_movement_price_list
 Purchase Order | view
 Purchase Order | view_stock
 Purchase Order | view_trade_model
@@ -91,6 +92,7 @@ Purchase Packing List | jump_related_purchase_invoice
 Purchase Packing List | packing_list_print
 Purchase Packing List | payment_condition
 Purchase Packing List | profile_view
+Purchase Packing List | reset_movement_price_list
 Purchase Packing List | view
 Purchase Packing List | view_stock
 Purchase Trade Condition Module | view
@@ -142,6 +144,7 @@ Sale Order | order_summary
 Sale Order | payment_condition
 Sale Order | profile_view
 Sale Order | reference_generate
+Sale Order | reset_movement_price_list
 Sale Order | sale_order_fast_input
 Sale Order | sale_order_planning
 Sale Order | view
@@ -163,6 +166,7 @@ Sale Packing List | jump_related_sale_invoice
 Sale Packing List | packing_list_print
 Sale Packing List | payment_condition
 Sale Packing List | profile_view
+Sale Packing List | reset_movement_price_list
 Sale Packing List | sale_packing_list_fast_input
 Sale Packing List | view
 Sale Packing List | view_container_list

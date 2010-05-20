@@ -1,3 +1,6 @@
+2010-05-21 yo
+* Add a new action Reset Prices into Sale Order, Sale Packing List, Purchase Order, and Purchase Packing List.
+
 2010-05-18 yo
 * Change the default of rounding to False, as it is currently very slow to apply rounding models. So those who want to use this feature should enable it explicitly.
 
