@@ -55,7 +55,13 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       return 'Test OOoChart'
 
     def getBusinessTemplateList(self):
-      return ('erp5_base', 'erp5_ui_test', 'erp5_odt_style', 'erp5_ods_style',)
+      return ('erp5_base', 
+              'erp5_ingestion',
+              'erp5_web',
+              'erp5_dms',
+              'erp5_ui_test', 
+              'erp5_odt_style',
+              'erp5_ods_style')
 
     def afterSetUp(self):
       self.auth = 'ERP5TypeTestCase:'
