@@ -54,6 +54,13 @@ except ImportError:
   def setSite(site=None):
     pass
 
+try:
+  import itools.zope
+  def get_context():
+    return current_app
+  itools.zope.get_context = get_context
+except ImportError:
+  pass
 
 import transaction
 from Testing import ZopeTestCase
