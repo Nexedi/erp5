@@ -960,8 +960,4 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       movement_uid_list = [x.getUid() for x in self.getMovementList()]
       sim_movement_list = search_method(portal_type='Simulation Movement',
                                         delivery_uid=movement_uid_list, **kw)
-      if len(sim_movement_list) == 0:
-        # 'order' category is deprecated. it is kept for compatibility.
-        sim_movement_list = search_method(portal_type='Simulation Movement',
-                                          order_uid=movement_uid_list, **kw)
       return sim_movement_list
