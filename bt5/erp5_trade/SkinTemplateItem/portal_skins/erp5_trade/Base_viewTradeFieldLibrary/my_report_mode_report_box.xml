@@ -12,15 +12,12 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>display_width</string>
-                <string>title</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_view_mode_test_method_id</string> </value>
+            <value> <string>my_report_mode_report_box</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -76,12 +73,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_report_box</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -90,10 +83,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Test Method ID</string> </value>
                 </item>
               </dictionary>
             </value>

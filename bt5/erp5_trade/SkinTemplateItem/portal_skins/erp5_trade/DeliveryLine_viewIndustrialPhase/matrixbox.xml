@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>cell_portal_type</string>
-                <string>editable_attributes</string>
-                <string>title</string>
-                <string>global_attributes</string>
                 <string>cell_base_id</string>
-                <string>tabs</string>
-                <string>lines</string>
+                <string>cell_portal_type</string>
                 <string>columns</string>
+                <string>editable_attributes</string>
+                <string>global_attributes</string>
+                <string>lines</string>
+                <string>tabs</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -108,6 +108,12 @@
                     <value> <string>Delivery Cell</string> </value>
                 </item>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>editable_attributes</string> </key>
                     <value>
                       <list>
@@ -140,11 +146,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_matrix_box</string> </value>
+                    <value> <string>my_view_mode_matrix_box</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>global_attributes</string> </key>
@@ -155,6 +161,18 @@
                           <string>mapped_value_property_list</string>
                         </tuple>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>tabs</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>

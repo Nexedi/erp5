@@ -264,7 +264,6 @@
                         <string>my_view_mode_predecessor_title</string>
                         <string>my_view_mode_source_method_id</string>
                         <string>my_view_mode_successor_title</string>
-                        <string>my_view_mode_test_method_id</string>
                         <string>my_view_mode_trade_phase</string>
                         <string>my_view_mode_business_process_specialise_title_list</string>
                         <string>my_view_mode_listbox_delivery_builder_title_list</string>
@@ -303,6 +302,9 @@
                         <string>my_view_mode_listbox_read_only_use_title_list</string>
                         <string>my_view_mode_module_listbox</string>
                         <string>my_view_mode_listbox</string>
+                        <string>my_view_mode_matrix_box</string>
+                        <string>my_view_mode_planning_box</string>
+                        <string>my_report_mode_report_box</string>
                       </list>
                     </value>
                 </item>

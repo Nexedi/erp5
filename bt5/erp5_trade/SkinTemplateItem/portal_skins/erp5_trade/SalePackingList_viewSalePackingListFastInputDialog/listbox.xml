@@ -13,13 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>columns</string>
                 <string>editable_columns</string>
-                <string>title</string>
+                <string>list_method</string>
+                <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>list_method</string>
-                <string>columns</string>
-                <string>portal_types</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -115,11 +115,11 @@
                           <string>Total Price</string>
                         </tuple>
                         <tuple>
-                          <string>getCurrentInventory</string>
+                          <string>current_quantity</string>
                           <string>Current</string>
                         </tuple>
                         <tuple>
-                          <string>getAvailableInventory</string>
+                          <string>available_quantity</string>
                           <string>Available</string>
                         </tuple>
                         <tuple>
@@ -184,6 +184,12 @@
                     <key> <string>list_method</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
