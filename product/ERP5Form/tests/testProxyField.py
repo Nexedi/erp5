@@ -155,7 +155,6 @@ class TestProxyField(ERP5TypeTestCase):
         'Base_viewGeekFieldLibrary',
         'View')
     form = skin_folder._getOb('Base_viewGeekFieldLibrary', None)
-    form.manage_addField('my_title', 'Customized Title', 'StringField')
 
     portal_skins.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
     skin_folder = portal_skins._getOb('erp5_geek')
