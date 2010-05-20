@@ -9,11 +9,12 @@ from asyncore import socket_map
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments, instance_random
-from Products.ERP5Type.tests.runUnitTest import instance_home, static_dir_list
+from Products.ERP5Type.tests.runUnitTest import static_dir_list
 
 def _print(message):
   sys.stderr.write(message + "\n")
 
+instance_home = os.environ['INSTANCE_HOME']
 zserver_list = os.environ.get('zserver', '').split(',')
 os.environ['zserver'] = zserver_list[0]
 
@@ -56,6 +57,7 @@ if load:
       ret = os.system("mysql %s < %s" % (getMySQLArguments(), dump_sql))
       assert not ret
     else:
+      _print("Could not find MySQL dump, will recreate catalog ... ")
       os.environ['erp5_tests_recreate_catalog'] = '1'
   _print("Restoring static files ... ")
   for dir in static_dir_list:
