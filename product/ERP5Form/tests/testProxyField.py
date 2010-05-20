@@ -53,6 +53,38 @@ class TestProxyField(ERP5TypeTestCase):
     self.getPortal().portal_skins.changeSkin(skin_name)
     request.set('portal_skin', skin_name)
 
+  def beforeTearDown(self):
+    """Remove objects created in tests."""
+    # Remove forms
+    custom_folder = self.getSkinsTool().custom
+    custom_folder.manage_delObjects(custom_folder.objectIds())
+
+    # Remove skin folders
+    if 'erp5_geek' in self.getSkinsTool().objectIds():
+      self.getSkinsTool().manage_delObjects(['erp5_geek'])
+      ps = self.getSkinsTool()
+      for skin_name, selection in ps.getSkinPaths():
+        new_selection = []
+        selection = selection.split(',')
+        for skin_id in selection:
+          if skin_id != 'erp5_geek':
+            new_selection.append(skin_id)
+        ps.manage_skinLayers(skinpath=tuple(new_selection),
+                             skinname=skin_name, add_skin=1)
+
+    if 'customized_geek' in self.getSkinsTool().objectIds():
+      self.getSkinsTool().manage_delObjects(['customized_geek'])
+      ps = self.getSkinsTool()
+      for skin_name, selection in ps.getSkinPaths():
+        new_selection = []
+        selection = selection.split(',')
+        for skin_id in selection:
+          if skin_id != 'customized_geek':
+            new_selection.append(skin_id)
+        ps.manage_skinLayers(skinpath=tuple(new_selection),
+                             skinname=skin_name, add_skin=1)
+    transaction.commit()
+
   def testEmptySurchargedFieldLibrary(self):
     """
     This test checks that it is not required to duplicate all fields in a custom
