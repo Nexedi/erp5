@@ -94,6 +94,7 @@
                         <string>my_collect_order_group</string>
                         <string>my_int_index</string>
                         <string>my_tested_property_list</string>
+                        <string>my_force_update</string>
                         <string>my_divergence_scope</string>
                       </list>
                     </value>

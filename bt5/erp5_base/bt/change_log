@@ -1,3 +1,6 @@
+2010-05-20 kazuhiko
+* Add checkboxes for force_update property of Property Movement Group and Category Movement Group.
+
 2010-05-14 yo
 * Get rid of wrong acquisitions from the use category.
 

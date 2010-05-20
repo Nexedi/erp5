@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>sort</string>
+                <string>editable_columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>editable_columns</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -114,6 +114,10 @@
                         <tuple>
                           <string>tested_property</string>
                           <string>Tested Property</string>
+                        </tuple>
+                        <tuple>
+                          <string>force_update</string>
+                          <string>Force Update</string>
                         </tuple>
                         <tuple>
                           <string>int_index</string>

@@ -86,6 +86,7 @@
                       <list>
                         <string>listbox_int_index</string>
                         <string>listbox_tested_property</string>
+                        <string>listbox_force_update</string>
                       </list>
                     </value>
                 </item>
