@@ -35,6 +35,7 @@ from Products.Formulator.TALESField import TALESMethod
 import transaction
 import unittest
 from lxml import etree
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestProxyField(ERP5TypeTestCase):
   """
@@ -144,6 +145,7 @@ class TestProxyField(ERP5TypeTestCase):
 
     self.assertEquals('Generic Title', field.get_value('title'))
 
+  @expectedFailure
   def testSkinSelectionTemplateField(self):
     """
     Check that proxy field values are generated from the current skin selection
@@ -155,6 +157,7 @@ class TestProxyField(ERP5TypeTestCase):
         'Base_viewGeekFieldLibrary',
         'View')
     form = skin_folder._getOb('Base_viewGeekFieldLibrary', None)
+    form.manage_addField('my_title', 'Customized Title', 'StringField')
 
     portal_skins.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
     skin_folder = portal_skins._getOb('erp5_geek')
@@ -192,6 +195,7 @@ class TestProxyField(ERP5TypeTestCase):
     field = getattr(form, 'my_title')
     field.manage_edit_xmlrpc(dict(
       form_id='Base_viewGeekFieldLibrary', field_id='my_title'))
+    transaction.commit()
 
     self.assertEquals(None, field.get_value('title'))
     self.changeSkin('GenericView')
