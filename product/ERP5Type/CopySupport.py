@@ -255,9 +255,17 @@ class CopyContainer:
         if userid is not None:
           #remove previous owners
           local_role_dict = self.__ac_local_roles__
+          removable_role_key_list = []
           for key, value in local_role_dict.items():
             if 'Owner' in value:
               value.remove('Owner')
+            if len(value) == 0:
+              removable_role_key_list.append(key)
+          # there is no need to keep emptied keys after cloning, it makes
+          # unstable local roles -- if object is cloned it can be different when
+          # after being just added
+          for key in removable_role_key_list:
+            local_role_dict.pop(key)
           #add new owner
           l=local_role_dict.setdefault(userid, [])
           l.append('Owner')
