@@ -169,7 +169,6 @@ function toggleFieldState(evt) {
   var target=(evt.target)?evt.target:evt.srcElement;
   tr_parent = target.parentNode.parentNode;
   allElements = tr_parent.childNodes;
-  console.log(allElements);
   for (i=0; i<allElements.length; i++) {
     if (isClass(allElements[i], 'to_disable')) {
       field = allElements[i].childNodes[1];
