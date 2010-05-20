@@ -400,7 +400,6 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
 
     return aggregated_amount_list
 
-
   def _isMatchedMovement(self, movement, base_application_list, tmp_movement):
     return (
       set(base_application_list).intersection(
