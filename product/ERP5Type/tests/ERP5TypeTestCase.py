@@ -35,6 +35,9 @@ original_get_request = Globals.get_request
 convertToUpperCase = Products.ERP5Type.Utils.convertToUpperCase
 
 def get_request():
+  request = original_get_request()
+  if request is not None:
+    return request
   if current_app is not None:
     return current_app.REQUEST
   else:
