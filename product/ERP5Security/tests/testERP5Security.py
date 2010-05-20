@@ -747,7 +747,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
         (((cloning_owner_id), ('Owner',)),)
     )
     self.assertEqual(
-        subdocument.get_local_roles(),
+        cloned_subdocument.get_local_roles(),
         (((cloning_owner_id), ('Owner',)),)
     )
 
