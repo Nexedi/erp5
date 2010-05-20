@@ -1,3 +1,6 @@
+2010-05-20 yo
+* Movement_getPriceCalculationOperandDict must take into account delivery types when getting Trade Conditions.
+
 2010-05-19 yusei
 * Add two work lists to validation workflow for supply portal types.
 
