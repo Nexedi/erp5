@@ -176,7 +176,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       # Test the differents render
       # render image
-      for image_format in STANDARD_IMAGE_FORMAT_LIST:
+      for image_format in VALID_IMAGE_FORMAT_LIST:
         response = self.publish(
                       '/%s/%s/%s?render_format=%s&display=medium'
                       % (self.portal.getId(), self.form_id, self.ooo_chart_id, image_format), self.auth )
