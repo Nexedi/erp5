@@ -32,7 +32,6 @@
 
 import unittest
 import transaction
-import uuid
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                      get_request
@@ -683,8 +682,8 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEquals(self.portal.portal_types[acquiring_type].acquire_local_roles, 1)
     self.assertEquals(self.portal.portal_types[parent_type].acquire_local_roles, 0)
 
-    original_owner_id = str(uuid.uuid4())
-    cloning_owner_id = str(uuid.uuid4())
+    original_owner_id = 'original_user'
+    cloning_owner_id = 'cloning_user'
     self._createZodbUser(original_owner_id)
     self._createZodbUser(cloning_owner_id)
     transaction.commit()
