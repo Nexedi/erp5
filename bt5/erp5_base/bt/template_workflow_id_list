@@ -15,5 +15,6 @@ order_simulation_interaction_workflow
 person_interaction_workflow
 processing_status_workflow
 query_workflow
+reindex_object_interaction_workflow
 simulation_movement_causality_interaction_workflow
 user_account_workflow
