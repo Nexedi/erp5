@@ -78,9 +78,11 @@ Surcharge <dtml-var meta_type> properties here.
                 <dtml-if "proxy_field.is_delegated(field_id)">
                   <input type="checkbox" 
                          name="<dtml-var checkbox_key>" 
+                         onclick="toggleFieldState(event)"
                          checked="checked" />
                 <dtml-else >
                   <input type="checkbox" 
+                         onclick="toggleFieldState(event)"
                          name="<dtml-var checkbox_key>" />
                 </dtml-if >
               </dtml-let >
@@ -96,9 +98,15 @@ Surcharge <dtml-var meta_type> properties here.
               </dtml-if>
             </div>
             </td>
-            <td align="left" valign="top">
-            <dtml-var "field.render(value)">
-            </td>
+            <dtml-if "proxy_field.is_delegated(field_id)">
+              <td align="left" valign="top" class="to_disable delegated">
+              <dtml-var "field.render(value)">
+              </td>
+            <dtml-else >
+              <td align="left" valign="top" class="to_disable">
+              <dtml-var "field.render(value)">
+              </td>
+            </dtml-if>
             <td><div class="form-element">
             <dtml-var "field.meta_type">
             </div></td>
@@ -130,6 +138,52 @@ Surcharge <dtml-var meta_type> properties here.
 </table>
 </form>
 
+<script type="text/javascript">
+function isClass(object, className) {
+        if (object.className != undefined){
+        return (object.className.search('(^|\\s)' + className + '(\\s|$)') != -1);
+        }
+        return false;
+}
+function GetElementsWithClassName(elementName,className) {
+        var allElements = document.getElementsByTagName(elementName);
+        var elemColl = new Array();
+        for (i = 0; i< allElements.length; i++) {
+                if (isClass(allElements[i], className)) {
+                        elemColl[elemColl.length] = allElements[i];
+                }
+        }
+        return elemColl;
+}
+var class_deletaged_list = GetElementsWithClassName('*','delegated');
+for(var i=0; i<class_deletaged_list.length; i++) {
+  element = class_deletaged_list[i].childNodes[1];
+  if (element.type == 'hidden'){
+    element = class_deletaged_list[i].childNodes[2];
+  }
+  element.readOnly = true;
+}
 
-
+function toggleFieldState(evt) {
+  evt=(evt)?evt:event;
+  var target=(evt.target)?evt.target:evt.srcElement;
+  tr_parent = target.parentNode.parentNode;
+  allElements = tr_parent.childNodes;
+  console.log(allElements);
+  for (i=0; i<allElements.length; i++) {
+    if (isClass(allElements[i], 'to_disable')) {
+      field = allElements[i].childNodes[1];
+      if (field.type == 'hidden'){
+        field = allElements[i].childNodes[2];
+      }
+      if (field.readOnly){
+        field.readOnly = false;
+      }
+      else{
+        field.readOnly = true;
+      }
+    }
+  }
+}
+</script>
 <dtml-var manage_page_footer>
