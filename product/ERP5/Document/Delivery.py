@@ -311,17 +311,9 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
 
     def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement',
                                        method_id='expand', **kw):
-      for my_simulation_movement in self.getDeliveryRelatedValueList(
-                                      portal_type = 'Simulation Movement'):
+      for simulation_movement in self._getAllRelatedSimulationMovementList():
         # And apply
-        getattr(my_simulation_movement.getObject(), method_id)(**kw)
-
-      for m in self.getMovementList():
-        # Find related in simulation
-        for my_simulation_movement in m.getDeliveryRelatedValueList(
-                                  portal_type = 'Simulation Movement'):
-          # And apply
-          getattr(my_simulation_movement.getObject(), method_id)(**kw)
+        getattr(simulation_movement.getObject(), method_id)(**kw)
 
     #######################################################
     # Causality computation
@@ -819,16 +811,12 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       if excluded_rule_path_list is None:
         excluded_rule_path_list = []
       to_expand_list = []
-      # we might use a zsql method, because it can be very slow
-      for m in self.getMovementList():
-        if m.isSimulated():
-          sim_movement_list = m.getDeliveryRelatedValueList()
-          for sim_movement in sim_movement_list:
-            if sim_movement.getRootAppliedRule().getPath() \
-                not in excluded_rule_path_list:
-              parent_value = sim_movement.getParentValue()
-              if parent_value not in to_expand_list:
-                to_expand_list.append(parent_value)
+      for sim_movement in self._getAllRelatedSimulationMovementList():
+        if sim_movement.getRootAppliedRule().getPath() \
+            not in excluded_rule_path_list:
+          parent_value = sim_movement.getParentValue()
+          if parent_value not in to_expand_list:
+            to_expand_list.append(parent_value)
       for rule in to_expand_list:
         rule.expand(activate_kw=activate_kw,**kw)
         rule.recursiveReindexObject(activate_kw=activate_kw)
@@ -965,3 +953,15 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
               simulation_movement.getRelativeUrl())
 
       return disconnected_simulation_movement_list
+
+    def _getAllRelatedSimulationMovementList(self, **kw):
+      search_method = \
+          self.getPortalObject().portal_catalog.unrestrictedSearchResults
+      movement_uid_list = [x.getUid() for x in self.getMovementList()]
+      sim_movement_list = search_method(portal_type='Simulation Movement',
+                                        delivery_uid=movement_uid_list, **kw)
+      if len(sim_movement_list) == 0:
+        # 'order' category is deprecated. it is kept for compatibility.
+        sim_movement_list = search_method(portal_type='Simulation Movement',
+                                          order_uid=movement_uid_list, **kw)
+      return sim_movement_list
