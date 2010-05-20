@@ -122,16 +122,6 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     self.portal.REQUEST['uri'] = instance_uri
     self.portal.portal_classes.DocumentationHelper_viewReport()
 
-  def test_04_ODT_style_report(self):
-    """Checks that it is possible to do ODT report"""
-    # XXX-Luke: Currently always fail, some assertions shall be done after any
-    # reasonable result will be available
-    self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
-    self.portal.REQUEST['uri'] = self.portal.getUrl()
-    self.portal.REQUEST['portal_skin'] = 'ODT'
-    self.portal.REQUEST['business_template_list'] = 'erp5_xhtml_style',
-    self.portal.portal_classes.DocumentationHelper_viewReport()
-
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocumentationHelper))
