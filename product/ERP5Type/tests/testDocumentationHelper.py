@@ -126,10 +126,11 @@ class TestDocumentationHelper(ERP5TypeTestCase):
     """Checks that it is possible to do ODT report"""
     # XXX-Luke: Currently always fail, some assertions shall be done after any
     # reasonable result will be available
-    self.portal.portal_classes.DocumentationHelper_viewReport(
-        class_name='ERP5SiteDocumentationHelper',
-        business_template_list=['erp5_xhtml_style'], uri=self.portal.getUrl(),
-        portal_skin='ODT')
+    self.portal.REQUEST['class_name'] = 'ERP5SiteDocumentationHelper'
+    self.portal.REQUEST['uri'] = self.portal.getUrl()
+    self.portal.REQUEST['portal_skin'] = 'ODT'
+    self.portal.REQUEST['business_template_list'] = 'erp5_xhtml_style',
+    self.portal.portal_classes.DocumentationHelper_viewReport()
 
 def test_suite():
   suite = unittest.TestSuite()
