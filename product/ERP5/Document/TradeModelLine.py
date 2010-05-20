@@ -314,14 +314,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           # movements (current_aggregated_amount_list).
           # if the quantity is not defined, take it by searching all movements
           # that used this base_amount
-          if (len(base_application_list) == 0 or \
-              len(movement.getBaseContributionList()) == 0 or \
-              set(base_application_list).intersection( \
-              set(movement.getBaseContributionList()))) and \
-              (len(movement.getVariationCategoryList()) == 0 or \
-               len(tmp_movement.getVariationCategoryList()) == 0 or \
-              set(movement.getVariationCategoryList()).intersection( \
-              set(tmp_movement.getVariationCategoryList()))):
+          if self._isMatchedMovement(movement, base_application_list, tmp_movement):
             # at least one base application is in base contributions and
             # if the movement have no variation category, it's the same as
             # if he have all variation categories
@@ -406,3 +399,15 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         aggregated_amount_list.append(tmp_movement)
 
     return aggregated_amount_list
+
+
+  def _isMatchedMovement(self, movement, base_application_list, tmp_movement):
+    return (
+      set(base_application_list).intersection(
+      set(movement.getBaseContributionList())) and
+      (len(movement.getVariationCategoryList()) == 0 or
+       len(tmp_movement.getVariationCategoryList()) == 0 or
+       set(movement.getVariationCategoryList()).intersection(
+      set(tmp_movement.getVariationCategoryList()))
+       )
+      )
