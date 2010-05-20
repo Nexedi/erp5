@@ -17,54 +17,87 @@ FLUSH_COMMAND = " PYTHONPATH=${configuration:openoffice_uno} " + \
                 " ${software_definition:oood_software}/start.py " + \
                 " --flush > /dev/null 2>&1 /dev/null"
 
+INSTANCE_PID_FILE = "/".join(PID_FILE.split("/")[:-1] + ["instance_0.pid"])
+
 class Oood:
-    pid = None
-    def __init__(self):
-        self.setsignals()
+  pid = None
+  openoffice_pid = None
 
-    def run(self):
-        subprocess.call(OOOD_COMMAND + "--start > /dev/null 2>&1 /dev/null &",
-                        shell=True)
-        subprocess.call(FLUSH_COMMAND, shell=True)
-        while 1:
-            if os.path.exists(PID_FILE):
-              self.pid = int(open(PID_FILE, "r").read())
-              time.sleep(40)
-            time.sleep(5)
+  def __init__(self):
+    self.setsignals()
+      
 
-    def setsignals(self):
-        signal.signal(signal.SIGTERM, self.stop)
-        signal.signal(signal.SIGHUP, self.stop)
-        signal.signal(signal.SIGINT, self.stop)
-        signal.signal(signal.SIGUSR1, self.stop)
-        signal.signal(signal.SIGUSR2, self.stop)
+  def run(self):
+    subprocess.call(OOOD_COMMAND + "--start > /dev/null 2>&1 /dev/null &",
+                    shell=True)
+    subprocess.call(FLUSH_COMMAND, shell=True)
+    while 1:
+      # Load the soffice pid for make sure it will be killed 
+      # when this wrapper is killed.
+      # The oood does a real mess with the open office pid file and we cannot
+      # trust always into the pid file. So if the process still running, don't
+      # upload the openoffice_pid.
+      update_pid_required = True
+      if self.openoffice_pid is not None:
+        try:
+          os.kill(self.openoffice_pid, 0)
+          update_pid_required = False
+        except OSError:
+          # Process is running ignore.
+          pass
+          
+      if os.path.exists(INSTANCE_PID_FILE) and update_pid_required:
+        self.openoffice_pid = int(open(INSTANCE_PID_FILE, "r").read())
+      
+      # Update the file, if it is not removed by oood by mistake.
+      if os.path.exists(PID_FILE):
+        self.pid = int(open(PID_FILE, "r").read())
+        time.sleep(40)
+      time.sleep(5)
 
-    def stop(self, sig, frame):
-        
-        if os.path.exists(PID_FILE):
-          self.pid = int(open(PID_FILE, "r").read())
-          #print self.pid
-        else: 
-          print "Pid File does not exist!"
-        
-        subprocess.call(OOOD_COMMAND + "--stop > /dev/null 2>&1 /dev/null ", 
-                        shell=True)
-        subprocess.call(FLUSH_COMMAND, shell=True)
-        if self.pid is not None:
-          try:
-            os.kill(self.pid, 9)
-            print "Kill pid (%s)" % self.pid
-          except OSError:
-            #print "Pid (%s) already stopped. " % self.pid
-            pass
-            # Ignore is ok, it means stop command works.
-            
-        sys.exit(0)
+  def setsignals(self):
+   signal.signal(signal.SIGTERM, self.stop)
+   signal.signal(signal.SIGHUP, self.stop)
+   signal.signal(signal.SIGINT, self.stop)
+   signal.signal(signal.SIGUSR1, self.stop)
+   signal.signal(signal.SIGUSR2, self.stop)
+
+  def stop(self, sig, frame):
+   if os.path.exists(PID_FILE):
+     self.pid = int(open(PID_FILE, "r").read())
+   else: 
+     print "Pid File does not exist!"
+
+   # Stop command in an appropriate way.
+   subprocess.call(OOOD_COMMAND + "--stop > /dev/null 2>&1 /dev/null ", 
+                   shell=True)
+
+   # Call Flush Command to stop openoffices.
+   subprocess.call(FLUSH_COMMAND, shell=True)
+
+   if self.pid is not None:
+     try:
+       # If oood process still running be brutal and force it stop.
+       os.kill(self.pid, 9)
+       print "Kill runserw pid (%s)" % self.pid
+     except OSError:
+       pass # OOOD is already stopped, nothing to do.
+
+   if self.openoffice_pid is not None:
+     try:
+       # Use SIGTERM is required for this case, because openoffice use
+       # a shell script to run and "trap" to kill the childrens.
+       os.kill(self.openoffice_pid , 15)
+       print "Kill openoffice pid (%s)" % self.pid
+     except OSError:
+       pass # OpenOffice is already stopped, nothing to do.
+
+   sys.exit(0)
         
 
 def main():
-    pp = Oood()
-    pp.run()
+  pp = Oood()
+  pp.run()
 
 if __name__ == '__main__':
-    main() 
+  main() 
