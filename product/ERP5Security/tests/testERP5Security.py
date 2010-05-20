@@ -32,6 +32,7 @@
 
 import unittest
 import transaction
+import uuid
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                      get_request
@@ -668,6 +669,56 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
 
+  def _createZodbUser(self, login, role_list=None):
+    if role_list is None:
+      role_list = ['Member', 'Assignee', 'Assignor', 'Author', 'Auditor',
+          'Associate']
+    uf = self.portal.acl_users
+    uf._doAddUser(login, '', role_list, [])
+
+  def test_owner_local_role_on_clone(self):
+    # check that tested stuff is ok
+    parent_type = 'Person'
+    acquiring_type = 'Email'
+    self.assertEquals(self.portal.portal_types[acquiring_type].acquire_local_roles, 1)
+    self.assertEquals(self.portal.portal_types[parent_type].acquire_local_roles, 0)
+
+    original_owner_id = str(uuid.uuid4())
+    cloning_owner_id = str(uuid.uuid4())
+    self._createZodbUser(original_owner_id)
+    self._createZodbUser(cloning_owner_id)
+    transaction.commit()
+    module = self.portal.getDefaultModule(portal_type=parent_type)
+    self.login(original_owner_id)
+    document = module.newContent(portal_type=parent_type)
+    subdocument = document.newContent(portal_type=acquiring_type)
+    self.stepTic()
+    self.login(cloning_owner_id)
+    cloned_document = document.Base_createCloneDocument(batch_mode=1)
+    self.stepTic()
+    self.login()
+    self.assertEqual(1, len(document.contentValues()))
+    self.assertEqual(1, len(cloned_document.contentValues()))
+    cloned_subdocument = cloned_document.contentValues()[0]
+    # real assertions
+    # roles on original document
+    self.assertEqual(
+        document.get_local_roles(),
+        (((original_owner_id), ('Owner',)),)
+    )
+    self.assertEqual(
+        subdocument.get_local_roles(),
+        (((original_owner_id), ('Owner',)),)
+    )
+
+    self.assertEqual(
+        cloned_document.get_local_roles(),
+        (((cloning_owner_id), ('Owner',)),)
+    )
+    self.assertEqual(
+        subdocument.get_local_roles(),
+        (((cloning_owner_id), ('Owner',)),)
+    )
 
 def test_suite():
   suite = unittest.TestSuite()
