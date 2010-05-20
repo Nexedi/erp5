@@ -97,8 +97,8 @@
                         <string>listbox_total_price</string>
                         <string>listbox_title</string>
                         <string>listbox_variation_category_list</string>
-                        <string>listbox_getCurrentInventory</string>
-                        <string>listbox_getAvailableInventory</string>
+                        <string>listbox_current_quantity</string>
+                        <string>listbox_available_quantity</string>
                         <string>listbox_quantity_unit</string>
                       </list>
                     </value>

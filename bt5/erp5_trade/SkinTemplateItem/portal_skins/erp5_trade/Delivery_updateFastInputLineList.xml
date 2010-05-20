@@ -97,15 +97,15 @@ for line in listbox:\n
        supply_cell_list = product.default_ssl.contentValues(portal_type=supply_cell_portal_type)\n
        for supply_cell in supply_cell_list:\n
          if supply_cell.getVariationCategoryList()[0]==\'variation/%s\'%line["variation_category_list"]:\n
-           line["total_price"] = line[\'quantity\'] * supply_cell.getBasePrice()\n
+           line["total_price"] = line[\'quantity\'] * (supply_cell.getBasePrice() or 0)\n
        request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']    \n
-       request.form["field_listbox_getAvailableInventory_new_%s"%line_id] = product.getAvailableInventory(\n
+       request.form["field_listbox_available_quantity_new_%s"%line_id] = product.getAvailableInventory(\n
                                          section_uid=context.getSourceSectionValue().getUid(),\n
                               variation_text=\'variation/%s\'%line["variation_category_list"])\n
        request.form[\'field_listbox_inventory_new_%s\'%line_id] = product.getInventory(\n
                                                               section_uid=context.getSourceSectionValue().getUid(),\n
                                                        variation_text=\'variation/%s\'%line["variation_category_list"])\n
-       request.form["field_listbox_getCurrentInventory_new_%s"%line_id] = product.getCurrentInventory(\n
+       request.form["field_listbox_current_quantity_new_%s"%line_id] = product.getCurrentInventory(\n
                                                                         section_uid=context.getSourceSectionValue().getUid(),\n
                                                           variation_text=\'variation/%s\'%line["variation_category_list"])\n
        total_price +=line[\'total_price\']\n
@@ -114,13 +114,13 @@ for line in listbox:\n
      elif line["variation_category_list"]==\'\' and product.getPortalType()==\'Product\' \\\n
           and no_inventory is False \\\n
           and line[\'quantity\'] <= product.getAvailableInventory(section_uid=context.getSourceSectionValue().getUid()):\n
-       line["total_price"] = line[\'quantity\'] * cell.getPrice()\n
+       line["total_price"] = line[\'quantity\'] * (cell.getPrice() or 0)\n
        request.form["field_listbox_total_price_new_%s"%line_id] = line[\'total_price\']\n
-       request.form["field_listbox_getAvailableInventory_new_%s"%line_id] = product.getAvailableInventory(\n
+       request.form["field_listbox_available_quantity_new_%s"%line_id] = product.getAvailableInventory(\n
                                          section_uid=context.getSourceSectionValue().getUid())\n
        request.form[\'field_listbox_inventory_new_%s\'%line_id] = product.getInventory(\n
                                                               section_uid=context.getSourceSectionValue().getUid())\n
-       request.form["field_listbox_getCurrentInventory_new_%s"%line_id] = product.getCurrentInventory(\n
+       request.form["field_listbox_current_quantity_new_%s"%line_id] = product.getCurrentInventory(\n
                                                                         section_uid=context.getSourceSectionValue().getUid(),)\n
        total_price +=line[\'total_price\']\n
        request.form["field_my_total_price"] = total_price\n
