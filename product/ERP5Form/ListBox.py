@@ -41,7 +41,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
 
-from Acquisition import aq_base, aq_self
+from Acquisition import aq_base, aq_self, aq_inner
 import Acquisition
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
@@ -1207,16 +1207,22 @@ class ListBoxRenderer:
     """
     form = self.getForm()
     editable_field_id = '%s_%s' % (self.getUnprefixedId(), alias)
-    if form.has_field(editable_field_id, include_disabled=1):
-      return form.get_field(editable_field_id, include_disabled=1)
-
-    # if we are rendering a proxy field, also look for editable fields from the
-    # template field's form.
-    if self.field.has_value('form_id'):
-      form = getattr(self.field, self.field.get_value('form_id'), None)
-      if form and form.has_field(editable_field_id, include_disabled=1):
+    field = self.field
+    while form is not None:
+      #Search the editable field in the form
+      if form.has_field(editable_field_id, include_disabled=1):
         return form.get_field(editable_field_id, include_disabled=1)
-
+      elif field.meta_type == 'ProxyField':
+        # if we are rendering a proxy field, also look for editable 
+        # fields from the template field's form.
+        field = field.getTemplateField()
+        if field is None:
+          form = None
+        else:
+          form = aq_inner(field).aq_parent
+      else:
+        form = None
+    
     return None
 
   def getListMethod(self):
