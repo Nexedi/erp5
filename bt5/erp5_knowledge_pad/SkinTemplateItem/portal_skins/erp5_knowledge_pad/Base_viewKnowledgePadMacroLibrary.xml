@@ -74,7 +74,7 @@
      title="Add gadgets"\n
      i18n:translate="" \n
      i18n:domain="ui"\n
-     id="add-gadgets"> Add gadgets</a>\n
+     id="add-gadgets"> <span>Add gadgets</span></a>\n
 </tal:block>\n
 \n
 <tal:block metal:define-macro="stick">\n
@@ -89,8 +89,8 @@
        \'WebSection_stickKnowledgePad?knowledge_pad_url=%s&cancel_url=%s\'\n
        %(active_knowledge_pad.getRelativeUrl(), cancel_url)"\n
        i18n:translate="" \n
-       i18n:domain="ui">Stick it\n
-    </a>\n
+       i18n:domain="ui"\n
+       id="stick-gadgets"><span>Stick it</span></a>\n
 \n
     <a tal:condition="is_customized_pad"\n
        tal:attributes="href python:\n
