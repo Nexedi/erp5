@@ -1,4 +1,7 @@
 2010-05-21 yusei
+* Display preferred base amounts in base contribution list and base application list.
+
+2010-05-21 yusei
 * Change base amount preference. Only one preferred list on trade is enough.
 * Revert previous changes. On movements, display uses defined on the corresponding resource only.
 
