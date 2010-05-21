@@ -124,7 +124,8 @@
                 %(context.getPortalObject().getId(),\n
                   mode)" \n
               i18n:translate="" \n
-              i18n:domain="ui">Add</button>\n
+              i18n:domain="ui"\n
+              id="add_new_tab_dialog_add_button">Add</button>\n
       <button type="button"\n
               tal:condition="python: mode==\'web_front\'"\n
               tal:attributes="onclick python: \n
@@ -135,7 +136,8 @@
                    context.getRelativeUrl(),\n
                    mode)" \n
               i18n:translate="" \n
-              i18n:domain="ui">Add</button>\n
+              i18n:domain="ui"\n
+              id="add_new_tab_dialog_add_button">Add</button>\n
   </div>\n
 \n
   <div id="rename_tab_dialog" \n
@@ -156,6 +158,7 @@
         <button type="button"\n
                 i18n:translate="" \n
                 i18n:domain="ui"\n
+                id="rename_tab_dialog_rename_button"\n
                 tal:attributes="onclick python: \'renameKnowledgePadToServer(\n
                 \\\'rename_tab_dialog\\\',\n
                 \\\'active_knowledge_pad_title\\\',\n
