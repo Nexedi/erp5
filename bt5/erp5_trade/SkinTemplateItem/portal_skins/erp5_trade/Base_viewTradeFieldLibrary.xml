@@ -307,6 +307,8 @@
                         <string>my_report_mode_report_box</string>
                         <string>my_view_mode_preferred_sale_base_amount_list</string>
                         <string>my_view_mode_preferred_purchase_base_amount_list</string>
+                        <string>my_view_mode_packing_use</string>
+                        <string>my_view_mode_order_use</string>
                       </list>
                     </value>
                 </item>
