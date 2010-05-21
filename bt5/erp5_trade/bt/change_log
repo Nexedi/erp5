@@ -1,3 +1,6 @@
+2010-05-21 yusei
+* Add two system preference properties for base amount category.
+
 2010-05-21 yo
 * Add a new action Reset Prices into Sale Order, Sale Packing List, Purchase Order, and Purchase Packing List.
 

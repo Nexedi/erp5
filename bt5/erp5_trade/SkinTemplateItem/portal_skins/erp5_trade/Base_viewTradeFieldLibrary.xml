@@ -305,6 +305,8 @@
                         <string>my_view_mode_matrix_box</string>
                         <string>my_view_mode_planning_box</string>
                         <string>my_report_mode_report_box</string>
+                        <string>my_view_mode_preferred_sale_base_amount_list</string>
+                        <string>my_view_mode_preferred_purchase_base_amount_list</string>
                       </list>
                     </value>
                 </item>
