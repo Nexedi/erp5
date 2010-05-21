@@ -29,8 +29,7 @@
 
 from copy import deepcopy
 
-from Products.Formulator.Form import Form, BasicForm, ZMIForm
-from Products.Formulator.Form import manage_addForm, manage_add, initializeForm
+from Products.Formulator.Form import BasicForm, ZMIForm
 from Products.Formulator.Errors import FormValidationError, ValidationError
 from Products.Formulator.DummyField import fields
 from Products.Formulator.XMLToForm import XMLToForm
@@ -40,16 +39,14 @@ from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.ERP5Type import PropertySheet, Permissions
 
 from urllib import quote
-from Products.ERP5Type.Globals import InitializeClass, PersistentMapping, DTMLFile, get_request
-from AccessControl import Unauthorized, getSecurityManager, ClassSecurityInfo
+from Products.ERP5Type.Globals import DTMLFile, get_request
+from AccessControl import Unauthorized, ClassSecurityInfo
 from ZODB.POSException import ConflictError
 from Acquisition import aq_base
 from Products.PageTemplates.Expressions import SecureModuleImporter
-from Products.ERP5Type.Utils import UpperCase
 
 from Products.ERP5Type.PsycoWrapper import psyco
 import sys
-import re
 
 _field_value_cache = {}
 def purgeFieldValueCache():
@@ -699,11 +696,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                     if alternate_name:
                         result[alternate_name] = value
                 except FormValidationError, e: # XXX JPS Patch for listbox
-                    #LOG('validate_all', 0, 'FormValidationError: field = %s, errors=%s' % (repr(field), repr(errors)))
                     errors.extend(e.errors)
                     result.update(e.result)
                 except ValidationError, err:
-                    #LOG('validate_all', 0, 'ValidationError: field.id = %s, err=%s' % (repr(field.id), repr(err)))
                     errors.append(err)
                 except KeyError, err:
                     LOG('ERP5Form/Form.py:validate_all', 0, 'KeyError : %s' % (err, ))
@@ -991,8 +986,6 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         are different. And if you specify keep_empty_value, then empty values
         will not be delegated(force_delegate option is high priority).
         """
-        from Products.ERP5Form.ProxyField import ProxyWidget
-
         def copy(field, value_type):
             new_dict = {}
             for key, value in getFieldDict(field, value_type).iteritems():
