@@ -188,6 +188,79 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEquals('enabled', user_preference.getPreferenceState())
     self.assertEqual(len(user_preference.objectIds()), 1)
 
+  def test_TemplateCreatePreferenceWithExistingNonAuthorizedPreference(self):
+    # When there is an active preference, but without add permission in that
+    # preference, another preference is created when making a template
+    self.createUserAndLogin(self.id())
+    unauthorized_preference = self.portal.portal_preferences.newContent(
+        portal_type='Preference')
+    unauthorized_preference.enable()
+    # it's not authorized to add content in this preference
+    unauthorized_preference.manage_permission('Add portal content', (), acquire=0)
+    preference_id_list = list(self.portal.portal_preferences.objectIds())
+
+    transaction.commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    transaction.commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+    self.tic()
+
+    # this preference was not used
+    self.assertEqual(len(unauthorized_preference.objectIds()), 0)
+
+    # a new preference is created
+    new_preference_id_list = list(self.portal.portal_preferences.objectIds())
+    self.assertEqual(len(preference_id_list) + 1, len(new_preference_id_list))
+    preference_id = [x for x in new_preference_id_list if x not in
+                            preference_id_list][0]
+    preference = self.portal.portal_preferences._getOb(preference_id)
+    self.assertEquals('Preference', preference.getPortalType())
+    self.assertEquals('enabled', preference.getPreferenceState())
+
+    self.assertEqual(len(preference.objectIds()), 1)
+
+  def test_TemplateCreateWithSameTitleUpdateExisting(self):
+    # When we create a template with the same title as an existing template, it
+    # replaces the existing one.
+    self.createUserAndLogin(self.id())
+    user_preference = self.portal.portal_preferences.newContent(
+        portal_type='Preference')
+    user_preference.setPriority(Priority.USER)
+    user_preference.enable()
+    transaction.commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo',
+                                                 title='template',
+                                                 description='First document')
+    transaction.commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(len(user_preference.objectIds()), 1)
+    self.assertEqual(user_preference.objectValues()[0].getDescription(),
+                     'First document')
+    
+    other_document = self.portal.foo_module.newContent(
+                                    portal_type='Foo',
+                                    title='template',
+                                    description="Another document")
+    other_document.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+    self.tic()
+    self.assertEqual(len(user_preference.objectIds()), 1)
+    self.assertEqual(user_preference.objectValues()[0].getDescription(),
+                     'Another document')
+
+
   def test_TemplateCreatePreferenceWithSystemPreferenceEnabled(self):
     # TODO: This test *might* be removed if it is good to trust
     #       getActivePreference to return only Preference portal type
@@ -240,7 +313,6 @@ class TestTemplate(ERP5TypeTestCase):
     preference_id = [x for x in new_preference_id_list if x not in
                             preference_id_list][0]
     preference = self.portal.portal_preferences._getOb(preference_id)
-
     self.assertEquals('Preference', preference.getPortalType())
     self.assertEquals('Document Template Container', preference.getTitle())
     self.assertEquals(Priority.USER, preference.getPriority())
@@ -280,10 +352,7 @@ class TestTemplate(ERP5TypeTestCase):
     preference = self.portal.portal_preferences._getOb(preference_id)
 
     self.assertEquals('Preference', preference.getPortalType())
-    self.assertEquals('Document Template Container', preference.getTitle())
-    self.assertEquals(Priority.USER, preference.getPriority())
     self.assertEquals('enabled', preference.getPreferenceState())
-
     self.assertEqual(len(preference.objectIds()), 2)
 
   def _testTemplateNotIndexable(self, document):
@@ -314,6 +383,10 @@ class TestTemplate(ERP5TypeTestCase):
     template_line = template.objectValues()[0]
     self.assertEquals(0,
         len(self.portal.portal_catalog(uid=template_line.getUid())))
+
+    # change the title, because creating another template with same title will
+    # replace the first one
+    document.setTitle('%sb' % document.getTitle())
 
     # and this is still true if you create two templates from the same document
     # #929
