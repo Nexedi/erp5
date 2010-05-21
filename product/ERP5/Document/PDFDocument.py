@@ -231,22 +231,27 @@ class PDFDocument(Image):
         result[key] = value
 
       # Then we use pdftk to get extra metadata
-      command_result = Popen(['pdftk', tmp.name, 'dump_data', 'output'],
+      try:
+        command_result = Popen(['pdftk', tmp.name, 'dump_data', 'output'],
                                                   stdout=PIPE).communicate()[0]
-      h = command_result
-      line_list = (line for line in h.splitlines())
-      while True:
-        try:
-          line = line_list.next()
-        except StopIteration:
-          break
-        if line.startswith('InfoKey'):
-          key = line[len('InfoKey: '):]
-          line = line_list.next()
-          assert line.startswith('InfoValue: '),\
-              "Wrong format returned by pdftk dump_data"
-          value = line[len('InfoValue: '):]
-          result.setdefault(key, value)
+      except OSError:
+        # pdftk not found
+        pass
+      else:
+        h = command_result
+        line_list = (line for line in h.splitlines())
+        while True:
+          try:
+            line = line_list.next()
+          except StopIteration:
+            break
+          if line.startswith('InfoKey'):
+            key = line[len('InfoKey: '):]
+            line = line_list.next()
+            assert line.startswith('InfoValue: '),\
+                "Wrong format returned by pdftk dump_data"
+            value = line[len('InfoValue: '):]
+            result.setdefault(key, value)
     finally:
       tmp.close()
 
