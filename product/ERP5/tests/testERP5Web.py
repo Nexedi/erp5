@@ -45,8 +45,6 @@ LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
 class TestERP5Web(ERP5TypeTestCase):
   """Test for erp5_web business template.
   """
-  run_all_test = 1
-  quiet = 0
   manager_username = 'zope'
   manager_password = 'zope'
   website_id = 'test'
@@ -161,15 +159,10 @@ class TestERP5Web(ERP5TypeTestCase):
 
     return webpage_list
 
-  def test_01_WebSiteRecatalog(self, quiet=quiet, run=run_all_test):
+  def test_01_WebSiteRecatalog(self):
     """
       Test that a recataloging works for Web Site documents
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_01_WebSiteRecatalog'
-      ZopeTestCase._print(message)
-
     self.setupWebSite()
     portal = self.getPortal()
     web_site_module = self.portal.getDefaultModule('Web Site')
@@ -183,28 +176,20 @@ class TestERP5Web(ERP5TypeTestCase):
     except:
       self.fail('Cataloging of the Web Site failed.')
 
-  def test_02_EditSimpleWebPage(self, quiet=quiet, run=run_all_test):
+  def test_02_EditSimpleWebPage(self):
     """
       Simple Case of creating a web page.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_02_EditSimpleWebPage'
-      ZopeTestCase._print(message)
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<b>OK</b>')
     self.assertEquals('text/html', page.getContentType())
     self.assertEquals('<b>OK</b>', page.getTextContent())
 
-  def test_02a_WebPageAsText(self, quiet=quiet, run=run_all_test):
+  def test_02a_WebPageAsText(self):
     """
       Check if Web Page's asText() returns utf-8 string correctly and
       if it is wrapped by certian column width.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_02a_WebPageAsText'
-      ZopeTestCase._print(message)
     # disable portal_transforms cache
     self.portal.portal_transforms.max_sec_in_cache=-1
     page = self.web_page_module.newContent(portal_type='Web Page')
@@ -218,14 +203,10 @@ class TestERP5Web(ERP5TypeTestCase):
     self.assertEquals("""Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé
 Hé Hé Hé!""", page.asText().strip())
 
-  def test_03_CreateWebSiteUser(self, quiet=quiet, run=run_all_test):
+  def test_03_CreateWebSiteUser(self):
     """
       Create Web site User.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_03_CreateWebSiteUser'
-      ZopeTestCase._print(message)
     self.setupWebSite()
     portal = self.getPortal()
     request = self.app.REQUEST
@@ -257,15 +238,11 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEquals(str(user),  kw['reference'])
     self.assertEquals(1, user.has_role(('Member', 'Authenticated',)))
 
-  def test_04_WebPageTranslation(self, quiet=quiet, run=run_all_test):
+  def test_04_WebPageTranslation(self):
     """
       Simple Case of showing the proper Web Page based on
       current user selected language in browser.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_04_WebPageTranslation'
-      ZopeTestCase._print(message)
     portal = self.getPortal()
     request = self.app.REQUEST
     website = self.setupWebSite()
@@ -295,17 +272,12 @@ Hé Hé Hé!""", page.asText().strip())
       default_document = websection.getDefaultDocumentValue()
       self.assertEquals(language, default_document.getLanguage())
 
-  def test_05_WebPageTextContentSubstitutions(self, quiet=quiet, run=run_all_test):
+  def test_05_WebPageTextContentSubstitutions(self):
     """
       Simple Case of showing the proper text content with and without a substitution
       mapping method.
       In case of asText, the content should be replaced too
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_05_WebPageTextContentSubstitutions'
-      ZopeTestCase._print(message)
-
     content = '<a href="${toto}">$titi</a>'
     asText_content = '$titi\n'
     substituted_content = '<a href="foo">bar</a>'
@@ -334,7 +306,7 @@ Hé Hé Hé!""", page.asText().strip())
     # Even with the same callable object, a restricted method id should not be callable.
     self.assertRaises(Unauthorized, document.asStrippedHTML)
 
-  def test_06_DefaultDocumentForWebSection(self, quiet=quiet, run=run_all_test):
+  def test_06_DefaultDocumentForWebSection(self):
     """
       Testing the default document for a Web Section.
 
@@ -346,10 +318,6 @@ Hé Hé Hé!""", page.asText().strip())
       Note: due to generic ERP5 Web implementation this test highly depends
       on WebSection_geDefaulttDocumentValueList
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_06_DefaultDocumentForWebSection'
-      ZopeTestCase._print(message)
     portal = self.getPortal()
     website = self.setupWebSite()
     websection = self.setupWebSection()
@@ -378,7 +346,7 @@ Hé Hé Hé!""", page.asText().strip())
     base_url = base_list[0]
     self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(), web_page_en.getReference()))
 
-  def test_06b_DefaultDocumentForWebSite(self, quiet=quiet, run=run_all_test):
+  def test_06b_DefaultDocumentForWebSite(self):
     """
       Testing the default document for a Web Site.
 
@@ -390,10 +358,6 @@ Hé Hé Hé!""", page.asText().strip())
       Note: due to generic ERP5 Web implementation this test highly depends
       on WebSection_geDefaulttDocumentValueList
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_06b_DefaultDocumentForWebSite'
-      ZopeTestCase._print(message)
     portal = self.getPortal()
     website = self.setupWebSite()
     publication_section_category_id_list = ['documentation',  'administration']
@@ -421,13 +385,9 @@ Hé Hé Hé!""", page.asText().strip())
     base_url = base_list[0]
     self.assertEqual(base_url, "%s/%s/" % (website.absolute_url(), web_page_en.getReference()))
 
-  def test_07_WebSection_getDocumentValueList(self, quiet=quiet, run=run_all_test):
+  def test_07_WebSection_getDocumentValueList(self):
     """ Check getting getDocumentValueList from Web Section.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_07_WebSection_getDocumentValueList'
-      ZopeTestCase._print(message)
     portal = self.getPortal()
     website = self.setupWebSite()
     websection = self.setupWebSection()
@@ -471,10 +431,9 @@ Hé Hé Hé!""", page.asText().strip())
     sequence_count = 0
     for sequence in [ sequence_one , sequence_two , sequence_three ]:
       sequence_count += 1
-      if not quiet:
-        message = '\ntest_07_WebSection_getDocumentValueList (Sequence %s)' \
-                                                                % (sequence_count)
-        ZopeTestCase._print(message)
+      message = '\ntest_07_WebSection_getDocumentValueList (Sequence %s)' \
+                                                              % (sequence_count)
+      ZopeTestCase._print(message)
 
       web_page_list = []
       for key in sequence:
@@ -646,16 +605,11 @@ Hé Hé Hé!""", page.asText().strip())
 
       self.web_page_module.manage_delObjects(list(self.web_page_module.objectIds()))
 
-  def test_08_AcquisitionWrappers(self, quiet=quiet, run=run_all_test):
+  def test_08_AcquisitionWrappers(self):
     """Test acquisition wrappers of documents.
     Check if documents obtained by getDefaultDocumentValue, getDocumentValue
     and getDocumentValueList are wrapped appropriately.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_08_AcquisitionWrappers'
-      ZopeTestCase._print(message)
-
     portal = self.getPortal()
 
     # Make its own publication section category.
@@ -705,15 +659,10 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertEquals(doc.aq_parent, websection)
       self.assertEquals(doc.aq_parent.aq_parent, website)
 
-  def test_09_WebSiteSkinSelection(self, quiet=quiet, run=run_all_test):
+  def test_09_WebSiteSkinSelection(self):
     """Test skin selection through a Web Site.
     Check if a Web Site can change a skin selection based on a property.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_09_WebSiteSkinSelection'
-      ZopeTestCase._print(message)
-
     portal = self.getPortal()
     ps = portal.portal_skins
     website = self.setupWebSite()
@@ -764,28 +713,18 @@ Hé Hé Hé!""", page.asText().strip())
     request['PARENTS'] = [self.app]
     self.assertEquals(request.traverse(path)(), 'bar')
 
-  def test_10_getDocumentValueList(self, quiet=quiet, run=run_all_test):
+  def test_10_getDocumentValueList(self):
     """Make sure that getDocumentValueList works."""
-    if not run: return
-    if not quiet:
-      message = '\ntest_10_getDocumentValueList'
-      ZopeTestCase._print(message)
-
     self.setupWebSite()
     website = self.web_site_module[self.website_id]
     website.getDocumentValueList(
       portal_type='Document',
       sort_on=[('translated_portal_type', 'ascending')])
 
-  def test_11_getWebSectionValueList(self, quiet=quiet, run=run_all_test):
+  def test_11_getWebSectionValueList(self):
     """ Check getWebSectionValueList from Web Site.
     Only visible web section should be returned.
     """
-    if not run: return
-    if not quiet:
-      message = 'test_11_getWebSectionValueList'
-      ZopeTestCase._print(message)
-
     portal = self.getPortal()
     web_site_portal_type = 'Web Site'
     web_section_portal_type = 'Web Section'
@@ -840,16 +779,11 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertSameSet([sub_web_section],
                        web_site.getWebSectionValueList(web_page))
 
-  def test_12_getWebSiteValue(self, quiet=quiet, run=run_all_test):
+  def test_12_getWebSiteValue(self):
     """
       Test that getWebSiteValue() and getWebSectionValue() always
       include selected Language.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_12_getWebSiteValue'
-      ZopeTestCase._print(message)
-
     website_id = self.setupWebSite().getId()
     website = self.portal.restrictedTraverse(
       'web_site_module/%s' % website_id)
@@ -921,17 +855,12 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertEquals(websection_relative_url_fr,
                       webpage_module_fr.getWebSectionValue().absolute_url(relative=1))
 
-  def test_13_DocumentCache(self, quiet=quiet, run=run_all_test):
+  def test_13_DocumentCache(self):
     """
       Test that when a document is modified, it can be accessed through a
       web_site, a web_section or wathever and display the last content (not an
       old cache value of the document).
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_13_DocumentCache'
-      ZopeTestCase._print(message)
-
     portal = self.getPortal()
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
@@ -984,22 +913,17 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertNotEquals(response.getBody().find(new_content), -1)
 
 
-  def test_13a_DocumentMovedCache(self, quiet=quiet, run=run_all_test):
+  def test_13a_DocumentMovedCache(self):
     """
-      What happens to the cache if document is moved 
+      What happens to the cache if document is moved
       with a new ID. Can we still access content,
-      or is the cache emptied. There is no reason 
+      or is the cache emptied. There is no reason
       that the cache should be regenerated or that the
-      previous cache would not be emptied. 
+      previous cache would not be emptied.
 
       Here, we test that the cache is not regenerated,
       not emptied, and still available.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_13a_DocumentMovedCache'
-      ZopeTestCase._print(message)
-
     portal = self.getPortal()
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
@@ -1025,7 +949,7 @@ Hé Hé Hé!""", page.asText().strip())
     document.setId('document_original_cache')
     self.assertTrue(document.hasConversion(format='txt'))
 
-  def test_13b_DocumentEditCacheKey(self, quiet=quiet, run=run_all_test):
+  def test_13b_DocumentEditCacheKey(self):
     """
       What happens if a web page is edited on a web site ?
       Is converted content cleared and updated ? Or
@@ -1033,11 +957,6 @@ Hé Hé Hé!""", page.asText().strip())
       that the content is updated and the cache cleared
       and reset.
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_13b_DocumentCacheKey'
-      ZopeTestCase._print(message)
-
     portal = self.getPortal()
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
@@ -1067,7 +986,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # Modify the web_page content
     # Use unrestrictedTraverse (XXX-JPS reason unknown)
-    web_document = website.unrestrictedTraverse('web_page_module/%s' % document.getId())     
+    web_document = website.unrestrictedTraverse('web_page_module/%s' % document.getId())
     web_document.edit(text_content=new_content)
     # Make sure cached is emptied
     self.assertFalse(web_document.hasConversion(format='txt'))
@@ -1220,16 +1139,11 @@ Hé Hé Hé!""", page.asText().strip())
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
 
-  def test_16_404ErrorPageIsReturned(self, quiet=quiet, run=run_all_test):
+  def test_16_404ErrorPageIsReturned(self):
     """
       Test that when we try to access a non existing url trought a web site, a
       404 error page is returned
     """
-    if not run: return
-    if not quiet:
-      message = '\ntest_16_404ErrorPageIsReturned'
-      ZopeTestCase._print(message)
-
     portal = self.getPortal()
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
@@ -1248,8 +1162,6 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
   """
-  run_all_test = 1
-  quiet = 0
 
   def getBusinessTemplateList(self):
     return ('erp5_base',
@@ -1283,12 +1195,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.clearModule(self.portal.web_site_module)
     self.clearModule(self.portal.web_page_module)
 
-  def test_01_AccessWebPageByReference(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = '\ntest_01_AccessWebPageByReference'
-      ZopeTestCase._print(message)
-
+  def test_01_AccessWebPageByReference(self):
     self.login('admin')
     site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                   id='site')
@@ -1347,12 +1254,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     target = self.portal.restrictedTraverse('web_site_module/site/section/my-first-web-page')
     self.assertEqual('こんにちは、世界！', target.getTextContent())
 
-  def test_02_LocalRolesFromRoleDefinition(self, quiet=quiet, run=run_all_test):
+  def test_02_LocalRolesFromRoleDefinition(self):
     """ Test setting local roles on Web Site/ Web Sectio using ERP5 Role Definition objects . """
-    if not run: return
-    if not quiet:
-      message = '\ntest_02_LocalRolesFromRoleDefinition'
-      ZopeTestCase._print(message)
     portal = self.portal
     person_reference = 'webuser'
     site = portal.web_site_module.newContent(portal_type='Web Site',
@@ -1387,12 +1290,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertSameSet((),
                        section.get_local_roles_for_userid(person_reference))
 
-  def test_03_WebSection_getDocumentValueListSecurity(self, quiet=quiet, run=run_all_test):
+  def test_03_WebSection_getDocumentValueListSecurity(self):
     """ Test WebSection_getDocumentValueList behaviour and security"""
-    if not run: return
-    if not quiet:
-      message = '\ntest_03_WebSection_getDocumentValueListSecurity'
-      ZopeTestCase._print(message)
     self.login('admin')
     web_site_module = self.portal.web_site_module
     site = web_site_module.newContent(portal_type='Web Site',
@@ -1527,13 +1426,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.assertEquals(page_jp_0.getUid(),
                       section.WebSection_getDocumentValueList()[0].getUid())
 
-  def test_04_ExpireUserAction(self, quiet=quiet, run=run_all_test):
+  def test_04_ExpireUserAction(self):
     """ Test the expire user action"""
-    if not run: return
-    if not quiet:
-      message = '\ntest_04_ExpireUserAction'
-      ZopeTestCase._print(message)
-
     self.login('admin')
     web_site_module = self.portal.web_site_module
     site = web_site_module.newContent(portal_type='Web Site', id='site')
@@ -1563,13 +1457,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     except Unauthorized:
       self.fail("An user should be able to expire a Web Section.")
 
-  def test_05_createWebSite(self, quiet=quiet, run=run_all_test):
+  def test_05_createWebSite(self):
     """ Test to create or clone web sites with many users """
-    if not run: return
-    if not quiet:
-      message = '\ntest_05_createWebSite'
-      ZopeTestCase._print(message)
-
     self.login('admin')
     web_site_module = self.portal.web_site_module
 
@@ -1591,13 +1480,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       site_2_copy)[0]['new_id']]
     self.assertEquals(site_2_clone.getPortalType(), 'Web Site')
 
-  def test_06_createWebSection(self, quiet=quiet, run=run_all_test):
+  def test_06_createWebSection(self):
     """ Test to create or clone web sections with many users """
-    if not run: return
-    if not quiet:
-      message = '\ntest_06_createWebSection'
-      ZopeTestCase._print(message)
-
     self.login('admin')
     web_site_module = self.portal.web_site_module
     site = web_site_module.newContent(portal_type='Web Site', id='site')
@@ -1625,13 +1509,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       section_3_copy)[0]['new_id']]
     self.assertEquals(section_3_clone.getPortalType(), 'Web Section')
 
-  def test_07_createCategory(self, quiet=quiet, run=run_all_test):
+  def test_07_createCategory(self):
     """ Test to create or clone categories with many users """
-    if not run: return
-    if not quiet:
-      message = '\ntest_07_createCategory'
-      ZopeTestCase._print(message)
-
     self.login('admin')
     portal_categories = self.portal.portal_categories
     publication_section = portal_categories.publication_section
@@ -1684,13 +1563,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       category_4_copy)[0]['new_id']]
     self.assertEquals(category_4_clone.getPortalType(), 'Category')
 
-  def test_08_createAndrenameCategory(self, quiet=quiet, run=run_all_test):
+  def test_08_createAndrenameCategory(self):
     """ Test to create or rename categories with many users """
-    if not run: return
-    if not quiet:
-      message = '\ntest_08_createAndrenameCategory'
-      ZopeTestCase._print(message)
-
     self.login('admin')
     portal_categories = self.portal.portal_categories
     publication_section = portal_categories.publication_section
@@ -1740,7 +1614,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       For a given Web Site with Predicates:
       - membership_criterion_base_category: follow_up
       - membership_criterion_document_list: follow_up/project/object_id
-      
+
       When you access website/WebSection_viewContentListAsRSS:
       - with super user you get the correct result
       - with anonymous user you do not get the correct result
@@ -1754,7 +1628,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     project = self.portal.project_module.newContent(portal_type='Project')
     project.validate()
     self.stepTic()
-                                                    
+
     website = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                      id='site')
     website.setMembershipCriterionBaseCategory('follow_up')
@@ -1772,7 +1646,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                                       text_content='test content')
     web_page_follow_up.publish()
     self.stepTic()
-    
+
     web_page_no_follow_up = web_page_module.newContent(portal_type="Web Page",
                                       id='test_web_page_no_follow_up',
                                       reference='NXD-Document.No.Follow.Up.Test',
