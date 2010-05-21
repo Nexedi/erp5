@@ -389,6 +389,14 @@ class ListBoxWidget(Widget.Widget):
                                  required=0)
     property_names.append('report_root_list')
 
+    display_style_list = fields.ListTextAreaField('display_style_list',
+                                title="Display style",
+                                description=(
+        "A list of styles which change the listbox rendering."),
+                                default=[],
+                                required=0)
+    property_names.append('display_style_list')
+
     list_action = fields.StringField('list_action',
                                  title='List Action',
                                  description=('The id of the object action'
@@ -915,6 +923,15 @@ class ListBoxRenderer:
     return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in report_root_list]
 
   getReportRootList = lazyMethod(getReportRootList)
+
+  def getDisplayStyleList(self):
+    """Return the list of avaible display style. Make sure that the 
+    titles are in unicode"""
+    display_style_list = self.field.get_value('display_style_list')
+    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in \
+                                                      display_style_list]
+
+  getDisplayStyleList = lazyMethod(getDisplayStyleList)
 
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
