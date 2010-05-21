@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts74084052.19</string> </value>
+            <value> <string>ts74431602.59</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -89,17 +89,45 @@ div.edit-form button{\n
   overflow: auto;\n
 }\n
 \n
-\n
-#add_new_tab_dialog_link{\n
-  /*line-height: 22px;*/\n
-  padding-left: 10px;\n
+/* Add gadgets link */\n
+#add_new_gadget_link{\n
+  margin-top:13px;\n
+  padding:0;  \n
 }\n
 \n
-#add_new_gadget_link{\n
-  padding-top:15px;\n
+#add-gadgets{\n
   border-bottom: none;\n
   float:right;\n
-  width:auto;\n
+  background: url("km_img/bt-add.png") no-repeat 0 0px;\n
+  margin-top:0px;\n
+  padding:0;\n
+  width:72px;\n
+  height:18px;\n
+  cursor: pointer;\n
+}\n
+\n
+#add-gadgets span{\n
+  display: none;\n
+}\n
+\n
+/* Stick gadget */\n
+#stick-gadgets{\n
+  border-bottom: none;\n
+  float:right;\n
+  background: url("km_img/bt-stick.png") no-repeat 0 0px;\n
+  margin-top:0px;\n
+  padding:0;\n
+  width:55px;\n
+  height:18px;\n
+  cursor: pointer;\n
+}\n
+#stick-gadgets a{\n
+  height:17px;\n
+  width:72px;\n
+}\n
+\n
+#stick-gadgets span{\n
+  display: none;\n
 }\n
 \n
 \n
@@ -249,10 +277,6 @@ h3.handle span.handle {\n
 }\n
 \n
 \n
-#add_new_gadget_link {\n
-  border-bottom: none;\n
-}\n
-\n
 #page_wrapper .content{\n
   border: none;\n
 }\n
@@ -326,7 +350,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4944</int> </value>
+            <value> <int>5335</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

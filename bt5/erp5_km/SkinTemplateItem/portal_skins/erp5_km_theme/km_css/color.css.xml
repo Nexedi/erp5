@@ -279,32 +279,32 @@ p.pub {\n
 \n
 }\n
 \n
-#tabs ul li.active, #tabs ul li:hover {\n
+#tabs ul li.tab_selected, #tabs ul li:hover {\n
 \n
 \tbackground-position: 0 0;\n
 \n
 }\n
 \n
-#tabs ul li.active span, #tabs ul li:hover span {\n
+#tabs ul li.tab_selected span, #tabs ul li:hover span {\n
 \n
 \tbackground-position: 100% 0;\n
 \n
 }\n
-\n
-#tabs ul li.active:hover {\n
+  \n
+#tabs ul li.tab_selected:hover {\n
 \n
 \tbackground-position: 0 -22px;\n
 \tcolor:#fff;\n
 \n
 }\n
 \n
-#tabs ul li.active:hover span {\n
+#tabs ul li.tab_selected:hover span {\n
 \n
 \tbackground-position: 100% -22px;\n
 \n
 }\n
 \n
-#tabs ul li.active:hover span a { color:#fafafa; }\n
+#tabs ul li.tab_selected:hover span a { color:#fafafa; }\n
 \n
 #tabs ul li span a { color: #e2e0d2; }\n
 \n
@@ -312,6 +312,28 @@ p.pub {\n
 \n
 \tbackground: none;\n
 \n
+}\n
+\n
+/* Rename & Remove pad buttons */\n
+#tabs li span.rename_tab_dialog_image{\n
+  background: none;\n
+  margin-left: -40px;\n
+}\n
+\n
+#tabs li span.remove_tab_dialog_image{\n
+  background: none;\n
+  margin-left: -25px;\n
+}\n
+\n
+/* Add new tab link */\n
+#add_new_tab_dialog_link{\n
+  background: url("km_img/bullet.png") no-repeat 0 7px!important;\n
+  color: #9D968D!important;\n
+  padding-top: 4px!important;\n
+  margin-left: 10px!important;\n
+  padding-left:13px !important;\n
+  font-size: 8pt;\n
+  font-weight: normal;\n
 }\n
 \n
 #navigation_table a, #navigation_table #tabs_switcher{\n
