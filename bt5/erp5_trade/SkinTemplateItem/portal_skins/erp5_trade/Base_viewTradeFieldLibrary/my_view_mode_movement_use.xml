@@ -14,13 +14,12 @@
             <value>
               <list>
                 <string>items</string>
-                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_view_mode_preferred_sale_base_amount_list</string> </value>
+            <value> <string>my_view_mode_movement_use</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,10 +73,6 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string></string> </value>
-                </item>
               </dictionary>
             </value>
         </item>
@@ -87,11 +82,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_multi_list_field</string> </value>
+                    <value> <string>my_view_mode_use</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
@@ -102,10 +97,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Sale Base Amounts</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -124,7 +115,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here.portal_categories.base_amount, preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(base=1, local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
+            <value> <string>here/Movement_getUseItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

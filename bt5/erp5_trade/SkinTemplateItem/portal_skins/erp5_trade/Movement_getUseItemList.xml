@@ -53,13 +53,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>mode = None\n
-#WAAA Using portal_type is not good\n
-if context.portal_type.startswith(\'Sale\'):\n
-  mode = \'sale\'\n
-elif context.portal_type.startswith(\'Purchase\'):\n
-  mode = \'purchase\'\n
-return context.Base_getPreferredCategoryItemList(mode=mode, category_id=category_id)\n
+            <value> <string>from Products.ERP5Type.Utils import UpperCase\n
+\n
+portal_categories = context.portal_categories\n
+portal_preferences = context.portal_preferences\n
+method_id = portal_preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\')\n
+\n
+item_list = getattr(portal_categories.use, method_id)(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')\n
+\n
+resource = context.getResourceValue()\n
+if resource is None:\n
+  item_display_list = ()\n
+else:\n
+  selected_use_list = [use_value.getCategoryRelativeUrl() for use_value in resource.getUseValueList()]\n
+  item_display_list = [item for item in item_list if item[1] in selected_use_list]\n
+\n
+return item_display_list\n
 </string> </value>
         </item>
         <item>
@@ -70,7 +79,7 @@ return context.Base_getPreferredCategoryItemList(mode=mode, category_id=category
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category_id</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -90,17 +99,31 @@ return context.Base_getPreferredCategoryItemList(mode=mode, category_id=category
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>category_id</string>
-                            <string>None</string>
-                            <string>mode</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>UpperCase</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal_categories</string>
+                            <string>portal_preferences</string>
+                            <string>method_id</string>
+                            <string>getattr</string>
+                            <string>item_list</string>
+                            <string>resource</string>
+                            <string>None</string>
+                            <string>item_display_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>use_value</string>
+                            <string>selected_use_list</string>
+                            <string>item</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -117,7 +140,7 @@ return context.Base_getPreferredCategoryItemList(mode=mode, category_id=category
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OrderLine_getPreferredCategoryItemList</string> </value>
+            <value> <string>Movement_getUseItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

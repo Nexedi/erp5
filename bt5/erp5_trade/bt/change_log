@@ -1,4 +1,8 @@
 2010-05-21 yusei
+* Change base amount preference. Only one preferred list on trade is enough.
+* Revert previous changes. On movements, display uses defined on the corresponding resource only.
+
+2010-05-21 yusei
 * Display preferred uses if preference is set.
 
 2010-05-21 yusei
