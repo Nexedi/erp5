@@ -71,4 +71,19 @@ class TradePreference:
       'write_permission': 'Manage properties',
       'mode'        : '' },
 
+    # base_amount
+    { 'id'          : 'preferred_sale_base_amount',
+      'description' : 'Uses of base amounts that are sold',
+      'type'        : 'lines',
+      'preference'  : 1,
+      'default'     : [],
+      'write_permission': 'Manage properties',
+      'mode'        : '' },
+    { 'id'          : 'preferred_purchase_base_amount',
+      'description' : 'Uses of base amounts that are purchased',
+      'type'        : 'lines',
+      'preference'  : 1,
+      'default'     : [],
+      'write_permission': 'Manage properties',
+      'mode'        : '' },
     )
