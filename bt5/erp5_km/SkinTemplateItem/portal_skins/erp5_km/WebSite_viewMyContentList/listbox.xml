@@ -16,6 +16,7 @@
                 <string>default_params</string>
                 <string>portal_types</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>title</string>
               </list>
             </value>
@@ -120,6 +121,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>document_selection</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>DESC</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
