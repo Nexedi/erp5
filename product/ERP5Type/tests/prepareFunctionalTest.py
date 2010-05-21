@@ -47,7 +47,7 @@ class FunctionalTestRunner(FunctionalTestRunnerBase):
     FunctionalTestRunnerBase.__init__(self, os.environ['INSTANCE_HOME'])
     # local overrides
     self.host = host
-    self.port = port
+    self.port = int(port)
   
   def getSvnRevision(self):
     # we should get the revision of a business template, but this is good
