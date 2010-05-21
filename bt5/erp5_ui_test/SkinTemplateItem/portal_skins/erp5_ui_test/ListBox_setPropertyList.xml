@@ -93,6 +93,7 @@ d = dict(\n
   field_domain_root_list = \'\',\n
   field_report_tree = \'\',\n
   field_report_root_list = \'\',\n
+  field_display_style_list = \'\',\n
   field_list_action = \'list\',\n
   field_enabled = \'checked\',\n
   field_editable = \'\',\n
