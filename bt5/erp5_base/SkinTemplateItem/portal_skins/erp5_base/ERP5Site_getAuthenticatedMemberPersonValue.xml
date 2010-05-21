@@ -58,13 +58,13 @@ Returns None if no corresponding person, for example when not using ERP5Security
 """\n
 if user_name is None:\n
   user_name = context.portal_membership.getAuthenticatedMember()\n
-found_user_list = context.portal_catalog(portal_type=\'Person\', \n
-                                         reference=str(user_name))\n
+\n
+found_user_list = context.acl_users.erp5_users.getUserByLogin(str(user_name))\n
 found_users = len(found_user_list)\n
 if found_users != 1:\n
   return None\n
 \n
-return found_user_list[0].getObject()\n
+return found_user_list[0]\n
 </string> </value>
         </item>
         <item>
@@ -80,9 +80,7 @@ return found_user_list[0].getObject()\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
