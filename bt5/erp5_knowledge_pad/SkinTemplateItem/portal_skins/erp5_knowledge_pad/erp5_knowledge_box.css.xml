@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts72636595.17</string> </value>
+            <value> <string>ts74423868.68</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -92,6 +92,17 @@ h3.handle span.handle {\n
   display: block;\n
   float: left;\n
 }\n
+\n
+#tabs li span.rename_tab_dialog_image{\n
+  background: url("icon_edit.gif") no-repeat;\n
+  padding-right: 6px;\n
+}\n
+\n
+#tabs li span.remove_tab_dialog_image{\n
+  background: url("icon_remove.gif") no-repeat;\n
+  padding-right: 6px;\n
+}\n
+\n
 \n
 .clickable-block{\n
   display: block;\n
@@ -582,7 +593,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9672</int> </value>
+            <value> <int>9895</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

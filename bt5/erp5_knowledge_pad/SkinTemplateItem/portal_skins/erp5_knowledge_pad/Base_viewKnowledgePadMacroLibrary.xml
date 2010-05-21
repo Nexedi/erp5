@@ -203,39 +203,38 @@
                         class="tab tab_selected">\n
                         <span id="active_knowledge_pad_title" \n
                               tal:content="knowledge_pad/title"/>\n
-                        <img src="icon_edit.gif" \n
-                            title="Settings"\n
-                            i18n:attributes="title"\n
-                            i18n:domain="ui"\n
-                            class="clickable_image"\n
-                            onclick="toggleElement(\'rename_tab_dialog\');" \n
-                            alt="edit"/>\n
 \n
-                        <img src="icon_remove.gif" \n
-                            title="Remove"\n
-                            i18n:attributes="title"\n
-                            i18n:domain="ui"\n
-                            class="clickable_image"\n
-                            tal:condition="python: mode==\'erp5_front\'"\n
-                            tal:attributes="onclick python: \'removeKnowledgePadFromServer(\n
-                            \\\'%s\\\', \\\'%s\\\',\\\'/%s\\\')\' \n
-                             %(active_knowledge_pad.getRelativeUrl(), \n
+                        <span title="Settings"\n
+                              i18n:attributes="title"\n
+                              i18n:domain="ui"\n
+                              class="clickable_image rename_tab_dialog_image"\n
+                              onclick="toggleElement(\'rename_tab_dialog\');" \n
+                              alt="edit"></span>\n
+\n
+                        <span title="Remove"\n
+                              i18n:attributes="title"\n
+                              i18n:domain="ui"\n
+                              class="clickable_image remove_tab_dialog_image"\n
+                              tal:condition="python: mode==\'erp5_front\'"\n
+                              tal:attributes="onclick python: \'removeKnowledgePadFromServer(\n
+                              \\\'%s\\\', \\\'%s\\\',\\\'/%s\\\')\' \n
+                              %(active_knowledge_pad.getRelativeUrl(), \n
                                mode,\n
                                context.getId())" \n
-                            alt="remove"/>\n
-                        <img src="icon_remove.gif" \n
-                             title="Remove"\n
-                             i18n:attributes="title"\n
-                             i18n:domain="ui"\n
-                             class="clickable_image"\n
-                             tal:condition="python: mode!=\'erp5_front\'"\n
-                             tal:attributes="onclick python: \'removeKnowledgePadFromServer(\n
-                             \\\'%s\\\', \\\'%s\\\',\\\'/%s/%s\\\')\' \n
-                             %(active_knowledge_pad.getRelativeUrl(), \n
+                            alt="remove"></span>\n
+                        <span title="Remove"\n
+                              i18n:attributes="title"\n
+                              i18n:domain="ui"\n
+                              class="clickable_image remove_tab_dialog_image"\n
+                              tal:condition="python: mode!=\'erp5_front\'"\n
+                              tal:attributes="onclick python: \'removeKnowledgePadFromServer(\n
+                              \\\'%s\\\', \\\'%s\\\',\\\'/%s/%s\\\')\' \n
+                              %(active_knowledge_pad.getRelativeUrl(), \n
                                mode,\n
                                context.getPortalObject().getId(),\n
                                context.getRelativeUrl())" \n
-                             alt="remove"/>\n
+                               alt="remove"></span>\n
+\n
                     </li>\n
 \n
                     <li tal:condition="not: is_active"\n
