@@ -309,7 +309,16 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>getIconAsHTML</string>
+                          <string>Icon</string>
+                        </tuple>
+                        <tuple>
+                          <string>getSummaryAsHTML</string>
+                          <string>Summary</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -321,6 +330,10 @@
                 <item>
                     <key> <string>alternate_name</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
@@ -382,6 +395,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
                       <list/>
@@ -403,6 +422,14 @@
                           <string>thumbnail</string>
                           <string>Thumbnail</string>
                         </tuple>
+                        <tuple>
+                          <string>getIconAsHTML</string>
+                          <string>Icon</string>
+                        </tuple>
+                        <tuple>
+                          <string>getSummaryAsHTML</string>
+                          <string>Summary</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -415,6 +442,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>full_text_search</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
@@ -422,6 +453,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -463,6 +498,10 @@
                 <item>
                     <key> <string>report_tree</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -509,6 +548,12 @@
                     <value> <string>Search Results</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
@@ -523,11 +568,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
@@ -542,11 +584,8 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
