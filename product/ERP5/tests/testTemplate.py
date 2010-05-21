@@ -48,17 +48,15 @@ class TestTemplate(ERP5TypeTestCase):
     """Returns list of BT to be installed."""
     return ('erp5_base', 'erp5_knowledge_pad', 'erp5_ui_test')
 
-  def login(self, name=None):
+  def createUserAndLogin(self, name=None):
     """login with Member & Author roles."""
-    if name is None:
-      return
     uf = self.getPortal().acl_users
     uf._doAddUser(name, '', ['Member', 'Author'], [])
     user = uf.getUserById(name).__of__(uf)
     newSecurityManager(None, user)
 
   def afterSetUp(self):
-    ERP5TypeTestCase.login(self, 'ERP5TypeTestCase')
+    self.login('ERP5TypeTestCase')
     portal_preferences = self.portal.portal_preferences
     portal_preferences.deleteContent(list(portal_preferences.objectIds()))
     transaction.commit()
@@ -71,7 +69,7 @@ class TestTemplate(ERP5TypeTestCase):
                                              ])
 
   def test_Template(self):
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
@@ -117,7 +115,7 @@ class TestTemplate(ERP5TypeTestCase):
 
 
   def test_TemplateDeletable(self):
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
@@ -170,7 +168,7 @@ class TestTemplate(ERP5TypeTestCase):
     )
 
   def test_TemplateCreatePreferenceWithExistingUserPreference(self):
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     user_preference = self.portal.portal_preferences.newContent(
         portal_type='Preference')
     user_preference.setPriority(Priority.USER)
@@ -193,14 +191,14 @@ class TestTemplate(ERP5TypeTestCase):
   def test_TemplateCreatePreferenceWithSystemPreferenceEnabled(self):
     # TODO: This test *might* be removed if it is good to trust
     #       getActivePreference to return only Preference portal type
-    ERP5TypeTestCase.login(self, 'ERP5TypeTestCase')
+    self.login('ERP5TypeTestCase')
     system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
     system_preference.setPriority(Priority.SITE)
     system_preference.enable()
     transaction.commit()
     self.tic()
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     user_preference = self.portal.portal_preferences.newContent(
         portal_type='Preference')
     user_preference.setPriority(Priority.USER)
@@ -221,7 +219,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual(len(user_preference.objectIds()), 1)
 
   def test_TemplateCreatePreference(self):
-    self.login('another user with no active preference')
+    self.createUserAndLogin('another user with no active preference')
     active_user_preference_list = [p for p in
         self.portal.portal_preferences._getSortedPreferenceList()
         if p.getPriority() == Priority.USER]
@@ -252,7 +250,7 @@ class TestTemplate(ERP5TypeTestCase):
 
   def test_manyTemplatesWithoutReindexation(self):
     """Check what happen when templates are created one by one without reindexation"""
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     active_user_preference_list = [p for p in
         self.portal.portal_preferences._getSortedPreferenceList()
         if p.getPriority() == Priority.USER]
@@ -293,7 +291,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.portal.portal_activities.manage_enableActivityTracking()
     self.portal.portal_activities.manage_enableActivityTimingLogging()
     self.portal.portal_activities.manage_enableActivityCreationTrace()
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
