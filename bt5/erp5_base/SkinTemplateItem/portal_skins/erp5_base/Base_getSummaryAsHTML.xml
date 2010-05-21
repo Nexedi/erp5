@@ -1,0 +1,234 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+def getOwnerHTML(context):\n
+  owners = context.Base_getOwnerInfoList()\n
+  html = []\n
+  for owner in owners:\n
+    html.append("<a href=\'%s\'/>%s</a>" % (owner[\'url\'], owner[\'title\']))\n
+  return "&nbsp;-&nbsp;".join(html)\n
+\n
+def getReferenceHTML(context):\n
+  html = ""\n
+  reference = context.getReference() or \'\'\n
+  if context.REQUEST.get(\'is_web_mode\', False):\n
+    website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
+    if reference:\n
+      html += """\n
+          <a href="%s">\n
+            %s\n
+          </a>&nbsp;-&nbsp;\n
+      """ % (website.getPermanentURL(context), reference)\n
+\n
+    for section in website.getWebSectionValueList(context):\n
+      html += "<a href=\'%s/view\'>%s</a>&nbsp;-&nbsp;" % \\\n
+        (section.absolute_url(), section.getCompactTranslatedTitle())\n
+  elif reference:\n
+      html = """\n
+          <a href="%(url)s/view">\n
+            %(reference)s\n
+          </a>\n
+      """\n
+  return html\n
+\n
+uid = context.getUid()\n
+url = context.absolute_url()\n
+title = context.getTitle() or (hasattr(context, \'getReference\') and context.getReference()) or context.getId()\n
+portal_type = context.getTranslatedPortalType()\n
+popup = context.Document_getPopupInfo() or \'\'\n
+selection = None\n
+selection_name = context.REQUEST.get("selection_name", None)\n
+if selection_name is not None:\n
+  selection = context.portal_selections.getSelectionFor(selection_name)\n
+found = context.Base_showFoundText(selection=selection)\n
+owner_html = getOwnerHTML(context) or \'\'\n
+\n
+date_renderer = context.ERP5Site_viewSearchResult.listbox_modification_date.render_pdf\n
+modification_date = date_renderer(context.getModificationDate())\n
+\n
+local_parameter_dict = {\n
+  \'uid\': uid,\n
+  \'url\': url,\n
+  \'title\': title,\n
+  \'reference_html\': getReferenceHTML(context),\n
+  \'portal_type\': portal_type,\n
+  \'popup\': popup,\n
+  \'selection\': selection,\n
+  \'found\': found,\n
+  \'owner_html\': owner_html,\n
+  \'modification_date\': modification_date,\n
+}\n
+\n
+html = """\n
+      <div onmouseout="showPopik(\'dom_popup_listbox_%(uid)s\', false)"            \n
+           onmouseover="showPopik(\'dom_popup_listbox_%(uid)s\', true)" \n
+           class="item_nohighlight">   \n
+        <div id="dom_popup_listbox_%(uid)s"\n
+             class="search_popup" \n
+             style="z-index: 100; display: none;">\n
+        %(popup)s\n
+        </div>\n
+        <div>  \n
+          <a href="%(url)s/view">\n
+              <span class="search_result_title">%(title)s</span>\n
+              <span class="search_result_portal_type">%(portal_type)s</span>\n
+          </a>\n
+        </div>\n
+\n
+        <span class="searchDetails found">\n
+          %(found)s\n
+        </span>\n
+\n
+        <div class="searchDetails coordinates">\n
+          %(reference_html)s\n
+\n
+          %(owner_html)s\n
+\n
+          <a href="%(url)s/Base_viewHistory">\n
+            %(modification_date)s\n
+          </a>\n
+               \n
+        </div>\n
+      \n
+    </div>""" % local_parameter_dict\n
+\n
+return html\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>getOwnerHTML</string>
+                            <string>getReferenceHTML</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>uid</string>
+                            <string>url</string>
+                            <string>hasattr</string>
+                            <string>title</string>
+                            <string>portal_type</string>
+                            <string>popup</string>
+                            <string>None</string>
+                            <string>selection</string>
+                            <string>selection_name</string>
+                            <string>found</string>
+                            <string>owner_html</string>
+                            <string>date_renderer</string>
+                            <string>modification_date</string>
+                            <string>local_parameter_dict</string>
+                            <string>html</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_getSummaryAsHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
