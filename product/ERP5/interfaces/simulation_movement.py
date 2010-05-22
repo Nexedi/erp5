@@ -34,6 +34,7 @@ from Products.ERP5.interfaces.property_recordable import IPropertyRecordable
 from Products.ERP5.interfaces.movement import IMovement
 from Products.ERP5.interfaces.divergence_controller import IDivergenceController
 from Products.ERP5.interfaces.explainable import IExplainable
+from zope.interface import Interface
 
 class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController, IExplainable):
   """Simulation Movement interface specification
@@ -91,8 +92,8 @@ class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController,
 
   def isDeletable():
     """Returns True if this simulation movement can be deleted, False
-    else. A simulation movement can be deleted if all its children
-    can be deleted of if it has no child.
+    else. A simulation movement can be deleted if it is not frozen,
+    and if all its children can be deleted or if it has no child.
     """
 
   def isCompleted():

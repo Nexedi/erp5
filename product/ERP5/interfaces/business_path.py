@@ -43,15 +43,31 @@ class IBusinessPath(Interface):
   delivery builders for all movements related to a given explanation.
   """
 
-  def getMovementCompletionDate(self, movement):
+  def getDeliveryBuilderValueList():
+    """Return the list of delivery builders to invoke with
+    this Business Path.
+
+    NOTE: redundant with PropertySheet definition
+    """
+
+  def getMovementCompletionDate(movement):
     """Returns the date of completion of the movemnet 
-    based on paremeters of the business path. This complete date can be
+    based on paremeters of the business path. This completion date can be
     the start date, the stop date, the date of a given workflow transition
     on the explaining delivery, etc.
 
     movement -- a Simulation Movement
     """
   
+  def getExpectedQuantity(amount):
+    """Returns the new quantity for the provided amount taking
+    into account the efficiency or the quantity defined on the business path.
+    This is used to implement payment conditions or splitting production
+    over multiple path. The total of getExpectedQuantity for all business
+    path which are applicable should never exceed the original quantity.
+    The implementation of this validation is left to rules.
+    """
+
   def isCompleted(explanation):
     """returns True if all related simulation movements for this explanation
     document are in a simulation state which is considered as completed

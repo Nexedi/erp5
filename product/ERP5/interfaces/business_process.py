@@ -39,14 +39,20 @@ class IBusinessPathProcess(Interface):
   to Business Path completion status and expected completion dates.
   """
 
-  def getBusinessPathValueList(trade_phase=None, predecessor=None, successor=None):
+  def getBusinessPathValueList(trade_phase=None, context=None,
+                               predecessor=None, successor=None, **kw):
     """Returns the list of contained Business Path documents
 
     trade_phase -- filter by trade phase
- 
+
+    context -- a context to test each Business Path on
+               and filter out Business Path which do not match
+
     predecessor -- filter by trade state predecessor
 
     successor -- filter by trade state successor
+
+    **kw -- same arguments as those passed to searchValues / contentValues
     """
 
   def isBusinessPathCompleted(explanation, business_path):
@@ -59,7 +65,8 @@ class IBusinessPathProcess(Interface):
     business_path -- a Business Path document
     """
 
-  def getExpectedBusinessPathCompletionDate(explanation, business_path):
+  def getExpectedBusinessPathCompletionDate(explanation, business_path, 
+                                                       delay_mode=None):
     """Returns the expected completion date of given Business Path document
     in the context of provided explanation.
 
@@ -67,9 +74,13 @@ class IBusinessPathProcess(Interface):
                    implicitely defines a simulation subtree
 
     business_path -- a Business Path document
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
     """
 
-  def getExpectedBusinessPathStartAndStopDate(explanation, business_path):
+  def getExpectedBusinessPathStartAndStopDate(explanation, business_path,
+                                                         delay_mode=None):
     """Returns the expected start and stop dates of given Business Path
     document in the context of provided explanation.
 
@@ -77,6 +88,9 @@ class IBusinessPathProcess(Interface):
                    implicitely defines a simulation subtree
 
     business_path -- a Business Path document
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
     """
 
 class IBuildableBusinessPathProcess(Interface):
@@ -89,6 +103,15 @@ class IBuildableBusinessPathProcess(Interface):
 
   def getBuildableBusinessPathValueList(explanation):
     """Returns the list of Business Path which are buildable
+    by taking into account trade state dependencies between
+    Business Path.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def getPartiallyBuildableBusinessPathValueList(explanation):
+    """Returns the list of Business Path which are partially buildable
     by taking into account trade state dependencies between
     Business Path.
 
@@ -114,6 +137,16 @@ class IBuildableBusinessPathProcess(Interface):
                    implicitely defines a simulation subtree
 
     business_path -- a Business Path document
+    """
+
+  def isBuildable(explanation):
+    """Returns True is this business process has at least one
+    Business Path which is buildable
+    """
+
+  def isPartiallyBuildable(explanation):
+    """Returns True is this business process has at least one
+    Business Path which is partially buildable
     """
 
 class ITradeStateProcess(Interface):
@@ -219,7 +252,8 @@ class ITradeStateProcess(Interface):
     trade_state -- a Trade State category
     """
 
-  def getExpectedTradeStateCompletionDate(explanation, trade_state):
+  def getExpectedTradeStateCompletionDate(explanation, trade_state,
+                                                         delay_mode=None):
     """Returns the date at which the give trade state is expected
     to be completed in the context of given explanation.
 
@@ -227,6 +261,9 @@ class ITradeStateProcess(Interface):
                    implicitely defines a simulation subtree
 
     trade_state -- a Trade State category
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
     """
 
 class ITradePhaseProcess(Interface):
@@ -286,7 +323,8 @@ class ITradePhaseProcess(Interface):
     trade_phase -- a Trade Phase category
     """
 
-  def getExpectedTradePhaseCompletionDate(explanation, trade_phase):
+  def getExpectedTradePhaseCompletionDate(explanation, trade_phase,
+                                                       delay_mode=None):
     """Returns the date at which the give trade phase is expected
     to be completed in the context of given explanation, taking
     into account the graph of date constraints defined by business path
@@ -296,6 +334,9 @@ class ITradePhaseProcess(Interface):
                    implicitely defines a simulation subtree
 
     trade_phase -- a Trade Phase category
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
     """
 
   def getRemainingTradePhaseList(business_path, trade_phase_list=None):
@@ -336,7 +377,7 @@ class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
                    implicitely defines a simulation subtree
     """
 
-  def getExpectedCompletionDate(explanation):
+  def getExpectedCompletionDate(explanation, delay_mode=None):
     """Returns the expected date at which all applicable Trade States and
     Trade Phases are completed in the context of given explanation.
 
