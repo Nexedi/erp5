@@ -660,7 +660,8 @@ class Resource(XMLMatrix, Variated):
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getPriceParameterDict')
-    def getPriceParameterDict(self, context=None, REQUEST=None, **kw):
+    def getPriceParameterDict(self, context=None, REQUEST=None,
+                              supply_path_type=None, **kw):
       """
       Get all pricing parameters from Predicate.
       """
@@ -679,7 +680,12 @@ class Resource(XMLMatrix, Variated):
       # Generate the predicate mapped value
       # to get some price values.
       domain_tool = getToolByName(self,'portal_domains')
-      portal_type_list = self.getPortalSupplyPathTypeList()
+      if supply_path_type is None:
+        portal_type_list = self.getPortalSupplyPathTypeList()
+      elif isinstance(supply_path_type, (list, tuple)):
+        portal_type_list = supply_path_type
+      else:
+        portal_type_list = (supply_path_type,)
 
       # Generate the fake context
       tmp_context = self.asContext(context=context, 
