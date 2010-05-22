@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: shift_jis -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -36,6 +36,39 @@ from Products.ERP5.Document.Path import Path
 from Products.ERP5.Document.Predicate import Predicate
 
 import zope.interface
+
+from zLOG import LOG
+
+class ExplanationCache:
+  """ExplanationCache provides a central access to 
+  all parameters and values which are needed to process 
+  an explanation. It is based on the idea that a value is calculated
+  once and once only, as a way to accelerate performance of algorithms
+  related to an explanation.
+
+        'explanation_uid': self._getExplanationUidList(explanation) # XXX-JPS why do we need explanation_uid ? and why a list
+        'simulation_path': simulation_path,
+
+    explanation_uid = self._getExplanationUidList(explanation) # A hint value to reduce the size of the tree
+    simulation_path = '/erp5/p.../%' # A list of path
+
+"""
+  def __init__(self, explanation):
+    """
+    """
+    self.explanation = explanation
+
+  def getRootExplanationUidList(self):
+    """
+    """
+
+  def getSimulationPathPatternList(self):
+    """
+    """
+
+def _getExplanationCache(explanation):
+  # XXX-JPS Cache this in a transaction variable or better
+  return ExplanationCache(explanation)
 
 class BusinessPath(Path, Predicate):
   """
@@ -81,9 +114,10 @@ class BusinessPath(Path, Predicate):
                     , PropertySheet.Comment
                     , PropertySheet.Arrow
                     , PropertySheet.Amount
-                    , PropertySheet.Chain
+                    , PropertySheet.Chain # XXX-JPS Why N
                     , PropertySheet.SortIndex
                     , PropertySheet.BusinessPath
+                    , PropertySheet.FlowCapacity
                     , PropertySheet.Reference
                     )
 
@@ -107,7 +141,7 @@ class BusinessPath(Path, Predicate):
             'source_account',
             'source_administration',
             #'source_advice',
-            #'source_carrier',
+            'source_carrier',
             #'source_decision',
             'source_function',
             'source_payment',
@@ -125,7 +159,7 @@ class BusinessPath(Path, Predicate):
       Returns all categories which are used to define the destination
       of this Arrow
     """
-    # Naive implementation - we must use category groups instead - XXX
+    # Naive implementation - we must use category groups instead - XXX-JPS review this later
     return ('destination',
             'destination_account',
             'destination_administration',
@@ -143,7 +177,7 @@ class BusinessPath(Path, Predicate):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getArrowCategoryDict')
-  def getArrowCategoryDict(self, context=None, **kw):
+  def getArrowCategoryDict(self, context=None, **kw): # XXX-JPS do we need it in API ?
     result = {}
     dynamic_category_list = self._getDynamicCategoryList(context)
     for base_category in self.getSourceArrowBaseCategoryList() +\
@@ -223,78 +257,59 @@ class BusinessPath(Path, Predicate):
       return method(context)
     return []
 
-  # IBusinessBuildable implementation
-  def isBuildable(self, explanation):
-    """
-    """
-    # check if there is at least one simulation movement which is not
-    # delivered
-    result = False
-    if self.isCompleted(explanation) or self.isFrozen(explanation):
-      return False # No need to build what was already built or frozen
-    for simulation_movement in self.getRelatedSimulationMovementValueList(
-        explanation):
-      if simulation_movement.getDeliveryValue() is None:
-        result = True
-    predecessor = self.getPredecessorValue()
-    if predecessor is None:
-      return result
-    # XXX FIXME TODO
-    # For now isPartiallyCompleted is used, as it was
-    # assumed to not implement isPartiallyBuildable, so in reality
-    # isBuildable is implemented like isPartiallyBuildable
-    #
-    # But in some cases it might be needed to implement
-    # isPartiallyBuildable, than isCompleted have to be used here
-    #
-    # Such cases are Business Processes using sequence not related
-    # to simulation tree with much of compensations
-    if self.isStatePartiallyCompleted(explanation, predecessor):
-      return result
-    return False
+  # IBusinessPath implementation
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                            'getMovementCompletionDate')
+  def getMovementCompletionDate(self, movement):
+    """Returns the date of completion of the movemnet 
+    based on paremeters of the business path. This complete date can be
+    the start date, the stop date, the date of a given workflow transition
+    on the explaining delivery, etc.
 
-  def isPartiallyBuildable(self, explanation):
+    movement -- a Simulation Movement
     """
-      Not sure if this will exist some day XXX
+    method_id = self.getCompletionDateMethodId()
+    method = getattr(movement, method_id) # We wish to raise if it does not exist
+    return method()
+  
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                            'getExpectedQuantity')
+  def getExpectedQuantity(self, amount):
+    """Returns the new quantity for the provided amount taking
+    into account the efficiency or the quantity defined on the business path.
+    This is used to implement payment conditions or splitting production
+    over multiple path. The total of getExpectedQuantity for all business
+    path which are applicable should never exceed the original quantity.
+    The implementation of this validation is left to rules.
     """
+    if self.getQuantity():
+      return self.getQuantity()
+    elif self.getEfficiency():
+      return amount.getQuantity() * self.getEfficiency()
+    else:
+      return amount.getQuantity()
 
-  def _getExplanationUidList(self, explanation):
-    """Helper method to fetch really explanation related movements"""
-    explanation_uid_list = [explanation.getUid()]
-    # XXX: getCausalityRelatedValueList is oversimplification, assumes
-    #      that documents are sequenced like simulation movements, which
-    #      is wrong
-    for found_explanation in explanation.getCausalityRelatedValueList(
-        portal_type=self.getPortalDeliveryTypeList()) + \
-        explanation.getCausalityValueList():
-      explanation_uid_list.extend(self._getExplanationUidList(
-        found_explanation))
-    return explanation_uid_list
-
-  def build(self, explanation):
-    """
-      Build
-    """
-    builder_list = self.getDeliveryBuilderValueList() # Missing method
-    for builder in builder_list:
-      # chosen a way that builder is good enough to decide to select movements
-      # which shall be really build (movement selection for build is builder
-      # job, not business path job)
-      builder.build(select_method_dict={
-        'causality_uid': self.getUid(),
-        'explanation_uid': self._getExplanationUidList(explanation)
-      })
-
-  # IBusinessCompletable implementation
   security.declareProtected(Permissions.AccessContentsInformation,
       'isCompleted')
   def isCompleted(self, explanation):
-    """
-      Looks at all simulation related movements
-      and checks the simulation_state of the delivery
+    """returns True if all related simulation movements for this explanation
+    document are in a simulation state which is considered as completed
+    according to the configuration of the current business path.
+    Completed means that it is possible to move to next step
+    of Business Process. This method does not check however whether previous
+    trade states of a given business process are completed or not.
+    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
+
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
+
+    NOTE: simulation movements can be completed (ex. in 'started' state) but
+    not yet frozen (ex. in 'delivered' state).
     """
     acceptable_state_list = self.getCompletedStateList()
-    for movement in self.getRelatedSimulationMovementValueList(explanation):
+    for movement in self._getExplanationRelatedSimulationMovementValueList(
+                                                                explanation):
       if movement.getSimulationState() not in acceptable_state_list:
         return False
     return True
@@ -302,111 +317,71 @@ class BusinessPath(Path, Predicate):
   security.declareProtected(Permissions.AccessContentsInformation,
       'isPartiallyCompleted')
   def isPartiallyCompleted(self, explanation):
-    """
-      Looks at all simulation related movements
-      and checks the simulation_state of the delivery
+    """returns True if some related simulation movements for this explanation
+    document are in a simulation state which is considered as completed
+    according to the configuration of the current business path.
+    Completed means that it is possible to move to next step
+    of Business Process. This method does not check however whether previous
+    trade states of a given business process are completed or not.
+    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
+
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
     """
     acceptable_state_list = self.getCompletedStateList()
-    for movement in self.getRelatedSimulationMovementValueList(explanation):
+    for movement in self._getExplanationRelatedSimulationMovementValueList(
+                                                                explanation):
       if movement.getSimulationState() in acceptable_state_list:
         return True
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isFrozen')
+  security.declareProtected(Permissions.AccessContentsInformation, 'isFrozen')
   def isFrozen(self, explanation):
+    """returns True if all related simulation movements for this explanation
+    document are in a simulation state which is considered as frozen
+    according to the configuration of the current business path.
+    Frozen means that simulation movement cannot be modified.
+    This method does not check however whether previous
+    trade states of a given business process are completed or not.
+    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
+
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
+
+    NOTE: simulation movements can be frozen (ex. in 'stopped' state) but
+    not yet completed (ex. in 'delivered' state).
     """
-      Looks at all simulation related movements
-      and checks if frozen
-    """
-    movement_list = self.getRelatedSimulationMovementValueList(explanation)
-    if len(movement_list) == 0:
-      return False # Nothing to be considered as Frozen
+    acceptable_state_list = self.getFrozenStateList()
+    movement_list = self._getExplanationRelatedSimulationMovementValueList(
+                                                                explanation)
+    if not movement_list:
+      return False # Frozen is True only if some delivered movements exist
     for movement in movement_list:
-      if not movement.isFrozen():
+      if movement.getDelivery() and movement.getSimulationState() not in acceptable_state_list: # XXX-JPS is it acceptable optimizatoin ?
         return False
     return True
 
-  def _recurseGetValueList(self, document, portal_type):
-    """Helper method to recurse documents as deep as possible and returns
-       list of document values matching portal_type"""
-    return_list = []
-    for subdocument in document.contentValues():
-      if subdocument.getPortalType() == portal_type:
-        return_list.append(subdocument)
-      return_list.extend(self._recurseGetValueList(subdocument, portal_type))
-    return return_list
+  def build(self, explanation):
+    """Builds all related movements in the simulation using the builders
+    defined on the Business Path.
 
-  def isMovementRelatedWithMovement(self, movement_value_a, movement_value_b):
-    """Checks if self is parent or children to movement_value
-
-    This logic is Business Process specific for Simulation Movements, as
-    sequence of Business Process is not related appearance of Simulation Tree
-
-    movement_value_a, movement_value_b - movements to check relation between
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
     """
-    movement_a_path = '%s/' % movement_value_a.getRelativeUrl()
-    movement_b_path = '%s/' % movement_value_b.getRelativeUrl()
+    builder_list = self.getDeliveryBuilderValueList()
+    explanation_cache = _getExplanationCache(explanation)
+    for builder in builder_list:
+      # Call build on each builder
+      # Provide 2 parameters: self and and explanation_cache
+      builder.build(select_method_dict={
+        'business_path': self,
+        'explanation_cache': explanation_cache,
+      })
 
-    if movement_a_path == movement_b_path or \
-       movement_a_path.startswith(movement_b_path) or \
-       movement_b_path.startswith(movement_a_path):
-      return True
-    return False
-
-  def _isDeliverySimulationMovementRelated(self, simulation_movement,
-                                           delivery_simulation_movement_list):
-    """Helper method, which checks if simulation_movement is BPM like related
-       with delivery"""
-    for delivery_simulation_movement in delivery_simulation_movement_list:
-      if self.isMovementRelatedWithMovement(delivery_simulation_movement,
-          simulation_movement):
-        return True
-    return False
-
-  # IBusinessPath implementation
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getRelatedSimulationMovementValueList')
-  def getRelatedSimulationMovementValueList(self, explanation):
-    """
-      Returns recursively all Simulation Movements indirectly related to explanation and self
-
-      As business sequence is not related to simulation tree need to built
-      full simulation trees per applied rule
-    """
-    portal_catalog = self.getPortalObject().portal_catalog
-    root_applied_rule_list = []
-    delivery_simulation_movement_list = portal_catalog(
-      delivery_uid=[x.getUid() for x in explanation.getMovementList()])
-
-    for simulation_movement in delivery_simulation_movement_list:
-      applied_rule = simulation_movement.getRootAppliedRule().getPath()
-      if applied_rule not in root_applied_rule_list:
-        root_applied_rule_list.append(applied_rule)
-
-    simulation_movement_list = portal_catalog(
-      portal_type='Simulation Movement', causality_uid=self.getUid(),
-      path=['%s/%%' % x for x in root_applied_rule_list])
-
-    return [simulation_movement.getObject() for simulation_movement
-          in simulation_movement_list
-          # related with explanation
-          if self._isDeliverySimulationMovementRelated(
-              simulation_movement, delivery_simulation_movement_list)]
-
-  def getExpectedQuantity(self, explanation, *args, **kwargs):
-    """
-      Returns the expected stop date for this
-      path based on the explanation.
-
-      XXX predecessor_quantity argument is required?
-    """
-    if self.getQuantity():
-      return self.getQuantity()
-    elif self.getEfficiency():
-      return explanation.getQuantity() * self.getEfficiency()
-    else:
-      return explanation.getQuantity()
+  # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX GARBAGE FROM HERE
 
   def getExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
@@ -527,3 +502,76 @@ class BusinessPath(Path, Predicate):
         else:
           return successor_expected_date
 
+
+
+  def _recurseGetValueList(self, document, portal_type):
+    """Helper method to recurse documents as deep as possible and returns
+       list of document values matching portal_type"""
+    return_list = []
+    for subdocument in document.contentValues():
+      if subdocument.getPortalType() == portal_type:
+        return_list.append(subdocument)
+      return_list.extend(self._recurseGetValueList(subdocument, portal_type))
+    return return_list
+
+  def _isMovementRelatedWithMovement(self, movement_value_a, movement_value_b): # XXX-JPS not in API
+    """Checks if self is parent or children to movement_value
+
+    This logic is Business Process specific for Simulation Movements, as
+    sequence of Business Process is not related appearance of Simulation Tree
+
+    movement_value_a, movement_value_b - movements to check relation between
+    """
+    movement_a_path = '%s/' % movement_value_a.getRelativeUrl()
+    movement_b_path = '%s/' % movement_value_b.getRelativeUrl()
+
+    if movement_a_path == movement_b_path or \
+       movement_a_path.startswith(movement_b_path) or \
+       movement_b_path.startswith(movement_a_path):
+      return True
+    return False
+
+  def _isDeliverySimulationMovementRelated(self, simulation_movement,
+                                           delivery_simulation_movement_list):
+    """Helper method, which checks if simulation_movement is BPM like related
+       with delivery"""
+    for delivery_simulation_movement in delivery_simulation_movement_list:
+      if self.isMovementRelatedWithMovement(delivery_simulation_movement,
+          simulation_movement):
+        return True
+    return False
+
+  # IBusinessPath implementation
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getRelatedSimulationMovementValueList')
+  def _getRelatedSimulationMovementValueList(self, explanation): # XXX-JPS purpose ? NOT IN API
+    """
+      Returns recursively all Simulation Movements indirectly related to explanation and self
+
+      As business sequence is not related to simulation tree need to built
+      full simulation trees per applied rule
+    """
+    portal_catalog = self.getPortalObject().portal_catalog
+    root_applied_rule_list = []
+
+     
+    if getattr(self, 'getMovementList', None) is None: # XXX-JPS temp hack
+      return []
+
+    delivery_simulation_movement_list = portal_catalog(
+      delivery_uid=[x.getUid() for x in explanation.getMovementList()]) # XXX-JPS it seems explanation is not understood as it should - only the root
+
+    for simulation_movement in delivery_simulation_movement_list:
+      applied_rule = simulation_movement.getRootAppliedRule().getPath()
+      if applied_rule not in root_applied_rule_list:
+        root_applied_rule_list.append(applied_rule)
+
+    simulation_movement_list = portal_catalog(
+      portal_type='Simulation Movement', causality_uid=self.getUid(),
+      path=['%s/%%' % x for x in root_applied_rule_list])
+
+    return [simulation_movement.getObject() for simulation_movement
+          in simulation_movement_list
+          # related with explanation
+          if self._isDeliverySimulationMovementRelated(
+              simulation_movement, delivery_simulation_movement_list)]
