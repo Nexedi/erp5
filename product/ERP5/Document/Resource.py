@@ -679,9 +679,10 @@ class Resource(XMLMatrix, Variated):
         new_category_list += (resource_category, )
       # Generate the predicate mapped value
       # to get some price values.
-      domain_tool = getToolByName(self,'portal_domains')
+      portal = self.getPortalObject()
+      domain_tool = getToolByName(portal, 'portal_domains')
       if supply_path_type is None:
-        portal_type_list = self.getPortalSupplyPathTypeList()
+        portal_type_list = portal.getPortalSupplyPathTypeList()
       elif isinstance(supply_path_type, (list, tuple)):
         portal_type_list = supply_path_type
       else:
