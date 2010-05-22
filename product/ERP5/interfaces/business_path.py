@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -29,49 +30,81 @@
 Products.ERP5.interfaces.business_path
 """
 
-from Products.ERP5.interfaces.business_completable import IBusinessCompletable
-from Products.ERP5.interfaces.business_buildable import IBusinessBuildable
+from zope.interface import Interface
 
-class IBusinessPath(IBusinessCompletable, IBusinessBuildable):
+class IBusinessPath(Interface):
   """Business Path interface specification
+
+  IBusinessPath provides a method to calculate the completion
+  date of existing movements based on business path properties.
+  It also provides methods to determine whether all related simulation
+  movements related to a given explanation are completed, partially
+  completed or frozen. Finally, it provides a method to invoke
+  delivery builders for all movements related to a given explanation.
   """
-  def getExpectedStartDate(task, predecessor_date=None):
-    """Returns the expected start date for this
-    path based on the task and provided predecessor_date.
 
-    'task' is a document which follows the ITaskGetter interface
-    (getStartDate, getStopDate) and defined the reference dates
-    for the business process execution
+  def getMovementCompletionDate(self, movement):
+    """Returns the date of completion of the movemnet 
+    based on paremeters of the business path. This complete date can be
+    the start date, the stop date, the date of a given workflow transition
+    on the explaining delivery, etc.
 
-    'predecessor_date' can be provided as predecessor date and
-     to override the date provided in the task
+    movement -- a Simulation Movement
+    """
+  
+  def isCompleted(explanation):
+    """returns True if all related simulation movements for this explanation
+    document are in a simulation state which is considered as completed
+    according to the configuration of the current business path.
+    Completed means that it is possible to move to next step
+    of Business Process. This method does not check however whether previous
+    trade states of a given business process are completed or not.
+    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
+
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
+
+    NOTE: simulation movements can be completed (ex. in 'started' state) but
+    not yet frozen (ex. in 'delivered' state).
     """
 
-  def getExpectedStopDate(task, predecessor_date=None):
-    """Returns the expected stop date for this
-    path based on the task and provided predecessor_date.
+  def isPartiallyCompleted(explanation):
+    """returns True if some related simulation movements for this explanation
+    document are in a simulation state which is considered as completed
+    according to the configuration of the current business path.
+    Completed means that it is possible to move to next step
+    of Business Process. This method does not check however whether previous
+    trade states of a given business process are completed or not.
+    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
 
-    'task' is a document which follows the ITaskGetter interface
-    (getStartDate, getStopDate) and defined the reference dates
-    for the business process execution
-
-    'predecessor_date' can be provided as predecessor date and
-     to override the date provided in the task
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
     """
 
-  def getRelatedSimulationMovementValueList(explanation):
-    """Returns list of values of Simulation Movements related to self
-    and delivery
+  def isFrozen(explanation):
+    """returns True if all related simulation movements for this explanation
+    document are in a simulation state which is considered as frozen
+    according to the configuration of the current business path.
+    Frozen means that simulation movement cannot be modified.
+    This method does not check however whether previous
+    trade states of a given business process are completed or not.
+    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
 
-    explanation - any document related to business path - which bootstraped
-                  process or is related to build of one paths
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
+
+    NOTE: simulation movements can be frozen (ex. in 'stopped' state) but
+    not yet completed (ex. in 'delivered' state).
     """
 
-  def isMovementRelatedWithMovement(movement_value_a, movement_value_b):
-    """Checks if self is parent or children to movement_value
+  def build(explanation):
+    """Builds all related movements in the simulation using the builders
+    defined on the Business Path
 
-    This logic is Business Process specific for Simulation Movements, as
-    sequence of Business Process is not related appearance of Simulation Tree
-
-    movement_value_a, movement_value_b - movements to check relation between
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
     """

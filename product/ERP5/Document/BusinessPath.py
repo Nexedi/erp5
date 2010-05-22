@@ -91,8 +91,6 @@ class BusinessPath(Path, Predicate):
   zope.interface.implements(interfaces.ICategoryAccessProvider,
                             interfaces.IArrowBase,
                             interfaces.IBusinessPath,
-                            interfaces.IBusinessBuildable,
-                            interfaces.IBusinessCompletable,
                             interfaces.IPredicate,
                             )
 

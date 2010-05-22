@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -29,66 +30,316 @@
 Products.ERP5.interfaces.business_process
 """
 
-from Products.ERP5.interfaces.business_completable import IBusinessCompletable
-from Products.ERP5.interfaces.business_buildable import IBusinessBuildable
+from zope.interface import Interface
 
-class IBusinessProcess(IBusinessCompletable, IBusinessBuildable):
-  """Business Process interface specification
+class IBusinessPathProcess(Interface):
+  """Business Path Process interface specification
+
+  IBusinessPathProcess defines Business Process APIs related
+  to Business Path completion status and expected completion dates.
   """
-  def getBuildablePathValueList(explanation):
+
+  def getBusinessPathValueList(trade_phase=None, predecessor=None, successor=None):
+    """Returns the list of contained Business Path documents
+
+    trade_phase -- filter by trade phase
+ 
+    predecessor -- filter by trade state predecessor
+
+    successor -- filter by trade state successor
+    """
+
+  def isBusinessPathCompleted(explanation, business_path):
+    """Returns True if given Business Path document
+    is completed in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
+    """
+
+  def getExpectedBusinessPathCompletionDate(explanation, business_path):
+    """Returns the expected completion date of given Business Path document
+    in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
+    """
+
+  def getExpectedBusinessPathStartAndStopDate(explanation, business_path):
+    """Returns the expected start and stop dates of given Business Path
+    document in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
+    """
+
+class IBuildableBusinessPathProcess(Interface):
+  """Buildable Business Path Process interface specification
+
+  IBuildableBusinessPathProcess defines an API to build
+  simulation movements related to business pathj in the context
+  of a given explanation.
+  """
+
+  def getBuildableBusinessPathValueList(explanation):
     """Returns the list of Business Path which are buildable
+    by taking into account trade state dependencies between
+    Business Path.
 
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
     """
 
-  def getCompletedStateValueList(explanation):
-    """Returns the list of Business States which are completed
+  def isBusinessPathBuildable(explanation, business_path):
+    """Returns True if any of the related Simulation Movement
+    is buildable and if the predecessor trade state is completed.
 
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
     """
 
-  def getPartiallyCompletedStateValueList(explanation):
-    """Returns the list of Business States which are partially 
-    completed
+  def isBusinessPatPartiallyBuildable(explanation, business_path):
+    """Returns True if any of the related Simulation Movement
+    is buildable and if the predecessor trade state is partially completed.
 
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
     """
 
-  def getLatestCompletedStateValue(explanation):
-    """Returns a completed Business State with no succeeding
-    completed Business Path
+class ITradeStateProcess(Interface):
+  """Trade State Process interface specification
 
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+  ITradeStateProcess defines Business Process APIs related
+  to Trade State completion status and expected completion dates.
+  ITradeStateProcess APIs recursively browse trade states and business
+  path to provide completion status and expected completion dates.
+
+  For example, a complete trade state is a trade state for
+  which all predecessor trade states are completed and for
+  which all business path applicable to the given explanation
+  are also completed.
+  """
+
+  def getTradeStateList():
+    """Returns list of all trade_state of this Business Process
+    by looking at successor and predecessor values of contained
+    Business Path.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
     """
 
-  def getLatestPartiallyCompletedStateValue(explanation):
-    """Returns a partially completed Business State with no
-    succeeding partially completed Business Path
+  def getSuccessorTradeStateList(explanation, trade_state):
+    """Returns the list of successor states in the 
+    context of given explanation. This list is built by looking
+    at all successor of business path involved in given explanation
+    and which predecessor is the given trade_phase.
 
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
     """
 
-  def getLatestCompletedStateValueList(explanation):
-    """Returns all completed Business State with no succeeding
-    completed Business Path
+  def getPredecessorTradeStateList(explanation, trade_state):
+    """Returns the list of predecessor states in the 
+    context of given explanation. This list is built by looking
+    at all predecessor of business path involved in given explanation
+    and which sucessor is the given trade_phase.
 
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
     """
 
-  def getLatestPartiallyCompletedStateValueList(explanation):
-    """Returns all partially completed Business State with no
-    succeeding partially completed Business Path
+  def getCompletedTradeStateList(explanation):
+    """Returns the list of Trade States which are completed
+    in the context of given explanation.
 
-    'explanation' is the Order or Item or Document which is the
-    cause of a root applied rule in the simulation
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
     """
+
+  def getPartiallyCompletedTradeStateList(explanation):
+    """Returns the list of Trade States which are partially 
+    completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def getLatestCompletedTradeStateList(explanation):
+    """Returns the list of completed trade states which predecessor
+    states are completed and for which no successor state 
+    is completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def getLatestPartiallyCompletedTradeState(explanation):
+    """Returns the list of completed trade states which predecessor
+    states are completed and for which no successor state 
+    is partially completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def isTradeStateCompleted(explanation, trade_state):
+    """Returns True if all predecessor trade states are
+    completed and if no successor trade state is completed
+    in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
+    """
+
+  def isTradeStatePartiallyCompleted(explanation, trade_state):
+    """Returns True if all predecessor trade states are
+    completed and if no successor trade state is partially completed
+    in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
+    """
+
+  def getExpectedTradeStateCompletionDate(explanation, trade_state):
+    """Returns the date at which the give trade state is expected
+    to be completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
+    """
+
+class ITradePhaseProcess(Interface):
+  """Trade Phase Process interface specification
+
+  ITradePhaseProcess defines Business Process APIs related
+  to Trade Phase completion status and expected completion dates.
+  Unlike ITradeStateProcess, ITradePhaseProcess APIs related to completion
+  do not take into account relations between trade states and
+  business path.
+
+  For example, a completed trade phase is a trade phase for which all
+  business path applicable to the given explanation are completed. 
+  It does not matter whether the predecessor trade state of related
+  business path is completed or not.
+  """
 
   def getTradePhaseList():
     """Returns list of all trade_phase of this Business Process
+    by looking at trade_phase values of contained Business Path.
+    """
+
+  def getCompletedTradePhaseList(explanation):
+    """Returns the list of Trade Phases which are completed
+    in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def getPartiallyCompletedTradePhaseList(explanation):
+    """Returns the list of Trade Phases which are partially completed
+    in the context of given explanation. 
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def isTradePhaseCompleted(explanation, trade_phase):
+    """Returns True all business path with given trade_phase
+    applicable to given explanation are completed.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_phase -- a Trade Phase category
+    """
+
+  def isTradePhasePartiallyCompleted(explanation, trade_phase):
+    """Returns True at least one business path with given trade_phase
+    applicable to given explanation is partially completed
+    or completed.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_phase -- a Trade Phase category
+    """
+
+  def getExpectedTradePhaseCompletionDate(explanation, trade_phase):
+    """Returns the date at which the give trade phase is expected
+    to be completed in the context of given explanation, taking
+    into account the graph of date constraints defined by business path
+    and business states.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_phase -- a Trade Phase category
+    """
+
+  def getRemainingTradePhaseList(business_path, trade_phase_list=None):
+    """Returns the list of remaining trade phases which to be achieved
+    as part of a business process. This list is calculated by analysing 
+    the graph of business path and trade states, starting from a given
+    business path. The result if filtered by a list of trade phases. This
+    method is useful mostly for production and MRP to manage a distributed
+    supply and production chain.
+
+    business_path -- a Business Path document
+
+    trade_phase_list -- if provided, the result is filtered by it after
+                        being collected - ???? useful ? XXX-JPS ?
+
+    NOTE: explanation is not involved here because we consider here that
+    self is the result of asUnionBusinessProcess and thus only contains
+    applicable Business Path to a given simulation subtree. Since the list
+    of remaining trade phases does not depend on exact values in the
+    simulation, we did not include the explanation. However, this makes the
+    API less uniform.
+    """
+
+class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
+                       ITradeStateProcess, ITradePhaseProcess, ):
+  """Business Process interface specification.
+
+  Business Process APIs are used to manage the completion status,
+  the completion dates, the start date and stop date, and trigger 
+  build process of a complex simulation process in ERP5.
+  """
+
+  def isBusinessProcessCompleted(explanation):
+    """Returns True is all applicable Trade States and Trade Phases
+    are completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def getExpectedCompletionDate(explanation):
+    """Returns the expected date at which all applicable Trade States and
+    Trade Phases are completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
     """
