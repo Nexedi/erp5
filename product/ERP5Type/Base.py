@@ -3415,7 +3415,11 @@ class Base( CopyContainer,
     # Make sure this object is not in the catalog
     catalog = getToolByName(self, 'portal_catalog', None)
     if catalog is not None:
-       catalog.unindexObject(self, uid=self.getUid())
+       kw = dict(activity="SQLQueue")
+       kw['after_path_and_method_id']= ([self.getPath(),
+                                          ['immediateReindexObject',
+                                          'recursiveImmediateReindexObject']])
+       catalog.activate(**kw).unindexObject(uid=self.getUid())
     self.isIndexable = ConstantGetter('isIndexable', value=False)
     self.isTemplate = ConstantGetter('isTemplate', value=True)
     # XXX reset security here
