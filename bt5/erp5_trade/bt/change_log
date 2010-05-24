@@ -1,3 +1,6 @@
+2010-05-24 yusei
+* Update Movement_getUseItemList. Add an empty select option to the result.
+
 2010-05-21 yusei
 * Display preferred base amounts in base contribution list and base application list.
 
