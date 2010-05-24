@@ -874,11 +874,11 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
 
     self.assertEquals('solved', related_invoice.getCausalityState())
 
-    # Of course, this invoice does not generate simulation again. An applied
-    # rule is created, but it is empty.
+    # Of course, this invoice does not generate simulation again. New
+    # applied rule is not created.
     related_applied_rule = related_invoice.getCausalityRelatedValue(
                                 portal_type='Applied Rule')
-    self.assertEquals(0, len(related_applied_rule.objectValues()))
+    self.assertEquals(None, related_applied_rule)
     
   def test_tax_line_build_accounting(self):
     base_1 = self.base_amount.newContent(
@@ -958,11 +958,11 @@ class TestTaxLineOrderSimulation(AccountingBuildTestCase):
                       income_line.getDestinationValue())
     self.assertEquals(30, income_line.getSourceCredit())
 
-    # Of course, this invoice does not generate simulation again. An applied
-    # rule is created, but it is empty.
+    # Of course, this invoice does not generate simulation again. New
+    # applied rule is not created.
     related_applied_rule = related_invoice.getCausalityRelatedValue(
                                 portal_type='Applied Rule')
-    self.assertEquals(0, len(related_applied_rule.objectValues()))
+    self.assertEquals(None, related_applied_rule)
 
     # and there's no other invoices
     self.assertEquals(1, len(self.portal.accounting_module.contentValues()))
