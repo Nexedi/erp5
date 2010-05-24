@@ -100,7 +100,7 @@ class DownloadableMixin:
     return str(data)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                                                                  'index_html')
+                            'getStandardFileName')
   def getStandardFileName(self, format=None):
     """Returns the document coordinates as a standard file name. This
     method is the reverse of getPropertyDictFromFileName.
