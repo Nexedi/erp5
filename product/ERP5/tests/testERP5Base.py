@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript, FileUpload
 from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestERP5Base(ERP5TypeTestCase):
   """ERP5 Base tests.
@@ -1527,11 +1528,14 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals('group/nexedi',
         self.portal.portal_preferences.getPreferredSectionCategory())
 
+  # Marked as expectedFailure as it shall be never possible to use edit method to set
+  # local property which would override existing method
+  @expectedFailure
   def test_content_type_property(self):
     portal_type = 'Person'
     person_module = self.portal.getDefaultModule(portal_type)
     person = person_module.newContent(portal_type=portal_type)
-    
+
     # assert that test has a sense
     self.assertEqual(getattr(person, 'getContentType', None), None)
 
