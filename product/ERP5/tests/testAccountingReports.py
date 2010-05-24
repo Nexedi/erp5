@@ -2583,7 +2583,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['simulation_state'] = ['delivered']
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 1
-    request_form['gap'] = 'my_country/my_accounting_standards/4'
+    request_form['gap_list'] = ['my_country/my_accounting_standards/4']
     request_form['per_account_class_summary'] = 0
 
     report_section_list = self.getReportSectionList(
@@ -2987,7 +2987,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form = self.portal.REQUEST.form
     request_form['from_date'] = DateTime(2006, 1, 1)
     request_form['at_date'] = DateTime(2006, 12, 31)
-    request_form['gap'] = 'my_country/my_accounting_standards/4/40'
+    request_form['gap_list'] = ['my_country/my_accounting_standards/4/40']
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
