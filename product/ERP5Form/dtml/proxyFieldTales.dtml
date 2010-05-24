@@ -155,7 +155,7 @@ function GetElementsWithClassName(elementName,className) {
         }
         return elemColl;
 }
-var class_deletaged_list = GetElementsWithClassName('*','delegated');
+var class_deletaged_list = GetElementsWithClassName('td','delegated');
 for(var i=0; i<class_deletaged_list.length; i++) {
   element = class_deletaged_list[i].childNodes[1];
   if (element.type == 'hidden'){
