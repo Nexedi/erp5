@@ -29,6 +29,9 @@
  <portal_type id="Balance Transaction">
   <item>Balance Transaction Line</item>
  </portal_type>
+ <portal_type id="Internal Invoice Transaction">
+  <item>Internal Invoice Transaction Line</item>
+ </portal_type>
  <portal_type id="Invoice Root Simulation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>

@@ -58,6 +58,18 @@ Cash Register | jump_active_accounting_pref
 Cash Register | transactions
 Cash Register | view
 Credit Card | transactions
+Internal Invoice Transaction Line | view
+Internal Invoice Transaction | add_internal_invoice_transaction_line
+Internal Invoice Transaction | convert_destination_price
+Internal Invoice Transaction | convert_source_price
+Internal Invoice Transaction | create_new_file
+Internal Invoice Transaction | create_reversal
+Internal Invoice Transaction | destination_asset
+Internal Invoice Transaction | document_list
+Internal Invoice Transaction | jump_related_payment
+Internal Invoice Transaction | profile_view
+Internal Invoice Transaction | source_asset
+Internal Invoice Transaction | view
 Invoice Root Simulation Rule | view
 Invoice Rule | view
 Organisation | grouping_reference_fast_input

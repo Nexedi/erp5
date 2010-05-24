@@ -10,6 +10,8 @@ Accounting Transaction Root Simulation Rule
 Balance Transaction
 Balance Transaction Line
 Cash Register
+Internal Invoice Transaction
+Internal Invoice Transaction Line
 Invoice Root Simulation Rule
 Invoice Rule
 Payment Rule

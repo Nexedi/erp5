@@ -2,6 +2,7 @@ Accounting Rule Cell Line | AccountingRuleCellLine
 Accounting Transaction | AccountingTransaction
 Balance Transaction | AccountingTransaction
 Cash Register | BankAccount
+Internal Invoice Transaction | AccountingTransaction
 Payment Transaction | AccountingTransaction
 Purchase Invoice Transaction | AccountingTransaction
 Sale Invoice Transaction | AccountingTransaction

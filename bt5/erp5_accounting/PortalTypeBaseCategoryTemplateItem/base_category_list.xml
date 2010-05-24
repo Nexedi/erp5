@@ -5,4 +5,7 @@
  <portal_type id="Accounting Transaction Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Internal Invoice Transaction">
+  <item>specialise</item>
+ </portal_type>
 </base_category_list>
