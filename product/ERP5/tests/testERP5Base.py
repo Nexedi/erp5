@@ -1527,6 +1527,16 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals('group/nexedi',
         self.portal.portal_preferences.getPreferredSectionCategory())
 
+  def test_content_type_property(self):
+    portal_type = 'Person'
+    person_module = self.portal.getDefaultModule(portal_type)
+    person = person_module.newContent(portal_type=portal_type)
+    
+    # assert that test has a sense
+    self.assertEqual(getattr(person, 'getContentType', None), None)
+
+    # edit content_type on document which has no content_type property configured
+    person.edit(content_type='text/xml')
 
 def test_suite():
   suite = unittest.TestSuite()
