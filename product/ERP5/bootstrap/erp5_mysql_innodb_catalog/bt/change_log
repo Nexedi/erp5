@@ -1,3 +1,6 @@
+2010-05-24 tatuya
+* Add parent_specialise_reference related key to select simulation movements by the applied rule reference.
+
 2010-03-15 yusei
 * Add grand_grand_grand_grand_grand_parent related key.
 

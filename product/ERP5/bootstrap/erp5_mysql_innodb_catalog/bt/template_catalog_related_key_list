@@ -51,3 +51,4 @@ translated_causality_state_title | translation/translated_message/z_related_tran
 metric_type_uid | measure/metric_type_uid/z_related_metric_type
 parent_strict_group_uid | category,catalog/uid/z_related_parent_strict_group
 grand_grand_grand_grand_grand_parent_simulation_state | catalog,catalog,catalog,catalog,catalog,catalog/simulation_state/z_related_grand_grand_grand_grand_grand_parent
+parent_specialise_reference | category,catalog/reference/z_related_parent_specialise
