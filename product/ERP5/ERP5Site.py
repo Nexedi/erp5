@@ -1134,6 +1134,22 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('amount_generator_cell')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalBusinessProcessTypeList')
+  def getPortalBusinessProcessTypeList(self):
+    """
+    Return amount generator types.
+    """
+    return self._getPortalGroupedTypeList('business_process')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalBusinessPathTypeList')
+  def getPortalBusinessPathTypeList(self):
+    """
+    Return amount generator line types.
+    """
+    return self._getPortalGroupedTypeList('business_path')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCalendarPeriodTypeList')
   def getPortalCalendarPeriodTypeList(self):
     """
