@@ -386,7 +386,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
     from ZConfig.components.logger.logger import EventLogFactory
     import logging
     section = SectionValue({'dateformat': '%Y-%m-%d %H:%M:%S',
-                            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+                            'format': '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s',
                             'level': logging.INFO,
                             'path': os.environ['EVENT_LOG_FILE'],
                             'max_size': None,

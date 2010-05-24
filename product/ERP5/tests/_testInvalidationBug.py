@@ -52,12 +52,17 @@ class TestInvalidationBug(ERP5TypeTestCase):
     self.login()
 
   def testReindex(self):
-    self.login()
+    print("To reproduce bugs easily, distribution step should be skipped for"
+          " SQLDict, by writing messages with processing_node already at 0."
+          " This can be done easily by patching SQLDict_writeMessageList.")
     module = self.getPortalObject().organisation_module
+    module.newContent()
     module.setIdGenerator('_generatePerDayId')
-    module.migrateToHBTree()
+    #module.migrateToHBTree()
     transaction.commit()
     self.tic()
+    print 'OID(%s) = %r' % (module.getRelativeUrl(), module._p_oid)
+    print '  OID(_tree) = %r' % module._tree._p_oid
     previous = DateTime()
     skin_folder = self.getPortal().portal_skins.custom
     if 'create_script' in skin_folder.objectIds():
@@ -71,19 +76,20 @@ for x in xrange(0, 1):
   id_list.append(organisation.getId())
 log('Created Organisations', (context,id_list))
 #log('All organisations', (context,[x for x in context.objectIds()]))
-context.activate(activity='SQLQueue').create_script()
+context.activate(activity='SQLQueue', priority=2).create_script()
 
 count = len(context)
 log('Organisation #', count)
-if not (count % 500):
-  if count == 500:
-    context.setProperty('perf_start', DateTime())
+if (count % 500) < 5:
+  start = context.getProperty('perf_start')
+  if start is None:
+    context.setProperty('perf_start', (count, DateTime()))
   else:
-    log('creation speed: %s obj/s' % ((count - 500) /
-        (86400 * (DateTime() - context.getProperty('perf_start')))))
+    log('creation speed: %s obj/s' % ((count - start[0]) /
+        (86400 * (DateTime() - start[1]))))
 """)
     for x in xrange(0,200):
-      module.activate(activity='SQLQueue').create_script()
+      module.activate(activity='SQLQueue', priority=2).create_script()
     transaction.commit()
     self.tic()
 
