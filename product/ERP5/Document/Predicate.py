@@ -235,7 +235,20 @@ class Predicate(XMLObject):
                                            'range' : 'max'
                                          }
       else:
-        catalog_kw[criterion.property] = criterion.identity
+        # if a filter was passed as argument
+        if catalog_kw.has_key(criterion.property):
+          if isinstance(catalog_kw[criterion.property], (tuple, list)):
+            catalog_filter_set = set(catalog_kw[criterion.property])
+          else:
+            catalog_filter_set = set([catalog_kw[criterion.property]])
+          if isinstance(criterion.identity, (tuple, list)):
+            parameter_filter_set = set(criterion.identity)
+          else:
+            parameter_filter_set = set([criterion.identity])
+          catalog_kw[criterion.property] = \
+              list(catalog_filter_set.intersection(parameter_filter_set))
+        else:
+          catalog_kw[criterion.property] = criterion.identity
 
     portal_catalog = getToolByName(self, 'portal_catalog')
 
