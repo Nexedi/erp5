@@ -1,3 +1,6 @@
+2010-05-24 kazuhiko
+* Call Delivery_updateAppliedRule with activity in accounting_workflow/scripts/buildTradeModelLineList.
+
 2010-05-24 Jérome
 * Allow to select multiple accounts root in General Ledger and Trial Balance
 
