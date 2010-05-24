@@ -79,14 +79,15 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
   if delivery_portal_type == \'Pay Sheet Transaction\':\n
     PRIORITY     = 3\n
     pay_sheet    = delivery\n
-    previous_tag = pay_sheet.getPath() + \'_firstUpdateAppliedRule\'\n
-    expand_tag   = pay_sheet.getPath() + \'_expand\'\n
+    path         = pay_sheet.getPath()\n
+    tag          = \'%s_updateAppliedRule\' % path\n
+    expand_tag   = \'%s_expand\' % path\n
     activate_kw  = { \'tag\'     : expand_tag\n
                    , \'priority\': PRIORITY\n
                    }\n
 \n
-    pay_sheet.activate( tag       = expand_tag\n
-                      , after_tag = previous_tag\n
+    pay_sheet.activate( tag       = tag\n
+                      , after_tag = expand_tag\n
                       , priority  = PRIORITY\n
                       ).updateAppliedRule( rule_reference = \'default_invoice_rule\'\n
                                          , activate_kw = activate_kw\n
@@ -119,10 +120,10 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
   build_trade_model_tag = \'invoice_transaction_build_trade_model_%s\' % \\\n
                                  delivery.getRelativeUrl()\n
   build_accounting_tag = \'invoice_transaction_build_accounting_%s\' % delivery.getRelativeUrl()\n
-  update_applied_rule_tag = \'%s_updateAppliedRule\' % delivery.getPath()\n
+  expand_tag = \'%s_expand\' % delivery.getPath()\n
   builder.activate(\n
       activity=\'SQLQueue\',\n
-      after_tag=(update_applied_rule_tag,\n
+      after_tag=(expand_tag,\n
                  build_trade_model_tag,),\n
       tag=build_accounting_tag,\n
       activate_kw=dict(tag=build_accounting_tag)).build(\n
@@ -133,7 +134,7 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
   portal_deliveries.payment_transaction_builder.activate(\n
                       activity=\'SQLQueue\',\n
                       after_tag=( build_trade_model_tag,\n
-                                  update_applied_rule_tag,\n
+                                  expand_tag,\n
                                   build_accounting_tag, ),\n
                       ).build(\n
                           explanation_uid=explanation_uid_list)\n
@@ -194,7 +195,8 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
                             <string>builder</string>
                             <string>PRIORITY</string>
                             <string>pay_sheet</string>
-                            <string>previous_tag</string>
+                            <string>path</string>
+                            <string>tag</string>
                             <string>expand_tag</string>
                             <string>activate_kw</string>
                             <string>explanation_uid_list</string>
@@ -202,7 +204,6 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
                             <string>order</string>
                             <string>build_trade_model_tag</string>
                             <string>build_accounting_tag</string>
-                            <string>update_applied_rule_tag</string>
                             <string>dict</string>
                           </tuple>
                         </value>

@@ -1,3 +1,6 @@
+2010-05-24 kazuhiko
+* Improve activity dependencies for Delivery_updateAppliedRule, eg. delivery.activate(tag='(path)_updateAppliedRule', after_tag='(path)_expand').Delivery_updateAppliedRule(activate_kw={'tag':'(path)_expand'})
+
 2010-05-05 Jérome
 * Add an action to add create an initial balance transaction, from an accounting period.
 

@@ -55,12 +55,12 @@
             <key> <string>_body</string> </key>
             <value> <string>order = state_change[\'object\']\n
 \n
-previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-expand_tag = order.getPath() + \'_expand\'\n
-activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-order.activate(tag=expand_tag, after_tag=previous_tag).updateAppliedRule(\n
-             rule_reference=\'default_order_rule\', activate_kw=activate_kw)\n
+path = order.getPath()\n
+tag = \'%s_updateAppliedRule\' % path\n
+expand_tag = \'%s_expand\' % path\n
+activate_kw = {\'tag\':expand_tag, \'priority\':3}\n
 \n
+order.activate(tag=tag, after_tag=expand_tag).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 \n
 order_portal_type = order.getPortalType()\n
 builder_dict = {\n
@@ -111,7 +111,8 @@ delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(expl
                             <string>_getitem_</string>
                             <string>order</string>
                             <string>_getattr_</string>
-                            <string>previous_tag</string>
+                            <string>path</string>
+                            <string>tag</string>
                             <string>expand_tag</string>
                             <string>activate_kw</string>
                             <string>order_portal_type</string>

@@ -57,24 +57,31 @@
 \n
 activate_kw = {}\n
 related_order = packing_list.getCausalityValue()\n
-after_tag_list = []\n
+path = packing_list.getPath()\n
+tag = \'%s_updateAppliedRule\' % path\n
+expand_tag = \'%s_expand\' % path\n
+activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
+after_tag_list = [expand_tag]\n
 if related_order is not None:\n
-  after_tag_list.append(related_order.getPath() + \'_firstUpdateAppliedRule\')\n
-  after_tag_list.append(related_order.getPath() + \'_expand\')\n
-tag = packing_list.getPath()+\'_expand\'\n
-activate_kw = {\'tag\':tag,\'priority\':3}\n
+  # XXX is it really required?\n
+  after_tag_list.append(\'%s_expand\' % related_order.getPath())\n
 \n
-packing_list.activate(after_tag=after_tag_list,tag=tag,\n
-    priority=3).updateAppliedRule(rule_reference=\'default_delivery_rule\',activate_kw=activate_kw)\n
+packing_list.activate(after_tag=after_tag_list,\n
+                      tag=tag,\n
+                      priority=3).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 \n
 \n
 # Make sure to reindex related simulation movement if we are already\n
 # simulated, call reindexObject, not immediateReindexObject so that\n
 # catalogObjectList will be called with many objects\n
-packing_list.activate(after_tag=after_tag_list,tag=tag,\n
-     priority=3).applyToDeliveryRelatedMovement(method_id=\'reindexObject\')\n
+# XXX is it really required?\n
+packing_list.activate(after_tag=after_tag_list,\n
+                      tag=tag,\n
+                      priority=3).applyToDeliveryRelatedMovement(method_id=\'reindexObject\')\n
 \n
-packing_list.startBuilding()\n
+if packing_list.getCausalityState() == \'draft\':\n
+  packing_list.startBuilding()\n
+# XXX is it really required?\n
 packing_list.activate(\n
   after_tag = tag,\n
 ).updateCausalityState()\n
@@ -121,9 +128,11 @@ packing_list.activate(\n
                             <string>activate_kw</string>
                             <string>_getattr_</string>
                             <string>related_order</string>
+                            <string>path</string>
+                            <string>tag</string>
+                            <string>expand_tag</string>
                             <string>after_tag_list</string>
                             <string>None</string>
-                            <string>tag</string>
                           </tuple>
                         </value>
                     </item>
