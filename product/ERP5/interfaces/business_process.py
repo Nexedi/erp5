@@ -65,6 +65,16 @@ class IBusinessPathProcess(Interface):
     business_path -- a Business Path document
     """
 
+  def isBusinessPathPartiallyCompleted(explanation, business_path):
+    """Returns True if given Business Path document
+    is partially completed in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
+    """
+
   def getExpectedBusinessPathCompletionDate(explanation, business_path, 
                                                        delay_mode=None):
     """Returns the expected completion date of given Business Path document
@@ -369,9 +379,25 @@ class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
   build process of a complex simulation process in ERP5.
   """
 
-  def isBusinessProcessCompleted(explanation):
+  def isCompleted(explanation):
     """Returns True is all applicable Trade States and Trade Phases
     are completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def isBuildable(explanation):
+    """Returns True is one Business Path of this Business Process
+    is buildable in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+
+  def isPartiallyBuildable(explanation):
+    """Returns True is one Business Path of this Business Process
+    is partially buildable in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line which
                    implicitely defines a simulation subtree
@@ -383,4 +409,15 @@ class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
 
     explanation -- an Order, Order Line, Delivery or Delivery Line which
                    implicitely defines a simulation subtree
+    """
+
+  def build(explanation, include_partially_buildable=False):
+    """Build whatever is buildable in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    include_partially_buildable -- if set to True, also build partially
+                                   buildable business path. Else
+                                   only build strictly buildable path.
     """
