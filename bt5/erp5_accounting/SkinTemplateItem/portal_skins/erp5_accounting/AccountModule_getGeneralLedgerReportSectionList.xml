@@ -70,10 +70,11 @@ section_uid = context.Base_getSectionUidListForSectionCategory(\n
                         section_category, request[\'section_category_strict\'])\n
 simulation_state    = request[\'simulation_state\']\n
 from_date           = request.get(\'from_date\', None)\n
-gap                 = request.get(\'gap\', None)\n
-# XXX the field should maybe use base=1 on the category...\n
-if gap:\n
-  gap = \'gap/%s\' % gap\n
+gap_list = []\n
+for gap in request.get(\'gap_list\', ()):\n
+  # XXX the field should maybe use base=1 on the category...\n
+  gap_list.append(\'gap/%s\' % gap)\n
+\n
 display_categories  = request.get(\'display_categories\', False)\n
 period_start_date = context\\\n
     .Base_getAccountingPeriodStartDateForSectionCategory(\n
@@ -182,8 +183,8 @@ account_type_to_group_by_mirror_section = [\n
                   \'account_type/liability/payable\', ]\n
 \n
 \n
-if gap or gap_root:\n
-  params[\'node_category\'] = gap or gap_root\n
+if gap_list or gap_root:\n
+  params[\'node_category\'] = gap_list or gap_root\n
 \n
 report_section_list = []\n
 \n
@@ -493,6 +494,8 @@ return report_section_list\n
                             <string>simulation_state</string>
                             <string>None</string>
                             <string>from_date</string>
+                            <string>gap_list</string>
+                            <string>_getiter_</string>
                             <string>gap</string>
                             <string>False</string>
                             <string>display_categories</string>
@@ -515,7 +518,6 @@ return report_section_list\n
                             <string>getFullAccountName</string>
                             <string>account_type_to_group_by_node</string>
                             <string>profit_and_loss_account_type</string>
-                            <string>_getiter_</string>
                             <string>account_type_value</string>
                             <string>append</string>
                             <string>$append0</string>
