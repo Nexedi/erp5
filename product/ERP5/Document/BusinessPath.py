@@ -34,41 +34,11 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.ExplanationCache import _getExplanationCache
 
 import zope.interface
 
 from zLOG import LOG
-
-class ExplanationCache:
-  """ExplanationCache provides a central access to 
-  all parameters and values which are needed to process 
-  an explanation. It is based on the idea that a value is calculated
-  once and once only, as a way to accelerate performance of algorithms
-  related to an explanation.
-
-        'explanation_uid': self._getExplanationUidList(explanation) # XXX-JPS why do we need explanation_uid ? and why a list
-        'simulation_path': simulation_path,
-
-    explanation_uid = self._getExplanationUidList(explanation) # A hint value to reduce the size of the tree
-    simulation_path = '/erp5/p.../%' # A list of path
-
-"""
-  def __init__(self, explanation):
-    """
-    """
-    self.explanation = explanation
-
-  def getRootExplanationUidList(self):
-    """
-    """
-
-  def getSimulationPathPatternList(self):
-    """
-    """
-
-def _getExplanationCache(explanation):
-  # XXX-JPS Cache this in a transaction variable or better
-  return ExplanationCache(explanation)
 
 class BusinessPath(Path, Predicate):
   """
@@ -175,6 +145,12 @@ class BusinessPath(Path, Predicate):
             #'destination_transport'
             )
 
+  # Helper Methods
+  def _getExplanationRelatedSimulationMovementValueList(self, explanation):
+    explanation_cache = _getExplanationCache(explanation)
+    return explanation_cache.getBusinessPathRelatedSimulationMovementValueList(self)
+
+  # XXX-JPS UNkonwn ?
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getArrowCategoryDict')
   def getArrowCategoryDict(self, context=None, **kw): # XXX-JPS do we need it in API ?
@@ -271,6 +247,22 @@ class BusinessPath(Path, Predicate):
     method_id = self.getCompletionDateMethodId()
     method = getattr(movement, method_id) # We wish to raise if it does not exist
     return method()
+
+  def getCompletionDate(self, explanation):
+    """Returns the date of completion of the movemnet 
+    based on paremeters of the business path. This complete date can be
+    the start date, the stop date, the date of a given workflow transition
+    on the explaining delivery, etc.
+
+    XXX - DOC
+
+    movement -- a Simulation Movement
+    """
+    date_list = []
+    for movement in self._getExplanationRelatedSimulationMovementValueList(explanation):
+      date_list.append(self.getMovementCompletionDate(movement))
+
+    return max(date_list)
   
   security.declareProtected(Permissions.AccessContentsInformation,
                                             'getExpectedQuantity')
@@ -360,6 +352,15 @@ class BusinessPath(Path, Predicate):
       return False # Frozen is True only if some delivered movements exist
     for movement in movement_list:
       if movement.getDelivery() and movement.getSimulationState() not in acceptable_state_list: # XXX-JPS is it acceptable optimizatoin ?
+        return False
+    return True
+
+  def isDelivered(self, explanation):
+    """XXX
+    """
+    for simulation_movement in self._getExplanationRelatedSimulationMovementValueList(
+        explanation):
+      if not simulation_movement.getDelivery():
         return False
     return True
 

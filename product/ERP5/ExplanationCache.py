@@ -51,12 +51,12 @@ class ExplanationCache:
     """
     # Define share properties
     self.explanation = explanation
-    self.portal_catalog = getToolByName(explanation 'portal_catalog')
+    self.portal_catalog = getToolByName(explanation, 'portal_catalog')
     self.simulation_movement_cache = {} # Simulation Movement Cache
     self.explanation_uid_cache = []
     self.explanation_path_pattern_cache = []
 
-  def getDeliveryMovementList(self):
+  def _getDeliveryMovementList(self):
     """Returns self is explanation is a delivery line
     of the list of explanation delivery lines if explanation
     is a delivery
@@ -80,7 +80,7 @@ class ExplanationCache:
       return self.explanation_uid_cache
     result = set()
     # For each delivery movement
-    for movement in self.getDeliveryMovementList():
+    for movement in self._getDeliveryMovementList():
       # For each simulation movement
       for simulation_movement in movement.getDeliveryRelatedValueList():
         result.add(simulation_movement.getExplanationUid()) # XXX-JPS use new API later
@@ -117,7 +117,7 @@ class ExplanationCache:
         local_path_dict[simulation_movement_id] = simulation_movement
 
     # For each delivery movement
-    for movement in self.getDeliveryMovementList():
+    for movement in self._getDeliveryMovementList():
       # For each simulation movement
       for simulation_movement in movement.getDeliveryRelatedValueList():
         updatePathDict(simulation_movement)
@@ -133,7 +133,7 @@ class ExplanationCache:
         else:
           browsePathDict('%s/%s' % (prefix, key), value) # Recursing with string append is slow XXX-JPS
 
-    browsePathDict('', path_dict)
+    browsePathDict('/', path_dict)
     self.explanation_path_pattern_cache = result
     return result
 
@@ -143,7 +143,7 @@ class ExplanationCache:
     """
     return self.getSimulationMovementList(causality_uid=business_path.getUid())
     
-  def getSimulationMovementList(self, **kw)
+  def getSimulationMovementList(self, **kw):
     """Search Simulation Movements related to our explanation.
     Cache result so that the second time we saarch for the same
     list we need not involve the catalog again.
@@ -157,9 +157,48 @@ class ExplanationCache:
                                **kw)
     return self.simulation_movement_cache[kw_tuple]
 
+  def geBusinessPathClosure(business_path):
+    """Creates a Business Process by filtering out all Business Path
+    in self which are not related to a simulation movement
+    which is either or parent or a child of explanation simulations movements
+    caused by 'business_path'
+
+    cache keys: business_path (simple) then path_set
+
+    XXX-JPS PSEUDO CODE
+    """
+    new_business_process = BusinessProcess()
+    accepted_path = []
+    
+    explanation_cache = _getExplanationCache(explanation)
+    path_list = explanation_cache.getSimulationPathPatternList()
+    path_list = map(lambda x:x[0:-1], path_list) # Remove trailing %
+    path_set = set()
+    for simulation_movement in business_path.\
+             _getExplanationRelatedSimulationMovementValueList(explanation):
+      simulation_path = simulation_movement.getPath()
+      for path in path_list:
+        if simulation_path.startswith(path):
+          path_set.add(path) # This selection path is part of explanation
+
+    for business_path in self.getBusinessPathValueList():
+      if business_path.hasMovementsIn(explanation, path_set):
+        accepted_path.append(business_path)
+
+    new_business_process.addValueList(business_path)
+    return new_business_process
+
 def _getExplanationCache(explanation):
+  if explanation.isinstance(ExplanationCache):
+    return explanation
   # Return cached value if any
   tv = getTransactionalVariable(explanation)
   if tv.get('explanation_cache', None) is None:
     tv['explanation_cache'] =  ExplanationCache(explanation)
   return tv.get('explanation_cache')
+
+def _getBusinessPathClosure(explanation, business_path):
+  """Returns a 
+  """
+  explanation_cache = _getExplanationCache(explanation)
+  return explanation_cache.getBusinessPathClosure(business_path)

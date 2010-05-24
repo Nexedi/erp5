@@ -59,6 +59,15 @@ class IBusinessPath(Interface):
     movement -- a Simulation Movement
     """
   
+  def getCompletionDate(explanation):
+    """Returns the date of completion of the movemnet 
+    based on paremeters of the business path. This completion date can be
+    the start date, the stop date, the date of a given workflow transition
+    on the explaining delivery, etc.
+
+    XXXXXXXXXXXXXXXx
+    """
+
   def getExpectedQuantity(amount):
     """Returns the new quantity for the provided amount taking
     into account the efficiency or the quantity defined on the business path.
@@ -114,6 +123,10 @@ class IBusinessPath(Interface):
 
     NOTE: simulation movements can be frozen (ex. in 'stopped' state) but
     not yet completed (ex. in 'delivered' state).
+    """
+
+  def isDelivered(explanation):
+    """XXX
     """
 
   def build(explanation):

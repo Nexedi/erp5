@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
+from Products.ERP5.ExplanationCache import _getExplanationCache, _getBusinessPathClosure
 
 import zope.interface
 
@@ -43,6 +44,8 @@ class BusinessProcess(Path, XMLObject):
 
     TODO:
       - finish interface implementation
+    RENAME:
+      getPathValueList -> getBusinessPathValueList
   """
   meta_type = 'ERP5 Business Process'
   portal_type = 'Business Process'
@@ -66,19 +69,23 @@ class BusinessProcess(Path, XMLObject):
   zope.interface.implements(interfaces.IBusinessProcess,
                             interfaces.IArrowBase)
 
-  # Access to path and states of the business process
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPathValueList')
-  def getPathValueList(self, trade_phase=None, context=None, **kw):
-    """
-      Returns all Path of the current BusinessProcess which
-      are matching the given trade_phase and the optional context.
+  # IBusinessPathProcess implementation
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessPathValueList')
+  def getBusinessPathValueList(self, trade_phase=None, context=None,
+                               predecessor=None, successor=None, **kw):
+    """Returns all Path of the current BusinessProcess which
+    are matching the given trade_phase and the optional context.
 
-      trade_phase -- a single trade phase category or a list of
-                      trade phases
+    trade_phase -- filter by trade phase
 
-      context -- the context to search matching predicates for
+    context -- a context to test each Business Path on
+               and filter out Business Path which do not match
 
-      **kw -- same parameters as for searchValues / contentValues
+    predecessor -- filter by trade state predecessor
+
+    successor -- filter by trade state successor
+
+    **kw -- same arguments as those passed to searchValues / contentValues
     """
     if trade_phase is None:
       trade_phase = set()
@@ -87,14 +94,22 @@ class BusinessProcess(Path, XMLObject):
     else:
       trade_phase = set(trade_phase)
     result = []
+    if kw.get('portal_type', None) is None:
+      kw['portal_type'] = self.getPortalBusinessPathTypeList()
+    if kw.get('sort_on', None) is None:
+      kw['sort_on'] = 'int_index'
+    original_business_path_list = self.objectValues(**kw), # Why Object Values ??? XXX-JPS
     if len(trade_phase) == 0:
-      return result
-    # Separate the selection of business paths into twp steps
+      return original_business_path_list # If not trade_phase is specified, return all Business Path
+    # Separate the selection of business paths into two steps
     # for easier debugging.
     # First, collect business paths which can be applicable to a given context.
     business_path_list = []
-    for business_path in self.objectValues(portal_type='Business Path',
-                                           sort_on='int_index'):
+    for business_path in original_business_path_list:
+      if predecessor is not None and business_path.getPredecessor() != predecessor:
+        break # Filter our business path which predecessor does not match
+      if successor is not None and business_path.getSuccessor() != successor:
+        break # Filter our business path which predecessor does not match
       if trade_phase.intersection(business_path.getTradePhaseList()):
         business_path_list.append(business_path)
     # Then, filter business paths by Predicate API.
@@ -106,174 +121,430 @@ class BusinessProcess(Path, XMLObject):
         result.append(business_path)
     return result
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getStateValueList')
-  def getStateValueList(self, *args, **kw):
-    """
-      Returns all states of the business process. The method
-      **kw parameters follows the API of searchValues / contentValues
-    """
-    # Naive implementation to redo XXX
-    kw['portal_type'] = "Business Path"
-    return [x for x in [y.getSuccessorValue() for y in \
-            self.contentValues(*args, **kw)] if x is not None]
+  def isBusinessPathCompleted(self, explanation, business_path):
+    """Returns True if given Business Path document
+    is completed in the context of provided explanation.
 
-  # Access to path and states of the business process
-  def isCompleted(self, explanation):
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
     """
-      True if all states are completed
+    # Return False if Business Path is not completed
+    if not business_path.isCompleted(explanation):
+      return False
+    predecessor_state = business_path.getPredecessor()
+    if not predecessor_state:
+      # This is a root business path, no predecessor
+      # so no need to do any recursion
+      return True
+    if self.isTradeStateCompleted(explanation, predecessor_state):
+      # If predecessor state is globally completed for the 
+      # given explanation, return True
+      # Please note that this is a specific case for a Business Process
+      # built using asUnionBusinessProcess. In such business process
+      # a business path may be completed even if its predecessor state
+      # is not
+      return True
+    # Build the closure business process which only includes those business 
+    # path wich are directly related to the current business path but DO NOT 
+    # narrow down the explanation else we might narrow down so much that
+    # it becomes an empty set
+    closure_process = _getBusinessPathClosure(explanation, business_path)
+    return closure_process.isTradeStateCompleted(explanation, predecessor_state)
+
+  def isBusinessPathPartiallyCompleted(self, explanation, business_path):
+    """Returns True if given Business Path document
+    is partially completed in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
     """
-    for state in self.getStateValueList():
-      if not state.isCompleted(explanation):
+    # Return False if Business Path is not partially completed
+    if not business_path.isPartiallyCompleted(explanation):
+      return False
+    predecessor_state = business_path.getPredecessor()
+    if not predecessor_state:
+      # This is a root business path, no predecessor
+      # so no need to do any recursion
+      return True
+    if self.isTradeStatePartiallyCompleted(explanation, predecessor_state):
+      # If predecessor state is globally partially completed for the 
+      # given explanation, return True
+      # Please note that this is a specific case for a Business Process
+      # built using asUnionBusinessProcess. In such business process
+      # a business path may be partially completed even if its predecessor
+      # state is not
+      return True
+    # Build the closure business process which only includes those business 
+    # path wich are directly related to the current business path but DO NOT 
+    # narrow down the explanation else we might narrow down so much that
+    # it becomes an empty set
+    closure_process = _getBusinessPathClosure(explanation, business_path)
+    return closure_process.isTradeStatePartiallyCompleted(explanation, 
+                                                           predecessor_state)
+
+  def getExpectedBusinessPathCompletionDate(explanation, business_path, 
+                                                       delay_mode=None):
+    """Returns the expected completion date of given Business Path document
+    in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
+    """
+    closure_process = _getBusinessPathClosure(explanation, business_path)
+    # XXX use explanatoin cache to optimize
+    predecessor = business_path.getPredecessor()
+    if closure_process.isTradeStateRootState(predecessor):
+      return business_path.getCompletionDate(explanation)
+
+    reference_date = closure_process.getExpectedTradeStateCompletionDate(explanation, predecessor)
+
+    return reference_date + wait_time + lead_time
+    
+
+  def getExpectedBusinessPathStartAndStopDate(explanation, business_path,
+                                                         delay_mode=None):
+    """Returns the expected start and stop dates of given Business Path
+    document in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
+    """
+    closure_process = _getBusinessPathClosure(explanation, business_path)
+    # XXX use explanatoin cache to optimize
+    trade_date = self.getTradeDate()
+    if trade_date is not None:
+      reference_date = closure_process.gettExpectedTradePhaseCompletionDate(explanation, trade_date)
+    else:
+      predecessor = business_path.getPredecessor() # XXX-JPS they should all have
+      reference_date = closure_process.getExpectedTradeStateCompletionDate(explanation, predecessor)
+
+    start_date = reference_date + wait_time
+    stop_date = start_date + lead_time # XXX-JPS use appropriate values
+    
+    return start_date, stop_date
+
+  # IBuildableBusinessPathProcess implementation
+  def getBuildableBusinessPathValueList(self, explanation):
+    """Returns the list of Business Path which are buildable
+    by taking into account trade state dependencies between
+    Business Path.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    result = []
+    for business_path in self.getBusinessPathValueList():
+      if self.isBusinessPathBuildable(explanation, business_path):
+        result.append(business_path)
+    return result
+
+  def getPartiallyBuildableBusinessPathValueList(self, explanation):
+    """Returns the list of Business Path which are partially buildable
+    by taking into account trade state dependencies between
+    Business Path.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    result = []
+    for business_path in self.getBusinessPathValueList():
+      if self.isBusinessPathPartiallyBuildable(explanation, business_path):
+        result.append(business_path)
+    return result
+
+  def isBusinessPathBuildable(self, explanation, business_path):
+    """Returns True if any of the related Simulation Movement
+    is buildable and if the predecessor trade state is completed.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
+    """
+    # If everything is delivered, no need to build
+    if business_path.isDelivered(explanation):
+      return False
+    # We must take the closure cause only way to combine business process
+    closure_process = _getBusinessPathClosure(explanation, business_path)
+    predecessor = business_path.getPredecessor()
+    return closure_process.isTradeStateCompleted(predecessor)
+
+  def isBusinessPathPartiallyBuildable(self, explanation, business_path):
+    """Returns True if any of the related Simulation Movement
+    is buildable and if the predecessor trade state is partially completed.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    business_path -- a Business Path document
+    """
+    # If everything is delivered, no need to build
+    if business_path.isDelivered(explanation):
+      return False
+    # We must take the closure cause only way to combine business process
+    closure_process = _getBusinessPathClosure(explanation, business_path)
+    predecessor = business_path.getPredecessor()
+    return closure_process.isTradeStatePartiallyCompleted(predecessor)
+
+  # ITradeStateProcess implementation
+  def getTradeStateList():
+    """Returns list of all trade_state of this Business Process
+    by looking at successor and predecessor values of contained
+    Business Path.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    result = set()
+    for business_path in self.getBusinessPathValueList():
+      result.add(business_path.getPredecessor())
+      result.add(business_path.getSuccessor())
+    return result
+
+  def getSuccessorTradeStateList(explanation, trade_state):
+    """Returns the list of successor states in the 
+    context of given explanation. This list is built by looking
+    at all successor of business path involved in given explanation
+    and which predecessor is the given trade_phase.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
+    """
+    result = set()
+    for business_path in self.getBusinessPathValueList():
+      if business_path.getPredecessor() == trade_state:
+        result.add(business_path.getSuccessor())
+    return result
+
+  def getPredecessorTradeStateList(explanation, trade_state):
+    """Returns the list of predecessor states in the 
+    context of given explanation. This list is built by looking
+    at all predecessor of business path involved in given explanation
+    and which sucessor is the given trade_phase.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
+    """
+    result = set()
+    for business_path in self.getBusinessPathValueList():
+      if business_path.getSuccessor() == trade_state:
+        result.add(business_path.getPredecessor())
+    return result
+
+  def getCompletedTradeStateList(explanation):
+    """Returns the list of Trade States which are completed
+    in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    return filter(lambda x:self.isTradeStateCompleted(explanation, x), self.getTradeStateList())
+
+  def getPartiallyCompletedTradeStateList(explanation):
+    """Returns the list of Trade States which are partially 
+    completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    return filter(lambda x:self.isTradeStatePartiallyCompleted(explanation, x), self.getTradeStateList())
+
+  def getLatestCompletedTradeStateList(explanation):
+    """Returns the list of completed trade states which predecessor
+    states are completed and for which no successor state 
+    is completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    result = set()
+    for state in self.getCompletedTradeStateValue(explanation):
+      for business_path in state.getPredecessorRelatedValueList():
+        if not self.isBusinessPathCompleted(explanation, business_path):
+          result.add(state)
+    return result
+
+  def getLatestPartiallyCompletedTradeStateList(explanation):
+    """Returns the list of completed trade states which predecessor
+    states are completed and for which no successor state 
+    is partially completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    result = set()
+    for state in self.getCompletedTradeStateValue(explanation):
+      for business_path in state.getPredecessorRelatedValueList():
+        if not self.isBusinessPathPartiallyCompleted(explanation, business_path):
+          result.add(state)
+    return result
+
+  def isTradeStateCompleted(explanation, trade_state):
+    """Returns True if all predecessor trade states are
+    completed and if no successor trade state is completed
+    in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
+    """
+    for business_path in self.getBusinessPathValueList(successor=trade_state):
+      if not closure_process.isBusinessPathCompleted(explanation, business_path):
+        return False
+    return True      
+
+  def isTradeStatePartiallyCompleted(explanation, trade_state):
+    """Returns True if all predecessor trade states are
+    completed and if no successor trade state is partially completed
+    in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
+    """
+    for business_path in self.getBusinessPathValueList(successor=trade_state):
+      if not self.isBusinessPathPartiallyCompleted(explanation, business_path):
+        return False
+    return True      
+
+  def getExpectedTradeStateCompletionDate(explanation, trade_state,
+                                                         delay_mode=None):
+    """Returns the date at which the give trade state is expected
+    to be completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_state -- a Trade State category
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
+    """
+    date_list = []
+    for business_path in self.getBusinessPathValueList(successor=trade_state):
+      date_list.append(self.getExpectedBusinessPathCompletionDate(explanation, business_path))
+    return max(date_list) # XXX-JPS provide -infinite for...
+
+  # ITradePhaseProcess implementation
+  def getTradePhaseList():
+    """Returns list of all trade_phase of this Business Process
+    by looking at trade_phase values of contained Business Path.
+    """
+    result = set()
+    for business_path in self.getBusinessPathValueList():
+      result.union(business_path.getTradePhaseList())
+    return result
+
+  def getCompletedTradePhaseList(explanation):
+    """Returns the list of Trade Phases which are completed
+    in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    return filter(lambda x:self.isTradePhaseCompleted(explanation, x), self.getTradePhaseList())
+    
+  def getPartiallyCompletedTradePhaseList(explanation):
+    """Returns the list of Trade Phases which are partially completed
+    in the context of given explanation. 
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    return filter(lambda x:self.isTradePhasePartiallyCompleted(explanation, x), self.getTradePhaseList())
+
+  def isTradePhaseCompleted(explanation, trade_phase):
+    """Returns True all business path with given trade_phase
+    applicable to given explanation are completed.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_phase -- a Trade Phase category
+    """
+    for business_path in self.getBusinessPathValueList(trade_phase=trade_phase):
+      if not self.isBusinessPathCompleted(explanation, business_path):
         return False
     return True
-  
-  def isBuildable(self, explanation):
-    """
-      True if all any path is buildable
-    """
-    return len(self.getBuildablePathValueList(explanation)) != 0
 
-  def getBuildablePathValueList(self, explanation):
-    """
-      Returns the list of Business Path which are ready to 
-      be built
-    """
-    return filter(lambda x:x.isBuildable(explanation),
-                  self.objectValues(portal_type='Business Path'))
+  def isTradePhasePartiallyCompleted(explanation, trade_phase):
+    """Returns True at least one business path with given trade_phase
+    applicable to given explanation is partially completed
+    or completed.
 
-  def getCompletedStateValueList(self, explanation):
-    """
-      Returns the list of Business States which are finished
-    """
-    return filter(lambda x:x.isCompleted(explanation), self.getStateValueList())
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
 
-  def getPartiallyCompletedStateValueList(self, explanation):
+    trade_phase -- a Trade Phase category
     """
-      Returns the list of Business States which are finished
-    """
-    return filter(lambda x:x.isPartiallyCompleted(explanation), self.getStateValueList())
+    for business_path in self.getBusinessPathValueList(trade_phase=trade_phase):
+      if not self.isBusinessPathPartiallyCompleted(explanation, business_path):
+        return False
+    return True
 
-  def getLatestCompletedStateValue(self, explanation):
-    """
-      Returns the most advanced completed state
-    """
-    for state in self.getCompletedStateValueList(explanation):
-      for path in state.getPredecessorRelatedValueList():
-        if not path.isCompleted(explanation):
-          return state
-    return None
+  def getExpectedTradePhaseCompletionDate(explanation, trade_phase,
+                                                       delay_mode=None):
+    """Returns the date at which the give trade phase is expected
+    to be completed in the context of given explanation, taking
+    into account the graph of date constraints defined by business path
+    and business states.
 
-  def getLatestPartiallyCompletedStateValue(self, explanation):
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    trade_phase -- a Trade Phase category
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
     """
-      Returns the most advanced completed state
+    date_list = []
+    for business_path in self.getBusinessPathValueList(trade_phase=trade_phase):
+      date_list.append(self.getExpectedTradePhaseCompletionDate(explanation, business_path, delay_mode=delay_mode))
+    return max(date_list)
+
+  def getRemainingTradePhaseList(business_path, trade_phase_list=None):
+    """Returns the list of remaining trade phases which to be achieved
+    as part of a business process. This list is calculated by analysing 
+    the graph of business path and trade states, starting from a given
+    business path. The result if filtered by a list of trade phases. This
+    method is useful mostly for production and MRP to manage a distributed
+    supply and production chain.
+
+    business_path -- a Business Path document
+
+    trade_phase_list -- if provided, the result is filtered by it after
+                        being collected - ???? useful ? XXX-JPS ?
+
+    NOTE: explanation is not involved here because we consider here that
+    self is the result of asUnionBusinessProcess and thus only contains
+    applicable Business Path to a given simulation subtree. Since the list
+    of remaining trade phases does not depend on exact values in the
+    simulation, we did not include the explanation. However, this makes the
+    API less uniform.
     """
-    for state in self.getCompletedStateValueList(explanation):
-      for path in state.getPredecessorRelatedValueList():
-        if not path.isPartiallyCompleted(explanation):
-          return state
-    return None
 
-  def getLatestCompletedStateValueList(self, explanation):
-    """
-      Returns the most advanced completed state
-    """
-    result = []
-    for state in self.getCompletedStateValueList(explanation):
-      for path in state.getPredecessorRelatedValueList():
-        if not path.isCompleted(explanation):
-          result.append(state)
-    return result
+    # XXXX REVIEWJPS
 
-  def getLatestPartiallyCompletedStateValueList(self, explanation):
-    """
-      Returns the most advanced completed state
-    """
-    result = []
-    for state in self.getCompletedStateValueList(explanation):
-      for path in state.getPredecessorRelatedValueList():
-        if not path.isPartiallyCompleted(explanation):
-          result.append(state)
-    return result
-
-  def build(self, explanation_relative_url):
-    """
-      Build whatever is buildable
-    """
-    explanation = self.restrictedTraverse(explanation_relative_url)
-    for path in self.getBuildablePathValueList(explanation):
-      path.build(explanation)
-
-  def isStartDateReferential(self): # XXX - not in interface
-    return self.getReferentialDate() == 'start_date'
-
-  def isStopDateReferential(self): # XXX - not in interface
-    return self.getReferentialDate() == 'stop_date'
-
-  def getTradePhaseList(self):
-    """
-      Returns all trade_phase of this business process
-    """
-    path_list = self.objectValues(portal_type=self.getPortalBusinessPathTypeList())
-    return filter(None, [path.getTradePhase()
-                         for path in path_list])
-
-  def getRootExplanationPathValue(self):
-    """
-      Returns a root path of this business process
-    """
-    path_list = self.objectValues(portal_type=self.getPortalBusinessPathTypeList())
-    path_list = filter(lambda x: x.isDeliverable(), path_list)
-    
-    if len(path_list) > 1:
-      raise Exception, "this business process has multi root paths"
-
-    if len(path_list) == 1:
-      return path_list[0]
-
-  def getHeadPathValueList(self, trade_phase_list=None):
-    """
-      Returns a list of head path(s) of this business process
-
-      trade_phase_list -- used to filtering, means that discovering
-                          a list of head path with the trade_phase_list
-    """
-    head_path_list = list()
-    for state in self.getStateValueList():
-      if len(state.getSuccessorRelatedValueList()) == 0:
-        head_path_list += state.getPredecessorRelatedValueList()
-
-    if trade_phase_list is not None:
-      _set = set(trade_phase_list)
-      _list = list()
-      # start to discover a head path with the trade_phase_list from head path(s) of whole
-      for path in head_path_list:
-        _list += self._getHeadPathValueList(path, _set)
-      head_path_list = map(lambda t: t[0], filter(lambda t: t != (None, None), _list))
-
-    return head_path_list
-
-  def _getHeadPathValueList(self, path, trade_phase_set):
-    # if the path has target trade_phase, it is a head path.
-    _set = set(path.getTradePhaseList())
-    if _set & trade_phase_set:
-      return [(path, _set & trade_phase_set)]
-
-    node = path.getSuccessorValue()
-    if node is None:
-      return [(None, None)]
-
-    _list = list()
-    for next_path in node.getPredecessorRelatedValueList():
-      _list += self._getHeadPathValueList(next_path, trade_phase_set)
-    return _list
-
-  def getRemainingTradePhaseList(self, explanation, trade_state, trade_phase_list=None):
-    """
-      Returns the list of remaining trade phase for this
-      state based on the explanation.
-
-      trade_phase_list -- if provide, the result is filtered by it after collected
-    """
     remaining_trade_phase_list = []
     for path in [x for x in self.objectValues(portal_type="Business Path") \
         if x.getPredecessorValue() == trade_state]:
@@ -297,38 +568,54 @@ class BusinessProcess(Path, XMLObject):
 
     return remaining_trade_phase_list
 
-  def isStatePartiallyCompleted(self, explanation, trade_state):
+  # IBusinessProcess global API
+  def isCompleted(explanation):
+    """Returns True is all applicable Trade States and Trade Phases
+    are completed in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
     """
-      If all path which reach this state are partially completed
-      then this state is completed
-    """
-    for path in [x for x in self.objectValues(portal_type="Business Path") \
-        if x.getSuccessorValue() == trade_state]:
-      if not path.isPartiallyCompleted(explanation):
+    for state in self.getTradeStateList():
+      if not state.isTradeStateCompleted(explanation):
         return False
     return True
 
-  def getExpectedStateCompletionDate(self, explanation, trade_state, *args, **kwargs):
-    """
-      Returns the expected completion date for this
-      state based on the explanation.
+  def getExpectedCompletionDate(explanation, delay_mode=None):
+    """Returns the expected date at which all applicable Trade States and
+    Trade Phases are completed in the context of given explanation.
 
-      explanation -- the document
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
     """
-    # Should be re-calculated?
-    # XXX : what is the purpose of the two following lines ? comment it until there is
-    # good answer
-    if 'predecessor_date' in kwargs:
-      del kwargs['predecessor_date']
-    successor_list = [x for x in self.objectValues(portal_type="Business Path") \
-        if x.getSuccessorValue() == trade_state]
-    date_list = self._getExpectedDateList(explanation,
-                                          successor_list,
-                                          self._getExpectedCompletionDate,
-                                          *args,
-                                          **kwargs)
-    if len(date_list) > 0:
-      return min(date_list)
+  
+  def isBuildable(explanation):
+    """Returns True is one Business Path of this Business Process
+    is buildable in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    return len(self.getBuildableBusinessPathValueList(explanation)) != 0
+
+  def isPartiallyBuildable(explanation):
+    """Returns True is one Business Path of this Business Process
+    is partially buildable in the context of given explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+    """
+    return len(self.getPartiallyBuildableBusinessPathValueList(explanation)) != 0
+
+  def build(self, explanation):
+    """
+      Build whatever is buildable
+    """
+    for business_path in self.getBuildableBusinessPathValueList(explanation):
+      business_path.build(explanation)
+
+
+  # GARBAGE - XXXXXXXXXXXXXXXXXXXXXXX
 
   def getExpectedStateBeginningDate(self, explanation, trade_state, *args, **kwargs):
     """
@@ -381,6 +668,75 @@ class BusinessProcess(Path, XMLObject):
 
     return expected_date_list
 
+  def getRootExplanationPathValue(self): # XXX-JPS not in API
+    """
+      Returns a root path of this business process
+    """
+    path_list = self.objectValues(portal_type=self.getPortalBusinessPathTypeList())
+    path_list = filter(lambda x: x.isDeliverable(), path_list)
+    
+    if len(path_list) > 1:
+      raise Exception, "this business process has multi root paths"
+
+    if len(path_list) == 1:
+      return path_list[0]
+
+  def getHeadPathValueList(self, trade_phase_list=None): # XXX-JPS not in API
+    """
+      Returns a list of head path(s) of this business process
+
+      trade_phase_list -- used to filtering, means that discovering
+                          a list of head path with the trade_phase_list
+    """
+    head_path_list = list()
+    for state in self.getStateValueList():
+      if len(state.getSuccessorRelatedValueList()) == 0:
+        head_path_list += state.getPredecessorRelatedValueList()
+
+    if trade_phase_list is not None:
+      _set = set(trade_phase_list)
+      _list = list()
+      # start to discover a head path with the trade_phase_list from head path(s) of whole
+      for path in head_path_list:
+        _list += self._getHeadPathValueList(path, _set)
+      head_path_list = map(lambda t: t[0], filter(lambda t: t != (None, None), _list))
+
+    return head_path_list
+
+  def _getHeadPathValueList(self, path, trade_phase_set):
+    # if the path has target trade_phase, it is a head path.
+    _set = set(path.getTradePhaseList())
+    if _set & trade_phase_set:
+      return [(path, _set & trade_phase_set)]
+
+    node = path.getSuccessorValue()
+    if node is None:
+      return [(None, None)]
+
+    _list = list()
+    for next_path in node.getPredecessorRelatedValueList():
+      _list += self._getHeadPathValueList(next_path, trade_phase_set)
+    return _list
+
   def _getExpectedCompletionDate(self, path, *args, **kwargs):
     return path.getExpectedStopDate(*args, **kwargs)
+
+
+  # From Business Path
+  def _getExplanationUidList(self, explanation):
+    """
+    Helper method to fetch really explanation related movements 
+    """ # XXX-JPS this seems to be doing too much - why do you need many "explanations"
+    explanation_uid_list = [explanation.getUid()]
+    # XXX: getCausalityRelatedValueList is oversimplification, assumes
+    #      that documents are sequenced like simulation movements, which
+    #      is wrong
+    if getattr(explanation, "getCausalityValueList", None) is None: 
+      return explanation_uid_list
+    for found_explanation in explanation.getCausalityRelatedValueList( # XXX-JPS this also seems exagerated, and breaking the APIs
+        portal_type=self.getPortalDeliveryTypeList()) + \
+        explanation.getCausalityValueList(): # Wrong if an item
+      explanation_uid_list.extend(self._getExplanationUidList(
+        found_explanation))
+    return explanation_uid_list
 

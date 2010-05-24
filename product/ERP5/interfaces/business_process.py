@@ -231,7 +231,7 @@ class ITradeStateProcess(Interface):
                    implicitely defines a simulation subtree
     """
 
-  def getLatestPartiallyCompletedTradeState(explanation):
+  def getLatestPartiallyCompletedTradeStateList(explanation):
     """Returns the list of completed trade states which predecessor
     states are completed and for which no successor state 
     is partially completed in the context of given explanation.
