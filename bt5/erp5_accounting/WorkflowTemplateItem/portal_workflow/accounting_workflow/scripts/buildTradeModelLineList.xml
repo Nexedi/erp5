@@ -71,11 +71,13 @@ builder = getattr(portal_deliveries,\n
                   builder_by_portal_type[delivery_portal_type],\n
                   None)\n
 \n
-expand_tag = \'%s_expand\' % delivery.getPath()\n
+path = delivery.getPath()\n
+tag = \'%s_updateAppliedRule\' % path\n
+expand_tag = \'%s_expand\' % path\n
 build_tag = \'invoice_transaction_build_trade_model_%s\' % delivery.getRelativeUrl()\n
 build_accounting_tag = \'invoice_transaction_build_accounting_%s\' % delivery.getRelativeUrl()\n
 \n
-delivery.activate(after_tag=expand_tag).Delivery_updateAppliedRule(activate_kw=dict(tag=expand_tag))\n
+delivery.activate(tag=tag, after_tag=expand_tag).Delivery_updateAppliedRule(activate_kw=dict(tag=expand_tag))\n
 \n
 if builder is not None:\n
   explanation_uid_list = [delivery.getUid(), ]\n
@@ -92,7 +94,7 @@ if builder is not None:\n
 \n
   builder.activate(\n
       activity=\'SQLQueue\',\n
-      after_tag=expand_tag,\n
+      after_tag=(tag, expand_tag),\n
       tag=build_tag,\n
       activate_kw=dict(tag=build_tag)).build(activate_kw=dict(tag=build_tag),\n
                                              explanation_uid=explanation_uid_list)\n
@@ -146,6 +148,8 @@ if builder is not None:\n
                             <string>getattr</string>
                             <string>None</string>
                             <string>builder</string>
+                            <string>path</string>
+                            <string>tag</string>
                             <string>expand_tag</string>
                             <string>build_tag</string>
                             <string>build_accounting_tag</string>

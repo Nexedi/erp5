@@ -81,9 +81,9 @@ order.activate(tag=tag, after_tag=expand_tag).updateAppliedRule(rule_reuference=
 \n
 for i in xrange(len(builder_list)):\n
     if i > 0:\n
-      after_tag = [expand_tag, \'%s_builder_%s\' % (order_path, i-1)]\n
+      after_tag = (tag, expand_tag, \'%s_builder_%s\' % (order_path, i-1))\n
     else:\n
-      after_tag = expand_tag\n
+      after_tag = (tag, expand_tag)\n
     builder_list[i].activate(\n
       activity=\'SQLQueue\',\n
       after_tag=after_tag,\n

@@ -70,7 +70,7 @@ builder_dict = {\n
 }\n
 delivery_builder = getattr(order.portal_deliveries, builder_dict[order_portal_type])\n
 \n
-delivery_builder.activate(activity=\'SQLQueue\',after_tag=expand_tag).build(explanation_uid=order.getUid())\n
+delivery_builder.activate(activity=\'SQLQueue\', after_tag=(tag, expand_tag)).build(explanation_uid=order.getUid())\n
 </string> </value>
         </item>
         <item>
