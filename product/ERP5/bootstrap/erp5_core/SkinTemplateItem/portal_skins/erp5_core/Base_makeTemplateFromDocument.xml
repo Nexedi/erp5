@@ -78,7 +78,7 @@ for existing_template in preference.contentValues(\n
 parent = context.getParentValue()\n
 document_id = context.getId()\n
 cp = parent.manage_copyObjects(ids=[document_id])\n
-paste_info, = preference.manage_pasteObjects(cb_copy_data=cp)\n
+paste_info, = preference.manage_pasteObjects(cb_copy_data=cp, is_indexable=False)\n
 \n
 template = getattr(preference, paste_info[\'new_id\'])\n
 template.makeTemplate()\n
@@ -138,6 +138,7 @@ return context.Base_redirect(form_id,\n
                             <string>parent</string>
                             <string>document_id</string>
                             <string>cp</string>
+                            <string>False</string>
                             <string>paste_info</string>
                             <string>getattr</string>
                             <string>_getitem_</string>
