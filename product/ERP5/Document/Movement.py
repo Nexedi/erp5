@@ -225,6 +225,14 @@ class Movement(XMLObject, Amount, CompositionMixin):
     else:
       return default
 
+  def _getBaseUnitPrice(self, context):
+    # Override Amount._getBaseUnitPrice to use Movement's
+    # getPriceCalculationOperandDict instead of Resource's.
+    operand_dict = context.getPriceParameterDict(context=context)
+    if operand_dict is not None:
+      base_unit_price = operand_dict.get('base_unit_price', None)
+      return base_unit_price
+
   security.declareProtected(Permissions.AccessContentsInformation, 
           'getPriceCalculationOperandDict')
   def getPriceCalculationOperandDict(self, default=None, context=None, **kw):
