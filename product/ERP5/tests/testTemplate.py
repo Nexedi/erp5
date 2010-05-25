@@ -377,8 +377,6 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertFalse(template.isIndexable)
     
     # Because they are not indexable, they cannot be found by catalog
-    transaction.commit()
-    self.tic()
     self.assertEquals(0, len(self.portal.portal_catalog(uid=template.getUid())))
     template_line = template.objectValues()[0]
     self.assertEquals(0,
