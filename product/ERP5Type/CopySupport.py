@@ -116,8 +116,9 @@ class CopyContainer:
       category_list = object.getCategoryList()
       path_len = len(path_item_list)
       for position in xrange(len(category_list)):
-          category_name = category_list[position].split('/')
-          if category_name[1:path_len + 1] == path_item_list: # XXX Should be possible to do this in a cleaner way
+          # only need to compare the first path_len components after the portal
+          category_name = category_list[position].split('/', path_len+1)
+          if category_name[1:path_len + 1] == path_item_list:
               category_name[path_len] = new_id
               category_list[position] = '/'.join(category_name)
               changed = True
