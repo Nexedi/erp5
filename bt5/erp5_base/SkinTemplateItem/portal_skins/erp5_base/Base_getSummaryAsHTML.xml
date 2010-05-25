@@ -66,7 +66,6 @@ def getReferenceHTML(context):\n
   html = ""\n
   reference = context.getReference() or \'\'\n
   if context.REQUEST.get(\'is_web_mode\', False):\n
-    website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
     if reference:\n
       html += """\n
           <a href="%s">\n
@@ -89,7 +88,8 @@ uid = context.getUid()\n
 url = context.absolute_url()\n
 title = context.getTitle() or (hasattr(context, \'getReference\') and context.getReference()) or context.getId()\n
 portal_type = context.getTranslatedPortalType()\n
-popup = context.Document_getPopupInfo() or \'\'\n
+website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
+popup = context.Document_getPopupInfo(context.REQUEST.get(\'current_web_site\')) or \'\'\n
 selection = None\n
 selection_name = context.REQUEST.get("selection_name", None)\n
 if selection_name is not None:\n
@@ -186,6 +186,7 @@ return html\n
                         <value>
                           <tuple>
                             <string>getOwnerHTML</string>
+                            <string>website</string>
                             <string>getReferenceHTML</string>
                             <string>_getattr_</string>
                             <string>context</string>
