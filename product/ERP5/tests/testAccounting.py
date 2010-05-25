@@ -2478,11 +2478,7 @@ class TestTransactions(AccountingTestCase):
   # tests for Grouping References
   def test_GroupingReferenceResetedOnCopyPaste(self):
     accounting_module = self.portal.accounting_module
-    for portal_type in self.portal.getPortalAccountingTransactionTypeList():
-      if portal_type == 'Balance Transaction':
-        # Balance Transaction cannot be copy and pasted, because they are not
-        # in visible allowed types.
-        continue
+    for portal_type in accounting_module.getVisibleAllowedContentTypeList():
       accounting_transaction = accounting_module.newContent(
                             portal_type=portal_type)
       line = accounting_transaction.newContent(
@@ -3444,10 +3440,9 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
           len(portal.getPortalAccountingMovementTypeList()), 0)
     self.assertNotEquals(
           len(portal.getPortalAccountingTransactionTypeList()), 0)
-    for accounting_portal_type in portal\
-                    .getPortalAccountingTransactionTypeList():
+    for accounting_portal_type in accounting_module.allowedContentTypes():
       accounting_transaction = accounting_module.newContent(
-            portal_type = accounting_portal_type,
+            portal_type = accounting_portal_type.getId(),
             source_section_value = source_section_value,
             destination_section_value = destination_section_value,
             resource_value = resource_value )
