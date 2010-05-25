@@ -58,12 +58,12 @@
   raise Unauthorized(script.getId())\n
 \n
 portal = context.getPortalObject()\n
-if portal.portal_membership.isAnonymousUser():\n
+if not portal.Base_checkPermission(\'portal_preferences\', \'Add portal content\'):\n
   return\n
 \n
 from Products.ERP5Type.Message import translateString\n
 preference = portal.portal_preferences.createPreferenceForUser(\n
-                                                  context.getReference())\n
+                                  context.getReference(), enable=True)\n
 \n
 preference.setTitle(translateString(\'Preference for ${name}\',\n
                      mapping=dict(name=context.getTitle())))\n
@@ -73,8 +73,6 @@ for assignment in context.contentValues(portal_type=\'Assignment\'):\n
   if group:\n
     preference.setPreferredSectionCategory(group)\n
     preference.setPreferredAccountingTransactionSectionCategory(group)\n
-\n
-preference.enable()\n
 </string> </value>
         </item>
         <item>
@@ -129,11 +127,11 @@ preference.enable()\n
                             <string>portal</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
+                            <string>True</string>
                             <string>preference</string>
                             <string>dict</string>
                             <string>_getiter_</string>
                             <string>assignment</string>
-                            <string>True</string>
                             <string>group</string>
                           </tuple>
                         </value>
