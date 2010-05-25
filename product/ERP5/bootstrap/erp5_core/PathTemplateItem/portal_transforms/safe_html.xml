@@ -28,6 +28,10 @@
                         <value>
                           <dictionary>
                             <item>
+                                <key> <string>default_encoding</string> </key>
+                                <value> <string>utf-8</string> </value>
+                            </item>
+                            <item>
                                 <key> <string>disable_transform</string> </key>
                                 <value> <int>0</int> </value>
                             </item>
@@ -78,33 +82,39 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>disable_transform</string> </key>
+                                <key> <string>default_encoding</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>inputs</string> </key>
+                                <key> <string>disable_transform</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>nasty_tags</string> </key>
+                                <key> <string>inputs</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>remove_javascript</string> </key>
+                                <key> <string>nasty_tags</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>valid_tags</string> </key>
+                                <key> <string>remove_javascript</string> </key>
                                 <value>
                                   <persistent> <string encoding="base64">AAAAAAAAAAk=</string> </persistent>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>valid_tags</string> </key>
+                                <value>
+                                  <persistent> <string encoding="base64">AAAAAAAAAAo=</string> </persistent>
                                 </value>
                             </item>
                           </dictionary>
@@ -481,6 +491,25 @@
             <key> <string>data</string> </key>
             <value>
               <list>
+                <string>string</string>
+                <string>default_encoding</string>
+                <string>Encoding used for html string. If encoding is different, the string will be converted</string>
+              </list>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="PersistentList" module="persistent.list"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <list>
                 <string>int</string>
                 <string>disable_transform</string>
                 <string>If 1, nothing is done.</string>
@@ -490,7 +519,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="6" aka="AAAAAAAAAAY=">
+  <record id="7" aka="AAAAAAAAAAc=">
     <pickle>
       <global name="PersistentList" module="persistent.list"/>
     </pickle>
@@ -509,7 +538,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="7" aka="AAAAAAAAAAc=">
+  <record id="8" aka="AAAAAAAAAAg=">
     <pickle>
       <global name="PersistentList" module="persistent.list"/>
     </pickle>
@@ -532,7 +561,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="8" aka="AAAAAAAAAAg=">
+  <record id="9" aka="AAAAAAAAAAk=">
     <pickle>
       <global name="PersistentList" module="persistent.list"/>
     </pickle>
@@ -555,7 +584,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="9" aka="AAAAAAAAAAk=">
+  <record id="10" aka="AAAAAAAAAAo=">
     <pickle>
       <global name="PersistentList" module="persistent.list"/>
     </pickle>
