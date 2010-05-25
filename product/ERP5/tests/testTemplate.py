@@ -369,8 +369,13 @@ class TestTemplate(ERP5TypeTestCase):
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
+
     transaction.commit()
+    # making a new template should not create indexing activities,
+    # either for the new template or one of its subobjects
+    self.assertEqual(self.portal.portal_activities.getMessageList(), [])
     self.tic()
+
     self.assertTrue(document.isIndexable)
     self.assertEqual(len(preference.objectIds()), 1)
     template = preference.objectValues()[0]
