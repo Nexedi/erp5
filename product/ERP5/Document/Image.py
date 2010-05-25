@@ -209,7 +209,7 @@ class Image(TextConvertableMixin, File, OFSImage):
       mime, image = self.getConversion(**convert_kw)
     except KeyError:
       # Generate photo on-the-fly
-      mime, image = self._makeDisplayPhoto(image_size, **convert_kw)
+      mime, image = self._makeDisplayPhoto(**convert_kw)
       self.setConversion(image, mime, **convert_kw)
     width, height = image.width, image.height
     # Set cookie for chosen size
