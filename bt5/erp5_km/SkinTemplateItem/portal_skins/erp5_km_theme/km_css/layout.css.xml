@@ -1056,7 +1056,7 @@ form p,\n
   font-size:1em;\n
   border: none;\n
   width: 120px;\n
-  margin-left: 40px;\n
+  margin-left: 10px;\n
 \n
 }\n
 .meta input.search_text:focus {color:#000000;}\n
