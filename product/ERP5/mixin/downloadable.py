@@ -27,6 +27,7 @@
 #
 ##############################################################################
 from AccessControl import ClassSecurityInfo
+from zExceptions import Unauthorized
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
