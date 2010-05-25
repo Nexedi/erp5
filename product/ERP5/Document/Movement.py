@@ -228,7 +228,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
   def _getBaseUnitPrice(self, context):
     # Override Amount._getBaseUnitPrice to use Movement's
     # getPriceCalculationOperandDict instead of Resource's.
-    operand_dict = context.getPriceParameterDict(context=context)
+    operand_dict = context.getPriceCalculationOperandDict(context=context)
     if operand_dict is not None:
       base_unit_price = operand_dict.get('base_unit_price', None)
       return base_unit_price
