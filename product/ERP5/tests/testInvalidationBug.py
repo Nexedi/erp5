@@ -51,7 +51,46 @@ class TestInvalidationBug(ERP5TypeTestCase):
   def afterSetUp(self):
     self.login()
 
-  def testReindex(self):
+  def testCommitOrder(self):
+    """Check order of resources being committed"""
+    module = self.getPortalObject().organisation_module
+    organisation = module.newContent()    # modify ZODB and create activity
+    organisation.immediateReindexObject() # modify catalog
+    path = organisation.getPath()
+    test_list = []
+    for connection_id, table in (('erp5_sql_connection', 'catalog'),
+                                 ('cmf_activity_sql_connection', 'message')):
+      connection = self.portal[connection_id]
+      connection = connection.__class__('_' + connection_id, '',
+                                        '-' + connection.connection_string)
+      query = "rollback\0select * from %s where path='%s'" % (table, path)
+      test_list.append(lambda query=query: len(connection.manage_test(query)))
+    result_list = [map(apply, test_list)]
+    Transaction_commitResources = transaction.Transaction._commitResources
+    def _commitResources(self):
+      orig_tpc_finish_dict = dict((rm.__class__, rm.__class__.tpc_finish)
+                                  for rm in self._resources)
+      def tpc_finish(self, txn):
+        orig_tpc_finish_dict[self.__class__](self, txn)
+        result_list.append(map(apply, test_list))
+      try:
+        for cls in orig_tpc_finish_dict:
+          cls.tpc_finish = tpc_finish
+        return Transaction_commitResources(self)
+      finally:
+        for cls, tpc_finish in orig_tpc_finish_dict.iteritems():
+          cls.tpc_finish = tpc_finish
+    try:
+      transaction.Transaction._commitResources = _commitResources
+      transaction.commit()
+    finally:
+      transaction.Transaction._commitResources = Transaction_commitResources
+    self.assertEqual(result_list[0], [0,0])
+    self.assertEqual(result_list[1], [0,0])  # activity buffer first
+    self.assertEqual(result_list[-2], [1,0]) # catalog
+    self.assertEqual(result_list[-1], [1,1]) # activity tables last
+
+  def _testReindex(self):
     print("To reproduce bugs easily, distribution step should be skipped for"
           " SQLDict, by writing messages with processing_node already at 0."
           " This can be done easily by patching SQLDict_writeMessageList.")
