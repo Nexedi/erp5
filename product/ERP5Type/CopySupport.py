@@ -112,7 +112,7 @@ class CopyContainer:
           self._updateInternalRelatedContent(object=subobject,
                                              path_item_list=path_item_list,
                                              new_id=new_id)
-      changed = 0
+      changed = False
       category_list = object.getCategoryList()
       path_len = len(path_item_list)
       for position in xrange(len(category_list)):
@@ -120,8 +120,8 @@ class CopyContainer:
           if category_name[1:path_len + 1] == path_item_list: # XXX Should be possible to do this in a cleaner way
               category_name[path_len] = new_id
               category_list[position] = '/'.join(category_name)
-              changed = 1
-      if changed != 0:
+              changed = True
+      if changed:
           object.setCategoryList(category_list)
 
   def _recursiveSetActivityAfterTag(self, obj, activate_kw=None):
