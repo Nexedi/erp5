@@ -38,16 +38,12 @@ class ExplanationCache:
   an explanation. It is based on the idea that a value is calculated
   once and once only, as a way to accelerate performance of algorithms
   related to an explanation.
+  """
 
-        'explanation_uid': self._getExplanationUidList(explanation) # XXX-JPS why do we need explanation_uid ? and why a list
-        'simulation_path': simulation_path,
-
-    explanation_uid = self._getExplanationUidList(explanation) # A hint value to reduce the size of the tree
-    simulation_path = '/erp5/p.../%' # A list of path
-
-"""
   def __init__(self, explanation):
-    """
+    """Explanation cache keeps a handful list of caches
+    to accelerate performance of business path browsing and
+    business process algorithms
     """
     # Define share properties
     self.explanation = explanation
@@ -55,6 +51,8 @@ class ExplanationCache:
     self.simulation_movement_cache = {} # Simulation Movement Cache
     self.explanation_uid_cache = []
     self.explanation_path_pattern_cache = []
+    self.closure_cache = []
+    self.union_cache = None
 
   def _getDeliveryMovementList(self):
     """Returns self is explanation is a delivery line
@@ -92,6 +90,12 @@ class ExplanationCache:
     """Return the list of root path of simulation tree which are 
     involved in the context of the explanation. This will be useful later
     in order to accelerate searches in the catalog.
+
+    XXX-JPS: QUESTION: should we consider only patterns starting from
+    the movement, or from the root delivery line related movement ?
+    In one case, we must provided appropriate explanation for everything
+    to work. In the other case, we can take any delivery line any where
+    a explanation.
     """
     # Return cache if defined
     if self.explanation_path_pattern_cache:
@@ -141,37 +145,53 @@ class ExplanationCache:
     """Returns the list of simulation movements caused by a business_path
     in the context the our explanation.
     """
-    return self.getSimulationMovementList(causality_uid=business_path.getUid())
+    return self.getSimulationMovementValueList(causality_uid=business_path.getUid())
     
-  def getSimulationMovementList(self, **kw):
+  def getSimulationMovementValueList(self, **kw):
     """Search Simulation Movements related to our explanation.
     Cache result so that the second time we saarch for the same
     list we need not involve the catalog again.
     """
     kw_tuple = tuple(kw.items()) # We hope that no sorting is needed
+    if kw.get('path', None) is None:
+      kw['path'] = self.getSimulationPathPatternList(), # XXX-JPS Explicit Query is better
+    if kw.get('explanation_uid', None) is None:
+      kw['explanation_uid'] = self.getRootExplanationUidList()
     if self.simulation_movement_list.get(kw_tuple, None) is None:
       self.simulation_movement_cache[kw_tuple] = \
            self.portal_catalog(portal_type="Simulation Movement",
-                               explanation_uid=self.getRootExplanationUidList(),
-                               path=self.getSimulationPathPatternList(), # XXX-JPS Explicit Query is better
+                               explanation_uid=explanation_uid,
+                               path=path,
                                **kw)
     return self.simulation_movement_cache[kw_tuple]
 
-  def geBusinessPathClosure(business_path):
+  def getBusinessPathValueList(self, **kw):
+    """Find all business path which are related to the simulation 
+    trees defined by the explanation.
+    """
+    business_type_list = self.getPortalBusinessPathTypeList()
+    simulation_movement_list = self.getSimulationMovementValueList()
+    simulation_movement_uid_list = map(lambda x:x.uid, simulation_movement_list) 
+    # We could use related keys instead of 2 queries
+    business_path_list = self.portal_catalog(
+                      portal_type=business_type_list,
+                      causality_related_uid=simulation_movement_uid_list,
+                      **kw)
+    return business_path_list
+
+  def geBusinessPathClosure(business_process, business_path):
     """Creates a Business Process by filtering out all Business Path
-    in self which are not related to a simulation movement
+    in 'business_process' which are not related to a simulation movement
     which is either or parent or a child of explanation simulations movements
     caused by 'business_path'
-
-    cache keys: business_path (simple) then path_set
-
-    XXX-JPS PSEUDO CODE
     """
-    new_business_process = BusinessProcess()
-    accepted_path = []
-    
-    explanation_cache = _getExplanationCache(explanation)
-    path_list = explanation_cache.getSimulationPathPatternList()
+    # Try to return cached value first
+    new_business_process = self.closure_cache.get(business_path, None)
+    if new_business_process is not None:
+      return new_business_process
+
+    # Build a list of path patterns which apply to current business_path
+    path_list = self.getSimulationPathPatternList()
     path_list = map(lambda x:x[0:-1], path_list) # Remove trailing %
     path_set = set()
     for simulation_movement in business_path.\
@@ -179,26 +199,75 @@ class ExplanationCache:
       simulation_path = simulation_movement.getPath()
       for path in path_list:
         if simulation_path.startswith(path):
-          path_set.add(path) # This selection path is part of explanation
+          path_set.add(path) # Only keep a path pattern which matches current simulation movement
 
-    for business_path in self.getBusinessPathValueList():
-      if business_path.hasMovementsIn(explanation, path_set):
-        accepted_path.append(business_path)
+    # Lookup in cache based on path_tuple
+    path_tuple = tuple(path_set) # XXX-JPS is the order guaranteed here ?
+    new_business_process = self.closure_cache.get(path_tuple, None)
+    if new_business_process is not None:
+      self.closure_cache[business_path] = new_business_process
+      return new_business_process
 
-    new_business_process.addValueList(business_path)
+    # Build a new closure business process
+    def hasMatchingMovement(business_path):
+      return len(self.getSimulationMovementValueList(path=path_set, 
+                                  causality_uid=business_path.getUid()))      
+
+    new_business_process = business_process.getParentValue().newContent(temp_object=True) # XXX-JPS is this really OK with union business processes
+    i = 0
+    for business_path in business_process.getBusinessPathValueList():
+      if hasMatchingMovement(business_path):
+        i += 1
+        id = 'closure_path_%s' % i
+        new_business_process._setOb(id, business_path.asContext(id=id))
+
+    self.closure_cache[business_path] = new_business_process
+    self.closure_cache[path_tuple] = new_business_process
     return new_business_process
 
+  def getUnionBusinessProcess(self):
+    """Return a Business Process made of all Business Path
+    which are the cause of Simulation Movements in the simulation
+    trees related to explanation.
+    """
+    # Try to return cached value first
+    new_business_process = self.union_cache
+    if new_business_process is not None:
+      return new_business_process
+
+    # Build Union Business Process
+    from Products.ERP5Type.Document import newTempBusinessProcess
+    new_business_process = newTempBusinessProcess(self.explanation, 'union_business_process')
+    i = 0
+    for business_path in self.getBusinessPathValueList():
+      i += 1
+      id = 'union_path_%s' % i
+      new_business_process._setOb(id, business_path.asContext(id=id))
+
+    # Keep it in cache and return
+    self.union_cache = new_business_process
+    return new_business_process
+
+
 def _getExplanationCache(explanation):
-  if explanation.isinstance(ExplanationCache):
-    return explanation
   # Return cached value if any
   tv = getTransactionalVariable(explanation)
   if tv.get('explanation_cache', None) is None:
     tv['explanation_cache'] =  ExplanationCache(explanation)
   return tv.get('explanation_cache')
 
-def _getBusinessPathClosure(explanation, business_path):
-  """Returns a 
+def _getBusinessPathClosure(business_process, explanation, business_path):
+  """Returns a closure Business Process for given 
+  business_path and explanation. This Business Process
+  contains only those Business Path which are related to business_path
+  in the context of explanation.
   """
   explanation_cache = _getExplanationCache(explanation)
-  return explanation_cache.getBusinessPathClosure(business_path)
+  return explanation_cache.getBusinessPathClosure(business_process, business_path)
+
+def _getUnionBusinessProcess(explanation):
+  """Build a Business Process by taking the union of Business Path
+  which are involved in the simulation trees related to explanation
+  """
+  explanation_cache = _getExplanationCache(explanation)
+  return explanation_cache.getUnionBusinessProcess()
