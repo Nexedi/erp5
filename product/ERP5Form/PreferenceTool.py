@@ -295,8 +295,9 @@ class PreferenceTool(BaseTool):
 
   security.declareProtected(Permissions.ManagePortal,
                             'createPreferenceForUser')
-  def createPreferenceForUser(self, username):
-    """Creates a preference for a given user.
+  def createPreferenceForUser(self, username, enable=True):
+    """Creates a preference for a given user, and optionnally enable the
+    preference.
     """
     security_manager = getSecurityManager()
     try:
@@ -305,7 +306,10 @@ class PreferenceTool(BaseTool):
       if user is None:
         raise ValueError("User %r not found" % (username, ))
       newSecurityManager(None, user.__of__(user_folder))
-      return self.newContent(portal_type='Preference')
+      preference = self.newContent(portal_type='Preference')
+      if enable:
+        preference.enable()
+      return preference
     finally:
       setSecurityManager(security_manager)
 
