@@ -176,6 +176,7 @@ class ContributionTool(BaseTool):
         headers = url_file.headers
         if hasattr(headers, 'type'):
           mime_type = headers.type
+          kw['content_type'] = mime_type
       kw['file'] = file
 
     # If the portal_type was provided, we can go faster
