@@ -544,7 +544,8 @@ class CopyContainer:
     previous call to manage_cutObjects or manage_copyObjects as the first
     argument.
 
-    If is_indexable is True, we will avoid indexing the pasted objects.
+    If is_indexable is False, we will avoid indexing the pasted objects and
+    subobjects
     """
     cp=None
     if cb_copy_data is not None:
