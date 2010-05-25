@@ -1,6 +1,7 @@
 <base_category_list>
  <portal_type id="Budget">
   <item>budget_type</item>
+  <item>group</item>
   <item>specialise</item>
  </portal_type>
  <portal_type id="Budget Line">
