@@ -246,7 +246,8 @@ class ContributionTool(BaseTool):
 
     # Then edit the document contents (so that upload can happen)
     document._edit(**kw)
-    if not document.hasContentType() and getattr(document, 'guessMimeType', None) is not None:
+    # if no content_type has been set, guess it
+    if 'content_type' not in kw and getattr(document, 'guessMimeType', None) is not None:
       # For File force to setup the mime_type
       document.guessMimeType(fname=file_name)
     if url:
