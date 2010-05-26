@@ -375,8 +375,10 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       deliver is convergent, and if so it will put the delivery
       in a solved state, if not convergent in a diverged state
       """
-      if getattr(self, 'diverge', None) is not None \
-            and getattr(self, 'converge', None) is not None:
+      isTransitionPossible = \
+          self.getPortalObject().portal_workflow.isTransitionPossible
+      if isTransitionPossible(self, 'diverge') and \
+          isTransitionPossible(self, 'converge'):
         if self.isDivergent(**kw):
           self.diverge()
         else:
