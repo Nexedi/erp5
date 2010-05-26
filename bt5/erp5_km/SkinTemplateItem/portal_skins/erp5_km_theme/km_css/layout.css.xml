@@ -511,7 +511,7 @@ ul.language_box img {\n
 ul.language_box .selected img {\n
 \n
   padding:2px;\n
-  border:1px solid grey;\n
+  border:1px solid #808080;\n
   opacity:1;\n
 \n
 }\n
@@ -1370,6 +1370,7 @@ fieldset.right_registration select {\n
 .listbox input {\n
 \n
   width: auto;\n
+  float:left;\n
 \n
 }\n
 \n
@@ -1435,6 +1436,10 @@ fieldset.registration {\n
 div.document div.content div.text h1, h2, h3, h4, h5, h6, p{\n
   /* XXX: generate it dynamically */\n
 }\n
+div.document div.content div.text blockquote, pre{\n
+  max-width: 600px;\n
+}\n
+\n
 \n
 div.document div.content div.text a{\n
   color: #686868;\n
