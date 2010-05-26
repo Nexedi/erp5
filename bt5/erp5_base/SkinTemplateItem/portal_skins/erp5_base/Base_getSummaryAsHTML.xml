@@ -59,7 +59,7 @@ def getOwnerHTML(context):\n
   owners = context.Base_getOwnerInfoList()\n
   html = []\n
   for owner in owners:\n
-    html.append("<a href=\'%s\'/>%s</a>" % (owner[\'url\'], owner[\'title\']))\n
+    html.append("<a href=\'%s\' class=\\"owner-link\\"/>%s</a>" % (owner[\'url\'], owner[\'title\']))\n
   return "&nbsp;-&nbsp;".join(html)\n
 \n
 def getReferenceHTML(context):\n
@@ -68,17 +68,17 @@ def getReferenceHTML(context):\n
   if context.REQUEST.get(\'is_web_mode\', False):\n
     if reference:\n
       html += """\n
-          <a href="%s">\n
+          <a href="%s" class="reference-link">\n
             %s\n
           </a>&nbsp;-&nbsp;\n
       """ % (website.getPermanentURL(context), reference)\n
 \n
     for section in website.getWebSectionValueList(context):\n
-      html += "<a href=\'%s/view\'>%s</a>&nbsp;-&nbsp;" % \\\n
+      html += "<a href=\'%s/view\' class=\\"section-link\\">%s</a>&nbsp;-&nbsp;" % \\\n
         (section.absolute_url(), section.getCompactTranslatedTitle())\n
   elif reference:\n
       html = """\n
-          <a href="%(url)s/view">\n
+          <a href="%(url)s/view" class="reference-link">\n
             %(reference)s\n
           </a>\n
       """\n
@@ -111,6 +111,7 @@ local_parameter_dict = {\n
   \'found\': found,\n
   \'owner_html\': owner_html,\n
   \'modification_date\': modification_date,\n
+\n
 }\n
 \n
 html = """\n
