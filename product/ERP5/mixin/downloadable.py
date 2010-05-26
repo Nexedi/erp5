@@ -26,8 +26,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from AccessControl import ClassSecurityInfo
-from zExceptions import Unauthorized
+from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
