@@ -54,6 +54,7 @@
               <list>
                 <string>bottom</string>
                 <string>hidden</string>
+                <string>not_assigned</string>
               </list>
             </value>
         </item>
@@ -74,7 +75,15 @@
                     <value>
                       <list>
                         <string>listbox_thumbnail</string>
+                        <string>listbox_getIconAsHTML</string>
+                        <string>listbox_getSummaryAsHTML</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>not_assigned</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
