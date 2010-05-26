@@ -64,7 +64,8 @@ class TestInvalidationBug(ERP5TypeTestCase):
       connection = connection.__class__('_' + connection_id, '',
                                         '-' + connection.connection_string)
       query = "rollback\0select * from %s where path='%s'" % (table, path)
-      test_list.append(lambda query=query: len(connection.manage_test(query)))
+      test_list.append(lambda manage_test=connection.manage_test, query=query:
+         len(manage_test(query)))
     result_list = [map(apply, test_list)]
     Transaction_commitResources = transaction.Transaction._commitResources
     def _commitResources(self):
