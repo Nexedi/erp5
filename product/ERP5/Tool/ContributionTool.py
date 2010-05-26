@@ -631,7 +631,7 @@ class ContributionTool(BaseTool):
       document = container.get(id, None)
       if document is not None:
         # Document aleardy exists: no need to keep on crawling
-        return
+        return document
     try:
       document = self.newContent(container_path=container_path, id=id, **kw)
       if document.isIndexContent() and document.getCrawlingDepth() >= 0:
@@ -662,6 +662,7 @@ class ContributionTool(BaseTool):
                     activity="SQLQueue").newContentFromURL(
                       container_path=container_path, id=id,
                       repeat=repeat - 1, **kw)
+    return document
 
   def _guessPortalType(self, name, typ, body):
     """
