@@ -451,7 +451,36 @@ label {\n
 \n
 /* ## form styling #################################### end ### */\n
 \n
+/* Search pop up styling */\n
+div.popup_row .reference{\n
+  color: inherit;\n
+}\n
 \n
+/* Search listbox styling */\n
+span.search_result_title{\n
+  color: #1111CC;\n
+}\n
+span.search_result_portal_type{\n
+  color: inherit;\n
+}\n
+span.found{\n
+  color: #000000;\n
+}\n
+span.found em{\n
+  font-weight: bold;\n
+}\n
+div.searchDetails a.section-link{\n
+  color: inherit;\n
+}\n
+div.searchDetails a.reference-link{\n
+  color: #228822;\n
+}\n
+div.searchDetails a.owner-link{\n
+  color: inherit;\n
+}\n
+div.searchDetails a.modification-date-link{\n
+  color: inherit;\n
+}\n
 
 
 ]]></string> </value>

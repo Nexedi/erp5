@@ -1440,7 +1440,6 @@ div.document div.content div.text blockquote, pre{\n
   max-width: 600px;\n
 }\n
 \n
-\n
 div.document div.content div.text a{\n
   color: #686868;\n
 }\n
@@ -1558,6 +1557,11 @@ div.searchBar input, div.extendedSearchBar input {\n
 \n
 div.centeredInner {\n
   text-align: center;\n
+}\n
+\n
+/* Search listbox styling */\n
+div.searchDetails, span.found{\n
+  padding-top: 5px;\n
 }
 
 ]]></string> </value>
