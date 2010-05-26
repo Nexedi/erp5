@@ -1,3 +1,6 @@
+2010-05-26 yo
+* Now the Resource_getPriceCalculationOperandDict must include base_unit_price, as the script is shared with getPrice and getBaseUnitPrice.
+
 2010-05-03 kazuhiko
 * make precision of base_price in Resource_viewDefaultSaleSupplyLine same as SaleSupplyLine_view's one, and same for Internal Supply Line and Purchase Supply Line.
 

@@ -111,7 +111,7 @@ if base_price not in (None, \'\'):\n
 \n
 # Return result\n
 if unit_base_price is not None:\n
-  return {\'price\': unit_base_price}\n
+  return dict(price=unit_base_price, base_unit_price=price_parameter_dict.get(\'base_unit_price\'))\n
 return default\n
 </string> </value>
         </item>
@@ -171,6 +171,7 @@ return default\n
                             <string>min</string>
                             <string>sum_surcharge_ratio</string>
                             <string>priced_quantity</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
