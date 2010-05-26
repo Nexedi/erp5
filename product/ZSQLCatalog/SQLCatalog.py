@@ -2456,6 +2456,20 @@ class Catalog(Folder,
         return None
     return None
 
+  def setFilterExpression(self, method_name, expression):
+    """ Set the Expression for a certain method name. This allow set 
+        expressions by scripts.
+    """
+    if withCMF:
+      if getattr(aq_base(self), 'filter_dict', None) is None:
+        self.filter_dict = PersistentMapping()
+        return None
+      self.filter_dict[method_name]['expression'] = expression
+      if expression:
+        self.filter_dict[method_name]['expression_instance'] = Expression(expression)
+      else:
+        self.filter_dict[method_name]['expression_instance'] = None
+
   def isPortalTypeSelected(self, method_name, portal_type):
     """ Returns true if the portal type is selected for this method.
       XXX deprecated
@@ -2484,6 +2498,25 @@ class Catalog(Folder,
       except KeyError:
         return []
     return []
+
+  def getFilterDict(self):
+    """
+      Utility Method.
+      Filter Dict is a dictionary and used at Python Scripts, 
+      This method returns a filter dict as a dictionary.
+    """
+    if withCMF:
+      if getattr(aq_base(self), 'filter_dict', None) is None:
+        self.filter_dict = PersistentMapping()
+        return None
+      filter_dict = {}
+      for key in self.filter_dict:
+        # Filter is also a Persistence dict.
+        filter_dict[key] = {}
+        for sub_key in self.filter_dict[key]:
+           filter_dict[key][sub_key] = self.filter_dict[key][sub_key]
+      return filter_dict
+    return None
 
   def getFilterableMethodList(self):
     """
