@@ -153,8 +153,11 @@ class BalanceTransaction(AccountingTransaction, Inventory):
           self.getDestinationSectionValue().getPriceCurrencyValue()
       if accounting_currency is not None:
         precision = accounting_currency.getQuantityPrecision()
+    inventory_date = self.getStartDate()
+    if inventory_date:
+      inventory_date = inventory_date.earliestTime()
     default_inventory_params = dict(
-                        to_date=self.getStartDate().earliestTime(),
+                        to_date=inventory_date,
                         section_uid=section_uid,
                         precision=precision,
                         portal_type=self.getPortalAccountingMovementTypeList(),
@@ -452,7 +455,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     sql_catalog_id = kw.pop("sql_catalog_id", None)
     disable_archive = kw.pop("disable_archive", 0)
 
-    if self.getSimulationState() in self.getPortalDraftOrderStateList():
+    if self.getSimulationState() in self.getPortalDraftOrderStateList() + (
+                                            'deleted',):
       # this prevent from trying to calculate stock
       # with not all properties defined and thus making
       # request with no condition in mysql
@@ -462,7 +466,7 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                     object_list,
                     sql_catalog_id = sql_catalog_id,
                     disable_archive=disable_archive,
-                    immediate_reindex_archive=immediate_reindex_archive)      
+                    immediate_reindex_archive=immediate_reindex_archive)
       return
 
     current_stock_dict = self._getCurrentStockDict()
