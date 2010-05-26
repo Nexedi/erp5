@@ -61,6 +61,10 @@ portal = context.getPortalObject()\n
 if not portal.Base_checkPermission(\'portal_preferences\', \'Add portal content\'):\n
   return\n
 \n
+if not context.getReference():\n
+  # noop in case if invoked on non loggable object\n
+  return\n
+\n
 from Products.ERP5Type.Message import translateString\n
 preference = portal.portal_preferences.createPreferenceForUser(\n
                                   context.getReference(), enable=True)\n
