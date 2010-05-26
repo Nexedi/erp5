@@ -58,12 +58,16 @@ class FirstCausalityMovementGroup(CausalityMovementGroup):
   def _getExplanationRelativeUrl(self, movement):
     """ Get the order value for a movement """
     applied_rule = movement.getParentValue()
-    parent = applied_rule.getParentValue()
+    if applied_rule.isRootAppliedRule():
+      return None
+    parent_movement = applied_rule.getParentValue()
     # Go upper into the simulation tree in order to find a delivery link
-    parent_delivery = parent.getDeliveryValue()
-    while parent_delivery is None and not parent.isRootAppliedRule():
-      parent = parent.getParentValue()
-      parent_delivery = parent.getDeliveryValue()
+    parent_delivery = parent_movement.getDeliveryValue()
+    applied_rule = parent_movement.getParentValue()
+    while parent_delivery is None and not applied_rule.isRootAppliedRule():
+      parent_movement = applied_rule.getParentValue()
+      parent_delivery = parent_movement.getDeliveryValue()
+      applied_rule = parent_movement.getParentValue()
     delivery_movement = parent_delivery
     delivery_url = None
     if delivery_movement is not None:
