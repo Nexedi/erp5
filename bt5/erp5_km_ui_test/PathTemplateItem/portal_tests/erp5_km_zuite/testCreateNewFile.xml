@@ -81,6 +81,45 @@
   <td>Presentation created successfully</td>\n
   <td></td>\n
 </tr>\n
+<!-- -->\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_my_title</td>\n
+\t<td>TioLive, ERP5, Freedom</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_my_reference</td>\n
+\t<td>tiolive-ERP5.DMS.TioLive</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_my_version</td>\n
+\t<td>001</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_my_language</td>\n
+\t<td>en</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyTextPresent</td>\n
+\t<td>tiolive-ERP5.DMS.TioLive-001-en.odp</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyTextPresent</td>\n
+\t<td>Presentation</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyTextPresent</td>\n
+\t<td>Converted</td>\n
+\t<td></td>\n
+</tr>\n
+\n
+\n
+<!-- -->\n
 <span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/wait_for_activities">\n
 Wait for activities</span>\n
 <tr>\n

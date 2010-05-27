@@ -121,26 +121,6 @@
   <td></td>\n
 </tr>\n
 \n
-\n
-<!-- Table mode -->\n
-<!--\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>style_toggle_icon</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyElementPresent</td>\n
-  <td>link=Web Page</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyElementPresent</td>\n
-  <td>link=km.web.site.test.page</td>\n
-  <td></td>\n
-</tr>\n
--->\n
-\n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
 </tbody></table>\n

@@ -83,8 +83,8 @@ km_preference = portal_preferences.newContent(\n
                   priority = 1,\n
                   preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
                   preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
-                  preferred_synchronous_metadata_discovery = False,\n
-                  preferred_redirect_to_document = False,\n
+                  preferred_synchronous_metadata_discovery = True,\n
+                  preferred_redirect_to_document = True,\n
                   preferred_ooodoc_server_address = context.Zuite_getConversionServerDict()["oood_hostname"],\n
                   preferred_ooodoc_server_port_number = context.Zuite_getConversionServerDict()["oood_port"])\n
 km_preference.enable()\n
@@ -144,7 +144,6 @@ return "Created Successfully."\n
                             <string>True</string>
                             <string>km_preference_id</string>
                             <string>portal_preferences</string>
-                            <string>False</string>
                             <string>_getitem_</string>
                             <string>km_preference</string>
                           </tuple>
