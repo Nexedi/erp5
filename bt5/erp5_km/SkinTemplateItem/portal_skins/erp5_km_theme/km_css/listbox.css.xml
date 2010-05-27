@@ -56,8 +56,11 @@ div.search_popup{\n
 /******************/ \n
 /* Listbox action */\n
 /******************/\n
-.bottom_actions {\n
+.listbox-action-widget {\n
   float:none;\n
+}\n
+.listbox-action-widget div.bottom_actions{\n
+  float:left;\n
 }\n
 \n
 /* Title of the bar */\n
@@ -73,10 +76,6 @@ div.search_popup{\n
 /* Sub container for the buttons*/\n
 .buttons_group {\n
   background-color:#E0DFD1;\n
-  /*font-family:Arial,Verdana,Helvetica,Sans;\n
-\n
-  margin-right:39px;\n
-  padding-left:10px;  */\n
   margin-right:30px;\n
   padding-top:3px;\n
   width:auto;\n
@@ -84,7 +83,7 @@ div.search_popup{\n
 }\n
 \n
 /* Buttons */\n
-.bottom_actions button, .bottom_actions a.button {\n
+.listbox-action-widget button, .listbox-action-widget a.button {\n
   background-image: url(\'./km_img/button_background.png\') ;\n
   background-position: 100% 0;\n
   background-color: inherit;\n
@@ -96,18 +95,18 @@ div.search_popup{\n
   margin-right:3px;\n
   margin-bottom:3px;\n
 }\n
-.bottom_actions button:hover,.bottom_actions a:hover {\n
+.listbox-action-widget button:hover,.listbox-action-widget a:hover {\n
  background-position:100% 100%;\n
 }\n
 \n
 /* a as button */\n
-.bottom_actions a.button{\n
+.listbox-action-widget a.button{\n
   display:block;\n
   margin-left: 9px;\n
 }\n
 \n
 /* Image in button */\n
-.bottom_actions span.image{\n
+.listbox-action-widget span.image{\n
   background-repeat:no-repeat;\n
   background-position:center center;\n
   display:block;\n
@@ -121,12 +120,12 @@ div.search_popup{\n
 }\n
 \n
 /* Description of botton */\n
-.bottom_actions span.description{\n
+.listbox-action-widget span.description{\n
   font-size:10px;\n
 }\n
 \n
 /* Global button span */\n
-.bottom_actions button > span, .bottom_actions a > span{\n
+.listbox-action-widget button > span, .listbox-action-widget a > span{\n
   display:block;\n
   background-color:inherit;\n
   background-image:url(\'./km_img/button_background.png\');\n
@@ -141,10 +140,10 @@ div.search_popup{\n
   white-space:nowrap;\n
   width:100%;\n
 }\n
-.bottom_actions button:hover > span, .bottom_actions a:hover > span{\n
+.listbox-action-widget button:hover > span, .listbox-action-widget a:hover > span{\n
   background-position:0 100%;\n
 }\n
-.bottom_actions span.description span {\n
+.listbox-action-widget span.description span {\n
   left:4px;\n
   position:relative;\n
 }\n
@@ -165,12 +164,12 @@ div.search_popup{\n
 /*********************/\n
 /*   Listbox style   */\n
 /*********************/\n
-/* Listbox Block */\n
 .listbox_left {\n
   margin-right: 4px;\n
   width: auto;\n
   float: left;\n
 }\n
+\n
 .listbox_center{\n
   float: left;\n
 }\n
@@ -221,9 +220,6 @@ div.extendedSearchBar {\n
   float:left;\n
   margin-top:0;\n
   padding:1em 0 0.5em;\n
-  /*right:5px;\n
-  text-align:right;\n
-  width:350px;*/\n
 }\n
 div.extendedSearchBar input.button{\n
  background-image: url(\'./km_img/search_background.png\');\n
@@ -273,12 +269,6 @@ background-color:#EBEBE2;\n
 .listbox select {\n
   max-width: 145px;\n
 }\n
-\n
-/*\n
-.listbox input {\n
-width:96%;\n
-}\n
-*/\n
 \n
 button.sort_button_desc{\n
   background-image: url(\'./km_img/switch_desc.png\');\n
