@@ -71,15 +71,7 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Drawing</string>
-                <string>File</string>
-                <string>Image</string>
-                <string>PDF</string>
-                <string>Presentation</string>
-                <string>Spreadsheet</string>
-                <string>Text</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
