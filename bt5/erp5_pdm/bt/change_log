@@ -1,3 +1,6 @@
+2010-05-27 yo
+* Resource_getPriceCalculationOperandDict must return base_unit_price even if price is not found. So the meaning of the default parameter has changed slightly - now it represents the default value of price instead of the default value of the returned result. This way is more backward compatible.
+
 2010-05-26 yo
 * Now the Resource_getPriceCalculationOperandDict must include base_unit_price, as the script is shared with getPrice and getBaseUnitPrice.
 
