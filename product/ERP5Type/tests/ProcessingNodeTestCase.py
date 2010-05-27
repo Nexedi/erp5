@@ -113,6 +113,20 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
     else:
       activity_tool.manage_removeFromProcessingList((currentNode,))
 
+  def assertNoPendingMessage(self):
+    """Get the last error message from error_log"""
+    message_list = self.portal.portal_activities.getMessageList()
+    if message_list:
+      error_message = 'These messages are pending: %r' % [
+          ('/'.join(m.object_path), m.method_id, m.processing_node, m.retry)
+          for m in message_list]
+      error_log = self.portal.error_log._getLog()
+      if len(error_log):
+        error_message += '\nLast error message:' \
+                         '\n%(type)s\n%(value)s\n%(tb_text)s' \
+                         % error_log[-1]
+      raise self.fail(error_message)
+
   def tic(self, verbose=0):
     """Execute pending activities"""
     portal_activities = self.getPortal().portal_activities
@@ -136,22 +150,12 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         # This prevents an infinite loop.
         count -= 1
         if count == 0:
-          # Get the last error message from error_log.
-          error_message = ''
-          error_log = self.portal.error_log._getLog()
-          if len(error_log):
-            last_log = error_log[-1]
-            error_message = '\nLast error message:\n%s\n%s\n%s\n' % (
-              last_log['type'],
-              last_log['value'],
-              last_log['tb_text'],
-              )
-          raise RuntimeError,\
-            'tic is looping forever. These messages are pending: %r %s' % (
-          [('/'.join(m.object_path), m.method_id, m.processing_node, m.retry)
-          for m in portal_activities.getMessageList()],
-          error_message
-          )
+          error_message = 'tic is looping forever. '
+          try:
+            self.assertNoPendingMessage()
+          except AssertionError, e:
+            error_message += str(e)
+          raise RuntimeError(error_message)
         # This give some time between messages
         if count % 10 == 0:
           portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
