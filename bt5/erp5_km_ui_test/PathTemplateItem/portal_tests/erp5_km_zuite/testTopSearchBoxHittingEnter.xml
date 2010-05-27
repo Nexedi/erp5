@@ -88,11 +88,13 @@
   <td>field_your_search_text</td>\n
   <td>\\13</td>\n
 </tr>\n
+<!--\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[@class=\'searchResultHeader\']/span[@class=\'right\']/em[2]</td>\n
   <td>1</td>\n
 </tr>\n
+-->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']//span[@class=\'search_result_title\']</td>\n

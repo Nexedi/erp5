@@ -71,9 +71,14 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@class=\'searchResultHeader\']/span[@class=\'right\']/em[2]</td>\n
-  <td>1</td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Search Results</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Summary</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
