@@ -6385,6 +6385,40 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse(getattr(portal.some_file, 'isClassOverriden', False))
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
 
+  def test_getBusinessTemplateUrl(self):
+    """ Test if this method can find which repository is the business
+        template
+    """
+    # How to define an existing and use INSTANCE_HOME_REPOSITORY?
+    url_list = [ 'https://svn.erp5.org/repos/public/erp5/trunk/bt5',
+                 'http://www.erp5.org/dists/snapshot/bt5',
+                 'http://www.erp5.org/dists/release/5.4.5/bt5', 
+                 'file:///opt/does/not/exist', 
+                 "INSTANCE_HOME_REPOSITORY"]
+    
+    exist_bt5 = 'erp5_base'
+    not_exist_bt5 = "erp5_not_exist"
+    template_tool = self.portal.portal_templates
+    getBusinessTemplateUrl = template_tool.getBusinessTemplateUrl
+
+    # Test Exists
+    self.assertEquals(getBusinessTemplateUrl(url_list, exist_bt5), 
+                  'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_base')
+    self.assertEquals(getBusinessTemplateUrl(url_list[1:], exist_bt5),
+                      'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
+    self.assertEquals(getBusinessTemplateUrl(url_list[2:], exist_bt5),
+                      'http://www.erp5.org/dists/release/5.4.5/bt5/erp5_base.bt5')
+    self.assertEquals(getBusinessTemplateUrl(url_list[3:], exist_bt5), None)
+    # XXX Remains test for INSTANCE_HOME_REPOSITORY and file:/// where erp5_base
+    # exists.
+
+    # Test Not exists
+    self.assertEquals(getBusinessTemplateUrl(url_list, not_exist_bt5), None)
+    self.assertEquals(getBusinessTemplateUrl(url_list[1:], not_exist_bt5), None)
+    self.assertEquals(getBusinessTemplateUrl(url_list[2:], not_exist_bt5), None)
+    self.assertEquals(getBusinessTemplateUrl(url_list[3:], not_exist_bt5), None)
+    self.assertEquals(getBusinessTemplateUrl(url_list[4:], not_exist_bt5), None)
+
   def test_type_provider(self):
     self.portal._setObject('dummy_type_provider', DummyTypeProvider())
     type_provider = self.portal.dummy_type_provider

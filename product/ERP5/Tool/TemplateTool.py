@@ -44,6 +44,7 @@ from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
 from cStringIO import StringIO
 from urllib import pathname2url, urlopen, splittype, urlretrieve
+import urllib2
 import re
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
@@ -1050,5 +1051,37 @@ class TemplateTool (BaseTool):
         else:
           opreation_log.append('Not found in repositories %s' % template_name)
       return opreation_log
+
+    security.declareProtected(Permissions.ManagePortal,
+            'getBusinessTemplateUrl')
+    def getBusinessTemplateUrl(self, base_url_list, bt5_title):
+      """
+        This method verify if the business template are available
+        into one url (repository).
+      """
+      # This list could be preconfigured at some properties or
+      # at preferences.
+      for base_url in base_url_list:
+        url = "%s/%s" % (base_url, bt5_title)
+        if base_url == "INSTANCE_HOME_REPOSITORY":
+          url = "file://%s/bt5/%s" % (getConfiguration().instancehome, 
+                                      bt5_title)
+          LOG('ERP5', INFO, "TemplateTool: INSTANCE_HOME_REPOSITORY is %s." \
+              % url)
+        try:
+          urllib2.urlopen(url)
+          return url
+        except (urllib2.HTTPError, OSError):
+          # XXX Try again with ".bt5" in case the folder format be used
+          # Instead tgz one.
+          url = "%s.bt5" % url
+          try:
+            urllib2.urlopen(url)
+            return url
+          except (urllib2.HTTPError, OSError):
+            pass
+      LOG('ERP5', INFO, 'TemplateTool: %s was not found into the url list: ' 
+                        '%s.' % (bt5_title, base_url_list))
+      return None
 
 InitializeClass(TemplateTool)
