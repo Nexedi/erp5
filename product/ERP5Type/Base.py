@@ -3083,6 +3083,16 @@ class Base( CopyContainer,
 
       fallback_script_id : the script to use if nothing is found
     """
+    def getScriptName(portal_type, method_id): 	 
+      from Products.ERP5Type.Base import Base 	 
+      class_name_list = [base_class.__name__ for base_class in self.__class__.mro() if issubclass(base_class, Base)] 	 
+      script_name_end = '_%s' % method_id 	 
+      for script_name_begin in [portal_type, self.getMetaType()] + class_name_list: 	 
+        name = ''.join([script_name_begin.replace(' ',''), script_name_end]) 	 
+        script = getattr(self, name, None) 	 
+        if script is not None: 	 
+          return name
+
     # script_id should not be used any more, keep compatibility
     if script_id is not None:
       LOG('ERP5Type/Base.getTypeBaseMethod',0,
@@ -3097,22 +3107,12 @@ class Base( CopyContainer,
 
     cache_key = (portal_type, method_id)
     try:
-      script = type_base_cache[cache_key]
+      name = type_base_cache[cache_key]
     except KeyError:
-      class_name_list = [portal_type, self.getMetaType()] + \
-        [base_class.__name__ for base_class in self.__class__.mro()
-                             if issubclass(base_class, Base)]
-      script_name_end = '_' + method_id
-      for script_name_begin in class_name_list:
-        script_id = script_name_begin.replace(' ','') + script_name_end
-        script = getattr(self, script_id, None)
-        if script is not None:
-          type_base_cache[cache_key] = aq_base(script)
-          return script
-      type_base_cache[cache_key] = None
-
-    if script is not None:
-      return script.__of__(self)
+      name = getScriptName(portal_type, method_id)
+      type_base_cache[cache_key] = name
+    if name is not None:
+      return getattr(self, name)
     if fallback_script_id is not None:
       return getattr(self, fallback_script_id)
 
