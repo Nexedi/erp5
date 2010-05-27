@@ -76,53 +76,49 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>URL contributed successfully</td>\n
+  <td>Web Page created successfully</td>\n
   <td></td>\n
 </tr>\n
-<!-- -->\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Preview</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Preview</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>field_my_version</td>\n
-\t<td>001</td>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyValue</td>\n
-\t<td>field_my_language</td>\n
-\t<td>en</td>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Draft</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Draft</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Community</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Community</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>ERP5</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>ERP5</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_my_reference</td>\n
-\t<td>Front-page-ERP5.com-Test</td>\n
+  <td>type</td>\n
+  <td>field_my_reference</td>\n
+  <td>Front-page-ERP5.com-Test</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>hidden_button</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>hidden_button</td>\n
+  <td></td>\n
 </tr>\n
-\n
-\n
-\n
 \n
 <!-- Wait for activities to finish -->\n
 <tr>\n
