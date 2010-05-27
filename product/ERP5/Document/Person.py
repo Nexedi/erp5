@@ -30,15 +30,12 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.utils import _checkPermission
-from Products.CMFCore.exceptions import AccessControl_Unauthorized
-from Products.ERP5Type.Globals import PersistentMapping
-from Acquisition import aq_base
 
 #from Products.ERP5.Core.Node import Node
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
 
 try:
   from Products import PluggableAuthService
@@ -46,19 +43,8 @@ try:
 except ImportError:
   PluggableAuthService = None
 
-try:
-  from AccessControl.AuthEncoding import pw_encrypt
-except ImportError:
-  pw_encrypt = lambda pw:pw
-
-try:
-  from AccessControl.AuthEncoding import pw_validate
-except ImportError:
-  pw_validate = lambda reference, attempt: reference == attempt
-      
-
 #class Person(Node, XMLObject):
-class Person(XMLObject):
+class Person(EncryptedPasswordMixin, XMLObject):
     """
       An Person object holds the information about
       an person (ex. you, me, someone in the company,
@@ -201,90 +187,6 @@ class Person(XMLObject):
       # invalid the cache for ERP5Security
       portal_caches = getToolByName(self.getPortalObject(), 'portal_caches')
       portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
-
-    security.declareProtected(Permissions.SetOwnPassword, 'checkPassword')
-    def checkPassword(self, value) :
-      """
-        Check the password, usefull when changing password
-      """      
-      if value is not None :
-        return pw_validate(self.getPassword(), value)
-      return False
-
-    def _setEncodedPassword(self, value, format='default'):
-      password = getattr(aq_base(self), 'password', None)
-      if password is None:
-        password = self.password = PersistentMapping()
-      self.password[format] = value
-
-    security.declarePublic('setEncodedPassword')
-    def setEncodedPassword(self, value, format='default'):
-      """
-        Set an already encoded password.
-      """
-      if not _checkPermission(Permissions.SetOwnPassword, self):
-        raise AccessControl_Unauthorized('setEncodedPassword')
-      self._setEncodedPassword(value, format=format)
-      self.reindexObject()
-
-    # Because both _setPassword and setPassword are considered as
-    # public method(They are callable from user directly or through edit method)
-    # _setPasswordByForce is needed to reset password without security check
-    # by Password Tool.
-    def __setPasswordByForce(self, value):
-      self.password = PersistentMapping()
-      self._setEncodedPassword(pw_encrypt(value))
-
-    def _setPassword(self, value):
-      if not _checkPermission(Permissions.SetOwnPassword, self):
-        raise AccessControl_Unauthorized('setPassword')
-      else:
-        self.__setPasswordByForce(value)
-
-    security.declarePublic('setPassword')
-    def setPassword(self, value) :
-      """
-        Set the password, only if the password is not empty.
-      """
-      if value is not None:
-        self._setPassword(value)
-        self.reindexObject()
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'getPassword')
-    def getPassword(self, *args, **kw):
-      """
-        Retrieve password in desired format.
-
-        getPassword([default], [format='default'])
-
-        default (anything)
-          Value to return if no password is set on context.
-          Default: None
-        format (string)
-          String defining the format in which the password is expected.
-          If passowrd is not available in that format, KeyError will be
-          raised.
-          Default: 'default'
-      """
-      marker = []
-      if len(args):
-        default_password = args[0]
-      else:
-        default_password = None
-      password = getattr(aq_base(self), 'password', marker)
-      if password is marker:
-        password = default_password
-      else:
-        format = kw.get('format', 'default')
-        # Backward compatibility: if it's not a PersistentMapping instance,
-        # assume it's a monovalued string, which corresponds to default
-        # password encoding.
-        if isinstance(password, PersistentMapping):
-          password = password.get(format, default_password)
-        else:
-          if format != 'default':
-            password = default_password
-      return password
 
     # Time management
     security.declareProtected(Permissions.AccessContentsInformation, 
