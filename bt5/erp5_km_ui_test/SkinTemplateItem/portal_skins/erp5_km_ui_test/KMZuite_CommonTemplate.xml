@@ -73,7 +73,8 @@
 \n
 \n
 <tal:block metal:define-macro="deleteKMWebSite">\n
-    <!-- delete the web_site -->\n
+    <!-- delete the web_site XXX: not used anymore as no need to delete site -->\n
+    <!--\n
     <tr>\n
       <td>open</td>\n
       <td>${base_url}/web_site_module/WebSiteModule_deleteKMSite?site_id=km_test_web_site</td>\n
@@ -85,6 +86,7 @@
       <td>Deleted Successfully.</td>\n
       <td></td>\n
     </tr>\n
+    -->\n
 </tal:block>\n
 \n
 \n

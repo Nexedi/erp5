@@ -58,36 +58,34 @@
 """\n
   Initialize a KM site.\n
 """\n
-if site_id in context.objectIds():\n
-  context.manage_delObjects([site_id])\n
-km_website = context.newContent(id = site_id, \\\n
-                                title = title, \n
-                                portal_type = \'Web Site\')\n
-km_website.edit(skin_selection_name = \'KM\',\n
-                container_layout = \'erp5_km_minimal_layout\',\n
-                content_layout = \'erp5_km_minimal_content_layout\',\n
-                custom_render_method_id = \'WebSite_viewKnowledgePad\',\n
-                layout_configuration_form_id = \'WebSection_viewKMMinimalThemeConfiguration\',\n
-                static_language_selection = True,\n
-                visible = True,\n
-                site_map_section_parent = True,\n
-                default_available_language = \'en\')\n
+if site_id not in context.objectIds():\n
+  km_website = context.newContent(id = site_id, \\\n
+                                  title = title, \n
+                                  portal_type = \'Web Site\')\n
+  km_website.edit(skin_selection_name = \'KM\',\n
+                  container_layout = \'erp5_km_minimal_layout\',\n
+                  content_layout = \'erp5_km_minimal_content_layout\',\n
+                  custom_render_method_id = \'WebSite_viewKnowledgePad\',\n
+                  layout_configuration_form_id = \'WebSection_viewKMMinimalThemeConfiguration\',\n
+                  static_language_selection = True,\n
+                  visible = True,\n
+                  site_map_section_parent = True,\n
+                  default_available_language = \'en\')\n
 \n
 km_preference_id = \'km_site_test\'\n
 portal_preferences = context.portal_preferences\n
-if km_preference_id in portal_preferences.objectIds():\n
-  portal_preferences.manage_delObjects([km_preference_id])\n
-km_preference = portal_preferences.newContent(\n
-                  id = km_preference_id,\n
-                  portal_type = \'System Preference\',\n
-                  priority = 1,\n
-                  preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
-                  preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
-                  preferred_synchronous_metadata_discovery = True,\n
-                  preferred_redirect_to_document = True,\n
-                  preferred_ooodoc_server_address = context.Zuite_getConversionServerDict()["oood_hostname"],\n
-                  preferred_ooodoc_server_port_number = context.Zuite_getConversionServerDict()["oood_port"])\n
-km_preference.enable()\n
+if km_preference_id not in portal_preferences.objectIds():\n
+  km_preference = portal_preferences.newContent(\n
+                    id = km_preference_id,\n
+                    portal_type = \'System Preference\',\n
+                    priority = 1,\n
+                    preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
+                    preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
+                    preferred_synchronous_metadata_discovery = True,\n
+                    preferred_redirect_to_document = True,\n
+                    preferred_ooodoc_server_address = context.Zuite_getConversionServerDict()["oood_hostname"],\n
+                    preferred_ooodoc_server_port_number = context.Zuite_getConversionServerDict()["oood_port"])\n
+  km_preference.enable()\n
 \n
 return "Created Successfully."\n
 

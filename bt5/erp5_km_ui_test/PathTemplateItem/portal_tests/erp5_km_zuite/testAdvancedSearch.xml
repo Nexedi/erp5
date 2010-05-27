@@ -57,22 +57,12 @@
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />\n
 \n
 <tr>\n
-  <td>open</td>\n
+  <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site/view</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>open</td>\n
-  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>\n
-  <td></td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>Done.</td>\n
-  <td></td>\n
-  <td></td>\n
-</tr>\n
+<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/wait_for_activities">\n
+Wait for activities</span>\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
@@ -93,13 +83,6 @@
   <td>hidden_button</td>\n
   <td></td>\n
 </tr>\n
-<!--\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@class=\'searchResultHeader\']/span[@class=\'right\']/em[2]</td>\n
-  <td>1</td>\n
-</tr>\n
--->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']//span[@class=\'search_result_title\']</td>\n

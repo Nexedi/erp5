@@ -45,11 +45,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
 <title>Search Top Box Clicking</title>\n
 </head>\n
-<body tal:define="file_name string:tiolive-ERP5.DMS.TioLive-001-en.odp;\n
+<body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods;\n
                   full_filename_location python: here.ExpressZuite_getFilenameLocation(file_name)">\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test a search on the top box clicking on the search button</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test My Documents gadget</td></tr>\n
 </thead><tbody>\n
 \n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
@@ -58,7 +58,7 @@
 \n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -78,7 +78,7 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>Presentation</td>\n
+  <td>Spreadsheet</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -89,12 +89,12 @@
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_title</td>\n
-  <td>TioLive, ERP5, Freedom</td>\n
+  <td>TioLive Spreadsheet</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>field_my_reference</td>\n
-  <td>tiolive-ERP5.DMS.TioLive</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.Spreadsheet</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -108,12 +108,12 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>tiolive-ERP5.DMS.TioLive-001-en.odp</td>\n
+  <td tal:content="file_name"></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>Presentation</td>\n
+  <td>Spreadsheet</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -121,39 +121,21 @@
   <td>Converted</td>\n
   <td></td>\n
 </tr>\n
-\n
-<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/wait_for_activities">\n
-Wait for activities</span>\n
-\n
+<!--  add "My Documents" gadget -->\n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_my_documents&amp;mode=web_front</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=My Documents</td>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>type</td>\n
-  <td>reference</td>\n
-  <td>%tiolive-ERP5.DMS.TioLive%</td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>hidden_button</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>TioLive, ERP5, Freedom</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>tiolive-ERP5.DMS.TioLive</td>\n
-  <td></td>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("TioLive Spreadsheet")</td>\n
+  <td>10000</td> \n
 </tr>\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
@@ -175,7 +157,7 @@ Wait for activities</span>\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>testCreateNewFile</string> </value>
+            <value> <string>testMyDocumentsGadget</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
