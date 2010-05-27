@@ -37,22 +37,22 @@ class IEncryptedPassword(Interface):
   encrypted password.
   """
 
-  def checkPassword(self, value):
+  def checkPassword(value):
     """
     Check the password, usefull when changing password
     """
 
-  def setEncodedPassword(self, value, format='default'):
+  def setEncodedPassword(value, format='default'):
     """
       Set an already encoded password.
     """
 
-  def setPassword(self, value) :
+  def setPassword(value) :
     """
       Set the password, only if the password is not empty.
     """
 
-  def getPassword(self, *args, **kw):
+  def getPassword(*args, **kw):
     """
       Retrieve password in desired format.
 
