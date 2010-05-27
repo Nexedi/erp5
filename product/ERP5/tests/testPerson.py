@@ -160,6 +160,18 @@ class TestPerson(ERP5TypeTestCase):
     p.setPassword('secret')
     self.assertTrue(p.getPassword())
 
+  def testPasswordFormat(self):
+    p = self._makeOne('person')
+    p._setEncodedPassword('pass_A', format='A')
+    p._setEncodedPassword('pass_B', format='B')
+    self.assertEquals('pass_A', p.getPassword(format='A'))
+    self.assertEquals('pass_B', p.getPassword(format='B'))
+
+    self.assertEquals(None, p.getPassword(format='unknown'))
+    self.assertEquals('default', p.getPassword('default', format='unknown'))
+
+    self.assertEquals(None, p.getPassword())
+    self.assertEquals('default', p.getPassword('default'))
 
 def test_suite():
   suite = unittest.TestSuite()
