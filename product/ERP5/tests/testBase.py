@@ -38,10 +38,22 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                        _getConversionServerDict
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.Base import Base
 from zExceptions import BadRequest
 from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5Type.Tool.ClassTool import _aq_reset
 from Products.ERP5Type.Workflow import addWorkflowByType
+
+def getDummyTypeBaseMethod(self):
+  """ Use a type Base method
+  """
+  script = self._getTypeBasedMethod('getDummyTypeBaseMethod')
+  if script is not None:
+    return script()
+  return "Script Not Found"
+
+Base.getDummyTypeBaseMethod = getDummyTypeBaseMethod
+
 
 class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
 
@@ -1103,27 +1115,27 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                         'Base_fooMethod',
                         'scripts_params=None',
                         '# Script body\n'
-                        'return "something"' )
+                        'return context.getId()' )
     xml_object_script = createZODBPythonScript(portal.portal_skins.custom,
                         'XMLObject_dummyMethod',
                         'scripts_params=None',
                         '# Script body\n'
-                        'return "something"' )
+                        'return context.getId()' )
     person_script = createZODBPythonScript(portal.portal_skins.custom,
                         'Person_dummyMethod',
                         'scripts_params=None',
                         '# Script body\n'
-                        'return "something"' )
+                        'return context.getId()' )
     copy_container_script = createZODBPythonScript(portal.portal_skins.custom,
                         'CopyContainer_dummyFooMethod',
                         'scripts_params=None',
                         '# Script body\n'
-                        'return "something"' )
+                        'return context.getId()' )
     cmfbtree_folder_script = createZODBPythonScript(portal.portal_skins.custom,
                         'CMFBTreeFolder_dummyFoo2Method',
                         'scripts_params=None',
                         '# Script body\n'
-                        'return "something"' )
+                        'return context.getId()' )
     org = portal.organisation_module.newContent(portal_type='Organisation')
     pers = portal.person_module.newContent(portal_type='Person')
 
@@ -1133,7 +1145,37 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(pers._getTypeBasedMethod('fooMethod'), base_script)
     self.assertEqual(org._getTypeBasedMethod('dummyFooMethod'), None)
     self.assertEqual(org._getTypeBasedMethod('dummyFoo2Method'), None)
+    
+    # Call the scripts to make sure the context are appropriated.
+    self.assertEqual(org._getTypeBasedMethod('dummyMethod')(), org.getId())
+    self.assertEqual(pers._getTypeBasedMethod('dummyMethod')(), pers.getId())
+    self.assertEqual(org._getTypeBasedMethod('fooMethod')(), org.getId())
+    self.assertEqual(pers._getTypeBasedMethod('fooMethod')(), pers.getId())
 
+    self.assertEqual(pers.getDummyTypeBaseMethod(), "Script Not Found")
+
+    person_dummy_script = createZODBPythonScript(portal.portal_skins.custom,
+                        'Person_getDummyTypeBaseMethod',
+                        'scripts_params=None',
+                        '# Script body\n'
+                        'return context.getId()' )
+
+    dummy_script_by_activity = createZODBPythonScript(portal.portal_skins.custom,
+                        'Person_getDummyTypeBaseMethodByActivity',
+                        'scripts_params=None',
+                        '# Script body\n'
+                        'context.getDummyTypeBaseMethod()\n'
+                        'return context.getDummyTypeBaseMethod()' )
+
+
+    transaction.commit() # Flush transactional cache.
+    self.assertEqual(pers.getDummyTypeBaseMethod(), pers.getId())
+    # Call once more to check cache.
+    self.assertEqual(pers.getDummyTypeBaseMethod(), pers.getId())
+
+    pers.activate().Person_getDummyTypeBaseMethodByActivity()
+    self.stepTic()
+    
   def test_translate_table(self):
     """check if Person portal type that is installed in erp5_base is
     well indexed in translate table or not.
