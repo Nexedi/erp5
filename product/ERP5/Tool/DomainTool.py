@@ -176,9 +176,14 @@ class DomainTool(BaseTool):
           category_list = context.getCategoryList()
       else:
         category_list = []
-        for tested_base_category in tested_base_category_list:
-          category_list.extend(
-               context.getCategoryMembershipList(tested_base_category, base=1))
+        if acquired:
+          for tested_base_category in tested_base_category_list:
+            category_list.extend(
+                context.getAcquiredCategoryMembershipList(tested_base_category, base=1))
+        else:
+          for tested_base_category in tested_base_category_list:
+            category_list.extend(
+                context.getCategoryMembershipList(tested_base_category, base=1))
 
       if tested_base_category_list != []:
         if len(category_list)==0:
