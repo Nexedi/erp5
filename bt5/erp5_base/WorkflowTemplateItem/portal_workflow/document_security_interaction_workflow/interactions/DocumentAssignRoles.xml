@@ -37,7 +37,7 @@
             <key> <string>before_commit_script_name</string> </key>
             <value>
               <list>
-                <string>Document_assignRoleToGroup</string>
+                <string>updateLocalRoles</string>
               </list>
             </value>
         </item>
