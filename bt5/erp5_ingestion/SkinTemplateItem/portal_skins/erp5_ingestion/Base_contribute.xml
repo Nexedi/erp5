@@ -74,62 +74,66 @@ if portal_type not in MARKER:\n
   document_kw[\'portal_type\'] = portal_type\n
 if classification not in MARKER:\n
   document_kw[\'classification\'] = classification\n
+if follow_up_list:\n
+  document_kw[\'follow_up_list\'] = follow_up_list\n
 \n
+document_kw.update({\'discover_metadata\': not synchronous_metadata_discovery})\n
 if url is not None:\n
   # we contribute and URL, this happens entirely asynchronous\n
-  document = portal_contributions.newContentFromURL(url = url, \n
+  document = portal_contributions.newContentFromURL(url = url,\n
                                                     **document_kw)\n
+  file_name=document.getId()\n
   message = translateString("URL contributed successfully.")\n
 else:\n
   # contribute file\n
   file_name = getattr(file, \'filename\', None)\n
   is_existing_document_updated = False\n
   document_kw.update({\'file\': file,\n
-                      \'file_name\': file_name,\n
-                      \'discover_metadata\': not synchronous_metadata_discovery})\n
+                      \'file_name\': file_name,})\n
   document = portal_contributions.newContent(**document_kw)\n
-  if synchronous_metadata_discovery:\n
-    # we need to do all synchronously, in other case portal_contributions will do\n
-    # this in an activity\n
-    if document.isSupportBaseDataConversion():\n
-      document.processFile()\n
-    merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(\n
-                                 file_name=file_name)\n
-    is_existing_document_updated = (merged_document!=document)\n
-    document = merged_document\n
-  # introspect document and find editable properties\n
-  # then use kw and try to get values in two available modes: the\n
-  # script coulbe be called: from ERP5 From or directly from Python script\n
-  document_edit_kw = {}\n
-  property_id_list = document.propertyIds()\n
-  for key in property_id_list:\n
-    value = kw.get(key, kw.get(\'field_your_%s\' %key, kw.get(\'field_my_%s\' %key, None)))\n
-    if value not in MARKER:\n
-      document_edit_kw[key] = value\n
-  if attach_document_to_context:\n
-    # attach document to current context using follow_up\n
-    follow_up_list = document.getFollowUpValueList()\n
-    if context not in follow_up_list:\n
-      # attach to context only if not already attached\n
-      follow_up_list.append(context)\n
-      document.setFollowUpValueList([x.getRelativeUrl() for x in follow_up_list])\n
-  # edit document   \n
-  if document_edit_kw is not {}:\n
-    document.edit(**document_edit_kw)\n
-  document_portal_type = document.getTranslatedPortalType()\n
-  if not is_existing_document_updated:\n
-    message = translateString(\'${portal_type} created successfully.\',\n
-                mapping=dict(portal_type=document_portal_type))\n
-  else:\n
-    message = translateString(\'${portal_type} updated successfully.\',\n
-                mapping=dict(portal_type=document_portal_type))\n
+\n
+if synchronous_metadata_discovery:\n
+  # we need to do all synchronously, in other case portal_contributions will do\n
+  # this in an activity\n
+  if document.isSupportBaseDataConversion():\n
+    document.processFile()\n
+  merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(\n
+                               file_name=file_name)\n
+  is_existing_document_updated = (merged_document!=document)\n
+  document = merged_document\n
+# introspect document and find editable properties\n
+# then use kw and try to get values in two available modes: the\n
+# script coulbe be called: from ERP5 From or directly from Python script\n
+document_edit_kw = {}\n
+property_id_list = document.propertyIds()\n
+for key in property_id_list:\n
+  value = kw.get(key, kw.get(\'field_your_%s\' %key, kw.get(\'field_my_%s\' %key, None)))\n
+  if value not in MARKER:\n
+    document_edit_kw[key] = value\n
+if attach_document_to_context:\n
+  # attach document to current context using follow_up\n
+  follow_up_list = document.getFollowUpValueList()\n
+  if context not in follow_up_list:\n
+    # attach to context only if not already attached\n
+    follow_up_list.append(context)\n
+    document.setFollowUpValueList([x.getRelativeUrl() for x in follow_up_list])\n
+# edit document   \n
+if document_edit_kw is not {}:\n
+  document.edit(**document_edit_kw)\n
+document_portal_type = document.getTranslatedPortalType()\n
+if not is_existing_document_updated:\n
+  message = translateString(\'${portal_type} created successfully.\',\n
+              mapping=dict(portal_type=document_portal_type))\n
+else:\n
+  message = translateString(\'${portal_type} updated successfully.\',\n
+              mapping=dict(portal_type=document_portal_type))\n
 \n
 if redirect_to_document or redirect_url is not None:\n
   # this is an UI mode where script should handle HTTP redirects and is likely used\n
   # by ERP5 form\n
   if redirect_to_document and document is not None:\n
     # explicitly required to view ingested document\n
-    return document.Base_redirect(\'view\',  \n
+    return document.Base_redirect(\'view\',\n
                       keep_items={\'portal_status_message\': message,\n
                                   \'editable_mode\': editable_mode})\n
   elif redirect_url is not None:\n
@@ -151,7 +155,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, editable_mode = 1, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, editable_mode = 1, follow_up_list=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -171,7 +175,7 @@ return document\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
+                        <value> <int>11</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -187,6 +191,7 @@ return document\n
                             <string>use_context_for_container</string>
                             <string>redirect_url</string>
                             <string>editable_mode</string>
+                            <string>follow_up_list</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
@@ -201,9 +206,9 @@ return document\n
                             <string>_write_</string>
                             <string>_apply_</string>
                             <string>document</string>
+                            <string>file_name</string>
                             <string>message</string>
                             <string>getattr</string>
-                            <string>file_name</string>
                             <string>is_existing_document_updated</string>
                             <string>merged_document</string>
                             <string>document_edit_kw</string>
@@ -211,7 +216,6 @@ return document\n
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>value</string>
-                            <string>follow_up_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
@@ -241,6 +245,7 @@ return document\n
                 <int>0</int>
                 <none/>
                 <int>1</int>
+                <none/>
               </tuple>
             </value>
         </item>
