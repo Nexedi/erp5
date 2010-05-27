@@ -117,7 +117,7 @@
                       summary="This table contains the domain tree"\n
                       class="listbox_domain_tree_table"\n
                       tal:attributes="id string:${field_id}_domain_tree_table"\n
-                      tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False);\n
+                      tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False, sort_on=((\'int_index\', \'ASC\'),));\n
                       total_depth python: max([report_tree.depth for report_tree in report_tree_list] + [-1])">\n
                 <tr tal:repeat="report_tree report_tree_list">\n
                   <tal:block tal:repeat="i python: range(report_tree.depth)">\n
@@ -128,11 +128,11 @@
                     <a href="method" class="tree_open"\n
                       tal:condition="report_tree/is_open"\n
                       tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">\n
-                      <b tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</b></a>\n
+                      <b tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</b></a>\n
                     <a href="method" class="tree_closed"\n
                       tal:condition="not: report_tree/is_open"\n
                       tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">\n
-                      <tal:block tal:content="report_tree/obj/getTranslatedTitleOrId">Domain</tal:block></a>\n
+                      <tal:block tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</tal:block></a>\n
                   </td>\n
                 </tr>\n
               </table>\n
