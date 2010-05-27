@@ -62,7 +62,7 @@ from Products.ERP5.mixin.downloadable import DownloadableMixin
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
 # these property ids are unchangable
-FIXED_PROPERTY_IDS =  ('id', 'uid', 'rid', 'sid')
+FIXED_PROPERTY_IDS = ('id', 'uid', 'rid', 'sid')
 
 VALID_TEXT_FORMAT_LIST = ('text', 'txt', 'html', 'base_html',
                           'stripped-html')

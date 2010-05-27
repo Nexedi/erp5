@@ -254,7 +254,7 @@ class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
       return self.hasTextContent()
 
     security.declareProtected(Permissions.AccessContentsInformation,
-                                                                 'getContentType')
+                                                              'getContentType')
     def getContentType(self, default=_MARKER):
       """Backward compatibility, read content_type
       from text_format property
