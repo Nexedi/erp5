@@ -6547,6 +6547,54 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(None,
         self.portal.portal_actions.getActionInfo('object_view/test_global_action'))
 
+  def test_indexation_of_updated_path_item(self):
+    """Tests indexation on updated paths item.
+    They should keep their uid and still be available to catalog
+    This test is similar to test_40_BusinessTemplateUidOfCategoriesUnchanged,
+    but it also checks the object is available to catalog.
+    """
+    self.portal.newContent(
+            id='exported_path',
+            title='Exported',
+            portal_type='Folder')
+    self.stepTic()
+
+    uid = self.portal.exported_path.getUid()
+
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',
+                          template_path_list=(
+                            'exported_path',))
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    
+    # modify the document
+    self.portal.exported_path.setTitle('Modified')
+    self.stepTic()
+
+    # install the business template
+    new_bt.install()
+
+    # after installation, the exported document is replaced with the one from
+    # the business template
+    self.assertEquals('Exported', self.portal.exported_path.getTitle())
+    # but its uid did not change
+    self.assertEquals(uid, self.portal.exported_path.getUid())
+    # and it is still in the catalog
+    self.stepTic()
+    self.assertEquals(self.portal.exported_path,
+        self.portal.portal_catalog.getResultValue(uid=uid))
+
 
 def test_suite():
   suite = unittest.TestSuite()
