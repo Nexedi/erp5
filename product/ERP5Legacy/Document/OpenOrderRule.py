@@ -70,14 +70,22 @@ class OpenOrderRule(DeliveryRule):
       order_movement_list = order.getMovementList(
         portal_type=order.getPortalOrderMovementTypeList())
 
+      now = DateTime()
       for order_movement in order_movement_list:
+        end_date = order_movement.getStopDate() - order.getForecastingTermDayCount()
+        if end_date > now:
+          calculation_base_date = now
+        else:
+          calculation_base_date = end_date
         last_simulation_movement = self._getLastSimulationMovementValue(applied_rule, order_movement)
         if last_simulation_movement is not None:
           schedule_start_date = last_simulation_movement.getStartDate()
-          schedule_list = self._getOrderDateScheduleTupleList(order_movement, schedule_start_date, **kw)
+          schedule_list = self._getOrderDateScheduleTupleList(order_movement, schedule_start_date,
+                                                              calculation_base_date=calculation_base_date,
+                                                              **kw)
         else:
           # Because order's start_date might be matched with the periodicity.
-          order_start_date = order.getStartDate()
+          order_start_date = order_movement.getStartDate()
           schedule_start_date = order_start_date-1
           schedule_list = [date_pair
                            for date_pair in self._getOrderDateScheduleTupleList(order_movement, schedule_start_date, **kw)
