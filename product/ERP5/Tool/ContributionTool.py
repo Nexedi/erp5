@@ -615,7 +615,7 @@ class ContributionTool(BaseTool):
       content.setContentMd5(new_content_md5)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
-  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT, batch_mode=True, **kw):
+  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT, repeat_interval=1, batch_mode=True, **kw):
     """
       A wrapper method for newContent which provides extra safety
       in case or errors (ie. download, access, conflict, etc.).
@@ -648,22 +648,25 @@ class ContributionTool(BaseTool):
         # which had to add this url to bad URL list, so next time we avoid
         # crawling bad URL
         raise
-      # Catch any HTTP error
-      self.activate(at_date=DateTime() + 1).newContentFromURL(
-                        container_path=container_path, id=id,
-                        repeat=repeat - 1, **kw)
+      if repeat > 0:
+        # Catch any HTTP error
+        self.activate(at_date=DateTime() + repeat_interval).newContentFromURL(
+                          container_path=container_path, id=id,
+                          repeat=repeat - 1,
+                          repeat_interval=repeat_interval, **kw)
     except urllib2.URLError, error:
       if repeat == 0 and batch_mode:
         # XXX - Call the extendBadURLList method, --NOT Implemented--
         raise
-      print error.reason
       #if getattr(error.reason,'args',None):
         #if error.reason.args[0] == socket.EAI_AGAIN:
           ## Temporary failure in name resolution - try again in 1 day
-      self.activate(at_date=DateTime() + 1,
-                    activity="SQLQueue").newContentFromURL(
-                      container_path=container_path, id=id,
-                      repeat=repeat - 1, **kw)
+      if repeat > 0:
+        self.activate(at_date=DateTime() + repeat_interval,
+                      activity="SQLQueue").newContentFromURL(
+                        container_path=container_path, id=id,
+                        repeat=repeat - 1,
+                        repeat_interval=repeat_interval, **kw)
     return document
 
   def _guessPortalType(self, name, typ, body):
