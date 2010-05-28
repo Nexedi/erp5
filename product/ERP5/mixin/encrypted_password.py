@@ -63,9 +63,9 @@ class EncryptedPasswordMixin:
       return pw_validate(self.getPassword(), value)
     return False
 
-  def checkUserCanChangePassword(self, unauthorized_message='setPassword'):
+  def checkUserCanChangePassword(self):
     if not _checkPermission(Permissions.SetOwnPassword, self):
-      raise AccessControl_Unauthorized(unauthorized_message)
+      raise AccessControl_Unauthorized('setPassword')
 
   def _setEncodedPassword(self, value, format='default'):
     password = getattr(aq_base(self), 'password', None)
@@ -77,7 +77,7 @@ class EncryptedPasswordMixin:
   def setEncodedPassword(self, value, format='default'):
     """
     """
-    self.checkUserCanChangePassword('setEncodedPassword')
+    self.checkUserCanChangePassword()
     self._setEncodedPassword(value, format=format)
     self.reindexObject()
 
@@ -86,7 +86,7 @@ class EncryptedPasswordMixin:
     self._setEncodedPassword(pw_encrypt(value))
 
   def _setPassword(self, value):
-    self.checkUserCanChangePassword('setPassword')
+    self.checkUserCanChangePassword()
     self._forceSetPassword(value)
 
   security.declarePublic('setPassword')

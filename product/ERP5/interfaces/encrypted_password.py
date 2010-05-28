@@ -56,7 +56,7 @@ class IEncryptedPassword(Interface):
     begins with _set*
     """
 
-  def checkUserCanChangePassword(unauthorized_message):
+  def checkUserCanChangePassword():
     """
     check user have permission to change his password. Raise in case he cannot.
     """
