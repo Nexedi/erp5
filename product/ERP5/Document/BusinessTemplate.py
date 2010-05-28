@@ -231,6 +231,9 @@ def registerSkinFolder(skin_tool, skin_folder):
     if (skin_folder_id not in selection_list):
       selection_list.insert(0, skin_folder_id)
     if reorder_skin_selection:
+      # Sort by skin ID
+      selection_list.sort()
+      # Sort by skin priority
       selection_list.sort(
         key=lambda x: x in skin_tool.objectIds() and skin_tool[x].getProperty(
         'business_template_skin_layer_priority', skin_tool[x].meta_type == 'Filesystem Directory View' and -1 or 0) or 0, reverse=True)
