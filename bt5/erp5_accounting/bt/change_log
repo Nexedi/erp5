@@ -1,3 +1,6 @@
+2010-05-28 lucas
+* Added quantity into Expandable Properties of the default_accounting_transaction_rule object.
+
 2010-05-28 yo
 * Keep remaining in the same view after adding a new Accounting Transaction Line.
 
