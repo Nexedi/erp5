@@ -63,6 +63,10 @@ class EncryptedPasswordMixin:
       return pw_validate(self.getPassword(), value)
     return False
 
+  def checkUserCanChangePassword(self, unauthorized_message='setPassword'):
+    if not _checkPermission(Permissions.SetOwnPassword, self):
+      raise AccessControl_Unauthorized(unauthorized_message)
+
   def _setEncodedPassword(self, value, format='default'):
     password = getattr(aq_base(self), 'password', None)
     if password is None:
@@ -73,24 +77,17 @@ class EncryptedPasswordMixin:
   def setEncodedPassword(self, value, format='default'):
     """
     """
-    if not _checkPermission(Permissions.SetOwnPassword, self):
-      raise AccessControl_Unauthorized('setEncodedPassword')
+    self.checkUserCanChangePassword('setEncodedPassword')
     self._setEncodedPassword(value, format=format)
     self.reindexObject()
 
-  # Because both _setPassword and setPassword are considered as
-  # public method(They are callable from user directly or through edit method)
-  # _setPasswordByForce is needed to reset password without security check
-  # by Password Tool.
-  def __setPasswordByForce(self, value):
+  def _forceSetPassword(self, value):
     self.password = PersistentMapping()
     self._setEncodedPassword(pw_encrypt(value))
 
   def _setPassword(self, value):
-    if not _checkPermission(Permissions.SetOwnPassword, self):
-      raise AccessControl_Unauthorized('setPassword')
-    else:
-      self.__setPasswordByForce(value)
+    self.checkUserCanChangePassword('setPassword')
+    self._forceSetPassword(value)
 
   security.declarePublic('setPassword')
   def setPassword(self, value) :

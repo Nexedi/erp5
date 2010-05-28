@@ -47,9 +47,24 @@ class IEncryptedPassword(Interface):
       Set an already encoded password.
     """
 
+  def _forceSetPassword(value):
+    """
+    Because both _setPassword and setPassword are considered as
+    public method(They are callable from user directly or through edit method)
+    _forceSetPassword is needed to reset password without security check by
+    Password Tool. This method is not callable through edit method as it not
+    begins with _set*
+    """
+
+  def checkUserCanChangePassword(unauthorized_message):
+    """
+    check user have permission to change his password. Raise in case he cannot.
+    """
+
   def setPassword(value) :
     """
-      Set the password, only if the password is not empty.
+      Set the password, only if the password is not empty and user has
+      SetOwnPassword permission
     """
 
   def getPassword(*args, **kw):

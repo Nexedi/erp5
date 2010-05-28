@@ -213,11 +213,7 @@ class PasswordTool(BaseTool):
     self._password_request_dict.pop(password_key)
     persons = self.getPortalObject().acl_users.erp5_users.getUserByLogin(user_login)
     person = persons[0]
-    # Calling private method starts with __ from outside is normally BAD,
-    # but if we leave the method as a normal method starts with _ and follow
-    # our naming convention, then the method can be callable through edit
-    # method without appropriate permission check and then security breaks.
-    person._Person__setPasswordByForce(password)
+    person._forceSetPassword(password)
     person.reindexObject()
     if REQUEST is not None:
       msg = translateString("Password changed.")
