@@ -169,6 +169,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
     """
       Remove everything after each run
     """
+    transaction.abort()
     doc_module = self.getDocumentModule()
     doc_module.manage_delObjects(list(doc_module.objectIds()))
     transaction.commit()
@@ -1696,6 +1697,10 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
     document = module.newContent(portal_type=portal_type, file=upload_file)
     self.assertEquals(document.asText(), 'ERP5 is a free software.\n')
+    upload_file = makeFileUpload('TEST.Large.Document.pdf')
+    document = module.newContent(portal_type=portal_type, file=upload_file)
+    from AccessControl import Unauthorized
+    self.assertRaises(Unauthorized, document.asText)
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
