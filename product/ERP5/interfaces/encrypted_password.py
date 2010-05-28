@@ -44,13 +44,13 @@ class IEncryptedPassword(Interface):
 
   def setEncodedPassword(value, format='default'):
     """
-      Set an already encoded password.
+    Set an already encoded password.
     """
 
   def _forceSetPassword(value):
     """
     Because both _setPassword and setPassword are considered as
-    public method(They are callable from user directly or through edit method)
+    public method (they are callable from user directly or through edit method)
     _forceSetPassword is needed to reset password without security check by
     Password Tool. This method is not callable through edit method as it not
     begins with _set*
@@ -63,22 +63,22 @@ class IEncryptedPassword(Interface):
 
   def setPassword(value) :
     """
-      Set the password, only if the password is not empty and user has
-      SetOwnPassword permission
+    Set the password, only if the password is not empty and user has
+    SetOwnPassword permission
     """
 
   def getPassword(*args, **kw):
     """
-      Retrieve password in desired format.
+    Retrieve password in desired format.
 
-      getPassword([default], [format='default'])
+    getPassword([default], [format='default'])
 
-      default (anything)
-        Value to return if no password is set on context.
-        Default: None
-      format (string)
-        String defining the format in which the password is expected.
-        If passowrd is not available in that format, KeyError will be
-        raised.
-        Default: 'default'
+    default (anything)
+      Value to return if no password is set on context.
+      Default: None
+    format (string)
+      String defining the format in which the password is expected.
+      If passowrd is not available in that format, KeyError will be
+      raised.
+      Default: 'default'
     """
