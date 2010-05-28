@@ -57,6 +57,8 @@
   Use to contribute file to ERP5.\n
 """\n
 from Products.ERP5Type.Message import translateString\n
+from ZTUtils import make_query\n
+\n
 MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
 portal_contributions = portal.portal_contributions\n
@@ -66,7 +68,6 @@ if synchronous_metadata_discovery is None:\n
 \n
 if redirect_to_document is None:\n
   redirect_to_document = portal.portal_preferences.isPreferredRedirectToDocument(False)\n
-\n
 if user_login is None:\n
   # get current authenticated user\n
   user_login = str(portal.portal_membership.getAuthenticatedMember())\n
@@ -85,10 +86,18 @@ if follow_up_list:\n
 document_kw.update({\'discover_metadata\': not synchronous_metadata_discovery})\n
 if url is not None:\n
   # we contribute and URL, this happens entirely asynchronous\n
-  document = portal_contributions.newContentFromURL(url = url,\n
+  document = portal_contributions.newContentFromURL(url = url, \\\n
+                                                    repeat = max_repeat, \\\n
+                                                    batch_mode = batch_mode, \\\n
                                                     **document_kw)\n
+  if document is None:\n
+    # portal contributions could not upload it\n
+    if cancel_url is not None:\n
+      # we can assume we can redirect\n
+      redirect_url= \'%s?%s\' %(cancel_url, \n
+                            make_query(dict(portal_status_message=translateString("Wrong or not accessible URL address."))))\n
+      return context.REQUEST.RESPONSE.redirect(redirect_url)\n
   file_name=document.getId()\n
-  message = translateString("URL contributed successfully.")\n
 else:\n
   # contribute file\n
   file_name = getattr(file, \'filename\', None)\n
@@ -144,7 +153,6 @@ if redirect_to_document or redirect_url is not None:\n
                                   \'editable_mode\': editable_mode})\n
   elif redirect_url is not None:\n
     # redirect URL has been supplied by caller\n
-    from ZTUtils import make_query\n
     redirect_url= \'%s?%s\' %(redirect_url, \n
                             make_query(dict(portal_status_message=message)))\n
     return context.REQUEST.RESPONSE.redirect(redirect_url)\n
@@ -161,7 +169,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, editable_mode = 1, follow_up_list=None, user_login=None, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, cancel_url=None, batch_mode=False, max_repeat=0, editable_mode = 1, follow_up_list=None, user_login=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -181,7 +189,7 @@ return document\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>12</int> </value>
+                        <value> <int>15</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -196,12 +204,17 @@ return document\n
                             <string>attach_document_to_context</string>
                             <string>use_context_for_container</string>
                             <string>redirect_url</string>
+                            <string>cancel_url</string>
+                            <string>batch_mode</string>
+                            <string>max_repeat</string>
                             <string>editable_mode</string>
                             <string>follow_up_list</string>
                             <string>user_login</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
                             <string>None</string>
                             <string>MARKER</string>
                             <string>_getattr_</string>
@@ -214,8 +227,8 @@ return document\n
                             <string>_write_</string>
                             <string>_apply_</string>
                             <string>document</string>
+                            <string>dict</string>
                             <string>file_name</string>
-                            <string>message</string>
                             <string>getattr</string>
                             <string>is_existing_document_updated</string>
                             <string>merged_document</string>
@@ -228,9 +241,7 @@ return document\n
                             <string>$append0</string>
                             <string>x</string>
                             <string>document_portal_type</string>
-                            <string>dict</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
@@ -252,6 +263,9 @@ return document\n
                 <int>0</int>
                 <int>0</int>
                 <none/>
+                <none/>
+                <int>0</int>
+                <int>0</int>
                 <int>1</int>
                 <none/>
                 <none/>
