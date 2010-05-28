@@ -65,13 +65,7 @@ class DownloadableMixin:
     web_cache_kw['format'] = format
     _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
 
-    method = self._getTypeBasedMethod('checkConversionFormatPermission',
-                 fallback_script_id='Document_checkConversionFormatPermission')
-    if not method(format=format):
-      raise Unauthorized("OOoDocument: user does not have enough permission'\
-                         ' to access document in %s format" %\
-                                                        (format or 'original'))
-
+    self._checkConversionFormatPermission(format, **kw)
     mime, data = self.convert(format, **kw)
     if not format:
       # Guess the format from original mimetype
