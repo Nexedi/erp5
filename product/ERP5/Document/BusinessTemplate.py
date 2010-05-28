@@ -218,6 +218,13 @@ def registerSkinFolder(skin_tool, skin_folder):
   if isinstance(skin_selection_list, basestring):
     skin_selection_list = skin_selection_list.split()
 
+  def skin_sort_key(skin_folder_id):
+    obj = skin_tool._getOb(skin_folder_id, None)
+    if obj is None:
+      return 0, skin_folder_id
+    return -obj.getProperty('business_template_skin_layer_priority',
+      obj.meta_type == 'Filesystem Directory View' and -1 or 0), skin_folder_id
+
   for skin_name in skin_selection_list:
 
     if (skin_name not in skin_tool.getSkinSelections()) and \
@@ -231,12 +238,8 @@ def registerSkinFolder(skin_tool, skin_folder):
     if (skin_folder_id not in selection_list):
       selection_list.insert(0, skin_folder_id)
     if reorder_skin_selection:
-      # Sort by skin ID
-      selection_list.sort()
-      # Sort by skin priority
-      selection_list.sort(
-        key=lambda x: x in skin_tool.objectIds() and skin_tool[x].getProperty(
-        'business_template_skin_layer_priority', skin_tool[x].meta_type == 'Filesystem Directory View' and -1 or 0) or 0, reverse=True)
+      # Sort by skin priority and ID
+      selection_list.sort(key=skin_sort_key)
     if (skin_name in skin_layer_list):
       skin_tool.manage_skinLayers(skinpath=selection_list,
                                   skinname=skin_name, add_skin=1)
