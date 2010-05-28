@@ -94,4 +94,7 @@ class BaseConvertableFileMixin:
   def _setBaseData(self, data):
     """Wrap value into Pdata
     """
-
+    if not isinstance(data, Pdata) and data is not None:
+      file = StringIO(data)
+      data, size = self._read_data(file)
+    self._baseSetBaseData(data)
