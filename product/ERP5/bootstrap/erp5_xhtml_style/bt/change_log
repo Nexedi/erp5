@@ -1,3 +1,6 @@
+2010-05-28 yo
+* Make it possible to customize the behavior after a new content is added.
+
 2010-03-09
 * Display title in breadcrumb if getCompactTranslatedTitle does not exist.
 
