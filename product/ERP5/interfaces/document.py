@@ -191,7 +191,9 @@ class IDocument(Interface):
 
     format - the format specied in the form of an extension
     string (ex. jpeg, html, text, txt, etc.)
-    **kw can be various things - e.g. resolution
+    if format is None means that we do not want to change the format
+    and return the raw data or a resized image in same format.
+    **kw - can be various things - e.g. resolution
     """
 
   def isSupportBaseDataConversion():

@@ -275,7 +275,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     return links
 
   security.declareProtected('Access contents information', 'displayMap')
-  def displayMap(self, exclude=None, format='', quality=DEFAULT_QUALITY,
+  def displayMap(self, exclude=None, format=None, quality=DEFAULT_QUALITY,\
                                                               resolution=None):
     """Return list of displays with size info."""
     displays = []

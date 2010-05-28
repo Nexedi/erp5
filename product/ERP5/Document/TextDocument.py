@@ -142,9 +142,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       if not format:
         # can return document without conversion
         return src_mimetype, self.getTextContent()
-      # Return the raw content
-      if format == 'raw':
-        return 'text/plain', self.getTextContent()
       portal = self.getPortalObject()
       mime_type = getToolByName(portal, 'mimetypes_registry').\
                                             lookupExtension('name.%s' % format)
