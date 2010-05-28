@@ -63,7 +63,7 @@ person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 \n
 version = \'001\'\n
 language = portal.Localizer.get_selected_language()\n
-user_assignment_dict = portal.ERP5Site_getUserAssignmentDict()\n
+user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()\n
 if group_list in MARKER:\n
   group_list = user_assignment_dict[\'group_list\']\n
 if site_list in MARKER:\n
