@@ -224,7 +224,8 @@ class File(Document, CMFFile):
 
     return (mime_type, content)
 
-  def _convert(self, format, **kw):
+  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
+  def convert(self, format, **kw):
     """According content_type of data we can proceed some Conversions.
     The idea is to wrap data into TempDocument who support conversion
     then return conversion from this temporary document.
