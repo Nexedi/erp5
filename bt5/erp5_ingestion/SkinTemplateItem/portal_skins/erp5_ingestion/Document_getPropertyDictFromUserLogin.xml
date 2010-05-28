@@ -58,7 +58,8 @@ Gets document properties discovered from the user who contributes / owns the doc
 User would be usually the current user, but sometimes the name has to be given explicitly\n
 if e.g. the doc is contributed by email, and the script is run by zope user.\n
 """\n
-return {}\n
+assignment_dict = context.ERP5Site_getPersonAssignmentDict(user_name=user_name)\n
+return assignment_dict\n
 </string> </value>
         </item>
         <item>
@@ -96,6 +97,9 @@ return {}\n
                         <value>
                           <tuple>
                             <string>user_name</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>assignment_dict</string>
                           </tuple>
                         </value>
                     </item>

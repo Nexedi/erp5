@@ -67,7 +67,12 @@ if synchronous_metadata_discovery is None:\n
 if redirect_to_document is None:\n
   redirect_to_document = portal.portal_preferences.isPreferredRedirectToDocument(False)\n
 \n
+if user_login is None:\n
+  # get current authenticated user\n
+  user_login = str(portal.portal_membership.getAuthenticatedMember())\n
+  \n
 document_kw = {}\n
+document_kw[\'user_login\'] = user_login\n
 if use_context_for_container:\n
   document_kw[\'container_path\'] = context.getRelativeUrl()\n
 if portal_type not in MARKER:\n
@@ -99,7 +104,7 @@ if synchronous_metadata_discovery:\n
     document.processFile()\n
   merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(\n
                                file_name=file_name,\n
-                               user_login=str(portal.portal_membership.getAuthenticatedMember()))\n
+                               user_login=user_login)\n
   is_existing_document_updated = (merged_document!=document)\n
   document = merged_document\n
 # introspect document and find editable properties\n
@@ -156,7 +161,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, editable_mode = 1, follow_up_list=None, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, editable_mode = 1, follow_up_list=None, user_login=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -176,7 +181,7 @@ return document\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>11</int> </value>
+                        <value> <int>12</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -193,6 +198,7 @@ return document\n
                             <string>redirect_url</string>
                             <string>editable_mode</string>
                             <string>follow_up_list</string>
+                            <string>user_login</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
@@ -203,6 +209,7 @@ return document\n
                             <string>portal</string>
                             <string>portal_contributions</string>
                             <string>False</string>
+                            <string>str</string>
                             <string>document_kw</string>
                             <string>_write_</string>
                             <string>_apply_</string>
@@ -211,7 +218,6 @@ return document\n
                             <string>message</string>
                             <string>getattr</string>
                             <string>is_existing_document_updated</string>
-                            <string>str</string>
                             <string>merged_document</string>
                             <string>document_edit_kw</string>
                             <string>property_id_list</string>
@@ -247,6 +253,7 @@ return document\n
                 <int>0</int>
                 <none/>
                 <int>1</int>
+                <none/>
                 <none/>
               </tuple>
             </value>
