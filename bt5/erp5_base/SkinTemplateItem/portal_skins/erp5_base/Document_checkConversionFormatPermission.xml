@@ -100,7 +100,7 @@ return 1\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>format=None</string> </value>
+            <value> <string>format=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -127,6 +127,7 @@ return 1\n
                         <value>
                           <tuple>
                             <string>format</string>
+                            <string>kw</string>
                           </tuple>
                         </value>
                     </item>
