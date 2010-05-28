@@ -98,7 +98,8 @@ if synchronous_metadata_discovery:\n
   if document.isSupportBaseDataConversion():\n
     document.processFile()\n
   merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(\n
-                               file_name=file_name)\n
+                               file_name=file_name,\n
+                               user_login=str(portal.portal_membership.getAuthenticatedMember()))\n
   is_existing_document_updated = (merged_document!=document)\n
   document = merged_document\n
 # introspect document and find editable properties\n
@@ -210,6 +211,7 @@ return document\n
                             <string>message</string>
                             <string>getattr</string>
                             <string>is_existing_document_updated</string>
+                            <string>str</string>
                             <string>merged_document</string>
                             <string>document_edit_kw</string>
                             <string>property_id_list</string>
