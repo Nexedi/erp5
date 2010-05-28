@@ -275,23 +275,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       """
       return True
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
-    def convertToBaseFormat(self, **kw):
-      """
-      """
-      if not self.hasData():
-        # Empty document no need to convert into base format
-        return
-      try:
-        message = self._convertToBaseFormat() # Call implemetation method
-        if message is None:
-          message = self.Base_translateString('Converted to ${mime_type}.',
-                              mapping={'mime_type': self.getBaseContentType()})
-        self.convertFile(comment=message) # Invoke workflow method
-      except NotImplementedError:
-        message = ''
-      return message
-
     def _convertToBaseFormat(self):
       """Conversion to base format for TextDocument consist
       to convert file content into utf-8
