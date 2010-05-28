@@ -6498,8 +6498,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     url_list = [ 'https://svn.erp5.org/repos/public/erp5/trunk/bt5',
                  'http://www.erp5.org/dists/snapshot/bt5',
                  'http://www.erp5.org/dists/release/5.4.5/bt5', 
-                 'file:///opt/does/not/exist', 
-                 "INSTANCE_HOME_REPOSITORY"]
+                 "INSTANCE_HOME_REPOSITORY", 
+                 'file:///opt/does/not/exist']
     
     exist_bt5 = 'erp5_base'
     not_exist_bt5 = "erp5_not_exist"
@@ -6513,9 +6513,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                       'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
     self.assertEquals(getBusinessTemplateUrl(url_list[2:], exist_bt5),
                       'http://www.erp5.org/dists/release/5.4.5/bt5/erp5_base.bt5')
-    self.assertEquals(getBusinessTemplateUrl(url_list[3:], exist_bt5), None)
-    # XXX Remains test for INSTANCE_HOME_REPOSITORY and file:/// where erp5_base
-    # exists.
+    INSTANCE_HOME = getConfiguration().instancehome
+    local_bt = None
+    if os.path.exists(INSTANCE_HOME + "/bt5/erp5_base"):
+      local_bt = 'file://' + INSTANCE_HOME + "/bt5/erp5_base"
+    self.assertEquals(getBusinessTemplateUrl(url_list[3:], exist_bt5), local_bt)
+    self.assertEquals(getBusinessTemplateUrl(url_list[4:], exist_bt5), None)
 
     # Test Not exists
     self.assertEquals(getBusinessTemplateUrl(url_list, not_exist_bt5), None)
