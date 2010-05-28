@@ -40,6 +40,7 @@ from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, tarfile
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
+from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
 from cStringIO import StringIO
@@ -135,14 +136,27 @@ class TemplateTool (BaseTool):
       DeprecationWarning('getInstalledBusinessTemplatesList is deprecated; Use getInstalledBusinessTemplateList instead.', DeprecationWarning)
       return self.getInstalledBusinessTemplateList()
 
-    def getInstalledBusinessTemplateList(self):
+    def _getInstalledBusinessTemplateList(self, only_title=0):
       """Get the list of installed business templates.
       """
       installed_bts = []
       for bt in self.contentValues(portal_type='Business Template'):
         if bt.getInstallationState() == 'installed':
-          installed_bts.append(bt)
+          bt5 = bt
+          if only_title:
+            bt5 = bt.getTitle()
+          installed_bts.append(bt5)
       return installed_bts
+
+    def getInstalledBusinessTemplateList(self):
+      """Get the list of installed business templates.
+      """
+      return self._getInstalledBusinessTemplateList(only_title=0)
+
+    def getInstalledBusinessTemplateTitleList(self):
+      """Get the list of installed business templates.
+      """
+      return self._getInstalledBusinessTemplateList(only_title=1)
 
     def getInstalledBusinessTemplateRevision(self, title, **kw):
       """
@@ -1051,6 +1065,42 @@ class TemplateTool (BaseTool):
         else:
           opreation_log.append('Not found in repositories %s' % template_name)
       return opreation_log
+
+    security.declareProtected(Permissions.ManagePortal,
+            'updateBusinessTemplateFromUrl')
+    def updateBusinessTemplateFromUrl(self, download_url, id=None,
+                                         keep_original_list=[],
+                                         before_triggered_bt5_id_list=[],
+                                         after_triggered_bt5_id_list=[],
+                                         update_catalog=0):
+      """ 
+        This method download and install a bt5, from a URL.
+      """
+      imported_bt5 = self.download(url = download_url, id = id)
+      BusinessTemplate_getModifiedObject = \
+        aq_base(getattr(self, 'BusinessTemplate_getModifiedObject'))
+  
+      install_kw = {}
+      listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
+      for listbox_line in listbox_object_list:
+        # if a bt5 item is removed we may still want to keep it
+        if (listbox_line.object_state in ('Removed', 'Removed but used', 'Modified', 'New') and
+            listbox_line.object_id in keep_original_list):
+          install_kw[listbox_line.object_id] = 'nothing' #Keep original
+        else:
+          install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
+  
+      # Run before script list
+      for before_triggered_bt5_id in before_triggered_bt5_id_list:
+        getattr(imported_bt5, before_triggered_bt5_id)()
+  
+      imported_bt5.install(object_to_update=install_kw,
+                           update_catalog=update_catalog)
+  
+      # Run After script list
+      for after_triggered_bt5_id in after_triggered_bt5_id_list:
+        getattr(imported_bt5, after_triggered_bt5_id)()
+      LOG('ERP5', INFO, "Updated %s from %s" %(imported_bt5.getTitle(), download_url))
 
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')

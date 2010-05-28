@@ -5275,6 +5275,33 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(None, self.getPortal()\
         .portal_templates.getInstalledBusinessTemplate('erp5_core'))
 
+  def test_getInstalledBusinessTemplateList(self):
+    templates_tool = self.getPortal().portal_templates
+    bt5_list =  templates_tool.getInstalledBusinessTemplateList()
+    another_bt_list = [ i for i in templates_tool.contentValues() \
+                       if i.getInstallationState() == 'installed']
+    self.assertEquals(len(bt5_list), len(another_bt_list))
+    for bt in bt5_list:
+      self.failUnless(bt in another_bt_list)
+
+    self.assertEquals(bt5_list, 
+                      templates_tool._getInstalledBusinessTemplateList())
+
+  def test_getInstalledBusinessTemplateTitleList(self):
+    templates_tool = self.getPortal().portal_templates
+    bt5_list =  templates_tool.getInstalledBusinessTemplateTitleList()
+    another_bt_list = [ i.getTitle() for i in templates_tool.contentValues() \
+                       if i.getInstallationState() == 'installed']
+    bt5_list.sort()
+    another_bt_list.sort()
+    self.assertEquals(bt5_list, another_bt_list)
+    for bt in bt5_list:
+      self.failUnless(bt in another_bt_list)
+
+    new_list = templates_tool._getInstalledBusinessTemplateList(only_title=1)
+    new_list.sort()
+    self.assertEquals(bt5_list, new_list)
+
   def test_CompareVersions(self):
     """Tests compare version on template tool. """
     compareVersions = self.getPortal().portal_templates.compareVersions
@@ -5330,6 +5357,81 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(test_web.getPortalType(), 'Business Template')
     self.assertEquals(test_web.getTitle(), 'test_web')
     self.assertTrue(test_web.getRevision())
+
+  def test_updateBusinessTemplateFromUrl_simple(self):
+    """
+     Test updateBusinessTemplateFromUrl method
+    """
+    template_tool = self.portal.portal_templates
+    old_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
+    template_tool.updateBusinessTemplateFromUrl(url)
+    new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+
+    self.assertNotEquals(old_bt, new_bt)
+    self.assertEquals('erp5_csv_style', new_bt.getTitle())
+    old_bt = new_bt
+    template_tool.updateBusinessTemplateFromUrl(url, id="new_erp5_csv_style")
+    new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+    self.assertNotEquals(old_bt, new_bt)
+    self.assertEquals('erp5_csv_style', new_bt.getTitle())
+    self.assertEquals('new_erp5_csv_style', new_bt.getId())
+
+  def test_updateBusinessTemplateFromUrl_keep_list(self):
+    """
+     Test updateBusinessTemplateFromUrl method
+    """
+    template_tool = self.portal.portal_templates
+    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
+    # don't install test_file
+    keep_original_list = ( 'portal_skins/erp5_test/test_file', )
+    template_tool.updateBusinessTemplateFromUrl(url, 
+                                   keep_original_list=keep_original_list)
+    bt = template_tool.getInstalledBusinessTemplate('test_core')
+    self.assertNotEquals(None, bt)
+    erp5_test = getattr(self.portal.portal_skins, 'erp5_test', None)
+    self.assertNotEquals(None, erp5_test)
+    test_file = getattr(erp5_test, 'test_file', None)
+    self.assertEquals(None, test_file)
+
+  def test_updateBusinessTemplateFromUrl_after_before_script(self):
+    """
+     Test updateBusinessTemplateFromUrl method
+    """
+    from Products.ERP5Type.tests.utils import createZODBPythonScript
+    portal = self.getPortal()
+    
+    createZODBPythonScript(portal.portal_skins.custom,
+                                   'BT_dummyA',
+                                   'scripts_params=None',
+                                   '# Script body\n'
+                                   'return context.setDescription("MODIFIED")') 
+
+    createZODBPythonScript(portal.portal_skins.custom,
+                                   'BT_dummyB',
+                                   'scripts_params=None',
+                                   '# Script body\n'
+                                   'return context.setChangeLog("MODIFIED")')
+
+    createZODBPythonScript(portal.portal_skins.custom,
+                                   'BT_dummyC',
+                                   'scripts_params=None',
+                                   '# Script body\n'
+                                   'return context.getPortalObject().setTitle("MODIFIED")')
+
+    template_tool = self.portal.portal_templates
+    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_html_style'
+    # don't install test_file
+    before_triggered_bt5_id_list = ['BT_dummyA', 'BT_dummyB']
+    after_triggered_bt5_id_list = ['BT_dummyC']
+    template_tool.updateBusinessTemplateFromUrl(url,
+                                   before_triggered_bt5_id_list=before_triggered_bt5_id_list, 
+                                   after_triggered_bt5_id_list=after_triggered_bt5_id_list)
+    bt = template_tool.getInstalledBusinessTemplate('test_html_style')
+    self.assertNotEquals(None, bt)
+    self.assertEquals(bt.getDescription(), 'MODIFIED')
+    self.assertEquals(bt.getChangeLog(), 'MODIFIED')
+    self.assertEquals(portal.getTitle(), 'MODIFIED')
 
   def stepCreateCustomWorkflow(self, sequence=None, sequence_list=None, **kw):
     """
