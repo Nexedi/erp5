@@ -176,6 +176,7 @@ class File(Document, CMFFile):
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   def getData(self, default=None):
     """return Data as str."""
+    self._checkConversionFormatPermission(None)
     data = self._baseGetData()
     if data is None:
       return None
