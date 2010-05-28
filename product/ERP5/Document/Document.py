@@ -1165,39 +1165,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
       result['title'] = title_list[0]
     return result
 
-  # Base format support
-  security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
-  def convertToBaseFormat(self, **kw):
-    """
-      Converts the content of the document to a base format
-      which is later used for all conversions. This method
-      is common to all kinds of documents and handles
-      exceptions in a unified way.
-
-      Implementation is delegated to _convertToBaseFormat which
-      must be overloaded by subclasses of Document which
-      need a base format.
-
-      convertToBaseFormat is called upon file upload, document
-      ingestion by the processing_status_workflow.
-
-      NOTE: the data of the base format conversion should be stored
-      using the base_data property. Refer to Document.py propertysheet.
-      Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
-    """
-    if getattr(self, 'hasData', None) is not None and not self.hasData():
-      # Empty document cannot be converted
-      return
-    try:
-      message = self._convertToBaseFormat() # Call implemetation method
-      if message is None:
-        # XXX Need to translate.
-        message = 'Converted to %s.' % self.getBaseContentType()
-      self.convertFile(comment=message) # Invoke workflow method
-    except NotImplementedError:
-      message = ''
-    return message
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMetadataMappingDict')
   def getMetadataMappingDict(self):
