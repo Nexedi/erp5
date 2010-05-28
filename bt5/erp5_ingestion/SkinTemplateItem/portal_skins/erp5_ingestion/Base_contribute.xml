@@ -101,11 +101,11 @@ if url is not None:\n
 else:\n
   # contribute file\n
   file_name = getattr(file, \'filename\', None)\n
-  is_existing_document_updated = False\n
   document_kw.update({\'file\': file,\n
                       \'file_name\': file_name,})\n
   document = portal_contributions.newContent(**document_kw)\n
 \n
+is_existing_document_updated = False\n
 if synchronous_metadata_discovery:\n
   # we need to do all synchronously, in other case portal_contributions will do\n
   # this in an activity\n
