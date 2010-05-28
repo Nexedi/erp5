@@ -262,7 +262,6 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
     """
     return format in self.getTargetFormatList()
 
-  security.declarePrivate('_convert')
   def _convert(self, format):
     """
       Communicates with server to convert a file 
@@ -305,6 +304,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
     If a conversion is already stored for this format, it is returned
     directly, otherwise the conversion is stored for the next time.
     """
+    self._checkConversionFormatPermission(format, **kw)
     #XXX if document is empty, stop to try to convert.
     #XXX but I don't know what is a appropriate mime-type.(Yusei)
     if not self.hasData():

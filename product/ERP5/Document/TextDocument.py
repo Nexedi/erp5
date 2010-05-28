@@ -131,8 +131,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       return self._substituteTextContent(subject, safe_substitute=safe_substitute,
                                          **substitution_method_parameter_dict)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-    def convert(self, format, substitution_method_parameter_dict=None,
+    def _convert(self, format, substitution_method_parameter_dict=None,
                 safe_substitute=True, charset=None, text_content=None, **kw):
       """
         Convert text using portal_transforms or oood
@@ -239,6 +238,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
     def getBaseData(self, default=_MARKER):
       """
       """
+      self._checkConversionFormatPermission(None, **kw)
       if default is _MARKER:
         return self.getTextContent()
       else:

@@ -427,6 +427,7 @@ class EmailDocument(TextDocument):
     main content (text/plain).
     TODO: add support for legacy objects
     """
+    self._checkConversionFormatPermission(None)
     if not self.hasFile() or self._baseGetTextContent() is not None:
       # Return the standard text content if no file was provided
       # Or standard text content is not empty.

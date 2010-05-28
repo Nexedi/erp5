@@ -323,8 +323,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     return mime_type, result
 
   # Conversion API
-  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-  def convert(self, format, **kw):
+  def _convert(self, format, **kw):
     """
     Implementation of conversion for Image files
     """

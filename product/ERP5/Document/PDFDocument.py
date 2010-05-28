@@ -67,8 +67,7 @@ class PDFDocument(Image):
                     )
 
   # Conversion API
-  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-  def convert(self, format, **kw):
+  def _convert(self, format, **kw):
     """
     Implementation of conversion for PDF files
     """
@@ -89,7 +88,7 @@ class PDFDocument(Image):
         self.setConversion(data, mime=mime, format='txt')
         return (mime, data)
     else:
-      return Image.convert(self, format, **kw)
+      return Image._convert(self, format, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
   def populateContent(self):
