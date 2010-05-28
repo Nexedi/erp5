@@ -250,6 +250,10 @@ elif tests_framework_home.startswith('/usr/lib'):
     real_instance_home = '/var/lib/erp5'
   else:
     real_instance_home = '/var/lib/zope'
+elif os.environ.get('REAL_INSTANCE_HOME', None) is not None:
+  # The user Defined where is the REAL INSTANCE HOME
+  # So we should use it
+  real_instance_home = os.environ.get('REAL_INSTANCE_HOME')
 else:
   real_instance_home = os.path.sep.join(
       tests_framework_home.split(os.path.sep)[:-3])
