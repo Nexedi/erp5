@@ -626,6 +626,7 @@ class ContributionTool(BaseTool):
 
       NOTE: implementation needs to be done.
     """
+    document = None
     # First of all, make sure do not try to create an existing document
     if container_path is not None and id is not None:
       container = self.restrictedTraverse(container_path)
