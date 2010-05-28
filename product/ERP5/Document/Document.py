@@ -58,6 +58,7 @@ from subprocess import Popen, PIPE
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.downloadable import DownloadableMixin
+from Products.ERP5.mixin.document import DocumentMixin
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -318,7 +319,7 @@ class UpdateMixIn:
 
 class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
                SnapshotMixin, UpdateMixIn, TextConvertableMixin,
-               DownloadableMixin):
+               DownloadableMixin, DocumentMixin):
   """Document is an abstract class with all methods related to document
   management in ERP5. This includes searchable text, explicit relations,
   implicit relations, metadata, versions, languages, etc.
@@ -1057,25 +1058,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
     method = self._getTypeBasedMethod('finishIngestion', fallback_script_id='Document_finishIngestion')
     return method()
 
-  # Conversion methods
-  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-  def convert(self, format, **kw):
-    """
-      Main content conversion function, returns result which should
-      be returned and stored in cache.
-      format - the format specied in the form of an extension
-      string (ex. jpeg, html, text, txt, etc.)
-      **kw can be various things - e.g. resolution
-
-      Default implementation returns an empty string (html, text)
-      or raises an error.
-
-      TODO:
-      - implement guards API so that conversion to certain
-        formats require certain permission
-    """
-    raise NotImplementedError
-
   security.declareProtected(Permissions.View, 'asSubjectText')
   def asSubjectText(self, **kw):
     """
@@ -1215,13 +1197,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
     except NotImplementedError:
       message = ''
     return message
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isSupportBaseDataConversion')
-  def isSupportBaseDataConversion(self):
-    """
-    """
-    return False
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMetadataMappingDict')
