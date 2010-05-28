@@ -113,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:bool(cell.getForceUpdate())</string> </value>
+            <value> <string>python:bool(cell.getUpdateAlways())</string> </value>
         </item>
       </dictionary>
     </pickle>
