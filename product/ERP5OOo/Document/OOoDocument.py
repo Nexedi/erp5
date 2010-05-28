@@ -50,10 +50,8 @@ VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from zLOG import LOG, ERROR
 
 # Mixin Import
-from Products.ERP5.mixin.base_convertable import BaseConvertableMixin
+from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
-from Products.ERP5.mixin.base_convertable_and_file import\
-                                                    BaseConvertableAndFileMixin
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -89,8 +87,8 @@ class TimeoutTransport(SafeTransport):
     return SafeTransport.make_connection(self, h)
 
 
-class OOoDocument(PermanentURLMixIn, BaseConvertableAndFileMixin, File,
-                  BaseConvertableMixin, TextConvertableMixin, Document):
+class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
+                                               TextConvertableMixin, Document):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to

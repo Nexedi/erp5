@@ -45,8 +45,7 @@ import cStringIO
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
-from Products.ERP5.mixin.base_convertable import BaseConvertableMixin
-from Products.ERP5.mixin.base_convertable_and_file import BaseConvertableAndFileMixin
+from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 try:
   from string import Template
 except ImportError:
@@ -55,9 +54,8 @@ except ImportError:
 DEFAULT_CONTENT_TYPE = 'text/html'
 _MARKER = []
 
-class TextDocument(BaseConvertableAndFileMixin, CachedConvertableMixin,
-                   CachedConvertableMixin, BaseConvertableMixin, TextContent,
-                   File):
+class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
+                                                            TextContent, File):
     """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
     and ITextConvertable
     """

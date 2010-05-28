@@ -26,13 +26,23 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from Products.ERP5Type.Base import WorkflowMethod
+from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
+from OFS.Image import Pdata
+from cStringIO import StringIO
+_MARKER = []
 
-class BaseConvertableMixin:
+class BaseConvertableFileMixin:
   """
   This class provides a generic implementation of IBaseConvertable.
+  This Mixin combine BaseConvertable  and Files documents.
+    getBaseData is overrided to serialise Pdata into string
+    _setBaseData is overrided to wrapp data into Pdata
+
+  - updateBaseMetadata is not implemented in this mixin and must be
+  explicitely overrided if needed.
+
   """
 
   security = ClassSecurityInfo()
@@ -40,23 +50,28 @@ class BaseConvertableMixin:
   security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
   def convertToBaseFormat(self):
     """
+    1 - Check if convertable data is not empty.
+    2 - Call implementation of conversion to Base Format
+    3 - Call convertFile form processing_status_workflow
+        to inform user in case of failures by writing
+        error message in transition's comment.
     """
     if not self.hasData():
       # Empty document cannot be converted
       return
-    try:
-      message = self._convertToBaseFormat() # Call implemetation method
-      if message is None:
-        message = self.Base_translateString('Converted to ${mime_type}.',
-                              mapping={'mime_type': self.getBaseContentType()})
+    message = self._convertToBaseFormat() # Call implemetation method
+    if message is None:
+      message = self.Base_translateString('Converted to ${mime_type}.',
+                            mapping={'mime_type': self.getBaseContentType()})
+    # if processing_status_workflow is associated
+    workflow_tool = getToolByName(self.getPortalObject(), 'portal_workflow')
+    if workflow_tool.isTransitionPossible(self, 'convert_file'):
       self.convertFile(comment=message) # Invoke workflow method
-    except NotImplementedError:
-      message = ''
     return message
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
   def updateBaseMetadata(self, **kw):
-    """
+    """This Method must be defined explicitely.
     """
     raise NotImplementedError
 
@@ -67,3 +82,24 @@ class BaseConvertableMixin:
     to processing_status_workflow like TempObject.
     """
   convertFile = WorkflowMethod(convertFile)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                                 'getBaseData')
+  def getBaseData(self, default=_MARKER):
+    """Serialise Pdata into string
+    """
+    self._checkConversionFormatPermission(None)
+    if default is _MARKER:
+      base_data = self._baseGetBaseData()
+    else:
+      base_data = self._baseGetBaseData(default)
+    if base_data is None:
+      return None
+    else:
+      return str(base_data)
+
+  security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
+  def _setBaseData(self, data):
+    """Wrap value into Pdata
+    """
+
