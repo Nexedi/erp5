@@ -67,7 +67,7 @@
 <tr>\n
   <td>type</td>\n
   <td>field_your_url</td>\n
-  <td>http://www.erp5.org</td>\n
+  <td>${base_url}</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -101,11 +101,6 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>Community</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
   <td>ERP5</td>\n
   <td></td>\n
 </tr>\n
@@ -121,6 +116,7 @@
 </tr>\n
 \n
 <!-- Wait for activities to finish -->\n
+<!--\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/Zuite_waitForActivities</td>\n
@@ -131,38 +127,14 @@
   <td>Done.</td>\n
   <td></td>\n
 </tr> \n
+-->\n
+\n
+<!-- Test bad link -->\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>field_your_search_text</td>\n
-  <td>www.erp5.org</td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>//input[@name=\'ERP5Site_viewQuickSearchResultList:method\']</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>ERP5</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>FrontPage </td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyElementPresent</td>\n
-  <td>link=Front-page-ERP5.com-Test</td>\n
-  <td></td>\n
-</tr>\n
-<!-- Test bad link -->\n
-\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>link=New Link</td>\n
@@ -171,7 +143,7 @@
 <tr>\n
   <td>type</td>\n
   <td>field_your_url</td>\n
-  <td>http://www.erp5-nosuch.org-nosuch</td>\n
+  <td>${base_url}/nosuch_view</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
