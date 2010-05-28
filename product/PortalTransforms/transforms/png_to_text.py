@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 from Products.PortalTransforms.interfaces import itransform
 from Products.PortalTransforms.libtransforms.commandtransform \
     import popentransform
-
+from subprocess import Popen, PIPE
 import os
 import tempfile
 from zope.interface import implements
@@ -13,7 +14,7 @@ class png_to_text(popentransform):
     inputs   = ('image/png',)
     output  = 'text/plain'
     output_encoding = 'utf-8'
-    
+
     __version__ = '2008-10-07.01'
 
     binaryName = "ocrocmd"
@@ -24,29 +25,28 @@ class png_to_text(popentransform):
         # XXX Surcharge from commandtransform, as ocrocmd do not accept 
         # parameters but environnement variable.
         # Surcharging prevent to put the variable in the zope.conf file
-        command = "%s %s" % (self.binary, self.binaryArgs)
+        command = self.binary
+        environment = {'quiet': '1',
+                       'hocr': '0',
+                       'blockwise': '0'}
         if not self.useStdin:
             tmpfile, tmpname = tempfile.mkstemp(text=False) # create tmp
             os.write(tmpfile, data) # write data to tmp using a file descriptor
             os.close(tmpfile)       # close it so the other process can read it
-            command = command % { 'infile' : tmpname } # apply tmp name to command
+            popen = Popen([command, tmpname], env=environment, stdout=PIPE)
+            out = popen.communicate()[0]
 
-        cin, couterr = os.popen4('quiet=1 hocr=0 blockwise=0 %s' % command, 'b')
-
-        if self.useStdin:
-            cin.write(str(data))
-
-        status = cin.close()
-
-        out = self.getData(couterr)
-        couterr.close()
+        else:
+            popen = Popen([command, tmpname], env=environment, stdin=PIPE,
+                                                                   stdout=PIPE)
+            out = popen.communicate(str(data))[0]
 
         if not self.useStdin:
             # remove tmp file
             os.unlink(tmpname)
-                     
-        cache.setData(out)                                                                                                                             
-        return cache       
+
+        cache.setData(out)
+        return cache
 
 def register():
     return png_to_text()
