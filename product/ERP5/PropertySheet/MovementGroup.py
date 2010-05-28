@@ -32,8 +32,8 @@ class MovementGroup:
        'type'        : 'lines',
        'default'     : (),
        'mode'        : 'w' },
-    {  'id'          : 'force_update',
-       'description' : 'Update always if enabled',
+    {  'id'          : 'update_always',
+       'description' : 'Update existing document always if enabled',
        'type'        : 'boolean',
        'mode'        : 'w' },
     )

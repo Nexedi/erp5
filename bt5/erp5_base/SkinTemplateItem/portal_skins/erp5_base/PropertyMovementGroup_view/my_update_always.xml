@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_force_update</string> </value>
+            <value> <string>my_update_always</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -93,7 +93,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Force Update</string> </value>
+                    <value> <string>Update</string> </value>
                 </item>
               </dictionary>
             </value>

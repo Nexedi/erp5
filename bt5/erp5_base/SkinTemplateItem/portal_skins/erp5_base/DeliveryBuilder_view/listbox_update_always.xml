@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_force_update</string> </value>
+            <value> <string>listbox_update_always</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

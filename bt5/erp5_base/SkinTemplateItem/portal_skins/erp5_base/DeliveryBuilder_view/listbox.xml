@@ -116,8 +116,8 @@
                           <string>Tested Property</string>
                         </tuple>
                         <tuple>
-                          <string>force_update</string>
-                          <string>Force Update</string>
+                          <string>update_always</string>
+                          <string>Update</string>
                         </tuple>
                         <tuple>
                           <string>int_index</string>
