@@ -79,7 +79,7 @@
             <key> <string>text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:${object_url}/Document_jumpToRelatedDocumentList?relation_id=related_successor&listbox_title=Related documents
+string:${object_url}/Document_jumpToRelatedDocumentList?relation_id=related_successor&listbox_title=Related Documents
 
 ]]></string> </value>
         </item>
