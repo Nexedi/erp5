@@ -125,7 +125,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         error_message += '\nLast error message:' \
                          '\n%(type)s\n%(value)s\n%(tb_text)s' \
                          % error_log[-1]
-      raise self.fail(error_message)
+      self.fail(error_message)
 
   def tic(self, verbose=0):
     """Execute pending activities"""
