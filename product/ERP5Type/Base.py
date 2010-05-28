@@ -3041,6 +3041,20 @@ class Base( CopyContainer,
     #  LOG('Base.setBinaryData',0,'data for : %s' % str(self))
     #  self.data = data
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+          'getRedirectParameterDictAfterAdd')
+  def getRedirectParameterDictAfterAdd(self, container, **kw):
+    """Return a dict of parameters to specify where the user is redirected
+    to after a new object is added in the UI."""
+    method = self._getTypeBasedMethod('getRedirectParameterDictAfterAdd',
+                                      'Base_getRedirectParameterDictAfterAdd')
+    if method is not None:
+      return method(container, **kw)
+
+    # XXX this should not happen, unless the Business Template is broken.
+    return dict(redirect_url=context.absolute_url() + '/view',
+                selection_index=None, selection_name=None)
+
   # Hash method
   def __hash__(self):
     return hash(self.getUid())
