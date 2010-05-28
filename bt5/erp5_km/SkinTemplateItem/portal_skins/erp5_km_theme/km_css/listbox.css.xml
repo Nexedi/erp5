@@ -186,13 +186,25 @@ div.search_popup{\n
   float: left;\n
 }\n
 \n
+.list_mode_selection input{\n
+  width: auto;\n
+}\n
+\n
 /*Footer block*/\n
+.listbox_footer{\n
+ background-color:#F0EFE9;\n
+ float:left;\n
+ margin-bottom:0.3em;\n
+ margin-top:0.3em;\n
+ min-height:28px;\n
+ \n
+}\n
+\n
 .listbox_footer_box {\n
-  background-color:#F0EFE9;\n
-  margin-top:5px;\n
   padding-top:5px;\n
   padding-bottom:5px;\n
-  min-height:22px\n
+  width: 50%;\n
+  float:left;\n
 }\n
 \n
 /*Display selection choice*/\n
@@ -237,7 +249,8 @@ div.searchResultHeader{\n
 .listbox_pagination {\n
   width:auto;\n
   margin:auto;\n
-  text-align:center;\n
+  text-align:right;\n
+  padding-right: 0.5em;\n
 }\n
 .listbox_pagination input{\n
   text-align:center;\n
