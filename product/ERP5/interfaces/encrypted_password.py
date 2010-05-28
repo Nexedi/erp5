@@ -63,8 +63,8 @@ class IEncryptedPassword(Interface):
 
   def setPassword(value) :
     """
-    Set the password, only if the password is not empty and user has
-    SetOwnPassword permission
+    Set the password, only if the password is not empty and if
+    checkUserCanChangePassword don't raise any error
     """
 
   def getPassword(*args, **kw):
