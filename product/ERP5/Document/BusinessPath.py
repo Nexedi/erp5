@@ -89,6 +89,7 @@ class BusinessPath(Path, Predicate):
                     , PropertySheet.BusinessPath
                     , PropertySheet.FlowCapacity
                     , PropertySheet.Reference
+                    , PropertySheet.PaymentCondition # XXX-JPS must be renames some day
                     )
 
   # Declarative interfaces
@@ -382,9 +383,10 @@ class BusinessPath(Path, Predicate):
         'explanation_cache': explanation_cache,
       })
 
-  # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX GARBAGE FROM HERE
+  # XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX GARBAGE FROM HERE - all code will be removed
+  # _LEGACY_ prefix is used to make sure nobody will call methods
 
-  def getExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
+  def _LEGACY_getExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
       Returns the expected start date for this
       path based on the explanation.
@@ -399,7 +401,7 @@ class BusinessPath(Path, Predicate):
                                  predecessor_date=predecessor_date,
                                  *args, **kwargs)
 
-  def _getRootExplanationExpectedStartDate(self, explanation, *args, **kwargs):
+  def _LEGACY__getRootExplanationExpectedStartDate(self, explanation, *args, **kwargs):
     if self.getParentValue().isStartDateReferential():
       return explanation.getStartDate()
     else:
@@ -407,7 +409,7 @@ class BusinessPath(Path, Predicate):
       if expected_date is not None:
         return expected_date - self.getLeadTime()
 
-  def _getPredecessorExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
+  def _LEGACY__getPredecessorExpectedStartDate(self, explanation, predecessor_date=None, *args, **kwargs):
     if predecessor_date is None:
       node = self.getPredecessorValue()
       if node is not None:
@@ -416,7 +418,7 @@ class BusinessPath(Path, Predicate):
     if predecessor_date is not None:
       return predecessor_date + self.getWaitTime()
 
-  def _getSuccessorExpectedStartDate(self, explanation, *args, **kwargs):
+  def _LEGACY__getSuccessorExpectedStartDate(self, explanation, *args, **kwargs):
     node = self.getSuccessorValue()
     if node is not None:
       expected_date =  self.getParentValue().getExpectedStateBeginningDate(
@@ -424,7 +426,7 @@ class BusinessPath(Path, Predicate):
       if expected_date is not None:
         return expected_date - self.getLeadTime()
 
-  def getExpectedStopDate(self, explanation, predecessor_date=None, *args, **kwargs):
+  def _LEGACY_getExpectedStopDate(self, explanation, predecessor_date=None, *args, **kwargs):
     """
       Returns the expected stop date for this
       path based on the explanation.
@@ -439,7 +441,7 @@ class BusinessPath(Path, Predicate):
                                  predecessor_date=predecessor_date,
                                  *args, **kwargs)
 
-  def _getRootExplanationExpectedStopDate(self, explanation, *args, **kwargs):
+  def _LEGACY__getRootExplanationExpectedStopDate(self, explanation, *args, **kwargs):
     if self.getParentValue().isStopDateReferential():
       return explanation.getStopDate()
     else:
@@ -447,7 +449,7 @@ class BusinessPath(Path, Predicate):
       if expected_date is not None:
         return expected_date + self.getLeadTime()
 
-  def _getPredecessorExpectedStopDate(self, explanation, *args, **kwargs):
+  def _LEGACY__getPredecessorExpectedStopDate(self, explanation, *args, **kwargs):
     node = self.getPredecessorValue()
     if node is not None:
       expected_date = self.getParentValue().getExpectedStateCompletionDate(
@@ -455,13 +457,13 @@ class BusinessPath(Path, Predicate):
       if expected_date is not None:
         return expected_date + self.getWaitTime() + self.getLeadTime()
 
-  def _getSuccessorExpectedStopDate(self, explanation, *args, **kwargs):
+  def _LEGACY__getSuccessorExpectedStopDate(self, explanation, *args, **kwargs):
     node = self.getSuccessorValue()
     if node is not None:
       return self.getParentValue().getExpectedStateBeginningDate(
          explanation, node, *args, **kwargs)
 
-  def _getExpectedDate(self, explanation, root_explanation_method,
+  def _LEGACY__getExpectedDate(self, explanation, root_explanation_method,
                        predecessor_method, successor_method,
                        visited=None, *args, **kwargs):
     """
@@ -505,7 +507,7 @@ class BusinessPath(Path, Predicate):
 
 
 
-  def _recurseGetValueList(self, document, portal_type):
+  def _LEGACY__recurseGetValueList(self, document, portal_type):
     """Helper method to recurse documents as deep as possible and returns
        list of document values matching portal_type"""
     return_list = []
@@ -515,7 +517,7 @@ class BusinessPath(Path, Predicate):
       return_list.extend(self._recurseGetValueList(subdocument, portal_type))
     return return_list
 
-  def _isMovementRelatedWithMovement(self, movement_value_a, movement_value_b): # XXX-JPS not in API
+  def _LEGACY__isMovementRelatedWithMovement(self, movement_value_a, movement_value_b): # XXX-JPS not in API
     """Checks if self is parent or children to movement_value
 
     This logic is Business Process specific for Simulation Movements, as
@@ -532,7 +534,7 @@ class BusinessPath(Path, Predicate):
       return True
     return False
 
-  def _isDeliverySimulationMovementRelated(self, simulation_movement,
+  def _LEGACY__isDeliverySimulationMovementRelated(self, simulation_movement,
                                            delivery_simulation_movement_list):
     """Helper method, which checks if simulation_movement is BPM like related
        with delivery"""
@@ -543,9 +545,7 @@ class BusinessPath(Path, Predicate):
     return False
 
   # IBusinessPath implementation
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'getRelatedSimulationMovementValueList')
-  def _getRelatedSimulationMovementValueList(self, explanation): # XXX-JPS purpose ? NOT IN API
+  def _LEGACY__getRelatedSimulationMovementValueList(self, explanation): # XXX-JPS purpose ? NOT IN API
     """
       Returns recursively all Simulation Movements indirectly related to explanation and self
 

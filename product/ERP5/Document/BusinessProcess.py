@@ -37,15 +37,25 @@ from Products.ERP5.ExplanationCache import _getExplanationCache, _getBusinessPat
 import zope.interface
 
 class BusinessProcess(Path, XMLObject):
-  """
-    The BusinessProcess class is a container class which is used
-    to describe business processes in the area of trade, payroll
-    and production.
+  """The BusinessProcess class is a container class which is used
+  to describe business processes in the area of trade, payroll
+  and production. Processes consists of a collection of Business Path
+  which define an arrow between a 'predecessor' trade_state and a 
+  'successor' trade_state, for a given trade_phase_list.
 
-    TODO:
-      - finish interface implementation
-    RENAME:
-      getPathValueList -> getBusinessPathValueList
+  TODO:
+  - add support to prevent infinite loop. (but beware, this notion has changed
+    with Union of Business Process, since the loop should be detected only
+    as part of a given business process closure)
+  - handle all properties of PaymentCondition in date calculation
+  - review getRemainingTradePhaseList
+  - optimize performance so that the completion dates are calculated
+    only once in a transaction thanks to caching (which could be 
+    handled in coordination with ExplanationCache infinite loop
+    detection)
+
+  RENAMED:
+    getPathValueList -> getBusinessPathValueList
   """
   meta_type = 'ERP5 Business Process'
   portal_type = 'Business Process'
@@ -150,7 +160,7 @@ class BusinessProcess(Path, XMLObject):
     # path wich are directly related to the current business path but DO NOT 
     # narrow down the explanation else we might narrow down so much that
     # it becomes an empty set
-    closure_process = _getBusinessPathClosure(explanation, business_path)
+    closure_process = _getBusinessPathClosure(self, explanation, business_path)
     return closure_process.isTradeStateCompleted(explanation, predecessor_state)
 
   def isBusinessPathPartiallyCompleted(self, explanation, business_path):
@@ -186,7 +196,7 @@ class BusinessProcess(Path, XMLObject):
     return closure_process.isTradeStatePartiallyCompleted(explanation, 
                                                            predecessor_state)
 
-  def getExpectedBusinessPathCompletionDate(explanation, business_path, 
+  def getExpectedBusinessPathCompletionDate(self, explanation, business_path, 
                                                        delay_mode=None):
     """Returns the expected completion date of given Business Path document
     in the context of provided explanation.
@@ -199,18 +209,32 @@ class BusinessProcess(Path, XMLObject):
     delay_mode -- optional value to specify calculation mode ('min', 'max')
                   if no value specified use average delay
     """
-    closure_process = _getBusinessPathClosure(explanation, business_path)
+    closure_process = _getBusinessPathClosure(self, explanation, business_path)
     # XXX use explanatoin cache to optimize
     predecessor = business_path.getPredecessor()
     if closure_process.isTradeStateRootState(predecessor):
       return business_path.getCompletionDate(explanation)
 
+    # Recursively find reference_date
     reference_date = closure_process.getExpectedTradeStateCompletionDate(explanation, predecessor)
-
-    return reference_date + wait_time + lead_time
+    start_date = reference_date + business_path.getPaymentTerm() # XXX-JPS Until better naming
+    if delay_mode == 'min':
+      delay = business_path.getMinDelay()
+    elif delay_mode == 'max':
+      delay = business_path.getMaxDelay()
+    else:
+      delay = (business_path.getMaxDelay() + business_path.getMinDelay()) / 2.0
+    stop_date = start_date + delay
     
+    completion_date_method_id = business_path.getCompletionDateMethodId()
+    if completion_date_method_id == 'getStartDate':
+      return start_date
+    elif completion_date_method_id == 'getStopDate':
+      return stop_date
+    
+    raise ValueError("Business Path does not support %s complete date method" % completion_date_method_id)    
 
-  def getExpectedBusinessPathStartAndStopDate(explanation, business_path,
+  def getExpectedBusinessPathStartAndStopDate(self, explanation, business_path,
                                                          delay_mode=None):
     """Returns the expected start and stop dates of given Business Path
     document in the context of provided explanation.
@@ -223,7 +247,7 @@ class BusinessProcess(Path, XMLObject):
     delay_mode -- optional value to specify calculation mode ('min', 'max')
                   if no value specified use average delay
     """
-    closure_process = _getBusinessPathClosure(explanation, business_path)
+    closure_process = _getBusinessPathClosure(self, explanation, business_path)
     # XXX use explanatoin cache to optimize
     trade_date = self.getTradeDate()
     if trade_date is not None:
@@ -232,9 +256,17 @@ class BusinessProcess(Path, XMLObject):
       predecessor = business_path.getPredecessor() # XXX-JPS they should all have
       reference_date = closure_process.getExpectedTradeStateCompletionDate(explanation, predecessor)
 
-    start_date = reference_date + wait_time
-    stop_date = start_date + lead_time # XXX-JPS use appropriate values
-    
+    # Recursively find reference_date
+    reference_date = closure_process.getExpectedTradeStateCompletionDate(explanation, predecessor)
+    start_date = reference_date + business_path.getPaymentTerm() # XXX-JPS Until better naming
+    if delay_mode == 'min':
+      delay = business_path.getMinDelay()
+    elif delay_mode == 'max':
+      delay = business_path.getMaxDelay()
+    else:
+      delay = (business_path.getMaxDelay() + business_path.getMinDelay()) / 2.0
+    stop_date = start_date + delay
+        
     return start_date, stop_date
 
   # IBuildableBusinessPathProcess implementation
@@ -279,7 +311,7 @@ class BusinessProcess(Path, XMLObject):
     if business_path.isDelivered(explanation):
       return False
     # We must take the closure cause only way to combine business process
-    closure_process = _getBusinessPathClosure(explanation, business_path)
+    closure_process = _getBusinessPathClosure(self, explanation, business_path)
     predecessor = business_path.getPredecessor()
     return closure_process.isTradeStateCompleted(predecessor)
 
@@ -296,12 +328,12 @@ class BusinessProcess(Path, XMLObject):
     if business_path.isDelivered(explanation):
       return False
     # We must take the closure cause only way to combine business process
-    closure_process = _getBusinessPathClosure(explanation, business_path)
+    closure_process = _getBusinessPathClosure(self, explanation, business_path)
     predecessor = business_path.getPredecessor()
     return closure_process.isTradeStatePartiallyCompleted(predecessor)
 
   # ITradeStateProcess implementation
-  def getTradeStateList():
+  def getTradeStateList(self):
     """Returns list of all trade_state of this Business Process
     by looking at successor and predecessor values of contained
     Business Path.
@@ -315,7 +347,7 @@ class BusinessProcess(Path, XMLObject):
       result.add(business_path.getSuccessor())
     return result
 
-  def getSuccessorTradeStateList(explanation, trade_state):
+  def getSuccessorTradeStateList(self, explanation, trade_state):
     """Returns the list of successor states in the 
     context of given explanation. This list is built by looking
     at all successor of business path involved in given explanation
@@ -332,7 +364,7 @@ class BusinessProcess(Path, XMLObject):
         result.add(business_path.getSuccessor())
     return result
 
-  def getPredecessorTradeStateList(explanation, trade_state):
+  def getPredecessorTradeStateList(self, explanation, trade_state):
     """Returns the list of predecessor states in the 
     context of given explanation. This list is built by looking
     at all predecessor of business path involved in given explanation
@@ -349,7 +381,7 @@ class BusinessProcess(Path, XMLObject):
         result.add(business_path.getPredecessor())
     return result
 
-  def getCompletedTradeStateList(explanation):
+  def getCompletedTradeStateList(self, explanation):
     """Returns the list of Trade States which are completed
     in the context of given explanation.
 
@@ -358,7 +390,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return filter(lambda x:self.isTradeStateCompleted(explanation, x), self.getTradeStateList())
 
-  def getPartiallyCompletedTradeStateList(explanation):
+  def getPartiallyCompletedTradeStateList(self, explanation):
     """Returns the list of Trade States which are partially 
     completed in the context of given explanation.
 
@@ -367,7 +399,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return filter(lambda x:self.isTradeStatePartiallyCompleted(explanation, x), self.getTradeStateList())
 
-  def getLatestCompletedTradeStateList(explanation):
+  def getLatestCompletedTradeStateList(self, explanation):
     """Returns the list of completed trade states which predecessor
     states are completed and for which no successor state 
     is completed in the context of given explanation.
@@ -382,7 +414,7 @@ class BusinessProcess(Path, XMLObject):
           result.add(state)
     return result
 
-  def getLatestPartiallyCompletedTradeStateList(explanation):
+  def getLatestPartiallyCompletedTradeStateList(self, explanation):
     """Returns the list of completed trade states which predecessor
     states are completed and for which no successor state 
     is partially completed in the context of given explanation.
@@ -397,7 +429,7 @@ class BusinessProcess(Path, XMLObject):
           result.add(state)
     return result
 
-  def isTradeStateCompleted(explanation, trade_state):
+  def isTradeStateCompleted(self, explanation, trade_state):
     """Returns True if all predecessor trade states are
     completed and if no successor trade state is completed
     in the context of given explanation.
@@ -412,7 +444,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True      
 
-  def isTradeStatePartiallyCompleted(explanation, trade_state):
+  def isTradeStatePartiallyCompleted(self, explanation, trade_state):
     """Returns True if all predecessor trade states are
     completed and if no successor trade state is partially completed
     in the context of given explanation.
@@ -427,7 +459,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True      
 
-  def getExpectedTradeStateCompletionDate(explanation, trade_state,
+  def getExpectedTradeStateCompletionDate(self, explanation, trade_state,
                                                          delay_mode=None):
     """Returns the date at which the give trade state is expected
     to be completed in the context of given explanation.
@@ -446,7 +478,7 @@ class BusinessProcess(Path, XMLObject):
     return max(date_list) # XXX-JPS provide -infinite for...
 
   # ITradePhaseProcess implementation
-  def getTradePhaseList():
+  def getTradePhaseList(self):
     """Returns list of all trade_phase of this Business Process
     by looking at trade_phase values of contained Business Path.
     """
@@ -455,7 +487,7 @@ class BusinessProcess(Path, XMLObject):
       result.union(business_path.getTradePhaseList())
     return result
 
-  def getCompletedTradePhaseList(explanation):
+  def getCompletedTradePhaseList(self, explanation):
     """Returns the list of Trade Phases which are completed
     in the context of given explanation.
 
@@ -464,7 +496,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return filter(lambda x:self.isTradePhaseCompleted(explanation, x), self.getTradePhaseList())
     
-  def getPartiallyCompletedTradePhaseList(explanation):
+  def getPartiallyCompletedTradePhaseList(self, explanation):
     """Returns the list of Trade Phases which are partially completed
     in the context of given explanation. 
 
@@ -473,7 +505,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return filter(lambda x:self.isTradePhasePartiallyCompleted(explanation, x), self.getTradePhaseList())
 
-  def isTradePhaseCompleted(explanation, trade_phase):
+  def isTradePhaseCompleted(self, explanation, trade_phase):
     """Returns True all business path with given trade_phase
     applicable to given explanation are completed.
 
@@ -487,7 +519,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  def isTradePhasePartiallyCompleted(explanation, trade_phase):
+  def isTradePhasePartiallyCompleted(self, explanation, trade_phase):
     """Returns True at least one business path with given trade_phase
     applicable to given explanation is partially completed
     or completed.
@@ -502,7 +534,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  def getExpectedTradePhaseCompletionDate(explanation, trade_phase,
+  def getExpectedTradePhaseCompletionDate(self, explanation, trade_phase,
                                                        delay_mode=None):
     """Returns the date at which the give trade phase is expected
     to be completed in the context of given explanation, taking
@@ -522,7 +554,7 @@ class BusinessProcess(Path, XMLObject):
       date_list.append(self.getExpectedTradePhaseCompletionDate(explanation, business_path, delay_mode=delay_mode))
     return max(date_list)
 
-  def getRemainingTradePhaseList(business_path, trade_phase_list=None):
+  def getRemainingTradePhaseList(self, business_path, trade_phase_list=None):
     """Returns the list of remaining trade phases which to be achieved
     as part of a business process. This list is calculated by analysing 
     the graph of business path and trade states, starting from a given
@@ -535,6 +567,8 @@ class BusinessProcess(Path, XMLObject):
     trade_phase_list -- if provided, the result is filtered by it after
                         being collected - ???? useful ? XXX-JPS ?
 
+    NOTE: this code has not been reviewed and needs review
+
     NOTE: explanation is not involved here because we consider here that
     self is the result of asUnionBusinessProcess and thus only contains
     applicable Business Path to a given simulation subtree. Since the list
@@ -542,9 +576,6 @@ class BusinessProcess(Path, XMLObject):
     simulation, we did not include the explanation. However, this makes the
     API less uniform.
     """
-
-    # XXXX REVIEWJPS
-
     remaining_trade_phase_list = []
     for path in [x for x in self.objectValues(portal_type="Business Path") \
         if x.getPredecessorValue() == trade_state]:
@@ -569,7 +600,7 @@ class BusinessProcess(Path, XMLObject):
     return remaining_trade_phase_list
 
   # IBusinessProcess global API
-  def isCompleted(explanation):
+  def isCompleted(self, explanation):
     """Returns True is all applicable Trade States and Trade Phases
     are completed in the context of given explanation.
 
@@ -581,15 +612,24 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  def getExpectedCompletionDate(explanation, delay_mode=None):
+  def getExpectedCompletionDate(self, explanation, delay_mode=None):
     """Returns the expected date at which all applicable Trade States and
     Trade Phases are completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line which
                    implicitely defines a simulation subtree
     """
+    date_list = []
+    # This implementation looks completely silly in the sense that it does
+    # not try to find a "final" state. However, it has the advantage to support
+    # negative delays in business path and propper optimization of ExplanationCache
+    # and completion methods should actually prevent calculating the same
+    # thing multiple times
+    for trade_state in self.getTradeStateList():
+      date_list.append(self.getExpectedTradeStateCompletionDate(explanation, delay_mode=delay_mode))
+    return max(date_list)
   
-  def isBuildable(explanation):
+  def isBuildable(self, explanation):
     """Returns True is one Business Path of this Business Process
     is buildable in the context of given explanation.
 
@@ -598,7 +638,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return len(self.getBuildableBusinessPathValueList(explanation)) != 0
 
-  def isPartiallyBuildable(explanation):
+  def isPartiallyBuildable(self, explanation):
     """Returns True is one Business Path of this Business Process
     is partially buildable in the context of given explanation.
 
@@ -615,9 +655,10 @@ class BusinessProcess(Path, XMLObject):
       business_path.build(explanation)
 
 
-  # GARBAGE - XXXXXXXXXXXXXXXXXXXXXXX
+  # GARBAGE - XXXXXXXXXXXXXXXXXXXXXXX - all code after here must be removed 
+  # renamed with _LEGACY_ prefix to be sure that this code is not called by any method
 
-  def getExpectedStateBeginningDate(self, explanation, trade_state, *args, **kwargs):
+  def _LEGACY_getExpectedStateBeginningDate(self, explanation, trade_state, *args, **kwargs):
     """
       Returns the expected beginning date for this
       state based on the explanation.
@@ -639,12 +680,12 @@ class BusinessProcess(Path, XMLObject):
     if len(date_list) > 0:
       return min(date_list)
 
-  def _getExpectedBeginningDate(self, path, *args, **kwargs):
+  def _LEGACY_getExpectedBeginningDate(self, path, *args, **kwargs):
     expected_date = path.getExpectedStartDate(*args, **kwargs)
     if expected_date is not None:
       return expected_date - path.getWaitTime()
 
-  def _getExpectedDateList(self, explanation, path_list, path_method,
+  def _LEGACY__getExpectedDateList(self, explanation, path_list, path_method,
                            visited=None, *args, **kwargs):
     """
       getExpected(Beginning/Completion)Date are same structure
@@ -668,7 +709,7 @@ class BusinessProcess(Path, XMLObject):
 
     return expected_date_list
 
-  def getRootExplanationPathValue(self): # XXX-JPS not in API
+  def _LEGACY_getRootExplanationPathValue(self): # XXX-JPS not in API
     """
       Returns a root path of this business process
     """
@@ -681,7 +722,7 @@ class BusinessProcess(Path, XMLObject):
     if len(path_list) == 1:
       return path_list[0]
 
-  def getHeadPathValueList(self, trade_phase_list=None): # XXX-JPS not in API
+  def _LEGACY_getHeadPathValueList(self, trade_phase_list=None): # XXX-JPS not in API
     """
       Returns a list of head path(s) of this business process
 
@@ -703,7 +744,7 @@ class BusinessProcess(Path, XMLObject):
 
     return head_path_list
 
-  def _getHeadPathValueList(self, path, trade_phase_set):
+  def _LEGACY__getHeadPathValueList(self, path, trade_phase_set):
     # if the path has target trade_phase, it is a head path.
     _set = set(path.getTradePhaseList())
     if _set & trade_phase_set:
@@ -718,12 +759,12 @@ class BusinessProcess(Path, XMLObject):
       _list += self._getHeadPathValueList(next_path, trade_phase_set)
     return _list
 
-  def _getExpectedCompletionDate(self, path, *args, **kwargs):
+  def _LEGACY__getExpectedCompletionDate(self, path, *args, **kwargs):
     return path.getExpectedStopDate(*args, **kwargs)
 
 
   # From Business Path
-  def _getExplanationUidList(self, explanation):
+  def _LEGACY__getExplanationUidList(self, explanation):
     """
     Helper method to fetch really explanation related movements 
     """ # XXX-JPS this seems to be doing too much - why do you need many "explanations"
@@ -739,4 +780,3 @@ class BusinessProcess(Path, XMLObject):
       explanation_uid_list.extend(self._getExplanationUidList(
         found_explanation))
     return explanation_uid_list
-
