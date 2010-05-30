@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Łukasz Nowak <luke@nexedi.com>
+#                    Lukasz Nowak <luke@nexedi.com>
 #                    Yusuke Muraoka <yusuke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -45,15 +45,15 @@ class BusinessPath:
             'description' : 'ID of method to get destination list of categories',
             'type'        : 'string',
             'mode'        : 'w' },
-        {   'id'          : 'lead_time',
-            'description' : 'How much time shall be spent on path',
-            'default'     : 0.0,
-            'type'        : 'float',
-            'mode'        : 'w' },
         {   'id'          : 'wait_time',
             'description' : 'How much time to wait before initiating path',
             'default'     : 0.0,
             'type'        : 'float',
+            'mode'        : 'w' },
+        {   'id'          : 'completion_date_method_id',
+            'description' : 'ID of method to get source list of categories',
+            'type'        : 'string',
+            'default'     : 'getStartDate',
             'mode'        : 'w' },
         {   'id'          : 'completed_state',
             'description' : 'List of states for which related Simulation '
@@ -69,6 +69,12 @@ class BusinessPath:
             'default'     : [],
             'multivalued' : 1,
             'mode'        : 'w' },
+        # Legacy
+        {   'id'          : 'lead_time', # XXX-JPS use FlowCapacity instead (min_delay)
+            'description' : 'How much time shall be spent on path',
+            'default'     : 0.0,
+            'type'        : 'float',
+            'mode'        : 'w' },
     )
-    _categories = ( 'delivery_builder', 'order_builder', 'end_of',
-        'trade_phase' , 'incoterm')
+    _categories = ('delivery_builder', 'order_builder', 'end_of',
+                   'trade_phase' , 'incoterm')
