@@ -37,6 +37,11 @@ class IBusinessPathProcess(Interface):
 
   IBusinessPathProcess defines Business Process APIs related
   to Business Path completion status and expected completion dates.
+
+  TODO:
+  - find a way in getTradePhaseMovementList to narrow down
+    parameters to be copied (this used to be done through rule 
+    parameter in provivate method)
   """
 
   def getBusinessPathValueList(trade_phase=None, context=None,
@@ -180,6 +185,20 @@ class ITradeStateProcess(Interface):
 
     explanation -- an Order, Order Line, Delivery or Delivery Line which
                    implicitely defines a simulation subtree
+    """
+
+  def isInitialTradeState(trade_state):
+    """Returns True if given 'trade_state' has no successor related
+    Business Path.
+
+    trade_state -- a Trade State category
+    """
+
+  def isFinalTradeState(trade_state):
+    """Returns True if given 'trade_state' has no predecessor related
+    Business Path.
+
+    trade_state -- a Trade State category
     """
 
   def getSuccessorTradeStateList(explanation, trade_state):
@@ -368,6 +387,23 @@ class ITradePhaseProcess(Interface):
     of remaining trade phases does not depend on exact values in the
     simulation, we did not include the explanation. However, this makes the
     API less uniform.
+    """
+
+  def getTradePhaseMovementList(explanation, amount, trade_phase=None, delay_mode=None):
+    """Returns a list of movement with appropriate arrow and dates,
+    based on the Business Path definitions, provided 'amount' and optional
+    trade phases. If no trade_phase is provided, the trade_phase defined
+    on the Amount is used instead.
+    
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    amount -- Amount (quantity, resource)
+
+    trade_phase -- optional Trade Phase category
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
     """
 
 class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,

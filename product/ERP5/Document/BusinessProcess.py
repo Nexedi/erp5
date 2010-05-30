@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.ExplanationCache import _getExplanationCache, _getBusinessPathClosure
+from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 import zope.interface
 
@@ -53,6 +54,11 @@ class BusinessProcess(Path, XMLObject):
     only once in a transaction thanks to caching (which could be 
     handled in coordination with ExplanationCache infinite loop
     detection)
+  - fine a better way to narrow down paremeters to copy without
+    using a rule parameter
+  - should _getPropertyAndCategoryList remain a private method or
+    become part of IMovement ?
+  - add security declarations
 
   RENAMED:
     getPathValueList -> getBusinessPathValueList
@@ -212,7 +218,7 @@ class BusinessProcess(Path, XMLObject):
     closure_process = _getBusinessPathClosure(self, explanation, business_path)
     # XXX use explanatoin cache to optimize
     predecessor = business_path.getPredecessor()
-    if closure_process.isTradeStateRootState(predecessor):
+    if closure_process.isInitialTradeState(predecessor):
       return business_path.getCompletionDate(explanation)
 
     # Recursively find reference_date
@@ -346,6 +352,22 @@ class BusinessProcess(Path, XMLObject):
       result.add(business_path.getPredecessor())
       result.add(business_path.getSuccessor())
     return result
+
+  def isInitialTradeState(self, trade_state):
+    """Returns True if given 'trade_state' has no successor related
+    Business Path.
+
+    trade_state -- a Trade State category
+    """
+    return len(self.getBusinessPathValueList(successor=trade_state)) == 0
+
+  def isFinalTradeState(self, trade_state):
+    """Returns True if given 'trade_state' has no predecessor related
+    Business Path.
+
+    trade_state -- a Trade State category
+    """
+    return len(self.getBusinessPathValueList(predecessor=trade_state)) == 0
 
   def getSuccessorTradeStateList(self, explanation, trade_state):
     """Returns the list of successor states in the 
@@ -598,6 +620,116 @@ class BusinessProcess(Path, XMLObject):
         remaining_trade_phase_list)
 
     return remaining_trade_phase_list
+
+  def getTradePhaseMovementList(self, explanation, amount, trade_phase=None, delay_mode=None):
+    """Returns a list of movement with appropriate arrow and dates,
+    based on the Business Path definitions, provided 'amount' and optional
+    trade phases. If no trade_phase is provided, the trade_phase defined
+    on the Amount is used instead.
+    
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    amount -- IAmount (quantity, resource) or IMovement
+
+    trade_phase -- optional Trade Phase category
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
+    """
+    if trade_phase is None:
+      trade_phase = amount.getTradePhase()
+
+    if trade_phase is None: raise ValueError("A trade_phase must be defined on the Amount or provided to getTradePhaseMovementList")
+
+    # Build a list of temp movements
+    from Products.ERP5Type.Document import newTempMovement
+    result = []
+    id_index = 0
+    base_id = amount.getId()
+    for business_path in self.getBusinessPathValueList(context=amount, trade_phase=trade_phase):
+      id_index += 1
+      movement = newTempMovement(self, '%s_%s' % (base_id, id_index))
+      movement._edit(self._getPropertyAndCategoryDict(explanation, amount, business_path, delay_mode=delay_mode))
+      result.append(movement)
+
+    # result can not be empty
+    if not result: raise ValueError("A Business Process can not erase amounts")
+
+    # Sort movement list and make sure the total is equal to total_quantity
+    total_quantity = amount.getQuantity()
+    current_quantity = 0
+    result.sort(key=lambda x:x.getStartDate())
+    stripped_result = []
+    for movement in result:
+      stripped_result.append(movement)
+      quantity = movement.getQuantity()
+      current_quantity += quantity
+      if current_quantity > total_quantity: 
+        # As soon as the current_quantity is greater than total_quantity
+        # strip the result
+        break
+
+    # Make sure total_quantity is reached by changing last movement valye
+    if current_quantity != total_quantity:
+      movement._setQuantity(quantity + total_quantity - current_quantity)
+
+    return stripped_result
+
+  def _getPropertyAndCategoryDict(self, explanation, amount, business_path, delay_mode=None, rule=None):
+    """A private method to  erge an amount and a business_path and return
+    a dict of properties and categories whch can be used to create a
+    new movement.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree
+
+    amount -- an IAmount instance or an IMovement instance
+ 
+    business_path -- an IBusinessPath instance
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
+
+    rule -- optional rule parameter which can be used to 
+            narrow down properties to be copied
+    """
+    LOG('_getPropertyAndCategoryList', 0, repr(_getPropertyAndCategoryList(movement)))
+    if rule is None:
+      property_dict = _getPropertyAndCategoryList(movement)
+    else:
+      property_dict = {}
+      for tester in rule._getUpdatingTesterList(exclude_quantity=False):
+        property_dict.update(tester.getUpdatablePropertyDict(
+          movement, None))
+
+    # Arrow categories
+    LOG('getArrowCategoryDict', 0, repr(business_path.getArrowCategoryDict(context=movement)))
+    for base_category, category_url_list in \
+            business_path.getArrowCategoryDict(context=movement).iteritems():
+      property_dict[base_category] = category_url_list
+
+    # Amount quantities - XXX-JPS maybe we should consider handling unit conversions here
+    # and specifying units
+    if business_path.getQuantity():
+      property_dict['quantity'] = business_path.getQuantity()
+    elif business_path.getEfficiency():
+      property_dict['quantity'] = movement.getQuantity() *\
+        business_path.getEfficiency()
+    else:
+      property_dict['quantity'] = movement.getQuantity()
+
+    # Dates
+    start_date, stop_date = self.getExpectedBusinessPathStartAndStopDate(
+                        explanation, business_path, delay_mode=delay_mode)
+    property_dict['start_date'] = start_date
+    property_dict['stop_date'] = stop_date
+
+    # Set causality to business path
+    LOG('causality', 0, repr(business_path.getRelativeUrl()))
+    property_dict['causality'] = business_path.getRelativeUrl() # XXX-JPS Will not work if we do not use real object
+
+    return property_dict 
 
   # IBusinessProcess global API
   def isCompleted(self, explanation):
