@@ -60,12 +60,14 @@ class IBusinessPath(Interface):
     """
   
   def getCompletionDate(explanation):
-    """Returns the date of completion of the movemnet 
-    based on paremeters of the business path. This completion date can be
-    the start date, the stop date, the date of a given workflow transition
-    on the explaining delivery, etc.
+    """Returns the date of completion of business path in the
+    context of the explanation. The completion date of the Business 
+    Path is the max date of all simulation movements which are
+    related to the Business Path and which are part of the explanation.
 
-    XXXXXXXXXXXXXXXx
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
     """
 
   def getExpectedQuantity(amount):
@@ -126,7 +128,13 @@ class IBusinessPath(Interface):
     """
 
   def isDelivered(explanation):
-    """XXX
+    """Returns True is all simulation movements related to this
+    Business Path in the context of given explanation are built
+    and related to a delivery through the 'delivery' category.
+
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
     """
 
   def build(explanation):

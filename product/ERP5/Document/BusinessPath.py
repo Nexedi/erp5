@@ -44,10 +44,8 @@ class BusinessPath(Path, Predicate):
   """
     The BusinessPath class embeds all information related to
     lead times and parties involved at a given phase of a business
-    process.
-
-    BusinessPath are also used as helper to build deliveries from
-    buildable movements.
+    process. BusinessPath are also the most common way to trigger
+    the build deliveries from buildable movements.
 
     The idea is to invoke isBuildable() on the collected simulation
     movements (which are orphan) during build "after select" process
@@ -60,12 +58,12 @@ class BusinessPath(Path, Predicate):
 
       Pros: global select is possible by not providing a causality_uid
       Cons: global select retrieves long lists of orphan movements which
-              are not yet buildable
-            the build process could be rather slow or require activities
+            are not yet buildable the build process could be rather
+            slow or require activities
 
     TODO:
-      - merge build implementation from erp5_bpm business template to ERP5
-        product code with backward compatibility
+    - IArrowBase implementation has too many comments which need to be
+      fixed
   """
   meta_type = 'ERP5 Business Path'
   portal_type = 'Business Path'
@@ -98,6 +96,11 @@ class BusinessPath(Path, Predicate):
                             interfaces.IBusinessPath,
                             interfaces.IPredicate,
                             )
+
+  # Helper Methods
+  def _getExplanationRelatedSimulationMovementValueList(self, explanation):
+    explanation_cache = _getExplanationCache(explanation)
+    return explanation_cache.getBusinessPathRelatedSimulationMovementValueList(self)
 
   # IArrowBase implementation
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -145,11 +148,6 @@ class BusinessPath(Path, Predicate):
             #'destination_trade',
             #'destination_transport'
             )
-
-  # Helper Methods
-  def _getExplanationRelatedSimulationMovementValueList(self, explanation):
-    explanation_cache = _getExplanationCache(explanation)
-    return explanation_cache.getBusinessPathRelatedSimulationMovementValueList(self)
 
   # XXX-JPS UNkonwn ?
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -250,14 +248,18 @@ class BusinessPath(Path, Predicate):
     return method()
 
   def getCompletionDate(self, explanation):
-    """Returns the date of completion of the movemnet 
-    based on paremeters of the business path. This complete date can be
-    the start date, the stop date, the date of a given workflow transition
-    on the explaining delivery, etc.
+    """Returns the date of completion of business path in the
+    context of the explanation. The completion date of the Business 
+    Path is the max date of all simulation movements which are
+    related to the Business Path and which are part of the explanation.
 
-    XXX - DOC
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
 
-    movement -- a Simulation Movement
+    NOTE:
+    It seems that current implementation makes sense mostly in the
+    context of a root explanation.
     """
     date_list = []
     for movement in self._getExplanationRelatedSimulationMovementValueList(explanation):
@@ -357,7 +359,13 @@ class BusinessPath(Path, Predicate):
     return True
 
   def isDelivered(self, explanation):
-    """XXX
+    """Returns True is all simulation movements related to this
+    Business Path in the context of given explanation are built
+    and related to a delivery through the 'delivery' category.
+
+    explanation -- the Order, Order Line, Delivery or Delivery Line which
+                   implicitely defines a simulation subtree and a union 
+                   business process.
     """
     for simulation_movement in self._getExplanationRelatedSimulationMovementValueList(
         explanation):
