@@ -625,21 +625,21 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         return self.convertXmlValue(subnode)
     return None
 
-  def replaceIdFromXML(self, xml, new_id):
+  def replaceIdFromXML(self, xml, attribute_name, new_id, as_string=True):
     """
       return a xml with id replace by a new id
     """
-    if xml is not None and new_id is not None:
-      if isinstance(xml, str):
-        xml = etree.XML(xml, parser=parser)
+    if isinstance(xml, str):
+      xml = etree.XML(xml, parser=parser)
+    else:
       #copy of xml object for modification
-      xml_copy = deepcopy(xml)
-      if xml_copy.tag == self.xml_object_tag:
-        object_element = xml_copy
-      else:
-        object_element = xml_copy.xpath('//object')[0]
-      object_element.attrib['id'] = new_id
-      return etree.tostring(xml_copy)
+      xml = deepcopy(xml)
+    object_element = xml.find('object')
+    del object_element.attrib['id']
+    object_element.attrib[attribute_name] = new_id
+    if as_string:
+      return etree.tostring(xml)
+    return xml
 
   def getXMLFromObjectWithId(self, object, xml_mapping):
     """
@@ -653,20 +653,20 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       xml = func()
     return xml
 
-  def getXMLFromObjectWithGid(self, object, gid, xml_mapping=None):
+  def getXMLFromObjectWithGid(self, object, gid, xml_mapping, as_string=True):
     """
       return the xml with Gid of Object
     """
-    xml_id = self.getXMLFromObjectWithId(object, xml_mapping)
-    xml_gid = self.replaceIdFromXML(xml_id, gid)
-    return xml_gid
+    xml_with_id = self.getXMLFromObjectWithId(object, xml_mapping)
+    return self.replaceIdFromXML(xml_with_id, 'gid', gid, as_string=as_string)
 
-  def getXMLFromObjectWithRid(self, object, rid, xml_mapping=None):
+
+  def getXMLFromObjectWithRid(self, object, rid, xml_mapping, as_string=True):
     """
       return the xml with Rid of Object
     """
     xml_id = self.getXMLFromObjectWithId(object, xml_mapping)
-    xml_rid = self.replaceIdFromXML(xml_id, rid)
+    xml_rid = self.replaceIdFromXML(xml_id, 'rid', rid, as_string=as_string)
     return xml_rid
 
   security.declareProtected(Permissions.AccessContentsInformation,'convertToXml')
