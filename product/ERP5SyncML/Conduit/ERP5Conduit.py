@@ -44,7 +44,8 @@ import re
 from lxml import etree
 from lxml.etree import Element
 parser = etree.XMLParser(remove_blank_text=True)
-from xml.marshal.generic import loads as unmarshaler
+from xml_marshaller.xml_marshaller import load_tree as unmarshaller
+from xupdate_processor import xuproc
 from zLOG import LOG, INFO, DEBUG
 from base64 import standard_b64decode
 from zope.interface import implements
@@ -106,9 +107,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     self.args = {}
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
-  def addNode(self, xml=None, object=None, previous_xml=None,
-              object_id=None, sub_object=None, force=0, simulate=0,
-              reset=0, **kw):
+  def addNode(self, xml=None, object=None, sub_object=None, reset=None,
+                                       simulate=None, **kw):
     """
     A node is added
 
@@ -128,119 +128,74 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     reset_workflow = False
     conflict_list = []
     xml = self.convertToXml(xml)
-    #LOG('ERP5Conduit addNode:',DEBUG,etree.tostring(xml,pretty_print=True))
+    #LOG('ERP5Conduit.addNode', INFO, 'object path:%s' % object.getPath())
+    #LOG('ERP5Conduit.addNode', INFO, '\n%s' % etree.tostring(xml, pretty_print=True))
     if xml is None:
       return {'conflict_list': conflict_list, 'object': sub_object}
     # In the case where this new node is a object to add
-    if xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD and \
-        self.getSubObjectDepth(xml) == 0:
-      if self.isHistoryAdd(xml) != -1: # bad hack XXX to be removed
-        for element in self.getXupdateElementList(xml):
-            xml = self.getElementFromXupdate(element)
-            conflict_list += self.addNode(
-                                    xml=xml,
-                                    object=object,
-                                    previous_xml=previous_xml,
-                                    force=force,
-                                    simulate=simulate,
-                                    reset=reset, **kw)['conflict_list']
+    xpath_expression = xml.get('select')
+    if xml.xpath('local-name()') == self.history_tag and not reset:
+      conflict_list += self.addWorkflowNode(object, xml, simulate)
+    elif xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD and\
+                            MARSHALLER_NAMESPACE_URI not in xml.nsmap.values():
+      # change the context according select expression
+      context = self.getContextFromXpath(object, xpath_expression)
+      for element in xml.findall('{%s}element' % xml.nsmap['xupdate']):
+        xml = self.getElementFromXupdate(element)
+        conflict_list += self.addNode(xml=xml, object=context, **kw)\
+                                                              ['conflict_list']
     elif xml.xpath('local-name()') == self.xml_object_tag:
       sub_object = self._createContent(xml=xml,
                                       object=object,
-                                      object_id=object_id,
                                       sub_object=sub_object,
-                                      reset=reset,
                                       reset_local_roles=reset_local_roles,
                                       reset_workflow=reset_workflow,
+                                      reset=reset,
                                       simulate=simulate,
                                       **kw)
-    elif xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD \
-         and self.getSubObjectDepth(xml) >= 1:
-      sub_object_id = self.getSubObjectId(xml)
-      if previous_xml is not None and sub_object_id is not None:
-        # Find the previous xml corresponding to this subobject
-        sub_previous_xml = self.getSubObjectXml(sub_object_id, previous_xml)
-        #LOG('addNode', DEBUG,'isSubObjectModification sub_previous_xml: %s' % str(sub_previous_xml))
-        if sub_previous_xml is not None:
-          sub_object = None
-          try:
-            sub_object = object._getOb(sub_object_id)
-          except (AttributeError, KeyError, TypeError):
-            pass
-          if sub_object is not None:
-            #LOG('addNode', DEBUG, 'subobject.id: %s' % sub_object.id)
-            # Change the xml in order to directly apply
-            # modifications to the subobject
-            sub_xml = self.getSubObjectXupdate(xml)
-            #LOG('addNode', DEBUG, 'sub_xml: %s' % str(sub_xml))
-            # Then do the udpate
-            conflict_list += self.addNode(xml=sub_xml, object=sub_object,
-                            previous_xml=sub_previous_xml, force=force,
-                            simulate=simulate, reset=reset, **kw)['conflict_list']
-    elif (xml.xpath('local-name()') == self.history_tag \
-       or self.isHistoryAdd(xml) > 0) and not reset:
-      conflict_list += self.addWorkflowNode(object, xml, simulate)
-    #elif xml.tag in self.local_role_list or self.isLocalRole(xml)>0 and not simulate:
     elif xml.xpath('local-name()') in self.local_role_list:
       self.addLocalRoleNode(object, xml)
     elif xml.xpath('local-name()') in self.local_permission_list:
       conflict_list += self.addLocalPermissionNode(object, xml)
     else:
-      conflict_list += self.updateNode(xml=xml,object=object, force=force,
-                                       simulate=simulate, reset=reset, **kw)
+      conflict_list += self.updateNode(xml=xml, object=object, reset=reset,
+                                                       simulate=simulate, **kw)
     # We must returns the object created
     return {'conflict_list':conflict_list, 'object': sub_object}
 
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
-  def deleteNode(self, xml=None, object=None, object_id=None, force=None,
-                 simulate=0, reset=0, **kw):
+  def deleteNode(self, xml=None, object=None, object_id=None, **kw):
     """
     A node is deleted
     """
-    # In the case where we have to delete an object
-    #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, object path: %s' % repr(object.getPhysicalPath()))
-    #LOG('ERP5Conduit deleteNode', DEBUG,"%s" % object_id)
-    #LOG('ERP5Conduit deleteNode', DEBUG,"%s" %  xml)
-    conflict_list = []
-    if xml is not None:
-      xml = self.convertToXml(xml)
-      #LOG('ERP5Conduit deleteNode', DEBUG,"%s" % etree.tostring(xml,pretty_print=True))
-    if object_id is None:
-      #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, SubObjectDepth: %i' % self.getSubObjectDepth(xml))
-      if xml.xpath('local-name()') == self.xml_object_tag:
-        object_id = self.getAttribute(xml,'id')
-      elif self.getSubObjectDepth(xml) == 1:
-        object_id = self.getSubObjectId(xml)
-      elif self.getSubObjectDepth(xml) == 2:
-        # we have to call delete node on a subsubobject
-        sub_object_id = self.getSubObjectId(xml)
-        try:
-          sub_object = object._getOb(sub_object_id)
-          sub_xml = self.getSubObjectXupdate(xml)
-          conflict_list += self.deleteNode(xml=sub_xml,object=sub_object,
-                                       force=force, simulate=simulate, 
-                                       reset=reset, **kw)
-        except (KeyError, AttributeError, TypeError):
-          #LOG('ERP5Conduit.deleteNode', DEBUG, 'deleteNode, Unable to delete SubObject: %s' % str(sub_object_id))
-          pass
-    if object_id is not None: # We do have an object_id
+    #LOG('ERP5Conduit.deleteNode', INFO, 'object path:%s' % object.getPath())
+    #LOG('ERP5Conduit deleteNode', INFO, 'object_id:%r' % object_id)
+    if object_id is not None:
       self._deleteContent(object=object, object_id=object_id)
-    # In the case where we have to delete an user role
-    # If we are still there, this means the delete is for this node
-    elif xml.xpath('name()') in self.XUPDATE_DEL:
-      xml = self.getElementFromXupdate(xml)
-      if xml.xpath('local-name()') in self.local_role_list and not simulate:
-        # We want to del a local role
-        user = self.getAttribute(xml,'id')
-        #LOG('ERP5Conduit.deleteNode local_role: ', DEBUG, 'user: %s' % repr(user))
-        if xml.xpath('local-name()') == self.local_role_tag:
+      return []
+    xml = self.convertToXml(xml)
+    #LOG('ERP5Conduit deleteNode', INFO, etree.tostring(xml, pretty_print=True))
+    xpath_expression = xml.get('select')
+    context_to_delete = self.getContextFromXpath(object, xpath_expression)
+    if context_to_delete != object:
+      self._deleteContent(object=context_to_delete.getParentValue(),
+                                           object_id=context_to_delete.getId())
+    else:
+      #same context
+      if [role for role in self.local_role_list if role in xpath_expression]:
+        user = self.extract_id_from_xpath.findall(xpath_expression)[-1][3]
+        #LOG('ERP5Conduit.deleteNode local_role: ', INFO, 'user: %r' % user)
+        if self.local_role_tag in xpath_expression:
           object.manage_delLocalRoles([user])
-        elif xml.xpath('local-name()') ==self.local_group_tag:
+        elif self.local_group_tag in xpath_expression:
           object.manage_delLocalGroupRoles([user])
-      if xml.xpath('local-name()') in self.local_permission_list and not simulate:
-        permission = self.getAttribute(xml,'id')
+      if [permission for permission in self.local_permission_list if\
+                                               permission in xpath_expression]:
+        permission = self.extract_id_from_xpath.findall(xpath_expression)[-1][3]
+        #LOG('ERP5Conduit.deleteNode permission: ', INFO,
+                                                 #'permission: %r' % permission)
         object.manage_setLocalPermissions(permission)
-    return conflict_list
+    return []
 
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteObject')
   def deleteObject(self, object, object_id):
@@ -251,8 +206,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       pass
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
-  def updateNode(self, xml=None, object=None, previous_xml=None, force=0,
-                 simulate=0, reset=0, **kw):
+  def updateNode(self, xml=None, object=None, previous_xml=None, force=False,
+                 simulate=False, reset=False, xpath_expression=None, **kw):
     """
     A node is updated with some xupdate
       - xml : the xml corresponding to the update, it should be xupdate
@@ -264,14 +219,12 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if xml is None:
       return {'conflict_list':conflict_list, 'object':object}
     xml = self.convertToXml(xml)
-    #LOG('ERP5Conduit.updateNode', DEBUG, 'xml.tag: %s' % xml.tag)
-    #LOG('ERP5Conduit.updateNode, force: ', DEBUG, force)
-    # we have an xupdate xml
-    #LOG('ERP5Conduit updateNode', DEBUG, "%s" % etree.tostring(xml,pretty_print=True))
-    if xml.xpath('name()') == 'xupdate:modifications':
+    #LOG('ERP5Conduit.updateNode, force: ', INFO, force)
+    #LOG('ERP5Conduit updateNode', INFO, object.getPath())
+    #LOG('ERP5Conduit updateNode', INFO, '\n%s' % etree.tostring(xml, pretty_print=True))
+    if xml.tag == '{%s}modifications' % xml.nsmap.get('xupdate'):
       conflict_list += self.applyXupdate(object=object,
                                          xupdate=xml,
-                                         conduit=self,
                                          previous_xml=previous_xml,
                                          force=force,
                                          simulate=simulate,
@@ -286,13 +239,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if value is not None:
           select_list = value.split('/') # Something like:
                                          #('','object[1]','sid[1]')
-          new_select_list = ()
+          new_select_list = []
           for select_item in select_list:
             if select_item.find('[') >= 0:
               select_item = select_item[:select_item.find('[')]
-            new_select_list += (select_item,)
+            new_select_list.append(select_item)
           select_list = new_select_list # Something like : ('','object','sid')
-          keyword = select_list[len(select_list)-1] # this will be 'sid'
+          keyword = select_list[-1] # this will be 'sid'
         data = None
         if xml.xpath('name()') not in self.XUPDATE_INSERT_OR_ADD:
           for subnode in xml:
@@ -300,6 +253,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               keyword = subnode.get('name')
               data_xml = subnode
         else:
+          #XXX find something better than hardcoded prefix
           # We can call add node
           conflict_list += self.addNode(xml=xml,
                                         object=object,
@@ -308,7 +262,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                         reset=reset,
                                         **kw)
           return conflict_list
-        
         if xml.xpath('name()') in self.XUPDATE_DEL:
           conflict_list += self.deleteNode(xml=xml,
                                            object=object,
@@ -321,8 +274,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           keyword = xml.xpath('name()')
         if not (keyword in self.NOT_EDITABLE_PROPERTY):
           # We will look for the data to enter
-          data_type = object.getPropertyType(keyword)
-          #LOG('ERP5Conduit.updateNode', DEBUG, 'data_type: %s for keyword: %s' % (str(data_type), keyword))
+          xpath_expression = xml.get('select', xpath_expression)
+          context = self.getContextFromXpath(object, xpath_expression)
+          data_type = context.getPropertyType(keyword)
+          #LOG('ERP5Conduit.updateNode', INFO, 'data_type:%r for keyword: %s' % (data_type, keyword))
           data = self.convertXmlValue(xml, data_type=data_type)
           args[keyword] = data
           args = self.getFormatedArgs(args=args)
@@ -335,37 +290,40 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           isConflict = False
           if (previous_xml is not None) and (not force):
           # if no previous_xml, no conflict
-            old_data = self.getObjectProperty(keyword, previous_xml,
-                                              data_type=data_type)
-            #current_data = object.getProperty(keyword)
-            current_data = self.getProperty(object, keyword)
-            #LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict data: %s' % str(data))
-            #LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict old_data: %s' % str(old_data))
-            #LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict current_data: %s' % str(current_data))
+            #old_data = self.getObjectProperty(keyword, previous_xml,
+                                              #data_type=data_type)
+            previous_xml_tree = self.convertToXml(previous_xml)
+            old_result = previous_xml_tree.xpath(xpath_expression)
+            if old_result:
+              old_data = self.convertXmlValue(old_result[0])
+            else:
+              raise ValueError('Xpath expression does not apply on previous'\
+                                                  ' xml:%r' % xpath_expression)
+            current_data = self.getProperty(context, keyword)
+            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict keyword: %s' % keyword)
+            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict data: %s' % str(data))
+            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict old_data: %s' % str(old_data))
+            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict current_data: %s' % str(current_data))
             if (old_data != current_data) and (data != current_data) \
                 and keyword not in self.force_conflict_list:
-              #LOG('ERP5Conduit.updateNode', DEBUG, 'Conflict on : %s' % keyword)
-              # Hack in order to get the synchronization working for demo
-              # XXX this have to be removed after
-              #if not (data_type in self.binary_type_list):
-              if 1:
-                # This is a conflict
-                isConflict = 1
-                xml_string = etree.tostring(xml, encoding='utf-8')
-                conflict = Conflict(object_path=object.getPhysicalPath(),
-                                    keyword=keyword)
-                conflict.setXupdate(xml_string)
-                if not (data_type in self.binary_type_list):
-                  conflict.setLocalValue(current_data)
-                  conflict.setRemoteValue(data)
-                conflict_list += [conflict]
+              #LOG('ERP5Conduit.updateNode', INFO, 'Conflict on : %s' % keyword)
+              # This is a conflict
+              isConflict = True
+              xml_string = etree.tostring(xml, encoding='utf-8')
+              conflict = Conflict(object_path=context.getPhysicalPath(),
+                                  keyword=keyword)
+              conflict.setXupdate(xml_string)
+              if not (data_type in self.binary_type_list):
+                conflict.setLocalValue(current_data)
+                conflict.setRemoteValue(data)
+              conflict_list += [conflict]
           # We will now apply the argument with the method edit
           if args != {} and (isConflict == 0 or force) and \
               (not simulate or reset):
-            self._updateContent(object=object, **args)
+            self._updateContent(object=context, **args)
             # It is sometimes required to do something after an edit
-            if getattr(object, 'manage_afterEdit', None) is not None:
-              object.manage_afterEdit()
+            if getattr(context, 'manage_afterEdit', None) is not None:
+              context.manage_afterEdit()
 
         if keyword == 'object':
           # This is the case where we have to call addNode
@@ -386,48 +344,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #user = self.getSubObjectId(xml)
           #roles = self.convertXmlValue(data,data_type='tokens')
           #object.manage_setLocalRoles(user,roles)
-          xml = self.getElementFromXupdate(xml)
           conflict_list += self.addNode(xml=xml, object=object,
                                        force=force, simulate=simulate,
                                        reset=reset, **kw)['conflict_list']
-      elif self.isSubObjectModification(xml):
-        # We should find the object corresponding to
-        # this update, so we have to look in the previous_xml
-        sub_object_id = self.getSubObjectId(xml)
-        #LOG('ERP5Conduit.updateNode', DEBUG,'isSubObjectModification sub_object_id: %s' % sub_object_id)
-        if previous_xml is not None and sub_object_id is not None:
-          sub_previous_xml = self.getSubObjectXml(sub_object_id, previous_xml)
-          #LOG('ERP5Conduit.updateNode', DEBUG, 'isSubObjectModification sub_previous_xml: %s' % str(sub_previous_xml))
-          sub_object = None
-          try:
-            sub_object = object._getOb(sub_object_id)
-          except KeyError:
-            pass
-          if sub_object is not None:
-            #LOG('ERP5Conduit.updateNode', DEBUG, 'subobject.id: %s' % sub_object.id)
-            # Change the xml in order to directly apply
-            # modifications to the subobject
-            sub_xml = self.getSubObjectXupdate(xml)
-            #LOG('ERP5Conduit.updateNode', DEBUG, 'sub_xml: %s' % str(sub_xml))
-            # Then do the udpate
-            conflict_list += self.updateNode(xml=sub_xml, object=sub_object,
-                                              force=force,
-                                              previous_xml=sub_previous_xml,
-                                              simulate=simulate, reset=reset, **kw)
-        elif previous_xml is None and xml is not None and sub_object_id is not None:
-          sub_object = None
-          try:
-            sub_object = object[sub_object_id]
-          except KeyError:
-            pass
-          if sub_object is not None:
-            sub_xml = self.getSubObjectXupdate(xml)
-            conflict_list += self.updateNode(xml=sub_xml,
-                                             object=sub_object,
-                                             force=force,
-                                             simulate=simulate,
-                                             reset=reset,
-                                             **kw)
     return conflict_list
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -466,13 +385,40 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     Check if it is a simple property
     not an attribute @type it's a metadata
     """
-    bad_list = (self.sub_object_exp, self.history_exp, self.attribute_type_exp,)
+    bad_list = (self.history_exp, self.attribute_type_exp,)
     value = xml.get('select')
     if value is not None:
       for bad_string in bad_list:
         if bad_string.search(value) is not None:
           return False
     return True
+
+  def getContextFromXpath(self, context, xpath):
+    """Return the last object from xpath expression
+    /object[@gid='foo']/object[@id='bar']/object[@id='freak']/property
+    will return object.getId() == 'freak'
+    - We ignore the first object_block /object[@gid='foo'] intentionaly
+    because the targeted context is already actual context.
+    """
+    if xpath is None:
+      return context
+    result_list = self.extract_id_from_xpath.findall(xpath)
+    first_object = True
+    while result_list:
+      object_block = result_list[0][0]
+      sub_context_id = result_list[0][3]
+      sub_context = context._getOb(sub_context_id, None)
+      if first_object:
+        first_object = False
+      elif sub_context is not None:
+        context = sub_context
+      else:
+        # Ignore non existing objects
+        LOG('ERP5Conduit', INFO, 'sub document of %s not found with id:%r'%\
+                                         (context.getPath(), sub_context_id))
+      xpath = xpath.replace(object_block, '', 1)
+      result_list = self.extract_id_from_xpath.findall(xpath)
+    return context
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                          'getSubObjectXupdate')
@@ -567,6 +513,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'getSubObjectId')
+  @deprecated
   def getSubObjectId(self, xml):
     """
     Return the id of the subobject in an xupdate modification
@@ -870,34 +817,90 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       data = int(data)
     return data
 
-  # XXX is it the right place ? It should be in XupdateUtils, but here we
-  # have some specific things to do
+
   security.declareProtected(Permissions.ModifyPortalContent, 'applyXupdate')
-  def applyXupdate(self, object=None, xupdate=None, conduit=None, force=0,
-                   simulate=0, reset=0, **kw):
+  def applyXupdate(self, object=None, xupdate=None, previous_xml=None, **kw):
     """
     Parse the xupdate and then it will call the conduit
     """
     conflict_list = []
     if isinstance(xupdate, (str, unicode)):
       xupdate = etree.XML(xupdate, parser=parser)
-    #LOG("applyXupdate xupdate",debug, "%s" % etree.tostring(xupdate,pretty_print=True))
+    #LOG("applyXupdate", INFO, etree.tostring(xupdate, pretty_print=True))
+    xupdate_builded = False
+    xpath_expression_update_dict = {}
     for subnode in xupdate:
-      sub_xupdate = self.getSubObjectXupdate(subnode)
       selection_name = ''
-      if subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
-        conflict_list += conduit.addNode(xml=sub_xupdate,object=object,
-                                         force=force, simulate=simulate,
-                                         reset=reset, **kw)['conflict_list']
-      elif subnode.xpath('name()') in self.XUPDATE_DEL:
-        conflict_list += conduit.deleteNode(xml=sub_xupdate, object=object,
-                                            force=force, simulate=simulate,
-                                            reset=reset, **kw)
-      elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
-        conflict_list += conduit.updateNode(xml=sub_xupdate, object=object,
-                                            force=force, simulate=simulate,
-                                            reset=reset, **kw)
+      original_xpath_expression = subnode.get('select', '')
+      if not xupdate_builded and\
+                            MARSHALLER_NAMESPACE_URI in subnode.nsmap.values()\
+                                  or 'block_data' in original_xpath_expression:
+        # It means that the xpath expression is targetting
+        # marshalled values or data nodes. We need to rebuild the original xml
+        # in its own context in order to retrieve original value
 
+        # We are insde a loop build the XUpdated tree only once
+        xupdate_builded = True
+
+        # Find the prefix used by marshaller.
+        for prefix, namespace_uri in subnode.nsmap.iteritems():
+          if namespace_uri == MARSHALLER_NAMESPACE_URI:
+            break
+        # TODO add support of etree objects for xuproc to avoid
+        # serializing tree into string
+        if not isinstance(previous_xml, str):
+          previous_xml = etree.tostring(previous_xml)
+        xupdated_tree = xuproc.applyXUpdate(xml_xu_string=etree.tostring(xupdate),
+                                            xml_doc_string=previous_xml)
+      if MARSHALLER_NAMESPACE_URI in subnode.nsmap.values():
+        xpath_expression = original_xpath_expression
+        context = self.getContextFromXpath(object, xpath_expression)
+        base_xpath_expression = xpath_expression\
+                                            [:xpath_expression.index(prefix)-1]
+        xupdated_node_list = xupdated_tree.xpath(base_xpath_expression)
+        if xupdated_node_list:
+          xupdated_node = xupdated_node_list[0]
+        else:
+          ValueError('Wrong xpath expression:%r' % base_xpath_expression)
+        if base_xpath_expression not in xpath_expression_update_dict:
+          xpath_expression_update_dict[base_xpath_expression] = \
+                                   dict(xml=xupdated_node,
+                                        object=context,
+                                        xpath_expression=base_xpath_expression)
+      elif 'block_data' in original_xpath_expression:
+        """XXX Use Qualified Names for block_data nodes
+        to avoid ambiguity
+        """
+        xpath_expression = original_xpath_expression
+        context = self.getContextFromXpath(object, xpath_expression)
+        base_xpath_expression = xpath_expression\
+                                            [:xpath_expression.index('block_data')-1]
+        xupdated_node_list = xupdated_tree.xpath(base_xpath_expression)
+        if xupdated_node_list:
+          xupdated_node = xupdated_node_list[0]
+        else:
+          ValueError('Wrong xpath expression:%r' % base_xpath_expression)
+        if base_xpath_expression not in xpath_expression_update_dict:
+          xpath_expression_update_dict[base_xpath_expression] = \
+                                   dict(xml=xupdated_node,
+                                        object=context,
+                                        xpath_expression=base_xpath_expression)
+      elif subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
+        conflict_list += self.addNode(xml=subnode, object=object,
+                                      previous_xml=previous_xml,
+                                      **kw)['conflict_list']
+      elif subnode.xpath('name()') in self.XUPDATE_DEL:
+        conflict_list += self.deleteNode(xml=subnode, object=object,
+                                         previous_xml=previous_xml, **kw)
+      elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
+        conflict_list += self.updateNode(xml=subnode, object=object,
+                                         previous_xml=previous_xml, **kw)
+
+    # Now apply collected xupdated_node
+    for update_dict in xpath_expression_update_dict.itervalues():
+      update_dict.update(kw)
+      conflict_list += self.updateNode(previous_xml=previous_xml,
+                                       **update_dict)
     return conflict_list
 
   def isWorkflowActionAddable(self, object=None, status=None, wf_tool=None,
@@ -1039,8 +1042,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return object.getId()
 
-  def _createContent(self, xml=None, object=None, object_id=None, sub_object=None,
-      reset=0, reset_local_roles=0, reset_workflow=0, simulate=0, **kw):
+  def _createContent(self, xml=None, object=None, object_id=None,
+                     sub_object=None, reset_local_roles=False,
+                     reset_workflow=False, simulate=False, **kw):
     """
       This is the method calling to create an object
     """
@@ -1056,8 +1060,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         portal_type = ''
         if xml.xpath('local-name()') == self.xml_object_tag:
           portal_type = self.getObjectType(xml)
-        elif xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD: # Deprecated ???
-          portal_type = self.getXupdateObjectType(xml) # Deprecated ???
         sub_object, reset_local_roles, reset_workflow = self.constructContent(
                                                         object,
                                                         object_id,
@@ -1065,7 +1067,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       self.newObject(object=sub_object,
                      xml=xml,
                      simulate=simulate,
-                     reset=reset,
                      reset_local_roles=reset_local_roles,
                      reset_workflow=reset_workflow)
     return sub_object
