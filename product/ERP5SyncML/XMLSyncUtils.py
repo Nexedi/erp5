@@ -800,8 +800,16 @@ class XMLSyncUtilsMixin(SyncCode):
               # If there is no xml, we re-send all the objects
               xml_string = xml_object
             else:
-             # This object has changed on this side, we have to generate some xmldiff
-              xml_string = self.getXupdateObject(xml_object, signature.getXML())
+              # This object has changed on this side, we have to generate some xmldiff
+              gid = signature.getGid()
+              xml_object_with_gid = conduit.replaceIdFromXML(xml_object, 'gid',
+                                                             gid)
+              previous_xml_with_gid = conduit.replaceIdFromXML(
+                                                signature.getXML(), 'gid', gid)
+              xml_string = self.getXupdateObject(xml_object_with_gid,
+                                                 previous_xml_with_gid)
+              #LOG('XMLSyncUtils diff:%s' % object.getPath(), INFO,
+                                                               #xupdate_string)
               if xml_string.count('\n') > self.MAX_LINES:
                 # This make comment fails, so we need to replace
                 more_data = True
@@ -826,15 +834,14 @@ class XMLSyncUtilsMixin(SyncCode):
           if subscriber_xupdate is not None:
             # The modification in the xml from signature is compare and update
             # with xml_xupdate from subscriber
-            old_xml = signature.getXML()
-            conduit.updateNode(
-                        xml=subscriber_xupdate,
-                        object=object,
-                        previous_xml=old_xml,
-                        force=(domain.getDomainType() == self.SUB),
-                        simulate=0)
-            xml_object = conduit.getXMLFromObjectWithId(object,\
-                         xml_mapping=domain.getXMLMapping()) 
+            previous_xml_with_gid = conduit.replaceIdFromXML(
+                               signature.getXML(), 'gid', gid, as_string=False)
+            conduit.updateNode(xml=subscriber_xupdate, object=object,
+                               previous_xml=previous_xml_with_gid,
+                               force=(domain.getDomainType() == self.SUB),
+                               simulate=False)
+            xml_object = conduit.getXMLFromObjectWithId(object,
+                                            xml_mapping=domain.getXMLMapping())
             signature.setTempXML(xml_object)
           if set_synchronized: # We have to do that after this previous update
             # We should not have this case when we are in CONFLICT_MERGE
@@ -845,11 +852,12 @@ class XMLSyncUtilsMixin(SyncCode):
           # some modification was already made and the update
           # may not apply correctly
           xml_update = signature.getPartialXML()
-          conduit.updateNode(
-                      xml=xml_update,
-                      object=object,
-                      previous_xml=signature.getXML(),
-                      force=1)
+          previous_xml_with_gid = conduit.replaceIdFromXML(signature.getXML(),
+                                                           'gid', gid,
+                                                           as_string=False)
+          conduit.updateNode(xml=xml_update, object=object,
+                             previous_xml=previous_xml_with_gid, force=True,
+                             gid=gid)
           xml_confirmation_list.append(self.SyncMLConfirmation(
                                   cmd_id=cmd_id,
                                   target_ref=object_gid,
@@ -1001,22 +1009,21 @@ class XMLSyncUtilsMixin(SyncCode):
             # Object was retrieve but need to be updated without recreated
             # usefull when an object is only deleted by workflow.
             if data_subnode is not None:
-              actual_xml = conduit.getXMLFromObjectWithId(object,
-                           xml_mapping=domain.getXMLMapping(force=1))
-              actual_xml = etree.XML(actual_xml, parser=parser)
-              xml_string_gid = conduit.replaceIdFromXML(data_subnode, gid)
-              actual_xml_gid = conduit.replaceIdFromXML(actual_xml, gid)
-              # use gid as compare key because their ids can be different
-              data_subnode = self.getXupdateObject(xml_string_gid, actual_xml_gid)
+              actual_xml = conduit.getXMLFromObjectWithGid(object, gid,
+                                  xml_mapping=domain.getXMLMapping(force=True))
+              # use gid to compare because their ids can be different
+              data_subnode = conduit.replaceIdFromXML(data_subnode, 'gid', gid)
+              # produce xupdate
+              data_subnode = self.getXupdateObject(data_subnode, actual_xml)
             conflict_list.extend(conduit.updateNode(
                                         xml=data_subnode,
                                         object=object,
-                                        previous_xml=signature.getXML(),
+                                        previous_xml=actual_xml,
                                         force=force,
                                         simulate=simulate,
                                         reset=reset))
-            xml_object = conduit.getXMLFromObjectWithId(object,\
-                         xml_mapping=domain.getXMLMapping()) 
+            xml_object = conduit.getXMLFromObjectWithId(object,
+                                            xml_mapping=domain.getXMLMapping())
             signature.setTempXML(xml_object)
           if object is not None:
             #LOG('applyActionList', DEBUG, 'addNode, found the object')
@@ -1046,6 +1053,9 @@ class XMLSyncUtilsMixin(SyncCode):
             signature = subscriber.getSignatureFromGid(gid)
             #LOG('applyActionList', DEBUG, 'previous signature: %s' % str(signature))
             previous_xml = signature.getXML()
+            if previous_xml:
+              # can be None
+              previous_xml = conduit.replaceIdFromXML(previous_xml, 'gid', gid)
             conflict_list += conduit.updateNode(
                                         xml=data_subnode,
                                         object=object,
