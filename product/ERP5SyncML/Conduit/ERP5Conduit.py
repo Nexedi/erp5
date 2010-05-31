@@ -749,7 +749,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       new_node.text = xml.text
       new_node.tail = xml.tail
       return new_node
-    if xml.xpath('name()') in (self.XUPDATE_UPDATE + self.XUPDATE_DEL):
+    if xml.xpath('name()') in (self.XUPDATE_UPDATE):
       # This condition seems not used anymore and not efficient
       # Usage of xupdate_processor is recommanded
       result = u'<'
