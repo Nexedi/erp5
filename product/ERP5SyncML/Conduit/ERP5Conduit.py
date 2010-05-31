@@ -665,8 +665,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return xml.xpath('string(.//*[name() == "xupdate:attribute"][@name = "portal_type"])') or None
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newObject')
-  def newObject(self, object=None, xml=None, simulate=0, reset=0, 
-      reset_local_roles=1, reset_workflow=1):
+  def newObject(self, object=None, xml=None, simulate=False,
+                reset_local_roles=True, reset_workflow=True):
     """
       modify the object with datas from
       the xml (action section)
