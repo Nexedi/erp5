@@ -330,11 +330,19 @@ class Rule(Predicate, XMLObject):
     mutable_movement_list = []
     deletable_movement_list = []
 
+    is_root = applied_rule.isRootAppliedRule()
     for movement in applied_rule.contentValues(portal_type=self.movement_type):
+      # XXX in root applied rule case, movement.isFrozen() is not a good
+      # criteria to determine if movement is immutable or not. Same for
+      # non-root case?
       if movement.isFrozen():
         immutable_movement_list.append(movement)
       else:
-        if movement._isTreeDelivered():
+        if is_root and movement.hasOrder():
+          ignore_first = False
+        else:
+          ignore_first = True
+        if movement._isTreeDelivered(ignore_first=ignore_first):
           mutable_movement_list.append(movement)
         else:
           deletable_movement_list.append(movement)
