@@ -36,10 +36,14 @@ from pickle import Pickler, EMPTY_DICT, MARK, DICT, PyStringMap, DictionaryType
 from xml.sax.saxutils import escape, unescape
 from lxml import etree
 from lxml.etree import Element, SubElement
-from xml.marshal.generic import dumps as marshaler
+from xml_marshaller.xml_marshaller import Marshaller
 from OFS.Image import Pdata
 from zLOG import LOG
 from base64 import standard_b64encode
+
+MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
+marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
+                                                            as_tree=True).dumps
 
 class OrderedPickler(Pickler):
     
@@ -109,10 +113,9 @@ def Base_asXML(object, root=None):
         else:
           raise ValueError("XMLExportImport failed, the data is undefined")
       elif prop_type in ('lines', 'tokens',):
-        # Use CDATA node to not be taken into account by erp5diff 
         value = [word.decode('utf-8').encode('ascii','xmlcharrefreplace')\
             for word in value]
-        sub_object.text = etree.CDATA(marshaler(value))
+        sub_object.append(marshaller(value))
       elif prop_type in ('text', 'string',):
         sub_object.text = unicode(escape(value), 'utf-8')
       elif prop_type != 'None':
@@ -151,18 +154,18 @@ def Base_asXML(object, root=None):
       if isinstance(role, unicode):
         role = role.encode('utf-8')
       role_list.append(role)
-    local_role_node.text = etree.CDATA(marshaler(tuple(role_list)))
+    local_role_node.append(marshaller(tuple(role_list)))
   if getattr(self, 'get_local_permissions', None) is not None:
     for user_permission in self.get_local_permissions():
       local_permission_node = SubElement(object, 'local_permission',
                               attrib=dict(id=user_permission[0], type='tokens'))
-      local_permission_node.text = etree.CDATA(marshaler(user_permission[1]))
+      local_permission_node.append(marshaller(user_permission[1]))
   # Sometimes theres is roles specified for groups, like with CPS
   if getattr(self, 'get_local_group_roles', None) is not None:
     for group_role in self.get_local_group_roles():
       local_group_node = SubElement(object, 'local_group',
                                     attrib=dict(id=group_role[0], type='tokens'))
-      local_group_node.text = etree.CDATA(marshaler(group_role[1]))
+      local_group_node.append(marshaller(group_role[1]))
   if return_as_object:
     return root
   return etree.tostring(root, encoding='utf-8',
