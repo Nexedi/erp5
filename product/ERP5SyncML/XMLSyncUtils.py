@@ -677,7 +677,7 @@ class XMLSyncUtilsMixin(SyncCode):
       xml_confirmation_list = []
     local_gid_list = []
     syncml_data_list = kw.get('syncml_data_list', [])
-    result = {'finished':1}
+    result = {'finished': True}
     if isinstance(remote_xml, (str, unicode)):
       remote_xml = etree.XML(remote_xml, parser=parser)
     if domain.isOneWayFromServer():
@@ -724,7 +724,7 @@ class XMLSyncUtilsMixin(SyncCode):
     loop = 0
     for object_path in subscriber.getRemainingObjectPathList():
       if max is not None and loop >= max:
-        result['finished'] = 0
+        result['finished'] = False
         break
       #LOG('getSyncMLData object_path', INFO, object_path)
       object = self.getPortalObject().unrestrictedTraverse(object_path)
@@ -733,7 +733,7 @@ class XMLSyncUtilsMixin(SyncCode):
       if not object_gid:
         continue
       local_gid_list += [object_gid]
-      force = 0
+      force = False
       if ''.join(syncml_data_list).count('\n') < self.MAX_LINES and not \
           object.getId().startswith('.'):
         # If not we have to cut
@@ -748,7 +748,7 @@ class XMLSyncUtilsMixin(SyncCode):
         signature = subscriber.getSignatureFromGid(object_gid)
         ## Here we first check if the object was modified or not by looking at dates
         status = self.SENT
-        more_data = 0
+        more_data = False
         # For the case it was never synchronized, we have to send everything
         if signature is not None and signature.getXMLMapping() is None:
           pass
@@ -763,7 +763,7 @@ class XMLSyncUtilsMixin(SyncCode):
           signature = Signature(id=gid, object=object).__of__(subscriber)
           signature.setTempXML(xml_string)
           if xml_string.count('\n') > self.MAX_LINES:
-            more_data = 1
+            more_data = True
             xml_string, rest_string = self.cutXML(xml_string)
             signature.setPartialXML(rest_string)
             status = self.PARTIAL
@@ -793,9 +793,9 @@ class XMLSyncUtilsMixin(SyncCode):
                                     source_ref=signature.getGid(),
                                     sync_code=self.CONFLICT_MERGE,
                                     cmd='Replace'))
-          set_synchronized = 1
+          set_synchronized = True
           if not signature.checkMD5(xml_object):
-            set_synchronized = 0
+            set_synchronized = False
             if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
               # If there is no xml, we re-send all the objects
               xml_string = xml_object
@@ -804,7 +804,7 @@ class XMLSyncUtilsMixin(SyncCode):
               xml_string = self.getXupdateObject(xml_object, signature.getXML())
               if xml_string.count('\n') > self.MAX_LINES:
                 # This make comment fails, so we need to replace
-                more_data = 1
+                more_data = True
                 xml_string, rest_string = self.cutXML(xml_string)
                 signature.setPartialXML(rest_string)
                 status = self.PARTIAL
@@ -904,14 +904,14 @@ class XMLSyncUtilsMixin(SyncCode):
     return result
 
   def applyActionList(self, domain=None, subscriber=None, cmd_id=0,
-                      remote_xml=None, conduit=None, simulate=0):
+                      remote_xml=None, conduit=None, simulate=False):
     """
     This just look to a list of action to do, then id applies
     each action one by one, thanks to a conduit
     """
     namespace = self.getNamespace(remote_xml.nsmap)
     xml_confirmation_list = []
-    has_next_action = 0
+    has_next_action = False
     gid_from_xml_list = []
     destination = self.unrestrictedTraverse(domain.getDestinationPath())
     #LOG('applyActionList args', DEBUG, 'domain : %s\n subscriber : %s\n cmd_id: %s'\ 
@@ -984,7 +984,7 @@ class XMLSyncUtilsMixin(SyncCode):
             data_subnode = self.getDataSubNode(action)
         if action.xpath('local-name()') == 'Add':
           # Then store the xml of this new subobject
-          reset = 0
+          reset = False
           if object is None:
             add_data = conduit.addNode(xml=data_subnode,
                                        object=destination,
@@ -997,7 +997,7 @@ class XMLSyncUtilsMixin(SyncCode):
               signature.setPath(object.getPhysicalPath())
               signature.setObjectId(object.getId())
           else:
-            reset = 1
+            reset = True
             # Object was retrieve but need to be updated without recreated
             # usefull when an object is only deleted by workflow.
             if data_subnode is not None:
@@ -1120,8 +1120,8 @@ class XMLSyncUtilsMixin(SyncCode):
     This method have to change status codes on signatures
     """
     status_list = self.getSyncBodyStatusList(remote_xml)
-    has_status_list = 0
-    destination_waiting_more_data = 0
+    has_status_list = False
+    destination_waiting_more_data = False
     for status in status_list:
       if not status['code']:
         continue
@@ -1136,9 +1136,9 @@ class XMLSyncUtilsMixin(SyncCode):
         #the client give his id but not the gid
         signature = subscriber.getSignatureFromRid(object_gid)
       if status_cmd in ('Add', 'Replace',):
-        has_status_list = 1
+        has_status_list = True
         if status_code == self.CHUNK_OK:
-          destination_waiting_more_data = 1
+          destination_waiting_more_data = True
           signature.setStatus(self.PARTIAL)
         elif status_code == self.CONFLICT:
           signature.setStatus(self.CONFLICT)
@@ -1153,7 +1153,7 @@ class XMLSyncUtilsMixin(SyncCode):
         elif status_code in (self.SUCCESS, self.ITEM_ADDED):
           signature.setStatus(self.SYNCHRONIZED)
       elif status_cmd == 'Delete':
-        has_status_list = 1
+        has_status_list = True
         if status_code == self.SUCCESS:
           if signature is not None:
             subscriber.delSignature(signature.getGid())
@@ -1200,7 +1200,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
     Send the server modification, this happens after the Synchronization
     initialization
     """
-    has_response = 0 #check if syncmodif replies to this messages
+    has_response = False #check if syncmodif replies to this messages
     cmd_id = 1 # specifies a SyncML message-unique command identifier
     #LOG('SyncModif', DEBUG, 'Starting... domain: %s' % domain.getId())
     # Get informations from the header
@@ -1211,9 +1211,9 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
       raise ValueError, "Sorry, This is not a SyncML Header"
 
     subscriber = domain # If we are the client, this is fine
-    simulate = 0 # used by applyActionList, should be 0 for client
+    simulate = False # used by applyActionList, should be False for client
     if domain.domain_type == self.PUB:
-      simulate = 1
+      simulate = True
       subscription_url = self.getSubscriptionUrlFromXML(xml_header)
       subscriber = domain.getSubscriber(subscription_url)
 
@@ -1230,7 +1230,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                                   pretty_print=True)
       LOG("SyncModif remote_xml :", INFO, remote_xml)
       if last_xml:
-        has_response = 1
+        has_response = True
         if domain.domain_type == self.PUB: # We always reply
           self.sendResponse(
                     from_url=domain.publication_url,
@@ -1328,7 +1328,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                       cmd_id_before_getsyncmldata=cmd_id_before_getsyncmldata,
                       has_status_list=has_status_list,
                       has_response=has_response )
-      return {'has_response':1, 'xml':''}
+      return {'has_response':True, 'xml':''}
     else:
       result = self.getSyncMLData(domain=domain,
                              remote_xml=remote_xml,
@@ -1435,14 +1435,14 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
         xml_confirmation = etree.XML(xml_confirmation, parser=parser)
       sync_body.append(xml_confirmation)
 
-    self.sync_finished = 0 
+    self.sync_finished = False
     if domain.domain_type == self.PUB: # We always reply
       # When the publication recieved the response Final and the modification 
       # data is finished so the publication send the tag "Final"
       if not self.checkSync(remote_xml) and not xml_confirmation_list\
         and not syncml_data_list and self.checkFinal(remote_xml):
         sync_body.append(E.Final())
-        self.sync_finished = 1
+        self.sync_finished = True
       xml_string = etree.tostring(xml_tree, encoding='utf-8', pretty_print=True)
       subscriber.setLastSentMessage(xml_string)
       self.sendResponse(
@@ -1452,18 +1452,18 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                 xml=xml_string,
                 domain=domain,
                 content_type=domain.getSyncContentType())
-      if self.sync_finished == 1:
+      if self.sync_finished:
         LOG('this is the end of the synchronisation session from PUB !!!', INFO, domain.getId())
         subscriber.setAuthenticated(False)
         domain.setAuthenticated(False)
-      has_response = 1
+      has_response = True
     elif domain.domain_type == self.SUB:
       # the modification data is finished on the subscription so the tag
       # "Final" sent to the publication
       if not self.checkAlert(remote_xml) and not xml_confirmation_list\
         and not syncml_data_list:
         sync_body.append(E.Final())
-        self.sync_finished = 1
+        self.sync_finished = True
       xml_string = etree.tostring(xml_tree, encoding='utf-8', pretty_print=True)
       if not self.sync_finished or not self.checkFinal(remote_xml):
         subscriber.setLastSentMessage(xml_string)
@@ -1473,7 +1473,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
                   sync_id=domain.getTitle(),
                   xml=xml_string, domain=domain,
                   content_type=domain.getSyncContentType())
-        has_response = 1
+        has_response = True
       #When the receive the final element and the sub finished synchronization
       else:
         if domain.isOneWayFromServer():
@@ -1622,7 +1622,7 @@ class XMLSyncUtils(XMLSyncUtilsMixin):
             response = self.SubSyncCred(subscription, xml_client)
           elif status_code_syncHdr == self.UNAUTHORIZED:
             LOG('SubSync', INFO, 'Bad authentication')
-            return {'has_response':0, 'xml':xml_client}
+            return {'has_response': False, 'xml': xml_client}
           else:
             response = self.SubSyncModif(subscription, xml_client)
         else:
