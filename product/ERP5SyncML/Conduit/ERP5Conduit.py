@@ -707,6 +707,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,'afterNewObject')
   def afterNewObject(self, object):
+    """Overloadable method
+    """
     pass
 
   security.declareProtected(Permissions.AccessContentsInformation,'getStatusFromXml')
@@ -734,6 +736,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   def getElementFromXupdate(self, xml):
     """
     return a fragment node with applied xupdate
+    This method simulate an xupdate transformation on given XML.
+    It transform the xupdate into node handleable by Conduit
     """
     if xml.xpath('name()') in self.XUPDATE_ELEMENT:
       new_node = Element(xml.get('name'), nsmap=xml.nsmap)
@@ -746,6 +750,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       new_node.tail = xml.tail
       return new_node
     if xml.xpath('name()') in (self.XUPDATE_UPDATE + self.XUPDATE_DEL):
+      # This condition seems not used anymore and not efficient
+      # Usage of xupdate_processor is recommanded
       result = u'<'
       attribute = xml.attrib.get('select')
       s = '[@id='
