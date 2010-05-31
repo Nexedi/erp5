@@ -541,7 +541,7 @@ class SynchronizationTool( SubscriptionSynchronization,
     signature = subscriber.getSignatureFromObjectId(object.getId()) # XXX may be change for rid
     copy_path = conflict.getCopyPath()
     signature.delConflict(conflict)
-    if len(signature.getConflictList()) == 0:
+    if not signature.getConflictList():
       if copy_path is not None:
         #LOG('p_sync.applyPublisherValue, conflict_list empty on : ', TRACE, signature)
         # Delete the copy of the object if the there is one
