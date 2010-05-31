@@ -640,14 +640,16 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       xml = xml[0]
     return xml
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getObjectType')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                               'getObjectType')
   def getObjectType(self, xml):
     """
     Retrieve the portal type from an xml
     """
     return xml.get('portal_type')
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getPropertyType')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                             'getPropertyType')
   def getPropertyType(self, xml):
     """
     Retrieve the portal type from an xml
@@ -700,18 +702,15 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       object.manage_afterEdit()
     self.afterNewObject(object)
 
-    ## Then we may create subobject
-    #for subnode in xml:
-      #if subnode.tag in (self.xml_object_tag,): #,self.history_tag):
-        #self.addNode(object=object, xml=subnode)
-
-  security.declareProtected(Permissions.AccessContentsInformation,'afterNewObject')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                              'afterNewObject')
   def afterNewObject(self, object):
     """Overloadable method
     """
     pass
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getStatusFromXml')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                            'getStatusFromXml')
   def getStatusFromXml(self, xml):
     """
     Return a worklow status from xml
@@ -732,7 +731,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return xml.xpath('|'.join(['.//*[name() = "%s"]' % name for name in self.XUPDATE_ELEMENT]))
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getElementFromXupdate')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                       'getElementFromXupdate')
   def getElementFromXupdate(self, xml):
     """
     return a fragment node with applied xupdate
@@ -775,7 +775,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       return self.convertToXml(result)
     return xml
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getWorkflowActionFromXml')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                    'getWorkflowActionFromXml')
   def getWorkflowActionFromXml(self, xml):
     """
     Return the list of workflow actions
