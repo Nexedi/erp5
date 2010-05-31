@@ -1454,9 +1454,31 @@ class TestIngestion(ERP5TypeTestCase):
     self.stepTic()
     self.assertEquals(document.getSourceReference(), my_filename)
 
+  def test_16_TestMetadataDiscoveryFromUserLogin(self):
+    """
+      Test that  user_login is used to discover meta data (group, function, etc.. from Assignment)
+    """
+    portal = self.portal
+    contribution_tool = getToolByName(portal, 'portal_contributions')
+    # create an user to simulate upload from him
+    user = self.createUser(reference='contributor1')
+    assignment = self.createUserAssignment(user, \
+                                           dict(group='anybody',
+                                                function='function/musician/wind/saxophone',
+                                                site='site/arctic/spitsbergen'))
+    portal.document_module.manage_setLocalRoles('contributor1', ['Assignor',])
+    self.stepTic()
+    file_object = makeFileUpload('TEST-en-002.doc')
+    document = contribution_tool.newContent(file=file_object)
+    document.discoverMetadata(document.getSourceReference(), 'contributor1') 
+    self.stepTic()
+    self.assertEquals(document.getSourceReference(), 'TEST-en-002.doc')
+    self.assertEquals('function/musician/wind/saxophone', document.getFunction())
+    self.assertEquals('anybody', document.getGroup())
+    self.assertEquals('site/arctic/spitsbergen', document.getSite())
+
 # Missing tests
 """
-    property_dict = context.getPropertyDictFromUserLogin()
     property_dict = context.getPropertyDictFromInput()
 """
 
