@@ -414,7 +414,7 @@ class Rule(Predicate, XMLObject):
               break
           else:
             # no modifiable movement was found, need to compensate by quantity
-            raise NotImplementedError('Need to generate quantity compensation')
+            raise NotImplementedError('Need to generate quantity compensation in %s, because all matched movements are immutable : %r.' % (applied_rule.getRelativeUrl(), [x.getRelativeUrl() for x in p_matched_list]))
 
         for movement in p_matched_list:
           if movement in (mutable_movement_list \
