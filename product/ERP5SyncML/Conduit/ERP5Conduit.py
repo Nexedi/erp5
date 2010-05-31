@@ -29,6 +29,7 @@
 
 from Products.ERP5SyncML.XMLSyncUtils import XMLSyncUtilsMixin
 from Products.ERP5SyncML.Conflict import Conflict
+from Products.ERP5Type.Utils import deprecated
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from Products.CMFCore.utils import getToolByName
 from DateTime.DateTime import DateTime
@@ -474,7 +475,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return True
 
   security.declareProtected(Permissions.AccessContentsInformation,
-      'getSubObjectXupdate')
+                                                         'getSubObjectXupdate')
+  @deprecated
   def getSubObjectXupdate(self, xml):
     """
     This will change the xml in order to change the update
@@ -499,7 +501,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return 0
 
   security.declareProtected(Permissions.AccessContentsInformation,
-      'isSubObjectModification')
+                                                     'isSubObjectModification')
+  @deprecated
   def isSubObjectModification(self, xml):
     """
     Check if it is a modification from an subobject
@@ -513,7 +516,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return 0
 
   security.declareProtected(Permissions.AccessContentsInformation,
-      'getSubObjectDepth')
+                                                           'getSubObjectDepth')
+  @deprecated
   def getSubObjectDepth(self, xml):
     """
     Give the Depth of a subobject modification
@@ -544,6 +548,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'changeSubObjectSelect')
+  @deprecated
   def changeSubObjectSelect(self, xml):
     """
     Return a string wich is the selection for the subobject
@@ -606,14 +611,18 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           return subnode
     return None
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getAttribute')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                                'getAttribute')
+  @deprecated
   def getAttribute(self, xml, param):
     """
     Retrieve the given parameter from the xml
     """
     return xml.attrib.get(param, None)
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getObjectProperty')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                           'getObjectProperty')
+  @deprecated
   def getObjectProperty(self, property, xml, data_type=None):
     """
     Retrieve the given property
@@ -698,7 +707,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     return xml.get('type')
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getXupdateObjectType')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                        'getXupdateObjectType')
+  @deprecated
   def getXupdateObjectType(self, xml):
     """
     Retrieve the portal type from an xupdate
@@ -763,7 +774,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       status[keyword] = value
     return status
 
-  security.declareProtected(Permissions.AccessContentsInformation,'getXupdateElementList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                       'getXupdateElementList')
+  @deprecated
   def getXupdateElementList(self, xml):
     """
     Retrieve the list of xupdate:element subnodes
