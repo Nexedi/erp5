@@ -139,10 +139,13 @@ def Base_asXML(object, root=None):
             variable_type = "date"
           if workflow_variable.find('language_revs') >= 0: # XXX specific to cps
             variable_type = "dict"
+          if workflow_action[workflow_variable] is None:
+            variable_type = 'None'
           variable_node = SubElement(workflow_node, workflow_variable,
                                      attrib=dict(type=variable_type))
-          variable_node_text = str(workflow_action[workflow_variable])
-          variable_node.text = unicode(variable_node_text, 'utf-8')
+          if variable_type != 'None':
+            variable_node_text = str(workflow_action[workflow_variable])
+            variable_node.text = unicode(variable_node_text, 'utf-8')
 
   # We should now describe security settings
   for user_role in self.get_local_roles():
