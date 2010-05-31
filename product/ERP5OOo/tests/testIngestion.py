@@ -143,16 +143,6 @@ class TestIngestion(ERP5TypeTestCase):
     script = getattr(context, script_id)
     script.ZPythonScript_edit('email_to, event, doc, **kw', 'return')
 
-  def login(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create a new manager user and login.
-    """
-    user_name = 'dms_user'
-    user_folder = self.portal.acl_users
-    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor'], [])
-    user = user_folder.getUserById(user_name).__of__(user_folder)
-    newSecurityManager(None, user)
-
   def createDefaultCategoryList(self):
     """
       Create some categories for testing. DMS security
