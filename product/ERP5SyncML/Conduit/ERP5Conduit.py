@@ -280,7 +280,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       args = {}
       if self.isProperty(xml):
         keyword = None
-        value = xml.attrib.get('select', None)
+        value = xml.get('select')
         if value is not None:
           select_list = value.split('/') # Something like:
                                          #('','object[1]','sid[1]')
@@ -295,7 +295,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if xml.xpath('name()') not in self.XUPDATE_INSERT_OR_ADD:
           for subnode in xml:
             if subnode.xpath('name()') in self.XUPDATE_ELEMENT:
-              keyword = subnode.attrib.get('name', None)
+              keyword = subnode.get('name')
               data_xml = subnode
         else:
           # We can call add node
@@ -465,7 +465,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     not an attribute @type it's a metadata
     """
     bad_list = (self.sub_object_exp, self.history_exp, self.attribute_type_exp,)
-    value = xml.attrib.get('select', None)
+    value = xml.get('select')
     if value is not None:
       for bad_string in bad_list:
         if bad_string.search(value) is not None:
@@ -487,7 +487,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       'isHistoryAdd')
   def isHistoryAdd(self, xml):
     bad_list = (self.history_exp,)
-    value = xml.attrib.get('select')
+    value = xml.get('select')
     if value is not None:
       for bad_string in bad_list:
         if bad_string.search(value) is not None:
@@ -601,7 +601,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xml = self.convertToXml(xml)
     for subnode in xml:
       if subnode.xpath('local-name()') == self.xml_object_tag:
-        if object_id == self.getAttribute(subnode, 'id'):
+        if object_id == subnode.get('id'):
           return subnode
     return None
 
@@ -721,7 +721,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       object.manage_delLocalRoles(user_role_list)
     if getattr(object, 'workflow_history', None) is not None and reset_workflow:
       object.workflow_history = PersistentMapping()
-    if xml.xpath('name()').find('xupdate') >= 0:
+    if xml.prefix == 'xupdate':
       xml = xml[0]
     for subnode in xml.xpath('*'):
       #get only Element nodes (not Comments or Processing instructions)
@@ -757,8 +757,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     status = {}
     for subnode in xml:
-      keyword = str(subnode.xpath('name()'))
-      value = self.getObjectProperty(keyword, xml)
+      keyword = subnode.tag
+      value = self.convertXmlValue(xml.find(keyword))
       status[keyword] = value
     return status
 
@@ -775,15 +775,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return a fragment node with applied xupdate
     """
     if xml.xpath('name()') in self.XUPDATE_ELEMENT:
-      new_node = Element(xml.attrib.get('name'), nsmap=xml.nsmap)
-      for subnode in xml:
-        if subnode.xpath('name()') == 'xupdate:attribute':
-          new_node.attrib.update({subnode.attrib.get('name'): subnode.text})
-      # Then dumps the xml and remove what we does'nt want
-      new_node.extend(deepcopy(child) for child in xml.xpath('*[namespace-uri(.) != "http://www.xmldb.org/xupdate"]'))
-      #Strange behaviour of lxml, xml.text return nothing when xml.text is CDATA
-      #new_node.text = xml.text
-      new_node.text = xml.xpath('string(text())')
+      new_node = Element(xml.get('name'), nsmap=xml.nsmap)
+      for subnode in xml.findall('{%s}attribute' % xml.nsmap['xupdate']):
+        new_node.attrib.update({subnode.get('name'): subnode.text})
+      ## Then dumps the xml and remove xupdate:attribute nodes
+      new_node.extend(deepcopy(child) for child in\
+                                 xml.xpath('*[name() != "xupdate:attribute"]'))
+      new_node.text = xml.text
       new_node.tail = xml.tail
       return new_node
     if xml.xpath('name()') in (self.XUPDATE_UPDATE + self.XUPDATE_DEL):
@@ -1000,12 +998,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     conflict_list = []
     # We want to add a local role
     #LOG('addLocalPermissionNode, xml',0,xml)
-    if len(xml.text):
-      roles = self.convertXmlValue(xml, data_type='tokens')
-      roles = list(roles) # Needed for CPS, or we have a CPS error
-    else:
-      roles = ()
-    permission = self.getAttribute(xml, 'id')
+    roles = self.convertXmlValue(xml, data_type='tokens')
+
+    permission = xml.get('id')
     #LOG('local_role: ',0,'permission: %s roles: %s' % (repr(permission),repr(roles)))
     #user = roles[0]
     #roles = roles[1:]
@@ -1047,7 +1042,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       This is the method calling to create an object
     """
     if object_id is None:
-      object_id = self.getAttribute(xml, 'id')
+      object_id = xml.get('id')
     if object_id is not None:
       if sub_object is None:
         try:
