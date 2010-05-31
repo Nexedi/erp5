@@ -910,10 +910,11 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.tic()
     self.synchronize(self.sub_id1)
     conflict_list = portal_sync.getConflictList()
-    self.assertEqual(len(conflict_list), 7)
+    self.assertEqual(len(conflict_list), 9)
     self.assertEqual(sorted([x.getKeyword() for x in conflict_list]),
-                     ['content_md5', 'content_type', 'description',
-                      'short_title', 'size', 'source_reference', 'title'])
+                     ['base_data', 'content_md5', 'content_type',
+                      'data', 'description', 'short_title', 'size',
+                      'source_reference', 'title'])
     # check if we have the state conflict on all clients
     self.checkSynchronizationStateIsConflict()
     # we will take :
@@ -922,16 +923,16 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     for conflict in conflict_list : 
       subscriber = conflict.getSubscriber()
       property = conflict.getPropertyId()
-      resolve = 0
+      resolved = False
       if property == 'description':
-        if subscriber.getSubscriptionUrl()==self.publication_url:
-          resolve = 1
+        if subscriber.getSubscriptionUrl() == self.publication_url:
+          resolved = True
           conflict.applySubscriberValue()
       if property == 'short_title':
-        if subscriber.getSubscriptionUrl()==self.subscription_url['two_way']:
-          resolve = 1
+        if subscriber.getSubscriptionUrl() == self.subscription_url['two_way']:
+          resolved = True
           conflict.applySubscriberValue()
-      if not resolve:
+      if not resolved:
         conflict.applyPublisherValue()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
