@@ -757,8 +757,8 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.getStatus() != self.PARTIAL) or\
             self.getAlertCodeFromXML(remote_xml) == self.SLOW_SYNC:
           #LOG('getSyncMLData', DEBUG, 'Current object.getPath: %s' % object.getPath())
-          xml_string = conduit.getXMLFromObjectWithId(object,\
-                       xml_mapping=domain.getXMLMapping())
+          xml_string = conduit.getXMLFromObjectWithId(object,
+                                            xml_mapping=domain.getXMLMapping())
           gid = subscriber.getGidFromObject(object)
           signature = Signature(id=gid, object=object).__of__(subscriber)
           signature.setTempXML(xml_string)
@@ -783,8 +783,8 @@ class XMLSyncUtilsMixin(SyncCode):
         elif signature.getStatus() in (self.NOT_SYNCHRONIZED,
                                        self.PUB_CONFLICT_MERGE,):
           # We don't have synchronized this object yet but it has a signature
-          xml_object = conduit.getXMLFromObjectWithId(object,\
-                       xml_mapping=domain.getXMLMapping()) 
+          xml_object = conduit.getXMLFromObjectWithId(object,
+                                            xml_mapping=domain.getXMLMapping())
           #LOG('getSyncMLData', DEBUG, 'checkMD5: %s' % str(signature.checkMD5(xml_object)))
           #LOG('getSyncMLData', DEBUG, 'getStatus: %s' % str(signature.getStatus()))
           if signature.getStatus() == self.PUB_CONFLICT_MERGE:
@@ -1034,8 +1034,8 @@ class XMLSyncUtilsMixin(SyncCode):
                 xml_object = etree.tostring(xml_object, encoding='utf-8',
                                             pretty_print=True)
             else: 
-              xml_object = conduit.getXMLFromObjectWithId(object,\
-                           xml_mapping=domain.getXMLMapping()) 
+              xml_object = conduit.getXMLFromObjectWithId(object,
+                                            xml_mapping=domain.getXMLMapping())
             signature.setStatus(self.SYNCHRONIZED)
             #signature.setId(object.getId())
             signature.setPath(object.getPhysicalPath())
@@ -1062,8 +1062,8 @@ class XMLSyncUtilsMixin(SyncCode):
                                         previous_xml=previous_xml,
                                         force=force,
                                         simulate=simulate)
-            xml_object = conduit.getXMLFromObjectWithId(object,\
-                         xml_mapping=domain.getXMLMapping())
+            xml_object = conduit.getXMLFromObjectWithId(object,
+                                            xml_mapping=domain.getXMLMapping())
             signature.setTempXML(xml_object)
             if conflict_list:
               status_code = self.CONFLICT
@@ -1078,7 +1078,7 @@ class XMLSyncUtilsMixin(SyncCode):
                                     cmd='Replace',
                                     sync_code=status_code,
                                     remote_xml=action))
-            cmd_id +=1
+            cmd_id += 1
             if simulate:
               # This means we are on the publisher side and we want to store
               # the xupdate from the subscriber and we also want to generate
@@ -1088,7 +1088,7 @@ class XMLSyncUtilsMixin(SyncCode):
               signature.setSubscriberXupdate(data_subnode_string)
 
         elif action.xpath('local-name()') == 'Delete':
-          LOG("applyactionlist delete",INFO,"")
+          #LOG("applyactionlist delete", INFO, "")
           object_id = signature.getId()
           #LOG('applyActionList Delete on : ', DEBUG, (signature.getId(), subscriber.getObjectFromGid(object_id)))
           if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
@@ -1115,7 +1115,7 @@ class XMLSyncUtilsMixin(SyncCode):
         #LOG('applyActionList', DEBUG, 'waiting more data for :%s' % signature.getId())
         xml_confirmation_list.append(self.SyncMLConfirmation(
                                 cmd_id=cmd_id,
-                                cmd= "%s" % action.xpath('name()'),
+                                cmd="%s" % action.xpath('name()'),
                                 sync_code=self.WAITING_DATA,
                                 remote_xml=action))
       if conflict_list and signature is not None:
