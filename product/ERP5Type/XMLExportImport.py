@@ -46,9 +46,9 @@ marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
                                                             as_tree=True).dumps
 
 class OrderedPickler(Pickler):
-    
+
     dispatch = Pickler.dispatch.copy()
-    
+
     def save_dict(self, obj):
         write = self.write
         if self.bin:
@@ -60,7 +60,7 @@ class OrderedPickler(Pickler):
         key_list.sort() # Order keys
         obj_items = map(lambda x: (x, obj[x]), key_list) # XXX Make it lazy in the future
         self._batch_setitems(obj_items)
-    
+
     dispatch[DictionaryType] = save_dict
     if not PyStringMap is None:
         dispatch[PyStringMap] = save_dict        
@@ -83,7 +83,8 @@ def Base_asXML(object, root=None):
   #LOG('asXML',0,'Working on: %s' % str(self.getPhysicalPath()))
 
   object = SubElement(root, 'object',
-                      attrib=dict(id=self.getId(), portal_type=self.getPortalType()))
+                      attrib=dict(id=self.getId(),
+                      portal_type=self.getPortalType()))
 
   # We have to find every property
   for prop_id in self.propertyIds():
@@ -151,7 +152,7 @@ def Base_asXML(object, root=None):
   for user_role in self.get_local_roles():
     local_role_node = SubElement(object, 'local_role',
                                  attrib=dict(id=user_role[0], type='tokens'))
-    #convert local_roles in string because marshaler can't do it
+    #convert local_roles in string because marshaller can't do it
     role_list = []
     for role in user_role[1]:
       if isinstance(role, unicode):
