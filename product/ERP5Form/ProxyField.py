@@ -574,10 +574,7 @@ class ProxyField(ZMIField):
     """
     proxy_field = self.getTemplateField()
     if proxy_field:
-      url='/'.join((self.absolute_url(),
-                    self.get_value('form_id'),
-                    self.get_value('field_id'),
-                    'manage_main'))
+      url = "%s/manage_main" % proxy_field.absolute_url() 
       REQUEST.RESPONSE.redirect(url)
     else:
       # FIXME: should show some error message 
