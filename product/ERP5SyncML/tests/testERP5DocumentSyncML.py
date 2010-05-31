@@ -118,9 +118,12 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
     """
       Return the list of business templates.
     """
-    return ('erp5_base', 'erp5_ingestion',\
-    'erp5_ingestion_mysql_innodb_catalog', 'erp5_web',\
-    'erp5_dms')
+    return ('erp5_base',
+            'erp5_ingestion',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_web',
+            'erp5_dms',
+            )
 
 
   def afterSetUp(self):
@@ -567,9 +570,8 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
   def getTitle(self):
     """
     """
-    return "ERP5 SyncML"
+    return "ERP5 Document SyncML"
 
-     
   def setupPublicationAndSubscriptionIdGenerator(self, quiet=0):
     portal_sync = self.getSynchronizationTool()
     sub1 = portal_sync.getSubscription(self.sub_id1)
@@ -788,7 +790,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     doc_s.edit(**kw)
     file = makeFileUpload(self.filename_odt)
     doc_s.edit(file=file)
-    #doc_s.convertToBaseFormat()
     # Side client modification gid of a odt document
     id_odt = str(self.ids[self.id_max_text+1])
     doc_c = document_client1._getOb(id_odt)
@@ -796,7 +797,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     doc_c.edit(**kw)
     file = makeFileUpload(self.filename_text)
     doc_c.edit(file=file)
-    #doc_c.convertToBaseFormat()
     transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
