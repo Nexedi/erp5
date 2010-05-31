@@ -111,12 +111,19 @@ class SyncCode(Persistent):
   ADDABLE_PROPERTY = local_role_list + (history_tag,) + local_permission_list
   NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:attribute') \
                           + XUPDATE_ELEMENT + ADDABLE_PROPERTY
-  sub_object_exp = re.compile("/object\[@id='.*'\]/")
-  object_exp = re.compile("/object\[@id='.*'\]")
+
   attribute_type_exp = re.compile("^.*attribute::type$")
-  sub_sub_object_exp = re.compile("/object\[@id='.*'\]/object\[@id='.*'\]/")
   history_exp = re.compile("/%s\[@id='.*'\]" % history_tag)
   bad_history_exp = re.compile("/%s\[@id='.*'\]/" % history_tag)
+  extract_id_from_xpath = re.compile(
+                              "(?P<object_block>(?P<property>[^/]+)\[@"\
+                              "(?P<id_of_id>id|gid)='(?P<object_id>[^']+)'\])")
+
+  # Those regular expression are deprecated and keept
+  # only for backward compatibility
+  object_exp = re.compile("/object\[@id='.*'\]")
+  sub_object_exp = re.compile("/object\[@id='.*'\]/")
+  sub_sub_object_exp = re.compile("/object\[@id='.*'\]/object\[@id='.*'\]/")
 
   #media types :
 
