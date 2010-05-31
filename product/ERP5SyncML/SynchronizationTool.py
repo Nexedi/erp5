@@ -548,7 +548,7 @@ class SynchronizationTool( SubscriptionSynchronization,
         directory = object.getParentValue()
         copy_id = copy_path[-1]
         #LOG('p_sync.applyPublisherValue, copy_id: ', TRACE, copy_id)
-        if hasattr(directory.aq_base, 'hasObject'):
+        if getattr(aq_base(directory), 'hasObject', None) is not None:
           # optimize the case of a BTree folder
           #LOG('p_sync.applyPublisherValue, deleting...: ', TRACE, copy_id)
           if directory.hasObject(copy_id):
