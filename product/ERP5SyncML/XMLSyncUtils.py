@@ -1095,13 +1095,14 @@ class XMLSyncUtilsMixin(SyncCode):
             data_subnode = self.getDataText(action)
           else:
             data_subnode = self.getDataSubNode(action)
-          #LOG('applyActionList, object gid to delete :', 0, subscriber.getObjectFromGid(object_id))
-          if subscriber.getObjectFromGid(object_id) is not None:
+          #LOG('applyActionList, object gid to delete :', INFO, subscriber.getObjectFromGid(object_id))
+          document = subscriber.getObjectFromGid(object_id)
+          if document is not None:
           #if the object exist:
             conduit.deleteNode(
                         xml=data_subnode,
                         object=destination,
-                        object_id=subscriber.getObjectFromGid(object_id).getId())
+                        object_id=document.getId())
             subscriber.delSignature(gid)
           xml_confirmation_list.append(self.SyncMLConfirmation(
                                   cmd_id=cmd_id,
