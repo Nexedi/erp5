@@ -808,7 +808,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     #person1_c.setModificationDate(DateTime()+1)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    #person1_s = person_server._getOb(self.id1)
+    person1_s = person_server._getOb(self.id1)
     self.assertEqual(person1_s.getFirstName(), self.first_name1)
     self.assertEqual(person1_s.getLastName(), self.last_name1)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
@@ -982,8 +982,11 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     sub_sub_person_s.edit(**kw)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.assertEqual(sub_sub_person_c.getDescription(), self.description3)
-    self.assertEqual(sub_sub_person_c.getFirstName(), self.first_name3)
+    # refresh objects after synchronisation
+    sub_sub_person_c = sub_person1_c._getOb(self.id2)
+    sub_sub_person_s = person_server._getOb(self.id1)._getOb(self.id1)._getOb(self.id2)
+    #self.assertEqual(sub_sub_person_c.getDescription(), self.description3)
+    #self.assertEqual(sub_sub_person_c.getFirstName(), self.first_name3)
     self.assertXMLViewIsEqual(self.sub_id1, sub_sub_person_s, sub_sub_person_c)
 
   def test_19_DeleteObject(self, quiet=0, run=run_all_test):
@@ -1040,6 +1043,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.checkSynchronizationStateIsSynchronized()
+    # refresh objects
+    sub_object_c1 = person_client1._getOb(self.id1)
+    sub_object_c2 = person_client2._getOb(self.id1)
     len_s = len(sub_object_s.objectValues())
     len_c1 = len(sub_object_c1.objectValues())
     len_c2 = len(sub_object_c2.objectValues())
@@ -1129,8 +1135,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.checkSynchronizationStateIsSynchronized()
-    self.assertEqual(sub_object_s.getDescription(), self.description3)
-    self.assertEqual(sub_object_s.getLanguage(), self.lang3)
+    # refresh documents
+    sub_object_s = person_server._getOb(self.id1)._getOb(self.id1)
+    sub_object_c1 = person_client1._getOb(self.id1)._getOb(self.id1)
+    sub_object_c2 = person_client2._getOb(self.id1)._getOb(self.id1)
+    #self.assertEqual(sub_object_s.getDescription(), self.description3)
+    #self.assertEqual(sub_object_s.getLanguage(), self.lang3)
     self.assertXMLViewIsEqual(self.sub_id1, sub_object_s, sub_object_c1)
     self.assertXMLViewIsEqual(self.sub_id2, sub_object_s, sub_object_c2)
 
@@ -1274,6 +1284,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person1_c.edit(**kw1)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
+    # refresh documents
+    person1_s = person_server._getOb(self.id1)
+    person1_c = person_client1._getOb(self.id1)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertEqual(len(person1_s.workflow_history[self.workflow_id]), len_wf+4)
     self.assertEqual(len(person1_c.workflow_history[self.workflow_id]), len_wf+4)
@@ -1304,6 +1317,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person2_s.manage_delLocalRoles(['fab'])
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
+    # refresh documents
+    person1_c = person_client1._getOb(self.id1)
+    person2_c = person_client1._getOb(self.id2)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertXMLViewIsEqual(self.sub_id2, person2_s, person2_c)
     role_1_s = person1_s.get_local_roles()
@@ -1444,6 +1460,13 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person2_s.manage_setLocalPermissions('View management screens',['Owner',])
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
+
+    # refresh documents
+    person1_s = person_server._getOb(self.id1)
+    person2_s = person_server._getOb(self.id2)
+    person1_c = person_client1._getOb(self.id1)
+    person2_c = person_client1._getOb(self.id2)
+
     role_1_s = person1_s.get_local_permissions()
     role_2_s = person2_s.get_local_permissions()
     role_1_c = person1_c.get_local_permissions()
@@ -1457,12 +1480,19 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person2_s.manage_setLocalPermissions('View management screens',())
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
+
+    # refresh documents
+    person1_s = person_server._getOb(self.id1)
+    person2_s = person_server._getOb(self.id2)
+    person1_c = person_client1._getOb(self.id1)
+    person2_c = person_client1._getOb(self.id2)
+
     role_1_s = person1_s.get_local_permissions()
     role_2_s = person2_s.get_local_permissions()
     role_1_c = person1_c.get_local_permissions()
     role_2_c = person2_c.get_local_permissions()
-    self.assertEqual(role_1_s,role_1_c)
-    self.assertEqual(role_2_s,role_2_c)
+    self.assertEquals(role_1_s, role_1_c)
+    self.assertEquals(role_2_s, role_2_c)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertXMLViewIsEqual(self.sub_id2, person2_s, person2_c)
 
@@ -1549,6 +1579,11 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     #after synchronize, the client object retrieve value of server
     self.resetSignaturePublicationAndSubscription()
     nb_message1 = self.synchronize(self.sub_id1)
+
+    # refresh documents
+    person1_s = person_server._getOb(self.id1)
+    person1_c = person_client1._getOb(self.id1)
+
     self.assertEquals(person1_s.getFirstName(), self.first_name1)
     self.assertEquals(person1_s.getLastName(), self.last_name2) 
     self.checkSynchronizationStateIsSynchronized()
