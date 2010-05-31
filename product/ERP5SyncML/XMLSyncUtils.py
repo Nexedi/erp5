@@ -1111,9 +1111,10 @@ class XMLSyncUtilsMixin(SyncCode):
                                   remote_xml=action))
       else: # We want to retrieve more data
         signature.setStatus(self.PARTIAL)
-        signature.appendPartialXML(partial_data) 
-        #LOG('applyActionList', DEBUG, 'previous_partial: %s' % str(previous_partial))
-        #LOG('applyActionList', DEBUG, 'waiting more data for :%s' % signature.getId())
+        signature.appendPartialXML(data)
+        #LOG('applyActionList', INFO, 'waiting more data for :%s' % signature.getId())
+        #LOG('applyActionList', INFO, 'waiting more data for :%s' % object.getPath())
+        #LOG('applyActionList', INFO, data)
         xml_confirmation_list.append(self.SyncMLConfirmation(
                                 cmd_id=cmd_id,
                                 cmd="%s" % action.xpath('name()'),
