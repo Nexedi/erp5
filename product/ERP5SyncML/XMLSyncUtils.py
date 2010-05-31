@@ -657,9 +657,8 @@ class XMLSyncUtilsMixin(SyncCode):
     line_list = xml_string.split('\n')
     short_string = '\n'.join(line_list[:self.MAX_LINES])
     rest_string = '\n'.join(line_list[self.MAX_LINES:])
-    xml_tree = E.Partial()
-    xml_tree.text = etree.CDATA(short_string.decode('utf-8'))
-    return xml_tree, rest_string
+    xml_string = etree.CDATA(short_string.decode('utf-8'))
+    return xml_string, rest_string
 
   def getSyncMLData(self, domain=None, remote_xml=None, cmd_id=0,
                     subscriber=None, xml_confirmation_list=None, conduit=None,
@@ -858,20 +857,18 @@ class XMLSyncUtilsMixin(SyncCode):
                                   cmd='Replace'))
           signature.setStatus(self.SYNCHRONIZED)
         elif signature.getStatus() == self.PARTIAL:
-          xml_string = signature.getPartialXML(default='')
-          if(subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']):
-            xml_to_send = conduit.getXMLFromObjectWithId(object,\
-                                  xml_mapping=domain.getXMLMapping()) 
-          elif xml_string.count('\n') > self.MAX_LINES:
-            more_data = 1
-            # Receive the chunk of partial xml
-            short_string = signature.getFirstChunkPdata(self.MAX_LINES)
-            xml_to_send = E.Partial()
-            xml_to_send.text = etree.CDATA(short_string.decode('utf-8'))
-            status = self.PARTIAL
+          # Receive the chunk of partial xml
+          if subscriber.getMediaType() != self.MEDIA_TYPE['TEXT_XML']:
+            xml_string = conduit.getXMLFromObjectWithId(object,
+                                            xml_mapping=domain.getXMLMapping())
           else:
-            xml_to_send = E.Partial()
-            xml_to_send.text = etree.CDATA(xml_string.decode('utf-8'))
+            # Wrapp it into CDATA
+            xml_string = signature.getPartialXML(default='')
+            if xml_string.count('\n') > self.MAX_LINES:
+              more_data = True
+              status = self.PARTIAL
+              xml_string = signature.getFirstChunkPdata(self.MAX_LINES)
+            xml_string = etree.CDATA(xml_string)
           signature.setStatus(status)
           if signature.getAction() == 'Replace':
             rid = signature.getRid()
@@ -882,7 +879,7 @@ class XMLSyncUtilsMixin(SyncCode):
                                        object=object,
                                        gid=gid,
                                        rid=rid,
-                                       xml_string=xml_to_send,
+                                       xml_string=xml_string,
                                        more_data=more_data,
                                        media_type=subscriber.getMediaType()))
           elif signature.getAction() == 'Add':
@@ -892,7 +889,7 @@ class XMLSyncUtilsMixin(SyncCode):
                                         cmd_id=cmd_id,
                                         object=object,
                                         gid=gid,
-                                        xml_string=xml_to_send,
+                                        xml_string=xml_string,
                                         more_data=more_data,
                                         media_type=subscriber.getMediaType()))
         if not more_data:
@@ -957,20 +954,26 @@ class XMLSyncUtilsMixin(SyncCode):
         signature.setObjectId(object_id)
         subscriber.addSignature(signature)
       force = signature.getForce()
-      partial_node = action.find('.//{%(ns)s}Item/{%(ns)s}Data/{%(ns)s}Partial' % {'ns': SYNCML_NAMESPACE})
-      partial_data = partial_node is not None and partial_node.text or ''
+      data_node = action.find('.//{%(ns)s}Item/{%(ns)s}Data'\
+                                                    % {'ns': SYNCML_NAMESPACE})
+      if data_node is not None:
+        if len(data_node):
+          data = etree.tostring(data_node[0])
+        else:
+          data = data_node.text or ''
+      else:
+        data = ''
       if not self.checkActionMoreData(action):
+        # This is the last chunk of a partial xml
+        # or this is just an entire data chunk
         data_subnode = None
-        if partial_node is not None:
-          if not partial_data:
-            data_subnode = signature.getPartialXML(default='')
-            signature.setPartialXML(None)
-          elif signature.hasPartialXML():
-            signature.appendPartialXML(partial_data)
-            data_subnode = signature.getPartialXML()
-            signature.setPartialXML(None)
-          else:
-            data_subnode = partial_data
+        if signature.hasPartialXML():
+          # rebuild the entire data
+          signature.appendPartialXML(data)
+          # fetch data as string
+          data_subnode = signature.getPartialXML()
+          # clear partial data cache on Signature
+          signature.setPartialXML(None)
           #LOG('applyActionList', DEBUG, 'data_subnode: %s' % data_subnode)
           if subscriber.getMediaType() == self.MEDIA_TYPE['TEXT_XML']:
             data_subnode = etree.XML(data_subnode, parser=parser)
