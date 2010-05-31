@@ -361,8 +361,8 @@ class TestERP5SyncMLMixin:
     transaction.commit()
     self.tic()
 
-  def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,\
-                           force=0):
+  def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,
+                                                                  force=False):
     """
       Check the equality between two xml objects with gid as id
     """
@@ -373,24 +373,29 @@ class TestERP5SyncMLMixin:
     gid_sub = publication.getGidFromObject(object_sub)
     self.assertEqual(gid_pub, gid_sub)
     conduit = ERP5Conduit()
-    xml_pub = conduit.getXMLFromObjectWithGid(object=object_pub, gid=gid_pub,\
-              xml_mapping=publication.getXMLMapping())
+    xml_pub = conduit.getXMLFromObjectWithGid(object=object_pub, gid=gid_pub,
+                                       xml_mapping=publication.getXMLMapping())
     #if One Way From Server there is not xml_mapping for subscription
-    xml_sub = conduit.getXMLFromObjectWithGid(object=object_sub, gid=gid_sub,\
-              xml_mapping=subscription.getXMLMapping(force))
+    xml_sub = conduit.getXMLFromObjectWithGid(object=object_sub, gid=gid_sub,
+                                 xml_mapping=subscription.getXMLMapping(force))
     erp5diff = ERP5Diff()
     erp5diff.compare(xml_pub, xml_sub)
     result = erp5diff.outputString()
     result = etree.XML(result)
-    if len(result) != 0 :
-      for update in result:
-        #XXX edit workflow is not replaced, so discard workflow checking
-        if update.get('select').find('time') != -1 or\
-        update.get('select').find('serial') !=1:
-          continue
-        else :
-          self.fail('diff between pub:\n%s \nand sub:\n%s \n => \n%s' %\
-              (xml_pub, xml_sub, etree.tostring(result, pretty_print=True)))
+    identity = True
+    for update in result:
+      #XXX edit workflow is not replaced, so discard workflow checking
+      select = update.get('select', '')
+      discarded_list = ('edit_workflow',)
+      if 'edit_workflow' in  select:
+        continue
+      else:
+        identity = False
+        break
+    if not identity:
+      self.fail('diff between pub:%s and sub:%s \n%s' % (object_pub.getPath(),
+                                                         object_sub.getPath(),
+                                   etree.tostring(result, pretty_print=True)))
 
   def deletePublicationAndSubscription(self):
     portal_sync = self.getSynchronizationTool()
