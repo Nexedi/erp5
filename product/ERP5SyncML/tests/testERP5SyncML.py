@@ -1244,7 +1244,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id2)
     self.assertXMLViewIsEqual(self.sub_id2, person1_s, person1_c2)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c1)
-        
 
   def test_26_SynchronizeWorkflowHistory(self, quiet=0, run=run_all_test):
     """
@@ -1649,7 +1648,6 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     self.assertEquals(person1_s.getFirstName(), self.first_name3)
     self.assertEquals(person1_s.getLastName(), self.last_name3)
  
-    
     #adding authentication :
     self.addAuthenticationToPublication(self.pub_id, 'fab', 'myPassword', 'b64',
         'syncml:auth-basic')
@@ -1734,7 +1732,7 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     self.assertEquals(person1_s.getFirstName(), self.first_name3)
     self.assertEquals(person1_s.getLastName(), self.last_name3)
     self.checkSynchronizationStateIsSynchronized()
- 
+
   def test_36_SynchronizationSubscriptionMaxLines(self, quiet=0, run=run_all_test):
     # We will try to populate the folder person_server
     # with the data form person_client 

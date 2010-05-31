@@ -112,7 +112,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
   nb_publication = 1
   #default edit_workflow
   workflow_id = 'processing_status_workflow'
-  
+
 
   def getBusinessTemplateList(self):
     """
@@ -132,7 +132,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
     self.setSystemPreferences()
     transaction.commit()
     self.tic()
-  
+
   def beforeTearDown(self):
     """
       Do some stuff after each test:
@@ -201,7 +201,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
       self.portal.portal_types.constructContent(type_name = 'Document Module',
                                              container = self.portal,
                                              id = 'document_client1')
-        
+
     if one_way:
       if not hasattr(self.portal, 'document_client_from_server'):
         self.portal.portal_types.constructContent(type_name = 'Document Module',
@@ -215,7 +215,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
       self.portal._delObject(id='document_client1')
     transaction.commit()
     self.tic()
- 
+
   def clearPublicationsAndSubscriptions(self):
     portal_sync = self.getSynchronizationTool()
     for pub in portal_sync.getPublicationList():
@@ -251,7 +251,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
     uf._doAddUser('syncml', '', ['Manager'], [])
     user = uf.getUserById('daniele').__of__(uf)
     newSecurityManager(None, user)
- 
+
   def resetSignaturePublicationAndSubscription(self):
     portal_sync = self.getSynchronizationTool()
     publication = portal_sync.getPublication(self.pub_id)
@@ -285,7 +285,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
     nb_document = len(document_server.objectValues())
     self.assertEqual(nb_document, len(self.ids))
     return nb_document
-   
+
   def documentServer(self, quiet=0, one_way=False):
     """
     create document in document_server
@@ -506,7 +506,7 @@ class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
       doc_c = document_client1._getOb(str(id))
       self.assertXMLViewIsEqual(self.sub_id1, doc_s, doc_c)
 
-  
+
   def checkFirstSynchronizationWithMultiDocument(self, nb_document=0):
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync.getSubscription(self.sub_id1)
@@ -635,7 +635,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     self.assertEqual(nb_message1, self.nb_message_first_synchronization)
     self.checkSynchronizationStateIsSynchronized()
     self.checkFirstSynchronization(nb_document=nb_document)
-  
+
   def test_03_UpdateSimpleData(self, quiet=0):
     if not quiet:
       ZopeTestCase._print('\nTest Update Simple Data ')
@@ -977,7 +977,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     With http synchronization, when a message is not well
     received, then we send message again, we want to
     be sure that is such case we don't do stupid things
-    
+
     If we want to make this test more intersting, it is
     better to split messages
     """
@@ -1080,7 +1080,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     self.assertEqual(document_s.getSourceReference(), self.filename_text)
     self.assertEquals(self.size_filename_text, document_s.get_size())
     self.assertEquals(document_s.getShortTitle(), self.short_title2) 
-    
+
     #reset for refresh sync
     #after synchronize, the client object retrieve value of server
     self.resetSignaturePublicationAndSubscription()
