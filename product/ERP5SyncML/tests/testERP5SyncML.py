@@ -1341,28 +1341,30 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       ZopeTestCase._print('\nTest Partial Data ')
       LOG('Testing... ',0,'test_28_PartialData')
     previous_max_lines = SyncCode.MAX_LINES
-    SyncCode.MAX_LINES = 10
-    self.populatePersonServerWithSubObject(quiet=1,run=1)
-    self.synchronize(self.sub_id1)
-    self.synchronize(self.sub_id2)
-    self.checkSynchronizationStateIsSynchronized()
-    person_client1 = self.getPersonClient1()
-    person1_c = person_client1._getOb(self.id1)
-    sub_person1_c = person1_c._getOb(self.id1)
-    sub_sub_person1 = sub_person1_c._getOb(self.id1)
-    sub_sub_person2 = sub_person1_c._getOb(self.id2)
-    # remove ('','portal...','person_server')
-    len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
-    self.assertEqual(len_path, 3)
-    len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
-    self.assertEqual(len_path, 3)
-    self.assertEquals(sub_sub_person1.getDescription(),self.description1)
-    self.assertEquals(sub_sub_person1.getFirstName(),self.first_name1)
-    self.assertEquals(sub_sub_person1.getLastName(),self.last_name1)
-    self.assertEquals(sub_sub_person2.getDescription(),self.description2)
-    self.assertEquals(sub_sub_person2.getFirstName(),self.first_name2)
-    self.assertEquals(sub_sub_person2.getLastName(),self.last_name2)
-    SyncCode.MAX_LINES = previous_max_lines
+    try:
+      SyncCode.MAX_LINES = 10
+      self.populatePersonServerWithSubObject(quiet=1,run=1)
+      self.synchronize(self.sub_id1)
+      self.synchronize(self.sub_id2)
+      self.checkSynchronizationStateIsSynchronized()
+      person_client1 = self.getPersonClient1()
+      person1_c = person_client1._getOb(self.id1)
+      sub_person1_c = person1_c._getOb(self.id1)
+      sub_sub_person1 = sub_person1_c._getOb(self.id1)
+      sub_sub_person2 = sub_person1_c._getOb(self.id2)
+      # remove ('','portal...','person_server')
+      len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
+      self.assertEqual(len_path, 3)
+      len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
+      self.assertEqual(len_path, 3)
+      self.assertEquals(sub_sub_person1.getDescription(),self.description1)
+      self.assertEquals(sub_sub_person1.getFirstName(),self.first_name1)
+      self.assertEquals(sub_sub_person1.getLastName(),self.last_name1)
+      self.assertEquals(sub_sub_person2.getDescription(),self.description2)
+      self.assertEquals(sub_sub_person2.getFirstName(),self.first_name2)
+      self.assertEquals(sub_sub_person2.getLastName(),self.last_name2)
+    finally:
+      SyncCode.MAX_LINES = previous_max_lines
 
   def test_29_BrokenMessage(self, quiet=0, run=run_all_test):
     """
