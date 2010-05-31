@@ -63,6 +63,7 @@ pref = getattr(context.portal_preferences, "erp5_ui_test_preference", None)\n
 if pref is None:\n
   pref = context.portal_preferences.newContent(id="erp5_ui_test_preference", portal_type="Preference")\n
 pref.setPreferredSubversionWorkingCopyList(tuple(working_copy_list.split(\',\')))\n
+pref.setPreferredHtmlStyleUnsavedFormWarning(False)\n
 if pref.getPreferenceState() == \'disabled\':\n
   pref.enable()\n
 \n
@@ -110,6 +111,7 @@ return \'Set Preference Successfully.\'\n
                             <string>None</string>
                             <string>pref</string>
                             <string>tuple</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -127,6 +129,10 @@ return \'Set Preference Successfully.\'\n
         <item>
             <key> <string>id</string> </key>
             <value> <string>BTZuite_setPreference</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Set Test Runner Preferences</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
