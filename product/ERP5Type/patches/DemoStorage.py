@@ -156,6 +156,8 @@ else: # Zope 2.8
 
     DemoStorage.loadBefore = loadBefore
 
+    from persistent.TimeStamp import TimeStamp
+
     def history(self, oid, version=None, length=1, filter=None):
         assert not version
         self._lock_acquire()
@@ -165,12 +167,18 @@ else: # Zope 2.8
             while length and pre:
                 oid, pre, vdata, p, tid = pre
                 assert vdata is None
-                d = {'tid': tid, 'size': len(p), 'version': ''}
+                d = {'tid': tid, 'size': len(p), 'version': '',
+                     'time': TimeStamp(tid).timeTime()}
                 if filter is None or filter(d):
                     r.append(d)
                     length -= 1
             if length:
-                r += self._base.history(oid, version, length, filter)
+                try:
+                    self._base.modifiedInVersion(oid)
+                except POSException.POSKeyError:
+                    pass
+                else:
+                    r += self._base.history(oid, version, length, filter)
             return r
         finally:
             self._lock_release()
