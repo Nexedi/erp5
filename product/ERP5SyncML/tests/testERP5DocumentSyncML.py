@@ -686,9 +686,10 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     self.tic()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    document_s = document_server._getOb(self.id1)
-    self.assertEqual(document_s.getDescription(), self.description2)
+    document_c = document_client1._getOb(self.id1)
+    self.assertEqual(document_c.getDescription(), self.description2)
     self.assertEqual(document_s.getShortTitle(), self.short_title1)
+    self.assertEqual(document_s.getBaseData(), document_c.getBaseData())
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c)
 
   def test_04_DeleteObject(self, quiet=0):
