@@ -272,7 +272,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           return conflict_list
         if keyword is None: # This is not a selection, directly the property
           keyword = xml.xpath('name()')
-        if not (keyword in self.NOT_EDITABLE_PROPERTY):
+        if keyword not in self.NOT_EDITABLE_PROPERTY:
           # We will look for the data to enter
           xpath_expression = xml.get('select', xpath_expression)
           context = self.getContextFromXpath(object, xpath_expression)
@@ -288,7 +288,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #last synchronization
           #   - current_data : the data actually on this box
           isConflict = False
-          if (previous_xml is not None) and (not force):
+          if previous_xml is not None and not force:
           # if no previous_xml, no conflict
             #old_data = self.getObjectProperty(keyword, previous_xml,
                                               #data_type=data_type)
@@ -318,7 +318,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                 conflict.setRemoteValue(data)
               conflict_list += [conflict]
           # We will now apply the argument with the method edit
-          if args != {} and (isConflict == 0 or force) and \
+          if args and (not isConflict or force) and \
               (not simulate or reset):
             self._updateContent(object=context, **args)
             # It is sometimes required to do something after an edit
