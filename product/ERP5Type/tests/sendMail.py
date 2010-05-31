@@ -80,7 +80,10 @@ def sendMail(subject,
         msg.set_payload(body)
 
     # Send the email via SMTP server.
-    s = smtplib.SMTP()
-    s.connect(smtp_host)
+    if smtp_host:
+      s = smtplib.SMTP(smtp_host)
+    else:
+      s = smtplib.SMTP()
+      s.connect()
     s.sendmail(from_mail, to_mail, msg.as_string())
     s.close()
