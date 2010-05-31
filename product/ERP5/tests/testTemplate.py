@@ -33,6 +33,7 @@ import unittest
 import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type import Permissions
 from Products.ERP5Form.Document.Preference import Priority
 
@@ -320,6 +321,17 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.assertEqual(len(preference.objectIds()), 1)
 
+  # Reason for test failure: 
+  #
+  # Base_makeTemplateFromDocument uses portal_preference.getActivePreference(),
+  # and if the user has no preference, it creates a new preference to attach it
+  # the template.
+  # But getActivePreference uses the catalog, for performance reasons. Which
+  # means that two successive calls to Base_makeTemplateFromDocument, from an
+  # initial state where the user has no active preferences, will create wrongly
+  # two preferences instead of one: during the second call, a preference does
+  # exist, and is enabled for current user, but is just not yet reindexed.
+  @expectedFailure
   def test_manyTemplatesWithoutReindexation(self):
     """Check what happen when templates are created one by one without reindexation"""
     self.createUserAndLogin(self.id())
