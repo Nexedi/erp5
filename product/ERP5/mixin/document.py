@@ -87,7 +87,14 @@ class DocumentMixin:
     # XXX cache result in TV
     method = self._getTypeBasedMethod('checkConversionFormatPermission',
                  fallback_script_id='Document_checkConversionFormatPermission')
-    if not method(format=format, **kw):
+    if '**kw' not in method.params():
+      # Backward compatibility code:
+      # Existing Type Based Method doesn't support new **kw argument
+      # in their signature.
+      is_allowed = method(format=format)
+    else:
+      is_allowed = method(format=format, **kw)
+    if not is_allowed:
       raise Unauthorized('Document: user does not have enough permission'\
                          ' to access document in %s format' %\
                                                         (format or 'original'))
