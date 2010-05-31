@@ -318,37 +318,11 @@ class XMLSyncUtilsMixin(SyncCode):
     else:
       raise ValueError, "Sorry, the given namespace is not supported"
 
-  def addXMLObject(self, cmd_id=0, object=None, xml_string=None,
-                  more_data=0, gid=None, media_type=None):
+  def addXMLObject(self, **kw):
     """
       Add an object with the SyncML protocol
     """
-    data_node = E.Data()
-    if media_type == self.MEDIA_TYPE['TEXT_XML'] and isinstance(xml_string, str):
-      data_node.append(etree.XML(xml_string, parser=parser))
-    elif media_type == self.MEDIA_TYPE['TEXT_XML'] and \
-         not isinstance(xml_string, str):
-      #xml_string could be Partial element if partial XML
-      data_node.append(xml_string)
-    else:
-      cdata = etree.CDATA(xml_string.decode('utf-8'))
-      data_node.text = cdata
-    xml = (E.Add(
-            E.CmdID('%s' % cmd_id),
-            E.Meta(
-              E.Type(media_type)
-              ),
-            E.Item(
-              E.Source(
-                E.LocURI(gid)
-                ),
-              data_node
-              )
-            ))
-    if more_data:
-      item_node = xml.find('{%s}Item' % SYNCML_NAMESPACE)
-      item_node.append(E.MoreData())
-    return etree.tostring(xml, encoding='utf-8', pretty_print=True)
+    return self._createAddOrReplaceNode('Add', **kw)
 
   def deleteXMLObject(self, cmd_id=0, object_gid=None, rid=None):
     """
@@ -366,34 +340,40 @@ class XMLSyncUtilsMixin(SyncCode):
              ))
     return etree.tostring(xml, encoding='utf-8', pretty_print=True)
 
-  def replaceXMLObject(self, cmd_id=0, object=None, xml_string=None,
-                       more_data=0, gid=None, rid=None, media_type=None):
+  def replaceXMLObject(self, **kw):
     """
       Replace an object with the SyncML protocol
     """
-    if rid:
-      elem_to_append = E.Target(E.LocURI('%s' % rid))
-    else:
-      elem_to_append = E.Source(E.LocURI('%s' % gid))
+    return self._createAddOrReplaceNode('Replace', **kw)
+
+  def _createAddOrReplaceNode(self, id_tag, cmd_id=0, object=None,
+                              xml_string=None, more_data=False, gid=None,
+                              rid=None, media_type=None):
+    """Mixin for addXMLObject() and replaceXMLObject()
+    """
     data_node = E.Data()
-    if not isinstance(xml_string, (str, unicode)):
-      data_node.append(xml_string)
+    if media_type == self.MEDIA_TYPE['TEXT_XML']:
+      if isinstance(xml_string, str):
+        data_node.append(etree.XML(xml_string, parser=parser))
+      elif isinstance(xml_string, etree.CDATA):
+        #xml_string could be Data element if partial XML
+        data_node.text = xml_string
+      else:
+        data_node.append(xml_string)
     else:
-      data_node.append(etree.XML(xml_string, parser=parser))
-    xml = (E.Replace(
-             E.CmdID('%s' % cmd_id),
-             E.Meta(
-               E.Type(media_type)
-               ),
-             E.Item(
-               elem_to_append,
-               data_node
-               )
-             ))
+      if isinstance(xml_string, etree.CDATA):
+        data_node.text = xml_string
+      else:
+        cdata = etree.CDATA(xml_string.decode('utf-8'))
+        data_node.text = cdata
+    main_tag = Element('{%s}%s' % (SYNCML_NAMESPACE, id_tag))
+    main_tag.append(E.CmdID('%s' % cmd_id))
+    main_tag.append(E.Meta(E.Type(media_type)))
+    main_tag.append(E.Item(E.Source(E.LocURI(gid)), data_node))
     if more_data:
-      item_node = xml.find('{%s}Item' % SYNCML_NAMESPACE)
+      item_node = main_tag.find('{%s}Item' % SYNCML_NAMESPACE)
       item_node.append(E.MoreData())
-    return etree.tostring(xml, encoding='utf-8', pretty_print=True)
+    return etree.tostring(main_tag, encoding='utf-8', pretty_print=True)
 
   def getXupdateObject(self, object_xml=None, old_xml=None):
     """
