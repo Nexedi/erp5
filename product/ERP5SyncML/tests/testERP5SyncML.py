@@ -29,7 +29,7 @@
 
 import unittest
 from Testing import ZopeTestCase
-from runUnitTest import tests_home
+from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
