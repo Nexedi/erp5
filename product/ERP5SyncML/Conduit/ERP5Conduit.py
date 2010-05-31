@@ -1045,10 +1045,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       object_id = xml.get('id')
     if object_id is not None:
       if sub_object is None:
-        try:
-          sub_object = object._getOb(object_id)
-        except (AttributeError, KeyError, TypeError):
-          sub_object = None
+        sub_object = object._getOb(object_id, None)
       if sub_object is None: # If so, it doesn't exist
         portal_type = ''
         if xml.xpath('local-name()') == self.xml_object_tag:
