@@ -87,7 +87,7 @@ class DocumentMixin:
     # XXX cache result in TV
     method = self._getTypeBasedMethod('checkConversionFormatPermission',
                  fallback_script_id='Document_checkConversionFormatPermission')
-    if '**kw' not in method.params():
+    if '**' not in method.params():
       # Backward compatibility code:
       # Existing Type Based Method doesn't support new **kw argument
       # in their signature.
