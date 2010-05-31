@@ -545,7 +545,7 @@ class SynchronizationTool( SubscriptionSynchronization,
       if copy_path is not None:
         #LOG('p_sync.applyPublisherValue, conflict_list empty on : ', TRACE, signature)
         # Delete the copy of the object if the there is one
-        directory = object.aq_parent
+        directory = object.getParentValue()
         copy_id = copy_path[-1]
         #LOG('p_sync.applyPublisherValue, copy_id: ', TRACE, copy_id)
         if hasattr(directory.aq_base, 'hasObject'):
