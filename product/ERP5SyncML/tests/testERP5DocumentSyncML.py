@@ -30,8 +30,9 @@
 import os
 import unittest
 from Testing import ZopeTestCase
-from runUnitTest import tests_home
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.runUnitTest import tests_home
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+                                                       _getConversionServerDict
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5DocumentConduit import ERP5DocumentConduit
 from Products.ERP5SyncML.SyncCode import SyncCode
@@ -42,7 +43,6 @@ from ERP5Diff import ERP5Diff
 from lxml import etree
 from Products.ERP5Type.tests.utils import FileUpload
 
-ooodoc_coordinates = ('127.0.0.1', 8008)
 test_files = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-\
 (?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
@@ -53,8 +53,8 @@ def makeFileUpload(name):
   path = os.path.join(test_files, name)
   return FileUpload(path, name)
 
-class TestERP5DocumentSyncMLMixin:
-  
+class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
+
   nb_objects = 10
   #for objects
   ids = range(1, nb_objects+1)
@@ -144,8 +144,9 @@ class TestERP5DocumentSyncMLMixin:
 
   def setSystemPreferences(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(ooodoc_coordinates[0])
-    default_pref.setPreferredOoodocServerPortNumber(ooodoc_coordinates[1])
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() == 'disabled':
