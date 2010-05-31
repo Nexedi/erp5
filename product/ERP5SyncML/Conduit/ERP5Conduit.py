@@ -29,6 +29,7 @@
 
 from Products.ERP5SyncML.XMLSyncUtils import XMLSyncUtilsMixin
 from Products.ERP5SyncML.Conflict import Conflict
+from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from Products.CMFCore.utils import getToolByName
 from DateTime.DateTime import DateTime
 from email.MIMEBase import MIMEBase
@@ -822,49 +823,38 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         action_list.append(subnode)
     return action_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,'convertXmlValue')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                                                             'convertXmlValue')
   def convertXmlValue(self, node, data_type=None):
+    """Cast xml information into appropriate python type
     """
-    It is possible that the xml change the value, for example
-    there is some too much '\n' and some spaces. We have to do some extra
-    things so that we convert correctly the value
-    XXXNicolas: I'm totally disagree with, so i comment this code
-    """
-    if node is None: return None
+    if node is None:
+      return None
     if data_type is None:
       data_type = self.getPropertyType(node)
-    if data_type == self.none_type: return None
+    if data_type == self.none_type:
+      return None
     data = node.text
     if data is not None and isinstance(data, unicode):
       data = data.encode('utf-8')
-    elif data is None:
-      if data_type in self.list_type_list:
-        return ()
-      elif data_type in self.text_type_list:
-        return ''
+    elif data is None and data_type in self.text_type_list:
+      return ''
     # We can now convert string in tuple, dict, binary...
     if data_type in self.list_type_list:
-      data = unmarshaler(node.text)
+      data = unmarshaller(node[0])
     elif data_type in self.text_type_list:
       data = unescape(data)
     elif data_type in self.data_type_list:
       if data is None:
-        # data is in blocks
-        data = ''.join([standard_b64decode(block.text) \
-               for block in node.iterchildren()])
+        # data is splitted inside  block_data nodes
+        data = ''.join([standard_b64decode(block.text) for\
+                                                 block in node.iterchildren()])
     elif data_type in self.pickle_type_list:
       data = pickle.loads(standard_b64decode(data))
     elif data_type in self.date_type_list:
       data = DateTime(data)
     elif data_type in self.int_type_list:
       data = int(data)
-    elif data_type in self.dict_type_list: # only usefull for CPS, with data = '{fr:1}'
-      if data == '{}':
-        data = {}
-      else:
-        dict_list = map(lambda x:x.split(':'), data[1:-1].split(','))
-        data = map(lambda (x,y):(x.replace(' ','').replace("'",''),int(y)),dict_list)
-        data = dict(data)
     return data
 
   # XXX is it the right place ? It should be in XupdateUtils, but here we
