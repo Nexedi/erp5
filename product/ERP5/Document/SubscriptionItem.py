@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Item import Item
-from Products.ERP5.mixin.movement_generator import MovementGeneratorMixin
+from Products.ERP5.mixin.rule import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
 class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
