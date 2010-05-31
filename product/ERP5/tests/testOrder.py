@@ -1060,6 +1060,13 @@ class TestOrderMixin:
     order_line = sequence.get('order_line')
     order_line.setQuantity(order_line.getQuantity() + 111)
 
+  def stepDeleteOrderLine(self, sequence=None, sequence_list=None, **kw):
+    """
+      Delete order line
+    """
+    order_line = sequence.get('order_line')
+    order_line.getParentValue().manage_delObjects([order_line.getId()])
+
   def stepCheckOrderSimulationStable(self, sequence=None, \
       sequence_list=None, **kw):
     """
@@ -1741,6 +1748,21 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepPlanOrder \
                       stepTic \
                       stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # Test when order line is deleted
+    sequence_string = '\
+                      stepCreateOrganisation \
+                      stepCreateProject \
+                      ' + self.non_variated_order_creation + '\
+                      stepOrderOrder \
+                      stepTic \
+                      stepDeleteOrderLine \
+                      stepTic \
+                      stepConfirmOrder \
                       stepTic \
                       stepCheckOrderSimulation \
                       '
