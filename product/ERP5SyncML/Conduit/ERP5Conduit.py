@@ -954,8 +954,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     conflict_list = []
     # We want to add a workflow action
-    wf_tool = getToolByName(object,'portal_workflow')
-    wf_id = self.getAttribute(xml,'id')
+    wf_tool = getToolByName(object.getPortalObject(), 'portal_workflow')
+    wf_id = xml.get('id')
     if wf_id is None: # History added by xupdate
       wf_id = self.getHistoryIdFromSelect(xml)
       xml = xml[0]
@@ -963,22 +963,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     status = self.getStatusFromXml(xml)
     #LOG('addNode, status:',0,status)
     add_action = self.isWorkflowActionAddable(object=object,
-                                           status=status,wf_tool=wf_tool,
-                                           wf_id=wf_id,xml=xml)
+                                              status=status,wf_tool=wf_tool,
+                                              wf_id=wf_id,xml=xml)
     if add_action and not simulate:
-      wf_tool.setStatusOf(wf_id,object,status)
-
-    # Specific CPS, try to remove duplicate lines in portal_repository._histories
-    tool = getToolByName(self,'portal_repository',None)
-    if tool is not None:
-      if getattr(self, 'getDocid', None) is not None:
-        docid = self.getDocid()
-        history = tool.getHistory(docid)
-        new_history = ()
-        for history_line in history:
-          if history_line not in new_history:
-            new_history += (history_line,)
-        tool.setHistory(docid,new_history)
+      wf_tool.setStatusOf(wf_id, object, status)
 
     return conflict_list
 
@@ -990,9 +978,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     # We want to add a local role
     roles = self.convertXmlValue(xml, data_type='tokens')
-    user = self.getAttribute(xml, 'id')
-    roles = list(roles) # Needed for CPS, or we have a CPS error
-    #LOG('local_role: ',0,'user: %s roles: %s' % (repr(user),repr(roles)))
+    user = xml.get('id')
+    #LOG('local_role: %s' % object.getPath(), INFO,
+                                          #'user:%r | roles:%r' % (user, roles))
     #user = roles[0]
     #roles = roles[1:]
     if xml.xpath('local-name()') == self.local_role_tag:
