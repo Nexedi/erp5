@@ -122,8 +122,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     [conflict1,conflict2,...] where conclict1 is of the form :
     [object.getPath(),keyword,local_and_actual_value,subscriber_value]
     """
-    reset_local_roles = 0
-    reset_workflow = 0
+    reset_local_roles = False
+    reset_workflow = False
     conflict_list = []
     xml = self.convertToXml(xml)
     #LOG('ERP5Conduit addNode:',DEBUG,etree.tostring(xml,pretty_print=True))
@@ -330,7 +330,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #   - old_data : the data from this box but at the time of the i
           #last synchronization
           #   - current_data : the data actually on this box
-          isConflict = 0
+          isConflict = False
           if (previous_xml is not None) and (not force):
           # if no previous_xml, no conflict
             old_data = self.getObjectProperty(keyword, previous_xml,
@@ -454,7 +454,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         msg = MIMEBase('application','octet-stream')
         Encoders.encode_base64(msg)
         msg.set_payload(data)
-        data = msg.get_payload(decode=1)
+        data = msg.get_payload(decode=True)
       new_args[keyword] = data
     return new_args
 
@@ -469,8 +469,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if value is not None:
       for bad_string in bad_list:
         if bad_string.search(value) is not None:
-          return 0
-    return 1
+          return False
+    return True
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'getSubObjectXupdate')
@@ -731,7 +731,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         keyword = subnode.xpath('name()')
         args[keyword] = self.convertXmlValue(subnode, keyword_type)
       elif subnode.xpath('local-name()') in self.ADDABLE_PROPERTY + (self.xml_object_tag,):
-        self.addNode(object=object, xml=subnode, force=1)
+        self.addNode(object=object, xml=subnode, force=True)
     # We should first edit the object
     args = self.getFormatedArgs(args=args)
     # edit the object with a dictionnary of arguments,
@@ -913,15 +913,15 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if wf_history.has_key(wf_id):
       action_list = wf_history[wf_id]
     else: action_list = []
-    addable = 1
+    addable = True
     for action in action_list:
-      this_one = 1
+      this_one = True
       for key in action.keys():
         if status[key] != action[key]:
-          this_one = 0
+          this_one = False
           break
       if this_one:
-        addable = 0
+        addable = False
         break
     return addable
 
@@ -935,7 +935,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #LOG('ERP5Conduit.addNode',0,'portal_type: |%s|' % str(portal_type))
     object.newContent(portal_type=portal_type, id=object_id)
     subobject = object._getOb(object_id)
-    return subobject, 1, 1
+    return subobject, True, True
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addWorkflowNode')
   def addWorkflowNode(self, object, xml, simulate):
