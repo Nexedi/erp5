@@ -591,7 +591,12 @@ class Rule(Predicate, XMLObject):
 
     default_property_list = self.getExpandablePropertyList()
     for prop in default_property_list:
-      property_dict[prop] = movement.getProperty(prop)
+      # getProprety('title') returns the ID if title is not set, but we
+      # don't want to propagate such a value in simulation movements.
+      if prop in ('title',) and not movement.hasProperty(prop):
+        property_dict[prop] = None
+      else:
+        property_dict[prop] = movement.getProperty(prop)
 
     # rule specific
     property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
