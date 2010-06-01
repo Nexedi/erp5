@@ -3801,6 +3801,41 @@ class Base( CopyContainer,
   def isItem(self):
     return self.portal_type in self.getPortalItemTypeList()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getGroupedStateList')
+  def getGroupedStateList(self, group):
+    """
+    Return a list of workflow states classified to a specific group.
+    """
+    portal_type = self.getPortalType()
+
+    def getStateList(portal_type, group):
+      state_dict = {}
+      portal_workflow = self.getPortalObject().portal_workflow
+      wf_id_list = portal_workflow.getChainFor(portal_type)
+      for wf_id in wf_id_list:
+        states = getattr(portal_workflow[wf_id], 'states', None)
+        if states is not None:
+          for state in states.objectValues():
+            if group in getattr(state, 'type_list', ()):
+              state_dict[state.getId()] = None
+      return tuple(state_dict.keys())
+
+    getStateList = CachingMethod(
+      getStateList,
+      id=('_getPortalGroupedStateList', portal_type, group),
+      cache_factory='erp5_content_medium')
+
+    state_list = getStateList(portal_type, group)
+    if len(state_list) == 0:
+      # If we cannot get state list from this portal type's workflow
+      # chain, try to get from the portal.
+      portal = self.getPortalObject()
+      state_list = portal._getPortalGroupedStateList(group) or \
+          portal._getPortalConfiguration('portal_%s_state_list' % group)
+
+    return state_list
+
 InitializeClass(Base)
 
 try:
