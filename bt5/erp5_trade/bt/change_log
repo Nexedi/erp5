@@ -1,3 +1,6 @@
+2010-06-01 kazuhiko
+* Use the same dependencies for Delivery_updateApplideRule to make it possible to merge activities.
+
 2010-05-24 kazuhiko
 * Improve activity dependencies for Delivery_updateAppliedRule, eg. delivery.activate(tag='(path)_updateAppliedRule', after_tag='(path)_expand').Delivery_updateAppliedRule(activate_kw={'tag':'(path)_expand'})
 

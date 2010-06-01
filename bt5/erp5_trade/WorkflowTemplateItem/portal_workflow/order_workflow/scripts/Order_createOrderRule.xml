@@ -54,13 +54,23 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>order = state_change[\'object\']\n
+order_path = order.getPath()\n
+path_and_method_id = (order_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
+expand_tag = order_path + \'_expand\'\n
+tag = order_path + \'_updateAppliedRule\'\n
 \n
-path = order.getPath()\n
-tag = \'%s_updateAppliedRule\' % path\n
-expand_tag = \'%s_expand\' % path\n
-activate_kw = {\'tag\':expand_tag, \'priority\':3}\n
+priority = 3\n
 \n
-order.activate(tag=tag, after_tag=expand_tag).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
+activate_kw = { \n
+  \'tag\': expand_tag,\n
+  \'priority\': priority,\n
+}\n
+order.activate(\n
+    after_path_and_method_id=path_and_method_id,\n
+    after_tag=expand_tag,\n
+    tag=tag,\n
+    priority=priority,\n
+    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
@@ -102,9 +112,11 @@ order.activate(tag=tag, after_tag=expand_tag).Delivery_updateAppliedRule(activat
                             <string>_getitem_</string>
                             <string>order</string>
                             <string>_getattr_</string>
-                            <string>path</string>
-                            <string>tag</string>
+                            <string>order_path</string>
+                            <string>path_and_method_id</string>
                             <string>expand_tag</string>
+                            <string>tag</string>
+                            <string>priority</string>
                             <string>activate_kw</string>
                           </tuple>
                         </value>
