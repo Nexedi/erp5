@@ -737,13 +737,13 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
       """
       folder_id = self.aq_parent.id
       # Find a business template which manages the context skin folder.
-      folder_id_list = []
+      folder_id_set = set([folder_id])
       for template in self.portal_templates.getInstalledBusinessTemplateList():
         template_skin_id_list = template.getTemplateSkinIdList()
         if folder_id in template_skin_id_list:
-          folder_id_list.extend(template_skin_id_list)
+          folder_id_set.update(set(template_skin_id_list))
           break
-      return folder_id_list
+      return list(folder_id_set)
 
     #Methods for Proxify tab.
     security.declareProtected('View management screens', 'getFormFieldList')
