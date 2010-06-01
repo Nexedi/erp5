@@ -1,3 +1,8 @@
+2010-06-01 mayoro
+* add delete transtion from embedded because needed in erp5_egov
+* allow owner to delete documents in embedded state
+
+
 2010-03-24 nicolas
 * Change duration cache of dms_cache_factory to avoid keeping converted values indefinitely. New duration is 6 month.
 

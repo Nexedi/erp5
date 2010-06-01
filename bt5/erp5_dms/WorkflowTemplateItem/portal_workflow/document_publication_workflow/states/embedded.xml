@@ -31,6 +31,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>extract</string>
               </tuple>
             </value>

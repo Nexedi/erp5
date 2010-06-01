@@ -71,6 +71,7 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
+                <string>Owner</string>
                 <string>Assignor</string>
                 <string>Manager</string>
               </tuple>
