@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -38,7 +39,7 @@ class TestContributionRegistryTool(ERP5TypeTestCase):
     return "Contribution Registry Tool"
 
   def getBusinessTemplateList(self):
-    return ()
+    return ('erp5_base',)
 
   def afterSetUp(self):
     self.setUpTestScript()
