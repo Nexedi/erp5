@@ -78,18 +78,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
 
   ## tests
 
-  def test_01_HasEverything(self):
-    """
-      Standard test to make sure we have everything we need - all the tools etc
-    """
-    print '\nTest Has Everything '
-    self.assertNotEqual(self.getCategoryTool(), None)
-    self.assertNotEqual(self.getSimulationTool(), None)
-    self.assertNotEqual(self.getTypeTool(), None)
-    self.assertNotEqual(self.getSQLConnection(), None)
-    self.assertNotEqual(self.getCatalogTool(), None)
-    self.assertNotEqual(self.getWorkflowTool(), None)
-
   def test_01_PersistentCacheConversion(self):
     """
       Test Conversion Cache mechanism
