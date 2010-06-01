@@ -63,7 +63,7 @@ if not delivery.isDelivery:\n
 # copy&paste from delivery_movement_simulation_interaction_workflow/scripts/DeliveryMovement_updateSimulation\n
 delivery_path = delivery.getPath()\n
 path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-expand_tag = delivery_path + \'_updateAppliedRule\'\n
+expand_tag = delivery_path + \'_expand\'\n
 tag = delivery_path + \'_updateAppliedRule\'\n
 \n
 priority = 3\n
