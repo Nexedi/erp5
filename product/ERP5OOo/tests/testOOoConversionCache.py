@@ -108,6 +108,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       self.assertEquals(document.getConversionSize(format=format), 0)
     document.edit(title='Bar')
     transaction.commit()
+    self.tic()
     #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
@@ -144,6 +145,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       self.assertEqual(document.getConversionSize(format=format), 0)
     document.edit(title='Bar')
     transaction.commit()
+    self.tic()
     #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
@@ -174,6 +176,8 @@ class TestDocumentConversionCache(TestDocumentMixin):
     document2.convert(format=format)
     self.assertNotEqual(document1.getConversion(format=format),
                         document2.getConversion(format=format))
+    transaction.commit()
+    self.tic()
 
   def test_04_PersistentCacheConversionWithFlare(self):
     """
@@ -212,6 +216,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       self.assertEqual(document.getConversionSize(format=format), 0)
     document.edit(title='Bar')
     transaction.commit()
+    self.tic()
     #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
@@ -270,6 +275,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     file2 = makeFileUpload(filename2)
     document.edit(file=file2)
     self.assertNotEqual(md5sum, document.getContentMd5())
+    self.tic()
 
   def test_07_check_cache_key_is_escaped(self):
     """
