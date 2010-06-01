@@ -58,6 +58,11 @@ response = request.RESPONSE\n
 \n
 from zExceptions import Unauthorized\n
 \n
+# Always force download of document event if format is supported\n
+# by browser\n
+file_name = context.getStandardFileName(None)\n
+response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % file_name)\n
+\n
 try:\n
   return context.index_html(request, response)\n
 except Unauthorized:\n
@@ -106,6 +111,8 @@ except Unauthorized:\n
                             <string>zExceptions</string>
                             <string>Unauthorized</string>
                             <string>context</string>
+                            <string>None</string>
+                            <string>file_name</string>
                             <string>msg</string>
                             <string>dict</string>
                           </tuple>
