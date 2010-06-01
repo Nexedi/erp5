@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:context.portal_categories.function.getCategoryChildTitleItemList()</string> </value>
+            <value> <string>here/AllocateToServiceAction_getFunctionList</string> </value>
         </item>
       </dictionary>
     </pickle>

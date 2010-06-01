@@ -1,4 +1,5 @@
 from zLOG import LOG
+from Products.CMFCore.utils import getToolByName
 
 def getPoralTypeListForWorkflow(self, workflow):
   '''
@@ -83,4 +84,19 @@ def getPortalTypeWorklistDictForWorkflow(self, workflow_list):
           result_dict['category']=worklist.actbox_category
           result_dict.update(worklist.guard.__dict__)
   return portal_type_worklist_dict
+
+def gessPortalType(self, attachment):
+  portal = self.getPortalObject()
+  portal_contributions = getToolByName(portal, 'portal_contributions', None)
+  if portal_contributions is None:
+    return None
+  else:
+    filename = attachment.filename
+    mime_type = attachment.headers["Content-Type"]
+    data = attachment.read()
+    return portal_contributions._guessPortalType(filename, mime_type, data)
+
+def setWorkflowList(self, portal_type_name, workflow_list=()):
+  portal_workflow = self.portal_workflow
+  portal_workflow._chains_by_type[portal_type_name] = workflow_list
 

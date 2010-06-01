@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>When a application ha been processing and signed, it could be archived.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -59,9 +59,12 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>Author</string>
+                        <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
@@ -85,12 +88,21 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>Set own password</string> </key>
+                    <value>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
+                        <string>Author</string>
+                        <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
                     </value>

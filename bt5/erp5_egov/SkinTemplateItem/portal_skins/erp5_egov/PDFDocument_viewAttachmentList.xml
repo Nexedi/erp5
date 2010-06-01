@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+        <global name="ERP5Report" module="Products.ERP5Form.Report"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This form lists all attachments which have been added or may be added</string> </value>
+            <value> <string>This form list all attachments wich have been added or may be added</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -83,37 +83,27 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>explanation</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>your_reportbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>explanation</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
                       <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>white_background</string> </key>
-                    <value>
-                      <list>
-                        <string>explanation</string>
-                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -134,6 +124,10 @@
         <item>
             <key> <string>pt</string> </key>
             <value> <string>report_view</string> </value>
+        </item>
+        <item>
+            <key> <string>report_method</string> </key>
+            <value> <string>PDFDocument_getReportSectionList</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

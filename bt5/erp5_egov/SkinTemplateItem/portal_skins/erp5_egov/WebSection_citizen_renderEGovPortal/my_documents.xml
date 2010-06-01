@@ -232,7 +232,7 @@ Comming soon...\n
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Display a list of \xe2\x80\x9cofficial\xe2\x80\x9d decisions or digital documents which may be later used to start new procedures</string> </value>
+                    <value> <string>Display a list of “official” decisions or digital documents which may be later used to start new procedures</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

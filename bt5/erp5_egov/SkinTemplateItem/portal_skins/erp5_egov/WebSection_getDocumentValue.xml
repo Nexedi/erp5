@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
  This script is part of ERP5 Web\n
 \n
  ERP5 Web is a business template of ERP5 which provides a way\n
@@ -169,7 +171,10 @@ if len(web_page_list) == 0:\n
                                    **kw)\n
 \n
 if len(web_page_list) == 0:\n
-  state = name.split(\'-\')[1]\n
+  state = \'\'\n
+  name_list = name.split(\'-\')\n
+  if len(name_list)>1:\n
+    state = name_list[1]\n
   if state:\n
     state = \'%\' + state + \'%\'\n
     # Search only with state\n
@@ -191,7 +196,9 @@ else:\n
 \n
 # return the web page\n
 return web_page\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -246,6 +253,7 @@ return web_page\n
                             <string>name_without_portal_type_and_web_site</string>
                             <string>name_without_web_site_and_view</string>
                             <string>state</string>
+                            <string>name_list</string>
                             <string>web_page</string>
                           </tuple>
                         </value>

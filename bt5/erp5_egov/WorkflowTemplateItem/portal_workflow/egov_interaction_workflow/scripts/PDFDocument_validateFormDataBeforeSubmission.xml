@@ -59,26 +59,10 @@ document = state_change[\'object\']\n
 portal = document.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
-portal_type = document.getPortalType()\n
-\n
-# dict of required documents\n
-attachement_method = getattr(context, \'%s_getApplicationIncomeDict\' % portal_type.replace(\' \', \'\'))\n
-attachement_type_dict = attachement_method()\n
-\n
-document_title_list = [x.getTitle() for x in document.contentValues(portal_type=\'File\')]\n
-\n
-# get only required documents\n
-required_title_list = [x for x,y in attachement_type_dict.items() if y[\'requirement\'] == \'Required\']\n
-\n
-message = \'The following documents are missing to submit the request :\'\n
-missing_document_list = []\n
-for required_title in required_title_list:\n
-  if required_title not in document_title_list:\n
-    missing_document_list.append(N_(required_title))\n
-\n
-if len(missing_document_list):\n
+if document.PDFDocument_getRequirementCount() != 0:\n
+  message = \'%s following document (s) are missing to submit the request \' % document.PDFDocument_getRequirementCount()\n
   message = N_(message)\n
-  raise ValidationFailed, "%s %s" % (message, \', \'.join(missing_document_list))\n
+  raise ValidationFailed, message\n
 </string> </value>
         </item>
         <item>
@@ -123,22 +107,7 @@ if len(missing_document_list):\n
                             <string>_getattr_</string>
                             <string>portal</string>
                             <string>N_</string>
-                            <string>portal_type</string>
-                            <string>getattr</string>
-                            <string>context</string>
-                            <string>attachement_method</string>
-                            <string>attachement_type_dict</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>document_title_list</string>
-                            <string>y</string>
-                            <string>required_title_list</string>
                             <string>message</string>
-                            <string>missing_document_list</string>
-                            <string>required_title</string>
-                            <string>len</string>
                           </tuple>
                         </value>
                     </item>

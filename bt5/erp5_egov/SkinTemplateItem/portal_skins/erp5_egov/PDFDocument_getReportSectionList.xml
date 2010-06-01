@@ -59,16 +59,18 @@ N_ = portal.Base_translateString\n
 # If we create one portal type per attachment... no need\n
 # but if attachment can be text, image, etc. We can not\n
 # A simple solution: use title to group\n
-type_list = map(lambda x: x.Type(), context.allowedContentTypes())\n
+type_list = map(lambda x: x.getId(), context.allowedContentTypes())\n
+\n
 file_type_list = (\'Image\', \'File\')\n
 sub_form_type_list = filter(lambda x: x not in file_type_list, type_list)\n
 \n
 # A simple solution: use title to group\n
-viewable_content_list = context.contentValues(portal_type=file_type_list, checked_permission=\'View\')\n
+viewable_content_list = context.contentValues(portal_type=type_list, checked_permission=\'View\')\n
+\n
 content_group_dict = {}\n
 for content in viewable_content_list:\n
-  if content.getValidationState() != \'draft\':\n
-    continue\n
+  #if content.getValidationState() != \'draft\':\n
+  #  continue\n
   title = content.getTitle()\n
   content_group_dict.setdefault(title, [])\n
   content_group_dict[title].append(content)\n
@@ -76,9 +78,10 @@ for content in viewable_content_list:\n
 # Now sort every group by creation date (to be done)\n
 # XXXX\n
 \n
+\n
 # Define some hard coded values\n
 \n
-attachement_method = getattr(context, \'%s_getApplicationIncomeDict\' % context.getPortalType().replace(\' \', \'\'))\n
+attachement_method = getattr(context, \'PDFDocument_getApplicationIncomeDict\')\n
 attachement_type_dict = attachement_method()\n
 \n
 # add other group title\n
@@ -109,7 +112,7 @@ for title in title_list:\n
     selection_params.update({\'requirement\': N_(requirement)})\n
   else:\n
     selection_params.update({\'requirement\': \'\'})\n
-\n
+  \n
 \n
   result.append(\n
     ReportSection(\n

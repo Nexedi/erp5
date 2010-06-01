@@ -54,8 +54,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal_type_list = context.EGov_getAllowedFormTypeList()\n
+ \n
+if portal_type_list == ():\n
+  return []\n
 \n
-# get user name\n
+# get portal_type_listuser name\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
 if not kw.has_key(\'portal_type\'):\n

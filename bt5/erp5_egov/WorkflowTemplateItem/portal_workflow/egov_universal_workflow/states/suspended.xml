@@ -11,8 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Applications are suspended if an attachment from the user is required.\r\n
-In this case, application stay in this state until user add the required attachment and resume the process.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -32,8 +31,14 @@ In this case, application stay in this state until user add the required attachm
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>resume</string>
-                <string>resume_action</string>
+                <string>allocate</string>
+                <string>allocate_action</string>
+                <string>complet</string>
+                <string>complet_action</string>
+                <string>open</string>
+                <string>open_action</string>
+                <string>request</string>
+                <string>request_action</string>
               </tuple>
             </value>
         </item>
@@ -63,9 +68,10 @@ In this case, application stay in this state until user add the required attachm
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -75,9 +81,7 @@ In this case, application stay in this state until user add the required attachm
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
+                        <string>Agent</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
@@ -85,31 +89,29 @@ In this case, application stay in this state until user add the required attachm
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Set own password</string> </key>
+                    <value>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Auditor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>

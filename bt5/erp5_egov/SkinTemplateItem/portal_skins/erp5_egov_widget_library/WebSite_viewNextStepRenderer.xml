@@ -49,8 +49,8 @@
               "\n
       tal:condition="python: portal.portal_membership.checkPermission(\'Modify portal content\', here)">\n
 \n
-  <input type="hidden" name="form_action" value=""\n
-         tal:attributes="value request/form_action" />\n
+<!--  <input type="hidden" name="form_action" value=""\n
+         tal:attributes="value request/form_action" />  -->\n
   <input type="hidden" name="edit_document_url" value=""\n
          tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
   <input type="hidden" name="view_document_url" value=""\n

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>In this sate, a agent has be designed to be in charge of the application.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -31,12 +31,12 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>assign</string>
+                <string>assign_action</string>
+                <string>complet</string>
+                <string>complet_action</string>
                 <string>open</string>
                 <string>open_action</string>
-                <string>refuse</string>
-                <string>refuse_action</string>
-                <string>sign</string>
-                <string>sign_action</string>
               </tuple>
             </value>
         </item>
@@ -66,9 +66,12 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -80,37 +83,37 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Set own password</string> </key>
+                    <value>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>

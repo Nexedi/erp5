@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>\'\'\'\n
+  return the dict of the possible attached files\n
+\'\'\'\n
+require = [\'Optional\', \'Required\']\n
+attachment_count = 39\n
+attachement_type_dict = {}\n
+portal_type_object = context.getTypeInfo()\n
+\n
+if portal_type_object.getStepAttachment():\n
+  for i in range(attachment_count+1)[1:]:\n
+    title = getattr(portal_type_object, "getAttachmentTitle%s" % i, None)\n
+    requirement = getattr(portal_type_object, "getAttachmentRequired%s" % i, None)\n
+    attachment = getattr(portal_type_object, "getAttachmentJustificative%s" % i, None)\n
+    type = getattr(portal_type_object, "getAttachmentModel%s" % i, None)\n
+    if type is not None:\n
+      type = type()\n
+    else:\n
+      type = []\n
+    if requirement is not None and requirement() is not None:\n
+      required = require[requirement()]\n
+    if title is not None and title()!="" and attachment is not None and attachment():\n
+      attachement_type_dict[title()] = {\n
+           \'description\': "",\n
+           \'requirement\': required,  \n
+           \'outcome\'    : False,\n
+           \'type\'       : type,\n
+      }\n
+\n
+return attachement_type_dict\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>*args,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>args</string>
+                            <string>kw</string>
+                            <string>require</string>
+                            <string>attachment_count</string>
+                            <string>attachement_type_dict</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_type_object</string>
+                            <string>_getiter_</string>
+                            <string>_getitem_</string>
+                            <string>range</string>
+                            <string>i</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>title</string>
+                            <string>requirement</string>
+                            <string>attachment</string>
+                            <string>type</string>
+                            <string>required</string>
+                            <string>False</string>
+                            <string>_write_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>PDFDocument_getApplicationIncomeDict</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

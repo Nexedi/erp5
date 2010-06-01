@@ -13,11 +13,8 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -30,6 +27,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -49,6 +47,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -56,11 +55,8 @@
             <key> <string>_View_Permission</string> </key>
             <value>
               <tuple>
-                <string>Anonymous</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
                 <string>Manager</string>
                 <string>Owner</string>
               </tuple>
@@ -126,10 +122,10 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<p><font size="3">Le navigateur que vous utilisez ne respecte pas les standards du web. Cela signifie qu\'il pourrait mal afficher ce site, car il ne comprendrai pas tout le code (bien qu\'il soit v\xc3\xa9rifi\xc3\xa9 et conforme au standards du web) rendant le site inutilisable. C\'est pourquoi nous vous recommandons d\'utiliser un naviguateur qui respecte ces standards tel que firefox, t\xc3\xa9l\xc3\xa9chargeable <a href="http://www.mozilla-europe.org/">ici</a>.</font></p>\r\n
+<p><font size="3">Le navigateur que vous utilisez ne respecte pas les standards du web. Cela signifie qu\'il pourrait mal afficher ce site, car il ne comprendrai pas tout le code (bien qu\'il soit vérifié et conforme au standards du web) rendant le site inutilisable. C\'est pourquoi nous vous recommandons d\'utiliser un naviguateur qui respecte ces standards tel que firefox, téléchargeable <a href="http://www.mozilla-europe.org/">ici</a>.</font></p>\r\n
 <br />\r\n
 <h1>Pourquoi respecter les standards ?</h1>\r\n
-<a href="http://openweb.eu.org/articles/pourquoi_standards" hreflang="fr">Pourquoi les standards?</a> Un tr\xc3\xa8s bon document qui permet d\'avoir le d\xc3\xa9tail sur les avantages des standards
+<a href="http://openweb.eu.org/articles/pourquoi_standards" hreflang="fr">Pourquoi les standards?</a> Un très bon document qui permet d\'avoir le détail sur les avantages des standards
 
 ]]></string> </value>
         </item>

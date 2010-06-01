@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>description</string>
-                <string>css_class</string>
                 <string>columns</string>
-                <string>selection_name</string>
+                <string>css_class</string>
                 <string>default_params</string>
+                <string>description</string>
                 <string>list_action</string>
                 <string>page_template</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -223,7 +223,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>DeclarationTVA_ListBox_asHTML</string> </value>
+                    <value> <string>EGov_ListBox_asHTML</string> </value>
                 </item>
                 <item>
                     <key> <string>read_only</string> </key>
