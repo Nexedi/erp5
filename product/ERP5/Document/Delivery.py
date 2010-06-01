@@ -707,7 +707,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
 
       # only expand if we are not in a "too early" or "too late" state
       if (self.getSimulationState() in
-          self.getGroupedStateList('draft_order')):
+          self.getPortalDraftOrderStateList()):
         return
 
       portal_rules = getToolByName(self, 'portal_rules')
