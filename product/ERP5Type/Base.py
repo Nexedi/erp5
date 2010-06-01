@@ -1930,7 +1930,7 @@ class Base( CopyContainer,
     """
     return self.absolute_url()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalObject')
+  security.declarePublic('getPortalObject')
   def getPortalObject(self):
     """
       Returns the portal object
