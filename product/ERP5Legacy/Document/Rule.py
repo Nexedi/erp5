@@ -439,7 +439,7 @@ class Rule(Predicate, XMLObject):
             prop_dict = modify_dict.setdefault(movement.getId(), {})
             for k, v in prevision.items():
               if k in ('quantity',):
-                pass
+                continue
               if movement.isPropertyRecorded(k):
                 movement_value = movement.getRecordedProperty(k)
                 if isinstance(movement_value, list) and not isinstance(v, list):
