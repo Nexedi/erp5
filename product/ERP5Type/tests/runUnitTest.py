@@ -316,6 +316,9 @@ class DebugTestResult:
     self.result = result
 
   def _start_debugger(self, tb):
+    import Lifetime
+    if Lifetime._shutdown_phase:
+      return
     try:
       # try ipython if available
       import IPython
