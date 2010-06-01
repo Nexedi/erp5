@@ -58,7 +58,7 @@ response = request.RESPONSE\n
 \n
 from zExceptions import Unauthorized\n
 \n
-# Always force download of document event if format is supported\n
+# Always force download of document even if format is supported\n
 # by browser\n
 file_name = context.getStandardFileName(None)\n
 response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % file_name)\n
