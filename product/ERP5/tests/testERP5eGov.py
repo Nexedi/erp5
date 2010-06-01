@@ -69,8 +69,7 @@ class TestEgov(ERP5TypeTestCase):
 	       'erp5_ingestion',
                'erp5_dms',
                'erp5_egov_mysql_innodb_catalog',
-               'erp5_egov',
-	       'egov_categories',]
+               'erp5_egov']
     return bt_list
 
   def getTitle(self):
@@ -91,6 +90,33 @@ class TestEgov(ERP5TypeTestCase):
     uf = self.getPortal().acl_users
     uf._doAddUser('major', '', ['Assignor',], [])
 
+  def createCategories(self):
+    """Create the categories for our test. """
+    # create categories
+    for cat_string in self.getNeededCategoryList():
+      base_cat = cat_string.split("/")[0]
+      path = self.getPortal().portal_categories[base_cat]
+      for cat in cat_string.split("/")[1:]:
+        if not cat in path.objectIds():
+          path = path.newContent(
+            portal_type='Category',
+            id=cat,)
+        else:
+          path = path[cat]
+    self.tic()
+    transaction.commit()
+    # check categories have been created
+    for cat_string in self.getNeededCategoryList() :
+      self.assertNotEquals(None,
+                self.getCategoryTool().restrictedTraverse(cat_string),
+                cat_string)
+
+  def getNeededCategoryList(self):
+    """Returns a list of categories that should be created."""
+    return ('group/client','group/client/dgid/di', 'group/client/dgid/bf',
+            'function/impots/taxes_indirectes', 'function/impots/section/chef',
+            'role/entreprise')
+
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('seb', '', ['Manager', 'Assignor','Assignee'], [])
@@ -98,6 +124,7 @@ class TestEgov(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
     self.portal = self.getPortalObject()
+    self.createCategories()
     # enable preferences
     pref = self.portal.portal_preferences._getOb(
                   'flare_cache_preference', None)
@@ -138,7 +165,6 @@ class TestEgov(ERP5TypeTestCase):
     self.portal.portal_skins.changeSkin(skin_name)
     request.set('portal_skin', skin_name)
 
-
   def createNewProcedure(self):
     """
      This function create a new EGov Type   
@@ -156,7 +182,7 @@ class TestEgov(ERP5TypeTestCase):
     # use accessors to verify if they are dynamically generated
     if procedure is None:
       return
-    procedure.setOrganisationDirectionService('dgid/di/cge')
+    procedure.setOrganisationDirectionService('client/dgid/di')
     procedure.setProcedureTitle(procedure_title)
     procedure.setProcedurePublicationSection('impots/taxes_indirectes')
     procedure.setProcedureTarget('entreprise')
@@ -174,7 +200,7 @@ class TestEgov(ERP5TypeTestCase):
 
     # add security configuration
     # define security for agent to process (assignor)
-    procedure.setInvolvedServiceGroup1('dgid/di/cge')
+    procedure.setInvolvedServiceGroup1('client/dgid/di')
     procedure.setInvolvedServiceFunction1('impots/section/chef')
     procedure.setInvolvedServiceProcess1(0)
     procedure.setInvolvedServiceValidate1(1)
@@ -182,7 +208,7 @@ class TestEgov(ERP5TypeTestCase):
     procedure.setInvolvedServiceAssociate1(0)
     # define security for agent to just process assigned
     # applications (Assignee)
-    procedure.setInvolvedServiceGroup2('dgid/di/cge')
+    procedure.setInvolvedServiceGroup2('client/dgid/di')
     procedure.setInvolvedServiceFunction2('impots/inspecteur')
     procedure.setInvolvedServiceProcess2(1)
     procedure.setInvolvedServiceValidate2(0)
@@ -191,7 +217,7 @@ class TestEgov(ERP5TypeTestCase):
 
     # define security for external agent to contribute
     # in processing (Associate)
-    procedure.setInvolvedServiceGroup3('dgid/di/csf/bf')
+    procedure.setInvolvedServiceGroup3('client/dgid/bf')
     procedure.setInvolvedServiceFunction3('impots/section/chef')
     procedure.setInvolvedServiceProcess3(0)
     procedure.setInvolvedServiceValidate3(0)
@@ -199,7 +225,7 @@ class TestEgov(ERP5TypeTestCase):
     procedure.setInvolvedServiceAssociate3(1)
 
     # define security for agent to just view (auditor)
-    procedure.setInvolvedServiceGroup2('dgid/di/cge')
+    procedure.setInvolvedServiceGroup2('client/dgid/di')
     procedure.setInvolvedServiceFunction2('impots')
     procedure.setInvolvedServiceProcess2(0)
     procedure.setInvolvedServiceValidate2(0)
