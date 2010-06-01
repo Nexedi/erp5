@@ -76,13 +76,6 @@ class TestDocumentConversionCache(TestDocumentMixin):
   def getTitle(self):
     return "OOo Conversion Cache"
 
-  def beforeTearDown(self):
-    """
-      Do some stuff after each test:
-      - clear document module
-    """
-    self.clearDocumentModule()
-
   ## tests
 
   def test_01_HasEverything(self):
