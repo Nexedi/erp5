@@ -1600,7 +1600,7 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
           convert_kw['frame'] = frame
           response = self.publish_method(self.document_path,
                                          basic=self.credential,
-                                         extra=convert_kw)
+                                         extra=convert_kw.copy())
 
           assert response.getHeader('content-type') == 'image/png', \
                                              response.getHeader('content-type')
