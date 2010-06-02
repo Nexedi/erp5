@@ -55,7 +55,7 @@
   </tal:bloc>\n
 </div>\n
 <div class="site_address">\n
-  <a href="http://www.safi.sn">http://www.safi.sn</a>\n
+  <a href="http://www.erp5.org">http://www.erp5.org</a>\n
 </div>\n
 <tal:bloc tal:condition="python: here.getPortalType() == \'Subscription Form\'">\n
   <div class="login_and_password">\n

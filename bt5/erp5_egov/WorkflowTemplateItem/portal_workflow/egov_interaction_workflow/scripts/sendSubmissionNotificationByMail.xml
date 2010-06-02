@@ -78,7 +78,7 @@ form_id = form.getId()\n
 procedure=translateString(form.getPortalType())\n
 \n
 \n
-wf_info=form.Egov_getProcedureWorkflowStateInfo(\'egov_safi_tva_universal_workflow\',\'submitted\')\n
+wf_info=form.Egov_getProcedureWorkflowStateInfo(\'egov_universal_workflow\',\'submitted\')\n
 date_of_submission=wf_info[\'time\'].strftime(\'%d/%m/%y %H:%M\')\n
 \n
 subject = translateString("[SAFI] Your ${procedure} document number: ${form_id} has been submitted", \n

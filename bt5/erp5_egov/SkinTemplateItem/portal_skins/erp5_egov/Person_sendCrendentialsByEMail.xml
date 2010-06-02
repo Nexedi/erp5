@@ -87,8 +87,8 @@ if len(result) == 0:\n
 person = result[0]\n
 \n
 # Build the message and translate it\n
-subject = translateString("Your credential for ${site_address}", mapping=dict(site_address=\'www.safi.sn\'))\n
-msg = """Thanks for registrering to SAFI. Now you can connect in on ${site_address} with this credentials : \n
+subject = translateString("Your credential for ${site_address}", mapping=dict(site_address=\'www.erp5.org\'))\n
+msg = """Thanks for registrering to ERP5 EGov. Now you can connect in on ${site_address} with this credentials : \n
 \n
 Login : ${login}\n
 Password : ${password}\n
@@ -96,7 +96,7 @@ Password : ${password}\n
 This credentials are usefull to track your application and more. Please visit ${site_address} for more information.\n
 """\n
 msg = translateString(msg,\n
-             mapping=dict(site_address=\'www.safi.sn\',\n
+             mapping=dict(site_address=\'www.erp5.org\',\n
                           login=person.getReference(),\n
                           password=not_encrypt_password)\n
             )\n

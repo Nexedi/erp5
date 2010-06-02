@@ -66,14 +66,7 @@ except AttributeError:\n
   my_group = None\n
 \n
 \n
-\n
-# XXX very bad but I don\'t know where workflow_id=egov_universal_workflow is hardcoded\n
-#if context.getPortalType() == "Subscription Form":\n
-#  workflow_id = "egov_safi_tva_anonymous_workflow"\n
-#elif context.getPortalType() == "Declaration TVA" or  context.getPortalType() == "Declaration TVA Empty" or  context.getPortalType() == "Declaration TVA Amendment":\n
-#  workflow_id = "egov_safi_tva_universal_workflow"\n
-\n
-workflow_id = "egov_universal_workflow"\n
+#workflow_id = "egov_universal_workflow"\n
 \n
 my_group = context.getTypeInfo().getOrganisationDirectionService()\n
 \n

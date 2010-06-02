@@ -61,7 +61,7 @@
           tal:attributes="href python: context.getPrintFormUrl()" i18n:translate="" i18n:domain="ui">Print</a>\n
       </tal:block>\n
       <!--<a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" i18n:translate="" i18n:domain="ui">Help</a>-->\n
-      <a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" onclick="window.open(this.href, \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
+      <a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" onclick="window.open(this.href, \'egov_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
     </span><hr/>\n
 \n
   </div>\n

@@ -62,10 +62,10 @@
         <a class="preferences" href="./preferences" i18n:translate="" i18n:domain="ui">Preferences</a>\n
       </tal:block>\n
       -->\n
-      <a class="help" href="EGov_helpWithContext" tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()"  onclick="window.open(this.href, \'safi_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
+      <a class="help" href="EGov_helpWithContext" tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()"  onclick="window.open(this.href, \'egov_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
 \n
     </span><br /><br />\n
-    <span class="site_title" i18n:translate="" i18n:domain="ui">SAFI - Online Procedures</span>\n
+    <span class="site_title" i18n:translate="" i18n:domain="ui">EGov - Online Procedures</span>\n
     \n
     <hr/>\n
   \n

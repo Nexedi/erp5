@@ -1,10 +1,13 @@
+2010-06-02 mayoro
+* rename extension for egov security
+* remove some word added by mistakes
+* remove unused extension SetUpInstance
+
 2010-06-01 mayoro
-* remove safi_egov
+* remove portal_skins added by mistake
 
 2010-06-01 mayoro
 * New version of ERP5 egov based on dynamic form generated from sla and pdf files defined on portal_types
-
-
 
 2009-09-07 yusuke
 * Replace ERP5Report to ERP5Form and ReportBox
