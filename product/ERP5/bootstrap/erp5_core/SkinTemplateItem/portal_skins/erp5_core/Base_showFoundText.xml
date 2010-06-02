@@ -63,6 +63,7 @@
 """\n
 from Products.ERP5.Document.Document import NotConvertedError\n
 \n
+encoding = \'utf-8\'\n
 is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
 \n
 if is_gadget_mode:\n
@@ -73,9 +74,9 @@ if is_gadget_mode:\n
 def getRandomDocumentTextExcerpt(document_text):\n
   # try to get somewhat arbitrary choice of searchable attrs\n
   if isinstance(document_text, str) and document_text!=\'\':\n
-    document_text = document_text.decode(\'utf-8\', \'ignore\')\n
+    document_text = document_text.decode(encoding, \'ignore\')\n
     start = min(len(document_text) - 300, 200)\n
-    return \'... %s ...\' %document_text[start:start + max_text_length]\n
+    return \'... %s ...\' %document_text[start:start + max_text_length].encode(encoding)\n
   else:\n
     return \'\'\n
 \n
@@ -124,8 +125,8 @@ else:\n
   result = \' \'.join(map(str, found_text_fragments))\n
 \n
   # Document may contains charactors which utf8 codec cannot decode.\n
-  unicode_result = result.decode(\'utf-8\', \'ignore\')\n
-  result = unicode_result.encode(\'utf-8\')\n
+  unicode_result = result.decode(encoding, \'ignore\')\n
+  result = unicode_result.encode(encoding)\n
 \n
   return result\n
 
@@ -172,6 +173,7 @@ else:\n
                             <string>max_text_length</string>
                             <string>Products.ERP5.Document.Document</string>
                             <string>NotConvertedError</string>
+                            <string>encoding</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>is_gadget_mode</string>
