@@ -64,9 +64,6 @@ portal_type_name = portal_type_name.replace(\'ç\', \'c\')\n
 portal_type_name = portal_type_name.replace(\'ê\', \'e\')\n
 portal_type_name = \' \'.join([word.capitalize() for word in portal_type_name.split(\' \')])\n
 \n
-#in case of so much whitespace in the name like \'Fo   ooo\' filled in the form \n
-portal_type_name.replace(\' \',\'\')\n
-\n
 ## verifying if portal_type exist or not\n
 \n
 portal = context.getPortalObject()\n

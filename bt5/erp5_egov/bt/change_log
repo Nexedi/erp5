@@ -1,4 +1,8 @@
 2010-06-02 mayoro
+* clean up change log and remove mistakes
+* remove replacing whitespace in preocedure title
+
+2010-06-02 mayoro
 * add some processing in procedure title in case of special caracters before generating portal_type
 
 2010-06-02 mayoro
@@ -22,7 +26,7 @@
 * update workflow script for new form.
 
 2008-11-11 fabien
-* modify some scripts to be able to make a subscription using the new safi form
+* modify some scripts to be able to make a subscription using the new form
 * typo
 
 2008-11-03 fabien
@@ -67,11 +71,10 @@ bring some corrections after the Mme Ba review :
 * modify some selection_name on listbox to be unique and avoid conflic
 
 2008-09-23 fabien
-* remove standardSecurity extension. The name was in conflict with an Extension in erp5_core. Move it in safi_egov bt and rename it in ERP5EGov_Security.
+* remove standardSecurity extension. The name was in conflict with an Extension in erp5_core. Move it in erp5_egov bt and rename it in ERP5EGov_Security.
 
 2008-09-12 fabien
 * Change all indentation, thanks to julien patch
-* move annonymous_workflow from egov public bt to safi_egov private bt wich is a more appropriate place.
 
 2008-09-11 fabien
 * Make anonymous subscription safer using a login and password to check the application progress.
@@ -87,12 +90,11 @@ bring some corrections after the Mme Ba review :
 * add erp5_egov_catalog to dependence list
 
 2008-06-07 fabien
-* move all web page and web site to safi_egov bt
+* move all web page and web site to erp5_egov bt
 
 2008-06-04 fabien
 * enhance EGov_Base_editAndNextStep script, now it should be possible to not
 have a modified Base_edit script
-* moved here some script from safi_tva bt
 
 2008-05-26 fabien
 bt refactoring :
