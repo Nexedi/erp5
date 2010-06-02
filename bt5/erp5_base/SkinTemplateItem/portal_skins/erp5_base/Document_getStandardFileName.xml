@@ -69,8 +69,6 @@ else:\n
   file_name = context.getTitleOrId()\n
 original_extension = None\n
 if \'.\' in file_name:\n
-  # delete actual extension if dot inside string and new format\n
-  # is provided\n
   file_name, original_extension = file_name.rsplit(\'.\', 1)\n
 if context.getVersion():\n
   file_name = \'%s-%s\' % (file_name, context.getVersion(),)\n
