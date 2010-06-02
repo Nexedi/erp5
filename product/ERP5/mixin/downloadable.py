@@ -28,6 +28,7 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Utils import fill_args_from_request
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
 
@@ -36,6 +37,7 @@ class DownloadableMixin:
 
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
+  @fill_args_from_request
   def index_html(self, REQUEST, RESPONSE, format=None, **kw):
     """
       We follow here the standard Zope API for files and images

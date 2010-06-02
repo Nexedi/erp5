@@ -34,6 +34,7 @@ import string
 import time
 import warnings
 import sys
+import inspect
 import persistent
 try:
   # Python 2.5 or later
@@ -349,6 +350,38 @@ def Email_parseAddressHeader(text):
   this header
   """
   return AddressList(text).addresslist
+
+def fill_args_from_request(*optional_args):
+  """Method decorator to fill missing args from given request
+
+  Without this decorator, code would have to rely on ZPublisher to get
+  paramaters from the REQUEST, which leads to much code duplication (copy and
+  paster of possible paramaters with their default values).
+
+  This decorator optional takes an list of names for parameters that are not
+  required by the method.
+  """
+  def decorator(wrapped):
+    names = inspect.getargspec(wrapped)[0]
+    assert names[:2] == ['self', 'REQUEST']
+    del names[:2]
+    names += optional_args
+    def wrapper(self, REQUEST=None, *args, **kw):
+      if REQUEST is not None:
+        for k in names[len(args):]:
+          if k not in kw:
+            v = REQUEST.get(k, kw)
+            if v is not kw:
+              kw[k] = v
+      return wrapped(self, REQUEST, *args, **kw)
+    wrapper.__name__ = wrapped.__name__
+    wrapper.__doc__ = wrapped.__doc__
+    return wrapper
+  if len(optional_args) == 1 and not isinstance(optional_args[0], basestring):
+    function, = optional_args
+    optional_args = ()
+    return decorator(function)
+  return decorator
 
 #####################################################
 # Globals initialization

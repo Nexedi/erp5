@@ -40,7 +40,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import convertDateToHour,\
                                 number_of_hours_in_day, number_of_hours_in_year
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, fill_args_from_request
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
@@ -243,14 +243,10 @@ class DocumentProxyMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'index_html' )
-  def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75,
-                                resolution=None, frame=0, **kw):
+  security.declareProtected(Permissions.AccessContentsInformation,'index_html')
+  def index_html(self, REQUEST, *args, **kw):
     """ Only a proxy method """
-    return self.getProxiedDocument().index_html(REQUEST, RESPONSE, 
-        display=display, format=format, quality=quality, resolution=resolution,
-        frame=frame, **kw)
+    return self.getProxiedDocument().index_html(REQUEST, *args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getProxiedDocument' )

@@ -41,6 +41,7 @@ from Acquisition import aq_base
 from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, ConversionError,\
                                                          VALID_TEXT_FORMAT_LIST
@@ -353,13 +354,11 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   # Display
   security.declareProtected('View', 'index_html')
-  def index_html(self, REQUEST, RESPONSE, format=None, display=None,
-                      quality=DEFAULT_QUALITY, resolution=None, frame=None, **kw):
+  @fill_args_from_request('display', 'quality', 'resolution', 'frame')
+  def index_html(self, REQUEST, *args, **kw):
     """Return the image data."""
     self._upradeImage()
-    return Document.index_html(self, REQUEST, RESPONSE, format=format,
-                      display=display, quality=quality, resolution=resolution,
-                      frame=frame, **kw)
+    return Document.index_html(self, REQUEST, *args, **kw)
 
   #
   # Photo processing
