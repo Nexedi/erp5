@@ -200,6 +200,11 @@ div.search_popup{\n
  \n
 }\n
 \n
+/* Do not display listbox footer in gadget mode */\n
+.block .listbox_footer{\n
+   display: none;\n
+}\n
+\n
 .listbox_footer_box {\n
   padding-top:5px;\n
   padding-bottom:5px;\n
@@ -270,7 +275,8 @@ a.tree_open {\n
 \n
 /*Table Listbox elmt*/\n
 .listbox th {\n
-background-color:#EBEBE2;\n
+  background-color:#EBEBE2;\n
+  text-align:left;\n
 }\n
 .listbox_search_line{\n
   background-color: #F0EFE9;\n
