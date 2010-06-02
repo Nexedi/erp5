@@ -59,12 +59,12 @@
 portal = context.getPortalObject()\n
 \n
 author = context.getSourceValue()\n
-result = {\'author_url\': None,\n
+result = {\'author_url\': \'#\',\n
           \'author_signature\': None,\n
-          \'author_title\': \'Unknown User\'}\n
+          \'author_title\': context.Base_translateString(\'Unknown User\')}\n
 \n
 if author is not None:\n
-  result[\'author_url\'] = author.getAbsoluteUrl()\n
+  result[\'author_url\'] = \'%s/view\' %author.getAbsoluteUrl()\n
   result[\'author_signature\'] = portal.ERP5Site_getUserPreferredForumSignature(author.getReference())\n
   result[\'author_title\'] = author.getTitle()\n
 \n

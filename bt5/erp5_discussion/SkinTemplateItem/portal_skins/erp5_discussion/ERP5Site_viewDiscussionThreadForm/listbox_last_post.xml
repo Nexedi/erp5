@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_add_new_thread_link</string> </value>
+            <value> <string>listbox_last_post</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -97,7 +97,7 @@
               <dictionary>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden_label button</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -105,11 +105,11 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_editor_field</string> </value>
+                    <value> <string>my_label_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -121,7 +121,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Add New Thread Link</string> </value>
+                    <value> <string>Last Post Author</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -140,11 +140,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: \'<a class="bt-small" style="width:250px;" href="%s/discussion_thread_module/DiscussionThreadModule_viewCreateNewDiscussionThreadDialog?cancel_url=%s"><span><img src="km_img/icon-add.png" alt="+"/> Add New Discussion Thread</span></a>\' %(here.getWebSiteValue().absolute_url(), here.absolute_url())
-
-]]></string> </value>
+            <value> <string>cell/DiscussionThread_viewLastPostWidget</string> </value>
         </item>
       </dictionary>
     </pickle>
