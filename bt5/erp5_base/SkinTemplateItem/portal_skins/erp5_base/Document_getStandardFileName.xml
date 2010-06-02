@@ -67,16 +67,17 @@ elif context.hasSourceReference():\n
   file_name = context.getSourceReference()\n
 else:\n
   file_name = context.getTitleOrId()\n
-if \'.\' in file_name and format:\n
+original_extension = None\n
+if \'.\' in file_name:\n
   # delete actual extension if dot inside string and new format\n
   # is provided\n
-  file_name = \'.\'.join(file_name.split(\'.\')[:-1])\n
+  file_name, original_extension = file_name.rsplit(\'.\', 1)\n
 if context.getVersion():\n
   file_name = \'%s-%s\' % (file_name, context.getVersion(),)\n
 if context.getLanguage():\n
   file_name = \'%s-%s\' % (file_name, context.getLanguage(),)\n
-if format:\n
-  file_name = \'%s.%s\' % (file_name, format,)\n
+if format or original_extension:\n
+  file_name = \'%s.%s\' % (file_name, format or original_extension,)\n
 return file_name\n
 </string> </value>
         </item>
@@ -118,7 +119,9 @@ return file_name\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>file_name</string>
-                            <string>_getitem_</string>
+                            <string>None</string>
+                            <string>original_extension</string>
+                            <string>_getiter_</string>
                           </tuple>
                         </value>
                     </item>

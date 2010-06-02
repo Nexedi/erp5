@@ -1235,6 +1235,21 @@ class TestDocument(TestDocumentMixin):
     document.edit(file=upload_file)
     self.assertEquals('application/pdf', document.getContentType())
 
+  def test_Document_getStandardFileName(self):
+    upload_file = makeFileUpload('metadata.pdf')
+    document = self.portal.document_module.newContent(portal_type='PDF')
+    # Here we use edit instead of setFile,
+    # because only edit method set filename as source_reference.
+    document.edit(file=upload_file)
+    self.assertEquals(document.getStandardFileName(), 'metadata.pdf')
+    self.assertEquals(document.getStandardFileName(format='png'),
+                      'metadata.png')
+    document.setVersion('001')
+    document.setLanguage('en')
+    self.assertEquals(document.getStandardFileName(), 'metadata-001-en.pdf')
+    self.assertEquals(document.getStandardFileName(format='png'),
+                      'metadata-001-en.png')
+
   def test_CMYKImageTextContent(self):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
