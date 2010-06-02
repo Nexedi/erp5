@@ -87,6 +87,8 @@ class PDFDocument(Image):
         data = self._convertToText()
         self.setConversion(data, mime=mime, format='txt')
         return (mime, data)
+    elif format is None:
+      return self.getContentType(), self.getData()
     else:
       return Image._convert(self, format, **kw)
 
