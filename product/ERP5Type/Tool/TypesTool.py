@@ -16,6 +16,7 @@
 ##############################################################################
 
 import imp, sys, warnings
+from itertools import chain
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
@@ -28,6 +29,47 @@ from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
 from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
+
+
+class ComposedObjectIds(object):
+  """Sequence type used to iterate efficiently over a union of folders
+
+  Returned values are ids of contained objects.
+  This type should used instead of building a simple list from the concatenation
+  of multiple calls on objectIds.
+
+  Note this class even implements '__contains__', which makes:
+    'some_id' in ComposedObjectIds([container])
+  faster than:
+    'some_id' in container.objectIds()
+
+  XXX Is it only useful for TypesTool ?
+      If not, this should it be moved in another place, like ERP5Type.Utils
+  """
+  __allow_access_to_unprotected_subobjects__ = 1
+
+  def __init__(self, container_list):
+    self._container_list = container_list
+
+  def __contains__(self, item):
+    for container in self._container_list:
+      if container.has_key(item):
+        return True
+    return False
+
+  def __iter__(self):
+    return chain(*[container.objectIds() for container in self._container_list])
+
+  def __len__(self):
+    return sum(map(len, self._container_list))
+
+  def __getitem__(self, item):
+    for container in self._container_list:
+      count = len(container)
+      if item < count:
+        return container.objectIds()[item]
+      item -= count
+    raise IndexError
 
 
 CMFCore_TypesTool = CMFCore_TypesToolModule.TypesTool
@@ -54,19 +96,32 @@ class TypesTool(TypeProvider):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def listContentTypes(self, container=None):
+    """List content types from all providers
+    """
+    if container is not None:
+      # XXX Slow legacy implementation. Is 'container_list' parameter useful ?
+      return CMFCore_TypesTool.listContentTypes(self, container)
+    object_list = [self]
+    _getOb = self.getPortalObject()._getOb
+    for provider in self.type_provider_list:
+      provider_value = _getOb(provider, None)
+      if provider_value:
+        object_list.append(provider_value)
+    return ComposedObjectIds(object_list)
+
   def listTypeInfo(self, container=None):
     """List type information from all providers
     """
     listTypeInfo = CMFCore_TypesTool.listTypeInfo
     type_info_list = listTypeInfo(self, container=container)
-    portal = self.getPortalObject()
+    _getOb = self.getPortalObject()._getOb
     for provider in self.type_provider_list:
-      provider_value = portal._getOb(provider, None)
+      provider_value = _getOb(provider, None)
       if provider_value is not None:
-        type_info_list.extend(
-            listTypeInfo(provider_value, container=container))
+        type_info_list += listTypeInfo(provider_value, container=container)
     return type_info_list
-  
+
   def _aq_dynamic(self, id):
     """Get a type information from a provider
     """

@@ -1431,16 +1431,17 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   def contentValues(self, *args, **kw):
     # Returns a list of documents contained in this folder.
     # ( no docstring to prevent publishing )
+    portal_type_id_list = self._getTypesTool().listContentTypes()
     filter_kw = kw.pop('filter', None) or {}
     portal_type = kw.pop('portal_type', None)
     if 'portal_type' in filter_kw:
       portal_type = filter_kw.pop('portal_type')
     if portal_type is None:
-      kw['portal_type'] = self._getTypesTool().listContentTypes()
+      kw['portal_type'] = portal_type_id_list
     else:
       if isinstance(portal_type, str):
         portal_type = portal_type,
-      kw['portal_type'] = portal_type
+      kw['portal_type'] = [x for x in portal_type if x in portal_type_id_list]
     object_list = self.objectValues(*args, **kw)
     if filter_kw:
       object_list = filter(ContentFilter(**filter_kw), object_list)
