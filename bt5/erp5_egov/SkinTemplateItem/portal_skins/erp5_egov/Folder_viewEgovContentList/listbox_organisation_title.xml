@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.SAFI_getTendererFromUserName()</string> </value>
+            <value> <string>python: cell.EGov_getTendererFromUserName()</string> </value>
         </item>
       </dictionary>
     </pickle>

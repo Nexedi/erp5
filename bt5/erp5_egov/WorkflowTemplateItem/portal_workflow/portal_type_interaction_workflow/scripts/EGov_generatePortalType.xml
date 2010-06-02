@@ -56,7 +56,16 @@
             <value> <string>procedure_request = state_change[\'object\']\n
 \n
 portal_type_name = procedure_request.getProcedureTitle()\n
+portal_type_name = portal_type_name.replace("\'", "")\n
+portal_type_name = portal_type_name.replace(\'é\', \'e\')\n
+portal_type_name = portal_type_name.replace(\'è\', \'e\')\n
+portal_type_name = portal_type_name.replace(\'à\', \'a\')\n
+portal_type_name = portal_type_name.replace(\'ç\', \'c\')\n
+portal_type_name = portal_type_name.replace(\'ê\', \'e\')\n
 portal_type_name = \' \'.join([word.capitalize() for word in portal_type_name.split(\' \')])\n
+\n
+#in case of so much whitespace in the name like \'Fo   ooo\' filled in the form \n
+portal_type_name.replace(\' \',\'\')\n
 \n
 ## verifying if portal_type exist or not\n
 \n

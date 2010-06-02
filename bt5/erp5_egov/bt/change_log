@@ -1,4 +1,7 @@
 2010-06-02 mayoro
+* add some processing in procedure title in case of special caracters before generating portal_type
+
+2010-06-02 mayoro
 * rename extension for egov security
 * remove some word added by mistakes
 * remove unused extension SetUpInstance

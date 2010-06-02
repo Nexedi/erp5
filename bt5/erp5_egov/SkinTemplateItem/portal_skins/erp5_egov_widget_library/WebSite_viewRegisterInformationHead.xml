@@ -47,7 +47,7 @@ Description:\n
 \n
 <tal:block metal:define-macro="main">\n
   <div class="become_member_head section_explanation" i18n:translate="" i18n:domain="ui">\n
-    The SAFI portal allows to make on-line administratives formalities.\n
+    The ERP5 EGov portal allows to make on-line administratives formalities.\n
     It is possible to make requests without being registred (anonymous request).\n
     However the registration is deeply advised.\n
   </div>\n

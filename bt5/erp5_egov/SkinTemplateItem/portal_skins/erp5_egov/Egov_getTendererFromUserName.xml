@@ -129,7 +129,7 @@ return tenderer\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SAFI_getTendererFromUserName</string> </value>
+            <value> <string>Egov_getTendererFromUserName</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -81,7 +81,7 @@ procedure=translateString(form.getPortalType())\n
 wf_info=form.Egov_getProcedureWorkflowStateInfo(\'egov_universal_workflow\',\'submitted\')\n
 date_of_submission=wf_info[\'time\'].strftime(\'%d/%m/%y %H:%M\')\n
 \n
-subject = translateString("[SAFI] Your ${procedure} document number: ${form_id} has been submitted", \n
+subject = translateString("[E-government] Your ${procedure} document number: ${form_id} has been submitted", \n
                            mapping = dict(procedure=procedure, form_id=form_id))\n
 \n
 msg_content=""" \n
@@ -89,7 +89,7 @@ msg_content=""" \n
 Your ${procedure} has been transmitted under the reference : ${form_id}, at ${date_of_submission}\n
 \n
 \n
-SAFI TEAM\n
+E-government TEAM\n
 \n
 """\n
 \n
