@@ -40,12 +40,13 @@
             <value> <string encoding="cdata"><![CDATA[
 
 <tal:block tal:define="last_post here/DiscussionThread_getLastPost;\n
-                       author_dict last_post/DiscussionPost_getAuthorDict">\n
+                       author_dict last_post/DiscussionPost_getAuthorDict;\n
+                       ">\n
   <a class="listbox-row-discussion-thread-last-post-by-author-link"\n
      tal:attributes="href author_dict/author_url"\n
      tal:content="author_dict/author_title"/> \n
   <a class="listbox-row-discussion-thread-last-post-link"\n
-     tal:attributes="href python: \'%s/view\' %last_post.absolute_url()"> \n
+     tal:attributes="href python: \'%s/view?list_start=%s&reset=1#%s\' %(here.absolute_url(), last_post.getId(), last_post.getUid())"> \n
     <img src="document_icon.gif" alt="Link To Post"/>\n
   </a>\n
  \n

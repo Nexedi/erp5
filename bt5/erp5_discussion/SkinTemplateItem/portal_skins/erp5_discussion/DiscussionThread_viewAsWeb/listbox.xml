@@ -164,7 +164,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
+            <value> <string>searchFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

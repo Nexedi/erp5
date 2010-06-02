@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts72891835.3</string> </value>
+            <value> <string>ts75477345.03</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,9 +30,14 @@
             <value> <string>/*\n
  ERP5 discussion forum.\n
 */\n
+\n
+/* listbox navigation */\n
 div.discussion-post-listbox-navigation{\n
   width: 100%; \n
   text-align: center;\n
+}\n
+div.discussion-post-listbox-navigation a.selected{\n
+  font-weight: bold!important;\n
 }\n
 \n
 div.discussion-post-listbox-row{\n
@@ -116,7 +121,8 @@ blockquote {\n
   border:1px solid #8CACBB;\n
   margin:5px;\n
   padding:10px 15px;\n
-}</string> </value>
+}\n
+</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -124,7 +130,7 @@ blockquote {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1442</int> </value>
+            <value> <int>1553</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

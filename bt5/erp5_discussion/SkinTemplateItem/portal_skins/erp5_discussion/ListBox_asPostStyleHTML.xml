@@ -114,7 +114,8 @@
 \n
               <div class="discussion-post-header">\n
                 <div class="discussion-post-title-container">\n
-                  <a tal:attributes="href string:${event_url}/view">\n
+                  <a tal:attributes="href string:${event_url}/view;\n
+\t\t                     name event_uid">\n
                     <div class="discussion-post-title"\n
                           tal:content="event_title"/>\n
                   </a>\n
