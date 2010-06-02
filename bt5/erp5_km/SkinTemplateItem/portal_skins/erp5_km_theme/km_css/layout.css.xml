@@ -1408,12 +1408,6 @@ td.pageNavigation{\n
 }\n
 \n
 \n
-.related_docs {\n
-\n
-  max-width: 170px;\n
-\n
-}\n
-\n
 /* gadget management block */\n
 div.gadget-management{\n
 }\n
