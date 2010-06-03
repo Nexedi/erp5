@@ -1648,7 +1648,6 @@ class Base( CopyContainer,
     getProperty = self.getProperty
     hasProperty = self.hasProperty
     _setProperty = self._setProperty
-    setId = self.setId
 
     def setChangedPropertyList(key_list):
       not_modified_list = []
@@ -1687,7 +1686,7 @@ class Base( CopyContainer,
                 # objects themselves cannot be used as keys.
                 modified_object_dict[id(o)] = o
             else:
-              setId(kw['id'], reindex=reindex_object)
+              self.setId(kw['id'], reindex=reindex_object)
         else:
           not_modified_list.append(key)
       return not_modified_list
