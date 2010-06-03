@@ -151,7 +151,7 @@ def initializeInstanceHome(tests_framework_home,
     if os.path.islink('Extensions'):
       os.remove('Extensions')
 
-    for d in static_dir_list + ('bin', 'etc', 'tests', 'var', 'log'):
+    for d in static_dir_list + ('bin', 'etc', 'tests', 'var', 'log', 'import'):
       if not os.path.exists(d):
         os.mkdir(d)
     for d in ('Products', 'bt5', 'svn', 'lib'):
