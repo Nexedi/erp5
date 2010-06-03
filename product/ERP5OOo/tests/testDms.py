@@ -64,6 +64,7 @@ from AccessControl import getSecurityManager
 from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 import os
 from threading import Thread
 import httplib
@@ -156,6 +157,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
       - clear document module
     """
     transaction.abort()
+    self.clearRestrictedSecurityHelperScript()
     activity_tool = self.portal.portal_activities
     activity_status = set(m.processing_node < -1
                           for m in activity_tool.getMessageList())
@@ -164,6 +166,13 @@ class TestDocumentMixin(ERP5TypeTestCase):
     else:
       assert not activity_status
     self.clearDocumentModule()
+
+  def clearRestrictedSecurityHelperScript(self):
+    script_id = 'Document_checkConversionFormatPermission'
+    custom = self.getPortal().portal_skins.custom
+    if script_id in custom.objectIds():
+      custom.manage_delObjects(ids=[script_id])
+      transaction.commit()
 
   def clearDocumentModule(self):
     """
@@ -1716,6 +1725,61 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     document = module.newContent(portal_type=portal_type, file=upload_file)
     from AccessControl import Unauthorized
     self.assertRaises(Unauthorized, document.asText)
+
+  def createRestrictedSecurityHelperScript(self):
+    createZODBPythonScript(self.getPortal().portal_skins.custom,
+    'Document_checkConversionFormatPermission', 'format=None, **kw', """
+if not format:
+  return 0
+return 1
+""")
+    transaction.commit()
+
+  def _test_document_conversion_to_base_format_no_original_format_access(self,
+      portal_type, file_name):
+    module = self.portal.getDefaultModule(portal_type)
+    upload_file = makeFileUpload(file_name)
+    document = module.newContent(portal_type=portal_type,
+                                 file=upload_file)
+
+    transaction.commit()
+    self.tic()
+
+    self.createRestrictedSecurityHelperScript()
+
+    from AccessControl import Unauthorized
+    # check that it is not possible to access document in original format
+    self.assertRaises(Unauthorized, document.convert, format=None)
+    # check that it is possible to convert document to text format
+    dummy = document.convert(format='text')
+
+  def test_WebPage_conversion_to_base_format_no_original_format_access(self):
+    """Checks Document.TextDocument"""
+    self._test_document_conversion_to_base_format_no_original_format_access(
+      'Web Page',
+      'TEST-text-iso8859-1.txt'
+    )
+
+  def test_PDF_conversion_to_base_format_no_original_format_access(self):
+    """Checks Document.PDFDocument"""
+    self._test_document_conversion_to_base_format_no_original_format_access(
+      'PDF',
+      'TEST-en-002.pdf'
+    )
+
+  def test_Text_conversion_to_base_format_no_original_format_access(self):
+    """Checks Document.OOoDocument"""
+    self._test_document_conversion_to_base_format_no_original_format_access(
+      'Text',
+      'TEST-en-002.odt'
+    )
+
+  def test_Image_conversion_to_base_format_no_original_format_access(self):
+    """Checks Document.Image"""
+    self._test_document_conversion_to_base_format_no_original_format_access(
+      'Image',
+      'TEST-en-002.png'
+    )
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
