@@ -46,12 +46,14 @@
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 /* Search popup fix*/\n
+\n
 div.search_popup{\n
   left:200px;\n
   position:absolute;\n
-  top:-20px;\n
+  top:-120px;\n
   width:250px;\n
 }\n
+\n
 \n
 /******************/ \n
 /* Listbox action */\n

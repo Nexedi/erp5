@@ -62,10 +62,15 @@ portal = context.getPortalObject()\n
 list_mode = request.get(\'list_mode\', False)\n
 dialog_mode = request.get(\'dialog_mode\', False)\n
 list_style = request.get(\'list_style\', None)\n
+context_portal_type = context.getPortalType()\n
 \n
 if portal.portal_membership.isAnonymousUser() or \\\n
   dialog_mode == True or \\\n
   (list_mode and list_style==\'search\'):\n
+  return False\n
+\n
+# show listbox action widget for module containers only\n
+if not context_portal_type.endswith(\'Module\'):# and context_portal_type!=\'Web Site\':\n
   return False\n
 \n
 return True\n
@@ -110,6 +115,7 @@ return True\n
                             <string>dialog_mode</string>
                             <string>None</string>
                             <string>list_style</string>
+                            <string>context_portal_type</string>
                             <string>True</string>
                           </tuple>
                         </value>

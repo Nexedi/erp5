@@ -482,6 +482,7 @@
         <div class="listbox_footer_box"\n
             tal:define="need_pagination python: int(here.total_size) > int(here.getMaxLineNumber())"\n
             tal:condition="need_pagination">\n
+\n
         <div class="listbox_pagination" \n
             tal:condition="need_pagination">\n
             <!--Display pagination -->\n
