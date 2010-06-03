@@ -167,12 +167,15 @@ class TestDocumentMixin(ERP5TypeTestCase):
       assert not activity_status
     self.clearDocumentModule()
 
+  conversion_format_permission_script_id_list = [
+      'Document_checkConversionFormatPermission',
+      'PDF_checkConversionFormatPermission']
   def clearRestrictedSecurityHelperScript(self):
-    script_id = 'Document_checkConversionFormatPermission'
-    custom = self.getPortal().portal_skins.custom
-    if script_id in custom.objectIds():
-      custom.manage_delObjects(ids=[script_id])
-      transaction.commit()
+    for script_id in self.conversion_format_permission_script_id_list:
+      custom = self.getPortal().portal_skins.custom
+      if script_id in custom.objectIds():
+        custom.manage_delObjects(ids=[script_id])
+        transaction.commit()
 
   def clearDocumentModule(self):
     """
@@ -1727,13 +1730,15 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     self.assertRaises(Unauthorized, document.asText)
 
   def createRestrictedSecurityHelperScript(self):
-    createZODBPythonScript(self.getPortal().portal_skins.custom,
-    'Document_checkConversionFormatPermission', 'format=None, **kw', """
+    script_content_list = ['format=None, **kw', """
 if not format:
   return 0
 return 1
-""")
-    transaction.commit()
+"""]
+    for script_id in self.conversion_format_permission_script_id_list:
+      createZODBPythonScript(self.getPortal().portal_skins.custom,
+      script_id, *script_content_list)
+      transaction.commit()
 
   def _test_document_conversion_to_base_format_no_original_format_access(self,
       portal_type, file_name):
