@@ -55,7 +55,7 @@ _MARKER = []
 class SelectionError( Exception ):
     pass
 
-class SelectionTool( BaseTool, UniqueObject, SimpleItem ):
+class SelectionTool( BaseTool, SimpleItem ):
     """
       The SelectionTool object is the place holder for all
       methods and algorithms related to persistent selections
