@@ -56,7 +56,8 @@
             <value> <string>"""Set subversion working copy list and enable preference.\n
 \n
 This script is called by Products.ERP5Type.tests.runFunctionalTest to set\n
-subversion working copy paths. It\'s not meant to be called by zelenium tests.\n
+subversion working copy paths and conversion server address.\n
+It\'s not meant to be called by zelenium tests directly.\n
 """\n
 \n
 pref = getattr(context.portal_preferences, "erp5_ui_test_preference", None)\n
@@ -67,8 +68,8 @@ if pref is None:\n
 \n
 pref.setPreferredSubversionWorkingCopyList(tuple(working_copy_list.split(\',\')))\n
 pref.setPreferredHtmlStyleUnsavedFormWarning(False)\n
-pref.setPreferredOoodocServerAddress(\'localhost\')\n
-pref.setPreferredOoodocServerPortNumber(8080)\n
+pref.setPreferredOoodocServerAddress(conversion_server_hostname)\n
+pref.setPreferredOoodocServerPortNumber(conversion_server_port)\n
 \n
 if pref.getPreferenceState() == \'disabled\':\n
   pref.enable()\n
@@ -84,7 +85,7 @@ return \'Set Preference Successfully.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>working_copy_list</string> </value>
+            <value> <string>working_copy_list, conversion_server_hostname, conversion_server_port</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -104,13 +105,15 @@ return \'Set Preference Successfully.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>working_copy_list</string>
+                            <string>conversion_server_hostname</string>
+                            <string>conversion_server_port</string>
                             <string>getattr</string>
                             <string>_getattr_</string>
                             <string>context</string>
@@ -134,7 +137,7 @@ return \'Set Preference Successfully.\'\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BTZuite_setPreference</string> </value>
+            <value> <string>Zuite_setPreference</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
