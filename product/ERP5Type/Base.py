@@ -169,11 +169,8 @@ class WorkflowMethod(Method):
     # New implementation does not use any longer wrapWorkflowMethod
     # but directly calls the workflow methods
     try:
-      wf = getToolByName(instance.getPortalObject(), 'portal_workflow', None)
+      wf = getToolByName(instance.getPortalObject(), 'portal_workflow')
     except AttributeError:
-      wf = getToolByName(instance, 'portal_workflow', None)
-
-    if wf is None:
       # XXX instance is unwrapped(no acquisition)
       # XXX I must think that what is a correct behavior.(Yusei)
       return self._m(instance, *args, **kw)
