@@ -1,3 +1,6 @@
+2010-06-03 yo
+* Add details tabs into Returned Sale Packing List and Returned Purchase Packing List for consistency.
+
 2010-06-01 kazuhiko
 * Use the same dependencies for Delivery_updateApplideRule to make it possible to merge activities.
 

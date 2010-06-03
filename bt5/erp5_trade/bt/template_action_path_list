@@ -108,6 +108,7 @@ Returned Purchase Packing List Line | view
 Returned Purchase Packing List Module | delivery_line_report
 Returned Purchase Packing List Module | view
 Returned Purchase Packing List Module | workflow_report
+Returned Purchase Packing List | details
 Returned Purchase Packing List | jump_related_purchase_invoice
 Returned Purchase Packing List | payment_condition
 Returned Purchase Packing List | profile_view
@@ -121,6 +122,7 @@ Returned Sale Packing List Line | view
 Returned Sale Packing List Module | delivery_line_report
 Returned Sale Packing List Module | view
 Returned Sale Packing List Module | workflow_report
+Returned Sale Packing List | details
 Returned Sale Packing List | jump_related_sale_invoice
 Returned Sale Packing List | payment_condition
 Returned Sale Packing List | profile_view
