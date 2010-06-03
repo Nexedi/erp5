@@ -106,10 +106,10 @@ class PDFDocument(Image):
     """
       Convert the PDF text content to text with pdftotext
     """
-    if not self.data:
+    if not self.hasData():
       return ''
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(str(self.getData()))
+    tmp.write(self.getData())
     tmp.seek(0)
     command_result = Popen(['pdftotext', '-layout', '-enc', 'UTF-8',
                                                     '-nopgbrk', tmp.name, '-'],
@@ -170,10 +170,10 @@ class PDFDocument(Image):
     NOTE: XXX check that command exists and was executed
     successfully
     """
-    if not self.data:
+    if not self.hasData():
       return ''
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(str(self.data))
+    tmp.write(self.getData())
     tmp.seek(0)
     command_result = Popen(['pdftohtml', '-enc', 'UTF-8', '-stdout',
                             '-noframes', '-i', tmp.name], stdout=PIPE)\
@@ -202,7 +202,7 @@ class PDFDocument(Image):
     except AttributeError:
       pass
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(str(self.data))
+    tmp.write(self.getData())
     tmp.seek(0)
     try:
       # First, we use pdfinfo to get standard metadata
