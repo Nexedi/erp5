@@ -1621,10 +1621,12 @@ class Base( CopyContainer,
       keep_existing -- if set to 1 or True, only those properties for which
       hasProperty is False will be updated.
     """
+    key_list = kw.keys()
+    if len(key_list) == 0:
+      return
     modified_property_dict = self._v_modified_property_dict = {}
     modified_object_dict = {}
 
-    key_list = kw.keys()
     unordered_key_list = [k for k in key_list if k not in edit_order]
     ordered_key_list = [k for k in edit_order if k in key_list]
     restricted_method_list = []
@@ -1643,6 +1645,11 @@ class Base( CopyContainer,
           for method in permissions[1]:
             restricted_method_list.append(method)
 
+    getProperty = self.getProperty
+    hasProperty = self.hasProperty
+    _setProperty = self._setProperty
+    setId = self.setId
+
     def setChangedPropertyList(key_list):
       not_modified_list = []
       for key in key_list:
@@ -1651,9 +1658,9 @@ class Base( CopyContainer,
         old_value = None
         if not force_update:
           try:
-            old_value = self.getProperty(key, evaluate=0)
+            old_value = getProperty(key, evaluate=0)
           except TypeError:
-            old_value = self.getProperty(key)
+            old_value = getProperty(key)
 
         if old_value != kw[key] or force_update:
           # We keep in a thread var the previous values
@@ -1661,7 +1668,7 @@ class Base( CopyContainer,
           # XXX If iteraction workflow script is triggered by edit and calls
           # edit itself, this is useless as the dict will be overwritten
           # If the keep_existing flag is set to 1, we do not update properties which are defined
-          if not keep_existing or not self.hasProperty(key):
+          if not keep_existing or not hasProperty(key):
             if restricted:
               accessor_name = 'set' + UpperCase(key)
               if accessor_name in restricted_method_list:
@@ -1669,7 +1676,7 @@ class Base( CopyContainer,
                 guarded_getattr(self, accessor_name)
             modified_property_dict[key] = old_value
             if key != 'id':
-              modified_object_list = self._setProperty(key, kw[key])
+              modified_object_list = _setProperty(key, kw[key])
               # BBB: if the setter does not return anything, assume
               # that self has been modified.
               if modified_object_list is None:
@@ -1680,7 +1687,7 @@ class Base( CopyContainer,
                 # objects themselves cannot be used as keys.
                 modified_object_dict[id(o)] = o
             else:
-              self.setId(kw['id'], reindex=reindex_object)
+              setId(kw['id'], reindex=reindex_object)
         else:
           not_modified_list.append(key)
       return not_modified_list
