@@ -431,8 +431,9 @@ class PropertyHolder:
     Return a list of tuple (id, method) for every accessor
     """
     accessor_method_item_list = []
+    accessor_method_item_list_append = accessor_method_item_list.append
     for x, y in self._getItemList():
-      if isinstance(y, types.TupleType):
+      if isinstance(y, tuple):
         if y is WORKFLOW_METHOD_MARKER or x == '__ac_permissions__':
           continue
         if len(y) == 0:
@@ -441,7 +442,7 @@ class PropertyHolder:
           continue
       elif not isinstance(y, Accessor):
         continue
-      accessor_method_item_list.append((x, y))
+      accessor_method_item_list_append((x, y))
     return accessor_method_item_list
 
   def getAccessorMethodIdList(self):
