@@ -1451,55 +1451,83 @@ div.document div.content div.text a{\n
 \n
 /* Web Toolbar */\n
 div.web-toolbar{\n
-  color: auto;\n
-  height: 30px;\n
   background-color: #000000;\n
 }\n
 \n
 div.web-toolbar h3{\n
   color:#FFFFFF;\n
-  height: 30px;\n
 }\n
 \n
 div.web-toolbar ul{\n
   padding: 0em!important;\n
   margin: 0em!important;\n
-  height: 30px;\n
 }\n
+\n
 div.web-toolbar ul li{\n
   padding-top:5px;\n
 }\n
 \n
-div.web-toolbar ul li.toolboxSection:hover {\n
+div.web-toolbar ul li.toolboxSection:hover{\n
   background:#A8A799;\n
 }\n
 \n
 div.web-toolbar h3:hover {\n
   background:#A8A799;\n
 }\n
+\n
 div.web-toolbar div.menu{\n
   background:#818364;\n
-  margin-bottom:8px;\n
+  padding: 0em;\n
   border-style: none;\n
 }\n
+\n
+div.web-toolbar div.menu ul li{\n
+  padding:0;\n
+  margin:0;\n
+  float:left;\n
+  width:100%;\n
+}\n
+\n
 div.web-toolbar div.menu li > a span, div.web-toolbar div.menu button, div.web-toolbar div.menu label{\n
   color: #FFFFFF;\n
 }\n
+\n
+div.web-toolbar li > a span {\n
+  padding: 0.5em;\n
+}\n
+\n
 div.web-toolbar div.menu label{\n
   font-weight: bold;\n
+  padding-left: 0.5em;\n
+  margin-bottom:1em;\n
+  margin-top:1em;\n
 }\n
 \n
 div.web-toolbar div.menu button{\n
   color: #FFFFFF!important;\n
   background-color: transparent;\n
-  border-style: none;\n
   padding-left: 1em;\n
+  padding-bottom:0.5em;\n
+}\n
+\n
+div.web-toolbar div.menu li:hover{\n
+  background-color: #000000;\n
 }\n
 \n
 div.web-toolbar li > a, div.web-toolbar button{\n
   border-style: none;\n
 }\n
+div.web-toolbar div.menu div.field{\n
+  padding-left: 0.5em;\n
+  padding-right: 0.5em;\n
+}\n
 \n
+div.web-toolbar div.menu div.field input, select, button{\n
+  width: 90%;\n
+}\n
+#clone_action_button{\n
+  width: 80%;\n
+}\n
 /* Generic styles used in all ERP5 KM Styles */\n
 .doNotDisplay, \n
 .do_not_display  {\n
