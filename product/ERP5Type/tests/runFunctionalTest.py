@@ -85,8 +85,8 @@ class FunctionalTestRunner:
     try:
       opts, args = getopt.getopt(arguments,
             "hsd", ["help", "stdout", "debug",
-                   "email_to_address=", "host=", "port=", 
-                   "portal_name=", "run_only=", "user=", 
+                   "email_to_address=", "host=", "port=",
+                   "portal_name=", "run_only=", "user=",
                    "password=", "alarms=",
                    "email_subject=", "smtp_host=", "xvfb_display="] )
     except getopt.GetoptError, msg:
@@ -175,7 +175,7 @@ class FunctionalTestRunner:
     os.system('%s/bin/zopectl stop' % self.instance_home)
   
   def runXvfb(self, xvfb_display):
-    pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb', 
+    pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb',
                      '-fbdir' , '%s' % self.xvfb_fbdir  ,
                      ':%s' % xvfb_display)
     display = os.environ.get('DISPLAY')
@@ -298,11 +298,9 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     self.unsubscribeFromTimerService()
 
   def getSvnRevision(self):
-    # get SVN revision used
+    """Get svn revision used."""
     import pysvn
-    os.chdir('%s/Products/ERP5' % self.instance_home)
-    revision = pysvn.Client().info('.').revision.number
-    return revision
+    return pysvn.Client().info(os.path.dirname(__file__)).revision.number
 
   def sendResult(self):
     result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % self.portal_url).readline()

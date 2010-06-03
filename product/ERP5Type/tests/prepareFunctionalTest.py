@@ -26,13 +26,7 @@
 #
 ##############################################################################
 
-#
-# Prepare ERP5 Zelenium Test.
-#
-# usage: python runUnitTest.py --save [OPTION]... prepareFunctionalTest.py
-#
-
-import os, os.path
+import os
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -49,25 +43,7 @@ class FunctionalTestRunner(FunctionalTestRunnerBase):
     self.host = host
     self.port = int(port)
   
-  def getSvnRevision(self):
-    # we should get the revision of a business template, but this is good
-    # enough for now.
-    import pysvn
-    revision = pysvn.Client().info(os.path.dirname(__file__)).revision.number
-    return revision
-
-
 os.environ['erp5_tests_portal_id'] = 'erp5_portal'
-
-MSG = '''
-This "test file" is intended to be used with --save option, for use with
-runFunctionalTest.py.
-
-It will now enter an IPython prompt so you can explore the environment either
-through IPython or through the "ZServer port" reported above.
-
-Once you exit the IPython prompt, this "test" will finish.
-'''.strip()
 
 class TestZelenium(ERP5TypeTestCase):
     def getBusinessTemplateList(self):
@@ -103,9 +79,7 @@ class TestZelenium(ERP5TypeTestCase):
                       runner_arguments)
       self.runner.main()
       self.runner.sendResult()
-      #print MSG
-      #import IPython.Shell
-      #IPython.Shell.IPShellEmbed('')(local_ns=locals(), global_ns=globals())
+
 
 def test_suite():
     suite = unittest.TestSuite()
