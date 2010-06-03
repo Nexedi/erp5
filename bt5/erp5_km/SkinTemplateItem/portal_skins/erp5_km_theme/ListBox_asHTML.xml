@@ -483,7 +483,7 @@
             tal:define="need_pagination python: int(here.total_size) > int(here.getMaxLineNumber())"\n
             tal:condition="need_pagination">\n
 \n
-        <div class="listbox_pagination" \n
+        <div class="listbox_pagination pageNavigation" \n
             tal:condition="need_pagination">\n
             <!--Display pagination -->\n
             <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n

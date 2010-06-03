@@ -202,9 +202,9 @@ div.search_popup{\n
  \n
 }\n
 \n
-/* Do not display listbox footer in gadget mode */\n
+/* Listbox Footer in gadget mode */\n
 .block .listbox_footer{\n
-   display: none;\n
+   background-color: transparent;\n
 }\n
 \n
 .listbox_footer_box {\n
