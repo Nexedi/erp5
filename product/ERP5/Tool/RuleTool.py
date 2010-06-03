@@ -130,7 +130,7 @@ class RuleTool (UniqueObject, Folder):
       - the rule must be of a known portal type
       - Predicate criterions can be used (like start_date_range_min)
       """
-      domain_tool = getToolByName(self, "portal_domains")
+      domain_tool = getToolByName(self.getPortalObject(), "portal_domains")
 
       if tested_base_category_list is None:
         tested_base_category_list = []
