@@ -175,8 +175,6 @@ class Predicate(XMLObject):
           tested_base_category[bc] = tested_base_category[bc] or \
                                      context.isMemberOf(c,
                                          strict_membership=strict_membership)
-        if tested_base_category.get(bc, 1) == 0:
-          break
     finally:
       if not enabled:
         disableReadOnlyTransactionCache(self)
