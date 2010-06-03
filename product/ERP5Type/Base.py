@@ -168,7 +168,7 @@ class WorkflowMethod(Method):
 
     # New implementation does not use any longer wrapWorkflowMethod
     # but directly calls the workflow methods
-    wf = getToolByName(instance, 'portal_workflow', None)
+    wf = getToolByName(instance.getPortalObject(), 'portal_workflow', None)
 
     if wf is None:
       # XXX instance is unwrapped(no acquisition)

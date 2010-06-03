@@ -229,7 +229,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     a delivery,
     finally, apply new rules if no rule with the same type is already applied.
     """
-    portal_rules = getToolByName(self, 'portal_rules')
+    portal_rules = getToolByName(self.getPortalObject(), 'portal_rules')
 
     tv = getTransactionalVariable(self)
     cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
