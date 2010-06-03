@@ -1522,9 +1522,10 @@ div.web-toolbar div.menu div.field{\n
   padding-right: 0.5em;\n
 }\n
 \n
-div.web-toolbar div.menu div.field input, select, button{\n
-  width: 90%;\n
+div.web-toolbar div.menu div.field input, div.web-toolbar div.menu div.field select, div.web-toolbar div.menu div.field button{\n
+  max-width: 90%;\n
 }\n
+\n
 #clone_action_button{\n
   width: 80%;\n
 }\n
