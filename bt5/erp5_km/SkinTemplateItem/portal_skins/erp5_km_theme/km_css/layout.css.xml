@@ -365,6 +365,7 @@ button, select, input {\n
 #wrapper_path {\n
 \n
 \tfloat:left;\n
+\twidth: 100%;\n
 \n
 }\n
 \n
@@ -474,6 +475,16 @@ ul.breadcrumb li {\n
 \tmargin-left:5px;\n
 \theight:100%;\n
 \n
+}\n
+\n
+div.breadcrumb{\n
+  float:left;\n
+  width: 85%\n
+}\n
+\n
+div.language-selection{\n
+  float:right;\n
+  width: 15%\n
 }\n
 \n
 \n
