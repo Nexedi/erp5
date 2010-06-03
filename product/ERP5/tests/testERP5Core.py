@@ -493,7 +493,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
   def test_getPropertyForUid(self):
     error_list = []
     for i in self.portal.objectValues():
-      if i.getUid() != i.getProperty('uid'):
+      if i.getUid() != 0 and i.getUid() != i.getProperty('uid'):
         error_list.append((i.getId(), i.getUid(), i.getProperty('uid')))
     self.assertEquals(error_list, [])
 
