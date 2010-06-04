@@ -173,6 +173,8 @@ class SupplyChain(Path, XMLObject):
       If recursive, browse the SupplyChain until a valid link is found.
       checked_link_list is used to prevent infinite loop.
     """
+    # XXX document "all" parameter if you can
+
     # Initialize checked_link_list parameter...
     if checked_link_list is None:
       checked_link_list = []
