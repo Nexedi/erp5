@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_at_date</string> </value>
+            <value> <string>your_preferred_from_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -316,7 +316,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>At Date</string> </value>
+                    <value> <string>From Date</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -471,7 +471,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredAccountingTransactionAtDate</string> </value>
+            <value> <string>preferences/getPreferredAccountingTransactionFromDate</string> </value>
         </item>
       </dictionary>
     </pickle>

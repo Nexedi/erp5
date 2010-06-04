@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_from_date</string> </value>
+            <value> <string>your_preferred_at_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -194,14 +194,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>hidden_day_is_last_day</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>hide_day</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>input_order</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -316,7 +308,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>From Date</string> </value>
+                    <value> <string>At Date</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -471,7 +463,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredAccountingTransactionFromDate</string> </value>
+            <value> <string>preferences/getPreferredAccountingTransactionAtDate</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -490,7 +482,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>not: request/is_accounting_report | nothing</string> </value>
+            <value> <string>python: not request.get(\'is_accounting_report\', False)</string> </value>
         </item>
       </dictionary>
     </pickle>

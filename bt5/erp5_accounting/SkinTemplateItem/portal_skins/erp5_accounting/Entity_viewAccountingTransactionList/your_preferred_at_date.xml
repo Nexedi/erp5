@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_at_date</string> </value>
+            <value> <string>your_preferred_at_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -191,6 +191,14 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hidden_day_is_last_day</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_day</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -482,7 +490,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not request.get(\'is_accounting_report\', False)</string> </value>
+            <value> <string>not: request/is_accounting_report | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
