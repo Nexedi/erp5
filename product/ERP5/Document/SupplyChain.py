@@ -166,11 +166,11 @@ class SupplyChain(Path, XMLObject):
   security.declareProtected(Permissions.View,
                             'getPreviousProductionSupplyLinkList')
   def getPreviousProductionSupplyLinkList(self, current_supply_link, 
-                                          recursive=0, all=0,
+                                          recursive=False, all=False,
                                           checked_link_list=None):
     """
       Return the previous SupplyLink which represents a production.
-      If recursive=1, browse the SupplyChain until a valid link is found.
+      If recursive, browse the SupplyChain until a valid link is found.
       checked_link_list is used to prevent infinite loop.
     """
     # Initialize checked_link_list parameter...
@@ -188,7 +188,7 @@ class SupplyChain(Path, XMLObject):
       previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
       # Test each link
       for previous_link in previous_link_list:
-        continue_recursivity = 0
+        continue_recursivity = False
         # Great, we find a valid one
         if previous_link.isProductionSupplyLink():
           transformation_link_list.append(previous_link)
@@ -200,13 +200,13 @@ class SupplyChain(Path, XMLObject):
                   "Those SupplyLinks are in conflict: %r and %r" %\
                   (current_supply_link.getRelativeUrl(),\
                    previous_link.getRelativeUrl())
-          if all == 1:
-            continue_recursivity=1
+          if all:
+            continue_recursivity = True
         # Reject the current
-        elif (recursive==1):
-          continue_recursivity=1
+        elif recursive:
+          continue_recursivity = True
         # Continue to browse the chain ?
-        if continue_recursivity == 1:
+        if continue_recursivity:
           # Browse the previous link
           transformation_link_list.extend(
             self.getPreviousProductionSupplyLinkList(
