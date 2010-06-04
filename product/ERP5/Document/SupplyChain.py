@@ -143,26 +143,25 @@ class SupplyChain(Path, XMLObject):
     if current_supply_link is None:
       # No current_supply_link defined, we need to return the last SupplyLink
       return [self.getLastLink()]
-    else:
-      # Get all SupplyLink in the SupplyChain
-      supply_link_list = self.objectValues(
-                                 portal_type=self.supply_link_portal_type)
-      # Destination of valid link must be the source of the current link.
-      current_node_value = current_supply_link.getCurrentNodeValue()
 
-      previous_supply_link_list = []
-      previous_production_list = []
-      for supply_link in supply_link_list:
-        if supply_link != current_supply_link and \
-          supply_link.getNextNodeValue() == current_node_value:
-          previous_supply_link_list.append(supply_link)
-          if supply_link.isProductionSupplyLink():
-            previous_production_list.append(supply_link)
+    # Get all SupplyLink in the SupplyChain
+    supply_link_list = self.objectValues(
+                               portal_type=self.supply_link_portal_type)
+    # Destination of valid link must be the source of the current link.
+    current_node_value = current_supply_link.getCurrentNodeValue()
 
-      if previous_production_list != []:
-        previous_supply_link_list = previous_production_list
+    previous_supply_link_list = []
+    previous_production_list = []
+    for supply_link in supply_link_list:
+      if supply_link != current_supply_link and \
+        supply_link.getNextNodeValue() == current_node_value:
+        previous_supply_link_list.append(supply_link)
+        if supply_link.isProductionSupplyLink():
+          previous_production_list.append(supply_link)
 
-      return previous_supply_link_list
+    if previous_production_list != []:
+      return previous_production_list
+    return previous_supply_link_list
 
   security.declareProtected(Permissions.View,
                             'getPreviousProductionSupplyLinkList')
