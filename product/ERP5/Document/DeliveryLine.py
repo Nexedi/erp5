@@ -376,7 +376,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
     def isDivergent(self):
       """ Returns true if the delivery line is divergent
       """
-      return not self.getDivergenceList()
+      return bool(self.getDivergenceList())
 
     security.declareProtected(Permissions.View, 'getDivergenceList')
     def getDivergenceList(self):
