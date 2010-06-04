@@ -97,16 +97,18 @@ class SupplyChain(Path, XMLObject):
                                  portal_type=self.supply_link_portal_type)
     # Search next link
     next_node_value = current_supply_link.getNextNodeValue()
-    next_supply_link_list = [x for x in supply_link_list if \
-                             x.getCurrentNodeValue() == next_node_value]
-    # Prevent infinite loop
-    if current_supply_link in next_supply_link_list:
-      next_supply_link_list.remove(current_supply_link)
-    # Get only production node in the list, or return the entire list
-    next_production_list = [x for x in next_supply_link_list \
-                                if x.isProductionSupplyLink()]
+
+    next_supply_link_list = []
+    next_production_list = []
+    for supply_link in supply_link_list:
+      if supply_link != current_supply_link and \
+          supply_link.getCurrentNodeValue() == next_node_value:
+        next_supply_link_list.append(supply_link)
+        if supply_link.isProductionSupplyLink():
+          next_production_list.append(supply_link)
+
     if next_production_list != []:
-      next_supply_link_list = next_production_list 
+      return next_production_list
     return next_supply_link_list
 
   security.declareProtected(Permissions.View,
