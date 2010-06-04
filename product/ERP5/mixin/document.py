@@ -31,7 +31,10 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type import Permissions
 from OFS.Image import Pdata
 from cStringIO import StringIO
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+
 _MARKER = []
+LOCK_PERMISSION_KEY = 'TRANSACTIONAL_VARIABLE_FORMAT_PERMISSION_LOCK_FLAG'
 
 class DocumentMixin:
   """
@@ -58,8 +61,14 @@ class DocumentMixin:
       string (ex. jpeg, html, text, txt, etc.)
       **kw can be various things - e.g. resolution
     """
-    self._checkConversionFormatPermission(format, **kw)
-    return self._convert(format, **kw)
+    transaction_variable = getTransactionalVariable(self.getPortalObject())
+    if LOCK_PERMISSION_KEY in transaction_variable:
+      del transaction_variable[LOCK_PERMISSION_KEY]
+    self._checkConversionFormatPermission(format, lock_checking=True, **kw)
+    result = self._convert(format, **kw)
+    if LOCK_PERMISSION_KEY in transaction_variable:
+      del transaction_variable[LOCK_PERMISSION_KEY]
+    return result
 
   def _convert(self, format, **kw):
     """Private method which make the transformation.
@@ -80,10 +89,15 @@ class DocumentMixin:
     else:
       return True
 
-  def _checkConversionFormatPermission(self, format, **kw):
+  def _checkConversionFormatPermission(self, format, lock_checking=False, **kw):
     """Private method to check permission when access specified format.
     This method raises
     """
+    transaction_variable = getTransactionalVariable(self.getPortalObject())
+    if transaction_variable.get(LOCK_PERMISSION_KEY, False):
+      # Permission already checked in convert with final format,
+      # do not check permission for intermediate formats
+      return True
     # XXX cache result in TV
     method = self._getTypeBasedMethod('checkConversionFormatPermission',
                  fallback_script_id='Document_checkConversionFormatPermission')
@@ -98,6 +112,7 @@ class DocumentMixin:
       raise Unauthorized('Document: user does not have enough permission'\
                          ' to access document in %s format' %\
                                                         (format or 'original'))
+    transaction_variable[LOCK_PERMISSION_KEY] = lock_checking
 
   security.declareProtected(Permissions.AccessContentsInformation,
                                                  'isSupportBaseDataConversion')
