@@ -171,12 +171,11 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
                                base_id='movement', rounding=False, **kw):
     from Products.ERP5Type.Document import newTempSimulationMovement
 
-    # Define rounding stuff
-    portal_roundings = getToolByName(self, 'portal_roundings', None)
-
     # ROUNDING
     if rounding:
-      movement_list = [portal_roundings.getRoundingProxy(movement, context=self)
+      rounding_proxy = getToolByName(self.getPortalObject(),
+                                     'portal_roundings').getRoundingProxy
+      movement_list = [rounding_proxy(movement, context=self)
                        for movement in movement_list]
 
     aggregated_amount_list = AggregatedAmountList()
@@ -279,7 +278,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
             # tmp_movement.getTotalPrice() returns rounded result.
             # If rounded_property_id='quantity', then
             # tmp_movement.getQuantity() will be rounded.
-            tmp_movement = portal_roundings.getRoundingProxy(tmp_movement, context=self)
+            tmp_movement = rounding_proxy(tmp_movement, context=self)
           tmp_movement.edit(
               variation_base_category_list = cell.getVariationBaseCategoryList(),
               variation_category_list = cell.getVariationCategoryList(),
@@ -300,7 +299,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
         if rounding:
           # Replace temporary movement with rounding proxy so that target
           # property value will be rounded.
-          tmp_movement = portal_roundings.getRoundingProxy(tmp_movement, context=self)
+          tmp_movement = rounding_proxy(tmp_movement, context=self)
         tmp_movement_list.append(tmp_movement)
     modified = 0
     aggregated_movement_list = []
@@ -363,7 +362,7 @@ class TradeModelLine(Predicate, XMLMatrix, Amount):
           # Do nothing
           return aggregated_amount_list
         if rounding:
-          tmp_movement = portal_roundings.getRoundingProxy(
+          tmp_movement = rounding_proxy(
             tmp_movement, context=self)
 
       # check if slices are used
