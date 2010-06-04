@@ -1741,6 +1741,12 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
         return obj
 
+    # Use Base class's methods for properties instead of patched PropertyManager's
+    _propertyMap = Base._propertyMap
+    _setProperty = Base._setProperty
+    getProperty = Base.getProperty
+    hasProperty = Base.hasProperty
+
 InitializeClass( CategoryTool )
 
 # Psyco
