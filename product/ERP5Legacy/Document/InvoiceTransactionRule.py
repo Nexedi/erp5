@@ -218,10 +218,7 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     return 1
 
   def _getCurrencyRatioAndPrecisionByArrow(self, arrow, prevision_line):
-    from Products.ERP5Type.Document import newTempSimulationMovement
     prevision_currency = prevision_line.get('resource', None)
-    temporary_movement = newTempSimulationMovement(self.getPortalObject(),
-        '1', **prevision_line)
     exchange_ratio = None
     precision = None
     section = prevision_line.get(arrow, None)
@@ -231,6 +228,9 @@ class InvoiceTransactionRule(Rule, PredicateMatrix):
     else:
       currency_url = None
     if currency_url is not None and prevision_currency != currency_url:
+      from Products.ERP5Type.Document import newTempSimulationMovement
+      temporary_movement = newTempSimulationMovement(self.getPortalObject(),
+                                                     '1', **prevision_line)
       precision = section.getPriceCurrencyValue() \
           .getQuantityPrecision()
       exchange_ratio = self.restrictedTraverse(currency_url).getPrice(
