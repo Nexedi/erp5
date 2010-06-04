@@ -28,7 +28,7 @@
 
 from Products.CMFCore.Expression import Expression
 
-class AccountingTransactionLine:
+class AccountingTransactionLineConstraint:
   """Constraints for Accounting Transaction Lines
   """
 
