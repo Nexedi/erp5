@@ -36,9 +36,7 @@ from DateTime import DateTime
 
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
-
-# TODO: test reports with function
-# TODO: test reports with project
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
   """Test Accounting reports
@@ -655,7 +653,65 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=300.0)))
 
     return t1, t2, t3
-                     
+   
+  @UnrestrictedMethod
+  def createProjectAndFunctionDataSet(self):
+    # create some functions
+    function = self.portal.portal_categories.function
+    if function._getOb('a', None) is None:
+      function.newContent(portal_type='Category', id='a')
+    self.function_a = function['a']
+    if function._getOb('b', None) is None:
+      function.newContent(portal_type='Category', id='b')
+    self.function_b = function['b']
+    # create some projects
+    self.project_1 = self.portal.project_module.newContent(
+                          portal_type='Project',
+                          title='Project 1')
+    self.project_2 = self.portal.project_module.newContent(
+                          portal_type='Project',
+                          title='Project 2')
+    account_module = self.portal.account_module
+    self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Function a Project 1',
+              source_reference='1',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              source_function_value=self.function_a,
+              source_project_value=self.project_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=500.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=500.0)))
+    self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Function b Project 2',
+              source_reference='2',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              source_function_value=self.function_b,
+              source_project_value=self.project_2,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=300.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=300.0)))
+    self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='No function no project',
+              source_reference='3',
+              simulation_state='delivered',
+              destination_section_value=self.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=700.0),
+                     dict(source_value=account_module.goods_sales,
+                          source_credit=700.0)))
+
+
+
   def testAccountStatement(self):
     # Simple Account Statement for "Receivable" account
     self.createAccountStatementDataSet()
@@ -2742,6 +2798,89 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         credit=600, final_debit_balance=600, final_credit_balance=600,
         final_balance_if_debit=600, final_balance_if_credit=600)
 
+  def testTrialBalanceFunction(self):
+    # trial balance restricted to a function
+    self.createProjectAndFunctionDataSet()
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['stopped', 'delivered']
+    request_form['per_account_class_summary'] = 0
+    request_form['show_empty_accounts'] = 0
+    request_form['per_account_class_summary'] = 0
+    request_form['function'] = 'function/a'
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    
+    self.checkLineProperties(data_line_list[0], node_id='41',
+        node_title='Receivable', initial_debit_balance=0,
+        initial_credit_balance=0, debit=500, credit=0,
+        final_debit_balance=500, final_credit_balance=0,
+        final_balance_if_debit=500, final_balance_if_credit=0,)
+    
+    self.checkLineProperties(data_line_list[1], node_id='7',
+        node_title='Goods Sales', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=500, final_debit_balance=0,
+        final_credit_balance=500, final_balance_if_debit=0,
+        final_balance_if_credit=500,)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=0, initial_credit_balance=0, debit=500,
+        credit=500, final_debit_balance=500, final_credit_balance=500,
+        final_balance_if_debit=500, final_balance_if_credit=500)
+
+  def testTrialBalanceProject(self):
+    # trial balance restricted to a project
+    self.createProjectAndFunctionDataSet()
+
+    # set request variables and render
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['stopped', 'delivered']
+    request_form['per_account_class_summary'] = 0
+    request_form['show_empty_accounts'] = 0
+    request_form['per_account_class_summary'] = 0
+    request_form['project'] = self.project_1.getRelativeUrl()
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    
+    self.checkLineProperties(data_line_list[0], node_id='41',
+        node_title='Receivable', initial_debit_balance=0,
+        initial_credit_balance=0, debit=500, credit=0,
+        final_debit_balance=500, final_credit_balance=0,
+        final_balance_if_debit=500, final_balance_if_credit=0,)
+    
+    self.checkLineProperties(data_line_list[1], node_id='7',
+        node_title='Goods Sales', initial_debit_balance=0,
+        initial_credit_balance=0, debit=0, credit=500, final_debit_balance=0,
+        final_credit_balance=500, final_balance_if_debit=0,
+        final_balance_if_credit=500,)
+    
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], node_id=None, node_title=None,
+        initial_debit_balance=0, initial_credit_balance=0, debit=500,
+        credit=500, final_debit_balance=500, final_credit_balance=500,
+        final_balance_if_debit=500, final_balance_if_credit=500)
+
 
   def testGeneralLedger(self):
     # Simple test of general ledger
@@ -3037,7 +3176,103 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEquals(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit=200, credit=100)
  
- 
+  def testGeneralLedgerFunction(self):
+    # general ledger restricted to a function
+    self.createProjectAndFunctionDataSet()
+    
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['function'] = 'function/a'
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    self.assertEquals(3, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='1',
+          Movement_getExplanationTitle='Function a Project 1',
+          date=DateTime(2006, 2, 2),
+          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
+          Movement_getMirrorSectionTitle='Client 1',
+          debit=500, credit=0, running_total_price=500, )
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=500, credit=0)
+
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='1',
+          Movement_getExplanationTitle='Function a Project 1',
+          date=DateTime(2006, 2, 2),
+          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
+          Movement_getMirrorSectionTitle='Client 1',
+          debit=0, credit=500, running_total_price=-500, )
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=0, credit=500)
+
+    line_list = self.getListBoxLineList(report_section_list[2])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0], debit=500, credit=500)
+
+  def testGeneralLedgerProject(self):
+    # general ledger restricted to a project
+    self.createProjectAndFunctionDataSet()
+    
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['project'] = self.project_1.getRelativeUrl()
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    self.assertEquals(3, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='1',
+          Movement_getExplanationTitle='Function a Project 1',
+          date=DateTime(2006, 2, 2),
+          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
+          Movement_getMirrorSectionTitle='Client 1',
+          debit=500, credit=0, running_total_price=500, )
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=500, credit=0)
+
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+          Movement_getSpecificReference='1',
+          Movement_getExplanationTitle='Function a Project 1',
+          date=DateTime(2006, 2, 2),
+          Movement_getExplanationTranslatedPortalType='Sale Invoice Transaction',
+          Movement_getMirrorSectionTitle='Client 1',
+          debit=0, credit=500, running_total_price=-500, )
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=0, credit=500)
+
+    line_list = self.getListBoxLineList(report_section_list[2])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0], debit=500, credit=500)
+
+
   def testProfitAndLoss(self):
     # Simple test of profit and loss
     self.createAccountStatementDataSet(use_two_bank_accounts=1)

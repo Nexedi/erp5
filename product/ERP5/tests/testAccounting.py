@@ -243,7 +243,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     # standalone accounting and only installs erp5_accounting_ui_test to have
     # some default content created.
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_accounting_ui_test', 'erp5_ods_style')
+            'erp5_project', 'erp5_accounting_ui_test', 'erp5_ods_style')
 
 
 class TestAccounts(AccountingTestCase):
