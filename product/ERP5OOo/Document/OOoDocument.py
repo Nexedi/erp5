@@ -262,7 +262,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
     """
     return format in self.getTargetFormatList()
 
-  def _convert(self, format):
+  def _getConversionFromProxyServer(self, format):
     """
       Communicates with server to convert a file 
     """
@@ -297,14 +297,12 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
-  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-  def convert(self, format, display=None, **kw):
+  def _convert(self, format, display=None, **kw):
     """Convert the document to the given format.
 
     If a conversion is already stored for this format, it is returned
     directly, otherwise the conversion is stored for the next time.
     """
-    self._checkConversionFormatPermission(format, **kw)
     #XXX if document is empty, stop to try to convert.
     #XXX but I don't know what is a appropriate mime-type.(Yusei)
     if not self.hasData():
@@ -351,7 +349,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
         #Text conversion is not supported by oood, do it in other way
         if not self.hasConversion(format=original_format):
           #Do real conversion for text
-          mime, data = self._convert(format='text-content')
+          mime, data = self._getConversionFromProxyServer(format='text-content')
           self.setConversion(data, mime, format=original_format)
           return mime, data
         return self.getConversion(format=original_format)
@@ -373,7 +371,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
       has_format = self.hasConversion(format=original_format, display=display)
     if not has_format:
       # Do real conversion
-      mime, data = self._convert(format)
+      mime, data = self._getConversionFromProxyServer(format)
       if is_html:
         # Extra processing required since
         # we receive a zip file
@@ -440,7 +438,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
       format_list = [x for x in self.getTargetFormatList()
                                 if x.startswith('html') or x.endswith('html')]
       format = format_list[0]
-      mime, data = self._convert(format)
+      mime, data = self._getConversionFromProxyServer(format)
       archive_file = cStringIO.StringIO()
       archive_file.write(str(data))
       zip_file = zipfile.ZipFile(archive_file)
