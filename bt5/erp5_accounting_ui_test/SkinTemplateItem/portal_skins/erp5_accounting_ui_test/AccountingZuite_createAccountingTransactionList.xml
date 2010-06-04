@@ -248,8 +248,9 @@ for month in range(1, month_count + 1):\n
                           portal_type=payment.getPortalAccountingMovementTypeList()):\n
             if line.getGroupingReference():\n
                line.activate(after_path_and_method_id=(\n
-                  ((payment.getPath(),), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),\n
-                  ((line.getPath(),), (\'recursiveImmediateReindexObject\', \'immediateReindexObject\')),),\n
+                  ((payment.getPath(), line.getPath()),\n
+                    (\'recursiveImmediateReindexObject\',\n
+                      \'immediateReindexObject\')),),\n
                ).AccountingTransactionLine_resetGroupingReference()\n
 \n
       else:\n
