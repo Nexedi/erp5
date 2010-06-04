@@ -374,17 +374,9 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
 
     security.declareProtected(Permissions.View, 'isDivergent')
     def isDivergent(self):
+      """ Returns true if the delivery line is divergent
       """
-        Returns 1 if the target is not met according to the current information
-        After and edit, the isOutOfTarget will be checked. If it is 1,
-        a message is emitted
-
-        emit targetUnreachable !
-      """
-      if self.getDivergenceList() == []:
-        return 0
-      else:
-        return 1
+      return not self.getDivergenceList()
 
     security.declareProtected(Permissions.View, 'getDivergenceList')
     def getDivergenceList(self):
