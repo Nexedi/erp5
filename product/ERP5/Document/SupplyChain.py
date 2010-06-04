@@ -188,9 +188,12 @@ class SupplyChain(Path, XMLObject):
       previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
       # Test each link
       for previous_link in previous_link_list:
-        continue_recursivity = False
-        # Great, we find a valid one
-        if previous_link.isProductionSupplyLink():
+        if not previous_link.isProductionSupplyLink():
+          # current is invalid
+          if not recursive:
+            continue
+        else:
+          # Great, we found a valid one
           transformation_link_list.append(previous_link)
           # Prevent infinite loop when 2 production_link have the same
           # destination
@@ -200,19 +203,15 @@ class SupplyChain(Path, XMLObject):
                   "Those SupplyLinks are in conflict: %r and %r" %\
                   (current_supply_link.getRelativeUrl(),\
                    previous_link.getRelativeUrl())
-          if all:
-            continue_recursivity = True
-        # Reject the current
-        elif recursive:
-          continue_recursivity = True
-        # Continue to browse the chain ?
-        if continue_recursivity:
-          # Browse the previous link
-          transformation_link_list.extend(
-            self.getPreviousProductionSupplyLinkList(
-                                         previous_link, 
-                                         recursive=recursive, all=all,
-                                         checked_link_list=checked_link_list))
+          if not recursive and not all:
+            continue
+
+        # Browse the previous link
+        transformation_link_list.extend(
+          self.getPreviousProductionSupplyLinkList(
+                                       previous_link, 
+                                       recursive=recursive, all=all,
+                                       checked_link_list=checked_link_list))
       # Return result
       return transformation_link_list
 
