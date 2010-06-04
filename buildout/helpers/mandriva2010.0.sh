@@ -17,6 +17,7 @@ automake
 bison
 cpio
 flex
+ftjam
 gcc
 gcc-c++
 groff
@@ -41,6 +42,7 @@ rpm
 subversion
 subversion-devel
 subversion-tools
+tesseract-devel
 x11-server-xvfb
 zip
 zlib1-devel\

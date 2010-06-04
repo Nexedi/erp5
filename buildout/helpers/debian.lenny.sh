@@ -7,14 +7,15 @@ build-essential
 cpio
 flex
 gcc
+jam
 libbz2-dev
 libgdbm-dev
 libglib2.0-dev
 libjpeg62-dev
 libldap2-dev
 libncurses5-dev
-libreadline-dev
 libneon27-gnutls-dev
+libreadline-dev
 libsasl2-dev
 libssl-dev
 libsvn-dev
@@ -27,6 +28,7 @@ python-setuptools
 rpm
 subversion
 subversion-tools
+tesseract-ocr-dev
 xvfb
 zip
 zlib1g-dev\
