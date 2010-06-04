@@ -96,27 +96,25 @@ params = dict(precision=precision,\n
               movement_portal_type=portal.getPortalAccountingMovementTypeList(),\n
               no_mirror_section_uid_cache=1,\n
               hide_grouping=request.get(\'omit_grouping_reference\', False))\n
+project = request.get(\'project\')\n
+if project:\n
+  params[\'project_uid\'] = portal.portal_categories.restrictedTraverse(project).getUid()\n
+function = request.get(\'function\')\n
+if function:\n
+  params[\'function_uid\'] = portal.portal_categories.restrictedTraverse(function).getUid()\n
+\n
+account_columns = (\n
+      (\'Movement_getSpecificReference\', \'Reference\'),\n
+      (\'Movement_getExplanationTitle\', \'Title\'),\n
+      (\'date\', \'Date\'),\n
+      (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
+      (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
+      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),)\n
 \n
 if len(simulation_state) > 1:\n
-  account_columns = (\n
-      (\'Movement_getSpecificReference\', \'Reference\'),\n
-      (\'Movement_getExplanationTitle\', \'Title\'),\n
-      (\'date\', \'Date\'),\n
-      (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
-      (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
-      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
-      (\'getTranslatedSimulationStateTitle\', \'State\'),\n
-      (\'debit\', \'Debit\'),\n
-      (\'credit\', \'Credit\'),\n
-      (\'running_total_price\', \'Net\'), )\n
-else:\n
-  account_columns = (\n
-      (\'Movement_getSpecificReference\', \'Reference\'),\n
-      (\'Movement_getExplanationTitle\', \'Title\'),\n
-      (\'date\', \'Date\'),\n
-      (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
-      (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
-      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
+  account_columns += (\n
+      (\'getTranslatedSimulationStateTitle\', \'State\'),)\n
+account_columns += (\n
       (\'debit\', \'Debit\'),\n
       (\'credit\', \'Credit\'),\n
       (\'running_total_price\', \'Net\'), )\n
@@ -507,8 +505,11 @@ return report_section_list\n
                             <string>_write_</string>
                             <string>dict</string>
                             <string>params</string>
-                            <string>len</string>
+                            <string>project</string>
+                            <string>function</string>
                             <string>account_columns</string>
+                            <string>len</string>
+                            <string>_inplacevar_</string>
                             <string>traverse</string>
                             <string>account_name_cache</string>
                             <string>getAccountName</string>

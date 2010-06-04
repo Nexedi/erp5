@@ -61,6 +61,10 @@ inventory_kw = dict(section_uid=section_uid,\n
                     at_date=at_date,\n
                     portal_type=context.getPortalAccountingMovementTypeList(),\n
                     )\n
+if function_uid:\n
+  inventory_kw[\'function_uid\'] = function_uid\n
+if project_uid:\n
+  inventory_kw[\'project_uid\'] = project_uid\n
 \n
 if node_category:\n
   # XXX if node category is passed, income or balance accounts are not\n
@@ -113,7 +117,7 @@ return [Object(debit=debit, credit=credit)]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_uid, simulation_state, at_date, period_start_date, precision, node_category=None, from_date=\'ignored\', **kw</string> </value>
+            <value> <string>section_uid, simulation_state, at_date, period_start_date, precision, node_category=None, function_uid=None, project_uid=None, from_date=\'ignored\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -133,7 +137,7 @@ return [Object(debit=debit, credit=credit)]\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -145,6 +149,8 @@ return [Object(debit=debit, credit=credit)]\n
                             <string>period_start_date</string>
                             <string>precision</string>
                             <string>node_category</string>
+                            <string>function_uid</string>
+                            <string>project_uid</string>
                             <string>from_date</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
@@ -154,6 +160,7 @@ return [Object(debit=debit, credit=credit)]\n
                             <string>getInventoryAssetPrice</string>
                             <string>dict</string>
                             <string>inventory_kw</string>
+                            <string>_write_</string>
                             <string>_apply_</string>
                             <string>income_node_category</string>
                             <string>balance_node_category</string>
@@ -172,6 +179,8 @@ return [Object(debit=debit, credit=credit)]\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
+                <none/>
                 <none/>
                 <string>ignored</string>
               </tuple>
