@@ -46,7 +46,7 @@
 <title>Search Top Box Clicking</title>\n
 </head>\n
 <body tal:define="file_name string:tiolive-ERP5.DMS.TioLive-001-en.odp;\n
-                  full_filename_location python: here.ExpressZuite_getFilenameLocation(file_name)">\n
+                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test a search on the top box clicking on the search button</td></tr>\n
@@ -121,10 +121,16 @@
   <td>Converted</td>\n
   <td></td>\n
 </tr>\n
-\n
-<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/wait_for_activities">\n
-Wait for activities</span>\n
-\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr> \n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site/en</td>\n

@@ -61,8 +61,16 @@
   <td>${base_url}/web_site_module/km_test_web_site/view</td>\n
   <td></td>\n
 </tr>\n
-<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/wait_for_activities">\n
-Wait for activities</span>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr> \n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/web_site_module/km_test_web_site/en</td>\n

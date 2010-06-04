@@ -46,7 +46,7 @@
 <title>Search Top Box Clicking</title>\n
 </head>\n
 <body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods;\n
-                  full_filename_location python: here.ExpressZuite_getFilenameLocation(file_name)">\n
+                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
 <tr><td rowspan="1" colspan="3">Test My Documents gadget</td></tr>\n
