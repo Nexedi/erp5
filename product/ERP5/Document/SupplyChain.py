@@ -183,39 +183,39 @@ class SupplyChain(Path, XMLObject):
     if current_supply_link in checked_link_list:
       raise SupplyChainError,\
             "SupplyLink %r is in a loop." % current_supply_link
-    else:
-      transformation_link_list = []
-      checked_link_list.append(current_supply_link)
-      # Get the previous link list
-      previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
-      # Test each link
-      for previous_link in previous_link_list:
-        if not previous_link.isProductionSupplyLink():
-          # current is invalid
-          if not recursive:
-            continue
-        else:
-          # Great, we found a valid one
-          transformation_link_list.append(previous_link)
-          # Prevent infinite loop when 2 production_link have the same
-          # destination
-          if (current_supply_link is not None) and \
-             (current_supply_link.isProductionSupplyLink()):
-            raise SupplyChainError,\
-                  "Those SupplyLinks are in conflict: %r and %r" %\
-                  (current_supply_link.getRelativeUrl(),\
-                   previous_link.getRelativeUrl())
-          if not recursive and not all:
-            continue
 
-        # Browse the previous link
-        transformation_link_list.extend(
-          self.getPreviousProductionSupplyLinkList(
-                                       previous_link, 
-                                       recursive=recursive, all=all,
-                                       checked_link_list=checked_link_list))
-      # Return result
-      return transformation_link_list
+    transformation_link_list = []
+    checked_link_list.append(current_supply_link)
+    # Get the previous link list
+    previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
+    # Test each link
+    for previous_link in previous_link_list:
+      if not previous_link.isProductionSupplyLink():
+        # current is invalid
+        if not recursive:
+          continue
+      else:
+        # Great, we found a valid one
+        transformation_link_list.append(previous_link)
+        # Prevent infinite loop when 2 production_link have the same
+        # destination
+        if (current_supply_link is not None) and \
+           (current_supply_link.isProductionSupplyLink()):
+          raise SupplyChainError,\
+                "Those SupplyLinks are in conflict: %r and %r" %\
+                (current_supply_link.getRelativeUrl(),\
+                 previous_link.getRelativeUrl())
+        if not recursive and not all:
+          continue
+
+      # Browse the previous link
+      transformation_link_list.extend(
+        self.getPreviousProductionSupplyLinkList(
+                                     previous_link, 
+                                     recursive=recursive, all=all,
+                                     checked_link_list=checked_link_list))
+    # Return result
+    return transformation_link_list
 
   security.declareProtected(Permissions.View,
                             'getPreviousPackingListSupplyLinkList')
