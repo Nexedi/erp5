@@ -1,3 +1,6 @@
+2010-06-04 kazuhiko
+* Do not invoke simulation_movement_causality_interaction_workflow/interactions/calculate_causality for temporary documents.
+
 2010-05-28 kazuhiko
 * Rename 'force_update' property to 'update_always'.
 
