@@ -38,10 +38,21 @@ class IBusinessPathProcess(Interface):
   IBusinessPathProcess defines Business Process APIs related
   to Business Path completion status and expected completion dates.
 
+  IMPORTANT:
+  - explanation implicitely defines a subtree of the simulation
+    Order, Order Line, Delivery or Delivery Line are simple cases
+    which consider all children of delivery related movements
+    + all parent simulation movement
+    Applied rule is another form of explanation, which defines
+    implicitely all children + all parent simulation movements
+     
+
   TODO:
   - find a way in getTradePhaseMovementList to narrow down
     parameters to be copied (this used to be done through rule 
     parameter in provivate method)
+  - Is there a reason why trade_phase should be a list in
+    getBusinessPathValueList ? (for rules ?)
   """
 
   def getBusinessPathValueList(trade_phase=None, context=None,
@@ -95,7 +106,7 @@ class IBusinessPathProcess(Interface):
     """
 
   def getExpectedBusinessPathStartAndStopDate(explanation, business_path,
-                                                         delay_mode=None):
+                                              delay_mode=None):
     """Returns the expected start and stop dates of given Business Path
     document in the context of provided explanation.
 
