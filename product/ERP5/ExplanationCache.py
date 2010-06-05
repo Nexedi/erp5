@@ -32,6 +32,8 @@ import types
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
+from zLOG import LOG
+
 class ExplanationCache:
   """ExplanationCache provides a central access to 
   all parameters and values which are needed to process 
@@ -51,8 +53,8 @@ class ExplanationCache:
     self.simulation_movement_cache = {} # Simulation Movement Cache
     self.explanation_uid_cache = []
     self.explanation_path_pattern_cache = []
-    self.closure_cache = []
-    self.union_cache = None
+    self.closure_cache = {}
+    self.union_cache = None   
 
   def _getDeliveryMovementList(self):
     """Returns self is explanation is a delivery line
@@ -84,7 +86,7 @@ class ExplanationCache:
         result.add(simulation_movement.getExplanationUid()) # XXX-JPS use new API later
     # Return result
     self.explanation_uid_cache = result
-    return result
+    return tuple(result)
 
   def getSimulationPathPatternList(self):
     """Return the list of root path of simulation tree which are 
@@ -134,6 +136,7 @@ class ExplanationCache:
         if type(value) is not types.DictType:
           # We have a real root
           result.append('%s/%s%' % (prefix, key))
+          # XXX-JPS here we must add all parent movements XXX-JPS
         else:
           browsePathDict('%s/%s' % (prefix, key), value) # Recursing with string append is slow XXX-JPS
 
@@ -147,21 +150,32 @@ class ExplanationCache:
     """
     return self.getSimulationMovementValueList(causality_uid=business_path.getUid())
     
+  def getBusinessPathRelatedMovementValueList(self, business_path):
+    """Returns the list of delivery movements related to a business_path
+    in the context the our explanation.
+    """
+    #XXXXXXXXXXX BAD
+    return self.getSimulationMovementValueList(causality_uid=business_path.getUid())
+
   def getSimulationMovementValueList(self, **kw):
     """Search Simulation Movements related to our explanation.
     Cache result so that the second time we saarch for the same
     list we need not involve the catalog again.
+
+    NOTE:
+    - this method can be made catalog independent
+      in case explanation is an applied rule, we can
+      browse parent and child movement
     """
     kw_tuple = tuple(kw.items()) # We hope that no sorting is needed
     if kw.get('path', None) is None:
-      kw['path'] = self.getSimulationPathPatternList(), # XXX-JPS Explicit Query is better
+      kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
     if kw.get('explanation_uid', None) is None:
       kw['explanation_uid'] = self.getRootExplanationUidList()
-    if self.simulation_movement_list.get(kw_tuple, None) is None:
+    LOG('getSimulationMovementValueList', 0, repr(kw))
+    if self.simulation_movement_cache.get(kw_tuple, None) is None:
       self.simulation_movement_cache[kw_tuple] = \
            self.portal_catalog(portal_type="Simulation Movement",
-                               explanation_uid=explanation_uid,
-                               path=path,
                                **kw)
     return self.simulation_movement_cache[kw_tuple]
 
@@ -179,23 +193,34 @@ class ExplanationCache:
                       **kw)
     return business_path_list
 
-  def geBusinessPathClosure(business_process, business_path):
+  def getBusinessPathClosure(self, business_process, business_path):
     """Creates a Business Process by filtering out all Business Path
     in 'business_process' which are not related to a simulation movement
-    which is either or parent or a child of explanation simulations movements
+    which is either a parent or a child of explanation simulations movements
     caused by 'business_path'
+
+    NOTE: Business Path Closure must be at least as "big" as composed 
+    business path. The appropriate calculation is still not clear. 
+    Options are:
+      - take all path of composed business path (even not yet expanded)
+      - take all path of composed business path which phase is not yet expanded
     """
     # Try to return cached value first
     new_business_process = self.closure_cache.get(business_path, None)
+    LOG('Inside getBusinessPathClosure cache: new_business_process', 0, repr(new_business_process)) 
     if new_business_process is not None:
+      LOG('Leaving getBusinessPathClosure new_business_process', 0, repr(new_business_process)) 
       return new_business_process
 
     # Build a list of path patterns which apply to current business_path
     path_list = self.getSimulationPathPatternList()
+    LOG('Inside getBusinessPathClosure path_list', 0, repr(path_list)) 
     path_list = map(lambda x:x[0:-1], path_list) # Remove trailing %
     path_set = set()
+    LOG('Inside getBusinessPathClosure _getExplanationRelatedSimulationMovementValueList', 0, repr(business_path.\
+             _getExplanationRelatedSimulationMovementValueList(self.explanation))) 
     for simulation_movement in business_path.\
-             _getExplanationRelatedSimulationMovementValueList(explanation):
+             _getExplanationRelatedSimulationMovementValueList(self.explanation):
       simulation_path = simulation_movement.getPath()
       for path in path_list:
         if simulation_path.startswith(path):
@@ -210,10 +235,13 @@ class ExplanationCache:
 
     # Build a new closure business process
     def hasMatchingMovement(business_path):
-      return len(self.getSimulationMovementValueList(path=path_set, 
+      return len(self.getSimulationMovementValueList(path=path_tuple, 
                                   causality_uid=business_path.getUid()))      
 
-    new_business_process = business_process.getParentValue().newContent(temp_object=True) # XXX-JPS is this really OK with union business processes
+    module = business_process.getPortalObject().business_process_module # XXX-JPS
+    LOG('module', 0, repr(module))
+    new_business_process = module.newContent(portal_type="Business Process", 
+                                                                        temp_object=True) # XXX-JPS is this really OK with union business processes
     i = 0
     for business_path in business_process.getBusinessPathValueList():
       if hasMatchingMovement(business_path):
@@ -223,6 +251,7 @@ class ExplanationCache:
 
     self.closure_cache[business_path] = new_business_process
     self.closure_cache[path_tuple] = new_business_process
+    LOG('Leaving getBusinessPathClosure new_business_process', 0, repr(new_business_process)) 
     return new_business_process
 
   def getUnionBusinessProcess(self):
@@ -262,6 +291,11 @@ def _getBusinessPathClosure(business_process, explanation, business_path):
   contains only those Business Path which are related to business_path
   in the context of explanation.
   """
+  if explanation.getPortalType() == "Applied Rule":
+    # There is no way to guess the closure during expand
+    # since some movements may not be generated. The resulting
+    # closure might be smaller than expexted
+    return business_process
   explanation_cache = _getExplanationCache(explanation)
   return explanation_cache.getBusinessPathClosure(business_process, business_path)
 
