@@ -92,7 +92,6 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """set up """
     self.createCategories()
     self.login()
-    self.portal = self.getPortal()
     if not hasattr(self.portal, 'testing_folder'):
       self.portal.newContent(portal_type='Folder',
                             id='testing_folder')
@@ -1669,6 +1668,58 @@ class TestMovementHistoryList(InventoryAPITestCase):
     self.assertEquals(-2, mvt_history_list[1].credit)
     self.assertEquals(0, mvt_history_list[1].debit_price)
     self.assertEquals(-4, mvt_history_list[1].credit_price)
+
+  def test_group_by_explanation(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    delivery = self.folder.newContent(portal_type='Dummy Delivery',
+                                      destination_section_value=self.section,
+                                      source_section_value=self.mirror_section,
+                                      destination_value=self.node,
+                                      source_value=self.mirror_node,)
+    m1 = delivery.newContent(portal_type='Dummy Movement', quantity=1,
+                             price=3, resource_value=self.resource,
+                             start_date=DateTime(2010, 1, 1))
+    m2 = delivery.newContent(portal_type='Dummy Movement', quantity=1,
+                             price=2, resource_value=self.resource,
+                             start_date=DateTime(2010, 1, 1))
+    m3 = delivery.newContent(portal_type='Dummy Movement', quantity=1,
+                             price=7, resource_value=self.other_resource,
+                             start_date=DateTime(2010, 1, 2))
+    transaction.commit();
+    self.tic()
+    # sanity check, our fake movements are all created in the same delivery,
+    # and have a valid explanation uid
+    self.assertEquals(m1.getExplanationUid(),
+                      m2.getExplanationUid())
+    self.assertTrue(m1.getExplanationUid())
+    # also make sure they acquire from delivery
+    self.assertEquals(self.node, m1.getDestinationValue())
+
+    # group by explanation
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              group_by=('explanation_uid',), )
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(3, mvt_history_list[0].total_quantity)
+    self.assertEquals(3, mvt_history_list[0].running_total_quantity)
+    self.assertEquals(12, mvt_history_list[0].total_price)
+    self.assertEquals(12, mvt_history_list[0].running_total_price)
+
+    # group by explanation and resource
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              group_by=('explanation_uid',
+                                                        'resource_uid'),
+                                              sort_on=(('stock.date', 'ASC'),))
+    self.assertEquals(2, len(mvt_history_list))
+
+    self.assertEquals(2, mvt_history_list[0].total_quantity)
+    self.assertEquals(2, mvt_history_list[0].running_total_quantity)
+    self.assertEquals(5, mvt_history_list[0].total_price)
+    self.assertEquals(5, mvt_history_list[0].running_total_price)
+
+    self.assertEquals(1, mvt_history_list[1].total_quantity)
+    self.assertEquals(3, mvt_history_list[1].running_total_quantity)
+    self.assertEquals(7, mvt_history_list[1].total_price)
+    self.assertEquals(12, mvt_history_list[1].running_total_price)
 
 
 class TestNextNegativeInventoryDate(InventoryAPITestCase):

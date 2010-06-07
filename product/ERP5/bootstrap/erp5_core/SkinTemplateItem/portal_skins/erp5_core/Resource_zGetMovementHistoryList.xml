@@ -664,23 +664,24 @@ SELECT\n
   catalog.relative_url as relative_url,\n
   stock.date AS date,\n
 <dtml-if expr="precision is not None">\n
-  ROUND(stock.quantity, <dtml-var precision>) AS total_quantity,\n
-  ROUND(stock.total_price, <dtml-var precision>) AS total_price,\n
+  <dtml-if group_by_expression>SUM</dtml-if>(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
+  <dtml-if group_by_expression>SUM</dtml-if>(ROUND(stock.total_price, <dtml-var precision>)) AS total_price,\n
 <dtml-else>\n
-  stock.quantity AS total_quantity,\n
-  stock.total_price AS total_price,\n
+  <dtml-if group_by_expression>SUM</dtml-if>(stock.quantity) AS total_quantity,\n
+  <dtml-if group_by_expression>SUM</dtml-if>(stock.total_price) AS total_price,\n
 </dtml-if>\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
   stock.mirror_section_uid AS mirror_section_uid,\n
   stock.mirror_node_uid AS mirror_node_uid,\n
+  stock.function_uid AS function_uid,\n
+  stock.project_uid AS project_uid,\n
   node.uid AS node_uid,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
   section.uid AS section_uid,\n
   section.title AS section_title,\n
   section.relative_url AS section_relative_url\n
-\n
 FROM\n
   stock\n
   <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
@@ -830,23 +831,24 @@ SELECT\n
   catalog.relative_url as relative_url,\n
   stock.date AS date,\n
 <dtml-if expr="precision is not None">\n
-  ROUND(stock.quantity, <dtml-var precision>) AS total_quantity,\n
-  ROUND(stock.total_price, <dtml-var precision>) AS total_price,\n
+  <dtml-if group_by_expression>SUM</dtml-if>(ROUND(stock.quantity, <dtml-var precision>)) AS total_quantity,\n
+  <dtml-if group_by_expression>SUM</dtml-if>(ROUND(stock.total_price, <dtml-var precision>)) AS total_price,\n
 <dtml-else>\n
-  stock.quantity AS total_quantity,\n
-  stock.total_price AS total_price,\n
+  <dtml-if group_by_expression>SUM</dtml-if>(stock.quantity) AS total_quantity,\n
+  <dtml-if group_by_expression>SUM</dtml-if>(stock.total_price) AS total_price,\n
 </dtml-if>\n
   stock.variation_text AS variation_text,\n
   stock.simulation_state AS simulation_state,\n
   stock.mirror_section_uid AS mirror_section_uid,\n
   stock.mirror_node_uid AS mirror_node_uid,\n
+  stock.function_uid AS function_uid,\n
+  stock.project_uid AS project_uid,\n
   node.uid AS node_uid,\n
   node.title AS node_title,\n
   node.relative_url AS node_relative_url,\n
   section.uid AS section_uid,\n
   section.title AS section_title,\n
   section.relative_url AS section_relative_url\n
-\n
 FROM\n
   stock\n
   <dtml-if section_filtered> INNER <dtml-else> LEFT </dtml-if>  \n
