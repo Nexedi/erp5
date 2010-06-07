@@ -36,6 +36,8 @@ from Products.ERP5.Document.Item import Item
 from Products.ERP5.mixin.rule import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
+from zLOG import LOG
+
 class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
   """
     A SubscriptionItem is an Item which expands itself
@@ -138,6 +140,10 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
     return my_applied_rule
 
   # IMovementGenerator interface implementation
+  def _getUpdatePropertyDict(self, input_movement):
+    # Default implementation bellow can be overriden by subclasses
+    return {}
+
   def _getInputMovementList(self, movement_list=None, rounding=None):
     """
       Generate the list of input movements by looking at all
@@ -146,13 +152,15 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
       TODO: clever handling of quantity (based on the nature
       of resource, ie. float or unit)
     """
+    from Products.ERP5Type.Document import newTempMovement
     result = []
     catalog_tool = getToolByName(self, 'portal_catalog')
 
     # Try to find the source open order
     open_order_movement_list = self.getAggregateRelatedValueList(
-                portal_type="Open Order Line") # XXX-JPS Hard Coded    
-    if not open_order_movement_list: return result
+                portal_type="Open Sale Order Line") # XXX-JPS Hard Coded    
+    if not open_order_movement_list:
+      return result
 
     # Find out which parent open orders
     explanation_uid_list = map(lambda x:x.getParentUid(), open_order_movement_list) # Instead, should call getDeliveryValue or equivalent
@@ -161,10 +169,10 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
 
     # Now generate movements for each valid open order
     for movement in open_order_movement_list:
-      if movement.getParentValue().getValidationState() == 'open': # XXX-JPS hard coding
+      if movement.getParentValue().getValidationState() in ('open', 'validated'): # XXX-JPS hard coding
         resource = movement.getResource()
-        start_date = movement.getStartDate()
-        stop_date = movement.getStopDate()
+        start_date = movement.getStartDateRangeMin() # Is this appropriate ?
+        stop_date = movement.getStartDateRangeMax() # Is this appropriate ?
         source = movement.getSource()
         source_section = movement.getSourceSection()
         destination = movement.getDestination()
@@ -172,11 +180,13 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
         quantity = self.getQuantity() # Is it so ? XXX-JPS
         quantity_unit = movement.getQuantityUnit()
         price = movement.getPrice()
-        current_date = start_date
+        specialise = movement.getSpecialise()
+        current_date = self.getNextPeriodicalDate(start_date)
+        id_index = 0
         while current_date < stop_date:
           next_date = self.getNextPeriodicalDate(current_date)
-          movement = self.newContent(temp_object=1,  
-                                     portal_type='Sale Order Line', # XXX-JPS Hard Coded
+          generated_movement = newTempMovement(self, 'subscription_%s' % id_index)
+          generated_movement._edit(  aggregate_value=self,
                                      resource=resource,
                                      quantity=quantity,
                                      quantity_unit=quantity_unit,
@@ -187,10 +197,12 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
                                      source_section=source_section,
                                      destination=destination,
                                      destination_section=destination_section,
-                                     delivery_value=movement # ???
+                                     specialise=specialise,
+                                #     delivery_value=movement # ??? to be confirmed - if we want order step or not
                                     )
-          result.append(movement)
+          result.append(generated_movement)
           current_date = next_date
+          id_index += 1
 
     # And now return result
     return result
