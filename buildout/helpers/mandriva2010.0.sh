@@ -23,6 +23,7 @@ groff
 libbzip2-devel
 libgdbm-devel
 libglib2.0-devel
+libgomp-devel
 libjpeg-devel
 libldap-devel
 libncurses-devel
