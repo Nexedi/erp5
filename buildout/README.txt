@@ -111,7 +111,7 @@ $ ~/erp5.buildout/bin/python2.4 bootstrap/bootstrap.py -c my_instances.cfg
 $ bin/buildout -c my_instances.cfg
 $ var/bin/supervisord # it will start supervisor and configured software
 $ $EDITOR my_instances.cfg
-# add "runUnitTest" and "development-site"
+# add "runUnitTest" and "development-site" to parts
 $ bin/buildout -c my_instances.cfg
 
 Fully configured development instance will be available in var/development-site.
