@@ -42,6 +42,7 @@ from Acquisition import aq_base
 
 from Products.ERP5.Document.AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
 from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
+from Products.ERP5.mixin.explainable import ExplainableMixin
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
@@ -60,7 +61,7 @@ parent_to_movement_simulation_state = {
   'invoiced'         : 'planned',
 }
 
-class SimulationMovement(Movement, PropertyRecordableMixin):
+class SimulationMovement(Movement, PropertyRecordableMixin, ExplainableMixin):
   """
       Simulation movements belong to a simulation workflow which includes
       the following steps
@@ -197,10 +198,33 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isCompleted')
   def isCompleted(self):
-    """Zope publisher docstring. Documentation in ISimulationMovement"""
+    """Lookup business path and, if any, return True whenever
+    simulation_state is in of completed state list defined on business path
+    """
     # only available in BPM, so fail totally in case of working without BPM
-    return self.getSimulationState() in self.getCausalityValue(
-        portal_type='Business Path').getCompletedStateList()
+    business_path =  self.getCausalityValue(
+                         portal_type=self.getPortalBusinessPathTypeList())
+    if business_path is None:
+      return False
+    return self.getSimulationState() in business_path.getCompletedStateList()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isFrozen')
+  def isFrozen(self):
+    """Lookup business path and, if any, return True whenever
+    simulation_state is in one of the frozen states defined on business path
+    """
+    business_path =  self.getCausalityValue(
+                         portal_type=self.getPortalBusinessPathTypeList())
+    if business_path is None:
+      # Legacy support - this should never happen
+      # XXX-JPS ADD WARNING
+      if self.getSimulationState() in ('stopped', 'delivered', 'cancelled'):
+        return True
+      if self._baseIsFrozen() == 0:
+        self._baseSetFrozen(None)
+      return self._baseGetFrozen() or False
+    return self.getSimulationState() in business_path.getFrozenStateList()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isAccountable')
@@ -520,7 +544,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
 
     see AppliedRule._isTreeDelivered
     """
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable(self) # XXX-JPS abbreviation wrong
     cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
     cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
 
@@ -564,9 +588,9 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     predecessor = business_path.getPredecessorValue()
     if predecessor is None:
       # first one, can be built
-      return True
+      return True # XXX-JPS wrong cause root is marked
 
-    for successor_related in predecessor.getSuccessorRelatedValueList():
+    for successor_related in predecessor.getSuccessorRelatedValueList(): # XXX-JPS wrong cause state shared by multi BPM
       for business_path_movement in successor_related \
           .getRelatedSimulationMovementValueList(explanation_value):
         if successor_related.isMovementRelatedWithMovement(self,
