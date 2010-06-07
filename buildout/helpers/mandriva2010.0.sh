@@ -29,6 +29,7 @@ libldap-devel
 libncurses-devel
 libSDL-devel
 libSDL_gfx-devel
+libSDL_image-devel
 libneon0.27-devel
 libopenssl-devel
 libpng-devel
