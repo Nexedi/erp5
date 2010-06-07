@@ -96,6 +96,8 @@ class ExplainableMixin:
             # Make sure not to include same delivery twice
             result.append(delivery_or_item)
 
+      document = document.getParentValue()
+
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,'getRootExplanationValue')
