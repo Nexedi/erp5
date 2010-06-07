@@ -43,6 +43,7 @@ from Testing import ZopeTestCase
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Base import _aq_reset
 
@@ -565,8 +566,8 @@ class TestInventory(InventoryAPITestCase):
       self.getInventoryEquals(total_quantity,
                               node_category=category.getRelativeUrl())
   
-  # FIXME: this test is currently broken
-  def TODO_test_DoubleSectionCategory(self):
+  @expectedFailure
+  def test_DoubleCategoryMembershipSectionCategory(self):
     """Tests inventory on section category, when the section is twice member\
     of the same category like it happens for group and mapping"""
     self.section.setGroup('level1/level2')
@@ -1115,7 +1116,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
                               'group/level1/level2',
                              ['group/level1', 'group/anotherlevel'],
                              ['group/level1', 'group/level1'],
-                             ['group/level1', 'group/level1/level2'], ]:
+                             ]:
       movement_history_list = getMovementHistoryList(
                                 section_category=section_category)
       self.assertEquals(len(movement_history_list), 1)
@@ -1130,6 +1131,19 @@ class TestMovementHistoryList(InventoryAPITestCase):
                         section_category='group/level1',
                         ignored='argument')), 1)
     
+  @expectedFailure
+  def testDoubleSectionCategory(self):
+    # it is currently invalid to pass the same category twice to inventory API
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self.section.setGroup('level1/level2')
+    mvt = self._makeMovement(quantity=100)
+    movement_history_list = getMovementHistoryList(
+                              section_category=['group/level1',
+                                                'group/level1/level2'])
+    self.assertEquals(len(movement_history_list), 1)
+    self.assertEquals(movement_history_list[0].total_quantity, 100)
+
+
   def testNodeCategoryAndSectionCategory(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self.section.setGroup('level1/level2')
@@ -1138,8 +1152,7 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
     valid_category_list = [ 'group/level1',
                            ['group/level1', 'group/anotherlevel'],
-                           ['group/level1', 'group/level1'],
-                           ['group/level1', 'group/level1/level2'], ]
+                           ['group/level1', 'group/level1'], ]
     invalid_category_list = ['group/anotherlevel', 'product_line/level1']
 
     # both valid
