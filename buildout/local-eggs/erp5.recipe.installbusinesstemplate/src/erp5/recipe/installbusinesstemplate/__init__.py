@@ -46,7 +46,7 @@ class Recipe(object):
 
     # XML-RPC connection
     options.setdefault('protocol', 'http')
-    options.setdefault('user', '')
+    options.setdefault('user', 'zope:zope')
     options.setdefault('hostname', 'localhost')
     options.setdefault('port', '8080')
     options.setdefault('portal_id', 'erp5')
