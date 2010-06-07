@@ -42,7 +42,7 @@ class Recipe(object):
     # Business Template installation
     options.setdefault('repository_path', '')
     options.setdefault('bt5_list', '')
-    options.setdefault('update_catalog', 'false')
+    options.setdefault('update_catalog', 'auto')
 
     # XML-RPC connection
     options.setdefault('protocol', 'http')
@@ -78,14 +78,28 @@ class Recipe(object):
     connection.portal_templates.updateRepositoryBusinessTemplateList(
                                                        [repository_path], None)
     bt5_list = [bt5 for bt5 in options['bt5_list'].splitlines() if bt5]
-    update_catalog = options['update_catalog'].lower() == 'true' or False
+    update_catalog_option = options['update_catalog'].lower()
+    if update_catalog_option == 'false':
+      update_catalog = False
+    elif update_catalog_option == 'true':
+      update_catalog = True
+    else:
+      # update_catalog_option == 'auto'
+      update_catalog = None 
     while bt5_list:
       partial_bt5_list = bt5_list[:self.MAX_BT_PER_TRANSACTION]
       print 'Installing following business template:',\
                                                     ', '.join(partial_bt5_list)
-      result = connection.portal_templates\
-                 .installBusinessTemplatesFromRepositories(partial_bt5_list,
-                                                           True, update_catalog)
+      if update_catalog is not None:
+        result = connection.portal_templates\
+                .installBusinessTemplatesFromRepositories(partial_bt5_list,
+                                                          True, update_catalog)
+      else:
+        # Avoid overriding default value and let business template
+        # clearing catalog only if needed.
+        result = connection.portal_templates\
+                    .installBusinessTemplatesFromRepositories(partial_bt5_list,
+                                                              True)
 
       bt5_list = bt5_list[self.MAX_BT_PER_TRANSACTION:]
 
