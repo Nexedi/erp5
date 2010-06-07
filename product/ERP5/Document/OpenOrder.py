@@ -37,6 +37,10 @@ from Products.ERP5.Document.Supply import Supply
 class OpenOrder(Supply):
   """
     An OpenOrder is a collection of Open Order Lines
+
+    TODO:
+    - make sure that this should be (or not) a subclass
+      of Order
   """
   meta_type = 'ERP5 Open Order'
   portal_type = 'Open Order'
