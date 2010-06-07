@@ -236,8 +236,8 @@ for k, v in kw.items() :\n
   if v not in (None, [], ()) :\n
     clean_kw[k] = kw[k]\n
 \n
-# Handle deferred style\n
-if clean_kw.get(\'deferred_style\', 0):\n
+# Handle deferred style, unless we are executing the update action\n
+if dialog_method != update_method and clean_kw.get(\'deferred_style\', 0):\n
   clean_kw[\'deferred_portal_skin\'] = clean_kw.get(\'portal_skin\', None)\n
   # XXX Hardcoded Deferred style name\n
   clean_kw[\'portal_skin\'] = \'Deferred\'\n
@@ -259,7 +259,8 @@ url_params_string = make_query(clean_kw)\n
 # If url is too long, we do not redirect to avoid crash.\n
 # XXX: 2000 is an arbitrary value resulted from trial and error.\n
 if (not(can_redirect) or len(url_params_string) > 2000):\n
-  if \'portal_skin\' in clean_kw:\n
+  # change the skin, unless we are executing the update action\n
+  if dialog_method != update_method and \'portal_skin\' in clean_kw:\n
     new_skin_name = clean_kw[\'portal_skin\']\n
     context.getPortalObject().portal_skins.changeSkin(new_skin_name)\n
     request.set(\'portal_skin\', new_skin_name)\n
@@ -308,7 +309,7 @@ return request.RESPONSE.redirect(redirect_url)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>dialog_method, dialog_id, dialog_category=\'\', **kw</string> </value>
+            <value> <string>dialog_method, dialog_id, dialog_category=\'\', update_method=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -328,7 +329,7 @@ return request.RESPONSE.redirect(redirect_url)\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>4</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -337,6 +338,7 @@ return request.RESPONSE.redirect(redirect_url)\n
                             <string>dialog_method</string>
                             <string>dialog_id</string>
                             <string>dialog_category</string>
+                            <string>update_method</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Log</string>
                             <string>log</string>
@@ -406,6 +408,7 @@ return request.RESPONSE.redirect(redirect_url)\n
             <value>
               <tuple>
                 <string></string>
+                <none/>
               </tuple>
             </value>
         </item>
