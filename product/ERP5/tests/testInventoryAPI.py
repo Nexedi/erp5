@@ -1631,7 +1631,45 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                               node_uid=self.node.getUid(),
                                               omit_input=1,
                                               omit_output=1)))
-    
+
+  def test_debit_credit(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=-1, price=2,
+                       start_date=DateTime(2010, 1, 1))
+    self._makeMovement(quantity=2, price=2,
+                       start_date=DateTime(2010, 1, 2))
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              sort_on=(('stock.date', 'ASC'),))
+    self.assertEquals(2, len(mvt_history_list))
+    self.assertEquals(0, mvt_history_list[0].debit)
+    self.assertEquals(1, mvt_history_list[0].credit)
+    self.assertEquals(0, mvt_history_list[0].debit_price)
+    self.assertEquals(2, mvt_history_list[0].credit_price)
+
+    self.assertEquals(2, mvt_history_list[1].debit)
+    self.assertEquals(0, mvt_history_list[1].credit)
+    self.assertEquals(4, mvt_history_list[1].debit_price)
+    self.assertEquals(0, mvt_history_list[1].credit_price)
+
+  def test_debit_credit_cancellation_amount(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    self._makeMovement(quantity=-1, price=2, cancellation_amount=True,
+                       start_date=DateTime(2010, 1, 1))
+    self._makeMovement(quantity=2, price=2, cancellation_amount=True,
+                       start_date=DateTime(2010, 1, 2))
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              sort_on=(('stock.date', 'ASC'),))
+    self.assertEquals(2, len(mvt_history_list))
+    self.assertEquals(-1, mvt_history_list[0].debit)
+    self.assertEquals(0, mvt_history_list[0].credit)
+    self.assertEquals(-2, mvt_history_list[0].debit_price)
+    self.assertEquals(0, mvt_history_list[0].credit_price)
+
+    self.assertEquals(0, mvt_history_list[1].debit)
+    self.assertEquals(-2, mvt_history_list[1].credit)
+    self.assertEquals(0, mvt_history_list[1].debit_price)
+    self.assertEquals(-4, mvt_history_list[1].credit_price)
+
 
 class TestNextNegativeInventoryDate(InventoryAPITestCase):
   """Tests getInventory methods.

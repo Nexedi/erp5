@@ -17,6 +17,7 @@ from ZTUtils import make_query
 from Products.CMFCore.utils import getToolByName
 from zLOG import LOG, PROBLEM
 from Products.ERP5Type.Message import translateString
+from ComputedAttribute import ComputedAttribute
 
 class InventoryBrain(ZSQLBrain):
   """
@@ -380,4 +381,28 @@ class MovementHistoryListBrain(InventoryListBrain):
       else:
         timezone = obj.getStopDate().timezone()
       self.date = self.date.toZone(timezone)
+
+  def _debit(self):
+    if self.getObject().isCancellationAmount():
+      return min(self.total_quantity, 0)
+    return max(self.total_quantity, 0)
+  debit = ComputedAttribute(_debit, 1)
+
+  def _credit(self):
+    if self.getObject().isCancellationAmount():
+      return min(-(self.total_quantity or 0), 0)
+    return max(-(self.total_quantity or 0), 0)
+  credit = ComputedAttribute(_credit, 1)
+
+  def _debit_price(self):
+    if self.getObject().isCancellationAmount():
+      return min(self.total_price, 0)
+    return max(self.total_price, 0)
+  debit_price = ComputedAttribute(_debit_price, 1)
+
+  def _credit_price(self):
+    if self.getObject().isCancellationAmount():
+      return min(-(self.total_price or 0), 0)
+    return max(-(self.total_price or 0), 0)
+  credit_price = ComputedAttribute(_credit_price, 1)
 
