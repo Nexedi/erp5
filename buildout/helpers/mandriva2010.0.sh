@@ -29,6 +29,7 @@ libldap-devel
 libncurses-devel
 libneon0.27-devel
 libopenssl-devel
+libpng-devel
 libreadline-devel
 libsasl2-devel
 libtermcap-devel
