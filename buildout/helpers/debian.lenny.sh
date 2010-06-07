@@ -9,6 +9,7 @@ flex
 gcc
 libbz2-dev
 libgdbm-dev
+libgif-dev
 libglib2.0-dev
 libjpeg62-dev
 libldap2-dev
