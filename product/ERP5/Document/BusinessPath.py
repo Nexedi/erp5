@@ -64,6 +64,8 @@ class BusinessPath(Path, Predicate):
     TODO:
     - IArrowBase implementation has too many comments which need to be
       fixed
+    - _getExplanationRelatedMovementValueList may be superfluous. Make
+      sure it is really needed
   """
   meta_type = 'ERP5 Business Path'
   portal_type = 'Business Path'
@@ -101,6 +103,10 @@ class BusinessPath(Path, Predicate):
   def _getExplanationRelatedSimulationMovementValueList(self, explanation):
     explanation_cache = _getExplanationCache(explanation)
     return explanation_cache.getBusinessPathRelatedSimulationMovementValueList(self)
+
+  def _getExplanationRelatedMovementValueList(self, explanation):
+    explanation_cache = _getExplanationCache(explanation)
+    return explanation_cache.getBusinessPathRelatedMovementValueList(self)
 
   # IArrowBase implementation
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -256,14 +262,19 @@ class BusinessPath(Path, Predicate):
     explanation -- the Order, Order Line, Delivery or Delivery Line which
                    implicitely defines a simulation subtree and a union 
                    business process.
-
-    NOTE:
-    It seems that current implementation makes sense mostly in the
-    context of a root explanation.
     """
     date_list = []
+
+    # First, let us try to find simulation movements in simulation
+    # (hoping that it is already built)
     for movement in self._getExplanationRelatedSimulationMovementValueList(explanation):
       date_list.append(self.getMovementCompletionDate(movement))
+
+    # Next, try to find delivery lines or cells which may provide
+    # a good definition of completion date.
+    if not date_list:
+      for movement in self._getExplanationRelatedMovementValueList(explanation):
+        date_list.append(self.getMovementCompletionDate(movement))
 
     return max(date_list)
   
