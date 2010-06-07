@@ -5281,7 +5281,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         # override update_catalog parameter only if value
         # is not explicitely passed.
         update_catalog = 1
-      else:
+      elif update_catalog is _MARKER:
         update_catalog = 0
       if update_catalog:
         catalog = _getCatalogValue(self)
