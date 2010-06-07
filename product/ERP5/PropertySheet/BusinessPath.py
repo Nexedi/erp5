@@ -33,7 +33,7 @@ class BusinessPath:
       Business Path properties
     """
     _properties = (
-        {   'id'          : 'deliverable', # XXX: same is in Simulation property sheet
+        {   'id'          : 'deliverable', # XXX-JPS: same is in Simulation property sheet
             'description' : 'If 1 it is related to root of simulation tree (root explanation)',
             'type'        : 'boolean',
             'mode'        : 'w' },
@@ -44,11 +44,6 @@ class BusinessPath:
         {   'id'          : 'destination_method_id',
             'description' : 'ID of method to get destination list of categories',
             'type'        : 'string',
-            'mode'        : 'w' },
-        {   'id'          : 'wait_time',
-            'description' : 'How much time to wait before initiating path',
-            'default'     : 0.0,
-            'type'        : 'float',
             'mode'        : 'w' },
         {   'id'          : 'completion_date_method_id',
             'description' : 'ID of method to get source list of categories',
@@ -75,6 +70,12 @@ class BusinessPath:
             'default'     : 0.0,
             'type'        : 'float',
             'mode'        : 'w' },
+        {   'id'          : 'wait_time', # XXX-JPS: duplicate with PaymentCondition
+            'description' : 'How much time to wait before initiating path',
+            'default'     : 0.0,
+            'type'        : 'float',
+            'mode'        : 'w' },
     )
+
     _categories = ('delivery_builder', 'order_builder', 'end_of',
                    'trade_phase' , 'incoterm')
