@@ -40,6 +40,10 @@ class ExplanationCache:
   an explanation. It is based on the idea that a value is calculated
   once and once only, as a way to accelerate performance of algorithms
   related to an explanation.
+
+  TODO: 
+  - implement property explanation calculation
+    (with parent simulation movements, not only children)
   """
 
   def __init__(self, explanation):
@@ -172,7 +176,6 @@ class ExplanationCache:
       kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
     if kw.get('explanation_uid', None) is None:
       kw['explanation_uid'] = self.getRootExplanationUidList()
-    LOG('getSimulationMovementValueList', 0, repr(kw))
     if self.simulation_movement_cache.get(kw_tuple, None) is None:
       self.simulation_movement_cache[kw_tuple] = \
            self.portal_catalog(portal_type="Simulation Movement",
@@ -207,18 +210,13 @@ class ExplanationCache:
     """
     # Try to return cached value first
     new_business_process = self.closure_cache.get(business_path, None)
-    LOG('Inside getBusinessPathClosure cache: new_business_process', 0, repr(new_business_process)) 
     if new_business_process is not None:
-      LOG('Leaving getBusinessPathClosure new_business_process', 0, repr(new_business_process)) 
       return new_business_process
 
     # Build a list of path patterns which apply to current business_path
     path_list = self.getSimulationPathPatternList()
-    LOG('Inside getBusinessPathClosure path_list', 0, repr(path_list)) 
     path_list = map(lambda x:x[0:-1], path_list) # Remove trailing %
     path_set = set()
-    LOG('Inside getBusinessPathClosure _getExplanationRelatedSimulationMovementValueList', 0, repr(business_path.\
-             _getExplanationRelatedSimulationMovementValueList(self.explanation))) 
     for simulation_movement in business_path.\
              _getExplanationRelatedSimulationMovementValueList(self.explanation):
       simulation_path = simulation_movement.getPath()
@@ -239,7 +237,6 @@ class ExplanationCache:
                                   causality_uid=business_path.getUid()))      
 
     module = business_process.getPortalObject().business_process_module # XXX-JPS
-    LOG('module', 0, repr(module))
     new_business_process = module.newContent(portal_type="Business Process", 
                                                                         temp_object=True) # XXX-JPS is this really OK with union business processes
     i = 0
@@ -251,7 +248,6 @@ class ExplanationCache:
 
     self.closure_cache[business_path] = new_business_process
     self.closure_cache[path_tuple] = new_business_process
-    LOG('Leaving getBusinessPathClosure new_business_process', 0, repr(new_business_process)) 
     return new_business_process
 
   def getUnionBusinessProcess(self):
