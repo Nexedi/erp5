@@ -106,6 +106,7 @@ catalog_method_filter_list = ('_filter_expression_archive',
                               '_filter_type_archive',)
 
 INSTALLED_BT_FOR_DIFF = 'installed_bt_for_diff'
+_MARKER = []
 
 def _getCatalog(acquisition_context):
   """
@@ -5208,7 +5209,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return modified_object_list
 
     def _install(self, force=1, object_to_update=None, update_translation=0,
-                 update_catalog=0, **kw):
+                 update_catalog=_MARKER, **kw):
       """
         Install a new Business Template, if force, all will be upgraded or installed
         otherwise depends of dict object_to_update
@@ -5276,8 +5277,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                trashbin=trashbin, installed_bt=installed_bt)
 
       # update catalog if necessary
-      if force and self.isCatalogUpdatable():
+      if update_catalog is _MARKER and force and self.isCatalogUpdatable():
+        # override update_catalog parameter only if value
+        # is not explicitely passed.
         update_catalog = 1
+      else:
+        update_catalog = 0
       if update_catalog:
         catalog = _getCatalogValue(self)
         if (catalog is None) or (not site.isIndexable):
