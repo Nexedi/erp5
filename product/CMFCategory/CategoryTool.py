@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -1380,7 +1381,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           category_list.append("%s/%s" % (base_category, context.getRelativeUrl()))
 
       sql_kw = {}
-      for sql_key in ('limit', 'order_by_expression'):
+      for sql_key in ('limit', 'order_by_expression'): # XXX-JPS it would be better to use Catalog API
         if sql_key in kw:
           sql_kw[sql_key] = kw[sql_key]
 
