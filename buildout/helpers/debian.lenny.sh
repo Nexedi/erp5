@@ -14,6 +14,7 @@ libjpeg62-dev
 libldap2-dev
 libncurses5-dev
 libneon27-gnutls-dev
+libpng12-dev
 libreadline-dev
 libsasl2-dev
 libssl-dev
