@@ -1,4 +1,7 @@
 # svn propset svn:externals -F ./EXTERNALS.TXT .
+# BEWARE: This folder is in process of removal.
+# BEWARE: Any addition might be removed without further notice.
+# To play with eggs use mr.developer and publish eggs in proper places
 
 z3c.recipe.openoffice   http://svn.zope.org/repos/main/z3c.recipe.openoffice/branches/erp5-downloadcache
 erp5.timmy https://svn.erp5.org/repos/public/erp5/trunk/utils/erp5.timmy
