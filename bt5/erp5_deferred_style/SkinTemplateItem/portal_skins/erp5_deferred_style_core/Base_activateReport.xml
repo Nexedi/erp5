@@ -74,7 +74,7 @@ if person_value.getDefaultEmailText(\'\') in (\'\', None):\n
               portal_status_message=N_("You haven\'t defined your email address")))\n
   \n
 active_process = portal.portal_activities.newActiveProcess()\n
-user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
+user_name = person_value.getReference()\n
 \n
 tag = \'active-report-%s\' % random.randint(0, 1000)\n
 priority = 3\n
