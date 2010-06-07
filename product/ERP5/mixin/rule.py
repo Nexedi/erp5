@@ -47,6 +47,11 @@ class MovementGeneratorMixin:
   This class provides a generic implementation of IMovementGenerator
   which can be used together the Rule mixin class bellow. It does not
   have any pretention to provide more than that.
+
+  TODO:
+    - _getInputMovementList is still not well defined. Should input
+      be an amount (_getInputAmountList) or a movement? This 
+      requires careful thiking.
   """
   # Default values
   _applied_rule = None
@@ -62,8 +67,12 @@ class MovementGeneratorMixin:
     else:
       self._rule = rule # for rule specific stuff
     if explanation is None:
-      self._explanation = applied_rule.getRootExplanationValue()
+      self._explanation = applied_rule
     else:
+      # A good example of explicit explanation can be getRootExplanationLineValue
+      # since different lines could have different dates
+      # such an explicit root explanation only works if
+      # indexing of simulation has already happened
       self._explanation = explanation
     # XXX-JPS handle delay_mode
 
@@ -93,16 +102,14 @@ class MovementGeneratorMixin:
     result = []
     folder = self._applied_rule
     # Build a list of movement and business path
-    for input_amount in self._getInputAmountList(movement_list=movement_list, 
+    for input_movement in self._getInputMovementList(movement_list=movement_list, 
                                                    rounding=rounding):
       # Merge movement and business path properties (core implementation)
-      LOG('getGeneratedMovementList input_movement', 0, repr(input_movement))
       # Lookup Business Process through composition (NOT UNION)
       business_process = input_movement.asComposedDocument()
-      explanation = self._explanation
-      LOG('getGeneratedMovementList business_process', 0, repr(business_process))
+      explanation = self._applied_rule # We use applied rule as local explanation
       trade_phase = self._getTradePhaseList(input_movement, business_process) # XXX-JPS not convenient to handle
-      result.extend(business_process.getTradePhaseMovementList(explanation, input_amount, 
+      result.extend(business_process.getTradePhaseMovementList(explanation, input_movement,
                                                  trade_phase=trade_phase, delay_mode=None))
 
     # Extend movement properties
@@ -118,15 +125,13 @@ class MovementGeneratorMixin:
             }
 
   def _getTradePhaseList(self, input_movement, business_process): # XXX-JPS WEIRD
-    LOG('_getTradePhaseList _trade_phase_list', 0, str(self._trade_phase_list))
     if self._trade_phase_list:
       return self._trade_phase_list
     if self._rule:
-      LOG('_getTradePhaseList _trade_phase_list', 0, str(self._rule.getTradePhaseList()))
       return self._rule.getTradePhaseList()
     return business_process.getTradePhaseList()
 
-  def _getInputMovementList(self, movement_list=None, rounding=None):
+  def _getInputMovementList(self, movement_list=None, rounding=None): #XXX-JPS should it be amount or movement ?
     raise NotImplementedError
     # Default implementation takes amounts ?
     # Use TradeModelRuleMovementGenerator._getInputMovementList as default implementation
