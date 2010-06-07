@@ -75,8 +75,8 @@ class IBusinessPathProcess(Interface):
     """Returns True if given Business Path document
     is completed in the context of provided explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     business_path -- a Business Path document
     """
@@ -85,8 +85,8 @@ class IBusinessPathProcess(Interface):
     """Returns True if given Business Path document
     is partially completed in the context of provided explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     business_path -- a Business Path document
     """
@@ -96,8 +96,8 @@ class IBusinessPathProcess(Interface):
     """Returns the expected completion date of given Business Path document
     in the context of provided explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     business_path -- a Business Path document
 
@@ -110,8 +110,8 @@ class IBusinessPathProcess(Interface):
     """Returns the expected start and stop dates of given Business Path
     document in the context of provided explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     business_path -- a Business Path document
 
@@ -132,8 +132,8 @@ class IBuildableBusinessPathProcess(Interface):
     by taking into account trade state dependencies between
     Business Path.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def getPartiallyBuildableBusinessPathValueList(explanation):
@@ -141,16 +141,16 @@ class IBuildableBusinessPathProcess(Interface):
     by taking into account trade state dependencies between
     Business Path.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def isBusinessPathBuildable(explanation, business_path):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor trade state is completed.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     business_path -- a Business Path document
     """
@@ -159,8 +159,8 @@ class IBuildableBusinessPathProcess(Interface):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor trade state is partially completed.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     business_path -- a Business Path document
     """
@@ -194,8 +194,8 @@ class ITradeStateProcess(Interface):
     by looking at successor and predecessor values of contained
     Business Path.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def isInitialTradeState(trade_state):
@@ -218,8 +218,8 @@ class ITradeStateProcess(Interface):
     at all successor of business path involved in given explanation
     and which predecessor is the given trade_phase.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     trade_state -- a Trade State category
     """
@@ -230,8 +230,8 @@ class ITradeStateProcess(Interface):
     at all predecessor of business path involved in given explanation
     and which sucessor is the given trade_phase.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     trade_state -- a Trade State category
     """
@@ -240,16 +240,16 @@ class ITradeStateProcess(Interface):
     """Returns the list of Trade States which are completed
     in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def getPartiallyCompletedTradeStateList(explanation):
     """Returns the list of Trade States which are partially 
     completed in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def getLatestCompletedTradeStateList(explanation):
@@ -257,8 +257,8 @@ class ITradeStateProcess(Interface):
     states are completed and for which no successor state 
     is completed in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def getLatestPartiallyCompletedTradeStateList(explanation):
@@ -266,8 +266,8 @@ class ITradeStateProcess(Interface):
     states are completed and for which no successor state 
     is partially completed in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def isTradeStateCompleted(explanation, trade_state):
@@ -275,8 +275,8 @@ class ITradeStateProcess(Interface):
     completed and if no successor trade state is completed
     in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     trade_state -- a Trade State category
     """
@@ -286,8 +286,8 @@ class ITradeStateProcess(Interface):
     completed and if no successor trade state is partially completed
     in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     trade_state -- a Trade State category
     """
@@ -297,8 +297,8 @@ class ITradeStateProcess(Interface):
     """Returns the date at which the give trade state is expected
     to be completed in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     trade_state -- a Trade State category
 
@@ -330,24 +330,24 @@ class ITradePhaseProcess(Interface):
     """Returns the list of Trade Phases which are completed
     in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def getPartiallyCompletedTradePhaseList(explanation):
     """Returns the list of Trade Phases which are partially completed
     in the context of given explanation. 
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def isTradePhaseCompleted(explanation, trade_phase):
     """Returns True all business path with given trade_phase
     applicable to given explanation are completed.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     trade_phase -- a Trade Phase category
     """
@@ -357,8 +357,8 @@ class ITradePhaseProcess(Interface):
     applicable to given explanation is partially completed
     or completed.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     trade_phase -- a Trade Phase category
     """
@@ -370,8 +370,8 @@ class ITradePhaseProcess(Interface):
     into account the graph of date constraints defined by business path
     and business states.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     trade_phase -- a Trade Phase category
 
@@ -406,8 +406,8 @@ class ITradePhaseProcess(Interface):
     trade phases. If no trade_phase is provided, the trade_phase defined
     on the Amount is used instead.
     
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     amount -- Amount (quantity, resource)
 
@@ -430,39 +430,39 @@ class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
     """Returns True is all applicable Trade States and Trade Phases
     are completed in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def isBuildable(explanation):
     """Returns True is one Business Path of this Business Process
     is buildable in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def isPartiallyBuildable(explanation):
     """Returns True is one Business Path of this Business Process
     is partially buildable in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def getExpectedCompletionDate(explanation, delay_mode=None):
     """Returns the expected date at which all applicable Trade States and
     Trade Phases are completed in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
     """
 
   def build(explanation, include_partially_buildable=False):
     """Build whatever is buildable in the context of given explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     include_partially_buildable -- if set to True, also build partially
                                    buildable business path. Else
