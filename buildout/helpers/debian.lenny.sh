@@ -7,7 +7,6 @@ build-essential
 cpio
 flex
 gcc
-jam
 libbz2-dev
 libgdbm-dev
 libglib2.0-dev
@@ -26,6 +25,7 @@ make
 patch
 python-setuptools
 rpm
+scons
 subversion
 subversion-tools
 tesseract-ocr-dev
