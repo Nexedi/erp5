@@ -1,3 +1,6 @@
+2010-06-08 yusei
+* Add CategoryTool_getPreferredPredicateCategoryParentUidItemList for optimized predicate category search.
+
 2010-06-04 yo
 * Do not enable reindexing by default. Who has approved such a change? It is up to the system administrator to decide when the catalog can be cleared.
 
