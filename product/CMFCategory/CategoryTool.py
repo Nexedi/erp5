@@ -1535,8 +1535,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
               (category_uid_name, renderUIDWithOperator(base_category_uid)))
           else:
             # In any other case, allow it.
-            where_expression_list.append('(%s IS NULL OR %s IN (%s))' % \
-              (category_uid_name, category_uid_name,
+            where_expression_list.append('(%s IS NULL OR %s = 0 OR %s IN (%s))' % \
+              (category_uid_name, category_uid_name, category_uid_name,
                ', '.join([renderUIDValue(x) for x in category_uid_list])))
         result['from_expression'] = {catalog_table_name:
           ('\nLEFT JOIN `%s` AS ' % (query_table, )).join(left_join_list)}
