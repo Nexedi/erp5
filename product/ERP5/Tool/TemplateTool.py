@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -60,6 +61,8 @@ import subprocess
 
 
 WIN = os.name == 'nt'
+
+_MARKER = []
 
 class BusinessTemplateUnknownError(Exception):
   """ Exception raised when the business template
@@ -1042,7 +1045,7 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplatesFromRepositories' )
     def installBusinessTemplatesFromRepositories(self, template_list,
-        only_newer=True):
+        only_newer=True, update_catalog=_MARKER):
       """Installs template_list from configured repositories by default only newest"""
       # XXX-Luke: This method could replace
       # TemplateTool_installRepositoryBusinessTemplateList while still being
@@ -1057,7 +1060,10 @@ class TemplateTool (BaseTool):
               template_name]['revision']:
             template_document = self.download(template_dict[template_name][
               'url'])
-            template_document.install()
+            if update_catalog is _MARKER:
+              template_document.install()
+            else:
+              template_document.install(update_catalog=update_catalog)
             opreation_log.append('Installed %s with revision %s' % (
               template_document.getTitle(), template_document.getRevision()))
           else:
