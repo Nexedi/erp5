@@ -105,5 +105,11 @@ class Preference:
       'write_permission': 'Manage properties',
       'preference'      : 1,
       'mode'            : '' },
+    { 'id'              : 'preferred_predicate_category',
+      'description'     : 'List of base categories used for predicate',
+      'type'            : 'tokens',
+      'default'         : [],
+      'preference'      : 1,
+      'mode'            : 'w'},
   )
 
