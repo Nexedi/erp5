@@ -1,5 +1,5 @@
 2010-06-08 kazuhiko
-* 'Validate Inventory Action' should be allowed for Assignor, not for Assignee.
+* 'Validate Inventory Action' should be allowed for Assignor.
 
 2010-06-03 yo
 * Add details tabs into Returned Sale Packing List and Returned Purchase Packing List for consistency.
