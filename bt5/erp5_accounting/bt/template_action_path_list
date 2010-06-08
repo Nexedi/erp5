@@ -127,3 +127,4 @@ Sale Invoice Transaction | document_list
 Sale Invoice Transaction | jump_to_related_payment
 Sale Invoice Transaction | profile_view
 Sale Invoice Transaction | source_asset
+System Preference | accounting_preference
