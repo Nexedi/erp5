@@ -152,11 +152,11 @@
                           <string>State</string>
                         </tuple>
                         <tuple>
-                          <string>debit</string>
+                          <string>debit_price</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>credit_price</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
@@ -200,11 +200,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>debit</string>
+                          <string>debit_price</string>
                           <string>debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>credit_price</string>
                           <string>credit</string>
                         </tuple>
                         <tuple>
@@ -255,32 +255,7 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>Accounting Transaction</string>
-                          <string>Accounting Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Purchase Invoice Transaction</string>
-                          <string>Purchase Invoice Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Sale Invoice Transaction</string>
-                          <string>Sale Invoice Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Balance Transaction</string>
-                          <string>Balance Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Payement Transaction</string>
-                          <string>Payement Transaction</string>
-                        </tuple>
-                        <tuple>
-                          <string>Pay Sheet Transaction</string>
-                          <string>Pay Sheet Transaction</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -322,11 +297,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>debit</string>
+                          <string>debit_price</string>
                           <string>Project_statDebit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>credit_price</string>
                           <string>Project_statCredit</string>
                         </tuple>
                         <tuple>

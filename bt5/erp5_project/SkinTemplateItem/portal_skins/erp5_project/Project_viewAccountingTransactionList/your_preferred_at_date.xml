@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_at_date</string> </value>
+            <value> <string>your_preferred_at_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
