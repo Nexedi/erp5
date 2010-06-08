@@ -259,14 +259,20 @@ url_params_string = make_query(clean_kw)\n
 # If url is too long, we do not redirect to avoid crash.\n
 # XXX: 2000 is an arbitrary value resulted from trial and error.\n
 if (not(can_redirect) or len(url_params_string) > 2000):\n
-  # change the skin, unless we are executing the update action\n
-  if dialog_method != update_method and \'portal_skin\' in clean_kw:\n
-    new_skin_name = clean_kw[\'portal_skin\']\n
-    context.getPortalObject().portal_skins.changeSkin(new_skin_name)\n
-    request.set(\'portal_skin\', new_skin_name)\n
-    deferred_portal_skin = clean_kw.get(\'deferred_portal_skin\')\n
-    if deferred_portal_skin:\n
-      request.set(\'deferred_portal_skin\', deferred_portal_skin)\n
+  if dialog_method != update_method:\n
+    # When we are not executing the update action, we have to change the skin\n
+    # manually,\n
+    if \'portal_skin\' in clean_kw:\n
+      new_skin_name = clean_kw[\'portal_skin\']\n
+      context.getPortalObject().portal_skins.changeSkin(new_skin_name)\n
+      request.set(\'portal_skin\', new_skin_name)\n
+      deferred_portal_skin = clean_kw.get(\'deferred_portal_skin\')\n
+      if deferred_portal_skin:\n
+        request.set(\'deferred_portal_skin\', deferred_portal_skin)\n
+    # and to cleanup formulator\'s special key in request\n
+    for key in list(request.keys()):\n
+      if key.startswith(\'field\') or key.startswith(\'subfield\'):\n
+        request.form.pop(key, None)\n
 \n
   # If we cannot redirect, then call the form directly.\n
   dialog_form = getattr(context, dialog_method)\n
@@ -393,6 +399,7 @@ return request.RESPONSE.redirect(redirect_url)\n
                             <string>url_params_string</string>
                             <string>new_skin_name</string>
                             <string>deferred_portal_skin</string>
+                            <string>list</string>
                             <string>_apply_</string>
                             <string>redirect_url</string>
                           </tuple>
