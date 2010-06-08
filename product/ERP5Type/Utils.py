@@ -920,15 +920,23 @@ def importLocalDocument(class_id, document_path = None):
     path = document_path
   path = os.path.join(path, "%s.py" % class_id)
 
+  module_path = 'Products.ERP5Type.Document.' + class_id
+  document_module = sys.modules.get(module_path)
   # Import Document Class and Initialize it
   f = open(path)
   try:
-    document_module = imp.load_source(
-          'Products.ERP5Type.Document.%s' % class_id, path, f)
+    document_module = imp.load_source(module_path, path, f)
     document_class = getattr(document_module, class_id)
     document_constructor = DocumentConstructor(document_class)
     document_constructor_name = "add%s" % class_id
     document_constructor.__name__ = document_constructor_name
+  except Exception:
+    f.close()
+    if document_module is not None:
+      sys.modules[module_path] = document_module
+    raise
+  else:
+    f.close()
     setattr(Products.ERP5Type.Document, class_id, document_module)
     setattr(Products.ERP5Type.Document, document_constructor_name,
                                       document_constructor)
@@ -936,8 +944,6 @@ def importLocalDocument(class_id, document_path = None):
     ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(
         Permissions.AddPortalContent, document_constructor_name,)
     InitializeClass(document_class)
-  finally:
-    f.close()
 
   # Temp documents are created as standard classes with a different constructor
   # which patches some methods are the instance level to prevent reindexing
