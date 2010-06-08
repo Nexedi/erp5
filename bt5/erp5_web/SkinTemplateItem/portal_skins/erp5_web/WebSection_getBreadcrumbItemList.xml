@@ -140,13 +140,14 @@ for chain_index in xrange(0, chain_list_length):\n
     title = None\n
 \n
   if title is not None:\n
+    full_title = title\n
     # shorten it only if it exceeds maximum specified length or\n
     # not last element in breadcrumb (include default Web Page which is not show but part of chain_list)\n
     if max_breadcrumb_length is not None and \\\n
        (chain_index + last_breadcrumb_offset < chain_list_length) and \\\n
        (len(title) - 4 > max_breadcrumb_length):\n
       title = \'%s ...\' %(title[:max_breadcrumb_length])\n
-    crumb_list.append((title, crumb))\n
+    crumb_list.append((title, crumb, full_title))\n
 \n
 return crumb_list\n
 
@@ -215,6 +216,7 @@ return crumb_list\n
                             <string>_getitem_</string>
                             <string>crumb</string>
                             <string>title</string>
+                            <string>full_title</string>
                           </tuple>
                         </value>
                     </item>
