@@ -2644,6 +2644,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                      and m.kw.get('uid') is not None ]
     self.assertEquals(len(message_list), 0)
 
+  def stepCheckFolderReindexActivityPresence(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check if we have activity for Folder_reindexAll.
+    """
+    message_list = [ m for m in self.portal.portal_activities.getMessageList()
+                     if m.method_id == 'Folder_reindexAll']
+    self.assertNotEquals(len(message_list), 0)
+
+
   def stepCheckPathNotUnindexAfterBuild(self, sequence=None, sequence_list=None, **kw):
     """
     Check that after a build, not unindex has been done
@@ -3078,6 +3087,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        InstallWithoutForceBusinessTemplate \
+                       CheckFolderReindexActivityPresence \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -3861,7 +3871,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNotInstalledInstallationState \
                        CheckPreinstallReturnSomething \
                        CheckCatalogPreinstallReturnCatalogMethod \
+		       Tic \
                        InstallWithoutForceBusinessTemplate \
+		       CheckFolderReindexActivityPresence \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -5208,6 +5220,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        InstallWithoutForceBusinessTemplate \
+		       CheckFolderReindexActivityPresence \
                        Tic \
                        \
                        CheckFormGroups \
@@ -5221,7 +5234,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
+		       Tic \
                        InstallWithoutForceBusinessTemplate \
+		       CheckFolderReindexActivityPresence \
                        Tic \
                        \
                        CheckFormGroups \
