@@ -76,26 +76,18 @@ precision = context.account_module.getQuantityPrecisionFromResource(currency)\n
 # we set the precision in request, for formatting on editable fields\n
 request.set(\'precision\', precision)\n
 \n
+selection_columns = (\n
+    (\'specific_reference\', \'Transaction Reference\'),\n
+    (\'date\', \'Date\'),\n
+    (\'title\', \'Accounting Transaction Title\'),)\n
 if len(portal_type) > 1:\n
-  selection_columns = [\n
-    (\'specific_reference\', \'Transaction Reference\'),\n
-    (\'date\', \'Date\'),\n
-    (\'title\', \'Accounting Transaction Title\'),\n
-    (\'portal_type\', \'Journal Type\'),\n
+  selection_columns += (\n
+    (\'portal_type\', \'Journal Type\'), )\n
+selection_columns += (\n
     (\'node_title\', \'Account\'),\n
     (\'mirror_section_title\', \'Third Party\'),\n
     (\'debit\', \'Debit\'),\n
-    (\'credit\', \'Credit\')]\n
-else:\n
-  selection_columns = [\n
-    (\'specific_reference\', \'Transaction Reference\'),\n
-    (\'date\', \'Date\'),\n
-    (\'title\', \'Accounting Transaction Title\'),\n
-    (\'node_title\', \'Account\'),\n
-    (\'mirror_section_title\', \'Third Party\'),\n
-    (\'debit\', \'Debit\'),\n
-    (\'credit\', \'Credit\')]\n
-\n
+    (\'credit\', \'Credit\'))\n
 \n
 return [ReportSection(\n
           path=context.getPhysicalPath(),\n
@@ -168,8 +160,9 @@ return [ReportSection(\n
                             <string>gap_root</string>
                             <string>currency</string>
                             <string>precision</string>
-                            <string>len</string>
                             <string>selection_columns</string>
+                            <string>len</string>
+                            <string>_inplacevar_</string>
                             <string>dict</string>
                           </tuple>
                         </value>

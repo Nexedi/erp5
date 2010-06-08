@@ -208,7 +208,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                  selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
                  selection_domain_join_column=\'section_uid\',\n
                  sort_on=sort_on,\n
-                  ignore_group_by=True,\n
+                 ignore_group_by=True,\n
                  src__=src__,\n
                  **params)\n
 

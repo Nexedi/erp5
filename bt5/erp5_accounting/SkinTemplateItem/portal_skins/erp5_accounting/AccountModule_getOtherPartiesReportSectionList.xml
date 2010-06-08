@@ -103,8 +103,8 @@ entity_columns = [\n
                        (\'Movement_getExplanationTitle\', \'Title\'),\n
                        (\'Movement_getSpecificReference\', \'Reference\'),\n
                        (\'getTranslatedSimulationStateTitle\', \'State\'),\n
-                       (\'debit\', \'Debit\'),\n
-                       (\'credit\', \'Credit\'),\n
+                       (\'debit_price\', \'Debit\'),\n
+                       (\'credit_price\', \'Credit\'),\n
                        (\'running_total_price\', \'Balance\'),\n
 ]\n
 \n

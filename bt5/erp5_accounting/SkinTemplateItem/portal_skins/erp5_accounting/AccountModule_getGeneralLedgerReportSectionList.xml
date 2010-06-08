@@ -103,6 +103,9 @@ function = request.get(\'function\')\n
 if function:\n
   params[\'function_uid\'] = portal.portal_categories.restrictedTraverse(function).getUid()\n
 \n
+analytic_columns = ()\n
+group_analytics = False # XXX \'group\' in the sense of grouping\n
+\n
 account_columns = (\n
       (\'Movement_getSpecificReference\', \'Reference\'),\n
       (\'Movement_getExplanationTitle\', \'Title\'),\n
@@ -110,13 +113,12 @@ account_columns = (\n
       (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
       (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
       (\'Movement_getMirrorSectionTitle\', \'Third Party\'),)\n
-\n
 if len(simulation_state) > 1:\n
   account_columns += (\n
       (\'getTranslatedSimulationStateTitle\', \'State\'),)\n
 account_columns += (\n
-      (\'debit\', \'Debit\'),\n
-      (\'credit\', \'Credit\'),\n
+      (\'debit_price\', \'Debit\'),\n
+      (\'credit_price\', \'Credit\'),\n
       (\'running_total_price\', \'Net\'), )\n
 \n
 # utility functions\n
@@ -217,9 +219,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -252,9 +252,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 \n
 # profit & loss -> same, but from date limited to the current period\n
@@ -284,9 +282,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 # group by mirror_section\n
 # movements in the period\n
@@ -317,9 +313,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -353,9 +347,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 \n
 # group by payment\n
@@ -387,9 +379,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -421,10 +411,8 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       form_id=\'Account_viewAccountingTransactionList\',\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
-                      selection_columns=account_columns,\n
                       listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      selection_columns=account_columns, ))\n
 \n
 report_section_list.sort(key=ReportSection.getTitle)\n
 \n
@@ -507,6 +495,8 @@ return report_section_list\n
                             <string>params</string>
                             <string>project</string>
                             <string>function</string>
+                            <string>analytic_columns</string>
+                            <string>group_analytics</string>
                             <string>account_columns</string>
                             <string>len</string>
                             <string>_inplacevar_</string>

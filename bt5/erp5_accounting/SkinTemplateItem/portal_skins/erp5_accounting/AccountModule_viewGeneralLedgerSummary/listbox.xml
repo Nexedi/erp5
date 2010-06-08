@@ -331,15 +331,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>anchor</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>debit</string>
+                          <string>debit_price</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>credit_price</string>
                           <string>Credit</string>
                         </tuple>
                       </list>
@@ -368,6 +372,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
                       <list/>
@@ -386,11 +396,11 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>debit</string>
+                          <string>debit_price</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>credit_price</string>
                           <string>Credit</string>
                         </tuple>
                       </list>
@@ -412,6 +422,10 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
@@ -453,6 +467,10 @@
                 <item>
                     <key> <string>report_tree</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -499,6 +517,12 @@
                     <value> <string>General Ledger Summary</string> </value>
                 </item>
                 <item>
+                    <key> <string>untranslatable_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>url_columns</string> </key>
                     <value>
                       <list/>
@@ -513,11 +537,8 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Products.Formulator.MethodField</string>
-          <string>Method</string>
-        </tuple>
-        <none/>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>

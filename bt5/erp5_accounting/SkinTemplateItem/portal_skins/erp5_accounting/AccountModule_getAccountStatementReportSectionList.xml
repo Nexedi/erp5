@@ -118,30 +118,22 @@ if function:\n
   params[\'function_uid\'] = traverse(function).getUid()\n
   params[\'function\'] = function\n
 if mirror_section:\n
-  params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()  \n
+  params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()\n
 if parent_portal_type:\n
   params[\'parent_portal_type\'] = parent_portal_type\n
 \n
 \n
+selection_columns = (\n
+  (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
+  (\'date\', \'Date\'),\n
+  (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'), )\n
 if len(section_uid) > 1:\n
-  selection_columns = [\n
-    (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
-    (\'date\', \'Date\'),\n
-    (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'),\n
-    (\'section_title\', \'Section\'),\n
-    (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
-    (\'debit\', \'Debit\'),\n
-    (\'credit\', \'Credit\'),\n
-    (\'running_total_price\', \'Net\'),]\n
-else:\n
-  selection_columns = [\n
-    (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
-    (\'date\', \'Date\'),\n
-    (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'),\n
-    (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
-    (\'debit\', \'Debit\'),\n
-    (\'credit\', \'Credit\'),\n
-    (\'running_total_price\', \'Net\'),]\n
+  selection_columns += ( (\'section_title\', \'Section\'), )\n
+selection_columns += (\n
+  (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
+  (\'debit_price\', \'Debit\'),\n
+  (\'credit_price\', \'Credit\'),\n
+  (\'running_total_price\', \'Net\'),)\n
 \n
 report_section_list = []\n
 if from_date and detailed_from_date_summary:\n
@@ -245,8 +237,9 @@ return report_section_list\n
                             <string>dict</string>
                             <string>params</string>
                             <string>_write_</string>
-                            <string>len</string>
                             <string>selection_columns</string>
+                            <string>len</string>
+                            <string>_inplacevar_</string>
                             <string>report_section_list</string>
                           </tuple>
                         </value>

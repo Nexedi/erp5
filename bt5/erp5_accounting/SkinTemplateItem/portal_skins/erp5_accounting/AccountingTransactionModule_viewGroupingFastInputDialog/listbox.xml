@@ -134,11 +134,11 @@
                           <string>Grouping</string>
                         </tuple>
                         <tuple>
-                          <string>debit</string>
+                          <string>debit_price</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>credit_price</string>
                           <string>Credit</string>
                         </tuple>
                         <tuple>
@@ -181,11 +181,11 @@
                           <string>Date</string>
                         </tuple>
                         <tuple>
-                          <string>debit</string>
+                          <string>debit_price</string>
                           <string>Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit</string>
+                          <string>credit_price</string>
                           <string>Credit</string>
                         </tuple>
                       </list>

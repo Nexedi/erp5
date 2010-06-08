@@ -13,14 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
                 <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_credit</string> </value>
+            <value> <string>listbox_debit_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -57,10 +56,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -82,10 +79,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -103,22 +96,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.Movement_getCreditPrice(brain=cell)</string> </value>
         </item>
       </dictionary>
     </pickle>

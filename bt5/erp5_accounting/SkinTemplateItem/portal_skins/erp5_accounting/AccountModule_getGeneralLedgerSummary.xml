@@ -71,11 +71,11 @@ if node_category:\n
   # calculated differently. As a result, the summary doesn\'t take from_date\n
   # into account for income accounts.\n
   return [Object(\n
-            debit=getInventoryAssetPrice(omit_output=1,\n
+            debit_price=getInventoryAssetPrice(omit_output=1,\n
                                node_category=node_category,\n
                                precision=precision,\n
                                **inventory_kw),\n
-            credit=-getInventoryAssetPrice(omit_input=1,\n
+            credit_price=-getInventoryAssetPrice(omit_input=1,\n
                                node_category=node_category,\n
                                precision=precision,\n
                                 **inventory_kw) or 0 ) ]\n
@@ -106,7 +106,7 @@ credit -= getInventoryAssetPrice(omit_input=1,\n
                                precision=precision,\n
                                 **inventory_kw) or 0\n
 \n
-return [Object(debit=debit, credit=credit)]\n
+return [Object(debit_price=debit, credit_price=credit)]\n
 </string> </value>
         </item>
         <item>

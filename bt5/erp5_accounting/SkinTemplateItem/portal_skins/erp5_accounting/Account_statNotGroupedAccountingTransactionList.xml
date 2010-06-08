@@ -57,6 +57,10 @@
 request = container.REQUEST\n
 \n
 return [Object(\n
+          debit_price=request.get(\n
+                 \'Account_statNotGroupedAccountingTransactionList.total_debit_price\'),\n
+          credit_price=request.get(\n
+                 \'Account_statNotGroupedAccountingTransactionList.total_credit_price\'),\n
           debit=request.get(\n
                  \'Account_statNotGroupedAccountingTransactionList.total_debit\'),\n
           credit=request.get(\n
