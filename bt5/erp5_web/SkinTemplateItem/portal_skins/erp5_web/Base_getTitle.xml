@@ -68,12 +68,11 @@
 \n
   XXX: move this script as an API of ERP5Type?\n
 """\n
-\n
 return context.getProperty(\'translated_short_title\', None) or \\\n
-       context.getProperty(\'short_title\', None) or \\\n
-       context.getProperty(\'translated_title_or_id\', None) or \\\n
-       context.getProperty(\'title_or_id\', None) or \\\n
-       context.title\n
+                   context.getProperty(\'short_title\', None) or \\\n
+                   context.getProperty(\'translated_title_or_id\', None) or \\\n
+                   context.getProperty(\'title_or_id\', None) or \\\n
+                   context.title\n
 </string> </value>
         </item>
         <item>

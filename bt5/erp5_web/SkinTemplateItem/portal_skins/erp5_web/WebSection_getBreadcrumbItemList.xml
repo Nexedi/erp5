@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
  This script is part of ERP5 Web\n
 \n
  ERP5 Web is a business template of ERP5 which provides a way\n
@@ -112,24 +114,44 @@ if document is None: document = context\n
 crumb_list = []\n
 \n
 # Implementation consists in browsing the aq_parent sequence\n
+web_site = context.getWebSiteValue()\n
 chain_list = document.Base_getAcquisitionParentValueList(upper_portal_type=\'Web Site\')\n
 chain_list.reverse()\n
-for i in xrange(0, len(chain_list)):\n
+\n
+last_breadcrumb_offset = 1\n
+max_breadcrumb_length = web_site.getLayoutProperty(\'layout_max_breadcrumb_length\', None)\n
+chain_list_length = len(chain_list)\n
+\n
+is_web_section_default_document = bool(context.REQUEST.get(\'is_web_section_default_document\', False))\n
+if is_web_section_default_document:\n
+  last_breadcrumb_offset = 2\n
+\n
+for chain_index in xrange(0, chain_list_length):\n
   try:\n
-    crumb = chain_list[i]\n
-    if i == 0:\n
+    crumb = chain_list[chain_index]\n
+    if chain_index == 0:\n
       title = context.Base_translateString(\'Home\')\n
     else:\n
       title = crumb.Base_getTitle()\n
-    crumb_list.append((title, crumb))\n
   except Unauthorized:\n
     # We should ignore any item in the chain which raises \n
     # a security exception. We use a catchall except here\n
     # because there is no way to import Unauthorized permission\n
-    pass\n
+    title = None\n
+\n
+  if title is not None:\n
+    # shorten it only if it exceeds maximum specified length or\n
+    # not last element in breadcrumb (include default Web Page which is not show but part of chain_list)\n
+    if max_breadcrumb_length is not None and \\\n
+       (chain_index + last_breadcrumb_offset < chain_list_length) and \\\n
+       (len(title) - 4 > max_breadcrumb_length):\n
+      title = \'%s ...\' %(title[:max_breadcrumb_length])\n
+    crumb_list.append((title, crumb))\n
 \n
 return crumb_list\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -178,11 +200,18 @@ return crumb_list\n
                             <string>context</string>
                             <string>crumb_list</string>
                             <string>_getattr_</string>
+                            <string>web_site</string>
                             <string>chain_list</string>
+                            <string>last_breadcrumb_offset</string>
+                            <string>max_breadcrumb_length</string>
+                            <string>len</string>
+                            <string>chain_list_length</string>
+                            <string>bool</string>
+                            <string>False</string>
+                            <string>is_web_section_default_document</string>
                             <string>_getiter_</string>
                             <string>xrange</string>
-                            <string>len</string>
-                            <string>i</string>
+                            <string>chain_index</string>
                             <string>_getitem_</string>
                             <string>crumb</string>
                             <string>title</string>
