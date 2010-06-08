@@ -24,6 +24,9 @@
  <key>parent_strict_group_uid | category,catalog/uid/z_related_parent_strict_group</key>
  <key>parent_string_index | catalog/string_index/z_related_parent</key>
  <key>parent_title | catalog/title/z_related_parent</key>
+ <key>predicate_category_base_category_uid | predicate_category/base_category_uid/z_related_predicate_category</key>
+ <key>predicate_category_category_strict_membership | predicate_category/category_strict_membership/z_related_predicate_category</key>
+ <key>predicate_category_category_uid | predicate_category/category_uid/z_related_predicate_category</key>
  <key>predicate_uid | predicate/uid/z_related_predicate</key>
  <key>resourceType | movement,catalog/portal_type/z_related_resource_from_movement</key>
  <key>stock_function_category_strict_membership_uid | category/category_uid/z_related_strict_membership_function_uid_from_stock</key>

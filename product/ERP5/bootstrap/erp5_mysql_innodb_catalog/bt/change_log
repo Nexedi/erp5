@@ -1,3 +1,8 @@
+2010-06-08 yusei
+* Add predicate category related keys.
+* Update predicate category indexing method to support "no-left-join" version of predicate search.
+* Use erp5_core revision 1601 or higher.
+
 2010-05-24 tatuya
 * Add parent_specialise_reference related key to select simulation movements by the applied rule reference.
 
