@@ -30,6 +30,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
+import transaction
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
@@ -67,6 +68,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       self.portal.manage_delObjects(ids=[self.folder.getId(),
                                           self.other_folder.getId()])
       clearCache()
+      transaction.commit()
 
     def newContent(self):
       """
@@ -160,6 +162,66 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       self.assertRaises(Unauthorized, guarded_getattr, self.folder, 'edit')
       # Reset to original permissions
       self.folder.manage_permission('Modify portal content', original_permission_list[0]['roles'], original_permission_list[0]['acquire'])
+
+    def test_upgradeObjectClass(self):
+      """ Test if it changes Object Class """
+      type_list = ['Folder', 'Category' ]
+      self._setAllowedContentTypesForFolderType(type_list)
+      obj = self.folder.newContent(portal_type="Category")
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      createZODBPythonScript(self.getPortal().portal_skins.custom,
+                     "test_upgradeObject", 'x',
+                     'return [1]')
+      test_script = self.getPortal().portal_skins.custom.test_upgradeObject
+      result = self.folder.upgradeObjectClass(test_script, from_class, 
+                                              to_class, test_script)
+      transaction.commit()
+      self.assertEquals(self.folder[obj.getId()].__class__, to_class)
+      self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
+      self.assertEquals([1], result)
+
+    def test_upgradeObjectClassHierarchicaly(self):
+      """ Test if migrate sub objects Hierarchicaly """
+      type_list = ['Folder', 'Category', 'Base Category']
+      self._setAllowedContentTypesForFolderType(type_list)
+      subfolder = self.newContent()
+      obj = subfolder.newContent(portal_type="Category")
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      createZODBPythonScript(self.getPortal().portal_skins.custom,
+                     "test_upgradeObjectZ", 'x',
+                     'return [1]')
+      test_script = self.getPortal().portal_skins.custom.test_upgradeObjectZ
+      result = self.folder.upgradeObjectClass(test_script, from_class,
+                                              to_class, test_script)
+      transaction.commit()
+      self.assertEquals(subfolder[obj.getId()].__class__, to_class)
+      self.assertNotEquals(subfolder[obj.getId()].__class__, from_class)
+      self.assertEquals([1], result)
+
+    def test_upgradeObjectClassWithSubObject(self):
+      """ Test If upgrade preseve subobjects """
+      type_list = ['Folder', 'Category', 'Base Category']
+      self._setAllowedContentTypesForFolderType(type_list)
+      subobject = self.folder.newContent(portal_type="Category")
+      obj = subobject.newContent(portal_type="Category")
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      createZODBPythonScript(self.getPortal().portal_skins.custom,
+                     "test_upgradeObjectZ", 'x',
+                     'return [1]')
+      test_script = self.getPortal().portal_skins.custom.test_upgradeObjectZ
+      result = self.folder.upgradeObjectClass(test_script, from_class,
+                                              to_class, test_script)
+      transaction.commit()
+      self.assertEquals(self.folder[subobject.getId()].__class__, to_class)
+      self.assertNotEquals(self.folder[subobject.getId()].__class__, from_class)
+      self.assertEquals(self.folder[subobject.getId()][obj.getId()].__class__, to_class)
+      self.assertNotEquals(self.folder[subobject.getId()][obj.getId()].__class__, from_class)
+      self.assertEquals([1, 1], result)
+
+
 
 def test_suite():
   suite = unittest.TestSuite()
