@@ -303,9 +303,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     return pysvn.Client().info(os.path.dirname(__file__)).revision.number
 
   def sendResult(self):
-    result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % self.portal_url).readline()
-    print result_uri
-    file_content = self.openUrl(result_uri)
+    file_content = self.openUrl('%s/portal_tests/TestTool_getResults' % self.portal_url)
     passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
     failures_re = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
     image_re = re.compile('<img[^>]*?>')
