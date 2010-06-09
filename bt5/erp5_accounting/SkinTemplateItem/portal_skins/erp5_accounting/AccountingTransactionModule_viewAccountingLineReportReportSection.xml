@@ -95,8 +95,8 @@
                         <string>listbox_debit</string>
                         <string>listbox_date</string>
                         <string>listbox_credit</string>
-                        <string>listbox_credit_quantity</string>
-                        <string>listbox_debit_quantity</string>
+                        <string>listbox_credit_price</string>
+                        <string>listbox_debit_price</string>
                       </list>
                     </value>
                 </item>

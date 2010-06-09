@@ -101,6 +101,8 @@
                         <string>listbox_date</string>
                         <string>listbox_credit_price</string>
                         <string>listbox_debit_price</string>
+                        <string>listbox_function</string>
+                        <string>listbox_project</string>
                       </list>
                     </value>
                 </item>

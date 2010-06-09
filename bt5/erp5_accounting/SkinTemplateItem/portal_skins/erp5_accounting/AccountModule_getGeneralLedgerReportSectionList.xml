@@ -58,8 +58,8 @@
 """Get the report sections for general ledger\n
 """\n
 from Products.ERP5Form.Report import ReportSection\n
-request  = context.REQUEST\n
 portal   = context.portal_url.getPortalObject()\n
+request  = portal.REQUEST\n
 cat_tool = portal.portal_categories\n
 sim_tool = portal.portal_simulation\n
 Base_translateString = context.Base_translateString\n
@@ -69,6 +69,7 @@ section_category    = request[\'section_category\']\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
                         section_category, request[\'section_category_strict\'])\n
 simulation_state    = request[\'simulation_state\']\n
+hide_analytic  = request[\'hide_analytic\']\n
 from_date           = request.get(\'from_date\', None)\n
 gap_list = []\n
 for gap in request.get(\'gap_list\', ()):\n
@@ -103,8 +104,15 @@ function = request.get(\'function\')\n
 if function:\n
   params[\'function_uid\'] = portal.portal_categories.restrictedTraverse(function).getUid()\n
 \n
-analytic_columns = ()\n
-group_analytics = False # XXX \'group\' in the sense of grouping\n
+default_selection_params = params.copy()\n
+\n
+analytic_column_list = ()\n
+if hide_analytic:\n
+  default_selection_params[\'group_by\'] = ( \'explanation_uid\',\n
+                                           \'mirror_section_uid\',\n
+                                           \'payment_uid\' )\n
+else:\n
+  analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
 \n
 account_columns = (\n
       (\'Movement_getSpecificReference\', \'Reference\'),\n
@@ -116,6 +124,7 @@ account_columns = (\n
 if len(simulation_state) > 1:\n
   account_columns += (\n
       (\'getTranslatedSimulationStateTitle\', \'State\'),)\n
+account_columns += analytic_column_list\n
 account_columns += (\n
       (\'debit_price\', \'Debit\'),\n
       (\'credit_price\', \'Credit\'),\n
@@ -205,7 +214,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   key = (inventory.node_relative_url, None, None)\n
   existing_section_dict[key] = True\n
   \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -238,7 +247,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
     continue\n
   existing_section_dict[key] = True\n
   \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -267,7 +276,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, None, None)\n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = max(from_date, period_start_date)\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'period_start_date\'] = max(from_date, period_start_date)\n
@@ -299,7 +308,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   key = (inventory.node_relative_url, inventory.mirror_section_uid, None)\n
   existing_section_dict[key] = True\n
 \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -333,7 +342,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
     continue\n
   existing_section_dict[key] = True\n
 \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -365,7 +374,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   key = (inventory.node_relative_url, None, inventory.payment_uid)\n
   existing_section_dict[key] = True\n
 \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -398,7 +407,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
     continue\n
   existing_section_dict[key] = True\n
 \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -416,7 +425,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
 \n
 report_section_list.sort(key=ReportSection.getTitle)\n
 \n
-total_params = params.copy()\n
+total_params = default_selection_params.copy()\n
 total_params[\'at_date\'] = at_date\n
 report_section_list.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
@@ -468,8 +477,8 @@ return report_section_list\n
                             <string>ReportSection</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
                             <string>portal</string>
+                            <string>request</string>
                             <string>cat_tool</string>
                             <string>sim_tool</string>
                             <string>Base_translateString</string>
@@ -478,6 +487,7 @@ return report_section_list\n
                             <string>section_category</string>
                             <string>section_uid</string>
                             <string>simulation_state</string>
+                            <string>hide_analytic</string>
                             <string>None</string>
                             <string>from_date</string>
                             <string>gap_list</string>
@@ -495,8 +505,8 @@ return report_section_list\n
                             <string>params</string>
                             <string>project</string>
                             <string>function</string>
-                            <string>analytic_columns</string>
-                            <string>group_analytics</string>
+                            <string>default_selection_params</string>
+                            <string>analytic_column_list</string>
                             <string>account_columns</string>
                             <string>len</string>
                             <string>_inplacevar_</string>

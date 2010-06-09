@@ -173,6 +173,14 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>function</string>
+                          <string>function</string>
+                        </tuple>
+                        <tuple>
+                          <string>project</string>
+                          <string>project</string>
+                        </tuple>
+                        <tuple>
                           <string>date</string>
                           <string>date</string>
                         </tuple>

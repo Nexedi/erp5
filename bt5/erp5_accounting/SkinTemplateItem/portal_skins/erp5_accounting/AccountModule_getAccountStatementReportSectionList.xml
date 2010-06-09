@@ -82,6 +82,7 @@ payment = request.get(\'payment\', None)\n
 function = request.get(\'function\', None)\n
 project = request.get(\'project\', None)\n
 simulation_state = request[\'simulation_state\']\n
+hide_analytic = request[\'hide_analytic\']\n
 from_date = request.get(\'from_date\', None)\n
 detailed_from_date_summary = request.get(\'detailed_from_date_summary\', 0)\n
 omit_grouping_reference = request.get(\'omit_grouping_reference\', 0)\n
@@ -122,6 +123,14 @@ if mirror_section:\n
 if parent_portal_type:\n
   params[\'parent_portal_type\'] = parent_portal_type\n
 \n
+analytic_column_list = ()\n
+if hide_analytic:\n
+  params[\'group_by\'] = ( \'explanation_uid\',\n
+                         \'mirror_section_uid\',\n
+                         \'payment_uid\', )\n
+else:\n
+  analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
+  params[\'analytic_column_list\'] = analytic_column_list\n
 \n
 selection_columns = (\n
   (\'Movement_getSpecificReference\', \'Transaction Reference\'),\n
@@ -129,7 +138,7 @@ selection_columns = (\n
   (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'), )\n
 if len(section_uid) > 1:\n
   selection_columns += ( (\'section_title\', \'Section\'), )\n
-selection_columns += (\n
+selection_columns += analytic_column_list + (\n
   (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
   (\'debit_price\', \'Debit\'),\n
   (\'credit_price\', \'Credit\'),\n
@@ -227,6 +236,7 @@ return report_section_list\n
                             <string>function</string>
                             <string>project</string>
                             <string>simulation_state</string>
+                            <string>hide_analytic</string>
                             <string>from_date</string>
                             <string>detailed_from_date_summary</string>
                             <string>omit_grouping_reference</string>
@@ -237,6 +247,7 @@ return report_section_list\n
                             <string>dict</string>
                             <string>params</string>
                             <string>_write_</string>
+                            <string>analytic_column_list</string>
                             <string>selection_columns</string>
                             <string>len</string>
                             <string>_inplacevar_</string>
