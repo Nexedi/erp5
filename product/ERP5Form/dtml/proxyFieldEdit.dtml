@@ -160,13 +160,16 @@ function ignoreEvent() { return false; }
 
 var class_deletaged_list = GetElementsWithClassName('td','delegated');
 for(var i=0; i<class_deletaged_list.length; i++) {
-  element = class_deletaged_list[i].childNodes[1];
-  if (element.type == 'hidden'){
-    element = element.nextSibling;
-  }
-  element.readOnly = true;
-  if (element.type == 'checkbox'){
-    element.onclick = ignoreEvent;
+  var disable_children = class_deletaged_list[i].childNodes;
+  for (var j=0; j<disable_children.length; j++) {
+    var element = disable_children[j];
+    if (element.type == 'hidden'){
+      continue;
+    }
+    element.readOnly = true;
+    if (element.type == 'checkbox'){
+      element.onclick = ignoreEvent;
+    }
   }
 }
 
@@ -177,20 +180,23 @@ function toggleFieldState(evt) {
   allElements = tr_parent.childNodes;
   for (i=0; i<allElements.length; i++) {
     if (isClass(allElements[i], 'to_disable')) {
-      field = allElements[i].childNodes[1];
-      if (field.type == 'hidden'){
-        field = field.nextSibling;
-      }
-      if (field.readOnly){
-        field.readOnly = false;
-        if (field.type == 'checkbox'){
-          field.onclick = normalEvent;
+      var disable_children = allElements[i].childNodes;
+      for (var j=0; j<disable_children.length; j++) {
+        var field = disable_children[j];
+        if (field.type == 'hidden'){
+          continue;
         }
-      }
-      else{
-        field.readOnly = true;
-        if (field.type == 'checkbox'){
-          field.onclick = ignoreEvent;
+        if (field.readOnly){
+          field.readOnly = false;
+          if (field.type == 'checkbox'){
+            field.onclick = normalEvent;
+          }
+        }
+        else{
+          field.readOnly = true;
+          if (field.type == 'checkbox'){
+            field.onclick = ignoreEvent;
+          }
         }
       }
     }
