@@ -56,6 +56,22 @@ class TestDomainTool(TestPredicateMixIn):
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel')
 
+  def beforeTearDown(self):
+    transaction.abort()
+
+    for system_preference in self.portal.portal_preferences.objectValues(portal_type='System Preference'):
+      if system_preference.getPreferenceState() != 'disabled':
+        system_preference.disable()
+    def deleteAll(module):
+      module.manage_delObjects(ids=list(module.objectIds()))
+    deleteAll(self.portal.organisation_module)
+    deleteAll(self.portal.product_module)
+    deleteAll(self.portal.sale_supply_module)
+    deleteAll(self.portal.sale_order_module)
+
+    transaction.commit()
+    self.tic()
+
   def getPortalId(self):
     return self.getPortal().getId()
 
@@ -430,6 +446,249 @@ class TestDomainTool(TestPredicateMixIn):
     self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, test=1))
     # Real test
     self.assertTrue(predicate_one_match not in portal_domains.searchPredicateList(document, test=0))
+
+  def test_07_NonLeftJoinModeOfSearchPredicateList(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Test non-left join mode of searchPredicateList method')
+
+    # Add system preference
+    system_preference = self.portal.portal_preferences.newContent(portal_type='System Preference')
+    system_preference.setPreferredPredicateCategoryList(
+      ['source_section', 'destination_section', 'price_currency'])
+
+    transaction.commit()
+    self.tic()
+
+    # Add sample data
+    jpy = self.portal.currency_module.newContent(portal_type='Currency',
+                                                 title='JPY',
+                                                 reference='JPY')
+    jpy.validate()
+
+    euro = self.portal.currency_module.newContent(portal_type='Currency',
+                                                 title='EURO',
+                                                 reference='EUR')
+    euro.validate()
+
+    organisation_module = self.portal.organisation_module
+    company= organisation_module.newContent(portal_type='Organisation',
+                                            title='Company')
+    shop = organisation_module.newContent(portal_type='Organisation',
+                                          title='Shop')
+    supplier = organisation_module.newContent(portal_type='Organisation',
+                                              title='Supplier')
+
+    product_module = self.portal.product_module
+    product1 = product_module.newContent(portal_type='Product',
+                                         title='Product1')
+    product2 = product_module.newContent(portal_type='Product',
+                                         title='Product2')
+
+    supply_module = self.portal.sale_supply_module
+    supply1 = supply_module.newContent(portal_type='Sale Supply',
+                                       title='Supply1',
+                                       source_section_value=supplier,
+                                       destination_section_value=shop,
+                                       price_currency_value=jpy)
+    supply1.newContent(portal_type='Sale Supply Line',
+                       resource_value=product1)
+    supply1.newContent(portal_type='Sale Supply Line',
+                       resource_value=product2)
+    supply2 = supply_module.newContent(portal_type='Sale Supply',
+                                       title='Supply2',
+                                       source_section_value=supplier,
+                                       destination_section_value=company,
+                                       price_currency_value=jpy)
+    supply2.newContent(portal_type='Sale Supply Line',
+                       resource_value=product2)
+    supply3 = supply_module.newContent(portal_type='Sale Supply',
+                                       title='Supply3',
+                                       source_section_value=supplier,
+                                       price_currency_value=euro)
+    supply3.newContent(portal_type='Sale Supply Line',
+                       resource_value=product1)
+
+    order = self.portal.sale_order_module.newContent(
+      portal_type='Sale Order',
+      source_section_value=supplier,
+      destination_section_value=shop,
+      price_currency_value=jpy)
+    order_line = order.newContent(portal_type='Sale Order Line',
+                                  resource_value=product1)
+
+    transaction.commit()
+    self.tic()
+
+    # Test
+    # Check traditional left join mode
+    domain_tool = self.portal.portal_domains
+    searchPredicateList = domain_tool.searchPredicateList
+    self.assertEqual(len(
+      searchPredicateList(order_line,
+                          portal_type='Sale Supply Line')),
+                     1)
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      src__=1))
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section'])),
+                     4)
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency'],
+      src__=1))
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section'])),
+                     3)
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section'],
+      src__=1))
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency'])),
+                     2)
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency'],
+      src__=1))
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency', 'resource'])),
+                     1)
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency', 'resource'],
+      src__=1))
+    # if wrong base categories are passed, then nothing is matched
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['WAAA', 'BOOO'])),
+                     0)
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['WAAA', 'BOOO'],
+      src__=1))
+
+    # Check non-left join mode
+    # Enable system preference and reindex all
+    system_preference.enable()
+    transaction.commit()
+    self.tic()
+    self.portal.ERP5Site_reindexAll()
+    transaction.commit()
+    self.tic()
+
+    # if tested_base_category_list is not passed, then left join mode is
+    # still used.
+    self.assertEqual(len(
+      searchPredicateList(order_line,
+                          portal_type='Sale Supply Line')),
+                     1)
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      src__=1))
+
+    
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section'])),
+                     4)
+    self.assert_(not 'LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency'],
+      src__=1))
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section'])),
+                     3)
+    self.assert_(not 'LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section'],
+      src__=1))
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency'])),
+                     2)
+    self.assert_(not 'LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency'],
+      src__=1))
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency', 'resource'])),
+                     1)
+    # resource is not in preferred predicate category list, so left join
+    # is used
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['source_section', 'destination_section',
+                                 'price_currency', 'resource'],
+      src__=1))
+    # if wrong base categories are passed, then nothing is matched
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['WAAA', 'BOOO'])),
+                     0)
+    self.assert_('LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['WAAA', 'BOOO'],
+      src__=1))
+    # add WAAA and BOOO to preference, this enables non-left join mode
+    system_preference.setPreferredPredicateCategoryList(
+      ['source_section', 'destination_section', 'price_currency',
+       'WAAA', 'BOOO'])
+    self.portal.portal_caches.clearAllCache()
+    transaction.commit()
+    self.tic()
+    self.portal.ERP5Site_reindexAll()
+    transaction.commit()
+    self.tic()
+    self.assertEqual(len(searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['WAAA', 'BOOO'])),
+                     0)
+    self.assert_(not 'LEFT JOIN' in searchPredicateList(
+      order_line,
+      portal_type='Sale Supply Line',
+      tested_base_category_list=['WAAA', 'BOOO'],
+      src__=1))
+
 
 def test_suite():
   suite = unittest.TestSuite()
