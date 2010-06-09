@@ -71,7 +71,7 @@ category_parent_uid_item_dict = dict([(item[1], item) for item in category_paren
 for base_category_id in preferred_predicate_category_list:\n
   base_category = getattr(context, base_category_id, None)\n
   if base_category is None:\n
-    pass\n
+    continue\n
   base_category_uid = base_category.getUid()\n
 \n
   if not base_category_uid in category_parent_uid_item_dict and base_category_id in enabled_base_category_list:\n

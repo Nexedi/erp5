@@ -1,4 +1,7 @@
 2010-06-09 yusei
+* Fix a typo in CategoryTool_getPreferredPredicateCategoryParentUidItemList.
+
+2010-06-09 yusei
 * Add predicate category field to system preference. This preference is used for optimized predicate category search("non-left join version").
 
 2010-06-08 yusei
