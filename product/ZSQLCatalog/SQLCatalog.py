@@ -941,30 +941,30 @@ class Catalog(Folder,
 
     return catalog_schema_dict[table]
 
+  @caching_instance_method(id='SQLCatalog.getColumnIds',
+                           cache_factory='erp5_content_long')
   def getColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
     """
-    def _getColumnIds():
-      keys = {}
-      for table in self.getCatalogSearchTableIds():
-        field_list = self._getCatalogSchema(table=table)
-        for field in field_list:
-          keys[field] = None
-          keys['%s.%s' % (table, field)] = None  # Is this inconsistent ?
-      for related in self.getSQLCatalogRelatedKeyList():
-        related_tuple = related.split('|')
-        related_key = related_tuple[0].strip()
-        keys[related_key] = None
-      for scriptable in self.getSQLCatalogScriptableKeyList():
-        scriptable_tuple = scriptable.split('|')
-        scriptable = scriptable_tuple[0].strip()
-        keys[scriptable] = None
-      keys = keys.keys()
-      keys.sort()
-      return keys
-    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_factory='erp5_content_long')()[:]
+    keys = {}
+    for table in self.getCatalogSearchTableIds():
+      field_list = self._getCatalogSchema(table=table)
+      for field in field_list:
+        keys[field] = None
+        keys['%s.%s' % (table, field)] = None  # Is this inconsistent ?
+    for related in self.getSQLCatalogRelatedKeyList():
+      related_tuple = related.split('|')
+      related_key = related_tuple[0].strip()
+      keys[related_key] = None
+    for scriptable in self.getSQLCatalogScriptableKeyList():
+      scriptable_tuple = scriptable.split('|')
+      scriptable = scriptable_tuple[0].strip()
+      keys[scriptable] = None
+    keys = list(keys.keys())
+    keys.sort()
+    return keys
 
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
@@ -1815,24 +1815,23 @@ class Catalog(Folder,
     """
     return self.sql_catalog_scriptable_keys
 
+  @caching_instance_method(id='SQLCatalog.getTableIndex',
+                           cache_factory='erp5_content_long')
   def getTableIndex(self, table):
     """
     Return a map between index and column for a given table
     """
-    def _getTableIndex(table):
-      table_index = {}
-      method = getattr(self, self.sql_catalog_index, '')
-      if method in ('', None):
-        return {}
-      index = list(method(table=table))
-      for line in index:
-        if table_index.has_key(line.KEY_NAME):
-          table_index[line.KEY_NAME].append(line.COLUMN_NAME)
-        else:
-          table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
-      return table_index
-    return CachingMethod(_getTableIndex, id='SQLCatalog.getTableIndex', \
-                         cache_factory='erp5_content_long')(table=table).copy()
+    table_index = {}
+    method = getattr(self, self.sql_catalog_index, '')
+    if method in ('', None):
+      return {}
+    index = list(method(table=table))
+    for line in index:
+      if table_index.has_key(line.KEY_NAME):
+        table_index[line.KEY_NAME].append(line.COLUMN_NAME)
+      else:
+        table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
+    return table_index.copy()
 
   @profiler_decorator
   def isValidColumn(self, column_id):
