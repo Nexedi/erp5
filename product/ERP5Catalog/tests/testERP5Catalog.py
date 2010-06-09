@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004 Nexedi SARL and Contributors. All Rights Reserved.
@@ -102,6 +103,9 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   run_all_test = 1
   quiet = 0
   username = 'seb'
+  new_erp5_sql_connection = 'erp5_sql_connection2'
+  new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
+  new_catalog_id = 'erp5_mysql_innodb2'
 
   def afterSetUp(self):
     uf = self.getPortal().acl_users
@@ -112,11 +116,21 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.tic()
 
   def beforeTearDown(self):
+    # restore default_catalog
+    self.portal.portal_catalog.default_sql_catalog_id = 'erp5_mysql_innodb'
+    # clear Modules
     for module in [ self.getPersonModule(),
                     self.getOrganisationModule(),
                     self.getCategoryTool().region,
                     self.getCategoryTool().group ]:
       module.manage_delObjects(list(module.objectIds()))
+    # Remove copied sql_connector and catalog
+    if self.new_erp5_sql_connection in self.portal.objectIds():
+      self.portal.manage_delObjects([self.new_erp5_sql_connection])
+    if self.new_erp5_deferred_sql_connection in self.portal.objectIds():
+      self.portal.manage_delObjects([self.new_erp5_deferred_sql_connection])
+    if self.new_catalog_id in self.portal.portal_catalog.objectIds():
+      self.portal.portal_catalog.manage_delObjects([self.new_catalog_id])
     get_transaction().commit()
     self.tic()
 
@@ -1487,8 +1501,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     portal = self.getPortal()
     self.original_connection_id = 'erp5_sql_connection'
-    self.original_deferred_connection_id = 'erp5_sql_deferred_connection2'
-    self.new_connection_id = 'erp5_sql_connection2'
+    self.original_deferred_connection_id = self.new_erp5_deferred_sql_connection
+    self.new_connection_id = self.new_erp5_sql_connection
     self.new_deferred_connection_id = 'erp5_sql_deferred_connection2'
     new_connection_string = getExtraSqlConnectionStringList()[0]
 
