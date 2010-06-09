@@ -53,15 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  TODO:\n
-    - Rename Event to Task everywhere\n
-"""\n
-\n
-\n
-context.getWebSiteValue().search_area.Base_redirect(form_id=\'WebSite_viewPendingEventList\', \n
-                keep_items=dict(reset=1,\n
-                                search_section_path=context.getRelativeUrl()))\n
+            <value> <string>context.getWebSiteValue().Base_redirect(form_id=\'ERP5Site_viewSearchResult\', \n
+                keep_items=dict(reset=1, portal_type=list(context.getPortalDocumentTypeList()),\n
+                                owner=context.getReference()))\n
 </string> </value>
         </item>
         <item>
@@ -101,6 +95,7 @@ context.getWebSiteValue().search_area.Base_redirect(form_id=\'WebSite_viewPendin
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>dict</string>
+                            <string>list</string>
                           </tuple>
                         </value>
                     </item>
@@ -117,7 +112,7 @@ context.getWebSiteValue().search_area.Base_redirect(form_id=\'WebSite_viewPendin
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_redirectToPendingEventList</string> </value>
+            <value> <string>Person_redirectToLatestContentList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
