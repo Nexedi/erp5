@@ -198,7 +198,8 @@ class DomainTool(BaseTool):
           predicate_category_table_name_list = []
           for relative_url in category_list:
             category_value = portal_categories.getCategoryValue(relative_url)
-            base_category_value = category_value.getBaseCategory()
+            base_category_id = portal_categories.getBaseCategoryId(relative_url)
+            base_category_value = portal_categories.getCategoryValue(base_category_id)
             if base_category_value.getId() in preferred_predicate_category_list:
               table_index = len(predicate_category_query_list)
               predicate_category_table_name = 'predicate_category_for_domain_tool_%s' % table_index
