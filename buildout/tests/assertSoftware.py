@@ -115,6 +115,25 @@ class AssertLddLibs(unittest.TestCase):
     result = os.system("ldd parts/memcached/bin/memcached | grep -q 'parts/li"
         "bevent/lib/libevent'")
 
+class AssertSoftwareRunable(unittest.TestCase):
+  def test_HaProxy(self):
+    stdout, stderr = subprocess.Popen(["parts/haproxy/sbin/haproxy", "-v"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('HA-Proxy'))
+
+  def test_Apache(self):
+    stdout, stderr = subprocess.Popen(["parts/apache/bin/httpd", "-v"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('Server version: Apache'))
+
+  def test_Ocropus(self):
+    stdout, stderr = subprocess.Popen(["parts/ocropus/bin/ocropus"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stdout, '')
+    self.assertTrue('splitting books' in stderr)
+
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
 
