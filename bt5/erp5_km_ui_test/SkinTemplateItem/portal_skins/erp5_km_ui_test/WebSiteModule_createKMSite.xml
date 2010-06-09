@@ -59,7 +59,7 @@
   Initialize a KM site.\n
 """\n
 portal = context.getPortalObject()\n
-\n
+"""\n
 if site_id not in context.objectIds():\n
   km_website = context.newContent(id = site_id, \\\n
                                   title = title, \n
@@ -73,6 +73,7 @@ if site_id not in context.objectIds():\n
                   visible = True,\n
                   site_map_section_parent = True,\n
                   default_available_language = \'en\')\n
+"""\n
 \n
 km_preference_id = \'km_site_test\'\n
 portal_preferences = context.portal_preferences\n
@@ -150,10 +151,9 @@ return "Created Successfully."\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>km_website</string>
-                            <string>True</string>
                             <string>km_preference_id</string>
                             <string>portal_preferences</string>
+                            <string>True</string>
                             <string>_getitem_</string>
                             <string>km_preference</string>
                             <string>_getiter_</string>
