@@ -944,23 +944,20 @@ class Catalog(Folder,
   @caching_instance_method(id='SQLCatalog.getColumnIds',
                            cache_factory='erp5_content_long')
   def _getColumnIds(self):
-    keys = {}
+    keys = set()
+    add_key = keys.add
     for table in self.getCatalogSearchTableIds():
       field_list = self._getCatalogSchema(table=table)
       for field in field_list:
-        keys[field] = None
-        keys['%s.%s' % (table, field)] = None  # Is this inconsistent ?
+        add_key(field)
+        add_key('%s.%s' % (table, field))  # Is this inconsistent ?
     for related in self.getSQLCatalogRelatedKeyList():
       related_tuple = related.split('|')
-      related_key = related_tuple[0].strip()
-      keys[related_key] = None
+      add_key(related_tuple[0].strip())
     for scriptable in self.getSQLCatalogScriptableKeyList():
       scriptable_tuple = scriptable.split('|')
-      scriptable = scriptable_tuple[0].strip()
-      keys[scriptable] = None
-    keys = keys.keys()
-    keys.sort()
-    return keys
+      add_key(scriptable_tuple[0].strip())
+    return sorted(keys)
 
   def getColumnIds(self):
     """
