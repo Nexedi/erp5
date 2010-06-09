@@ -29,6 +29,7 @@ flex
 gcc
 gcc-c++
 groff
+libboost-devel
 libbzip2-devel
 libgdbm-devel
 libglib2.0-devel
