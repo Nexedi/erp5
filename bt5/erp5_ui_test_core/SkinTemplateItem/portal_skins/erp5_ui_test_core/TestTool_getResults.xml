@@ -53,15 +53,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal_tests = container.portal_tests\n
+            <value> <string encoding="cdata"><![CDATA[
+
+portal_tests = container.portal_tests\n
 if test_zuite_relative_url is not None:\n
   # we care for a specific test zuite\n
-  portal_tests = portal_tests.restrictedTraverse(test_zuite_relative_url,\\\n
+  portal_tests = portal_tests.restrictedTraverse(test_zuite_relative_url,\n
                                                  portal_tests)\n
-results = [portal_tests.absolute_url() + \'/\' + e for e in portal_tests.objectIds(\'Zuite Results\')]\n
-results.reverse()\n
-return \'\\n\'.join(results) + \'\\n\'\n
-</string> </value>
+\n
+results = portal_tests.objectValues(\'Zuite Results\')\n
+if not results:\n
+  return None\n
+\n
+# Selenium results tests are just named "testTable.1", "testTable.2" and so forth.\n
+# We replace this by the path of the test, this way we can easily see which test has failed.\n
+html = results[0].index_html()\n
+for idx, test_case in enumerate(portal_tests.listTestCases()):\n
+  html = html.replace(\'>testTable.%s</a>\' % (idx + 1), \'>%s</a>\' % test_case[\'path\'])\n
+\n
+return html\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -102,11 +115,13 @@ return \'\\n\'.join(results) + \'\\n\'\n
                             <string>container</string>
                             <string>portal_tests</string>
                             <string>None</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>e</string>
                             <string>results</string>
+                            <string>_getitem_</string>
+                            <string>html</string>
+                            <string>_getiter_</string>
+                            <string>enumerate</string>
+                            <string>idx</string>
+                            <string>test_case</string>
                           </tuple>
                         </value>
                     </item>
