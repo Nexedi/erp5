@@ -933,12 +933,12 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
               self.serverhost, self.serverport = self.startZServer()
               self._registerNode(distributing=1, processing=1)
 
-            self._updateConversionServerConfiguration()
             self._updateConnectionStrings()
             self._recreateCatalog()
             self._installBusinessTemplateList(business_template_list,
                                               light_install=light_install,
                                               quiet=quiet)
+            self._updateConversionServerConfiguration()
             # Create a Manager user at the Portal level
             uf = self.getPortal().acl_users
             uf._doAddUser('ERP5TypeTestCase', '', ['Manager', 'Member', 'Assignee',
