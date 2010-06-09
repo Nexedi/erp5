@@ -51,6 +51,7 @@ try:
   from transaction import get as get_transaction
 except ImportError:
   pass
+import transaction
 
 from OFS.ObjectManager import ObjectManager
 from random import randint
@@ -1652,7 +1653,107 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     path_list = [module.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
-    
+
+  def test_48bis_ERP5Site_hotReindexAllCheckCachedValues(self):
+    """
+      test the hot reindexing of catalog -> catalog2 
+      Check that cached values are invalidated due to
+      catalog migration
+    """
+    message = 'Hot Reindex All: cache invalidation'
+    ZopeTestCase._print('\n%s ' % message)
+    LOG('Testing... ', 0, message)
+
+    portal = self.getPortal()
+    self.original_connection_id = 'erp5_sql_connection'
+    self.original_deferred_connection_id = 'erp5_sql_deferred_connection'
+    new_connection_string = getExtraSqlConnectionStringList()[0]
+
+    # Skip this test if default connection string is not "test test".
+    original_connection = getattr(portal, self.original_connection_id)
+    connection_string = original_connection.connection_string
+    if (connection_string == new_connection_string):
+      message = 'SKIPPED: default connection string is the same as the one for hot-reindex catalog'
+      ZopeTestCase._print(message)
+      LOG('Testing... ',0, message)
+
+    # Create new connectors
+    portal.manage_addZMySQLConnection(self.new_erp5_sql_connection,'',
+                                      new_connection_string)
+    new_connection = portal[self.new_erp5_sql_connection]
+    new_connection.manage_open_connection()
+    portal.manage_addZMySQLConnection(self.new_erp5_deferred_sql_connection,'',
+                                      new_connection_string)
+    new_connection = portal[self.new_erp5_deferred_sql_connection]
+    new_connection.manage_open_connection()
+    # the transactionless connector must not be change because this one
+    # create the portal_ids otherwise it create of conflicts with uid
+    # objects
+
+    # Create new catalog
+    portal_catalog = self.getCatalogTool()
+    self.original_catalog_id = 'erp5_mysql_innodb'
+    self.new_catalog_id = self.original_catalog_id + '2'
+    cp_data = portal_catalog.manage_copyObjects(ids=('erp5_mysql_innodb',))
+    new_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
+    portal_catalog.manage_renameObject(id=new_id, new_id=self.new_catalog_id)
+
+    # Parse all methods in the new catalog in order to change the connector
+    new_catalog = portal_catalog[self.new_catalog_id]
+
+    # Add new searchable table in new catalog
+    create_dummy_table_sql = """
+    CREATE TABLE `dummy` (
+    `uid` BIGINT UNSIGNED NOT NULL,
+    `dummy_title` varchar(32) NOT NULL default '',
+    PRIMARY KEY  (`uid`)
+    ) TYPE=InnoDB;
+    """
+    new_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+                    id='z_create_dummy_table', title='', arguments="",
+                    connection_id=self.new_erp5_sql_connection,
+                    template=create_dummy_table_sql)
+    drop_summy_table_sql = """
+    DROP TABLE IF EXISTS `dummy`
+    """
+    new_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+                    id='z0_drop_dummy_table', title='', arguments="",
+                    connection_id=self.new_erp5_sql_connection,
+                    template=drop_summy_table_sql)
+
+    # update catalog configuration and declare new ZSQLMethods
+    sql_clear_catalog_list = list(new_catalog.sql_clear_catalog)
+    sql_clear_catalog_list.extend(['z0_drop_dummy_table',
+                                   'z_create_dummy_table'])
+    sql_clear_catalog_list.sort()
+    new_catalog.sql_clear_catalog = tuple(sql_clear_catalog_list)
+
+    sql_search_table_list = list(new_catalog.sql_search_tables)
+    sql_search_table_list.append('dummy')
+    sql_search_table_list.sort()
+    new_catalog.sql_search_tables = tuple(sql_search_table_list)
+
+    # prepare arguments for hot reindex
+    source_sql_connection_id_list=list((self.original_connection_id,
+                                  self.original_deferred_connection_id))
+    destination_sql_connection_id_list=list((self.new_erp5_sql_connection,
+                                       self.new_erp5_deferred_sql_connection))
+    # launch the full hot reindexing 
+    portal_catalog.manage_hotReindexAll(source_sql_catalog_id=self.original_catalog_id,
+                 destination_sql_catalog_id=self.new_catalog_id,
+                 source_sql_connection_id_list=source_sql_connection_id_list,
+                 destination_sql_connection_id_list=destination_sql_connection_id_list,
+                 update_destination_sql_catalog=True)
+
+    # Flush message queue
+    transaction.commit()
+    self.tic()
+    # Check that column map is updated according new structure of catalog.
+    self.assertTrue('dummy.dummy_title' in portal_catalog.getSQLCatalog().getColumnMap())
+    # Check more cached methods of SQLCatalog by building SQLQuery
+    query = portal_catalog.getSQLCatalog().buildQuery(kw={'dummy.dummy_title': 'Foo'})
+    self.assertTrue(query.query_list)
+
   def test_47_Unrestricted(self, quiet=quiet, run=run_all_test):
     """test unrestricted search/count results.
     """
