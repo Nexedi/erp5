@@ -155,13 +155,19 @@ function GetElementsWithClassName(elementName,className) {
         }
         return elemColl;
 }
+function normalEvent() { return true; }
+function ignoreEvent() { return false; }
+
 var class_deletaged_list = GetElementsWithClassName('td','delegated');
 for(var i=0; i<class_deletaged_list.length; i++) {
   element = class_deletaged_list[i].childNodes[1];
   if (element.type == 'hidden'){
-    element = class_deletaged_list[i].childNodes[2];
+    element = element.nextSibling;
   }
   element.readOnly = true;
+  if (element.type == 'checkbox'){
+    element.onclick = ignoreEvent;
+  }
 }
 
 function toggleFieldState(evt) {
@@ -173,13 +179,19 @@ function toggleFieldState(evt) {
     if (isClass(allElements[i], 'to_disable')) {
       field = allElements[i].childNodes[1];
       if (field.type == 'hidden'){
-        field = allElements[i].childNodes[2];
+        field = field.nextSibling;
       }
       if (field.readOnly){
         field.readOnly = false;
+        if (field.type == 'checkbox'){
+          field.onclick = normalEvent;
+        }
       }
       else{
         field.readOnly = true;
+        if (field.type == 'checkbox'){
+          field.onclick = ignoreEvent;
+        }
       }
     }
   }
