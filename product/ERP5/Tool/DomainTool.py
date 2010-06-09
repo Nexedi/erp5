@@ -189,7 +189,9 @@ class DomainTool(BaseTool):
       if tested_base_category_list != []:
         preferred_predicate_category_list = portal_preferences.getPreferredPredicateCategoryList()
 
-        if preferred_predicate_category_list and tested_base_category_list is not None:
+        if (preferred_predicate_category_list and
+            tested_base_category_list is not None and
+            set(preferred_predicate_category_list).issuperset(set(tested_base_category_list))):
           # New behavior is enabled only if preferred predicate category is
           # defined and tested_base_category_list is passed.
           predicate_category_query_list = []
