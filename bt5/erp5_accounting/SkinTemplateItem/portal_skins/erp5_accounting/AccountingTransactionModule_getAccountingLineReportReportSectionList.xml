@@ -57,8 +57,41 @@
 portal = context.getPortalObject()\n
 request = container.REQUEST\n
 \n
+selection_columns = (\n
+  (\'title\', \'Title\',),\n
+  (\'int_index\', \'Int Index\',),\n
+  (\'parent_description\', \'Description\',),\n
+  (\'parent_reference\', \'Invoice Number\',),\n
+  (\'specific_reference\', \'Transaction Reference\',),\n
+  (\'node_reference\', \'Account Code\',),\n
+  (\'node_title\', \'Account Name\',),\n
+  (\'node_account_type_title\', \'Account Type\',),\n
+  (\'node_financial_section_title\', \'Financial Section\',),\n
+  (\'section_title\', \'Section\',),\n
+  (\'payment_title\', \'Section Bank Account\',),\n
+  (\'payment_mode\', \'Payment Mode\',),\n
+  (\'mirror_section_title\', \'Third Party\',),\n
+  (\'mirror_payment_title\', \'Third Party Bank Account\',),\n
+  (\'mirror_section_region_title\', \'Third Party Region\',),\n
+  (\'function_title\',\n
+      context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),\n
+  (\'project_title\', \'Project\',),\n
+  (\'product_line\', \'Product Line\'),\n
+  (\'string_index\', \'String Index\'),\n
+  (\'date\', \'Operation Date\'),\n
+  (\'debit_price\', \'Converted Debit\'),\n
+  (\'credit_price\', \'Converted Credit\'),\n
+  (\'currency\', \'Accounting Currency\'),\n
+  (\'debit\', \'Debit\'),\n
+  (\'credit\', \'Credit\'),\n
+  (\'resource\', \'Transaction Currency\'),\n
+  (\'translated_portal_type\', \'Line Type\'),\n
+  (\'parent_translated_portal_type\', \'Transaction Type\'),\n
+  (\'translated_simulation_state_title\', \'State\'),)\n
+\n
 \n
 return [ReportSection(form_id=\'AccountingTransactionModule_viewAccountingLineReportReportSection\',\n
+                      selection_columns=selection_columns,\n
                       path=context.getPhysicalPath())]\n
 </string> </value>
         </item>
@@ -103,6 +136,7 @@ return [ReportSection(form_id=\'AccountingTransactionModule_viewAccountingLineRe
                             <string>portal</string>
                             <string>container</string>
                             <string>request</string>
+                            <string>selection_columns</string>
                           </tuple>
                         </value>
                     </item>
