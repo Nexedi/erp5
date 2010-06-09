@@ -196,10 +196,16 @@ class DomainTool(BaseTool):
           # defined and tested_base_category_list is passed.
           predicate_category_query_list = []
           predicate_category_table_name_list = []
+          category_dict = {}
           for relative_url in category_list:
             category_value = portal_categories.getCategoryValue(relative_url)
             base_category_id = portal_categories.getBaseCategoryId(relative_url)
             base_category_value = portal_categories.getCategoryValue(base_category_id)
+            if not base_category_value in category_dict:
+              category_dict[base_category_value] = []
+            category_dict[base_category_value].append(category_value)
+
+          for base_category_value, category_value_list in category_dict.iteritems():
             if base_category_value.getId() in preferred_predicate_category_list:
               table_index = len(predicate_category_query_list)
               predicate_category_table_name = 'predicate_category_for_domain_tool_%s' % table_index
@@ -209,7 +215,7 @@ class DomainTool(BaseTool):
                       Query(predicate_category_base_category_uid=base_category_value.getUid(), table_alias_list=table_alias_list),
                       Query(predicate_category_category_strict_membership=1, table_alias_list=table_alias_list),
                       ComplexQuery(
-                          Query(predicate_category_category_uid=category_value.getUid(), table_alias_list=table_alias_list),
+                          Query(predicate_category_category_uid=[category_value.getUid() for category_value in category_value_list], table_alias_list=table_alias_list),
                           Query(predicate_category_category_uid='NULL', table_alias_list=table_alias_list),
                           logical_operator='OR'),
                       logical_operator='AND'))
