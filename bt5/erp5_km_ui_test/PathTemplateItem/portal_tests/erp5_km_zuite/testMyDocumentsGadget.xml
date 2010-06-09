@@ -121,6 +121,7 @@
   <td>Converted</td>\n
   <td></td>\n
 </tr>\n
+\n
 <!--  add "My Documents" gadget -->\n
 <tr>\n
   <td>openAndWait</td>\n
@@ -137,6 +138,10 @@
   <td>selenium.isTextPresent("TioLive Spreadsheet")</td>\n
   <td>10000</td> \n
 </tr>\n
+\n
+<!--  XXX: add "Profile" gadget -->\n
+\n
+\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
