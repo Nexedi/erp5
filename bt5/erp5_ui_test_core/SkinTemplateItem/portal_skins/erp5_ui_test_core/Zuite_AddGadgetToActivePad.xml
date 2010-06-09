@@ -57,8 +57,12 @@
   Add (if not present) gadgets to current knowledge pad.\n
 """\n
 \n
-all_pads = [x for x in context.ERP5Site_getKnowledgePadListForUser(mode)]\n
-active_pad, all_pads = context.ERP5Site_getActiveKnowledgePadForUser(all_pads)\n
+all_pads = [x for x in context.ERP5Site_getKnowledgePadListForUser(mode, default_pad_group)]\n
+if mode.startswith(\'web\'):\n
+  active_pad, all_pads = context.WebSite_getActiveKnowledgePadForUser(all_pads, default_pad_group)\n
+else:\n
+  active_pad, all_pads = context.ERP5Site_getActiveKnowledgePadForUser(all_pads)\n
+\n
 active_pad = active_pad.getObject()\n
 gadget_list = active_pad.contentValues(filter={\'portal_type\': \'Knowledge Box\'})\n
 contained_gadgets = [x.getSpecialiseValue().getRelativeUrl() \\\n
@@ -84,7 +88,7 @@ return context.view()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>gadget_relative_url, mode=\'erp5_front\'</string> </value>
+            <value> <string>gadget_relative_url, mode=\'erp5_front\', default_pad_group=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -104,7 +108,7 @@ return context.view()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -112,6 +116,7 @@ return context.view()\n
                           <tuple>
                             <string>gadget_relative_url</string>
                             <string>mode</string>
+                            <string>default_pad_group</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
@@ -137,6 +142,7 @@ return context.view()\n
             <value>
               <tuple>
                 <string>erp5_front</string>
+                <none/>
               </tuple>
             </value>
         </item>
