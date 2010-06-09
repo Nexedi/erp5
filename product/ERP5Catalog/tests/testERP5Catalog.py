@@ -132,7 +132,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       self.portal.manage_delObjects([self.new_erp5_deferred_sql_connection])
     if self.new_catalog_id in self.portal.portal_catalog.objectIds():
       self.portal.portal_catalog.manage_delObjects([self.new_catalog_id])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def getSQLPathList(self,connection_id=None, sql=None):
@@ -205,7 +205,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person.immediateReindexObject()
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.manage_delObjects('1')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.checkRelativeUrlNotInSQLPathList(path_list)
     # Now we will ask to immediatly reindex
@@ -217,7 +217,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person.immediateReindexObject()
     self.checkRelativeUrlInSQLPathList(path_list)
     person_module.manage_delObjects('2')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.checkRelativeUrlNotInSQLPathList(path_list)
     # Now we will try with the method deleteContent
@@ -229,7 +229,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module.deleteContent('3')
     # Now delete things is made with activities
     self.checkRelativeUrlNotInSQLPathList(path_list)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.checkRelativeUrlNotInSQLPathList(path_list)
 
@@ -249,7 +249,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(['4'],folder_object_list)
     person.immediateReindexObject()
     person_module.manage_delObjects('4')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
@@ -273,7 +273,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(['4'],folder_object_list)
     
     person_module.manage_delObjects('4')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
@@ -298,7 +298,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(['4'],folder_object_list)
     
     person_module.manage_delObjects('4')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     folder_object_list = [x.getObject().getId() for x in person_module.searchFolder()]
     self.assertEquals([],folder_object_list)
@@ -443,13 +443,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Need to abort a transaction artificially, so commit the current
     # one, first.
-    get_transaction().commit()
+    transaction.commit()
 
     catalog.newUid()
     uid_buffer = getUIDBuffer()
     self.failUnless(len(uid_buffer) > 0)
 
-    get_transaction().abort()
+    transaction.abort()
     uid_buffer = getUIDBuffer()
     self.failUnless(len(uid_buffer) == 0)
 
@@ -460,7 +460,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Create some objects
     portal = self.getPortal()
@@ -471,7 +471,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Clear catalog
     portal_catalog = self.getCatalogTool()
@@ -482,12 +482,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     message_count = result[0]['COUNT(*)']
     self.assertEquals(0, message_count)
     # Commit
-    get_transaction().commit()
+    transaction.commit()
     # Reindex all
     portal.ERP5Site_reindexAll()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
-    get_transaction().commit()
+    transaction.commit()
     # Check catalog
     sql = 'select count(*) from message'
     result = sql_connection.manage_test(sql)
@@ -506,7 +506,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', 0, message)
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Create some objects
     portal = self.getPortal()
@@ -524,7 +524,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation.setRole('not_exists')
     self.assertEquals(organisation.getRoleValue(), None)
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Clear catalog
     portal_catalog = self.getCatalogTool()
@@ -538,12 +538,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     message_count = result[0]['COUNT(*)']
     self.assertEquals(0, message_count)
     # Commit
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Check catalog
     organisation.reindexObject()
     # Commit
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     sql = 'select count(*) from message'
     result = sql_connection.manage_test(sql)
@@ -622,7 +622,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = module.newContent(portal_type='Organisation',)
     creation_date = organisation.getCreationDate().toZone('UTC').ISO()
     modification_date = organisation.getModificationDate().toZone('UTC').ISO()
-    get_transaction().commit()
+    transaction.commit()
     now = DateTime()
     self.tic()
     sql = """select creation_date, modification_date 
@@ -637,7 +637,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     
     import time; time.sleep(3)
     organisation.edit(title='edited')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql)
     self.assertEquals(creation_date, result[0]['creation_date'].ISO())
@@ -665,7 +665,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     # clear catalog
     portal_catalog.manage_catalogClear()
-    get_transaction().commit()
+    transaction.commit()
     
     # create some content to use destination_section_title as related key
     # FIXME: create the related key here ?
@@ -677,7 +677,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     source_organisation.setDestinationSectionValue(destination_organisation)
     source_organisation.recursiveReindexObject()
     destination_organisation.recursiveReindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # buildSQLQuery can use arbitrary table name.
@@ -817,7 +817,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation2.setTitle('Organisation 2')
     self.assertEquals(organisation2.getGroupValue(), group_nexedi_category2)
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Try to get the organisation with the group title Nexedi
@@ -883,7 +883,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation.setGroup('nexedi/erp5')
     self.assertEquals(organisation.getGroupValue(), sub_group_nexedi)
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Try to get the organisation with the group title Nexedi
@@ -912,7 +912,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     person_module = self.getPersonModule()
     person_module.newContent(portal_type='Person', title='A Person')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertNotEquals([], self.getCatalogTool().searchResults(
                                      portal_type='Person', title=u'A Person'))
@@ -939,7 +939,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uid = person.getUid()
     unindex = portal_catalog.unindexObject
     self.assertRaises(AttributeError,unindex,person,uid=person.getUid())
-    get_transaction().abort()
+    transaction.abort()
 
   def test_24_SortOn(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -1049,7 +1049,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     organisation = module.newContent(portal_type='Organisation')
     kw.setdefault('group', 'group/nexedi')
     organisation.edit(**kw)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     return organisation
   
@@ -1259,10 +1259,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     folder = self.getOrganisationModule()
     ob = folder.newContent()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     folder.manage_delObjects([ob.getId()])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(0, len(folder.searchFolder()))
 
@@ -1288,7 +1288,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder.manage_permission(perm, ['Member'], 1)
     ob.manage_permission('Access contents information', ['Member'], 1)
     ob.manage_permission(perm, ['Manager'], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # check access
     self.assertEquals(1, getSecurityManager().checkPermission(perm, folder))
@@ -1341,7 +1341,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       otherob.setTitle('Something different')
       self.failIf('this' in otherob.SearchableText(), otherob.SearchableText())
     # catalog those objects
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals([ob],
         [x.getObject() for x in self.getCatalogTool()(
@@ -1374,12 +1374,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     portal_catalog = self.getCatalogTool()
     person_module = self.getPersonModule()
     person = person_module.newContent(id='1',portal_type='Person')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     copy_data = person_module.manage_copyObjects([person.getId()])
     new_id = person_module.manage_pasteObjects(copy_data)[0]['new_id']
     new_person = person_module[new_id]
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     path_list = [new_person.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list)
@@ -1394,7 +1394,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     person_module = self.getPersonModule()
     person_module.reindexObject()
     person = person_module.newContent(id='1',portal_type='Person')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals([person],
         [x.getObject() for x in self.getCatalogTool()(
@@ -1473,7 +1473,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ctool.default_result_limit = old_default_result_limit
 
   def playActivityList(self, method_id_list):
-    get_transaction().commit()
+    transaction.commit()
     portal_activities = self.getActivityTool()
     for i in range(0,100):
       message_list = portal_activities.getMessageList()
@@ -1485,7 +1485,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
             portal_activities.manageInvoke(message.object_path,message.method_id)
           except ActivityFlushError,m:
             pass
-      get_transaction().commit()
+      transaction.commit()
 
   def test_48_ERP5Site_hotReindexAll(self, quiet=quiet, run=run_all_test):
     """
@@ -1523,7 +1523,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.organisation = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Create new connectors
     portal.manage_addZMySQLConnection(self.new_connection_id,'',
@@ -1560,12 +1560,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
                  update_destination_sql_catalog=True)
 
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.organisation2 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     first_deleted_url = self.organisation2.getRelativeUrl()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     path_list = [self.organisation.getRelativeUrl()]
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.original_connection_id)
@@ -1585,7 +1585,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # complicated hot reindex
     portal_catalog.manage_hotReindexAll(self.new_catalog_id,
                                  self.original_catalog_id)
-    get_transaction().commit()
+    transaction.commit()
     self.assertEquals(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_RECORDING_STATE)
     self.organisation3 = module.newContent(portal_type='Organisation',
@@ -1595,10 +1595,10 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.deleted_organisation = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
     self.deleted_organisation.immediateReindexObject()
-    get_transaction().commit()
+    transaction.commit()
     deleted_url = self.deleted_organisation.getRelativeUrl()
     module.manage_delObjects(ids=[self.deleted_organisation.getId()])
-    get_transaction().commit()
+    transaction.commit()
     # We will invoke acitivities one by one in order to make sure we can test
     # the double indexing state of hot reindexing
     self.playActivityList(('Folder_reindexAll',
@@ -1621,7 +1621,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.next_deleted_organisation = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2",id='toto')
     next_deleted_url = self.next_deleted_organisation.getRelativeUrl()
-    get_transaction().commit()
+    transaction.commit()
     self.playActivityList(( 'immediateReindexObject',
                          'recursiveImmediateReindexObject',))
     path_list=[next_deleted_url]
@@ -1632,7 +1632,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     #after the hot reindexing
     self.organisation4 = module.newContent(portal_type='Organisation',
                                      title="GreatTitle2")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(portal_catalog.getHotReindexingState(),
                       HOT_REINDEXING_FINISHED_STATE)
@@ -1772,7 +1772,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     folder = self.getOrganisationModule()
     ob = folder.newContent(title='Object Title')
     ob.manage_permission('View', ['Manager'], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     # bob cannot see the document
@@ -1851,7 +1851,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ob2 = folder.newContent(title='Object Title')
     ob2_id = ob2.getId()
     ob2.manage_addLocalRoles('bob', ['Assignee'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     
     # by default bob can see those 2 documents
@@ -1902,7 +1902,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     ob1.manage_addLocalRoles('bob', ['Assignee'])
     ob1.manage_permission('View', ['Assignor'], 0)
     ob1.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     user = getSecurityManager().getUser()
     self.assertFalse(user.has_permission('View', ob1))
@@ -1933,7 +1933,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     like_ = person_module.newContent(portal_type='Person', title='LIKE')
     select_ = person_module.newContent(portal_type='Person', title='SELECT')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     ctool = self.getCatalogTool()
     self.assertEquals([and_], [x.getObject() for x in
@@ -2058,7 +2058,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Ensure that the new uid is long.
     uid = organisation.uid
     self.failUnless(isinstance(uid, long))
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Ensure that the uid did not change after the indexing.
@@ -2066,7 +2066,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Force to convert the uid to int.
     self.uid = int(uid)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # After the indexing, the uid must be converted to long automatically,
@@ -2116,7 +2116,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     obj2 = self._makeOrganisation(title='The Document')
     obj2.manage_permission('View', [], 0)
     obj2.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     ctool = self.getCatalogTool()
     self.assertEquals([obj], [x.getObject() for x in
@@ -2135,7 +2135,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     obj = self._makeOrganisation(title='The Document')
     obj2 = obj.newContent(portal_type='Bank Account')
     obj2.manage_addLocalRoles('bob', ['Auditor'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.login('bob')
@@ -2146,7 +2146,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # This will work as long as Bank Account are associated to a workflow that
     # allow deletion.
     obj2.delete()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals([], [x.getObject() for x in
                            obj.searchFolder(portal_type='Bank Account')])
@@ -2186,7 +2186,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     obj.manage_setLocalRoles(user2, ['Assignor'])
 
     obj.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     logout()
@@ -2240,7 +2240,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check that Owner is not catalogued if he can't view the object
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, [], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
     self.assertSameSet([''], [x.owner for x in result])
@@ -2248,7 +2248,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check that Owner is catalogued when he can view the object
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Owner'], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
     self.assertSameSet(['super_owner'], [x.owner for x in result])
@@ -2257,7 +2257,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # object because he has another role
     obj = folder.newContent(portal_type='Organisation')
     obj.manage_permission(perm, ['Assignee'], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % obj.getUid())
     self.assertSameSet([''], [x.owner for x in result])
@@ -2274,7 +2274,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.login('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, [], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
     self.assertSameSet([''], [x.owner for x in result])
@@ -2291,7 +2291,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.login('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, ['Owner'], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
     self.assertSameSet(['little_owner'], [x.owner for x in result])
@@ -2309,7 +2309,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.login('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, [], 1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
     self.assertSameSet(['little_owner'], [x.owner for x in result])
@@ -2326,7 +2326,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.login('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, [], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
     self.assertSameSet([''], [x.owner for x in result])
@@ -2343,7 +2343,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.login('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, ['Owner'], 0)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
     self.assertSameSet(['little_owner'], [x.owner for x in result])
@@ -2361,7 +2361,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.login('little_owner')
     sub_obj = obj.newContent(portal_type='Address')
     sub_obj.manage_permission(perm, [], 1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = sql_connection.manage_test(sql % sub_obj.getUid())
     self.assertSameSet(['little_owner'], [x.owner for x in result])
@@ -2459,7 +2459,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # D from ????
     person_module.newContent(id='D', first_name='D', last_name='ERP5')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # simple query
@@ -2499,11 +2499,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     uf = self.getPortal().acl_users
     uf._doAddUser('foo', 'foo', ['Member', ], [])
     uf._doAddUser('ERP5TypeTestCase', 'ERP5TypeTestCase', ['Member', ], [])
-    get_transaction().commit()
+    transaction.commit()
     portal_catalog = self.getCatalogTool()
     portal_catalog.manage_catalogClear()
     self.getPortal().ERP5Site_reindexAll()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     
@@ -2560,7 +2560,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
             object_dict[getObjectDictKey()] = \
               newContent(container, portal_type, acquire_view_permission,
                          view_role_list, local_role_dict)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     def query(sql):
@@ -2652,7 +2652,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check that nothing is returned when user can not view the object
     obj.manage_permission(perm, [], 0)
     obj.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = obj.portal_catalog(portal_type=portal_type)
     self.assertSameSet([obj2, ], [x.getObject() for x in result])
@@ -2664,7 +2664,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check that object is returned when he can view the object
     obj.manage_permission(perm, ['Auditor'], 0)
     obj.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = obj.portal_catalog(portal_type=portal_type)
     self.assertSameSet([obj2, obj], [x.getObject() for x in result])
@@ -2676,7 +2676,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Check that object is returned when he can view the object
     obj.manage_permission(perm, ['Owner'], 0)
     obj.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = obj.portal_catalog(portal_type=portal_type)
     self.assertSameSet([obj2, obj], [x.getObject() for x in result])
@@ -2738,7 +2738,7 @@ VALUES
                                  'Base_getOwnerId']),
           template = catalog_local_role_sql)
 
-    get_transaction().commit()
+    transaction.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
     sql_catalog.sql_catalog_object_list = \
       current_sql_catalog_object_list + \
@@ -2754,21 +2754,21 @@ VALUES
     current_sql_search_tables = sql_catalog.sql_search_tables
     sql_catalog.sql_search_tables = sql_catalog.sql_search_tables + \
         [local_roles_table]
-    get_transaction().commit()
+    transaction.commit()
 
     try:
       # Clear catalog
       portal_catalog = self.getCatalogTool()
       portal_catalog.manage_catalogClear()
-      get_transaction().commit()
+      transaction.commit()
       self.portal.portal_caches.clearAllCache()
-      get_transaction().commit()
+      transaction.commit()
       obj2.reindexObject()
 
       # Check that nothing is returned when user can not view the object
       obj.manage_permission(perm, [], 0)
       obj.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       result = obj.portal_catalog(portal_type=portal_type)
       self.assertSameSet([obj2, ], [x.getObject() for x in result])
@@ -2781,7 +2781,7 @@ VALUES
       # Check that object is returned when he can view the object
       obj.manage_permission(perm, ['Auditor'], 0)
       obj.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       result = obj.portal_catalog(portal_type=portal_type)
       self.assertSameSet([obj2, obj], [x.getObject() for x in result])
@@ -2793,7 +2793,7 @@ VALUES
       # Check that object is returned when he can view the object
       obj.manage_permission(perm, ['Owner'], 0)
       obj.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       result = obj.portal_catalog(portal_type=portal_type)
       self.assertSameSet([obj2, obj], [x.getObject() for x in result])
@@ -2809,7 +2809,7 @@ VALUES
       sql_catalog.sql_catalog_local_role_keys = \
           current_sql_catalog_local_role_keys
       sql_catalog.sql_search_tables = current_sql_search_tables
-      get_transaction().commit()
+      transaction.commit()
 
   def test_MonoValueAssigneeIndexing(self, quiet=quiet, run=run_all_test):
     if not run: 
@@ -2843,7 +2843,7 @@ VALUES
     # Check that nothing is returned when user can not view the object
     obj.manage_permission(perm, [], 0)
     obj.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = obj.portal_catalog(portal_type=portal_type)
     self.assertSameSet([obj2, ], [x.getObject() for x in result])
@@ -2855,7 +2855,7 @@ VALUES
     # Check that object is returned when he can view the object
     obj.manage_permission(perm, ['Auditor'], 0)
     obj.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = obj.portal_catalog(portal_type=portal_type)
     self.assertSameSet([obj2, obj], [x.getObject() for x in result])
@@ -2867,7 +2867,7 @@ VALUES
     # Check that object is returned when he can view the object
     obj.manage_permission(perm, ['Assignee'], 0)
     obj.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = obj.portal_catalog(portal_type=portal_type)
     self.assertSameSet([obj2, obj], [x.getObject() for x in result])
@@ -2933,7 +2933,7 @@ VALUES
                                  'getViewPermissionAssignee']),
           template = catalog_local_role_sql)
 
-    get_transaction().commit()
+    transaction.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
     sql_catalog.sql_catalog_object_list = \
       current_sql_catalog_object_list + \
@@ -2956,21 +2956,21 @@ VALUES
     current_sql_search_tables = sql_catalog.sql_search_tables
     sql_catalog.sql_search_tables = sql_catalog.sql_search_tables + \
         [local_roles_table]
-    get_transaction().commit()
+    transaction.commit()
 
     try:
       # Clear catalog
       portal_catalog = self.getCatalogTool()
       portal_catalog.manage_catalogClear()
-      get_transaction().commit()
+      transaction.commit()
       self.portal.portal_caches.clearAllCache()
-      get_transaction().commit()
+      transaction.commit()
       obj2.reindexObject()
 
       # Check that nothing is returned when user can not view the object
       obj.manage_permission(perm, [], 0)
       obj.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       result = obj.portal_catalog(portal_type=portal_type)
       self.assertSameSet([obj2, ], [x.getObject() for x in result])
@@ -2983,7 +2983,7 @@ VALUES
       # Check that object is returned when he can view the object
       obj.manage_permission(perm, ['Auditor'], 0)
       obj.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       result = obj.portal_catalog(portal_type=portal_type)
       self.assertSameSet([obj2, obj], [x.getObject() for x in result])
@@ -2995,7 +2995,7 @@ VALUES
       # Check that object is returned when he can view the object
       obj.manage_permission(perm, ['Assignee'], 0)
       obj.reindexObject()
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
       result = obj.portal_catalog(portal_type=portal_type)
       self.assertSameSet([obj2, obj], [x.getObject() for x in result])
@@ -3013,7 +3013,7 @@ VALUES
       sql_catalog.sql_catalog_role_keys = \
           current_sql_catalog_role_keys
       sql_catalog.sql_search_tables = current_sql_search_tables
-      get_transaction().commit()
+      transaction.commit()
 
   def test_UserOrGroupRoleIndexing(self, quiet=quiet, run=run_all_test):
     if not run: 
@@ -3097,7 +3097,7 @@ VALUES
                                  'getViewPermissionAssignee']),
           template = catalog_local_role_sql)
 
-    get_transaction().commit()
+    transaction.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
     sql_catalog.sql_catalog_object_list = \
       current_sql_catalog_object_list + \
@@ -3124,15 +3124,15 @@ VALUES
         [local_roles_table]
 
     portal = self.getPortal()
-    get_transaction().commit()
+    transaction.commit()
 
     try:
       # Clear catalog
       portal_catalog = self.getCatalogTool()
       portal_catalog.manage_catalogClear()
-      get_transaction().commit()
+      transaction.commit()
       self.portal.portal_caches.clearAllCache()
-      get_transaction().commit()
+      transaction.commit()
 
       organisation_relative_url = organisation.getRelativeUrl()
       countResults = organisation.portal_catalog.countResults
@@ -3205,7 +3205,7 @@ VALUES
         for security_group, local_role_list in security_group_list:
           organisation.manage_setLocalRoles(security_group, local_role_list)
         organisation.reindexObject()
-        get_transaction().commit()
+        transaction.commit()
         self.tic()
 
         for expected_result, local_roles in \
@@ -3271,7 +3271,7 @@ VALUES
       sql_catalog.sql_catalog_role_keys = \
           current_sql_catalog_role_keys
       sql_catalog.sql_search_tables = current_sql_search_tables
-      get_transaction().commit()
+      transaction.commit()
 
   def test_UserOrGroupLocalRoleIndexing(self, quiet=quiet, run=run_all_test):
     if not run: 
@@ -3351,7 +3351,7 @@ VALUES
                                  'getViewPermissionAssignee']),
           template = catalog_local_role_sql)
 
-    get_transaction().commit()
+    transaction.commit()
     current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
     sql_catalog.sql_catalog_object_list = \
       current_sql_catalog_object_list + \
@@ -3373,15 +3373,15 @@ VALUES
         [local_roles_table]
 
     portal = self.getPortal()
-    get_transaction().commit()
+    transaction.commit()
 
     try:
       # Clear catalog
       portal_catalog = self.getCatalogTool()
       portal_catalog.manage_catalogClear()
-      get_transaction().commit()
+      transaction.commit()
       self.portal.portal_caches.clearAllCache()
-      get_transaction().commit()
+      transaction.commit()
 
       organisation_relative_url = organisation.getRelativeUrl()
       countResults = organisation.portal_catalog.countResults
@@ -3449,7 +3449,7 @@ VALUES
         for security_group, local_role_list in security_group_list:
           organisation.manage_setLocalRoles(security_group, local_role_list)
         organisation.reindexObject()
-        get_transaction().commit()
+        transaction.commit()
         self.tic()
 
         for expected_result, local_roles in \
@@ -3510,7 +3510,7 @@ VALUES
       sql_catalog.sql_catalog_role_keys = \
           current_sql_catalog_role_keys
       sql_catalog.sql_search_tables = current_sql_search_tables
-      get_transaction().commit()
+      transaction.commit()
 
   def test_ObjectReindexationConcurency(self, quiet=quiet, run=run_all_test):
     if not run:
@@ -3528,17 +3528,17 @@ VALUES
     document_1_1 = document_1.newContent()
     document_1_2 = document_1.newContent()
     document_2 = container.newContent()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # First case: parent, then child
     document_1.reindexObject()
     self.assertEqual(len(portal_activities.getMessageList()), 0)
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 1)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 1)
     document_1_1.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 2)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 1)
@@ -3547,12 +3547,12 @@ VALUES
     document_1.reindexObject()
     document_2.reindexObject()
     self.assertEqual(len(portal_activities.getMessageList()), 0)
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 2)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 2)
     document_1_1.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 3)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 2)
@@ -3560,12 +3560,12 @@ VALUES
     # Second case: child, then parent
     document_1_1.reindexObject()
     self.assertEqual(len(portal_activities.getMessageList()), 0)
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 1)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 1)
     document_1.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 2)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 1)
@@ -3574,12 +3574,12 @@ VALUES
     document_1_1.reindexObject()
     document_2.reindexObject()
     self.assertEqual(len(portal_activities.getMessageList()), 0)
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 2)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 2)
     document_1.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 3)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 2)
@@ -3587,12 +3587,12 @@ VALUES
     # Third case: child 1, then child 2
     document_1_1.reindexObject()
     self.assertEqual(len(portal_activities.getMessageList()), 0)
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 1)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 1)
     document_1_2.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 2)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 1)
@@ -3601,12 +3601,12 @@ VALUES
     document_1_1.reindexObject()
     document_2.reindexObject()
     self.assertEqual(len(portal_activities.getMessageList()), 0)
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 2)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 2)
     document_1_2.reindexObject()
-    get_transaction().commit()
+    transaction.commit()
     self.assertEqual(len(portal_activities.getMessageList()), 3)
     portal_activities.distribute()
     self.assertEqual(len([x for x in portal_activities.getMessageList() if x.processing_node == 0]), 2)
@@ -3623,7 +3623,7 @@ VALUES
     folder = self.getOrganisationModule()
     folder.newContent(portal_type=portal_type, title='foo_organisation_1')
     folder.newContent(portal_type=portal_type, title='foo_organisation_2')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(1, len(folder.portal_catalog(portal_type=portal_type,
                                                    title='foo_organisation_1')))
@@ -3647,7 +3647,7 @@ VALUES
     folder = self.getOrganisationModule()
     first_doc = folder.newContent(portal_type=portal_type, reference="foo")
     second_doc = folder.newContent(portal_type=portal_type, reference=" foo")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     def compareSet(reference, document_list):
       result = folder.portal_catalog(portal_type=portal_type,
@@ -3672,7 +3672,7 @@ VALUES
     folder = self.getOrganisationModule()
     first_doc = folder.newContent(portal_type=portal_type, reference="doc 1")
     second_doc = folder.newContent(portal_type=portal_type, reference="doc 2", description="test")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     result = folder.portal_catalog(portal_type=portal_type, reference='doc %', description='%')
     self.assertEqual(len(result), 2)
@@ -3693,7 +3693,7 @@ VALUES
     person_1 = person_module.newContent(portal_type="Person")
     person_2 = person_module.newContent(portal_type="Person",
                  career_subordination_value=organisation)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEqual(len(person_module.searchFolder()),
                      len(person_module.searchFolder(sort_on=[('subordination_title', 'ascending')])))
@@ -3744,7 +3744,7 @@ VALUES
     description_object_list = [object_1,           object_3,           object_12, object_13, object_14, object_23,            object_34]
     both_object_list =        [object_1,                               object_12, object_13, object_14, object_23                      ]
     title_object_list =       [                                        object_12                                                       ]
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # Single join
     check(reference_object_list,
@@ -3804,7 +3804,7 @@ VALUES
     organisation2.setTitle('Organisation 2')
     self.assertEquals(organisation2.getGroupValue(), group_nexedi_category2)
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     base_category = portal_category.group
@@ -3882,7 +3882,7 @@ VALUES
                                      description='d')
     organisation2.setGroup('nexedi')
     # Flush message queue
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     base_category = portal_category.group
@@ -3980,7 +3980,7 @@ VALUES
   def test_distinct_select_expression(self, quiet=quiet, run=run_all_test):
     if not run: return
     person = self.portal.person_module.newContent(portal_type='Person')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     portal_catalog = self.getCatalogTool()
     res = portal_catalog.searchResults(
@@ -4006,7 +4006,7 @@ VALUES
     # Create an object just to allocate a new valid uid.
     person_module = self.getPersonModule()
     person = person_module.newContent(portal_type='Person')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Make sure that the new object is catalogued.
@@ -4016,7 +4016,7 @@ VALUES
     # Delete the new object to free the uid.
     available_uid = person.uid
     person_module.manage_delObjects(uids=[available_uid])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     # Make sure that the uid is not used any longer.
@@ -4141,7 +4141,7 @@ VALUES
       module_len = len(person_module)
     module_uid = person_module.getUid()
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     catalog = self.getCatalogTool()
 
@@ -4172,7 +4172,7 @@ VALUES
     assignment = person[person._setObject(assignment.id, assignment)]
     self.assertFalse('uid' in assignment.__dict__)
     assignment.uid = None
-    get_transaction().commit()
+    transaction.commit()
 
     person_uid_list = []
     catalog_result_list = []
