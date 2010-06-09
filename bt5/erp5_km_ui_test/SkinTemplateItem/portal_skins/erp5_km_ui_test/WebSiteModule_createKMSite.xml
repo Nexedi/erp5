@@ -58,6 +58,8 @@
 """\n
   Initialize a KM site.\n
 """\n
+portal = context.getPortalObject()\n
+\n
 if site_id not in context.objectIds():\n
   km_website = context.newContent(id = site_id, \\\n
                                   title = title, \n
@@ -86,6 +88,15 @@ if km_preference_id not in portal_preferences.objectIds():\n
                     preferred_ooodoc_server_address = context.Zuite_getConversionServerDict()["oood_hostname"],\n
                     preferred_ooodoc_server_port_number = context.Zuite_getConversionServerDict()["oood_port"])\n
   km_preference.enable()\n
+\n
+# publish the test web page so we can use it in tests for setting default WEb Section page\n
+for reference in (\'minimal_km_footer\', \'km.web.site.test.page\',):\n
+  km_page = portal.portal_catalog.getResultValue(portal_type = \'Web Page\',\n
+                                                 reference = reference)\n
+  if km_page.getValidationState()==\'draft\':\n
+    km_page.publish()\n
+# clear cache so UI is regenarated\n
+portal.portal_caches.clearAllCache()\n
 \n
 return "Created Successfully."\n
 
@@ -138,12 +149,16 @@ return "Created Successfully."\n
                             <string>title</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>km_website</string>
                             <string>True</string>
                             <string>km_preference_id</string>
                             <string>portal_preferences</string>
                             <string>_getitem_</string>
                             <string>km_preference</string>
+                            <string>_getiter_</string>
+                            <string>reference</string>
+                            <string>km_page</string>
                           </tuple>
                         </value>
                     </item>

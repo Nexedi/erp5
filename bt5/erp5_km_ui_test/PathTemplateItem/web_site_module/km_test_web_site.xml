@@ -137,6 +137,26 @@
                       <value> <string>float</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_max_breadcrumb_length</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>layout_footer_reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -190,6 +210,16 @@
         <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewKMMinimalThemeConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>layout_footer_reference</string> </key>
+            <value> <string>minimal_km_footer</string> </value>
+        </item>
+        <item>
+            <key> <string>layout_max_breadcrumb_length</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>layout_navigation_menu_opacity</string> </key>
