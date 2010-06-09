@@ -36,6 +36,7 @@ import sys
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
+from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -1078,35 +1079,71 @@ class TemplateTool (BaseTool):
                                          keep_original_list=[],
                                          before_triggered_bt5_id_list=[],
                                          after_triggered_bt5_id_list=[],
-                                         update_catalog=0):
+                                         update_catalog=0,
+                                         reinstall=False,
+                                         active_process=None):
       """ 
         This method download and install a bt5, from a URL.
       """
+      if active_process is None:
+        installed_dict = {}
+        def log(msg):
+          LOG('TemplateTool.updateBusinessTemplateFromUrl', INFO, msg)
+      else:
+        active_process = self.unrestrictedTraverse(active_process)
+        if getattr(aq_base(active_process), 'installed_dict', None) is None:
+          active_process.installed_dict = PersistentMapping()
+        installed_dict = active_process.installed_dict
+        message_list = []
+        log = message_list.append
+
+      log("Installing %s ..." % download_url)
       imported_bt5 = self.download(url = download_url, id = id)
+      bt_title = imported_bt5.getTitle()
       BusinessTemplate_getModifiedObject = \
         aq_base(getattr(self, 'BusinessTemplate_getModifiedObject'))
-  
-      install_kw = {}
+
       listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
+      if reinstall:
+        log('Reinstall all items')
+        install_kw = dict.fromkeys(imported_bt5.getItemsList(), 'install')
+      else:
+        install_kw = {}
       for listbox_line in listbox_object_list:
-        # if a bt5 item is removed we may still want to keep it
-        if (listbox_line.object_state in ('Removed', 'Removed but used', 'Modified', 'New') and
-            listbox_line.object_id in keep_original_list):
-          install_kw[listbox_line.object_id] = 'nothing' #Keep original
+        item = listbox_line.object_id
+        state = listbox_line.object_state
+        removed = state.startswith('Removed')
+        if removed:
+          moved = installed_dict.get(listbox_line.object_id, '')
+          log('%s: %s%s' % (state, item, moved and ' (moved to %s)' % moved))
         else:
-          install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
-  
+          installed_dict[item] = bt_title
+        # if a bt5 item is removed we may still want to keep it
+        if ((removed or state in ('Modified', 'New'))
+            and item in keep_original_list):
+          install_kw[item] = 'nothing'
+          log("Keep %r" % item)
+        else:
+          install_kw[item] = listbox_line.choice_item_list[0][1]
+
       # Run before script list
       for before_triggered_bt5_id in before_triggered_bt5_id_list:
-        getattr(imported_bt5, before_triggered_bt5_id)()
-  
+        log('Execute %r' % before_triggered_bt5_id)
+        imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
+
       imported_bt5.install(object_to_update=install_kw,
                            update_catalog=update_catalog)
-  
+
       # Run After script list
       for after_triggered_bt5_id in after_triggered_bt5_id_list:
-        getattr(imported_bt5, after_triggered_bt5_id)()
-      LOG('ERP5', INFO, "Updated %s from %s" %(imported_bt5.getTitle(), download_url))
+        log('Execute %r' % after_triggered_bt5_id)
+        imported_bt5.unrestrictedTraverse(after_triggered_bt5_id)()
+      if active_process is not None:
+        active_process.postResult(ActiveResult(
+          '%03u. %s' % (len(active_process.getResultList()) + 1, bt_title),
+          detail='\n'.join(message_list)))
+      else:
+        log("Updated %s from %s" % (bt_title, download_url))
 
     security.declareProtected(Permissions.ManagePortal,
             'getBusinessTemplateUrl')
