@@ -943,11 +943,7 @@ class Catalog(Folder,
 
   @caching_instance_method(id='SQLCatalog.getColumnIds',
                            cache_factory='erp5_content_long')
-  def getColumnIds(self):
-    """
-    Calls the show column method and returns dictionnary of
-    Field Ids
-    """
+  def _getColumnIds(self):
     keys = {}
     for table in self.getCatalogSearchTableIds():
       field_list = self._getCatalogSchema(table=table)
@@ -962,9 +958,16 @@ class Catalog(Folder,
       scriptable_tuple = scriptable.split('|')
       scriptable = scriptable_tuple[0].strip()
       keys[scriptable] = None
-    keys = list(keys.keys())
+    keys = keys.keys()
     keys.sort()
     return keys
+
+  def getColumnIds(self):
+    """
+    Calls the show column method and returns dictionnary of
+    Field Ids
+    """
+    return self._getColumnIds()[:]
 
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
@@ -1817,10 +1820,7 @@ class Catalog(Folder,
 
   @caching_instance_method(id='SQLCatalog.getTableIndex',
                            cache_factory='erp5_content_long')
-  def getTableIndex(self, table):
-    """
-    Return a map between index and column for a given table
-    """
+  def _getTableIndex(self, table):
     table_index = {}
     method = getattr(self, self.sql_catalog_index, '')
     if method in ('', None):
@@ -1831,7 +1831,13 @@ class Catalog(Folder,
         table_index[line.KEY_NAME].append(line.COLUMN_NAME)
       else:
         table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
-    return table_index.copy()
+    return table_index
+
+  def getTableIndex(self, table):
+    """
+    Return a map between index and column for a given table
+    """
+    return self._getTableIndex(table).copy()
 
   @profiler_decorator
   def isValidColumn(self, column_id):
