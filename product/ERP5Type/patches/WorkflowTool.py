@@ -783,6 +783,19 @@ def WorkflowTool_isTransitionPossible(self, ob, transition_id, wf_id=None):
 
 WorkflowTool.isTransitionPossible = WorkflowTool_isTransitionPossible
 
+def WorkflowTool_getWorkflowChainDict(self, sorted=True):
+  """Returns workflow chain compatible with workflow_chain_dict signature"""
+  chain = self._chains_by_type.copy()
+  return_dict = {}
+  for portal_type, workflow_id_list in chain.iteritems():
+    if sorted:
+      workflow_id_list = list(workflow_id_list)
+      workflow_id_list.sort()
+    return_dict['chain_%s' % portal_type] = ', '.join(workflow_id_list)
+  return return_dict
+
+WorkflowTool.getWorkflowChainDict = WorkflowTool_getWorkflowChainDict
+
 WorkflowTool._reindexWorkflowVariables = lambda self, ob: \
   hasattr(aq_base(ob), 'reindexObjectSecurity') and ob.reindexObjectSecurity()
 
