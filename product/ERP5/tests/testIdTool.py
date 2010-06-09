@@ -32,6 +32,7 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from _mysql_exceptions import ProgrammingError
 
 class TestIdTool(ERP5TypeTestCase):
 
@@ -258,6 +259,25 @@ class TestIdTool(ERP5TypeTestCase):
     self.assertEquals([2, 3, 4], self.id_tool.generateNewIdList(
                                         id_generator='test_application_sql',
                                         id_group='a04', id_count=3))
+
+  def test_05_RebuildTableForDefaultSQLNonContinuousIncreasingIdGenerator(self):
+    """
+      It should be possible to reconstruct the portal_ids table thanks to
+      data stored in ZODB
+    """
+    portal = self.getPortalObject()
+    generator = self.id_tool._getLatestGeneratorValue(
+       'mysql_non_continuous_increasing')
+    self.assertTrue(generator is not None)
+    generator.generateNewId(id_group='foo_bar', default=4)
+    self.assertEquals(generator.last_max_id_dict['foo_bar'].value, 4)
+    portal.IdTool_zDropTable()
+    sql_connection = self.getSQLConnection()
+    query = 'select last_id from portal_ids where id_group="foo_bar"'
+    self.assertRaises(ProgrammingError, sql_connection.manage_test, query)
+    generator.rebuildSqlTable()
+    result =  sql_connection.manage_test(query)
+    self.assertEqual(result[0].last_id, 4)
 
 def test_suite():
   suite = unittest.TestSuite()

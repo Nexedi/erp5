@@ -209,3 +209,26 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         'idTool_zDropTable and/or idTool_zCreateTable could not be found.'
     drop_method()
     create_method()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'rebuildSqlTable')
+  def rebuildSqlTable(self):
+    """
+      After a mysql crash, it could be needed to restore values stored in
+      zodb into mysql
+
+      TODO : take into account the case where the value is stored every X
+             generation 
+    """
+    portal = self.getPortalObject()
+    getattr(portal, 'IdTool_zDropTable')()
+    getattr(self, 'SQLNonContinuousIncreasingIdGenerator_zCreateTable')()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'rebuildSqlTable')
+  def getPersistentIdDict(self):
+    """
+      Return all data stored in zodb
+    """
+    return dict([(x[0],x[1].value) for x in
+       getattr(self, 'last_max_id_dict', {}).iteritems()])
