@@ -1732,6 +1732,15 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     sql_search_table_list.append('dummy')
     sql_search_table_list.sort()
     new_catalog.sql_search_tables = tuple(sql_search_table_list)
+    portal_catalog.manage_catalogClear()
+    transaction.commit()
+    # Catalog structure changed, so we should be able to build new queries
+    # with new table columns
+    # Check that column map is updated according new structure of catalog.
+    self.assertTrue('dummy.dummy_title' in portal_catalog.getSQLCatalog().getColumnMap())
+    # Check more cached methods of SQLCatalog by building SQLQuery
+    query = portal_catalog.getSQLCatalog().buildQuery(kw={'dummy.dummy_title': 'Foo'})
+    self.assertTrue(query.query_list)
 
     # prepare arguments for hot reindex
     source_sql_connection_id_list=list((self.original_connection_id,
