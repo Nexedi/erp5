@@ -51,9 +51,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     ...
   """
 
-  def getTitle(self):
-    return "Accounting Reports"
-
   def beforeTearDown(self):
     # workaround the fact that Balance Transaction Line are not unindexed
     # correctly when removed
@@ -154,6 +151,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['portal_type'] = ['Sale Invoice Transaction']
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -320,6 +318,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['portal_type'] = ['Accounting Transaction']
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -450,6 +449,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['portal_type'] = ['Payment Transaction']
     request_form['simulation_state'] = ['delivered']
     request_form['payment'] = bank1.getRelativeUrl()
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -481,7 +481,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # Stat Line
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=100, credit=100)
-
 
   def createAccountStatementDataSet(self, use_two_bank_accounts=1):
     """Create transactions for Account statement report.
@@ -671,6 +670,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.project_2 = self.portal.project_module.newContent(
                           portal_type='Project',
                           title='Project 2')
+
     account_module = self.portal.account_module
     self._makeOne(
               portal_type='Sale Invoice Transaction',
@@ -710,8 +710,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=700.0)))
 
-
-
   def testAccountStatement(self):
     # Simple Account Statement for "Receivable" account
     self.createAccountStatementDataSet()
@@ -724,6 +722,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group/sub1'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -828,6 +827,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -901,6 +901,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1007,6 +1008,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['detailed_from_date_summary'] = 1
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1151,6 +1153,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['detailed_from_date_summary'] = 1
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1230,6 +1233,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['detailed_from_date_summary'] = 1
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1295,6 +1299,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1357,6 +1362,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1417,6 +1423,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1472,6 +1479,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1518,6 +1526,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -1552,6 +1561,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['stopped', 'confirmed']
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -1612,6 +1622,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1671,6 +1682,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                self.portal.accounting_module,
@@ -1744,6 +1756,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
     
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -1781,7 +1794,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit_price=100, credit_price=200)
-
 
   def testTrialBalance(self):
     # Simple test of trial balance
@@ -1900,6 +1912,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 1
     request_form['per_account_class_summary'] = 0
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2163,6 +2176,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 1
     request_form['per_account_class_summary'] = 0
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2243,6 +2257,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2719,6 +2734,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 1
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2894,6 +2910,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3130,6 +3147,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category'] = 'group/demo_group'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3187,6 +3205,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['function'] = 'function/a'
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3235,6 +3254,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['project'] = self.project_1.getRelativeUrl()
+    request_form['hide_analytic'] = False
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3271,7 +3291,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEquals(1, len(data_line_list))
     self.checkLineProperties(data_line_list[0], debit_price=500, credit_price=500)
-
 
   def testProfitAndLoss(self):
     # Simple test of profit and loss
@@ -3389,8 +3408,383 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           debit_price=300,)
 
 
+class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
+
+  def setUp(self):
+    # FIXME: use afterSetUp, and fix AccountingTestCase to use afterSetUp
+    AccountingTestCase.setUp(self)
+    self.login('ERP5TypeTestCase')
+    # create some functions
+    function = self.portal.portal_categories.function
+    if function._getOb('a', None) is None:
+      function.newContent(portal_type='Category', id='a')
+    self.function_a = function['a']
+    if function._getOb('b', None) is None:
+      function.newContent(portal_type='Category', id='b')
+    self.function_b = function['b']
+
+    # create some product lines
+    product_line = self.portal.portal_categories.product_line
+    if product_line._getOb('pl1', None) is None:
+      product_line.newContent(portal_type='Category', id='pl1')
+    self.product_line_1 = product_line['pl1']
+
+    # create some projects
+    self.project_1 = self.portal.project_module.newContent(
+                          portal_type='Project',
+                          title='Project 1')
+    self.project_2 = self.portal.project_module.newContent(
+                          portal_type='Project',
+                          title='Project 2')
+
+    preference = self.portal.portal_preferences.getActivePreference()
+    preference.edit(
+        preferred_accounting_transaction_line_function_base_category='function',
+        preferred_accounting_transaction_line_analytic_base_category_list=(
+                                              'product_line', ),)
+    account_module = self.portal.account_module
+    uid_list = sorted([
+        self.portal.portal_catalog.newUid(),
+        self.portal.portal_catalog.newUid(),
+        self.portal.portal_catalog.newUid(),])
+     
+    self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Detailed Transaction',
+              source_reference='1',
+              simulation_state='delivered',
+              destination_section_value=self.portal.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=account_module.receivable,
+                          source_debit=1500.0),
+                     dict(source_value=account_module.goods_sales,
+                          uid=uid_list[0],
+                          source_function_value=self.function_a,
+                          source_project_value=self.project_1,
+                          product_line_value=self.product_line_1,
+                          source_credit=300.0),
+                     dict(source_value=account_module.goods_sales,
+                          uid=uid_list[1],
+                          source_function_value=self.function_b,
+                          source_project_value=self.project_1,
+                          product_line_value=self.product_line_1,
+                          source_credit=500.0),
+                     dict(source_value=account_module.goods_sales,
+                          uid=uid_list[2],
+                          source_function_value=self.function_b,
+                          source_project_value=self.project_2,
+                          product_line_value=None,
+                          source_credit=700.0),
+                     ))
+    self.login(self.username)
+
+  def beforeTearDown(self):
+    self.login('ERP5TypeTestCase')
+    transaction.abort()
+    preference = self.portal.portal_preferences.getActivePreference()
+    preference.edit(
+        preferred_accounting_transaction_line_function_base_category=None,
+        preferred_accounting_transaction_line_analytic_base_category_list=())
+    transaction.commit()
+
+  def testJournalAnalyticsShown(self):
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['portal_type'] = ['Sale Invoice Transaction']
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountingTransactionModule_viewJournalReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(4, len(data_line_list))
+    
+    # test columns values
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list,
+        [ 'specific_reference', 'date', 'title',
+          'project', 'function', 'product_line_translated_title',
+          'node_title', 'mirror_section_title', 'debit', 'credit'])
+    
+    self.checkLineProperties(data_line_list[0],
+                             project=None,
+                             function=None,
+                             product_line_translated_title=None,
+                             node_title='41',
+                             mirror_section_title='Client 1',
+                             debit=1500,
+                             credit=0)
+    self.checkLineProperties(data_line_list[1],
+                             project='Project 1',
+                             function='a',
+                             product_line_translated_title='pl1',
+                             node_title='7',
+                             debit=0,
+                             credit=300)
+    self.checkLineProperties(data_line_list[2],
+                             project='Project 1',
+                             function='b',
+                             product_line_translated_title='pl1',
+                             node_title='7',
+                             debit=0,
+                             credit=500)
+    self.checkLineProperties(data_line_list[3],
+                             project='Project 2',
+                             function='b',
+                             product_line_translated_title=None,
+                             node_title='7',
+                             debit=0,
+                             credit=700)
+
+    stat_line = line_list[-1]
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=1500, credit=1500)
+
+  def testJournalAnalyticsHidden(self):
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['portal_type'] = ['Sale Invoice Transaction']
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = True
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountingTransactionModule_viewJournalReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    
+    # test columns values
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list,
+        ['specific_reference', 'date', 'title',
+          'node_title', 'mirror_section_title', 'debit', 'credit'])
+    
+    self.checkLineProperties(data_line_list[0],
+                             node_title='41',
+                             mirror_section_title='Client 1',
+                             debit=1500,
+                             credit=0)
+    # this line is the aggregation of 3 lines
+    self.checkLineProperties(data_line_list[1],
+                             node_title='7',
+                             debit=0,
+                             credit=1500)
+    stat_line = line_list[-1]
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=1500, credit=1500)
+
+  def testAccountStatementAnalyticsShown(self):
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.goods_sales.getRelativeUrl()
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group/sub1'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(3, len(data_line_list))
+
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list,
+        ['Movement_getSpecificReference', 'date',
+         'Movement_getExplanationTitle',
+         'project', 'function', 'product_line_translated_title',
+         'Movement_getMirrorSectionTitle',
+         'debit_price', 'credit_price', 'running_total_price'])
+
+    self.checkLineProperties(data_line_list[0],
+                             project='Project 1',
+                             function='a',
+                             product_line_translated_title='pl1',
+                             debit_price=0,
+                             credit_price=300,
+                             running_total_price=-300)
+    self.checkLineProperties(data_line_list[1],
+                             project='Project 1',
+                             function='b',
+                             product_line_translated_title='pl1',
+                             debit_price=0,
+                             credit_price=500,
+                             running_total_price=-800)
+    self.checkLineProperties(data_line_list[2],
+                             project='Project 2',
+                             function='b',
+                             product_line_translated_title=None,
+                             debit_price=0,
+                             credit_price=700,
+                             running_total_price=-1500)
+
+    stat_line = line_list[-1]
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
+ 
+  def testAccountStatementAnalyticsHidden(self):
+    request_form = self.portal.REQUEST.form
+    request_form['node'] = \
+                self.portal.account_module.goods_sales.getRelativeUrl()
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group/sub1'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = True
+
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountModule_viewAccountStatementReport')
+    self.assertEquals(1, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list,
+        ['Movement_getSpecificReference', 'date',
+         'Movement_getExplanationTitle',
+         'Movement_getMirrorSectionTitle',
+         'debit_price', 'credit_price', 'running_total_price'])
+
+    self.checkLineProperties(data_line_list[0],
+                             debit_price=0,
+                             credit_price=1500,
+                             running_total_price=-1500)
+
+    stat_line = line_list[-1]
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
+
+  def testGeneralLedgerAnalyticsShown(self):
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = False
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    self.assertEquals(3, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    # FIXME: order of columns is inconsistant in GL and Account Statement
+    self.assertEquals(['Movement_getSpecificReference',
+        'Movement_getExplanationTitle', 'date',
+        'Movement_getExplanationTranslatedPortalType',
+        'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
+         'project', 'function', 'product_line_translated_title',
+        'debit_price', 'credit_price', 'running_total_price'],
+        data_line_list[0].column_id_list)
+
+    self.checkLineProperties(data_line_list[0],
+                             project='Project 1',
+                             function='a',
+                             product_line_translated_title='pl1',
+                             debit_price=0,
+                             credit_price=300,
+                             running_total_price=-300)
+    self.checkLineProperties(data_line_list[1],
+                             project='Project 1',
+                             function='b',
+                             product_line_translated_title='pl1',
+                             debit_price=0,
+                             credit_price=500,
+                             running_total_price=-800)
+    self.checkLineProperties(data_line_list[2],
+                             project='Project 2',
+                             function='b',
+                             product_line_translated_title=None,
+                             debit_price=0,
+                             credit_price=700,
+                             running_total_price=-1500)
+
+    stat_line = line_list[-1]
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
+
+    line_list = self.getListBoxLineList(report_section_list[2])
+    
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             debit_price=1500,
+                             credit_price=1500,)
+
+  def testGeneralLedgerAnalyticsHidden(self):
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 12, 31)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['hide_analytic'] = True
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewGeneralLedgerReport')
+    self.assertEquals(3, len(report_section_list))
+
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(['Movement_getSpecificReference',
+        'Movement_getExplanationTitle', 'date',
+        'Movement_getExplanationTranslatedPortalType',
+        'Movement_getExplanationReference', 'Movement_getMirrorSectionTitle',
+        'debit_price', 'credit_price', 'running_total_price'],
+        data_line_list[0].column_id_list)
+    # receivable account
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             debit_price=1500,
+                             credit_price=0,
+                             running_total_price=1500)
+    stat_line = line_list[-1]
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=1500, credit_price=0)
+    # good sales account
+    line_list = self.getListBoxLineList(report_section_list[1])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             debit_price=0,
+                             credit_price=1500,
+                             running_total_price=-1500)
+    stat_line = line_list[-1]
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit_price=0, credit_price=1500)
+    # summary
+    line_list = self.getListBoxLineList(report_section_list[2])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(1, len(data_line_list))
+    self.checkLineProperties(data_line_list[0],
+                             debit_price=1500,
+                             credit_price=1500,)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAccountingReports))
+  suite.addTest(unittest.makeSuite(TestAccountingReportsWithAnalytic))
   return suite
 
