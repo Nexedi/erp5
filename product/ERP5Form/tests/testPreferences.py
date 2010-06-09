@@ -37,7 +37,7 @@ from zExceptions import Unauthorized
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
-from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
 
 default_large_image_height, = [pref.get('default')

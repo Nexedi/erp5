@@ -42,7 +42,7 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5Form.PreferenceTool import Priority
 
 SOURCE = 'source'
 DESTINATION = 'destination'

@@ -31,9 +31,12 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Core.Folder import Folder
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Form.PreferenceTool import PreferenceTool
 
 class Priority:
-  """ names for priorities """
+  """ names for priorities
+      XXX This was moved to PreferenceTool directly
+  """
   SITE  = 1
   GROUP = 2
   USER  = 3
@@ -89,3 +92,11 @@ class Preference( Folder ):
   def disable(self):
     """Workflow method"""
     self._clearCache()
+
+  def _aq_dynamic(self, id):
+    """ force _aq_dynamic on preference tool, because list of property sheet of
+        preferences depends on the code of PreferenceTool._aq_dynamic"""
+    if not PreferenceTool.aq_preference_generated:
+      portal = self.getPortalObject()
+      portal.portal_preferences._aq_dynamic('dummy')
+    return Preference.inheritedAttribute('_aq_dynamic')(self, id)

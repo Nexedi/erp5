@@ -41,9 +41,14 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Form import _dtmldir
-from Products.ERP5Form.Document.Preference import Priority
 
 _marker = object()
+
+class Priority:
+  """ names for priorities """
+  SITE  = 1
+  GROUP = 2
+  USER  = 3
 
 def updatePreferenceClassPropertySheetList():
   # The Preference class should be imported from the common location

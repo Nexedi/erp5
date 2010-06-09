@@ -35,7 +35,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type import Permissions
-from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5Form.PreferenceTool import Priority
 
 
 class TestTemplate(ERP5TypeTestCase):
