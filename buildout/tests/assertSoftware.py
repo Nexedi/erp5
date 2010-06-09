@@ -134,6 +134,19 @@ class AssertSoftwareRunable(unittest.TestCase):
     self.assertEqual(stdout, '')
     self.assertTrue('splitting books' in stderr)
 
+  def test_TokyoCabinet(self):
+    stdout, stderr = subprocess.Popen(["parts/tokyocabinet/bin/tcamgr",
+      "version"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('Tokyo Cabinet'))
+
+  def test_Flare(self):
+    stdout, stderr = subprocess.Popen(["parts/flare/bin/flarei", "-v"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('flare'))
+
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
 
