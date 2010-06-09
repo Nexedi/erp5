@@ -1082,12 +1082,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     return update_list
 
   security.declareProtected( Permissions.ModifyPortalContent, 'upgradeObjectClass' )
-  def upgradeObjectClass(self, test_before=None, from_class=None,\
-                         to_class=None, test_after=None):
+  def upgradeObjectClass(self, test_before, from_class, to_class, test_after):
     """
     upgrade the class of all objects inside this
     particular folder
-     test have to be a method with one parameter
+     test_before and test_after have to be a method with one parameter.
      migrations is a dictionnary of class, { from_class : to_class }
     """
     #LOG("upradeObjectClass: folder ",0,self.id)
@@ -1103,28 +1102,29 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
           test_list += o.upgradeObjectClass(test_before=test_before, \
                           from_class=from_class, to_class=to_class,
                           test_after=test_after)
+
         # Test if we must apply the upgrade
         if test_before(o) is not None:
-          LOG("upradeObjectClass: id ",0,id)
+          LOG("upgradeObjectClass: id ", 0, id)
           klass = obase.__class__
-          LOG("upradeObjectClass: klass ",0,str(klass))
-          LOG("upradeObjectClass: from_class ",0,str(from_class))
+          LOG("upgradeObjectClass: klass ", 0 ,str(klass))
+          LOG("upgradeObjectClass: from_class ", 0 ,str(from_class))
           if klass == from_class:
             try:
-                newob = to_class(obase.id)
-                newob.id = obase.id # This line activates obase.
+              newob = to_class(obase.id)
+              newob.id = obase.id # This line activates obase.
             except AttributeError:
-                newob = to_class(id)
-                newob.id = id
+              newob = to_class(id)
+              newob.id = id
             keys = obase.__dict__.keys()
             for k in keys:
               if k not in ('id', 'meta_type', '__class__'):
                 setattr(newob,k,obase.__dict__[k])
 
             self.manage_delObjects(id)
-            LOG("upradeObjectClass: ",0,"add new object: %s" % str(newob.id))
+            LOG("upgradeObjectClass: ",0,"add new object: %s" % str(newob.id))
             transaction.commit() # XXX this commit should be after _setObject
-            LOG("upradeObjectClass: ",0,"newob.__class__: %s" % str(newob.__class__))
+            LOG("upgradeObjectClass: ",0,"newob.__class__: %s" % str(newob.__class__))
             self._setObject(id, newob)
             object_to_test = self._getOb(id)
             test_list += test_after(object_to_test)
