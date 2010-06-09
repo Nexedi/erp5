@@ -67,6 +67,7 @@
                     <value>
                       <list>
                         <string>my_preferred_criterion_property_list</string>
+                        <string>my_preferred_predicate_category_list</string>
                       </list>
                     </value>
                 </item>
