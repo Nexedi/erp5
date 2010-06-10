@@ -62,6 +62,8 @@ request = container.REQUEST\n
 portal = context.getPortalObject()\n
 getInventoryList = portal.portal_simulation.getInventoryList\n
 getInventory = portal.portal_simulation.getInventoryAssetPrice\n
+traverse = context.getPortalObject().restrictedTraverse\n
+getObject = context.getPortalObject().portal_catalog.getObject\n
 Base_translateString = portal.Base_translateString\n
 selected_gap = gap_root\n
 \n
@@ -80,6 +82,11 @@ inventory_params = dict(section_uid=section_uid,\n
                         simulation_state=simulation_state,\n
                         precision=precision,\n
                         group_by_resource=0)\n
+\n
+if group_analytic:\n
+  inventory_params[\'group_by\'] = group_analytic\n
+  group_analytic = tuple(group_analytic)\n
+\n
 if portal_type and portal_type != portal.getPortalAccountingTransactionTypeList():\n
   inventory_params[\'parent_portal_type\'] = portal_type\n
 if function:\n
@@ -92,7 +99,7 @@ if node_uid:\n
 \n
 MARKER = Object()\n
 \n
-# a dictionary (node_relative_url, mirror_section_uid, payment_uid)\n
+# a dictionary (node_relative_url, mirror_section_uid, payment_uid + analytic)\n
 #                        -> dict(debit=, credit=)\n
 line_per_account = {}\n
 # a dictionnary node_relative_url -> boolean "do we have transactions for this\n
@@ -130,6 +137,29 @@ total_initial_credit_balance = 0\n
 total_final_balance_if_debit = 0\n
 total_final_balance_if_credit = 0\n
 \n
+def getKey(brain, mirror_section=MARKER, payment=MARKER, all_empty=False):\n
+  key = (brain[\'node_relative_url\'],\n
+         mirror_section,\n
+         payment)\n
+  for analytic in group_analytic:\n
+    if all_empty:\n
+      key += (MARKER, )\n
+    elif hasattr(brain, analytic):\n
+      key += (getattr(brain, analytic), )\n
+    else:\n
+      key += (brain.getObject().getProperty(analytic.replace(\'strict_\', \'\', 1)), )\n
+  return key\n
+\n
+analytic_title_dict = {None: \'\', }\n
+def getAnalyticTitleFromUid(uid):\n
+  if uid is MARKER:\n
+    return \'\'\n
+  try:\n
+    return analytic_title_dict[uid]\n
+  except KeyError:\n
+    return analytic_title_dict.setdefault(uid,\n
+        getObject(uid).getTitle())\n
+\n
 # standards accounts {{{\n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
@@ -140,9 +170,7 @@ for node in getInventoryList(\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
   account_used[node[\'node_relative_url\']] = 1\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'debit\'] = total_price\n
   total_debit += round(total_price, precision)\n
@@ -156,9 +184,7 @@ for node in getInventoryList(\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
   account_used[node[\'node_relative_url\']] = 1\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'credit\'] = -total_price\n
   total_credit -= round(total_price, precision)\n
@@ -174,9 +200,7 @@ for node in getInventoryList(\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
   account_used[node[\'node_relative_url\']] = 1\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'debit\'] = total_price\n
   total_debit += round(total_price, precision)\n
@@ -190,9 +214,7 @@ for node in getInventoryList(\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
   account_used[node[\'node_relative_url\']] = 1\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'credit\'] = -total_price\n
   total_credit -= round(total_price, precision)\n
@@ -212,8 +234,8 @@ if account_type_to_group_by_mirror_section:\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
-            (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
-            dict(debit=0, credit=0))\n
+          getKey(node, mirror_section=node[\'mirror_section_uid\']),\n
+          dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'debit\'] = total_price\n
     total_debit += round(total_price, precision)\n
@@ -230,8 +252,8 @@ if account_type_to_group_by_mirror_section:\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
-            (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
-            dict(debit=0, credit=0))\n
+          getKey(node, mirror_section=node[\'mirror_section_uid\']),\n
+          dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'credit\'] = - total_price\n
     total_credit -= round(total_price, precision)\n
@@ -251,8 +273,8 @@ if account_type_to_group_by_payment:\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
-                  (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-                  dict(debit=0, credit=0))\n
+          getKey(node, payment=node[\'payment_uid\']),\n
+          dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'debit\'] = total_price\n
     total_debit += round(total_price, precision)\n
@@ -269,16 +291,13 @@ if account_type_to_group_by_payment:\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
-                  (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-                  dict(debit=0, credit=0))\n
+          getKey(node, payment=node[\'payment_uid\']),\n
+          dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'credit\'] = - total_price\n
     total_credit -= round(total_price, precision)\n
   # }}}\n
 \n
-\n
-traverse = context.getPortalObject().restrictedTraverse\n
-getObject = context.getPortalObject().portal_catalog.getObject\n
 \n
 node_title_and_id_cache = {}\n
 def getNodeTitleAndId(node_relative_url):\n
@@ -297,8 +316,9 @@ def getNodeTitleAndId(node_relative_url):\n
 # period)\n
 for node in LazyFilter(context.account_module.contentValues(), skip=\'\'):\n
   if node.getRelativeUrl() not in account_used:\n
-    line_per_account.setdefault((node.getRelativeUrl(), MARKER, MARKER),\n
-                              dict(debit=0, credit=0))\n
+    line_per_account.setdefault(\n
+          getKey(dict(node_relative_url=node.getRelativeUrl()), all_empty=True),\n
+          dict(debit=0, credit=0))\n
 \n
 initial_balance_date = (from_date - 1).latestTime()\n
 \n
@@ -319,9 +339,7 @@ for node in getInventoryList(\n
                 portal_type=accounting_movement_type_list +\n
                               balance_movement_type_list,\n
                 **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
               \'initial_debit_balance\', 0) + max(total_price, 0)\n
@@ -343,9 +361,7 @@ for node in getInventoryList(\n
                 at_date=from_date + 1,\n
                 portal_type=balance_movement_type_list,\n
                 **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
               \'initial_debit_balance\', 0) + max(total_price, 0)\n
@@ -367,9 +383,7 @@ for node in getInventoryList(\n
                 to_date=from_date,\n
                 portal_type=period_movement_type_list,\n
                 **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
                     \'initial_debit_balance\', 0) + total_price\n
@@ -383,9 +397,7 @@ for node in getInventoryList(\n
                 to_date=from_date,\n
                 portal_type=period_movement_type_list,\n
                 **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
                     \'initial_credit_balance\', 0) - total_price\n
@@ -401,9 +413,7 @@ for node in getInventoryList(\n
                 group_by_node=1,\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
                     \'initial_debit_balance\', 0) + total_price\n
@@ -417,9 +427,7 @@ for node in getInventoryList(\n
                 group_by_node=1,\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
-  account_props = line_per_account.setdefault(\n
-                          (node[\'node_relative_url\'], MARKER, MARKER),\n
-                          dict(debit=0, credit=0))\n
+  account_props = line_per_account.setdefault(getKey(node), dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_credit_balance\'] = account_props.get(\n
                     \'initial_credit_balance\', 0) - total_price\n
@@ -440,9 +448,10 @@ for node in getInventoryList(\n
   mirror_section_key = MARKER\n
   if expand_accounts:\n
     mirror_section_key = node[\'mirror_section_uid\']\n
+  \n
   account_props = line_per_account.setdefault(\n
-          (node[\'node_relative_url\'], mirror_section_key, MARKER),\n
-          dict(debit=0, credit=0))\n
+                    getKey(node, mirror_section=mirror_section_key),\n
+                           dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
                   \'initial_debit_balance\', 0) + max(total_price, 0)\n
@@ -465,8 +474,8 @@ for node in getInventoryList(\n
   if expand_accounts:\n
     mirror_section_key = node[\'mirror_section_uid\']\n
   account_props = line_per_account.setdefault(\n
-          (node[\'node_relative_url\'], mirror_section_key, MARKER),\n
-          dict(debit=0, credit=0))\n
+          getKey(node, mirror_section=mirror_section_key),\n
+                 dict(debit=0, credit=0))\n
   total_price = node[\'total_price\'] or 0\n
   account_props[\'initial_debit_balance\'] = account_props.get(\n
               \'initial_debit_balance\', 0) + max(total_price, 0)\n
@@ -493,8 +502,8 @@ if expand_accounts:\n
                   portal_type=period_movement_type_list,\n
                   **inventory_params):\n
     account_props = line_per_account.setdefault(\n
-            (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
-            dict(debit=0, credit=0))\n
+          getKey(node, mirror_section=node[\'mirror_section_uid\']),\n
+                 dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
                       \'initial_debit_balance\', 0) + total_price\n
@@ -510,8 +519,8 @@ if expand_accounts:\n
                   portal_type=period_movement_type_list,\n
                   **inventory_params):\n
     account_props = line_per_account.setdefault(\n
-            (node[\'node_relative_url\'], node[\'mirror_section_uid\'], MARKER),\n
-            dict(debit=0, credit=0))\n
+          getKey(node, mirror_section=node[\'mirror_section_uid\']),\n
+                 dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
                       \'initial_credit_balance\', 0) - total_price\n
@@ -530,8 +539,8 @@ if account_type_to_group_by_payment:\n
                                 balance_movement_type_list,\n
                   **inventory_params):\n
     account_props = line_per_account.setdefault(\n
-            (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-            dict(debit=0, credit=0))\n
+          getKey(node, payment=node[\'payment_uid\']),\n
+                 dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
                     \'initial_debit_balance\', 0) + max(total_price, 0)\n
@@ -551,8 +560,8 @@ if account_type_to_group_by_payment:\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
-                  (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-                  dict(debit=0, credit=0))\n
+          getKey(node, payment=node[\'payment_uid\']),\n
+                 dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     total_price += account_props.get(\'initial_debit_balance\', 0)\n
     total_price -= account_props.get(\'initial_credit_balance\', 0)\n
@@ -576,8 +585,8 @@ if account_type_to_group_by_payment:\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
-                  (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-                  dict(debit=0, credit=0))\n
+          getKey(node, payment=node[\'payment_uid\']),\n
+                 dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_debit_balance\'] = account_props.get(\n
                       \'initial_debit_balance\', 0) + total_price\n
@@ -594,36 +603,39 @@ if account_type_to_group_by_payment:\n
                   **inventory_params):\n
     account_used[node[\'node_relative_url\']] = 1\n
     account_props = line_per_account.setdefault(\n
-                  (node[\'node_relative_url\'], MARKER, node[\'payment_uid\']),\n
-                  dict(debit=0, credit=0))\n
+          getKey(node, payment=node[\'payment_uid\']),\n
+                 dict(debit=0, credit=0))\n
     total_price = node[\'total_price\'] or 0\n
     account_props[\'initial_credit_balance\'] = account_props.get(\n
                       \'initial_credit_balance\', 0) - total_price\n
   # }}}\n
 \n
 line_list = []\n
-for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
-                                    line_per_account.items():\n
-  node_uid, node_title, node_id, string_index, node = getNodeTitleAndId(node_relative_url)\n
-  if mirror_section_uid is not MARKER:\n
-    if mirror_section_uid is None:\n
-      node_title = \'%s (%s)\' % ( node_title, Base_translateString(\'None\'))\n
-    else:\n
-      third_party = getObject(mirror_section_uid)\n
-      node_title = "%s (%s)" % ( node_title, third_party.getTitle() )\n
-  elif payment_uid is not MARKER:\n
+for key, data in line_per_account.items():\n
+  node_relative_url = key[0]\n
+  mirror_section_uid = key[1]\n
+  payment_uid = key[2]\n
+  analytic_key_list = key[3:]\n
+\n
+  mirror_section_title = None\n
+  if expand_accounts and mirror_section_uid is not MARKER:\n
+    mirror_section_title = getObject(mirror_section_uid).getTitle()\n
+\n
+  node_uid, node_title, node_id, node_string_index, node =\\\n
+          getNodeTitleAndId(node_relative_url)\n
+\n
+  if selected_gap and not node.isMemberOf(selected_gap):\n
+    continue\n
+\n
+  if payment_uid is not MARKER:\n
     if payment_uid is None:\n
       node_title = \'%s (%s)\' % ( node_title, Base_translateString(\'None\'))\n
     else:\n
       payment = getObject(payment_uid)\n
       node_title = "%s (%s)" % ( node_title, payment.getTitle() )\n
-  \n
-  if not string_index:\n
-    string_index = \'%-10s\' % node_id\n
-  string_index = \'%s %s\' % (string_index, node_title)\n
 \n
-  if selected_gap and not node.isMemberOf(selected_gap):\n
-    continue\n
+  if not node_string_index:\n
+    node_string_index = \'%-10s\' % node_id\n
 \n
   initial_debit_balance = data.get(\'initial_debit_balance\', 0)\n
   initial_credit_balance = data.get(\'initial_credit_balance\', 0)\n
@@ -639,19 +651,32 @@ for (node_relative_url, mirror_section_uid, payment_uid), data in \\\n
   total_final_balance_if_credit += round(max(-closing_balance, 0) or 0, precision)\n
   \n
   \n
-  line_list.append(Object(uid=\'new_\',\n
-                          node_id=node_id,\n
-                          node_title=node_title,\n
-                          string_index=string_index,\n
-                          node_relative_url=node_relative_url,\n
-                          initial_debit_balance=initial_debit_balance,\n
-                          initial_credit_balance=initial_credit_balance,\n
-                          debit=data[\'debit\'],\n
-                          credit=data[\'credit\'],\n
-                          final_debit_balance=final_debit_balance,\n
-                          final_credit_balance=final_credit_balance,\n
-                          final_balance_if_debit=max(closing_balance, 0),\n
-                          final_balance_if_credit=max(-closing_balance, 0) or 0,))\n
+  line = Object(uid=\'new_\',\n
+                node_id=node_id,\n
+                node_title=node_title,\n
+                mirror_section_title=mirror_section_title,\n
+                node_relative_url=node_relative_url,\n
+                initial_debit_balance=initial_debit_balance,\n
+                initial_credit_balance=initial_credit_balance,\n
+                debit=data[\'debit\'],\n
+                credit=data[\'credit\'],\n
+                final_debit_balance=final_debit_balance,\n
+                final_credit_balance=final_credit_balance,\n
+                final_balance_if_debit=max(closing_balance, 0),\n
+                final_balance_if_credit=max(-closing_balance, 0) or 0,)\n
+\n
+  sort_key = (node_string_index, node_title, mirror_section_title)\n
+  analytic_dict = dict()\n
+  for analytic, uid in zip(group_analytic, analytic_key_list):\n
+    title = getAnalyticTitleFromUid(uid)\n
+    analytic_dict[analytic] = title\n
+    sort_key += (title, )\n
+\n
+  analytic_dict[\'sort_key\'] = sort_key\n
+  line.update(analytic_dict)\n
+\n
+  line_list.append(line)\n
+  \n
 \n
 if not show_empty_accounts:\n
   line_list = [ line for line in line_list\n
@@ -660,10 +685,7 @@ if not show_empty_accounts:\n
                    line[\'initial_credit_balance\'] or\n
                    line[\'initial_debit_balance\'] ]\n
 \n
-# sort\n
-def getStringIndex(obj):\n
-  return obj[\'string_index\']\n
-line_list.sort(key=getStringIndex)\n
+line_list.sort(key=lambda obj:obj[\'sort_key\'])\n
 \n
 # cache values for stat\n
 request.set(\'TrialBalance.total_initial_debit_balance\',\n
@@ -751,7 +773,7 @@ return new_line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, portal_type=None, function=None, project=None, **kw</string> </value>
+            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, portal_type=None, function=None, project=None, group_analytic=[], **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -771,7 +793,7 @@ return new_line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>14</int> </value>
+                        <value> <int>15</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -791,6 +813,7 @@ return new_line_list\n
                             <string>portal_type</string>
                             <string>function</string>
                             <string>project</string>
+                            <string>group_analytic</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -803,6 +826,8 @@ return new_line_list\n
                             <string>portal</string>
                             <string>getInventoryList</string>
                             <string>getInventory</string>
+                            <string>traverse</string>
+                            <string>getObject</string>
                             <string>Base_translateString</string>
                             <string>selected_gap</string>
                             <string>inventory_movement_type_list</string>
@@ -815,6 +840,7 @@ return new_line_list\n
                             <string>dict</string>
                             <string>inventory_params</string>
                             <string>_write_</string>
+                            <string>tuple</string>
                             <string>MARKER</string>
                             <string>line_per_account</string>
                             <string>account_used</string>
@@ -828,6 +854,11 @@ return new_line_list\n
                             <string>total_initial_credit_balance</string>
                             <string>total_final_balance_if_debit</string>
                             <string>total_final_balance_if_credit</string>
+                            <string>False</string>
+                            <string>getKey</string>
+                            <string>None</string>
+                            <string>analytic_title_dict</string>
+                            <string>getAnalyticTitleFromUid</string>
                             <string>_apply_</string>
                             <string>node</string>
                             <string>_getitem_</string>
@@ -836,27 +867,25 @@ return new_line_list\n
                             <string>_inplacevar_</string>
                             <string>round</string>
                             <string>max</string>
-                            <string>traverse</string>
-                            <string>getObject</string>
                             <string>node_title_and_id_cache</string>
                             <string>getNodeTitleAndId</string>
-                            <string>initial_balance_date</string>
-                            <string>False</string>
-                            <string>found_balance</string>
                             <string>True</string>
+                            <string>initial_balance_date</string>
+                            <string>found_balance</string>
                             <string>period_movement_type_list</string>
                             <string>min</string>
                             <string>mirror_section_key</string>
                             <string>line_list</string>
+                            <string>key</string>
+                            <string>data</string>
                             <string>node_relative_url</string>
                             <string>mirror_section_uid</string>
                             <string>payment_uid</string>
-                            <string>data</string>
+                            <string>analytic_key_list</string>
+                            <string>mirror_section_title</string>
                             <string>node_title</string>
                             <string>node_id</string>
-                            <string>string_index</string>
-                            <string>None</string>
-                            <string>third_party</string>
+                            <string>node_string_index</string>
                             <string>payment</string>
                             <string>initial_debit_balance</string>
                             <string>initial_credit_balance</string>
@@ -864,7 +893,12 @@ return new_line_list\n
                             <string>final_credit_balance</string>
                             <string>closing_balance</string>
                             <string>line</string>
-                            <string>getStringIndex</string>
+                            <string>sort_key</string>
+                            <string>analytic_dict</string>
+                            <string>zip</string>
+                            <string>analytic</string>
+                            <string>uid</string>
+                            <string>title</string>
                             <string>current_gap</string>
                             <string>getAccountClass</string>
                             <string>new_line_list</string>
@@ -895,6 +929,7 @@ return new_line_list\n
                 <none/>
                 <none/>
                 <none/>
+                <list/>
               </tuple>
             </value>
         </item>
