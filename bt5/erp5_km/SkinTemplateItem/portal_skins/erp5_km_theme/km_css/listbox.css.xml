@@ -63,21 +63,24 @@ div.search_popup{\n
 }\n
 .listbox-action-widget div.bottom_actions{\n
   float:left;\n
+  background-color:#E0DFD1;\n
+  padding-left:0.5em;\n
+  padding-bottom:0.2em;\n
 }\n
 \n
 /* Title of the bar */\n
 .listbox_actions_title{\n
-  background-color:#CDCAAE;\n
   color:#FFFFFF;\n
   display:block;\n
   font-size:15px;\n
-  text-align:center;\n
-  width:67px;\n
+  text-align:left;\n
+  width:100%;\n
+  float:left;\n
+\n
 }\n
 \n
 /* Sub container for the buttons*/\n
 .buttons_group {\n
-  background-color:#E0DFD1;\n
   margin-right:30px;\n
   padding-top:3px;\n
   width:auto;\n
@@ -200,6 +203,7 @@ div.search_popup{\n
  margin-bottom:0.3em;\n
  margin-top:0.3em;\n
  min-height:28px;\n
+ padding-left:0.2em;\n
  \n
 }\n
 \n
@@ -276,10 +280,10 @@ a.tree_open {\n
   padding-left:15px;\n
 }\n
 \n
-/*Table Listbox elmt*/\n
+/*Table Listbox elements */\n
 .listbox th {\n
-  background-color:#EBEBE2;\n
   text-align:left;\n
+  vertical-align: top;\n
 }\n
 .listbox_search_line{\n
   background-color: #F0EFE9;\n
