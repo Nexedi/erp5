@@ -28,13 +28,15 @@ Options:
                              --data_fs_path to run tests on an existing
                              Data.fs
   --data_fs_path=STRING      Use the given path for the Data.fs
-  --live_instance_path=STRING
+  --live_instance=[STRING]
                              Use Data.fs, Document, PropertySheet, Constraint
                              from a live instance. This is very usefull in order
                              to try quickly a test without having to rebuild
                              testing data. This could be totally unsafe for you
                              instance, this depends if the test destroy existing
                              data or not.
+                             STRING could be used to define the path of real
+                             instance
                              It enable --save --load --data_fs_path
   --bt5_path                 Search for Business Templates in the given list of
                              paths (or any HTTP url supported by template tool),
@@ -599,7 +601,7 @@ def main():
         "update_business_templates",
         "random_activity_priority=",
         "activity_node=",
-        "live_instance_path=",
+        "live_instance=",
         "zeo_client=",
         "zeo_server=",
         "zserver=",
@@ -668,12 +670,12 @@ def main():
       os.environ["conversion_server_hostname"] = arg
     elif opt == "--conversion_server_port":
       os.environ["conversion_server_port"] = arg
-    elif opt == "--live_instance_path":
-      os.environ["live_instance_path"] = arg
+    elif opt == "--live_instance":
+      os.environ["live_instance_path"] = arg or real_instance_home
       os.environ["erp5_load_data_fs"] = "1"
       os.environ["erp5_save_data_fs"] = "1"
-      os.environ["erp5_tests_data_fs_path"] = arg + '/var/Data.fs'
-      os.environ["ignore_mysql_dump"] = "1"
+      os.environ["erp5_tests_data_fs_path"] = os.path.join(
+                                                arg, 'var', 'Data.fs')
     elif opt == "--use_dummy_mail_host":
       os.environ["use_dummy_mail_host"] = "1"
     elif opt == "--random_activity_priority":
