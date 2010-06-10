@@ -83,6 +83,7 @@
                         <string>my_preferred_accounting_transaction_from_date</string>
                         <string>my_preferred_accounting_transaction_at_date</string>
                         <string>my_preferred_accounting_transaction_section_category</string>
+                        <string>my_preferred_accounting_section_category_strict</string>
                         <string>my_preferred_accounting_transaction_source_section</string>
                         <string>my_preferred_accounting_transaction_currency</string>
                       </list>
