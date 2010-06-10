@@ -30,6 +30,7 @@
 """
 
 import unittest
+import os
 
 import transaction
 from DateTime import DateTime
@@ -1810,6 +1811,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 1
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -1912,7 +1914,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 1
     request_form['per_account_class_summary'] = 0
-    request_form['hide_analytic'] = False
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -1922,29 +1924,34 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
  
     self.assertEquals(6, len(data_line_list))
+    
+    self.assertEquals(['node_id', 'node_title', 'mirror_section_title',
+      'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
+      'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
+      'final_balance_if_credit'], data_line_list[0].column_id_list)
 
     # account are sorted by GAP Id
     self.checkLineProperties(data_line_list[0], node_id='40',
-        node_title='Payable (Client 1)', initial_debit_balance=0,
-        initial_credit_balance=0, debit=200, credit=100,
-        final_debit_balance=200, final_credit_balance=100,
+        node_title='Payable', mirror_section_title='Client 1',
+        initial_debit_balance=0, initial_credit_balance=0, debit=200,
+        credit=100, final_debit_balance=200, final_credit_balance=100,
         final_balance_if_debit=100, final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[1], node_id='41',
-        node_title='Receivable (Client 1)', initial_debit_balance=0,
-        initial_credit_balance=0, debit=1000, credit=200,
-        final_debit_balance=1000, final_credit_balance=200,
+        node_title='Receivable', mirror_section_title='Client 1',
+        initial_debit_balance=0, initial_credit_balance=0, debit=1000,
+        credit=200, final_debit_balance=1000, final_credit_balance=200,
         final_balance_if_debit=800, final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[2], node_id='41',
-        node_title='Receivable (Client 2)', initial_debit_balance=0,
-        initial_credit_balance=0, debit=400, credit=0, final_debit_balance=400,
-        final_credit_balance=0, final_balance_if_debit=400,
-        final_balance_if_credit=0)
+        node_title='Receivable', mirror_section_title='Client 2',
+        initial_debit_balance=0, initial_credit_balance=0, debit=400, credit=0,
+        final_debit_balance=400, final_credit_balance=0,
+        final_balance_if_debit=400, final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[3], node_id='41',
-        node_title='Receivable (John Smith)', initial_debit_balance=0,
-        initial_credit_balance=0, debit=500, credit=0,
+        node_title='Receivable', mirror_section_title='John Smith',
+        initial_debit_balance=0, initial_credit_balance=0, debit=500, credit=0,
         final_debit_balance=500, final_credit_balance=0,
         final_balance_if_debit=500, final_balance_if_credit=0,)
     
@@ -2026,6 +2033,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2111,6 +2119,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2176,7 +2185,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 1
     request_form['per_account_class_summary'] = 0
-    request_form['hide_analytic'] = False
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2187,26 +2196,26 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEquals(4, len(data_line_list))
 
     self.checkLineProperties(data_line_list[0], node_id='40',
-        node_title='Payable (Client 1)', initial_debit_balance=400,
-        initial_credit_balance=0, debit=0, credit=0,
+        node_title='Payable', mirror_section_title='Client 1',
+        initial_debit_balance=400, initial_credit_balance=0, debit=0, credit=0,
         final_debit_balance=400, final_credit_balance=0,
         final_balance_if_debit=400, final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[1], node_id='40',
-        node_title='Payable (Client 2)', initial_debit_balance=0,
-        initial_credit_balance=600, debit=0, credit=0,
+        node_title='Payable', mirror_section_title='Client 2',
+        initial_debit_balance=0, initial_credit_balance=600, debit=0, credit=0,
         final_debit_balance=0, final_credit_balance=600,
         final_balance_if_debit=0, final_balance_if_credit=600)
     
     self.checkLineProperties(data_line_list[2], node_id='41',
-        node_title='Receivable (Client 1)', initial_debit_balance=0,
+        node_title='Receivable', mirror_section_title='Client 1', initial_debit_balance=0,
         initial_credit_balance=400, debit=0, credit=0,
         final_debit_balance=0, final_credit_balance=400,
         final_balance_if_debit=0, final_balance_if_credit=400)
 
     self.checkLineProperties(data_line_list[3], node_id='41',
-        node_title='Receivable (Client 2)', initial_debit_balance=600,
-        initial_credit_balance=0, debit=0, credit=0,
+        node_title='Receivable', mirror_section_title='Client 2',
+        initial_debit_balance=600, initial_credit_balance=0, debit=0, credit=0,
         final_debit_balance=600, final_credit_balance=0,
         final_balance_if_debit=600, final_balance_if_credit=0)
 
@@ -2257,7 +2266,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
-    request_form['hide_analytic'] = False
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2326,6 +2335,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2393,6 +2403,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2473,6 +2484,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2541,6 +2553,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2613,6 +2626,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2656,6 +2670,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['expand_accounts'] = 1
     request_form['gap_list'] = ['my_country/my_accounting_standards/4']
     request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2668,26 +2683,26 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     # account are sorted by GAP Id
     self.checkLineProperties(data_line_list[0], node_id='40',
-        node_title='Payable (Client 1)', initial_debit_balance=0,
-        initial_credit_balance=0, debit=200, credit=100,
-        final_debit_balance=200, final_credit_balance=100,
+        node_title='Payable', mirror_section_title='Client 1',
+        initial_debit_balance=0, initial_credit_balance=0, debit=200,
+        credit=100, final_debit_balance=200, final_credit_balance=100,
         final_balance_if_debit=100, final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[1], node_id='41',
-        node_title='Receivable (Client 1)', initial_debit_balance=0,
-        initial_credit_balance=0, debit=1000, credit=200,
-        final_debit_balance=1000, final_credit_balance=200,
+        node_title='Receivable', mirror_section_title='Client 1',
+        initial_debit_balance=0, initial_credit_balance=0, debit=1000,
+        credit=200, final_debit_balance=1000, final_credit_balance=200,
         final_balance_if_debit=800, final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[2], node_id='41',
-        node_title='Receivable (Client 2)', initial_debit_balance=0,
-        initial_credit_balance=0, debit=400, credit=0, final_debit_balance=400,
-        final_credit_balance=0, final_balance_if_debit=400,
-        final_balance_if_credit=0)
+        node_title='Receivable', mirror_section_title='Client 2',
+        initial_debit_balance=0, initial_credit_balance=0, debit=400, credit=0,
+        final_debit_balance=400, final_credit_balance=0,
+        final_balance_if_debit=400, final_balance_if_credit=0)
     
     self.checkLineProperties(data_line_list[3], node_id='41',
-        node_title='Receivable (John Smith)', initial_debit_balance=0,
-        initial_credit_balance=0, debit=500, credit=0,
+        node_title='Receivable', mirror_section_title='John Smith',
+        initial_debit_balance=0, initial_credit_balance=0, debit=500, credit=0,
         final_debit_balance=500, final_credit_balance=0,
         final_balance_if_debit=500, final_balance_if_credit=0,)
     
@@ -2734,7 +2749,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 1
-    request_form['hide_analytic'] = False
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2787,6 +2802,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
     request_form['portal_type'] = ['Purchase Invoice Transaction']
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2828,6 +2844,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['per_account_class_summary'] = 0
     request_form['function'] = 'function/a'
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -2870,6 +2887,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 0
     request_form['per_account_class_summary'] = 0
     request_form['project'] = self.project_1.getRelativeUrl()
+    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
@@ -3413,6 +3431,8 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
   def setUp(self):
     # FIXME: use afterSetUp, and fix AccountingTestCase to use afterSetUp
     AccountingTestCase.setUp(self)
+    if os.environ.get('erp5_save_data_fs'):
+      return
     self.login('ERP5TypeTestCase')
     # create some functions
     function = self.portal.portal_categories.function
@@ -3780,6 +3800,208 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     self.checkLineProperties(data_line_list[0],
                              debit_price=1500,
                              credit_price=1500,)
+
+  def testTrialBalanceGroupByProject(self):
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+    request_form['gap_list'] = ['my_country/my_accounting_standards/7']
+    request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = ['project']
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+ 
+    self.assertEquals(2, len(data_line_list))
+
+    self.assertEquals(['node_id', 'node_title', 'project_uid',
+      'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
+      'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
+      'final_balance_if_credit'], data_line_list[0].column_id_list)
+
+    self.checkLineProperties(data_line_list[0], node_id='7',
+        node_title='Goods Sales', project_uid='Project 1',
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=800, final_debit_balance=0, final_credit_balance=800,
+        final_balance_if_debit=0, final_balance_if_credit=800)
+
+    self.checkLineProperties(data_line_list[1], node_id='7',
+        node_title='Goods Sales', project_uid='Project 2',
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=700, final_debit_balance=0, final_credit_balance=700,
+        final_balance_if_debit=0, final_balance_if_credit=700)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=1500, final_debit_balance=0, final_credit_balance=1500,
+        final_balance_if_debit=0, final_balance_if_credit=1500)
+
+  def testTrialBalanceGroupByFunction(self):
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+    request_form['gap_list'] = ['my_country/my_accounting_standards/7']
+    request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = ['function']
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+ 
+    self.assertEquals(2, len(data_line_list))
+
+    self.assertEquals(['node_id', 'node_title', 'function_uid',
+      'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
+      'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
+      'final_balance_if_credit'], data_line_list[0].column_id_list)
+
+    self.checkLineProperties(data_line_list[0], node_id='7',
+        node_title='Goods Sales', function_uid='a',
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=300, final_debit_balance=0, final_credit_balance=300,
+        final_balance_if_debit=0, final_balance_if_credit=300)
+
+    self.checkLineProperties(data_line_list[1], node_id='7',
+        node_title='Goods Sales', function_uid='b',
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=1200, final_debit_balance=0, final_credit_balance=1200,
+        final_balance_if_debit=0, final_balance_if_credit=1200)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=1500, final_debit_balance=0, final_credit_balance=1500,
+        final_balance_if_debit=0, final_balance_if_credit=1500)
+
+  def testTrialBalanceGroupByProjectAndFunction(self):
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+    request_form['gap_list'] = ['my_country/my_accounting_standards/7']
+    request_form['per_account_class_summary'] = 0
+    request_form['group_analytic'] = ['function', 'project']
+
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+ 
+    self.assertEquals(3, len(data_line_list))
+
+    self.assertEquals(['node_id', 'node_title', 'function_uid', 'project_uid',
+      'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
+      'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
+      'final_balance_if_credit'], data_line_list[0].column_id_list)
+
+    self.checkLineProperties(data_line_list[0], node_id='7',
+        node_title='Goods Sales', function_uid='a', project_uid='Project 1',
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=300, final_debit_balance=0, final_credit_balance=300,
+        final_balance_if_debit=0, final_balance_if_credit=300)
+
+    self.checkLineProperties(data_line_list[1], node_id='7',
+        node_title='Goods Sales', function_uid='b', project_uid='Project 1',
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=500, final_debit_balance=0, final_credit_balance=500,
+        final_balance_if_debit=0, final_balance_if_credit=500)
+
+    self.checkLineProperties(data_line_list[2], node_id='7',
+        node_title='Goods Sales', function_uid='b', project_uid='Project 2',
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=700, final_debit_balance=0, final_credit_balance=700,
+        final_balance_if_debit=0, final_balance_if_credit=700)
+
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=1500, final_debit_balance=0, final_credit_balance=1500,
+        final_balance_if_debit=0, final_balance_if_credit=1500)
+
+  def testTrialBalanceGroupByProductLine(self):
+    self._makeOne(
+              portal_type='Sale Invoice Transaction',
+              title='Noise',
+              source_reference='2',
+              simulation_state='delivered',
+              destination_section_value=self.portal.organisation_module.client_1,
+              start_date=DateTime(2006, 2, 2),
+              lines=(dict(source_value=self.portal.account_module.receivable,
+                          source_debit=1100.0),
+                     dict(source_value=self.portal.account_module.payable,
+                          source_function_value=self.function_a,
+                          source_project_value=self.project_1,
+                          product_line_value=self.product_line_1,
+                          source_credit=1100.0),))
+
+    request_form = self.portal.REQUEST.form
+    request_form['from_date'] = DateTime(2006, 1, 1)
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['simulation_state'] = ['delivered']
+    request_form['show_empty_accounts'] = 0
+    request_form['expand_accounts'] = 0
+    request_form['gap_list'] = ['my_country/my_accounting_standards/7']
+    request_form['per_account_class_summary'] = 0
+    # in the dialog, categories are in the '_translated_title' form
+    request_form['group_analytic'] = ['product_line_translated_title']
+    self.assertTrue(
+        ('Product Line', 'product_line_translated_title') in
+      self.portal.accounting_module.AccountModule_viewTrialBalanceReportDialog\
+        .your_group_analytic.get_value('items'))
+    
+    report_section_list = self.getReportSectionList(
+                                    self.portal.accounting_module,
+                                    'AccountModule_viewTrialBalanceReport')
+    self.assertEquals(1, len(report_section_list))
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+ 
+    self.assertEquals(1, len(data_line_list))
+
+    self.assertEquals(['node_id', 'node_title', 'strict_product_line_uid',
+      'initial_debit_balance', 'initial_credit_balance', 'debit', 'credit',
+      'final_debit_balance', 'final_credit_balance', 'final_balance_if_debit',
+      'final_balance_if_credit'], data_line_list[0].column_id_list)
+
+    self.checkLineProperties(data_line_list[0], node_id='7',
+        node_title='Goods Sales', strict_product_line_uid='pl1',
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=800, final_debit_balance=0, final_credit_balance=800,
+        final_balance_if_debit=0, final_balance_if_credit=800)
+
+    # Lines that does not have a product line are not displayed. This is a
+    # technical limitation, we would have to left join to support this.
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1],
+        initial_debit_balance=0, initial_credit_balance=0, debit=0,
+        credit=800, final_debit_balance=0, final_credit_balance=800,
+        final_balance_if_debit=0, final_balance_if_credit=800)
 
 
 def test_suite():
