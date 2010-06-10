@@ -15,11 +15,11 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts69348961.48</string> </value>
+            <value> <string>ts76170392.93</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>erp5_km_utils.js</string> </value>
+            <value> <string>erp5_km.js</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -27,7 +27,8 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>\n
+            <value> <string encoding="cdata"><![CDATA[
+
 // Browser gadget toggle section\n
 function toggleSection(section_id, image_id){\n
   section_obj = getElement(section_id);\n
@@ -62,7 +63,18 @@ function toggleDocumentDetailsPopupWindow(dom_id, show, url){\n
     dom_element.style.display=\'none\';\n
     }\n
 }\n
-</string> </value>
+\n
+MochiKit.DOM.addLoadEvent(setScreenClass);\n
+connect(window, "onresize", setScreenClass);\n
+\n
+function setScreenClass(){\n
+  var fmt = document.documentElement.clientWidth;\n
+  var cls = (fmt<=800)?\'screen_small\':(fmt>800)?\'screen_wide\':\'screen_small\';\n
+  document.body.className=cls;\n
+};\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -70,7 +82,7 @@ function toggleDocumentDetailsPopupWindow(dom_id, show, url){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>1041</long> </value>
+            <value> <int>1319</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
