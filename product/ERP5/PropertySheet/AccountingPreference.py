@@ -57,6 +57,12 @@ class AccountingPreference:
       'type'        : 'string',
       'preference'  : 1,
       'mode'        : 'w'},
+    { 'id'          : 'preferred_accounting_section_category_strict',
+      'description' : 'Do we use strict section category membership by'
+                      ' default.',
+      'type'        : 'boolean',
+      'preference'  : 1,
+      'mode'        : 'w'},
     { 'id'          : 'preferred_accounting_transaction_source_section',
       'description' : 'The preferred section organisation.',
       'type'        : 'string',
