@@ -58,7 +58,7 @@
                tal:condition="not: exists_siblings">\n
              <a tal:content="root_section/Base_getTitle"\n
                 tal:attributes="href root_section/absolute_url;\n
-                                title section/Base_getTitle;"/>\n
+                                title root_section/Base_getTitle"/>\n
            </li>\n
            <li class="non-empty-list-node"\n
                tal:condition="exists_siblings">\n
