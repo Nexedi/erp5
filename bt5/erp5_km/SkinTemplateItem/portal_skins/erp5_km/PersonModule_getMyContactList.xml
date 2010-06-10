@@ -127,7 +127,7 @@ return context.portal_catalog(**kw)\n
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>TODO - is this really useful ?</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
