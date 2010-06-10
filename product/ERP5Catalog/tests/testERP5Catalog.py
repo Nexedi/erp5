@@ -1706,29 +1706,34 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     PRIMARY KEY  (`uid`)
     ) TYPE=InnoDB;
     """
-    new_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
-                    id='z_create_dummy_table', title='', arguments="",
-                    connection_id=self.new_erp5_sql_connection,
-                    template=create_dummy_table_sql)
     drop_summy_table_sql = """
     DROP TABLE IF EXISTS `dummy`
     """
-    new_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+    for catalog, connection_id in ((original_catalog, original_connection_id),
+        (new_catalog, self.new_erp5_sql_connection)):
+      catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+                    id='z_create_dummy_table', title='', arguments="",
+                    connection_id=connection_id,
+                    template=create_dummy_table_sql)
+      catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
                     id='z0_drop_dummy_table', title='', arguments="",
-                    connection_id=self.new_erp5_sql_connection,
+                    connection_id=connection_id,
                     template=drop_summy_table_sql)
 
     # update catalog configuration and declare new ZSQLMethods
-    sql_clear_catalog_list = list(new_catalog.sql_clear_catalog)
+    sql_clear_catalog_list = list(original_catalog.sql_clear_catalog)
     sql_clear_catalog_list.extend(['z0_drop_dummy_table',
                                    'z_create_dummy_table'])
     sql_clear_catalog_list.sort()
-    new_catalog.sql_clear_catalog = tuple(sql_clear_catalog_list)
+    original_catalog.sql_clear_catalog = new_catalog.sql_clear_catalog = \
+      tuple(sql_clear_catalog_list)
 
-    sql_search_table_list = list(new_catalog.sql_search_tables)
+    sql_search_table_list = list(original_catalog.sql_search_tables)
     sql_search_table_list.append('dummy')
     sql_search_table_list.sort()
-    new_catalog.sql_search_tables = tuple(sql_search_table_list)
+    original_catalog.sql_search_tables = new_catalog.sql_search_tables = \
+      tuple(sql_search_table_list)
+
     portal_catalog.manage_catalogClear()
     transaction.commit()
     # Catalog structure changed, so we should be able to build new queries
