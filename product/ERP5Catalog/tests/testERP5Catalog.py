@@ -1692,14 +1692,11 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Create new catalog
     portal_catalog = self.getCatalogTool()
-    original_catalog_id = 'erp5_mysql_innodb'
-    self.new_catalog_id = self.original_catalog_id + '2'
-    cp_data = portal_catalog.manage_copyObjects(ids=('erp5_mysql_innodb',))
-    new_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
-    portal_catalog.manage_renameObject(id=new_id, new_id=self.new_catalog_id)
-
-    # Parse all methods in the new catalog in order to change the connector
-    new_catalog = portal_catalog[self.new_catalog_id]
+    original_catalog = portal_catalog.getSQLCatalog()
+    original_catalog_id = original_catalog.getId()
+    cp_data = portal_catalog.manage_copyObjects(ids=(original_catalog_id,))
+    new_catalog_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
+    new_catalog = portal_catalog[new_catalog_id]
 
     # Add new searchable table in new catalog
     create_dummy_table_sql = """
