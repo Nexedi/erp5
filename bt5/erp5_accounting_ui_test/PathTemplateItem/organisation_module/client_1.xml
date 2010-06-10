@@ -86,6 +86,8 @@
             <value>
               <tuple>
                 <string>region/region</string>
+                <string>group/client</string>
+                <string>role/client</string>
               </tuple>
             </value>
         </item>
