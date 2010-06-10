@@ -1,3 +1,4 @@
+PYTHON=python
 SOFTWARE_BUILD_PATH='/opt/erp5/'`cat VERSION.txt`
 PACKAGE_INSTALL_PATH='opt/erp5/'`cat VERSION.txt`
 ifndef $(PACKAGE_VERSION)
@@ -14,7 +15,7 @@ software: bin/buildout
 	bin/buildout
 
 bin/buildout:
-	python -S bootstrap/bootstrap.py
+	$(PYTHON) -S bootstrap/bootstrap.py
 
 # run make assert to check that all is working
 assert: bin/python2.4
