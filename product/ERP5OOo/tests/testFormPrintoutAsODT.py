@@ -597,8 +597,9 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     request = self.app.REQUEST
     request['here'] = test1
 
+    from DateTime import DateTime
     test1.foo_1.setTitle('foo_title_7')
-    test1.foo_1.setStartDate('2009-04-20')
+    test1.foo_1.setStartDate(DateTime(2009,4,20))
     message = listbox.ListBox_setPropertyList(
       field_list_method = 'objectValues',
       field_portal_types = 'Foo Line | Foo Line',
