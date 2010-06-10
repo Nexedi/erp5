@@ -522,6 +522,9 @@ def create_settings_form():
                      method, enctype, encoding, stored_encoding, unicode_mode, edit_order])
     return form
 
+
+from OFS.Cache import filterCacheTab
+
 class ERP5Form(ZMIForm, ZopePageTemplate):
     """
         A Formulator form with a built-in rendering parameter based
@@ -538,7 +541,11 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                       ({'label':'Proxify', 'action':'formProxify'},
                        {'label':'UnProxify', 'action':'formUnProxify'},
                        {'label':'RelatedProxy', 
-                         'action':'formShowRelatedProxyFields'}
+                         'action':'formShowRelatedProxyFields'},
+                       {'label': 'Cache',
+                        'action': 'ZCacheable_manage',
+                        'filter': filterCacheTab,
+                        'help': ('OFSP', 'Cacheable-properties.stx')}
                       )+
                       ZMIForm.manage_options[5:])
 
