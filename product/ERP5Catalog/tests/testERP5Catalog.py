@@ -1665,12 +1665,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     LOG('Testing... ', 0, message)
 
     portal = self.getPortal()
-    self.original_connection_id = 'erp5_sql_connection'
-    self.original_deferred_connection_id = 'erp5_sql_deferred_connection'
+    original_connection_id = 'erp5_sql_connection'
+    original_deferred_connection_id = 'erp5_sql_deferred_connection'
     new_connection_string = getExtraSqlConnectionStringList()[0]
 
     # Skip this test if default connection string is not "test test".
-    original_connection = getattr(portal, self.original_connection_id)
+    original_connection = getattr(portal, original_connection_id)
     connection_string = original_connection.connection_string
     if (connection_string == new_connection_string):
       message = 'SKIPPED: default connection string is the same as the one for hot-reindex catalog'
@@ -1692,7 +1692,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
 
     # Create new catalog
     portal_catalog = self.getCatalogTool()
-    self.original_catalog_id = 'erp5_mysql_innodb'
+    original_catalog_id = 'erp5_mysql_innodb'
     self.new_catalog_id = self.original_catalog_id + '2'
     cp_data = portal_catalog.manage_copyObjects(ids=('erp5_mysql_innodb',))
     new_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
@@ -1743,13 +1743,13 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(query.query_list)
 
     # prepare arguments for hot reindex
-    source_sql_connection_id_list=list((self.original_connection_id,
-                                  self.original_deferred_connection_id))
+    source_sql_connection_id_list=list((original_connection_id,
+                                  original_deferred_connection_id))
     destination_sql_connection_id_list=list((self.new_erp5_sql_connection,
                                        self.new_erp5_deferred_sql_connection))
     # launch the full hot reindexing 
-    portal_catalog.manage_hotReindexAll(source_sql_catalog_id=self.original_catalog_id,
-                 destination_sql_catalog_id=self.new_catalog_id,
+    portal_catalog.manage_hotReindexAll(source_sql_catalog_id=original_catalog_id,
+                 destination_sql_catalog_id=new_catalog_id,
                  source_sql_connection_id_list=source_sql_connection_id_list,
                  destination_sql_connection_id_list=destination_sql_connection_id_list,
                  update_destination_sql_catalog=True)
