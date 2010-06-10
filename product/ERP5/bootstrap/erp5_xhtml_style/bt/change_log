@@ -1,3 +1,6 @@
+2010-06-10 kazuhiko
+* Typing Enter key in listbox search fields invokes Base_doSelect instead of the page's form action.
+
 2010-05-28 yo
 * Make it possible to customize the behavior after a new content is added.
 

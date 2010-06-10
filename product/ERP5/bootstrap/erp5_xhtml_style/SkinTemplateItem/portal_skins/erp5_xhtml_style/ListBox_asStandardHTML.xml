@@ -233,7 +233,8 @@
                       tal:replace="structure python: search_field.render(value = param, key = alias)" />\n
                     <tal:block tal:condition="python: search_field is None">\n
                       <input tal:condition="not: is_gadget_mode" name="id" size="8" value=""\n
-                        tal:attributes="name alias; value param" style="width: 100%" />\n
+                        tal:attributes="name alias; value param" style="width: 100%"\n
+                        onkeypress="submitFormOnEnter(event, this.form, \'Base_doSelect\');" />\n
                       <input tal:condition="is_gadget_mode" \n
                         tal:define ="params python: {alias:\'this.value\'};"\n
                         size="8" type="textarea" \n
