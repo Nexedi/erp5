@@ -1567,6 +1567,58 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
+  def test_subcontent_reindexing(self):
+    """Tests, that modification on Packing List are propagated to subobjects
+    during reindxation"""
+    organisation1 = self.portal.organisation_module.newContent(
+                              portal_type='Organisation')
+    organisation2 = self.portal.organisation_module.newContent(
+                              portal_type='Organisation')
+    packing_list = self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
+                              portal_type=self.packing_list_portal_type,
+                              source_value=organisation1)
+    packing_list_line = packing_list.newContent(portal_type=self.packing_list_line_portal_type)
+    packing_list_cell = packing_list.newContent(portal_type=self.packing_list_line_portal_type)\
+        .newContent(portal_type=self.packing_list_cell_portal_type)
+    self.stepTic()
+    # self-tests...
+    # ...assertions of acquisition
+    source, source_uid = packing_list.getSource(), packing_list.getSourceUid()
+    self.assertEqual(source, packing_list_line.getSource())
+    self.assertEqual(source, packing_list_cell.getSource())
+    # ...assertions that only acquisition is used
+    self.assertFalse('source/'+source in packing_list_line.getCategoryList())
+    self.assertFalse('source/'+source in packing_list_cell.getCategoryList())
+    # ...assertions that they are movement
+    self.assertTrue(packing_list_line.isMovement())
+    self.assertTrue(packing_list_cell.isMovement())
+    # real assertions
+    kw = {"movement.source_uid":source_uid}
+    catalog_tool = self.portal.portal_catalog
+    self.assertEqual(1, len(catalog_tool(uid=packing_list.getUid(),
+      source_relative_url=source)))
+    self.assertEqual(1, len(catalog_tool(uid=packing_list_line.getUid(), **kw)))
+    self.assertEqual(1, len(catalog_tool(uid=packing_list_cell.getUid(), **kw)))
+
+    # change to different source
+    packing_list.setSourceValue(organisation2)
+    self.stepTic()
+
+    # ...assertions of acquisition
+    source, source_uid = packing_list.getSource(), packing_list.getSourceUid()
+    self.assertEqual(source, packing_list_line.getSource())
+    self.assertEqual(source, packing_list_cell.getSource())
+    # ...assertions that only acquisition is used
+    self.assertFalse('source/'+source in packing_list_line.getCategoryList())
+    self.assertFalse('source/'+source in packing_list_cell.getCategoryList())
+    # real assertions
+    kw = {"movement.source_uid":source_uid}
+    catalog_tool = self.portal.portal_catalog
+    self.assertEqual(1, len(catalog_tool(uid=packing_list.getUid(),
+      source_relative_url=source)))
+    self.assertEqual(1, len(catalog_tool(uid=packing_list_line.getUid(), **kw)))
+    self.assertEqual(1, len(catalog_tool(uid=packing_list_cell.getUid(), **kw)))
+
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
