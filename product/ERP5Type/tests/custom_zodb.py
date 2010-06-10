@@ -32,9 +32,10 @@ data_fs_path = os.environ.get('erp5_tests_data_fs_path',
                               os.path.join(instance_home, 'Data.fs'))
 load = int(os.environ.get('erp5_load_data_fs', 0))
 save = int(os.environ.get('erp5_save_data_fs', 0))
+live_instance_path = os.environ.get('live_instance_path', None)
 
 save_mysql = None
-if not zeo_client:
+if not zeo_client and live_instance_path is None:
   def save_mysql(verbosity=1):
     # The output of mysqldump needs to merge many lines at a time
     # for performance reasons (merging lines is at most 10 times
@@ -62,9 +63,13 @@ if load:
   _print("Restoring static files ... ")
   for dir in static_dir_list:
     full_path = os.path.join(instance_home, dir)
-    if os.path.exists(full_path + '.bak'):
+    if live_instance_path is not None:
+      backup_path = os.path.join(live_instance_path, dir)
+    else:
+      backup_path = full_path + '.bak'
+    if os.path.exists(backup_path):
       os.rmdir(full_path)
-      shutil.copytree(full_path + '.bak', full_path, symlinks=True)
+      shutil.copytree(backup_path, full_path, symlinks=True)
 elif save and not zeo_client and os.path.exists(data_fs_path):
   os.remove(data_fs_path)
 
