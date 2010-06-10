@@ -468,6 +468,12 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
       archive_file.close()
 
   def _getExtensibleContent(self, request, name):
+    # Be sure that html conversion is done,
+    # as it is required to extract extensible content
+    self._convert(format='html')
+    web_cache_kw = {'name': name,
+                    'format': '_embedded'}
+    _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
     try:
       mime, data = self.getConversion(format='_embedded', file_name=name)
       return OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
