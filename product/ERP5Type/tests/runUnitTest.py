@@ -671,11 +671,12 @@ def main():
     elif opt == "--conversion_server_port":
       os.environ["conversion_server_port"] = arg
     elif opt == "--live_instance":
-      os.environ["live_instance_path"] = arg or real_instance_home
+      live_instance_path = arg or real_instance_home
+      os.environ["live_instance_path"] = live_instance_path
       os.environ["erp5_load_data_fs"] = "1"
       os.environ["erp5_save_data_fs"] = "1"
       os.environ["erp5_tests_data_fs_path"] = os.path.join(
-                                                arg, 'var', 'Data.fs')
+                                      live_instance_path, 'var', 'Data.fs')
     elif opt == "--use_dummy_mail_host":
       os.environ["use_dummy_mail_host"] = "1"
     elif opt == "--random_activity_priority":
