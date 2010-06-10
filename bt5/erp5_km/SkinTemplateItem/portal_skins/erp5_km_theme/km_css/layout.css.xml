@@ -1456,25 +1456,20 @@ div.web-toolbar{\n
 \n
 div.web-toolbar h3{\n
   color:#FFFFFF;\n
+  padding-top: 4px;\n
 }\n
 \n
-div.web-toolbar ul{\n
-  padding: 0em!important;\n
-  margin: 0em!important;\n
+#wrapper_footer div.web-toolbar ul{\n
+  padding: 0em;\n
+  margin: 0em;\n
 }\n
 \n
-div.web-toolbar ul li{\n
-  padding-top:5px;\n
-}\n
-\n
-div.web-toolbar ul li.toolboxSection:hover{\n
+#wrapper_footer div.web-toolbar li.toolboxSection:hover, \n
+#wrapper_footer div.web-toolbar li.toolboxSection h3:hover {\n
   background:#A8A799;\n
 }\n
 \n
-div.web-toolbar h3:hover {\n
-  background:#A8A799;\n
-}\n
-\n
+  \n
 div.web-toolbar div.menu{\n
   background:#818364;\n
   padding: 0em;\n
