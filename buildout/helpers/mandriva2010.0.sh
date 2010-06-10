@@ -31,6 +31,7 @@ gcc-c++
 groff
 libboost-devel
 libbzip2-devel
+libboost-devel
 libgdbm-devel
 libglib2.0-devel
 libSDL-devel

@@ -7,6 +7,7 @@ build-essential
 cpio
 flex
 gcc
+libboost-dev
 libbz2-dev
 libgdbm-dev
 libgif-dev
