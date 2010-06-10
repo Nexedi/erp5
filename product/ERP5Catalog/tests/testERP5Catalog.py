@@ -1759,6 +1759,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # Flush message queue
     transaction.commit()
     self.tic()
+    self.assertEqual(portal_catalog.getSQLCatalog().getId(), new_catalog_id)
     # Check that column map is updated according new structure of catalog.
     self.assertTrue('dummy.dummy_title' in portal_catalog.getSQLCatalog().getColumnMap())
     # Check more cached methods of SQLCatalog by building SQLQuery
