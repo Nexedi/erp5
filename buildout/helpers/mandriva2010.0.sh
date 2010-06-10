@@ -12,16 +12,7 @@ Helper for buildout-base installation of ERP5 on Mandriva 2010.
    -h  shows this message
    -l  lists the required dependencies\
 """
-# Avoid some mandriva bugs, when package with canonical name libXXX
-# is wrongly only 32 bit
-if [ `uname -m` == "x86_64" ] ; then # XXX: Is it compilant way to fetch arch?
-  libs="lib64ungif4-devel"
-else
-  libs="libungif4-devel"
-fi
-
 PACKAGE_LIST="""\
-${libs}
 automake
 bison
 cpio
@@ -33,7 +24,7 @@ libboost-devel
 libbzip2-devel
 libboost-devel
 libgdbm-devel
-libglib2.0-devel
+libglib2-devel
 libSDL-devel
 libSDL_gfx-devel
 libSDL_image-devel
@@ -47,6 +38,7 @@ libpng-devel
 libreadline-devel
 libsasl2-devel
 libtermcap-devel
+libungif-devel
 libxml2-devel
 libxslt-devel
 make
