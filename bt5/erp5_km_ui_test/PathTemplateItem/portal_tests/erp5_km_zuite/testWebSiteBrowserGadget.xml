@@ -72,7 +72,11 @@
   <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
-\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Section 1")</td>\n
+  <td>10000</td> \n
+</tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
   <td>//div[@class=\'box_inner_content\']/div/ul[1]/li/a[@title=\'Section 1\']</td>\n
@@ -103,8 +107,6 @@
   <td>//div[@class=\'box_inner_content\']/div/ul[2]/ul/li[2]/a[@title=\'Section 2.2\']</td>\n
   <td></td>\n
 </tr>\n
-\n
-\n
 <tr>\n
   <td>verifyElementPresent</td>\n
   <td>//div[@class=\'box_inner_content\']/div/ul[3]/li/a[@title=\'Section 3\']</td>\n
