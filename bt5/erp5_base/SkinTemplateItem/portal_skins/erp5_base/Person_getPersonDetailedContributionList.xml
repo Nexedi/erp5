@@ -97,8 +97,8 @@ elif from_date is not None:\n
 elif to_date is not None:\n
   params = {"creation_date":to_date}\n
   query = Query(range="max", **params)\n
-select_expression = \'DATE_FORMAT(creation_date, "%s") as date, portal_type\' %sql_format\n
-group_by = \'DATE_FORMAT(creation_date, "%s"), portal_type\' %sql_format\n
+select_expression = {\'date\' : \'DATE_FORMAT(creation_date, "%s")\'%sql_format, \'portal_type\' : None}\n
+group_by = [\'DATE_FORMAT(creation_date, "%s")\' % sql_format, \'portal_type\']\n
 \n
 # count number of object created by the user for each type of document\n
 reference = kw.get(\'person_reference_list\', context.getReference())\n
