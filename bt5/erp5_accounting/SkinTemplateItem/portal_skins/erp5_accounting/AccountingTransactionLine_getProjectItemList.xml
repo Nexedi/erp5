@@ -56,6 +56,7 @@
             <value> <string>"""Returns the item list of possible projects to use on accounting lines.\n
 \n
 This script is indented to be used on custom listfields for accounting lines, and on reports.\n
+If this script returns an empty list, it means that reports by project are disabled.\n
 """\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
@@ -79,6 +80,8 @@ if context.getPortalType() == \'Accounting Transaction Module\':\n
       project = getObject(brain.project_uid)\n
       project_list.append((project.getTitle(), project.getRelativeUrl(),))\n
   project_list.sort(key=lambda x:x[0])\n
+  if not project_list:\n
+    return [] # returning an empty list, not to add project column on reports\n
   return [(\'\', \'\')] + project_list\n
   \n
 # case 2: script is used on custom listfields.\n

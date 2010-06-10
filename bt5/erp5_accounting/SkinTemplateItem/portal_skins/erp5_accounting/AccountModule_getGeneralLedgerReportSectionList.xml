@@ -194,6 +194,7 @@ account_type_to_group_by_mirror_section = [\n
 \n
 if gap_list or gap_root:\n
   params[\'node_category\'] = gap_list or gap_root\n
+  default_selection_params[\'node_category\'] = gap_list or gap_root\n
 \n
 report_section_list = []\n
 \n

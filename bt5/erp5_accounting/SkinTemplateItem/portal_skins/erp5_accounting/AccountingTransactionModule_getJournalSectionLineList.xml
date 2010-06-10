@@ -65,6 +65,7 @@ if payment:\n
 \n
 if group_by:\n
   extra_kw[\'group_by\'] = group_by\n
+  extra_kw[\'ignore_group_by\'] = True\n
 \n
 account_title_cache = dict()\n
 def getAccountId(node_relative_url):\n
@@ -230,6 +231,7 @@ return line_list\n
                             <string>dict</string>
                             <string>extra_kw</string>
                             <string>_write_</string>
+                            <string>True</string>
                             <string>account_title_cache</string>
                             <string>getAccountId</string>
                             <string>account_in_gap_root_cache</string>
