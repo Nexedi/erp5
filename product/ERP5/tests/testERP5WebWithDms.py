@@ -28,14 +28,25 @@
 ##############################################################################
 
 import unittest
-
+import os
 import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+     _getConversionServerDict
+from Products.ERP5Type.tests.utils import FileUpload
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
+
+def makeFilePath(name):
+  return os.path.join(os.path.dirname(__file__), 'test_data', name)
+
+def makeFileUpload(name, as_name=None):
+  if as_name is None:
+    as_name = name
+  path = makeFilePath(name)
+  return FileUpload(path, as_name)
 
 class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   """Test for erp5_web business template.
@@ -70,9 +81,19 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
+    self.setDefaultSitePreference()
     self.web_page_module = self.portal.web_page_module
     self.web_site_module = self.portal.web_site_module
     self.portal_id = self.portal.getId()
+
+  def setDefaultSitePreference(self):
+    default_pref = self.portal.portal_preferences.default_site_preference
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+    if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
+      default_pref.enable()
+    return default_pref
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
@@ -413,6 +434,31 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Convert the Date into string according RFC 1123 Time Format
     modification_date = rfc1123_date(document.getModificationDate())
     self.assertEqual(modification_date, last_modified_header)
+
+    # Upload a presentation with 3 pages.
+    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    document = document_module.newContent(portal_type='Presentation',
+                                          file=upload_file)
+    reference = 'P-DMS-Presentation.3.Pages'
+    document.edit(reference=reference)
+    document.publish()
+    transaction.commit()
+    self.tic()
+    website_url = website.absolute_url_path()
+    # Check we can access to the 3 drawings converted into images.
+    # Those images can be accessible through extensible content
+    # url : path-of-document + '/' + 'img' + page-index + '.png'
+    for i in range(3):
+      path = '/'.join((website_url,
+                       reference,
+                       'img%s.png' % i))
+      response = self.publish(path)
+      policy_list = self.portal.caching_policy_manager.listPolicies()
+      policy = [policy for policy in policy_list\
+                                          if policy[0] == 'unauthenticated'][0]
+      self.assertEquals(response.getHeader('Content-Type'), 'image/png')
+      self.assertEquals(response.getHeader('Cache-Control'),
+                        'max-age=%s' % policy[1].getMaxAgeSecs())
 
 def test_suite():
   suite = unittest.TestSuite()
