@@ -426,15 +426,24 @@ class SimulationTool(BaseTool):
         # Some columns cannot be found automatically, prepend table name to
         # avoid ambiguities.
 
-        # Group-by expression
+        # Group-by expression  (eg. group_by=['node_uid'])
         group_by = new_kw.pop('group_by', [])
-        column_group_by = new_kw.pop('column_group_by', [])
 
+        # group by from stock table (eg. group_by_node=True)
+        column_group_by = new_kw.pop('column_group_by', [])
         if column_group_by:
           group_by.extend(['%s.%s' % (table, x) for x in column_group_by])
+
+        # group by from related keys columns (eg. group_by_node_category=True)
         related_key_group_by = new_kw.pop('related_key_group_by', [])
         if related_key_group_by:
           group_by.extend(['%s_%s' % (table, x) for x in related_key_group_by])
+        
+        # group by involving a related key (eg. group_by=['product_line_uid'])
+        related_key_dict_passthrough_group_by = new_kw.get(
+                'related_key_dict_passthrough', dict()).pop('group_by', [])
+        group_by.extend(related_key_dict_passthrough_group_by)
+
         if group_by:
           new_kw['group_by'] = group_by
 
@@ -962,6 +971,7 @@ class SimulationTool(BaseTool):
         group_by_section_category_strict_membership=0,
         group_by_resource=None,
         movement_list_mode=0,
+        group_by=None,
         **ignored):
       """
       Set defaults group_by parameters
@@ -979,7 +989,7 @@ class SimulationTool(BaseTool):
       group by statements in SQL).
       """
       new_group_by_dict = {}
-      if not ignore_group_by:
+      if not ignore_group_by and group_by is None:
         if group_by_node or group_by_mirror_node or group_by_section or \
            group_by_project or group_by_function or \
            group_by_mirror_section or group_by_payment or \

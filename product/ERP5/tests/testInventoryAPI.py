@@ -187,6 +187,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'group/level1/level2',
               'group/anotherlevel',
               'product_line/level1/level2',
+              'product_line/anotherlevel',
               'function/function1',
               'function/function1/function2',
            # we create a huge group category for consolidation tests
@@ -877,6 +878,37 @@ class TestInventoryList(InventoryAPITestCase):
     self.assertEquals([r for r in inventory_list
                         if r.date.year() == 2001][0].inventory, 1)
 
+  def test_GroupByRelatedKey(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self._makeMovement(quantity=2, product_line='level1')
+    self._makeMovement(quantity=3, product_line='level1',
+                       destination_value=self.other_node)
+    self._makeMovement(quantity=11, product_line='anotherlevel')
+    # note that grouping by related key only make sense if you group by strict
+    # memebership related keys
+    inventory_list = getInventoryList(node_uid=(self.node.getUid(),
+                                                self.other_node.getUid()),
+                                      ignore_group_by=True,
+                                      group_by=('strict_product_line_uid',))
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list
+            if r.getObject().getProductLine() == 'level1'][0].inventory, 5)
+    self.assertEquals([r for r in inventory_list
+        if r.getObject().getProductLine() == 'anotherlevel'][0].inventory, 11)
+
+    inventory_list = getInventoryList(node_uid=(self.node.getUid(),
+                                                self.other_node.getUid()),
+                                      group_by_node=True,
+                                      group_by=('strict_product_line_uid',))
+    self.assertEquals(3, len(inventory_list))
+    self.assertEquals([r for r in inventory_list
+            if r.getObject().getProductLine() == 'level1'
+            and r.node_uid == self.node.getUid()][0].inventory, 2)
+    self.assertEquals([r for r in inventory_list
+            if r.getObject().getProductLine() == 'level1'
+            and r.node_uid == self.other_node.getUid()][0].inventory, 3)
+    self.assertEquals([r for r in inventory_list
+        if r.getObject().getProductLine() == 'anotherlevel'][0].inventory, 11)
 
   def test_OmitInputOmitOutput(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -1719,8 +1751,8 @@ class TestMovementHistoryList(InventoryAPITestCase):
 
     # group by explanation and resource
     mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
-                                              group_by=('explanation_uid',
-                                                        'resource_uid'),
+                                              group_by_resource=True,
+                                              group_by=('explanation_uid',),
                                               sort_on=(('stock.date', 'ASC'),))
     self.assertEquals(2, len(mvt_history_list))
 
