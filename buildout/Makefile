@@ -32,8 +32,10 @@ debian-appliance:
 	cd $(SOFTWARE_BUILD_PATH); $(MAKE) $(MFLAGS)
 	mkdir -p debian-erp5-appliance/debian/erp5-$(PACKAGE_VERSION)/$(PACKAGE_INSTALL_PATH)
 	mv $(SOFTWARE_BUILD_PATH)/* debian-erp5-appliance/debian/erp5-$(PACKAGE_VERSION)/$(PACKAGE_INSTALL_PATH)
-	rm -rf `find debian-erp5-appliance/ -type d -name .svn`
-	rm -rf `find debian-erp5-appliance/ -name *.pyc`
+	find debian-erp5-appliance/debian/erp5-$(PACKAGE_VERSION)/$(PACKAGE_INSTALL_PATH) -type d -name .svn -exec rm -rf {} \;
+	find debian-erp5-appliance/debian/erp5-$(PACKAGE_VERSION)/$(PACKAGE_INSTALL_PATH) -name '*.pyc' -delete
+	rm -rf debian-erp5-appliance/debian/erp5-$(PACKAGE_VERSION)/$(PACKAGE_INSTALL_PATH)/downloads/* 
+	rm -rf debian-erp5-appliance/debian/erp5-$(PACKAGE_VERSION)/$(PACKAGE_INSTALL_PATH)/parts/*__unpack__
 	cd debian-erp5-appliance/; sudo dpkg-buildpackage -b 
 	svn co  https://svn.erp5.org/repos/public/spec/debian-tiolive-application/ debian-tiolive-application
 	sed -i "s,__PACKAGE_VERSION__,$(PACKAGE_VERSION),g" debian-tiolive-application/debian/rules
