@@ -31,6 +31,7 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testTask import TestTaskMixin
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestTaskReportDivergenceMixin(TestTaskMixin):
   """
@@ -220,7 +221,103 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
     sequence_list.play(self, quiet=quiet)
 
-    
+  def stepCloneTaskReportLine(self, sequence=None, **kw):
+    """
+    Create a second task report line by cloning the existing one.
+    """
+    task_report = sequence.get('task_report')
+    task_report.contentValues()[0].Base_createCloneDocument(batch_mode=1)
+
+  def stepChangeFirstTaskReportLineDate(self, sequence=None, **kw):
+    """
+    Change the start and stop dates on the first task report line.
+    """
+    task_report = sequence.get('task_report')
+    task_line = task_report.contentValues()[0]
+    task_line.edit(
+        start_date=task_line.getStartDate()+1,
+        stop_date=task_line.getStopDate()+1,
+        )
+    sequence.edit(
+        task_report_start_date=task_report.getStartDate(),
+        task_report_stop_date=task_report.getStopDate(),
+        task_report_line_1_start_date=task_line.getStartDate(),
+        task_report_line_1_stop_date=task_line.getStopDate(),
+        )
+
+  def stepChangeSecondTaskReportLineDate(self, sequence=None, **kw):
+    """
+    Change the start and stop dates on the second task report line.
+    """
+    task_report = sequence.get('task_report')
+    task_line = task_report.contentValues()[1]
+    task_line.edit(
+        start_date=task_line.getStartDate()+2,
+        stop_date=task_line.getStopDate()+2,
+        )
+    sequence.edit(
+        task_report_line_2_start_date=task_line.getStartDate(),
+        task_report_line_2_stop_date=task_line.getStopDate(),
+        )
+
+  def stepAcceptLineDateDecision(self, sequence=None, **kw):
+    """
+    Use the divergence API to adopt the decision.
+    """
+    task_report = sequence.get('task_report')
+    # XXX Check task report solver proposition in UI
+
+  def stepCheckTaskReportDates(self, sequence=None, **kw):
+    """
+    Check that the task report and task report lines's dates were not modified
+    by the divergence solving process.
+    """
+    task_report = sequence.get('task_report')
+    task_line_1 = task_report.contentValues()[0]
+    task_line_2 = task_report.contentValues()[1]
+    self.assertEquals(
+        sequence.get('task_report_start_date'), task_report.getStartDate())
+    self.assertEquals(
+        sequence.get('task_report_stop_date'), task_report.getStopDate())
+    self.assertEquals(
+        sequence.get('task_report_line_1_start_date'), task_line_1.getStartDate())
+    self.assertEquals(
+        sequence.get('task_report_line_1_stop_date'), task_line_1.getStopDate())
+    self.assertEquals(
+        sequence.get('task_report_line_2_start_date'), task_line_2.getStartDate())
+    self.assertEquals(
+        sequence.get('task_report_line_2_stop_date'), task_line_2.getStopDate())
+
+  @expectedFailure
+  def test_04_TaskReportChangeStartDate(self, quiet=quiet, run=run_all_test):
+    """
+    Check that it is possible to solve date's divergence on the task report 
+    line level.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetStrictSecurity \
+                      ' + self.default_task_sequence + '\
+                      stepCheckTaskReportIsSolved \
+                      \
+                      stepCloneTaskReportLine \
+                      stepChangeFirstTaskReportLineDate \
+                      stepChangeSecondTaskReportLineDate \
+                      stepCheckTaskReportIsCalculating \
+                      stepTic \
+                      stepCheckTaskReportIsDiverged \
+                      stepAcceptLineDateDecision \
+                      stepTic \
+                      stepCheckTaskReportIsSolved \
+                      stepCheckTaskReportDates \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTaskReportDivergence))
