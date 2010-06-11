@@ -92,14 +92,16 @@
                         <string>my_portal_type</string>
                         <string>my_reference</string>
                         <string>my_version</string>
-                        <string>my_stored_in_zodb</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_stored_in_zodb</string>
+                        <string>my_store_interval</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

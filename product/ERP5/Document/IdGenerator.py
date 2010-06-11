@@ -131,3 +131,28 @@ class IdGenerator(Base):
                         self.getReference()
     specialise.getLatestVersionValue().clearGenerator()
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'exportGeneratorIdDict')
+  def exportGeneratorIdDict(self):
+    """
+      Export last id values in a dictionnary in the form { group_id : last_id }
+    """
+    specialise = self.getSpecialiseValue()
+    if specialise is None:
+      raise ValueError, "the id generator %s doesn't have specialise value" %\
+                        self.getReference()
+    return specialise.getLatestVersionValue().exportGeneratorIdDict()
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'importGeneratorIdDict')
+  def importGeneratorIdDict(self, id_dict, clear=False):
+    """
+      Import data, this is usefull if we want to replace a generator by
+      another one.
+    """
+    specialise = self.getSpecialiseValue()
+    if specialise is None:
+      raise ValueError, "the id generator %s doesn't have specialise value" %\
+                        self.getReference()
+    specialise.getLatestVersionValue().importGeneratorIdDict(id_dict=id_dict,
+                                                           clear=clear)

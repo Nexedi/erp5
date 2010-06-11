@@ -133,3 +133,26 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     # Remove dictionary
     self.last_id_dict = PersistentMapping()
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'exportGeneratorIdDict')
+  def exportGeneratorIdDict(self):
+    """
+      Export last id values in a dictionnary in the form { group_id : last_id }
+    """
+    return dict(self.last_id_dict)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'importGeneratorIdDict')
+  def importGeneratorIdDict(self, id_dict, clear=False):
+    """
+      Import data, this is usefull if we want to replace a generator by
+      another one.
+    """
+    if clear:
+      self.clearGenerator()
+    if not isinstance(id_dict, dict):
+      raise TypeError, 'the argument given is not a dictionary'
+    for value in id_dict.values():
+      if not isinstance(value, int):
+        raise TypeError, 'the value given in dictionary is not a integer'
+    self.last_id_dict.update(id_dict)

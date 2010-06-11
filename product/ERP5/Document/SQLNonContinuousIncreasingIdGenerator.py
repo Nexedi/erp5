@@ -90,7 +90,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     except ProgrammingError, error:
       if error[0] != NO_SUCH_TABLE:
         raise
-      # If the database not exist, initialise the generator
+      # If the database not exist, initialize the generator
       self.initializeGenerator()
     if self.getStoredInZodb():
       # Store the new_id on ZODB if the checkbox storedInZodb is enabled
@@ -100,11 +100,45 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         # If the dictionary not exist, initialize the generator
         self.initializeGenerator()
         last_max_id_dict = getattr(aq_base(self), 'last_max_id_dict')
-      # Store the new value id
+      if last_max_id_dict.get(id_group, None) is not None and \
+          last_max_id_dict[id_group].value > new_id:
+        raise ValueError, 'The last_id %s stored in zodb dictionary is ' \
+            'higher than the new id %s generated' % \
+            (last_max_id_dict[id_group].value, new_id)
+      # Check the store interval to store the data
+      store_interval = self.getStoreInterval()
+      if not store_interval:
+        store_interval = 1
+      # Store the new id
       if last_max_id_dict.get(id_group, None) is None:
         last_max_id_dict[id_group] = ScalarMaxConflictResolver(new_id)
-      last_max_id_dict[id_group].set(new_id)
+      elif last_max_id_dict[id_group].value <= (new_id - store_interval):
+        last_max_id_dict[id_group].set(new_id)
     return new_id
+
+  def _updateSqlTable(self):
+    """
+      Update the portal ids table with the data of persistent dictionary
+    """
+    portal = self.getPortalObject()
+    get_value_list = getattr(portal, 'IdTool_zGetValueList')
+    set_last_id_method = getattr(portal, 'IdTool_zSetLastId')
+    id_group_done = []
+    # Save the last id of persistent dict if it is higher that
+    # the last id stored in the sql table
+    for line in get_value_list().dictionaries():
+      id_group = line['id_group']
+      last_id = line['last_id']
+      if self.last_max_id_dict.has_key(id_group) and \
+        self.last_max_id_dict[id_group].value > last_id:
+        set_last_id_method(id_group=id_group,
+            last_id=self.last_max_id_dict[id_group].value)
+      id_group_done.append(id_group)
+   
+    # save the last ids which not exist in sql
+    for id_group in (set(self.last_max_id_dict) - set(id_group_done)):
+      set_last_id_method(id_group=id_group,
+          last_id=self.last_max_id_dict[id_group].value)
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewId')
@@ -178,13 +212,15 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
             if storage and (not self.last_max_id_dict.has_key(id_group) or \
                 self.last_max_id_dict[id_group].value < last_insert_id):
               self.last_max_id_dict[id_group] = ScalarMaxConflictResolver(last_insert_id)
-              self.last_max_id_dict[id_group].set(last_insert_id)
             continue
         last_id = int(last_id.value)
         set_last_id_method(id_group=id_group, last_id=last_id)
         if storage:
           self.last_max_id_dict[id_group] = ScalarMaxConflictResolver(last_id)
-          self.last_max_id_dict[id_group].set(last_id)
+
+    # Store last_max_id_dict in mysql
+    if self.getStoredInZodb(): 
+      self._updateSqlTable()
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'clearGenerator')
@@ -210,7 +246,49 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     drop_method()
     create_method()
 
-  security.declareProtected(Permissions.AccessContentsInformation,
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'exportGeneratorIdDict')
+  def exportGeneratorIdDict(self):
+    """
+      Export last id values in a dictionnary in the form { group_id : last_id }
+    """
+    portal = self.getPortalObject()
+    # Store last_max_id_dict in mysql
+    if self.getStoredInZodb(): 
+      self._updateSqlTable()
+    # Return values from sql 
+    get_value_list = getattr(portal, 'IdTool_zGetValueList')
+    return dict([(line['id_group'],int(line['last_id'])) for line in
+      get_value_list().dictionaries()])
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'importGeneratorIdDict')
+  def importGeneratorIdDict(self, id_dict=None, clear=False):
+    """
+      Import data, this is usefull if we want to replace a generator by
+      another one.
+    """
+    if clear:
+      self.clearGenerator()
+    portal = self.getPortalObject()
+    set_last_id_method = getattr(portal, 'IdTool_zSetLastId')
+    if not isinstance(id_dict, dict):
+      raise TypeError, 'the argument given is not a dictionary'
+    new_id_dict = dict()
+    for key, value in id_dict.items():
+      if isinstance(value, int):
+        set_last_id_method(id_group=key, last_id=value)
+        # The id must be a ScalarMaxConflictResolver object for the persistent dict
+        new_id_dict[key] = ScalarMaxConflictResolver(value)
+      else:
+        raise TypeError, 'the value in the dictionary given is not a integer'
+    # Update persistent dict
+    if self.getStoredInZodb():
+      if getattr(self, 'last_max_id_dict', None) is None:
+        self.last_max_id_dict = PersistentMapping()
+      self.last_max_id_dict.update(new_id_dict)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
       'rebuildSqlTable')
   def rebuildSqlTable(self):
     """
@@ -221,14 +299,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
              generation 
     """
     portal = self.getPortalObject()
-    getattr(portal, 'IdTool_zDropTable')()
-    getattr(self, 'SQLNonContinuousIncreasingIdGenerator_zCreateTable')()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'rebuildSqlTable')
-  def getPersistentIdDict(self):
-    """
-      Return all data stored in zodb
-    """
-    return dict([(x[0],x[1].value) for x in
-       getattr(self, 'last_max_id_dict', {}).iteritems()])
+    drop_method = getattr(portal, 'IdTool_zDropTable')
+    create_method = getattr(portal, 'IdTool_zCreateEmptyTable')
+    drop_method()
+    create_method()
+    self._updateSqlTable()
