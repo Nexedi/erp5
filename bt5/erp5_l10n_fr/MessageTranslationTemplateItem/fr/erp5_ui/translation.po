@@ -3729,6 +3729,9 @@ msgstr "Pour le compte de"
 msgid "Destination site"
 msgstr "Lieu de livraison"
 
+msgid "Detail Analytics"
+msgstr "Détail de l'analytique"
+
 msgid "Detailed Beginning Balance"
 msgstr "Détail du solde initial"
 
@@ -4793,6 +4796,10 @@ msgstr "Suivi"
 msgid "Follow up must be set to acknowledge an Event."
 msgstr "Le suivi doit être renseigné pour prendre en compte un évènement."
 
+msgid ""
+"For each account, there will be a breakdown by each analytic checked here."
+msgstr "Le rapport inclura un détail pour chaque axe anlytique sélectionné ici"
+
 msgid "Force"
 msgstr "Forcer"
 
@@ -5090,6 +5097,9 @@ msgstr ""
 msgid "Hide"
 msgstr "Cacher"
 
+msgid "Hide Analytical Details"
+msgstr "Cacher le détail de l'analytique"
+
 msgid "Hide Document"
 msgstr "Cacher"
 
@@ -5202,6 +5212,11 @@ msgid ""
 "If a document is missing in order to process an action, ERP5 will warn the "
 "user that this is Missing"
 msgstr "Cet état signifie qu'un document est actuellement manquant."
+
+msgid ""
+"If checked, accounting lines that have been split for analytic detail will "
+"be aggregated together."
+msgstr "Les lignes qui ont étés éclatées pour l'analytique seront regroupées."
 
 msgid "If set, payment will occur at the end of the month of the payment term."
 msgstr ""
