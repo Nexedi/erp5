@@ -62,19 +62,13 @@ body {\n
   color:#FF4400;\n
 }\n
 \n
-\n
 #header {\n
         color:#a8a799;\n
-\n
 }\n
 \n
 .breadcrumb li {\n
-\n
 \tcolor:#686868;\n
-\n
 }\n
-\n
-\n
 \n
 ::selection {\n
 \tbackground:#aaa;\n
@@ -100,50 +94,36 @@ body {\n
 \n
 }\n
 \n
-\n
 fieldset.left h4,\n
 fieldset.center h4,\n
 fieldset.right h4 {\n
-\n
 \tbackground-color:#efeee8;\n
-\n
 }\n
 \n
 .document > .content ul li {\n
-\n
   background:transparent url(../km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
   margin:0 0 0.3em 2px;\n
   padding:0 0 0 12px;\n
   list-style-image:none;\n
   list-style-position:outside;\n
   list-style-type:none;\n
-\n
 }\n
 \n
 table {\n
-\n
 \tborder: 1px solid #ecebe2;\n
-\n
 }\n
 \n
 table.table-b { border:none; }\n
 \n
 table tr.thead {\n
-\n
 \tbackground-color:#ecebe2;\n
-\n
-\n
 }\n
 \n
 table.table-b tr.thead {\n
-\n
 \tbackground-color:#fff;\n
-\n
-\n
 }\n
 \n
 table th button {\n
-\n
   background-color:inherit;\n
   border-width:0;\n
   color:inherit;\n
@@ -154,75 +134,65 @@ table th button {\n
   text-align:left;\n
   background:transparent url(../km_img/switch.png) no-repeat scroll 100% 50%;\n
   padding:0 6px 0 0;\n
-\n
 }\n
 \n
-table tr.thead th { text-align: left; }\n
+table tr.thead th { \n
+  text-align: left; \n
+}\n
 \n
 table tbody tr td {\n
-\n
 \tborder-top: 1px solid #ecebe2;\n
 \tbackground-color: #FFFFFF;\n
 \t-webkit-transition-property: background;\n
 \t-webkit-transition-duration: 0.2s;\n
 \t-webkit-transition-timing-function: linear;\n
-\n
 }\n
 \n
-table.table-b tbody tr td { border:none; }\n
+table.table-b tbody tr td { \n
+  border:none; \n
+}\n
 \n
 table tbody tr:hover td {\n
-\n
 \tbackground-color: #f7f6f0;\n
-\n
 }\n
 \n
 .pnav {\n
-\n
 \tbackground-color: #ecebe2;\n
-\n
 }\n
 \n
 #km_left .document > .content {\n
-\n
 \tbackground-color: #fff;\n
 \tborder:1px solid #c0bfb3;\n
-\n
 }\n
 \n
 .section {\n
-\n
 \tborder-bottom: 1px solid #e9e9e9;\n
-\n
 }\n
 \n
 p.pub {\n
-\n
 \tbackground: url(../km_img/pub.png) no-repeat transparent;\n
 \tpadding: 0 0 0 15px;\n
-\n
 }\n
 \n
-\n
-\n
 #wrapper_footer {\n
-\n
 \tborder-top:1px solid #fcfbfb;\n
 \tbackground-color:#9d968d;\n
 \tcolor:#eae9df;\n
-\n
 }\n
-\n
 \n
 \n
 /* ## link styling ################################### start # */\n
 \n
-a:link, a:active, a:visited { color: #9d968d; font-weight:bold; }\n
+a:link, a:active, a:visited { \n
+  color: #9d968d; \n
+  font-weight:bold; \n
+}\n
 \n
-a:hover { color: #000; }\n
+a:hover { \n
+  color: #000; \n
+}\n
 \n
 #header a:link, #header a:active, #header a:visited {\n
-\n
 \tcolor:#fff;\n
 \tfont-weight:bold;\n
 \ttext-shadow: 0 1px 0 #a8a799;\n
@@ -237,117 +207,96 @@ a:hover { color: #000; }\n
 }\n
 \n
 #header ul.breadcrumb li a:link, #header ul.breadcrumb li a:active, #header ul.breadcrumb li a:visited {\n
-\n
 \tcolor:#686868;\n
-\n
 }\n
 \n
 #header ul.breadcrumb li a:hover {\n
-\n
 \tcolor:#000;\n
-\n
 }\n
 \n
 .gadget table thead tr th a, .content table thead tr th a {\n
-\n
  \tcolor:#000;\n
  \tpadding-right:10px;\n
  \tbackground: url(../km_img/switch.png) no-repeat transparent;\n
  \tbackground-position: 100% 50%;\n
-\n
 }\n
 \n
-a.draft:link, a.draft:active, a.draft:visited, .draft { color:#4574cb; }\n
+a.draft:link, a.draft:active, a.draft:visited, .draft { \n
+  color:#4574cb; \n
+}\n
 \n
-a.inactive:link, a.inactive:active, a.inactive:visited, .inactive { color:#cb4545; }\n
+a.inactive:link, a.inactive:active, a.inactive:visited, .inactive { \n
+  color:#cb4545; \n
+}\n
 \n
-a.pub:link, a.pub:active, a.pub:visited, .pub { color:#45cb45; }\n
+a.pub:link, a.pub:active, a.pub:visited, .pub { \n
+  color:#45cb45; \n
+}\n
 \n
 \n
 #footer a:link, #footer a:active, #footer a:visited,\n
-#footer ul li a:link, #footer ul li a:active, #footer ul li a:visited { color:#eae9df; }\n
+#footer ul li a:link, #footer ul li a:active, #footer ul li a:visited { \n
+  color:#eae9df; \n
+}\n
 \n
 #footer a:hover, #footer ul li a:hover { color:#fff; }\n
 \n
 /* ## link styling ################################### end ### */\n
 \n
 #menu ul li #n1:link, #menu ul li #n1:active, #menu ul li #n1:visited {\n
-\n
 \tbackground: url(../km_img/home-2.gif) no-repeat transparent;\n
-\n
 }\n
 \n
 #menu ul li #n1:hover {\n
-\n
 \tbackground-position: 0 100%;\n
-\n
 }\n
 \n
 #menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
-\n
-\tbackground: url(../km_img/login.gif) no-repeat transparent;\n
+  background: url(../km_img/login.gif) no-repeat transparent;\n
   background-position: 0 -3px;\n
-\n
 }\n
 \n
 #menu #login-logout-link:hover {\n
-\n
 \tbackground-position: 0 -23px;\n
-\n
 }\n
 \n
 .pnav a:link, .pnav a:active, .pnav a:visited {\n
-\n
 \tcolor:#828282;\n
-\n
 }\n
 \n
 .pnav a:hover {\n
-\n
 \tcolor:#000;\n
-\n
 }\n
 \n
 .actions ul li a:link, .actions ul li a:active, .actions ul li a:visited {\n
-\n
 \tbackground-color: #b7e2b7;\n
 \tborder:1px solid #b7e2b7;\n
 \tcolor:#323232;\n
-\n
 }\n
 \n
 .actions ul li.selected a:link, .actions ul li.selected a:active, .actions ul li.selected a:visited, .actions ul li a:hover {\n
-\n
 \tbackground: #4bcc4b;\n
 \tborder:1px solid #4bcc4b;\n
 \tcolor:#fff;\n
-\n
 }\n
 \n
 /* ## navigation ###################################### end ### */\n
 \n
 a.bt-download:link, a.bt-download:active, a.bt-download:visited {\n
-\n
 \tbackground: url(../km_img/icon-save.png) no-repeat transparent;\n
-\n
 }\n
 \n
 a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-\n
 \tbackground: url(../km_img/icon-rss.png) no-repeat transparent;\n
-\n
 }\n
 \n
 a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
 a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-\n
 \tbackground-position: 100% 50%;\n
 \tcolor:#000;\n
-\n
 }\n
 \n
 /* ## buttons ######################################### start # */\n
-\n
 \n
 a.block-refresh { background-position: 0 0; }\n
 \n
@@ -366,31 +315,23 @@ a.block-remove:hover { background-position: -34px 100% !important; }\n
 a.block-edit-form:hover { background-position: -51px 100% !important; }\n
 \n
 a.bt-edit:link, a.bt-edit:active, a.bt-edit:visited {\n
-\n
 \tbackground: url(../km_img/bt-edit.png) no-repeat transparent;\n
-\n
 }\n
 \n
 a.bt-edit:link strong, a.bt-edit:active strong,\n
 a.bt-edit:visited strong {\n
-\n
 \tbackground: url(../km_img/bt-edit.png) no-repeat transparent;\n
 \tbackground-position: 100% 0;\n
 \tcolor:#828282;\n
-\n
 }\n
 \n
 a.bt-edit:hover {\n
-\n
 \tbackground-position: 0 100%;\n
-\n
 }\n
 \n
 a.bt-edit:hover strong {\n
-\n
 \tcolor:#4f4f4f;\n
 \tbackground-position: 100% 100%;\n
-\n
 }\n
 \n
 button.formbt, button.bt-med span, .bt-small span { color:#828282; }\n
@@ -413,13 +354,11 @@ button#input-save-edit span.image {background: url(../km_img/bt-save.png) no-rep
 \n
 button#input-save-edit span.image,\n
 button#input-save-view span.image {\n
-\n
-\tposition: relative;\n
-\tmargin:8px;\n
+  position: relative;\n
+  margin:8px;\n
   float: left;\n
   width: 19px;\n
   height: 18px;\n
-\n
 }\n
 \n
 /* ## buttons ######################################### end ### */\n
@@ -427,23 +366,12 @@ button#input-save-view span.image {\n
 \n
 /* ## form styling #################################### start # */\n
 \n
-.search_button {\n
-/*\n
-\tbackground: url(../km_img/bt-qsearch.gif) no-repeat transparent;\n
-\ttext-indent:-999999px;\n
-*/\n
-}\n
-\n
 .search_button:hover {\n
-\n
 \tbackground-position: 0 100%;\n
-\n
 }\n
 \n
 label {\n
-\n
 \tcolor:#9d968d;\n
-\n
 }\n
 \n
 \n
@@ -458,24 +386,31 @@ div.popup_row .reference{\n
 span.search_result_title{\n
   color: #1111CC;\n
 }\n
+\n
 span.search_result_portal_type{\n
   color: inherit;\n
 }\n
+\n
 span.found{\n
   color: #000000;\n
 }\n
+\n
 span.found em{\n
   font-weight: bold;\n
 }\n
+\n
 div.searchDetails a.section-link{\n
   color: inherit;\n
 }\n
+\n
 div.searchDetails a.reference-link{\n
   color: #228822;\n
 }\n
+\n
 div.searchDetails a.owner-link{\n
   color: inherit;\n
 }\n
+\n
 div.searchDetails a.modification-date-link{\n
   color: inherit;\n
 }\n
