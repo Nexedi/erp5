@@ -77,6 +77,7 @@
                     <value>
                       <list>
                         <string>my_preferred_forum_signature</string>
+                        <string>my_preferred_forum_quote_original_message</string>
                       </list>
                     </value>
                 </item>

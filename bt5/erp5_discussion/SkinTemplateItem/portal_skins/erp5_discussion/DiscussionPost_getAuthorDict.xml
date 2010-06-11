@@ -65,7 +65,7 @@ result = {\'author_url\': \'#\',\n
 \n
 if author is not None:\n
   result[\'author_url\'] = \'%s/view\' %author.getAbsoluteUrl()\n
-  result[\'author_signature\'] = portal.ERP5Site_getUserPreferredForumSignature(author.getReference())\n
+  result[\'author_signature\'] = portal.ERP5Site_getUserPreferredForumSettingsDict(author.getReference())[\'preferred_forum_signature\']\n
   result[\'author_title\'] = author.getTitle()\n
 \n
 return result\n
@@ -116,6 +116,7 @@ return result\n
                             <string>None</string>
                             <string>result</string>
                             <string>_write_</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

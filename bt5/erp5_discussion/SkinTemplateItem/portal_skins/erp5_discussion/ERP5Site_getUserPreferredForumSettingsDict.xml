@@ -65,10 +65,12 @@ def getPreferredForumSignature(username):\n
                                        owner = username,\n
                                        preference_state=\'enabled\')\n
   if preference is not None:\n
-    return preference.getProperty(\'preferred_forum_signature\', None)\n
+    return {\'preferred_forum_signature\': preference.getProperty(\'preferred_forum_signature\', None),\n
+             \'preferred_forum_quote_original_message\': preference.getProperty(\'preferred_forum_quote_original_message\', None),\n
+            }\n
 \n
 getPreferredForumSignature = CachingMethod(getPreferredForumSignature,\n
-                               ("ERP5Site_getUserPreferredForumSignature", username),\n
+                               ("ERP5Site_getUserPreferredForumSettingsDict", username),\n
                                 cache_factory=\'erp5_ui_short\')\n
 return getPreferredForumSignature(username)\n
 </string> </value>
@@ -138,7 +140,7 @@ return getPreferredForumSignature(username)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_getUserPreferredForumSignature</string> </value>
+            <value> <string>ERP5Site_getUserPreferredForumSettingsDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

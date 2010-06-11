@@ -149,22 +149,16 @@
                      tal:content="author_signature"/>\n
                 <hr/>\n
               </tal:block>\n
-              <button tal:condition="isUserAllowedToPost" \n
-                      type="submit" \n
-                      title="Reply" \n
-                      name="DiscussionThread_viewCreateNewDiscussionPostDialog:method"\n
-                      class="discussion-post-action-button"\n
-                      tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %event_id">\n
-                Cited Reply\n
-              </button>\n
+\n
               <button tal:condition="isUserAllowedToPost" \n
                       type="submit" \n
                       title="Reply" \n
                       name="DiscussionThread_redirectCreateNewDiscussionPost:method"\n
+                      tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %event_id"\n
                       class="discussion-post-action-button">\n
-                New Reply\n
+                Reply\n
               </button>\n
-      \n
+<!--      \n
               <tal:block tal:condition="python:real_context.portal_membership.checkPermission(\'Delete objects\', event_object)">\n
                 <button type="submit" \n
                         title="Delete" \n
@@ -174,6 +168,7 @@
                   Delete\n
                 </button>\n
               </tal:block>\n
+-->\n
             </div>\n
           </tal:block>\n
           <div class="discussion-post-listbox-navigation">\n
