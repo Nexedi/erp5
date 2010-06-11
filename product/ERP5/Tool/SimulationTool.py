@@ -442,6 +442,9 @@ class SimulationTool(BaseTool):
         # group by involving a related key (eg. group_by=['product_line_uid'])
         related_key_dict_passthrough_group_by = new_kw.get(
                 'related_key_dict_passthrough', dict()).pop('group_by', [])
+        if isinstance(related_key_dict_passthrough_group_by, basestring):
+          related_key_dict_passthrough_group_by = (
+                related_key_dict_passthrough_group_by,)
         group_by.extend(related_key_dict_passthrough_group_by)
 
         if group_by:

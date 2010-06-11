@@ -896,8 +896,27 @@ class TestInventoryList(InventoryAPITestCase):
             if r.getObject().getUse() == 'use1'][0].inventory, 5)
     self.assertEquals([r for r in inventory_list
         if r.getObject().getUse() == 'use2'][0].inventory, 11)
+    # group_by can also be passed as string
+    inventory_list = getInventoryList(node_uid=(self.node.getUid(),
+                                                self.other_node.getUid()),
+                                      group_by='strict_use_uid', )
+    self.assertEquals(2, len(inventory_list))
+    self.assertEquals([r for r in inventory_list
+            if r.getObject().getUse() == 'use1'][0].inventory, 5)
+    self.assertEquals([r for r in inventory_list
+        if r.getObject().getUse() == 'use2'][0].inventory, 11)
 
-    # mixed with group_by_* arguments
+    # the name of a column can also be used, from stock or other tables
+    inventory_list = getInventoryList(node_uid=(self.node.getUid(),
+                                                self.other_node.getUid()),
+                                      group_by='node_uid', )
+    self.assertEquals(2, len(inventory_list))
+    inventory_list = getInventoryList(node_uid=(self.node.getUid(),
+                                                self.other_node.getUid()),
+                                      group_by='title', )
+    self.assertEquals(4, len(inventory_list))
+
+    # group_by= can be mixed with group_by_* arguments
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by_node=True,
