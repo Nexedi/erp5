@@ -66,8 +66,10 @@ def getPreferredForumSignature(username):\n
                                        preference_state=\'enabled\')\n
   if preference is not None:\n
     return {\'preferred_forum_signature\': preference.getProperty(\'preferred_forum_signature\', None),\n
-             \'preferred_forum_quote_original_message\': preference.getProperty(\'preferred_forum_quote_original_message\', None),\n
+             \'preferred_forum_quote_original_message\': preference.getProperty(\'preferred_forum_quote_original_message\', False),\n
             }\n
+  else:\n
+    return {}\n
 \n
 getPreferredForumSignature = CachingMethod(getPreferredForumSignature,\n
                                ("ERP5Site_getUserPreferredForumSettingsDict", username),\n
