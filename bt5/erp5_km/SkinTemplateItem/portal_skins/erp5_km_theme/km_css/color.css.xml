@@ -90,13 +90,13 @@ body {\n
   margin-bottom:2px;\n
 }\n
 \n
-.draggable_wrapper #page_wrapper h3 {\n
-\n
-\tbackground: url(../km_img/widgethead.png) repeat-x #c1c0b4;\n
+.block h3.handle{\n
+\tbackground: url(../km_img/widgethead.png) repeat-x scroll 0 -2px #c1c0b4;\n
 \tborder-color:#C0BFB3 #C0BFB3 #9C9479;\n
 \tborder-style:solid;\n
 \tborder-width:1px;\n
 \tcolor:#776D61;\n
+\tfont-size:10pt;\n
 \n
 }\n
 \n
@@ -189,8 +189,6 @@ table tbody tr:hover td {\n
 \tborder:1px solid #c0bfb3;\n
 \n
 }\n
-\n
-/*h3 { color:#3f69be; }*/\n
 \n
 .section {\n
 \n

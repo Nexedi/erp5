@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts75479889.2</string> </value>
+            <value> <string>ts76239406.87</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -189,12 +189,6 @@
 \n
 \n
 \n
-.gadget .block > h3{\n
-\n
-\tbackground: url(../km_img/widgethead2.png) repeat-x #c1c0b4;\n
-}\n
-\n
-\n
 .gadget .post small {\n
 \n
 \tcolor:#827d5c;\n
@@ -213,6 +207,8 @@ a.block-minimize,\n
 a.block-remove,\n
 a.block-edit-form{\n
   background: url(../km_img/window.png) no-repeat transparent;\n
+  height: 11px;\n
+  margin-top: 4px;\n
 }\n
 \n
 /* Style for showing mvement between gadget columns */\n
@@ -392,6 +388,41 @@ div.relations-gadget ul{\n
   margin-left:0.5em;\n
 }\n
 \n
+/* Gadget admin toolbox (deprecated)*/\n
+.gadget .adminToolbox > label{\n
+\n
+  display:none;\n
+\n
+}\n
+\n
+.gadget .adminToolbox .inner select{\n
+\n
+  width: 100%;\n
+\n
+}\n
+\n
+div.adminToolbox button[type="submit"] {\n
+\n
+display:none;\n
+\n
+}\n
+\n
+div.adminToolbox fieldset {\n
+  display:block;\n
+}\n
+\n
+div.adminToolbox fieldset .clone-button{\n
+  text-align: center;\n
+}\n
+\n
+div.adminToolbox fieldset {\n
+  display:block;\n
+}\n
+\n
+div.adminToolbox fieldset .clone-button{\n
+  text-align: center;\n
+}\n
+\n
 /*WEB*/\n
 .portal-column {\n
   margin-right: 1%;\n
@@ -415,7 +446,7 @@ div.relations-gadget ul{\n
   width: auto;\n
 }\n
 \n
-\n
+/*\n
 h3.handle {\n
   margin: 0;\n
   padding: 0 0 0 10px;\n
@@ -431,6 +462,7 @@ h3.handle span.handle {\n
   padding: 5px 5px 0 0;\n
   background: none;\n
 }\n
+*/\n
 \n
 \n
 #page_wrapper .content{\n
@@ -506,7 +538,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7754</int> </value>
+            <value> <int>8142</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -674,83 +674,83 @@ img.float-left {\n
 \n
 /* ## element "boxes" ################################# start # */\n
 \n
-.gadget {\n
 \n
+/* Gadget layout */\n
+.block h3.handle{\n
+  margin:0;\n
+  padding:3px 0;\n
+  display: block;\n
+}\n
+\n
+.block h3.handle span{\n
+  padding: 0;\n
+  padding-left: 15px;\n
+}\n
+\n
+.block h3.handle span.gadget_title{\n
+  float:left;\n
+  left:12px;\n
+  position:absolute;\n
+}\n
+\n
+.block .box_inner_content, \n
+.block .minimize_wrapper, \n
+.block .content {\n
+  width: auto;\n
+}\n
+\n
+.gadget {\n
 \tmargin:0;\n
 \tpadding:0;\n
 \tborder:none;\n
-\n
-}\n
-\n
-.draggable_wrapper #page_wrapper h3 {\n
-\n
-\tmargin:0;\n
-\tpadding:8px 0;\n
-\tdisplay: block;\n
-\twhite-space: nowrap;\n
-\n
-}\n
-\n
-.gadget h3 span ,\n
-.draggable_wrapper #page_wrapper h3 span{\n
-\n
-  padding: 0 !important;\n
-\n
-}\n
-\n
-.draggable_wrapper #page_wrapper h3 span {\n
-\n
-  padding-left: 15px !important;\n
-\n
-}\n
-\n
-.gadget h3 span.handle,\n
-.draggable_wrapper #page_wrapper h3 span.handle{\n
-\n
-  min-height:16px !important;\n
-\n
-}\n
-\n
-.gadget .adminToolbox > label{\n
-\n
-  display:none;\n
-\n
-}\n
-\n
-.gadget .adminToolbox .inner select{\n
-\n
-  width: 100%;\n
-\n
-}\n
-\n
-div.adminToolbox button[type="submit"] {\n
-\n
-display:none;\n
-\n
-}\n
-\n
-div.adminToolbox fieldset {\n
-  display:block;\n
-}\n
-\n
-div.adminToolbox fieldset .clone-button{\n
-  text-align: center;\n
-}\n
-\n
-div.adminToolbox fieldset {\n
-  display:block;\n
-}\n
-\n
-div.adminToolbox fieldset .clone-button{\n
-  text-align: center;\n
 }\n
 \n
 .gadget .inner .table-b{\n
-\n
   table-layout: fixed;\n
   overflow: scroll;\n
+}\n
+\n
+.gadget h3 small {\n
+\twidth:50px;\n
+\tfloat:right;\n
+\tposition: absolute;\n
+\tright:0;\n
+\ttop:5px;\n
 \n
 }\n
+\n
+.gadget h3.handle a{\n
+\twidth: 11px;\n
+\theight: 11px;\n
+\ttext-indent: -999999px;\n
+\tmargin: 2px 5px 0 0;\n
+}\n
+\n
+.gadget .inner {\n
+\tpadding:10px;\n
+\twidth:auto;\n
+}\n
+\n
+.gadget .inner .post {\n
+\tpadding: 0 0 10px 0;\n
+}\n
+\n
+.gadget h4 {\n
+\tmargin:0;\n
+\tpadding: 0;\n
+}\n
+\n
+\n
+.gadget .inner .feed {\n
+\tmargin:0 0 0 20px;\n
+\tpadding:0;\n
+}\n
+\n
+.gadget p { \n
+  margin:0; \n
+}\n
+\n
+/* eof gadgets */\n
 \n
 div#mainwrapper div#wrapper_right{\n
   float:left;\n
@@ -763,17 +763,6 @@ div#km_left div#wrapper_bottom{ \n
   clear:left;\n
 }\n
 \n
-div#mainwrapper div#wrapper_right fieldset.widget .minimize_wrapper .content{\n
-\n
-  width: auto;\n
-\n
-}\n
-\n
-.box_inner_content {\n
-\n
-  width: auto;\n
-\n
-}\n
 \n
 div#mainwrapper div#wrapper_right fieldset.widget iframe {width: 100%;}\n
 div#mainwrapper div#wrapper_right fieldset.widget table.gadget td div {\n
@@ -807,77 +796,6 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 div#mainwrapper div.wrapper div.gadget fieldset.widget div.field label{\n
   display:none;\n
 }\n
-\n
-\n
-\n
-.gadget h3 { padding: 2px 0; }\n
-\n
-.gadget .block h3 span.gadget_title {\n
-\n
-  float: left;\n
-  position: absolute;\n
-  left: 26px;\n
-\n
-}\n
-\n
-.gadget h3 small {\n
-\n
-\twidth:65px;\n
-\tfloat:right;\n
-\tposition: absolute;\n
-\tright:2px;\n
-\ttop:11px;\n
-\n
-}\n
-\n
-.gadget h3 small {\n
-\twidth:50px;\n
-\tfloat:right;\n
-\tposition: absolute;\n
-\tright:0;\n
-\ttop:5px;\n
-\n
-}\n
-\n
-.gadget h3.handle a,\n
-.draggable_wrapper #page_wrapper h3.handle a {\n
-\n
-\twidth: 11px;\n
-\theight: 11px;\n
-\ttext-indent: -999999px;\n
-\tmargin: 2px 5px 0 0;\n
-\n
-}\n
-\n
-.gadget .inner {\n
-\n
-\tpadding:10px;\n
-\twidth:auto;\n
-\n
-}\n
-\n
-.gadget .inner .post {\n
-\n
-\tpadding: 0 0 10px 0;\n
-\n
-}\n
-\n
-.gadget h4 {\n
-\n
-\tmargin:0;\n
-\tpadding: 0;\n
-\n
-}\n
-\n
-\n
-.gadget .inner .feed {\n
-\n
-\tmargin:0 0 0 20px;\n
-\tpadding:0;\n
-\n
-}\n
-\n
-.gadget p { margin:0; }\n
 \n
 .document > .content ul li {\n
 \n
