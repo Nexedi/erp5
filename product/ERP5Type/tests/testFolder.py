@@ -221,7 +221,25 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       self.assertNotEquals(self.folder[subobject.getId()][obj.getId()].__class__, from_class)
       self.assertEquals([1, 1], result)
 
-
+    def test_upgradeObjectClassWithStrings(self):
+      """ Test if it changes Object Class """
+      type_list = ['Folder', 'Category' ]
+      self._setAllowedContentTypesForFolderType(type_list)
+      obj = self.folder.newContent(portal_type="Category")
+      from_class_as_string = 'Products.ERP5Type.Document.Category.Category'
+      to_class_as_string = 'Products.ERP5Type.Document.Folder.Folder'
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      createZODBPythonScript(self.getPortal().portal_skins.custom,
+                     "test_upgradeObject", 'x',
+                     'return [1]')
+      test_script = self.getPortal().portal_skins.custom.test_upgradeObject
+      result = self.folder.upgradeObjectClass(test_script, from_class_as_string,
+                                              to_class_as_string, test_script)
+      transaction.commit()
+      self.assertEquals(self.folder[obj.getId()].__class__, to_class)
+      self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
+      self.assertEquals([1], result)
 
 def test_suite():
   suite = unittest.TestSuite()

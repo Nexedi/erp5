@@ -1084,13 +1084,28 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   security.declareProtected( Permissions.ModifyPortalContent, 'upgradeObjectClass' )
   def upgradeObjectClass(self, test_before, from_class, to_class, test_after):
     """
-    upgrade the class of all objects inside this
-    particular folder
-     test_before and test_after have to be a method with one parameter.
-     migrations is a dictionnary of class, { from_class : to_class }
+    Upgrade the class of all objects inside this particular folder:
+      test_before and test_after have to be a method with one parameter.
+
+      from_class and to_class can be classes (o.__class___) or strings like:
+        'Products.ERP5Type.Document.Folder.Folder'
+     
     """
-    #LOG("upradeObjectClass: folder ",0,self.id)
+    #LOG("upgradeObjectClass: folder ", 0, self.id)
     test_list = []
+    def getClassFromString(a_klass):
+      from_module = '.'.join(a_klass.split('.')[:-1])
+      real_klass = a_klass.split('.')[-1]
+      # XXX It is possible that API Change for Python 2.6.
+      mod = __import__(from_module, globals(), locals(),  [real_klass])
+      return getattr(mod, real_klass)
+
+    if isinstance(from_class, type('')):
+      from_class = getClassFromString(from_class)
+
+    if isinstance(to_class, type('')):
+      to_class = getClassFromString(to_class)
+
     folder = self.getObject()
     for o in self.listFolderContents():
       # Make sure this sub object is not the same as object
