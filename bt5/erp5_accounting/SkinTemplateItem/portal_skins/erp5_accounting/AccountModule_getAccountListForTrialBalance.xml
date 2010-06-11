@@ -93,6 +93,8 @@ if function:\n
   inventory_params[\'function\'] = function\n
 if project:\n
   inventory_params[\'project\'] = project\n
+if mirror_section_category:\n
+  inventory_params[\'mirror_section_category\'] = mirror_section_category\n
 \n
 if node_uid:\n
   inventory_params[\'node_uid\'] = node_uid\n
@@ -773,7 +775,7 @@ return new_line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, portal_type=None, function=None, project=None, group_analytic=[], **kw</string> </value>
+            <value> <string>show_empty_accounts, expand_accounts, at_date, from_date, period_start_date, section_uid, simulation_state, precision, node_uid, gap_root=None, per_account_class_summary=0, portal_type=None, function=None, project=None, group_analytic=[], mirror_section_category=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -793,7 +795,7 @@ return new_line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>15</int> </value>
+                        <value> <int>16</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -814,6 +816,7 @@ return new_line_list\n
                             <string>function</string>
                             <string>project</string>
                             <string>group_analytic</string>
+                            <string>mirror_section_category</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -930,6 +933,7 @@ return new_line_list\n
                 <none/>
                 <none/>
                 <list/>
+                <none/>
               </tuple>
             </value>
         </item>

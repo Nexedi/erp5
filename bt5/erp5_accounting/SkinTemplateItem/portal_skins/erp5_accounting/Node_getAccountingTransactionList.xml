@@ -84,6 +84,8 @@ if node_category_strict_membership:\n
   params[\'node_category_strict_membership\'] = node_category_strict_membership\n
 if node_category:\n
   params[\'node_category\'] = node_category\n
+if mirror_section_category:\n
+  params[\'mirror_section_category\'] = mirror_section_category\n
 \n
 if not \'parent_portal_type\' in params:\n
   params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
@@ -230,7 +232,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, src__=0, **kw</string> </value>
+            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, mirror_section_category=None, from_date=None, selection_name=None, src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -250,7 +252,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -260,6 +262,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>sort_on</string>
                             <string>node_category</string>
                             <string>node_category_strict_membership</string>
+                            <string>mirror_section_category</string>
                             <string>from_date</string>
                             <string>selection_name</string>
                             <string>src__</string>
@@ -308,6 +311,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
               <tuple>
                 <none/>
                 <list/>
+                <none/>
                 <none/>
                 <none/>
                 <none/>

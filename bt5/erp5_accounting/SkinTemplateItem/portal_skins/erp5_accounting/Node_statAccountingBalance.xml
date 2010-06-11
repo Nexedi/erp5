@@ -77,6 +77,8 @@ if kw.get(\'node_category_strict_membership\'):\n
                 kw[\'node_category_strict_membership\']\n
 if kw.get(\'node_category\'):\n
   params[\'node_category\'] = kw[\'node_category\']\n
+if kw.get(\'mirror_section_category\'):\n
+  params[\'mirror_section_category\'] = kw[\'mirror_section_category\']\n
 \n
 ###\n
 # Get the \'where_expression\' parameter\n

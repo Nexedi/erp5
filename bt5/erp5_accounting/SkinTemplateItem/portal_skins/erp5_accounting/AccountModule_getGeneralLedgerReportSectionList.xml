@@ -71,6 +71,8 @@ section_uid = context.Base_getSectionUidListForSectionCategory(\n
 simulation_state    = request[\'simulation_state\']\n
 hide_analytic  = request[\'hide_analytic\']\n
 from_date           = request.get(\'from_date\', None)\n
+mirror_section_category_list = request.get(\'mirror_section_category_list\',\n
+                                            None)\n
 gap_list = []\n
 for gap in request.get(\'gap_list\', ()):\n
   # XXX the field should maybe use base=1 on the category...\n
@@ -195,6 +197,11 @@ account_type_to_group_by_mirror_section = [\n
 if gap_list or gap_root:\n
   params[\'node_category\'] = gap_list or gap_root\n
   default_selection_params[\'node_category\'] = gap_list or gap_root\n
+\n
+if mirror_section_category_list:\n
+  params[\'mirror_section_category\'] = mirror_section_category_list\n
+  default_selection_params[\'mirror_section_category\'] =\\\n
+        mirror_section_category_list\n
 \n
 report_section_list = []\n
 \n
@@ -491,6 +498,7 @@ return report_section_list\n
                             <string>hide_analytic</string>
                             <string>None</string>
                             <string>from_date</string>
+                            <string>mirror_section_category_list</string>
                             <string>gap_list</string>
                             <string>_getiter_</string>
                             <string>gap</string>
