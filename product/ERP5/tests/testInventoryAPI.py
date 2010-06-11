@@ -187,7 +187,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'group/level1/level2',
               'group/anotherlevel',
               'product_line/level1/level2',
-              'product_line/anotherlevel',
+              'use/use1',
+              'use/use2',
               'function/function1',
               'function/function1/function2',
            # we create a huge group category for consolidation tests
@@ -880,35 +881,36 @@ class TestInventoryList(InventoryAPITestCase):
 
   def test_GroupByRelatedKey(self):
     getInventoryList = self.getSimulationTool().getInventoryList
-    self._makeMovement(quantity=2, product_line='level1')
-    self._makeMovement(quantity=3, product_line='level1',
+    self._makeMovement(quantity=2, use='use1')
+    self._makeMovement(quantity=3, use='use1',
                        destination_value=self.other_node)
-    self._makeMovement(quantity=11, product_line='anotherlevel')
+    self._makeMovement(quantity=7, use='use2')
+    self._makeMovement(quantity=4, use='use2')
     # note that grouping by related key only make sense if you group by strict
     # memebership related keys
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
-                                      ignore_group_by=True,
-                                      group_by=('strict_product_line_uid',))
+                                      group_by=('strict_use_uid', ))
     self.assertEquals(2, len(inventory_list))
     self.assertEquals([r for r in inventory_list
-            if r.getObject().getProductLine() == 'level1'][0].inventory, 5)
+            if r.getObject().getUse() == 'use1'][0].inventory, 5)
     self.assertEquals([r for r in inventory_list
-        if r.getObject().getProductLine() == 'anotherlevel'][0].inventory, 11)
+        if r.getObject().getUse() == 'use2'][0].inventory, 11)
 
+    # mixed with group_by_* arguments
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
                                       group_by_node=True,
-                                      group_by=('strict_product_line_uid',))
+                                      group_by=('strict_use_uid',))
     self.assertEquals(3, len(inventory_list))
     self.assertEquals([r for r in inventory_list
-            if r.getObject().getProductLine() == 'level1'
+            if r.getObject().getUse() == 'use1'
             and r.node_uid == self.node.getUid()][0].inventory, 2)
     self.assertEquals([r for r in inventory_list
-            if r.getObject().getProductLine() == 'level1'
+            if r.getObject().getUse() == 'use1'
             and r.node_uid == self.other_node.getUid()][0].inventory, 3)
     self.assertEquals([r for r in inventory_list
-        if r.getObject().getProductLine() == 'anotherlevel'][0].inventory, 11)
+        if r.getObject().getUse() == 'use2'][0].inventory, 11)
 
   def test_OmitInputOmitOutput(self):
     getInventoryList = self.getSimulationTool().getInventoryList
