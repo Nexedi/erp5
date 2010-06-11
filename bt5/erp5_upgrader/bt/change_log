@@ -1,0 +1,19 @@
+2010-02-16 nicolas
+* Add new properties in Signature in order to trig some actions just before or just after business template update/installation
+
+2010-02-12 nicolas
+* add REINSTALABLE_BT5_ID_LIST inside Signature API in order to call reinstallation of Business Templates and revert local changes.
+* Extend Unit Test (work on going, known bug will be fixed)
+Reviewed by Rafael
+
+2009-08-04 jps
+* Refactored (and broken) by JPS with lots of pseudo-code
+
+2009-04-17 ivan
+* Split to specific migrations using skin folders
+
+2009-03-20 ivan
+* Start to refector as generic ERP5 upgrader
+
+2009-03-12 ivan
+* Initial import
