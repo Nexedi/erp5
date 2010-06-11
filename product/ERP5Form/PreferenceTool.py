@@ -97,6 +97,8 @@ def createPreferenceToolAccessorList(portal) :
   # Generate common method names
   for prop in property_list:
     if prop.get('preference'):
+      # XXX read_permission and write_permissions defined at
+      # property sheet are not respected by this.
       # only properties marked as preference are used
       attribute = prop['id']
       attr_list = [ 'get%s' % convertToUpperCase(attribute)]
