@@ -46,7 +46,6 @@
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 /* Search popup fix*/\n
-\n
 div.search_popup{\n
   left:200px;\n
   position:absolute;\n
@@ -285,7 +284,7 @@ a.tree_open {\n
   text-align:left;\n
   vertical-align: top;\n
 }\n
-.listbox_search_line{\n
+.listbox_search_line, .listbox_label_line{\n
   background-color: #F0EFE9;\n
 }\n
 .listbox_search_line th{\n

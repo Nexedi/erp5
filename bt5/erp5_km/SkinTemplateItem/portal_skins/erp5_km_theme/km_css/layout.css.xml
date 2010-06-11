@@ -585,10 +585,10 @@ width: auto;\n
 }\n
 \n
 #tabs {\n
-\n
-\toverflow: hidden;\n
-\twidth:99%;\n
-\n
+  overflow: hidden;\n
+  width:99%;\n
+  border-bottom: none;\n
+  height: 35px;\n
 }\n
 \n
 #tabs ul {\n
@@ -647,7 +647,10 @@ width: auto;\n
 a#tabs-add:link, a#tabs-add:active, a#tabs-add:visited,\n
 a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10px; }\n
 \n
-#tabs_switcher{padding-top: 15px;}\n
+#tabs_switcher {\n
+  padding-top: 15px;\n
+  height:35px;\n
+}\n
 \n
 /* ## navigation ###################################### end ### */\n
 \n

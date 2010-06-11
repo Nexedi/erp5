@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76239406.87</string> </value>
+            <value> <string>ts76242823.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -35,25 +35,12 @@
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
 \n
-.draggable_wrapper {\n
-  background-color: inherit;\n
-}\n
-\n
-#tabs{\n
-  border-bottom: none;\n
-  height: 35px;\n
-}\n
-\n
 .border_bottom1px{\n
   border-bottom: none!important;\n
 }\n
 \n
 .border_bottom0px{\n
   border-bottom: none!important;\n
-}\n
-\n
-#tabs_switcher {\n
-  height:35px;\n
 }\n
 \n
 .tab {\n
@@ -71,12 +58,6 @@
 #tabs ul li{\n
 \n
   list-style-image: none;\n
-\n
-}\n
-\n
-.border_bottom0px {\n
-\n
-  height: 35px;\n
 \n
 }\n
 \n
@@ -538,7 +519,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8142</int> </value>
+            <value> <int>7964</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
