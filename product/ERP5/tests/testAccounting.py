@@ -2253,7 +2253,7 @@ class TestTransactions(AccountingTestCase):
     self.assertEquals(self.main_section,
         self.main_section.Organisation_getMappingRelatedOrganisation())
 
-    client = self.organisation_module.client_1
+    client = self.organisation_module.client_2
     self.assertEquals(None, client.getGroupValue())
     self.assertEquals(client,
         client.Organisation_getMappingRelatedOrganisation())
