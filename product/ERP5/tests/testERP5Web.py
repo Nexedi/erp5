@@ -1661,6 +1661,15 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     self.logout()
     self.assertEquals(1, len(website.WebSection_getDocumentValueList()))
 
+  def test_WebSiteModuleDefaultSecurity(self):
+    """
+      Test that by default Anonymous User may access Web Site Module
+    """
+    portal = self.portal
+    self.logout()
+    portal.restrictedTraverse('web_site_module')
+    portal.web_site_module.view()
+
 
 class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
   """Tests possible transitions for category_publication_workflow"""
