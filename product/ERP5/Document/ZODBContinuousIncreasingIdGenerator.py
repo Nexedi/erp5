@@ -58,23 +58,15 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
       raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
     if default is None:
       default = 0
-    self.last_id_dict = getattr(self, 'last_id_dict', None)
-    if self.last_id_dict is None:
+    last_id_dict = getattr(self, 'last_id_dict', None)
+    if last_id_dict is None:
       # If the dictionary not exist initialize generator
       self.initializeGenerator()
-    marker = []
-    # Retrieve the last id
-    last_id = self.last_id_dict.get(id_group, marker)
-    if last_id is marker:
-      new_id = default
-      if id_count > 1:
-        # If create a list use the default and increment
-        new_id = new_id + id_count - 1
-    else:
-      # Increment the last_id
-      new_id = last_id + id_count
+      last_id_dict = self.last_id_dict
+    # Retrieve the last id and increment
+    new_id = last_id_dict.get(id_group, default - 1) + id_count
     # Store the new_id in the dictionary
-    self.last_id_dict[id_group] = new_id
+    last_id_dict[id_group] = new_id
     return new_id
 
   security.declareProtected(Permissions.AccessContentsInformation,
