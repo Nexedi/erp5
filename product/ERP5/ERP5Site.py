@@ -1805,7 +1805,7 @@ class ERP5Generator(PortalGenerator):
       setattr(p, 'isIndexable', ConstantGetter('isIndexable', value=True))
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site
-      p.portal_ids.initializeGenerator(all=True)
+      p.portal_ids.clearGenerator(all=True)
       # Then clear the catalog and reindex it
       p.portal_catalog.manage_catalogClear()
       # Calling ERP5Site_reindexAll is useless.
