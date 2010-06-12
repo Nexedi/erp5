@@ -56,6 +56,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
   property_sheets = (PropertySheet.SQLIdGenerator,
                     ) + IdGenerator.property_sheets
 
+  last_max_id_dict = None
+
   def _generateNewId(self, id_group, id_count=1, default=None):
     """
       Return the next_id with the last_id with the sql method
@@ -73,20 +75,14 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
 
     # Retrieve the zsql method
     portal = self.getPortalObject()
-    generate_id_method = getattr(portal, 'IdTool_zGenerateId', None)
-    commit_method = getattr(portal, 'IdTool_zCommit', None)
-    get_last_id_method = getattr(portal, 'IdTool_zGetLastId', None)
-    if None in (generate_id_method, commit_method, get_last_id_method):
-      raise AttributeError, 'Error while generating Id: ' \
-        'idTool_zGenerateId and/or IdTool_zCommit and/or idTool_zGetLastId' \
-        'could not be found.'
-    result_query = generate_id_method(id_group=id_group, id_count=id_count, \
-        default=default)
+    result_query = portal.IdTool_zGenerateId(id_group=id_group,
+                                             id_count=id_count,
+                                             default=default)
     try:
       # Tries of generate the new_id
       new_id = result_query[0]['LAST_INSERT_ID()']
       # Commit the changement of new_id
-      commit_method()
+      portal.IdTool_zCommit()
     except ProgrammingError, error:
       if error[0] != NO_SUCH_TABLE:
         raise
@@ -94,12 +90,11 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       self.initializeGenerator()
     if self.getStoredInZodb():
       # Store the new_id on ZODB if the checkbox storedInZodb is enabled
-      last_max_id_dict = getattr(aq_base(self), \
-           'last_max_id_dict', None)
+      last_max_id_dict = self.last_max_id_dict
       if last_max_id_dict is None:
         # If the dictionary not exist, initialize the generator
         self.initializeGenerator()
-        last_max_id_dict = getattr(aq_base(self), 'last_max_id_dict')
+        last_max_id_dict = self.last_max_id_dict
       if last_max_id_dict.get(id_group, None) is not None and \
           last_max_id_dict[id_group].value > new_id:
         raise ValueError, 'The last_id %s stored in zodb dictionary is ' \
@@ -121,8 +116,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       Update the portal ids table with the data of persistent dictionary
     """
     portal = self.getPortalObject()
-    get_value_list = getattr(portal, 'IdTool_zGetValueList')
-    set_last_id_method = getattr(portal, 'IdTool_zSetLastId')
+    get_value_list = portal.IdTool_zGetValueList
+    set_last_id_method = portal.IdTool_zSetLastId
     id_group_done = []
     # Save the last id of persistent dict if it is higher that
     # the last id stored in the sql table
@@ -169,35 +164,23 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
     LOG('initialize SQL Generator', INFO, 'Id Generator: %s' % (self,))
     # Check the dictionnary
-    if getattr(self, 'last_max_id_dict', None) is None:
+    if self.last_max_id_dict is None:
       self.last_max_id_dict = PersistentMapping()
     # Create table portal_ids if not exists
     portal = self.getPortalObject()
-    get_value_list = getattr(portal, 'IdTool_zGetValueList', None)
-    if get_value_list is None:
-      raise AttributeError, 'Error while initialize generator:' \
-        'idTool_zGetValueList could not be found.'
     try:
-      get_value_list()
+      portal.IdTool_zGetValueList()
     except ProgrammingError, error:
       if error[0] != NO_SUCH_TABLE:
         raise
-      drop_method = getattr(portal, 'IdTool_zDropTable', None)
-      create_method = getattr(portal, 'IdTool_zCreateEmptyTable', None)
-      if None in (drop_method, create_method):
-        raise AttributeError, 'Error while initialize generator: ' \
-          'idTool_zDropTable and/or idTool_zCreateTable could not be found.'
-      drop_method()
-      create_method()
+      portal.IdTool_zDropTable()
+      portal.IdTool_zCreateEmptyTable()
 
     # XXX compatiblity code below, dump the old dictionnaries
     # Retrieve the zsql_method
-    portal_ids = getattr(self, 'portal_ids', None)
-    get_last_id_method = getattr(portal, 'IdTool_zGetLastId', None)
-    set_last_id_method = getattr(portal, 'IdTool_zSetLastId', None)
-    if None in (get_last_id_method, set_last_id_method):
-      raise AttributeError, 'Error while generating Id: ' \
-        'idTool_zGetLastId and/or idTool_zSetLastId could not be found.'
+    portal_ids = portal.portal_ids
+    get_last_id_method = portal.IdTool_zGetLastId
+    set_last_id_method = portal.IdTool_zSetLastId
     storage = self.getStoredInZodb()
     # Recovery last_max_id_dict datas in zodb if enabled and is in mysql
     if len(self.last_max_id_dict) == 0 and \
@@ -219,7 +202,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
           self.last_max_id_dict[id_group] = ScalarMaxConflictResolver(last_id)
 
     # Store last_max_id_dict in mysql
-    if self.getStoredInZodb(): 
+    if storage:
       self._updateSqlTable()
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -238,13 +221,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     self.last_max_id_dict = PersistentMapping()
     # Remove and recreate portal_ids table
     portal = self.getPortalObject()
-    drop_method = getattr(portal, 'IdTool_zDropTable', None)
-    create_method = getattr(portal, 'IdTool_zCreateEmptyTable', None)
-    if None in (drop_method, create_method):
-      raise AttributeError, 'Error while clear generator: ' \
-        'idTool_zDropTable and/or idTool_zCreateTable could not be found.'
-    drop_method()
-    create_method()
+    portal.IdTool_zDropTable()
+    portal.IdTool_zCreateEmptyTable()
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'exportGeneratorIdDict')
@@ -257,7 +235,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     if self.getStoredInZodb(): 
       self._updateSqlTable()
     # Return values from sql 
-    get_value_list = getattr(portal, 'IdTool_zGetValueList')
+    get_value_list = portal.IdTool_zGetValueList
     return dict([(line['id_group'],int(line['last_id'])) for line in
       get_value_list().dictionaries()])
 
@@ -271,7 +249,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     if clear:
       self.clearGenerator()
     portal = self.getPortalObject()
-    set_last_id_method = getattr(portal, 'IdTool_zSetLastId')
+    set_last_id_method = portal.IdTool_zSetLastId
     if not isinstance(id_dict, dict):
       raise TypeError, 'the argument given is not a dictionary'
     new_id_dict = dict()
@@ -284,7 +262,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
         raise TypeError, 'the value in the dictionary given is not a integer'
     # Update persistent dict
     if self.getStoredInZodb():
-      if getattr(self, 'last_max_id_dict', None) is None:
+      if self.last_max_id_dict is None:
         self.last_max_id_dict = PersistentMapping()
       self.last_max_id_dict.update(new_id_dict)
 
@@ -299,8 +277,6 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
              generation 
     """
     portal = self.getPortalObject()
-    drop_method = getattr(portal, 'IdTool_zDropTable')
-    create_method = getattr(portal, 'IdTool_zCreateEmptyTable')
-    drop_method()
-    create_method()
+    portal.IdTool_zDropTable()
+    portal.IdTool_zCreateEmptyTable()
     self._updateSqlTable()
