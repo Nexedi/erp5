@@ -141,8 +141,7 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
       Generate the next id in the sequence of ids of a particular group
     """
-    new_id = self._generateNewId(id_group=id_group, default=default)
-    return new_id
+    return self._generateNewId(id_group=id_group, default=default)
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewIdList')
@@ -150,9 +149,9 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     """
       Generate a list of next ids in the sequence of ids of a particular group
     """
-    new_id = self._generateNewId(id_group=id_group, id_count=id_count, \
-                            default=default)
-    return range(new_id - id_count + 1, new_id + 1)
+    new_id = 1 + self._generateNewId(id_group=id_group, id_count=id_count,
+                                     default=default)
+    return range(new_id - id_count, new_id)
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'initializeGenerator')
