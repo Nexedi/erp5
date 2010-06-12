@@ -139,7 +139,7 @@ class IdTool(BaseTool):
       template_tool = getattr(self, 'portal_templates', None)
       revision = template_tool.getInstalledBusinessTemplateRevision('erp5_core')
       # XXX backward compatiblity
-      if revision > '1561':
+      if int(revision) > 1561:
         LOG('generateNewId', ERROR, 'while generating id')
         raise
       else:
@@ -200,7 +200,7 @@ class IdTool(BaseTool):
       template_tool = getattr(self, 'portal_templates', None)
       revision = template_tool.getInstalledBusinessTemplateRevision('erp5_core')
       # XXX backward compatiblity
-      if revision > '1561':
+      if int(revision) > 1561:
         LOG('generateNewIdList', ERROR, 'while generating id')
         raise
       else:
