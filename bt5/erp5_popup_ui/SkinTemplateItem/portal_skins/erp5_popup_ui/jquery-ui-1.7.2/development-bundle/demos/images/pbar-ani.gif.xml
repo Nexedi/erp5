@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_EtagSupport__etag</string> </key>
             <value> <string>ts65545372.75</string> </value>
         </item>
@@ -1177,7 +1181,7 @@ d\xaa\xa6C\x1b\xac0I\xccGlGJ^\xdf\xebL\xec<UN\x01\x0c\x8e|E\xa3h\xc1L\x1a\x91\xc
                                                                                                     \n
                                                                                                     \n
                                                                                                     \n
-             
+
 
 ]]></string> </value>
         </item>
@@ -1877,7 +1881,7 @@ d\xaa\xa6C\x1b\xac0I\xccGlGJ^\xdf\xebL\xec<UN\x01\x0c\x8e|E\xa3h\xc1L\x1a\x91\xc
 </x:xmpmeta>\n
                                                                                                     \n
                                                                                                     \n
-                                                                                                    
+
 
 ]]></string> </value>
         </item>
