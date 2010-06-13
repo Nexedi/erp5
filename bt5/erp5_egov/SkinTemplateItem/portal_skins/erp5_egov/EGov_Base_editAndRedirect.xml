@@ -92,7 +92,6 @@ if mode == \'edit\':\n
       attachment_title_list = kw[\'attachment_title\']\n
       attachment_file_list = kw[\'attachment\']\n
     attachment_list = zip(attachment_file_list, attachment_title_list)\n
-    meta_type_dict = {}\n
     type_dict = {}\n
     type_allowed_content_type_list = context.getTypeInfo().getTypeAllowedContentTypeList()\n
     for i in range(len(attachment_list)+1)[1:]:\n
@@ -100,7 +99,6 @@ if mode == \'edit\':\n
       title = getattr(context.getTypeInfo(), "getAttachmentTitle%s" % i, None) \n
       if title is not None and type is not None:\n
         type_object = context.restrictedTraverse(context.getPortalObject().getUrl()+"/portal_types/"+type())\n
-        meta_type_dict[title()] =  type_object.getTypeMimeTypeList()\n
         type_dict[title()] =  type_object.getId()\n
         if type_object.getId() not in type_allowed_content_type_list: \n
           type_allowed_content_type_list.append(type_object.getId())\n
@@ -234,7 +232,6 @@ return context.Base_redirect(next_url, keep_items = dict(portal_status_message=m
                             <string>attachment_file_list</string>
                             <string>zip</string>
                             <string>attachment_list</string>
-                            <string>meta_type_dict</string>
                             <string>type_dict</string>
                             <string>type_allowed_content_type_list</string>
                             <string>range</string>
