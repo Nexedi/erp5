@@ -57,7 +57,7 @@
 portal = context.getPortalObject()\n
 \n
 # get module url\n
-absolute_url = portal.web_site_module.egov_portal.absolute_url()\n
+absolute_url = portal.web_site_module.ecitizen.absolute_url()\n
 \n
 redirect_url = absolute_url\n
 \n

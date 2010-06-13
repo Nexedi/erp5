@@ -615,7 +615,8 @@ fieldset.register_informations{\n
 }\n
 \n
 .site_title{\n
-  padding-top: 15px;\n
+  padding-top: 5px;\n
+  padding-left: 25px;\n
   font-size: 1.6em;\n
   text-align: center;\n
   font-weight: bold;\n
