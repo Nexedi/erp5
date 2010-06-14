@@ -111,6 +111,7 @@ table_2</string> </value>
 
 <dtml-var table_2>.original_message = <dtml-var table_1>.validation_state\n
 AND <dtml-var table_2>.message_context = "validation_state_title"\n
+AND <dtml-var table_2>.portal_type = catalog.portal_type\n
 AND <dtml-var table_2>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
 AND <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
 AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.causality.getUid()">\n
@@ -157,6 +158,7 @@ AND <dtml-var table_0>.uid = catalog.uid\n
 
 <dtml-var table_2>.original_message = <dtml-var table_1>.validation_state\n
 AND <dtml-var table_2>.message_context = "validation_state_title"\n
+AND <dtml-var table_2>.portal_type = catalog.portal_type\n
 AND <dtml-var table_2>.language = <dtml-sqlvar "Localizer.get_selected_language()" type="string">\n
 AND <dtml-var table_1>.uid = <dtml-var table_0>.category_uid\n
 AND <dtml-var table_0>.base_category_uid = <dtml-var "portal_categories.causality.getUid()">\n
