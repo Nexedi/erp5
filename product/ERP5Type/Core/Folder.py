@@ -1082,7 +1082,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     return update_list
 
   security.declareProtected( Permissions.ModifyPortalContent, 'upgradeObjectClass' )
-  def upgradeObjectClass(self, test_before, from_class, to_class, test_after):
+  def upgradeObjectClass(self, test_before, from_class, to_class, test_after,
+                               test_only=0):
     """
     Upgrade the class of all objects inside this particular folder:
       test_before and test_after have to be a method with one parameter.
@@ -1116,7 +1117,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         if hasattr(obase,'upgradeObjectClass'):
           test_list += o.upgradeObjectClass(test_before=test_before, \
                           from_class=from_class, to_class=to_class,
-                          test_after=test_after)
+                          test_after=test_after, test_only=test_only)
 
         # Test if we must apply the upgrade
         if test_before(o) is not None:
@@ -1124,7 +1125,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
           klass = obase.__class__
           LOG("upgradeObjectClass: klass ", 0 ,str(klass))
           LOG("upgradeObjectClass: from_class ", 0 ,str(from_class))
-          if klass == from_class:
+          if klass == from_class and not test_only:
             try:
               newob = to_class(obase.id)
               newob.id = obase.id # This line activates obase.
@@ -1143,6 +1144,9 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
             self._setObject(id, newob)
             object_to_test = self._getOb(id)
             test_list += test_after(object_to_test)
+
+          if klass == from_class and test_only:
+            test_list += test_after(o)
 
     return test_list
 

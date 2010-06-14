@@ -163,6 +163,14 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       # Reset to original permissions
       self.folder.manage_permission('Modify portal content', original_permission_list[0]['roles'], original_permission_list[0]['acquire'])
 
+    def _createUpgradeObjectClassPythonScript(self):
+      """Create a simple python script """
+      createZODBPythonScript(self.getPortal().portal_skins.custom,
+                     "test_upgradeObject", 'x',
+                     'return [1]')
+      return self.getPortal().portal_skins.custom.test_upgradeObject
+      
+
     def test_upgradeObjectClass(self):
       """ Test if it changes Object Class """
       type_list = ['Folder', 'Category' ]
@@ -170,15 +178,27 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       obj = self.folder.newContent(portal_type="Category")
       from_class = obj.__class__
       to_class = self.folder.__class__
-      createZODBPythonScript(self.getPortal().portal_skins.custom,
-                     "test_upgradeObject", 'x',
-                     'return [1]')
-      test_script = self.getPortal().portal_skins.custom.test_upgradeObject
+      test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class, 
                                               to_class, test_script)
       transaction.commit()
       self.assertEquals(self.folder[obj.getId()].__class__, to_class)
       self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
+      self.assertEquals([1], result)
+
+    def test_upgradeObjectClassOnlyTest(self):
+      """ Test if it DOES NOT change Object Class, only test it. """
+      type_list = ['Folder', 'Category' ]
+      self._setAllowedContentTypesForFolderType(type_list)
+      obj = self.folder.newContent(portal_type="Category")
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      test_script = self._createUpgradeObjectClassPythonScript()
+      result = self.folder.upgradeObjectClass(test_script, from_class,
+                                       to_class, test_script, test_only=1)
+      transaction.commit()
+      self.assertNotEquals(self.folder[obj.getId()].__class__, to_class)
+      self.assertEquals(self.folder[obj.getId()].__class__, from_class)
       self.assertEquals([1], result)
 
     def test_upgradeObjectClassHierarchicaly(self):
@@ -189,10 +209,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       obj = subfolder.newContent(portal_type="Category")
       from_class = obj.__class__
       to_class = self.folder.__class__
-      createZODBPythonScript(self.getPortal().portal_skins.custom,
-                     "test_upgradeObjectZ", 'x',
-                     'return [1]')
-      test_script = self.getPortal().portal_skins.custom.test_upgradeObjectZ
+      test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class,
                                               to_class, test_script)
       transaction.commit()
@@ -208,10 +225,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       obj = subobject.newContent(portal_type="Category")
       from_class = obj.__class__
       to_class = self.folder.__class__
-      createZODBPythonScript(self.getPortal().portal_skins.custom,
-                     "test_upgradeObjectZ", 'x',
-                     'return [1]')
-      test_script = self.getPortal().portal_skins.custom.test_upgradeObjectZ
+      test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class,
                                               to_class, test_script)
       transaction.commit()
@@ -230,10 +244,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       to_class_as_string = 'Products.ERP5Type.Document.Folder.Folder'
       from_class = obj.__class__
       to_class = self.folder.__class__
-      createZODBPythonScript(self.getPortal().portal_skins.custom,
-                     "test_upgradeObject", 'x',
-                     'return [1]')
-      test_script = self.getPortal().portal_skins.custom.test_upgradeObject
+      test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class_as_string,
                                               to_class_as_string, test_script)
       transaction.commit()
