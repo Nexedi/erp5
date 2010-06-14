@@ -37,6 +37,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -85,10 +91,12 @@
             <value> <string>CREATE TABLE translation (\n
   language VARCHAR(255),\n
   message_context VARCHAR(50),\n
+  portal_type VARCHAR(255),\n
   original_message VARCHAR(255),\n
   translated_message VARCHAR(255),\n
   KEY `message` (`translated_message`),\n
-  KEY `original_message` (`original_message`)\n
+  KEY `original_message` (`original_message`),\n
+  KEY `portal_type` (`portal_type`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
         </item>
@@ -129,10 +137,12 @@
                         <value> <string>CREATE TABLE translation (\n
   language VARCHAR(255),\n
   message_context VARCHAR(50),\n
+  portal_type VARCHAR(255),\n
   original_message VARCHAR(255),\n
   translated_message VARCHAR(255),\n
   KEY `message` (`translated_message`),\n
-  KEY `original_message` (`original_message`)\n
+  KEY `original_message` (`original_message`),\n
+  KEY `portal_type` (`portal_type`)\n
 ) TYPE=InnoDB;\n
 </string> </value>
                     </item>

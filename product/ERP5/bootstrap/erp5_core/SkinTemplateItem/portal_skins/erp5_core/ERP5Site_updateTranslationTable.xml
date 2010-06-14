@@ -53,73 +53,72 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Document import newTempBase\n
-from Products.ERP5Type.Utils import getMessageIdWithContext\n
+            <value> <string>from Products.ERP5Type.Utils import getMessageIdWithContext\n
 \n
 supported_languages = context.Localizer.get_supported_languages()\n
 translated_keys = {} # This dict prevents entering the same key twice\n
 \n
-context.portal_catalog.deleteTranslationList(sql_catalog_id=sql_catalog_id)\n
+sql_catalog = context.portal_catalog.getSQLCatalog(sql_catalog_id)\n
+sql_catalog.z0_drop_translation()\n
+sql_catalog.z_create_translation()\n
 \n
-i = 0\n
+z_catalog_translation_list = sql_catalog.z_catalog_translation_list\n
+def catalog_translation_list(object_list):\n
+  parameter_dict = {}\n
+  for i in object_list:\n
+    for property in (\'language\', \'message_context\', \'portal_type\',\n
+                     \'original_message\', \'translated_message\'):\n
+      parameter_dict.setdefault(property, []).append(i[property])\n
+  z_catalog_translation_list(**parameter_dict)\n
 \n
 # Translate every workflow state in the context of the state variable\n
-for wf in context.portal_workflow.objectValues():\n
-  object_list = []\n
+object_list = []\n
+portal_workflow = context.portal_workflow\n
+for wf_id, portal_type_list in portal_workflow.getChainDict().items():\n
+  wf = getattr(portal_workflow, wf_id, None)\n
+  if wf is None:\n
+    continue\n
   state_var = wf.variables.getStateVar()\n
   if wf.states:\n
     for state_id, state in wf.states.items():\n
       for lang in supported_languages:\n
-        key = (lang, state_var, state_id)\n
-        if not translated_keys.has_key(key):\n
-          translated_keys[key] = None # mark as translated\n
-          obj = newTempBase(context, \'temp_translation_%d\' % i,\n
-                            language=lang, message_context=state_var, original_message=state_id,\n
-                            translated_message = context.Localizer.erp5_ui.gettext(state_id, lang=lang).encode(\'utf-8\'))\n
-          obj.setUid(\'temp_%d\' % i)\n
-          i += 1\n
-          object_list.append(obj)\n
-\n
-        # translate state title as well\n
-        if state.title != \'\' :\n
-          state_var_title = \'%s_title\' % state_var\n
-          msg_id = getMessageIdWithContext(state.title, \'state\', wf.id)\n
-          translated_message = context.Localizer.erp5_ui.gettext(msg_id, default=\'\', lang=lang).encode(\'utf-8\')\n
-          if translated_message == \'\':\n
-            msg_id = state.title\n
-            translated_message = context.Localizer.erp5_ui.gettext(state.title.decode(\'utf-8\'), lang=lang).encode(\'utf-8\')\n
-          key = (lang, state_var_title, state_id, msg_id)\n
+        for portal_type in portal_type_list:\n
+          key = (lang, portal_type, state_var, state_id)\n
           if not translated_keys.has_key(key):\n
+            translated_message = context.Localizer.erp5_ui.gettext(state_id, lang=lang).encode(\'utf-8\')\n
             translated_keys[key] = None # mark as translated\n
-            obj = newTempBase(context, \'temp_translation_%d\' % i,\n
-                              language=lang, message_context=state_var_title,\n
-                              original_message = state_id, translated_message = translated_message )\n
-            obj.setUid(\'temp_%d\' % i)\n
-            i += 1\n
-            object_list.append(obj)\n
+            object_list.append(dict(language=lang, message_context=state_var, portal_type=portal_type, original_message=state_id,\n
+                               translated_message=translated_message))\n
 \n
-  if object_list:\n
-    context.portal_catalog.catalogTranslationList(object_list, sql_catalog_id=sql_catalog_id)\n
+          # translate state title as well\n
+          if state.title != \'\' :\n
+            state_var_title = \'%s_title\' % state_var\n
+            msg_id = getMessageIdWithContext(state.title, \'state\', wf.id)\n
+            translated_message = context.Localizer.erp5_ui.gettext(msg_id, default=\'\', lang=lang).encode(\'utf-8\')\n
+            if translated_message == \'\':\n
+              msg_id = state.title\n
+              translated_message = context.Localizer.erp5_ui.gettext(state.title.decode(\'utf-8\'), lang=lang).encode(\'utf-8\')\n
+            key = (lang, portal_type, state_var_title, state_id, msg_id)\n
+            if not translated_keys.has_key(key):\n
+              translated_keys[key] = None # mark as translated\n
+              object_list.append(dict(language=lang, message_context=state_var_title, portal_type=portal_type, original_message=state_id,\n
+                                 translated_message=translated_message))\n
+if object_list:\n
+  catalog_translation_list(object_list)\n
 \n
 # Translate every portal type in the context of the portal type\n
+object_list = []\n
 for ptype in context.portal_types.objectValues():\n
-  title = ptype.title\n
-  if not title: title = ptype.id\n
-  object_list = []\n
+  portal_type = ptype.title\n
+  if not portal_type: portal_type = ptype.id\n
   for lang in supported_languages:\n
-    key = (lang, \'portal_type\', title)\n
+    key = (lang, \'portal_type\', portal_type)\n
     if not translated_keys.has_key(key):\n
       translated_keys[key] = None # mark as translated\n
-      obj = newTempBase(context, \'temp_translation_%d\' % i,\n
-                        language=lang, message_context="portal_type",\n
-                        original_message = title,\n
-                        translated_message = context.Localizer.erp5_ui.gettext(title, lang=lang).encode(\'utf-8\'))\n
-      obj.setUid(\'temp_%d\' % i)\n
-      i += 1\n
-      object_list.append(obj)\n
-\n
-  if object_list:\n
-    context.portal_catalog.catalogTranslationList(object_list, sql_catalog_id=sql_catalog_id)\n
+      object_list.append(dict(language=lang, message_context=\'portal_type\', portal_type=portal_type, original_message=portal_type,\n
+                         translated_message=context.Localizer.erp5_ui.gettext(portal_type, lang=lang).encode(\'utf-8\')))\n
+if object_list:\n
+  catalog_translation_list(object_list)\n
 \n
 print \'Done\'\n
 return printed\n
@@ -162,32 +161,35 @@ return printed\n
                             <string>sql_catalog_id</string>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
                             <string>Products.ERP5Type.Utils</string>
                             <string>getMessageIdWithContext</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>supported_languages</string>
                             <string>translated_keys</string>
-                            <string>i</string>
-                            <string>_getiter_</string>
-                            <string>wf</string>
+                            <string>sql_catalog</string>
+                            <string>z_catalog_translation_list</string>
+                            <string>catalog_translation_list</string>
                             <string>object_list</string>
+                            <string>portal_workflow</string>
+                            <string>_getiter_</string>
+                            <string>wf_id</string>
+                            <string>portal_type_list</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>wf</string>
                             <string>state_var</string>
                             <string>state_id</string>
                             <string>state</string>
                             <string>lang</string>
+                            <string>portal_type</string>
                             <string>key</string>
-                            <string>None</string>
+                            <string>translated_message</string>
                             <string>_write_</string>
-                            <string>obj</string>
-                            <string>_inplacevar_</string>
+                            <string>dict</string>
                             <string>state_var_title</string>
                             <string>msg_id</string>
-                            <string>translated_message</string>
                             <string>ptype</string>
-                            <string>title</string>
                           </tuple>
                         </value>
                     </item>

@@ -1,3 +1,6 @@
+2010-06-14 Kazuhiko
+* Index portal_type in translation table to avoid unexpected verbose results of translated state search.
+ 
 2010-06-09 yusei
 * Fix a typo in CategoryTool_getPreferredPredicateCategoryParentUidItemList.
 

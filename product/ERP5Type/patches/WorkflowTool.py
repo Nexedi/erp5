@@ -799,6 +799,17 @@ WorkflowTool.getWorkflowChainDict = WorkflowTool_getWorkflowChainDict
 WorkflowTool._reindexWorkflowVariables = lambda self, ob: \
   hasattr(aq_base(ob), 'reindexObjectSecurity') and ob.reindexObjectSecurity()
 
+def WorkflowTool_getChainDict(self):
+    """Test if the given transition exist from the current state.
+    """
+    chain_dict = {}
+    for portal_type, wf_id_list in self._chains_by_type.iteritems():
+        for wf_id in wf_id_list:
+            chain_dict.setdefault(wf_id, []).append(portal_type)
+    return chain_dict
+
+WorkflowTool.getChainDict = WorkflowTool_getChainDict
+
 # Backward compatibility, as WorkflowMethod has been removed in CMFCore 2.2
 from MethodObject import Method
 class WorkflowMethod( Method ):
