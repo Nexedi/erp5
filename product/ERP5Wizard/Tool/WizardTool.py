@@ -322,7 +322,7 @@ class WizardTool(BaseTool):
         user_and_password[0] and user_and_password[1]):
       if user_and_password!=last_loggedin_user_and_password:
         # credentials changed we need to renew __ac cookie from server as well
-	cookiejar.clear()
+        cookiejar.clear()
       # try login to server only once using cookie method
       if not _isUserAcknowledged(cookiejar):
         server_url = self.getServerUrl()
@@ -338,7 +338,7 @@ class WizardTool(BaseTool):
               user_and_password)
           header_dict['Authorization'] = auth
         # save last credentials we passed to server
-	last_loggedin_user_and_password = user_and_password
+        last_loggedin_user_and_password = user_and_password
     if content_type:
       header_dict['Content-Type'] = content_type
 
