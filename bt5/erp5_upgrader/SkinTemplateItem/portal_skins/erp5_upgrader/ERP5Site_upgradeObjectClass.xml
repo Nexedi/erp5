@@ -53,80 +53,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
+            <value> <string>"""\n
+  Migrate Object Classes based on upgrade signature\n
 """\n
-  Finalize Upgrade is the final step of upgrader. Here should contains\n
-  the scripts that should be executed after the business template installation.\n
-"""\n
-# Setup skins\n
-context.ERP5Site_setupUpgraderSkinSelection()\n
+class_signature_list = context.ERP5Site_getUpgraderSignature(\'upgrade_object_class_list\')\n
 \n
-clear_cache_kw = dict(activity=\'SQLQueue\', \n
-                      priority=3, \n
-                      tag="tag_upgrader_clear_cache")\n
-\n
-portal_alarms = context.getPortalObject().portal_alarms\n
-activate = context.portal_activities.activate\n
-# Group Messages into the same active process.\n
-active_process = portal_alarms.upgrader_controller.getLastActiveProcess()\n
-if active_process is None:\n
-  active_process = context.newActiveProcess()\n
-\n
-active_process = active_process.getPath()\n
-\n
+portal = context.getPortalObject()\n
 message_list = []\n
-bt5_upgrader_sense = portal_alarms.bt5_upgrader.sense()\n
-if bt5_upgrader_sense:\n
-  activate(active_process=active_process,\n
-           activity=\'SQLQueue\',\n
-           priority=2).Alarm_saveActiveResult(\n
-              summary="ERROR: Finalize Upgrader not started",\n
-              severity=0,\n
-              detail=\'BT5 Upgrader Sense: %s\' % (bt5_upgrader_sense))\n
 \n
-# Verify if is required upgrade Global Site Properties. \n
-message_list.extend(context.ERP5Site_upgradeGlobalPropertyList(upgrade=1))\n
+test_only = not upgrade\n
 \n
-message_list.extend(context.ERP5Site_upgradeWorkflowChain(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeValidationStateList(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeData(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradePortalTypePropertySheet(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeSecurity(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeMySQLCharset(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeSQLCatalogFilter(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeObjectClass(upgrade=1))\n
-\n
-# Verify if there was any change previously and \n
-if len(message_list) > 0:\n
- message_list.extend(context.ERP5Site_upgradeSQLCatalog(upgrade=1))\n
- clear_cache_kw[\'after_tag\'] = \'tag_migration_finish\'\n
-\n
-activate(active_process=active_process,\n
-           activity=\'SQLQueue\',\n
-           priority=2).Alarm_saveActiveResult(summary="Finalize Upgrade",\n
-                       severity=0,\n
-                       detail=\'\\n\'.join(message_list))\n
-\n
-clear_cache_kw[\'after_method_id\'] = [\'Alarm_saveActiveResult\',\'immediateReindexObject\']\n
-context.portal_caches.activate(**clear_cache_kw).clearAllCache()\n
-\n
-activate(active_process=active_process,\n
-           activity=\'SQLQueue\',\n
-           priority=4,\n
-           after_tag=clear_cache_kw[\'tag\']).ERP5Site_notifyUpgradeIntegrity(active_process=active_process)\n
+for object_class in class_signature_list:\n
+  folder, test_before , from_class, to_class , test_after = object_class\n
+  folder_object = portal.restrictedTraverse(folder)\n
+  test_before_method = getattr(context, test_before )\n
+  test_after_method = getattr(context, test_after )\n
+  result = folder_object.upgradeObjectClass(test_before_method, \n
+                                            from_class, \n
+                                            to_class, \n
+                                            test_after_method, \n
+                                            test_only)\n
+  message_list.extend(result)\n
 \n
 return message_list\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -136,7 +86,7 @@ return message_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>upgrade=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -156,27 +106,31 @@ return message_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
+                            <string>upgrade</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>dict</string>
-                            <string>clear_cache_kw</string>
-                            <string>portal_alarms</string>
-                            <string>activate</string>
-                            <string>active_process</string>
-                            <string>None</string>
+                            <string>class_signature_list</string>
+                            <string>portal</string>
                             <string>message_list</string>
-                            <string>bt5_upgrader_sense</string>
-                            <string>len</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>_getitem_</string>
+                            <string>test_only</string>
+                            <string>_getiter_</string>
+                            <string>object_class</string>
+                            <string>folder</string>
+                            <string>test_before</string>
+                            <string>from_class</string>
+                            <string>to_class</string>
+                            <string>test_after</string>
+                            <string>folder_object</string>
+                            <string>getattr</string>
+                            <string>test_before_method</string>
+                            <string>test_after_method</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>
@@ -188,12 +142,14 @@ return message_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_upgradeFinalize</string> </value>
+            <value> <string>ERP5Site_upgradeObjectClass</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

@@ -53,7 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   The release signature is a kind of declarative\n
   specification of an upgrader.\n
 """\n
@@ -111,7 +113,6 @@ UPGRADABLE_BT5_ID_LIST = (\n
                         "erp5_mobile",\n
                         "erp5_ui_test_core",\n
                         "erp5_ui_test",\n
-                        "erp5_express_ui_test",\n
                          )\n
 \n
 # A list bt5 which are required for the upgrade\n
@@ -382,7 +383,8 @@ UPDATE_ROLE_PORTAL_TYPE_LIST = [ \'Person Module\',\n
                                  \'Sale Trade Condition\',\n
                                  \'Gadget\',\n
                                  \'Knowledge Pad\',\n
-                                 \'Knowledge Box\' \n
+                                 \'Knowledge Box\', \n
+                                 \'Currency Exchange Line\'\n
                                ]\n
 \n
 # A property sheet expected to found into a Portal Type List.\n
@@ -393,6 +395,14 @@ PORTAL_TYPE_PROPERTY_SHEET_LIST = []\n
 KEEP_ORIGINAL_DICT = {\n
   \'erp5_core\':(\'portal_preferences/default_site_preference\',\n
                \'portal_categories/function\',\n
+              ),\n
+\n
+  \'erp5_dms\':(\'portal_workflow/processing_status_workflow\',\n
+              \'portal_categories/contributor\',\n
+              \'portal_skins/erp5_dms/Image_view/image_view\'\n
+             ),\n
+\n
+  \'erp5_base\':(\'portal_categories/specialise\',\n
               ),\n
 \n
   \'erp5_trade\':(\'portal_workflow/delivery_tax_interaction_workflow\',\n
@@ -412,11 +422,6 @@ KEEP_ORIGINAL_DICT = {\n
                 ),\n
 \n
   \'erp5_wizard\':(\'portal_preferences/erp5_express_default_customer_preference\',\n
-                ),\n
-\n
-  \'erp5_express_ui_test\':(\'portal_type_roles/Person Module\',\n
-                          \'portal_type_roles/Person\',\n
-                          \'portal_type_roles/Organisation Module\',\n
                 ),\n
 \n
 }\n
@@ -458,6 +463,11 @@ VALIDATION_DICT = {\n
                ),\n
 }\n
 \n
+#\n
+# Dictionary the expected filters for catalog. This is a usually determinated\n
+# by catalog.getFilterDict()\n
+#\n
+\n
 CATALOG_FILTER_DICT = { \n
    \'z_catalog_item_list\' : \'python: here.providesIMovement()\',\n
    \'z_catalog_predicate_category_list\': \'python: isPredicate\',\n
@@ -479,15 +489,41 @@ CATALOG_FILTER_DICT = { \n
    \'z_catalog_quantity_unit_conversion_list\': \'python: here.getPortalType() in here.getPortalResourceTypeList()\',\n
    \'z0_uncatalog_inventory_stock\': \'python: isInventoryMovement\'}\n
 \n
+\n
+#\n
+# List of Scripts to be run after upgrade is finished to determinate \n
+# the integrity and consistency of the instance.\n
+#\n
+\n
 INTEGRITY_VERIFICATION_SCRIPT_ID_LIST = (\'ERP5Site_verifyUpgradeIntegrity\',\n
                                          \'ERP5Site_verifyBT5UpgradeIntegrity\',\n
-                                         \'ERP5Site_verifyUserAuthentificationIntegrity\',\n
                                          \'ERP5Site_verifyMemcachedIntegrity\',\n
                                          \'ERP5Site_verifySQLCatalogFilterIntegrity\',\n
                                          \'ERP5Site_verifyActivityIntegrity\')\n
 \n
+# \n
+# Define the property and value ({\'property\' : \'value\', ...} to be set or created \n
+# into erp5 portal object.\n
+#\n
 ERP5_SITE_PROPERTY_DICT = {}\n
 \n
+\n
+#\n
+# Define instructions for migrate object class of a group of objects like:\n
+# ((    relative_url <- Folder Relative URL where the object is located.\n
+#   , \'script_to_run_before\' <- Script ID that will test if the \n
+#                               object can be migrated or not.\n
+#   , \'Products.ERP5Type.Document.FROM.CLASS\' <- Expected Class to be migrated\n
+#   , \'Products.ERP5Type.Document.TO.CLASS\'   <- Class to be Migrated.\n
+#   , \'script_to_run_after\' <- Script ID that will run after test it finished.\n
+# ), )\n
+# \n
+\n
+UPGRADE_OBJECT_CLASS_LIST = ( (\'portal_gadgets\', \n
+                          \'ERP5Site_testUpgradeObjectClass\',\n
+                          \'Products.ERP5Type.Document.Folder.Folder\', \n
+                          \'Products.ERP5Type.Document.Gadget.Gadget\', \n
+                          \'ERP5Site_testUpgradeObjectClass\'  ), )\n
 \n
 # Wrap everything into a dict\n
 signature_dict = {\n
@@ -525,13 +561,17 @@ signature_dict = {\n
  , \'portal_type_property_sheet_list\' : PORTAL_TYPE_PROPERTY_SHEET_LIST\n
    # Provide a list of Properties Expected at ERP5Site portal\n
  , \'erp5_site_property_dict\' : ERP5_SITE_PROPERTY_DICT\n
+   # Provide a list of tuples with informations to upgrade object class\n
+ , \'upgrade_object_class_list\' : UPGRADE_OBJECT_CLASS_LIST\n
 }\n
 \n
 if item is not None:\n
   return signature_dict.get(item)\n
 else:\n
   return signature_dict\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -589,6 +629,7 @@ else:\n
                             <string>CATALOG_FILTER_DICT</string>
                             <string>INTEGRITY_VERIFICATION_SCRIPT_ID_LIST</string>
                             <string>ERP5_SITE_PROPERTY_DICT</string>
+                            <string>UPGRADE_OBJECT_CLASS_LIST</string>
                             <string>signature_dict</string>
                           </tuple>
                         </value>

@@ -53,52 +53,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
+            <value> <string>"""\n
+  Dummy script used by Upgrader Script\n
 """\n
-  Finalize Upgrade is the final step of upgrader. Here should contains\n
-  the scripts that should be executed after the business template installation.\n
-"""\n
-# Setup skins\n
-context.ERP5Site_setupUpgraderSkinSelection()\n
-\n
-# Verify if is required upgrade Global Site Properties. \n
-if len(context.ERP5Site_upgradeGlobalPropertyList()) > 0:\n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeValidationStateList()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeWorkflowChain()) > 0:\n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeData()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradePortalTypePropertySheet()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeSecurity()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeObjectClass()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeSQLCatalogFilter()) > 0: \n
-  return True\n
-\n
-if len(context.ERP5Site_upgradeSQLCatalog()) > 0: \n
-  return True\n
-\n
-# (rafael) Maybe this is dangerous, enable it when this\n
-# is appropriated tested.\n
-#if len(context.ERP5Site_upgradeMySQLCharset()) > 0: \n
-#  return True\n
-\n
-return False\n
-
-
-]]></string> </value>
+return [ (upgrade_object.getRelativeUrl(), upgrade_object.getMetaType()) ]\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -108,7 +67,7 @@ return False\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>upgrade_object</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -128,18 +87,14 @@ return False\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
+                            <string>upgrade_object</string>
                             <string>_getattr_</string>
-                            <string>context</string>
-                            <string>len</string>
-                            <string>True</string>
-                            <string>False</string>
                           </tuple>
                         </value>
                     </item>
@@ -156,7 +111,7 @@ return False\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_senseFinalizeUpgrade</string> </value>
+            <value> <string>ERP5Site_testUpgradeObjectClass</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
