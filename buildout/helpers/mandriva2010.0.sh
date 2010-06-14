@@ -36,6 +36,7 @@ libneon0.27-devel
 libopenssl-devel
 libpng-devel
 libreadline-devel
+librsync-devel
 libsasl2-devel
 libtermcap-devel
 libungif-devel

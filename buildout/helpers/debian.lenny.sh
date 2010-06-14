@@ -18,6 +18,7 @@ libncurses5-dev
 libneon27-gnutls-dev
 libpng12-dev
 libreadline-dev
+librsync-dev
 libsasl2-dev
 libsdl-gfx1.2-dev
 libsdl-image1.2-dev
