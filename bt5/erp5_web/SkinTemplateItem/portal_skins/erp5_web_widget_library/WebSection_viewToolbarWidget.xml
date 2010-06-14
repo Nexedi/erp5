@@ -103,15 +103,6 @@
           </button>\n
         </li>\n
         </tal:block>\n
-        <li tal:repeat="action actions/object_add | nothing">\n
-          <button class="menu-link" \n
-                  tal:attributes="title string:Add ${action/name};\n
-                                  name python:\'Base_doAction:method\';\n
-                                  value string:object ${action/url}"\n
-                  i18n:translate="" i18n:domain="ui">\n
-            Add <tal:block tal:content="action/name" i18n:name="portal_type" i18n:translate="" />\n
-          </button>\n
-        </li>\n
         <tal:block tal:define="document_template_list here/getDocumentTemplateList | nothing"\n
                    tal:condition="document_template_list">\n
         <li tal:repeat="document_template document_template_list">\n
@@ -312,7 +303,8 @@
   </li>\n
   <script type="text/javascript" src="erp5_web_toolbar.js" tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
 </ul>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

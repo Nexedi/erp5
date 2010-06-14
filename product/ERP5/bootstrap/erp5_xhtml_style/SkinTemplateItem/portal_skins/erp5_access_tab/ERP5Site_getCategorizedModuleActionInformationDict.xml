@@ -131,13 +131,6 @@ def getModuleActionInformationDict(**kw):\n
         template_name = Base_translateString(\'${template_title} (Template)\',\n
                                              mapping=dict(template_title=template.getTitle()))\n
         module_add_list.append((template_name, url))\n
-      for add_action in action_dict.get(\'object_add\', ()):\n
-        url = renderCustomLink(add_action[\'url\'],\n
-                               dict(cancel_url=cancel_url,\n
-                                    form_id=form_id,\n
-                                    selection_name=selection_name,\n
-                                    select_action=action))\n
-        module_add_list.append((Base_translateString(add_action[\'name\']), url))\n
       if module_add_list:\n
         add_list.append((translated_title, module_add_list))\n
 \n
