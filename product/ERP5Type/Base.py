@@ -926,10 +926,6 @@ class Base( CopyContainer,
 
       # Generate portal_type methods
       if aq_key not in Base.aq_portal_type:
-        if ptype == 'Preference':
-          # XXX-JPS this should be moved to Preference class
-          from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
-          updatePreferenceClassPropertySheetList()
         initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal)
         generated = True
 
