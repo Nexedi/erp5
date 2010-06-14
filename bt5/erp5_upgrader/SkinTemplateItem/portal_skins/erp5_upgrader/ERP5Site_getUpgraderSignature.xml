@@ -566,7 +566,7 @@ signature_dict = {\n
 }\n
 \n
 if item is not None:\n
-  return signature_dict.get(item)\n
+  return signature_dict.get(item, None)\n
 else:\n
   return signature_dict\n
 
