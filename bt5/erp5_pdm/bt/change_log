@@ -1,3 +1,6 @@
+2010-06-14 kazuhiko
+* Fix a bug in Base_validateEan13Code that does not work in the case where the check digit is 0.
+
 2010-05-27 yo
 * Resource_getPriceCalculationOperandDict must return base_unit_price even if price is not found. So the meaning of the default parameter has changed slightly - now it represents the default value of price instead of the default value of the returned result. This way is more backward compatible.
 
