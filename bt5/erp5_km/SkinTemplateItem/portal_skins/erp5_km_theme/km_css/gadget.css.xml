@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76242823.7</string> </value>
+            <value> <string>ts76264002.76</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -215,6 +215,17 @@ div.edit-form button{\n
   background-color: #BDD0F0;\n
   overflow: auto;\n
 }\n
+\n
+/* listbox buttons in gadget mode */\n
+div.block table.listbox button.sort_button,\n
+div.block table.listbox thead tr th{\n
+  color:#000000;\n
+}\n
+\n
+div.block table.listbox button.sort_button:hover{\n
+  color: #FFFFFF;\n
+}\n
+\n
 \n
 /* Add gadgets link */\n
 #add_new_gadget_link{\n
@@ -519,7 +530,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>7964</int> </value>
+            <value> <int>8174</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
