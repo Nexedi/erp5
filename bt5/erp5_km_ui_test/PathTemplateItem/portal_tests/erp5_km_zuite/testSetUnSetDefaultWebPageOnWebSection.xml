@@ -43,12 +43,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Search Top Box hitting Enter</title>\n
+<title tal:content="template/getId"/>\n
 </head>\n
 <body tal:define="page_uid python: here.Zuite_getObjectUid(portal_type=\'Web Page\', title=\'%test_km%\')">\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test set default Web Page on Web Section</td></tr>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
 </thead><tbody>\n
 \n
 \n
