@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-class AccountingTransaction:
+class AccountingTransactionConstraint:
   """Constraints for Accounting Transactions
   """
 

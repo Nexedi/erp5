@@ -103,7 +103,6 @@ class BalanceTransaction(AccountingTransaction, Inventory):
                     , PropertySheet.Amount
                     , PropertySheet.Reference
                     , PropertySheet.PaymentCondition
-                    , PropertySheet.AccountingTransaction
                     )
   
 
