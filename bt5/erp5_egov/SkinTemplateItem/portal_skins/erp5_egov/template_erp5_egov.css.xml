@@ -541,7 +541,7 @@ div#main_content fieldset {\n
 }\n
 \n
 div#main_content fieldset.bottom{\n
-  padding:0;\n
+  padding:3em;\n
 }\n
 \n
 .inline,\n

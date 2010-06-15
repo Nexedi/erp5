@@ -1,5 +1,8 @@
+2010-06-15 mayoro
+*center listbox by modifying padding
+
 2010-06-13 mayoro
-*rename mistake in login_form of ecitizen (egov_portal) is no longer used
+*rename mistake in login_form of ecitizen (egov_portal is no longer used)
 *add padding left for site title in template_erp5_egov.css
 
 2010-06-13 mayoro
