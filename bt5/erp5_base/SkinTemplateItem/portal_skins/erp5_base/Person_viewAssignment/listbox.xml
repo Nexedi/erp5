@@ -113,19 +113,19 @@
                           <string>Organisation</string>
                         </tuple>
                         <tuple>
-                          <string>site_title</string>
+                          <string>site_translated_title</string>
                           <string>Site</string>
                         </tuple>
                         <tuple>
-                          <string>group_title</string>
+                          <string>group_translated_title</string>
                           <string>Group</string>
                         </tuple>
                         <tuple>
-                          <string>function_title</string>
+                          <string>function_translated_title</string>
                           <string>Function</string>
                         </tuple>
                         <tuple>
-                          <string>activity_title</string>
+                          <string>activity_translated_title</string>
                           <string>Activity</string>
                         </tuple>
                         <tuple>
