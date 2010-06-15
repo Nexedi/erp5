@@ -147,6 +147,12 @@ class AssertSoftwareRunable(unittest.TestCase):
     self.assertEqual(stderr, '')
     self.assertTrue(stdout.startswith('flare'))
 
+  def test_rdiff_backup(self):
+    stdout, stderr = subprocess.Popen(["parts/rdiff-backup/bin/rdiff-backup",
+      "-v"], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertEqual(stdout.strip(), 'rdiff-backup 1.0.5')
+
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
 
