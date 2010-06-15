@@ -1090,7 +1090,22 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
 
       from_class and to_class can be classes (o.__class___) or strings like:
         'Products.ERP5Type.Document.Folder.Folder'
-     
+    
+    XXX Some comments by Seb:
+    - it is not designed to work for modules with thousands of objects,
+      so it totally unusable when you have millions of objects
+    - it is totally unsafe. There is even such code inside :
+        self.manage_delObjects(id of original object)
+        commit()
+        self._setObject(new object instance)
+      So it is possible to definitely loose data.
+    - There is no proof that upgrade is really working. With such a
+      dangerous operation, it would be much more safer to have a proof,
+      something like the "fix point" after doing a synchronization. Such
+      checking should even be done before doing commit (like it might
+      be possible to export objects in the xml format used for exports
+      before and after, and run a diff). 
+
     """
     #LOG("upgradeObjectClass: folder ", 0, self.id)
     test_list = []
