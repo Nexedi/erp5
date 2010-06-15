@@ -46,6 +46,9 @@ print sys.version_info[:2]
 
   def test_required_libraries(self):
     """Checks possiblity of importing libraries"""
+    ignored_library_list = createCleanList("""
+      socks
+    """)
     required_library_list = createCleanList("""
       ERP5Diff
       MySQLdb
@@ -68,7 +71,6 @@ print sys.version_info[:2]
       pytz
       readline
       simplejson
-      socks
       threadframe
       uuid
       xml
