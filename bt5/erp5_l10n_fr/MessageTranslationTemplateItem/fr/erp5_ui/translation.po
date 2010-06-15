@@ -3182,6 +3182,9 @@ msgstr "Devise de la comptabilité par défaut"
 msgid "Default Address"
 msgstr "Adresse principale"
 
+msgid "Default Career"
+msgstr "Étape de carrière principale"
+
 msgid "Default Calculation Script"
 msgstr "Script de calcul par défaut"
 
@@ -6651,6 +6654,12 @@ msgstr "Document Office"
 
 msgid "Old Value"
 msgstr "Ancienne valeur"
+
+msgid "Number of Children"
+msgstr "Nombre d'enfants"
+
+msgid "Number of Partners"
+msgstr "Nombre de partenaires"
 
 msgid "Omit \"Grouped References\""
 msgstr "Sans écritures lettrées"
@@ -11428,6 +11437,9 @@ msgstr "Tiers"
 msgid "Third Party"
 msgstr "Tiers"
 
+msgid "Third Party (with Link)"
+msgstr "Tiers (avec lien)"
+
 msgid "Third Party Account"
 msgstr "Compte chez le tiers"
 
@@ -11445,6 +11457,9 @@ msgstr "Le tiers ${third_party_name} est invalidé."
 
 msgid "Third party associated with the transaction"
 msgstr "Le tiers qui est associé à la transaction."
+
+msgid "Head of Family"
+msgstr "Chef de famille"
 
 msgid "Third party associated with to the transaction"
 msgstr "Tiers associé à la transaction."
