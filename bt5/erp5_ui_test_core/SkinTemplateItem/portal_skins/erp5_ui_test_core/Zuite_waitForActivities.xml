@@ -64,8 +64,7 @@
 from Products.ERP5Type.Utils import sleep\n
 count = int(count)\n
 while len(context.portal_activities.getMessageList()) > 0:\n
-  if invoke == 1:\n
-    context.portal_activities.process_timer(0, 0)\n
+  context.portal_activities.process_timer(0, 0)\n
   count -= 1\n
   sleep(t=1)\n
   if count < 0:\n
@@ -84,7 +83,7 @@ return \'Done.\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>count = 1000, invoke=1</string> </value>
+            <value> <string>count = 1000</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -104,14 +103,13 @@ return \'Done.\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>count</string>
-                            <string>invoke</string>
                             <string>Products.ERP5Type.Utils</string>
                             <string>sleep</string>
                             <string>int</string>
@@ -133,7 +131,6 @@ return \'Done.\'\n
             <value>
               <tuple>
                 <int>1000</int>
-                <int>1</int>
               </tuple>
             </value>
         </item>
