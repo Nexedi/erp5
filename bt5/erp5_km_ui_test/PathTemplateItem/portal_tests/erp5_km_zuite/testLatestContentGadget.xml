@@ -63,85 +63,96 @@
 </tr>\n
 \n
 <tr>\n
-\t<td>click</td>\n
-\t<td>//li[@id=\'select-module-toolbox\']/h3</td>\n
-\t<td></td>\n
+  <td>click</td>\n
+  <td>//li[@id=\'select-module-toolbox\']/h3</td>\n
+   <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>//button[@title=\'Documents\']</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Documents\']</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
-\t<td>//li[@id=\'action-document-toolbox\']/h3</td>\n
-\t<td></td>\n
+  <td>click</td>\n
+  <td>//li[@id=\'action-document-toolbox\']/h3</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>//button[@title=\'Add Drawing\']</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Add Drawing\']</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_my_title</td>\n
-\t<td>test drawing</td>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>test drawing</td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_my_reference</td>\n
-\t<td>test-drawing-document</td>\n
+  <td>type</td>\n
+  <td>field_my_reference</td>\n
+  <td>test-drawing-document</td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_my_version</td>\n
-\t<td>001</td>\n
+  <td>type</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
 </tr>\n
 <tr>\n
-\t<td>type</td>\n
-\t<td>field_my_language</td>\n
-\t<td>en</td>\n
+  <td>type</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
 </tr>\n
 <tr>\n
-\t<td>select</td>\n
-\t<td>subfield_field_my_group_list_default:list</td>\n
-\t<td>label=Test Zuite Group/Section 1</td>\n
+  <td>select</td>\n
+  <td>subfield_field_my_group_list_default:list</td>\n
+  <td>label=Test Zuite Group/Section 1</td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>input-save-edit</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>input-save-edit</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>click</td>\n
-\t<td>//li[@id=\'action-document-toolbox\']/h3</td>\n
-\t<td></td>\n
+  <td>click</td>\n
+  <td>//li[@id=\'action-document-toolbox\']/h3</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>//button[@title=\'Release Document\']</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Release Document\']</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>dialog_submit_button</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>verifyTextPresent</td>\n
-\t<td>Status changed</td>\n
-\t<td></td>\n
+  <td>verifyTextPresent</td>\n
+  <td>Status changed</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
-\t<td>clickAndWait</td>\n
-\t<td>link=Section 1</td>\n
-\t<td></td>\n
+  <td>clickAndWait</td>\n
+  <td>link=Section 1</td>\n
+  <td></td>\n
 </tr>\n
 \n
 <!-- Add Latest Content Gadget -->\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_latest_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Wait for activities to finish -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -154,10 +165,6 @@
   <td>test drawing</td>\n
   <td></td>\n
 </tr>\n
-\n
-\n
-  \n
-\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
