@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76264002.76</string> </value>
+            <value> <string>ts76583408.93</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -34,7 +34,9 @@
 /*     - missing docstring                                      */\n
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
-\n
+div.draggable_wrapper{\n
+  background-color:transparent;\n
+}\n
 .border_bottom1px{\n
   border-bottom: none!important;\n
 }\n
@@ -530,7 +532,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8174</int> </value>
+            <value> <int>8230</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
