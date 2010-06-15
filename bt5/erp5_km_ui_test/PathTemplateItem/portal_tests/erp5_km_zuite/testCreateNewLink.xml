@@ -76,7 +76,12 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>Web Page created successfully</td>\n
+  <td>Web Page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>successfully</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
