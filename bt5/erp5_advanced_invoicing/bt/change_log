@@ -1,3 +1,6 @@
+2010-06-15 yusei
+* Fix plan transition on invoice_workflow. Appropriate root applied rule must be made.
+
 2010-04-27 yusei
 * Fix list view forms for sale/purchase invoice module.
 * Fix purchase invoice default view action. View form for purchase invoice transaction was used.

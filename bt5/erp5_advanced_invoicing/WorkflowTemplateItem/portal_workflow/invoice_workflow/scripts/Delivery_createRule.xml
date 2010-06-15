@@ -53,7 +53,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].getExplanationValue().Delivery_updateSimulation()\n
+            <value> <string>invoice = state_change[\'object\']\n
+invoice_path = invoice.getPath()\n
+path_and_method_id = (invoice_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
+expand_tag = invoice_path + \'_expand\'\n
+tag = invoice_path + \'_updateAppliedRule\'\n
+\n
+priority = 3\n
+\n
+activate_kw = { \n
+  \'tag\': expand_tag,\n
+  \'priority\': priority,\n
+}\n
+invoice.activate(\n
+    after_path_and_method_id=path_and_method_id,\n
+    after_tag=expand_tag,\n
+    tag=tag,\n
+    priority=priority,\n
+    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
@@ -91,8 +108,15 @@
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>_getattr_</string>
                             <string>_getitem_</string>
+                            <string>invoice</string>
+                            <string>_getattr_</string>
+                            <string>invoice_path</string>
+                            <string>path_and_method_id</string>
+                            <string>expand_tag</string>
+                            <string>tag</string>
+                            <string>priority</string>
+                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>
@@ -109,7 +133,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_updateSimulation</string> </value>
+            <value> <string>Delivery_createRule</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
