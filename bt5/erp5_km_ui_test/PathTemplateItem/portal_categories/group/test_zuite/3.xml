@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="WebSection" module="Products.ERP5Type.Document.WebSection"/>
+        <global name="Category" module="Products.ERP5Type.Document.Category"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -57,21 +57,21 @@
             </value>
         </item>
         <item>
-            <key> <string>__translation_dict</string> </key>
+            <key> <string>_count</string> </key>
             <value>
-              <dictionary/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>_identity_criterion</string> </key>
+            <key> <string>_mt_index</string> </key>
             <value>
-              <dictionary/>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
             </value>
         </item>
         <item>
-            <key> <string>_range_criterion</string> </key>
+            <key> <string>_tree</string> </key>
             <value>
-              <dictionary/>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
             </value>
         </item>
         <item>
@@ -82,61 +82,43 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>3</string> </value>
         </item>
         <item>
-            <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_base_category</string> </key>
-            <value>
-              <tuple>
-                <string>group</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_category</string> </key>
-            <value>
-              <tuple>
-                <string>group/test_zuite/2/1</string>
-              </tuple>
-            </value>
+            <key> <string>last_id</string> </key>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Section</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>string_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>test_method_id</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <value> <string>Category</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Section 2.1</string> </value>
-        </item>
-        <item>
-            <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>Section 3</string> </value>
         </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
     </pickle>
   </record>
 </ZopeData>

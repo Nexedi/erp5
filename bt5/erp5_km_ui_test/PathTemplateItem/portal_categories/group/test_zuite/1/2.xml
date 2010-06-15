@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="WebSection" module="Products.ERP5Type.Document.WebSection"/>
+        <global name="Category" module="Products.ERP5Type.Document.Category"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -57,32 +57,14 @@
             </value>
         </item>
         <item>
-            <key> <string>__translation_dict</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_identity_criterion</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_range_criterion</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
+            <key> <string>codification</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -91,24 +73,8 @@
             </value>
         </item>
         <item>
-            <key> <string>membership_criterion_base_category</string> </key>
-            <value>
-              <tuple>
-                <string>group</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>membership_criterion_category</string> </key>
-            <value>
-              <tuple>
-                <string>group/test_zuite/2/1</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Web Section</string> </value>
+            <value> <string>Category</string> </value>
         </item>
         <item>
             <key> <string>short_title</string> </key>
@@ -117,24 +83,8 @@
             </value>
         </item>
         <item>
-            <key> <string>string_index</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>test_method_id</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
-            <value> <string>Section 2.1</string> </value>
-        </item>
-        <item>
-            <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
+            <value> <string>Section 12</string> </value>
         </item>
       </dictionary>
     </pickle>
