@@ -235,7 +235,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
     def getBaseData(self, default=_MARKER):
       """
       """
-      self._checkConversionFormatPermission(None, **kw)
+      self._checkConversionFormatPermission(None)
       if default is _MARKER:
         return self.getTextContent()
       else:
