@@ -61,20 +61,15 @@ transaction = context.getObject()\n
 transaction_lines = transaction.objectValues(portal_type=lines_portal_type)\n
 id_to_delete_list = []\n
 \n
-\n
 for line in transaction_lines:\n
-  line = line.getObject()\n
-  # Do not delete lines involved in simulation\n
-  if len(line.getDeliveryRelatedValueList(\n
-                    portal_type = \'Simulation Movement\') +\n
-          line.getOrderRelatedValueList(\n
-                    portal_type = \'Simulation Movement\')) == 0:\n
-    if not line.getSourceInventoriatedTotalAssetPrice() and \\\n
-       not line.getDestinationInventoriatedTotalAssetPrice():\n
-      id_to_delete_list.append(line.getId())\n
+  if line.getSourceInventoriatedTotalAssetPrice() or \\\n
+     line.getDestinationInventoriatedTotalAssetPrice() or \\\n
+     line.isSimulated():\n
+    continue\n
+  id_to_delete_list.append(line.getId())\n
 \n
+# Don\'t delete everything\n
 if len(id_to_delete_list) != len(transaction_lines):\n
-  # Don\'t delete everything\n
   transaction.deleteContent(id_to_delete_list)\n
 \n
 if redirect:\n
