@@ -1,8 +1,8 @@
 Accounting Rule Cell Line | AccountingRuleCellLine
-Accounting Transaction | AccountingTransaction
-Balance Transaction | AccountingTransaction
+Accounting Transaction | AccountingTransactionConstraint
+Balance Transaction | AccountingTransactionConstraint
 Cash Register | BankAccount
-Internal Invoice Transaction | AccountingTransaction
-Payment Transaction | AccountingTransaction
-Purchase Invoice Transaction | AccountingTransaction
-Sale Invoice Transaction | AccountingTransaction
+Internal Invoice Transaction | AccountingTransactionConstraint
+Payment Transaction | AccountingTransactionConstraint
+Purchase Invoice Transaction | AccountingTransactionConstraint
+Sale Invoice Transaction | AccountingTransactionConstraint
