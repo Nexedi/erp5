@@ -68,7 +68,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@name=\'Base_doModule:method\' and @value=\'/web_site_module/km_test_web_site/person_module\']</td>\n
+  <td>//button[@name=\'Base_doModule:method\' and @title=\'Persons\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
