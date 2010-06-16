@@ -79,6 +79,37 @@ class TestERP5Administration(InventoryAPITestCase):
     mvt.getParentValue()._delOb(mvt.getId())
     checkStock(row_count-2) # alarm.solve will unindex 'mvt'
 
+  def test_check_consistency_alarm(self):
+    alarm = self.portal.portal_alarms.check_consistency
+    person = self.portal.person_module.newContent(portal_type='Person')
+    # this document will be non consistent, for PropertyTypeValidity
+    person.title = 3 
+    
+    alarm.activeSense()
+    transaction.commit()
+    self.tic()
+    
+    # some errors were detected
+    self.assertTrue(alarm.sense())
+    
+    # this alarm has a custom report
+    alarm.Alarm_viewConsistencyCheckReport()
+    # which has a listbox showing all problem reported by constraints and
+    # errors reported by property type validity constraint
+    line_list = alarm.Alarm_viewConsistencyCheckReport.listbox.get_value(
+                        'default', render_format='list')
+    self.assertEquals(1, len([line for line in line_list if line.isDataLine()]))
+    self.assertEquals(str(line_list[-1].getColumnProperty('getTranslatedMessage')),
+      "Attribute title should be of type string but is of type <type 'int'>")
+
+    # this alarm can solve, as long as the constraints can solve, this is the
+    # case of PropertyTypeValidity
+    alarm.solve()
+    transaction.commit()
+    self.tic()
+    self.assertEquals('3', person.title)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Administration))
