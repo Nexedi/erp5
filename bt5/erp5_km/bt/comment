@@ -16,7 +16,6 @@ TODO:
 - display some default tabs on first page in annonymous
 - add rss links on listbox, widgets, ...
 - translate footer web_page
-- make buttons background transparent (pb visible at ContributionTool_viewContributeFileDialog).
 - display Robert Jung copyright on all css files he made (currently it's only on layout.css)
 - try all widgets rendering
 - try on ie7
