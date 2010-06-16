@@ -307,6 +307,8 @@
                         <string>my_report_mode_report_box</string>
                         <string>my_view_mode_preferred_trade_base_amount_list</string>
                         <string>my_view_mode_movement_use</string>
+                        <string>my_view_mode_listbox_resource_relative_url</string>
+                        <string>my_view_mode_listbox_movement_relative_url</string>
                       </list>
                     </value>
                 </item>

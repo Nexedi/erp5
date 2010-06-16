@@ -13,7 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>hash_script_id</string>
+                <string>first_item</string>
                 <string>items</string>
                 <string>title</string>
               </list>
@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_dialog_mode_listbox_variation_category_list</string> </value>
+            <value> <string>my_view_mode_listbox_movement_relative_url</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -62,6 +62,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>form_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -88,15 +92,15 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_parallel_list_field</string> </value>
+                    <value> <string>my_string_field</string> </value>
+                </item>
+                <item>
+                    <key> <string>first_item</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>hash_script_id</string> </key>
-                    <value> <string>Base_hashCategoryList</string> </value>
                 </item>
                 <item>
                     <key> <string>items</string> </key>
@@ -110,7 +114,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Variation</string> </value>
+                    <value> <string>Movement</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -129,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getVariationRangeCategoryList()</string> </value>
+            <value> <string>python: context.Delivery_getResourceItemList(validation_state=\'validated\', portal_type=[\'Service\', \'Product\'], cell=cell)</string> </value>
         </item>
       </dictionary>
     </pickle>

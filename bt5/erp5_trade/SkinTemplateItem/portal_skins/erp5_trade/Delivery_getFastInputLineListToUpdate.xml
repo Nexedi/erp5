@@ -53,47 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Remove empty items\n
-item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']],\\\n
-                   item_list)\n
-sub_field_dict = {}\n
-split_depth = 1\n
-resource = context.getResourceValue()\n
-if resource is not None:\n
-  not_option_base_category_list = resource.getVariationBaseCategoryList(\n
-                                                 omit_optional_variation=1)\n
-else :\n
-  not_option_base_category_list = ()\n
-\n
-for item in item_list:\n
-  # Get value of the item\n
-  item_value = item[int(not is_right_display)]\n
-  # Hash key from item_value\n
-  item_split = string.split(item_value, \'/\')\n
-  item_key = string.join(item_split[:split_depth] , \'/\' )\n
-  base_category = item_split[0]\n
-\n
-  if not sub_field_dict.has_key(item_key):\n
-    # Create property dict\n
-    sub_field_property_dict = default_sub_field_property_dict.copy()\n
-    sub_field_property_dict[\'key\'] = item_key\n
-    required_value = 0\n
-    if base_category in not_option_base_category_list:\n
-      required_value = 1\n
-    sub_field_property_dict[\'required\'] = required_value\n
-    sub_field_property_dict[\'field_type\'] = \'ListField\'\n
-    sub_field_property_dict[\'size\'] = 1\n
-    sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
-    sub_field_property_dict[\'value\'] = []\n
-    sub_field_dict[item_key] = sub_field_property_dict\n
-\n
-  sub_field_dict[item_key][\'item_list\'] =\\\n
-     sub_field_dict[item_key][\'item_list\'] + [item]\n
-\n
-  if item in value_list:\n
-    sub_field_dict[item_key][\'value\'] = item\n
-\n
-return sub_field_dict.values()\n
+            <value> <string>return context.Delivery_getFastInputLineList(read_document_lines=True, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -104,7 +64,7 @@ return sub_field_dict.values()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>item_list, value_list, default_sub_field_property_dict={}, is_right_display=0</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -124,36 +84,17 @@ return sub_field_dict.values()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>item_list</string>
-                            <string>value_list</string>
-                            <string>default_sub_field_property_dict</string>
-                            <string>is_right_display</string>
-                            <string>filter</string>
-                            <string>sub_field_dict</string>
-                            <string>split_depth</string>
+                            <string>kw</string>
+                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>resource</string>
-                            <string>None</string>
-                            <string>not_option_base_category_list</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
-                            <string>_getitem_</string>
-                            <string>int</string>
-                            <string>item_value</string>
-                            <string>string</string>
-                            <string>item_split</string>
-                            <string>item_key</string>
-                            <string>base_category</string>
-                            <string>sub_field_property_dict</string>
-                            <string>_write_</string>
-                            <string>required_value</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -165,15 +106,12 @@ return sub_field_dict.values()\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <dictionary/>
-                <int>0</int>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DeliveryLine_hashVariationCategoryItemList</string> </value>
+            <value> <string>Delivery_getFastInputLineListToUpdate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

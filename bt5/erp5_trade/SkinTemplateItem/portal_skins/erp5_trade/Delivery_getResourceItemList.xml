@@ -53,47 +53,72 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Remove empty items\n
-item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']],\\\n
-                   item_list)\n
-sub_field_dict = {}\n
-split_depth = 1\n
-resource = context.getResourceValue()\n
-if resource is not None:\n
-  not_option_base_category_list = resource.getVariationBaseCategoryList(\n
-                                                 omit_optional_variation=1)\n
-else :\n
-  not_option_base_category_list = ()\n
+            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
 \n
-for item in item_list:\n
-  # Get value of the item\n
-  item_value = item[int(not is_right_display)]\n
-  # Hash key from item_value\n
-  item_split = string.split(item_value, \'/\')\n
-  item_key = string.join(item_split[:split_depth] , \'/\' )\n
-  base_category = item_split[0]\n
 \n
-  if not sub_field_dict.has_key(item_key):\n
-    # Create property dict\n
-    sub_field_property_dict = default_sub_field_property_dict.copy()\n
-    sub_field_property_dict[\'key\'] = item_key\n
-    required_value = 0\n
-    if base_category in not_option_base_category_list:\n
-      required_value = 1\n
-    sub_field_property_dict[\'required\'] = required_value\n
-    sub_field_property_dict[\'field_type\'] = \'ListField\'\n
-    sub_field_property_dict[\'size\'] = 1\n
-    sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
-    sub_field_property_dict[\'value\'] = []\n
-    sub_field_dict[item_key] = sub_field_property_dict\n
+if context.getPortalType() in context.getPortalSaleTypeList():\n
+  use_list = context.portal_preferences.getPreferredSaleUseList()\n
+elif context.getPortalType() in context.getPortalPurchaseTypeList():\n
+  use_list = context.portal_preferences.getPreferredPurchaseUseList()\n
+else:\n
+  use_list = context.portal_preferences.getPreferredPurchaseUseList() + context.portal_preferences.getPreferredSaleUseList()\n
 \n
-  sub_field_dict[item_key][\'item_list\'] =\\\n
-     sub_field_dict[item_key][\'item_list\'] + [item]\n
+if len(use_list) == 0:\n
+  return []\n
 \n
-  if item in value_list:\n
-    sub_field_dict[item_key][\'value\'] = item\n
+sql_kw = {}\n
+try:\n
+  resource_title = cell.resource_title\n
+except AttributeError:\n
+  resource_title = None\n
+try:\n
+  reference = cell.default_reference\n
+except AttributeError:\n
+  reference = None\n
 \n
-return sub_field_dict.values()\n
+if resource_title not in (None, ""):\n
+  sql_kw[\'title\'] = resource_title\n
+if reference not in (None, ""):\n
+  sql_kw[\'reference\'] = reference\n
+\n
+\n
+if len(sql_kw) == 0:\n
+  try:\n
+    if cell.getResourceValue() is not None:\n
+      sql_kw[\'reference\'] = cell.getResourceReference()\n
+      sql_kw[\'title\'] = cell.getResourceTitle()\n
+    else:\n
+      return [(\'\', \'\')]\n
+  except AttributeError:\n
+    pass\n
+\n
+def getResourceItemList(sql_kw):\n
+  portal = context.getPortalObject()\n
+\n
+  result = []\n
+  for resource in portal.portal_catalog.searchResults(sort_on=((\'portal_type\', \'asc\'),\n
+                                                               (\'title\', \'asc\')),\n
+                                                      **sql_kw):\n
+    result.append(\n
+      (resource.getTitle(),\n
+       resource.getRelativeUrl()))\n
+\n
+  result.append((\'\', \'\'))\n
+  return result\n
+\n
+\n
+\n
+sql_kw[\'portal_type\'] = portal_type\n
+sql_kw[\'validation_state\'] = validation_state\n
+sql_kw[\'default_use_uid\'] = [context.portal_categories.resolveCategory(use).getUid()\n
+                             for use in use_list]\n
+\n
+\n
+getResourceItemList = CachingMethod(getResourceItemList, ("getResourceItemList", context.aq_parent.getId()),\n
+                                          cache_factory="erp5_ui_long")\n
+\n
+\n
+return getResourceItemList(sql_kw)\n
 </string> </value>
         </item>
         <item>
@@ -104,7 +129,7 @@ return sub_field_dict.values()\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>item_list, value_list, default_sub_field_property_dict={}, is_right_display=0</string> </value>
+            <value> <string>validation_state=\'validated\', portal_type=None, cell=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -124,36 +149,32 @@ return sub_field_dict.values()\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>3</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>item_list</string>
-                            <string>value_list</string>
-                            <string>default_sub_field_property_dict</string>
-                            <string>is_right_display</string>
-                            <string>filter</string>
-                            <string>sub_field_dict</string>
-                            <string>split_depth</string>
+                            <string>validation_state</string>
+                            <string>portal_type</string>
+                            <string>cell</string>
+                            <string>Products.ERP5Type.Cache</string>
+                            <string>CachingMethod</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>resource</string>
+                            <string>use_list</string>
+                            <string>len</string>
+                            <string>sql_kw</string>
+                            <string>resource_title</string>
+                            <string>AttributeError</string>
                             <string>None</string>
-                            <string>not_option_base_category_list</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
-                            <string>_getitem_</string>
-                            <string>int</string>
-                            <string>item_value</string>
-                            <string>string</string>
-                            <string>item_split</string>
-                            <string>item_key</string>
-                            <string>base_category</string>
-                            <string>sub_field_property_dict</string>
+                            <string>reference</string>
                             <string>_write_</string>
-                            <string>required_value</string>
+                            <string>getResourceItemList</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>use</string>
                           </tuple>
                         </value>
                     </item>
@@ -166,14 +187,15 @@ return sub_field_dict.values()\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <dictionary/>
-                <int>0</int>
+                <string>validated</string>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DeliveryLine_hashVariationCategoryItemList</string> </value>
+            <value> <string>Delivery_getResourceItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
