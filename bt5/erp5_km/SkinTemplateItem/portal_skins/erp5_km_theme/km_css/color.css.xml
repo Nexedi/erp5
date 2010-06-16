@@ -379,7 +379,7 @@ button#input-save-view span.image {\n
 \n
 \n
 /* ## form styling #################################### start # */\n
-\n
+.meta input.search_button:hover,\n
 .search_button:hover {\n
 \tbackground-position: 0 100%;\n
 }\n

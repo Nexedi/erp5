@@ -527,6 +527,11 @@ ul.language_box .selected img {\n
 \n
 }\n
 \n
+ul.language_box .not_selected img:hover{\n
+  border: 1px solid #808080;\n
+  padding:2px;\n
+}\n
+\n
 ul.widget_management_box{\tpadding: 0 0px 0 0;}\n
 \n
 ul.widget_management_box a {float:left;}\n

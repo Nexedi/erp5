@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76695040.05</string> </value>
+            <value> <string>ts76696710.23</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -223,6 +223,11 @@ div.block table.listbox thead tr th{\n
 \n
 div.block table.listbox button.sort_button:hover{\n
   color: #FFFFFF;\n
+}\n
+\n
+div.block div.listbox_footer_box{\n
+  width: auto;\n
+  float:right;\n
 }\n
 \n
 /* Add gadgets link */\n
@@ -492,7 +497,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8009</int> </value>
+            <value> <int>8076</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
