@@ -773,11 +773,13 @@ div#mainwrapper div#wrapper_right fieldset.widget table.gadget td div {\n
 \tmargin: 0 !important;\n
 \tborder: 0 !important;\n
 }\n
-\n
+/*\n
 div#mainwrapper div#wrapper_right fieldset.widget div.field ul{\n
   list-style-position:inside;\n
   list-style-type:square;\n
 }\n
+*/\n
+\n
 div#mainwrapper div#wrapper_right fieldset.widget div.field label{\n
   display:block;\n
   float:left;\n
