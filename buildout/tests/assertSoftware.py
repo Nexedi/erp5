@@ -155,6 +155,18 @@ class AssertSoftwareRunable(unittest.TestCase):
     self.assertEqual(stderr, '')
     self.assertEqual(stdout.strip(), 'rdiff-backup 1.0.5')
 
+  def test_imagemagick(self):
+    binary_list = [ 'animate', 'composite', 'convert', 'identify', 'mogrify',
+        'stream', 'compare', 'conjure', 'display', 'import', 'montage']
+    base = os.path.join('parts', 'imagemagick', 'bin')
+    error_list = []
+    for binary in binary_list:
+      stdout, stderr = subprocess.Popen([os.path.join(base, binary), "-version"],
+          stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+      if 'Version: ImageMagick' not in stdout:
+        error_list.append(binary)
+    self.assertEqual([], error_list)
+
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
 
