@@ -435,7 +435,7 @@ button, select, input {\n
 \tcursor: default;\n
 }\n
 \n
-#menu ul li #n1:link, #menu ul li #n1:active, #menu ul li #n1:visited {\n
+#menu ul li #home-link:link, #menu ul li #home-link:active, #menu ul li #home-link:visited {\n
 \n
 \ttext-indent: -99999px;\n
 \tdisplay:block;\n

@@ -60,7 +60,7 @@
                        anonymous_navigation_menu python:is_anonymous and current_web_site.getLayoutProperty(\'layout_anonymous_navigation_menu\');">\n
 \n
 <ul class="nav">\n
-  <li><a href="#" tal:attributes="href portal_path" id="n1">Home</a></li>\n
+  <li><a href="#" tal:attributes="href portal_path" id="home-link">Home</a></li>\n
 \n
   <tal:block tal:replace="structure here/WebSite_viewBrowseNavigationMenuWidget"/>\n
 \n

@@ -49,6 +49,18 @@
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
 \n
+/*\n
+##  dreikelvin CSS Framework 3.5\n
+##\n
+##  Author & Copyright: Robert Jung 2008\n
+##  URL: http://design.dreikelvin.de/\n
+##\n
+##  CSS for "ERP5"\n
+##\n
+##\n
+*/\n
+/* ## XHTML basis elements ############################ start # */\n
+\n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 \n
@@ -243,11 +255,13 @@ a.pub:link, a.pub:active, a.pub:visited, .pub { \n
 \n
 /* ## link styling ################################### end ### */\n
 \n
-#menu ul li #n1:link, #menu ul li #n1:active, #menu ul li #n1:visited {\n
-\tbackground: url(../km_img/home-2.gif) no-repeat transparent;\n
+#menu ul li #home-link:link, \n
+#menu ul li #home-link:active, \n
+#menu ul li #home-link:visited {\n
+\tbackground: url(../km_img/home.gif) no-repeat transparent;\n
 }\n
 \n
-#menu ul li #n1:hover {\n
+#menu ul li #home-link:hover {\n
 \tbackground-position: 0 100%;\n
 }\n
 \n
