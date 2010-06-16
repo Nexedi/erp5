@@ -163,15 +163,12 @@ class ActiveObject(ExtensionClass.Base):
     """
     return self.hasActivity(processing_node = VALIDATE_ERROR_STATE)
 
-  security.declareProtected( permissions.View, 'getActiveProcess' )
   def getActiveProcess(self):
     activity_tool = getToolByName(self.getPortalObject(), 'portal_activities', None)
     if activity_tool is None:
       return None # Do nothing if no portal_activities
     return activity_tool.getActiveProcess()
 
-  security.declareProtected(permissions.ModifyPortalContent,
-    'setDefaultActivateParameters')
   def setDefaultActivateParameters(self, **kw):
     # This method sets the default keyword parameters to activate. This is
     # useful when you need to specify special parameters implicitly (e.g. to
@@ -180,7 +177,6 @@ class ActiveObject(ExtensionClass.Base):
     key = ('default_activate_parameter', id(aq_base(self)))
     tv[key] = kw
 
-  security.declareProtected(permissions.View, 'getDefaultActivateParameterDict')
   def getDefaultActivateParameterDict(self, inherit_placeless=True):
     # This method returns default activate parameters to self.
     # The result can be either a dict object or None.
