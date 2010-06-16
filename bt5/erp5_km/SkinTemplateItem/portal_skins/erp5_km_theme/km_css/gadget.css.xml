@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76583408.93</string> </value>
+            <value> <string>ts76669086.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -100,7 +100,10 @@ div.draggable_wrapper{\n
 \tbackground-position: 100% -44px;\n
 \n
 }\n
-\n
+#tabs ul li.tab,\n
+#tabs ul li.tab_selected{\n
+  border: none;\n
+}\n
 #tabs ul li.tab_selected, #tabs ul li:hover {\n
 \n
 \tbackground-position: 0 0;\n
@@ -532,7 +535,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8230</int> </value>
+            <value> <int>8290</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -100,7 +100,6 @@
               <tuple>
                 <string>gadget_type/web_section</string>
                 <string>gadget_type/web_front</string>
-                <string>gadget_type/erp5_front</string>
               </tuple>
             </value>
         </item>
