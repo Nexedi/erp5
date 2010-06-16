@@ -161,10 +161,9 @@ class ActiveObject(ExtensionClass.Base):
     return self.hasActivity(processing_node = VALIDATE_ERROR_STATE)
 
   def getActiveProcess(self):
-    activity_tool = getToolByName(self.getPortalObject(), 'portal_activities', None)
-    if activity_tool is None:
-      return None # Do nothing if no portal_activities
-    return activity_tool.getActiveProcess()
+    path = getActivityRuntimeEnvironment()._message.active_process
+    if active_process:
+      return self.unrestrictedTraverse(path)
 
   def setDefaultActivateParameters(self, placeless=False, **kw):
     # This method sets the default keyword parameters to activate. This is
