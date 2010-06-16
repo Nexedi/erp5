@@ -61,7 +61,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>gadget_type/erp5_front</string>
                 <string>gadget_type/web_section</string>
                 <string>gadget_type/web_front</string>
               </tuple>
