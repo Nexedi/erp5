@@ -4,24 +4,18 @@ National flag icons (icon_lang_*.png) from http://flags.blogpotato.de/ are licen
 
 TODO:
 - fix thunbnail display in Documents -> My Content et al. (proxy field problem)
-- ContributionTool_viewContributeFileDialog must redirect to the newly created document (erp5_dms issue)
-- implement missing ContributionTool_viewContributeLinkDialog
-- make sure that "new document / link / page" menu actions create a page with editable_mode=1 and predefine group / section etc. values based either on the current section or on the user assignments.
 - make consistency between document listing forms in gagdgets and in standard view
 - make consistency between person listing forms in gagdgets and in standard view
-- possibly provide access to organisations from "Contacts"
 - fluid vs. fixed should be configurable in layout configuration form
 - make sure CSS are compatible with http://jigsaw.w3.org/css-validator/
 - colors must be more consistent and configurable (ie. menu color, login form, legend color, ). This should be configurable in the KM Configuration Form (tales should be used in css files)
 - review css selector : remove duplicate and unused
-- remove unused files (if there is)
 - improve login form style
 - improve module listboxes
 - set colors in css file for each validation state
 - display some default tabs on first page in annonymous
 - add rss links on listbox, widgets, ...
 - translate footer web_page
-- merge with erp5_knowledge_pad duplicate forms (check for compatibility with other web sites)
 - make buttons background transparent (pb visible at ContributionTool_viewContributeFileDialog).
 - display Robert Jung copyright on all css files he made (currently it's only on layout.css)
 - try all widgets rendering
