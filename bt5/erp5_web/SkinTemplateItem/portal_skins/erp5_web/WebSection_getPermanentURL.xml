@@ -94,7 +94,7 @@
  - change the behaviour of WebSection_getPermanentURL\n
    for documents which are not published.\n
 """\n
-html_portal_type_list = (\'Web Site\', \'Web Section\')#, \'Web Page\')\n
+html_portal_type_list = (\'Web Site\', \'Web Section\', \'Web Page\')\n
 portal_type = document.getPortalType()\n
 \n
 # If no reference is defined, no way to build a permanent URL.\n
