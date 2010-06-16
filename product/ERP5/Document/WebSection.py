@@ -304,7 +304,7 @@ class WebSection(Domain, PermanentURLMixIn):
         except KeyError:
           pass
 
-      result = self._getTypeBasedMethod('getPermanentURL',
+      result = document._getTypeBasedMethod('getPermanentURL',
                      fallback_script_id='WebSection_getPermanentURL')(document,
                          view=view)
 
