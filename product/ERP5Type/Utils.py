@@ -1549,12 +1549,8 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
-    from Products.ERP5Type.Constraint import PropertyTypeValidity
-    # Create the constraint method list - always check type
-    property_holder.constraints = [
-                  PropertyTypeValidity(id='type_check',
-                    description="Type Validity Check Error") ]
 
+    property_holder.constraints = []
     for const in constraint_list:
       createConstraintList(property_holder, constraint_definition=const)
     # ERP5 _properties and Zope _properties are somehow different

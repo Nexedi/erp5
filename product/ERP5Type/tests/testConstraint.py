@@ -1440,6 +1440,11 @@ class TestConstraint(PropertySheetTestCase):
             'acquisition_portal_type':('Category'),
             'acquisition_accessor_id':'getTitle',
             'mode':''},)
+          _constraints = (
+            { 'type': 'PropertyTypeValidity',
+              'id': 'type_check',
+              'description': "Type Validity Check Error",
+            }, )
       ''')
     self.assertEquals([], person.checkConsistency())
     group3 = self.category_tool.restrictedTraverse(
