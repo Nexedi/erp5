@@ -1485,7 +1485,9 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>None</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
