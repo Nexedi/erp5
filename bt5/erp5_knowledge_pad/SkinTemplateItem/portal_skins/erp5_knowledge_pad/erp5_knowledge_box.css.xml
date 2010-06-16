@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts74425503.07</string> </value>
+            <value> <string>ts76670303.39</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -37,7 +37,6 @@
   width: 100%;\n
   float:left;\n
   margin-top: 0.5em;\n
-\n
 }\n
 \n
 /* Columns */\n
@@ -58,7 +57,7 @@
 }\n
 \n
 /* Boxes */\n
-.block {\n
+div.block {\n
   margin: 1px;\n
   padding: 0px;\n
   width: 100%;\n
@@ -80,15 +79,14 @@ h3.handle span.handle {\n
   background: transparent url(images/tab_right_selected.png) no-repeat scroll right top;\n
 }\n
 \n
-.block h3 span.gadget_title{\n
+div.block h3 span.gadget_title{\n
   min-width: 100px;\n
 }\n
 \n
-\n
 /* Minimize, Edit, Remove images */\n
-.clickable_image{\n
+span.clickable_image{\n
   cursor: pointer; \n
-  margin-top: 5px!important;\n
+  margin-top: 5px;\n
   display: block;\n
   float: left;\n
 }\n
@@ -103,8 +101,7 @@ h3.handle span.handle {\n
   padding-right: 6px;\n
 }\n
 \n
-\n
-.clickable-block{\n
+a.clickable-block{\n
   display: block;\n
   float: right;\n
   width: 15px;\n
@@ -116,15 +113,15 @@ h3.handle span.handle {\n
   margin: 0;\n
 }\n
 \n
-.block-remove {\n
+a.block-remove {\n
   background-image: url(icon_remove.gif); \n
 }\n
 \n
-.block-minimize {\n
+a.block-minimize {\n
   background-image: url(icon_minimize.gif); \n
 }\n
 \n
-.block-edit-form {\n
+a.block-edit-form {\n
   background-image: url(icon_edit.gif); \n
 }\n
 \n
@@ -132,7 +129,8 @@ h3.handle span.handle {\n
   border: 2px dashed #f00;\n
 }\n
 \n
-.handle {\n
+span.handle,\n
+h3.handle {\n
   cursor: move;\n
 }\n
 \n
@@ -145,7 +143,7 @@ div.edit-form button{\n
   margin-top: 0.5em;\n
 }\n
 \n
-.edit-form {\n
+div.edit-form {\n
   padding-top: 0.5em; \n
   padding-left: 1em;\n
   padding-bottom: 0.5em;\n
@@ -164,13 +162,13 @@ div.edit-form button{\n
 }\n
 \n
 #navigation_table tr{\n
-  border:medium none!important;\n
+  border:medium none;\n
 }\n
 \n
 #navigation_table td{\n
-  margin: 0em!important;\n
-  padding: 0em!important;\n
-  border:medium none!important;\n
+  margin: 0em;\n
+  padding: 0em;\n
+  border:medium none;\n
 }\n
 \n
 #tabs {\n
@@ -190,13 +188,13 @@ div.edit-form button{\n
   list-style-type: none;\n
 }\n
 \n
-.tab {\n
+li.tab {\n
   display: block;\n
   font-size: 12px;\n
   float: left;\n
   height: 24px;\n
   padding-right: 5px;\n
-  background-color: #BDD0F0; /*#97B0D1;*/\n
+  background-color: #BDD0F0;\n
   cursor: pointer;\n
   border: 1px solid #3D6474;\n
   margin-right: 1px;\n
@@ -211,7 +209,7 @@ div.edit-form button{\n
 }\n
 \n
 /* Selected tabs should be 1px higher in order to hide border at bottom */\n
-.tab_selected {\n
+li.tab_selected {\n
   font-weight: bold;\n
   background-color: #DAE6F6; \n
   border-bottom: 1px solid #DAE6F6;\n
@@ -224,7 +222,7 @@ div.edit-form button{\n
 }\n
 \n
 /* Dialogs */\n
-.toggable_dialog{\n
+div.toggable_dialog{\n
   display: none;\n
   left: 400px;\n
   position: absolute;\n
@@ -249,6 +247,10 @@ div.edit-form button{\n
   border-style: none;\n
 }\n
 \n
+#tabs-switcher-container{\n
+  width: 17.5%;\n
+}\n
+\n
 #tabs_switcher{\n
   cursor: pointer; \n
   font-weight: bold;\n
@@ -269,35 +271,34 @@ div.edit-form button{\n
   border-bottom:1px solid #3D6474;\n
 }\n
 \n
-\n
 /* Draggable Area */\n
-.draggable_wrapper{\n
-  background-color: white;\n
+div.draggable_wrapper{\n
+  background-color: #FFFFFF;\n
 }\n
 \n
-.wait_block {\n
+div.wait_block {\n
   text-align: center;\n
   padding: 2em;\n
 }\n
 \n
-.box_inner_content {\n
+div.box_inner_content {\n
   background-color:#FFFFFF;\n
   padding: 0.1em;\n
   clear:left;\n
   overflow: visible;\n
 }\n
 \n
-.box_inner_content ol{\n
+div.box_inner_content ol{\n
   margin-top: 0em;\n
 }\n
 \n
 /* this classes will switch one/off border below tabs selector*/\n
-.border_bottom0px{\n
-  border-bottom: 1px solid #DAE6F6!important;\n
+div.border_bottom0px{\n
+  border-bottom: 1px solid #DAE6F6;\n
 }\n
 \n
-.border_bottom1px{\n
-  border-bottom: 1px solid #3D6474!important;\n
+div.border_bottom1px{\n
+  border-bottom: 1px solid #3D6474;\n
 }\n
 \n
 /* seperate gadget tables from rest of ERP5*/\n
@@ -305,13 +306,10 @@ div.block div.content{\n
   padding: 0px;\n
 }\n
 \n
-div.block table {\n
-  margin: 0em!important;\n
-  border:none!important;\n
-}\n
-\n
-div.block table tr, div.block table tr td{\n
-  border: none!important;\n
+div.block table,\n
+div.block table tr, \n
+div.block table tr td{\n
+  border: none;\n
 }\n
 \n
 /* lisbox style should be square for gadgets */\n
@@ -321,16 +319,12 @@ div.block ul{\n
 \n
 \n
 /* When we show listbox in gagets we need to override some CSS*/\n
-div.block table.listbox{\n
-  width:100%!important;\n
-  border:medium none!important;\n
-  margin:0em!important;\n
-}\n
-.box_inner_content .input,\n
-.box_inner_content .search.result .resultList{\n
-  width:100%!important;\n
-  margin:0em!important;\n
-  padding:0em!important;\n
+div.block table.listbox,\n
+div.box_inner_content .input,\n
+div.box_inner_content .search.result .resultList{\n
+  width:100%;\n
+  margin:0em;\n
+  padding:0em;\n
 }\n
 \n
 .box_inner_content .search.result .extendedSearchBar{\n
@@ -345,8 +339,9 @@ div.block table.listbox .left{\n
   float:left;\n
 }\n
 \n
-div.block table.listbox tr, div.block table.listbox td{\n
-  border:medium none!important;\n
+div.block table.listbox tr, \n
+div.block table.listbox td{\n
+  border:medium none;\n
 }\n
 \n
 div.block table.listbox span.left{\n
@@ -360,7 +355,6 @@ div.block table.listbox caption{\n
 }\n
 \n
 div.block table.listbox button.sort_button{\n
-\n
   background-color: inherit;\n
   color: blue;\n
   border-width: 0;\n
@@ -369,12 +363,8 @@ div.block table.listbox button.sort_button{\n
   vertical-align:middle;\n
   float:left;\n
   text-decoration: underline;\n
-\n
 }\n
 \n
-div.block table.listbox thead{\n
-  /* display: none; */ /* do not hide listbox elements in gadgets */\n
-}\n
 \n
 div.block table.listbox thead tr th{\n
   background-color:#eee;\n
@@ -384,14 +374,14 @@ div.block table.listbox thead tr th{\n
 }\n
 \n
 div.block div.input{\n
-  margin-left:0em!important;\n
+  margin-left:0em;\n
 }\n
 \n
 div.rss-link div.input{\n
   text-align:right;\n
 }\n
 \n
-div#add-stick-gadget-tool-section{\n
+#add-stick-gadget-tool-section{\n
   margin-bottom: 1.5em;\n
 }\n
 \n
@@ -409,7 +399,8 @@ div.block div.searchResultHeader span.left button{\n
 \n
 /* labels in forms inserted into a gadget should be visible\n
   indedepndantly from fact that master form may use hiddenLabel */\n
-div.block div.hidden_label label, div.block div.hiddenLabel label{\n
+div.block div.hidden_label label, \n
+div.block div.hiddenLabel label{\n
   display: none!important;\n
 }\n
 \n
@@ -593,7 +584,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9895</int> </value>
+            <value> <int>9618</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -97,8 +97,8 @@
        \'WebSection_unStickKnowledgePad?knowledge_pad_url=%s&cancel_url=%s\'\n
        %(active_knowledge_pad.getRelativeUrl(), cancel_url)"\n
        i18n:translate="" \n
-       i18n:domain="ui">Unstick it\n
-    </a>\n
+       i18n:domain="ui"\n
+       id="unstick-gadgets"><span>Unstick it</span></a>\n
   </tal:block>\n
 </tal:block>\n
 \n
@@ -178,7 +178,7 @@
 \n
    <table id="navigation_table">\n
       <tr>\n
-        <td style="width: 17.5%;">\n
+        <td id="tab-switcher-container">\n
           <div class="tab"\n
               id="tabs_switcher"\n
               tal:attributes="class python: test(is_tabs_visible,\n
@@ -188,9 +188,9 @@
                   tal:condition="not: is_tabs_visible">Show tabs</span>\n
             <span i18n:translate="" i18n:domain="ui" \n
                   tal:condition="is_tabs_visible">Hide tabs</span>\n
-        </div>\n
-      </td>\n
-        <td>\n
+          </div>\n
+        </td>\n
+        <td id="tab-list-container">\n
           <div id="tabs"\n
               tal:attributes="style python: \n
                                     \'display: %s\' %test(is_tabs_visible, \'block\', \'none\')">\n
@@ -268,7 +268,7 @@
             </div>\n
           </td>\n
     \n
-          <td>\n
+          <td id="add-new-gadget-container">\n
             <div id="add_new_gadget_link"\n
                  tal:attributes="class python: test(is_tabs_visible,\n
                                                     \'border_bottom1px\',\n
