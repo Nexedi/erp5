@@ -1,3 +1,6 @@
+2010-06-16 mayoro
+* use proxifield for listbox in Folder_viewEgovContentList
+
 2010-06-15 mayoro
 *center listbox by modifying padding
 
