@@ -35,7 +35,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -43,7 +45,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>custom_report</string> </value>
+            <value> <string>configuration</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -55,11 +57,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>3.0</float> </value>
+            <value> <float>6.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Report</string> </value>
+            <value> <string>Configuration</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,7 +81,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/${object/getReportMethodId}</string> </value>
+            <value> <string>string:${object_url}/${object/getConfigurationFormId}</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -95,7 +97,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>object/getReportMethodId</string> </value>
+            <value> <string>object/getConfigurationFormId</string> </value>
         </item>
       </dictionary>
     </pickle>
