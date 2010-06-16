@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76670303.39</string> </value>
+            <value> <string>ts76672293.43</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,7 +27,11 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>#page_wrapper {\n
+            <value> <string>#gadget_area_wrapper {\n
+  margin-top: 0.5em;\n
+}\n
+\n
+#page_wrapper {\n
   text-align: left;\n
   margin: 0em;\n
   padding: 0em;\n
@@ -584,7 +588,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9618</int> </value>
+            <value> <int>9665</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
