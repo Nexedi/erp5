@@ -56,23 +56,17 @@
             <value> <string>"""\n
 Understand this and make it suit your needs\n
 """\n
+\n
 return (\n
 # This one combines function, type of procedure and destination to generate a security group\n
-  (\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'publication_section\', \'destination\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'publication_section\', \'destination\'] ),\n
 # This one is the usual group and function security\n
-  (\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'group\',] ),\n
-  (\'ERP5Type_getSecurityCategoryFromAssignmentParent\', [\'group\', \'function\', ]),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'group\',] ),\n
 # This one is the usual group, function and site security, needed if access rights depend on site\n
-  (\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'group\', \'site\'] ),\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'group\', \'site\'] ),\n
 # This one is the usual group security\n
-  (\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'group\'] ),\n
-  (\'ERP5Type_getSecurityCategoryFromAssignmentParent\', [\'group\'] ),\n
-  #(\'ERP5Type_getSecurityCategoryRoot\', [\'group\']),\n
-# This one is the usual function security\n
-  (\'ERP5Type_getSecurityCategoryFromAssignment\', [\'function\'] ),\n
-# This one is the usual role security\n
-  (\'ERP5Type_getSecurityCategoryFromEntity\', [\'role\'] ),\n
-\n
+(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'group\'] ),\n
+(\'ERP5Type_getSecurityCategoryRoot\', [\'group\']),\n
 )\n
 </string> </value>
         </item>

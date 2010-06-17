@@ -4,9 +4,6 @@
 (egov_portal is no longer used)
 
 2010-06-16 mayoro
-* modify script ERP5Type_getSecurityCategoryMapping to to generate right categories for security
-
-2010-06-16 mayoro
 * use proxifield for listbox in Folder_viewEgovContentList
 
 2010-06-15 mayoro
