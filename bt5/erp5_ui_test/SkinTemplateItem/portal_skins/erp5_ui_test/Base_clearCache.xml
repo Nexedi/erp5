@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""User the cache tool in order to clear the cache"""\n
-context.portal_caches.clearCache()\n
+context.portal_caches.clearAllCache()\n
 return "Cleared."\n
 </string> </value>
         </item>
