@@ -111,6 +111,10 @@
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
+                        <tuple>
+                          <string>group_translated_title</string>
+                          <string>Group</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -154,6 +158,10 @@
                         <tuple>
                           <string>budget_type</string>
                           <string>Budget Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>group</string>
+                          <string>Group</string>
                         </tuple>
                       </list>
                     </value>
