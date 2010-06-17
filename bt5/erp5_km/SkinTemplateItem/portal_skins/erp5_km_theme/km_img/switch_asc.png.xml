@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts71851346.66</string> </value>
+            <value> <string>ts76763626.74</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,11 +27,10 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAYAAADAp4fuAAAAAXNSR0IArs4c6QAAAAZiS0dEAAAA
-AAAA+UO7fwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9oEFQsxBs5d2eIAAABoSURBVAjX
-XYihDcJQFADvtYSEiioMjhlYBNWxanFMUNVFGKK2dYgm/OYdBhLCmctdLPMkwDgMXLsOgOo7fh33
-Wy9/xDJPHpr2sav3F5B1fUIpBfWoop7VE59oVDITldCsIQQSYNte1RuIbDxtFVZEdQAAAABJRU5E
-rkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAAUAAAAHCAYAAADAp4fuAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
+/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9oGEQghKK+tvBIAAABYSURBVAjX
+XYs5CoAwAARnVQQt/JqVz7K18wVWfilt0lkIRlgr8VgYBgZWKQYA1mVxPwwCKO7wtuZpNL8pxUDT
+dlRlDZh93yDnjO0Psp+3bSRRwBMlcZ4HF2qCLyqQLW/gAAAAAElFTkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -43,7 +42,7 @@ rkJggg==</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>232</int> </value>
+            <value> <int>216</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76696710.23</string> </value>
+            <value> <string>ts76758131.69</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -52,7 +52,9 @@ div.right-gadget div.portal-column {\n
 \n
 /* Add & Stick gadgets  side column management */\n
 div.gadget-management{\n
-  margin-bottom: 10px;\n
+  display:block;\n
+  float:right;\n
+  margin-bottom:5px;\n
 }\n
 \n
 div.draggable_wrapper{\n
@@ -63,13 +65,20 @@ div.border_bottom1px,\n
 div.border_bottom0px{\n
   border-bottom: none;\n
 }\n
-\n
+#tabs_switcher{\n
+  font-weight: normal;\n
+}\n
 #tabs_switcher,\n
 #tabs ul li.tab {\n
   border: none;\n
 }\n
 \n
 /* Gadget Navigation table */\n
+#navigation_table{\n
+  color:#9D968D;\n
+  font-weight:normal;\n
+}\n
+\n
 #navigation_table td {\n
   background: url(../km_img/tabsbg.png) repeat-x transparent;\n
   background-position: 0 100%;\n
@@ -151,19 +160,14 @@ div.border_bottom0px{\n
   color: #9D968D;\n
   padding-top: 4px;\n
   margin-left: 10px;\n
-  padding-left:13px;\n
+  padding-left: 13px;\n
   font-size: 8pt;\n
   font-weight: normal;\n
 }\n
 \n
-#navigation_table a, #navigation_table #tabs_switcher{\n
-\n
-  color:#9D968D;\n
-  font-weight:normal;\n
-\n
-}\n
-\n
-#navigation_table a:hover, #navigation_table #tabs_switcher:hover{color: #000; }\n
+#navigation_table a:hover, \n
+#navigation_table #tabs_switcher:hover,\n
+#navigation_table #tabs ul #add_new_tab_dialog_link:hover{color: #000; }\n
 \n
 /* EOF Gadget Navigation Table */\n
 \n
@@ -418,7 +422,7 @@ div.adminToolbox fieldset .clone-button{\n
 \n
 \n
 div.block {\n
-  margin-bottom: 10px;\n
+  margin-bottom: 5px;\n
 }\n
 \n
 .box_inner_content {\n
@@ -497,7 +501,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8076</int> </value>
+            <value> <int>8168</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
