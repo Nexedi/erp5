@@ -107,10 +107,14 @@ class AssertLddLibs(unittest.TestCase):
 
   def test_MySQLdb(self):
     """Checks proper linking to mysql library from MySQLdb egg"""
-    result = os.system("ldd develop-eggs/MySQL_python-1.2.3c1-py2.4-linux-x86"
-       "_64.egg/_mysql.so | grep -q 'parts/mysql-tritonn-5.0/lib/mysql/libmys"
-       "qlclient_r.so'")
-    self.assertEqual(result, 0)
+    error_list = []
+    for d in os.listdir('develop-eggs'):
+      if d.startswith('MySQL_python'):
+        path = os.path.join('develop-eggs', d, '_mysql.so')
+        if os.system("ldd %s | grep -q 'parts/mysql-tritonn-5.0/lib/my"
+            "sql/libmysqlclient_r.so'" % path) != 0:
+          error_list.append(path)
+    self.assertEqual(error_list, [])
 
   def test_memcached_libevent(self):
     """Checks proper liunking to libevent from memcached"""
