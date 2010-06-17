@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_source_asset_credit</string> </value>
+            <value> <string>listbox_destination_asset_credit</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -82,11 +82,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox_source_asset_credit</string> </value>
+                    <value> <string>my_money_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>AccountingTransaction_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>precision</string> </key>
@@ -113,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getQuantityPrecisionFromResource(here.getSourceSectionValue().getPriceCurrency())</string> </value>
+            <value> <string>python: here.getQuantityPrecisionFromResource(here.getDestinationSectionValue().getPriceCurrency())</string> </value>
         </item>
       </dictionary>
     </pickle>
