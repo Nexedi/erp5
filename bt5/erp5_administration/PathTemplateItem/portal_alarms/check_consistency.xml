@@ -84,8 +84,8 @@
             <key> <string>module_list</string> </key>
             <value>
               <tuple>
-                <string>/erp5/organisation_module</string>
-                <string>/erp5/person_module</string>
+                <string>organisation_module</string>
+                <string>person_module</string>
               </tuple>
             </value>
         </item>
