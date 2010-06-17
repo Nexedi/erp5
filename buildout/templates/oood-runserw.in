@@ -6,7 +6,7 @@ import subprocess
 import sys
 import os
 
-PID_FILE = "${configuration:oood_pid}" 
+PID_FILE = "${configuration:oood_pid}"
 
 OOOD_COMMAND = " PYTHONPATH=${configuration:openoffice_uno} " + \
                " ${configuration:openoffice_python} " + \
@@ -25,7 +25,6 @@ class Oood:
 
   def __init__(self):
     self.setsignals()
-      
 
   def run(self):
     subprocess.call(OOOD_COMMAND + "--start > /dev/null 2>&1 /dev/null &",
@@ -45,10 +44,10 @@ class Oood:
         except OSError:
           # Process is running ignore.
           pass
-          
+
       if os.path.exists(INSTANCE_PID_FILE) and update_pid_required:
         self.openoffice_pid = int(open(INSTANCE_PID_FILE, "r").read())
-      
+
       # Update the file, if it is not removed by oood by mistake.
       if os.path.exists(PID_FILE):
         self.pid = int(open(PID_FILE, "r").read())
@@ -65,11 +64,11 @@ class Oood:
   def stop(self, sig, frame):
    if os.path.exists(PID_FILE):
      self.pid = int(open(PID_FILE, "r").read())
-   else: 
+   else:
      print "Pid File does not exist!"
 
    # Stop command in an appropriate way.
-   subprocess.call(OOOD_COMMAND + "--stop > /dev/null 2>&1 /dev/null ", 
+   subprocess.call(OOOD_COMMAND + "--stop > /dev/null 2>&1 /dev/null ",
                    shell=True)
 
    # Call Flush Command to stop openoffices.
@@ -93,7 +92,6 @@ class Oood:
        pass # OpenOffice is already stopped, nothing to do.
 
    sys.exit(0)
-        
 
 def main():
   pp = Oood()
