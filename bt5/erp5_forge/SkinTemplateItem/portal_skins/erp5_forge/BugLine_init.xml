@@ -60,7 +60,7 @@ edit_kw = {\'content_type\': portal.portal_preferences.getPreferredTextFormat(),
            \'destination_value_list\': context.BugLine_getRecipientValueList()}\n
 \n
 # Define a Reporter as Source Trade\n
-person =  context.Bug_getUserPersonValue()\n
+person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
 if person is not None:\n
   edit_kw[\'source_value\'] = person\n
 \n
