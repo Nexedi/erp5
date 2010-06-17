@@ -60,6 +60,20 @@ item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']],\\\n
 sub_field_dict = {}\n
 split_depth = 1\n
 \n
+# build a dict of title to display, based on the titles of corresponding\n
+# budget variations\n
+base_category_title_dict = dict()\n
+budget_line = container.REQUEST.get(\'here\')\n
+if budget_line is not None:\n
+  budget_model =budget_line.getParentValue().getSpecialiseValue()\n
+  if budget_model is not None:\n
+    for budget_variation in budget_model.contentValues():\n
+      if budget_variation.hasTitle():\n
+        base_category_title_dict[\n
+          budget_variation.getProperty(\'variation_base_category\')\n
+          ] =  budget_variation.getTitle()\n
+\n
+\n
 resolveCategory = context.getPortalObject().portal_categories.resolveCategory\n
 \n
 for item in item_list:\n
@@ -88,11 +102,14 @@ for item in item_list:\n
     sub_field_dict[item_key][\'value\'] =\\\n
       sub_field_dict[item_key][\'value\'] + [item_value]\n
 \n
-  base_category_value = resolveCategory(base_category)\n
-  if base_category_value is not None:\n
-    sub_field_dict[item_key][\'title\'] = base_category_value.getTranslatedTitle()\n
+  if base_category in base_category_title_dict:\n
+    sub_field_dict[item_key][\'title\'] = base_category_title_dict[base_category]\n
   else:\n
-    sub_field_dict[item_key][\'title\'] = base_category\n
+    base_category_value = resolveCategory(base_category)\n
+    if base_category_value is not None:\n
+      sub_field_dict[item_key][\'title\'] = base_category_value.getTranslatedTitle()\n
+    else:\n
+      sub_field_dict[item_key][\'title\'] = base_category\n
   \n
 return sub_field_dict.values()\n
 </string> </value>
@@ -138,10 +155,18 @@ return sub_field_dict.values()\n
                             <string>filter</string>
                             <string>sub_field_dict</string>
                             <string>split_depth</string>
+                            <string>dict</string>
+                            <string>base_category_title_dict</string>
                             <string>_getattr_</string>
+                            <string>container</string>
+                            <string>budget_line</string>
+                            <string>None</string>
+                            <string>budget_model</string>
+                            <string>_getiter_</string>
+                            <string>budget_variation</string>
+                            <string>_write_</string>
                             <string>context</string>
                             <string>resolveCategory</string>
-                            <string>_getiter_</string>
                             <string>item</string>
                             <string>_getitem_</string>
                             <string>int</string>
@@ -151,9 +176,7 @@ return sub_field_dict.values()\n
                             <string>item_key</string>
                             <string>base_category</string>
                             <string>sub_field_property_dict</string>
-                            <string>_write_</string>
                             <string>base_category_value</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
