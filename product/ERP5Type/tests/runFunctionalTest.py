@@ -278,7 +278,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
   def setPreference(self):
     conversion_server_hostname = os.environ.get('conversion_server_hostname',
                                                 'localhost')
-    conversion_server_port = os.environ.get('conversion_server_port', '8080')
+    conversion_server_port = os.environ.get('conversion_server_port', '8008')
     urllib2.urlopen('%s/Zuite_setPreference?__ac_name='
                     '%s&__ac_password=%s&working_copy_list=%s'
                     '&conversion_server_hostname=%s'
