@@ -123,7 +123,7 @@ class ERP5UserManager(BasePlugin):
                 
               if pw_validate(user.getPassword(), password) and \
                      len(valid_assignment_list) and user \
-                     .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
+                     .getValidationState() not in ['deleted', 'invalidated']: #user.getCareerRole() == 'internal':
                 return login, login # use same for user_id and login
             finally:
               setSecurityManager(sm)
