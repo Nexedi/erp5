@@ -9,6 +9,7 @@ flex
 gcc
 libboost-dev
 libbz2-dev
+libgc-dev
 libgdbm-dev
 libgif-dev
 libglib2.0-dev

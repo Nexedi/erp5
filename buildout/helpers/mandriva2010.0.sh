@@ -27,6 +27,7 @@ libglib2-devel
 libSDL-devel
 libSDL_gfx-devel
 libSDL_image-devel
+libgc-devel
 libgomp-devel
 libjpeg-devel
 libldap-devel
