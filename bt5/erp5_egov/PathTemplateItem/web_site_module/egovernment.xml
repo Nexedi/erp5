@@ -52,6 +52,7 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -197,6 +198,10 @@
         <item>
             <key> <string>short_title</string> </key>
             <value> <string>Government Agent Workspace</string> </value>
+        </item>
+        <item>
+            <key> <string>skin_selection_name</string> </key>
+            <value> <string>EGov</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

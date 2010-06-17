@@ -52,7 +52,14 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
+                <string>Owner</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>__translation_dict</string> </key>
+            <value>
+              <dictionary/>
             </value>
         </item>
         <item>
@@ -84,6 +91,12 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>captcha</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

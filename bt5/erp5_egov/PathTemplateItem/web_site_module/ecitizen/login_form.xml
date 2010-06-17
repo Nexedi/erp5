@@ -60,7 +60,7 @@ request = context.REQUEST\n
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 \n
-module_url = portal.web_site_module.egov_portal.absolute_url()\n
+module_url = portal.web_site_module.ecitizen.absolute_url()\n
 form_id = \'view\'\n
 \n
 msg = ""\n
