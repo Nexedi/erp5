@@ -241,28 +241,28 @@ def getSearchDialog(self, REQUEST=None):
         continue
 
 
-      if column_id in catalog_schema:
-        if column_id.endswith('state') or column_id.endswith('state_title'):
-          # this is a workflow state, it will be handled later
-          continue
-        elif 'date' in column_id:
-          # is it date ? -> provide exact + range
-          # TODO: do we need an API in catalog for this ?
-          addDateTimeField(column_id, column_title)
+    if column_id in catalog_schema:
+      if column_id.endswith('state') or column_id.endswith('state_title'):
+        # this is a workflow state, it will be handled later
+        continue
+      elif 'date' in column_id:
+        # is it date ? -> provide exact + range
+        # TODO: do we need an API in catalog for this ?
+        addDateTimeField(column_id, column_title)
 
-        elif 'quantity' in column_id or 'price' in column_id:
-          # is it float ? -> provide exact + range
-          # TODO: do we need an API in catalog for this ?
-          addFloatField(column_id, column_title)
+      elif 'quantity' in column_id or 'price' in column_id:
+        # is it float ? -> provide exact + range
+        # TODO: do we need an API in catalog for this ?
+        addFloatField(column_id, column_title)
+      else:
+        if column_id in sql_catalog_full_text_search_keys:
+          addFullTextStringField(column_id, column_title)
         else:
-          if column_id in sql_catalog_full_text_search_keys:
-            addFullTextStringField(column_id, column_title)
-          else:
-            default_search_key = 'ExactMatch'
-            if column_id in sql_catalog_keyword_search_keys:
-              default_search_key = 'Keyword'
-            addKeywordSearchStringField(column_id, column_title,
-                            default_search_key=default_search_key)
+          default_search_key = 'ExactMatch'
+          if column_id in sql_catalog_keyword_search_keys:
+            default_search_key = 'Keyword'
+          addKeywordSearchStringField(column_id, column_title,
+                          default_search_key=default_search_key)
 
   allowed_content_types = self.getTypeInfo().getTypeAllowedContentTypeList()
   # remember which workflow we already displayed
