@@ -167,6 +167,18 @@ class AssertSoftwareRunable(unittest.TestCase):
         error_list.append(binary)
     self.assertEqual([], error_list)
 
+  def test_w3m(self):
+    stdout, stderr = subprocess.Popen(["parts/w3m/bin/w3m", "-V"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('w3m version w3m/0.5.2'))
+
+  def test_lynx(self):
+    stdout, stderr = subprocess.Popen(["parts/lynx/bin/lynx", "-version"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('Lynx Version 2.8.7'))
+
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""
 
