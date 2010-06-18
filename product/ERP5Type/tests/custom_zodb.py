@@ -32,10 +32,9 @@ data_fs_path = os.environ.get('erp5_tests_data_fs_path',
                               os.path.join(instance_home, 'Data.fs'))
 load = int(os.environ.get('erp5_load_data_fs', 0))
 save = int(os.environ.get('erp5_save_data_fs', 0))
-live_instance_path = os.environ.get('live_instance_path', None)
+save_mysql = int(os.environ.get('erp5_dump_sql') or not zeo_client) or None
 
-save_mysql = None
-if not zeo_client and live_instance_path is None:
+if save_mysql:
   def save_mysql(verbosity=1):
     # The output of mysqldump needs to merge many lines at a time
     # for performance reasons (merging lines is at most 10 times
@@ -61,9 +60,10 @@ if load:
       _print("Could not find MySQL dump, will recreate catalog ... ")
       os.environ['erp5_tests_recreate_catalog'] = '1'
   _print("Restoring static files ... ")
+  live_instance_path = os.environ.get('live_instance_path')
   for dir in static_dir_list:
     full_path = os.path.join(instance_home, dir)
-    if live_instance_path is not None:
+    if live_instance_path:
       backup_path = os.path.join(live_instance_path, dir)
     else:
       backup_path = full_path + '.bak'

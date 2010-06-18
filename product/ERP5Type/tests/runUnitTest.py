@@ -28,16 +28,15 @@ Options:
                              --data_fs_path to run tests on an existing
                              Data.fs
   --data_fs_path=STRING      Use the given path for the Data.fs
-  --live_instance=[STRING]
-                             Use Data.fs, Document, PropertySheet, Constraint
-                             from a live instance. This is very usefull in order
+  --live_instance=[STRING]   Use Data.fs, Document, PropertySheet, Constraint
+                             from a live instance. This is very useful in order
                              to try quickly a test without having to rebuild
-                             testing data. This could be totally unsafe for you
+                             testing data. This could be totally unsafe for your
                              instance, this depends if the test destroy existing
                              data or not.
                              STRING could be used to define the path of real
-                             instance
-                             It enable --save --load --data_fs_path
+                             instance. It automatically enables:
+                               --save --load --dump_sql=0 --data_fs_path=...
   --bt5_path                 Search for Business Templates in the given list of
                              paths (or any HTTP url supported by template tool),
                              delimited with commas. In particular, BT can be
@@ -45,7 +44,7 @@ Options:
                              using a url like:
                                http://.../erp5/portal_templates/asRepository
                              Default is INSTANCE_HOME/bt5 and its subfolders.
-  --recreate_catalog=0 or 1  recreate the content of the sql catalog. Default
+  --recreate_catalog={0|1}   Recreate the content of the SQL catalog. Default
                              is to recreate, unless using --data_fs_path
   --save                     Run unit tests in persistent mode (if unset,
                              existing Data.fs, dump.sql and *.bak static
@@ -53,6 +52,9 @@ Options:
                              if business templates are updated
                              or if --load is unset.
   --load                     Reuse existing instance (created with --save).
+  --dump_sql=[0|1]           Force enabling/disabling SQL dumps.
+                             By default, databases are loaded/saved except
+                             when running ZEO clients.
   --erp5_sql_connection_string=STRING
                              ZSQL Connection string for erp5_sql_connection, by
                              default, it will use "test test"
@@ -561,13 +563,18 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
       # be done manually.
       if verbosity:
         _print('Dumping static files...\n')
+      live_instance_path = os.environ.get('live_instance_path')
       for static_dir in static_dir_list:
         try:
           shutil.rmtree(static_dir + '.bak')
         except OSError, e:
           if e.errno != errno.ENOENT:
             raise
-        shutil.copytree(static_dir, static_dir + '.bak', symlinks=True)
+        if live_instance_path:
+          backup_path = os.path.join(live_instance_path, static_dir)
+        else:
+          backup_path = static_dir + '.bak'
+        shutil.copytree(static_dir, backup_path, symlinks=True)
     elif zeo_client_pid_list is not None:
       _print('WARNING: No static files saved. You will have to do it manually.')
 
@@ -593,6 +600,7 @@ def main():
         "erp5_catalog_storage=",
         "save",
         "load",
+        "dump_sql=",
         "email_from_address=",
         "enable_full_indexing=",
         "run_only=",
@@ -656,6 +664,8 @@ def main():
       os.environ["erp5_save_data_fs"] = "1"
     elif opt == "--load":
       os.environ["erp5_load_data_fs"] = "1"
+    elif opt == "--dump_sql":
+      os.environ["erp5_dump_sql"] = arg
     elif opt == "--erp5_catalog_storage":
       os.environ["erp5_catalog_storage"] = arg
     elif opt == "--run_only":
@@ -672,9 +682,11 @@ def main():
       os.environ["conversion_server_port"] = arg
     elif opt == "--live_instance":
       live_instance_path = arg or real_instance_home
+      # following line is only for static files
       os.environ["live_instance_path"] = live_instance_path
       os.environ["erp5_load_data_fs"] = "1"
       os.environ["erp5_save_data_fs"] = "1"
+      os.environ["erp5_dump_sql"] = "0"
       os.environ["erp5_tests_data_fs_path"] = os.path.join(
                                       live_instance_path, 'var', 'Data.fs')
     elif opt == "--use_dummy_mail_host":
