@@ -63,6 +63,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -71,7 +79,33 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>lines</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -156,7 +190,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>section_content_selection</string> </value>
+                    <value> <string>search_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -179,6 +213,22 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: \'%s_selection\' % (here.getRelativeUrl())</string> </value>
         </item>
       </dictionary>
     </pickle>
