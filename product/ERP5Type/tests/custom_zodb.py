@@ -108,7 +108,7 @@ while not zeo_client:
   if save:
     Storage = FileStorage(data_fs_path)
   elif load:
-    Storage = DemoStorage(base=FileStorage(data_fs_path))
+    Storage = DemoStorage(base=FileStorage(data_fs_path, read_only=True))
   else:
     Storage = DemoStorage()
   break
