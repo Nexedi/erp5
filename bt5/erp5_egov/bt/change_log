@@ -1,15 +1,8 @@
-2010-06-17 mayoro
-* Use EGov as default skin selection name for egovernment and ecitizen web sites
-* remove mistake in login_form of ecitizen
-(egov_portal is no longer used)
-
-2010-06-16 mayoro
-* use proxifield for listbox in Folder_viewEgovContentList
-
-2010-06-15 mayoro
-*center listbox by modifying padding
+2010-06-18 mayoro
+* add script to generate security from entity
 
 2010-06-13 mayoro
+*rename mistake in login_form of ecitizen (egov_portal) is no longer used
 *add padding left for site title in template_erp5_egov.css
 
 2010-06-13 mayoro
