@@ -6753,7 +6753,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         self.portal.portal_catalog.getResultValue(uid=uid))
 
   def test_bt5_must_be_exported(self):
-    """ Just to show an error. """
+    """
+      The bt5 must be exported correctly. Without fail exporting the Portal
+      Type Actions as well.
+    """
     portal = self.getPortalObject()
     template_tool = portal.portal_templates
     bt5obj = portal.portal_catalog.getResultValue(portal_type='Business Template',
