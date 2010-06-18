@@ -6752,17 +6752,19 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(self.portal.exported_path,
         self.portal.portal_catalog.getResultValue(uid=uid))
 
-  def test_bt5_must_be_exported(self):
+  def test_export_bt5_with_portal_type_actions(self):
     """
-      The bt5 must be exported correctly. Without fail exporting the Portal
-      Type Actions as well.
+      The bt5 must be exported correctly.
+      Without fail exporting the Portal Type Actions.
     """
     portal = self.getPortalObject()
     template_tool = portal.portal_templates
     bt5obj = portal.portal_catalog.getResultValue(portal_type='Business Template',
-                                           title='erp5_barcode')
+                                                  title='erp5_barcode')
+    # it is required to copy and paste to be able to export it
     template_copy = template_tool.manage_copyObjects(ids=(bt5obj.getId(),))
     new_id_list = template_tool.manage_pasteObjects(template_copy)
+
     new_bt5_id = new_id_list[0]['new_id']
     new_bt5_obj = getattr(template_tool, new_bt5_id, None)
     new_bt5_obj.edit()
