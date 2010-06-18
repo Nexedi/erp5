@@ -108,7 +108,9 @@ while not zeo_client:
   if save:
     Storage = FileStorage(data_fs_path)
   elif load:
-    Storage = DemoStorage(base=FileStorage(data_fs_path, read_only=True))
+    Storage = FileStorage(data_fs_path, read_only=True)
+    Storage._is_read_only = False # XXX for Zope 2.8
+    Storage = DemoStorage(base=Storage)
   else:
     Storage = DemoStorage()
   break
