@@ -79,7 +79,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   quiet = 1
 
   def getBusinessTemplateList(self):
-    return ('erp5_csv_style', 'erp5_pdf_style')
+    return ('erp5_csv_style', 'erp5_pdf_style', 'erp5_barcode')
 
   def getTitle(self):
     return "Business Template"
@@ -6751,6 +6751,20 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.stepTic()
     self.assertEquals(self.portal.exported_path,
         self.portal.portal_catalog.getResultValue(uid=uid))
+
+  def test_bt5_must_be_exported(self):
+    """ Just to show an error. """
+    portal = self.getPortalObject()
+    template_tool = portal.portal_templates
+    bt5obj = portal.portal_catalog.getResultValue(portal_type='Business Template',
+                                           title='erp5_barcode')
+    template_copy = template_tool.manage_copyObjects(ids=(bt5obj.getId(),))
+    new_id_list = template_tool.manage_pasteObjects(template_copy)
+    new_bt5_id = new_id_list[0]['new_id']
+    new_bt5_obj = getattr(template_tool, new_bt5_id, None)
+    new_bt5_obj.edit()
+    new_bt5_obj.build()
+    template_tool.export(new_bt5_obj)
 
 
 def test_suite():
