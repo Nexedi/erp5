@@ -233,23 +233,19 @@ def _getConnectionStringDict():
   """Returns the connection strings used for this test.
   """
   connection_string_dict = {}
-  erp5_sql_connection_string = os.environ.get(
-                                    'erp5_sql_connection_string')
-  if erp5_sql_connection_string:
-    connection_string_dict['erp5_sql_connection_string'] = \
-                                erp5_sql_connection_string
-  cmf_activity_sql_connection_string = os.environ.get(
-                            'cmf_activity_sql_connection_string',
-                            os.environ.get('erp5_sql_connection_string'))
-  if cmf_activity_sql_connection_string:
-    connection_string_dict['cmf_activity_sql_connection_string'] = \
-                                cmf_activity_sql_connection_string
-    erp5_sql_transactionless_connection_string = os.environ.get(
-             'erp5_sql_transactionless_connection_string',
-             '-%s' % cmf_activity_sql_connection_string)
-    if erp5_sql_transactionless_connection_string:
-      connection_string_dict['erp5_sql_transactionless_connection_string'] = \
-                              erp5_sql_transactionless_connection_string
+  default = os.environ.get('erp5_sql_connection_string')
+  for connection in ('erp5_sql_connection_string',
+                     'erp5_sql_deferred_connection_string',
+                     # default value for transactionless is derived from value
+                     # for cmf_activity, so process it last
+                     'cmf_activity_sql_connection_string'):
+    connection_string = os.environ.get(connection, default)
+    if connection_string:
+      connection_string_dict[connection] = connection_string
+  connection = 'erp5_sql_transactionless_connection_string'
+  if os.environ.get(connection, connection_string):
+    connection_string_dict[connection] = \
+      os.environ.get(connection, '-' + connection_string)
   return connection_string_dict
 
 def _getConversionServerDict():
@@ -898,10 +894,10 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
                 ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
 
               extra_constructor_kw = _getConnectionStringDict()
-              # manage_addERP5Site does not accept
-              # erp5_sql_transactionless_connection_string argument
-              extra_constructor_kw.pop(
-                    'erp5_sql_transactionless_connection_string', None)
+              # manage_addERP5Site does not accept the following 2 arguments
+              for k in ('erp5_sql_deferred_connection_string',
+                        'erp5_sql_transactionless_connection_string'):
+                extra_constructor_kw.pop(k, None)
               email_from_address = os.environ.get('email_from_address')
               if email_from_address is not None:
                 extra_constructor_kw['email_from_address'] = email_from_address
