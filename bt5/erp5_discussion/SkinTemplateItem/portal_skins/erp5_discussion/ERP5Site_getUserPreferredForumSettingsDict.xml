@@ -60,17 +60,17 @@ from Products.ERP5Type.Cache import CachingMethod\n
 \n
 portal = context.getPortalObject()\n
 def getPreferredForumSignature(username):\n
+  result = {\'preferred_forum_signature\': None,\n
+            \'preferred_forum_quote_original_message\': False}\n
   preference = portal.portal_catalog.getResultValue(\n
                                        portal_type=\'Preference\',\n
                                        owner = username,\n
                                        preference_state=\'enabled\')\n
   if preference is not None:\n
-    return {\'preferred_forum_signature\': preference.getProperty(\'preferred_forum_signature\', None),\n
-             \'preferred_forum_quote_original_message\': preference.getProperty(\'preferred_forum_quote_original_message\', False),\n
-            }\n
-  else:\n
-    return {}\n
-\n
+    result[\'preferred_forum_signature\'] = preference.getProperty(\'preferred_forum_signature\', None)\n
+    result[\'preferred_forum_quote_original_message\'] = preference.getProperty(\'preferred_forum_quote_original_message\', False)\n
+  return result\n
+  \n
 getPreferredForumSignature = CachingMethod(getPreferredForumSignature,\n
                                ("ERP5Site_getUserPreferredForumSettingsDict", username),\n
                                 cache_factory=\'erp5_ui_short\')\n
