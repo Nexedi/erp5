@@ -6752,13 +6752,18 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(self.portal.exported_path,
         self.portal.portal_catalog.getResultValue(uid=uid))
 
-  def test_export_bt5_with_portal_type_actions(self):
+  def test_build_and_export_bt5_into_same_transaction(self):
     """
-      The bt5 must be exported correctly.
-      Without fail exporting the Portal Type Actions.
+      Copy, build and export a business template into the same transaction.
+
+      Make sure all objects can be exported, when build() and export() are
+      into the same transaction. 
     """
     portal = self.getPortalObject()
     template_tool = portal.portal_templates
+    # Use erp5_barcode because it contains ActionTemplateItem, which seems to
+    # cause problems to be export. Maybe create a test bt5 with all items could
+    # be more appropriated.
     bt5obj = portal.portal_catalog.getResultValue(portal_type='Business Template',
                                                   title='erp5_barcode')
     # it is required to copy and paste to be able to export it
@@ -6770,7 +6775,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     new_bt5_obj.edit()
     new_bt5_obj.build()
     template_tool.export(new_bt5_obj)
-
 
 def test_suite():
   suite = unittest.TestSuite()
