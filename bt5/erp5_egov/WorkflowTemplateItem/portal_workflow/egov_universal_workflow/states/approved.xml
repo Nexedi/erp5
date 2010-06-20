@@ -33,6 +33,8 @@
               <tuple>
                 <string>available</string>
                 <string>available_action</string>
+                <string>complet</string>
+                <string>complet_action</string>
               </tuple>
             </value>
         </item>

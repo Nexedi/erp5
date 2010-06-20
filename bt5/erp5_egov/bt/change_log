@@ -1,4 +1,8 @@
 2010-06-20 mayoro
+* Add complete transition from accepted state
+*Add the title of the transition Complete, it should not be configured in the hosting form
+
+2010-06-20 mayoro
 *adjust left margin for status displaying
 * remove some specific files in img and clean up page templates
 
