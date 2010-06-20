@@ -202,11 +202,11 @@ class SimulationMovement(Movement, PropertyRecordableMixin, ExplainableMixin):
     simulation_state is in of completed state list defined on business path
     """
     # only available in BPM, so fail totally in case of working without BPM
-    business_path =  self.getCausalityValue(
-                         portal_type=self.getPortalBusinessPathTypeList())
-    if business_path is None:
+    business_link =  self.getCausalityValue(
+                         portal_type=self.getPortalBusinessLinkTypeList())
+    if business_link is None:
       return False
-    return self.getSimulationState() in business_path.getCompletedStateList()
+    return self.getSimulationState() in business_link.getCompletedStateList()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isFrozen')
@@ -214,9 +214,9 @@ class SimulationMovement(Movement, PropertyRecordableMixin, ExplainableMixin):
     """Lookup business path and, if any, return True whenever
     simulation_state is in one of the frozen states defined on business path
     """
-    business_path =  self.getCausalityValue(
-                         portal_type=self.getPortalBusinessPathTypeList())
-    if business_path is None:
+    business_link =  self.getCausalityValue(
+                         portal_type=self.getPortalBusinessLinkTypeList())
+    if business_link is None:
       # Legacy support - this should never happen
       # XXX-JPS ADD WARNING
       if self.getSimulationState() in ('stopped', 'delivered', 'cancelled'):
@@ -224,7 +224,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin, ExplainableMixin):
       if self._baseIsFrozen() == 0:
         self._baseSetFrozen(None)
       return self._baseGetFrozen() or False
-    return self.getSimulationState() in business_path.getFrozenStateList()
+    return self.getSimulationState() in business_link.getFrozenStateList()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isAccountable')
@@ -580,32 +580,32 @@ class SimulationMovement(Movement, PropertyRecordableMixin, ExplainableMixin):
       return False
 
     # might be buildable - business path depended
-    business_path = self.getCausalityValue(portal_type='Business Path')
+    business_link = self.getCausalityValue(portal_type='Business Link')
     explanation_value = self.getExplanationValue()
 
-    if business_path is None or explanation_value is None:
+    if business_link is None or explanation_value is None:
       return True
-    predecessor = business_path.getPredecessorValue()
+    predecessor = business_link.getPredecessorValue()
     if predecessor is None:
       # first one, can be built
       return True # XXX-JPS wrong cause root is marked
 
     for successor_related in predecessor.getSuccessorRelatedValueList(): # XXX-JPS wrong cause state shared by multi BPM
-      for business_path_movement in successor_related \
+      for business_link_movement in successor_related \
           .getRelatedSimulationMovementValueList(explanation_value):
         if successor_related.isMovementRelatedWithMovement(self,
-            business_path_movement):
-          business_path_movement_delivery = business_path_movement \
+            business_link_movement):
+          business_link_movement_delivery = business_link_movement \
               .getDeliveryValue()
-          if business_path_movement_delivery is None:
+          if business_link_movement_delivery is None:
             return False # related movement is not delivered yet
 
-          business_path_movement_delivery_document = \
-              business_path_movement_delivery.getExplanationValue()
+          business_link_movement_delivery_document = \
+              business_link_movement_delivery.getExplanationValue()
           # here we can optimise somehow, as
-          # business_path_movement_delivery_document would repeat
+          # business_link_movement_delivery_document would repeat
           if not successor_related.isCompleted(
-              business_path_movement_delivery_document):
+              business_link_movement_delivery_document):
             # related movements delivery is not completed
             return False
     return True

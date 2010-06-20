@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -186,7 +187,7 @@ portal_supply_type_list = ('Purchase Supply','Sale Supply')
 portal_supply_path_type_list = ('Supply Line','Supply Cell')
 
 portal_business_process_type_list = ('Business Process',)
-portal_business_path_type_list = ('Business Path',)
+portal_business_link_type_list = ('Business Link',)
 
 # This transaction lines are special because destination must be None.
 portal_balance_transaction_line_type_list = ('Balance Transaction Line',)

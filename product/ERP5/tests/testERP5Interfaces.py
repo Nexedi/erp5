@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: shift_jis -*-
 ##############################################################################
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Łukasz Nowak <luke@nexedi.com>
@@ -35,9 +35,9 @@ import unittest
 # manually and treated as reference to what implements what
 implements_tuple_list = [
   (('Products.ERP5Type.Document.RoleDefinition', 'RoleDefinition'), 'ILocalRoleGenerator'),
-  (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'IArrowBase'),
-  (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'IBusinessPath'),
-  (('Products.ERP5Type.Document.BusinessPath','BusinessPath'), 'ICategoryAccessProvider'),
+  (('Products.ERP5Type.Document.BusinessLink','BusinessLink'), 'IArrowBase'),
+  (('Products.ERP5Type.Document.BusinessLink','BusinessLink'), 'IBusinessLink'),
+  (('Products.ERP5Type.Document.BusinessLink','BusinessLink'), 'ICategoryAccessProvider'),
   (('Products.ERP5Type.Document.TradeCondition','TradeCondition'), 'IAmountGenerator'),
   (('Products.ERP5Type.Document.TradeModelCell','TradeModelCell'), 'IAmountGenerator'),
   (('Products.ERP5Type.Document.TradeModelCell','TradeModelCell'), 'IVariated'),
@@ -84,8 +84,8 @@ addTestMethodDynamically(TestERP5Interfaces, implements_tuple_list)
 
 for failing_method in [
     'test_Products.ERP5.AggregatedAmountList_AggregatedAmountList_implements_IAmountList',
-    'test_Products.ERP5Type.Document.BusinessPath_BusinessPath_implements_IBusinessPath',
-    'test_Products.ERP5Type.Document.BusinessPath_BusinessPath_implements_ICategoryAccessProvider',
+    'test_Products.ERP5Type.Document.BusinessLink_BusinessLink_implements_IBusinessLink',
+    'test_Products.ERP5Type.Document.BusinessLink_BusinessLink_implements_ICategoryAccessProvider',
     'test_Products.ERP5Type.Document.TradeCondition_TradeCondition_implements_IAmountGenerator',
     'test_Products.ERP5Type.Document.TradeModelCell_TradeModelCell_implements_IAmountGenerator',
     'test_Products.ERP5Type.Document.TradeModelCell_TradeModelCell_implements_IVariated',

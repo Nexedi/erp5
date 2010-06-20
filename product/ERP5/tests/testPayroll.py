@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009-2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -36,9 +37,9 @@ import transaction
 class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
   BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
                CreateBusinessProcess
-               CreateBusinessPath
+               CreateBusinessLink
                CreateUrssafRoubaixOrganisation
-               ModifyBusinessPathTradePhase
+               ModifyBusinessLinkTradePhase
                ModelSpecialiseBusinessProcess
                Tic
   """
@@ -841,14 +842,14 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     node.edit(title='Urssaf de Roubaix Tourcoing')
     sequence.edit(urssaf_roubaix = node)
 
-  def stepModifyBusinessPathTradePhase(self, sequence=None, **kw):
-    business_path = sequence.get('business_path')
-    business_path.setTradePhaseList(['payroll/france/urssaf',
+  def stepModifyBusinessLinkTradePhase(self, sequence=None, **kw):
+    business_link = sequence.get('business_link')
+    business_link.setTradePhaseList(['payroll/france/urssaf',
                                      'payroll/france/labour'])
-    business_path.setSourceValue(sequence.get('urssaf_roubaix'))
-    business_path.setSourceSectionValue(sequence.get('urssaf_roubaix'))
-    business_path.setDeliveryBuilderList(('portal_deliveries/pay_sheet_builder',))
-    sequence.edit(business_path=business_path)
+    business_link.setSourceValue(sequence.get('urssaf_roubaix'))
+    business_link.setSourceSectionValue(sequence.get('urssaf_roubaix'))
+    business_link.setDeliveryBuilderList(('portal_deliveries/pay_sheet_builder',))
+    sequence.edit(business_link=business_link)
 
   def stepModelSpecialiseBusinessProcess(self, sequence=None, **kw):
     model = sequence.get('model')
@@ -3240,9 +3241,9 @@ class TestPayroll(TestPayrollMixin):
                CreatePriceCurrency
                CreateLabourOutputService
                CreateBusinessProcess
-               CreateBusinessPath
+               CreateBusinessLink
                CreateUrssafRoubaixOrganisation
-               ModifyBusinessPathTradePhase
+               ModifyBusinessLinkTradePhase
                Tic
                CheckModelWithoutRefValidity
     """
@@ -3260,9 +3261,9 @@ class TestPayroll(TestPayrollMixin):
                CreatePriceCurrency
                CreateLabourOutputService
                CreateBusinessProcess
-               CreateBusinessPath
+               CreateBusinessLink
                CreateUrssafRoubaixOrganisation
-               ModifyBusinessPathTradePhase
+               ModifyBusinessLinkTradePhase
                Tic
                CheckModelWithoutDateValidity
     """
@@ -3278,9 +3279,9 @@ class TestPayroll(TestPayrollMixin):
                CreatePriceCurrency
                CreateLabourOutputService
                CreateBusinessProcess
-               CreateBusinessPath
+               CreateBusinessLink
                CreateUrssafRoubaixOrganisation
-               ModifyBusinessPathTradePhase
+               ModifyBusinessLinkTradePhase
                Tic
                CheckModelDateValidity
     """
@@ -3295,9 +3296,9 @@ class TestPayroll(TestPayrollMixin):
     sequence_string = """
                CreatePriceCurrency
                CreateBusinessProcess
-               CreateBusinessPath
+               CreateBusinessLink
                CreateUrssafRoubaixOrganisation
-               ModifyBusinessPathTradePhase
+               ModifyBusinessLinkTradePhase
                Tic
                CheckModelVersioning
     """

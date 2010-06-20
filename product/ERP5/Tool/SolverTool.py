@@ -230,8 +230,8 @@ class SolverTool(BaseTool):
     test_property = divergence_tester.getTestedProperty()
     application_value_level = {}
     for simulation_movement in movement.getDeliveryRelatedValueList():
-      business_path = simulation_movement.getCausalityValue()
-      for delivery_builder in business_path.getDeliveryBuilderValueList():
+      business_link = simulation_movement.getCausalityValue()
+      for delivery_builder in business_link.getDeliveryBuilderValueList():
         for movement_group in delivery_builder.contentValues(): # filter missing
           if test_property in movement_group.getTestedPropertyList():
             application_value_level[movement_group.getCollectGroupOrder()] = None
@@ -267,8 +267,8 @@ class SolverTool(BaseTool):
     test_property = divergence_tester.getTestedProperty()
     application_value_level = {}
     for simulation_movement in movement.getDeliveryRelatedValueList():
-      business_path = simulation_movement.getCausalityValue()
-      for delivery_builder in business_path.getDeliveryBuilderValueList():
+      business_link = simulation_movement.getCausalityValue()
+      for delivery_builder in business_link.getDeliveryBuilderValueList():
         for property_group in delivery_builder.contentValues(portal_type="Property group"):
           if test_property in property_group.getTestedPropertyList():
             application_value_level[property_group.getCollectGroupOrder()] = None

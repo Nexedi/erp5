@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -200,11 +201,11 @@ class PaySheetTransaction(Invoice):
           movement_list_trade_phase_dic[trade_phase].append(movement)
 
       for trade_phase in movement_list_trade_phase_dic.keys():
-        business_path_list = business_process.getPathValueList(trade_phase=\
+        business_link_list = business_process.getPathValueList(trade_phase=\
             trade_phase)
-        for business_path in business_path_list:
+        for business_link in business_link_list:
           builder_list = [portal.restrictedTraverse(url) for url in\
-                          business_path.getDeliveryBuilderList()]
+                          business_link.getDeliveryBuilderList()]
           for builder in builder_list:
             builder.build(delivery_relative_url_list=[self.getRelativeUrl(),],
                       movement_list = movement_list_trade_phase_dic[trade_phase])

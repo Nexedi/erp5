@@ -158,8 +158,8 @@ class TestMRPMixin(TestBPMMixin):
     ready -------- partial_produced ------- done
     """
     business_process = self.createBusinessProcess()
-    business_path_p2 = self.createBusinessPath(business_process)
-    business_path_p3 = self.createBusinessPath(business_process)
+    business_link_p2 = self.createBusinessLink(business_process)
+    business_link_p3 = self.createBusinessLink(business_process)
     business_state_ready = self.createBusinessState(business_process)
     business_state_partial = self.createBusinessState(business_process)
     business_state_done = self.createBusinessState(business_process)
@@ -171,7 +171,7 @@ class TestMRPMixin(TestBPMMixin):
     destination = self.createOrganisation(title='destination')
     
     business_process.edit(referential_date='stop_date')
-    business_path_p2.edit(id='p2',
+    business_link_p2.edit(id='p2',
                           predecessor_value=business_state_ready,
                           successor_value=business_state_partial,
                           quantity=1,
@@ -181,7 +181,7 @@ class TestMRPMixin(TestBPMMixin):
                           destination_section_value=destination_section,
                           destination_value=destination,
                           )
-    business_path_p3.edit(id='p3',
+    business_link_p3.edit(id='p3',
                           predecessor_value=business_state_partial,
                           successor_value=business_state_done,
                           quantity=1,
@@ -201,8 +201,8 @@ class TestMRPMixin(TestBPMMixin):
            mrp/p3
     """
     business_process = self.createBusinessProcess()
-    business_path_p2 = self.createBusinessPath(business_process)
-    business_path_p3 = self.createBusinessPath(business_process)
+    business_link_p2 = self.createBusinessLink(business_process)
+    business_link_p3 = self.createBusinessLink(business_process)
     business_state_ready = self.createBusinessState(business_process)
     business_state_partial = self.createBusinessState(business_process)
 
@@ -213,7 +213,7 @@ class TestMRPMixin(TestBPMMixin):
     destination = self.createOrganisation(title='destination')
 
     business_process.edit(referential_date='stop_date')
-    business_path_p2.edit(id='p2',
+    business_link_p2.edit(id='p2',
                           predecessor_value=business_state_ready,
                           successor_value=business_state_partial,
                           quantity=1,
@@ -223,7 +223,7 @@ class TestMRPMixin(TestBPMMixin):
                           destination_section_value=destination_section,
                           destination_value=destination,
                           )
-    business_path_p3.edit(id='p3',
+    business_link_p3.edit(id='p3',
                           predecessor_value=business_state_ready,
                           successor_value=business_state_partial,
                           quantity=1,
@@ -280,7 +280,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
 
     # organisations
     path = business_process.objectValues(
-      portal_type=self.portal.getPortalBusinessPathTypeList())[0]
+      portal_type=self.portal.getPortalBusinessLinkTypeList())[0]
     source_section = path.getSourceSection()
     source = path.getSource()
     destination_section = path.getDestinationSection()
@@ -344,7 +344,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
 
     # organisations
     path = business_process.objectValues(
-      portal_type=self.portal.getPortalBusinessPathTypeList())[0]
+      portal_type=self.portal.getPortalBusinessLinkTypeList())[0]
     source_section = path.getSourceSection()
     source = path.getSource()
     destination_section = path.getDestinationSection()
@@ -413,7 +413,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
 
     # organisations
     path = business_process.objectValues(
-      portal_type=self.portal.getPortalBusinessPathTypeList())[0]
+      portal_type=self.portal.getPortalBusinessLinkTypeList())[0]
     source_section = path.getSourceSection()
     source = path.getSource()
     destination_section = path.getDestinationSection()

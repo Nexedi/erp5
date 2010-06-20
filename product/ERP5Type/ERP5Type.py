@@ -267,7 +267,7 @@ class ERP5TypeInformation(XMLObject,
       'divergence_tester', 'target_solver',
       'amount_generator',  'amount_generator_line', 'amount_generator_cell',
       # Business Processes
-      'business_path', 'business_process',
+      'trade_model_path', 'business_link', 'business_process',
       # Movement Group
       'movement_group',
       # Calendar

@@ -57,9 +57,9 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
 
   def setUpBusinessProcess(self):
     business_process = self.portal.business_process_module.erp5_default_business_process
-    pay_business_path = business_process['pay']
-    pay_business_path.setSource('account_module/bank')
-    pay_business_path.setDestination('account_module/bank')
+    pay_business_link = business_process['pay']
+    pay_business_link.setSource('account_module/bank')
+    pay_business_link.setDestination('account_module/bank')
 
   @UnrestrictedMethod
   def createInvoiceTransactionRule(self, resource=None):

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Romain Courteaud <romain@nexedi.com>
+# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -26,28 +26,28 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""
+Products.ERP5.interfaces.trade_model_path
+"""
 
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5Legacy.Document.ProductionOrderModelRule import ProductionOrderModelRule
+from zope.interface import Interface
 
-class ProductionOrderModelRootSimulationRule(ProductionOrderModelRule):
+class ITradeModelPath(Interface):
+  """Trade Model Path interface specification
+
+  ITradeModelPath provides a method to calculate the completion
+  date of existing movements based on business path properties.
+  It also provides methods to determine whether all related simulation
+  movements related to a given explanation are completed, partially
+  completed or frozen. Finally, it provides a method to invoke
+  delivery builders for all movements related to a given explanation.
   """
-    Prouction Order Model Simulation Rule object use a Supply Chain to expand a 
-    Production Order.
-  """
 
-  # CMF Type Definition
-  meta_type = 'ERP5 Production Order Model Root Simulation Rule'
-  portal_type = 'Production Order Model Root Simulation Rule'
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
-      business_link, current_property_dict):
-    """Order rule specific update dictionary"""
-    return {
-      'delivery': movement.getRelativeUrl(),
-    }
+  def getExpectedQuantity(amount):
+    """Returns the new quantity for the provided amount taking
+    into account the efficiency or the quantity defined on the business path.
+    This is used to implement payment conditions or splitting production
+    over multiple path. The total of getExpectedQuantity for all business
+    path which are applicable should never exceed the original quantity.
+    The implementation of this validation is left to rules.
+    """

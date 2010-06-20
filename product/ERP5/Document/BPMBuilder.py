@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: shift_jis -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -43,6 +43,7 @@ class SelectMethodError(Exception): pass
 
 class BPMBuilder(Alarm):
   """Top class for builders.
+ XXX-JPS Wrong Naming - Abbreviation (BPM)
 
   WARNING: This is BPM evaluation of building approach.
   WARNING: Do NOT use it in production environment.
@@ -100,10 +101,10 @@ class BPMBuilder(Alarm):
     # Select movements
     if input_movement_list is None:
       if not select_method_dict.has_key('causality_uid'):
-        business_path_value_list = self.getRelatedBusinessPathValueList()
-        if len(business_path_value_list) > 0:
-          # use only Business Path related movements
-          select_method_dict['causality_uid'] = [q.getUid() for q in business_path_value_list]
+        business_link_value_list = self.getRelatedBusinessLinkValueList()
+        if len(business_link_value_list) > 0:
+          # use only Business Link related movements
+          select_method_dict['causality_uid'] = [q.getUid() for q in business_link_value_list]
       # do search
       input_movement_value_list = self.searchMovementList(
         delivery_relative_url_list=existing_delivery_list,
@@ -220,10 +221,10 @@ class BPMBuilder(Alarm):
       input_movement.edit(delivery_value=delivery_movement,
                                activate_kw=activate_kw)
 
-  def getRelatedBusinessPathValueList(self):
+  def getRelatedBusinessLinkValueList(self):
     return self.getDeliveryBuilderRelatedValueList(
-        portal_type='Business Path') + self.getOrderBuilderRelatedValueList(
-        portal_type='Business Path')
+        portal_type='Business Link') + self.getOrderBuilderRelatedValueList(
+        portal_type='Business Link')
 
   def callBeforeBuildingScript(self):
     """

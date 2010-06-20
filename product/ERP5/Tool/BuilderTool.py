@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: shift_jis -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -47,11 +47,11 @@ class BuilderTool(BaseTool):
       BuilderPortalType_selectDefaultMovement
 
     business_process_list - optional Business Process list, if defined only
-      builders for Business Paths contained in those Business Process will
+      builders for Business Links contained in those Business Process will
       be run
 
     trade_phase_list - optional list of trade phases, if defined only
-      Business Paths for this trade phase will be used
+      Business Links for this trade phase will be used
 
     existing_delivery_list - list of deliveries to which builder will *try*
       add new/update existing movements and update delivery. It is not
@@ -80,9 +80,9 @@ class BuilderTool(BaseTool):
       method_id = getattr(self,method_id_dict[self.getPortalType()])
       for business_process_url in business_process_list:
         business_process = self.unrestrictedTraverse(business_process_url)
-        for business_path in business_process.getPathValueList(
+        for business_link in business_process.getPathValueList(
             trade_phase=trade_phase_list):
-          builder_value_list.extend(getattr(business_path,method_id)())
+          builder_value_list.extend(getattr(business_link,method_id)())
 
     # FIXME: what kind of sorting to use?
     return sorted(builder_value_list)

@@ -27,7 +27,7 @@
 #
 ##############################################################################
 """
-Products.ERP5.interfaces.business_path
+Products.ERP5.interfaces.explainable
 """
 
 from zope.interface import Interface

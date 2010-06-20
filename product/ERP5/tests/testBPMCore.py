@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: shift_jis -*-
 ##############################################################################
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Łukasz Nowak <luke@nexedi.com>
@@ -45,7 +45,7 @@ class TestBPMMixin(ERP5TypeTestCase):
       'erp5_invoicing', 'erp5_simplified_invoicing')
 
   business_process_portal_type = 'Business Process'
-  business_path_portal_type = 'Business Path'
+  business_link_portal_type = 'Business Link'
 
   normal_resource_use_category_list = ['normal']
   invoicing_resource_use_category_list = ['discount', 'tax']
@@ -79,16 +79,16 @@ class TestBPMMixin(ERP5TypeTestCase):
         **kw)
 
   @reindex
-  def createBusinessPath(self, business_process=None, **kw):
+  def createBusinessLink(self, business_process=None, **kw):
     if business_process is None:
       business_process = self.createBusinessProcess()
     kw['destination_method_id'] = kw.pop('destination_method_id',
-        'BusinessPath_getDefaultDestinationList')
+        'BusinessLink_getDefaultDestinationList')
     kw['source_method_id'] = kw.pop('source_method_id',
-        'BusinessPath_getDefaultSourceList')
-    business_path = business_process.newContent(
-      portal_type=self.business_path_portal_type, **kw)
-    return business_path
+        'BusinessLink_getDefaultSourceList')
+    business_link = business_process.newContent(
+      portal_type=self.business_link_portal_type, **kw)
+    return business_link
 
   def createMovement(self):
     # returns a movement for testing
@@ -218,105 +218,105 @@ class TestBPMImplementation(TestBPMMixin):
   def test_BusinessProcess_getPathValueList(self):
     business_process = self.createBusinessProcess()
 
-    accounting_business_path = business_process.newContent(
-        portal_type=self.business_path_portal_type,
+    accounting_business_link = business_process.newContent(
+        portal_type=self.business_link_portal_type,
         trade_phase='default/accounting')
 
-    delivery_business_path = business_process.newContent(
-        portal_type=self.business_path_portal_type,
+    delivery_business_link = business_process.newContent(
+        portal_type=self.business_link_portal_type,
         trade_phase='default/delivery')
 
-    accounting_delivery_business_path = business_process.newContent(
-        portal_type=self.business_path_portal_type,
+    accounting_delivery_business_link = business_process.newContent(
+        portal_type=self.business_link_portal_type,
         trade_phase=('default/accounting', 'default/delivery'))
 
     self.stepTic()
 
     self.assertSameSet(
-      (accounting_business_path, accounting_delivery_business_path),
+      (accounting_business_link, accounting_delivery_business_link),
       business_process.getPathValueList(trade_phase='default/accounting')
     )
 
     self.assertSameSet(
-      (delivery_business_path, accounting_delivery_business_path),
+      (delivery_business_link, accounting_delivery_business_link),
       business_process.getPathValueList(trade_phase='default/delivery')
     )
 
     self.assertSameSet(
-      (accounting_delivery_business_path, delivery_business_path,
-        accounting_business_path),
+      (accounting_delivery_business_link, delivery_business_link,
+        accounting_business_link),
       business_process.getPathValueList(trade_phase=('default/delivery',
         'default/accounting'))
     )
 
-  def test_BusinessPathStandardCategoryAccessProvider(self):
+  def test_BusinessLinkStandardCategoryAccessProvider(self):
     source_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
     source_section_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
-    business_path = self.createBusinessPath()
-    business_path.setSourceValue(source_node)
-    business_path.setSourceSectionValue(source_section_node)
-    self.assertEquals([source_node], business_path.getSourceValueList())
-    self.assertEquals([source_node.getRelativeUrl()], business_path.getSourceList())
+    business_link = self.createBusinessLink()
+    business_link.setSourceValue(source_node)
+    business_link.setSourceSectionValue(source_section_node)
+    self.assertEquals([source_node], business_link.getSourceValueList())
+    self.assertEquals([source_node.getRelativeUrl()], business_link.getSourceList())
     self.assertEquals(source_node.getRelativeUrl(),
-        business_path.getSource(default='something'))
+        business_link.getSource(default='something'))
 
-  def test_EmptyBusinessPathStandardCategoryAccessProvider(self):
-    business_path = self.createBusinessPath()
-    self.assertEquals(None, business_path.getSourceValue())
-    self.assertEquals(None, business_path.getSource())
+  def test_EmptyBusinessLinkStandardCategoryAccessProvider(self):
+    business_link = self.createBusinessLink()
+    self.assertEquals(None, business_link.getSourceValue())
+    self.assertEquals(None, business_link.getSource())
     self.assertEquals('something',
-        business_path.getSource(default='something'))
+        business_link.getSource(default='something'))
 
   def test_BuinessPathDynamicCategoryAccessProvider(self):
     source_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
     source_section_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
-    business_path = self.createBusinessPath()
-    business_path.setSourceMethodId('BusinessPath_getDefaultSourceList')
+    business_link = self.createBusinessLink()
+    business_link.setSourceMethodId('BusinessLink_getDefaultSourceList')
 
     context_movement = self.createMovement()
     context_movement.setSourceValue(source_node)
     context_movement.setSourceSectionValue(source_section_node)
-    self.assertEquals(None, business_path.getSourceValue())
+    self.assertEquals(None, business_link.getSourceValue())
     self.assertEquals([source_node],
-                      business_path.getSourceValueList(context=context_movement))
+                      business_link.getSourceValueList(context=context_movement))
     self.assertEquals([source_node.getRelativeUrl()],
-                      business_path.getSourceList(context=context_movement))
+                      business_link.getSourceList(context=context_movement))
     self.assertEquals(source_node.getRelativeUrl(),
-      business_path.getSource(context=context_movement, default='something'))
+      business_link.getSource(context=context_movement, default='something'))
 
-  def test_BuinessPathDynamicCategoryAccessProviderBusinessPathPrecedence(self):
+  def test_BuinessPathDynamicCategoryAccessProviderBusinessLinkPrecedence(self):
     movement_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
     path_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
-    business_path = self.createBusinessPath()
-    business_path.setSourceMethodId('BusinessPath_getDefaultSourceList')
-    business_path.setSourceValue(path_node)
+    business_link = self.createBusinessLink()
+    business_link.setSourceMethodId('BusinessLink_getDefaultSourceList')
+    business_link.setSourceValue(path_node)
 
     context_movement = self.createMovement()
     context_movement.setSourceValue(movement_node)
-    self.assertEquals(path_node, business_path.getSourceValue())
+    self.assertEquals(path_node, business_link.getSourceValue())
     self.assertEquals(path_node,
-                      business_path.getSourceValue(context=context_movement))
+                      business_link.getSourceValue(context=context_movement))
     self.assertEquals([path_node],
-                      business_path.getSourceValueList(context=context_movement))
+                      business_link.getSourceValueList(context=context_movement))
 
   def test_BuinessPathDynamicCategoryAccessProviderEmptyMovement(self):
-    business_path = self.createBusinessPath()
-    business_path.setSourceMethodId('BusinessPath_getDefaultSourceList')
+    business_link = self.createBusinessLink()
+    business_link.setSourceMethodId('BusinessLink_getDefaultSourceList')
 
     context_movement = self.createMovement()
-    self.assertEquals(None, business_path.getSourceValue())
+    self.assertEquals(None, business_link.getSourceValue())
     self.assertEquals(None,
-                      business_path.getSourceValue(context=context_movement))
+                      business_link.getSourceValue(context=context_movement))
     self.assertEquals(None,
-                      business_path.getSource(context=context_movement))
+                      business_link.getSource(context=context_movement))
     self.assertEquals('something',
-      business_path.getSource(context=context_movement, default='something'))
+      business_link.getSource(context=context_movement, default='something'))
 
   def test_BusinessState_getRemainingTradePhaseList(self):
     """
@@ -344,41 +344,41 @@ class TestBPMImplementation(TestBPMMixin):
     # define business process
     category_tool = self.getCategoryTool()
     business_process = self.createBusinessProcess()
-    business_path_a_b = self.createBusinessPath(business_process)
-    business_path_b_c = self.createBusinessPath(business_process)
-    business_path_b_d = self.createBusinessPath(business_process)
-    business_path_c_d = self.createBusinessPath(business_process)
-    business_path_d_e = self.createBusinessPath(business_process)
+    business_link_a_b = self.createBusinessLink(business_process)
+    business_link_b_c = self.createBusinessLink(business_process)
+    business_link_b_d = self.createBusinessLink(business_process)
+    business_link_c_d = self.createBusinessLink(business_process)
+    business_link_d_e = self.createBusinessLink(business_process)
     business_state_a = category_tool.trade_state.state_a
     business_state_b = category_tool.trade_state.state_b
     business_state_c = category_tool.trade_state.state_c
     business_state_d = category_tool.trade_state.state_d
     business_state_e = category_tool.trade_state.state_e
-    business_path_a_b.setPredecessorValue(business_state_a)
-    business_path_b_c.setPredecessorValue(business_state_b)
-    business_path_b_d.setPredecessorValue(business_state_b)
-    business_path_c_d.setPredecessorValue(business_state_c)
-    business_path_d_e.setPredecessorValue(business_state_d)
-    business_path_a_b.setSuccessorValue(business_state_b)
-    business_path_b_c.setSuccessorValue(business_state_c)
-    business_path_b_d.setSuccessorValue(business_state_d)
-    business_path_c_d.setSuccessorValue(business_state_d)
-    business_path_d_e.setSuccessorValue(business_state_e)
+    business_link_a_b.setPredecessorValue(business_state_a)
+    business_link_b_c.setPredecessorValue(business_state_b)
+    business_link_b_d.setPredecessorValue(business_state_b)
+    business_link_c_d.setPredecessorValue(business_state_c)
+    business_link_d_e.setPredecessorValue(business_state_d)
+    business_link_a_b.setSuccessorValue(business_state_b)
+    business_link_b_c.setSuccessorValue(business_state_c)
+    business_link_b_d.setSuccessorValue(business_state_d)
+    business_link_c_d.setSuccessorValue(business_state_d)
+    business_link_d_e.setSuccessorValue(business_state_e)
 
     # set title for debug
-    business_path_a_b.edit(title="a_b")
-    business_path_b_c.edit(title="b_c")
-    business_path_b_d.edit(title="b_d")
-    business_path_c_d.edit(title="c_d")
-    business_path_d_e.edit(title="d_e")
+    business_link_a_b.edit(title="a_b")
+    business_link_b_c.edit(title="b_c")
+    business_link_b_d.edit(title="b_d")
+    business_link_c_d.edit(title="c_d")
+    business_link_d_e.edit(title="d_e")
     
     # set trade_phase
-    business_path_a_b.edit(trade_phase=['default/discount'],
+    business_link_a_b.edit(trade_phase=['default/discount'],
                            completed_state=['ordered']) # (*1)
-    business_path_b_c.edit(trade_phase=['default/delivery'])
-    business_path_b_d.edit(trade_phase=['default/invoicing'])
-    business_path_c_d.edit(trade_phase=['default/payment'])
-    business_path_d_e.edit(trade_phase=['default/accounting'])
+    business_link_b_c.edit(trade_phase=['default/delivery'])
+    business_link_b_d.edit(trade_phase=['default/invoicing'])
+    business_link_c_d.edit(trade_phase=['default/payment'])
+    business_link_d_e.edit(trade_phase=['default/accounting'])
 
     # mock order
     order = self.portal.sale_order_module.newContent(portal_type="Sale Order")
@@ -391,20 +391,20 @@ class TestBPMImplementation(TestBPMMixin):
 
     applied_rule = order.getCausalityRelatedValue()
     sm = applied_rule.contentValues(portal_type="Simulation Movement")[0]
-    sm.edit(causality_value=business_path_a_b)
+    sm.edit(causality_value=business_link_a_b)
 
     # make other movements for each business path
     applied_rule.newContent(portal_type="Simulation Movement",
-                            causality_value=business_path_b_c,
+                            causality_value=business_link_b_c,
                             order_value=order_line)
     applied_rule.newContent(portal_type="Simulation Movement",
-                            causality_value=business_path_b_d,
+                            causality_value=business_link_b_d,
                             order_value=order_line)
     applied_rule.newContent(portal_type="Simulation Movement",
-                            causality_value=business_path_c_d,
+                            causality_value=business_link_c_d,
                             order_value=order_line)
     applied_rule.newContent(portal_type="Simulation Movement",
-                            causality_value=business_path_d_e,
+                            causality_value=business_link_d_e,
                             order_value=order_line)
 
     self.stepTic()
@@ -412,7 +412,7 @@ class TestBPMImplementation(TestBPMMixin):
     trade_phase = self.portal.portal_categories.trade_phase.default
 
     # assertion which getRemainingTradePhaseList must return category which will be passed
-    # discount is passed, business_path_a_b is already completed, because simulation state is "ordered"
+    # discount is passed, business_link_a_b is already completed, because simulation state is "ordered"
     self.assertEquals(set([trade_phase.delivery,
                            trade_phase.invoicing,
                            trade_phase.payment,
@@ -441,7 +441,7 @@ class TestBPMImplementation(TestBPMMixin):
                                                       trade_phase_list=['default/delivery',
                                                                         'default/accounting'])))
 
-  def test_BusinessPath_calculateExpectedDate(self):
+  def test_BusinessLink_calculateExpectedDate(self):
     """
     This test case is described for what start/stop date is expected on
     each path by explanation.
@@ -469,36 +469,36 @@ class TestBPMImplementation(TestBPMMixin):
     # define business process
     category_tool = self.getCategoryTool()
     business_process = self.createBusinessProcess()
-    business_path_a_b = self.createBusinessPath(business_process)
-    business_path_b_c = self.createBusinessPath(business_process)
-    business_path_b_d = self.createBusinessPath(business_process)
-    business_path_c_d = self.createBusinessPath(business_process)
-    business_path_d_e = self.createBusinessPath(business_process)
+    business_link_a_b = self.createBusinessLink(business_process)
+    business_link_b_c = self.createBusinessLink(business_process)
+    business_link_b_d = self.createBusinessLink(business_process)
+    business_link_c_d = self.createBusinessLink(business_process)
+    business_link_d_e = self.createBusinessLink(business_process)
     business_state_a = category_tool.trade_state.state_a
     business_state_b = category_tool.trade_state.state_b
     business_state_c = category_tool.trade_state.state_c
     business_state_d = category_tool.trade_state.state_d
     business_state_e = category_tool.trade_state.state_e
-    business_path_a_b.setPredecessorValue(business_state_a)
-    business_path_b_c.setPredecessorValue(business_state_b)
-    business_path_b_d.setPredecessorValue(business_state_b)
-    business_path_c_d.setPredecessorValue(business_state_c)
-    business_path_d_e.setPredecessorValue(business_state_d)
-    business_path_a_b.setSuccessorValue(business_state_b)
-    business_path_b_c.setSuccessorValue(business_state_c)
-    business_path_b_d.setSuccessorValue(business_state_d)
-    business_path_c_d.setSuccessorValue(business_state_d)
-    business_path_d_e.setSuccessorValue(business_state_e)
+    business_link_a_b.setPredecessorValue(business_state_a)
+    business_link_b_c.setPredecessorValue(business_state_b)
+    business_link_b_d.setPredecessorValue(business_state_b)
+    business_link_c_d.setPredecessorValue(business_state_c)
+    business_link_d_e.setPredecessorValue(business_state_d)
+    business_link_a_b.setSuccessorValue(business_state_b)
+    business_link_b_c.setSuccessorValue(business_state_c)
+    business_link_b_d.setSuccessorValue(business_state_d)
+    business_link_c_d.setSuccessorValue(business_state_d)
+    business_link_d_e.setSuccessorValue(business_state_e)
 
     business_process.edit(referential_date='stop_date')
-    business_path_a_b.edit(title='a_b', lead_time=2, wait_time=1)
-    business_path_b_c.edit(title='b_c', lead_time=2, wait_time=1)
-    business_path_b_d.edit(title='b_d', lead_time=3, wait_time=1)
-    business_path_c_d.edit(title='c_d', lead_time=3, wait_time=0)
-    business_path_d_e.edit(title='d_e', lead_time=4, wait_time=2)
+    business_link_a_b.edit(title='a_b', lead_time=2, wait_time=1)
+    business_link_b_c.edit(title='b_c', lead_time=2, wait_time=1)
+    business_link_b_d.edit(title='b_d', lead_time=3, wait_time=1)
+    business_link_c_d.edit(title='c_d', lead_time=3, wait_time=0)
+    business_link_d_e.edit(title='d_e', lead_time=4, wait_time=2)
 
     # root explanation
-    business_path_b_d.edit(deliverable=True)
+    business_link_b_d.edit(deliverable=True)
     self.stepTic()
 
     """
@@ -516,18 +516,18 @@ class TestBPMImplementation(TestBPMMixin):
     mock = Mock(base_date)
 
     # root explanation.
-    self.assertEquals(business_path_b_d.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
-    self.assertEquals(business_path_b_d.getExpectedStopDate(mock), DateTime('2009/04/04 GMT+9'))
+    self.assertEquals(business_link_b_d.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
+    self.assertEquals(business_link_b_d.getExpectedStopDate(mock), DateTime('2009/04/04 GMT+9'))
 
     # assertion for each path without root explanation.
-    self.assertEquals(business_path_a_b.getExpectedStartDate(mock), DateTime('2009/03/27 GMT+9'))
-    self.assertEquals(business_path_a_b.getExpectedStopDate(mock), DateTime('2009/03/29 GMT+9'))
-    self.assertEquals(business_path_b_c.getExpectedStartDate(mock), DateTime('2009/03/30 GMT+9'))
-    self.assertEquals(business_path_b_c.getExpectedStopDate(mock), DateTime('2009/04/01 GMT+9'))
-    self.assertEquals(business_path_c_d.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
-    self.assertEquals(business_path_c_d.getExpectedStopDate(mock), DateTime('2009/04/04 GMT+9'))
-    self.assertEquals(business_path_d_e.getExpectedStartDate(mock), DateTime('2009/04/06 GMT+9'))
-    self.assertEquals(business_path_d_e.getExpectedStopDate(mock), DateTime('2009/04/10 GMT+9'))
+    self.assertEquals(business_link_a_b.getExpectedStartDate(mock), DateTime('2009/03/27 GMT+9'))
+    self.assertEquals(business_link_a_b.getExpectedStopDate(mock), DateTime('2009/03/29 GMT+9'))
+    self.assertEquals(business_link_b_c.getExpectedStartDate(mock), DateTime('2009/03/30 GMT+9'))
+    self.assertEquals(business_link_b_c.getExpectedStopDate(mock), DateTime('2009/04/01 GMT+9'))
+    self.assertEquals(business_link_c_d.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
+    self.assertEquals(business_link_c_d.getExpectedStopDate(mock), DateTime('2009/04/04 GMT+9'))
+    self.assertEquals(business_link_d_e.getExpectedStartDate(mock), DateTime('2009/04/06 GMT+9'))
+    self.assertEquals(business_link_d_e.getExpectedStopDate(mock), DateTime('2009/04/10 GMT+9'))
 
     """
     Test of illegal case, lead time of reality and simulation are inconsistent,
@@ -536,11 +536,11 @@ class TestBPMImplementation(TestBPMMixin):
     How we know which is referential, currently implementation of it can be known by
     BusinessProcess.isStartDateReferential and BusinessProcess.isStopDateReferential.
 
-    In this test case, stop_date on business_path_b_d is referential, because business_path_b_d is
+    In this test case, stop_date on business_link_b_d is referential, because business_link_b_d is
     root explanation and business_process refer to stop_date as referential.
 
     calculation example(when referential date is 2009/04/06 GMT+9):
-    start_date of business_path_b_d = referential_date - 3(lead_time of business_path_b_d)
+    start_date of business_link_b_d = referential_date - 3(lead_time of business_link_b_d)
                                     = 2009/04/06 GMT+9 - 3
                                     = 2009/04/03 GMT+9
     """
@@ -555,19 +555,19 @@ class TestBPMImplementation(TestBPMMixin):
     base_date = DateTime('2009/04/01 GMT+9')
     mock = Mock(base_date)
 
-    self.assertEquals(business_path_b_d.getExpectedStartDate(mock), DateTime('2009/04/03 GMT+9'))
+    self.assertEquals(business_link_b_d.getExpectedStartDate(mock), DateTime('2009/04/03 GMT+9'))
     # This is base in this context, because referential_date is 'stop_date'
-    self.assertEquals(business_path_b_d.getExpectedStopDate(mock), DateTime('2009/04/06 GMT+9'))
+    self.assertEquals(business_link_b_d.getExpectedStopDate(mock), DateTime('2009/04/06 GMT+9'))
 
     # assertion for each path without root explanation.
-    self.assertEquals(business_path_a_b.getExpectedStartDate(mock), DateTime('2009/03/29 GMT+9'))
-    self.assertEquals(business_path_a_b.getExpectedStopDate(mock), DateTime('2009/03/31 GMT+9'))
-    self.assertEquals(business_path_b_c.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
-    self.assertEquals(business_path_b_c.getExpectedStopDate(mock), DateTime('2009/04/03 GMT+9'))
-    self.assertEquals(business_path_c_d.getExpectedStartDate(mock), DateTime('2009/04/03 GMT+9'))
-    self.assertEquals(business_path_c_d.getExpectedStopDate(mock), DateTime('2009/04/06 GMT+9'))
-    self.assertEquals(business_path_d_e.getExpectedStartDate(mock), DateTime('2009/04/08 GMT+9'))
-    self.assertEquals(business_path_d_e.getExpectedStopDate(mock), DateTime('2009/04/12 GMT+9'))
+    self.assertEquals(business_link_a_b.getExpectedStartDate(mock), DateTime('2009/03/29 GMT+9'))
+    self.assertEquals(business_link_a_b.getExpectedStopDate(mock), DateTime('2009/03/31 GMT+9'))
+    self.assertEquals(business_link_b_c.getExpectedStartDate(mock), DateTime('2009/04/01 GMT+9'))
+    self.assertEquals(business_link_b_c.getExpectedStopDate(mock), DateTime('2009/04/03 GMT+9'))
+    self.assertEquals(business_link_c_d.getExpectedStartDate(mock), DateTime('2009/04/03 GMT+9'))
+    self.assertEquals(business_link_c_d.getExpectedStopDate(mock), DateTime('2009/04/06 GMT+9'))
+    self.assertEquals(business_link_d_e.getExpectedStartDate(mock), DateTime('2009/04/08 GMT+9'))
+    self.assertEquals(business_link_d_e.getExpectedStopDate(mock), DateTime('2009/04/12 GMT+9'))
 
 class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
   def _createDelivery(self, **kw):
@@ -609,19 +609,19 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
 
     # path which is completed, as soon as related simulation movements are in
     # proper state
-    self.order_path = self.createBusinessPath(business_process,
+    self.order_path = self.createBusinessLink(business_process,
         successor_value = ordered,
         trade_phase='default/order',
         completed_state_list = self.completed_state_list,
         frozen_state_list = self.frozen_state_list)
 
-    self.delivery_path = self.createBusinessPath(business_process,
+    self.delivery_path = self.createBusinessLink(business_process,
         predecessor_value = ordered, successor_value = delivered,
         trade_phase='default/delivery',
         completed_state_list = self.completed_state_list,
         frozen_state_list = self.frozen_state_list)
 
-    self.invoice_path = self.createBusinessPath(business_process,
+    self.invoice_path = self.createBusinessLink(business_process,
         predecessor_value = delivered, successor_value = invoiced,
         trade_phase='default/invoicing')
     self.stepTic()
@@ -633,19 +633,19 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     delivered = category_tool.trade_state.delivered
     invoiced = category_tool.trade_state.invoiced
 
-    self.order_path = self.createBusinessPath(business_process,
+    self.order_path = self.createBusinessLink(business_process,
         successor_value = ordered,
         trade_phase='default/order',
         completed_state_list = self.completed_state_list,
         frozen_state_list = self.frozen_state_list)
 
-    self.invoice_path = self.createBusinessPath(business_process,
+    self.invoice_path = self.createBusinessLink(business_process,
         predecessor_value = ordered, successor_value = invoiced,
         trade_phase='default/invoicing',
         completed_state_list = self.completed_state_list,
         frozen_state_list = self.frozen_state_list)
 
-    self.delivery_path = self.createBusinessPath(business_process,
+    self.delivery_path = self.createBusinessLink(business_process,
         predecessor_value = invoiced, successor_value = delivered,
         trade_phase='default/delivery')
     self.stepTic()
@@ -769,7 +769,7 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEquals(invoicing_simulation_movement.isBuildable(), True)
     self.assertEquals(self.invoice_path.isBuildable(delivery), True)
 
-    # XXX look at comments in BusinessPath.isBuildable
+    # XXX look at comments in BusinessLink.isBuildable
     self.assertEquals(self.invoice_path.isBuildable(order), True)
 
     self.assertEquals(self.delivery_path.isBuildable(delivery), False)

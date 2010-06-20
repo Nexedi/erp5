@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: shift_jis -*-
 ##############################################################################
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Łukasz Nowak <luke@nexedi.com>
@@ -56,9 +56,9 @@ class TestTradeModelLineMixin(TestBPMMixin):
     sequence.edit(business_process=self.createBusinessProcess(
       title=self.id()))
 
-  def stepCreateBusinessPath(self, sequence=None, **kw):
+  def stepCreateBusinessLink(self, sequence=None, **kw):
     business_process = sequence.get('business_process')
-    sequence.edit(business_path=self.createBusinessPath(business_process))
+    sequence.edit(business_link=self.createBusinessLink(business_process))
 
 class TestTradeModelLine(TestTradeModelLineMixin):
   quiet = True
@@ -101,10 +101,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING = \
       COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
-              CreateBusinessPath
-              ModifyBusinessPathTaxing
-              CreateBusinessPath
-              ModifyBusinessPathDiscounting
+              CreateBusinessLink
+              ModifyBusinessLinkTaxing
+              CreateBusinessLink
+              ModifyBusinessLinkDiscounting
               CreateTradeCondition
               SpecialiseTradeConditionWithBusinessProcess
               CreateTradeModelLine
@@ -195,35 +195,35 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         portal_type='Trade Model Line',
         **kw)
 
-  def stepModifyBusinessPathDiscounting(self, sequence=None, **kw):
+  def stepModifyBusinessLinkDiscounting(self, sequence=None, **kw):
     category_tool = self.getCategoryTool()
     predecessor = category_tool.trade_state.invoiced
     successor = category_tool.trade_state.taxed
-    business_path = sequence.get('business_path')
+    business_link = sequence.get('business_link')
     self.assertNotEqual(None, predecessor)
     self.assertNotEqual(None, successor)
 
-    business_path.edit(
+    business_link.edit(
       predecessor_value = predecessor,
       successor_value = successor,
       trade_phase = 'default/discount'
     )
-    sequence.edit(business_path=None, business_path_discounting=business_path)
+    sequence.edit(business_link=None, business_link_discounting=business_link)
 
-  def stepModifyBusinessPathTaxing(self, sequence=None, **kw):
+  def stepModifyBusinessLinkTaxing(self, sequence=None, **kw):
     category_tool = self.getCategoryTool()
     predecessor = category_tool.trade_state.invoiced
     successor = category_tool.trade_state.taxed
-    business_path = sequence.get('business_path')
+    business_link = sequence.get('business_link')
     self.assertNotEqual(None, predecessor)
     self.assertNotEqual(None, successor)
 
-    business_path.edit(
+    business_link.edit(
       predecessor_value = predecessor,
       successor_value = successor,
       trade_phase = 'default/tax'
     )
-    sequence.edit(business_path=None, business_path_taxing=business_path)
+    sequence.edit(business_link=None, business_link_taxing=business_link)
 
   def stepAcceptDecisionQuantityInvoice(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
@@ -506,15 +506,15 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def stepCheckOrderLineDiscountedTaxedSimulation(self, sequence=None, **kw):
     order_line = sequence.get('order_line_discounted_taxed')
-    business_path_discounting = sequence.get('business_path_discounting')
-    business_path_taxing = sequence.get('business_path_taxing')
+    business_link_discounting = sequence.get('business_link_discounting')
+    business_link_taxing = sequence.get('business_link_taxing')
     price_currency = sequence.get('price_currency')
 
     service_tax = sequence.get('service_tax')
     service_discount = sequence.get('service_discount')
 
-    self.assertNotEqual(None, business_path_discounting)
-    self.assertNotEqual(None, business_path_taxing)
+    self.assertNotEqual(None, business_link_discounting)
+    self.assertNotEqual(None, business_link_taxing)
     self.assertNotEqual(None, price_currency)
 
     for trade_model_simulation_movement_list in \
@@ -537,7 +537,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       )
 
       self.assertEqual(
-        business_path_discounting,
+        business_link_discounting,
         trade_model_simulation_movement_discount_complex.getCausalityValue()
       )
 
@@ -578,7 +578,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       )
 
       self.assertEqual(
-        business_path_taxing,
+        business_link_taxing,
         trade_model_simulation_movement_tax_complex.getCausalityValue()
       )
 
@@ -606,15 +606,15 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def stepCheckOrderLineDiscountedSimulation(self, sequence=None, **kw):
     order_line = sequence.get('order_line_discounted')
-    business_path_discounting = sequence.get('business_path_discounting')
-    business_path_taxing = sequence.get('business_path_taxing')
+    business_link_discounting = sequence.get('business_link_discounting')
+    business_link_taxing = sequence.get('business_link_taxing')
     price_currency = sequence.get('price_currency')
 
     service_tax = sequence.get('service_tax')
     service_discount = sequence.get('service_discount')
 
-    self.assertNotEqual(None, business_path_discounting)
-    self.assertNotEqual(None, business_path_taxing)
+    self.assertNotEqual(None, business_link_discounting)
+    self.assertNotEqual(None, business_link_taxing)
     self.assertNotEqual(None, price_currency)
 
     for trade_model_simulation_movement_list in \
@@ -637,7 +637,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       )
 
       self.assertEqual(
-        business_path_discounting,
+        business_link_discounting,
         trade_model_simulation_movement_discount_only.getCausalityValue()
       )
 
@@ -671,7 +671,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
           trade_model_simulation_movement_tax_only.getTotalPrice())
 
       self.assertEqual(
-        business_path_taxing,
+        business_link_taxing,
         trade_model_simulation_movement_tax_only.getCausalityValue()
       )
 
@@ -700,9 +700,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def stepCheckOrderLineTaxedSimulation(self, sequence=None, **kw):
     order_line = sequence.get('order_line_taxed')
-    business_path = sequence.get('business_path_taxing')
+    business_link = sequence.get('business_link_taxing')
     price_currency = sequence.get('price_currency')
-    self.assertNotEqual(None, business_path)
+    self.assertNotEqual(None, business_link)
     self.assertNotEqual(None, price_currency)
     for trade_model_simulation_movement_list in \
         self.getTradeModelSimulationMovementList(order_line):
@@ -717,7 +717,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       )
 
       self.assertEqual(
-        business_path,
+        business_link,
         trade_model_simulation_movement.getCausalityValue()
       )
 
@@ -1447,10 +1447,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING = \
       COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
-              CreateBusinessPath
-              ModifyBusinessPathTaxing
-              CreateBusinessPath
-              ModifyBusinessPathDiscounting
+              CreateBusinessLink
+              ModifyBusinessLinkTaxing
+              CreateBusinessLink
+              ModifyBusinessLinkDiscounting
               CreateTradeCondition
               SpecialiseTradeConditionWithBusinessProcess
               CreateTradeModelLine
@@ -1876,10 +1876,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
-              CreateBusinessPath
-              ModifyBusinessPathTaxing
-              CreateBusinessPath
-              ModifyBusinessPathDiscounting
+              CreateBusinessLink
+              ModifyBusinessLinkTaxing
+              CreateBusinessLink
+              ModifyBusinessLinkDiscounting
               CreateTradeCondition
               SpecialiseTradeConditionWithBusinessProcess
               CreateTradeModelLine
@@ -1937,10 +1937,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence_list = SequenceList()
     sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
               CreateBusinessProcess
-              CreateBusinessPath
-              ModifyBusinessPathTaxing
-              CreateBusinessPath
-              ModifyBusinessPathDiscounting
+              CreateBusinessLink
+              ModifyBusinessLinkTaxing
+              CreateBusinessLink
+              ModifyBusinessLinkDiscounting
               CreateTradeCondition
               SpecialiseTradeConditionWithBusinessProcess
               CreateTradeModelLine
@@ -1970,7 +1970,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def test_BuildTradeModelLineAndAccountingFromOrder(self):
     business_process = self.createBusinessProcess()
-    business_path = self.createBusinessPath(business_process,
+    business_link = self.createBusinessLink(business_process,
                               trade_phase='default/tax')
 
     product = self.createResource('Product',
@@ -2070,7 +2070,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def test_BuildTradeModelLineAndAccountingFromInvoice(self):
     business_process = self.createBusinessProcess()
-    business_path = self.createBusinessPath(business_process,
+    business_link = self.createBusinessLink(business_process,
                               trade_phase='default/tax')
 
     product = self.createResource('Product',

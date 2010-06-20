@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: shift_jis -*-
 ##############################################################################
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #          Łukasz Nowak <luke@nexedi.com>
@@ -505,7 +505,7 @@ class TestBPMEvaluationDefaultProcessMixin:
         referential_date='start_date')
     self._setTradeStateList()
 
-    self.order_path = self.createBusinessPath(self.business_process,
+    self.order_path = self.createBusinessLink(self.business_process,
         successor_value=self.ordered_state,
         trade_phase='default/order',
         deliverable=1,
@@ -513,7 +513,7 @@ class TestBPMEvaluationDefaultProcessMixin:
         frozen_state_list=['confirmed'],
         )
 
-    self.delivery_path = self.createBusinessPath(self.business_process,
+    self.delivery_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.ordered_state,
         successor_value=self.delivered_state,
         trade_phase='default/delivery',
@@ -523,7 +523,7 @@ class TestBPMEvaluationDefaultProcessMixin:
         delivery_builder='portal_deliveries/bpm_sale_packing_list_builder',
         )
 
-    self.invoice_path = self.createBusinessPath(self.business_process,
+    self.invoice_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.delivered_state,
         successor_value=self.invoiced_state,
         completed_state_list=['delivered'],
@@ -531,14 +531,14 @@ class TestBPMEvaluationDefaultProcessMixin:
         delivery_builder='portal_deliveries/bpm_sale_invoice_builder',
         trade_phase='default/invoicing')
 
-    self.account_path = self.createBusinessPath(self.business_process,
+    self.account_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.invoiced_state,
         successor_value=self.accounted_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/accounting')
 
-    self.pay_path = self.createBusinessPath(self.business_process,
+    self.pay_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.invoiced_state,
         successor_value=self.accounted_state,
         completed_state_list=['delivered'],
@@ -553,7 +553,7 @@ class TestBPMEvaluationDifferentProcessMixin:
         referential_date='start_date')
     self._setTradeStateList()
 
-    self.order_path = self.createBusinessPath(self.business_process,
+    self.order_path = self.createBusinessLink(self.business_process,
         successor_value=self.ordered_state,
         trade_phase='default/order',
         deliverable=1,
@@ -561,28 +561,28 @@ class TestBPMEvaluationDifferentProcessMixin:
         frozen_state_list=['confirmed'],
         )
 
-    self.invoice_path = self.createBusinessPath(self.business_process,
+    self.invoice_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.ordered_state,
         successor_value=self.invoiced_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/invoicing')
 
-    self.account_path = self.createBusinessPath(self.business_process,
+    self.account_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.invoiced_state,
         successor_value=self.accounted_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/accounting')
 
-    self.pay_path = self.createBusinessPath(self.business_process,
+    self.pay_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.accounted_state,
         successor_value=self.paid_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/payment')
 
-    self.delivery_path = self.createBusinessPath(self.business_process,
+    self.delivery_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.paid_state,
         successor_value=self.delivered_state,
         trade_phase='default/delivery',

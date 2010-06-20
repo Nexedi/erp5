@@ -32,11 +32,35 @@ Products.ERP5.interfaces.business_process
 
 from zope.interface import Interface
 
-class IBusinessPathProcess(Interface):
-  """Business Path Process interface specification
+class ITradeModelPathProcess(Interface):
+  """
+  """
 
-  IBusinessPathProcess defines Business Process APIs related
-  to Business Path completion status and expected completion dates.
+  def getTradeModelPathValueList():
+    """
+    """
+
+  def getExpectedTradeModelPathStartAndStopDate(explanation, business_link,
+                                              delay_mode=None):
+    """Returns the expected start and stop dates of given Business Link
+    document in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
+
+    business_link -- a Business Link document
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
+    """
+
+
+
+class IBusinessLinkProcess(Interface):
+  """Business Link Process interface specification
+
+  IBusinessLinkProcess defines Business Process APIs related
+  to Business Link completion status and expected completion dates.
 
   IMPORTANT:
   - explanation implicitely defines a subtree of the simulation
@@ -52,17 +76,17 @@ class IBusinessPathProcess(Interface):
     parameters to be copied (this used to be done through rule 
     parameter in provivate method)
   - Is there a reason why trade_phase should be a list in
-    getBusinessPathValueList ? (for rules ?)
+    getBusinessLinkValueList ? (for rules ?)
   """
 
-  def getBusinessPathValueList(trade_phase=None, context=None,
+  def getBusinessLinkValueList(trade_phase=None, context=None,
                                predecessor=None, successor=None, **kw):
-    """Returns the list of contained Business Path documents
+    """Returns the list of contained Business Link documents
 
     trade_phase -- filter by trade phase
 
-    context -- a context to test each Business Path on
-               and filter out Business Path which do not match
+    context -- a context to test each Business Link on
+               and filter out Business Link which do not match
 
     predecessor -- filter by trade state predecessor
 
@@ -71,108 +95,95 @@ class IBusinessPathProcess(Interface):
     **kw -- same arguments as those passed to searchValues / contentValues
     """
 
-  def isBusinessPathCompleted(explanation, business_path):
-    """Returns True if given Business Path document
+  def isBusinessLinkCompleted(explanation, business_link):
+    """Returns True if given Business Link document
     is completed in the context of provided explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
-    business_path -- a Business Path document
+    business_link -- a Business Link document
     """
 
-  def isBusinessPathPartiallyCompleted(explanation, business_path):
-    """Returns True if given Business Path document
+  def isBusinessLinkPartiallyCompleted(explanation, business_link):
+    """Returns True if given Business Link document
     is partially completed in the context of provided explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
-    business_path -- a Business Path document
+    business_link -- a Business Link document
     """
 
-  def getExpectedBusinessPathCompletionDate(explanation, business_path, 
+  def getExpectedBusinessLinkCompletionDate(explanation, business_link, 
                                                        delay_mode=None):
-    """Returns the expected completion date of given Business Path document
+    """Returns the expected completion date of given Business Link document
     in the context of provided explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
-    business_path -- a Business Path document
+    business_link -- a Business Link document
 
     delay_mode -- optional value to specify calculation mode ('min', 'max')
                   if no value specified use average delay
     """
 
-  def getExpectedBusinessPathStartAndStopDate(explanation, business_path,
-                                              delay_mode=None):
-    """Returns the expected start and stop dates of given Business Path
-    document in the context of provided explanation.
 
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
+class IBuildableBusinessLinkProcess(Interface):
+  """Buildable Business Link Process interface specification
 
-    business_path -- a Business Path document
-
-    delay_mode -- optional value to specify calculation mode ('min', 'max')
-                  if no value specified use average delay
-    """
-
-class IBuildableBusinessPathProcess(Interface):
-  """Buildable Business Path Process interface specification
-
-  IBuildableBusinessPathProcess defines an API to build
+  IBuildableBusinessLinkProcess defines an API to build
   simulation movements related to business pathj in the context
   of a given explanation.
   """
 
-  def getBuildableBusinessPathValueList(explanation):
-    """Returns the list of Business Path which are buildable
+  def getBuildableBusinessLinkValueList(explanation):
+    """Returns the list of Business Link which are buildable
     by taking into account trade state dependencies between
-    Business Path.
+    Business Link.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
     """
 
-  def getPartiallyBuildableBusinessPathValueList(explanation):
-    """Returns the list of Business Path which are partially buildable
+  def getPartiallyBuildableBusinessLinkValueList(explanation):
+    """Returns the list of Business Link which are partially buildable
     by taking into account trade state dependencies between
-    Business Path.
+    Business Link.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
     """
 
-  def isBusinessPathBuildable(explanation, business_path):
+  def isBusinessLinkBuildable(explanation, business_link):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor trade state is completed.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
-    business_path -- a Business Path document
+    business_link -- a Business Link document
     """
 
-  def isBusinessPatPartiallyBuildable(explanation, business_path):
+  def isBusinessPatPartiallyBuildable(explanation, business_link):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor trade state is partially completed.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
-    business_path -- a Business Path document
+    business_link -- a Business Link document
     """
 
   def isBuildable(explanation):
     """Returns True is this business process has at least one
-    Business Path which is buildable
+    Business Link which is buildable
     """
 
   def isPartiallyBuildable(explanation):
     """Returns True is this business process has at least one
-    Business Path which is partially buildable
+    Business Link which is partially buildable
     """
 
 class ITradeStateProcess(Interface):
@@ -192,7 +203,7 @@ class ITradeStateProcess(Interface):
   def getTradeStateList():
     """Returns list of all trade_state of this Business Process
     by looking at successor and predecessor values of contained
-    Business Path.
+    Business Link.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
@@ -200,14 +211,14 @@ class ITradeStateProcess(Interface):
 
   def isInitialTradeState(trade_state):
     """Returns True if given 'trade_state' has no successor related
-    Business Path.
+    Business Link.
 
     trade_state -- a Trade State category
     """
 
   def isFinalTradeState(trade_state):
     """Returns True if given 'trade_state' has no predecessor related
-    Business Path.
+    Business Link.
 
     trade_state -- a Trade State category
     """
@@ -323,7 +334,7 @@ class ITradePhaseProcess(Interface):
 
   def getTradePhaseList():
     """Returns list of all trade_phase of this Business Process
-    by looking at trade_phase values of contained Business Path.
+    by looking at trade_phase values of contained Business Link.
     """
 
   def getCompletedTradePhaseList(explanation):
@@ -379,7 +390,7 @@ class ITradePhaseProcess(Interface):
                   if no value specified use average delay
     """
 
-  def getRemainingTradePhaseList(business_path, trade_phase_list=None):
+  def getRemainingTradePhaseList(business_link, trade_phase_list=None):
     """Returns the list of remaining trade phases which to be achieved
     as part of a business process. This list is calculated by analysing 
     the graph of business path and trade states, starting from a given
@@ -387,14 +398,14 @@ class ITradePhaseProcess(Interface):
     method is useful mostly for production and MRP to manage a distributed
     supply and production chain.
 
-    business_path -- a Business Path document
+    business_link -- a Business Link document
 
     trade_phase_list -- if provided, the result is filtered by it after
                         being collected - ???? useful ? XXX-JPS ?
 
     NOTE: explanation is not involved here because we consider here that
     self is the result of asUnionBusinessProcess and thus only contains
-    applicable Business Path to a given simulation subtree. Since the list
+    applicable Business Link to a given simulation subtree. Since the list
     of remaining trade phases does not depend on exact values in the
     simulation, we did not include the explanation. However, this makes the
     API less uniform.
@@ -402,7 +413,7 @@ class ITradePhaseProcess(Interface):
 
   def getTradePhaseMovementList(explanation, amount, trade_phase=None, delay_mode=None):
     """Returns a list of movement with appropriate arrow and dates,
-    based on the Business Path definitions, provided 'amount' and optional
+    based on the Business Link definitions, provided 'amount' and optional
     trade phases. If no trade_phase is provided, the trade_phase defined
     on the Amount is used instead.
     
@@ -417,7 +428,7 @@ class ITradePhaseProcess(Interface):
                   if no value specified use average delay
     """
 
-class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
+class IBusinessProcess(ITradeModelPathProcess, IBusinessLinkProcess, IBuildableBusinessLinkProcess,
                        ITradeStateProcess, ITradePhaseProcess, ):
   """Business Process interface specification.
 
@@ -435,7 +446,7 @@ class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
     """
 
   def isBuildable(explanation):
-    """Returns True is one Business Path of this Business Process
+    """Returns True is one Business Link of this Business Process
     is buildable in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -443,7 +454,7 @@ class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
     """
 
   def isPartiallyBuildable(explanation):
-    """Returns True is one Business Path of this Business Process
+    """Returns True is one Business Link of this Business Process
     is partially buildable in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -468,3 +479,5 @@ class IBusinessProcess(IBusinessPathProcess, IBuildableBusinessPathProcess,
                                    buildable business path. Else
                                    only build strictly buildable path.
     """
+
+

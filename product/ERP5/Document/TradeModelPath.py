@@ -40,11 +40,11 @@ import zope.interface
 
 from zLOG import LOG
 
-class BusinessPath(Path, Predicate):
+class TradeModelPath(Path, Predicate):
   """
-    The BusinessPath class embeds all information related to
+    The TradeModelPath class embeds all information related to
     lead times and parties involved at a given phase of a business
-    process. BusinessPath are also the most common way to trigger
+    process. TradeModelPath are also the most common way to trigger
     the build deliveries from buildable movements.
 
     The idea is to invoke isBuildable() on the collected simulation
@@ -53,8 +53,10 @@ class BusinessPath(Path, Predicate):
     Here is the typical code of an alarm in charge of the building process::
 
       builder = portal_deliveries.a_delivery_builder
-      for business_path in builder.getDeliveryBuilderRelatedValueList():
-        builder.build(causality_uid=business_path.getUid(),) # Select movements
+      for trade_model_path in builder.getDeliveryBuilderRelatedValueList():
+        builder.build(causality_uid=trade_model_path.getUid(),) # Select movements
+
+    WRONG - too slow
 
       Pros: global select is possible by not providing a causality_uid
       Cons: global select retrieves long lists of orphan movements which
@@ -67,8 +69,8 @@ class BusinessPath(Path, Predicate):
     - _getExplanationRelatedMovementValueList may be superfluous. Make
       sure it is really needed
   """
-  meta_type = 'ERP5 Business Path'
-  portal_type = 'Business Path'
+  meta_type = 'ERP5 Trade Model Path'
+  portal_type = 'Trade Model Path'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -86,7 +88,7 @@ class BusinessPath(Path, Predicate):
                     , PropertySheet.Amount
                     , PropertySheet.Chain # XXX-JPS Why N
                     , PropertySheet.SortIndex
-                    , PropertySheet.BusinessPath
+                    , PropertySheet.TradeModelPath
                     , PropertySheet.FlowCapacity
                     , PropertySheet.Reference
                     , PropertySheet.PaymentCondition # XXX-JPS must be renames some day
@@ -95,18 +97,18 @@ class BusinessPath(Path, Predicate):
   # Declarative interfaces
   zope.interface.implements(interfaces.ICategoryAccessProvider,
                             interfaces.IArrowBase,
-                            interfaces.IBusinessPath,
+                            interfaces.ITradeModelPath,
                             interfaces.IPredicate,
                             )
 
   # Helper Methods
   def _getExplanationRelatedSimulationMovementValueList(self, explanation):
     explanation_cache = _getExplanationCache(explanation)
-    return explanation_cache.getBusinessPathRelatedSimulationMovementValueList(self)
+    return explanation_cache.getTradeModelPathRelatedSimulationMovementValueList(self)
 
   def _getExplanationRelatedMovementValueList(self, explanation):
     explanation_cache = _getExplanationCache(explanation)
-    return explanation_cache.getBusinessPathRelatedMovementValueList(self)
+    return explanation_cache.getTradeModelPathRelatedMovementValueList(self)
 
   # IArrowBase implementation
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -176,7 +178,7 @@ class BusinessPath(Path, Predicate):
   def _getCategoryMembershipList(self, category, **kw):
     """
       Overridden in order to take into account dynamic arrow categories in case if no static
-      categories are set on Business Path
+      categories are set on Trade Model Path
     """
     context = kw.pop('context')
     result = Path._getCategoryMembershipList(self, category, **kw)
@@ -191,7 +193,7 @@ class BusinessPath(Path, Predicate):
   def _getAcquiredCategoryMembershipList(self, category, **kw):
     """
       Overridden in order to take into account dynamic arrow categories in case if no static
-      categories are set on Business Path
+      categories are set on Trade Model Path
     """
     context = kw.pop('context', None)
     result = Path._getAcquiredCategoryMembershipList(self, category, **kw)
@@ -237,46 +239,6 @@ class BusinessPath(Path, Predicate):
       method = getattr(self, method_id)
       return method(context)
     return []
-
-  # IBusinessPath implementation
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                            'getMovementCompletionDate')
-  def getMovementCompletionDate(self, movement):
-    """Returns the date of completion of the movemnet 
-    based on paremeters of the business path. This complete date can be
-    the start date, the stop date, the date of a given workflow transition
-    on the explaining delivery, etc.
-
-    movement -- a Simulation Movement
-    """
-    method_id = self.getCompletionDateMethodId()
-    method = getattr(movement, method_id) # We wish to raise if it does not exist
-    return method()
-
-  def getCompletionDate(self, explanation):
-    """Returns the date of completion of business path in the
-    context of the explanation. The completion date of the Business 
-    Path is the max date of all simulation movements which are
-    related to the Business Path and which are part of the explanation.
-
-    explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
-                   business process.
-    """
-    date_list = []
-
-    # First, let us try to find simulation movements in simulation
-    # (hoping that it is already built)
-    for movement in self._getExplanationRelatedSimulationMovementValueList(explanation):
-      date_list.append(self.getMovementCompletionDate(movement))
-
-    # Next, try to find delivery lines or cells which may provide
-    # a good definition of completion date.
-    if not date_list:
-      for movement in self._getExplanationRelatedMovementValueList(explanation):
-        date_list.append(self.getMovementCompletionDate(movement))
-
-    return max(date_list)
   
   security.declareProtected(Permissions.AccessContentsInformation,
                                             'getExpectedQuantity')
@@ -294,110 +256,3 @@ class BusinessPath(Path, Predicate):
       return amount.getQuantity() * self.getEfficiency()
     else:
       return amount.getQuantity()
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isCompleted')
-  def isCompleted(self, explanation):
-    """returns True if all related simulation movements for this explanation
-    document are in a simulation state which is considered as completed
-    according to the configuration of the current business path.
-    Completed means that it is possible to move to next step
-    of Business Process. This method does not check however whether previous
-    trade states of a given business process are completed or not.
-    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
-
-    explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
-                   business process.
-
-    NOTE: simulation movements can be completed (ex. in 'started' state) but
-    not yet frozen (ex. in 'delivered' state).
-    """
-    acceptable_state_list = self.getCompletedStateList()
-    for movement in self._getExplanationRelatedSimulationMovementValueList(
-                                                                explanation):
-      if movement.getSimulationState() not in acceptable_state_list:
-        return False
-    return True
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isPartiallyCompleted')
-  def isPartiallyCompleted(self, explanation):
-    """returns True if some related simulation movements for this explanation
-    document are in a simulation state which is considered as completed
-    according to the configuration of the current business path.
-    Completed means that it is possible to move to next step
-    of Business Process. This method does not check however whether previous
-    trade states of a given business process are completed or not.
-    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
-
-    explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
-                   business process.
-    """
-    acceptable_state_list = self.getCompletedStateList()
-    for movement in self._getExplanationRelatedSimulationMovementValueList(
-                                                                explanation):
-      if movement.getSimulationState() in acceptable_state_list:
-        return True
-    return False
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'isFrozen')
-  def isFrozen(self, explanation):
-    """returns True if all related simulation movements for this explanation
-    document are in a simulation state which is considered as frozen
-    according to the configuration of the current business path.
-    Frozen means that simulation movement cannot be modified.
-    This method does not check however whether previous
-    trade states of a given business process are completed or not.
-    Use instead IBusinessPathProcess.isBusinessPathCompleted for this purpose.
-
-    explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
-                   business process.
-
-    NOTE: simulation movements can be frozen (ex. in 'stopped' state) but
-    not yet completed (ex. in 'delivered' state).
-    """
-    acceptable_state_list = self.getFrozenStateList()
-    movement_list = self._getExplanationRelatedSimulationMovementValueList(
-                                                                explanation)
-    if not movement_list:
-      return False # Frozen is True only if some delivered movements exist
-    for movement in movement_list:
-      if movement.getDelivery() and movement.getSimulationState() not in acceptable_state_list: # XXX-JPS is it acceptable optimizatoin ?
-        return False
-    return True
-
-  def isDelivered(self, explanation):
-    """Returns True is all simulation movements related to this
-    Business Path in the context of given explanation are built
-    and related to a delivery through the 'delivery' category.
-
-    explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
-                   business process.
-    """
-    for simulation_movement in self._getExplanationRelatedSimulationMovementValueList(
-        explanation):
-      if not simulation_movement.getDelivery():
-        return False
-    return True
-
-  def build(self, explanation):
-    """Builds all related movements in the simulation using the builders
-    defined on the Business Path.
-
-    explanation -- the Order, Order Line, Delivery or Delivery Line which
-                   implicitely defines a simulation subtree and a union 
-                   business process.
-    """
-    builder_list = self.getDeliveryBuilderValueList()
-    explanation_cache = _getExplanationCache(explanation)
-    for builder in builder_list:
-      # Call build on each builder
-      # Provide 2 parameters: self and and explanation_cache
-      builder.build(select_method_dict={
-        'business_path': self,
-        'explanation_cache': explanation_cache,
-      })

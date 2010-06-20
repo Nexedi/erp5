@@ -776,24 +776,6 @@ class ERP5Site(FolderMixIn, CMFSite):
            self._getPortalConfiguration('portal_supply_path_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBusinessProcessTypeList')
-  def getPortalBusinessProcessTypeList(self):
-    """
-      Return business process types.
-    """
-    return self._getPortalGroupedTypeList('business_process') or \
-           self._getPortalConfiguration('portal_business_process_type_list')
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBusinessPathTypeList')
-  def getPortalBusinessPathTypeList(self):
-    """
-      Return business path types.
-    """
-    return self._getPortalGroupedTypeList('business_path') or \
-           self._getPortalConfiguration('portal_business_path_type_list')
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalAcquisitionMovementTypeList')
   def getPortalAcquisitionMovementTypeList(self):
     """
@@ -1141,13 +1123,22 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     return self._getPortalGroupedTypeList('business_process')
 
+
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBusinessPathTypeList')
-  def getPortalBusinessPathTypeList(self):
+                            'getPortalBusinessLinkTypeList')
+  def getPortalBusinessLinkTypeList(self):
     """
-    Return amount generator line types.
+      Return business link types.
     """
-    return self._getPortalGroupedTypeList('business_path')
+    return self._getPortalGroupedTypeList('business_link')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalTradeModelPathTypeList')
+  def getPortalTradeModelPathTypeList(self):
+    """
+      Return trade model path types.
+    """
+    return self._getPortalGroupedTypeList('trade_model_path')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCalendarPeriodTypeList')
