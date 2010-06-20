@@ -265,7 +265,7 @@ form#main_form div#wrapper_header fieldset.widget hr{\n
 form#main_form div#wrapper_header fieldset.widget ul.onleft {\n
   list-style: none;\n
   padding: 5px;\n
-  margin: 20px 0 0 5px;\n
+  margin: 20px 0 0 45px;\n
   /*background: white;*/\n
   /*background: #fff url(erp5-website-field.png) top repeat-x;*/\n
   background: white url(img/title_gradient_bar.gif) right repeat-y; \n

@@ -1,3 +1,7 @@
+2010-06-20 mayoro
+*adjust left margin for status displaying
+* remove some specific files in img and clean up page templates
+
 2010-06-18 mayoro
 * add script to generate security from entity
 
