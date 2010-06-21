@@ -1,4 +1,7 @@
 2010-06-21 mohamadou
+* update EgovSecurity  to set security for Anonymous only if there is no authentification and no subscription
+
+2010-06-21 mohamadou
 * update generatePortalType to use good role category for role information definition
 * add publication_section category if procedure needs subscription
 

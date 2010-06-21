@@ -155,9 +155,10 @@ def setPermissionsOnEGovModule(self, portal_type_object):
   # assume anonymous role can access and add
   if portal_type_object is not None:
     step_authentication =  portal_type_object.getStepAuthentication()
+    step_subscription =  portal_type_object.getStepSubscription()
   self.manage_acquiredPermissions(aquired_permission_list)
   for (role, permission_list) in role_permission_dict.items():
-    if role == "Anonymous" and not step_authentication:
+    if role == "Anonymous" and not step_authentication and not step_subscription:
       self.manage_role(role_to_manage=role, permissions=permission_list)
     elif role != "Anonymous":
       self.manage_role(role_to_manage=role, permissions=permission_list)
