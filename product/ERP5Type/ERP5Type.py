@@ -244,6 +244,7 @@ class ERP5TypeInformation(XMLObject,
       'delivery', 'delivery_movement',
       'order', 'order_movement',
       'container', 'container_line',
+      'inventory',
       # Different Aspects
       'sale', 'purchase', 'internal',
       # PDM
