@@ -1,4 +1,7 @@
 2010-06-21 mohamadou
+*add external methods to use the new extension
+- setUpInstance to set up all egov instance
+- enableProcedureLogin to enable some procedure such as Subscription Form to log in.
 * add SetUpEGovInstance Extension, to use Egov User and Group Manager and to enable some procedure log in.
 
 2010-06-21 mohamadou
