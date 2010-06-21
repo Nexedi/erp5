@@ -220,7 +220,7 @@ from Acquisition import aq_base
 
 portal_name = 'erp5_portal'
 
-# we keep a reference to all sites for wich setup failed the first time, to
+# we keep a reference to all sites for which setup failed the first time, to
 # prevent replaying the same failing setup step for each test.
 failed_portal_installation = {}
 
@@ -1181,7 +1181,7 @@ class ERP5ReportTestCase(ERP5TypeTestCase):
 
 def dummy_setUp(self):
   '''
-  This one is overloaded so that it dos not execute beforeSetUp and afterSetUp
+  This one is overloaded so that it does not execute beforeSetUp and afterSetUp
   from the original tests, which would write to the FileStorage when --save is
   enabled
   '''
@@ -1196,7 +1196,7 @@ def dummy_setUp(self):
 
 def dummy_tearDown(self):
   '''
-  This one is overloaded so that it dos not execute beforeTearDown from
+  This one is overloaded so that it does not execute beforeTearDown from
   the original tests, which would write to the FileStorage when --save
   is enabled
   '''
