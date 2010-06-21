@@ -29,9 +29,10 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
-class SolverTypeInformation(ERP5TypeInformation):
+class SolverTypeInformation(Predicate, ERP5TypeInformation):
   """
     EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
 
