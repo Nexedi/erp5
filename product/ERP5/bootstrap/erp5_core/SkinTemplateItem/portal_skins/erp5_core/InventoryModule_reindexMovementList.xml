@@ -53,36 +53,36 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# look in the catalog to all inventory movement sort on date\n
-count = 1\n
+            <value> <string># Inventory requires reindexing when older movements become available, because\n
+# inventory generates deltas against the past stock, using a catalog. It is only\n
+# necessary to reindex Inventory documents instead of Inventory movements, because\n
+# Inventory reindexes its movements in a special way to the stock table by itself.\n
+#\n
+# FIXME: I think it would be better to replace this script with a good interactor\n
+# which reindexes future inventory documents.\n
 \n
+previous_tag = None\n
 portal = context.getPortalObject()\n
 \n
-# We have to reindex all inventory in the order of the date\n
-for o in [ x.getObject() for x in portal.portal_catalog(\n
-                                     portal_type = portal.getPortalInventoryMovementTypeList()\n
-                                   , limit       = None\n
-                                   , sort_on     = [(\'movement.start_date\',\'ascending\')]\n
-                                   , sql_catalog_id = sql_catalog_id\n
-                                   )\n
-]:\n
-  activate_kw = {\n
-    \'tag\': \'inventory_%i\' % (count+1),\n
-    \'after_tag\': \'inventory_%i\' % count,\n
-    \'passive_commit\': passive_commit,\n
-  }\n
-  o.reindexObject(activate_kw=activate_kw, sql_catalog_id=sql_catalog_id)\n
-  count += 1\n
+# We have to reindex all inventory documents in the order of the dates.\n
+# Uids are used to make the ordering consistent, even when multiple documents have\n
+# the same date.\n
+for inventory in portal.portal_catalog(portal_type=portal.getPortalInventoryTypeList(),\n
+                                       limit=None,\n
+                                       sort_on=[(\'delivery.start_date\', \'ascending\'), (\'uid\', \'ascending\')],\n
+                                       sql_catalog_id=sql_catalog_id):\n
+  inventory = inventory.getObject()\n
+  tag = \'inventory_%i\' % inventory.getUid()\n
+  activate_kw = dict(tag=tag, passive_commit=passive_commit)\n
+  if previous_tag is not None:\n
+    activate_kw[\'after_tag\'] = previous_tag\n
+  previous_tag = tag\n
+  inventory.reindexObject(activate_kw=activate_kw, sql_catalog_id=sql_catalog_id)\n
 \n
-if final_activity_tag is not None and count > 1:\n
+if final_activity_tag is not None and previous_tag is not None:\n
   # Dummy activity used to determine if the previously started activities are over.\n
-  context.activate(tag=final_activity_tag\n
-                  ,after_tag=\'inventory_%i\' % (count - 1, )).getId()\n
-
-
-]]></string> </value>
+  context.activate(tag=final_activity_tag, after_tag=previous_tag).getId()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -122,18 +122,17 @@ if final_activity_tag is not None and count > 1:\n
                             <string>passive_commit</string>
                             <string>final_activity_tag</string>
                             <string>kw</string>
-                            <string>count</string>
+                            <string>None</string>
+                            <string>previous_tag</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
                             <string>_getiter_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>None</string>
-                            <string>x</string>
-                            <string>o</string>
+                            <string>inventory</string>
+                            <string>tag</string>
+                            <string>dict</string>
                             <string>activate_kw</string>
-                            <string>_inplacevar_</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
