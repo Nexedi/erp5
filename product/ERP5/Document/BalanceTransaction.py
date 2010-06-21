@@ -183,6 +183,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    resource_uid=resource_uid,
+                   relative_url=movement.getRelativeUrl(),
+                   uid=movement.getUid(),
                    quantity=inventory.total_quantity,
                    total_price=inventory.total_price, ))
     
@@ -211,6 +213,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    source_section_uid=mirror_section_uid,
+                   relative_url=movement.getRelativeUrl(),
+                   uid=movement.getUid(),
                    resource_uid=resource_uid,
                    quantity=inventory.total_quantity,
                    total_price=inventory.total_price, ))
@@ -240,6 +244,8 @@ class BalanceTransaction(AccountingTransaction, Inventory):
               dict(destination_uid=node_uid,
                    destination_section_uid=section_uid,
                    destination_payment_uid=payment_uid,
+                   relative_url=movement.getRelativeUrl(),
+                   uid=movement.getUid(),
                    resource_uid=resource_uid,
                    quantity=inventory.total_quantity,
                    total_price=inventory.total_price, ))

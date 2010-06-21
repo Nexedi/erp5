@@ -1333,6 +1333,11 @@ class TestClosingPeriod(AccountingTestCase):
       "SELECT date FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
 
+    # we can reindex again
+    balance_transaction.reindexObject()
+    transaction.commit()
+    self.tic()
+
 
   def test_createBalanceOnMirrorSectionMultiCurrencySameMirrorSection(self):
     pl = self.portal.account_module.newContent(
@@ -1465,6 +1470,11 @@ class TestClosingPeriod(AccountingTestCase):
       "SELECT date FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
 
+    # we can reindex again
+    balance_transaction.reindexObject()
+    transaction.commit()
+    self.tic()
+
 
   def test_AccountingPeriodWorkflow(self):
     """Tests that accounting_period_workflow creates a balance transaction.
@@ -1588,6 +1598,11 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(2, len(section_balance_transaction.getMovementList()))
     self.assertEquals([], section_balance_transaction.checkConsistency())
 
+    transaction.commit()
+    self.tic()
+    # we can reindex again
+    main_section_balance_transaction.reindexObject()
+    section_balance_transaction.reindexObject()
     transaction.commit()
     self.tic()
 
@@ -1731,7 +1746,12 @@ class TestClosingPeriod(AccountingTestCase):
           if m.getDestinationValue() == self.account_module.stocks]
     self.assertEquals(1, len(stock_movement_list))
     self.assertEquals(500, stock_movement_list[0].getDestinationCredit())
-    
+
+    transaction.commit()
+    self.tic()
+    balance_transaction.reindexObject()
+    transaction.commit()
+    self.tic()
 
   def test_InventoryIndexingNodeAndMirrorSection(self):
     # Balance Transactions are indexed as Inventories.
@@ -1794,6 +1814,11 @@ class TestClosingPeriod(AccountingTestCase):
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
 
+    # we can reindex again
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
+
   def test_InventoryIndexingNodeDiffOnNode(self):
     # Balance Transactions are indexed as Inventories.
     transaction1 = self._makeOne(
@@ -1836,6 +1861,10 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(-90, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
+    # we can reindex again
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
 
   def test_IndexingBalanceTransactionLinesWithSameNodes(self):
     # Indexes balance transaction without any previous inventory.
@@ -1877,19 +1906,35 @@ class TestClosingPeriod(AccountingTestCase):
                               mirror_section_uid=self.organisation_module\
                                                     .client_2.getUid(),
                               node_uid=node_uid))
+    # we can reindex again
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
     
-
   def test_BalanceTransactionLineBrainGetObject(self):
     # Balance Transaction Line can be retrieved using Brain.getObject
+    existing_transaction = self._makeOne(
+               start_date=DateTime(2006, 1, 31),
+               portal_type='Sale Invoice Transaction',
+               simulation_state='delivered',
+               lines=(dict(source_value=self.account_module.receivable,
+                           source_debit=30),
+                      dict(source_value=self.account_module.goods_sales,
+                           source_credit=30)))
+
     balance = self.accounting_module.newContent(
                           portal_type='Balance Transaction',
+                          id='different_from_line',
                           destination_section_value=self.section,
                           start_date=DateTime(2006, 12, 31),
                           resource_value=self.currency_module.euro,)
+    # this line already exists in stock table, only the difference will be
+    # indexed
     balance_line = balance.newContent(
                 portal_type='Balance Transaction Line',
                 destination_value=self.account_module.receivable,
                 destination_debit=100,)
+    # this line does not already exist
     balance_line2 = balance.newContent(
                 portal_type='Balance Transaction Line',
                 destination_value=self.account_module.payable,
@@ -1907,10 +1952,12 @@ class TestClosingPeriod(AccountingTestCase):
     # there is one line in getMovementHistoryList:
     mvt_history_list = stool.getMovementHistoryList(
                               section_uid=self.section.getUid(),
-                              node_uid=node_uid)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(mvt_history_list[0].getObject(),
+                              node_uid=node_uid,
+                              sort_on=(('date', 'ASC'), ))
+    self.assertEquals(2, len(mvt_history_list))
+    self.assertEquals(mvt_history_list[1].getObject(),
                       balance_line)
+    self.assertEquals([30, 70], [b.total_price for b in mvt_history_list])
 
     # There is also one line on payable account
     node_uid = self.account_module.payable.getUid()
@@ -1921,6 +1968,81 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(mvt_history_list[0].getObject(),
                       balance_line2)
 
+    # we can reindex again
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
+
+  def test_BalanceTransactionLineBrainGetObjectDifferentThirdParties(self):
+    # Balance Transaction Line can be retrieved using Brain.getObject, when
+    # the balance is for different third parties
+    existing_transaction = self._makeOne(
+               start_date=DateTime(2006, 1, 30),
+               portal_type='Sale Invoice Transaction',
+               simulation_state='delivered',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           source_debit=30),
+                      dict(source_value=self.account_module.goods_sales,
+                           source_credit=30)))
+    another_existing_transaction = self._makeOne(
+               start_date=DateTime(2006, 1, 31),
+               portal_type='Sale Invoice Transaction',
+               simulation_state='delivered',
+               destination_section_value=self.organisation_module.client_2,
+               lines=(dict(source_value=self.account_module.receivable,
+                           source_debit=40),
+                      dict(source_value=self.account_module.goods_sales,
+                           source_credit=40)))
+
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          id='different_from_line',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2006, 12, 31),
+                          resource_value=self.currency_module.euro,)
+    
+    balance_line = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.receivable,
+                source_section_value=self.organisation_module.client_2,
+                destination_debit=100,)
+    balance_line2 = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.payable,
+                destination_credit=100,)
+    balance.stop()
+    transaction.commit()
+    self.tic()
+    
+    stool = self.portal.portal_simulation
+    # the account 'receivable' has a balance of 100 + 30
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(130, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid,))
+    # there is one line in getMovementHistoryList:
+    mvt_history_list = stool.getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid,
+                              sort_on=(('date', 'ASC'), ))
+    self.assertEquals(3, len(mvt_history_list))
+    self.assertEquals(mvt_history_list[2].getObject(),
+                      balance_line)
+    self.assertEquals([30, 40, 60], [b.total_price for b in mvt_history_list])
+
+    # There is also one line on payable account
+    node_uid = self.account_module.payable.getUid()
+    mvt_history_list = stool.getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(mvt_history_list[0].getObject(),
+                      balance_line2)
+
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
 
   def test_BalanceTransactionDate(self):
     # check that dates are correctly used for Balance Transaction indexing
