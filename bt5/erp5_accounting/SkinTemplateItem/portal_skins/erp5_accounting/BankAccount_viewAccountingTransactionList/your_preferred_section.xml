@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>bank_account</string> </value>
+            <value> <string>your_preferred_section</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -242,7 +242,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Bank Account</string> </value>
+                    <value> <string>Section Category</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -276,7 +276,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/title</string> </value>
+            <value> <string>python: here.portal_categories.resolveCategory(here.portal_preferences.getPreferredAccountingTransactionSectionCategory()).getTitle()</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -75,7 +75,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>preferred_warning</string>
+                        <string>your_preferred_warning</string>
                       </list>
                     </value>
                 </item>
@@ -83,9 +83,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>bank_account</string>
-                        <string>preferred_from_date</string>
-                        <string>preferred_at_date</string>
+                        <string>your_bank_account</string>
+                        <string>your_preferred_from_date</string>
+                        <string>your_preferred_at_date</string>
                       </list>
                     </value>
                 </item>
@@ -93,8 +93,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>preferred_section</string>
-                        <string>preferred_simulation_state</string>
+                        <string>your_preferred_section</string>
+                        <string>your_preferred_simulation_state</string>
                       </list>
                     </value>
                 </item>
