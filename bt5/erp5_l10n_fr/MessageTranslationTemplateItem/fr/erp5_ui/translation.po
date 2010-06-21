@@ -560,6 +560,9 @@ msgstr "Prendre en compte l'évènement"
 msgid "Acknowledge Event [transition in event_workflow]"
 msgstr "Prendre en compte l'évènement"
 
+msgid "Acknowledgeable Messages"
+msgstr "Messages du système"
+
 msgid "Acknowledged"
 msgstr "Pris en compte"
 
@@ -1324,6 +1327,9 @@ msgstr ""
 "Le compte en banque ${bank_account_reference} utilise la devise "
 "${bank_account_currency}."
 
+msgid "Bank Account Holder Name"
+msgstr "Titulaire du compte"
+
 msgid "Bank Account Key"
 msgstr "Clé R.I.B."
 
@@ -1514,6 +1520,9 @@ msgstr "Variation de budget"
 
 msgid "Budget Variations"
 msgstr "Variations de budget"
+
+msgid "Budget Workflow"
+msgstr "Workflow des budgets"
 
 msgid "Budget title"
 msgstr "Intitule du budget"
@@ -3182,11 +3191,11 @@ msgstr "Devise de la comptabilité par défaut"
 msgid "Default Address"
 msgstr "Adresse principale"
 
-msgid "Default Career"
-msgstr "Étape de carrière principale"
-
 msgid "Default Calculation Script"
 msgstr "Script de calcul par défaut"
+
+msgid "Default Career"
+msgstr "Étape de carrière principale"
 
 msgid "Default Classification"
 msgstr "Classification préférée"
@@ -3951,6 +3960,9 @@ msgstr "Le document a été supprimé par un utilisateur."
 
 msgid "Documents to Review"
 msgstr "Documents à voir"
+
+msgid "Documents to Submit"
+msgstr "Documents à soumettre"
 
 msgid "Domain"
 msgstr "Domaine"
@@ -4775,6 +4787,9 @@ msgstr "Rapport fiscal"
 msgid "Flat List"
 msgstr "Tout"
 
+msgid "Float Quantity Style"
+msgstr "Affichage des valeurs numériques"
+
 msgid "Flow Capacity (obsolete - use Supply Line)"
 msgstr "Liquidités (obsolète - utiliser lignes de livraison)"
 
@@ -4875,6 +4890,9 @@ msgstr "Image taille réelle"
 
 msgid "Full Sized Image"
 msgstr "Image taille réelle"
+
+msgid "Full Text Search"
+msgstr "Recherche avancée"
 
 msgid "Function"
 msgstr "Fonction"
@@ -5075,6 +5093,9 @@ msgid ""
 msgstr ""
 "En cas de problème de connexion, vérifiez que vous avez autorisé les cookies "
 "dans votre navigateur."
+
+msgid "Head of Family"
+msgstr "Chef de famille"
 
 msgid "Height (cm)"
 msgstr "Hauteur (cm)"
@@ -5372,6 +5393,13 @@ msgstr "Montre combien de fois en nombre de mois l'évènement aura lieu."
 
 msgid "Indicates how often in month the event will happen (every x months)"
 msgstr "Montre combien de fois en nombre de mois l'évènement aura lieu."
+
+msgid ""
+"Indicates if a confirmation dialog should be displayed when the user tries "
+"to navigate from a form that was partially changed"
+msgstr ""
+"Indique si un dialogue de confirmation doit être affiché lorsque "
+"l'utilisateur quite la page sans avoir enregistrée"
 
 msgid "Indicates if an alarm is enabled or not (working or not)"
 msgstr "Ce champ montre si l'alarme est activée ou non( si ça marche ou pas)"
@@ -6238,6 +6266,9 @@ msgstr "Retrait de circulation"
 msgid "Money Amounts Fields Width"
 msgstr "Largeur des champs représentant des valeurs monétaires"
 
+msgid "Money Quantity Style"
+msgstr "Affichage des valeurs monétaires"
+
 msgid "Month"
 msgstr "Mois"
 
@@ -6577,6 +6608,9 @@ msgstr "Novembre"
 msgid "Number"
 msgstr "Numéro"
 
+msgid "Number of Children"
+msgstr "Nombre d'enfants"
+
 msgid "Number of Lines Displayed in List Mode ListBoxes"
 msgstr "Nombre de lignes affichées en mode liste"
 
@@ -6585,6 +6619,9 @@ msgstr "Nombre de lignes affichées en mode vue"
 
 msgid "Number of Lines to Add"
 msgstr "Nombre de lignes à ajouter"
+
+msgid "Number of Partners"
+msgstr "Nombre de partenaires"
 
 msgid "Number of Related Objects"
 msgstr "Nombre d'objets en relation"
@@ -6654,12 +6691,6 @@ msgstr "Document Office"
 
 msgid "Old Value"
 msgstr "Ancienne valeur"
-
-msgid "Number of Children"
-msgstr "Nombre d'enfants"
-
-msgid "Number of Partners"
-msgstr "Nombre de partenaires"
 
 msgid "Omit \"Grouped References\""
 msgstr "Sans écritures lettrées"
@@ -7003,6 +7034,9 @@ msgstr "Partenaires"
 
 msgid "Password"
 msgstr "Mot de passe"
+
+msgid "Password Confirm"
+msgstr "Confirmation du mot de passe"
 
 msgid "Password Confirmation"
 msgstr "Confirmation du mot de passe"
@@ -7562,6 +7596,9 @@ msgstr "Tarifé"
 
 msgid "Priced Quantity"
 msgstr "Quantité correspondant au prix"
+
+msgid "Prices reset."
+msgstr "Prix réinitialisés."
 
 msgid "Pricing Interaction Workflow"
 msgstr "Workflow d'interaction des prix"
@@ -8759,6 +8796,9 @@ msgstr "Hiérarchie d'expression de besoins"
 
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
+
+msgid "Reset Prices"
+msgstr "Réinitialiser les prix"
 
 msgid "Resolve"
 msgstr "Résoudre"
@@ -10904,6 +10944,9 @@ msgstr "La personne ou l'organisation facturée."
 msgid "The invoicing person or organisation."
 msgstr "La personne ou l'organisation qui facture la livraison ou prestation."
 
+msgid "The languages displayed in the User Interface."
+msgstr "Les langues proposées dans l'interface utilisateur."
+
 msgid "The last name of the person."
 msgstr "Le nom de la personne"
 
@@ -11458,9 +11501,6 @@ msgstr "Le tiers ${third_party_name} est invalidé."
 msgid "Third party associated with the transaction"
 msgstr "Le tiers qui est associé à la transaction."
 
-msgid "Head of Family"
-msgstr "Chef de famille"
-
 msgid "Third party associated with to the transaction"
 msgstr "Tiers associé à la transaction."
 
@@ -11951,6 +11991,9 @@ msgid "Unpublishes the document"
 msgstr ""
 "Permet de dépublier un document. Il sera possible de le publier à nouveau."
 
+msgid "Unsaved Form Warning"
+msgstr "Avertissement de formulaire non enregistré"
+
 msgid "Unversioned Files"
 msgstr "Fichier sans version"
 
@@ -12098,6 +12141,9 @@ msgstr "L'identifiant de l'utilisateur n'es pas spécifié."
 
 msgid "User Interface"
 msgstr "Interface utilisateur"
+
+msgid "User Interface Languages"
+msgstr "Langues de l'interface utilisateur"
 
 msgid "User Login"
 msgstr "Nom d'utilisateur"
