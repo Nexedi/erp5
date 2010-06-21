@@ -104,13 +104,7 @@ class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
             ._getInputMovementAndPathTupleList(context):
       kw = self._getPropertyAndCategoryList(input_movement, business_path,
                                             rule)
-      root_simulation_movement = input_movement.getRootSimulationMovement()
-      source = input_movement.getSourceAdministration() or \
-               root_simulation_movement.getSource()
-      destination = input_movement.getDestinationAdministration() or \
-                    root_simulation_movement.getDestination()
-      kw.update({'order':None, 'delivery':None,
-                 'source':source, 'destination':destination})
+      kw.update({'order':None,'delivery':None})
       simulation_movement = context.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
