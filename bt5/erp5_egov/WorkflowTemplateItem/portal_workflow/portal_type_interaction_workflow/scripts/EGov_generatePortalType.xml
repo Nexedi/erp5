@@ -138,44 +138,50 @@ if len(result) == 0:\n
 \n
   procedure_target = procedure_request.getProcedureTarget()\n
   procedure_organisation_direction = procedure_request.getOrganisationDirectionService()\n
+  procedure_publication_section =  procedure_request.getProcedurePublicationSection()\n
+  procedure_step_subscription = procedure_request.getStepSubscription()\n
+  \n
+  citizen_category_list = [\'role/citoyen\', \'role/citoyen/national\', \'role/citoyen/etranger\']\n
+  company_category_list = [\'role/entreprise\', \'role/entreprise/agence\', \'role/entreprise/siege\', \'role/entreprise/succursale\']\n
+  madatary_category_list = [\'function/entreprise/mandataire\', \'role/entreprise\']\n
+  procedure_publication_section_category = \'publication_section/%s\' % procedure_publication_section\n
+  \n
+  # If procedure needs subcription add the publication_section in role_category_list\n
+  if procedure_step_subscription:\n
+    citizen_category_list.append(procedure_publication_section_category)\n
+    company_category_list.append(procedure_publication_section_category)\n
+    madatary_category_list.append(procedure_publication_section_category)\n
 \n
-  if procedure_target is not None:\n
+  if procedure_target :\n
     if procedure_target == "tous":\n
       portal_type_module.newContent(portal_type=\'Role Information\',\n
 \t\t      title=\'Citizens Role Information\',\n
 \t\t      role_name=\'Agent\',\n
-\t\t      #role_base_category_script_list=\'group function site\',\n
-\t\t      role_category_list=\'role/citoyen*\')\n
+\t\t      role_category_list=citizen_category_list)\n
       portal_type_module.newContent(portal_type=\'Role Information\',\n
 \t\t      title=\'Companies Role Information\',\n
 \t\t      role_name=\'Agent\',\n
-\t\t      #role_base_category_script_list=\'group function\',\n
-\t\t      role_category_list=\'role/entreprise*\')\n
+\t\t      role_category_list=company_category_list)\n
       portal_type_module.newContent(portal_type=\'Role Information\',\n
 \t\t      title=\'Mandataries Role Information\',\n
 \t\t      role_name=\'Agent\',\n
-\t\t      #role_base_category_script_list=\'group function\',\n
-\t\t      role_category_list=[\'function/entreprise/mandataire\', \'role/entreprise*\'])\n
+\t\t      role_category_list=madatary_category_list)\n
     if procedure_target=="citoyen":\n
       portal_type_module.newContent(portal_type=\'Role Information\',\n
 \t\t      title=\'Citizens Role Information\',\n
 \t\t      role_name=\'Agent\',\n
-\t\t      #role_base_category_script_list=\'group function site\',\n
-\t\t      role_category_list=\'role/citoyen*\')\n
+\t\t      role_category_list=citizen_category_list)\n
     if procedure_target == "entreprise":\n
       portal_type_module.newContent(portal_type=\'Role Information\',\n
 \t\t      title=\'Companies Role Information\',\n
 \t\t      role_name=\'Agent\',\n
-\t\t      #role_base_category_script_list=\'group function\',\n
-\t\t      role_category_list=\'role/entreprise*\')\n
+\t\t      role_category_list=company_category_list)\n
       \n
   if procedure_organisation_direction is not None:\n
     portal_type_module.newContent(portal_type=\'Role Information\',\n
 \t\t      title=\'Administrative Agent Role Information\',\n
 \t\t      role_name=\'Auditor\',\n
 \t\t      role_category_list=\'group/%s*\' % procedure_organisation_direction)\n
-\n
-\n
 \n
 \n
 portal_type_module_id = \'_\'.join(portal_type_module_name.lower().split(\' \'))\n
@@ -256,6 +262,12 @@ module_object.EGov_setPermissionsOnEGovModule(procedure_request)\n
                             <string>portal_type_module</string>
                             <string>procedure_target</string>
                             <string>procedure_organisation_direction</string>
+                            <string>procedure_publication_section</string>
+                            <string>procedure_step_subscription</string>
+                            <string>citizen_category_list</string>
+                            <string>company_category_list</string>
+                            <string>madatary_category_list</string>
+                            <string>procedure_publication_section_category</string>
                             <string>None</string>
                             <string>portal_type_module_id</string>
                             <string>getattr</string>

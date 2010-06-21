@@ -1,3 +1,8 @@
+2010-06-21 mohamadou
+* update generatePortalType to use good role category for role information definition
+* add publication_section category if procedure needs subscription
+
+
 2010-06-20 mayoro
 * Add complete transition from accepted state
 *Add the title of the transition Complete, it should not be configured in the hosting form
