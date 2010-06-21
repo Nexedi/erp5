@@ -1,4 +1,7 @@
 2010-06-21 mohamadou
+* add SetUpEGovInstance Extension, to use Egov User and Group Manager and to enable some procedure log in.
+
+2010-06-21 mohamadou
 * add publication section in erp5_egov  Assignment _view
 
 2010-06-21 mohamadou
