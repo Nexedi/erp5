@@ -43,7 +43,7 @@ class InventoryInteractor(Interactor):
     """
       Reset _aq_dynamic
     """
-    inventory = method_call_object.instance.getDeliveryValue()
+    inventory = method_call_object.instance.getRootDeliveryValue()
     # No need to reindex recursively, so we call _reindexObject() not
     # reindexObject() that is defined in Delivery.py as recursiveReindexObject().
     inventory._reindexObject(**method_call_object.kw)
