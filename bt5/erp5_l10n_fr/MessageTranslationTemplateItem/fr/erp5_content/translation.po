@@ -998,7 +998,7 @@ msgstr "Guatémaltèque"
 msgid "Guernsey"
 msgstr "Guernsey"
 
-msgid "Guianese"
+msgid "Guyanese"
 msgstr "Guyanais"
 
 msgid "Guinea"
@@ -1645,7 +1645,7 @@ msgstr "Niger"
 msgid "Nigeria"
 msgstr "Nigéria"
 
-msgid "Nigerian"
+msgid "Nigerien"
 msgstr "Nigerien"
 
 msgid "Niue"
