@@ -455,7 +455,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
         # call portal_transforms to strip HTML in safe mode
         portal = self.getPortalObject()
         transform_tool = getToolByName(portal, 'portal_transforms')
-        data = transform_tool.convertToData('text/xhtml-safe',
+        data = transform_tool.convertToData('text/x-html-safe',
                                             zip_file.read(file_name),
                                             object=self, context=self,
                                             mimetype=mime)
