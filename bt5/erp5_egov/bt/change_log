@@ -1,4 +1,7 @@
 2010-06-21 mohamadou
+* add publication section in erp5_egov  Assignment _view
+
+2010-06-21 mohamadou
 * update EgovSecurity  to set security for Anonymous only if there is no authentification and no subscription
 
 2010-06-21 mohamadou
