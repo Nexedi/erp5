@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Tool.TypesTool import TypeProvider
 from Products.ERP5 import DeliverySolver
 from Products.ERP5Type.Message import translateString
-
+from Products.CMFCore.utils import getToolByName
 
 class SolverTool(TypeProvider):
   """ The SolverTool provides API to find out which solver can be applied in
@@ -198,3 +198,20 @@ class SolverTool(TypeProvider):
           if test_property in property_group.getTestedPropertyList():
             application_value_level[property_group.getCollectGroupOrder()] = None
     # etc. same
+
+  def searchTargetSolverList(self, divergence_tester,
+                             tested_base_category_list=None, **kw):
+    """
+    this method returns a list of target solvers, as predicates against
+    divergence tester.
+    """
+    domain_tool = getToolByName(self.getPortalObject(), "portal_domains")
+
+    if tested_base_category_list is None:
+      tested_base_category_list = []
+
+    solver_list = domain_tool.searchPredicateList(
+      context=divergence_tester, portal_type='Solver Type',
+      tested_base_category_list=tested_base_category_list, **kw)
+
+    return solver_list
