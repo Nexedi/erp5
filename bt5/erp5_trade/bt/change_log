@@ -1,3 +1,6 @@
+2010-06-21 yo
+* Specify the inventory group to the portal type Inventory.
+
 2010-06-08 kazuhiko
 * 'Validate Inventory Action' should be allowed for Assignor.
 
