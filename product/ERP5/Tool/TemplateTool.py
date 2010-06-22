@@ -1114,8 +1114,12 @@ class TemplateTool (BaseTool):
         state = listbox_line.object_state
         removed = state.startswith('Removed')
         if removed:
-          moved = installed_dict.get(listbox_line.object_id, '')
-          log('%s: %s%s' % (state, item, moved and ' (moved to %s)' % moved))
+          # The following condition could not be used to automatically decide
+          # if an item must be kept or not. For example, this would not work
+          # for items installed by PortalTypeWorkflowChainTemplateItem.
+          maybe_moved = installed_dict.get(listbox_line.object_id, '')
+          log('%s: %s%s' % (state, item,
+            maybe_moved and ' (moved to %s ?)' % maybe_moved))
         else:
           installed_dict[item] = bt_title
         # if a bt5 item is removed we may still want to keep it
