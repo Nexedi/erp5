@@ -1806,6 +1806,26 @@ return 1
       self.assertTrue('Continue' in response.getBody())
       self.assertTrue('Last page' in response.getBody())
 
+  def test_contributeLink(self):
+    """
+      Test contributing a link.
+    """
+    portal = self.portal
+    kw = {'url':portal.absolute_url()}
+    web_page = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page.getRevision()=='2')
+    
+    second_web_page = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page==second_web_page)
+    self.assertTrue(second_web_page.getRevision()=='3')
+
+    third_web_page = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page==second_web_page==third_web_page)
+    self.assertTrue(third_web_page.getRevision()=='4')
+    
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
