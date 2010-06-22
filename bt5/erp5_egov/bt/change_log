@@ -1,3 +1,6 @@
+2010-06-22 mayoro
+* remove fixe value of recipient, mistake
+
 2010-06-21 mohamadou
 *add external methods to use the new extension
 - setUpInstance to set up all egov instance
