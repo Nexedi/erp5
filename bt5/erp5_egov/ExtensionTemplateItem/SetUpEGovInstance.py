@@ -2,7 +2,8 @@
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
-#                 Mohamadou Mbengue <mayoro@gmail.com>
+#                  Fabien Morin <fabien@nexedi.com>
+#                  Mohamadou Mbengue <mmbengue@gmail.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
