@@ -52,12 +52,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     ...
   """
 
-  def beforeTearDown(self):
-    # workaround the fact that Balance Transaction Line are not unindexed
-    # correctly when removed
-    self.portal.erp5_sql_connection.manage_test('TRUNCATE TABLE stock')
-    transaction.commit()
-
   def testJournal(self):
     # Journal report.
     # this will be a journal for 2006/02/02, for Sale Invoice Transaction

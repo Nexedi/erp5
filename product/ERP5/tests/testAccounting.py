@@ -863,14 +863,6 @@ class TestTransactionValidation(AccountingTestCase):
 class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.
   """
-  def beforeTearDown(self):
-    transaction.abort()
-    # we manually remove the content of stock table, because unindexObject
-    # might not work correctly on Balance Transaction, and we don't want
-    # leave something in stock table that will change the next test.
-    self.portal.erp5_sql_connection.manage_test('truncate stock')
-    transaction.commit()
-
   def test_createBalanceOnNode(self):
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
@@ -1781,7 +1773,8 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_credit=100,)
     balance.stop()
     balance.deliver()
-    balance.immediateReindexObject()
+    transaction.commit()
+    self.tic()
 
     # now check inventory
     stool = self.getSimulationTool()
@@ -1818,6 +1811,11 @@ class TestClosingPeriod(AccountingTestCase):
     balance.reindexObject()
     transaction.commit()
     self.tic()
+    # the account 'receivable' still has a balance of 100
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
 
   def test_InventoryIndexingNodeDiffOnNode(self):
     # Balance Transactions are indexed as Inventories.

@@ -404,11 +404,11 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     This method must return a function that accepts properties keywords
     arguments and returns a temp object edited with those properties.
     """
-    from Products.ERP5Type.Document import newTempBalanceTransactionLine
-    
+    from Products.ERP5Type.Document import newTempAccountingTransactionLine
     def factory(*args, **kw):
-      doc = newTempBalanceTransactionLine(self, kw.pop('id', self.getId()),
-                                         uid=self.getUid())
+      doc = newTempAccountingTransactionLine(self, kw.pop('id', self.getId()),
+                                             uid=self.getUid())
+      doc.portal_type = 'Balance Transaction Line'
       relative_url = kw.pop('relative_url', None)
       destination_total_asset_price = kw.pop('total_price', None)
       if destination_total_asset_price is not None:
@@ -459,16 +459,15 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     """
     sql_catalog_id = kw.pop("sql_catalog_id", None)
     disable_archive = kw.pop("disable_archive", 0)
+    immediate_reindex_archive = sql_catalog_id is not None
 
     if self.getSimulationState() in self.getPortalDraftOrderStateList() + (
                                             'deleted',):
       # this prevent from trying to calculate stock
       # with not all properties defined and thus making
       # request with no condition in mysql
-      object_list = [self]
-      immediate_reindex_archive = sql_catalog_id is not None
       self.portal_catalog.catalogObjectList(
-                    object_list,
+                    [self],
                     sql_catalog_id = sql_catalog_id,
                     disable_archive=disable_archive,
                     immediate_reindex_archive=immediate_reindex_archive)
@@ -489,9 +488,9 @@ class BalanceTransaction(AccountingTransaction, Inventory):
     self.portal_catalog.catalogObjectList([self])
     
     # Catalog differences calculated from lines
-    self.portal_catalog.catalogObjectList(stock_object_list,
-         method_id_list=('z_catalog_stock_list',
-                         'z_catalog_object_list',
-                         'z_catalog_movement_category_list'),
-         disable_cache=1, check_uid=0)
-    
+    self.portal_catalog.catalogObjectList(stock_object_list[::],
+         method_id_list=('z_catalog_stock_list',),
+         disable_cache=1, check_uid=0,
+         sql_catalog_id=sql_catalog_id,
+         disable_archive=disable_archive,
+         immediate_reindex_archive=immediate_reindex_archive)
