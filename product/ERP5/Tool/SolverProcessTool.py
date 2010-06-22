@@ -83,6 +83,8 @@ class SolverProcessTool(BaseTool):
                             or a list thereof
     """
     # Do not create a new solver process if no divergence
+    # XXX (possible performance issue) Here it calls all divergence
+    # testers, but they should be called later.
     if not self.isDivergent(delivery_or_movement=delivery_or_movement):
       return None
 
@@ -93,10 +95,13 @@ class SolverProcessTool(BaseTool):
     new_solver.buildSolverDecisionList(delivery_or_movement=delivery_or_movement,
                                        temp_object=temp_object)
 
-    # Append the solver process into the delivery's solver category
-    delivery = delivery_or_movement.getRootDeliveryValue()
-    solver_list = delivery.getSolverValueList()
-    solver_list.append(new_solver)
-    delivery.setSolverValueList(solver_list)
-    return new_solver
-
+    if not temp_object:
+      # Append the solver process into the delivery's solver category
+      # XXX using delivery's solver category is not so good idea,
+      # because we might want to solve several deliveries with one
+      # solver process, several users want to solve one document etc.
+      delivery = delivery_or_movement.getRootDeliveryValue()
+      solver_list = delivery.getSolverValueList()
+      solver_list.append(new_solver)
+      delivery.setSolverValueList(solver_list)
+      return new_solver
