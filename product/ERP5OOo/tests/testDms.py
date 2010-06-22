@@ -1812,19 +1812,36 @@ return 1
     """
     portal = self.portal
     kw = {'url':portal.absolute_url()}
-    web_page = portal.Base_contribute(**kw)
+    web_page_1 = portal.Base_contribute(**kw)
     self.stepTic()
-    self.assertTrue(web_page.getRevision()=='2')
+    self.assertTrue(web_page_1.getRevision()=='2')
     
-    second_web_page = portal.Base_contribute(**kw)
+    web_page_2 = portal.Base_contribute(**kw)
     self.stepTic()
-    self.assertTrue(web_page==second_web_page)
-    self.assertTrue(second_web_page.getRevision()=='3')
+    self.assertTrue(web_page_1==web_page_2)
+    self.assertTrue(web_page_2.getRevision()=='3')
 
-    third_web_page = portal.Base_contribute(**kw)
+    web_page_3 = portal.Base_contribute(**kw)
     self.stepTic()
-    self.assertTrue(web_page==second_web_page==third_web_page)
-    self.assertTrue(third_web_page.getRevision()=='4')
+    self.assertTrue(web_page_2==web_page_3)
+    self.assertTrue(web_page_3.getRevision()=='4')
+
+    # test in synchronous mode
+    kw['synchronous_metadata_discovery']=True
+    web_page_4 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_3==web_page_4)
+    self.assertTrue(web_page_4.getRevision()=='5')
+
+    web_page_5 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_4==web_page_5)
+    self.assertTrue(web_page_5.getRevision()=='6')
+
+    web_page_6 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_5==web_page_6)
+    self.assertTrue(web_page_6.getRevision()=='7')
     
 
 class TestDocumentWithSecurity(TestDocumentMixin):
