@@ -54,7 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal_types = context.getPortalObject().portal_types\n
-portal_type_list = portal_types.contentValues(filter={\'portal_type\':\'EGov Type\'})\n
+portal_type_list = portal_types.searchFolder(portal_type=\'EGov Type\', validation_state = \'validated\')\n
+\n
 portal_type_anon_list = ()\n
 portal_type_auth_list = ()\n
 for portal_type in portal_type_list:\n
@@ -76,6 +77,14 @@ return portal_type_auth_list\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
