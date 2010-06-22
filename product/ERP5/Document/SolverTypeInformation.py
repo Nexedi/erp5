@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002-2007 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2010 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -62,15 +62,15 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
 
     configuration_mapping -- a mapping of configuration parameters sorted in
                              canonical way. ((c1, v1), (c2, v2 ))
-  
-    solver_dict -- a dictionary of configuration parameters for 
+
+    solver_dict -- a dictionary of configuration parameters for
                    each solver
                       solver_dict[solver] = {
                          movement : [((c1, v1), (c2, v2 )),
                                      ((c1, v1), (c2, v2 )),
                                     ],}
 
-    movement_dict -- a dictionary of solver and configuration parameters for 
+    movement_dict -- a dictionary of solver and configuration parameters for
                      each movement
                        movement_dict[movement] = {
                                      solver : [((c1, v1), (c2, v2 )),
@@ -82,7 +82,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
       return method(movement, configuration_mapping, solver_dict, movement_dict)
 
     # Default Implementation (use categories and trivial case)
-    #  this default implementation should be applicable to most 
+    #  this default implementation should be applicable to most
     #  solvers so that use of Type Based methods is very rare
     for solver, configuration_list in movement_dict[movement].items():
       if solver is not self and solver.getTestedProperty() == self.getTestedProperty():
@@ -93,39 +93,39 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
 
   def getSolverProcessGroupingKey(self, movement, configuration_mapping, solver_dict, movement_dict):
     """
-    Returns a key which can be used to group solvers during the 
+    Returns a key which can be used to group solvers during the
     process to build Targer Solver instances from Solver Decisions.
     This key depends on the movement and on the configuration_dict.
 
     For example, the movement dependent key for a solver which reduces
     produced quantity is the releative URL of the production order which
-    this movement depends from (if it depennds on a single production 
+    this movement depends from (if it depennds on a single production
     order). If the same movement relates to multiple production orders,
     then the movement dependent grouping key should be None, but this
     could generate a different group for movements which depend on
-    a single production order and for movements which depend on 
+    a single production order and for movements which depend on
     multiple production orders. For this purpose, the grouping key
     can be decided by looking up other_movement_list, a dictionnary
     which provides for each movement solver by the same solver the
     configuration parameters.
 
     The configuration dependent key for a "universal" solver (ex.
-    Adopt, Accept) which tested property is configurable, is the 
+    Adopt, Accept) which tested property is configurable, is the
     tested property itself.
 
     movement -- a movement
 
     configuration_mapping -- a mapping of configuration parameters sorted in
                              canonical way. ((c1, v1), (c2, v2 ))
-  
-    solver_dict -- a dictionary of configuration parameters for 
+
+    solver_dict -- a dictionary of configuration parameters for
                    each solver
                       solver_dict[solver] = {
                          movement : [((c1, v1), (c2, v2 )),
                                      ((c1, v1), (c2, v2 )),
                                     ],}
 
-    movement_dict -- a dictionary of solver and configuration parameters for 
+    movement_dict -- a dictionary of solver and configuration parameters for
                      each movement
                        movement_dict[movement] = {
                                      solver : [((c1, v1), (c2, v2 )),
@@ -150,7 +150,6 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
 
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
-                    
     """
     # Implemented through type based method
     # and using read transaction cache
