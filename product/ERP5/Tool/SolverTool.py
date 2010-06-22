@@ -207,9 +207,6 @@ class SolverTool(TypeProvider):
     """
     domain_tool = getToolByName(self.getPortalObject(), "portal_domains")
 
-    if tested_base_category_list is None:
-      tested_base_category_list = []
-
     solver_list = domain_tool.searchPredicateList(
       context=divergence_tester, portal_type='Solver Type',
       tested_base_category_list=tested_base_category_list, **kw)
