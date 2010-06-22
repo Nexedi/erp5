@@ -39,6 +39,7 @@
               <tuple>
                 <string>accounting_transaction</string>
                 <string>delivery</string>
+                <string>inventory</string>
               </tuple>
             </value>
         </item>
