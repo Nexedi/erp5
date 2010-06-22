@@ -19,6 +19,7 @@ cpio
 flex
 gcc
 gcc-c++
+gettext
 groff
 libboost-devel
 libbzip2-devel
