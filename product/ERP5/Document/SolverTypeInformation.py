@@ -164,7 +164,8 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
 
     cache = getReadOnlyTransactionCache(self)
     if cache is not None:
-      key = ('getDefaultConfigurationPropertyDict', solver_portal_type)
+      key = ('getDefaultConfigurationPropertyDict', solver_portal_type,
+             configurable.getRelativeUrl())
       try:
         method = cache[key]
       except KeyError:
