@@ -59,7 +59,7 @@ request=context.REQUEST\n
 \n
 if context.portal_membership.isAnonymousUser() and not captcha_ok:\n
   absolute_url = context.absolute_url()\n
-  new_url = \'captcha/CheckCaptcha\'\n
+  new_url = \'captcha/CheckCaptcha/view\'\n
   redirect_url = "%s/%s" % (absolute_url, new_url)\n
 else:\n
   portal_type = new_application_procedure\n
