@@ -1786,6 +1786,27 @@ return 1
       'TEST-en-002.png'
     )
 
+  def test_getExtensibleContent(self):
+    """
+      Test extensible content of some DMS types. As this is possible only on URL traversal use publish.
+    """
+    # Create document with good content
+    document = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    document.edit(file=upload_file)
+    self.stepTic()
+    self.assertEquals('converted', document.getExternalProcessingState())
+    for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
+      response = self.publish('%s/%s' %(document.getPath(), object_url),
+                              basic='ERP5TypeTestCase:')
+      self.assertTrue('Status: 200 OK' in response.getOutput())
+      # OOod produced HTML navigation, test it
+      self.assertTrue('First page' in response.getBody())
+      self.assertTrue('Back' in response.getBody())
+      self.assertTrue('Continue' in response.getBody())
+      self.assertTrue('Last page' in response.getBody())
+
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
