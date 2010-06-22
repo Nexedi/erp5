@@ -211,9 +211,11 @@ class SolverProcess(XMLObject, ActiveProcess):
     for x in delivery_or_movement:
       if x.isDelivery():
         movement_list.extend(x.getMovementList())
+      else:
+        movement_list.append(x)
 
     # We suppose here that movement_list is a list of
-    # delivery lines. Let us group decisions in such way
+    # delivery movements. Let us group decisions in such way
     # that a single decision is created per divergence tester instance
     # and per application level list
     solver_tool = self.getPortalObject().portal_solvers
