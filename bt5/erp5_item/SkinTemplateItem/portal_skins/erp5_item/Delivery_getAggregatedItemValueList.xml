@@ -61,10 +61,10 @@ pl_type = context.getPortalType()\n
 pl_line_type = pl_type + \' Line\'\n
 pl_cell_type = pl_type + \' Cell\'\n
 \n
-line_list = context.objectValues(filter={\'portal_type\':pl_line_type})\n
+line_list = context.objectValues(portal_type=pl_line_type)\n
 for line in line_list:\n
   selection_uid_list.extend(line.getAggregateUidList())\n
-  cell_list = line.objectValues(filter={\'portal_type\':pl_cell_type})\n
+  cell_list = line.objectValues(portal_type=pl_cell_type)\n
   for cell in cell_list:\n
     selection_uid_list.extend(cell.getAggregateUidList())\n
 \n
