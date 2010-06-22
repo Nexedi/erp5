@@ -57,6 +57,7 @@ enc=base64.encodestring
 dec=base64.decodestring
 
 _MARKER = []
+EMBEDDED_FORMAT = '_embedded'
 
 class TimeoutTransport(SafeTransport):
   """A xmlrpc transport with configurable timeout.
@@ -462,7 +463,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
       else:
         mime = guess_content_type(file_name)[0]
         data = Pdata(zip_file.read(file_name))
-      self.setConversion(data, mime=mime, format='_embedded', file_name=file_name)
+      self.setConversion(data, mime=mime, format=EMBEDDED_FORMAT, file_name=file_name)
     if must_close:
       zip_file.close()
       archive_file.close()
@@ -473,9 +474,9 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
     try:
       self._convert(format='html')
       web_cache_kw = {'name': name,
-                      'format': '_embedded'}
+                      'format': EMBEDDED_FORMAT}
       _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
-      mime, data = self.getConversion(format='_embedded', file_name=name)
+      mime, data = self.getConversion(format=EMBEDDED_FORMAT, file_name=name)
       return OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     except (NotConvertedError, ConversionError, KeyError):
       return PermanentURLMixIn._getExtensibleContent(self, request, name)
