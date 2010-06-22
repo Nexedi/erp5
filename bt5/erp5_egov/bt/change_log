@@ -1,4 +1,9 @@
 2010-06-22 mayoro
+* Allow anonymous procedure to login
+* after captcha test use the desired portal_type to create new procedure (previous one was hardcoded)
+* remove form_action in WebSite_viewCaptchaRenderer it's no longer used
+
+2010-06-22 mayoro
 * add view as default view of web page captcha
 
 2010-06-22 mayoro

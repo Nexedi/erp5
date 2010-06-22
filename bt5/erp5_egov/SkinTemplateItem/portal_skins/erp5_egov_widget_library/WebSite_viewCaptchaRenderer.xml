@@ -63,16 +63,19 @@ Description:\n
         to generate a new image.\n
       </tal:block>\n
     </div>\n
+\n
+\n
     <div class="next_step_action" tal:define="object_uid           here/getUid | nothing;\n
                   object_path          here/getPath | nothing;\n
                   form                 nocall: form | nothing;\n
                   form_id              form/id | template/title_or_id | nothing;\n
                   portal               here/getPortalObject;\n
-                  form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
                   local_parameter_list local_parameter_list | python: {};\n
                   ">\n
-      <input type="hidden" name="form_action" value=""\n
-             tal:attributes="value request/form_action" />\n
+\n
+      <input type="hidden" name="portal_type" value=""\n
+             tal:attributes="value python: request.get(\'portal_type\', \'\')" />\n
+\n
       <input type="hidden" name="edit_document_url" value=""\n
              tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
       <input type="hidden" name="view_document_url" value=""\n
@@ -86,7 +89,7 @@ Description:\n
           <img src="Captcha_getCaptchaFile?display=thumbnail&amp;format=&amp;resolution=75" alt="captcha"/>\n
           <input class="captcha_text" type="text" size="6" name="captcha_text"/>\n
         </div>\n
-        <a class="onright" href="" OnClick="javascript:window.history.go(0)">\n
+        <a class="onright" href="" tal:attributes="href python:\'%s/%s?portal_type=%s\' % (here.absolute_url(), \'view\', request.get(\'portal_type\',\'\'))" OnClick="javascript:window.history.go()">\n
           <img src="img/reload.png" alt="Refresh"/>\n
         </a>\n
       <div class="clear">\n

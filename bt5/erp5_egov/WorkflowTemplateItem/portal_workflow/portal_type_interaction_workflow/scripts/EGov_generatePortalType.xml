@@ -206,6 +206,11 @@ module_object.setIdGenerator(\'_generatePerDayId\') \n
 ## initialize security on the module\n
 \n
 module_object.EGov_setPermissionsOnEGovModule(procedure_request)\n
+\n
+# Allow anonymous procedure to login\n
+\n
+if not procedure.getStepAuthentication():\n
+  procedure_request.EGov_enableProcedureLogin(portal_type_name)\n
 </string> </value>
         </item>
         <item>
@@ -274,6 +279,7 @@ module_object.EGov_setPermissionsOnEGovModule(procedure_request)\n
                             <string>module_object</string>
                             <string>portal_type_module_object</string>
                             <string>allowed_content_type_list</string>
+                            <string>procedure</string>
                           </tuple>
                         </value>
                     </item>
