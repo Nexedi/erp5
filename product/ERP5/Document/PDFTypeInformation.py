@@ -750,7 +750,7 @@ class PDFTypeInformation(ERP5TypeInformation):
                       name='Form',
                       description='',
                       category='object_view',
-                      priority=1.1,
+                      priority=0.5,
                       icon=None,
                       action='string:${object_url}/PDFType_viewDefaultForm',
                       condition=None,
