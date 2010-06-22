@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001 Zope Corporation and Contributors. All Rights
 # Reserved.
+#                  Fabien Morin <fabien@nexedi.com>
+#                  Mohamadou Mbengue <mmbengue@gmail.com>
 #
 # This software is subject to the provisions of the Zope Public License,
 # Version 2.1 (ZPL).  A copy of the ZPL should accompany this
