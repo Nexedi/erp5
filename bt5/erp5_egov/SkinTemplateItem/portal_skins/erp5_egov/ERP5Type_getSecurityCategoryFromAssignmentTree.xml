@@ -133,7 +133,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>base_category_list=[], user_name=None, object=None, portal_type=None</string> </value>
+            <value> <string>base_category_list, user_name, object, portal_type, strict=False, root=False</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -162,7 +162,7 @@ return category_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -172,6 +172,8 @@ return category_list\n
                             <string>user_name</string>
                             <string>object</string>
                             <string>portal_type</string>
+                            <string>strict</string>
+                            <string>root</string>
                             <string>Products.ERP5Type.Log</string>
                             <string>log</string>
                             <string>category_list</string>
@@ -192,10 +194,8 @@ return category_list\n
                             <string>base_category</string>
                             <string>category_value</string>
                             <string>None</string>
-                            <string>root</string>
                             <string>_write_</string>
                             <string>RuntimeError</string>
-                            <string>strict</string>
                             <string>grouplist</string>
                             <string>range</string>
                             <string>i</string>
@@ -214,10 +214,8 @@ return category_list\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
-                <list/>
-                <none/>
-                <none/>
-                <none/>
+                <int>0</int>
+                <int>0</int>
               </tuple>
             </value>
         </item>
