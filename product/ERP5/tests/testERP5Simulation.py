@@ -543,7 +543,48 @@ for failing_method in [
           expectedFailure(getattr(TestERP5SimulationPackingList, failing_method)))
         
 class TestERP5SimulationInvoice(TestERP5SimulationMixin, TestSaleInvoice):
-  pass
+  quiet = TestSaleInvoice.quiet
+
+  def test_09_InvoiceChangeStartDateFail(self, quiet=quiet):
+    """
+    Change the start_date of a Invoice Line,
+    check that the invoice is divergent,
+    then accept decision, and check Packing list is *not* divergent,
+    because Unify Solver does not propagage the change to the upper
+    simulation movement.
+    """
+    if not quiet:
+      self.logMessage('Invoice Change Sart Date')
+    sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+    """
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+
+    stepChangeInvoiceStartDate
+    stepCheckInvoiceIsDivergent
+    stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
+    stepUnifyStartDateWithDecisionInvoice
+    stepTic
+
+    stepCheckInvoiceNotSplitted
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+    """
+    self.playSequence(sequence, quiet=quiet)
 
 def test_suite():
   suite = unittest.TestSuite()
