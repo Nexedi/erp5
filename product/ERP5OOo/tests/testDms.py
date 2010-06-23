@@ -1506,6 +1506,8 @@ class TestDocument(TestDocumentMixin):
 
     html_content = """<html>
       <head>
+        <meta http-equiv="refresh" content="5;url=http://example.com/"/>
+        <meta http-equiv="Set-Cookie" content=""/>
         <title>My dirty title</title>
         <style type="text/css">
           a {color: #FFAA44;}
@@ -1533,6 +1535,8 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue('<head>' not in safe_html)
     self.assertTrue('<style' not in safe_html)
     self.assertTrue('#FFAA44' not in safe_html)
+    self.assertTrue('5;url=http://example.com/' not in safe_html)
+    self.assertTrue('Set-Cookie' not in safe_html)
 
     # Check that outputed entire html is safe
     entire_html = web_page.asEntireHTML()
