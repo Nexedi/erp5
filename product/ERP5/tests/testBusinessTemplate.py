@@ -79,7 +79,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   quiet = 1
 
   def getBusinessTemplateList(self):
-    return ('erp5_csv_style', 'erp5_pdf_style', 'erp5_barcode')
+    return ('erp5_base',
+            'erp5_csv_style',
+            'erp5_pdf_style',
+            'erp5_barcode',
+            )
 
   def getTitle(self):
     return "Business Template"
@@ -6752,17 +6756,32 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(self.portal.exported_path,
         self.portal.portal_catalog.getResultValue(uid=uid))
 
-  # XXX (lucas): Rafael requested to add expectedFailure
-  @expectedFailure
   def test_build_and_export_bt5_into_same_transaction(self):
     """
       Copy, build and export a business template into the same transaction.
 
       Make sure all objects can be exported, when build() and export() are
       into the same transaction. 
+
+      NOTES: 
+       - it works for some business templates. (e.g. erp5_base)
+       - the object which does not have ._p_jar property is always an 
+         ActionTemplateItem.
     """
     portal = self.getPortalObject()
     template_tool = portal.portal_templates
+    # Try with erp5_base, which contais ActionTemplateItem and works.
+    bt5obj = portal.portal_catalog.getResultValue(portal_type='Business Template',
+                                                  title='erp5_base')
+    template_copy = template_tool.manage_copyObjects(ids=(bt5obj.getId(),))
+    new_id_list = template_tool.manage_pasteObjects(template_copy)
+
+    new_bt5_id = new_id_list[0]['new_id']
+    new_bt5_obj = getattr(template_tool, new_bt5_id, None)
+    new_bt5_obj.edit()
+    new_bt5_obj.build()
+    template_tool.export(new_bt5_obj)
+
     # Use erp5_barcode because it contains ActionTemplateItem, which seems to
     # cause problems to be export. Maybe create a test bt5 with all items could
     # be more appropriated.
