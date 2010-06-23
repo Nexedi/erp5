@@ -209,7 +209,7 @@ module_object.EGov_setPermissionsOnEGovModule(procedure_request)\n
 \n
 # Allow anonymous procedure to login\n
 \n
-if not procedure.getStepAuthentication():\n
+if not procedure_request.getStepAuthentication():\n
   procedure_request.EGov_enableProcedureLogin(portal_type_name)\n
 </string> </value>
         </item>
@@ -279,7 +279,6 @@ if not procedure.getStepAuthentication():\n
                             <string>module_object</string>
                             <string>portal_type_module_object</string>
                             <string>allowed_content_type_list</string>
-                            <string>procedure</string>
                           </tuple>
                         </value>
                     </item>

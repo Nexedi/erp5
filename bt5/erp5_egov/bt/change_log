@@ -1,3 +1,6 @@
+2010-06-23 mayoro
+* correct previous commit, use procedure_request instead of procedure
+
 2010-06-22 mayoro
 * Allow anonymous procedure to login
 * after captcha test use the desired portal_type to create new procedure (previous one was hardcoded)
