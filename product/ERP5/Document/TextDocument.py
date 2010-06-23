@@ -30,18 +30,13 @@
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING
-from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
-from OFS.Image import Pdata
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Document import Document, ConversionError,\
-                                            NotConvertedError
+from Products.ERP5.Document.Document import Document, ConversionError
 from Products.ERP5.Document.File import File
 from Products.ERP5Type.WebDAVSupport import TextContent
 import re
-import md5
-import cStringIO
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
