@@ -1,4 +1,7 @@
 2010-06-23 mohamadou
+* add a script to update a procedure's local roles using a username and role_name_list
+
+2010-06-23 mohamadou
 * use ERP5Type_getSecurityCategoryFromAssignmentParentGroup to generate function_group* group of security
 
 
