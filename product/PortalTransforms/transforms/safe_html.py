@@ -185,8 +185,8 @@ class StrippingParser(HTMLParser):
                 elif remove_script and hasScript(v):
                     if not self.raise_error: continue
                     else: raise IllegalHTML, 'Script URI "%s" not allowed.' % v
-                elif k.lower() == 'content' and self.default_encoding and\
-                                                self.default_encoding not in v:
+                elif tag.lower() == 'meta' and k.lower() == 'content' and\
+                     self.default_encoding and self.default_encoding not in v:
                     match = charset_parser.search(v)
                     if match is not None:
                       self.original_charset = match.group('charset')
