@@ -17,10 +17,11 @@
                 <string>css_class</string>
                 <string>default_params</string>
                 <string>description</string>
-                <string>list_action</string>
+                <string>list_method</string>
                 <string>page_template</string>
                 <string>selection_name</string>
                 <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -76,7 +77,9 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -133,11 +136,15 @@
                         </tuple>
                         <tuple>
                           <string>actor</string>
-                          <string>Actor</string>
+                          <string>Agent</string>
+                        </tuple>
+                        <tuple>
+                          <string>assigned_user</string>
+                          <string>Assigned To</string>
                         </tuple>
                         <tuple>
                           <string>time</string>
-                          <string>Time</string>
+                          <string>Date</string>
                         </tuple>
                         <tuple>
                           <string>assigned_function</string>
@@ -176,11 +183,11 @@
                         </tuple>
                         <tuple>
                           <string>workflow_id</string>
-                          <string>egov_anonymous_workflow</string>
+                          <string>egov_universal_workflow</string>
                         </tuple>
                         <tuple>
                           <string>workflow_title</string>
-                          <string>ERP5 eGov anonymous Workflow</string>
+                          <string>Egov workflow</string>
                         </tuple>
                       </list>
                     </value>
@@ -214,8 +221,10 @@
                     <value> <string>Base_viewWorkflowHistory</string> </value>
                 </item>
                 <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string>Folder_viewContentList</string> </value>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>not_viewable</string> </key>
@@ -231,7 +240,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>egov_annonymous_workflow_history_selection</string> </value>
+                    <value> <string>egov_workflow_history_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -240,6 +249,41 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Workflow History</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>action</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>state</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>actor</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>assigned_user</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>time</string>
+                          <string>Base_getHistoricalComparisonUrl</string>
+                        </tuple>
+                        <tuple>
+                          <string>comment</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>error_message</string>
+                          <string></string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>viewable_permission</string> </key>
@@ -255,6 +299,38 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: context.Base_translateString("All steps related to your")+" "+context.Base_translateString(context.getPortalType())</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>EGov_getWorkflowHistoryItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

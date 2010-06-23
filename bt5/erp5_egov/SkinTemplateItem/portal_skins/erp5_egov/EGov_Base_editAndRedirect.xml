@@ -177,6 +177,14 @@ return context.Base_redirect(next_url, keep_items = dict(portal_status_message=m
             <value> <string>form_id, next_url, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', **kw</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>

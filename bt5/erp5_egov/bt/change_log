@@ -1,3 +1,9 @@
+2010-06-23 mayoro
+* correct redirect url when logout
+* display login and password to track anonymous procedure at the end of submission (it's not only for Subscription Form)
+* remove log in EGov_Base_editAndNextStep
+* configure listbox of PDFDocument_viewAnonymousHistory
+
 2010-06-23 mohamadou
 * change erp5_egov skin priority since some standar script are redefined.
 

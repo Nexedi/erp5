@@ -201,7 +201,9 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -236,6 +238,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -245,9 +251,7 @@
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
@@ -267,6 +271,10 @@
                 </item>
                 <item>
                     <key> <string>report_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>row_css_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -419,6 +427,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
                     <value> <int>20</int> </value>
                 </item>
@@ -428,7 +440,9 @@
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
@@ -438,7 +452,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>DeclarationTVA_ListBox_asHTML</string> </value>
+                    <value> <string>EGov_ListBox_asHTML</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -457,6 +471,10 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>row_css_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>search</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -472,7 +490,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>selection_name_history_view</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -509,7 +527,24 @@
                 <item>
                     <key> <string>url_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>PDFDocument_getURL</string>
+                        </tuple>
+                        <tuple>
+                          <string>getOwner</string>
+                          <string>PDFDocument_getURL</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>PDFDocument_getURL</string>
+                        </tuple>
+                        <tuple>
+                          <string>getTranslatedValidationStateTitle</string>
+                          <string>PDFDocument_getURL</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
               </dictionary>
@@ -529,7 +564,23 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'%s_getAttachedApplicationIncomeList\' % here.getPortalType().replace(\' \', \'\')</string> </value>
+            <value> <string>python: context.Base_translateString("All attached files add to your")+" "+context.Base_translateString(context.getPortalType())</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="Method" module="Products.Formulator.MethodField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>PDFDocument_getAttachedApplicationIncomeList</string> </value>
         </item>
       </dictionary>
     </pickle>

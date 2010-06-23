@@ -59,7 +59,7 @@
 portal = context.getPortalObject()\n
 N_ = portal.Base_translateString\n
 website = context.getWebSiteValue()\n
-form_id=\'view\'\n
+form_id=\'EGov_viewLoginForm\'\n
 \n
 REQUEST = context.REQUEST\n
 if REQUEST.has_key(\'portal_skin\'):\n

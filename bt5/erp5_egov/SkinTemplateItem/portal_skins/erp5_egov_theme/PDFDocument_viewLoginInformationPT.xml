@@ -57,7 +57,7 @@
 <div class="site_address">\n
   <a href="http://www.erp5.org">http://www.erp5.org</a>\n
 </div>\n
-<tal:bloc tal:condition="python: here.getPortalType() == \'Subscription Form\'">\n
+<tal:bloc tal:condition="python: not here.getTypeInfo().getStepAuthentication()">\n
   <div class="login_and_password">\n
     <tal:bloc i18n:translate="" i18n:domain="ui">\n
       And use the login \n
@@ -66,7 +66,7 @@
     <tal:bloc i18n:translate="" i18n:domain="ui">\n
     and the password \n
     </tal:bloc>\n
-    <span class="password" tal:content="here/getPassword">pin02nuz</span>\n
+    <span class="password" tal:content="python: here.EGov_getAnonymousProcedurePassword()">pin02nuz</span>\n
   </div>\n
 </tal:bloc>\n
 <div class="explanation">\n
