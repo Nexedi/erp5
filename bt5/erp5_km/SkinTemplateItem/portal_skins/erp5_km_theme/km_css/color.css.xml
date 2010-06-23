@@ -353,7 +353,10 @@ button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { color
 \n
 button.formbt, button.formbt > span { background: url(../km_img/formbt.png) no-repeat transparent; }\n
 \n
-button.bt-med, button.bt-med span { background: url(../km_img/button-med.png) no-repeat transparent; }\n
+button.bt-med, button.bt-med span { \n
+  background: url(../km_img/button-med.png) no-repeat transparent; \n
+  background-color: #E9E9E9;\n
+}\n
 \n
 .bt-small, .bt-small span { background: url(../km_img/button-small.png) no-repeat transparent; }\n
 \n

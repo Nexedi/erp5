@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76758131.69</string> </value>
+            <value> <string>ts77275017.31</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -113,6 +113,7 @@ div.border_bottom0px{\n
 #tabs ul li span {\n
   background: url(../km_img/tabs.png) no-repeat transparent;\n
   background-position: 100% -44px;\n
+  background-color: #E9E9E9;\n
 }\n
 #tabs ul li.tab,\n
 #tabs ul li.tab_selected{\n
@@ -501,7 +502,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8168</int> </value>
+            <value> <int>8197</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
