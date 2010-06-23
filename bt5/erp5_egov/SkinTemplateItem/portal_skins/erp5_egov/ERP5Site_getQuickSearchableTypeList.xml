@@ -53,7 +53,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>type_list = context.EGov_getAllowedFormTypeList() + (\'Person\', \'Organisation\')\n
+            <value> <string>portal_types = context.getPortalObject().portal_types\n
+validated_type_list = portal_types.searchFolder(portal_type=\'EGov Type\', validation_state = \'validated\')\n
+\n
+portal_type_list = ()\n
+\n
+for portal_type in validated_type_list:\n
+  portal_type_list += (portal_type.getTitle(),)\n
+\n
+\n
+type_list = portal_type_list + (\'Person\', \'Organisation\')\n
 return type_list\n
 </string> </value>
         </item>
@@ -93,6 +102,12 @@ return type_list\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal_types</string>
+                            <string>validated_type_list</string>
+                            <string>portal_type_list</string>
+                            <string>_getiter_</string>
+                            <string>portal_type</string>
+                            <string>_inplacevar_</string>
                             <string>type_list</string>
                           </tuple>
                         </value>

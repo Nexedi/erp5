@@ -1,4 +1,8 @@
 2010-06-23 mayoro
+* modify ERP5Site_getQuickSearchableTypeList to allow processing anonymous and not anonymous procedure
+* after login redirect in desired default page (default view)
+
+2010-06-23 mayoro
 * Allow manager to set own password for procedures
 
 2010-06-23 mayoro
