@@ -1038,6 +1038,12 @@ class TestDocument(TestDocumentMixin):
                         parsed_string.keys())
     self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
 
+    # parse with multiple portal_type containing spaces in one portal_type
+    search_string = "type:Drawing,File,Web Page"
+    parsed_string = parse(search_string)
+    self.assertEquals(parsed_string['portal_type'], 'Drawing,File,Web Page')
+
+
   def test_11_SearchStringSearchCapability(self):
     """
     Test search string search capabilities.
