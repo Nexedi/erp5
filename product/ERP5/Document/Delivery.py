@@ -353,8 +353,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       ## Note that fast option was removed. Now, fast=1 is ignored.
       
       # Check if the total quantity equals the total of each simulation movement quantity
-      for movement in self.getMovementList():
-        if movement.isDivergent():
+      for simulation_movement in self._getAllRelatedSimulationMovementList():
+        if simulation_movement.isDivergent():
           return 1
       return 0
 
@@ -364,8 +364,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       Return a list of messages that contains the divergences
       """
       divergence_list = []
-      for movement in self.getMovementList():
-         divergence_list.extend(movement.getDivergenceList())
+      for simulation_movement in self._getAllRelatedSimulationMovementList():
+         divergence_list.extend(simulation_movement.getDivergenceList())
       return divergence_list
 
     @UnrestrictedMethod
