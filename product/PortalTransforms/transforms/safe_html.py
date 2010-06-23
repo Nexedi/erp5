@@ -74,12 +74,20 @@ msg_pat = """
 """
 
 def hasScript(s):
-   """ Dig out evil Java/VB script inside an HTML attribute """
-
-   # look for "script" and "expression"
-   javascript_pattern = re.compile("([\s\n]*?s[\s\n]*?c[\s\n]*?r[\s\n]*?i[\s\n]*?p[\s\n]*?t[\s\n]*?:)|([\s\n]*?e[\s\n]*?x[\s\n]*?p[\s\n]*?r[\s\n]*?e[\s\n]*?s[\s\n]*?s[\s\n]*?i[\s\n]*?o[\s\n]*?n)", re.DOTALL|re.IGNORECASE)
+   """
+   >>> hasScript('script:evil(1);')
+   True
+   >>> hasScript('expression:evil(1);')
+   True
+   >>> hasScript('http://foo.com/ExpressionOfInterest.doc')
+   False
+   """
    s = decode_htmlentities(s)
-   return javascript_pattern.findall(s)
+   s = ''.join(s.split()).lower()
+   for t in ('script:', 'expression:', 'expression('):
+      if t in s:
+         return True
+   return False
 
 def decode_htmlentities(s):
    """ XSS code can be hidden with htmlentities """
