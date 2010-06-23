@@ -73,6 +73,15 @@ msg_pat = """
 %s</d>
 """
 
+# we inconditionally remove all meta tags with http-equiv
+# except for content-type, because:
+# * refresh can redirect;
+# * set-cookie expose confidential data;
+# * www-authenticate can disturb authentication on portal;
+# * expires can disbale caching features
+# * ...
+ALLOWED_HTTP_EQUIV_VALUE_LIST = ('content-type',)
+
 def hasScript(s):
    """
    >>> hasScript('script:evil(1);')
@@ -172,6 +181,11 @@ class StrippingParser(HTMLParser):
         """
         if self.suppress: return
 
+        if tag.lower() == 'meta':
+          for k, v in attrs:
+            if k.lower() == 'http-equiv' and v.lower() not in\
+                                                 ALLOWED_HTTP_EQUIV_VALUE_LIST:
+              return
         if self.valid.has_key(tag):
             self.result.append('<' + tag)
 
