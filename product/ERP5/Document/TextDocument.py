@@ -189,14 +189,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
           return base_list[0]
       return Document.getContentBaseURL(self)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-    def hasBaseData(self):
-      """
-        A TextDocument store its base_data in the "text_content" property.
-        Having base_data is equivalent to having some text_content.
-      """
-      return self.hasTextContent()
-
     security.declareProtected(Permissions.ModifyPortalContent, 'setBaseData')
     def setBaseData(self, value):
       """Store base_data into text_content
