@@ -6,6 +6,6 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: here.getPortalType() in ('M0','M0 Bis','M2','M2 Bis','M4','P0','P2','P4','S1','S5','Subscription Form','Declaration TVA','Mandate Form', 'Organisation', 'Assignment')</value>
+  <value>python: context.getPortalType() in ( 'Organisation', 'Assignment') or  context.getTypeInfo().getPortalType() == 'EGov Type'</value>
  </item>
 </catalog_method>
