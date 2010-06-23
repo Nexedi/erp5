@@ -129,12 +129,9 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
   # Declarative security
   security = ClassSecurityInfo()
 
-  ### Extensible content
-  def _getExtensibleContent(self, request, name):
-    # Permanent URL traversal
-    # First we must get the logged user by forcing identification
+  def _forceIdentification(self, request):
+    # force identification (usable for extensible content)
     cache = getReadOnlyTransactionCache(self)
-    # LOG('getReadOnlyTransactionCache', 0, repr(cache)) # Currently, it is always None
     if cache is not None:
       key = ('__bobo_traverse__', self, 'user')
       try:
@@ -180,14 +177,23 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
                     # do not try to change SecurityManager
       if cache is not None:
         cache[key] = user
+
+    old_manager = None
     if user is not None:
       # We need to perform identification
       old_manager = getSecurityManager()
       newSecurityManager(get_request(), user)
+
+    return old_manager, user
+
+  ### Extensible content
+  def _getExtensibleContent(self, request, name):
+    # Permanent URL traversal
+    old_manager, user = self._forceIdentification(request)
     # Next get the document per name
     portal = self.getPortalObject()
     document = self.getDocumentValue(name=name, portal=portal)
-    # Last, cleanup everything
+    # restore original security context if there's a logged in user
     if user is not None:
       setSecurityManager(old_manager)
     if document is not None:
