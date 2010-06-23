@@ -1027,6 +1027,17 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals(kw['newest'], parsed_string['newest'])
     self.assertEquals('boolean', parsed_string['mode'])
 
+    # search with multiple portal_type
+    kw = {'search_portal_type': 'Document,Presentation,Web Page',
+           'searchabletext_any': 'erp5'}
+    search_string = assemble(**kw)
+    parsed_string = parse(search_string)
+    self.assertEquals('erp5 type:"Document,Presentation,Web Page"', \
+                      search_string)
+    self.assertSameSet(['searchabletext', 'portal_type'], \
+                        parsed_string.keys())
+    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
+
   def test_11_SearchStringSearchCapability(self):
     """
     Test search string search capabilities.
@@ -1194,6 +1205,11 @@ class TestDocument(TestDocumentMixin):
     kw = {'searchabletext_any': 'owner',
           'contributor_title': '%Contributor%'}
     self.assertSameSet([document_4], getAdvancedSearchStringResultList(**kw))
+
+    # multiple portal_type specified
+    kw = {'search_portal_type': 'File,Presentation'}
+    self.assertSameSet([document_1, document_2, document_3, document_4], getAdvancedSearchStringResultList(**kw))
+
     # XXX: search limited to a certain date range
     # XXX: search mode
 
