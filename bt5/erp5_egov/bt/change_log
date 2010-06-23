@@ -1,4 +1,7 @@
 2010-06-23 mayoro
+* Allow manager to set own password for procedures
+
+2010-06-23 mayoro
 * Change filter expression in z_catalog_egov_list
 * Allow Agent and Owner to delete procedure in draft state
 

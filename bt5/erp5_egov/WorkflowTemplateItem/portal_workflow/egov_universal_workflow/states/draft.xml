@@ -96,6 +96,7 @@
                     <value>
                       <tuple>
                         <string>Agent</string>
+                        <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
@@ -105,6 +106,7 @@
                     <value>
                       <tuple>
                         <string>Agent</string>
+                        <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
