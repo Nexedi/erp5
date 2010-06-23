@@ -1,3 +1,10 @@
+2010-06-23 mohamadou
+* use ERP5Type_getSecurityCategoryFromAssignmentParentGroup to generate function_group* group of security
+
+
+2010-06-23 mohamadou
+* use role_name_list instead of role_name in procedure role information definition
+
 2010-06-23 mayoro
 * modify ERP5Site_getQuickSearchableTypeList to allow processing anonymous and not anonymous procedure
 * after login redirect in desired default page (default view)
