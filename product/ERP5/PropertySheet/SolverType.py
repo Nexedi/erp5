@@ -68,6 +68,11 @@ class SolverType:
           'mode':       'w',
           'label':      'Delivery Solvers'
          },
+        { 'id':         'automatic_solver',
+          'type':       'boolean',
+          'mode':       'w',
+          'label':      'Solve automatically if True'
+         },
     )
 
     _categories = ('conflicting_solver',)
