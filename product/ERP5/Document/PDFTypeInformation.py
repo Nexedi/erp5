@@ -419,7 +419,9 @@ class PDFTypeInformation(ERP5TypeInformation):
   isPortalContent = 1
   isRADContent = 1
 
-  property_sheets = ( PropertySheet.PDFType, )
+  property_sheets = ( PropertySheet.PDFType, 
+                      PropertySheet.Reference,
+                      PropertySheet.Login,)
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -767,6 +769,9 @@ class PDFTypeInformation(ERP5TypeInformation):
     ]
 
   def updatePropertySheetDefinitionDict(self, definition_dict, **kw):
+    """
+    This function add properties of scribus file to the propertySheet 
+    """
     if self.getDefaultScribusFormValue() is None:
       return
     if '_properties' in definition_dict:
