@@ -1,3 +1,6 @@
+2010-06-23 mohamadou
+* change erp5_egov skin priority since some standar script are redefined.
+
 2010-06-23 mayoro
 * correct previous commit, use procedure_request instead of procedure
 
