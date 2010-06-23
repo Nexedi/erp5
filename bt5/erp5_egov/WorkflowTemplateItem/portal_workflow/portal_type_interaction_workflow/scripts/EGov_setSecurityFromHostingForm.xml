@@ -131,9 +131,10 @@ procedure_request.newContent(portal_type=\'Role Information\',\n
 #In this case a specific function sould be used as role_base_category_script_id\n
 for (seq,role_definition) in map_group_function_dict.items():\n
   role_name = role_definition[-1]\n
+  role_name_list = role_name.split(\',\')\n
   procedure_request.newContent(portal_type=\'Role Information\',\n
                      title=\'Role Information %s\' % (seq+1),\n
-                     role_name=role_name,\n
+                     role_name_list=role_name_list,\n
                      description=\'Generated Role Information - %s \' % role_name,\n
                      role_base_category_list=\'group function\',\n
                      role_base_category_script_id=\'\',\n
@@ -200,6 +201,7 @@ for (seq,role_definition) in map_group_function_dict.items():\n
                             <string>_write_</string>
                             <string>seq</string>
                             <string>role_name</string>
+                            <string>role_name_list</string>
                           </tuple>
                         </value>
                     </item>
