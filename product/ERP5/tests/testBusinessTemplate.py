@@ -82,7 +82,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     return ('erp5_base',
             'erp5_csv_style',
             'erp5_pdf_style',
-            'erp5_barcode',
             )
 
   def getTitle(self):
@@ -6771,8 +6770,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortalObject()
     template_tool = portal.portal_templates
     # Try with erp5_base, which contais ActionTemplateItem and works.
-    bt5obj = portal.portal_catalog.getResultValue(portal_type='Business Template',
-                                                  title='erp5_base')
+    bt5obj = template_tool.getInstalledBusinessTemplate('erp5_base')
     template_copy = template_tool.manage_copyObjects(ids=(bt5obj.getId(),))
     new_id_list = template_tool.manage_pasteObjects(template_copy)
 
@@ -6785,8 +6783,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # Use erp5_barcode because it contains ActionTemplateItem, which seems to
     # cause problems to be export. Maybe create a test bt5 with all items could
     # be more appropriated.
-    bt5obj = portal.portal_catalog.getResultValue(portal_type='Business Template',
-                                                  title='erp5_barcode')
+    bt5obj = template_tool.getInstalledBusinessTemplate('erp5_core')
     # it is required to copy and paste to be able to export it
     template_copy = template_tool.manage_copyObjects(ids=(bt5obj.getId(),))
     new_id_list = template_tool.manage_pasteObjects(template_copy)
