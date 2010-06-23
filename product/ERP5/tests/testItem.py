@@ -158,6 +158,20 @@ class TestItemMixin(TestSaleInvoiceMixin):
     item_list = sequence.get('item_list')
     order_line.setAggregateValueList(item_list)
 
+  def stepOrderSetAggregationList(self, sequence=None,
+                                          sequence_list=None, **kw):
+    """  Aggregate Items """
+    order = sequence.get('order')
+    item_module = self.getPortal().item_module
+    item_list = item_module.contentValues()
+    # this step expect that number of order lines
+    # and number of item list is same.
+    order_line_list = order.contentValues(portal_type=self.order_line_portal_type)
+    self.assertEqual(len(order_line_list), len(item_list))
+    for order_line, item in zip(order_line_list, item_list):
+      order_line.setAggregateValueList([item])
+
+
   def stepCheckOrderLineAggregate(self, sequence=None,
                                           sequence_list=None, **kw):
     """ Check items """
@@ -178,6 +192,13 @@ class TestItemMixin(TestSaleInvoiceMixin):
     packing_list_line = sequence.get('packing_list_line')
     self.checkAggregate(line=packing_list_line, sequence=sequence)
 
+  def stepCheckPackingListLineAggregateList(self, sequence=None,
+                                          sequence_list=None, **kw):
+    """ Check items """
+    packing_list_line = sequence.get('packing_list_line')
+    self.checkAggregateList(line=packing_list_line, sequence=sequence)
+
+
   def stepCheckInvoiceLineAggregate(self, sequence=None,
                                           sequence_list=None, **kw):
     """ Check items """
@@ -186,19 +207,125 @@ class TestItemMixin(TestSaleInvoiceMixin):
                          portal_type=self.invoice_line_portal_type)
     self.checkAggregate(line=invoice_line_list[0], sequence=sequence)
 
+  def stepCheckToRender_Delivery_viewAggregatedItemList(self, sequence=None,
+                                                        sequence_list=None, **kw):
+    """Check to render the view"""
+    packing_list = sequence.get('packing_list')
+    packing_list.Delivery_viewAggregatedItemList()
+
+  def stepCheckPackingListStartDateAfterStartDateAdopt(self,sequence=None, sequence_list=None, **kw):
+    """
+      Check that start date is adopted.
+    """
+    packing_list = sequence.get('packing_list')
+    self.assertEquals(packing_list.getStartDate(),self.datetime+15)
+
+
+  def stepModifyOrderLinesQuantity(self,sequence=None, sequence_list=None, **kw):
+    """
+      modify order line quantities
+    """
+    order = sequence.get('order')
+    order_line_list = order.contentValues(portal_type=self.order_line_portal_type)
+    for order_line in order_line_list:
+      order_line.edit(quantity=self.default_quantity-1)
+
+  def stepModifyOneOrderLineStartDate(self,sequence=None, sequence_list=None, **kw):
+    """
+      modify order line start date
+    """
+    order = sequence.get('order')
+    resource_list = sequence.get('resource_list')
+    order_line_list = order.contentValues(portal_type=self.order_line_portal_type)
+    self.assertEquals(len(order_line_list),len(resource_list))
+    order_line_list[-1].edit(start_date=self.datetime+15)
+
+
+  def stepModifyOrderLinesDate(self,sequence=None, sequence_list=None, **kw):
+    """
+      modify order line date
+    """
+    order = sequence.get('order')
+    for order_line in order.contentValues(portal_type=self.order_line_portal_type):
+      order_line.edit(start_date=self.datetime+15)
+
   def checkAggregate(self, line=None, sequence=None):
     """ Check items """
     item_list = sequence.get('item_list')
     self.assertEquals(len(line.getAggregateList()),1)
     self.failUnless(item_list[0] in line.getAggregateValueList())
-    
+
+  def checkAggregateList(self, line=None, sequence=None):
+    """ Check items """
+    item_list = self.portal.item_module.contentValues(portal_type='Item')
+    self.failUnless(line.getAggregateValueList()[0] in item_list)
+
+
+  DEFAULT_ITEM_WITH_ORDER_SEQUENCE = \
+                      'stepCreateEntities \
+                       stepCreateCurrency \
+                       stepCreateItemList \
+                       stepCreateOrder \
+                       stepSetOrderProfile \
+                       stepSetOrderPriceCurrency \
+                       stepCreateNotVariatedResource \
+                       stepTic \
+                       stepCreateOrderLine \
+                       stepSetOrderLineResource \
+                       stepSetOrderLineDefaultValues \
+                       stepOrderLineSetAggregationList \
+                       '
+  DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE = DEFAULT_ITEM_WITH_ORDER_SEQUENCE + '\
+                       stepOrderOrder \
+                       stepTic \
+                       stepConfirmOrder \
+                       stepTic \
+                       stepCheckOrderRule \
+                       stepCheckOrderLineAggregate \
+                       stepCheckOrderSimulation \
+                       stepCheckSimulationAggregate \
+                       stepCheckDeliveryBuilding \
+                       stepCheckPackingListIsNotDivergent \
+                       stepCheckPackingListLineAggregate \
+                       stepCheckToRender_Delivery_viewAggregatedItemList \
+                       '
+  DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE_AND_SAME_RESOURCE_LINES = DEFAULT_ITEM_WITH_ORDER_SEQUENCE + '\
+                       stepCreateItemList \
+                       stepCreateOrderLine \
+                       stepSetOrderLineResource \
+                       stepSetOrderLineDefaultValues \
+                       stepOrderSetAggregationList \
+                       stepOrderOrder \
+                       stepTic \
+                       stepConfirmOrder \
+                       stepTic \
+                       stepCheckOrderSimulation \
+                       stepCheckDeliveryBuilding \
+                       stepCheckPackingListIsNotDivergent \
+                       stepCheckOrderPackingList \
+                       stepCheckPackingListLineAggregateList \
+                       '
 
 class TestItem(TestItemMixin, ERP5TypeTestCase):
 
   quiet = 0
+  run_all_test= 1
 
   def getTitle(self):
     return "Item"
+
+  def beforeTearDown(self):
+    transaction.abort()
+    for module in (self.portal.organisation_module,
+                   self.portal.item_module,
+                   self.portal.sale_packing_list_module,
+                   self.portal.purchase_packing_list_module,
+                   self.portal.product_module,
+                   self.portal.portal_simulation,):
+      module.manage_delObjects(list(module.objectIds()))
+    transaction.commit()
+    self.tic()
+
 
   def test_01_ItemSimpleTest(self, quiet=quiet):
     sequence_list = SequenceList()
@@ -534,6 +661,207 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     self.assertEquals(packing_list.getCausalityState(),'solved')
+
+  def test_07_WithPackingListChangePackingListQuantityAndAccept(self, quiet=quiet, run=run_all_test):
+    """
+      Create order and add items, then Change the quantity
+      on an delivery line, after that see if the packing list is
+      divergent and then split and defer the packing list
+    """
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepSplitAndDeferPackingList \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListSplitted \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_08_ChangePackingListDateAndAccept(self, quiet=quiet, run=run_all_test):
+    """
+      Create order and add items, then Change the date
+      on an delivery line, after that see if the packing list is
+      divergent and then accept decision on the packing list
+    """
+    sequence_list = SequenceList()
+
+    sequence_string = self.DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE + '\
+                      stepChangePackingListStartDate \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepUnifyStartDateWithDecision \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckSimulationStartDateUpdated \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_09_ChangeOrderDateAndAcceptOnPackingList(self, quiet=quiet, run=run_all_test):
+    """
+      Create order and add items, then Change the order date
+      on an order line, after that see if the packing list is
+      divergent and then adopt prevision on the packing list
+    """
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE + '\
+                      stepModifyOneOrderLineStartDate \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepCheckPackingListIsDivergent \
+                      stepUnifyStartDateWithPrevision \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckNewPackingListAfterStartDateAdopt \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_10_ChangeOrderQuantityAndAdoptOnPackingList(self, quiet=quiet, run=run_all_test):
+    """
+      Create order and add items, then Change the quantity
+      on an order line, after that see if the packing list is
+      divergent and then adopt prevision on the packing list
+    """
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE + '\
+                      stepModifyOrderLinesQuantity \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAdoptPrevisionQuantity \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListLineWithNewQuantityPrevision \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_11_ChangeOrderQuantityAndAcceptOnPackingList(self, quiet=quiet, run=run_all_test):
+    """
+      Create order and add items, then Change the quantity
+      on an order line, after that see if the packing list is
+      divergent and then accept decision on the packing list
+    """
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE + '\
+                      stepModifyOrderLinesQuantity \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionQuantity \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSimulationQuantityUpdated \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_12_CreteSameResourceDifferentItemOrderLines(self, quiet=quiet, run=run_all_test):
+    """
+      Create order lines with same resouces and add items into them, then Change the quantity
+      on the order lines, after that see if the packing list is
+      divergent and then adopt prevision on the packing list
+    """
+    sequence_list = SequenceList()
+    sequence_string = ''
+    sequence_string = self.DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE_AND_SAME_RESOURCE_LINES + '\
+                      stepModifyOrderLinesQuantity \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAdoptPrevisionQuantity \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListLineWithNewQuantityPrevision \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_13_CreateSameResourceDiffrentItemOrderLinesThenChangeTheOrderLinesDate(
+           self, quiet=quiet, run=run_all_test):
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE_AND_SAME_RESOURCE_LINES + '\
+                      stepModifyOrderLinesDate \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepUnifyStartDateWithPrevision \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepCheckPackingListStartDateAfterStartDateAdopt \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_14_ManuallyAddPackingListWithItem(self, quiet=quiet, run=run_all_test):
+    """
+    Checks that adding invoice lines and accounting lines to one invoice
+    generates correct simulation
+    """
+    if not quiet:
+      self.logMessage('Invoice with Manually Added Movements')
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_ITEM_WITH_PACKING_LIST_SEQUENCE + '\
+          stepSetReadyPackingList \
+          stepTic \
+          stepStartPackingList \
+          stepCheckInvoicingRule \
+          stepTic \
+          stepCheckInvoiceBuilding \
+          stepRebuildAndCheckNothingIsCreated \
+          stepCheckInvoicesConsistency \
+          stepAddInvoiceLines \
+          stepTic \
+          stepStartInvoice \
+          stepTic \
+          stepCheckSimulationTrees \
+          '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def test_15_ThreeOrderLines(self, quiet=quiet, run=run_all_test):
+    """
+    Check that item with three order lines.
+    """
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_ITEM_WITH_ORDER_SEQUENCE + '\
+                       stepCreateItemList \
+                       stepCreateOrderLine \
+                       stepSetOrderLineResource \
+                       stepSetOrderLineDefaultValues \
+                       stepCreateItemList \
+                       stepCreateOrderLine \
+                       stepSetOrderLineResource \
+                       stepSetOrderLineDefaultValues \
+                       stepOrderSetAggregationList \
+                       stepTic \
+                       stepOrderOrder \
+                       stepTic \
+                       stepConfirmOrder \
+                       stepTic \
+                       stepCheckOrderSimulation \
+                       stepCheckDeliveryBuilding \
+                       stepCheckPackingListIsNotDivergent \
+                       stepCheckPackingListLineAggregateList \
+                       stepCheckOrderPackingList '
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  # Note that: Item with Inventory API tests exsist in
+  # testInventoryModule(tested getInventory) and testInventoryAPI(tested getTrackingList).
+  #
+  # def test_WithInventoryAPI(self):
+  #   pass
 
   def test_select_item_dialog_no_variation(self):
     organisation = self.createOrganisation(title='Organisation III')
