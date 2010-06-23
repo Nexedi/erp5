@@ -47,6 +47,7 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, PermanentURLMixIn,\
 VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
+from AccessControl.SecurityManagement import setSecurityManager
 from zLOG import LOG, ERROR
 
 # Mixin Import
@@ -471,15 +472,20 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
   def _getExtensibleContent(self, request, name):
     # Be sure that html conversion is done,
     # as it is required to extract extensible content
+    old_manager, user = self._forceIdentification(request)
+    web_cache_kw = {'name': name,
+                    'format': EMBEDDED_FORMAT}
     try:
       self._convert(format='html')
-      web_cache_kw = {'name': name,
-                      'format': EMBEDDED_FORMAT}
       _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
       mime, data = self.getConversion(format=EMBEDDED_FORMAT, file_name=name)
-      return OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
+      document = OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     except (NotConvertedError, ConversionError, KeyError):
-      return PermanentURLMixIn._getExtensibleContent(self, request, name)
+      document = PermanentURLMixIn._getExtensibleContent(self, request, name)
+    # restore original security context if there's a logged in user
+    if user is not None:
+      setSecurityManager(old_manager)
+    return document
 
   security.declarePrivate('_convertToBaseFormat')
   def _convertToBaseFormat(self):
