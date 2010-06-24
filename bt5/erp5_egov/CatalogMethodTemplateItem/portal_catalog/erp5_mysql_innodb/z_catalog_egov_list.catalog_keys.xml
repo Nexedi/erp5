@@ -8,4 +8,7 @@
  <item key="_filter_expression_archive" type="str">
   <value>python: context.getPortalType() in ('Organisation', 'Assignment') or (lambda type_info: type_info is not None and type_info.getPortalType() == 'EGov Type')(context.getTypeInfo())</value>
  </item>
+ <item key="_filter_expression_cache_key_archive" type="tuple">
+  <value>portal_type</value>
+ </item>
 </catalog_method>

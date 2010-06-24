@@ -1,4 +1,7 @@
 2010-06-24 mayoro
+*use portal_type as expression kache key
+
+2010-06-24 mayoro
 * use lambda expression to filter objects without portal_type in z_catalog_egov_list filter
 
 2010-06-23 mohamadou
