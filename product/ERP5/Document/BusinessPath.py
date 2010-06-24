@@ -236,6 +236,7 @@ class BusinessPath(Path, Predicate):
         explanation):
       if simulation_movement.getDeliveryValue() is None:
         result = True
+        break
     predecessor = self.getPredecessorValue()
     if predecessor is None:
       return result
