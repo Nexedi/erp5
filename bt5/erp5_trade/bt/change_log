@@ -1,3 +1,6 @@
+2010-06-22 JPS
+* Business Path now split into Business Link and Trade Model Path
+
 2010-05-06 nicolas.dumazet
 * Add Internal Order, Internal Order Line and Internal Order Cell portal types
 

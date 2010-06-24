@@ -83,7 +83,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -97,8 +99,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_order_builder_list</string>
-                        <string>my_source_method_id</string>
                         <string>my_completed_state_list</string>
                         <string>my_predecessor</string>
                       </list>
@@ -109,11 +111,10 @@
                     <value>
                       <list>
                         <string>my_trade_phase</string>
+                        <string>my_int_index</string>
                         <string>my_delivery_builder_list</string>
-                        <string>my_destination_method_id</string>
                         <string>my_frozen_state_list</string>
                         <string>my_successor</string>
-                        <string>my_deliverable</string>
                       </list>
                     </value>
                 </item>
@@ -122,7 +123,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessPath_viewAdvanced</string> </value>
+            <value> <string>BusinessLink_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -130,7 +131,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BusinessPath_viewAdvanced</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -146,7 +147,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Advanced</string> </value>
+            <value> <string>Business Link View</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

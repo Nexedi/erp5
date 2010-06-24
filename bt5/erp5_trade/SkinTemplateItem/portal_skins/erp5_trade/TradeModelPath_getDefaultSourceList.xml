@@ -55,7 +55,9 @@
             <key> <string>_body</string> </key>
             <value> <string>category_list = []\n
 for base_category in context.getSourceArrowBaseCategoryList():\n
-  category = movement.getDefaultAcquiredCategoryMembership(base_category, base=1)\n
+  category = context.getDefaultAcquiredCategoryMembership(base_category, base=1) # This should be moved to degault implementation of business path - XXX-JPS\n
+  if category is None:\n
+    category = movement.getDefaultAcquiredCategoryMembership(base_category, base=1)\n
   if category:\n
     category_list.append(category)\n
 \n
@@ -103,6 +105,7 @@ return category_list\n
                             <string>context</string>
                             <string>base_category</string>
                             <string>category</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -119,7 +122,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessPath_getDefaultSourceList</string> </value>
+            <value> <string>TradeModelPath_getDefaultSourceList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

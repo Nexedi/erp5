@@ -124,7 +124,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessProcess_view</string> </value>
+            <value> <string>BusinessProcess_viewTradeModelPath</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -148,7 +148,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Business Process Model</string> </value>
+            <value> <string>Trade Model Path</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -156,6 +156,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

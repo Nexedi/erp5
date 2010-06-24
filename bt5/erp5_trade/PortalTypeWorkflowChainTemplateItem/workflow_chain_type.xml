@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
-  <type>Business Path</type>
+  <type>Business Link</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
@@ -166,5 +166,9 @@
  <chain>
   <type>Trade Model Line</type>
   <workflow>edit_workflow, trade_model_line_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Trade Model Path</type>
+  <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

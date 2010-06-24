@@ -106,7 +106,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessPath_viewProfile</string> </value>
+            <value> <string>BusinessLink_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

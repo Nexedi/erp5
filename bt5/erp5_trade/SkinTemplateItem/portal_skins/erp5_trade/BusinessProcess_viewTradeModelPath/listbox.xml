@@ -92,22 +92,6 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>predecessor_title</string>
-                          <string>Predecessor</string>
-                        </tuple>
-                        <tuple>
-                          <string>successor_title</string>
-                          <string>Successor</string>
-                        </tuple>
-                        <tuple>
-                          <string>order_builder_title_list</string>
-                          <string>Order Builders</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_builder_title_list</string>
-                          <string>Delivery Builders</string>
-                        </tuple>
-                        <tuple>
                           <string>trade_phase_title</string>
                           <string>Trade Phase</string>
                         </tuple>
@@ -138,15 +122,15 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Business Link</string>
-                          <string>Business Link</string>
+                          <string>Trade Model Path</string>
+                          <string>Trade Model Path</string>
                         </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>business_process_model_view_selection</string> </value>
+                    <value> <string>business_process_trade_model_path_view_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -165,7 +149,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Business Links</string> </value>
+                    <value> <string>Trade Model Paths</string> </value>
                 </item>
               </dictionary>
             </value>

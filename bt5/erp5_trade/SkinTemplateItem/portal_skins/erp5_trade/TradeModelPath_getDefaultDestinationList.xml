@@ -119,7 +119,7 @@ return category_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessPath_getDefaultDestinationList</string> </value>
+            <value> <string>TradeModelPath_getDefaultDestinationList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

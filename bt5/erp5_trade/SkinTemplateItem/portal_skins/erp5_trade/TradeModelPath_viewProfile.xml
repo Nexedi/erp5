@@ -64,9 +64,6 @@
               <list>
                 <string>left</string>
                 <string>right</string>
-                <string>center</string>
-                <string>bottom</string>
-                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -75,38 +72,18 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center</string> </key>
-                    <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list>
-                        <string>listbox_int_index</string>
-                        <string>listbox_order_builder_title_list</string>
-                        <string>listbox_delivery_builder_title_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_version</string>
-                        <string>my_specialise_title_list</string>
+                        <string>my_source_method_id</string>
+                        <string>my_source_section_title</string>
+                        <string>my_source_title</string>
+                        <string>my_source_decision_title</string>
+                        <string>my_source_administration_title</string>
+                        <string>my_source_payment</string>
+                        <string>my_source_project_title</string>
+                        <string>my_source_reference</string>
+                        <string>my_source_carrier_title</string>
                       </list>
                     </value>
                 </item>
@@ -114,8 +91,15 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_reference</string>
-                        <string>my_translated_validation_state_title</string>
+                        <string>my_destination_method_id</string>
+                        <string>my_destination_section_title</string>
+                        <string>my_destination_title</string>
+                        <string>my_destination_decision_title</string>
+                        <string>my_destination_administration_title</string>
+                        <string>my_destination_payment</string>
+                        <string>my_destination_project_title</string>
+                        <string>my_destination_reference</string>
+                        <string>my_destination_carrier_title</string>
                       </list>
                     </value>
                 </item>
@@ -124,7 +108,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessProcess_view</string> </value>
+            <value> <string>TradeModelPath_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -132,7 +116,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BusinessProcessModel_view</string> </value>
+            <value> <string>BusinessPath_viewProfile</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -148,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Business Process Model</string> </value>
+            <value> <string>Profile</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -156,6 +140,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
