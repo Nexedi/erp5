@@ -1,3 +1,6 @@
+2010-06-24 mayoro
+* use lambda expression to filter objects without portal_type in z_catalog_egov_list filter
+
 2010-06-23 mohamadou
 * add a script to update a procedure's local roles using a username and role_name_list
 
