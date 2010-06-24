@@ -1,3 +1,6 @@
+2010-06-24 mohamadou
+*rename the script Egov_updateProcedureLocalRole in EGov_updateProcedureLocalRole
+
 2010-06-24 mayoro
 *use portal_type as expression kache key
 
