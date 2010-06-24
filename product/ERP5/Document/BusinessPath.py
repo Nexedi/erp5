@@ -227,19 +227,22 @@ class BusinessPath(Path, Predicate):
   def isBuildable(self, explanation):
     """
     """
-    # check if there is at least one simulation movement which is not
-    # delivered
-    result = False
     if self.isCompleted(explanation) or self.isFrozen(explanation):
       return False # No need to build what was already built or frozen
+
+    # check if there is at least one simulation movement which is not
+    # delivered
     for simulation_movement in self.getRelatedSimulationMovementValueList(
         explanation):
       if simulation_movement.getDeliveryValue() is None:
-        result = True
         break
+    else:
+      # if all simulation movements are delivered, we can bail out
+      return False
+
     predecessor = self.getPredecessorValue()
     if predecessor is None:
-      return result
+      return True
     # XXX FIXME TODO
     # For now isPartiallyCompleted is used, as it was
     # assumed to not implement isPartiallyBuildable, so in reality
@@ -250,9 +253,7 @@ class BusinessPath(Path, Predicate):
     #
     # Such cases are Business Processes using sequence not related
     # to simulation tree with much of compensations
-    if predecessor.isPartiallyCompleted(explanation):
-      return result
-    return False
+    return predecessor.isPartiallyCompleted(explanation)
 
   def isPartiallyBuildable(self, explanation):
     """
