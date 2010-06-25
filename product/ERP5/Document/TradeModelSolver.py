@@ -64,15 +64,18 @@ class TradeModelSolver(AcceptSolver):
     portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
     solved_property_list = configuration_dict.get('tested_property_list',
                                                   portal_type.getTestedPropertyList())
+    delivery_dict = {}
+    for simulation_movement in self.getDeliveryValueList():
+      delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
+                               []).append(simulation_movement)
 
     # Here, items of delivery_list should be movements, not deliveries.
-    solved_movement_list = self.getDeliveryValueList()
-    delivery_list = []
-    for solved_movement in solved_movement_list:
-      delivery = solved_movement.getDeliveryValue()
-      if delivery not in delivery_list:
-        delivery_list.append(delivery)
-    all_movement_list = sum([x.getMovementList() for x in delivery_list], [])
+    delivery_set = set()
+    solved_movement_list = delivery_dict.iterkeys()
+    for movement in solved_movement_list:
+      delivery = movement.getRootDeliveryValue()
+      delivery_set.add(delivery)
+    all_movement_list = sum([x.getMovementList() for x in delivery_set], [])
 
     # First, separate movements into invoice lines and trade model
     # related lines.
@@ -88,8 +91,8 @@ class TradeModelSolver(AcceptSolver):
 
     # Second, apply changes on invoice lines to simulation movements,
     # then expand.
-    for movement in solved_movement_list:
-      for simulation_movement in movement.getDeliveryRelatedValueList():
+    for movement, simulation_movement_list in delivery_dict.iteritems():
+      for simulation_movement in simulation_movement_list:
         value_dict = {}
         for solved_property in solved_property_list:
           new_value = movement.getProperty(solved_property)

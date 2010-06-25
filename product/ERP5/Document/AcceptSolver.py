@@ -64,31 +64,25 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     original one recorded.
     """
     configuration_dict = self.getConfigurationPropertyDict()
-    portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
-    solved_property_list = configuration_dict.get('tested_property_list',
-                                                  portal_type.getTestedPropertyList())
-    for movement in self.getDeliveryValueList():
-      simulation_movement_list = movement.getDeliveryRelatedValueList()
-      # if movement here is a delivery, we need to find simulation
-      # movements by its movements.
-      if len(simulation_movement_list) == 0:
-        simulation_movement_list = sum(
-          [x.getDeliveryRelatedValueList() \
-           for x in self.getDeliveryValue().getMovementList()], [])
-      for simulation_movement in simulation_movement_list:
-        value_dict = {}
-        for solved_property in solved_property_list:
-          new_value = movement.getProperty(solved_property)
-          # XXX hard coded
-          if solved_property == 'quantity':
-            new_quantity = new_value * simulation_movement.getDeliveryRatio()
-            value_dict.update({'quantity':new_quantity})
-          else:
-            value_dict.update({solved_property:new_value})
-        for property_id, value in value_dict.iteritems():
-          if not simulation_movement.isPropertyRecorded(property_id):
-            simulation_movement.recordProperty(property_id)
-          simulation_movement.setMappedProperty(property_id, value)
-        simulation_movement.expand()
+    solved_property_list = configuration_dict.get('tested_property_list', None)
+    if solved_property_list is None:
+      portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
+      solved_property_list = portal_type.getTestedPropertyList()
+    for simulation_movement in self.getDeliveryValueList():
+      movement = simulation_movement.getDeliveryValue()
+      value_dict = {}
+      for solved_property in solved_property_list:
+        new_value = movement.getProperty(solved_property)
+        # XXX hard coded
+        if solved_property == 'quantity':
+          new_quantity = new_value * simulation_movement.getDeliveryRatio()
+          value_dict.update({'quantity':new_quantity})
+        else:
+          value_dict.update({solved_property:new_value})
+      for property_id, value in value_dict.iteritems():
+        if not simulation_movement.isPropertyRecorded(property_id):
+          simulation_movement.recordProperty(property_id)
+        simulation_movement.setMappedProperty(property_id, value)
+      simulation_movement.expand()
     # Finish solving
     self.succeed()

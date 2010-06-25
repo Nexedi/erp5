@@ -65,11 +65,14 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
   # ISolver Implementation
   def solve(self):
     """
-    """    
-    for delivery_line in self.getDeliveryValueList(): 
-      decision_quantity = delivery_line.getQuantity()
-      simulation_movement_list = delivery_line.getDeliveryRelatedValueList()
-      configuration_dict = self.getConfigurationPropertyDict()
+    """
+    configuration_dict = self.getConfigurationPropertyDict()
+    delivery_dict = {}
+    for simulation_movement in self.getDeliveryValueList():
+      delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
+                               []).append(simulation_movement)
+    for movement, simulation_movement_list in delivery_dict.iteritems():
+      decision_quantity = movement.getQuantity()
       delivery_solver = self.portal_solvers.newDeliverySolver(
         configuration_dict['delivery_solver'], simulation_movement_list)
       # Update the quantity using delivery solver algorithm

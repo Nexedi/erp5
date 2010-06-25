@@ -67,17 +67,14 @@ class UnifySolver(AcceptSolver):
                                                   portal_type.getTestedPropertyList())
     # XXX it does not support multiple tested properties.
     solved_property = solved_property_list[0]
-    for movement in self.getDeliveryValueList():
+    delivery_dict = {}
+    for simulation_movement in self.getDeliveryValueList():
+      delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
+                               []).append(simulation_movement)
+    for movement, simulation_movement_list in delivery_dict.iteritems():
       configuration_dict = self.getConfigurationPropertyDict()
       new_value = configuration_dict.get('value')
       movement.setProperty(solved_property, new_value)
-      simulation_movement_list = movement.getDeliveryRelatedValueList()
-      # if movement here is a delivery, we need to find simulation
-      # movements by its movements.
-      if len(simulation_movement_list) == 0:
-        simulation_movement_list = sum(
-          [x.getDeliveryRelatedValueList() \
-           for x in self.getDeliveryValue().getMovementList()], [])
       for simulation_movement in simulation_movement_list:
         value_dict = {solved_property:new_value}
         for property_id, value in value_dict.iteritems():
