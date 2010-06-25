@@ -2078,7 +2078,11 @@ class ScribusParser:
     object_dict = {}
     # getting usefull properties for field generation
     object_dict['title'] = str(properties_field['title'])
-    object_dict['erp_type'] = str(properties_field['type'])
+    object_dict['erp_type'] = str(properties_field['type']) # XXX why erp_type ?
+    # it's probably better to use something like 
+    # object_dict['meta_type'] = field.getRecursiveTemplateField().meta_type 
+    # this should also work for ProxyFields
+
     object_dict['data_type'] = str(properties_field['data_type'])
     object_dict['default'] = properties_field['default_data']
     object_dict['nb'] = str(properties_field['nb'])
