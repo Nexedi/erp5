@@ -66,9 +66,7 @@
 """\n
 \n
 translateString = context.Base_translateString\n
-search_list = [(\'all\', \'All\'),\n
-               (\'\', \'Everything\'),\n
-              ]\n
+search_list = [(\'\', \'Everything\')]\n
 \n
 # Portal Types\n
 for portal_type in context.getPortalDocumentTypeList():\n
