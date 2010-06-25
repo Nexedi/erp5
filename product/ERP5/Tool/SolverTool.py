@@ -200,15 +200,18 @@ class SolverTool(TypeProvider):
     # etc. same
 
   def searchTargetSolverList(self, divergence_tester,
-                             tested_base_category_list=None, **kw):
+                             simulation_movement,
+                             automatic_solver_only=False, **kw):
     """
     this method returns a list of target solvers, as predicates against
-    divergence tester.
+    simulation movement.
     """
-    domain_tool = getToolByName(self.getPortalObject(), "portal_domains")
-
-    solver_list = domain_tool.searchPredicateList(
-      context=divergence_tester, portal_type='Solver Type',
-      tested_base_category_list=tested_base_category_list, **kw)
-
-    return solver_list
+    # Target Solver only works for non-legacy testers.
+    if not interfaces.IEquivalenceTester.providedBy(divergence_tester):
+      return []
+    solver_list = divergence_tester.getSolverValueList()
+    if automatic_solver_only:
+      return [x for x in solver_list if x.isAutomaticSolver() and \
+              x.test(simulation_movement, **kw)]
+    else:
+      return [x for x in solver_list if x.test(simulation_movement, **kw)]
