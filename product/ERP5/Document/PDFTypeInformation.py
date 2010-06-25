@@ -133,8 +133,8 @@ def getPropertiesCSSDict(parsed_scribus
       # defining font-size from height - 2 (this value seems to have a good
       # rendering on Mozilla and Konqueror)
       # do not match for TextArea (as it is a multiline object)
-      type_list = ['TextAreaField', 'MultiListField', 'EditorField']
-      type_list +=  ['ListBox', 'ImageField', 'MatrixBox']
+      type_list = ['TextAreaField', 'MultiListField', 'EditorField',
+          'ListBox', 'ImageField', 'MatrixBox']
       #if properties_field['type'] not in type_list:
         #if float(properties_field['size_y']) > 8.0:
           #properties_css_object_stand['font-size'] = \
