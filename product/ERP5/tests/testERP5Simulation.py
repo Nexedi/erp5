@@ -622,8 +622,6 @@ class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMi
       solver_process_type_info.getTypeAllowedContentTypeList() + \
       [solver_id]
     )
-    self.portal.portal_activities.manage_enableActivityCreationTrace()
-    self.portal.portal_activities.manage_enableActivityTracking()
     (default_chain, chain_dict) = getChainByType(self.portal)
     chain_dict['chain_%s' % solver_id] = 'solver_workflow'
     self.portal.portal_workflow.manage_changeWorkflows(default_chain,
