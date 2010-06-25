@@ -963,3 +963,15 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       sim_movement_list = search_method(portal_type='Simulation Movement',
                                         delivery_uid=movement_uid_list, **kw)
       return sim_movement_list
+
+    def getDivergentTesterAndSimulationMovementList(self):
+      """
+      This method returns a list of (tester, simulation_movement) for each divergence.
+      """
+      divergent_tester_list = []
+      for simulation_movement in self._getAllRelatedSimulationMovementList():
+        rule = simulation_movement.getParentValue().getSpecialiseValue()
+        for tester in rule._getDivergenceTesterList(exclude_quantity=False):
+          if tester.explain(simulation_movement) not in (None, []):
+            divergent_tester_list.append((tester, simulation_movement))
+      return divergent_tester_list
