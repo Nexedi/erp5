@@ -567,10 +567,26 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       # first one, can be built
       return True
 
-    for successor_related in predecessor.getSuccessorRelatedValueList():
-      for business_path_movement in successor_related \
-          .getRelatedSimulationMovementValueList(explanation_value):
-        if successor_related.isMovementRelatedWithMovement(self,
+    portal_catalog = self.getPortalObject().portal_catalog
+
+    delivery_simulation_movement_list = portal_catalog(
+      delivery_uid=[x.getUid() for x in explanation_value.getMovementList()])
+
+    simulation_movement_list = business_path.getBusinessPathClosure(
+      delivery_simulation_movement_list)
+
+    # store a causality -> causality_related_movement_list mapping
+    causality_dict = dict()
+    for mov in simulation_movement_list:
+      causality_dict.setdefault(mov.getCausality(), []).append(mov)
+
+
+    for parent_path in predecessor.getSuccessorRelatedValueList():
+      causality = parent_path.getRelativeUrl()
+      related_simulation_list = causality_dict.get(causality, [])
+
+      for business_path_movement in related_simulation_list:
+        if parent_path.isMovementRelatedWithMovement(self,
             business_path_movement):
           business_path_movement_delivery = business_path_movement \
               .getDeliveryValue()
@@ -581,7 +597,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
               business_path_movement_delivery.getExplanationValue()
           # here we can optimise somehow, as
           # business_path_movement_delivery_document would repeat
-          if not successor_related.isCompleted(
+          if not parent_path.isCompleted(
               business_path_movement_delivery_document):
             # related movements delivery is not completed
             return False
