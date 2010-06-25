@@ -126,7 +126,9 @@ def setPermissionsOnEGovModule(self, portal_type_object):
                           'WebDAV Lock items','WebDAV Unlock items',
                           'WebDAV access',
                           ]
-
+ 
+  view_permission_list= [ Permissions.AccessContentsInformation, Permissions.ListFolderContents  \
+                        , Permissions.View ]
 
   role_permission_dict =  {'Anonymous':[Permissions.AccessContentsInformation, Permissions.AddPortalContent \
                                        ,Permissions.CopyOrMove, Permissions.ModifyPortalContent \
@@ -162,10 +164,14 @@ def setPermissionsOnEGovModule(self, portal_type_object):
   for (role, permission_list) in role_permission_dict.items():
     if role == "Anonymous" and not step_authentication and not step_subscription:
       self.manage_role(role_to_manage=role, permissions=permission_list)
+      #give anonymous access to the portal type
+      portal_type_object.manage_role(role_to_manage=role, permissions=view_permission_list)
     elif role != "Anonymous":
       self.manage_role(role_to_manage=role, permissions=permission_list)
       if role == "Agent":
         portal_type_object.manage_role(role_to_manage=role, permissions=permission_list)
+  #set acquired local role on the portal type
+  portal_type_object.setTypeAcquireLocalRole(1)
 
 def getSecurityCategoryFromAssignment(self, base_category_list, user_name, 
     object, portal_type, child_category_list=[]):

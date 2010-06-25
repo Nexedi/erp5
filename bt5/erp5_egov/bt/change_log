@@ -1,3 +1,6 @@
+2010-06-25 mohamadou
+*Give anonymous access to a portal_type that does not require authentication
+
 2010-06-24 mohamadou
 *rename the script Egov_updateProcedureLocalRole in EGov_updateProcedureLocalRole
 
