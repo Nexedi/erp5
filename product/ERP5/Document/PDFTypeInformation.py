@@ -48,7 +48,8 @@ def getPropertiesCSSDict(parsed_scribus
                       , image_height
                       , scribus_width
                       , scribus_height
-                      , space_between_pages):
+                      , space_between_pages
+                      , portal_preferences):
   """
   recover all CSS data relative to the current page_object (field)
   and save these informations in the output dict
@@ -108,7 +109,6 @@ def getPropertiesCSSDict(parsed_scribus
       properties_field['position_y'] = \
           str(float(properties_field['position_y']) - \
           (scribus_height + page_gap)* page)
-
       # Processing object for CSS data
       # declaring dict containing all css data
       # _stand for general display
@@ -130,25 +130,6 @@ def getPropertiesCSSDict(parsed_scribus
           str(scaling_factor * float(properties_field['size_y'])) + 'px'
       properties_css_object_error['height'] = \
           str(scaling_factor * float(properties_field['size_y'])) + 'px'
-      # defining font-size from height - 2 (this value seems to have a good
-      # rendering on Mozilla and Konqueror)
-      # do not match for TextArea (as it is a multiline object)
-      type_list = ['TextAreaField', 'MultiListField', 'EditorField',
-          'ListBox', 'ImageField', 'MatrixBox']
-      #if properties_field['type'] not in type_list:
-        #if float(properties_field['size_y']) > 8.0:
-          #properties_css_object_stand['font-size'] = \
-            #str((scaling_factor *float(properties_field['size_y']))-5.5 ) + 'px'
-          #properties_css_object_error['font-size'] = \
-            #str((scaling_factor *float(properties_field['size_y']))-5.5) + 'px'
-        #else:
-          #properties_css_object_stand['font-size'] = \
-            #str((scaling_factor *float(properties_field['size_y']))-3.5 ) + 'px'
-          #properties_css_object_error['font-size'] = \
-            #str((scaling_factor *float(properties_field['size_y']))-3.5) + 'px'
-      #else:
-        #properties_css_object_stand['font-size'] = '12px'
-        #properties_css_object_error['font-size'] = '12px'
 
       # Use default font-size 12px for harmonization
       properties_css_object_stand['font-size'] = '12px'
@@ -230,21 +211,8 @@ def getPropertiesCSSDict(parsed_scribus
           # rendering DateTimeField, composed at least of three input
           # areas, and their order can be changed
           # getting the number of fields to render and their size unit
-          if properties_field['date_only'] == '0':
-            field_nb = 5
-            # defining counting unit for fields
-            # total = 6.1 units:
-            # 2 > year
-            # 1 > month
-            # 1 > day
-            # 0.1 > space between date and time
-            # 1 > hour
-            # 1 > minutes
-            width_part = int(float(properties_field['size_x']) / 6.1)
-          else:
-            field_nb = 3
-            # same as before but without hours and minutes
-            width_part = int((float(properties_field['size_x']) / 4))
+          field_nb = 3
+          width_part = int((float(properties_field['size_x']) / 4))
           # defining global field rendering (for Date), ignoring for the moment
           # the whole part about the time
           # this following field refere to no existing field, it's use only
@@ -257,7 +225,12 @@ def getPropertiesCSSDict(parsed_scribus
           field_dict[0]['margin-left'] = \
               str(scaling_factor *float(properties_field['position_x'])) + 'px'
 
-          if properties_field['input_order'] in \
+          date_order = portal_preferences.getPreferredDateOrder()
+          if  date_order is not None and date_order != '':
+            preferred_date_order = date_order
+          else:
+            preferred_date_order = 'ymd'
+          if preferred_date_order in \
                 ['day/month/year', 'dmy', 'dmY', 'month/day/year', 'mdy', 'mdY']:
             # specified input order. must be dd/mm/yyyy or mm/dd/yyyy (year is
             # the last field).
@@ -304,19 +277,6 @@ def getPropertiesCSSDict(parsed_scribus
             field_dict[3]['margin-left'] = \
               str(scaling_factor *(float(properties_field['position_x']) + \
               width_part*3)) + 'px'
-          # rendering time if necessary
-          if properties_field['date_only'] == '0':
-            # date is specified
-            field_dict[4] = {}
-            field_dict[4]['width'] = str(width_part) + 'px'
-            field_dict[4]['margin-left'] = \
-                str(int(properties_field['position_x']) +\
-                int(properties_field['size_x']) - width_part*2) + 'px'
-            field_dict[5] = {}
-            field_dict[5]['width'] = str(width_part) + 'px'
-            field_dict[5]['margin-left'] = \
-                str(int(properties_field['position_x']) +\
-                int(properties_field['size_x']) - width_part) + 'px'
 
         field_nb_range = field_nb + 1
         field_range = range(field_nb_range)
@@ -531,20 +491,18 @@ class PDFTypeInformation(ERP5TypeInformation):
           elif field_type == 'DateTimeField':
             field = form.manage_addField(field_id,
                                 field_title,
-                                'ProxyField')
+                                field_type)
             field = form[field_name]
-            field.values['form_id'] = 'Base_viewFieldLibrary'
-            field.values['field_id'] = 'my_date'
-            field.delegated_list += ('default',)
-            field.manage_tales_xmlrpc({"default":
-              "python: here.getProperty('%s')" % field_id[3:]})
+            field.values['date_only'] = 1
+            preferences = self.getPortalObject().portal_preferences
+            date_order = preferences.getPreferredDateOrder()
+            if  date_order is not None and date_order != '':
+              field.values['input_order'] = date_order
           else:
             field = form.manage_addField(field_id,
                                 field_title,
                                 field_type)
-
           field = form[field_name]
-
           field.values['required'] = field_required
           field.values['editable'] = field_editable
 
@@ -576,13 +534,9 @@ class PDFTypeInformation(ERP5TypeInformation):
       values['encoding'] = "UTF-8"
       values['stored_encoding'] = 'UTF-8'
       values['unicode_mode'] = 0
-      #values['getBackgroundUrl'] = self.getBackgroundUrl(page)
-      #values['getCSSUrl'] = self.getCSSUrl()
-
       values['getBackgroundUrl'] = lambda page: \
         'portal_types/%s/renderFormImage?page=%s' % (self.getId(), page)
       values['getCSSUrl'] = lambda: 'portal_types/%s/renderFormCSS' % self.getId()
-
       # using the dict declared just above to set the attributes
       for key, value in values.items():
         setattr(form, key, value)
@@ -627,7 +581,8 @@ class PDFTypeInformation(ERP5TypeInformation):
                                               image0.getHeight(),
                                               scribus_width,
                                               scribus_height,
-                                              space_between_pages)
+                                              space_between_pages,
+                                              self.getPortalObject().portal_preferences)
       # declaring object that holds the CSS data
       css_file_name = "%s_css.css" % self.getId().replace(' ','')
       css_file_content = generateCSSOutputContent(properties_css_dict)
