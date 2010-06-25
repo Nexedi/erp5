@@ -633,17 +633,44 @@ class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMi
     self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
       solver=('portal_solvers/Automatic Quantity Accept Solver',))
 
+  def stepSetUpAutomaticQuantityAdoptSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Automatic Quantity Adopt Solver',
+                            'AdoptSolver', ('quantity',))
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
+      solver=('portal_solvers/Automatic Quantity Adopt Solver',))
+
   def test_01_PackingListDecreaseQuantity(self, quiet=quiet):
     """
       Change the quantity on an delivery line, then
-      see if the packing list is divergent and then
-      split and defer the packing list
+      see if the packing list is solved automatically
+      with accept solver.
     """
     sequence_list = SequenceList()
 
     # Test with a simply order without cell
     sequence_string = '\
                       stepSetUpAutomaticQuantityAcceptSolver \
+                      ' + self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_02_PackingListDecreaseQuantity(self, quiet=quiet):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is solved automatically
+      with adopt solver.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetUpAutomaticQuantityAdoptSolver \
                       ' + self.default_sequence + '\
                       stepDecreasePackingListLineQuantity \
                       stepCheckPackingListIsCalculating \
