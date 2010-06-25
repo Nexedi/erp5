@@ -2,7 +2,7 @@
 ##############################################################################
 # Copyright (c) 2002-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                     Mayoro DIAGNE <mayoro@nexedi.com>
-#                     Guy Osvald <guy@nexedi.com>                                                               
+#                     Guy Osvald <guy@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -52,7 +52,7 @@ def getPropertiesCSSDict(parsed_scribus
   """
   recover all CSS data relative to the current page_object (field)
   and save these informations in the output dict
-  """ 
+  """
   #image_width = 800
   scaling_factor = min(float(image_width)/scribus_width,
                        float(image_height)/scribus_height)
@@ -89,7 +89,7 @@ def getPropertiesCSSDict(parsed_scribus
     properties_css_page['border-'] = "dotted none none"
     properties_css_page['border-'] = "1px 0pt 0pt"
     properties_css_page['border'] = "1px solid #999999"
-   
+
     properties_css_pagediv['background'] = "transparent"
     properties_css_pagediv['border'] = "0"
 
@@ -97,7 +97,7 @@ def getPropertiesCSSDict(parsed_scribus
     properties_css_page['width'] = str (image_width) + 'px'
     properties_css_page['height'] = str (image_height) + 'px'
     properties_page['actual_width'] = scribus_width
-    properties_page['actual_height'] = scribus_height 
+    properties_page['actual_height'] = scribus_height
     properties_css_background['height'] = str(image_height) + 'px'
     properties_css_background['width'] = str (image_width) + 'px'
     # adding properties dict to global dicts
@@ -241,15 +241,15 @@ def getPropertiesCSSDict(parsed_scribus
             # 1 > hour
             # 1 > minutes
             width_part = int(float(properties_field['size_x']) / 6.1)
-          else: 
+          else:
             field_nb = 3
             # same as before but without hours and minutes
             width_part = int((float(properties_field['size_x']) / 4))
           # defining global field rendering (for Date), ignoring for the moment
           # the whole part about the time
-          # this following field refere to no existing field, it's use only 
-          # when editable property is unchecked (there is only one field 
-          # without _class_N but just _class, so, the 3 existing CSS selector 
+          # this following field refere to no existing field, it's use only
+          # when editable property is unchecked (there is only one field
+          # without _class_N but just _class, so, the 3 existing CSS selector
           # can't be applied, that the reason for this new one)
           field_dict[0] = {}
           field_dict[0]['width'] = \
@@ -369,7 +369,7 @@ def generateCSSOutputContent(properties_css_dict):
     class_properties = properties_css_dict['head'][class_name]
     # joining exerything
     output_string = "." + str(class_name) + " {" \
-                    + "; ".join(["%s:%s" % (id, val) for id, 
+                    + "; ".join(["%s:%s" % (id, val) for id,
                       val in class_properties.items()]) \
                     + "}"
     # adding current line to css_content_object
@@ -379,7 +379,7 @@ def generateCSSOutputContent(properties_css_dict):
   for class_name in properties_css_dict['standard'].keys():
     class_properties = properties_css_dict['standard'][class_name]
     output_string = "." + str(class_name) + " {" \
-                    + "; ".join(["%s:%s" % (id, val) for id, 
+                    + "; ".join(["%s:%s" % (id, val) for id,
                       val in class_properties.items()]) \
                     + "}"
     form_css_content += output_string + "\n"
@@ -419,7 +419,7 @@ class PDFTypeInformation(ERP5TypeInformation):
   isPortalContent = 1
   isRADContent = 1
 
-  property_sheets = ( PropertySheet.PDFType, 
+  property_sheets = ( PropertySheet.PDFType,
                       PropertySheet.Reference,
                       PropertySheet.Login,)
 
@@ -455,7 +455,7 @@ class PDFTypeInformation(ERP5TypeInformation):
 
   def _getParsedScribusFile(self):
     """
-      Returns a reusable data structure which can 
+      Returns a reusable data structure which can
       be used to generate ERP5 Form, ERP5 Form CSS,
       PDF Form, etc.
     """
@@ -468,7 +468,7 @@ class PDFTypeInformation(ERP5TypeInformation):
       scribus_parser = ScribusParser(import_scribus_file)
       import_scribus_file.close()
       return scribus_parser.getERP5PropertyDict()
-    generateParsedScribus = CachingMethod(generateParsedScribus, 
+    generateParsedScribus = CachingMethod(generateParsedScribus,
                                         ('PDFTypeInformation_generateParsedScribus',
                                         md5.new(scribus_form.getData()).digest()),
                                         cache_factory='dms_cache_factory')
@@ -479,7 +479,7 @@ class PDFTypeInformation(ERP5TypeInformation):
       Returns an ERP5 Form instance (stored in RAM)
     """
     if self.getDefaultScribusFormValue() is None:
-      return 
+      return
 
     def generateERP5Form():
       form_name = "view"
@@ -521,8 +521,8 @@ class PDFTypeInformation(ERP5TypeInformation):
               field.values['field_id'] = 'my_list_field'
             else:
               field.values['field_id'] = 'my_multi_list_field'
-            # ne pas déléguer les propriétés items et default  
-            field.delegated_list += ('items', 'default') 
+            # ne pas déléguer les propriétés items et default
+            field.delegated_list += ('items', 'default')
             field.manage_tales_xmlrpc({"items":
               "python: here.EGov_getCategoryChildItemListByFieldName('%s')"\
               % field_id})
@@ -535,7 +535,7 @@ class PDFTypeInformation(ERP5TypeInformation):
             field = form[field_name]
             field.values['form_id'] = 'Base_viewFieldLibrary'
             field.values['field_id'] = 'my_date'
-            field.delegated_list += ('default',)  
+            field.delegated_list += ('default',)
             field.manage_tales_xmlrpc({"default":
               "python: here.getProperty('%s')" % field_id[3:]})
           else:
@@ -547,7 +547,7 @@ class PDFTypeInformation(ERP5TypeInformation):
 
           field.values['required'] = field_required
           field.values['editable'] = field_editable
-         
+
           if page != 0:
             # move fields to destination group
             form.move_field_group(field_id,
@@ -587,7 +587,7 @@ class PDFTypeInformation(ERP5TypeInformation):
       for key, value in values.items():
         setattr(form, key, value)
       return form
-    #generateERP5Form = CachingMethod(generateERP5Form, 
+    #generateERP5Form = CachingMethod(generateERP5Form,
     #                                ('PDFTypeInformation_generateERP5Form',
     #                                md5.new(self.getDefaultScribusFormValue().getData()).digest()),
     #                                cache_factory='erp5_ui_long')
@@ -610,7 +610,7 @@ class PDFTypeInformation(ERP5TypeInformation):
     """
     if self.getDefaultScribusFormValue() is None:
       return
-    def generateERP5FormCSS():    
+    def generateERP5FormCSS():
       parsed_scribus = self._getParsedScribusFile()
       import_pdf_file = StringIO.StringIO(self.getDefaultPdfFormValue().getData())
       pdf_parser = PDFParser(import_pdf_file)
@@ -631,12 +631,12 @@ class PDFTypeInformation(ERP5TypeInformation):
       # declaring object that holds the CSS data
       css_file_name = "%s_css.css" % self.getId().replace(' ','')
       css_file_content = generateCSSOutputContent(properties_css_dict)
-      css_file = DTMLDocument(css_file_content, __name__ = css_file_name) 
+      css_file = DTMLDocument(css_file_content, __name__ = css_file_name)
       import_scribus_file.close()
       import_pdf_file.close()
       return css_file
 
-    generateERP5FormCSS = CachingMethod(generateERP5FormCSS, 
+    generateERP5FormCSS = CachingMethod(generateERP5FormCSS,
                                         ('PDFTypeInformation_generateERP5FormCSS',
                                         md5.new(self.getDefaultScribusFormValue().getData()).digest()),
                                         cache_factory='dms_cache_factory')
@@ -651,8 +651,8 @@ class PDFTypeInformation(ERP5TypeInformation):
     from Products.ERP5Type.Document import newTempImage
     import_pdf_file = self.getDefaultPdfFormValue()
     #depend on preferences, best xlargeheight = 1131
-    mime, image_data = import_pdf_file.convert(format = 'jpg', 
-                                                frame = page, 
+    mime, image_data = import_pdf_file.convert(format = 'jpg',
+                                                frame = page,
                                                 resolution = self.getResolution(),
                                                 quality = 600,
                                                 display = 'xlarge')
@@ -672,16 +672,16 @@ class PDFTypeInformation(ERP5TypeInformation):
     portal_type_name = self.getId().replace(' ','')
     pdf_form_name ='%s_view%sAsPdf' % (portal_type_name, portal_type_name)
     pdf_file = StringIO.StringIO(self.getDefaultPdfFormValue().getData())
-    pdf_form = PDFForm(pdf_form_name, portal_type_name, pdf_file)    
+    pdf_form = PDFForm(pdf_form_name, portal_type_name, pdf_file)
     pdf_form.manage_upload(pdf_file)
     import_scribus_file = StringIO.StringIO(self.getDefaultScribusFormValue().getData())
-    scribus_parser = ScribusParser(import_scribus_file)    
-    erp5_properties = scribus_parser.getERP5PropertyDict()    
+    scribus_parser = ScribusParser(import_scribus_file)
+    erp5_properties = scribus_parser.getERP5PropertyDict()
     def_usePropertySheet = 0
     my_prefix = 'my_'
     prefix_len = len(my_prefix)
     pages = range(len(erp5_properties))
-    for page in pages: 
+    for page in pages:
       page_content =  erp5_properties[page]
       for cell_name, field_dict in page_content:
       # current object is PDF Form
@@ -737,10 +737,10 @@ class PDFTypeInformation(ERP5TypeInformation):
             else:
               TALES = "python: here.getProperty('%s')" % cell_name[prefix_len:]
           pdf_form.setCellTALES(cell_name, TALES)
-    import_scribus_file.close() 
+    import_scribus_file.close()
     pdf_file.close()
     self.REQUEST.RESPONSE.setHeader('Content-Type', 'application/pdf')
-    return pdf_form   
+    return pdf_form
 
 
   def getCacheableActionList(self):
@@ -770,7 +770,7 @@ class PDFTypeInformation(ERP5TypeInformation):
 
   def updatePropertySheetDefinitionDict(self, definition_dict, **kw):
     """
-    This function add properties of scribus file to the propertySheet 
+    This function add properties of scribus file to the propertySheet
     """
     if self.getDefaultScribusFormValue() is None:
       return
@@ -785,5 +785,5 @@ class PDFTypeInformation(ERP5TypeInformation):
                                                  'mode':'w'})
     ERP5TypeInformation.updatePropertySheetDefinitionDict(self, definition_dict)
 
-    
+
 
