@@ -377,26 +377,67 @@ class BusinessPath(Path, Predicate):
       full simulation trees per applied rule
     """
     portal_catalog = self.getPortalObject().portal_catalog
-    root_applied_rule_set = set()
+
     delivery_simulation_movement_list = portal_catalog(
       delivery_uid=[x.getUid() for x in explanation.getMovementList()])
 
-    for simulation_movement in delivery_simulation_movement_list:
-      applied_rule = simulation_movement.getRootAppliedRule()
-      root_applied_rule_set.add(applied_rule)
-
-    simulation_movement_list = []
-    for applied_rule in root_applied_rule_set:
-      simulation_movement_list.extend(self._recurseGetValueList(
-        applied_rule, 'Simulation Movement'))
+    related_list = self.getBusinessPathClosure(delivery_simulation_movement_list)
 
     self_url = self.getRelativeUrl()
-    return [simulation_movement for simulation_movement
-          in simulation_movement_list
-          # related with explanation
-          if simulation_movement.getCausality() == self_url and \
-            self._isDeliverySimulationMovementRelated(
-              simulation_movement, delivery_simulation_movement_list)]
+    return [m for m in related_list if m.getCausality() == self_url]
+
+  def getBusinessPathClosure(self, movement_list):
+    # We color/remember all paths to all items in movement_list
+    # Also, if A and B are in movement_list with
+    # A an ancestor of B, the path to B is not colored
+    colored_tree_dict = dict()
+
+    leaf_marker = object()
+    for simulation_movement in movement_list:
+      # remove portal_simulation
+      path_list = simulation_movement.getRelativeUrl().split("/")[1:]
+
+      cur = colored_tree_dict
+      for path in path_list[:-1]:
+        cur = cur.setdefault(path, {})
+        if cur == leaf_marker:
+          # an ancestor of simulation_movement was colored before
+          break
+      else:
+        # note that we remove possibly-colored-before descendants
+        cur[path_list[-1]] = leaf_marker
+
+    # We note closure(ns)=descendants(ns) U ancestors(ns) with ns a nodeset
+    #
+    # At this point, L = leafs(colored_tree) is the smallest nodeset ns satisfying
+    #   descendants(ns) == descendants(movement_list)
+    # Because L < movement_list, we have closure(L) < closure(movement_list)
+    # Note that
+    #   ancestors(movement_list) < closure(L)
+    # hence
+    #   closure(L) == closure(movement_list)
+
+    related_list = []
+    def closure(root, tree):
+      """
+      recursive helper filling related_list with closure(leafs(tree))
+
+      tree represents a coloration of the complete simulation tree.
+      tree is rooted at root
+        - we include all colored non-leaf movements
+        - we include all movement descendants of a colored leaf
+      """
+      for k, v in tree.iteritems():
+        cur = root[k]
+        # XXX maybe using parity Applied Rule / Simulation Movement is enough?
+        if cur.getPortalType() == 'Simulation Movement':
+          related_list.append(cur)
+        if v == leaf_marker:
+          related_list.extend(self._recurseGetValueList(cur, 'Simulation Movement'))
+        else:
+          closure(cur, v)
+    closure(self.getPortalObject().portal_simulation, colored_tree_dict)
+    return related_list
 
   def getExpectedQuantity(self, explanation, *args, **kwargs):
     """
