@@ -70,7 +70,7 @@ for tester, simulation_movement in delivery.getDivergentTesterAndSimulationMovem
       # XXX We need to calculate and pass default values for some solvers\n
       target_solver = solver_process.newContent(\n
         portal_type=solver.getId(),\n
-        delivery=simulation_movement.getDeliveryList()\n
+        delivery=simulation_movement.getRelativeUrl()\n
         )\n
       target_solver.startSolving()\n
       target_solver.solve()\n
