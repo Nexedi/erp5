@@ -28,12 +28,36 @@
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
+  <type>Purchase Invoice Transaction</type>
+  <workflow>divergence_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Order</type>
+  <workflow>divergence_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Purchase Packing List</type>
+  <workflow>divergence_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Quantity Cancel Solver</type>
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
   <type>Quantity Split Solver</type>
   <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Invoice Transaction</type>
+  <workflow>divergence_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Order</type>
+  <workflow>divergence_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Sale Packing List</type>
+  <workflow>divergence_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Solver Process</type>

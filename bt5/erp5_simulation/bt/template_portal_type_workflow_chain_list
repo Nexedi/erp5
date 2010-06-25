@@ -5,8 +5,14 @@ DateTime Divergence Tester | edit_workflow
 Float Divergence Tester | edit_workflow
 Net Converted Quantity Divergence Tester | edit_workflow
 Production Reduction Solver | solver_workflow
+Purchase Invoice Transaction | divergence_interaction_workflow
+Purchase Order | divergence_interaction_workflow
+Purchase Packing List | divergence_interaction_workflow
 Quantity Cancel Solver | solver_workflow
 Quantity Split Solver | solver_workflow
+Sale Invoice Transaction | divergence_interaction_workflow
+Sale Order | divergence_interaction_workflow
+Sale Packing List | divergence_interaction_workflow
 Solver Process | solver_process_workflow
 String Divergence Tester | edit_workflow
 Trade Model Solver | solver_workflow
