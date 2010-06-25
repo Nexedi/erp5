@@ -567,13 +567,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       # first one, can be built
       return True
 
-    portal_catalog = self.getPortalObject().portal_catalog
-
-    delivery_simulation_movement_list = portal_catalog(
-      delivery_uid=[x.getUid() for x in explanation_value.getMovementList()])
-
-    simulation_movement_list = business_path.getBusinessPathClosure(
-      delivery_simulation_movement_list)
+    simulation_movement_list = business_path.getBusinessPathClosure([self])
 
     # store a causality -> causality_related_movement_list mapping
     causality_dict = dict()
@@ -587,14 +581,12 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
 
       completed_state_list = parent_path.getCompletedStateList()
       for business_path_movement in related_simulation_list:
-        if parent_path.isMovementRelatedWithMovement(self,
-            business_path_movement):
-          business_path_movement_delivery = business_path_movement \
-              .getDeliveryValue()
-          if business_path_movement_delivery is None:
-            return False # related movement is not delivered yet
-          if business_path_movement.getSimulationState() not in completed_state_list:
-            return False
+        business_path_movement_delivery = business_path_movement \
+            .getDeliveryValue()
+        if business_path_movement_delivery is None:
+          return False # related movement is not delivered yet
+        if business_path_movement.getSimulationState() not in completed_state_list:
+          return False
     return True
 
   def getSolverProcessValueList(self, movement=None, validation_state=None):
