@@ -1,3 +1,6 @@
+2010-06-25 mayoro
+* modify catalog table egov and use generic attributes in z_catalog_egov_list and z_create_egov
+
 2010-06-25 mohamadou
 *Give anonymous access to a portal_type that does not require authentication
 

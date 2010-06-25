@@ -90,15 +90,10 @@
             <key> <string>src</string> </key>
             <value> <string>CREATE TABLE `egov` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
-  `corporate_registration_code` VARCHAR(255) DEFAULT \'\',\n
-  `vat_code` VARCHAR(255) DEFAULT \'\',\n
-  `company_name` VARCHAR(255) DEFAULT \'\',\n
-  `coordonnees` VARCHAR(255) DEFAULT \'\',\n
-  `imposition_period` VARCHAR(255) DEFAULT \'\',\n
-  `unity_sector` VARCHAR(255) DEFAULT \'\',\n
-  PRIMARY KEY (`uid`),\n
-  KEY `rccm` (`corporate_registration_code`),\n
-  KEY `ninea` (`vat_code`)\n
+  `portal_type` VARCHAR(255) DEFAULT \'\',\n
+  `translated_validation_state_title` VARCHAR(255) DEFAULT \'\',\n
+  `modification_date` DATETIME,\n
+  PRIMARY KEY (`uid`)\n
 ) TYPE=InnoDB\n
 </string> </value>
         </item>
@@ -138,15 +133,10 @@
                         <key> <string>raw</string> </key>
                         <value> <string>CREATE TABLE `egov` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
-  `corporate_registration_code` VARCHAR(255) DEFAULT \'\',\n
-  `vat_code` VARCHAR(255) DEFAULT \'\',\n
-  `company_name` VARCHAR(255) DEFAULT \'\',\n
-  `coordonnees` VARCHAR(255) DEFAULT \'\',\n
-  `imposition_period` VARCHAR(255) DEFAULT \'\',\n
-  `unity_sector` VARCHAR(255) DEFAULT \'\',\n
-  PRIMARY KEY (`uid`),\n
-  KEY `rccm` (`corporate_registration_code`),\n
-  KEY `ninea` (`vat_code`)\n
+  `portal_type` VARCHAR(255) DEFAULT \'\',\n
+  `translated_validation_state_title` VARCHAR(255) DEFAULT \'\',\n
+  `modification_date` DATETIME,\n
+  PRIMARY KEY (`uid`)\n
 ) TYPE=InnoDB\n
 </string> </value>
                     </item>
