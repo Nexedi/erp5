@@ -614,6 +614,9 @@ class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMi
       type_factory_method_id='add%s' % solver_class,
       type_group_list=('target_solver',),
     )
+    solver.setCriterion(property='portal_type',
+                        identity=['Simulation Movement',])
+    solver.setCriterionProperty('portal_type')
     solver_process_type_info = self.portal.portal_types['Solver Process']
     solver_process_type_info.setTypeAllowedContentTypeList(
       solver_process_type_info.getTypeAllowedContentTypeList() + \
