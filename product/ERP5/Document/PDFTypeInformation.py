@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-# Copyright (c) 2002-2007 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                     Mayoro DIAGNE <mayoro@nexedi.com>
 #                     Guy Osvald <guy@nexedi.com>                                                               
 #
