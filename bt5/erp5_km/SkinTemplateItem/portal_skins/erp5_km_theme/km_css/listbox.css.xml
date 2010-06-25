@@ -301,6 +301,14 @@ button.sort_button_desc{\n
 button.sort_button_asc{\n
   background-image: url(\'./km_img/switch_asc.png\');\n
 }\n
+\n
+/* in search mode listbox may contain top/ bottom quick search inputs */\n
+div.search-text-listbox{\n
+  text-align: center;\n
+}\n
+div.search-text-listbox input{\n
+  width: auto;\n
+}\n
 
 
 ]]></string> </value>
