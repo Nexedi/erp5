@@ -66,9 +66,11 @@
 """\n
 \n
 translateString = context.Base_translateString\n
-search_list = [(\'\', \'Everything\')]\n
+search_list = [(\'all\', \'All Documents\'),\n
+               (\'\', \'Everything\')]\n
 \n
-# Portal Types\n
+# Document Portal Types\n
+search_list.append((\'\', \'-- Documents --\'))\n
 for portal_type in context.getPortalDocumentTypeList():\n
   search_list.append((portal_type, portal_type))\n
 \n
