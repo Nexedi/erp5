@@ -55,9 +55,8 @@ class ScribusParser:
       source = open(scribus_file_descriptor, "rb")
       data = source.read() 
       source.close()
-    data = data.replace('&#x5;', '\n')
-    data = data.replace('&#x4;', '\t')
-    self.data = data
+
+    self.parsed_data = etree.XML(data)
 
   def getData(self):
     """
@@ -69,7 +68,7 @@ class ScribusParser:
     """
     Return the content file in XML structured
     """
-    return etree.XML(self.getData())
+    return self.parsed_data
 
 
   def getXMLObjectByTagName(self, tag_name):
