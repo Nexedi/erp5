@@ -10,12 +10,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_arg</string> </key>
             <value>
               <object>
@@ -30,13 +24,19 @@
                         <value>
                           <dictionary>
                             <item>
-                                <key> <string>getCorporateRegistrationCode</string> </key>
+                                <key> <string>getPortalType</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
                             </item>
                             <item>
-                                <key> <string>getVatCode</string> </key>
+                                <key> <string>getTranslatedValidationStateTitle</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>modification_date</string> </key>
                                 <value>
                                   <dictionary/>
                                 </value>
@@ -54,15 +54,22 @@
                         <key> <string>_keys</string> </key>
                         <value>
                           <list>
-<string>uid</string>
-<string>getCorporateRegistrationCode</string>
-<string>getVatCode</string>
+                            <string>uid</string>
+                            <string>getPortalType</string>
+                            <string>getTranslatedValidationStateTitle</string>
+                            <string>modification_date</string>
                           </list>
                         </value>
                     </item>
                   </dictionary>
                 </state>
               </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -74,9 +81,9 @@
         <item>
             <key> <string>arguments_src</string> </key>
             <value> <string>uid\r\n
-getCorporateRegistrationCode\r\n
-getVatCode\r\n
-</string> </value>
+getPortalType\r\n
+getTranslatedValidationStateTitle\r\n
+modification_date </string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -123,8 +130,9 @@ VALUES\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 ( \n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getVatCode[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="getPortalType[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getTranslatedValidationStateTitle[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="modification_date[loop_item]" type="datetime" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
   </dtml-in>\n
@@ -176,8 +184,9 @@ VALUES\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
 ( \n
   <dtml-sqlvar expr="uid[loop_item]" type="int">,\n
-  <dtml-sqlvar expr="getCorporateRegistrationCode[loop_item]" type="string" optional>,\n
-  <dtml-sqlvar expr="getVatCode[loop_item]" type="string" optional>\n
+  <dtml-sqlvar expr="getPortalType[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="getTranslatedValidationStateTitle[loop_item]" type="string" optional>,\n
+  <dtml-sqlvar expr="modification_date[loop_item]" type="datetime" optional>\n
 )\n
 <dtml-if sequence-end><dtml-else>,</dtml-if>\n
   </dtml-in>\n
