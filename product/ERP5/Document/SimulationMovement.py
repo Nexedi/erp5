@@ -585,6 +585,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       causality = parent_path.getRelativeUrl()
       related_simulation_list = causality_dict.get(causality, [])
 
+      completed_state_list = parent_path.getCompletedStateList()
       for business_path_movement in related_simulation_list:
         if parent_path.isMovementRelatedWithMovement(self,
             business_path_movement):
@@ -592,14 +593,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
               .getDeliveryValue()
           if business_path_movement_delivery is None:
             return False # related movement is not delivered yet
-
-          business_path_movement_delivery_document = \
-              business_path_movement_delivery.getExplanationValue()
-          # here we can optimise somehow, as
-          # business_path_movement_delivery_document would repeat
-          if not parent_path.isCompleted(
-              business_path_movement_delivery_document):
-            # related movements delivery is not completed
+          if business_path_movement.getSimulationState() not in completed_state_list:
             return False
     return True
 
