@@ -382,17 +382,20 @@ class BusinessPath(Path, Predicate):
       delivery_uid=[x.getUid() for x in explanation.getMovementList()])
 
     for simulation_movement in delivery_simulation_movement_list:
-      applied_rule = simulation_movement.getRootAppliedRule().getPath()
+      applied_rule = simulation_movement.getRootAppliedRule()
       root_applied_rule_set.add(applied_rule)
 
-    simulation_movement_list = portal_catalog(
-      portal_type='Simulation Movement', causality_uid=self.getUid(),
-      path=['%s/%%' % x for x in root_applied_rule_set])
+    simulation_movement_list = []
+    for applied_rule in root_applied_rule_set:
+      simulation_movement_list.extend(self._recurseGetValueList(
+        applied_rule, 'Simulation Movement'))
 
-    return [simulation_movement.getObject() for simulation_movement
+    self_url = self.getRelativeUrl()
+    return [simulation_movement for simulation_movement
           in simulation_movement_list
           # related with explanation
-          if self._isDeliverySimulationMovementRelated(
+          if simulation_movement.getCausality() == self_url and \
+            self._isDeliverySimulationMovementRelated(
               simulation_movement, delivery_simulation_movement_list)]
 
   def getExpectedQuantity(self, explanation, *args, **kwargs):
