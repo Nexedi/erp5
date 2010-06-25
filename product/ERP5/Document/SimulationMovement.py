@@ -567,26 +567,53 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       # first one, can be built
       return True
 
-    simulation_movement_list = business_path.getBusinessPathClosure([self])
-
     # store a causality -> causality_related_movement_list mapping
     causality_dict = dict()
-    for mov in simulation_movement_list:
-      causality_dict.setdefault(mov.getCausality(), []).append(mov)
 
+    # for now only explore ancestors
+    current = self.getParentValue()
+    while True:
+      portal_type = current.getPortalType()
+      if portal_type == "Simulation Movement":
+        causality_dict[current.getCausality()] = current
+      elif portal_type != "Applied Rule":
+        break
+      # XXX or maybe directly go up by two levels?
+      current = current.getParentValue()
 
-    for parent_path in predecessor.getSuccessorRelatedValueList():
-      causality = parent_path.getRelativeUrl()
-      related_simulation_list = causality_dict.get(causality, [])
+    parent_path_list = predecessor.getSuccessorRelatedValueList()
+    remaining_path_list = []
+    for path in parent_path_list:
+      related_simulation = causality_dict.get(path.getRelativeUrl())
+      if related_simulation is None:
+        remaining_path_list.append(path)
+        continue
+      if related_simulation.getDeliveryValue() is None:
+        return False # related movement is not delivered yet
+      if related_simulation.getSimulationState() not in \
+          path.getCompletedStateList():
+        return False
 
-      completed_state_list = parent_path.getCompletedStateList()
-      for business_path_movement in related_simulation_list:
-        business_path_movement_delivery = business_path_movement \
-            .getDeliveryValue()
-        if business_path_movement_delivery is None:
-          return False # related movement is not delivered yet
-        if business_path_movement.getSimulationState() not in completed_state_list:
+    # in 90% of cases, Business Path goes downward and this is enough
+    if not remaining_path_list:
+      return True
+
+    # But sometimes we have to dig deeper
+
+    # reset dict
+    causality_dict = dict()
+
+    # and explore descendants
+    for descendant in business_path._recurseGetValueList(self, 'Simulation Movement'):
+      causality_dict.setdefault(descendant.getCausality(), []).append(descendant)
+    for path in remaining_path_list:
+      completed_state_list = path.getCompletedStateList()
+      for simulation in causality_dict.get(path.getRelativeUrl(), []):
+        if simulation.getDeliveryValue() is None:
           return False
+        if simulation.getSimulationState() not in completed_state_list:
+          return False
+
     return True
 
   def getSolverProcessValueList(self, movement=None, validation_state=None):
