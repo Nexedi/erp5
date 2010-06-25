@@ -32,14 +32,13 @@ This test is experimental for new simulation implementation.
 import unittest
 import transaction
 
-from zLOG import LOG
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from testPackingList import TestPackingList
+from testPackingList import TestPackingList, TestPackingListMixin
 from testInvoice import TestSaleInvoice, TestInvoiceMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.Document.BusinessTemplate import getChainByType
 
 class TestERP5SimulationMixin(TestInvoiceMixin):
   def getBusinessTemplateList(self):
@@ -586,9 +585,79 @@ class TestERP5SimulationInvoice(TestERP5SimulationMixin, TestSaleInvoice):
     """
     self.playSequence(sequence, quiet=quiet)
 
+class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMixin,
+                                      ERP5TypeTestCase):
+  quiet = 0
+
+  def afterSetUp(self, quiet=1, run=1):
+    TestERP5SimulationMixin.afterSetUp(self)
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    self.original_allowed_content_types = solver_process_type_info.getTypeAllowedContentTypeList()
+    self.added_target_solver_list = []
+
+  def beforeTearDown(self, quiet=1, run=1):
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
+      solver=())
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    solver_process_type_info.setTypeAllowedContentTypeList(self.original_allowed_content_types)
+    self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
+    TestERP5SimulationMixin.beforeTearDown(self)
+
+  @UnrestrictedMethod
+  def _setUpTargetSolver(self, solver_id, solver_class, tested_property_list):
+    solver_tool = self.portal.portal_solvers
+    solver = solver_tool.newContent(
+      portal_type='Solver Type',
+      id=solver_id,
+      tested_property_list=tested_property_list,
+      automatic_solver=1,
+      type_factory_method_id='add%s' % solver_class,
+      type_group_list=('target_solver',),
+    )
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    solver_process_type_info.setTypeAllowedContentTypeList(
+      solver_process_type_info.getTypeAllowedContentTypeList() + \
+      [solver_id]
+    )
+    self.portal.portal_activities.manage_enableActivityCreationTrace()
+    self.portal.portal_activities.manage_enableActivityTracking()
+    (default_chain, chain_dict) = getChainByType(self.portal)
+    chain_dict['chain_%s' % solver_id] = 'solver_workflow'
+    self.portal.portal_workflow.manage_changeWorkflows(default_chain,
+                                                       props=chain_dict)
+    self.added_target_solver_list.append(solver_id)
+
+  def stepSetUpAutomaticQuantityAcceptSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Automatic Quantity Accept Solver',
+                            'AcceptSolver', ('quantity',))
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
+      solver=('portal_solvers/Automatic Quantity Accept Solver',))
+
+  def test_01_PackingListDecreaseQuantity(self, quiet=quiet):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is divergent and then
+      split and defer the packing list
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetUpAutomaticQuantityAcceptSolver \
+                      ' + self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Simulation))
   suite.addTest(unittest.makeSuite(TestERP5SimulationPackingList))
   suite.addTest(unittest.makeSuite(TestERP5SimulationInvoice))
+  suite.addTest(unittest.makeSuite(TestAutomaticSolvingPackingList))
   return suite
