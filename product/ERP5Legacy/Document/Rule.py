@@ -338,10 +338,10 @@ class Rule(Predicate, XMLObject):
       if movement.isFrozen():
         immutable_movement_list.append(movement)
       else:
-        if is_root and movement.hasOrder():
-          ignore_first = False
-        else:
+        if is_root and not movement.hasOrder():
           ignore_first = True
+        else:
+          ignore_first = False
         if movement._isTreeDelivered(ignore_first=ignore_first):
           mutable_movement_list.append(movement)
         else:
