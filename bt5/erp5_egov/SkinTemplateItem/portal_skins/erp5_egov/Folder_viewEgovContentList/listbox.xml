@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>columns</string>
                 <string>editable_columns</string>
-                <string>sort</string>
-                <string>title</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
-                <string>columns</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -88,10 +88,6 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>organisation_title</string>
-                          <string>Tenderer</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_portal_type</string>
                           <string>Procedure</string>
                         </tuple>
@@ -134,11 +130,7 @@
                           <string>Reference</string>
                         </tuple>
                         <tuple>
-                          <string>organisation_title</string>
-                          <string>Tenderer</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
+                          <string>getPortalType</string>
                           <string>Procedure</string>
                         </tuple>
                         <tuple>
