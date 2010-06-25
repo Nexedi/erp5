@@ -46,13 +46,13 @@ class SolverProcess(XMLObject, ActiveProcess):
 
     - Target Solver documents which encapsulate the resolution
       heuristic in relation with DivergenceTester (ie. each
-      DivergenceTester must provide a list of Target Solver portal 
+      DivergenceTester must provide a list of Target Solver portal
       types whch are suitable to solve a given divergence) and
       which may eventually use a Delivery Solver each time divergence
       is related to quantities.
 
     Every Simulation Movement affected by a Solver Process has a relation
-    to the solver process through the "solver" base category.         
+    to the solver process through the "solver" base category.
   """
   meta_type = 'ERP5 Solver Process'
   portal_type = 'Solver Process'
@@ -107,7 +107,7 @@ class SolverProcess(XMLObject, ActiveProcess):
         if configuration_mapping not in movement_solver_configuration_list:
           movement_solver_configuration_list.append(configuration_mapping)
 
-    # Second, create a mapping between solvers and movements 
+    # Second, create a mapping between solvers and movements
     # and their configuration
     #
     #   solver_dict[solver] = {
@@ -138,7 +138,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       for solver, movement_solver_configuration_list in movement_solver_dict.items():
         for configuration_mapping in movement_solver_configuration_list:
           # Detect conflicts. This includes finding out that a solver which
-          # is exclusive per movement, conflicts with another solver on the same 
+          # is exclusive per movement, conflicts with another solver on the same
           # movement
           solver_message_list = solver.getSolverConflictMessageList(movement, configuration_mapping, solver_dict, movement_dict)
           if solver_message_list:
@@ -171,7 +171,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     return []
 
   # ISolver implementation
-  # Solver Process Workflow Interface 
+  # Solver Process Workflow Interface
   #  NOTE: how can we consider that a workflow defines or provides an interface ?
   def solve(self):
     """
@@ -186,7 +186,7 @@ class SolverProcess(XMLObject, ActiveProcess):
   # API
   def isSolverDecisionListConsistent(self):
     """
-    Returns True is the Solver Process decisions do not 
+    Returns True is the Solver Process decisions do not
     need to be rebuilt, False else. This method can be
     invoked before invoking buildSolverDecisionList if
     this helps reducing CPU time.
@@ -197,7 +197,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     """
     Build (or rebuild) the solver decisions in the solver process
 
-    delivery_or_movement -- a movement, a delivery, 
+    delivery_or_movement -- a movement, a delivery,
                             or a list thereof
     """
     if delivery_or_movement is None:
@@ -225,7 +225,7 @@ class SolverProcess(XMLObject, ActiveProcess):
         for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList(exclude_quantity=False):
           if divergence_tester.compare(simulation_movement, movement):
             continue
-          application_list = map(lambda x:x.getRelativeUrl(), 
+          application_list = map(lambda x:x.getRelativeUrl(),
                  solver_tool.getSolverDecisionApplicationValueList(movement, divergence_tester))
           application_list.sort()
           solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list))
