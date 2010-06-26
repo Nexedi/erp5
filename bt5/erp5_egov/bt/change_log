@@ -1,4 +1,7 @@
 2010-06-26 mayoro
+* correct previous commit, use contentValues because  of caching method
+
+2010-06-26 mayoro
 * Add erp5_html_compatibility in EGov registered skin selection, needed for form_view_dialog
 * Use  catalog to search for attachments
 * Make change password available just for Person or Organisation accounts (not for procedure)

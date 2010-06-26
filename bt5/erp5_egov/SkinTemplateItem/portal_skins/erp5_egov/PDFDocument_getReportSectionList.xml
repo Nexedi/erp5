@@ -65,13 +65,14 @@ file_type_list = (\'Image\', \'File\')\n
 sub_form_type_list = filter(lambda x: x not in file_type_list, type_list)\n
 \n
 # A simple solution: use title to group\n
-viewable_content_list = [x.getObject() for x in context.searchFolder(validation_state = [\'embedded\',\'draft\'])]\n
+viewable_content_list = context.contentValues(portal_type=type_list, checked_permission=\'View\',validation_state = \'embedded\')\n
 \n
 content_group_dict = {}\n
 for content in viewable_content_list:\n
-  title = content.getTitle()\n
-  content_group_dict.setdefault(title, [])\n
-  content_group_dict[title].append(content)\n
+  if content.getValidationState() in [\'embedded\',\'draft\']:\n
+    title = content.getTitle()\n
+    content_group_dict.setdefault(title, [])\n
+    content_group_dict[title].append(content)\n
 \n
 # Now sort every group by creation date (to be done)\n
 # XXXX\n
@@ -138,6 +139,14 @@ return result\n
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>
@@ -170,12 +179,9 @@ return result\n
                             <string>file_type_list</string>
                             <string>filter</string>
                             <string>sub_form_type_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
                             <string>viewable_content_list</string>
                             <string>content_group_dict</string>
+                            <string>_getiter_</string>
                             <string>content</string>
                             <string>title</string>
                             <string>_getitem_</string>
