@@ -81,6 +81,14 @@ return website.Base_redirect(form_id, keep_items = {\'portal_status_message\' : 
             <value> <string>dialog_id=None, editable_mode=0, **kw</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>errors</string> </key>
             <value>
               <tuple/>

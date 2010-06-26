@@ -52,7 +52,7 @@
       <a class="home" tal:condition="python: context.EGov_checkUserIsAPersonOrOrganisation()==True" tal:attributes="href python:context.getWebSiteValue().absolute_url()" href="./home" \n
         i18n:translate="" i18n:domain="ui">Home</a>\n
 \n
-      <a class="preferences" tal:condition="python: not here.portal_membership.isAnonymousUser()" href="PreferenceTool_viewChangePasswordDialog" \n
+      <a class="preferences" tal:condition="python: context.EGov_checkUserIsAPersonOrOrganisation()==True" href="PreferenceTool_viewChangePasswordDialog" \n
         i18n:translate="" i18n:domain="ui">Change Password</a>\n
 \n
       <a class="logout" href="WebSite_logout" i18n:translate="" i18n:domain="ui">Logout</a> \n

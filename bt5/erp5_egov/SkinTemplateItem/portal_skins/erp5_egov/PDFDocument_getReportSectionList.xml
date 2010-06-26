@@ -65,12 +65,10 @@ file_type_list = (\'Image\', \'File\')\n
 sub_form_type_list = filter(lambda x: x not in file_type_list, type_list)\n
 \n
 # A simple solution: use title to group\n
-viewable_content_list = context.contentValues(portal_type=type_list, checked_permission=\'View\')\n
+viewable_content_list = [x.getObject() for x in context.searchFolder(validation_state = [\'embedded\',\'draft\'])]\n
 \n
 content_group_dict = {}\n
 for content in viewable_content_list:\n
-  #if content.getValidationState() != \'draft\':\n
-  #  continue\n
   title = content.getTitle()\n
   content_group_dict.setdefault(title, [])\n
   content_group_dict[title].append(content)\n
@@ -172,9 +170,12 @@ return result\n
                             <string>file_type_list</string>
                             <string>filter</string>
                             <string>sub_form_type_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                             <string>viewable_content_list</string>
                             <string>content_group_dict</string>
-                            <string>_getiter_</string>
                             <string>content</string>
                             <string>title</string>
                             <string>_getitem_</string>
