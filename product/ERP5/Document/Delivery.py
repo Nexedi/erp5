@@ -369,7 +369,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       return divergence_list
 
     @UnrestrictedMethod
-    def updateCausalityState(self, **kw):
+    def updateCausalityState(self, solve_automatically=True, **kw):
       """
       This is often called as an activity, it will check if the
       deliver is convergent, and if so it will put the delivery
@@ -380,7 +380,11 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       if isTransitionPossible(self, 'diverge') and \
           isTransitionPossible(self, 'converge'):
         if self.isDivergent(**kw):
-          self.diverge()
+          if solve_automatically and \
+              isTransitionPossible(self, 'solve_automatically'):
+            self.solveAutomatically()
+          else:
+            self.diverge()
         else:
           self.converge()
 
