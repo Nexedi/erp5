@@ -72,15 +72,15 @@ if len(uids):\n
       knowledge_box.setSpecialiseValue(gadget)\n
       knowledge_box.visible()\n
     else:\n
-      not_added_gadgets_mesage = "You already have such gadget(s)."\n
-  msg = \'Added\'\n
+      not_added_gadgets_mesage = "You already have such gadgets."\n
+  msg = \'Gadget added.\'\n
 else:\n
-  msg = \'Nothing to add\'\n
+  msg = \'Nothing to add.\'\n
 \n
 if not_added_gadgets_mesage is not None:\n
   msg = not_added_gadgets_mesage\n
 \n
-translated_msg =  context.Base_translateString(msg)\n
+translated_msg = context.Base_translateString(msg)\n
 if cancel_url is not None:\n
   cancel_url = \'%s?portal_status_message=%s\' %(cancel_url,translated_msg)\n
   context.REQUEST.RESPONSE.redirect(cancel_url)\n

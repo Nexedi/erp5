@@ -72,9 +72,9 @@
       %(cancel_url, \n
         active_knowledge_pad.getRelativeUrl(), mode);"\n
      title="Add gadgets"\n
-     i18n:translate="" \n
      i18n:domain="ui"\n
-     id="add-gadgets"> <span>Add gadgets</span></a>\n
+     i18n:attributes="title"\n
+     id="add-gadgets"><span i18n:translate="">Add gadgets</span></a>\n
 </tal:block>\n
 \n
 <tal:block metal:define-macro="stick">\n
