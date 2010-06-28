@@ -31,6 +31,7 @@
 from Testing import ZopeTestCase
 from Products import ERP5Security
 from Products import PluggableAuthService
+from zLOG import LOG, WARNING, INFO
 
 def enableEgovProcedureLogin(self, portal_type):
   '''
@@ -55,6 +56,7 @@ def enableEgovProcedureLogin(self, portal_type):
     ptype_list = acl_users.egov_groups.portal_type_list
     if not portal_type in ptype_list:
       ptype_list = ptype_list + (portal_type,)
+      acl_users.egov_groups.manage_changeProperties(portal_type_list=ptype_list,)
   return '- %s Login Enabled' % portal_type
 
 def setUpEGovSecurityManager(self):
