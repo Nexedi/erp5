@@ -7,6 +7,7 @@ build-essential
 cpio
 flex
 gcc
+gettext
 libboost-dev
 libbz2-dev
 libgc-dev
