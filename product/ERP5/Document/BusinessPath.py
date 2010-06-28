@@ -387,47 +387,60 @@ class BusinessPath(Path, Predicate):
     return [m for m in related_list if m.getCausality() == self_url]
 
   def getBusinessPathClosure(self, movement_list):
-    # We color/remember all paths to all items in movement_list
-    # Also, if A and B are in movement_list with
-    # A an ancestor of B, the path to B is not colored
+    """
+    Returns a list of Simulation Movement that are related to
+    movement_list.
+    "related" means that each of the returned Movement
+    will be an ancestor or a descendant of a movement in movement_list
+
+    Formally, this method returns all Simulation Movements in:
+       ancestors(movement_list) U descendants(movement_list)
+    """
+    # We need to find all ancestors of movement_list, as well as all
+    # of its descendants.
+    # When A is an ancestor of B we have:
+    #   ancestors(B) > ancestors(A) and
+    # and
+    #   descendants(A) > descendants(B)
+    # In this sense it only makes sense to compute descendants of A
+    # and ancestors of B.
+    #
+    # To do this we construct a tree of all (physical) paths leading
+    # to each movement in movement_list. This tree can be seen
+    # as a subtree of the whole Simulation Tree, or as a coloration
+    # of the Simulation Tree.
+    # Then, for each tree leaf, if that leaf has an non-root ancestor,
+    # we remove the leaf and only keep the ancestor:
+    # Because of the above properties,
+    #   closure({leaf, ancestor}) == closure({ancestor})
+    # which ensures that at the end of the coloration,
+    #   closure(colored_tree) == closure(movement_list)
     colored_tree_dict = dict()
 
     leaf_marker = object()
     for simulation_movement in movement_list:
-      # remove portal_simulation
-      path_list = simulation_movement.getRelativeUrl().split("/")[1:]
+      # remove portal_simulation from the path
+      component_list = simulation_movement.getRelativeUrl().split("/")[1:]
 
       cur = colored_tree_dict
-      for path in path_list[:-1]:
-        cur = cur.setdefault(path, {})
+      for component in component_list[:-1]:
+        cur = cur.setdefault(component, {})
         if cur == leaf_marker:
           # an ancestor of simulation_movement was colored before
           break
       else:
         # note that we remove possibly-colored-before descendants
-        cur[path_list[-1]] = leaf_marker
-
-    # We note closure(ns)=descendants(ns) U ancestors(ns) with ns a nodeset
-    #
-    # At this point, L = leafs(colored_tree) is the smallest nodeset ns satisfying
-    #   descendants(ns) == descendants(movement_list)
-    # Because L < movement_list, we have closure(L) < closure(movement_list)
-    # Note that
-    #   ancestors(movement_list) < closure(L)
-    # hence
-    #   closure(L) == closure(movement_list)
+        cur[component_list[-1]] = leaf_marker
 
     related_list = []
-    def closure(root, tree):
+    def closure(root, path_item_tree):
       """
-      recursive helper filling related_list with closure(leafs(tree))
+      recursive helper filling related_list with:
+        nodes(tree) U descendants(leafs(tree))
 
-      tree represents a coloration of the complete simulation tree.
-      tree is rooted at root
-        - we include all colored non-leaf movements
-        - we include all movement descendants of a colored leaf
+      root is a zodb object where the path_item_tree should be rooted.
       """
-      for k, v in tree.iteritems():
+      for k, v in path_item_tree.iteritems():
         cur = root[k]
         # XXX maybe using parity Applied Rule / Simulation Movement is enough?
         if cur.getPortalType() == 'Simulation Movement':
