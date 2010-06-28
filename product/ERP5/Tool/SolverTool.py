@@ -206,9 +206,6 @@ class SolverTool(TypeProvider):
     this method returns a list of target solvers, as predicates against
     simulation movement.
     """
-    # Target Solver only works for non-legacy testers.
-    if not interfaces.IEquivalenceTester.providedBy(divergence_tester):
-      return []
     solver_list = divergence_tester.getSolverValueList()
     if automatic_solver_only:
       return [x for x in solver_list if x.isAutomaticSolver() and \
