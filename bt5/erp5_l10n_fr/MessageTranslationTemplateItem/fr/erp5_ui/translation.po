@@ -4933,6 +4933,9 @@ msgstr "Le plan comptable doit être défini"
 msgid "GSM"
 msgstr "Portable"
 
+msgid "Gadget added."
+msgstr "Gadget ajouté."
+
 msgid "Gender"
 msgstr "Sexe"
 
@@ -6578,6 +6581,9 @@ msgstr "Aucune correspondance."
 msgid "Nothing more to pay."
 msgstr "Rien à payer"
 
+msgid "Nothing to add."
+msgstr "Rien à ajouter."
+
 msgid "Nothing to paste."
 msgstr "Rien à coller"
 
@@ -7403,6 +7409,9 @@ msgid "Please use link above ('Add gadget') to prepare it yourself."
 msgstr ""
 "Vous pouvez utiliser le lien \"Ajouter des gadgets\" ci-dessus afin "
 "d'ajouter de nouveaux gadgets"
+
+msgid "Please wait until your tab is being prepared."
+msgstr "Votre page d'accueil est en cours de préparation"
 
 msgid "Port of the oood server."
 msgstr "Port du serveur oood."
@@ -9536,6 +9545,9 @@ msgstr "Inclure les comptes non mouvementés"
 
 msgid "Show All"
 msgstr "Tout Montrer"
+
+msgid "Show tabs"
+msgstr "Montrer les onglets"
 
 msgid "Signature"
 msgstr "Signature"
@@ -12619,6 +12631,9 @@ msgstr "Année"
 msgid "Year / Month / Day"
 msgstr "Année / Mois / Jour"
 
+msgid "You already have such gadgets."
+msgstr "Ce gadget existe déja."
+
 msgid "You are here:"
 msgstr "Vous êtes ici:"
 
@@ -12708,6 +12723,9 @@ msgstr "Vous avez des changements non enregistrés"
 
 msgid "You selected an item that was not in the list."
 msgstr "Cet élément n'est pas dans la liste"
+
+msgid "You'll be automatically redirected."
+msgstr "Vous allez être automatiquement redirigé."
 
 msgid "Your Item No."
 msgstr "Votre réf."
