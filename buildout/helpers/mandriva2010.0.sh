@@ -40,6 +40,7 @@ libreadline-devel
 librsync-devel
 libsasl2-devel
 libtermcap-devel
+libtool
 libungif-devel
 libxml2-devel
 libxslt-devel
