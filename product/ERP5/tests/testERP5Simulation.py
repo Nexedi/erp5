@@ -601,6 +601,8 @@ class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMi
     solver_process_type_info = self.portal.portal_types['Solver Process']
     solver_process_type_info.setTypeAllowedContentTypeList(self.original_allowed_content_types)
     self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
+    transaction.commit()
+    self.tic()
     TestERP5SimulationMixin.beforeTearDown(self)
 
   @UnrestrictedMethod
@@ -626,6 +628,7 @@ class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMi
     chain_dict['chain_%s' % solver_id] = 'solver_workflow'
     self.portal.portal_workflow.manage_changeWorkflows(default_chain,
                                                        props=chain_dict)
+    self.portal.portal_caches.clearAllCache()
     self.added_target_solver_list.append(solver_id)
 
   def stepSetUpAutomaticQuantityAcceptSolver(self, sequence=None, sequence_list=None):
