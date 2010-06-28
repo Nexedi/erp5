@@ -1038,6 +1038,114 @@ class TestInventoryList(InventoryAPITestCase):
     checkInventory(line=3, type='Future', source=1, quantity=-9)
     checkInventory(line=3, type='Future', destination=1, quantity=9)
 
+  def test_inventory_asset_price(self):
+    # examples from http://accountinginfo.com/study/inventory/inventory-120.htm
+    movement_list = [
+        (1,  "Beginning Inventory", -700, 10),
+        (3,  "Purchase",            -100, 12),
+        (8,  "Sale",                 500, None),
+        (15, "Purchase",            -600, 14),
+        (19, "Purchase",            -200, 15),
+        (25, "Sale",                 400, None),
+        (27, "Sale",                 100, None),
+    ]
+    resource = self.getProductModule().newContent(
+                                  title='My resource',
+                                  portal_type='Product')
+    for m in movement_list:
+      self._makeMovement(resource_value=resource,
+                         source_value=self.node,
+                         destination_value=self.mirror_node,
+                         start_date=DateTime('2000/1/%d 12:00 UTC' % m[0]),
+                         title=m[1],
+                         quantity=m[2],
+                         price=m[3],
+                         )
+
+    self._safeTic()
+    simulation_tool = self.getSimulationTool()
+    def valuate(method):
+      r = simulation_tool.getInventoryAssetPrice(
+            valuation_method=method,
+            resource_uid=resource.getUid(),
+            node_uid=self.node.getUid())
+      return round(r)
+
+
+    self.assertEquals(7895, valuate("MovingAverage"))
+    self.assertEquals(7200, valuate("Filo"))
+    self.assertEquals(8600, valuate("Fifo"))
+
+  def test_weighted_average_asset_price(self):
+    def h(quantity, total_price):
+      """
+      A small helper. Returns a dictionary
+      """
+      d = dict(quantity=quantity,
+               price=float(total_price)/quantity,
+               total_price=total_price)
+      return d
+    # one item per month:
+    #  - movement_list: quantity is negative, it's incoming/purchase
+    #  - after: quantity, total_price, and expected unit_price
+    # Data was extracted from existing ledger books
+    data = {
+      '2009/11':
+        dict(movement_list=[h(566, 259208),], after=h(566, 259208),),
+      '2009/12':
+        dict(movement_list=[h(600, 291600), h(-1135, 536164), ],
+          after=h(31, 14644)),
+      '2010/01':
+        dict(movement_list=[h(1200, 583200), ], after=h(1231, 597844)),
+      '2010/02':
+        dict(movement_list=[h(200, 97200), h(-1265, 614417), ],
+          after=h(166, 80627)),
+      '2010/03':
+        dict(movement_list=[], after=h(166, 80627)),
+      '2010/04':
+        dict(movement_list=[h(600, 291600), h(-680, 330437), ],
+          after=h(86, 41791)),
+      '2010/05':
+        dict(movement_list=[], after=h(86, 41791)),
+      '2010/06':
+        dict(movement_list=[], after=h(86, 41791)),
+      '2010/07':
+        dict(movement_list=[], after=h(86, 41791)),
+      '2010/08':
+        dict(movement_list=[h(4400, 2032800), h(-4364, 2018170), ],
+          after=h(122, 56420)),
+      '2010/09':
+        dict(movement_list=[], after=h(122, 56420)),
+      '2010/10':
+        dict(movement_list=[], after=h(122, 56420)),
+      '2010/11':
+        dict(movement_list=[h(1400, 646800), h(-1357, 626984), h(4, 1848)],
+          after=h(169, 78084)),
+    }
+
+    resource = self._makeProduct(title="Product for weighted average test")
+    resource_uid = resource.getUid()
+
+    # create all movements
+    for month, value in data.iteritems():
+      for mov in value['movement_list']:
+        d = DateTime('%s/15 15:00 UTC' % month)
+        self._makeMovement(start_date=d, resource_uid=resource_uid, **mov)
+
+    self._safeTic()
+
+    # and check
+    for cur in sorted(data)[1:]:
+      # month+1
+      to_date = DateTime("%s/1" % cur) + 31
+
+      result = self.getSimulationTool().getInventoryAssetPrice(
+                  valuation_method="MonthlyWeightedAverage",
+                  to_date=to_date,
+                  resource_uid=resource.getUid(),
+                  node_uid=self.node.getUid())
+      self.assertTrue(result is not None)
+      self.assertEquals(data[cur]['after']['total_price'], round(result))
 
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
@@ -2459,6 +2567,7 @@ class TestInventoryDocument(InventoryAPITestCase):
                   [x.path for x in self.resource.getInventoryList(
                                          optimisation__=False,
                                          mirror_uid=self.mirror_node.getUid())])
+
 
 class BaseTestUnitConversion(InventoryAPITestCase):
   QUANTITY_UNIT_DICT = {}
