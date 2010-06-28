@@ -7411,7 +7411,7 @@ msgstr ""
 "d'ajouter de nouveaux gadgets"
 
 msgid "Please wait until your tab is being prepared."
-msgstr "Votre page d'accueil est en cours de préparation"
+msgstr "Votre page d'accueil est en cours de préparation."
 
 msgid "Port of the oood server."
 msgstr "Port du serveur oood."
