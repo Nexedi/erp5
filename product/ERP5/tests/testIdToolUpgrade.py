@@ -54,7 +54,9 @@ class TestIdTool(ERP5TypeTestCase):
     # Rebuild a persistent mapping like it already existed in beginning 2010
     id_tool.dict_length_ids = PersistentMapping()
     id_tool.dict_length_ids['foo'] = Length(5)
+    id_tool.dict_length_ids['bar'] = Length(5)
     id_tool.IdTool_zSetLastId(id_group='foo', last_id=5)
+    id_tool.IdTool_zSetLastId(id_group='bar', last_id=10)
     # Delete new zsql methods which are used by new code
     skin_folder = self.getPortal().portal_skins.erp5_core
     custom_skin_folder = self.getPortal().portal_skins.custom
@@ -95,3 +97,11 @@ class TestIdTool(ERP5TypeTestCase):
     # Make sure that the old code is not used any more, so the dic on
     # id tool should not change
     self.assertEquals(int(id_tool.dict_length_ids['foo'].value), 6)
+    id_list = id_tool.generateNewLengthIdList(id_group='bar')
+    self.assertEquals(id_list, [11])
+    generator_list = [x for x in id_tool.objectValues()
+                      if x.getReference()=='mysql_non_continuous_increasing']
+    self.assertEquals(len(generator_list), 1)
+    generator = generator_list[0]
+    self.assertEquals(generator.last_max_id_dict['foo'].value, 7)
+    self.assertEquals(generator.last_max_id_dict['bar'].value, 11)
