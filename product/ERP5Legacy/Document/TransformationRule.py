@@ -294,12 +294,6 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
 #      """
 #        Returns a list Divergence descriptors
 #      """
-#
-#    security.declareProtected(Permissions.View, 'getSolverList')
-#    def getSolverList(self, applied_rule):
-#      """
-#        Returns a list Divergence solvers
-#      """
 
     # Deliverability / orderability
     def isDeliverable(self, m):
