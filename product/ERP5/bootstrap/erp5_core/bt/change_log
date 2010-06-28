@@ -1,3 +1,6 @@
+2010-06-21 nicolas.dumazet
+* Add Resource_getAssetPrice to compute asset prices.
+
 2010-06-21 yo
 * Rewrite InventoryModule_reindexMovementList, as this script still assumed the older implementation of reindexObject which indexed a delta for each inventory movement, but now we index all movements from each inventory document at a time, thus this script started to do needless indexing.
 
