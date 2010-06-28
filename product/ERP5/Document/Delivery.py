@@ -960,6 +960,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       search_method = \
           self.getPortalObject().portal_catalog.unrestrictedSearchResults
       movement_uid_list = [x.getUid() for x in self.getMovementList()]
+      if len(movement_uid_list) == 0:
+        return []
       sim_movement_list = search_method(portal_type='Simulation Movement',
                                         delivery_uid=movement_uid_list, **kw)
       return sim_movement_list
