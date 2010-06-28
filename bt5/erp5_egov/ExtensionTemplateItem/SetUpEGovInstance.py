@@ -33,6 +33,29 @@ from Products import ERP5Security
 from Products import PluggableAuthService
 from zLOG import LOG, WARNING, INFO
 
+
+def allowAccessOnPersonAndOrganisation(self):
+  '''use safi PAS to be able to login organisation'''
+
+  self.portal = self.getPortalObject()
+  person_portal_type = self.portal.portal_types.getTypeInfo('Person')
+  person_module_portal_type = self.portal.portal_types.getTypeInfo('Person Module')
+  organisation_portal_type = self.portal.portal_types.getTypeInfo('Organisation')
+  organisation_module_portal_type = self.portal.portal_types.getTypeInfo('Organisation Module')
+
+  portal_type_list = (person_portal_type, person_module_portal_type, organisation_portal_type, \
+                      organisation_module_portal_type)
+  role_category_list = ['role/gouvernement']
+  for ptype in portal_type_list:
+    role_info_list=[role_info.getTitle() for role_info in ptype.contentValues(portal_type='Role Information')]
+    if 'Agent Administratif' not in role_info_list:
+      ptype.newContent(portal_type='Role Information',
+                     title='Agent Administratif',
+                     role_name='Auditor',
+                     role_category_list=role_category_list)
+
+  return '- Access on Person and Organisation allowed for administrative agent'
+
 def enableEgovProcedureLogin(self, portal_type):
   '''
   set properties to enable the login on Person and Organisation
@@ -112,6 +135,7 @@ def setUpInstance(self):
   '''call all other set up method to prepare the site for eGOV Instance'''
   message_list = []
   message_list.append(setUpEGovSecurityManager(self))
+  message_list.append(allowAccessOnPersonAndOrganisation(self))
 
   message_list.append('')
   message_list.append('Set Up sequence completed')
