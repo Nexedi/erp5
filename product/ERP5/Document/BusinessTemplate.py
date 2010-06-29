@@ -1343,6 +1343,19 @@ class ToolTemplateItem(PathTemplateItem):
     return PathTemplateItem._backupObject(self, action, None, container_path,
                                           object_id, **kw)
 
+  def onNewObject(self, obj):
+    """ When we install a tool that is a type provider not
+    registered on types tool, register the type provider.
+    """
+    portal = obj.getPortalObject()
+    types_tool = portal.portal_types
+    type_container_id = obj.getId()
+    if interfaces.ITypeProvider.isImplementedBy(obj) and \
+        type_container_id not in types_tool.type_provider_list:
+      types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
+                                      (type_container_id,)
+    return PathTemplateItem.onNewObject(self, obj)
+
 class PreferenceTemplateItem(PathTemplateItem):
   """
   This class is used to store preference objects
@@ -1785,18 +1798,6 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
           delattr(obj, attr)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
-  
-  def onNewObject(self, obj):
-    """ When we install a type which is contained in a type provider not
-    registered on types tool, register the type provider.
-    """
-    portal = obj.getPortalObject()
-    types_tool = portal.portal_types
-    type_container_id = obj.getParentId()
-    if type_container_id != 'portal_types' and \
-        type_container_id not in types_tool.type_provider_list:
-      types_tool.type_provider_list = tuple(types_tool.type_provider_list) + (
-          type_container_id,)
 
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information
