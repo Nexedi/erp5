@@ -18,6 +18,7 @@ bison
 boost-devel
 cpio
 flex
+gc-devel
 gcc
 gcc-c++
 gdbm-devel
