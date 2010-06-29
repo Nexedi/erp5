@@ -48,6 +48,7 @@ ncurses-devel
 patch
 python-devel
 python-setuptools
+python-xml
 readline-devel
 rpm
 scons
