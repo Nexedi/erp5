@@ -28,6 +28,7 @@ libjpeg-devel
 libldapcpp-devel
 libneon-devel
 libopenssl-devel
+librsync
 libtool
 libxml2-devel
 libxslt-devel
@@ -39,6 +40,7 @@ python-devel
 python-setuptools
 readline-devel
 rpm
+scons
 subversion
 subversion-devel
 subversion-tools
