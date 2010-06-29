@@ -15,12 +15,13 @@ Helper for buildout-base installation of ERP5 on OpenSUSE 11.2
 PACKAGE_LIST="""\
 automake
 bison
+boost-devel
 cpio
 flex
 gcc
 gcc-c++
-giflib-devel
 gdbm-devel
+giflib-devel
 glib2-devel
 groff
 libSDL-devel
