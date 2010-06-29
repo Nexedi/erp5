@@ -28,7 +28,9 @@ libjpeg-devel
 libldapcpp-devel
 libneon-devel
 libopenssl-devel
+libpng-devel
 librsync
+libtiff-devel
 libtool
 libxml2-devel
 libxslt-devel
