@@ -54,15 +54,24 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-This script returns a dictionary of default properties for Unify Solver.\n
-\n
-This is a sample implementation that returns the first item in each list.\n
+This script returns a dictionary of possible values for Unify Solver.\n
 """\n
-value_list_dict = context.UnifySolver_getDefaultConfigurationPropertyListDict()\n
-value_dict = {}\n
-for property_id, value_list in value_list_dict.items():\n
-  value_dict[proeprty_id] = value_list[0]\n
-return value_dict\n
+solver_decision = context.getCausalityValue()\n
+tester = solver_decision.getCausalityValue()\n
+value_list_dict = {}\n
+for property_id in tester.getTestedProperty():\n
+  value_list = []\n
+  for simulation_movement in configurable.getDeliveryValueList():\n
+    movement = simulation_movement.getDeliveryValue()\n
+    value = movement.getProperty(property_id)\n
+    if value not in value_list:\n
+      value_list.append(value)\n
+    simulation_movement_list = movement.getDeliveryRelatedValueList()\n
+    value = simulation_movement.getProperty(property_id)\n
+    if value not in value_list:\n
+      value_list.append(value)\n
+  value_list_dict[property_id] = [(x, repr(x)) for x in value_list]\n
+return value_list_dict\n
 </string> </value>
         </item>
         <item>
@@ -101,14 +110,22 @@ return value_dict\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>solver_decision</string>
+                            <string>tester</string>
                             <string>value_list_dict</string>
-                            <string>value_dict</string>
                             <string>_getiter_</string>
                             <string>property_id</string>
                             <string>value_list</string>
-                            <string>_getitem_</string>
+                            <string>configurable</string>
+                            <string>simulation_movement</string>
+                            <string>movement</string>
+                            <string>value</string>
+                            <string>simulation_movement_list</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>x</string>
+                            <string>repr</string>
                             <string>_write_</string>
-                            <string>proeprty_id</string>
                           </tuple>
                         </value>
                     </item>
@@ -125,7 +142,7 @@ return value_dict\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>UnifySolver_getDefaultConfigurationPropertyDict</string> </value>
+            <value> <string>UnifySolver_getDefaultConfigurationPropertyListDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
