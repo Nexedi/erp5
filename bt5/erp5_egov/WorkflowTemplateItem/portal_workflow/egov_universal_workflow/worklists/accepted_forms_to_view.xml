@@ -15,19 +15,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Procedure to validate (%(count)s)</string> </value>
+            <value> <string>Procedure to complete (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?validation_state=submitted&local_roles=%(local_roles)s&reset=1
+Base_viewSearchResultList?validation_state=accepted&reset=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Procedure to view</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -37,7 +37,7 @@ Base_viewSearchResultList?validation_state=submitted&local_roles=%(local_roles)s
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>procedure_forms_to_view</string> </value>
+            <value> <string>accepted_forms_to_view</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -61,7 +61,8 @@ Base_viewSearchResultList?validation_state=submitted&local_roles=%(local_roles)s
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Auditor</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -82,10 +83,10 @@ Base_viewSearchResultList?validation_state=submitted&local_roles=%(local_roles)s
             <value>
               <dictionary>
                 <item>
-                    <key> <string>simulation_state</string> </key>
+                    <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>submitted</string>
+                        <string>accepted</string>
                       </tuple>
                     </value>
                 </item>

@@ -1,4 +1,8 @@
 2010-06-29 mayoro
+* Give some roles to manager
+* Add two worklists
+
+2010-06-29 mayoro
 * Clean up page templates and scripts, remove french expression, use Locallizer for translation
 * Add Agent role for procedure
 * Rename Egov_getTendererFromUserName

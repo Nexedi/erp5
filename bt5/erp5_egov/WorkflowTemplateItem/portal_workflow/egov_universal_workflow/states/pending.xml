@@ -77,6 +77,7 @@
                       <tuple>
                         <string>Agent</string>
                         <string>Assignee</string>
+                        <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
@@ -90,7 +91,9 @@
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
