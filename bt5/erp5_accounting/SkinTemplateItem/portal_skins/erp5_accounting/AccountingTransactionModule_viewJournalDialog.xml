@@ -91,8 +91,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>your_portal_type</string>
                         <string>your_simulation_state</string>
+                        <string>your_portal_type</string>
                       </list>
                     </value>
                 </item>
