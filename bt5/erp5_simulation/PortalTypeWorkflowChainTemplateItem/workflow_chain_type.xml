@@ -36,10 +36,6 @@
   <workflow>solver_workflow</workflow>
  </chain>
  <chain>
-  <type>Solver Process</type>
-  <workflow>solver_process_workflow</workflow>
- </chain>
- <chain>
   <type>String Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>

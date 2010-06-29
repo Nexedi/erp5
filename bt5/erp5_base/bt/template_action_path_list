@@ -81,6 +81,13 @@ Root Applied Rule Causality Movement Group | view
 Rounding Model | predicate_view
 Rounding Model | view
 Rounding Tool | view
+Solver Tool | view
+Solver Type | action_view
+Solver Type | role_view
+Solver Type | solver_view
+Solver Type | translation_view
+Solver Type | update_local_roles
+Solver Type | view
 Split Movement Group | view
 Tax Line Delivery Movement Group | view
 Telephone | change_function

@@ -8,10 +8,6 @@ Production Reduction Solver
 Quantity Cancel Solver
 Quantity Split Solver
 Solver Decision
-Solver Process
-Solver Process Tool
-Solver Tool
-Solver Type
 String Divergence Tester
 Trade Model Solver
 Unify Solver

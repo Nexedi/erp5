@@ -64,16 +64,6 @@
   <item>Trade Model Solver</item>
   <item>Unify Solver</item>
  </portal_type>
- <portal_type id="Solver Process Tool">
-  <item>Solver Process</item>
- </portal_type>
- <portal_type id="Solver Tool">
-  <item>Solver Type</item>
- </portal_type>
- <portal_type id="Solver Type">
-  <item>Action Information</item>
-  <item>Role Information</item>
- </portal_type>
  <portal_type id="Trade Model Simulation Rule">
   <item>Category Membership Divergence Tester</item>
   <item>DateTime Divergence Tester</item>

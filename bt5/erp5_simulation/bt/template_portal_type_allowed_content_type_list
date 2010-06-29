@@ -40,7 +40,6 @@ Payment Simulation Rule | Float Divergence Tester
 Payment Simulation Rule | Net Converted Quantity Divergence Tester
 Payment Simulation Rule | String Divergence Tester
 Payment Simulation Rule | Variation Divergence Tester
-Solver Process Tool | Solver Process
 Solver Process | Accept Solver
 Solver Process | Adopt Solver
 Solver Process | Production Reduction Solver
@@ -48,9 +47,6 @@ Solver Process | Quantity Split Solver
 Solver Process | Solver Decision
 Solver Process | Trade Model Solver
 Solver Process | Unify Solver
-Solver Tool | Solver Type
-Solver Type | Action Information
-Solver Type | Role Information
 Trade Model Simulation Rule | Category Membership Divergence Tester
 Trade Model Simulation Rule | DateTime Divergence Tester
 Trade Model Simulation Rule | Float Divergence Tester
