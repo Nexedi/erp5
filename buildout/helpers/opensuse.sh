@@ -58,6 +58,7 @@ subversion-devel
 subversion-tools
 termcap
 xorg-x11-server
+xorg-x11-server-extra
 zip
 zlib-devel\
 """
