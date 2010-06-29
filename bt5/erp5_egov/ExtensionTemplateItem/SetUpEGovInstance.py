@@ -82,6 +82,7 @@ def enableEgovProcedureLogin(self, portal_type):
       acl_users.egov_groups.manage_changeProperties(portal_type_list=ptype_list,)
   return '- %s Login Enabled' % portal_type
 
+
 def setUpEGovSecurityManager(self):
   '''use safi PAS to be able to login organisation'''
 
@@ -93,7 +94,7 @@ def setUpEGovSecurityManager(self):
   acl_users = getAclUsers(self)
 
   # Add EGOVUserManager
-  ZopeTestCase.installProduct('EGOVSecurity')
+  ZopeTestCase.installProduct('ERP5eGovSecurity')
   erp5security_dispatcher = acl_users.manage_addProduct['ERP5eGovSecurity']
   # don't add it if it's already here
   if {'meta_type': 'EGOV User Manager', 'id': 'egov_users'} not in \
