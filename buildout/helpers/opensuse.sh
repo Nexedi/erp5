@@ -23,6 +23,8 @@ gdbm-devel
 glib2-devel
 groff
 libSDL-devel
+libSDL_gfx-devel
+libSDLmm-devel
 libcom_err-devel
 libgsasl-devel
 libjpeg-devel
