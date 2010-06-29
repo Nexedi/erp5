@@ -571,8 +571,13 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     # has predecessors: check movements related to those predecessors!
     predecessor_path_list = predecessor_state.getSuccessorRelatedValueList()
 
+    def isBuiltAndCompleted(simulation, path):
+      return simulation.getCausalityValue() is not None and \
+          simulation.getSimulationState() in path.getCompletedStateList()
+
     ### Step 1:
     ## Explore ancestors in ZODB (cheap)
+    #
 
     # store a causality -> causality_related_movement_list mapping
     causality_dict = dict()
@@ -587,25 +592,22 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       # XXX or maybe directly go up by two levels?
       current = current.getParentValue()
 
-    remaining_path_list = []
+    remaining_path_set = set()
     for path in predecessor_path_list:
       related_simulation = causality_dict.get(path.getRelativeUrl())
       if related_simulation is None:
-        remaining_path_list.append(path)
+        remaining_path_set.add(path)
         continue
       # XXX assumption is made here that if we find ONE completed ancestor
       # movement of self that is related to a predecessor path, then
       # that predecessor path is completed. Is it True? (aka when
       # Business Process goes downwards, is the maximum movements per
       # predecessor 1 or can we have more?)
-      if related_simulation.getDeliveryValue() is None:
-        return False # related movement is not delivered yet
-      if related_simulation.getSimulationState() not in \
-          path.getCompletedStateList():
+      if not isBuiltAndCompleted(related_simulation, path):
         return False
 
     # in 90% of cases, Business Path goes downward and this is enough
-    if not remaining_path_list:
+    if not remaining_path_set:
       return True
 
     # But sometimes we have to dig deeper
@@ -613,39 +615,39 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     ### Step 2:
     ## Try catalog to find descendant movements, knowing
     # that it can be incomplete
-    uid_list = [p.getUid() for p in remaining_path_list]
 
-    # That list might be incomplete if catalog is lagging behind
     portal_catalog = self.getPortalObject().portal_catalog
     catalog_simulation_movement_list = portal_catalog(
       portal_type='Simulation Movement',
-      causality_uid=uid_list,
+      causality_uid=[p.getUid() for p in remaining_path_set],
       path='%s/%%' % self.getPath())
 
     for simulation in catalog_simulation_movement_list:
-      path = simulation.getCausalityValue()
-      if simulation.getDeliveryValue() is None or \
-          simulation.getSimulationState() not in path.getCompletedStateList():
+      if not isBuiltAndCompleted(simulation, simulation.getCausalityValue()):
         return False
 
     ### Step 3:
     ## We had no luck, we have to explore descendant movements in ZODB
+    #
+    def _recurseGetValueList(document):
+      """
+      generator yielding Simulation Movement descendants of document.
+      It does _not_ explore the whole subtree if iteration is stopped.
+      """
+      subdocument_list = document.contentValues()
+      for subdocument in subdocument_list:
+        if subdocument.getPortalType() == "Simulation Movement":
+          yield subdocument
+      for subdocument in subdocument_list:
+        for d in _recurseGetValueList(subdocument):
+          yield d
 
-    # reset dict
-    causality_dict = dict()
-
-    # and explore descendants
-    # XXX: _recurseGetValueList fetches _all_ descendants, but we can bail
-    #      out early if one movement is not built
-    for descendant in business_path._recurseGetValueList(self, 'Simulation Movement'):
-      causality_dict.setdefault(descendant.getCausality(), []).append(descendant)
-    for path in remaining_path_list:
-      completed_state_list = path.getCompletedStateList()
-      for simulation in causality_dict.get(path.getRelativeUrl(), []):
-        if simulation.getDeliveryValue() is None:
-          return False
-        if simulation.getSimulationState() not in completed_state_list:
-          return False
+    for descendant in _recurseGetValueList(self):
+      path = descendant.getCausalityValue()
+      if path not in remaining_path_set:
+        continue
+      if not isBuiltAndCompleted(descendant, path):
+        return False
 
     return True
 
