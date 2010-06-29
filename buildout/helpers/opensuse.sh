@@ -19,6 +19,7 @@ cpio
 flex
 gcc
 gcc-c++
+giflib-devel
 gdbm-devel
 glib2-devel
 groff
