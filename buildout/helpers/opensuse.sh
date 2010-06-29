@@ -22,6 +22,7 @@ gcc-c++
 gdbm-devel
 glib2-devel
 groff
+libSDL-devel
 libcom_err-devel
 libgsasl-devel
 libjpeg-devel
