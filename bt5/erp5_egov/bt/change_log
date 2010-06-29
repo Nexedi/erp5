@@ -1,5 +1,7 @@
-2010-06-28 mohamadou
-* add a script in setUpEgovInstance to allow acces on Persons and Organisations to administrative agents
+2010-06-29 mayoro
+* Clean up page templates and scripts, remove french expression, use Locallizer for translation
+* Add Agent role for procedure
+* Rename Egov_getTendererFromUserName
 
 2010-06-26 mayoro
 * correct previous commit, use contentValues because  of caching method

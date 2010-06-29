@@ -91,7 +91,7 @@ password = context.Person_generatePassword()\n
 form.setPassword(password)\n
 \n
 # the ownership is the form itself\n
-form.manage_addLocalRoles(new_object_id, [\'Owner\',])\n
+form.manage_addLocalRoles(new_object_id, [\'Owner\',\'Agent\'])\n
 \n
 \n
 # login with this new form\n

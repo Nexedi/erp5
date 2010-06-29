@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Return the tenderer of the procédure \n
+  Return the tenderer of the procedure \n
   ie: return the organisation on wich belong the user\n
   if it doesn\'t exist return the user\n
 """\n
@@ -129,7 +129,7 @@ return tenderer\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Egov_getTendererFromUserName</string> </value>
+            <value> <string>EGov_getTendererFromUserName</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
