@@ -300,6 +300,16 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     """
     return getattr(self.getPortal(), 'counter_module', None)
 
+  def stepTic(self, **kwd):
+    """
+    The is used to simulate the zope_tic_loop script
+    Each time this method is called, it simulates a call to tic
+    which invoke activities in the Activity Tool
+    """
+    # execute transaction
+    get_transaction().commit()
+    self.tic()
+
   def createCurrency(self, currency_list=(('EUR', 'Euro', 1/652., 1/650., 'USD'), ('USD', 'USD', 652, 650., 'EUR')), only_currency=False):
     # create the currency document for euro inside the currency module
     #currency_list = (('EUR', 'Euro', 1/650., 'USD'), ('USD', 'Dollar', 650., 'EUR'))
