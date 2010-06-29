@@ -27,6 +27,12 @@
             </value>
         </item>
         <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>business_template_skin_layer_priority</string> </key>
             <value> <float>250.0</float> </value>
         </item>
