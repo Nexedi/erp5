@@ -222,7 +222,8 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
                                    description = "test",
                                    # source_value = self.bi_counter,
                                    start_date = DateTime().Date(),
-                                   source_total_asset_price = 20000.0)
+                                   source_total_asset_price = 20000.0,
+                                   unique_per_account=True)
     # call set source to go into the interaction workflow to update local roles
     self.check_payment._setSource(self.bi_counter.getRelativeUrl())
     self.assertNotEqual(self.check_payment, None)

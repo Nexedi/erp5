@@ -107,12 +107,11 @@ if bank_account is None:\n
 \n
 # Check the check.\n
 check_number = transaction.getAggregateFreeText()\n
-check_resource = transaction.getAggregateResource()\n
 \n
-# Automated calculation of the aggregate resource\n
-if check_resource is None:\n
-  check_resource = transaction.Base_getCheckModelByBankAccount(\n
-                    bank_account=bank_account).getRelativeUrl()\n
+# always verify check model as the version may have changed\n
+version = transaction.isUniquePerAccount() and 1 or 2\n
+check_resource = bank_account.BankAccount_getCheckModel(version=version).getRelativeUrl()\n
+if transaction.getAggregateResource() != check_resource:\n
   transaction.edit(aggregate_resource=check_resource)\n
 \n
 if not check_number:\n
@@ -213,9 +212,10 @@ elif error[\'error_code\'] != 0:\n
                             <string>price</string>
                             <string>bank_account</string>
                             <string>check_number</string>
+                            <string>version</string>
                             <string>check_resource</string>
-                            <string>check</string>
                             <string>context</string>
+                            <string>check</string>
                             <string>error</string>
                           </tuple>
                         </value>

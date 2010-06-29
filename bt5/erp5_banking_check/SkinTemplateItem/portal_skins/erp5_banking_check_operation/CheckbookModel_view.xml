@@ -104,6 +104,7 @@
                       <list>
                         <string>my_price_currency</string>
                         <string>my_composition</string>
+                        <string>my_unique_per_account</string>
                       </list>
                     </value>
                 </item>

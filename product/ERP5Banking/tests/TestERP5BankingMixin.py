@@ -907,15 +907,17 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
                                             reference_range_max = max,
                                             start_date = date)
 
-  def createCheckbookModel(self, id, check_model, reference=None):
+  def createCheckbookModel(self, id, check_model, reference=None, version=1):
     """
     Create a checkbook for the given bank account
     with 3 variations
     """
+    unique_per_account = version == 1
     model =  self.checkbook_model_module.newContent(id = id,
                                             portal_type = 'Checkbook Model',
                                             title='Generic',
                                             account_number_enabled=True,
+                                            unique_per_account=unique_per_account,
                                             reference=reference,
                                             composition=check_model.getRelativeUrl())
     model.newContent(id='variant_1', portal_type='Checkbook Model Check Amount Variation',
@@ -927,15 +929,17 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     return model
 
 
-  def createCheckModel(self, id, reference='CCOP'):
+  def createCheckModel(self, id, reference='CCOP', version=1):
     """
     Create a checkbook for the given bank account
     """
+    unique_per_account = version == 1
     return self.checkbook_model_module.newContent(id = id,
                                             portal_type = 'Check Model',
                                             title = 'Check',
                                             reference = reference,
                                             account_number_enabled=True,
+                                            unique_per_account=unique_per_account
                                             )
 
   def createCheckAndCheckbookModel(self):
@@ -945,11 +949,31 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     self.check_model = self.createCheckModel(id='check_model')
     self.check_model_1 = self.check_model
     self.check_model_2 = self.createCheckModel(id='check_model_2', reference='CCCO')
+    self.check_model_1_2 = self.createCheckModel(
+        id='check_model_1_2',
+        reference='CCOP2',
+        version=2,
+    )
+    self.check_model_2_2 = self.createCheckModel(
+        id='check_model_2_2',
+        reference='CCCO2',
+        version=2,
+    )
     self.checkbook_model = self.createCheckbookModel(
            id='checkbook_model', check_model=self.check_model)
     self.checkbook_model_1 = self.checkbook_model
     self.checkbook_model_2 = self.createCheckbookModel(
            id='checkbook_model_2', check_model=self.check_model_2)
+    self.checkbook_model_1_2 = self.createCheckbookModel(
+           id='checkbook_model_1_2',
+           check_model=self.check_model_1_2,
+           version=2,
+    )
+    self.checkbook_model_2_2 = self.createCheckbookModel(
+           id='checkbook_model_2_2',
+           check_model=self.check_model_2_2,
+           version=2,
+    )
 
   def createCheck(self, id, reference, checkbook, bank_account=None,
                         resource_value=None, destination_value=None):

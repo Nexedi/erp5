@@ -6,6 +6,7 @@
  </portal_type>
  <portal_type id="Check Payment">
   <item>ItemAggregation</item>
+  <item>CheckPayment</item>
   <item>Price</item>
  </portal_type>
  <portal_type id="Checkbook Delivery">

@@ -72,14 +72,19 @@ if destination_id is None:\n
 # serialize destination vault to only have one operation at a time\n
 destination_value = context.getDestinationValue()\n
 destination_value.serialize()\n
+line_list = context.objectValues(portal_type=\'Checkbook Reception Line\')\n
 \n
-# first check that there is not a particular tag\n
-checkbook_reception_tag = "CheckbookReception_%s" % destination_id\n
-if context.portal_activities.countMessageWithTag(checkbook_reception_tag) != 0:\n
+for line in line_list:\n
+  if not line.getResourceValue().isUniquePerAccount():\n
+    checkbook_reception_tag = "CheckbookReception_global"\n
+    msg = Message(domain=\'ui\', message=\'Sorry, there is already a pending checkbook reception\')\n
+    break\n
+else:\n
   msg = Message(domain=\'ui\', message=\'Sorry, there is already a checkbook reception newly validated\')\n
+  checkbook_reception_tag = "CheckbookReception_%s" % destination_id\n
+if context.portal_activities.countMessageWithTag(checkbook_reception_tag) != 0:\n
   raise ValidationFailed, (msg, )\n
 \n
-line_list = context.objectValues(portal_type=\'Checkbook Reception Line\')\n
 if check == 1:\n
   encountered_check_identifiers_dict = {}\n
   for line in line_list:\n
@@ -139,11 +144,11 @@ if create==1:\n
                             <string>None</string>
                             <string>msg</string>
                             <string>destination_value</string>
-                            <string>checkbook_reception_tag</string>
                             <string>line_list</string>
-                            <string>encountered_check_identifiers_dict</string>
                             <string>_getiter_</string>
                             <string>line</string>
+                            <string>checkbook_reception_tag</string>
+                            <string>encountered_check_identifiers_dict</string>
                           </tuple>
                         </value>
                     </item>

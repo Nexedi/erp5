@@ -99,6 +99,7 @@
                         <string>my_destination_payment_title</string>
                         <string>my_source</string>
                         <string>my_source_total_asset_price</string>
+                        <string>my_unique_per_account</string>
                       </list>
                     </value>
                 </item>
