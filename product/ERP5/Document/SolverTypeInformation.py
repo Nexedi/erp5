@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
@@ -151,39 +151,10 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
     """
-    # Implemented through type based method
-    # and using read transaction cache
-    if configurable.getPortalType() == 'Solver Decision':
-      try:
-        solver_portal_type = configurable.getSolverValue().getId()
-      except AttributeError:
-        return {}
-    else:
-      solver_portal_type = configurable.getPortalType()
+    return self._callTypeBasetMethod(
+      self, 'getDefaultConfigurationPropertyDict')
 
-    cache = getReadOnlyTransactionCache(self)
-    if cache is not None:
-      key = ('getDefaultConfigurationPropertyDict', solver_portal_type,
-             configurable.getRelativeUrl())
-      try:
-        method = cache[key]
-      except KeyError:
-        method = self._getTypeBasedMethod(
-          'getDefaultConfigurationPropertyDict',
-          fallback_script_id='Solver_getDefaultConfigurationPropertyDict')
-        cache[key] = method
-    return method(configurable)
-
-  def getDefaultConfigurationPropertyList(self, id, configurable):
-    """
-    Returns a list of possible values for a given property
-    (public API)
-
-    configurable -- a configurable document (Solver Decision
-                    or Target Solver)
-    """
-
-  def getDefaultConfigurationProperty(self, id, configurable):
+  def getDefaultConfigurationProperty(self, property, configurable):
     """
     Returns the default value for a given property
     (public API)
@@ -193,3 +164,61 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
 
     TODO: XXX-JPS unify with IConfigurable
     """
+    return self.getDefaultConfigurationPropertyDict().get(property, None)
+
+  def getDefaultConfigurationPropertyListDict(self, configurable):
+    """
+    Returns a dictionary of possible values for specified
+    configurable object
+    (implementation)
+
+    configurable -- a configurable document (Solver Decision
+                    or Target Solver)
+    """
+    return self._callTypeBasetMethod(
+      self, 'getDefaultConfigurationPropertyListDict')
+
+  def getDefaultConfigurationPropertyList(self, property, configurable):
+    """
+    Returns a list of possible values for a given property
+    (public API)
+
+    configurable -- a configurable document (Solver Decision
+                    or Target Solver)
+    """
+    return self.getDefaultConfigurationPropertyListDict().get(property, [])
+
+  def _callTypeBasedMethod(self, method_id, configurable):
+    # Implemented through type based method
+    # and using read transaction cache
+    portal_type = configurable.getPortalType()
+    if portal_type == 'Solver Decision':
+      try:
+        solver_portal_type = self.getSolverValue().getId()
+        solver = None
+      except AttributeError:
+        return {}
+    elif interfaces.ISolver.providedBy(configurable):
+      solver_portal_type = portal_type
+      solver = configurable
+    else:
+      raise NotImplementedError, '%s is not supported for configurable argument' % portal_type
+
+    cache = getReadOnlyTransactionCache(self)
+    if cache is not None:
+      key = (method_id, solver_portal_type,
+             configurable.getRelativeUrl())
+      try:
+        method = cache[key]
+      except KeyError:
+        if solver is None:
+          solver = self.getParentValue().newContent(
+            portal_type=solver_portal_type,
+            temp_object=True,
+            delivery_list=configurable.getDeliveryList(),
+            causality_value=configurable)
+        method = solver._getTypeBasedMethod(
+          method_id,
+          fallback_script_id='Solver_%s' % method_id)
+        cache[key] = method
+    return method()

@@ -94,23 +94,11 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     configurable object
     (implementation)
     """
-    # XXX To be implemented through type based method and using read
-    # transaction cache
-    try:
-      solver_portal_type = self.getSolverValue().getId()
-    except AttributeError:
+    solver_type = self.getSolverValue()
+    if solver_type is None:
       return {}
-
-    solver = self.getParentValue().newContent(
-      portal_type=solver_portal_type,
-      temp_object=True,
-      delivery_list=self.getDeliveryList(),
-      causality_value=self)
-    method = solver._getTypeBasedMethod(
-      'getDefaultConfigurationPropertyDict',
-      fallback_script_id='Solver_getDefaultConfigurationPropertyDict')
-
-    return method(self)
+    else:
+      solver_type.getDefaultConfigurationPropertyDict()
 
   def getExplanationMessage(self, all=False):
     """
