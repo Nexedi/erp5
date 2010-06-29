@@ -27,6 +27,7 @@ libSDL-devel
 libSDL_gfx-devel
 libSDL_image-devel
 libSDLmm-devel
+libbz2-devel
 libcom_err-devel
 libgsasl-devel
 libjpeg-devel
