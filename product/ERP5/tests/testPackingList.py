@@ -30,6 +30,8 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Document.BusinessTemplate import getChainByType
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testOrder import TestOrderMixin
@@ -1619,6 +1621,110 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEqual(1, len(catalog_tool(uid=packing_list_line.getUid(), **kw)))
     self.assertEqual(1, len(catalog_tool(uid=packing_list_cell.getUid(), **kw)))
 
+class TestAutomaticSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
+  quiet = 0
+
+  def afterSetUp(self, quiet=1, run=1):
+    TestPackingListMixin.afterSetUp(self)
+    types_tool = self.portal.portal_types
+    solver_process_type_info = types_tool['Solver Process']
+    if 'portal_solvers' not in types_tool.type_provider_list:
+      types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
+                                      ('portal_solvers',)
+    self.original_allowed_content_types = solver_process_type_info.getTypeAllowedContentTypeList()
+    self.added_target_solver_list = []
+
+  def beforeTearDown(self, quiet=1, run=1):
+    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+      solver=())
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    solver_process_type_info.setTypeAllowedContentTypeList(self.original_allowed_content_types)
+    self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
+    transaction.commit()
+    self.tic()
+    beforeTearDown = getattr(TestPackingListMixin, 'beforeTearDown',
+                             ERP5TypeTestCase.beforeTearDown)
+    beforeTearDown(self)
+
+  @UnrestrictedMethod
+  def _setUpTargetSolver(self, solver_id, solver_class, tested_property_list):
+    solver_tool = self.portal.portal_solvers
+    solver = solver_tool.newContent(
+      portal_type='Solver Type',
+      id=solver_id,
+      tested_property_list=tested_property_list,
+      automatic_solver=1,
+      type_factory_method_id='add%s' % solver_class,
+      type_group_list=('target_solver',),
+    )
+    solver.setCriterion(property='portal_type',
+                        identity=['Simulation Movement',])
+    solver.setCriterionProperty('portal_type')
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    solver_process_type_info.setTypeAllowedContentTypeList(
+      solver_process_type_info.getTypeAllowedContentTypeList() + \
+      [solver_id]
+    )
+    (default_chain, chain_dict) = getChainByType(self.portal)
+    chain_dict['chain_%s' % solver_id] = 'solver_workflow'
+    self.portal.portal_workflow.manage_changeWorkflows(default_chain,
+                                                       props=chain_dict)
+    self.portal.portal_caches.clearAllCache()
+    self.added_target_solver_list.append(solver_id)
+
+  def stepSetUpAutomaticQuantityAcceptSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Automatic Quantity Accept Solver',
+                            'AcceptSolver', ('quantity',))
+    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+      solver=('portal_solvers/Automatic Quantity Accept Solver',))
+
+  def stepSetUpAutomaticQuantityAdoptSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Automatic Quantity Adopt Solver',
+                            'AdoptSolver', ('quantity',))
+    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+      solver=('portal_solvers/Automatic Quantity Adopt Solver',))
+
+  def test_01_PackingListDecreaseQuantity(self, quiet=quiet):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is solved automatically
+      with accept solver.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetUpAutomaticQuantityAcceptSolver \
+                      ' + self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_02_PackingListDecreaseQuantity(self, quiet=quiet):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is solved automatically
+      with adopt solver.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetUpAutomaticQuantityAdoptSolver \
+                      ' + self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
@@ -1655,5 +1761,6 @@ class TestPurchasePackingList(TestPurchasePackingListMixin, TestPackingList):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPackingList))
+  suite.addTest(unittest.makeSuite(TestAutomaticSolvingPackingList))
   suite.addTest(unittest.makeSuite(TestPurchasePackingList))
   return suite
