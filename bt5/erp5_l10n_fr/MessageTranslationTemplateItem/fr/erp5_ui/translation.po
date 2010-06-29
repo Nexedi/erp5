@@ -11504,6 +11504,9 @@ msgstr "Compte en banque chez le tiers"
 msgid "Third Party Reference"
 msgstr "Référence du tiers"
 
+msgid "Third Party Region"
+msgstr "Région du tiers"
+
 msgid "Third Party Transaction Reference"
 msgstr "Référence pour le tiers"
 
