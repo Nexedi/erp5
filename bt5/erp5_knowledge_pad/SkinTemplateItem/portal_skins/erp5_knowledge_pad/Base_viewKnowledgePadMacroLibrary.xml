@@ -184,10 +184,10 @@
               tal:attributes="class python: test(is_tabs_visible,\n
                                                  \'border_bottom1px\',\n
                                                   \'border_bottom0px\');">\n
-            <span i18n:translate="" i18n:domain="ui"\n
-                  tal:condition="not: is_tabs_visible">Show tabs</span>\n
-            <span i18n:translate="" i18n:domain="ui" \n
-                  tal:condition="is_tabs_visible">Hide tabs</span>\n
+            <span i18n:translate="" i18n:domain="ui" id="tab_switcher_hidden"\n
+                  tal:attributes="style python: test(is_tabs_visible, \'display:none\', None)">Show tabs</span>\n
+            <span i18n:translate="" i18n:domain="ui" id="tab_switcher_visible"\n
+                  tal:attributes="style python: test(is_tabs_visible, None, \'display:none\')">Hide tabs</span>\n
           </div>\n
         </td>\n
         <td id="tab-list-container">\n

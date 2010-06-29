@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts68379872.09</string> </value>
+            <value> <string>ts77806058.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/javascript</string> </value>
+            <value> <string>application/x-javascript</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -323,20 +323,22 @@ function initialize(){\n
     })}\n
 \n
   // enable show/hide tabs\n
-  tabs =  getElement(\'tabs\');\n
-  tabs_switcher =  getElement(\'tabs_switcher\');\n
-  add_gadget =  getElement(\'add_new_gadget_link\')\n
+  tabs = getElement(\'tabs\');\n
+  tabs_switcher = getElement(\'tabs_switcher\');\n
+  add_gadget = getElement(\'add_new_gadget_link\')\n
   if(tabs_switcher){\n
     connect(tabs_switcher, \'onclick\', function (){\n
       var is_tabs_visible=0;\n
       if(tabs.style.display!=\'block\'){\n
         is_tabs_visible=1;\n
-        tabs_switcher.innerHTML = \'Hide tabs\';\n
+        getElement("tab_switcher_visible").style.display = "block";\n
+        getElement("tab_switcher_hidden").style.display = "none";\n
         add_gadget.className = "border_bottom1px";\n
         tabs_switcher.className = "border_bottom1px";\n
       }\n
       else{\n
-        tabs_switcher.innerHTML = \'Show tabs\';\n
+        getElement("tab_switcher_hidden").style.display = "block";\n
+        getElement("tab_switcher_visible").style.display = "none";\n
         add_gadget.className = "border_bottom0px";\n
         tabs_switcher.className = "border_bottom0px";\n
       }\n
@@ -399,7 +401,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>14577</long> </value>
+            <value> <int>14748</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
