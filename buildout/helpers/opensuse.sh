@@ -24,6 +24,7 @@ glib2-devel
 groff
 libSDL-devel
 libSDL_gfx-devel
+libSDL_image-devel
 libSDLmm-devel
 libcom_err-devel
 libgsasl-devel
