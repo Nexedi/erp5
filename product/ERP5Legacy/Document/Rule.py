@@ -531,4 +531,20 @@ class Rule(Predicate, XMLObject):
 
     return property_dict
 
+  def _getDivergenceTesterList(self, exclude_quantity=True):
+    """
+    Return the applicable divergence testers which must
+    be used to test movement divergence. (ie. not all
+    divergence testers of the Rule)
 
+     exclude_quantity -- if set to true, do not consider
+                         quantity divergence testers
+    """
+    tester_list = self.objectValues(
+      portal_type=self.getPortalDivergenceTesterTypeList())
+    if exclude_quantity:
+      # XXX hardcoded
+      return filter(lambda x:x.getPortalType() != 'Quantity Divergence Tester',
+                    tester_list)
+    else:
+      return tester_list
