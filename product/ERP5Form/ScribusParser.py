@@ -30,7 +30,7 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from lxml import etree
-
+from zLOG import LOG,INFO
 class ScribusParser:
   """
     Scribus parser API provide methods wich allow to parse a scribus file.
@@ -478,7 +478,11 @@ class ScribusParser:
         for attributes in field[1]["ANTOOLTIP"].split("#"):
           if attributes != "":
             key,value = attributes.split(":")
+            if isinstance(key, unicode):
+                key = key.encode('utf-8')
+            if isinstance(value, unicode):
+                value = value.encode('utf-8')
             if key == "nb":
-              value = int(value)     
-            erp5_attribute_dict[key]=value
+              value = int(value)
+            erp5_attribute_dict[key]=value     
     return erp5_attribute_dict
