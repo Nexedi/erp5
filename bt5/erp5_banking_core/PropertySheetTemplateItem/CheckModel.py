@@ -43,6 +43,10 @@ class CheckModel:
             'description' : 'If we must create items inside a checkbook',
             'type'        : 'boolean',
             'mode'        : 'w' },
+        {   'id'          : 'unique_per_account',
+            'description' : 'If check numbers are unique per account',
+            'type'        : 'boolean',
+            'mode'        : 'w' },
     )
   
 
