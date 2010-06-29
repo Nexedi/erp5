@@ -556,21 +556,27 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       # already delivered
       return False
 
-    # might be buildable - business path depended
+    # might be buildable - business path dependent
     business_path = self.getCausalityValue(portal_type='Business Path')
     explanation_value = self.getExplanationValue()
-
     if business_path is None or explanation_value is None:
       return True
-    predecessor = business_path.getPredecessorValue()
-    if predecessor is None:
+
+    predecessor_state = business_path.getPredecessorValue()
+    if predecessor_state is None:
       # first one, can be built
       return True
+
+    # movement is not built, and corresponding business path
+    # has predecessors: check movements related to those predecessors!
+    predecessor_path_list = predecessor_state.getSuccessorRelatedValueList()
+
+    ### Step 1:
+    ## Explore ancestors in ZODB (cheap)
 
     # store a causality -> causality_related_movement_list mapping
     causality_dict = dict()
 
-    # for now only explore ancestors
     current = self.getParentValue()
     while True:
       portal_type = current.getPortalType()
@@ -581,13 +587,17 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       # XXX or maybe directly go up by two levels?
       current = current.getParentValue()
 
-    parent_path_list = predecessor.getSuccessorRelatedValueList()
     remaining_path_list = []
-    for path in parent_path_list:
+    for path in predecessor_path_list:
       related_simulation = causality_dict.get(path.getRelativeUrl())
       if related_simulation is None:
         remaining_path_list.append(path)
         continue
+      # XXX assumption is made here that if we find ONE completed ancestor
+      # movement of self that is related to a predecessor path, then
+      # that predecessor path is completed. Is it True? (aka when
+      # Business Process goes downwards, is the maximum movements per
+      # predecessor 1 or can we have more?)
       if related_simulation.getDeliveryValue() is None:
         return False # related movement is not delivered yet
       if related_simulation.getSimulationState() not in \
@@ -600,10 +610,33 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
 
     # But sometimes we have to dig deeper
 
+    ### Step 2:
+    ## Try catalog to find descendant movements, knowing
+    # that it can be incomplete
+    uid_list = [p.getUid() for p in remaining_path_list]
+
+    # That list might be incomplete if catalog is lagging behind
+    portal_catalog = self.getPortalObject().portal_catalog
+    catalog_simulation_movement_list = portal_catalog(
+      portal_type='Simulation Movement',
+      causality_uid=uid_list,
+      path='%s/%%' % self.getPath())
+
+    for simulation in catalog_simulation_movement_list:
+      path = simulation.getCausalityValue()
+      if simulation.getDeliveryValue() is None or \
+          simulation.getSimulationState() not in path.getCompletedStateList():
+        return False
+
+    ### Step 3:
+    ## We had no luck, we have to explore descendant movements in ZODB
+
     # reset dict
     causality_dict = dict()
 
     # and explore descendants
+    # XXX: _recurseGetValueList fetches _all_ descendants, but we can bail
+    #      out early if one movement is not built
     for descendant in business_path._recurseGetValueList(self, 'Simulation Movement'):
       causality_dict.setdefault(descendant.getCausality(), []).append(descendant)
     for path in remaining_path_list:
