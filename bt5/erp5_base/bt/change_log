@@ -1,3 +1,7 @@
+2010-06-30 kazuhiko
+* Calculate and pass default values to automatic solvers.
+* Add fallback scripts for target solvers' default configuration values.
+
 2010-06-29 kazuhiko
 * Move portal_solvers and portal_solver_processes from the experimental erp5_simulation business template to the erp5_base business template.
 

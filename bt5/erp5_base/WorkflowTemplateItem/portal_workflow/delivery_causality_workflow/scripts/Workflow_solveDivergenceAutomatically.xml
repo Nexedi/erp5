@@ -109,16 +109,15 @@ else:\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>state_change</string>
                             <string>delivery</string>
-                            <string>getattr</string>
                             <string>_getattr_</string>
-                            <string>None</string>
                             <string>portal</string>
+                            <string>getattr</string>
+                            <string>None</string>
                             <string>solver_tool</string>
                             <string>solver_process_tool</string>
                             <string>activate_kw</string>
-                            <string>False</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

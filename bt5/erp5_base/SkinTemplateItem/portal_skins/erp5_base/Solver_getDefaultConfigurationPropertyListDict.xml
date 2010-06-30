@@ -53,41 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-delivery = context\n
-\n
-portal = delivery.getPortalObject()\n
-solver_tool = portal.portal_solvers\n
-solver_process_tool = portal.portal_solver_processes\n
-\n
-solver_movement_list = []\n
-for tester, simulation_movement in delivery.getDivergentTesterAndSimulationMovementList():\n
-  solver_list = filter(lambda x:x.isAutomaticSolver(),\n
-                       solver_tool.searchTargetSolverList(tester, simulation_movement, automatic_solver_only=True))\n
-  if len(solver_list) == 1:\n
-    solver_movement_list.append((solver_list[0], simulation_movement))\n
-\n
-if len(solver_movement_list) > 0:\n
-  # XXX We sometimes want to store solver process document persistently.\n
-  solver_process = solver_process_tool.newContent(\n
-    portal_type=\'Solver Process\', temp_object=True)\n
-  for solver, simulation_movement in solver_movement_list:\n
-    # XXX Do we need grouping here?\n
-    # XXX Do we need to split activities for each target solver?\n
-    target_solver = solver_process.newContent(\n
-      portal_type=solver.getId(),\n
-      delivery=simulation_movement.getRelativeUrl()\n
-      )\n
-    # Calculate and pass default values.\n
-    target_solver.updateConfiguration(\n
-        **solver.getDefaultConfigurationPropertyDict(target_solver))\n
-  solver_process.solve()\n
-\n
-delivery.updateCausalityState(solve_automatically=False)\n
-
-
-]]></string> </value>
+            <value> <string># This script is just a fall back script returns nothing meaningful.\n
+return {}\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -98,14 +66,6 @@ delivery.updateCausalityState(solve_automatically=False)\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -130,28 +90,7 @@ delivery.updateCausalityState(solve_automatically=False)\n
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple>
-                            <string>context</string>
-                            <string>delivery</string>
-                            <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>solver_tool</string>
-                            <string>solver_process_tool</string>
-                            <string>solver_movement_list</string>
-                            <string>_getiter_</string>
-                            <string>tester</string>
-                            <string>simulation_movement</string>
-                            <string>filter</string>
-                            <string>True</string>
-                            <string>solver_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>solver_process</string>
-                            <string>solver</string>
-                            <string>target_solver</string>
-                            <string>_apply_</string>
-                            <string>False</string>
-                          </tuple>
+                          <tuple/>
                         </value>
                     </item>
                   </dictionary>
@@ -167,7 +106,7 @@ delivery.updateCausalityState(solve_automatically=False)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_solveDivergenceAutomatically</string> </value>
+            <value> <string>Solver_getDefaultConfigurationPropertyListDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
