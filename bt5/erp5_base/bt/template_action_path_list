@@ -81,6 +81,8 @@ Root Applied Rule Causality Movement Group | view
 Rounding Model | predicate_view
 Rounding Model | view
 Rounding Tool | view
+Solver Decision | configuration
+Solver Decision | view
 Solver Tool | view
 Solver Type | action_view
 Solver Type | role_view

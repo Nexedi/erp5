@@ -117,6 +117,9 @@
  <portal_type id="Rounding Tool">
   <item>Rounding Model</item>
  </portal_type>
+ <portal_type id="Solver Process">
+  <item>Solver Decision</item>
+ </portal_type>
  <portal_type id="Solver Process Tool">
   <item>Solver Process</item>
  </portal_type>

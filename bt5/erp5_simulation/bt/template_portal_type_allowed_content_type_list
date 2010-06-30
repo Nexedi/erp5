@@ -44,7 +44,6 @@ Solver Process | Accept Solver
 Solver Process | Adopt Solver
 Solver Process | Production Reduction Solver
 Solver Process | Quantity Split Solver
-Solver Process | Solver Decision
 Solver Process | Trade Model Solver
 Solver Process | Unify Solver
 Trade Model Simulation Rule | Category Membership Divergence Tester
