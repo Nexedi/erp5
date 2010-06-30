@@ -115,7 +115,7 @@ class TestEgov(ERP5TypeTestCase):
     """Returns a list of categories that should be created."""
     return ('group/client','group/client/dgid/di', 'group/client/dgid/bf',
             'function/impots/taxes_indirectes', 'function/impots/section/chef',
-            'role/citoyen', 'role/citoyen/national', 'role/citoyen/etranger', 
+            'role/citoyen', 'role/citoyen/national', 'role/citoyen/etranger', 'role/gouvernement',
             'role/entreprise', 'role/entreprise/agence', 'role/entreprise/siege', 'role/entreprise/succursale', 
             'function/entreprise/mandataire')
 
@@ -138,6 +138,9 @@ class TestEgov(ERP5TypeTestCase):
     if pref is not None:
       if pref.getPreferenceState() == 'disabled':
         pref.enable()
+
+    #set up the instance
+    self.portal.EGov_setUpInstance()
 
   def beforeTearDown(self):
     """
