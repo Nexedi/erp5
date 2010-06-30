@@ -98,8 +98,8 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
       if last_max_id_dict.get(id_group, None) is not None and \
           last_max_id_dict[id_group].value > new_id:
         raise ValueError, 'The last_id %s stored in zodb dictionary is ' \
-            'higher than the new id %s generated' % \
-            (last_max_id_dict[id_group].value, new_id)
+            'higher than the new id %s generated for id_group %s' % \
+            (last_max_id_dict[id_group].value, new_id, id_group)
       # Check the store interval to store the data
       store_interval = self.getStoreInterval()
       if not store_interval:
