@@ -1,4 +1,7 @@
 2010-06-30 mohamadou
+* test if user has access to a module before displaying it.
+
+2010-06-30 mohamadou
 * Add role information in EGov Type
 
 2010-06-30 mohamadou

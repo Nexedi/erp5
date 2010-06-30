@@ -53,17 +53,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal_types = context.getPortalObject().portal_types\n
+            <value> <string>from AccessControl import getSecurityManager\n
+user=getSecurityManager().getUser()\n
+\n
+portal_types = context.getPortalObject().portal_types\n
 validated_type_list = portal_types.searchFolder(portal_type=\'EGov Type\', validation_state = \'validated\')\n
+access_permission= \'Access contents information\'\n
+view_permission = \'View\'\n
 \n
 portal_type_list = ()\n
+for ptype_title in [\'Person\', \'Organisation\']:\n
+  default_module = context.getDefaultModule(ptype_title)\n
+  if user.has_permission(access_permission,default_module) or user.has_permission(view_permission,default_module):\n
+    portal_type_list += (ptype_title,)\n
+  \n
+for ptype in validated_type_list:\n
+  default_module = context.getDefaultModule(ptype.getTitle())\n
+  if user.has_permission(access_permission,default_module) or user.has_permission(view_permission,default_module):\n
+    portal_type_list += (ptype.getTitle(),)\n
 \n
-for portal_type in validated_type_list:\n
-  portal_type_list += (portal_type.getTitle(),)\n
-\n
-\n
-type_list = portal_type_list + (\'Person\', \'Organisation\')\n
-return type_list\n
+return portal_type_list\n
 </string> </value>
         </item>
         <item>
@@ -100,15 +109,21 @@ return type_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>AccessControl</string>
+                            <string>getSecurityManager</string>
                             <string>_getattr_</string>
+                            <string>user</string>
                             <string>context</string>
                             <string>portal_types</string>
                             <string>validated_type_list</string>
+                            <string>access_permission</string>
+                            <string>view_permission</string>
                             <string>portal_type_list</string>
                             <string>_getiter_</string>
-                            <string>portal_type</string>
+                            <string>ptype_title</string>
+                            <string>default_module</string>
                             <string>_inplacevar_</string>
-                            <string>type_list</string>
+                            <string>ptype</string>
                           </tuple>
                         </value>
                     </item>

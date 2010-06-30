@@ -162,7 +162,7 @@ def setPermissionsOnEGovModule(self, portal_type_object):
   portal_type_object.manage_role(role_to_manage='Agent', permissions=view_permission_list)
 
   # if the procedure needs no authentification anonymous should access and add
-  if portal_type_object  is not None:
+  if portal_type_object is not None:
     step_authentication =  portal_type_object.getStepAuthentication()
     step_subscription =  portal_type_object.getStepSubscription()
     if not step_authentication: # and not step_subscription
