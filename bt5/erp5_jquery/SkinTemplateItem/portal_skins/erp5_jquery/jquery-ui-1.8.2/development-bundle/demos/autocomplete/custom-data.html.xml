@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Autocomplete Custom Data Demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.autocomplete.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#project-label {\n
+\t\tdisplay: block;\n
+\t\tfont-weight: bold;\n
+\t\tmargin-bottom: 1em;\n
+\t}\n
+\t#project-icon {\n
+\t\tfloat: left;\n
+\t\theight: 32px;\n
+\t\twidth: 32px;\n
+\t}\n
+\t#project-description {\n
+\t\tmargin: 0;\n
+\t\tpadding: 0;\n
+\t}\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\tvar projects = [\n
+\t\t\t{\n
+\t\t\t\tvalue: \'jquery\',\n
+\t\t\t\tlabel: \'jQuery\',\n
+\t\t\t\tdesc: \'the write less, do more, JavaScript library\',\n
+\t\t\t\ticon: \'jquery_32x32.png\'\n
+\t\t\t},\n
+\t\t\t{\n
+\t\t\t\tvalue: \'jquery-ui\',\n
+\t\t\t\tlabel: \'jQuery UI\',\n
+\t\t\t\tdesc: \'the official user interface library for jQuery\',\n
+\t\t\t\ticon: \'jqueryui_32x32.png\'\n
+\t\t\t},\n
+\t\t\t{\n
+\t\t\t\tvalue: \'sizzlejs\',\n
+\t\t\t\tlabel: \'Sizzle JS\',\n
+\t\t\t\tdesc: \'a pure-JavaScript CSS selector engine\',\n
+\t\t\t\ticon: \'sizzlejs_32x32.png\'\n
+\t\t\t}\n
+\t\t];\n
+\t\t\n
+\t\t$(\'#project\').autocomplete({\n
+\t\t\tminLength: 0,\n
+\t\t\tsource: projects,\n
+\t\t\tfocus: function(event, ui) {\n
+\t\t\t\t$(\'#project\').val(ui.item.label);\n
+\t\t\t\treturn false;\n
+\t\t\t},\n
+\t\t\tselect: function(event, ui) {\n
+\t\t\t\t$(\'#project\').val(ui.item.label);\n
+\t\t\t\t$(\'#project-id\').val(ui.item.value);\n
+\t\t\t\t$(\'#project-description\').html(ui.item.desc);\n
+\t\t\t\t$(\'#project-icon\').attr(\'src\', \'../images/\' + ui.item.icon);\n
+\t\t\t\t\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t})\n
+\t\t.data( "autocomplete" )._renderItem = function( ul, item ) {\n
+\t\t\treturn $( "<li></li>" )\n
+\t\t\t\t.data( "item.autocomplete", item )\n
+\t\t\t\t.append( "<a>" + item.label + "<br>" + item.desc + "</a>" )\n
+\t\t\t\t.appendTo( ul );\n
+\t\t};\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\t<div id="project-label">Select a project (type "j" for a start):</div>\n
+\t<img id="project-icon" src="../images/transparent_1x1.png" class="ui-state-default"/>\n
+\t<input id="project"/>\n
+\t<input type="hidden" id="project-id"/>\n
+\t<p id="project-description"></p>\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+<p>\n
+You can use your own custom data formats and displays by simply overriding the default focus and select actions.\n
+</p>\n
+<p>\n
+Try typing "j" to get a list of projects or just press the down arrow.\n
+</p>\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>custom-data.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

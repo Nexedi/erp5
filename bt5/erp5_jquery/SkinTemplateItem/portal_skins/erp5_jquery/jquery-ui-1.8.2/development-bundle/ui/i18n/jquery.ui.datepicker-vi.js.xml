@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77895658.66</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.ui.datepicker-vi.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/* Vietnamese initialisation for the jQuery UI date picker plugin. */\n
+/* Translated by Le Thanh Huy (lthanhhuy@cit.ctu.edu.vn). */\n
+jQuery(function($){\n
+\t$.datepicker.regional[\'vi\'] = {\n
+\t\tcloseText: \'Đóng\',\n
+\t\tprevText: \'&#x3c;Trước\',\n
+\t\tnextText: \'Tiếp&#x3e;\',\n
+\t\tcurrentText: \'Hôm nay\',\n
+\t\tmonthNames: [\'Tháng Một\', \'Tháng Hai\', \'Tháng Ba\', \'Tháng Tư\', \'Tháng Năm\', \'Tháng Sáu\',\n
+\t\t\'Tháng Bảy\', \'Tháng Tám\', \'Tháng Chín\', \'Tháng Mười\', \'Tháng Mười Một\', \'Tháng Mười Hai\'],\n
+\t\tmonthNamesShort: [\'Tháng 1\', \'Tháng 2\', \'Tháng 3\', \'Tháng 4\', \'Tháng 5\', \'Tháng 6\',\n
+\t\t\'Tháng 7\', \'Tháng 8\', \'Tháng 9\', \'Tháng 10\', \'Tháng 11\', \'Tháng 12\'],\n
+\t\tdayNames: [\'Chủ Nhật\', \'Thứ Hai\', \'Thứ Ba\', \'Thứ Tư\', \'Thứ Năm\', \'Thứ Sáu\', \'Thứ Bảy\'],\n
+\t\tdayNamesShort: [\'CN\', \'T2\', \'T3\', \'T4\', \'T5\', \'T6\', \'T7\'],\n
+\t\tdayNamesMin: [\'CN\', \'T2\', \'T3\', \'T4\', \'T5\', \'T6\', \'T7\'],\n
+\t\tweekHeader: \'Tu\',\n
+\t\tdateFormat: \'dd/mm/yy\',\n
+\t\tfirstDay: 0,\n
+\t\tisRTL: false,\n
+\t\tshowMonthAfterYear: false,\n
+\t\tyearSuffix: \'\'};\n
+\t$.datepicker.setDefaults($.datepicker.regional[\'vi\']);\n
+});\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1097</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

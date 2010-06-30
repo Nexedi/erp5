@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Dialog - Basic modal</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../external/jquery.bgiframe-2.1.1.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.draggable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.resizable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.dialog.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!\n
+\t\t$("#dialog").dialog("destroy");\n
+\t\n
+\t\t$("#dialog-modal").dialog({\n
+\t\t\theight: 140,\n
+\t\t\tmodal: true\n
+\t\t});\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+\n
+<div class="demo">\n
+\n
+<div id="dialog-modal" title="Basic modal dialog">\n
+\t<p>Adding the modal overlay screen makes the dialog look more prominent because it dims out the page content.</p>\n
+</div>\n
+\n
+<!-- Sample page content to illustrate the layering of the dialog -->\n
+<div class="hiddenInViewSource" style="padding:20px;">\n
+\t<p>Sed vel diam id libero <a href="http://example.com">rutrum convallis</a>. Donec aliquet leo vel magna. Phasellus rhoncus faucibus ante. Etiam bibendum, enim faucibus aliquet rhoncus, arcu felis ultricies neque, sit amet auctor elit eros a lectus.</p>\n
+\t<form>\n
+\t\t<input value="text input" /><br />\n
+\t\t<input type="checkbox" />checkbox<br />\n
+\t\t<input type="radio" />radio<br />\n
+\t\t<select>\n
+\t\t\t<option>select</option>\n
+\t\t</select><br /><br />\n
+\t\t<textarea>textarea</textarea><br />\n
+\t</form>\n
+</div><!-- End sample page content -->\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>A modal dialog prevents the user from interacting with the rest of the page until it is closed.  To add a semi-transparent layer that dims out the page content behind the dialog, set the background color and opacity of the <code>overlay</code> option.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>modal.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

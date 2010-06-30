@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Slider - Multiple sliders</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.slider.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t\t#demo-frame > div.demo { padding: 10px !important; }\n
+\t\t#eq span {\n
+\t\t\theight:120px; float:left; margin:15px\n
+\t\t}\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t// setup master volume\n
+\t\t$("#master").slider({\n
+\t\t\tvalue: 60,\n
+\t\t\torientation: "horizontal",\n
+\t\t\trange: "min",\n
+\t\t\tanimate: true\n
+\t\t});\n
+\t\t// setup graphic EQ\n
+\t\t$("#eq > span").each(function() {\n
+\t\t\t// read initial values from markup and remove that\n
+\t\t\tvar value = parseInt($(this).text());\n
+\t\t\t$(this).empty().slider({\n
+\t\t\t\tvalue: value,\n
+\t\t\t\trange: "min",\n
+\t\t\t\tanimate: true,\n
+\t\t\t\torientation: "vertical"\n
+\t\t\t});\n
+\t\t});\n
+\t});\n
+\t</script>\n
+</head>\n
+<body class="ui-widget-content" style="border:0;">\n
+\n
+<div class="demo">\n
+\n
+<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">\n
+<span class="ui-icon ui-icon-volume-on" style="float:left; margin:-2px 5px 0 0;"></span>\n
+Master volume\n
+</p>\n
+\n
+<div id="master" style="width:260px; margin:15px;"></div>\n
+\n
+<p class="ui-state-default ui-corner-all" style="padding:4px;margin-top:4em;">\n
+<span class="ui-icon ui-icon-signal" style="float:left; margin:-2px 5px 0 0;"></span>\n
+Graphic EQ\n
+</p>\n
+\n
+<div id="eq">\n
+\t<span>88</span>\n
+\t<span>77</span>\n
+\t<span>55</span>\n
+\t<span>33</span>\n
+\t<span>40</span>\n
+\t<span>45</span>\n
+\t<span>70</span>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description" style="clear:left;">\n
+\n
+<p>Combine horizontal and vertical sliders, each with their own options, to create the UI for a music player.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>multiple-vertical.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

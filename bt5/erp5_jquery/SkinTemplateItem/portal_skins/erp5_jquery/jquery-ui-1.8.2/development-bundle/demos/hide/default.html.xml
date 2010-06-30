@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Effects - Hide Demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.blind.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.bounce.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.clip.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.drop.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.explode.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.fold.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.highlight.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.pulsate.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.scale.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.shake.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.slide.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t\t.toggler { width: 500px; height: 200px; }\n
+\t\t#button { padding: .5em 1em; text-decoration: none; }\n
+\t\t#effect { width: 240px; height: 135px; padding: 0.4em; position: relative; }\n
+\t\t#effect h3 { margin: 0; padding: 0.4em; text-align: center; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\n
+\t\t//run the currently selected effect\n
+\t\tfunction runEffect(){\n
+\t\t\t//get effect type from \n
+\t\t\tvar selectedEffect = $(\'#effectTypes\').val();\n
+\t\t\t\n
+\t\t\t//most effect types need no options passed by default\n
+\t\t\tvar options = {};\n
+\t\t\t//check if it\'s scale or size - they need options explicitly set\n
+\t\t\tif(selectedEffect == \'scale\'){  options = {percent: 0}; }\n
+\t\t\telse if(selectedEffect == \'size\'){ options = { to: {width: 200,height: 60} }; }\n
+\t\t\t\n
+\t\t\t//run the effect\n
+\t\t\t$("#effect").hide(selectedEffect,options,500,callback);\n
+\t\t};\n
+\t\t\n
+\t\t//callback function to bring a hidden box back\n
+\t\tfunction callback(){\n
+\t\t\tsetTimeout(function(){\n
+\t\t\t\t$("#effect:hidden").removeAttr(\'style\').hide().fadeIn();\n
+\t\t\t}, 1000);\n
+\t\t};\n
+\t\t\n
+\t\t//set effect from select menu value\n
+\t\t$("#button").click(function() {\n
+\t\t\trunEffect();\n
+\t\t\treturn false;\n
+\t\t});\n
+\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<div class="toggler">\n
+\t<div id="effect" class="ui-widget-content ui-corner-all">\n
+\t\t<h3 class="ui-widget-header ui-corner-all">Hide</h3>\n
+\t\t<p>\n
+\t\t\tEtiam libero neque, luctus a, eleifend nec, semper at, lorem. Sed pede. Nulla lorem metus, adipiscing ut, luctus sed, hendrerit vitae, mi.\n
+\t\t</p>\n
+\t</div>\n
+</div>\n
+\n
+<select name="effects" id="effectTypes">\n
+\t<option value="blind">Blind</option>\n
+\t<option value="bounce">Bounce</option>\n
+\t<option value="clip">Clip</option>\n
+\t<option value="drop">Drop</option>\n
+\t<option value="explode">Explode</option>\n
+\t<option value="fold">Fold</option>\n
+\t<option value="highlight">Highlight</option>\n
+\t<option value="puff">Puff</option>\n
+\t<option value="pulsate">Pulsate</option>\n
+\t<option value="scale">Scale</option>\n
+\t<option value="shake">Shake</option>\n
+\t<option value="size">Size</option>\n
+\t<option value="slide">Slide</option>\n
+</select>\n
+\n
+<a href="#" id="button" class="ui-state-default ui-corner-all">Run Effect</a>\n
+\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>Click the button above to preview the effect.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Droppable - Accept Demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.draggable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.droppable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#droppable { width: 150px; height: 150px; padding: 0.5em; float: left; margin: 10px; }\n
+\t#draggable, #draggable-nonvalid { width: 100px; height: 100px; padding: 0.5em; float: left; margin: 10px 10px 10px 0; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\n
+\t\t$("#draggable, #draggable-nonvalid").draggable();\n
+\n
+\t\t$("#droppable").droppable({\n
+\t\t\taccept: \'#draggable\',\n
+\t\t\tactiveClass: \'ui-state-hover\',\n
+\t\t\thoverClass: \'ui-state-active\',\n
+\t\t\tdrop: function(event, ui) {\n
+\t\t\t\t$(this).addClass(\'ui-state-highlight\').find(\'p\').html(\'Dropped!\');\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\t\n
+<div id="draggable-nonvalid" class="ui-widget-content">\n
+\t<p>I\'m draggable but can\'t be dropped</p>\n
+</div>\n
+\n
+<div id="draggable" class="ui-widget-content">\n
+\t<p>Drag me to my target</p>\n
+</div>\n
+\n
+<div id="droppable" class="ui-widget-header">\n
+\t<p>accept: \'#draggable\'</p>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>Specify using the <code>accept</code> option which element (or group of elements) is accepted by the target droppable.</p>\n
+\n
+</div><!-- End demo-description -->\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>accepted-elements.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Button - Default demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.button.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#rerun")\n
+\t\t\t.button()\n
+\t\t\t.click( function() {\n
+\t\t\t\talert( "Running the last action" );\n
+\t\t\t})\n
+\t\t.next()\n
+\t\t\t.button( {\n
+\t\t\t\ttext: false,\n
+\t\t\t\ticons: {\n
+\t\t\t\t\tprimary: "ui-icon-triangle-1-s"\n
+\t\t\t\t}\n
+\t\t\t})\n
+\t\t\t.click( function() {\n
+\t\t\t\talert( "Could display a menu to select an action" );\n
+\t\t\t})\n
+\t\t.parent()\n
+\t\t\t.buttonset();\n
+\t});\n
+\t</script>\n
+\t<style>\n
+\t\t\n
+\t</style>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+\t<div>\n
+\t\t<button id="rerun">Run last action</button>\n
+\t\t<button id="select">Select an action</button>\n
+\t</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+\n
+\n
+<div class="demo-description">\n
+\n
+<p>An example of a split button built with two buttons: A plan button with just text, one with only a primary icon\n
+and no text. Both are grouped together in a set.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>splitbutton.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

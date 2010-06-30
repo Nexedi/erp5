@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Button - Toolbar demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.button.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#toolbar {\n
+\t\tpadding: 10px 4px;\n
+\t}\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$(\'#beginning\').button({\n
+\t\t\ttext: false,\n
+\t\t\ticons: {\n
+\t\t\t\tprimary: \'ui-icon-seek-start\'\n
+\t\t\t}\n
+\t\t});\n
+\t\t$(\'#rewind\').button({\n
+\t\t\ttext: false,\n
+\t\t\ticons: {\n
+\t\t\t\tprimary: \'ui-icon-seek-prev\'\n
+\t\t\t}\n
+\t\t});\n
+\t\t$(\'#play\').button({\n
+\t\t\ttext: false,\n
+\t\t\ticons: {\n
+\t\t\t\tprimary: \'ui-icon-play\'\n
+\t\t\t}\n
+\t\t})\n
+\t\t.click(function() {\n
+\t\t\tvar options;\n
+\t\t\tif ($(this).text() == \'play\') {\n
+\t\t\t\toptions = {\n
+\t\t\t\t\tlabel: \'pause\',\n
+\t\t\t\t\ticons: {\n
+\t\t\t\t\t\tprimary: \'ui-icon-pause\'\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\t\t\t} else {\n
+\t\t\t\toptions = {\n
+\t\t\t\t\tlabel: \'play\',\n
+\t\t\t\t\ticons: {\n
+\t\t\t\t\t\tprimary: \'ui-icon-play\'\n
+\t\t\t\t\t}\n
+\t\t\t\t};\n
+\t\t\t}\n
+\t\t\t$(this).button(\'option\', options);\n
+\t\t});\n
+\t\t$(\'#stop\').button({\n
+\t\t\ttext: false,\n
+\t\t\ticons: {\n
+\t\t\t\tprimary: \'ui-icon-stop\'\n
+\t\t\t}\n
+\t\t})\n
+\t\t.click(function() {\n
+\t\t\t$(\'#play\').button(\'option\', {\n
+\t\t\t\tlabel: \'play\',\n
+\t\t\t\ticons: {\n
+\t\t\t\t\tprimary: \'ui-icon-play\'\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\t\t$(\'#forward\').button({\n
+\t\t\ttext: false,\n
+\t\t\ticons: {\n
+\t\t\t\tprimary: \'ui-icon-seek-next\'\n
+\t\t\t}\n
+\t\t});\n
+\t\t$(\'#end\').button({\n
+\t\t\ttext: false,\n
+\t\t\ticons: {\n
+\t\t\t\tprimary: \'ui-icon-seek-end\'\n
+\t\t\t}\n
+\t\t});\n
+\t\t$("#shuffle").button();\n
+\t\t$("#repeat").buttonset();\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+\t<span id="toolbar" class="ui-widget-header ui-corner-all">\n
+\t\t<button id="beginning">go to beginning</button>\n
+\t\t<button id="rewind">rewind</button>\n
+\t\t<button id="play">play</button>\n
+\t\t<button id="stop">stop</button>\n
+\t\t<button id="forward">fast forward</button>\n
+\t\t<button id="end">go to end</button>\n
+\t\t\n
+\t\t<input type="checkbox" id="shuffle" /><label for="shuffle">Shuffle</label>\n
+\t\t\n
+\t\t<span id="repeat">\n
+\t\t\t<input type="radio" id="repeat0" name="repeat" checked="checked" /><label for="repeat0">No Repeat</label>\n
+\t\t\t<input type="radio" id="repeat1" name="repeat" /><label for="repeat1">Once</label>\n
+\t\t\t<input type="radio" id="repeatall" name="repeat" /><label for="repeatall">All</label>\n
+\t\t</span>\n
+\t</span>\n
+\n
+</div><!-- End demo -->\n
+\n
+\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+\tA mediaplayer toolbar. Take a look at the underlying markup: A few button elements,\n
+\tan input of type checkbox for the Shuffle button, and three inputs of type radio for the Repeat options. \n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>toolbar.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>content4-broken.php</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?php \n
+header("HTTP/1.0 404 Not Found");\n
+?>
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

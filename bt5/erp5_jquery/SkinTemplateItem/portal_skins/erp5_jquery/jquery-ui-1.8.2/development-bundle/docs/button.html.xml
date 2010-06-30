@@ -1,0 +1,513 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<ul class="UIAPIPlugin-toc">\n
+<li><a href="#overview">Overview</a></li>\n
+<li><a href="#options">Options</a></li>\n
+<li><a href="#events">Events</a></li>\n
+<li><a href="#methods">Methods</a></li>\n
+<li><a href="#theming">Theming</a></li>\n
+</ul>\n
+<div class="UIAPIPlugin">\n
+  <h1>jQuery UI Button</h1>\n
+  <div id="overview">\n
+    <h2 class="top-header">Overview</h2>\n
+    <div id="overview-main">\n
+        <p>Button enhances standard form elements like button, input of type submit or reset or anchors to themable buttons with appropiate mouseover and active styles.</p>\n
+<p>In addition to basic push buttons, radio buttons and checkboxes (inputs of type radio and checkbox) can be converted to buttons: Their associated label is styled to appear as the button, while the underlying input is updated on click.</p>\n
+<p>In order to group radio buttons, Button also provides an additional widget-method, called Buttonset. Its used by selecting a container element (which contains the radio buttons) and calling buttonset(). Buttonset will also provide visual grouping, and therefore should be used whenever you have a group of buttons. It works by selecting all descendents and applying button() to them. You can enable and disable a buttonset, which will enable and disable all contained buttons. Destroying a buttonset also calls the button\'s destroy method.</p>\n
+    </div>\n
+    <div id="overview-dependencies">\n
+        <h3>Dependencies</h3>\n
+        <ul>\n
+<li>UI Core</li>\n
+<li>UI Widget</li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-example">\n
+        <h3>Example</h3>\n
+        <div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<p><div id="demo" class="tabs-container" rel="300">\n
+A simple jQuery UI Button.<br />\n
+</p>\n
+<pre>$(&quot;button&quot;).button();\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js&quot;&gt;&lt;/script&gt;\n
+  \n
+  &lt;script&gt;\n
+  $(document).ready(function() {\n
+    $(&quot;button&quot;).button();\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;button&gt;Button label&lt;/button&gt;\n
+\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+<div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<div id="demo" class="tabs-container" rel="300">\n
+A simple jQuery UI Button.<br />\n
+</p>\n
+<pre>$(&quot;#radio1&quot;).buttonset();\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js&quot;&gt;&lt;/script&gt;\n
+  \n
+  &lt;script&gt;\n
+  $(document).ready(function() {\n
+    $(&quot;#radio1&quot;).buttonset();\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;div id=&quot;radio1&quot;&gt;\n
+\t&lt;input type=&quot;radio&quot; id=&quot;radio1&quot; name=&quot;radio&quot; /&gt;&lt;label for=&quot;radio1&quot;&gt;Choice 1&lt;/label&gt;\n
+\t&lt;input type=&quot;radio&quot; id=&quot;radio2&quot; name=&quot;radio&quot; checked=&quot;checked&quot; /&gt;&lt;label for=&quot;radio2&quot;&gt;Choice 2&lt;/label&gt;\n
+\t&lt;input type=&quot;radio&quot; id=&quot;radio3&quot; name=&quot;radio&quot; /&gt;&lt;label for=&quot;radio3&quot;&gt;Choice 3&lt;/label&gt;\n
+&lt;/div&gt;\n
+\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+    </div>\n
+  </div>\n
+  <div id="options">\n
+    <h2 class="top-header">Options</h2>\n
+    <ul class="options-list">\n
+      \n
+<li class="option" id="option-disabled">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-disabled">disabled</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Disables (true) or enables (false) the button. Can be set when initialising (first creating) the button.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a button with the <code>disabled</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).button({ disabled: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>disabled</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var disabled = $( ".selector" ).button( "option", "disabled" );\n
+//setter\n
+$( ".selector" ).button( "option", "disabled", true );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-text">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-text">text</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">true</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Whether to show any text - when set to false (display no text), icons (see icons option) must be enabled, otherwise it\'ll be ignored.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a button with the <code>text</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).button({ text: false });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>text</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var text = $( ".selector" ).button( "option", "text" );\n
+//setter\n
+$( ".selector" ).button( "option", "text", false );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-icons">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-icons">icons</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Options</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">{ primary: null, secondary: null }</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Icons to display, with or without text (see text option). The primary icon is displayed on the left of the label text, the secondary on the right. Value for the primary and secondary properties must be a classname (String), eg. "ui-icon-gear". For using only a primary icon: icons: {primary:\'ui-icon-locked\'}. For using both primary and secondary icon: icons: {primary:\'ui-icon-gear\',secondary:\'ui-icon-triangle-1-s\'}</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a button with the <code>icons</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).button({ icons: {primary:\'ui-icon-gear\',secondary:\'ui-icon-triangle-1-s\'} });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>icons</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var icons = $( ".selector" ).button( "option", "icons" );\n
+//setter\n
+$( ".selector" ).button( "option", "icons", {primary:\'ui-icon-gear\',secondary:\'ui-icon-triangle-1-s\'} );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-label">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-label">label</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">HTML content of the button, or value attribute</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Text to show on the button. When not specified (null), the element\'s html content is used, or its value attribute when it\'s an input element of type submit or reset; or the html content of the associated label element if its an input of type radio or checkbox</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a button with the <code>label</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).button({ label: "custom label" });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>label</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var label = $( ".selector" ).button( "option", "label" );\n
+//setter\n
+</p>\n
+$( ".selector" ).button( "option", "label", "custom label" );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="events">\n
+    <h2 class="top-header">Events</h2>\n
+    <ul class="events-list">\n
+      <p>There are no events for this plugin.</p>\n
+    </ul>\n
+  </div>\n
+  <div id="methods">\n
+    <h2 class="top-header">Methods</h2>\n
+    <ul class="methods-list">\n
+      \n
+<li class="method" id="method-destroy">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-destroy">destroy</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.button( "destroy"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Remove the button functionality completely. This will return the element back to its pre-init state.</p>\n
+  </div>\n
+</li>\n
+\n
+<p>\n
+<li class="method" id="method-disable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-disable">disable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.button( "disable"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Disable the button.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-enable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-enable">enable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.button( "enable"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Enable the button.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.button( "option"\n
+\n
+, optionName\n
+\n
+, <span class="optional">[</span>value<span class="optional">] </span>\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Get or set any button option. If no value is specified, will act as a getter.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.button( "option"\n
+\n
+, options\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Set multiple button options at once by providing an options object.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-widget">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-widget">widget</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.button( "widget"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Returns the .ui-button element.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-refresh">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-refresh">refresh</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.button( "refresh"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Refreshes the visual state of the button. Useful for updating button state after the native element\'s checked or disabled state is changed programatically.</p>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="theming">\n
+    <h2 class="top-header">Theming</h2>\n
+    <p>The jQuery UI Button plugin uses the jQuery UI CSS Framework to style its look and feel, including colors and background textures. We recommend using the ThemeRoller tool to create and download custom themes that are easy to build and maintain.\n
+</p>\n
+  <p>If a deeper level of customization is needed, there are widget-specific classes referenced within the jquery.ui.button.css stylesheet that can be modified. These classes are highlighed in bold below.\n
+</p>\n
+    \n
+  <h3>Sample markup with jQuery UI CSS Framework classes</h3>\n
+  &lt;button class=&quot;<strong>ui-button ui-button-text-only</strong> ui-widget ui-state-default ui-corner-all&quot;&gt;<br />\n
+&nbsp;&nbsp;&nbsp;&lt;span class=&quot;<strong>ui-button-text</strong>&quot;&gt;Button Label&lt;/span&gt;<br />&lt;/button&gt;\n
+  <p class="theme-note">\n
+    <strong>\n
+      Note: This is a sample of markup generated by the button plugin, not markup you should use to create a button. The only markup needed for that is &lt;button&gt;Button Label&lt;/button&gt;.\n
+    </strong>\n
+  </p>\n
+\n
+  </div>\n
+</div>\n
+\n
+</p><!-- \n
+Pre-expand include size: 23021 bytes\n
+Post-expand include size: 28995 bytes\n
+Template argument size: 13372 bytes\n
+Maximum: 2097152 bytes\n
+-->\n
+\n
+<!-- Saved in parser cache with key jqdocs_docs:pcache:idhash:3767-1!1!0!!en!2 and timestamp 20100520115500 -->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>button.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

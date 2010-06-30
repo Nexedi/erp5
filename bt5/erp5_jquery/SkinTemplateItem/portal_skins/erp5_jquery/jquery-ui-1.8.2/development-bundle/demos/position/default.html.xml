@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Position - Default functionality</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.draggable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\n
+\tdiv#parent {\n
+\t\twidth: 60%;\n
+\t\tmargin: 10px auto;\n
+\t\tpadding: 5px;\n
+\t\t\n
+\t\tborder: 1px solid #777;\n
+\t\tbackground-color: #fbca93;\n
+\t\ttext-align: center;\n
+\t}\n
+\n
+\tdiv.positionable {\n
+\t\twidth: 75px;\n
+\t\theight: 75px;\n
+\t\tposition: absolute;\n
+\t\tdisplay: block;\n
+\t\tright: 0;\n
+\t\tbottom: 0;\n
+\t\tbackground-color: #bcd5e6;\n
+\t\ttext-align: center;\n
+\t}\n
+\n
+\tselect, input {\n
+\t\tmargin-left: 15px;\n
+\t}\n
+\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t\n
+\t\tfunction position(using) {\n
+\t\t\t$(\'.positionable\').position({\n
+\t\t\t\tof: $(\'#parent\'),\n
+\t\t\t\tmy: $(\'#my_horizontal\').val() + \' \' + $(\'#my_vertical\').val(),\n
+\t\t\t\tat: $(\'#at_horizontal\').val() + \' \'+ $(\'#at_vertical\').val(),\n
+\t\t\t\toffset: $(\'#offset\').val(),\n
+\t\t\t\tusing: using,\n
+\t\t\t\tcollision: $("#collision_horizontal").val() + \' \' + $("#collision_vertical").val()\n
+\t\t\t});\n
+\t\t}\n
+\t\t\n
+\t\t$(\'.positionable\').css("opacity", 0.5);\n
+\t\t\n
+\t\t$(\':input\').bind(\'click keyup change\', function() { position(); });\n
+\t\t\n
+\t\t$("#parent").draggable({\n
+\t\t\tdrag: function() { position(); }\n
+\t\t});\n
+\t\t\n
+\t\t$(\'.positionable\').draggable({\n
+\t\t\tdrag: function(event, ui) {\n
+\t\t\t\t// reset offset before calculating it\n
+\t\t\t\t$("#offset").val("0");\n
+\t\t\t\tposition(function(result) {\n
+\t\t\t\t\t$("#offset").val("" + (ui.offset.left - result.left) + " " + (ui.offset.top - result.top));\n
+\t\t\t\t\tposition();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t});\n
+\t\t\n
+\t\tposition();\n
+\t});\n
+\t</script>\n
+\t\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<div id="parent">\n
+\t<p>\n
+\tThis is the position parent element.\n
+\t</p>\n
+</div>\n
+\n
+<div class="positionable">\n
+\t<p>\n
+\tto position\n
+\t</p>\n
+</div>\n
+\n
+<div class="positionable" style="width:120px; height: 40px;">\n
+\t<p>\n
+\tto position 2\n
+\t</p>\n
+</div>\n
+\n
+<div style="padding: 20px; margin-top: 75px;">\n
+\tposition...\n
+\t<div style="padding-bottom: 20px;">\n
+\t\t<b>my:</b>\n
+\t\t<select id="my_horizontal">\n
+\t\t\t<option value="left">left</option>\n
+\t\t\t<option value="center">center</option>\n
+\t\t\t<option value="right">right</option>\n
+\t\t</select> \n
+\t\t<select id="my_vertical">\n
+\t\t\t<option value="top">top</option>\n
+\t\t\t<option value="middle">center</option>\n
+\t\t\t<option value="bottom">bottom</option>\n
+\t\t</select>\n
+\t</div>\n
+\t<div style="padding-bottom: 20px;">\n
+\t\t<b>at:</b>\n
+\t\t<select id="at_horizontal">\n
+\t\t\t<option value="left">left</option>\n
+\t\t\t<option value="center">center</option>\n
+\t\t\t<option value="right">right</option>\n
+\t\t</select>\n
+\t\t<select id="at_vertical">\n
+\t\t\t<option value="top">top</option>\n
+\t\t\t<option value="middle">center</option>\n
+\t\t\t<option value="bottom">bottom</option>\n
+\t\t</select>\n
+\t</div>\n
+\t<div style="padding-bottom: 20px;">\n
+\t\t<b>offset:</b>\n
+\t\t<input id="offset" type="text" size="15"/>\n
+\t</div>\n
+\t<div style="padding-bottom: 20px;">\n
+\t\t<b>collision:</b>\n
+\t\t<select id="collision_horizontal">\n
+\t\t\t<option value="flip">flip</option>\n
+\t\t\t<option value="fit">fit</option>\n
+\t\t\t<option value="none">none</option>\n
+\t\t</select>\n
+\t\t<select id="collision_vertical">\n
+\t\t\t<option value="flip">flip</option>\n
+\t\t\t<option value="fit">fit</option>\n
+\t\t\t<option value="none">none</option>\n
+\t\t</select>\n
+\t</div>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>Use the form controls to configure the positioning, or drag the positioned element to modify its offset.\n
+<br/>Drag around the parent element to see collision detection in action.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

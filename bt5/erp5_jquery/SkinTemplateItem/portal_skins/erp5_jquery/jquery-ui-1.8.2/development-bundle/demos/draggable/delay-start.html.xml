@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Draggable - Delay start</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.draggable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#draggable, #draggable2 { width: 120px; height: 120px; padding: 0.5em; float: left; margin: 0 10px 10px 0; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#draggable").draggable({ distance: 20 });\n
+\t\t$("#draggable2").draggable({ delay: 1000 });\n
+\t\t$(".ui-draggable").disableSelection();\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\t\n
+<div id="draggable" class="ui-widget-content">\n
+\t<p>Only if you drag me by 20 pixels, the dragging will start</p>\n
+</div>\n
+\n
+<div id="draggable2" class="ui-widget-content">\n
+\t<p>Regardless of the distance, you have to drag and wait for 1000ms before dragging starts</p>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+Delay the start of dragging for a number of milliseconds with the <code>delay</code> option; prevent dragging until the cursor is held down and dragged a specifed number of pixels with the <code>distance</code> option. \n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>delay-start.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

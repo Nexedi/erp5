@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.ui.accordion.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/* Accordion\n
+----------------------------------*/\n
+.ui-accordion .ui-accordion-header { cursor: pointer; position: relative; margin-top: 1px; zoom: 1; }\n
+.ui-accordion .ui-accordion-li-fix { display: inline; }\n
+.ui-accordion .ui-accordion-header-active { border-bottom: 0 !important; }\n
+.ui-accordion .ui-accordion-header a { display: block; font-size: 1em; padding: .5em .5em .5em .7em; }\n
+/* IE7-/Win - Fix extra vertical space in lists */\n
+.ui-accordion a { zoom: 1; }\n
+.ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }\n
+.ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }\n
+.ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; margin-top: -2px; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }\n
+.ui-accordion .ui-accordion-content-active { display: block; }</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

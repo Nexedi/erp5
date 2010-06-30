@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Effects - Effect Demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.effects.core.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t\t.graph {\n
+\t\t\tfloat: left;\n
+\t\t\tmargin-left: 10px;\n
+\t\t}\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\tif (!$("<canvas/>")[0].getContext) {\n
+\t\t\t$("<div/>").text("Your browser doesn\'t support canvas, which is required for this demo. Give Firefox 3 a try!").appendTo("#graphs");\n
+\t\t\treturn;\n
+\t\t}\n
+\t\tvar i = 0;\n
+\t\tvar width = 100,\n
+\t\t\theight = 100;\n
+\t\t$.each($.easing, function(name, impl) {\n
+\t\t\t// skip linera/jswing and any non functioning implementation\n
+\t\t\tif (!$.isFunction(impl) || /jswing/.test(name))\n
+\t\t\t\treturn;\n
+\t\t\tvar graph = $("<div/>").addClass("graph").appendTo("#graphs");\n
+\t\t\tvar text = $("<div/>").text(++i + ". " + name).appendTo(graph);\n
+\t\t\t\n
+\t\t\tvar canvas = $("<canvas/>").appendTo(graph)[0]\n
+\t\t\tcanvas.width = width;\n
+\t\t\tcanvas.height = height;\n
+\t\t\tvar drawHeight = height * 0.8;\n
+\t\t\tvar cradius = 10;\n
+\t\t\tvar ctx = canvas.getContext("2d");\n
+\t\t\tctx.fillStyle = "black";\n
+\t\t\t\n
+\t\t\tctx.beginPath();\n
+\t\t\tctx.moveTo(cradius, 0);\n
+\t\t\tctx.quadraticCurveTo(0, 0, 0, cradius);\n
+\t\t\tctx.lineTo(0, height - cradius);\n
+\t\t\tctx.quadraticCurveTo(0, height, cradius, height);\n
+\t\t\tctx.lineTo(width - cradius, height);\n
+\t\t\tctx.quadraticCurveTo(width, height, width, height - cradius);\n
+\t\t\tctx.lineTo(width, 0);\n
+\t\t\tctx.lineTo(cradius, 0);\n
+\t\t\tctx.fill();\n
+\t\t\t\n
+\t\t\tctx.strokeStyle = "#555";\n
+\t\t\tctx.beginPath();\n
+\t\t\tctx.moveTo(width * 0.1, drawHeight + .5);\n
+\t\t\tctx.lineTo(width * 0.9, drawHeight + .5);\n
+\t\t\tctx.stroke();\n
+\n
+\t\t\tctx.strokeStyle = "#555";\n
+\t\t\tctx.beginPath();\n
+\t\t\tctx.moveTo(width * 0.1, drawHeight * .3 - .5);\n
+\t\t\tctx.lineTo(width * 0.9, drawHeight * .3 - .5);\n
+\t\t\tctx.stroke();\n
+\t\t\t\n
+\t\t\tctx.strokeStyle = "white";\n
+\t\t\tctx.beginPath();\n
+\t\t\tctx.lineWidth = 2;\n
+\t\t\tctx.moveTo(width * 0.1, drawHeight);\n
+\t\t\t$.each(new Array(width), function(position) {\n
+\t\t\t\tvar val = impl(0, position, 0, 1, height);\n
+\t\t\t\tif (/linear|jswing/.test(name)) val = position / width;\n
+\t\t\t\tctx.lineTo(position * 0.8 + width * 0.1, drawHeight - drawHeight * val * 0.7);\n
+\t\t\t});\n
+\t\t\tctx.stroke();\n
+\t\t\tgraph.click(function() {\n
+\t\t\t\t$(canvas).animate({height: "hide"}, 2000, name).animate({"left": "0"}, 800).animate({height: "show"}, 2000, name);\n
+\t\t\t});\n
+\t\t\t\n
+\t\t\tgraph.width(width).height(height + text.height() + 10);\n
+\t\t\t//return false;\n
+\t\t});\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+\t<div id="graphs"></div>\n
+\t\n
+\t<div id="animted"></div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p><strong>All easings provided by jQuery UI are drawn above, using a HTML canvas element</strong>. Click a diagram to see the easing in action.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>easing.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

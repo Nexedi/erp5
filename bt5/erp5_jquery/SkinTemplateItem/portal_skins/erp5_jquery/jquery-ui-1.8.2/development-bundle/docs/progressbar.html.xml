@@ -1,0 +1,434 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<ul class="UIAPIPlugin-toc">\n
+<li><a href="#overview">Overview</a></li>\n
+<li><a href="#options">Options</a></li>\n
+<li><a href="#events">Events</a></li>\n
+<li><a href="#methods">Methods</a></li>\n
+<li><a href="#theming">Theming</a></li>\n
+</ul>\n
+<div class="UIAPIPlugin">\n
+  <h1>jQuery UI Progressbar</h1>\n
+  <div id="overview">\n
+    <h2 class="top-header">Overview</h2>\n
+    <div id="overview-main">\n
+        <p>\n
+The progress bar is designed to simply display the current % complete for a process. The bar is coded to be flexibly sized through CSS and will scale to fit inside it\'s parent container by default.\n
+</p>\n
+<p>\n
+This is a determinate progress bar, meaning that it should only be used in situations where the system can accurately update the current status complete. A determinate progress bar should never fill from left to right, then loop back to empty for a single process -- if the actual percent complete status cannot be calculated, an indeterminate progress bar (coming soon) or spinner animation is a better way to provide user feedback.\n
+</p>\n
+    </div>\n
+    <div id="overview-dependencies">\n
+        <h3>Dependencies</h3>\n
+        <ul>\n
+<li>UI Core</li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-example">\n
+        <h3>Example</h3>\n
+        <div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<p><div id="demo" class="tabs-container" rel="100">\n
+A simple jQuery UI Progressbar.<br />\n
+</p>\n
+<pre>$(&quot;#progressbar&quot;).progressbar({ value: 37 });\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js&quot;&gt;&lt;/script&gt;\n
+  \n
+  &lt;script&gt;\n
+  $(document).ready(function() {\n
+    $(&quot;#progressbar&quot;).progressbar({ value: 37 });\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;div id=&quot;progressbar&quot;&gt;&lt;/div&gt;\n
+\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+    </div>\n
+  </div>\n
+  <div id="options">\n
+    <h2 class="top-header">Options</h2>\n
+    <ul class="options-list">\n
+      \n
+<li class="option" id="option-disabled">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-disabled">disabled</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Disables (true) or enables (false) the progressbar. Can be set when initialising (first creating) the progressbar.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a progressbar with the <code>disabled</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).progressbar({ disabled: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>disabled</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var disabled = $( ".selector" ).progressbar( "option", "disabled" );\n
+//setter\n
+$( ".selector" ).progressbar( "option", "disabled", true );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-value">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-value">value</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Number</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">0</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>The value of the progressbar.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a progressbar with the <code>value</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).progressbar({ value: 37 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>value</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var value = $( ".selector" ).progressbar( "option", "value" );\n
+//setter\n
+$( ".selector" ).progressbar( "option", "value", 37 );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="events">\n
+    <h2 class="top-header">Events</h2>\n
+    <ul class="events-list">\n
+      \n
+<li class="event" id="event-change">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-change">change</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">progressbarchange</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when the value of the progressbar changes.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>change</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).progressbar({\n
+   change: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>change</code> event by type: <code>progressbarchange</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;progressbarchange&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="methods">\n
+    <h2 class="top-header">Methods</h2>\n
+    <ul class="methods-list">\n
+      \n
+<li class="method" id="method-destroy">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-destroy">destroy</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.progressbar( "destroy"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Remove the progressbar functionality completely. This will return the element back to its pre-init state.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-disable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-disable">disable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.progressbar( "disable"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Disable the progressbar.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-enable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-enable">enable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.progressbar( "enable"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Enable the progressbar.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.progressbar( "option"\n
+\n
+, optionName\n
+\n
+, <span class="optional">[</span>value<span class="optional">] </span>\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Get or set any progressbar option. If no value is specified, will act as a getter.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.progressbar( "option"\n
+\n
+, options\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Set multiple progressbar options at once by providing an options object.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-widget">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-widget">widget</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.progressbar( "widget"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Returns the .ui-progressbar element.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-value">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-value">value</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.progressbar( "value"\n
+\n
+, <span class="optional">[</span>value<span class="optional">] </span>\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>This method gets or sets the current value of the progressbar.</p>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="theming">\n
+    <h2 class="top-header">Theming</h2>\n
+    <p>The jQuery UI Progressbar plugin uses the jQuery UI CSS Framework to style its look and feel, including colors and background textures. We recommend using the ThemeRoller tool to create and download custom themes that are easy to build and maintain.\n
+</p>\n
+  <p>If a deeper level of customization is needed, there are widget-specific classes referenced within the jquery.ui.progressbar.css stylesheet that can be modified. These classes are highlighed in bold below.\n
+</p>\n
+    \n
+  <h3>Sample markup with jQuery UI CSS Framework classes</h3>\n
+  &lt;div class=&quot;<strong>ui-progressbar </strong>ui-widget ui-widget-content ui-corner-all&quot;&gt;<br />\n
+\t&nbsp;&nbsp;&nbsp;&lt;div style=&quot;width: 37%;&quot; class=&quot;<strong>ui-progressbar-value</strong> ui-widget-header ui-corner-left&quot;&gt;&lt;/div&gt;<br />\n
+\t&lt;/div&gt;\n
+  <p class="theme-note">\n
+    <strong>\n
+      Note: This is a sample of markup generated by the progressbar plugin, not markup you should use to create a progressbar. The only markup needed for that is &lt;div&gt;&lt;/div&gt;.\n
+    </strong>\n
+  </p>\n
+\n
+  </div>\n
+</div>\n
+\n
+</p><!-- \n
+Pre-expand include size: 18800 bytes\n
+Post-expand include size: 21667 bytes\n
+Template argument size: 8533 bytes\n
+Maximum: 2097152 bytes\n
+-->\n
+\n
+<!-- Saved in parser cache with key jqdocs_docs:pcache:idhash:3780-1!1!0!!en!2 and timestamp 20100520101523 -->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>progressbar.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

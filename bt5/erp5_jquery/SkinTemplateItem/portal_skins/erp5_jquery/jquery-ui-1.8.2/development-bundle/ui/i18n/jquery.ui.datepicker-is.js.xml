@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts77895657.67</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.ui.datepicker-is.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Icelandic initialisation for the jQuery UI date picker plugin. */\n
+/* Written by Haukur H. Thorsson (haukur@eskill.is). */\n
+jQuery(function($){\n
+\t$.datepicker.regional[\'is\'] = {\n
+\t\tcloseText: \'Loka\',\n
+\t\tprevText: \'&#x3c; Fyrri\',\n
+\t\tnextText: \'N&aelig;sti &#x3e;\',\n
+\t\tcurrentText: \'&Iacute; dag\',\n
+\t\tmonthNames: [\'Jan&uacute;ar\',\'Febr&uacute;ar\',\'Mars\',\'Apr&iacute;l\',\'Ma&iacute\',\'J&uacute;n&iacute;\',\n
+\t\t\'J&uacute;l&iacute;\',\'&Aacute;g&uacute;st\',\'September\',\'Okt&oacute;ber\',\'N&oacute;vember\',\'Desember\'],\n
+\t\tmonthNamesShort: [\'Jan\',\'Feb\',\'Mar\',\'Apr\',\'Ma&iacute;\',\'J&uacute;n\',\n
+\t\t\'J&uacute;l\',\'&Aacute;g&uacute;\',\'Sep\',\'Okt\',\'N&oacute;v\',\'Des\'],\n
+\t\tdayNames: [\'Sunnudagur\',\'M&aacute;nudagur\',\'&THORN;ri&eth;judagur\',\'Mi&eth;vikudagur\',\'Fimmtudagur\',\'F&ouml;studagur\',\'Laugardagur\'],\n
+\t\tdayNamesShort: [\'Sun\',\'M&aacute;n\',\'&THORN;ri\',\'Mi&eth;\',\'Fim\',\'F&ouml;s\',\'Lau\'],\n
+\t\tdayNamesMin: [\'Su\',\'M&aacute;\',\'&THORN;r\',\'Mi\',\'Fi\',\'F&ouml;\',\'La\'],\n
+\t\tweekHeader: \'Vika\',\n
+\t\tdateFormat: \'dd/mm/yy\',\n
+\t\tfirstDay: 0,\n
+\t\tisRTL: false,\n
+\t\tshowMonthAfterYear: false,\n
+\t\tyearSuffix: \'\'};\n
+\t$.datepicker.setDefaults($.datepicker.regional[\'is\']);\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1117</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

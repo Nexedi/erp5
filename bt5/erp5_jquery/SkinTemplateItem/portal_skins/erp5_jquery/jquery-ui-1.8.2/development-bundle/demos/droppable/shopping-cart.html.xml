@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Droppable - Shopping Cart Demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.draggable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.droppable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.sortable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.accordion.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\th1 { padding: .2em; margin: 0; }\n
+\t#products { float:left; width: 500px; margin-right: 2em; }\n
+\t#cart { width: 200px; float: left; }\n
+\t/* style the list to maximize the droppable hitarea */\n
+\t#cart ol { margin: 0; padding: 1em 0 1em 3em; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#catalog").accordion();\n
+\t\t$("#catalog li").draggable({\n
+\t\t\tappendTo: "body",\n
+\t\t\thelper: "clone"\n
+\t\t});\n
+\t\t$("#cart ol").droppable({\n
+\t\t\tactiveClass: "ui-state-default",\n
+\t\t\thoverClass: "ui-state-hover",\n
+\t\t\taccept: ":not(.ui-sortable-helper)",\n
+\t\t\tdrop: function(event, ui) {\n
+\t\t\t\t$(this).find(".placeholder").remove();\n
+\t\t\t\t$("<li></li>").text(ui.draggable.text()).appendTo(this);\n
+\t\t\t}\n
+\t\t}).sortable({\n
+\t\t\titems: "li:not(.placeholder)",\n
+\t\t\tsort: function() {\n
+\t\t\t\t// gets added unintentionally by droppable interacting with sortable\n
+\t\t\t\t// using connectWithSortable fixes this, but doesn\'t allow you to customize active/hoverClass options\n
+\t\t\t\t$(this).removeClass("ui-state-default");\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\t\n
+<div id="products">\n
+\t<h1 class="ui-widget-header">Products</h1>\t\n
+\t<div id="catalog">\n
+\t\t<h3><a href="#">T-Shirts</a></h3>\n
+\t\t<div>\n
+\t\t\t<ul>\n
+\t\t\t\t<li>Lolcat Shirt</li>\n
+\t\t\t\t<li>Cheezeburger Shirt</li>\n
+\t\t\t\t<li>Buckit Shirt</li>\n
+\t\t\t</ul>\n
+\t\t</div>\n
+\t\t<h3><a href="#">Bags</a></h3>\n
+\t\t<div>\n
+\t\t\t<ul>\n
+\t\t\t\t<li>Zebra Striped</li>\n
+\t\t\t\t<li>Black Leather</li>\n
+\t\t\t\t<li>Alligator Leather</li>\n
+\t\t\t</ul>\n
+\t\t</div>\n
+\t\t<h3><a href="#">Gadgets</a></h3>\n
+\t\t<div>\n
+\t\t\t<ul>\n
+\t\t\t\t<li>iPhone</li>\n
+\t\t\t\t<li>iPod</li>\n
+\t\t\t\t<li>iPad</li>\n
+\t\t\t</ul>\n
+\t\t</div>\n
+\t</div>\n
+</div>\n
+\n
+<div id="cart">\n
+\t<h1 class="ui-widget-header">Shopping Cart</h1>\n
+\t<div class="ui-widget-content">\n
+\t\t<ol>\n
+\t\t\t<li class="placeholder">Add your items here</li>\n
+\t\t</ol>\n
+\t</div>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>Demonstrate how to use an accordion to structure products into a catalog and make use drag and drop for adding\n
+them to a shopping cart, where they are sortable.</p>\n
+\n
+</div><!-- End demo-description -->\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>shopping-cart.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

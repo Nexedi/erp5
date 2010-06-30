@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Position - Default functionality</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+    \n
+    <style type="text/css">\n
+   \thtml, body {\n
+   \t\tmargin: 0;\n
+\t\tpadding: 0\n
+   \t}\n
+    </style>\n
+    \n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t\n
+\t\t$.fn.position2 = function(options) {\n
+\t\t\treturn this.position($.extend({\n
+\t\t\t\tof: window,\n
+\t\t\t\tusing: function(to) {\n
+\t\t\t\t\t$(this).css({\n
+\t\t\t\t\t\ttop: to.top,\n
+\t\t\t\t\t\tleft: to.left\n
+\t\t\t\t\t})\n
+\t\t\t\t},\n
+\t\t\t\tcollision: "none"\n
+\t\t\t}, options));\n
+\t\t}\n
+\t\t\n
+\t\t$.fn.left = function(using) {\n
+\t\t\treturn this.position2({\n
+\t\t\t\tmy: "right middle",\n
+\t\t\t\tat: "left middle",\n
+\t\t\t\toffset: "25 0",\n
+\t\t\t\tusing: using\n
+\t\t\t});\n
+\t\t}\n
+\t\t$.fn.right = function(using) {\n
+\t\t\treturn this.position2({\n
+\t\t\t\tmy: "left middle",\n
+\t\t\t\tat: "right middle",\n
+\t\t\t\toffset: "-25 0",\n
+\t\t\t\tusing: using\n
+\t\t\t});\n
+\t\t}\n
+\t\t$.fn.center = function(using) {\n
+\t\t\treturn this.position2({\n
+\t\t\t\tmy: "center middle",\n
+\t\t\t\tat: "center middle",\n
+\t\t\t\tusing: using\n
+\t\t\t});\n
+\t\t};\n
+\t\t\n
+\t\t$("img:eq(0)").left();\n
+\t\t$("img:eq(1)").center();\n
+\t\t$("img:eq(2)").right();\n
+\t\t\n
+\t\t$("body").css({\n
+\t\t\toverflow: "hidden"\n
+\t\t})\n
+\t\t$(".demo").css({\n
+\t\t\tposition: "relative",\n
+\t\t});\n
+\t\t$(".demo img").css({\n
+\t\t\tposition: "absolute",\n
+\t\t});\n
+\t\t\n
+\t\tfunction animate(to) {\n
+\t\t\t$(this).animate(to);\n
+\t\t}\n
+\t\tfunction next() {\n
+\t\t\t$("img:eq(2)").center(animate);\n
+\t\t\t$("img:eq(1)").left(animate)\n
+\t\t\t$("img:eq(0)").right().appendTo(".demo");\n
+\t\t}\n
+\t\tfunction previous() {\n
+\t\t\t$("img:eq(0)").center(animate);\n
+\t\t\t$("img:eq(1)").right(animate);\n
+\t\t\t$("img:eq(2)").left().prependTo(".demo");\n
+\t\t}\n
+\t\t$("#previous").click(previous);\n
+\t\t$("#next").click(next);\n
+\t\t\n
+\t\t$(".demo img").click(function() {\n
+\t\t\t$(".demo img").index(this) == 0 ? previous() : next();\n
+\t\t});\n
+\t\t\n
+\t\t$(window).resize(function() {\n
+\t\t\t$("img:eq(0)").left(animate);\n
+\t\t\t$("img:eq(1)").center(animate);\n
+\t\t\t$("img:eq(2)").right(animate);\n
+\t\t})\n
+\t});\n
+\t</script>\n
+    \n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+\t<img src="images/earth.jpg" />\n
+\t<img src="images/flight.jpg" />\n
+\t<img src="images/rocket.jpg" />\n
+\n
+\t<a id="previous" href="#">Previous</a>\n
+\t<a id="next" href="#">Next</a>\n
+</div>\n
+\n
+<div class="demo-description">\n
+\n
+<p>A prototype for the <a href="http://wiki.jqueryui.com/Photoviewer">Photoviewer</a> using Position to place images at the center, left and right and cycle them.\n
+<br/>Use the links at the top to cycle, or click on the images on the left and right.\n
+<br/>Note how the images are repositioned when resizing the window.\n
+<br/>Warning: Doesn\'t currently work inside the demo viewer; open in a new window instead!</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>cycler.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

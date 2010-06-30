@@ -1,0 +1,841 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<ul class="UIAPIPlugin-toc">\n
+<li><a href="#overview">Overview</a></li>\n
+<li><a href="#options">Options</a></li>\n
+<li><a href="#events">Events</a></li>\n
+<li><a href="#methods">Methods</a></li>\n
+<li><a href="#theming">Theming</a></li>\n
+</ul>\n
+<div class="UIAPIPlugin">\n
+  <h1>jQuery UI Droppable</h1>\n
+  <div id="overview">\n
+    <h2 class="top-header">Overview</h2>\n
+    <div id="overview-main">\n
+        <p>The jQuery UI Droppable plugin makes selected elements droppable (meaning they accept being dropped on by draggables). You can specify which (individually) or which kind of draggables each will accept.</p>\n
+<p>All callbacks receive two arguments: The original browser event and a prepared ui object, view below for a documentation of this object (if you name your second argument \'ui\'):</p>\n
+<ul>\n
+ <li> <b>ui.draggable</b> - current draggable element, a jQuery object.</li>\n
+ <li> <b>ui.helper</b> - current draggable helper, a jQuery object</li>\n
+ <li> <b>ui.position</b> - current position of the draggable helper { top: , left: }</li>\n
+ <li> <b>ui.offset</b> - current absolute position of the draggable helper { top: , left: }</li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-dependencies">\n
+        <h3>Dependencies</h3>\n
+        <ul>\n
+<li>UI Core</li>\n
+<li><a href="http://docs.jquery.com/UI/Draggable" title="UI/Draggable">UI Draggable</a></li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-example">\n
+        <h3>Example</h3>\n
+        <div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<p><div id="demo" class="tabs-container" rel="100">\n
+Makes the div droppable (a drop target for a draggable).<br />\n
+</p>\n
+<pre>$(&quot;#draggable&quot;).draggable();\n
+    $(&quot;#droppable&quot;).droppable({\n
+      drop: function() { alert(\'dropped\'); }\n
+    });\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;style type=&quot;text/css&quot;&gt;\n
+    #draggable { width: 75px; height: 25px; background: silver; padding: 10px; }\n
+    #droppable { position: absolute; left: 250px; top: 0; width: 125px; height: 75px; background: gray; color: white; padding: 10px; }\n
+  &lt;/style&gt;\n
+  &lt;script&gt;\n
+  $(document).ready(function() {\n
+    $(&quot;#draggable&quot;).draggable();\n
+    $(&quot;#droppable&quot;).droppable({\n
+      drop: function() { alert(\'dropped\'); }\n
+    });\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;div id=&quot;droppable&quot;&gt;Drop here&lt;/div&gt;\n
+&lt;div id=&quot;draggable&quot;&gt;Drag me&lt;/div&gt;\n
+\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+    </div>\n
+  </div>\n
+  <div id="options">\n
+    <h2 class="top-header">Options</h2>\n
+    <ul class="options-list">\n
+      \n
+<li class="option" id="option-disabled">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-disabled">disabled</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Disables (true) or enables (false) the droppable. Can be set when initialising (first creating) the droppable.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a droppable with the <code>disabled</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).droppable({ disabled: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>disabled</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var disabled = $( ".selector" ).droppable( "option", "disabled" );\n
+//setter\n
+$( ".selector" ).droppable( "option", "disabled", true );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-accept">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-accept">accept</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Selector, Function</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'*\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>All draggables that match the selector will be accepted. If a function is specified, the function will be called for each draggable on the page (passed as the first argument to the function), to provide a custom filter. The function should return true if the draggable should be accepted.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a droppable with the <code>accept</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).droppable({ accept: \'.special\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>accept</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var accept = $( ".selector" ).droppable( "option", "accept" );\n
+//setter\n
+$( ".selector" ).droppable( "option", "accept", \'.special\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-activeClass">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-activeClass">activeClass</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If specified, the class will be added to the droppable while an acceptable draggable is being dragged.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a droppable with the <code>activeClass</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).droppable({ activeClass: \'ui-state-highlight\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>activeClass</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var activeClass = $( ".selector" ).droppable( "option", "activeClass" );\n
+//setter\n
+$( ".selector" ).droppable( "option", "activeClass", \'ui-state-highlight\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-addClasses">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-addClasses">addClasses</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">true</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If set to false, will prevent the ui-droppable class from being added. This may be desired as a performance optimization when calling .droppable() init on many hundreds of elements.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a droppable with the <code>addClasses</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).droppable({ addClasses: false });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>addClasses</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var addClasses = $( ".selector" ).droppable( "option", "addClasses" );\n
+//setter\n
+$( ".selector" ).droppable( "option", "addClasses", false );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-greedy">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-greedy">greedy</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If true, will prevent event propagation on nested droppables.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a droppable with the <code>greedy</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).droppable({ greedy: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>greedy</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var greedy = $( ".selector" ).droppable( "option", "greedy" );\n
+//setter\n
+$( ".selector" ).droppable( "option", "greedy", true );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-hoverClass">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-hoverClass">hoverClass</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If specified, the class will be added to the droppable while an acceptable draggable is being hovered.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a droppable with the <code>hoverClass</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).droppable({ hoverClass: \'drophover\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>hoverClass</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var hoverClass = $( ".selector" ).droppable( "option", "hoverClass" );\n
+//setter\n
+$( ".selector" ).droppable( "option", "hoverClass", \'drophover\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-scope">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-scope">scope</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'default\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Used to group sets of draggable and droppable items, in addition to droppable\'s accept option. A draggable with the same scope value as a droppable will be accepted.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a droppable with the <code>scope</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).droppable({ scope: \'tasks\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>scope</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var scope = $( ".selector" ).droppable( "option", "scope" );\n
+//setter\n
+$( ".selector" ).droppable( "option", "scope", \'tasks\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-tolerance">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-tolerance">tolerance</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'intersect\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Specifies which mode to use for testing whether a draggable is \'over\' a droppable. Possible values: \'fit\', \'intersect\', \'pointer\', \'touch\'.\n
+</p>\n
+<ul>\n
+<li><b>fit</b>: draggable overlaps the droppable entirely</li>\n
+<li><b>intersect</b>: draggable overlaps the droppable at least 50%</li>\n
+<li><b>pointer</b>: mouse pointer overlaps the droppable</li>\n
+<li><b>touch</b>: draggable overlaps the droppable any amount</li>\n
+</ul>\n
+<p></p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a droppable with the <code>tolerance</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).droppable({ tolerance: \'fit\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>tolerance</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var tolerance = $( ".selector" ).droppable( "option", "tolerance" );\n
+//setter\n
+$( ".selector" ).droppable( "option", "tolerance", \'fit\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="events">\n
+    <h2 class="top-header">Events</h2>\n
+    <ul class="events-list">\n
+      \n
+<li class="event" id="event-activate">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-activate">activate</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">dropactivate</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered any time an accepted draggable starts dragging. This can be useful if you want to make the droppable \'light up\' when it can be dropped on.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>activate</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).droppable({\n
+   activate: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>activate</code> event by type: <code>dropactivate</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;dropactivate&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-deactivate">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-deactivate">deactivate</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">dropdeactivate</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered any time an accepted draggable stops dragging.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>deactivate</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).droppable({\n
+   deactivate: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>deactivate</code> event by type: <code>dropdeactivate</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;dropdeactivate&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-over">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-over">over</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">dropover</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered as an accepted draggable is dragged \'over\' (within the tolerance of) this droppable.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>over</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).droppable({\n
+   over: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>over</code> event by type: <code>dropover</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;dropover&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-out">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-out">out</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">dropout</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when an accepted draggable is dragged out (within the tolerance of) this droppable.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>out</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).droppable({\n
+   out: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>out</code> event by type: <code>dropout</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;dropout&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-drop">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-drop">drop</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">drop</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when an accepted draggable is dropped \'over\' (within the tolerance of) this droppable. In the callback, $(this) represents the droppable the draggable is dropped on.\n
+ui.draggable represents the draggable.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>drop</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).droppable({\n
+   drop: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>drop</code> event by type: <code>drop</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;drop&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="methods">\n
+    <h2 class="top-header">Methods</h2>\n
+    <ul class="methods-list">\n
+      \n
+<li class="method" id="method-destroy">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-destroy">destroy</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.droppable( "destroy"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Remove the droppable functionality completely. This will return the element back to its pre-init state.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-disable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-disable">disable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.droppable( "disable"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Disable the droppable.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-enable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-enable">enable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.droppable( "enable"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Enable the droppable.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.droppable( "option"\n
+\n
+, optionName\n
+\n
+, <span class="optional">[</span>value<span class="optional">] </span>\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Get or set any droppable option. If no value is specified, will act as a getter.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.droppable( "option"\n
+\n
+, options\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Set multiple droppable options at once by providing an options object.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-widget">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-widget">widget</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.droppable( "widget"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Returns the .ui-droppable element.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="theming">\n
+    <h2 class="top-header">Theming</h2>\n
+    <p>The jQuery UI Droppable plugin uses the jQuery UI CSS Framework to style its look and feel, including colors and background textures. We recommend using the ThemeRoller tool to create and download custom themes that are easy to build and maintain.\n
+</p>\n
+  <p>If a deeper level of customization is needed, there are widget-specific classes referenced within the jquery.ui.droppable.css stylesheet that can be modified. These classes are highlighed in bold below.\n
+</p>\n
+    \n
+  <h3>Sample markup with jQuery UI CSS Framework classes</h3>\n
+  &lt;div class=&quot;<strong>ui-droppable</strong>&quot;&gt;&lt;/div&gt;\n
+  <p class="theme-note">\n
+    <strong>\n
+      Note: This is a sample of markup generated by the droppable plugin, not markup you should use to create a droppable. The only markup needed for that is &lt;div&gt;&lt;/div&gt;.\n
+    </strong>\n
+  </p>\n
+\n
+  </div>\n
+</div>\n
+\n
+</p><!-- \n
+Pre-expand include size: 32197 bytes\n
+Post-expand include size: 50778 bytes\n
+Template argument size: 26267 bytes\n
+Maximum: 2097152 bytes\n
+-->\n
+\n
+<!-- Saved in parser cache with key jqdocs_docs:pcache:idhash:3769-1!1!0!!en!2 and timestamp 20100520115456 -->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>droppable.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

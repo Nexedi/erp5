@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Button - Checkboxes demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.button.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#check").button();\n
+\t\t$("#format").buttonset();\n
+\t});\n
+\t</script>\n
+\t<style>\n
+\t\t#format { margin-top: 2em; }\n
+\t</style>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+\t<input type="checkbox" id="check" /><label for="check">Toggle</label>\n
+\t\n
+\t<div id="format">\n
+\t\t<input type="checkbox" id="check1" /><label for="check1">B</label>\n
+\t\t<input type="checkbox" id="check2" /><label for="check2">I</label>\n
+\t\t<input type="checkbox" id="check3" /><label for="check3">U</label>\n
+\t</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+\n
+\n
+<div class="demo-description">\n
+\n
+<p>A checkbox is styled as a toggle button with the button widget. The label element associated with the checkbox is used for the button text.</p>\n
+\n
+<p>This demo also demonstrates three checkboxes styled as a button set by calling <code>.buttonset()</code> on a common container.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>checkbox.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

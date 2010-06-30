@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Droppable - Simple photo manager</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.draggable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.droppable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.resizable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.dialog.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t\t#gallery { float: left; width: 65%; min-height: 12em; } * html #gallery { height: 12em; } /* IE6 */\n
+\t\t.gallery.custom-state-active { background: #eee; }\n
+\t\t.gallery li { float: left; width: 96px; padding: 0.4em; margin: 0 0.4em 0.4em 0; text-align: center; }\n
+\t\t.gallery li h5 { margin: 0 0 0.4em; cursor: move; }\n
+\t\t.gallery li a { float: right; }\n
+\t\t.gallery li a.ui-icon-zoomin { float: left; }\n
+\t\t.gallery li img { width: 100%; cursor: move; }\n
+\n
+\t\t#trash { float: right; width: 32%; min-height: 18em; padding: 1%;} * html #trash { height: 18em; } /* IE6 */\n
+\t\t#trash h4 { line-height: 16px; margin: 0 0 0.4em; }\n
+\t\t#trash h4 .ui-icon { float: left; }\n
+\t\t#trash .gallery h5 { display: none; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t\t$(function() {\n
+\t\t\t// there\'s the gallery and the trash\n
+\t\t\tvar $gallery = $(\'#gallery\'), $trash = $(\'#trash\');\n
+\n
+\t\t\t// let the gallery items be draggable\n
+\t\t\t$(\'li\',$gallery).draggable({\n
+\t\t\t\tcancel: \'a.ui-icon\',// clicking an icon won\'t initiate dragging\n
+\t\t\t\trevert: \'invalid\', // when not dropped, the item will revert back to its initial position\n
+\t\t\t\tcontainment: $(\'#demo-frame\').length ? \'#demo-frame\' : \'document\', // stick to demo-frame if present\n
+\t\t\t\thelper: \'clone\',\n
+\t\t\t\tcursor: \'move\'\n
+\t\t\t});\n
+\n
+\t\t\t// let the trash be droppable, accepting the gallery items\n
+\t\t\t$trash.droppable({\n
+\t\t\t\taccept: \'#gallery > li\',\n
+\t\t\t\tactiveClass: \'ui-state-highlight\',\n
+\t\t\t\tdrop: function(ev, ui) {\n
+\t\t\t\t\tdeleteImage(ui.draggable);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// let the gallery be droppable as well, accepting items from the trash\n
+\t\t\t$gallery.droppable({\n
+\t\t\t\taccept: \'#trash li\',\n
+\t\t\t\tactiveClass: \'custom-state-active\',\n
+\t\t\t\tdrop: function(ev, ui) {\n
+\t\t\t\t\trecycleImage(ui.draggable);\n
+\t\t\t\t}\n
+\t\t\t});\n
+\n
+\t\t\t// image deletion function\n
+\t\t\tvar recycle_icon = \'<a href="link/to/recycle/script/when/we/have/js/off" title="Recycle this image" class="ui-icon ui-icon-refresh">Recycle image</a>\';\n
+\t\t\tfunction deleteImage($item) {\n
+\t\t\t\t$item.fadeOut(function() {\n
+\t\t\t\t\tvar $list = $(\'ul\',$trash).length ? $(\'ul\',$trash) : $(\'<ul class="gallery ui-helper-reset"/>\').appendTo($trash);\n
+\n
+\t\t\t\t\t$item.find(\'a.ui-icon-trash\').remove();\n
+\t\t\t\t\t$item.append(recycle_icon).appendTo($list).fadeIn(function() {\n
+\t\t\t\t\t\t$item.animate({ width: \'48px\' }).find(\'img\').animate({ height: \'36px\' });\n
+\t\t\t\t\t});\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// image recycle function\n
+\t\t\tvar trash_icon = \'<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>\';\n
+\t\t\tfunction recycleImage($item) {\n
+\t\t\t\t$item.fadeOut(function() {\n
+\t\t\t\t\t$item.find(\'a.ui-icon-refresh\').remove();\n
+\t\t\t\t\t$item.css(\'width\',\'96px\').append(trash_icon).find(\'img\').css(\'height\',\'72px\').end().appendTo($gallery).fadeIn();\n
+\t\t\t\t});\n
+\t\t\t}\n
+\n
+\t\t\t// image preview function, demonstrating the ui.dialog used as a modal window\n
+\t\t\tfunction viewLargerImage($link) {\n
+\t\t\t\tvar src = $link.attr(\'href\');\n
+\t\t\t\tvar title = $link.siblings(\'img\').attr(\'alt\');\n
+\t\t\t\tvar $modal = $(\'img[src$="\'+src+\'"]\');\n
+\n
+\t\t\t\tif ($modal.length) {\n
+\t\t\t\t\t$modal.dialog(\'open\')\n
+\t\t\t\t} else {\n
+\t\t\t\t\tvar img = $(\'<img alt="\'+title+\'" width="384" height="288" style="display:none;padding: 8px;" />\')\n
+\t\t\t\t\t\t.attr(\'src\',src).appendTo(\'body\');\n
+\t\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\t\timg.dialog({\n
+\t\t\t\t\t\t\t\ttitle: title,\n
+\t\t\t\t\t\t\t\twidth: 400,\n
+\t\t\t\t\t\t\t\tmodal: true\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t}, 1);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\n
+\t\t\t// resolve the icons behavior with event delegation\n
+\t\t\t$(\'ul.gallery > li\').click(function(ev) {\n
+\t\t\t\tvar $item = $(this);\n
+\t\t\t\tvar $target = $(ev.target);\n
+\n
+\t\t\t\tif ($target.is(\'a.ui-icon-trash\')) {\n
+\t\t\t\t\tdeleteImage($item);\n
+\t\t\t\t} else if ($target.is(\'a.ui-icon-zoomin\')) {\n
+\t\t\t\t\tviewLargerImage($target);\n
+\t\t\t\t} else if ($target.is(\'a.ui-icon-refresh\')) {\n
+\t\t\t\t\trecycleImage($item);\n
+\t\t\t\t}\n
+\n
+\t\t\t\treturn false;\n
+\t\t\t});\n
+\t\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\t<div class="demo ui-widget ui-helper-clearfix">\n
+\n
+\t\t<ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">\n
+\t\t\t<li class="ui-widget-content ui-corner-tr">\n
+\t\t\t\t<h5 class="ui-widget-header">High Tatras</h5>\n
+\t\t\t\t<img src="images/high_tatras_min.jpg" alt="The peaks of High Tatras" width="96" height="72" />\n
+\t\t\t\t<a href="images/high_tatras.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>\n
+\t\t\t\t<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>\n
+\t\t\t</li>\n
+\t\t\t<li class="ui-widget-content ui-corner-tr">\n
+\t\t\t\t<h5 class="ui-widget-header">High Tatras 2</h5>\n
+\t\t\t\t<img src="images/high_tatras2_min.jpg" alt="The chalet at the Green mountain lake" width="96" height="72" />\n
+\t\t\t\t<a href="images/high_tatras2.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>\n
+\t\t\t\t<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>\n
+\t\t\t</li>\n
+\t\t\t<li class="ui-widget-content ui-corner-tr">\n
+\t\t\t\t<h5 class="ui-widget-header">High Tatras 3</h5>\n
+\t\t\t\t<img src="images/high_tatras3_min.jpg" alt="Planning the ascent" width="96" height="72" />\n
+\t\t\t\t<a href="images/high_tatras3.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>\n
+\t\t\t\t<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>\n
+\t\t\t</li>\n
+\t\t\t<li class="ui-widget-content ui-corner-tr">\n
+\t\t\t\t<h5 class="ui-widget-header">High Tatras 4</h5>\n
+\t\t\t\t<img src="images/high_tatras4_min.jpg" alt="On top of Kozi kopka" width="96" height="72" />\n
+\t\t\t\t<a href="images/high_tatras4.jpg" title="View larger image" class="ui-icon ui-icon-zoomin">View larger</a>\n
+\t\t\t\t<a href="link/to/trash/script/when/we/have/js/off" title="Delete this image" class="ui-icon ui-icon-trash">Delete image</a>\n
+\t\t\t</li>\n
+\t\t</ul>\n
+\n
+\t\t<div id="trash" class="ui-widget-content ui-state-default">\n
+\t\t\t<h4 class="ui-widget-header"><span class="ui-icon ui-icon-trash">Trash</span> Trash</h4>\n
+\t\t</div>\n
+\n
+\t</div><!-- End demo -->\n
+\n
+\t<div class="demo-description">\n
+\n
+\t\t<p>You can delete an image either by dragging it to the Trash or by clicking the trash icon.</p>\n
+\t\t<p>You can "recycle" an image by dragging it back to the gallery or by clicking the recycle icon.</p>\n
+\t\t<p>You can view larger image by clicking the zoom icon. jQuery UI dialog widget is used for the modal window.</p>\n
+\n
+\t</div><!-- End demo-description -->\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>photo-manager.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

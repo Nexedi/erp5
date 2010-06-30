@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Slider - Slider scrollbar</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.slider.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t\t#demo-frame > div.demo { padding: 10px !important; }\n
+\t\t.scroll-pane { overflow: auto; width: 99%; float:left; }\n
+\t\t.scroll-content { width: 2440px; float: left; }\n
+\t\t.scroll-content-item { width: 100px; height: 100px; float: left; margin: 10px; font-size: 3em; line-height: 96px; text-align: center; }\n
+\t\t* html .scroll-content-item { display: inline; } /* IE6 float double margin bug */\n
+\t\t.scroll-bar-wrap { clear: left; padding: 0 4px 0 2px; margin: 0 -1px -1px -1px; }\n
+\t\t.scroll-bar-wrap .ui-slider { background: none; border:0; height: 2em; margin: 0 auto;  }\n
+\t\t.scroll-bar-wrap .ui-handle-helper-parent { position: relative; width: 100%; height: 100%; margin: 0 auto; }\n
+\t\t.scroll-bar-wrap .ui-slider-handle { top:.2em; height: 1.5em; }\n
+\t\t.scroll-bar-wrap .ui-slider-handle .ui-icon { margin: -8px auto 0; position: relative; top: 50%; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t//scrollpane parts\n
+\t\tvar scrollPane = $(\'.scroll-pane\');\n
+\t\tvar scrollContent = $(\'.scroll-content\');\n
+\t\t\n
+\t\t//build slider\n
+\t\tvar scrollbar = $(".scroll-bar").slider({\n
+\t\t\tslide:function(e, ui){\n
+\t\t\t\tif( scrollContent.width() > scrollPane.width() ){ scrollContent.css(\'margin-left\', Math.round( ui.value / 100 * ( scrollPane.width() - scrollContent.width() )) + \'px\'); }\n
+\t\t\t\telse { scrollContent.css(\'margin-left\', 0); }\n
+\t\t\t}\n
+\t\t});\n
+\t\t\n
+\t\t//append icon to handle\n
+\t\tvar handleHelper = scrollbar.find(\'.ui-slider-handle\')\n
+\t\t.mousedown(function(){\n
+\t\t\tscrollbar.width( handleHelper.width() );\n
+\t\t})\n
+\t\t.mouseup(function(){\n
+\t\t\tscrollbar.width( \'100%\' );\n
+\t\t})\n
+\t\t.append(\'<span class="ui-icon ui-icon-grip-dotted-vertical"></span>\')\n
+\t\t.wrap(\'<div class="ui-handle-helper-parent"></div>\').parent();\n
+\t\t\n
+\t\t//change overflow to hidden now that slider handles the scrolling\n
+\t\tscrollPane.css(\'overflow\',\'hidden\');\n
+\t\t\n
+\t\t//size scrollbar and handle proportionally to scroll distance\n
+\t\tfunction sizeScrollbar(){\n
+\t\t\tvar remainder = scrollContent.width() - scrollPane.width();\n
+\t\t\tvar proportion = remainder / scrollContent.width();\n
+\t\t\tvar handleSize = scrollPane.width() - (proportion * scrollPane.width());\n
+\t\t\tscrollbar.find(\'.ui-slider-handle\').css({\n
+\t\t\t\twidth: handleSize,\n
+\t\t\t\t\'margin-left\': -handleSize/2\n
+\t\t\t});\n
+\t\t\thandleHelper.width(\'\').width( scrollbar.width() - handleSize);\n
+\t\t}\n
+\t\t\n
+\t\t//reset slider value based on scroll content position\n
+\t\tfunction resetValue(){\n
+\t\t\tvar remainder = scrollPane.width() - scrollContent.width();\n
+\t\t\tvar leftVal = scrollContent.css(\'margin-left\') == \'auto\' ? 0 : parseInt(scrollContent.css(\'margin-left\'));\n
+\t\t\tvar percentage = Math.round(leftVal / remainder * 100);\n
+\t\t\tscrollbar.slider("value", percentage);\n
+\t\t}\n
+\t\t//if the slider is 100% and window gets larger, reveal content\n
+\t\tfunction reflowContent(){\n
+\t\t\t\tvar showing = scrollContent.width() + parseInt( scrollContent.css(\'margin-left\') );\n
+\t\t\t\tvar gap = scrollPane.width() - showing;\n
+\t\t\t\tif(gap > 0){\n
+\t\t\t\t\tscrollContent.css(\'margin-left\', parseInt( scrollContent.css(\'margin-left\') ) + gap);\n
+\t\t\t\t}\n
+\t\t}\n
+\t\t\n
+\t\t//change handle position on window resize\n
+\t\t$(window)\n
+\t\t.resize(function(){\n
+\t\t\t\tresetValue();\n
+\t\t\t\tsizeScrollbar();\n
+\t\t\t\treflowContent();\n
+\t\t});\n
+\t\t//init scrollbar size\n
+\t\tsetTimeout(sizeScrollbar,10);//safari wants a timeout\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<div class="scroll-pane ui-widget ui-widget-header ui-corner-all">\n
+\t<div class="scroll-content">\n
+\t\t<div class="scroll-content-item ui-widget-header">1</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">2</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">3</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">4</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">5</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">6</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">7</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">8</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">9</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">10</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">11</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">12</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">13</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">14</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">15</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">16</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">17</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">18</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">19</div>\n
+\t\t<div class="scroll-content-item ui-widget-header">20</div>\n
+\t</div>\n
+\t<div class="scroll-bar-wrap ui-widget-content ui-corner-bottom">\n
+\t\t<div class="scroll-bar"></div>\n
+\t</div>\n
+</div>\n
+\n
+\n
+\n
+</div><!-- End demo -->\n
+\n
+\n
+\n
+<div class="demo-description">\n
+\n
+<p>Use a slider to manipulate the positioning of content on the page. In this case, it acts as a scrollbar with the potential to capture values if needed.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>side-scroll.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
