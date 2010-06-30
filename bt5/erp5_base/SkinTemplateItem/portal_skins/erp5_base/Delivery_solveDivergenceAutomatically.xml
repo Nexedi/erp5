@@ -57,8 +57,9 @@
 solver_process_tool = delivery.getPortalObject().portal_solver_processes\n
 # XXX We sometimes want to store solver process document persistently.\n
 solver_process = solver_process_tool.newSolverProcess(delivery, temp_object=True)\n
-solver_process.buildTargetSolverList()\n
-solver_process.solve()\n
+if solver_process is not None:\n
+  solver_process.buildTargetSolverList()\n
+  solver_process.solve()\n
 # XXX It can be required to wait indexing.\n
 delivery.updateCausalityState(solve_automatically=False)\n
 </string> </value>
@@ -110,6 +111,7 @@ delivery.updateCausalityState(solve_automatically=False)\n
                             <string>_getattr_</string>
                             <string>solver_process_tool</string>
                             <string>True</string>
+                            <string>None</string>
                             <string>solver_process</string>
                             <string>False</string>
                           </tuple>
