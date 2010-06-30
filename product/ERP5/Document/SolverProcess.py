@@ -259,6 +259,16 @@ class SolverProcess(XMLObject, ActiveProcess):
           new_decision = self.newContent(portal_type='Solver Decision')
         new_decision._setDeliveryValueList(movement_dict.keys())
         new_decision._setCausality(solver_decision_key[0])
+        # If we have only one available automatic solver, we just use it
+        # automatically.
+        automatic_solver_list = filter(lambda x:x.isAutomaticSolver(),
+                                       solver_list)
+        if len(automatic_solver_list) == 1:
+          automatic_solver = automatic_solver_list[0]
+          new_decision.setSolverValue(automatic_solver)
+          new_decision.updateConfiguration(
+            **automatic_solver.getDefaultConfigurationPropertyDict(
+            new_decision))
         # XXX We need a relation between Simulation Movement and Solver
         # Process, but ideally, the relation should be created when a
         # Target Solver processes, not when a Solver Decision is
