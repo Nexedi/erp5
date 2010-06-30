@@ -6668,6 +6668,68 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(None, types_tool.getTypeInfo('Dummy Type'))
     self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
 
+  def test_type_provider_2(self):
+    self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+    type_provider = self.portal.dummy_type_provider
+    types_tool = self.portal.portal_types
+
+    registered_type_provider_list = types_tool.type_provider_list
+    # register this type provider
+    types_tool.type_provider_list = (
+        'dummy_type_provider',) + registered_type_provider_list
+
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',
+                          template_tool_id_list=('dummy_type_provider', ),)
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # unregister type provider
+    types_tool.type_provider_list = registered_type_provider_list
+    # uninstall the type provider (this will also uninstall the contained types)
+    self.portal.manage_delObjects(['dummy_type_provider'])
+    self.stepTic()
+
+    new_bt.install()
+
+    type_provider = self.portal._getOb('dummy_type_provider', None)
+    self.assertNotEqual(None, type_provider)
+
+    # This type provider, will be automatically registered on types tool during
+    # business template installation, because it contains type information
+    self.assertTrue('dummy_type_provider' in types_tool.type_provider_list)
+
+    # Create a business template that has the same title but does not
+    # contain type_provider.
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',)
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    new_bt.install(force=0, object_to_update={'dummy_type_provider':'remove'})
+    self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
+    self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
+
   def test_global_action(self):
     # Tests that global actions are properly exported and reimported
     self.portal.portal_actions.addAction(
