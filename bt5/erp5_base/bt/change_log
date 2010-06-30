@@ -1,4 +1,5 @@
 2010-06-30 kazuhiko
+* Reimplement Delivery_solveDivergenceAutomatically by using Solver Process Tool's API instead of ad-hoc way.
 * Move Solver Decision portal type from the experimental erp5_simulation business template to the erp5_base business template.
 * Calculate and pass default values to automatic solvers.
 * Add fallback scripts for target solvers' default configuration values.
