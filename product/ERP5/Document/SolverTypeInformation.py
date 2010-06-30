@@ -151,8 +151,8 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
     """
-    return self._callTypeBasetMethod(
-      self, 'getDefaultConfigurationPropertyDict')
+    return self._callTypeBasedMethod(
+      configurable, 'getDefaultConfigurationPropertyDict')
 
   def getDefaultConfigurationProperty(self, property, configurable):
     """
@@ -175,8 +175,8 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
     """
-    return self._callTypeBasetMethod(
-      self, 'getDefaultConfigurationPropertyListDict')
+    return self._callTypeBasedMethod(
+      configurable, 'getDefaultConfigurationPropertyListDict')
 
   def getDefaultConfigurationPropertyList(self, property, configurable):
     """
@@ -188,7 +188,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     """
     return self.getDefaultConfigurationPropertyListDict().get(property, [])
 
-  def _callTypeBasedMethod(self, method_id, configurable):
+  def _callTypeBasedMethod(self, configurable, method_id):
     # Implemented through type based method
     # and using read transaction cache
     portal_type = configurable.getPortalType()
@@ -206,19 +206,21 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
 
     cache = getReadOnlyTransactionCache(self)
     if cache is not None:
-      key = (method_id, solver_portal_type,
-             configurable.getRelativeUrl())
+      key = (method_id, solver_portal_type)
       try:
-        method = cache[key]
+        return cache[key]()
       except KeyError:
-        if solver is None:
-          solver = self.getParentValue().newContent(
-            portal_type=solver_portal_type,
-            temp_object=True,
-            delivery_list=configurable.getDeliveryList(),
-            causality_value=configurable)
-        method = solver._getTypeBasedMethod(
-          method_id,
-          fallback_script_id='Solver_%s' % method_id)
-        cache[key] = method
+        pass
+
+    if solver is None:
+      solver = self.getParentValue().newContent(
+        portal_type=solver_portal_type,
+        temp_object=True,
+        delivery_list=configurable.getDeliveryList(),
+        causality_value=configurable)
+    method = solver._getTypeBasedMethod(
+      method_id,
+      fallback_script_id='Solver_%s' % method_id)
+    if cache is not None:
+      cache[key] = method
     return method()
