@@ -192,8 +192,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     this helps reducing CPU time.
     """
 
-  def buildSolverDecisionList(self, delivery_or_movement=None,
-                              temp_object=False):
+  def buildSolverDecisionList(self, delivery_or_movement=None):
     """
     Build (or rebuild) the solver decisions in the solver process
 
@@ -239,7 +238,6 @@ class SolverProcess(XMLObject, ActiveProcess):
     # Now build the solver decision instances based on the previous
     # grouping
     solver_decision_list = self.objectValues(portal_type='Solver Decision')
-    index = 1
     for solver_decision_key, movement_dict in solver_decision_dict.items():
       causality, delivery_list, solver_list = solver_decision_key
       matched_solver_decision_list = [
@@ -249,14 +247,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       if len(matched_solver_decision_list) > 0:
         solver_decision_list.remove(matched_solver_decision_list[0])
       else:
-        if temp_object:
-          new_decision = self.newContent(portal_type='Solver Decision',
-                                         temp_object=True,
-                                         #id=index,
-                                         uid='new_%s' % index)
-          index += 1
-        else:
-          new_decision = self.newContent(portal_type='Solver Decision')
+        new_decision = self.newContent(portal_type='Solver Decision')
         new_decision._setDeliveryValueList(movement_dict.keys())
         new_decision._setCausality(solver_decision_key[0])
         # If we have only one available automatic solver, we just use it

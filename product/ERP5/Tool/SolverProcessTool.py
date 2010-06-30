@@ -92,8 +92,7 @@ class SolverProcessTool(BaseTool):
     new_solver = self.newContent(portal_type='Solver Process',
                                  temp_object=temp_object)
     # And build decisions
-    new_solver.buildSolverDecisionList(delivery_or_movement=delivery_or_movement,
-                                       temp_object=temp_object)
+    new_solver.buildSolverDecisionList(delivery_or_movement)
 
     if not temp_object:
       # Append the solver process into the delivery's solver category
@@ -104,4 +103,5 @@ class SolverProcessTool(BaseTool):
       solver_list = delivery.getSolverValueList()
       solver_list.append(new_solver)
       delivery.setSolverValueList(solver_list)
-      return new_solver
+
+    return new_solver
