@@ -56,9 +56,9 @@
 \n
   <input type="text"\n
          name="field_your_search_text"\n
-         onkeypress="submitFormOnEnter(event, \'main_form\', \'ERP5Site_viewQuickSearchResultList\')"\n
+         onkeypress="submitFormOnEnter(event, \'main_form\', \'ERP5Site_viewQuickSearchResultList\', false, this)"\n
          tal:attributes="value python: search_text"/>\n
-\n
+ \n
   <input type="submit" \n
          value="Search" \n
          name="ERP5Site_viewQuickSearchResultList:method" \n
