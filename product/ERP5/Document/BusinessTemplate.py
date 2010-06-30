@@ -1343,18 +1343,48 @@ class ToolTemplateItem(PathTemplateItem):
     return PathTemplateItem._backupObject(self, action, None, container_path,
                                           object_id, **kw)
 
-  def onNewObject(self, obj):
+  def install(self, context, trashbin, **kw):
     """ When we install a tool that is a type provider not
-    registered on types tool, register the type provider.
+    registered on types tool, register it into the type provider.
     """
-    portal = obj.getPortalObject()
+    PathTemplateItem.install(self, context, trashbin, **kw)
+    portal = context.getPortalObject()
     types_tool = portal.portal_types
-    type_container_id = obj.getId()
-    if interfaces.ITypeProvider.isImplementedBy(obj) and \
-        type_container_id not in types_tool.type_provider_list:
-      types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
-                                      (type_container_id,)
-    return PathTemplateItem.onNewObject(self, obj)
+    for type_container_id, obj in self._objects.iteritems():
+      if interfaces.ITypeProvider.isImplementedBy(obj) and \
+          type_container_id not in types_tool.type_provider_list:
+        types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
+                                        (type_container_id,)
+
+  def uninstall(self, context, **kw):
+    """ When we uninstall a tool, unregister it from the type provider. """
+    portal = context.getPortalObject()
+    types_tool = portal.portal_types
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._path_archive.keys()
+    for tool_id in object_keys:
+      types_tool.type_provider_list = tuple([ \
+        x for x in types_tool.type_provider_list \
+        if x != tool_id])
+    PathTemplateItem.uninstall(self, context, **kw)
+
+  def remove(self, context, **kw):
+    """ When we remove a tool, unregister it from the type provider. """
+    portal = context.getPortalObject()
+    types_tool = portal.portal_types
+    remove_dict = kw.get('remove_object_dict', {})
+    keys = self._objects.keys()
+    for tool_id in keys:
+      if remove_dict.has_key(tool_id):
+        action = remove_dict[tool_id]
+        if 'remove' in action:
+          types_tool.type_provider_list = tuple([ \
+            x for x in types_tool.type_provider_list \
+            if x != tool_id])
+    PathTemplateItem.remove(self, context, **kw)
 
 class PreferenceTemplateItem(PathTemplateItem):
   """
