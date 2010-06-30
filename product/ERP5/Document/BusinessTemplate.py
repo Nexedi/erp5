@@ -5250,15 +5250,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
       else:
         object_to_update = {}
 
-      installed_bt = self.portal_templates.getInstalledBusinessTemplate(
+      site = self.getPortalObject()
+      installed_bt = site.portal_templates.getInstalledBusinessTemplate(
                                                            self.getTitle())
       # When reinstalling, installation state should not change to replaced
       if installed_bt not in [None, self]:
         if installed_bt.getTemplateFormatVersion() == 0:
           force = 1
-        installed_bt.replace(self)
+        if site.portal_workflow.isTransitionPossible(
+            installed_bt, 'replace'):
+          installed_bt.replace(self)
 
-      trash_tool = getToolByName(self, 'portal_trash', None)
+      trash_tool = getToolByName(site, 'portal_trash', None)
       if trash_tool is None and self.getTemplateFormatVersion() == 1:
         raise AttributeError, 'Trash Tool is not installed'
 
@@ -5269,7 +5272,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if not force:
         self.checkDependencies()
 
-      site = self.getPortalObject()
       from Products.ERP5.ERP5Site import ERP5Generator
       generator_class = getattr(site, '_generator_class', ERP5Generator)
       gen = generator_class()
