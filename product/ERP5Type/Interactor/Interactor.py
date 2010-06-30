@@ -101,11 +101,23 @@ class InteractorSource:
     """
     self.method = method
 
+  def doBefore(self, action, *args, **kw):
+    """
+    """
+    if not isinstance(self.method, InteractorMethod):
+      im_class = self.method.im_class
+      # Turn this into an InteractorMethod
+      interactor_method = InteractorMethod(self.method)
+      setattr(im_class, self.method.__name__, interactor_method)
+      self.method = interactor_method
+    # Register the action
+    self.method.registerBeforeAction(action, args, kw)
+
   def doAfter(self, action, *args, **kw):
     """
     """
-    im_class = self.method.im_class
     if not isinstance(self.method, InteractorMethod):
+      im_class = self.method.im_class
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
