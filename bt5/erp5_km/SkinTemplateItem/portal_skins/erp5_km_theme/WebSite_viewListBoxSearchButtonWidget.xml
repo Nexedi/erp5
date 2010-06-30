@@ -54,13 +54,13 @@
 \n
 <tal:block tal:define="search_text here/Base_getSearchText">\n
   <input type="text"\n
-         name="field_your_search_text"\n
-         onkeypress="submitFormOnEnter(event, \'main_form\', \'ERP5Site_viewQuickSearchResultList\', false, this)"\n
-         tal:attributes="value python: search_text"/>\n
+         name="field_your_search_text_listbox"\n
+         onkeypress="submitFormOnEnter(event, \'main_form\', \'WebSite_viewQuickSearchResultList\', false, this)"\n
+         tal:attributes="value search_text"/>\n
  \n
   <input type="submit" \n
          value="Search" \n
-         name="ERP5Site_viewQuickSearchResultList:method" \n
+         name="WebSite_viewQuickSearchResultList:method" \n
          class=""/>\n
 </tal:block>\n
 

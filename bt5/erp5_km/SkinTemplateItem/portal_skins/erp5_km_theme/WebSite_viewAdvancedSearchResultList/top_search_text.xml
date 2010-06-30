@@ -13,6 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>enabled</string>
                 <string>title</string>
               </list>
             </value>
@@ -74,6 +75,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>search_text_listbox</string> </value>
