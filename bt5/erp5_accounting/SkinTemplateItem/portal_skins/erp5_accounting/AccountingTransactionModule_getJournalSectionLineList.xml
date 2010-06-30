@@ -136,10 +136,12 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
     else:\n
       specific_reference = transaction.getDestinationReference()\n
     displayed_transaction[transaction.getUid()] = 1\n
+    transaction_reference = transaction.getReference()\n
     title = mvt.hasTitle() and mvt.getTitle() or transaction.getTitle()\n
     date = brain.date\n
   else:\n
     specific_reference = \'\'\n
+    transaction_reference = \'\'\n
     title = mvt.hasTitle() and mvt.getTitle() or \'\'\n
     date = None\n
 \n
@@ -147,6 +149,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
                 title=title,\n
                 portal_type=transaction.getTranslatedPortalType(),\n
                 specific_reference=specific_reference,\n
+                parent_reference=transaction_reference,\n
                 mirror_section_title=mirror_section_title,\n
                 node_title=getAccountId(brain.node_relative_url),\n
                 date=date,\n
@@ -251,6 +254,7 @@ return line_list\n
                             <string>is_source</string>
                             <string>mirror_section_title</string>
                             <string>specific_reference</string>
+                            <string>transaction_reference</string>
                             <string>title</string>
                             <string>date</string>
                             <string>None</string>

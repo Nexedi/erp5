@@ -100,7 +100,8 @@ else:\n
 selection_columns = (\n
     (\'specific_reference\', \'Transaction Reference\'),\n
     (\'date\', \'Date\'),\n
-    (\'title\', \'Accounting Transaction Title\'),)\n
+    (\'title\', \'Accounting Transaction Title\'),\n
+    (\'parent_reference\', \'Document Reference\'),)\n
 if len(portal_type) > 1:\n
   selection_columns += (\n
     (\'portal_type\', \'Journal Type\'), )\n
