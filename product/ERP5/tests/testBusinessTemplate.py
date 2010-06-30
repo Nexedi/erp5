@@ -6663,6 +6663,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     instance.setSourceReference('OK')
     self.assertEquals('OK', instance.getSourceReference())
 
+    new_bt.uninstall()
+    self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
+    self.assertEquals(None, types_tool.getTypeInfo('Dummy Type'))
+    self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
+
   def test_global_action(self):
     # Tests that global actions are properly exported and reimported
     self.portal.portal_actions.addAction(
