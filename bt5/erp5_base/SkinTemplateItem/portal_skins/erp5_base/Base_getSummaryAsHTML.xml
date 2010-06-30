@@ -90,11 +90,8 @@ title = context.getTitle() or (hasattr(context, \'getReference\') and context.ge
 portal_type = context.getTranslatedPortalType()\n
 website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
 popup = context.Document_getPopupInfo(context.REQUEST.get(\'current_web_site\')) or \'\'\n
-selection = None\n
-selection_name = context.REQUEST.get("selection_name", None)\n
-if selection_name is not None:\n
-  selection = context.portal_selections.getSelectionFor(selection_name)\n
-found = context.Base_showFoundText(selection=selection)\n
+\n
+found = context.Base_showFoundText()\n
 owner_html = getOwnerHTML(context) or \'\'\n
 \n
 date_renderer = context.ERP5Site_viewSearchResult.listbox_modification_date.render_pdf\n
@@ -107,7 +104,6 @@ local_parameter_dict = {\n
   \'reference_html\': getReferenceHTML(context),\n
   \'portal_type\': portal_type,\n
   \'popup\': popup,\n
-  \'selection\': selection,\n
   \'found\': found,\n
   \'owner_html\': owner_html,\n
   \'modification_date\': modification_date,\n
@@ -197,9 +193,6 @@ return html\n
                             <string>title</string>
                             <string>portal_type</string>
                             <string>popup</string>
-                            <string>None</string>
-                            <string>selection</string>
-                            <string>selection_name</string>
                             <string>found</string>
                             <string>owner_html</string>
                             <string>date_renderer</string>
