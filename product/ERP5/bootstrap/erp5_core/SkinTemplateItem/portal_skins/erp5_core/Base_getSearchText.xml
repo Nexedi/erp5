@@ -53,67 +53,36 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
+            <value> <string>"""\n
+  Get search text from REQUEST or selection.\n
 """\n
-  This script is used in listbox allowing when switching \'table\' --> \'search\' mode.\n
-  It will try to generate parts of the document\'s text \n
-  containing searched words as well highlighting the searched \n
-  words in the text itself.\n
-"""\n
-from Products.ERP5.Document.Document import NotConvertedError\n
+# get search words from listbox selection\n
+argument_names = (\'advanced_search_text\', \n
+                  \'your_search_text\',\n
+                  \'title\',\n
+                  \'reference\',\n
+                  \'searchabletext\', \n
+                  \'searchabletext_any\',\n
+                  \'searchabletext_all\', \n
+                  \'searchabletext_phrase\',)\n
 \n
-encoding = \'utf-8\'\n
-is_gadget_mode = context.REQUEST.get(\'is_gadget_mode\', 0)\n
+if selection is None:\n
+  selection_name = context.REQUEST.get("selection_name", None)\n
+  if selection_name is not None:\n
+    selection = context.portal_selections.getSelectionFor(selection_name)\n
 \n
-if is_gadget_mode:\n
-  # in gadget mode less space is available thus show less text\n
-  max_text_length = 100\n
-  max_lines = 1\n
-\n
-def getRandomDocumentTextExcerpt(document_text):\n
-  # try to get somewhat arbitrary choice of searchable attrs\n
-  if isinstance(document_text, str) and document_text!=\'\':\n
-    document_text = document_text.decode(encoding, \'ignore\')\n
-    start = min(len(document_text) - 300, 200)\n
-    return \'... %s ...\' %document_text[start:start + max_text_length].encode(encoding)\n
-  else:\n
-    return \'\'\n
-\n
-if document_text is None:\n
-  try:\n
-    document_text = context.getSearchableText()\n
-  except NotConvertedError:\n
-    return context.Base_translateString("This document is not converted yet.")\n
-\n
-search_string = context.Base_getSearchText(selection)\n
-\n
-if search_string != \'\':\n
-  search_argument_list = context.Base_parseSearchString(search_string)\n
-  search_string = search_argument_list.get(\'searchabletext\', \'\')\n
-\n
-if search_string == \'\':\n
-  # the searched words are empty (e.g. because we used only parameters \n
-  # without pure searchable text)\n
-  return getRandomDocumentTextExcerpt(document_text)\n
+if selection is not None:\n
+  params = selection.getParams()\n
 else:\n
-  found_text_fragments = context.Base_getExcerptText(\n
-                           context, \\\n
-                           document_text, \\\n
-                           search_string, \\\n
-                           tags = (\'<em>\', \'</em>\'), \\\n
-                           trail = 5, \\\n
-                           maxlines = max_lines)\n
-  result = \' \'.join(map(str, found_text_fragments))\n
+  params = context.portal_selections.getSelectionParamsFor(\'search_result_selection\')\n
 \n
-  # Document may contains charactors which utf8 codec cannot decode.\n
-  unicode_result = result.decode(encoding, \'ignore\')\n
-  result = unicode_result.encode(encoding)\n
+params = [params.get(name, \'\') for name in argument_names]\n
+# flatten value if it is list\n
+params = [(hasattr(param, \'sort\') and \' \'.join(param) or param) for param in params]\n
+search_string = \' \'.join(params).strip()\n
 \n
-  return result\n
-
-
-]]></string> </value>
+return search_string\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -123,7 +92,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>document_text=None, selection=None, max_lines = 5, max_text_length = 500</string> </value>
+            <value> <string>selection=None</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -143,31 +112,26 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>document_text</string>
                             <string>selection</string>
-                            <string>max_lines</string>
-                            <string>max_text_length</string>
-                            <string>Products.ERP5.Document.Document</string>
-                            <string>NotConvertedError</string>
-                            <string>encoding</string>
+                            <string>argument_names</string>
+                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>is_gadget_mode</string>
-                            <string>getRandomDocumentTextExcerpt</string>
-                            <string>None</string>
+                            <string>selection_name</string>
+                            <string>params</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>name</string>
+                            <string>param</string>
+                            <string>hasattr</string>
                             <string>search_string</string>
-                            <string>search_argument_list</string>
-                            <string>found_text_fragments</string>
-                            <string>map</string>
-                            <string>str</string>
-                            <string>result</string>
-                            <string>unicode_result</string>
                           </tuple>
                         </value>
                     </item>
@@ -181,15 +145,12 @@ else:\n
             <value>
               <tuple>
                 <none/>
-                <none/>
-                <int>5</int>
-                <int>500</int>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_showFoundText</string> </value>
+            <value> <string>Base_getSearchText</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
