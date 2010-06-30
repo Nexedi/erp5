@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Sortable - Connect lists with Tabs</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.sortable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.droppable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.tabs.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; padding: 5px; font-size: 1.2em; width: 120px; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#sortable1, #sortable2").sortable().disableSelection();\n
+\n
+\t\tvar $tabs = $("#tabs").tabs();\n
+\n
+\t\tvar $tab_items = $("ul:first li",$tabs).droppable({\n
+\t\t\taccept: ".connectedSortable li",\n
+\t\t\thoverClass: "ui-state-hover",\n
+\t\t\tdrop: function(ev, ui) {\n
+\t\t\t\tvar $item = $(this);\n
+\t\t\t\tvar $list = $($item.find(\'a\').attr(\'href\')).find(\'.connectedSortable\');\n
+\n
+\t\t\t\tui.draggable.hide(\'slow\', function() {\n
+\t\t\t\t\t$tabs.tabs(\'select\', $tab_items.index($item));\n
+\t\t\t\t\t$(this).appendTo($list).show(\'slow\');\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\n
+<div id="tabs">\n
+\t<ul>\n
+\t\t<li><a href="#tabs-1">Nunc tincidunt</a></li>\n
+\t\t<li><a href="#tabs-2">Proin dolor</a></li>\n
+\t</ul>\n
+\t<div id="tabs-1">\n
+\t\t<ul id="sortable1" class="connectedSortable ui-helper-reset">\n
+\t\t\t<li class="ui-state-default">Item 1</li>\n
+\t\t\t<li class="ui-state-default">Item 2</li>\n
+\t\t\t<li class="ui-state-default">Item 3</li>\n
+\t\t\t<li class="ui-state-default">Item 4</li>\n
+\t\t\t<li class="ui-state-default">Item 5</li>\n
+\t\t</ul>\n
+\t</div>\n
+\t<div id="tabs-2">\n
+\t\t<ul id="sortable2" class="connectedSortable ui-helper-reset">\n
+\t\t\t<li class="ui-state-highlight">Item 1</li>\n
+\t\t\t<li class="ui-state-highlight">Item 2</li>\n
+\t\t\t<li class="ui-state-highlight">Item 3</li>\n
+\t\t\t<li class="ui-state-highlight">Item 4</li>\n
+\t\t\t<li class="ui-state-highlight">Item 5</li>\n
+\t\t</ul>\n
+\t</div>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+\tSort items from one list into another and vice versa, by dropping the list item on the appropriate tab above.\n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>connect-lists-through-tabs.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

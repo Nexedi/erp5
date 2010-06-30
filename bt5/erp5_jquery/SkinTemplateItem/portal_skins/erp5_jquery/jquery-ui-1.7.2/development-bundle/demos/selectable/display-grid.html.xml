@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Selectable - Display as grid</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.selectable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t\n
+\t<style type="text/css">\n
+\t#feedback { font-size: 1.4em; }\n
+\t#selectable .ui-selecting { background: #FECA40; }\n
+\t#selectable .ui-selected { background: #F39814; color: white; }\n
+\t#selectable { list-style-type: none; margin: 0; padding: 0; }\n
+\t#selectable li { margin: 3px; padding: 1px; float: left; width: 100px; height: 80px; font-size: 4em; text-align: center; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#selectable").selectable();\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\n
+<ol id="selectable">\n
+\t<li class="ui-state-default">1</li>\n
+\t<li class="ui-state-default">2</li>\n
+\t<li class="ui-state-default">3</li>\n
+\t<li class="ui-state-default">4</li>\n
+\t<li class="ui-state-default">5</li>\n
+\t<li class="ui-state-default">6</li>\n
+\t<li class="ui-state-default">7</li>\n
+\t<li class="ui-state-default">8</li>\n
+\t<li class="ui-state-default">9</li>\n
+\t<li class="ui-state-default">10</li>\n
+\t<li class="ui-state-default">11</li>\n
+\t<li class="ui-state-default">12</li>\n
+</ol>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>To arrange selectable items as a grid, give them identical dimensions and float them using CSS.</p>\n
+\n
+</div><!-- End demo-description -->\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>display-grid.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

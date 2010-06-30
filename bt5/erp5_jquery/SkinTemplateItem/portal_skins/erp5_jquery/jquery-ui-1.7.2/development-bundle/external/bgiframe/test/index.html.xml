@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n
+\t"http://www.w3.org/TR/html4/strict.dtd">\n
+<html debug="true">\n
+\t<head>\n
+\t\t<meta http-equiv="Content-type" content="text/html; charset=utf-8">\n
+\t\t<title>jQuery bgiframe Visual Test</title>\n
+\t\t\n
+\t\t<!-- load latest build of jquery.js -->\n
+\t\t<script type="text/javascript" src="../../../jquery/dist/jquery.js"></script>\n
+\n
+\t\t<!-- load dimensions.js (this is what we\'re testing! -->\n
+\t\t<script type="text/javascript" src="../jquery.bgiframe.js"></script>\n
+\t\t\n
+\t\t<!-- load firebug lite \n
+\t\t<script type="text/javascript" src="http://brandon.jquery.com/firebuglite/firebug.js"></script>-->\n
+\t\t\n
+\t\t<link rel="Stylesheet" media="screen" href="../../../jquery/test/data/testsuite.css" />\n
+\t\t\n
+\t\t<script type="text/javascript" charset="utf-8">\n
+\t\t\t$(function() {\n
+\t\t\t\t$(\'#userAgent\').html(navigator.userAgent);\n
+\t\t\t\t$(\'#box2\').bgiframe();\n
+\t\t\t\t$(\'#box3\').bgiframe({top: -5, left: -5});\n
+\t\t\t\t$(\'#box4\').bgiframe({top: -5, left: -5, width: 270, height: 120});\n
+\t\t\t\t$(\'#box5\').bgiframe({top: 0, left: 0, width: 260, height: 110});\n
+\t\t\t\t$(\'#box6\').bgiframe({top: \'-5px\', left: \'-5px\', width: \'270px\', height: \'120px\'});\n
+\t\t\t\t$(\'#box7\').bgiframe({top: \'-.5em\', left: \'-.5em\', width: \'17em\', height: \'12em\'});\n
+\t\t\t\t$(\'#box8\').bgiframe({top: \'-.5em\', left: \'-.5em\'});\n
+\t\t\t\t$(\'#box9\').bgiframe({opacity:false});\n
+\t\t\t});\n
+\t\t</script>\n
+\t\t\n
+\t\t<style type="text/css" media="screen">\n
+\t\t\t#wrapper { position: relative; width: 100%; font: 12px Arial; }\n
+\t\t\t\tform { position: absolute; top: 0; left: 0; width: 100%; }\n
+\t\t\t\t\tselect { position: relative; width: 100%; margin: 0 0 2px; z-index: 1; }\n
+\t\t\t\t\n
+\t\t\t\t.box { position: relative; z-index: 2; float: left; margin: 5px; border: 5px solid #666; padding: 5px; width: 250px; height: 100px; color: #000; background-color: #999; }\n
+\t\t\t\t\tdl { margin: 0; padding: 0; }\n
+\t\t\t\t\t\tdt { float: left; margin: 0; padding: 0; width: 50px; }\n
+\t\t\t\t\t\tdd { margin: 0; padding: 0; }\n
+\t\t\t\t#box7, #box8 { border-width: .5em; padding: .5em; width: 15em; height: 10em; }\n
+\t\t</style>\n
+\t</head>\n
+\t<body>\n
+\t\t<h1 id="banner">jQuery bgiframe - Visual Test</h1>\n
+\t\t<h2 id="userAgent"></h2>\n
+\t\t<div id="wrapper">\n
+\t\t\t<form action="#" method="get" accept-charset="utf-8">\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t\t<select name="test"><option>Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing Testing</option></select>\n
+\t\t\t</form>\n
+\t\t\t\n
+\t\t\t<div id="box1" class="box">nothing</div>\n
+\t\t\t<div id="box2" class="box">\n
+\t\t\t\t<dl>\n
+\t\t\t\t\t<dt>top:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>left:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>width:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>height:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t</dl>\n
+\t\t\t</div>\n
+\t\t\t<div id="box3" class="box">\n
+\t\t\t\t<dl>\n
+\t\t\t\t\t<dt>top:</dt>\n
+\t\t\t\t\t<dd>0</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>left:</dt>\n
+\t\t\t\t\t<dd>0</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>width:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>height:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t</dl>\n
+\t\t\t</div>\n
+\t\t\t<div id="box4" class="box">\n
+\t\t\t\t<dl>\n
+\t\t\t\t\t<dt>top:</dt>\n
+\t\t\t\t\t<dd>-5</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>left:</dt>\n
+\t\t\t\t\t<dd>-5</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>width:</dt>\n
+\t\t\t\t\t<dd>270</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>height:</dt>\n
+\t\t\t\t\t<dd>120</dd>\n
+\t\t\t\t</dl>\n
+\t\t\t</div>\n
+\t\t\t<div id="box5" class="box">\n
+\t\t\t\t<dl>\n
+\t\t\t\t\t<dt>top:</dt>\n
+\t\t\t\t\t<dd>0</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>left:</dt>\n
+\t\t\t\t\t<dd>0</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>width:</dt>\n
+\t\t\t\t\t<dd>260</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>height:</dt>\n
+\t\t\t\t\t<dd>110</dd>\n
+\t\t\t\t</dl>\n
+\t\t\t</div>\n
+\t\t\t<div id="box6" class="box">\n
+\t\t\t\t<dl>\n
+\t\t\t\t\t<dt>top:</dt>\n
+\t\t\t\t\t<dd>\'-5px\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>left:</dt>\n
+\t\t\t\t\t<dd>\'-5px\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>width:</dt>\n
+\t\t\t\t\t<dd>\'270px\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>height:</dt>\n
+\t\t\t\t\t<dd>\'120px\'</dd>\n
+\t\t\t\t</dl>\n
+\t\t\t</div>\n
+\t\t\t<div id="box7" class="box">\n
+\t\t\t\t<dl>\n
+\t\t\t\t\t<dt>top:</dt>\n
+\t\t\t\t\t<dd>\'-.5em\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>left:</dt>\n
+\t\t\t\t\t<dd>\'-.5em\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>width:</dt>\n
+\t\t\t\t\t<dd>\'17em\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>height:</dt>\n
+\t\t\t\t\t<dd>\'12em\'</dd>\n
+\t\t\t\t</dl>\n
+\t\t\t</div>\n
+\t\t\t<div id="box8" class="box">\n
+\t\t\t\t<dl>\n
+\t\t\t\t\t<dt>top:</dt>\n
+\t\t\t\t\t<dd>\'-.5em\'</dd>\n
+\n
+\t\t\t\t\t<dt>left:</dt>\n
+\t\t\t\t\t<dd>\'-.5em\'</dd>\n
+\n
+\t\t\t\t\t<dt>width:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\n
+\t\t\t\t\t<dt>height:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t</dl>\n
+\t\t\t</div>\n
+\t\t\t<div id="box9" class="box">\n
+\t\t\t\t<dl>\n
+\t\t\t\t\t<dt>top:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>left:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>width:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>height:</dt>\n
+\t\t\t\t\t<dd>\'auto\'</dd>\n
+\t\t\t\t\t\n
+\t\t\t\t\t<dt>opacity:</dt>\n
+\t\t\t\t\t<dd>false</dd>\n
+\t\t\t\t</dl>\n
+\t\t\t</div>\n
+\t\t</div>\n
+\t</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>index.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Draggable - Snap to element or grid</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.draggable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t.draggable { width: 90px; height: 80px; padding: 5px; float: left; margin: 0 10px 10px 0; font-size: .9em; }\n
+\t.ui-widget-header p, .ui-widget-content p { margin: 0; }\n
+\t#snaptarget { height: 140px; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#draggable").draggable({ snap: true });\n
+\t\t$("#draggable2").draggable({ snap: \'.ui-widget-header\' });\n
+\t\t$("#draggable3").draggable({ snap: \'.ui-widget-header\', snapMode: \'outer\' });\n
+\t\t$("#draggable4").draggable({ grid: [20,20] });\n
+\t\t$("#draggable5").draggable({ grid: [80, 80] });\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\t\n
+<div id="snaptarget" class="ui-widget-header">\n
+\t<p>I\'m a snap target</p>\n
+</div>\n
+\n
+<br clear="both" />\n
+\n
+<div id="draggable" class="draggable ui-widget-content">\n
+\t<p>Default (snap: true), snaps to all other draggable elements</p>\n
+</div>\n
+\n
+<div id="draggable2" class="draggable ui-widget-content">\n
+\t<p>I only snap to the big box</p>\n
+</div>\n
+\n
+<div id="draggable3" class="draggable ui-widget-content">\n
+\t<p>I only snap to the outer edges of the big box</p>\n
+</div>\n
+\n
+<div id="draggable4" class="draggable ui-widget-content">\n
+\t<p>I snap to a 20 x 20 grid</p>\n
+</div>\n
+\n
+<div id="draggable5" class="draggable ui-widget-content">\n
+\t<p>I snap to a 80 x 80 grid</p>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>Snap the draggable to the inner or outer boundaries of a DOM element.  Use the <code>snap</code>, <code>snapMode</code> (inner, outer, both), and <code>snapTolerance</code> (distance in pixels the draggable must be from the element when snapping is invoked) options. </p>\n
+\n
+<p>Or snap the draggable to a grid.  Set the dimensions of grid cells (height and width in pixels) with the <code>grid</code> option.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>snap-to.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

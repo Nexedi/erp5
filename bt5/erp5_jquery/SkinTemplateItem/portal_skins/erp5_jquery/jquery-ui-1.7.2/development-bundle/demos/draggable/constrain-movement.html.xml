@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Draggable - Constrain movement</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.draggable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t.draggable { width: 90px; height: 90px; padding: 0.5em; float: left; margin: 0 10px 10px 0; }\n
+\t#draggable, #draggable2 { margin-bottom:20px; }\n
+\t#draggable { cursor: n-resize; }\n
+\t#draggable2 { cursor: e-resize; }\n
+\t#containment-wrapper { width: 95%; height:150px; border:2px solid #ccc; padding: 10px;}\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#draggable").draggable({ axis: \'y\' });\n
+\t\t$("#draggable2").draggable({ axis: \'x\' });\n
+\t\t\n
+\t\t$("#draggable3").draggable({ containment: \'#containment-wrapper\', scroll: false });\n
+\t\t$("#draggable4").draggable({ containment: \'#demo-frame\' });\n
+\t\t$("#draggable5").draggable({ containment: \'parent\' });\n
+\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\n
+<h3 class="docs">Constrain movement along an axis:</h3>\n
+\t\n
+<div id="draggable" class="draggable ui-widget-content">\n
+\t<p>I can be dragged only vertically</p>\n
+</div>\n
+\n
+<div id="draggable2" class="draggable ui-widget-content">\n
+\t<p>I can be dragged only horizontally</p>\n
+</div>\n
+\n
+<h3 class="docs">Or to within another DOM element:</h3>\n
+<div id="containment-wrapper">\n
+<div id="draggable3" class="draggable ui-widget-content">\n
+\t<p>I\'m contained within the box</p>\n
+</div>\n
+\n
+<div id="draggable4" class="draggable ui-widget-content">\n
+\t<p>I\'m contained within the box\'s parent</p>\n
+</div>\n
+\n
+<div class="draggable ui-widget-content">\n
+\t<p id="draggable5" class="ui-widget-header">I\'m contained within my parent</p>\n
+</div>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+Constrain the movement of each draggable by defining the boundaries of the draggable area. Set the <code>axis</code> option to limit the draggable\'s path to the x- or y-axis, or use the <code>containment</code> option to specify a parent DOM element or a jQuery selector, like \'document.\'\n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>constrain-movement.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

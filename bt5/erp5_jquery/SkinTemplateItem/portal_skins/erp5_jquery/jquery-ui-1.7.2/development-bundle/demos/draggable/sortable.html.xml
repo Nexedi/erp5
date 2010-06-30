@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!doctype html>\n
+<html lang="en">\n
+<head>\n
+\t<title>jQuery UI Draggable + Sortable</title>\n
+\t<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.3.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.draggable.js"></script>\n
+\t<script type="text/javascript" src="../../ui/ui.sortable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t.demo ul { list-style-type: none; margin: 0; padding: 0; margin-bottom: 10px; }\n
+\t.demo li { margin: 5px; padding: 5px; width: 150px; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#sortable").sortable({\n
+\t\t\trevert: true\n
+\t\t});\n
+\t\t$("#draggable").draggable({\n
+\t\t\tconnectToSortable: \'#sortable\',\n
+\t\t\thelper: \'clone\',\n
+\t\t\trevert: \'invalid\'\n
+\t\t})\n
+\t\t$("ul, li").disableSelection();\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\t\n
+<ul>\n
+\t<li id="draggable" class="ui-state-highlight">Drag me down</li>\n
+</ul>\n
+\n
+<ul id="sortable">\n
+\t<li class="ui-state-default">Item 1</li>\n
+\t<li class="ui-state-default">Item 2</li>\n
+\t<li class="ui-state-default">Item 3</li>\n
+\t<li class="ui-state-default">Item 4</li>\n
+\t<li class="ui-state-default">Item 5</li>\n
+</ul>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+Draggables are built to interact seamlessly with <a href="#">sortables</a>.\n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sortable.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

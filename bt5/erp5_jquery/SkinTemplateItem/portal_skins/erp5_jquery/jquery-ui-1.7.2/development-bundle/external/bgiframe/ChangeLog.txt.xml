@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ChangeLog.txt</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+== New and Noteworthy ==\r\n
+\r\n
+== 2.1.1 ==\r\n
+\r\n
+* Removed $.browser.version for jQuery < 1.1.3\r\n
+\r\n
+== 2.1 ==\r\n
+\r\n
+* Updated to work with jQuery 1.1.3\r\n
+* Added $.browser.version for jQuery < 1.1.3\r\n
+* Optimized duplication check by using child selector and using .length test\r\n
+\r\n
+== 2.0 ==\r\n
+\r\n
+* Added ability change settings like width, height, src and more.\r\n
+\r\n
+== 1.0 ==\r\n
+\r\n
+* Only adds iframe once per an element\r\n
+* Works with SSL enabled pages
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
