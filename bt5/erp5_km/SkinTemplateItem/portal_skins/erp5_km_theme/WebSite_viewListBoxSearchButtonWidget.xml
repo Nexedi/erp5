@@ -52,8 +52,7 @@
   -->\n
 </tal:block>\n
 \n
-<tal:block tal:define="search_text python: request.get(\'your_search_text\', None);">\n
-\n
+<tal:block tal:define="search_text here/Base_getSearchText">\n
   <input type="text"\n
          name="field_your_search_text"\n
          onkeypress="submitFormOnEnter(event, \'main_form\', \'ERP5Site_viewQuickSearchResultList\', false, this)"\n
@@ -63,7 +62,6 @@
          value="Search" \n
          name="ERP5Site_viewQuickSearchResultList:method" \n
          class=""/>\n
- \n
 </tal:block>\n
 
 

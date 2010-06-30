@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(request, \'new_advanced_search_text\', False) or context.Base_translateString(\'Search\')</string> </value>
+            <value> <string>python: context.Base_getSearchText() or context.Base_translateString(\'Search\')</string> </value>
         </item>
       </dictionary>
     </pickle>

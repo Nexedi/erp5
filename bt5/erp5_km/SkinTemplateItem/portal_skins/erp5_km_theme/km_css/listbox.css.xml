@@ -305,6 +305,10 @@ button.sort_button_asc{\n
 /* in search mode listbox may contain top/ bottom quick search inputs */\n
 div.search-text-listbox{\n
   text-align: center;\n
+  float:left;\n
+  height:auto; \n
+  margin-bottom:0.5em;\n
+  margin-top:0.5em;\n
 }\n
 div.search-text-listbox input{\n
   width: auto;\n
