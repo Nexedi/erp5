@@ -16,8 +16,10 @@ def patchActivityTool():
   from Products.CMFActivity.ActivityTool import ActivityTool
   def patch(function):
     name = function.__name__
-    setattr(ActivityTool, '_orig_' + name, getattr(ActivityTool, name))
+    orig_function = getattr(ActivityTool, name)
+    setattr(ActivityTool, '_orig_' + name, orig_function)
     setattr(ActivityTool, name, function)
+    function.__doc__ = orig_function.__doc__
 
   # When a ZServer can't be started, the node name ends with ':' (no port).
   @patch

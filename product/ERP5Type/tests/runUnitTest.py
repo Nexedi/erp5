@@ -565,15 +565,15 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
         _print('Dumping static files...\n')
       live_instance_path = os.environ.get('live_instance_path')
       for static_dir in static_dir_list:
-        try:
-          shutil.rmtree(static_dir + '.bak')
-        except OSError, e:
-          if e.errno != errno.ENOENT:
-            raise
         if live_instance_path:
           backup_path = os.path.join(live_instance_path, static_dir)
         else:
           backup_path = static_dir + '.bak'
+        try:
+          shutil.rmtree(backup_path)
+        except OSError, e:
+          if e.errno != errno.ENOENT:
+            raise
         shutil.copytree(static_dir, backup_path, symlinks=True)
     elif zeo_client_pid_list is not None:
       _print('WARNING: No static files saved. You will have to do it manually.')
