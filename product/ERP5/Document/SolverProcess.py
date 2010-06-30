@@ -217,18 +217,22 @@ class SolverProcess(XMLObject, ActiveProcess):
     # We suppose here that movement_list is a list of
     # delivery movements. Let us group decisions in such way
     # that a single decision is created per divergence tester instance
-    # and per application level list
+    # and per application level list and per available target solver
+    # list
     solver_tool = self.getPortalObject().portal_solvers
     solver_decision_dict = {}
     for movement in movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
         for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList(exclude_quantity=False):
-          if divergence_tester.compare(simulation_movement, movement):
+          if divergence_tester.explain(simulation_movement) in (None, []):
             continue
           application_list = map(lambda x:x.getRelativeUrl(),
                  solver_tool.getSolverDecisionApplicationValueList(movement, divergence_tester))
           application_list.sort()
-          solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list))
+          solver_list = solver_tool.searchTargetSolverList(
+            divergence_tester, simulation_movement)
+          solver_list.sort(key=lambda x:x.getId())
+          solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list), tuple(solver_list))
           movement_dict = solver_decision_dict.setdefault(solver_decision_key, {})
           movement_dict[simulation_movement] = None
 
@@ -237,7 +241,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     solver_decision_list = self.objectValues(portal_type='Solver Decision')
     index = 1
     for solver_decision_key, movement_dict in solver_decision_dict.items():
-      causality, delivery_list = solver_decision_key
+      causality, delivery_list, solver_list = solver_decision_key
       matched_solver_decision_list = [
         x for x in solver_decision_list \
         if x.getDeliveryList() == list(delivery_list) and \
