@@ -138,8 +138,11 @@ selection_columns = (\n
   (\'Movement_getExplanationTitle\', \'Accounting Transaction Title\'), )\n
 if len(section_uid) > 1:\n
   selection_columns += ( (\'section_title\', \'Section\'), )\n
-selection_columns += analytic_column_list + (\n
-  (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
+selection_columns += analytic_column_list\n
+if not mirror_section:\n
+  selection_columns += ( (\'Movement_getMirrorSectionTitle\', \'Third Party\'), )\n
+selection_columns += (\n
+  (\'Movement_getExplanationReference\', \'Document Reference\'),\n
   (\'debit_price\', \'Debit\'),\n
   (\'credit_price\', \'Credit\'),\n
   (\'running_total_price\', \'Net\'),)\n

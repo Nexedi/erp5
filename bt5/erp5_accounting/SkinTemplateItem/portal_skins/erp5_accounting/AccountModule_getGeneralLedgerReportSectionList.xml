@@ -121,7 +121,7 @@ account_columns = (\n
       (\'Movement_getExplanationTitle\', \'Title\'),\n
       (\'date\', \'Date\'),\n
       (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
-      (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
+      (\'Movement_getExplanationReference\', \'Document Reference\'),\n
       (\'Movement_getMirrorSectionTitle\', \'Third Party\'),)\n
 if len(simulation_state) > 1:\n
   account_columns += (\n

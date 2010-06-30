@@ -208,7 +208,6 @@ if builder_by_ptype.has_key(delivery_portal_type) :\n
                             <string>order</string>
                             <string>build_trade_model_tag</string>
                             <string>build_accounting_tag</string>
-                            <string>path</string>
                             <string>update_applied_rule_tag</string>
                             <string>dict</string>
                           </tuple>
