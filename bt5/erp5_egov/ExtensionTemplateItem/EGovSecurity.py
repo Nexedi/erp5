@@ -126,18 +126,19 @@ def setPermissionsOnEGovModule(self, portal_type_object):
                           'WebDAV Lock items','WebDAV Unlock items',
                           'WebDAV access',
                           ]
- 
+
+  agent_permission_list = [Permissions.AccessContentsInformation, Permissions.AddPortalContent \
+                                       ,Permissions.CopyOrMove, Permissions.ModifyPortalContent \
+                                       ,Permissions.ListFolderContents,Permissions.View, 'View History' \
+                                       ]
   view_permission_list= [ Permissions.AccessContentsInformation, Permissions.ListFolderContents  \
                         , Permissions.View ]
 
-  role_permission_dict =  {'Anonymous':[Permissions.AccessContentsInformation, Permissions.AddPortalContent \
-                                       ,Permissions.CopyOrMove, Permissions.ModifyPortalContent \
-                                       ,Permissions.ListFolderContents,Permissions.View, 'View History' \
-                                       ],
-                           'Agent':    [Permissions.AccessContentsInformation, Permissions.AddPortalContent \
-                                       ,Permissions.CopyOrMove, Permissions.ModifyPortalContent \
-                                       ,Permissions.ListFolderContents,Permissions.View, 'View History' \
-                                       ],
+  citizen_role_list = ['role/citoyen', 'role/citoyen/national', 'role/citoyen/etranger']
+  company_role_list = ['role/entreprise', 'role/entreprise/agence', 'role/entreprise/siege', 'role/entreprise/succursale']
+  agent_role_list = ['role/gouvernement']
+
+  role_permission_dict =  {'Agent':    agent_permission_list,
                            'Associate':[Permissions.AccessContentsInformation, Permissions.ListFolderContents \
                                        ,Permissions.View, Permissions.CopyOrMove, 'View History'  \
                                        ],
@@ -155,23 +156,26 @@ def setPermissionsOnEGovModule(self, portal_type_object):
                            'Manager':  zope_permission_list
                           }
 
-  #XXX if the procedure needs no authentification, 
-  # assume anonymous role can access and add
-  if portal_type_object is not None:
-    step_authentication =  portal_type_object.getStepAuthentication()
-    step_subscription =  portal_type_object.getStepSubscription()
-  self.manage_acquiredPermissions(aquired_permission_list)
-  for (role, permission_list) in role_permission_dict.items():
-    if role == "Anonymous" and not step_authentication and not step_subscription:
-      self.manage_role(role_to_manage=role, permissions=permission_list)
-      #give anonymous access to the portal type
-      portal_type_object.manage_role(role_to_manage=role, permissions=view_permission_list)
-    elif role != "Anonymous":
-      self.manage_role(role_to_manage=role, permissions=permission_list)
-      if role == "Agent":
-        portal_type_object.manage_role(role_to_manage=role, permissions=permission_list)
   #set acquired local role on the portal type
   portal_type_object.setTypeAcquireLocalRole(1)
+  #Agent role should have access permissions on the portal type
+  portal_type_object.manage_role(role_to_manage='Agent', permissions=view_permission_list)
+
+  # if the procedure needs no authentification anonymous should access and add
+  if portal_type_object  is not None:
+    step_authentication =  portal_type_object.getStepAuthentication()
+    step_subscription =  portal_type_object.getStepSubscription()
+    if not step_authentication: # and not step_subscription
+      #Anonymous should have access, add, modify and delete permissions on the module
+      self.manage_role(role_to_manage='Anonymous', permissions=agent_permission_list)
+      #Anonymous should also have access to the portal type
+      portal_type_object.manage_role(role_to_manage='Anonymous', permissions=view_permission_list)
+
+  #set acquired permissionson the module
+  self.manage_acquiredPermissions(aquired_permission_list)
+  for (role, permission_list) in role_permission_dict.items():
+    self.manage_role(role_to_manage=role, permissions=permission_list)
+  
 
 def getSecurityCategoryFromAssignment(self, base_category_list, user_name, 
     object, portal_type, child_category_list=[]):
