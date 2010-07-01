@@ -116,9 +116,7 @@ class ExplanationCache:
       simulation_movement_id = simulation_movement.getId()
       insert_movement = True
       for path_id in container_path:
-        if local_path_dict.get(path_id, None) is None:
-          local_path_dict[path_id] = dict()
-        local_path_dict = local_path_dict[path_id]
+        local_path_dict = local_path_dict.setdefault(path_id, {})
         if type(local_path_dict) is not types.DictType:
           # A movement was already inserted
           insert_movement = False
