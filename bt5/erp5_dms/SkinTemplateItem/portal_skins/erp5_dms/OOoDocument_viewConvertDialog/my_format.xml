@@ -275,7 +275,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getPermittedTargetFormatItemList</string> </value>
+            <value> <string>here/getTargetFormatItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
