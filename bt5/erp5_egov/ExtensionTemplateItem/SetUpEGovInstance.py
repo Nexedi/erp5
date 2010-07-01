@@ -53,6 +53,8 @@ def allowAccessOnPersonAndOrganisation(self):
                      title='Agent Administratif',
                      role_name='Auditor',
                      role_category_list=role_category_list)
+  for ptype in portal_type_list:
+    ptype.updateRoleMapping()
 
   return '- Access on Person and Organisation allowed for administrative agent'
 
