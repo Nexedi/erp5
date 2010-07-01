@@ -616,33 +616,74 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     ## Try catalog to find descendant movements, knowing
     # that it can be incomplete
 
+    class treeNode(dict):
+      """
+      Used to cache accesses to ZODB objects.
+      The idea is to put in visited_dict the objects we've already
+      loaded from ZODB in Step #2 to avoid loading them again in Step #3.
+
+      - self represents a single ZODB container c
+      - self.visited_dict contains an id->(ZODB obj) cache for subobjects of c
+      - self[id] contains the treeNode representing c[id]
+      """
+      def __init__(self):
+        dict.__init__(self)
+        self.visited_dict = dict()
+
+    path_tree = treeNode()
+    def updateTree(simulation_movement):
+      tree_node = path_tree
+      movement_path = simulation_movement.getPhysicalPath()
+      simulation_movement_id = movement_path[-1]
+      # find container
+      for path_id in movement_path[:-1]:
+        tree_node = tree_node.setdefault(path_id, treeNode())
+      # and mark the object as visited
+      tree_node.visited_dict[simulation_movement_id] = simulation_movement
+
     portal_catalog = self.getPortalObject().portal_catalog
     catalog_simulation_movement_list = portal_catalog(
       portal_type='Simulation Movement',
       causality_uid=[p.getUid() for p in remaining_path_set],
       path='%s/%%' % self.getPath())
 
-    for simulation in catalog_simulation_movement_list:
-      if not isBuiltAndCompleted(simulation, simulation.getCausalityValue()):
+    for movement in catalog_simulation_movement_list:
+      if not isBuiltAndCompleted(movement, movement.getCausalityValue()):
         return False
+      updateTree(movement)
 
     ### Step 3:
     ## We had no luck, we have to explore descendant movements in ZODB
     #
-    def _recurseGetValueList(document):
+    def _recurseGetValueList(document, tree_node):
       """
       generator yielding Simulation Movement descendants of document.
       It does _not_ explore the whole subtree if iteration is stopped.
+
+      It uses the tree we built previously to avoid loading again ZODB
+      objects that we already loaded during catalog querying
       """
-      subdocument_list = document.contentValues()
-      for subdocument in subdocument_list:
-        if subdocument.getPortalType() == "Simulation Movement":
-          yield subdocument
-      for subdocument in subdocument_list:
-        for d in _recurseGetValueList(subdocument):
+      object_id_list = document.objectIds()
+      for id in object_id_list:
+        if id not in tree_node.visited_dict:
+          # we had not visited it in step #2
+          subdocument = document[id]
+          if subdocument.getPortalType() == "Simulation Movement":
+            tree_node.visited_dict[id] = subdocument
+            yield subdocument
+
+      for id, subdocument in tree_node.visited_dict.iteritems():
+        subtree = tree_node.get(id, treeNode())
+        for d in _recurseGetValueList(subdocument, subtree):
           yield d
 
-    for descendant in _recurseGetValueList(self):
+    # descend in the tree to find self:
+    tree_node = path_tree
+    for path_id in self.getPhysicalPath():
+      tree_node = tree_node.setdefault(path_id, treeNode())
+
+    # explore subobjects of self
+    for descendant in _recurseGetValueList(self, tree_node):
       path = descendant.getCausalityValue()
       if path not in remaining_path_set:
         continue
