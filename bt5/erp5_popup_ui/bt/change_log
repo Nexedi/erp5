@@ -1,3 +1,6 @@
+2010-07-01 yo
+* Fix a bug that scripts in every fetched document may be executed. Otherwise, ready callbacks can be executed many times.
+
 2010-06-30 yo
 * Remove jquery from this Business Template. Instead, depend on erp5_jquery.
 

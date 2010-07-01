@@ -88,12 +88,12 @@ jQuery(function() {\n
     jQuery(\'<div class="loading" style="background-color: #AAAAAA; opacity: 0.5; position: absolute; left: 0%; width: 100%; top: 0%; height: 100%; transparent;"><p class="loading" style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p></div>\').appendTo(dialog);\n
     animate();\n
 \n
-    // define  fallback values\n
-    if(method_name==undefined)\n
+    // define fallback values\n
+    if (method_name == undefined)\n
       method_name = \'post\';\n
-    if(method_name==\'post\')\n
+    if (method_name == \'post\')\n
       var caller = jQuery.post;\n
-    if(method_name==\'get\')\n
+    if (method_name == \'get\')\n
       var caller = jQuery.get;\n
     caller(url, query, function(data, textStatus, XMLHttpRequest) {\n
       if (textStatus == \'success\' || textStatus == \'notmodified\') {\n
@@ -101,7 +101,8 @@ jQuery(function() {\n
         dialog.empty();\n
         //jQuery(\'div.loading\', dialog).remove();\n
 \n
-        dialog.html(jQuery(\'<div />\').append(data).find(\'form\'));\n
+        dialog.html(jQuery(\'<div />\').append(data.replace(/<script(.|\\s)*?\\/script>/g, "")).find(\'form\'));\n
+\n
         // XXX Get rid of unneeded stuff in JavaScript for now.\n
         jQuery(\'.bars, .breadcrumb, .logged_in_as\', dialog).remove();\n
         jQuery(\'[id]\', dialog).removeAttr(\'id\');\n
