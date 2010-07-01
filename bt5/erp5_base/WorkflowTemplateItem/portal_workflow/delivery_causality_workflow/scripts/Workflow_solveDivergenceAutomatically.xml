@@ -63,8 +63,8 @@ if solver_tool is None or solver_process_tool is None:\n
   delivery.diverge()\n
   return\n
 else:\n
-  activate_kw = state_change[\'kwargs\'].get(\'activate_kw\') or {}\n
-  delivery.activate(**activate_kw).Delivery_solveDivergenceAutomatically()\n
+  solver_tag = \'%s_solve\' % delivery.getPath()\n
+  delivery.activate(tag=solver_tag).Delivery_solveDivergenceAutomatically()\n
 </string> </value>
         </item>
         <item>
@@ -116,8 +116,7 @@ else:\n
                             <string>None</string>
                             <string>solver_tool</string>
                             <string>solver_process_tool</string>
-                            <string>activate_kw</string>
-                            <string>_apply_</string>
+                            <string>solver_tag</string>
                           </tuple>
                         </value>
                     </item>

@@ -59,9 +59,11 @@ solver_process_tool = delivery.getPortalObject().portal_solver_processes\n
 solver_process = solver_process_tool.newSolverProcess(delivery, temp_object=True)\n
 if solver_process is not None:\n
   solver_process.buildTargetSolverList()\n
-  solver_process.solve()\n
-# XXX It can be required to wait indexing.\n
-delivery.updateCausalityState(solve_automatically=False)\n
+  solver_tag = \'%s_solve\' % delivery.getPath()\n
+  solver_process.solve(activate_kw={\'tag\':solver_tag})\n
+  delivery.activate(after_tag=solver_tag).updateCausalityState(solve_automatically=False)\n
+else:\n
+  delivery.updateCausalityState(solve_automatically=False)\n
 </string> </value>
         </item>
         <item>
@@ -111,8 +113,9 @@ delivery.updateCausalityState(solve_automatically=False)\n
                             <string>_getattr_</string>
                             <string>solver_process_tool</string>
                             <string>True</string>
-                            <string>None</string>
                             <string>solver_process</string>
+                            <string>None</string>
+                            <string>solver_tag</string>
                             <string>False</string>
                           </tuple>
                         </value>
