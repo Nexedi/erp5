@@ -139,6 +139,8 @@ class TestEgov(ERP5TypeTestCase):
       if pref.getPreferenceState() == 'disabled':
         pref.enable()
 
+    transaction.commit()
+    self.tic()
     #set up the instance
     self.portal.EGov_setUpInstance()
 
