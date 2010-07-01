@@ -655,7 +655,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     ### Step 3:
     ## We had no luck, we have to explore descendant movements in ZODB
     #
-    def _recurseGetValueList(document, tree_node):
+    def descendantGenerator(document, tree_node):
       """
       generator yielding Simulation Movement descendants of document.
       It does _not_ explore the whole subtree if iteration is stopped.
@@ -674,7 +674,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
 
       for id, subdocument in tree_node.visited_dict.iteritems():
         subtree = tree_node.get(id, treeNode())
-        for d in _recurseGetValueList(subdocument, subtree):
+        for d in descendantGenerator(subdocument, subtree):
           yield d
 
     # descend in the tree to find self:
@@ -683,7 +683,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       tree_node = tree_node.setdefault(path_id, treeNode())
 
     # explore subobjects of self
-    for descendant in _recurseGetValueList(self, tree_node):
+    for descendant in descendantGenerator(self, tree_node):
       path = descendant.getCausalityValue()
       if path not in remaining_path_set:
         continue
