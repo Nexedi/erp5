@@ -1351,7 +1351,7 @@ class ToolTemplateItem(PathTemplateItem):
     portal = context.getPortalObject()
     types_tool = portal.portal_types
     for type_container_id, obj in self._objects.iteritems():
-      if interfaces.ITypeProvider.isImplementedBy(obj) and \
+      if interfaces.ITypeProvider.providedBy(obj) and \
           type_container_id not in types_tool.type_provider_list:
         types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
                                         (type_container_id,)
