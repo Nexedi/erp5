@@ -98,7 +98,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     if solver_type is None:
       return {}
     else:
-      solver_type.getDefaultConfigurationPropertyDict()
+      return solver_type.getDefaultConfigurationPropertyDict(self)
 
   def getExplanationMessage(self, all=False):
     """
