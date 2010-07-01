@@ -42,7 +42,7 @@ class MinPrice(FIFO):
 
   title = 'MinPrice Solver'
 
-  def setTotalQuantity(self, new_quantity):
+  def setTotalQuantity(self, new_quantity, activate_kw=None):
     """
     """
     result = []
@@ -58,14 +58,15 @@ class MinPrice(FIFO):
         if quantity < remaining_quantity:
           result.append((movement, quantity))
           remaining_quantity -= quantity
-          movement.setQuantity(0)
+          movement.edit(quantity=0, delivery_ratio=0, activate_kw=activate_kw)
         else:
           result.append((movement, remaining_quantity))
-          movement.setQuantity(quantity - remaining_quantity)
+          movement_quantity = quantity - remaining_quantity
+          movement.edit(quantity=movement_quantity,
+                        delivery_ratio=movement_quantity / new_quantity,
+                        activate_kw=activate_kw)
           remaining_quantity = 0
     # Return movement, split_quantity tuples
-    for movement in simulation_movement_list:
-      movement.setDeliveryRatio(movement.getQuantity() / new_quantity)
     return result
 
   def _getSimulationMovementList(self):

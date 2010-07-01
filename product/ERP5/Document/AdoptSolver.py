@@ -60,7 +60,7 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
                            )
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
     Adopt new property to movements or deliveries.
     """
@@ -73,6 +73,9 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
     for movement, simulation_movement_list in delivery_dict.iteritems():
+      if activate_kw is not None:
+        movement.setDefaultActivateParameters(
+          activate_kw=activate_kw, **activate_kw)
       for solved_property in solved_property_list:
         # XXX hardcoded
         if solved_property == 'quantity':
@@ -84,7 +87,8 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
             delivery_ratio = quantity / total_quantity
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
-                                     delivery_error=delivery_error)
+                                     delivery_error=delivery_error,
+                                     activate_kw=activate_kw)
         else:
           # XXX TODO we need to support multiple values for categories or
           # list type property.

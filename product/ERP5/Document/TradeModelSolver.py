@@ -55,7 +55,7 @@ class TradeModelSolver(AcceptSolver):
   zope.interface.implements(interfaces.ISolver,)
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
     Adopt new values to simulation movements, with keeping the original
     one recorded, and then update Trade Model related lines accordingly.
@@ -93,6 +93,9 @@ class TradeModelSolver(AcceptSolver):
     # then expand.
     for movement, simulation_movement_list in delivery_dict.iteritems():
       for simulation_movement in simulation_movement_list:
+        if activate_kw is not None:
+          simulation_movement.setDefaultActivateParameters(
+            activate_kw=activate_kw, **activate_kw)
         value_dict = {}
         for solved_property in solved_property_list:
           new_value = movement.getProperty(solved_property)
@@ -104,12 +107,16 @@ class TradeModelSolver(AcceptSolver):
         for property_id, value in value_dict.iteritems():
           if not simulation_movement.isPropertyRecorded(property_id):
             simulation_movement.recordProperty(property_id)
-          simulation_movement.setMappedProperty(property_id, value)
-        simulation_movement.expand()
+          simulation_movement.setMappedProperty(property_id, value,
+                                                activate_kw=activate_kw)
+        simulation_movement.expand(activate_kw=activate_kw)
 
     # Third, adopt changes on trade model related lines.
     # XXX non-linear case is not yet supported.
     for movement in trade_model_related_movement_list:
+      if activate_kw is not None:
+        movement.setDefaultActivateParameters(
+          activate_kw=activate_kw, **activate_kw)
       for solved_property in solved_property_list:
         if solved_property == 'quantity':
           simulation_movement_list = movement.getDeliveryRelatedValueList()
@@ -121,7 +128,8 @@ class TradeModelSolver(AcceptSolver):
             delivery_ratio = quantity / total_quantity
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
-                                     delivery_error=delivery_error)
+                                     delivery_error=delivery_error,
+                                     activate_kw=activate_kw)
         else:
           # XXX TODO we need to support multiple values for categories or
           # list type property.

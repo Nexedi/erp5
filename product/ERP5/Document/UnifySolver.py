@@ -56,7 +56,7 @@ class UnifySolver(AcceptSolver):
   zope.interface.implements(interfaces.ISolver,)
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
     Adopt new property to simulation movements, with keeping the
     original one recorded.
@@ -72,15 +72,21 @@ class UnifySolver(AcceptSolver):
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
     for movement, simulation_movement_list in delivery_dict.iteritems():
+      if activate_kw is not None:
+        movement.setDefaultActivateParameters(
+          activate_kw=activate_kw, **activate_kw)
       configuration_dict = self.getConfigurationPropertyDict()
       new_value = configuration_dict.get('value')
       movement.setProperty(solved_property, new_value)
       for simulation_movement in simulation_movement_list:
+        if activate_kw is not None:
+          simulation_movement.setDefaultActivateParameters(
+            activate_kw=activate_kw, **activate_kw)
         value_dict = {solved_property:new_value}
         for property_id, value in value_dict.iteritems():
           if not simulation_movement.isPropertyRecorded(property_id):
             simulation_movement.recordProperty(property_id)
           simulation_movement.setMappedProperty(property_id, value)
-        simulation_movement.expand()
+        simulation_movement.expand(activate_kw=activate_kw)
     # Finish solving
     self.succeed()

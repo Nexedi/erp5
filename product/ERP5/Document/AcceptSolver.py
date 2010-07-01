@@ -58,7 +58,7 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
   zope.interface.implements(interfaces.ISolver,)
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
     Adopt new property to simulation movements, with keeping the
     original one recorded.
@@ -69,6 +69,9 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
       solved_property_list = portal_type.getTestedPropertyList()
     for simulation_movement in self.getDeliveryValueList():
+      if activate_kw is not None:
+        simulation_movement.setDefaultActivateParameters(
+        activate_kw=activate_kw, **activate_kw)
       movement = simulation_movement.getDeliveryValue()
       value_dict = {}
       for solved_property in solved_property_list:
@@ -83,6 +86,6 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
         if not simulation_movement.isPropertyRecorded(property_id):
           simulation_movement.recordProperty(property_id)
         simulation_movement.setMappedProperty(property_id, value)
-      simulation_movement.expand()
+      simulation_movement.expand(activate_kw=activate_kw)
     # Finish solving
     self.succeed()

@@ -173,7 +173,7 @@ class SolverProcess(XMLObject, ActiveProcess):
   # ISolver implementation
   # Solver Process Workflow Interface
   #  NOTE: how can we consider that a workflow defines or provides an interface ?
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
       Start solving
     """
@@ -181,7 +181,8 @@ class SolverProcess(XMLObject, ActiveProcess):
     for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
       if isTransitionPossible(solver, 'start_solving'):
         solver.startSolving()
-        solver.activate(active_process=self).solve()
+        solver.activate(active_process=self, activate_kw=activate_kw).solve(
+          activate_kw=activate_kw)
 
   # API
   def isSolverDecisionListConsistent(self):

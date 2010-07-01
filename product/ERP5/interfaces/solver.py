@@ -46,7 +46,7 @@ class ISolver(Interface):
     - find a way to define at which level to solve divergences
       (ex. line, delivery)
   """
-  def solve():
+  def solve(activate_kw=None):
     """
     Start the solving process (and trigger the workflow method
     in solver_process_workflow). At the end the solving process,
