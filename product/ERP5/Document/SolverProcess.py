@@ -243,7 +243,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       causality, delivery_list, solver_list = solver_decision_key
       matched_solver_decision_list = [
         x for x in solver_decision_list \
-        if x.getDeliveryList() == list(delivery_list) and \
+        if x.getDeliveryValueList() == movement_dict.keys() and \
         x.getCausality() == causality]
       if len(matched_solver_decision_list) > 0:
         solver_decision_list.remove(matched_solver_decision_list[0])
