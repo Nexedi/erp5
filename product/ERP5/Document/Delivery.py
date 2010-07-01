@@ -380,7 +380,10 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       if isTransitionPossible(self, 'diverge') and \
           isTransitionPossible(self, 'converge'):
         if self.isDivergent(**kw):
-          if solve_automatically and \
+          # If delivery is not simulated (PackingList.isDivergent()
+          # returns True in such a case), we cannot solve divergence
+          # anyway.
+          if self.isSimulated() and solve_automatically and \
               isTransitionPossible(self, 'solve_automatically'):
             self.solveAutomatically()
           else:
