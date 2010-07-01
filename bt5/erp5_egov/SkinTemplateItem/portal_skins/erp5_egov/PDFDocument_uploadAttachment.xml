@@ -80,7 +80,7 @@ if mode == \'edit\':\n
   for i in range(len(attachment_list)+1)[1:]:\n
     type = getattr(context.getTypeInfo(), "getAttachmentModel%s" % i, None)\n
     title = getattr(context.getTypeInfo(), "getAttachmentTitle%s" % i, None) \n
-    if title is not None and type is not None:\n
+    if title is not None and title() is not None and type is not None and type() is not None:\n
       type_object = context.restrictedTraverse(context.getPortalObject().getUrl()+"/portal_types/"+type())\n
       type_dict[title()] =  type_object.getId()\n
       if type_object.getId() not in type_allowed_content_type_list: \n

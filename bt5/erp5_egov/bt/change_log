@@ -1,11 +1,5 @@
-2010-06-30 mohamadou
-* test if user has access to a module before displaying it.
-
-2010-06-30 mohamadou
-* Add role information in EGov Type
-
-2010-06-30 mohamadou
-* clean EGov_security Extension
+2010-07-01 mayoro
+* Test if the returned title or portal_type of attachments are not None before proceed
 
 2010-06-29 mohamadou
 * Add erp5_egov_security skin folder
