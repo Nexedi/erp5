@@ -101,6 +101,7 @@
                         <string>my_configuration_property_list</string>
                         <string>my_delivery_solver_list</string>
                         <string>my_tested_property_list</string>
+                        <string>my_automatic_solver</string>
                       </list>
                     </value>
                 </item>

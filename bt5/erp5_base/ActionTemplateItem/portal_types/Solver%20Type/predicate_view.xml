@@ -20,7 +20,6 @@
             <value>
               <tuple>
                 <string>action_type/object_view</string>
-                <string>portal_types/Tester Type/7</string>
               </tuple>
             </value>
         </item>
@@ -34,7 +33,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Provides access to common tester properties.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -42,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>solver_view</string> </value>
+            <value> <string>predicate_view</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -58,11 +59,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>2.0</float> </value>
+            <value> <float>3.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Solver Configuration</string> </value>
+            <value> <string>Predicate</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -82,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/SolverType_view</string> </value>
+            <value> <string>string:${object_url}/Predicate_view</string> </value>
         </item>
       </dictionary>
     </pickle>

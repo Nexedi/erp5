@@ -85,6 +85,7 @@ Solver Decision | configuration
 Solver Decision | view
 Solver Tool | view
 Solver Type | action_view
+Solver Type | predicate_view
 Solver Type | role_view
 Solver Type | solver_view
 Solver Type | translation_view

@@ -72,7 +72,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -80,6 +82,9 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_decimal_alignment_enabled</string>
+                        <string>my_decimal_rounding_option</string>
+                        <string>my_decimal_exponent</string>
                       </list>
                     </value>
                 </item>
@@ -87,10 +92,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_decimal_alignment_enabled</string>
-                        <string>my_decimal_rounding_option</string>
-                        <string>my_decimal_exponent</string>
-                        <string>my_description</string>
+                        <string>my_solver_list</string>
                       </list>
                     </value>
                 </item>
