@@ -59,9 +59,9 @@ This script returns a dictionary of possible values for Unify Solver.\n
 solver_decision = context.getCausalityValue()\n
 tester = solver_decision.getCausalityValue()\n
 value_list_dict = {}\n
-for property_id in tester.getTestedProperty():\n
+for property_id in tester.getTestedPropertyList():\n
   value_list = []\n
-  for simulation_movement in configurable.getDeliveryValueList():\n
+  for simulation_movement in context.getDeliveryValueList():\n
     movement = simulation_movement.getDeliveryValue()\n
     value = movement.getProperty(property_id)\n
     if value not in value_list:\n
@@ -70,7 +70,7 @@ for property_id in tester.getTestedProperty():\n
     value = simulation_movement.getProperty(property_id)\n
     if value not in value_list:\n
       value_list.append(value)\n
-  value_list_dict[property_id] = [(x, repr(x)) for x in value_list]\n
+  value_list_dict[property_id] = [(x, str(x)) for x in value_list]\n
 return value_list_dict\n
 </string> </value>
         </item>
@@ -116,7 +116,6 @@ return value_list_dict\n
                             <string>_getiter_</string>
                             <string>property_id</string>
                             <string>value_list</string>
-                            <string>configurable</string>
                             <string>simulation_movement</string>
                             <string>movement</string>
                             <string>value</string>
@@ -124,7 +123,7 @@ return value_list_dict\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
-                            <string>repr</string>
+                            <string>str</string>
                             <string>_write_</string>
                           </tuple>
                         </value>
