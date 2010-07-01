@@ -100,6 +100,18 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     else:
       return solver_type.getDefaultConfigurationPropertyDict(self)
 
+  def getDefaultConfigurationPropertyListDict(self):
+    """
+    Returns a dictionary of possible values for specified
+    configurable object
+    (implementation)
+    """
+    solver_type = self.getSolverValue()
+    if solver_type is None:
+      return {}
+    else:
+      return solver_type.getDefaultConfigurationPropertyListDict(self)
+
   def getExplanationMessage(self, all=False):
     """
     Returns the HTML message that describes the detail of divergences to
