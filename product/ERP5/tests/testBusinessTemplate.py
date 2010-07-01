@@ -763,10 +763,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       group_dict[group] = id_list
     sequence.edit(form_id=form_id, group_dict=group_dict)
 
-  def stepCreateNewFormIntoCustom(self, sequence=None, sequence_list=None):
+  def stepCreateNewFormIntoErp5Base(self, sequence=None, sequence_list=None):
     """Create a new ERP5 Form in a skin folder."""
     ps = self.getSkinsTool()
-    skin_folder = ps._getOb('custom', None)
+    skin_folder = ps._getOb('erp5_base', None)
     self.assertNotEquals(skin_folder, None)
     form_id = 'Geek_view'
     addERP5Form = skin_folder.manage_addProduct['ERP5Form'].addERP5Form
@@ -798,6 +798,19 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skin_folder.manage_delObjects([form_id])
     form = skin_folder._getOb(form_id, None)
     self.assertEquals(form, None)
+
+  def stepRemoveFormFromErp5Base(self, sequence=None, sequence_list=None):
+    """Remove an ERP5 Form."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_base', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    skin_folder.manage_delObjects([form_id])
+    form = skin_folder._getOb(form_id, None)
+    self.assertEquals(form, None)
+
 
   def stepAddFormField(self, sequence=None, sequence_list=None):
     """Add a field to an ERP5 Form."""
@@ -871,10 +884,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertEquals(form, None)
 
-  def stepCheckFormIsNotRemovedFromCustom(self, sequence=None, sequence_list=None):
+  def stepCheckFormIsNotRemovedFromErp5Base(self, sequence=None, sequence_list=None):
     """Check the form is not exist in custom."""
     ps = self.getSkinsTool()
-    skin_folder = ps._getOb('custom', None)
+    skin_folder = ps._getOb('erp5_base', None)
     self.assertNotEquals(skin_folder, None)
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
@@ -5355,7 +5368,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
-                       CreateNewFormIntoCustom \
+                       CreateNewFormIntoErp5Base \
                        CreateSkinFolder \
                        CreateNewForm \
                        CreateNewBusinessTemplate \
@@ -5385,7 +5398,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        Tic \
                        \
                        CheckFormIsRemoved \
-                       CheckFormIsNotRemovedFromCustom \
+                       CheckFormIsNotRemovedFromErp5Base \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
