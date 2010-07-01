@@ -194,7 +194,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     portal_type = configurable.getPortalType()
     if portal_type == 'Solver Decision':
       try:
-        solver_portal_type = self.getSolverValue().getId()
+        solver_portal_type = configurable.getSolverValue().getId()
         solver = None
       except AttributeError:
         return {}
@@ -213,7 +213,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
         pass
 
     if solver is None:
-      solver = self.getParentValue().newContent(
+      solver = configurable.getParentValue().newContent(
         portal_type=solver_portal_type,
         temp_object=True,
         delivery_list=configurable.getDeliveryList(),
