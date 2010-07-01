@@ -763,6 +763,30 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       group_dict[group] = id_list
     sequence.edit(form_id=form_id, group_dict=group_dict)
 
+  def stepCreateNewFormIntoCustom(self, sequence=None, sequence_list=None):
+    """Create a new ERP5 Form in a skin folder."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('custom', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = 'Geek_view'
+    addERP5Form = skin_folder.manage_addProduct['ERP5Form'].addERP5Form
+    addERP5Form(form_id, 'View')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+                      sorted(['left', 'right', 'center', 'bottom', 'hidden']))
+    addField = form.manage_addProduct['Formulator'].manage_addField
+    addField('my_title', 'Title', 'StringField')
+    field = form.get_field('my_title')
+    self.assertEquals(form.get_fields_in_group('left'), [field])
+    group_dict = {}
+    for group in form.get_groups(include_empty=1):
+      id_list = []
+      for field in form.get_fields_in_group(group):
+        id_list.append(field.getId())
+      group_dict[group] = id_list
+
+
   def stepRemoveForm(self, sequence=None, sequence_list=None):
     """Remove an ERP5 Form."""
     ps = self.getSkinsTool()
@@ -838,6 +862,25 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertEquals('First Form Title', form.title)
 
+  def stepCheckFormIsRemoved(self, sequence=None, sequence_list=None):
+    """Check the form is exist in erp5_geek."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertEquals(form, None)
+
+  def stepCheckFormIsNotRemovedFromCustom(self, sequence=None, sequence_list=None):
+    """Check the form is not exist in custom."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('custom', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+
+
   def stepRemoveFormField(self, sequence=None, sequence_list=None):
     """Remove a field from an ERP5 Form."""
     ps = self.getSkinsTool()
@@ -900,6 +943,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       if skin_id in selection:
         selection.remove(skin_id)
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
+
+
+  def stepRemoveFileFromSkinFolder(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove file from Skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    # TODO 
 
   def stepCheckSkinFolderExists(self, sequence=None,sequence_list=None, **kw):
     """
@@ -5288,6 +5341,55 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
+
+  def test_34_RemoveForm(self, quiet=quiet, run=run_all_test):
+    """
+    - Add a form into erp5_geek and custom skin folder
+    - Remove the form from erp5_geek
+    - Check the form is removed from erp5_geek
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Upgrade Form'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateNewFormIntoCustom \
+                       CreateSkinFolder \
+                       CreateNewForm \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveForm \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFormGroups \
+                       RemoveForm \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CreateNewForm \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFormIsRemoved \
+                       CheckFormIsNotRemovedFromCustom \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
 
   def test_getInstalledBusinessTemplate(self):
     self.assertNotEquals(None, self.getPortal()\
