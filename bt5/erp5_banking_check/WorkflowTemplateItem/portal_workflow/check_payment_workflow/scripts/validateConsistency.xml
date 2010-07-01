@@ -108,11 +108,11 @@ if bank_account is None:\n
 # Check the check.\n
 check_number = transaction.getAggregateFreeText()\n
 \n
-# always verify check model as the version may have changed\n
-version = transaction.isUniquePerAccount() and 1 or 2\n
-check_resource = bank_account.BankAccount_getCheckModel(version=version).getRelativeUrl()\n
-if transaction.getAggregateResource() != check_resource:\n
-  transaction.edit(aggregate_resource=check_resource)\n
+# bind check payment with check model\n
+check_resource = bank_account.BankAccount_getCheckModel(\n
+  unique_per_account=transaction.isUniquePerAccount(),\n
+).getRelativeUrl()\n
+transaction.edit(aggregate_resource=check_resource)\n
 \n
 if not check_number:\n
   msg = Message(domain=\'ui\', message="Check not defined.")\n
@@ -212,10 +212,9 @@ elif error[\'error_code\'] != 0:\n
                             <string>price</string>
                             <string>bank_account</string>
                             <string>check_number</string>
-                            <string>version</string>
                             <string>check_resource</string>
-                            <string>context</string>
                             <string>check</string>
+                            <string>context</string>
                             <string>error</string>
                           </tuple>
                         </value>
