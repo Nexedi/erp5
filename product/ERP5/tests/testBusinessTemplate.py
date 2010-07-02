@@ -937,8 +937,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form_id = sequence.get('form_id')
     form = skin_folder._getOb(form_id, None)
     self.assertNotEquals(form, None)
-    title_filed =form._getOb('my_title', None)
-    self.assertNotEquals(title_filed, None)
+    title_field =form._getOb('my_title', None)
+    self.assertNotEquals(title_field, None)
 
   def stepCreateNewObjectInSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
     """
