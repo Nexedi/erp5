@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays download widget of a document.\n
+ \n
+  -->\n
+</tal:block>\n
+\n
+<div class="download-document-format-list-container"\n
+     tal:define="target_format_item_list python: here.getTargetFormatItemList();\n
+                       document_url here/absolute_url">\n
+ <span onClick="javascript:toggleElement(\'div\', \'download-document-format-list-menu\');"> Download</span>\n
+  <div class="download-document-format-list-menu" style="opacity: 0.999999; display: none;">\n
+    <ul>\n
+      <li class="separator"><a tal:attributes="href document_url"> Original </a></li>\n
+      <li tal:repeat="target_format_item target_format_item_list">\n
+        <a tal:attributes="href python: \'%s?format=%s\' %(document_url, target_format_item[1])"\n
+           tal:content="python: target_format_item[0]"/>\n
+      </li>\n
+    </ul>\n
+  </div>\n
+\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_viewDownloadWidget</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

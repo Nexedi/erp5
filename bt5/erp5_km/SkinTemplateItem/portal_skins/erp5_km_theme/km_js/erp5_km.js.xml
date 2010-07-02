@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77887532.32</string> </value>
+            <value> <string>ts78059655.7</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -31,8 +31,8 @@
 
 // Browser gadget toggle section\n
 function toggleSection(section_id, image_id){\n
-  section_obj = getElement(section_id);\n
-  image_obj = getElement(image_id);\n
+  section_obj = MochiKit.DOM.getElement(section_id);\n
+  image_obj = MochiKit.DOM.getElement(image_id);\n
   if(section_obj.style.display==\'none\'){\n
     section_obj.style.display=\'block\';\n
     image_obj.src=\'images/tree_open.png\';}\n
@@ -64,6 +64,12 @@ function toggleDocumentDetailsPopupWindow(dom_id, show, url){\n
     }\n
 }\n
 \n
+// Toggle any element\n
+function toggleElement(tag_name, class_name){\n
+  dom_element = MochiKit.DOM.getFirstElementByTagAndClassName(tag_name, class_name);\n
+  MochiKit.Visual.toggle(dom_element);\n
+}\n
+\n
 MochiKit.DOM.addLoadEvent(setScreenClass);\n
 connect(window, "onresize", setScreenClass);\n
 \n
@@ -82,7 +88,7 @@ function setScreenClass(){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1319</int> </value>
+            <value> <int>1540</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

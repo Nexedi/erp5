@@ -1519,7 +1519,51 @@ div.centeredInner {\n
 /* Search listbox styling */\n
 div.searchDetails, span.found{\n
   padding-top: 5px;\n
-}
+}\n
+\n
+/* Download widget */\n
+div.download-document-format-list-container{\n
+  display:block;\n
+  float:left;\n
+  max-width: 200px;\n
+}\n
+div.download-document-format-list-container span{\n
+  cursor: pointer; \n
+  display:block;\n
+  float:right;\n
+  background:transparent url(km_img/collapse-down-arrow.gif) no-repeat scroll right 6px;\n
+  padding: 3px;\n
+  padding-right: 10px;\n
+  font-weight: bold;\n
+}\n
+\n
+div.download-document-format-list-menu{\n
+  display:block;\n
+  float:left;\n
+  border: 1px solid #ECEBE2;\n
+}\n
+div.download-document-format-list-container span:hover,\n
+div.download-document-format-list-menu ul li:hover{\n
+  background-color: #ECEBE2;\n
+}\n
+div.download-document-format-list-menu ul{\n
+  list-style-type:none;\n
+  padding:0.4em;\n
+  margin-bottom:0;\n
+  margin-top:0;\n
+}\n
+div.download-document-format-list-menu ul li{\n
+  margin-bottom:2px;\n
+}\n
+div.download-document-format-list-menu ul li.separator{\n
+  border-bottom: 1px solid #ECEBE2;\n
+  margin-bottom:5px;\n
+  padding-bottom:3px;\n
+}\n
+\n
+\n
+\n
+
 
 ]]></string> </value>
         </item>

@@ -307,7 +307,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/current_web_document/Document_viewDownloadWidget</string> </value>
+            <value> <string>request/current_web_document/Base_viewDownloadWidget</string> </value>
         </item>
       </dictionary>
     </pickle>
