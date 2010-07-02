@@ -1263,3 +1263,17 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
         # but not in http://www.some.site/at
         base_url = '/'.join(base_url_list[:-1])
     return base_url
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTargetFormatItemList')
+  def getTargetFormatItemList(self):
+    """
+      Returns a list of acceptable formats for conversion
+      in the form of tuples (for listfield in ERP5Form)
+
+      NOTE: it is the responsability of the respecive type based script
+      to provide an extensive list of conversion formats.
+    """
+    method = self._getTypeBasedMethod('getTargetFormatItemList',
+              fallback_script_id='Base_getTargetFormatItemList')
+    return method()
