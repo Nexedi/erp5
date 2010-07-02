@@ -385,9 +385,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
     """
     result = self.getSourceInventoriatedTotalAssetPrice()
     if result is not None :
-      if result > 0 and not self.isCancellationAmount():
-        return result
-      if result < 0 and self.isCancellationAmount():
+      if (result > 0) ^ bool(self.isCancellationAmount()):
         return result
     return 0.0
 
@@ -399,9 +397,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
     """
     result = self.getSourceInventoriatedTotalAssetPrice()
     if result is not None :
-      if result < 0 and not self.isCancellationAmount():
-        return -result
-      if result > 0 and self.isCancellationAmount():
+      if (result < 0) ^ bool(self.isCancellationAmount()):
         return -result
     return 0.0
 
@@ -789,9 +785,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if (quantity < 0 and not self.isCancellationAmount()):
-      return - quantity
-    elif quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return - quantity
     return 0.0
 
@@ -806,8 +800,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0 and not self.isCancellationAmount() \
-      or quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return 0.0
     return quantity
 
@@ -889,8 +882,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0 and not self.isCancellationAmount() \
-      or quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return 0.0
     return quantity
 
@@ -909,9 +901,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if (quantity < 0 and not self.isCancellationAmount()):
-      return - quantity
-    elif quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return - quantity
     return 0.0
   
@@ -930,8 +920,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0 and not self.isCancellationAmount() \
-      or quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return 0.0
     return quantity
 
@@ -950,9 +939,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if (quantity < 0 and not self.isCancellationAmount()):
-      return - quantity
-    elif quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return - quantity
     return 0.0
   
