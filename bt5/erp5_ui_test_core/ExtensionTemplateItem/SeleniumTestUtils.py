@@ -26,17 +26,17 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from App.config import getConfiguration
-from os import sep
+
+import os
+from Products.ERP5 import tests
 
 def Zuite_getTestDocumentsHome(self):
   """
     Get test documents folder as string.
   """
-  instance_home_path = getConfiguration().instancehome
-  instance_home_elements = instance_home_path.split(sep)[:-1]
-  instance_home_elements.append('test_documents')
-  documents_home = sep.join(instance_home_elements)
-  return documents_home
+  return os.path.join(
+               os.path.abspath(
+                  os.path.dirname(tests.__file__)),'test_data')
+
   
   
