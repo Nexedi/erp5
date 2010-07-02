@@ -43,4 +43,6 @@ Role Definition | local_permission_interaction_workflow
 Rounding Model | validation_workflow
 Simulation Movement | simulation_movement_causality_interaction_workflow
 Solver Process | solver_process_workflow
+Solver Type | edit_workflow
+Solver Type | validation_workflow
 Telephone | edit_workflow

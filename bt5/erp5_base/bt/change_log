@@ -1,3 +1,7 @@
+2010-07-02 kazuhiko
+* Use validation_workflow in Solver Type.
+* Use a different view form for Solver Type to display validation_state.
+
 2010-06-30 kazuhiko
 * Reimplement Delivery_solveDivergenceAutomatically by using Solver Process Tool's API instead of ad-hoc way.
 * Move Solver Decision portal type from the experimental erp5_simulation business template to the erp5_base business template.

@@ -100,6 +100,10 @@
   <workflow>solver_process_workflow</workflow>
  </chain>
  <chain>
+  <type>Solver Type</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Telephone</type>
   <workflow>edit_workflow</workflow>
  </chain>

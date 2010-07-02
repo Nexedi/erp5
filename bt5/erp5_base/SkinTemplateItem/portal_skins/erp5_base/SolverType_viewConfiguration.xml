@@ -83,9 +83,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -98,14 +96,12 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_id</string>
-                        <string>my_type_factory_method_id</string>
-                        <string>my_type_init_script_id</string>
-                        <string>my_type_add_permission</string>
-                        <string>my_type_acquire_local_role</string>
-                        <string>my_type_property_sheet_list</string>
-                        <string>my_type_base_category_list</string>
-                        <string>my_type_icon</string>
+                        <string>my_configuration_form_id</string>
+                        <string>my_solver_action_title</string>
+                        <string>my_configuration_property_list</string>
+                        <string>my_delivery_solver_list</string>
+                        <string>my_tested_property_list</string>
+                        <string>my_automatic_solver</string>
                       </list>
                     </value>
                 </item>
@@ -113,11 +109,11 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_type_filter_content_type</string>
-                        <string>my_type_allowed_content_type_list</string>
-                        <string>my_type_hidden_content_type_list</string>
-                        <string>my_type_group_list</string>
-                        <string>my_translated_validation_state_title</string>
+                        <string>my_conflicting_solver_list</string>
+                        <string>my_line_exclusive</string>
+                        <string>my_configuration_groupable</string>
+                        <string>my_line_groupable</string>
+                        <string>my_process_exclusive</string>
                       </list>
                     </value>
                 </item>
@@ -126,7 +122,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SolverType_view</string> </value>
+            <value> <string>SolverType_viewConfiguration</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -134,7 +130,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PortalType_view</string> </value>
+            <value> <string>TesterType_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -150,7 +146,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Portal Type</string> </value>
+            <value> <string>Solver Configuration</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -158,6 +154,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

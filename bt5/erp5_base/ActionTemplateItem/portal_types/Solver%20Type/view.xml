@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/BaseType_view</string> </value>
+            <value> <string>string:${object_url}/SolverType_view</string> </value>
         </item>
       </dictionary>
     </pickle>
