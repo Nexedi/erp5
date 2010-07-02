@@ -73,6 +73,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Sale Invoice Transaction',
               title='First One',
               simulation_state='delivered',
+              reference='1',
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 2),
               lines=(dict(source_value=account_module.receivable,
@@ -86,6 +87,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Sale Invoice Transaction',
               title='Second One',
               simulation_state='delivered',
+              reference='2',
               destination_section_value=self.organisation_module.client_2,
               start_date=DateTime(2006, 2, 2, 1, 1), # XXX we have to force
               # different values of hour minutes, because /for now/ sorting is
@@ -103,6 +105,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               title='Third One',
               portal_type='Sale Invoice Transaction',
               simulation_state='delivered',
+              reference='3',
               # with a person member of the group
               destination_section_value=self.person_module.john_smith,
               start_date=DateTime(2006, 2, 2, 2, 2), # with hour:minutes
@@ -168,14 +171,15 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # test columns values
     line = data_line_list[0]
     self.assertEquals(line.column_id_list,
-        ['specific_reference', 'date', 'title', 'node_title',
-         'mirror_section_title', 'debit', 'credit'])
+        ['specific_reference', 'date', 'title', 'parent_reference',
+          'node_title', 'mirror_section_title', 'debit', 'credit'])
     
     # First Transaction
     self.checkLineProperties(data_line_list[0],
                             specific_reference=first.getSourceReference(),
                             date=DateTime(2006, 2, 2),
                             title='First One',
+                            parent_reference='1',
                             node_title='41',
                             mirror_section_title='Client 1',
                             debit=119.60,
@@ -186,6 +190,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference='',
                             date=None,
                             title='',
+                            parent_reference='',
                             node_title='4457',
                             mirror_section_title='Client 1',
                             debit=0,
@@ -194,6 +199,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference='',
                             date=None,
                             title='',
+                            parent_reference='',
                             node_title='7',
                             mirror_section_title='Client 1',
                             debit=0,
@@ -204,6 +210,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference=second.getSourceReference(),
                             date=DateTime(2006, 2, 2, 1, 1),
                             title='Second One',
+                            parent_reference='2',
                             node_title='41',
                             mirror_section_title='Client 2',
                             debit=239.20,
@@ -212,6 +219,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference='',
                             date=None,
                             title='',
+                            parent_reference='',
                             node_title='4457',
                             mirror_section_title='Client 2',
                             debit=0,
@@ -220,6 +228,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference='',
                             date=None,
                             title='',
+                            parent_reference='',
                             node_title='7',
                             mirror_section_title='Client 2',
                             debit=0,
@@ -232,6 +241,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                               # be displayed, but this rendering level cannot
                               # be tested with this framework
                             title='Third One',
+                            parent_reference='3',
                             node_title='41',
                             mirror_section_title='John Smith',
                             debit=358.80,
@@ -240,6 +250,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference='',
                             date=None,
                             title='',
+                            parent_reference='',
                             node_title='4457',
                             mirror_section_title='John Smith',
                             debit=0,
@@ -250,6 +261,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             # If a title is set on the line, we can see it on
                             # this report
                             title='Line Title',
+                            parent_reference='',
                             node_title='7',
                             mirror_section_title='John Smith',
                             debit=0,
@@ -261,6 +273,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.failIf(stat_line.getColumnProperty('specific_reference'))
     self.failIf(stat_line.getColumnProperty('date'))
     self.failIf(stat_line.getColumnProperty('title'))
+    self.failIf(stat_line.getColumnProperty('parent_reference'))
     self.failIf(stat_line.getColumnProperty('node_title'))
     self.failIf(stat_line.getColumnProperty('mirror_section_title'))
     # when printing the report, the field does the rounding, so we can round in
@@ -332,7 +345,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     # test columns values
     line = data_line_list[0]
     self.assertEquals(line.column_id_list,
-        ['specific_reference', 'date', 'title', 'node_title',
+        ['specific_reference', 'date', 'title', 'parent_reference', 'node_title',
          'mirror_section_title', 'debit', 'credit'])
     
     # First Transaction
@@ -498,6 +511,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Accounting Transaction',
               title='Transaction 1',
               source_reference='1',
+              reference='ref1',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 1),
@@ -510,6 +524,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Accounting Transaction',
               title='Transaction 2',
               source_reference='2',
+              reference='ref2',
               simulation_state='delivered',
               destination_section_value=self.organisation_module.client_1,
               start_date=DateTime(2006, 2, 1, 0, 1),
@@ -523,6 +538,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Payment Transaction',
               title='Transaction 3',
               source_reference='3',
+              reference='ref3',
               simulation_state='delivered',
               source_payment_value=bank1,
               destination_section_value=self.organisation_module.client_1,
@@ -536,6 +552,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Payment Transaction',
               title='Transaction 4',
               destination_reference='4',
+              reference='ref4',
               simulation_state='delivered',
               destination_section_value=self.section,
               destination_payment_value=bank1,
@@ -551,6 +568,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Accounting Transaction',
               title='Transaction 5',
               source_reference='5',
+              reference='ref5',
               simulation_state='delivered',
               source_payment_value=bank2,
               destination_section_value=self.person_module.john_smith,
@@ -564,6 +582,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Purchase Invoice Transaction',
               title='Transaction 6',
               destination_reference='6',
+              reference='ref6',
               simulation_state='delivered',
               destination_payment_value=bank2,
               source_section_value=self.organisation_module.client_1,
@@ -578,6 +597,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Accounting Transaction',
               title='Transaction 7',
               source_reference='7',
+              reference='ref7',
               simulation_state='stopped',
               source_payment_value=bank2,
               destination_section_value=self.organisation_module.client_1,
@@ -592,6 +612,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
               portal_type='Accounting Transaction',
               title='Transaction 8',
               source_reference='8',
+              reference='ref8',
               simulation_state='delivered',
               source_payment_value=bank2,
               destination_section_value=self.organisation_module.client_1,
@@ -767,10 +788,12 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.assertEquals(line.column_id_list,
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle', 'Movement_getMirrorSectionTitle',
+         'Movement_getExplanationReference',
          'debit_price', 'credit_price', 'running_total_price'])
     
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='1',
+                             Movement_getExplanationReference='ref1',
                              date=DateTime(2006, 2, 1),
                              Movement_getExplanationTitle='Transaction 1',
                              Movement_getMirrorSectionTitle='Client 1',
@@ -780,6 +803,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     
     self.checkLineProperties(data_line_list[1],
                              Movement_getSpecificReference='2',
+                             Movement_getExplanationReference='ref2',
                              date=DateTime(2006, 2, 1, 0, 1),
                              Movement_getExplanationTitle='Transaction 2',
                              Movement_getMirrorSectionTitle='Client 1',
@@ -789,6 +813,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     
     self.checkLineProperties(data_line_list[2],
                              Movement_getSpecificReference='3',
+                             Movement_getExplanationReference='ref3',
                              date=DateTime(2006, 2, 2, 0, 2),
                              Movement_getExplanationTitle='Transaction 3',
                              Movement_getMirrorSectionTitle='Client 1',
@@ -798,6 +823,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     self.checkLineProperties(data_line_list[3],
                              Movement_getSpecificReference='4',
+                             Movement_getExplanationReference='ref4',
                              date=DateTime(2006, 2, 2, 0, 3),
                              Movement_getExplanationTitle='Transaction 4',
                              Movement_getMirrorSectionTitle='Client 2',
@@ -807,6 +833,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     self.checkLineProperties(data_line_list[4],
                              Movement_getSpecificReference='5',
+                             Movement_getExplanationReference='ref5',
                              date=DateTime(2006, 2, 2, 0, 4),
                              Movement_getExplanationTitle='Transaction 5',
                              Movement_getMirrorSectionTitle='John Smith',
@@ -816,6 +843,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
     self.checkLineProperties(data_line_list[5],
                              Movement_getSpecificReference='6',
+                             Movement_getExplanationReference='ref6',
                              date=DateTime(2006, 2, 2, 0, 5),
                              Movement_getExplanationTitle='Transaction 6',
                              Movement_getMirrorSectionTitle='Client 1',
@@ -1543,7 +1571,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                 self.portal.organisation_module.client_2.getRelativeUrl()
     request_form['from_date'] = DateTime(2006, 2, 2)
     request_form['at_date'] = DateTime(2006, 2, 2)
-    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category'] = 'group/demo_group/sub1'
     request_form['section_category_strict'] = False
     request_form['simulation_state'] = ['delivered']
     request_form['hide_analytic'] = False
@@ -1556,11 +1584,18 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     data_line_list = [l for l in line_list if l.isDataLine()]
     self.assertEquals(1, len(data_line_list))
 
+    line = data_line_list[0]
+    # mirror section title is not in the list of columns, as a mirror section
+    # is choosen in the dialog
+    self.assertEquals(line.column_id_list,
+        ['Movement_getSpecificReference', 'date',
+         'Movement_getExplanationTitle', 'Movement_getExplanationReference',
+         'debit_price', 'credit_price', 'running_total_price'])
+
     self.checkLineProperties(data_line_list[0],
                              Movement_getSpecificReference='4',
                              date=DateTime(2006, 2, 2, 0, 3),
                              Movement_getExplanationTitle='Transaction 4',
-                             Movement_getMirrorSectionTitle='Client 2',
                              debit_price=400,
                              credit_price=0,
                              running_total_price=400)
@@ -1790,6 +1825,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle', 'section_title',
          'Movement_getMirrorSectionTitle',
+         'Movement_getExplanationReference',
          'debit_price', 'credit_price', 'running_total_price'])
 
     self.checkLineProperties(data_line_list[0],
@@ -3034,7 +3070,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 1',
           date=DateTime(2006, 2, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref1',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=100, running_total_price=-100, )
     
@@ -3043,7 +3079,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 2',
           date=DateTime(2006, 2, 1, 0, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref2',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=200, credit_price=0, running_total_price=100, )
     
@@ -3067,7 +3103,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 1',
           date=DateTime(2006, 2, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref1',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=100, credit_price=0, running_total_price=100, )
     
@@ -3076,7 +3112,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 2',
           date=DateTime(2006, 2, 1, 0, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref2',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=200, running_total_price=-100, )
     
@@ -3085,7 +3121,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 3',
           date=DateTime(2006, 2, 2, 0, 2),
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref3',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=300, credit_price=0, running_total_price=200, )
     
@@ -3095,7 +3131,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           date=DateTime(2006, 2, 2, 0, 5),
           Movement_getExplanationTranslatedPortalType
                 ='Purchase Invoice Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref6',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=600, credit_price=0, running_total_price=800, )
     
@@ -3104,7 +3140,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 8',
           date=DateTime(2006, 2, 3),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref8',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=800, credit_price=0, running_total_price=1600, )
     
@@ -3128,7 +3164,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 4',
           date=DateTime(2006, 2, 2, 0, 3),
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref4',
           Movement_getMirrorSectionTitle='Client 2',
           debit_price=400, credit_price=0, running_total_price=400, )
     
@@ -3145,7 +3181,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 5',
           date=DateTime(2006, 2, 2, 0, 4),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref5',
           Movement_getMirrorSectionTitle='John Smith',
           debit_price=500, credit_price=0, running_total_price=500, )
     
@@ -3162,7 +3198,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 3',
           date=DateTime(2006, 2, 2, 0, 2),
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref3',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=300, running_total_price=-300, )
     
@@ -3171,7 +3207,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 4',
           date=DateTime(2006, 2, 2, 0, 3),
           Movement_getExplanationTranslatedPortalType='Payment Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref4',
           Movement_getMirrorSectionTitle='Client 2',
           debit_price=0, credit_price=400, running_total_price=-700, )
 
@@ -3180,7 +3216,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 5',
           date=DateTime(2006, 2, 2, 0, 4),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref5',
           Movement_getMirrorSectionTitle='John Smith',
           debit_price=0, credit_price=500, running_total_price=-1200, )
 
@@ -3190,7 +3226,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           date=DateTime(2006, 2, 2, 0, 5),
           Movement_getExplanationTranslatedPortalType
                               ='Purchase Invoice Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref6',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=600, running_total_price=-1800, )
 
@@ -3199,7 +3235,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 8',
           date=DateTime(2006, 2, 3),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref8',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=800, running_total_price=-2600, )
     
@@ -3246,7 +3282,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 1',
           date=DateTime(2006, 2, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref1',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=0, credit_price=100, running_total_price=-100, )
     
@@ -3255,7 +3291,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
           Movement_getExplanationTitle='Transaction 2',
           date=DateTime(2006, 2, 1, 0, 1),
           Movement_getExplanationTranslatedPortalType='Accounting Transaction',
-          Movement_getExplanationReference=None,
+          Movement_getExplanationReference='ref2',
           Movement_getMirrorSectionTitle='Client 1',
           debit_price=200, credit_price=0, running_total_price=100, )
     
@@ -3642,7 +3678,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     # test columns values
     line = data_line_list[0]
     self.assertEquals(line.column_id_list,
-        [ 'specific_reference', 'date', 'title',
+        [ 'specific_reference', 'date', 'title', 'parent_reference',
           'project', 'function', 'product_line_translated_title',
           'node_title', 'mirror_section_title', 'debit', 'credit'])
     
@@ -3701,7 +3737,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     # test columns values
     line = data_line_list[0]
     self.assertEquals(line.column_id_list,
-        ['specific_reference', 'date', 'title',
+        ['specific_reference', 'date', 'title', 'parent_reference',
           'node_title', 'mirror_section_title', 'debit', 'credit'])
     
     self.checkLineProperties(data_line_list[0],
@@ -3743,6 +3779,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
          'Movement_getExplanationTitle',
          'project', 'function', 'product_line_translated_title',
          'Movement_getMirrorSectionTitle',
+         'Movement_getExplanationReference',
          'debit_price', 'credit_price', 'running_total_price'])
 
     self.checkLineProperties(data_line_list[0],
@@ -3795,6 +3832,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
         ['Movement_getSpecificReference', 'date',
          'Movement_getExplanationTitle',
          'Movement_getMirrorSectionTitle',
+         'Movement_getExplanationReference',
          'debit_price', 'credit_price', 'running_total_price'])
 
     self.checkLineProperties(data_line_list[0],
