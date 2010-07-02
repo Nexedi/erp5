@@ -433,9 +433,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
     """
     result = self.getDestinationInventoriatedTotalAssetPrice()
     if result is not None :
-      if result > 0 and not self.isCancellationAmount():
-        return result
-      if result < 0 and self.isCancellationAmount():
+      if (result > 0) ^ bool(self.isCancellationAmount()):
         return result
     return 0.0
 
@@ -447,9 +445,7 @@ class Movement(XMLObject, Amount, CompositionMixin):
     """
     result = self.getDestinationInventoriatedTotalAssetPrice()
     if result is not None :
-      if result < 0 and not self.isCancellationAmount():
-        return -result
-      if result > 0 and self.isCancellationAmount():
+      if (result < 0) ^ bool(self.isCancellationAmount()):
         return -result
     return 0.0
 
