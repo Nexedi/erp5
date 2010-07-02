@@ -1,4 +1,4 @@
-ServerRoot "${software_definition:software_home}/parts/apache"
+ServerRoot "${:server_root}"
 
 #Listen 12.34.56.78:80
 Listen ${:httpd_port}
@@ -112,7 +112,7 @@ DocumentRoot "${:httpd_htdocs}"
     Satisfy All
 </FilesMatch>
 
-ErrorLog "${buildout:log-directory}/httpd/error_log"
+ErrorLog "${:error_log}"
 LogLevel warn
 
 <IfModule log_config_module>
@@ -124,7 +124,7 @@ LogLevel warn
       LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" %I %O" combinedio
     </IfModule>
 
-    CustomLog "${buildout:log-directory}/httpd/access_log" common
+    CustomLog "${:access_log}" common
 
 </IfModule>
 
@@ -156,4 +156,4 @@ SSLRandomSeed connect builtin
 
 ${:httpd_extra_conf}
 
-Include ${buildout:var-directory}/etc/*.vhost.conf
+Include ${:include_config}
