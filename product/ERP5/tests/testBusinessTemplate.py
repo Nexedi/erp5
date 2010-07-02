@@ -5438,6 +5438,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckFormIsRemoved \
                        CheckFormIsNotRemovedFromErp5Nerd \
                        CheckFieldTitleIsNotRemovedFromErp5Nerd \
+                       CheckTrashBin \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
