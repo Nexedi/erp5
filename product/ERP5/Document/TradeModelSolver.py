@@ -107,8 +107,7 @@ class TradeModelSolver(AcceptSolver):
         for property_id, value in value_dict.iteritems():
           if not simulation_movement.isPropertyRecorded(property_id):
             simulation_movement.recordProperty(property_id)
-          simulation_movement.setMappedProperty(property_id, value,
-                                                activate_kw=activate_kw)
+          simulation_movement.setMappedProperty(property_id, value)
         simulation_movement.expand(activate_kw=activate_kw)
 
     # Third, adopt changes on trade model related lines.
