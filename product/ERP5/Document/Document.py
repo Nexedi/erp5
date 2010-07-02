@@ -1277,3 +1277,28 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
     method = self._getTypeBasedMethod('getTargetFormatItemList',
               fallback_script_id='Base_getTargetFormatItemList')
     return method()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTargetFormatTitleList')
+  def getTargetFormatTitleList(self):
+    """
+      Returns a list of acceptable formats for conversion
+    """
+    return map(lambda x: x[0], self.getTargetFormatItemList())
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTargetFormatList')
+  def getTargetFormatList(self):
+    """
+      Returns a list of acceptable formats for conversion
+    """
+    return map(lambda x: x[1], self.getTargetFormatItemList())
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'isTargetFormatAllowed')
+  def isTargetFormatAllowed(self, format):
+    """
+      Checks if the current document can be converted
+      into the specified target format.
+    """
+    return format in self.getTargetFormatList()
