@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -245,10 +242,6 @@
                         <string>my_dialog_mode_gross_weight</string>
                         <string>my_dialog_mode_next_container_int_index</string>
                         <string>my_view_mode_trade_condition_specialise_title_list</string>
-                        <string>my_dialog_mode_listbox_inventory</string>
-                        <string>my_dialog_mode_listbox_reference</string>
-                        <string>my_dialog_mode_listbox_title</string>
-                        <string>my_dialog_mode_total_price</string>
                         <string>my_view_mode_efficiency</string>
                         <string>my_view_mode_end_of</string>
                         <string>my_view_mode_lead_time</string>
