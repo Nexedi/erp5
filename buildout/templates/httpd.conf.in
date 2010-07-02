@@ -1,7 +1,7 @@
 ServerRoot "${software_definition:software_home}/parts/apache"
 
 #Listen 12.34.56.78:80
-Listen ${configuration:httpd_port}
+Listen ${:httpd_port}
 
 # LoadModule foo_module modules/mod_foo.so
 LoadModule authn_file_module modules/mod_authn_file.so
@@ -86,7 +86,7 @@ Group daemon
 
 ServerAdmin you@example.com
 
-DocumentRoot "${configuration:httpd_htdocs}"
+DocumentRoot "${:httpd_htdocs}"
 
 <Directory />
     Options FollowSymLinks
@@ -95,7 +95,7 @@ DocumentRoot "${configuration:httpd_htdocs}"
     Deny from all
 </Directory>
 
-<Directory "${configuration:httpd_htdocs}">
+<Directory "${:httpd_htdocs}">
     Options Indexes FollowSymLinks
     AllowOverride None
     Order allow,deny
@@ -129,10 +129,10 @@ LogLevel warn
 </IfModule>
 
 <IfModule alias_module>
-    ScriptAlias /cgi-bin/ "${configuration:httpd_cgibin}"
+    ScriptAlias /cgi-bin/ "${:httpd_cgibin}"
 </IfModule>
 
-<Directory "${configuration:httpd_cgibin}">
+<Directory "${:httpd_cgibin}">
     AllowOverride None
     Options None
     Order allow,deny
@@ -154,6 +154,6 @@ SSLRandomSeed startup builtin
 SSLRandomSeed connect builtin
 </IfModule>
 
-${configuration:httpd_extra_conf}
+${:httpd_extra_conf}
 
 Include ${buildout:var-directory}/etc/*.vhost.conf
