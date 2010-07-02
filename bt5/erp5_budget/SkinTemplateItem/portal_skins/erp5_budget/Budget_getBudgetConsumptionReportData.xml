@@ -83,15 +83,31 @@ else:\n
   budget_list = portal.portal_catalog.searchResults(\n
                                 portal_type=\'Budget\',\n
                                 validation_state=validation_state)\n
+\n
+  group_filtered_budget_list = []\n
+  filtered_budget_list = []\n
+  for budget in budget_list:\n
+    budget = budget.getObject()\n
+    if \'group\' in budget.getVariationBaseCategoryList():\n
+      group_matches = False\n
+      for category in budget.getVariationCategoryList():\n
+        if category.startswith(defined_group): \n
+          group_matches = True\n
+          break\n
+    if not group_matches:\n
+      continue\n
+    group_filtered_budget_list.append(budget)\n
+\n
   if from_date or at_date:\n
-    new_budget_list = []\n
-    for budget in budget_list:\n
+    for budget in group_filtered_budget_list:\n
       if from_date and budget.getStartDateRangeMax() < from_date:\n
         continue\n
       if at_date and budget.getStartDateRangeMin() > at_date:\n
         continue\n
-      new_budget_list.append(budget)\n
-    budget_list = new_budget_list\n
+      filtered_budget_list.append(budget)\n
+    group_filtered_budget_list = filtered_budget_list\n
+\n
+  budget_list = group_filtered_budget_list\n
 \n
 line_list = []\n
 \n
@@ -151,6 +167,8 @@ for budget in budget_list:\n
     level_1_line_list = []\n
 \n
     budget_line_cell_range = budget_line.BudgetLine_asCellRange()\n
+    if len(budget_line_cell_range) == 0:\n
+      continue\n
     if len(budget_line_cell_range) == 1:\n
       # if there\'s only one dimension, we add a virtual level 2, to keep the\n
       # same structure\n
@@ -413,8 +431,12 @@ return pformat(line_list)\n
                             <string>from_date</string>
                             <string>at_date</string>
                             <string>validation_state</string>
-                            <string>new_budget_list</string>
+                            <string>group_filtered_budget_list</string>
+                            <string>filtered_budget_list</string>
                             <string>budget</string>
+                            <string>False</string>
+                            <string>group_matches</string>
+                            <string>True</string>
                             <string>line_list</string>
                             <string>None</string>
                             <string>target_currency_title</string>
@@ -422,7 +444,6 @@ return pformat(line_list)\n
                             <string>conversion_ratio</string>
                             <string>isVisibleCell</string>
                             <string>dict</string>
-                            <string>True</string>
                             <string>budget_line</string>
                             <string>total_level_1_initial_budget</string>
                             <string>total_level_1_current_budget</string>
