@@ -1868,7 +1868,33 @@ return 1
     self.stepTic()
     self.assertTrue(web_page_5==web_page_6)
     self.assertTrue(web_page_6.getRevision()=='7')
+
+  def test_getTargetFormatItemList(self):
+    """
+     Test getting target conversion format item list.
+     Note: this tests assumes the default formats do exists for some content types.
+     as this is a matter of respective oinfiguration of mimetypes_registry & portal_transforms
+     only the basic minium of transorm to formats is tested.
+    """
+    portal_type = 'PDF'
+    module = self.portal.getDefaultModule(portal_type)
+
+    upload_file = makeFileUpload('TEST.Large.Document.pdf')
+    pdf = module.newContent(portal_type=portal_type, file=upload_file)
     
+    self.assertTrue('html' in pdf.getTargetFormatList())
+    self.assertTrue('png' in pdf.getTargetFormatList())
+    self.assertTrue('txt' in pdf.getTargetFormatList())
+
+    web_page=self.portal.web_page_module.newContent(portal_type='Web Page',
+                                                    content_type='text/html')
+    self.assertTrue('odt' in web_page.getTargetFormatList())
+    self.assertTrue('txt' in web_page.getTargetFormatList())
+
+    image=self.portal.image_module.newContent(portal_type='Image',
+                                                    content_type='image/png')
+    self.assertTrue('txt' in image.getTargetFormatList())
+  
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
