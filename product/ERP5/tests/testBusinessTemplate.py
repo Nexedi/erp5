@@ -5426,6 +5426,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        \
+                       CreateNewForm \
+                       \
                        CheckFieldTitleIsNotRemovedFromErp5Nerd \
                        \
                        ImportBusinessTemplate \
