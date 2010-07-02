@@ -1,3 +1,6 @@
+2010-07-02 Kazuhiko
+* Allow Manager to invoke validation_workflow's actions.
+
 2010-06-21 nicolas.dumazet
 * Add Resource_getAssetPrice to compute asset prices.
 
