@@ -1,3 +1,6 @@
+2010-07-02 lucas
+* Improved testCreateNewFile, it is required to wait for activities after adding a new file.
+
 2010-06-15 ivan
 * Add test group
 
