@@ -133,12 +133,21 @@ def setUpEGovSecurityManager(self):
                                                       'Organisation'],)
   return '- EGOV security set up completed'
 
+def publishAllWebPages(self):
+  '''web pages are accessible by anonymous users only if they are published'''
+  web_page_module = self.getPortalObject().web_page_module
+  for web_page in web_page_module.contentValues():
+    if web_page.getValidationState() != 'published':
+      web_page.publish()
+  return '- All web pages are published'
+
 
 def setUpInstance(self):
   '''call all other set up method to prepare the site for eGOV Instance'''
   message_list = []
   message_list.append(setUpEGovSecurityManager(self))
   message_list.append(allowAccessOnPersonAndOrganisation(self))
+  message_list.append(publishAllWebPages(self))
 
   message_list.append('')
   message_list.append('Set Up sequence completed')
