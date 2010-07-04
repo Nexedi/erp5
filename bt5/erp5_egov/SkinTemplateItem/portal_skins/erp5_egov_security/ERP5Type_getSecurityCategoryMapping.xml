@@ -77,20 +77,6 @@ return (\n
   (\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'publication_section\', \'role\', ] ),\n
 \n
 )\n
-\n
-\n
-\n
-return (\n
-# This one combines function, type of procedure and destination to generate a security group\n
-(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'publication_section\', \'destination\'] ),\n
-# This one is the usual group and function security\n
-(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'group\',] ),\n
-# This one is the usual group, function and site security, needed if access rights depend on site\n
-(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'function\', \'group\', \'site\'] ),\n
-# This one is the usual group security\n
-(\'ERP5Type_getSecurityCategoryFromAssignmentStrict\', [\'group\'] ),\n
-(\'ERP5Type_getSecurityCategoryRoot\', [\'group\']),\n
-)\n
 </string> </value>
         </item>
         <item>
