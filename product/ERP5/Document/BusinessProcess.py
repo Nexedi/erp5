@@ -61,7 +61,7 @@ class BusinessProcess(Path, XMLObject):
 
   Business Process completion, dates, etc. are calculated
   always in the context of an explanation. Sometimes, 
-  it is necessary to ignore certain business path to evaluate
+  it is necessary to ignore certain business link to evaluate
   completion or completion dates. This is very true for Union 
   Business Processes. This is the concept of Business Link closure,
   ie. filtering out all Business Link which are not used in an explanation.
@@ -83,12 +83,12 @@ class BusinessProcess(Path, XMLObject):
   - add security declarations
   - why are we using objectValues in some places ?
   - add a property to rules in order to determine whether dates
-    are provided by the rule or by business path. This is an extension
+    are provided by the rule or by business link / trade model path. This is an extension
     of the idea that root applied rules provide date information.
   - use explanation cache more to optimize speed
   - DateTime must be extended in ERP5 to support  +infinite and -infinite 
     like floating points do
-  - support conversions in business path
+  - support conversions in trade model path
 
   RENAMED:
     getPathValueList -> getBusinessLinkValueList
@@ -115,11 +115,98 @@ class BusinessProcess(Path, XMLObject):
   zope.interface.implements(interfaces.IBusinessProcess,
                             interfaces.IArrowBase)
 
+  # ITradeModelPathProcess implementation
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTradeModelPathValueList')
+  def getTradeModelPathValueList(self, trade_phase=None, context=None, **kw):
+    """Returns all Trade Model Path of the current Business Process which
+    are matching the given trade_phase and the optional context.
+
+    trade_phase -- filter by trade phase
+
+    context -- a context to test each Business Link on
+               and filter out Business Link which do not match
+
+    **kw -- same arguments as those passed to searchValues / contentValues
+    """
+    if trade_phase is None:
+      trade_phase = set()
+    elif not isinstance(trade_phase, (list, tuple)):
+      trade_phase = set((trade_phase,))
+    else:
+      trade_phase = set(trade_phase)
+    result = []
+    if kw.get('portal_type', None) is None:
+      kw['portal_type'] = self.getPortalTradeModelPathTypeList()
+    if kw.get('sort_on', None) is None:
+      kw['sort_on'] = 'int_index'
+    original_path_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
+    # Separate the selection of trade model paths into two steps
+    # for easier debugging.
+    # First, collect trade model paths which can be applicable to a given context.
+    path_list = []
+    for path in original_path_list:
+      accept_path = True
+      if trade_phase is not None and not trade_phase.intersection(path.getTradePhaseList()):
+        accept_path = False # Filter our business path which trade phase does not match
+      if accept_path:
+        path_list.append(path)
+    # Then, filter trade model paths by Predicate API.
+    # FIXME: Ideally, we should use the Domain Tool to search business paths,
+    # and avoid using the low level Predicate API. But the Domain Tool does
+    # support the condition above without scripting?
+    for path in path_list:
+      if path.test(context):
+        result.append(path)
+    return result
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getExpectedTradeModelPathStartAndStopDate')
+  def getExpectedTradeModelPathStartAndStopDate(self, explanation, trade_model_path,
+                                                      delay_mode=None):
+    """Returns the expected start and stop dates of given Trade Model Path
+    document in the context of provided explanation.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
+
+    trade_model_path -- a Trade Model Path document
+
+    delay_mode -- optional value to specify calculation mode ('min', 'max')
+                  if no value specified use average delay
+    """
+    if explanation.getPortalType() != 'Applied Rule':
+      raise TypeError('explanation must be an Applied Rule')
+
+    if explanation.getParentValue().getPortalType() == 'Simulation Tool':
+      raise ValueError('explanation must not be a Root Applied Rule')
+
+    trade_date = trade_model_path.getTradeDate()
+    if not trade_date:
+      raise ValueError('a trade_date must be defined on every Trade Model Path')
+
+    reference_date_method_id = trade_model_path.getReferenceDateMethodId()
+    if not reference_date_method_id:
+      raise ValueError('a reference date method must be defined on every Trade Model Path')
+
+    explanation_cache = _getExplanationCache(self, explanation)
+    reference_date = explanation_cache.getReferenceDate(self, trade_date, reference_date_method_id)
+
+    # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)
+    start_date = reference_date + trade_model_path.getPaymentTerm() # XXX-JPS Until better naming
+    if delay_mode == 'min':
+      delay = trade_model_path.getMinDelay()
+    elif delay_mode == 'max':
+      delay = trade_model_path.getMaxDelay()
+    else:
+      delay = (business_link.getMaxDelay() + trade_model_path.getMinDelay()) / 2.0
+    stop_date = start_date + delay
+        
+    return start_date, stop_date
+
   # IBusinessLinkProcess implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessLinkValueList')
   def getBusinessLinkValueList(self, trade_phase=None, context=None,
                                predecessor=None, successor=None, **kw):
-    """Returns all Path of the current BusinessProcess which
+    """Returns all Business Links of the current BusinessProcess which
     are matching the given trade_phase and the optional context.
 
     trade_phase -- filter by trade phase
@@ -145,22 +232,22 @@ class BusinessProcess(Path, XMLObject):
     if kw.get('sort_on', None) is None:
       kw['sort_on'] = 'int_index'
     original_business_link_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
-    # Separate the selection of business paths into two steps
+    # Separate the selection of business links into two steps
     # for easier debugging.
-    # First, collect business paths which can be applicable to a given context.
+    # First, collect business links which can be applicable to a given context.
     business_link_list = []
     for business_link in original_business_link_list:
-      accept_path = True
+      accept_link = True
       if predecessor is not None and business_link.getPredecessor() != predecessor:
-        accept_path = False # Filter our business path which predecessor does not match
+        accept_link = False # Filter our business link which predecessor does not match
       if successor is not None and business_link.getSuccessor() != successor:
-        accept_path = False # Filter our business path which predecessor does not match
+        accept_link = False # Filter our business link which predecessor does not match
       if trade_phase is not None and not trade_phase.intersection(business_link.getTradePhaseList()):
-        accept_path = False # Filter our business path which trade phase does not match
-      if accept_path:
+        accept_link = False # Filter our business link which trade phase does not match
+      if accept_link:
         business_link_list.append(business_link)
-    # Then, filter business paths by Predicate API.
-    # FIXME: Ideally, we should use the Domain Tool to search business paths,
+    # Then, filter business links by Predicate API.
+    # FIXME: Ideally, we should use the Domain Tool to search business links,
     # and avoid using the low level Predicate API. But the Domain Tool does
     # support the condition above without scripting?
     for business_link in business_link_list:
@@ -168,6 +255,7 @@ class BusinessProcess(Path, XMLObject):
         result.append(business_link)
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkCompleted')
   def isBusinessLinkCompleted(self, explanation, business_link):
     """Returns True if given Business Link document
     is completed in the context of provided explanation.
@@ -182,7 +270,7 @@ class BusinessProcess(Path, XMLObject):
       return False
     predecessor_state = business_link.getPredecessor()
     if not predecessor_state:
-      # This is a root business path, no predecessor
+      # This is a root business links, no predecessor
       # so no need to do any recursion
       return True
     if self.isTradeStateCompleted(explanation, predecessor_state):
@@ -190,16 +278,17 @@ class BusinessProcess(Path, XMLObject):
       # given explanation, return True
       # Please note that this is a specific case for a Business Process
       # built using asUnionBusinessProcess. In such business process
-      # a business path may be completed even if its predecessor state
+      # a business link may be completed even if its predecessor state
       # is not
       return True
     # Build the closure business process which only includes those business 
-    # path wich are directly related to the current business path but DO NOT 
+    # links wich are directly related to the current business link but DO NOT 
     # narrow down the explanation else we might narrow down so much that
     # it becomes an empty set
     closure_process = _getBusinessLinkClosure(self, explanation, business_link)
     return closure_process.isTradeStateCompleted(explanation, predecessor_state)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkPartiallyCompleted')
   def isBusinessLinkPartiallyCompleted(self, explanation, business_link):
     """Returns True if given Business Link document
     is partially completed in the context of provided explanation.
@@ -214,7 +303,7 @@ class BusinessProcess(Path, XMLObject):
       return False
     predecessor_state = business_link.getPredecessor()
     if not predecessor_state:
-      # This is a root business path, no predecessor
+      # This is a root business link, no predecessor
       # so no need to do any recursion
       return True
     if self.isTradeStatePartiallyCompleted(explanation, predecessor_state):
@@ -222,94 +311,19 @@ class BusinessProcess(Path, XMLObject):
       # given explanation, return True
       # Please note that this is a specific case for a Business Process
       # built using asUnionBusinessProcess. In such business process
-      # a business path may be partially completed even if its predecessor
+      # a business link may be partially completed even if its predecessor
       # state is not
       return True
     # Build the closure business process which only includes those business 
-    # path wich are directly related to the current business path but DO NOT 
+    # links wich are directly related to the current business link but DO NOT 
     # narrow down the explanation else we might narrow down so much that
     # it becomes an empty set
     closure_process = _getBusinessLinkClosure(explanation, business_link)
     return closure_process.isTradeStatePartiallyCompleted(explanation, 
                                                            predecessor_state)
 
-  def getExpectedBusinessLinkCompletionDate(self, explanation, business_link, 
-                                                       delay_mode=None):
-    """Returns the expected completion date of given Business Link document
-    in the context of provided explanation.
-
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
-
-    business_link -- a Business Link document
-
-    delay_mode -- optional value to specify calculation mode ('min', 'max')
-                  if no value specified use average delay
-    """
-    closure_process = _getBusinessLinkClosure(self, explanation, business_link)
-    # XXX use explanation cache to optimize
-    predecessor = business_link.getPredecessor()
-    if closure_process.isInitialTradeState(predecessor):
-      return business_link.getCompletionDate(explanation)
-
-    # Recursively find reference_date
-    reference_date = closure_process.getExpectedTradeStateCompletionDate(explanation, predecessor)
-    start_date = reference_date + business_link.getPaymentTerm() # XXX-JPS Until better naming
-    if delay_mode == 'min':
-      delay = business_link.getMinDelay()
-    elif delay_mode == 'max':
-      delay = business_link.getMaxDelay()
-    else:
-      delay = (business_link.getMaxDelay() + business_link.getMinDelay()) / 2.0
-    stop_date = start_date + delay
-    
-    completion_date_method_id = business_link.getCompletionDateMethodId()
-    if completion_date_method_id == 'getStartDate':
-      return start_date
-    elif completion_date_method_id == 'getStopDate':
-      return stop_date
-    
-    raise ValueError("Business Link does not support %s complete date method" % completion_date_method_id)    
-
-  def getExpectedTradeModelPathStartAndStopDate(self, explanation, trade_model_path,
-                                                         delay_mode=None):
-    """Returns the expected start and stop dates of given Trade Model Path
-    document in the context of provided explanation.
-
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
-
-    trade_model_path -- a Trade Model Path document
-
-    delay_mode -- optional value to specify calculation mode ('min', 'max')
-                  if no value specified use average delay
-    """
-    if explanation.getPortalType() != 'Applied Rule':
-      raise TypeError('explanation must be an Applied Rule as part of expand process')
-    closure_process = _getBusinessLinkClosure(self, explanation, trade_model_path) # XXX-JPS ???
-    # XXX use explanation cache to optimize
-    trade_date = trade_model_path.getTradeDate()
-    if trade_date is not None:
-      trade_phase = trade_date[len('trade_date/'):] # XXX-JPS quite dirty way
-      reference_date = closure_process.getExpectedTradePhaseCompletionDate(explanation, trade_phase)
-    else:
-      predecessor = business_link.getPredecessor() # XXX-JPS all states are supposed to have a predecessor
-      reference_date = closure_process.getExpectedTradeStateCompletionDate(explanation, predecessor)
-
-    # Recursively find reference_date
-    reference_date = closure_process.getExpectedTradeStateCompletionDate(explanation, predecessor)
-    start_date = reference_date + trade_model_path.getPaymentTerm() # XXX-JPS Until better naming
-    if delay_mode == 'min':
-      delay = trade_model_path.getMinDelay()
-    elif delay_mode == 'max':
-      delay = trade_model_path.getMaxDelay()
-    else:
-      delay = (business_link.getMaxDelay() + trade_model_path.getMinDelay()) / 2.0
-    stop_date = start_date + delay
-        
-    return start_date, stop_date
-
   # IBuildableBusinessLinkProcess implementation
+  security.declareProtected(Permissions.AccessContentsInformation, 'getBuildableBusinessLinkValueList')
   def getBuildableBusinessLinkValueList(self, explanation):
     """Returns the list of Business Link which are buildable
     by taking into account trade state dependencies between
@@ -324,6 +338,7 @@ class BusinessProcess(Path, XMLObject):
         result.append(business_link)
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyBuildableBusinessLinkValueList')
   def getPartiallyBuildableBusinessLinkValueList(self, explanation):
     """Returns the list of Business Link which are partially buildable
     by taking into account trade state dependencies between
@@ -338,6 +353,7 @@ class BusinessProcess(Path, XMLObject):
         result.append(business_link)
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkBuildable')
   def isBusinessLinkBuildable(self, explanation, business_link):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor trade state is completed.
@@ -355,6 +371,7 @@ class BusinessProcess(Path, XMLObject):
     predecessor = business_link.getPredecessor()
     return closure_process.isTradeStateCompleted(predecessor)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkPartiallyBuildable')
   def isBusinessLinkPartiallyBuildable(self, explanation, business_link):
     """Returns True if any of the related Simulation Movement
     is buildable and if the predecessor trade state is partially completed.
@@ -373,6 +390,7 @@ class BusinessProcess(Path, XMLObject):
     return closure_process.isTradeStatePartiallyCompleted(predecessor)
 
   # ITradeStateProcess implementation
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTradeStateList')
   def getTradeStateList(self):
     """Returns list of all trade_state of this Business Process
     by looking at successor and predecessor values of contained
@@ -387,6 +405,7 @@ class BusinessProcess(Path, XMLObject):
       result.add(business_link.getSuccessor())
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isInitialTradeState')
   def isInitialTradeState(self, trade_state):
     """Returns True if given 'trade_state' has no successor related
     Business Link.
@@ -395,6 +414,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return len(self.getBusinessLinkValueList(successor=trade_state)) == 0
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isFinalTradeState')
   def isFinalTradeState(self, trade_state):
     """Returns True if given 'trade_state' has no predecessor related
     Business Link.
@@ -403,10 +423,11 @@ class BusinessProcess(Path, XMLObject):
     """
     return len(self.getBusinessLinkValueList(predecessor=trade_state)) == 0
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSuccessorTradeStateList')
   def getSuccessorTradeStateList(self, explanation, trade_state):
     """Returns the list of successor states in the 
     context of given explanation. This list is built by looking
-    at all successor of business path involved in given explanation
+    at all successor of business link involved in given explanation
     and which predecessor is the given trade_phase.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -420,10 +441,11 @@ class BusinessProcess(Path, XMLObject):
         result.add(business_link.getSuccessor())
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPredecessorTradeStateList')
   def getPredecessorTradeStateList(self, explanation, trade_state):
     """Returns the list of predecessor states in the 
     context of given explanation. This list is built by looking
-    at all predecessor of business path involved in given explanation
+    at all predecessor of business link involved in given explanation
     and which sucessor is the given trade_phase.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -437,6 +459,7 @@ class BusinessProcess(Path, XMLObject):
         result.add(business_link.getPredecessor())
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCompletedTradeStateList')
   def getCompletedTradeStateList(self, explanation):
     """Returns the list of Trade States which are completed
     in the context of given explanation.
@@ -446,6 +469,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return filter(lambda x:self.isTradeStateCompleted(explanation, x), self.getTradeStateList())
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyCompletedTradeStateList')
   def getPartiallyCompletedTradeStateList(self, explanation):
     """Returns the list of Trade States which are partially 
     completed in the context of given explanation.
@@ -455,6 +479,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return filter(lambda x:self.isTradeStatePartiallyCompleted(explanation, x), self.getTradeStateList())
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getLatestCompletedTradeStateList')
   def getLatestCompletedTradeStateList(self, explanation):
     """Returns the list of completed trade states which predecessor
     states are completed and for which no successor state 
@@ -470,6 +495,7 @@ class BusinessProcess(Path, XMLObject):
           result.add(state)
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getLatestPartiallyCompletedTradeStateList')
   def getLatestPartiallyCompletedTradeStateList(self, explanation):
     """Returns the list of completed trade states which predecessor
     states are completed and for which no successor state 
@@ -485,6 +511,7 @@ class BusinessProcess(Path, XMLObject):
           result.add(state)
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isTradeStateCompleted')
   def isTradeStateCompleted(self, explanation, trade_state):
     """Returns True if all predecessor trade states are
     completed and if no successor trade state is completed
@@ -500,6 +527,7 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True      
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isTradeStatePartiallyCompleted')
   def isTradeStatePartiallyCompleted(self, explanation, trade_state):
     """Returns True if all predecessor trade states are
     completed and if no successor trade state is partially completed
@@ -515,25 +543,8 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True      
 
-  def getExpectedTradeStateCompletionDate(self, explanation, trade_state,
-                                                         delay_mode=None):
-    """Returns the date at which the give trade state is expected
-    to be completed in the context of given explanation.
-
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
-
-    trade_state -- a Trade State category
-
-    delay_mode -- optional value to specify calculation mode ('min', 'max')
-                  if no value specified use average delay
-    """
-    date_list = []
-    for business_link in self.getBusinessLinkValueList(successor=trade_state):
-      date_list.append(self.getExpectedBusinessLinkCompletionDate(explanation, business_link))
-    return max(date_list) # XXX-JPS it would be good that date support infinite values
-
   # ITradePhaseProcess implementation
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTradePhaseList')
   def getTradePhaseList(self):
     """Returns list of all trade_phase of this Business Process
     by looking at trade_phase values of contained Business Link.
@@ -543,6 +554,7 @@ class BusinessProcess(Path, XMLObject):
       result = result.union(business_link.getTradePhaseList())
     return result
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getCompletedTradePhaseList')
   def getCompletedTradePhaseList(self, explanation):
     """Returns the list of Trade Phases which are completed
     in the context of given explanation.
@@ -552,6 +564,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return filter(lambda x:self.isTradePhaseCompleted(explanation, x), self.getTradePhaseList())
     
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPartiallyCompletedTradePhaseList')
   def getPartiallyCompletedTradePhaseList(self, explanation):
     """Returns the list of Trade Phases which are partially completed
     in the context of given explanation. 
@@ -561,8 +574,9 @@ class BusinessProcess(Path, XMLObject):
     """
     return filter(lambda x:self.isTradePhasePartiallyCompleted(explanation, x), self.getTradePhaseList())
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isTradePhaseCompleted')
   def isTradePhaseCompleted(self, explanation, trade_phase):
-    """Returns True all business path with given trade_phase
+    """Returns True all business link with given trade_phase
     applicable to given explanation are completed.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -575,8 +589,9 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isTradePhasePartiallyCompleted')
   def isTradePhasePartiallyCompleted(self, explanation, trade_phase):
-    """Returns True at least one business path with given trade_phase
+    """Returns True at least one business link with given trade_phase
     applicable to given explanation is partially completed
     or completed.
 
@@ -590,31 +605,12 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  def getExpectedTradePhaseCompletionDate(self, explanation, trade_phase,
-                                                       delay_mode=None):
-    """Returns the date at which the give trade phase is expected
-    to be completed in the context of given explanation, taking
-    into account the graph of date constraints defined by business path
-    and business states.
-
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
-
-    trade_phase -- a Trade Phase category
-
-    delay_mode -- optional value to specify calculation mode ('min', 'max')
-                  if no value specified use average delay
-    """
-    date_list = []
-    for business_link in self.getBusinessLinkValueList(trade_phase=trade_phase):
-      date_list.append(self.getExpectedBusinessLinkCompletionDate(explanation, business_link, delay_mode=delay_mode))
-    return max(date_list)
-
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRemainingTradePhaseList')
   def getRemainingTradePhaseList(self, business_link, trade_phase_list=None):
     """Returns the list of remaining trade phases which to be achieved
     as part of a business process. This list is calculated by analysing 
-    the graph of business path and trade states, starting from a given
-    business path. The result if filtered by a list of trade phases. This
+    the graph of business link and trade states, starting from a given
+    business link. The result if filtered by a list of trade phases. This
     method is useful mostly for production and MRP to manage a distributed
     supply and production chain.
 
@@ -633,16 +629,16 @@ class BusinessProcess(Path, XMLObject):
     API less uniform.
     """
     remaining_trade_phase_list = []
-    for path in [x for x in self.objectValues(portal_type="Business Link") \
+    for link in [x for x in self.objectValues(portal_type="Business Link") \
         if x.getPredecessorValue() == trade_state]:
-      # XXX When no simulations related to path, what should path.isCompleted return?
+      # XXX When no simulations related to link, what should link.isCompleted return?
       #     if True we don't have way to add remaining trade phases to new movement
-      if not (path.getRelatedSimulationMovementValueList(explanation) and
-              path.isCompleted(explanation)):
-        remaining_trade_phase_list += path.getTradePhaseValueList()
+      if not (link.getRelatedSimulationMovementValueList(explanation) and
+              link.isCompleted(explanation)):
+        remaining_trade_phase_list += link.getTradePhaseValueList()
 
       # collect to successor direction recursively
-      state = path.getSuccessorValue()
+      state = link.getSuccessorValue()
       if state is not None:
         remaining_trade_phase_list.extend(
           self.getRemainingTradePhaseList(explanation, state, None))
@@ -655,6 +651,7 @@ class BusinessProcess(Path, XMLObject):
 
     return remaining_trade_phase_list
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTradePhaseMovementList')
   def getTradePhaseMovementList(self, explanation, amount, trade_phase=None, delay_mode=None):
     """Returns a list of movement with appropriate arrow and dates,
     based on the Business Link definitions, provided 'amount' and optional
@@ -681,7 +678,7 @@ class BusinessProcess(Path, XMLObject):
     result = []
     id_index = 0
     base_id = amount.getId()
-    for business_link in self.getTradePathValueList(context=amount, trade_phase=trade_phase):
+    for business_link in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
       movement = newTempMovement(business_link, '%s_%s' % (base_id, id_index))
       kw = self._getPropertyAndCategoryDict(explanation, amount, business_link, delay_mode=delay_mode)
@@ -765,19 +762,20 @@ class BusinessProcess(Path, XMLObject):
         # applied rules which are not root applied rules. 
         # XXX-JPS could be extended with a rule property instead
         # of supports only in root applied rule case
-        start_date, stop_date = self.getExpectedTradePathStartAndStopDate(
+        start_date, stop_date = self.getExpectedTradeModelPathStartAndStopDate(
                                explanation, business_link, delay_mode=delay_mode)
         property_dict['start_date'] = start_date
         property_dict['stop_date'] = stop_date
     else:
       raise TypeError("Explanation must be an Applied Rule in expand process") # Nothing to do
 
-    # Set causality to business path
+    # Set causality to business link
     property_dict['causality'] = business_link.getRelativeUrl() # XXX-JPS Will not work if we do not use real object
 
     return property_dict 
 
   # IBusinessProcess global API
+  security.declareProtected(Permissions.AccessContentsInformation, 'isCompleted')
   def isCompleted(self, explanation):
     """Returns True is all applicable Trade States and Trade Phases
     are completed in the context of given explanation.
@@ -789,24 +787,8 @@ class BusinessProcess(Path, XMLObject):
       if not state.isTradeStateCompleted(explanation):
         return False
     return True
-
-  def getExpectedCompletionDate(self, explanation, delay_mode=None):
-    """Returns the expected date at which all applicable Trade States and
-    Trade Phases are completed in the context of given explanation.
-
-    explanation -- an Order, Order Line, Delivery or Delivery Line or
-                   Applied Rule which implicitely defines a simulation subtree
-    """
-    date_list = []
-    # This implementation looks completely silly in the sense that it does
-    # not try to find a "final" state. However, it has the advantage to support
-    # negative delays in business path and propper optimization of ExplanationCache
-    # and completion methods should actually prevent calculating the same
-    # thing multiple times
-    for trade_state in self.getTradeStateList():
-      date_list.append(self.getExpectedTradeStateCompletionDate(explanation, delay_mode=delay_mode))
-    return max(date_list)
   
+  security.declareProtected(Permissions.AccessContentsInformation, 'isBuildable')
   def isBuildable(self, explanation):
     """Returns True is one Business Link of this Business Process
     is buildable in the context of given explanation.
@@ -816,6 +798,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return len(self.getBuildableBusinessLinkValueList(explanation)) != 0
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isPartiallyBuildable')
   def isPartiallyBuildable(self, explanation):
     """Returns True is one Business Link of this Business Process
     is partially buildable in the context of given explanation.
@@ -825,6 +808,7 @@ class BusinessProcess(Path, XMLObject):
     """
     return len(self.getPartiallyBuildableBusinessLinkValueList(explanation)) != 0
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'build')
   def build(self, explanation):
     """
       Build whatever is buildable

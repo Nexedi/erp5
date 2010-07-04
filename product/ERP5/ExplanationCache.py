@@ -203,8 +203,8 @@ class ExplanationCache:
     NOTE: Business Link Closure must be at least as "big" as composed 
     business path. The appropriate calculation is still not clear. 
     Options are:
-      - take all path of composed business path (even not yet expanded)
-      - take all path of composed business path which phase is not yet expanded
+      - take all link of composed business link (even not yet expanded)
+      - take all link of composed business link which phase is not yet expanded
     """
     # Try to return cached value first
     new_business_process = self.closure_cache.get(business_link, None)
@@ -271,6 +271,43 @@ class ExplanationCache:
     self.union_cache = new_business_process
     return new_business_process
 
+  def getReferenceDate(self, business_process, trade_phase, reference_date_method_id, delay_mode=None):
+    """Browse parent similation movements until a movement with
+    appropriate trade_phase is found.
+    """
+    # Find simulation movements with appropriate trade_phase
+    movement_list = self.getSimulationMovementValueList(trade_phase=trade_phase)
+
+    # Case 1: some (parent) simulation movement with appropriate trade phase exists
+    if len(movement_list):
+      # XXX-JPS - for now take arbitrary one
+      # but we should in reality some way to configure this
+      movement = movement_list[0]
+      method = getattr(movement, reference_date_method_id)
+      return method()
+
+    # Case 2: we must recursively find another trade phase
+    # to find the value recursively
+    # XXX-JPS this is only useful for production (MRP) in reality
+    # whenever trade model path define time constraints within the same
+    # movement generator (ie. transformation with multiple phases)
+    path_list = business_process.getTradeModelPathValueList(trade_phase=trade_phase)
+    if not len(path_list):
+      raise ValueError('No Trade Model Path defines a reference data.')
+
+    path = path_list[0] 
+    # XXX-JPS - for now take arbitrary one
+    # but we should in reality some way to configure this
+    start_date, stop_date = business_process.getExpectedTradeModelPathStartAndStopDate(
+                                   self.explanation, path, delay_mode=delay_mode)
+
+    # Create a fake simulation movement and lookup property
+    movement = self.explanation.newContent(portal_type="Simulation Movement", 
+                                           temp_object=True, 
+                                           start_date=start_date, stop_date=stop_date,
+                                           trade_phase=trade_phase, causality=path)
+    method = getattr(movement, reference_date_method_id)
+    return method()
 
 def _getExplanationCache(explanation):
   # Return cached value if any

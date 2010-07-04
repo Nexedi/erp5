@@ -28,26 +28,25 @@
 #
 ##############################################################################
 
-class BusinessLink:
+class TradeModelPath:
     """
-      Business Link properties
+      Trade Model Path properties
     """
     _properties = (
-        {   'id'          : 'completed_state',
-            'description' : 'List of states for which related Simulation '
-                            'Movement is considered as completed',
-            'type'        : 'lines',
-            'default'     : [],
-            'multivalued' : 1,
+        {   'id'          : 'source_method_id',
+            'description' : 'ID of method to get source list of categories',
+            'type'        : 'string',
             'mode'        : 'w' },
-        {   'id'          : 'frozen_state',
-            'description' : 'List of states for which related Simulation '
-                            'Movement is considered as frozen',
-            'type'        : 'lines',
-            'default'     : [],
-            'multivalued' : 1,
+        {   'id'          : 'destination_method_id',
+            'description' : 'ID of method to get destination list of categories',
+            'type'        : 'string',
+            'mode'        : 'w' },
+        {   'id'          : 'reference_date_method_id',
+            'description' : 'ID of method to get the reference date at the trade_phase defined by trade_date',
+            'type'        : 'string',
+            'default'     : 'getStopDate',
             'mode'        : 'w' },
     )
 
-    _categories = ('delivery_builder', 'order_builder', 'end_of', # XXX-JPS why end_of
-                   'trade_phase' , 'incoterm') # XXX-JPS why incoterm
+    _categories = ('end_of', # XXX-JPS What is end_of ????
+                   'trade_phase' , 'incoterm') # XXX-JPS why incoterm ?
