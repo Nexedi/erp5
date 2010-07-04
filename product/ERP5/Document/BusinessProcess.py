@@ -678,10 +678,10 @@ class BusinessProcess(Path, XMLObject):
     result = []
     id_index = 0
     base_id = amount.getId()
-    for business_link in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
+    for trade_model_path in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
-      movement = newTempMovement(business_link, '%s_%s' % (base_id, id_index))
-      kw = self._getPropertyAndCategoryDict(explanation, amount, business_link, delay_mode=delay_mode)
+      movement = newTempMovement(trade_model_path, '%s_%s' % (base_id, id_index))
+      kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
       movement._edit(**kw)
       result.append(movement)
 
@@ -708,7 +708,7 @@ class BusinessProcess(Path, XMLObject):
 
     return stripped_result
 
-  def _getPropertyAndCategoryDict(self, explanation, amount, business_link, delay_mode=None):
+  def _getPropertyAndCategoryDict(self, explanation, amount, trade_model_path, delay_mode=None):
     """A private method to merge an amount and a business_link and return
     a dict of properties and categories which can be used to create a
     new movement.
@@ -718,7 +718,7 @@ class BusinessProcess(Path, XMLObject):
 
     amount -- an IAmount instance or an IMovement instance
  
-    business_link -- an IBusinessLink instance
+    trade_model_path -- an ITradeModelPath instance
 
     delay_mode -- optional value to specify calculation mode ('min', 'max')
                   if no value specified use average delay
@@ -737,16 +737,16 @@ class BusinessProcess(Path, XMLObject):
 
     # Arrow categories
     for base_category, category_url_list in \
-            business_link.getArrowCategoryDict(context=amount).iteritems():
+            trade_model_path.getArrowCategoryDict(context=amount).iteritems():
       property_dict[base_category] = category_url_list
 
     # Amount quantities - XXX-JPS maybe we should consider handling unit conversions here
     # and specifying units
-    if business_link.getQuantity():
-      property_dict['quantity'] = business_link.getQuantity()
+    if trade_model_path.getQuantity():
+      property_dict['quantity'] = trade_model_path.getQuantity()
     elif business_link.getEfficiency():
       property_dict['quantity'] = amount.getQuantity() *\
-        business_link.getEfficiency()
+        trade_model_path.getEfficiency()
     else:
       property_dict['quantity'] = amount.getQuantity()
 
@@ -763,14 +763,14 @@ class BusinessProcess(Path, XMLObject):
         # XXX-JPS could be extended with a rule property instead
         # of supports only in root applied rule case
         start_date, stop_date = self.getExpectedTradeModelPathStartAndStopDate(
-                               explanation, business_link, delay_mode=delay_mode)
+                               explanation, trade_model_path, delay_mode=delay_mode)
         property_dict['start_date'] = start_date
         property_dict['stop_date'] = stop_date
     else:
       raise TypeError("Explanation must be an Applied Rule in expand process") # Nothing to do
 
-    # Set causality to business link
-    property_dict['causality'] = business_link.getRelativeUrl() # XXX-JPS Will not work if we do not use real object
+    # Set causality to trade model path
+    property_dict['causality'] = trade_model_path.getRelativeUrl() # XXX-JPS Will not work if we do not use real object
 
     return property_dict 
 
