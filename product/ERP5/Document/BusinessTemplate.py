@@ -1159,10 +1159,9 @@ class ObjectTemplateItem(BaseTemplateItem):
                                         sub_content_id in container.objectIds()])
       fillRecursivePathList(self._objects.keys())
       for recursive_path in recursive_path_list:
-        remove_action_tuple = ('remove', 'save_and_remove')
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
-          if action in remove_action_tuple:
+          if action in ('remove', 'save_and_remove'):
             document = portal.restrictedTraverse(recursive_path, None)
             if document is None:
               # It happens if the parent of target path is removed before
@@ -1176,11 +1175,6 @@ class ObjectTemplateItem(BaseTemplateItem):
             container_path_list = recursive_path.split('/')[:-1]
             self._backupObject(action, trashbin, container_path_list,
                                document_id)
-            container_path = os.path.dirname(recursive_path)
-            if container_path in update_dict and \
-              update_dict[container_path] in remove_action_tuple:
-              # If parent is removed, no need to remove the sub directory.
-              continue
             parent.manage_delObjects([document_id])
     else:
       # for old business template format
@@ -1231,12 +1225,6 @@ class ObjectTemplateItem(BaseTemplateItem):
           unregisterSkinFolder(container, skin_folder,
               container.getSkinSelections())
 
-        remove_dict = kw.get('remove_object_dict', {})
-        container_path_name = os.path.dirname(relative_url)
-        if container_path_name in remove_dict and \
-          remove_dict[container_path_name] in ('remove', 'save_and_remove'):
-          # If parent is removed, no need to remove the sub directory.
-          continue
         container.manage_delObjects([object_id])
         if container.aq_parent.meta_type == 'ERP5 Catalog' and not len(container):
           # We are removing a ZSQLMethod, remove the SQLCatalog if empty
