@@ -206,6 +206,10 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
 
         self.fail(self.message)
 
+  def afterSetUp(self):
+    self.portal.Localizer._default_language = 'en'
+    self.portal.Localizer.set_languages(['en', 'fr'])
+
   def test_01_EnglishTranslation(self, quiet=0, run=run_all_test):
     """
     Test English translation
@@ -274,7 +278,7 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
 
     transaction.commit()
     self.tic()
-    self.portal.Localizer.get_selected_language = lambda: self.lang
+    self.portal.Localizer._default_language = 'fr'
 
     self.assertEquals(item.getTranslatedValidationStateTitle(), 'Draft')
     item.validate()
@@ -283,10 +287,17 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
                       'Validé')
     # Now run indexation of translations.
     self.portal.ERP5Site_updateTranslationTable()
+    transaction.commit()
+    self.tic()
     # Ckeck queries with translated workflow state title generated with
     # getMessageIdWithContext
-    self.assertTrue(len(self.portal.portal_catalog(
-                            translated_validation_state_title="En bon usage")))
+    self.assertEquals(1, len(self.portal.portal_catalog(
+      translated_validation_state_title="En bon usage")))
+    self.assertEquals(1, len(self.portal.portal_catalog(
+      translated_validation_state_title="En bon usage", portal_type='Item')))
+    self.assertEquals(0, len(self.portal.portal_catalog(
+      translated_validation_state_title="En bon usage",
+      portal_type='Organisation')))
 
   @expectedFailure
   def test_07_NegatedQueryForTranslation(self, quiet=0, run=run_all_test):
