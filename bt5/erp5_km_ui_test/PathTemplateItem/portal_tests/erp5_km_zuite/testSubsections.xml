@@ -112,14 +112,12 @@
   <td>link=Section 1</td>\n
   <td></td>\n
 </tr>\n
-\n
 <!--  add "Subsections" gadget -->\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_subsection&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>\n
   <td></td>\n
 </tr>\n
-\n
 <tr>\n
   <td>waitForTextPresent</td>\n
   <td>Subsections</td>\n

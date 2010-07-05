@@ -57,7 +57,7 @@
 \n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -122,7 +122,6 @@
   <td>field_your_search_text</td>\n
   <td>Pouet_NO_EXISTS</td>\n
 </tr>\n
-\n
 <tr>\n
   <td>type</td>\n
   <td>field_your_search_text_listbox</td>\n
@@ -138,7 +137,6 @@
   <td>//tr[@id=\'listbox_data_line_0\']//span[@class=\'search_result_title\']</td>\n
   <td>test_km_web_site_page</td>\n
 </tr>\n
-\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n

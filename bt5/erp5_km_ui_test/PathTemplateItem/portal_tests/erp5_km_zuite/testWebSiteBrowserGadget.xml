@@ -133,9 +133,6 @@
   <td></td>\n
 </tr>\n
 \n
-\n
-\n
-\n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
 </tbody></table>\n
