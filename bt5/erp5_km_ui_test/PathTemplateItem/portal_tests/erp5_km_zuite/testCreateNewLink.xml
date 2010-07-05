@@ -56,7 +56,7 @@
 \n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/view</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -137,7 +137,7 @@
 <!-- Test bad link -->\n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

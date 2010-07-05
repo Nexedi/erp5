@@ -58,10 +58,9 @@
 \n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/view</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
-\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>link=Section 1</td>\n
@@ -168,7 +167,6 @@
   <td>This section has no description yet.</td>\n
   <td></td>\n
 </tr>\n
-\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n

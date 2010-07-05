@@ -58,7 +58,7 @@
 \n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/view</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -139,6 +139,22 @@
 </tr>\n
 \n
 <!-- Add Latest Content Gadget -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site/1/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_latest_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>\n
