@@ -3456,7 +3456,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           invoice_line.getDeliveryRelatedValue(portal_type='Simulation Movement'
               ).getQuantity())
 
-    if self.portal._getOb('portal_solvers', None) is not None:
+    if invoice_line.getDeliveryRelatedValue().getParentValue().getSpecialiseId() == \
+        'new_invoice_simulation_rule':
       # With new simulation solvers, changes on simulation movements will
       # not backtrack.
       pass
