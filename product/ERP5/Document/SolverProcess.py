@@ -241,15 +241,17 @@ class SolverProcess(XMLObject, ActiveProcess):
     solver_decision_list = self.objectValues(portal_type='Solver Decision')
     for solver_decision_key, movement_dict in solver_decision_dict.items():
       causality, delivery_list, solver_list = solver_decision_key
+      movement_url_list = [x.getRelativeUrl() for x in movement_dict.keys()]
+      movement_url_list.sort()
       matched_solver_decision_list = [
         x for x in solver_decision_list \
-        if x.getDeliveryValueList() == movement_dict.keys() and \
+        if sorted(x.getDeliveryList()) == movement_url_list and \
         x.getCausality() == causality]
       if len(matched_solver_decision_list) > 0:
         solver_decision_list.remove(matched_solver_decision_list[0])
       else:
         new_decision = self.newContent(portal_type='Solver Decision')
-        new_decision._setDeliveryValueList(movement_dict.keys())
+        new_decision._setDeliveryList(movement_url_list)
         new_decision._setCausality(solver_decision_key[0])
         # If we have only one available automatic solver, we just use it
         # automatically.
