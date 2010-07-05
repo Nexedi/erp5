@@ -64,7 +64,8 @@
                tal:condition="exists_siblings">\n
              <img src="images/tree_closed.png" \n
                   alt=""\n
-                  tal:attributes="id image_dom_id"/>\n
+                  tal:attributes="id image_dom_id;\n
+                                  onclick python: \'toggleSection(\\\'%s\\\', \\\'%s\\\')\' %(section_dom_id, image_dom_id)"/>\n
              <span tal:content="root_section/Base_getTitle"\n
                    style="cursor:pointer;"\n
                    tal:attributes="onclick python: \'toggleSection(\\\'%s\\\', \\\'%s\\\')\' %(section_dom_id, image_dom_id)"/>\n
