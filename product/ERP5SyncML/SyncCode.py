@@ -92,6 +92,7 @@ class SyncCode(Persistent):
   text_type_list = ('text','string')
   list_type_list = list_types
   none_type = 'None'
+  boolean_type = 'boolean'
   force_conflict_list = ('layout_and_schema','ModificationDate')
   binary_type_list = ('image','file','document','pickle')
   date_type_list = ('date',)

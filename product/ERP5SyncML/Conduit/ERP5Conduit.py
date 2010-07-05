@@ -822,6 +822,13 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       data = DateTime(data)
     elif data_type in self.int_type_list:
       data = int(data)
+    elif data_type == self.boolean_type:
+      if data == 'False':
+        data = False
+      elif data == 'True':
+        data = True
+      else:
+        raise NotImplementedError
     return data
 
 
