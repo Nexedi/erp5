@@ -191,7 +191,7 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     # use Quantity Split Solver.
     quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Solver'])
     # configure for Quantity Split Solver.
-    kw = {'delivery_solver':'FIFO',
+    kw = {'delivery_solver':'FIFO Delivery Solver',
           'start_date':self.datetime + 15,
           'stop_date':self.datetime + 25}
     quantity_solver_decision.updateConfiguration(**kw)
@@ -419,7 +419,7 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
     quantity_solver_decision.setSolverValue(
         self.portal.portal_solvers['Quantity Split Solver'])
     # configure for Quantity Split Solver.
-    kw = {'delivery_solver':'FIFO',
+    kw = {'delivery_solver':'FIFO Delivery Solver',
           'start_date':packing_list.getStartDate() + 10}
     quantity_solver_decision.updateConfiguration(**kw)
     solver_process.buildTargetSolverList()
