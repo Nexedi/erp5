@@ -100,7 +100,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     else:
       return solver_type.getDefaultConfigurationPropertyDict(self)
 
-  def getDefaultConfigurationPropertyListDict(self):
+  def getConfigurationPropertyListDict(self):
     """
     Returns a dictionary of possible values for specified
     configurable object
@@ -110,7 +110,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     if solver_type is None:
       return {}
     else:
-      return solver_type.getDefaultConfigurationPropertyListDict(self)
+      return solver_type.getConfigurationPropertyListDict(self)
 
   def getExplanationMessage(self, all=False):
     """
