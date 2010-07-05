@@ -161,6 +161,16 @@
 </tr>\n
 <tr>\n
   <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
@@ -172,7 +182,7 @@
 <tr>\n
   <td>waitForCondition</td>\n
   <td>selenium.isTextPresent("Test person")</td>\n
-  <td>10000</td> \n
+  <td>20000</td> \n
 </tr>\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n

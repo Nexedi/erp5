@@ -69,12 +69,22 @@
 </tr>\n
 <tr>\n
   <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForCondition</td>\n
-  <td>selenium.isTextPresent("Section 1")</td>\n
+  <td>selenium.isTextPresent("Web Site Browser")</td>\n
   <td>10000</td> \n
 </tr>\n
 <tr>\n
