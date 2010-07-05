@@ -12,7 +12,7 @@
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Open Purchase Order">
-  <item>Open Sale Order Line</item>
+  <item>Open Purchase Order Line</item>
   <item>Payment Condition</item>
  </portal_type>
  <portal_type id="Open Purchase Order Module">

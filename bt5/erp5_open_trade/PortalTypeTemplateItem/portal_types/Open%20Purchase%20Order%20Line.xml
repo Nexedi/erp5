@@ -30,7 +30,7 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
@@ -38,16 +38,15 @@
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
-            <value> <string>ERP5 Order</string> </value>
+            <value> <string>ERP5 Order Line</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Open Sale Order is used for selling something repeatedly or recurrently.\n
-It defines what will be sold and how often and how many.</string> </value>
+            <value> <string>Sale order lines are part of sale orders and bear the different product or service references that have been sold by the company.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addOrder</string> </value>
+            <value> <string>addOrderLine</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -57,17 +56,17 @@ It defines what will be sold and how often and how many.</string> </value>
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>order</string>
+                <string>order_movement</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Open Purchase Order</string> </value>
+            <value> <string>Open Purchase Order Line</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string>Delivery_generateReference</string> </value>
+            <value> <string>OrderLine_init</string> </value>
         </item>
         <item>
             <key> <string>permission</string> </key>

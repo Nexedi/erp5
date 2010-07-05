@@ -4,6 +4,10 @@
   <workflow>rule_validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Open Purchase Order Line</type>
+  <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
+ </chain>
+ <chain>
   <type>Open Sale Order</type>
   <workflow>edit_workflow, open_order_workflow</workflow>
  </chain>
