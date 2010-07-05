@@ -171,11 +171,15 @@ class TestERP5SyncMLMixin:
     person_server = self.getPersonServer()
     person1 = person_server.newContent(id=self.id1, portal_type='Person')
     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
-          'description':self.description1}
+          'description':self.description1,
+          'default_telephone_text': 'call me at this phone number',
+          'default_career_title': 'My Career Step'}
     person1.edit(**kw)
     person2 = person_server.newContent(id=self.id2, portal_type='Person')
     kw = {'first_name':self.first_name2,'last_name':self.last_name2,
-          'description':self.description2}
+          'description':self.description2,
+          'default_telephone_text': 'call me at this phone number',
+          'default_career_title': 'My Career Step'}
     person2.edit(**kw)
     nb_person = len(person_server.objectValues())
     self.assertEqual(nb_person, 2)
@@ -1046,9 +1050,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     # refresh objects
     sub_object_c1 = person_client1._getOb(self.id1)
     sub_object_c2 = person_client2._getOb(self.id1)
-    len_s = len(sub_object_s.objectValues())
-    len_c1 = len(sub_object_c1.objectValues())
-    len_c2 = len(sub_object_c2.objectValues())
+    len_s = len(sub_object_s.objectValues(portal_type='Person'))
+    len_c1 = len(sub_object_c1.objectValues(portal_type='Person'))
+    len_c2 = len(sub_object_c2.objectValues(portal_type='Person'))
     self.failUnless(len_s==len_c1==len_c2==0)
 
   def test_21_GetConflictListOnSubObject(self, quiet=0, run=run_all_test):
