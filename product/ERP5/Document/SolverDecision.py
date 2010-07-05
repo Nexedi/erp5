@@ -112,6 +112,17 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     else:
       return solver_type.getConfigurationPropertyListDict(self)
 
+  def searchDeliverySolverList(self, **kw):
+    """
+    this method returns a list of delivery solvers, as predicates against
+    solver decision.
+    """
+    portal = self.getPortalObject()
+    portal_type_list = portal.getPortalDeliverySolverTypeList()
+    portal_solvers = portal.portal_solvers
+    return filter(lambda x:x.test(self),
+                  [getattr(portal_solvers, x) for x in portal_type_list])
+
   def getExplanationMessage(self, all=False):
     """
     Returns the HTML message that describes the detail of divergences to
