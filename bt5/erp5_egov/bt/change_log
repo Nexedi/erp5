@@ -1,3 +1,7 @@
+2010-07-05 mayoro
+* remove proxy role manager for  Script PDFType_viewDefaultForm to avoid displaying tab meta data
+* clean history displaying, remove duplicate lines for actions like approve and approve actions
+
 2010-07-03 mayoro
 * Add publication of web pages in SetUpEGovInstance
 

@@ -96,6 +96,7 @@ next_serial = None\n
 previous_obj = None\n
 \n
 for workflow_item in workflow_item_list:\n
+  same_action = 0\n
   # XXX removing str method generate a strange bug\n
   o = newTempBase(portal_object, str(i))\n
   i += 1\n
@@ -132,7 +133,12 @@ for workflow_item in workflow_item_list:\n
     if value is marker:\n
       value = \'Does not exist\'\n
     o.setProperty(key, value)\n
- \n
+  \n
+  if getattr(previous_obj, \'state\', None) is not None:\n
+    if previous_obj.state ==  o.state:\n
+      same_action = 1\n
+\n
+\n
   # record current serial as "next serial" for the previous revision\n
   if next_serial is not None:\n
     previous_obj.setProperty(\'next_serial\', o.serial)\n
@@ -143,11 +149,13 @@ for workflow_item in workflow_item_list:\n
     group = person.Person_getPrimaryGroup()\n
   except AttributeError:\n
     group = None\n
-  if group and my_group : \n
-    if group.startswith(my_group) or action_name in [\'pending_action\', \'submit_draft_action\']:\n
+\n
+  if not same_action:\n
+    if group and my_group : \n
+      if group.startswith(my_group) or action_name in [\'pending\', \'submit_draft\']:\n
+        result.append(o)\n
+    elif action_name in [\'pending\', \'submit_draft\']:\n
       result.append(o)\n
-  elif action_name in [\'pending_action\', \'submit_draft_action\']:\n
-    result.append(o)\n
 return result\n
 </string> </value>
         </item>
@@ -238,6 +246,7 @@ return result\n
                             <string>next_serial</string>
                             <string>previous_obj</string>
                             <string>workflow_item</string>
+                            <string>same_action</string>
                             <string>str</string>
                             <string>o</string>
                             <string>_inplacevar_</string>
