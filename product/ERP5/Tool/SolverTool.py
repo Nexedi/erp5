@@ -28,6 +28,7 @@
 ##############################################################################
 
 import zope.interface
+import re
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
@@ -49,46 +50,36 @@ class SolverTool(TypeProvider):
 
   # Declarative Security
   security = ClassSecurityInfo()
- 
+
   # Declarative interfaces
-  zope.interface.implements(interfaces.IDeliverySolverFactory, )
+  zope.interface.implements(interfaces.IDeliverySolverFactory,)
 
   # IDeliverySolverFactory implementation
-  def newDeliverySolver(self, class_name, movement_list):
+  def newDeliverySolver(self, portal_type, movement_list):
     """
-    """
-    __import__('%s.%s' % (DeliverySolver.__name__, class_name))
-    solver_class = getattr(getattr(DeliverySolver, class_name), class_name)
-    return solver_class(movement_list)
+    Return a new instance of delivery solver of the given
+    portal_type and with appropriate parameters.
 
-  def getDeliverySolverClassNameList(self):
-    """
-    """
-    # XXX Hardcoded for now. We need a new registration system for
-    # delivery solvers.
-    return ['FIFO', 'LIFO', 'MinPrice',]
+    portal_type -- the portal type of the delivery solver.
 
-  def getDeliverySolverTranslatedItemList(self, class_name_list=None):
+    movement_list -- movements to initialise the instance with
+    """
+    solver_type = self._getOb(portal_type)
+    solver_class = re.sub('^add', 'newTemp',
+                       solver_type.getTypeFactoryMethodId())
+    module = __import__('Products.ERP5Type.Document', globals(), locals(),
+                        [solver_class])
+    tmp_solver = getattr(module, solver_class)(self, 'delivery_solver')
+    tmp_solver.setDeliveryValueList(movement_list)
+    return tmp_solver
+
+  def getDeliverySolverTranslatedItemList(self, portal_type_list=None):
     """
     """
-    return sorted([(self.getDeliverySolverTranslatedTitle(x), x) \
-                   for x in self.getDeliverySolverClassNameList() \
-                   if class_name_list is None or x in class_name_list],
+    return sorted([(translateString(x), 'portal_solvers/%s' % x) \
+                   for x in self.getPortalDeliverySolverTypeList() \
+                   if portal_type_list is None or x in portal_type_list],
                   key=lambda x:str(x[0]))
-
-  def getDeliverySolverTranslatedTitle(self, class_name):
-    """
-    """
-    __import__('%s.%s' % (DeliverySolver.__name__, class_name))
-    return translateString(
-      getattr(getattr(DeliverySolver, class_name), class_name).title)
-
-  def getDeliverySolverTranslatedDescription(self, class_name):
-    """
-    """
-    __import__('%s.%s' % (DeliverySolver.__name__, class_name))
-    return translateString(
-      getattr(getattr(DeliverySolver, class_name), class_name).__doc__)
 
   def getSolverProcessValueList(self, delivery_or_movement=None, validation_state=None):
     """
