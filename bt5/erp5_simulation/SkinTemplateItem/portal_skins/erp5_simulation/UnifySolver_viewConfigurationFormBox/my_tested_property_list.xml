@@ -173,7 +173,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getDefaultConfigurationPropertyListDict().keys()[0:1]</string> </value>
+            <value> <string>python:cell.getConfigurationPropertyListDict().keys()[0:1]</string> </value>
         </item>
       </dictionary>
     </pickle>
