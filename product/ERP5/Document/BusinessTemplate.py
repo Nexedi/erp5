@@ -32,7 +32,7 @@ from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod, _aq_reset
@@ -613,6 +613,84 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     return self.__class__.__name__[:-12]
 
+  def restrictedResolveValue(self, context=None, path=None, default=_MARKER):
+    """
+      Get the value with checking the security.
+      This method does not acquire the parent.
+    """
+    def restrictedGetItem(container, key, default):
+      validate = getSecurityManager().validate
+      try:
+        value = container[key]
+      except KeyError:
+        if default is not _MARKER:
+          return default
+        return None
+      if value is not None:
+        try:
+          if not validate(container, container, key, value):
+            raise Unauthorized('unauthorized access to element %s' % key)
+        except Unauthorized:
+          # if user can't access object try to return default passed
+          if default is not _MARKER:
+            return default
+          raise
+      return value
+    return self._resolveValue(context, path, default, getItem=restrictedGetItem)
+
+  def unrestrictedResolveValue(self, context=None, path=None, default=_MARKER):
+    """
+      Get the value without checking the security.
+      This method does not acquire the parent.
+    """
+    def unrestrictedGetItem(container, key, default):
+      try:
+        return container[key]
+      except KeyError:
+        if default is not _MARKER:
+          return default
+        else:
+          return None
+    return self._resolveValue(context, path, default, getItem=unrestrictedGetItem)
+
+  def _resolveValue(self, context, path, default=_MARKER, getItem=None):
+    """
+    Resolve the value without acquire the parent.
+    """
+    if isinstance(path, basestring):
+      stack = path.split('/')
+    else:
+      stack = list(path)
+    stack.reverse()
+    value = None
+    if stack:
+      portal = aq_inner(self.getPortalObject())
+      # It can be passed with the context, so at first, searching from the context.
+      if context is None:
+        container = portal
+      else:
+        container = context
+      key = stack.pop()
+      value = getItem(container, key, default)
+
+      # resolve the value from top to down
+      while value is not None and stack:
+        key = stack.pop()
+        value = getItem(value, key, default)
+    else:
+      # When relative_url is empty, returns the context
+      return context
+
+    if value is None:
+      LOG('BusinessTemplate', WARNING,
+          'Could not access object %s' % path)
+      if default is not _MARKER:
+        return default
+      else:
+        raise KeyError
+    return value
+
+
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
@@ -933,7 +1011,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           container_path = path_list[:-1]
           object_id = path_list[-1]
           try:
-            container = portal.unrestrictedTraverse(container_path)
+            container = self.unrestrictedResolveValue(portal, container_path)
           except KeyError:
             # parent object can be set to nothing, in this case just go on
             container_url = '/'.join(container_path)
@@ -1162,7 +1240,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
           if action in ('remove', 'save_and_remove'):
-            document = portal.restrictedTraverse(recursive_path, None)
+            document = self.restrictedResolveValue(portal, recursive_path, None)
             if document is None:
               # It happens if the parent of target path is removed before
               continue
@@ -1212,7 +1290,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
       try:
-        container = portal.unrestrictedTraverse(container_path)
+        container = self.unrestrictedResolveValue(portal, container_path)
         object = container._getOb(object_id) # We force access to the object to be sure
                                         # that appropriate exception is thrown
                                         # in case object is already backup and/or removed
@@ -1270,7 +1348,7 @@ class PathTemplateItem(ObjectTemplateItem):
         try:
           container_path = relative_url.split('/')[0:-1]
           object_id = relative_url.split('/')[-1]
-          container = portal.unrestrictedTraverse(container_path)
+          container = self.unrestrictedResolveValue(portal, container_path)
           if trash and trashbin is not None:
             self.portal_trash.backupObject(trashbin, container_path,
                                            object_id, save=1,
@@ -1757,7 +1835,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
           container_path = path.split('/')[:-1]
           object_id = path.split('/')[-1]
           try:
-            container = portal.unrestrictedTraverse(container_path)
+            container = self.unrestrictedResolveValue(portal, container_path)
           except KeyError:
             # parent object can be set to nothing, in this case just go on
             container_url = '/'.join(container_path)
