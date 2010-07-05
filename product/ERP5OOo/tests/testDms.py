@@ -1283,6 +1283,15 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals(document.getStandardFileName(), 'metadata-001-en.pdf')
     self.assertEquals(document.getStandardFileName(format='png'),
                       'metadata-001-en.png')
+    # check when format contains multiple '.'
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    document = self.portal.document_module.newContent(portal_type='Presentation')
+    # Here we use edit instead of setFile,
+    # because only edit method set filename as source_reference.
+    document.edit(file=upload_file)
+    self.assertEquals(document.getStandardFileName(), 'TEST-en-003.odp')
+    self.assertEquals('TEST-en-003.odg', document.getStandardFileName(format='odp.odg'))
+
 
   def test_CMYKImageTextContent(self):
     upload_file = makeFileUpload('cmyk_sample.jpg')
