@@ -75,6 +75,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.Comment
                     , PropertySheet.SolverSelection
                     , PropertySheet.Configurable
                     )
