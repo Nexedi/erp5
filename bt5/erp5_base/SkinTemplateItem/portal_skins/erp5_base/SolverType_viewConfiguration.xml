@@ -98,7 +98,6 @@
                       <list>
                         <string>my_configuration_form_id</string>
                         <string>my_solver_action_title</string>
-                        <string>my_configuration_property_list</string>
                         <string>my_tested_property_list</string>
                         <string>my_default_configuration_property_dict_method_id</string>
                         <string>my_configuration_property_list_dict_method_id</string>
