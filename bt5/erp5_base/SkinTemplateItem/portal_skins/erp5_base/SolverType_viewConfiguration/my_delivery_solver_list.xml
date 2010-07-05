@@ -124,7 +124,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getPortalObject().portal_solvers.getDeliverySolverTranslatedItemList()</string> </value>
+            <value> <string>python:map(lambda x: (x, \'portal_solvers/%s\' % x), here.getPortalDeliverySolverTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>
