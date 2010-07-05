@@ -30,7 +30,6 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.Predicate import Predicate
-from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
 class SolverTypeInformation(Predicate, ERP5TypeInformation):
   """
@@ -151,8 +150,11 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
     """
-    return self._callTypeBasedMethod(
-      configurable, 'getDefaultConfigurationPropertyDict')
+    method_id = self.getDefaultConfigurationPropertyDictMethodId()
+    if method_id:
+      return self._callMethod(configurable, method_id, {})
+    else:
+      return {}
 
   def getDefaultConfigurationProperty(self, property, configurable):
     """
@@ -166,7 +168,7 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     """
     return self.getDefaultConfigurationPropertyDict().get(property, None)
 
-  def getDefaultConfigurationPropertyListDict(self, configurable):
+  def getConfigurationPropertyListDict(self, configurable):
     """
     Returns a dictionary of possible values for specified
     configurable object
@@ -175,10 +177,13 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
     """
-    return self._callTypeBasedMethod(
-      configurable, 'getDefaultConfigurationPropertyListDict')
+    method_id = self.getConfigurationPropertyListDictMethodId()
+    if method_id:
+      return self._callMethod(configurable, method_id, {})
+    else:
+      return {}
 
-  def getDefaultConfigurationPropertyList(self, property, configurable):
+  def getConfigurationPropertyList(self, property, configurable):
     """
     Returns a list of possible values for a given property
     (public API)
@@ -186,41 +191,27 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
     """
-    return self.getDefaultConfigurationPropertyListDict().get(property, [])
+    return self.getConfigurationPropertyListDict().get(property, [])
 
-  def _callTypeBasedMethod(self, configurable, method_id):
+  def _callMethod(self, configurable, method_id, default=None):
     # Implemented through type based method
     # and using read transaction cache
     portal_type = configurable.getPortalType()
     if portal_type == 'Solver Decision':
       try:
         solver_portal_type = configurable.getSolverValue().getId()
-        solver = None
+        solver = configurable.getParentValue().newContent(
+          portal_type=solver_portal_type,
+          temp_object=True,
+          delivery_list=configurable.getDeliveryList(),
+          causality_value=configurable)
       except AttributeError:
-        return {}
+        return default
     elif interfaces.ISolver.providedBy(configurable):
       solver_portal_type = portal_type
       solver = configurable
     else:
       raise NotImplementedError, '%s is not supported for configurable argument' % portal_type
 
-    cache = getReadOnlyTransactionCache(self)
-    if cache is not None:
-      key = (method_id, solver_portal_type)
-      try:
-        return cache[key]()
-      except KeyError:
-        pass
-
-    if solver is None:
-      solver = configurable.getParentValue().newContent(
-        portal_type=solver_portal_type,
-        temp_object=True,
-        delivery_list=configurable.getDeliveryList(),
-        causality_value=configurable)
-    method = solver._getTypeBasedMethod(
-      method_id,
-      fallback_script_id='Solver_%s' % method_id)
-    if cache is not None:
-      cache[key] = method
+    method = getattr(solver, method_id)
     return method()

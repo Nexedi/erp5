@@ -99,9 +99,9 @@
                         <string>my_configuration_form_id</string>
                         <string>my_solver_action_title</string>
                         <string>my_configuration_property_list</string>
-                        <string>my_delivery_solver_list</string>
                         <string>my_tested_property_list</string>
-                        <string>my_automatic_solver</string>
+                        <string>my_default_configuration_property_dict_method_id</string>
+                        <string>my_configuration_property_list_dict_method_id</string>
                       </list>
                     </value>
                 </item>
@@ -109,6 +109,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_automatic_solver</string>
+                        <string>my_delivery_solver_list</string>
                         <string>my_conflicting_solver_list</string>
                         <string>my_line_exclusive</string>
                         <string>my_configuration_groupable</string>
