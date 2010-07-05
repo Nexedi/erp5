@@ -73,8 +73,10 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                                []).append(simulation_movement)
     for movement, simulation_movement_list in delivery_dict.iteritems():
       decision_quantity = movement.getQuantity()
-      delivery_solver = self.portal_solvers.newDeliverySolver(
-        configuration_dict['delivery_solver'], simulation_movement_list)
+      delivery_solver = self.getParentValue().newContent(
+        portal_type=configuration_dict['delivery_solver'],
+        temp_object=True)
+      delivery_solver.setDeliveryValueList(simulation_movement_list)
       # Update the quantity using delivery solver algorithm
       split_list = delivery_solver.setTotalQuantity(decision_quantity,
                                                     activate_kw=activate_kw)

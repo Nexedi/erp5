@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -23,49 +22,51 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
 import zope.interface
-from Products.ERP5Type import interfaces
-from DeliverySolver import DeliverySolver
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5.Document.FIFODeliverySolver import FIFODeliverySolver
 
-class FIFO(DeliverySolver):
+class MinimisePriceDeliverySolver(FIFODeliverySolver):
   """
-  The FIFO solver reduces delivered quantity by reducing the quantity of
-  simulation movements from the last order.
+  The Minimise Price deliver solver distributes quantity in order to minimise
+  price.
   """
+  meta_type = 'ERP5 Minimise Price Delivery Solver'
+  portal_type = 'Minimise Price Delivery Solver'
+  add_permission = Permissions.AddPortalContent
+  isIndexable = 0 # We do not want to fill the catalog with objects on which we need no reporting
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.DeliverySolver
+                    )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IDeliverySolver)
-
-  title = 'FIFO Solver'
+  zope.interface.implements(interfaces.IDeliverySolver,)
 
   # IDeliverySolver Implementation
-  def __init__(self, simulation_movement_list):
-    """
-      Move this to mixin
-    """
-    self.simulation_movement_list = simulation_movement_list
-
-  def getTotalQuantity(self):
-    """
-      Move this to mixin
-    """
-    total_quantity = 0
-    for movement in self.simulation_movement_list:
-      total_quantity += movement.getQuantity()
-    return total_quantity
-
   def setTotalQuantity(self, new_quantity, activate_kw=None):
     """
     """
     result = []
-    remaining_quantity = self.getTotalQuantity() - new_quantity
-    if remaining_quantity < 0:
-      return result
     simulation_movement_list = self._getSimulationMovementList()
+    remaining_quantity = self.getTotalQuantity() - new_quantity
+    if remaining_quantity > 0:
+      # In case of reducing the quantity, we should start from the more
+      # expensive price.
+      simulation_movement_list.reverse()
     for movement in simulation_movement_list:
       if remaining_quantity:
         quantity = movement.getQuantity()
@@ -85,11 +86,10 @@ class FIFO(DeliverySolver):
 
   def _getSimulationMovementList(self):
     """
-    Returns a list of simulation movement sorted from the last order.
+    Returns a list of simulation movement sorted from the lower price.
     """
-    simulation_movement_list = self.simulation_movement_list
+    simulation_movement_list = self.getDeliveryValueList()
     if len(simulation_movement_list) > 1:
-      return sorted(simulation_movement_list,
-        key=lambda x:x.getExplainationValue().getStartDate(), reverse=True)
+      return sorted(simulation_movement_list, key=lambda x:x.getPrice())
     else:
       return simulation_movement_list

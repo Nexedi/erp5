@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2008-2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -23,33 +22,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
-import zope.interface
-from Products.ERP5Type import interfaces
-
-from FIFO import FIFO
-
-class LIFO(FIFO):
-  """
-  The LIFO solver reduces delivered quantity by reducing the quantity of
-  simulation movements from the first order.
-  """
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.IDeliverySolver)
-
-  title = 'LIFO Solver'
-
-  def _getSimulationMovementList(self):
-    """
-    Returns a list of simulation movement sorted from the first order.
-    """
-    simulation_movement_list = self.simulation_movement_list
-    if len(simulation_movement_list) > 1:
-      return sorted(simulation_movement_list,
-        key=lambda x:x.getExplainationValue().getStartDate())
-    else:
-      return simulation_movement_list
+class DeliverySolver:
+  _categories = ('delivery',)
