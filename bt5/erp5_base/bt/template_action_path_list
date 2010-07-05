@@ -83,6 +83,9 @@ Rounding Model | view
 Rounding Tool | view
 Solver Decision | configuration
 Solver Decision | view
+Solver Process Tool | view
+Solver Process | target_solver
+Solver Process | view
 Solver Tool | view
 Solver Type | action_view
 Solver Type | predicate_view

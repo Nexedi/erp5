@@ -18,9 +18,6 @@ Quantity Cancel Solver | configuration
 Quantity Cancel Solver | view
 Quantity Split Solver | configuration
 Quantity Split Solver | view
-Solver Process Tool | view
-Solver Process | target_solver
-Solver Process | view
 String Divergence Tester | configuration
 String Divergence Tester | predicate
 String Divergence Tester | view

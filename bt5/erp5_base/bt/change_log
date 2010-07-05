@@ -1,3 +1,6 @@
+2010-07-05 kazuhiko
+* Move Solver Process related actions from the experimental erp5_simulation business template to the erp5_base business template.
+
 2010-07-02 kazuhiko
 * Use validation_workflow in Solver Type.
 * Use a different view form for Solver Type to display validation_state.
