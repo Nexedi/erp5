@@ -139,7 +139,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     elif xml.xpath('name()') in self.XUPDATE_INSERT_OR_ADD and\
                             MARSHALLER_NAMESPACE_URI not in xml.nsmap.values():
       # change the context according select expression
-      context = self.getContextFromXpath(object, xpath_expression)
+      get_target_parent = xml.xpath('name()') in self.XUPDATE_INSERT
+      context = self.getContextFromXpath(object, xpath_expression,
+                                         get_target_parent=get_target_parent)
       for element in xml.findall('{%s}element' % xml.nsmap['xupdate']):
         xml = self.getElementFromXupdate(element)
         conflict_list += self.addNode(xml=xml, object=context, **kw)\
@@ -275,7 +277,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         if keyword not in self.NOT_EDITABLE_PROPERTY:
           # We will look for the data to enter
           xpath_expression = xml.get('select', xpath_expression)
-          context = self.getContextFromXpath(object, xpath_expression)
+          get_target_parent = xml.xpath('name()') in self.XUPDATE_INSERT
+          context = self.getContextFromXpath(object,
+                                           xpath_expression,
+                                           get_target_parent=get_target_parent)
           data_type = context.getPropertyType(keyword)
           #LOG('ERP5Conduit.updateNode', INFO, 'data_type:%r for keyword: %s' % (data_type, keyword))
           data = self.convertXmlValue(xml, data_type=data_type)
@@ -393,16 +398,21 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           return False
     return True
 
-  def getContextFromXpath(self, context, xpath):
+  def getContextFromXpath(self, context, xpath, get_target_parent=False):
     """Return the last object from xpath expression
     /object[@gid='foo']/object[@id='bar']/object[@id='freak']/property
     will return object.getId() == 'freak'
     - We ignore the first object_block /object[@gid='foo'] intentionaly
     because the targeted context is already actual context.
+      context: object in acquisition context
+      xpath: string which is xpath expression to fetch the object
+      get_target_parent: boolean to get the parent of targetted object
     """
     if xpath is None:
       return context
     result_list = self.extract_id_from_xpath.findall(xpath)
+    if get_target_parent:
+      result_list = result_list[:-1]
     first_object = True
     while result_list:
       object_block = result_list[0][0]
@@ -418,6 +428,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                          (context.getPath(), sub_context_id))
       xpath = xpath.replace(object_block, '', 1)
       result_list = self.extract_id_from_xpath.findall(xpath)
+      if get_target_parent:
+        result_list = result_list[:-1]
     return context
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -868,7 +880,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                             xml_doc_string=previous_xml)
       if MARSHALLER_NAMESPACE_URI in subnode.nsmap.values():
         xpath_expression = original_xpath_expression
-        context = self.getContextFromXpath(object, xpath_expression)
+        get_target_parent = subnode.xpath('name()') in self.XUPDATE_INSERT
+        context = self.getContextFromXpath(object, xpath_expression,
+                                           get_target_parent=get_target_parent)
         base_xpath_expression = xpath_expression\
                                             [:xpath_expression.index(prefix)-1]
         xupdated_node_list = xupdated_tree.xpath(base_xpath_expression)
@@ -886,7 +900,9 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         to avoid ambiguity
         """
         xpath_expression = original_xpath_expression
-        context = self.getContextFromXpath(object, xpath_expression)
+        get_target_parent = xml.xpath('name()') in self.XUPDATE_INSERT
+        context = self.getContextFromXpath(object, xpath_expression,
+                                           get_target_parent=get_target_parent)
         base_xpath_expression = xpath_expression\
                                             [:xpath_expression.index('block_data')-1]
         xupdated_node_list = xupdated_tree.xpath(base_xpath_expression)
