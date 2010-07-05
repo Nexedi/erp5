@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77275017.31</string> </value>
+            <value> <string>ts78326871.69</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -37,7 +37,7 @@
 \n
 /* 3 columng gadget layout */\n
 div.portal-column {\n
-  width:33%; \n
+  width:32.9%; \n
   margin-right:3px;\n
 }\n
 \n
@@ -502,7 +502,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8197</int> </value>
+            <value> <int>8199</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
