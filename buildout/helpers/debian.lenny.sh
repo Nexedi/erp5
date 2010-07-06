@@ -10,6 +10,8 @@ gcc
 gettext
 libboost-dev
 libboost-program-options-dev
+libboost-regex-dev
+libboost-serialization-dev
 libbz2-dev
 libgc-dev
 libgdbm-dev
