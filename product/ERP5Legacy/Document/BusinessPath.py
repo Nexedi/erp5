@@ -1,4 +1,4 @@
-from Products.ERP5.Document import BusinessLink
+from Products.ERP5.Document.BusinessLink import BusinessLink
 
-BusinessPath = BusinessLink.BusinessLink
+BusinessPath = BusinessLink
 
