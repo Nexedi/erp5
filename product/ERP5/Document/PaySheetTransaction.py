@@ -199,10 +199,14 @@ class PaySheetTransaction(Invoice):
           if not movement_list_trade_phase_dic.has_key(trade_phase):
             movement_list_trade_phase_dic[trade_phase] = []
           movement_list_trade_phase_dic[trade_phase].append(movement)
-
       for trade_phase in movement_list_trade_phase_dic.keys():
         business_link_list = business_process.getPathValueList(trade_phase=\
             trade_phase)
+        # XXX-Aurel
+        # must convert amount into simulation movement
+        # by calling method BusinessProcess.getTradePhaseMovementList
+        # for now delivery builder will fail because it calls setDeliveryValue
+        # which does not exists on amount
         for business_link in business_link_list:
           builder_list = [portal.restrictedTraverse(url) for url in\
                           business_link.getDeliveryBuilderList()]
