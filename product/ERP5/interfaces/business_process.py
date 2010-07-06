@@ -336,7 +336,7 @@ class ITradePhaseProcess(Interface):
     """
 
   def isTradePhaseCompleted(explanation, trade_phase):
-    """Returns True all business link with given trade_phase
+    """Returns True if all business link with given trade_phase
     applicable to given explanation are completed.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
