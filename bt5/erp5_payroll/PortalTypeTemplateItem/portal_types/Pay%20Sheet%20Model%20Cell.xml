@@ -29,7 +29,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addTradeModelCell</string> </value>
+            <value> <string>addPaySheetModelCell</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
