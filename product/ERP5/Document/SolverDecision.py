@@ -118,11 +118,11 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     this method returns a list of delivery solvers, as predicates against
     solver decision.
     """
-    portal = self.getPortalObject()
-    portal_type_list = portal.getPortalDeliverySolverTypeList()
-    portal_solvers = portal.portal_solvers
-    return filter(lambda x:x.test(self),
-                  [getattr(portal_solvers, x) for x in portal_type_list])
+    target_solver_type = self.getSolverValue()
+    if target_solver_type is None:
+      return []
+    solver_list = target_solver_type.getDeliverySolverValueList()
+    return filter(lambda x:x.test(self), solver_list)
 
   def getExplanationMessage(self, all=False):
     """

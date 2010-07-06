@@ -85,4 +85,4 @@ class SolverType:
          },
     )
 
-    _categories = ('conflicting_solver',)
+    _categories = ('conflicting_solver', 'delivery_solver',)
