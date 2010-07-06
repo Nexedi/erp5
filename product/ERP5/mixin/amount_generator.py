@@ -210,7 +210,7 @@ class AmountGeneratorMixin:
             for key in amount_generator_cell.getMappedValuePropertyList():
               # XXX-JPS Make sure handling of list properties can be handled
               property_dict[key] = amount_generator_cell.getProperty(key)
-            category_list = amount_generator_cell.getCategoryMembershipList(
+            category_list = amount_generator_cell.getAcquiredCategoryMembershipList(
               amount_generator_cell.getMappedValueBaseCategoryList(), base=1)
             if category_list:
               property_dict.setdefault('category_list',
@@ -223,6 +223,10 @@ class AmountGeneratorMixin:
             property_dict['reference'] = (amount_generator_cell.getReference()
                                           or self.getReference()) # XXX
             property_dict['id'] = amount_generator_cell.getRelativeUrl().replace('/', '_')
+            property_dict['title'] = self.getTitle()
+            property_dict['int_index'] = self.getIntIndex()
+            property_dict['description'] = self.getDescription()
+
           # Case 2: the cell defines a temporary calculation line
           if base_contribution_list:
             # Define a key in order to aggregate amounts in cells
@@ -265,10 +269,14 @@ class AmountGeneratorMixin:
         # need values converted to the default management unit
         # If no quantity is provided, we consider that the value is 1.0
         # (XXX is it OK ?) XXX-JPS Need careful review with taxes
-        property_dict['quantity'] = sum(base_amount[x]
-                                        for x in base_application_set) * \
-          property_dict.pop('net_converted_quantity',
-                            property_dict.get('quantity', 1.0))
+        quantity = property_dict.pop('net_converted_quantity',
+                                     property_dict.get('quantity', 1.0))
+        if quantity in (None, ''):
+          property_dict['quantity'] = sum(base_amount[x]
+                                          for x in base_application_set)
+        else:
+          property_dict['quantity'] = sum(base_amount[x]
+                                          for x in base_application_set) * quantity
         base_application_set.discard(None)
         # XXX Is it correct to generate nothing if the computed quantity is 0 ?
         if not property_dict['quantity']:
