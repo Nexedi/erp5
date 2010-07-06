@@ -206,6 +206,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     """
     if os.environ.get('erp5_save_data_fs'):
       return
+    self.login('ERP5TypeTestCase')
     transaction.abort()
     self.accounting_module.manage_delObjects(
                       list(self.accounting_module.objectIds()))
@@ -2594,6 +2595,31 @@ class TestTransactions(AccountingTestCase):
         self.assertEquals(100, line.getSourceCredit())
         self.assertEquals(None, line.getSourceTotalAssetPrice())
       
+  # tests for Invoice_getRemainingTotalPayablePrice
+  def test_Invoice_getRemainingTotalPayablePriceDeletedPayment(self):
+    """Checks in case of deleted Payments related to invoice"""
+    # Simple case of creating a related payment transaction.
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100)))
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    transaction.commit()
+    self.tic()
+    remaining_price = invoice.Invoice_getRemainingTotalPayablePrice()
+    self.assertEqual(-100, remaining_price)
+    payment.delete()
+    transaction.commit()
+    self.tic()
+    remaining_price = invoice.Invoice_getRemainingTotalPayablePrice()
+    self.assertEqual(-100, remaining_price)
 
   # tests for Grouping References
   def test_GroupingReferenceResetedOnCopyPaste(self):
