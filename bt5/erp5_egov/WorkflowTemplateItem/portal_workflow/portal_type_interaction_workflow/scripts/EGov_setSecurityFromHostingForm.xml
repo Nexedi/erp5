@@ -108,7 +108,7 @@ for i in range (nb_line)[1:]:\n
     map_group_function_dict[j] = param_list\n
     j=j+1\n
 \n
-"""\n
+\n
 #Create the default role for Assignee\n
 procedure_request.newContent(portal_type=\'Role Information\',\n
                      title=\'Default Assignee Role Information\',\n
@@ -116,15 +116,16 @@ procedure_request.newContent(portal_type=\'Role Information\',\n
                      description=\'Last assigned person\',\n
                      role_base_category_script_list=\'group function site\',\n
                      role_base_category_script_id=\'ERP5Site_getSecurityFromWorkflowAssignment\',\n
-                     role_category_list=\'role/gouvernement*\')\n
+                     )\n
 \n
-#Create Associate role\n
+"""\n
+#Create Associate user or service role\n
 procedure_request.newContent(portal_type=\'Role Information\',\n
-                     title=\'Default Associate Role Information\',\n
-                     role_name=[Associate, Auditor],\n
+                     title=\'Default Associate User or Service Role Information\',\n
+                     role_name_list=[Associate, Assignee],\n
                      description=\'Any associate user or service\',\n
-                     role_base_category_script_id=\'ERP5Site_getSecurityFromWorkflowAssignment\',\n
-                     role_category_list=\'role/gouvernement*\')\n
+                     role_base_category_script_id=\'ERP5Site_getSecurityFromWorkflowHistory\',\n
+                     )\n
 """\n
 \n
 #XXX Sometimes securities are generated using information in form\n

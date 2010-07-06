@@ -1,3 +1,6 @@
+2010-07-06 mohamadou
+* add assignee default role on procedure portal type role information
+
 2010-07-05 mayoro
 * remove proxy role manager for  Script PDFType_viewDefaultForm to avoid displaying tab meta data
 * clean history displaying, remove duplicate lines for actions like approve and approve actions
