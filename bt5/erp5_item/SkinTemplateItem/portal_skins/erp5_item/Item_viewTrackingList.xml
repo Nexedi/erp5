@@ -79,7 +79,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_item_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -95,6 +94,7 @@
                       <list>
                         <string>listbox_date</string>
                         <string>listbox_variation_category_item_list</string>
+                        <string>listbox_item_quantity</string>
                       </list>
                     </value>
                 </item>
