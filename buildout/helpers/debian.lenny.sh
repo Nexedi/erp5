@@ -9,6 +9,7 @@ flex
 gcc
 gettext
 libboost-dev
+libboost-program-options-dev
 libbz2-dev
 libgc-dev
 libgdbm-dev
