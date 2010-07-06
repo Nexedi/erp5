@@ -112,5 +112,5 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
 
     # Finish solving
     if self.getPortalObject().portal_workflow.isTransitionPossible(
-      solver, 'succeed'):
+      self, 'succeed'):
       self.succeed()

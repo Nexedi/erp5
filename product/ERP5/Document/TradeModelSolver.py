@@ -138,5 +138,5 @@ class TradeModelSolver(AcceptSolver):
 
     # Finish solving
     if self.getPortalObject().portal_workflow.isTransitionPossible(
-      solver, 'succeed'):
+      self, 'succeed'):
       self.succeed()

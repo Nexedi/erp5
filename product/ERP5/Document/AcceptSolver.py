@@ -89,5 +89,5 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       simulation_movement.expand(activate_kw=activate_kw)
     # Finish solving
     if self.getPortalObject().portal_workflow.isTransitionPossible(
-      solver, 'succeed'):
+      self, 'succeed'):
       self.succeed()

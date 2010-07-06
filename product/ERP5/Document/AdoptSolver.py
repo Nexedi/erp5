@@ -97,5 +97,5 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
                                simulation_movement.getProperty(solved_property))
     # Finish solving
     if self.getPortalObject().portal_workflow.isTransitionPossible(
-      solver, 'succeed'):
+      self, 'succeed'):
       self.succeed()
