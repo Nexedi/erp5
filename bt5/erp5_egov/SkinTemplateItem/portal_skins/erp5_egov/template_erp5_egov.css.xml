@@ -527,6 +527,7 @@ div.section_title{\n
 div#main_content fieldset {\n
   margin: 0;\n
   border:none;\n
+  padding: 0;\n
 }\n
 \n
 .content #fieldset_center,\n
@@ -580,6 +581,20 @@ fieldset.register_informations{\n
   border: 1px solid #999 !important;\n
   width:800px !important;\n
 }\n
+\n
+.document .section_explanation{\n
+  background: white !important;\n
+  width:791px !important;\n
+  line-height: 3em;\n
+  marging-left: 2em;\n
+}\n
+\n
+div.section_explanation{\n
+  padding-left: 0.5em;\n
+}\n
+\n
+\n
+\n
 \n
 fieldset.white_background .input,\n
 fieldset.register_informations .input{\n

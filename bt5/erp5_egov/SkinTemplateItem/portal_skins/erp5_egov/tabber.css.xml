@@ -280,9 +280,14 @@ margin-right: 1em;\n
 \n
 .tabbertab .advanced_search_fields div{\n
   padding: 1px;\n
+  margin-left: 1.5em;\n
 }\n
 \n
 .tabbertab .advanced_search_fields input{\n
+}\n
+\n
+.tabbertab .advanced_search_fields .hidden_label {\n
+  margin-left: 16em;\n
 }\n
 \n
 </tal:block>\n

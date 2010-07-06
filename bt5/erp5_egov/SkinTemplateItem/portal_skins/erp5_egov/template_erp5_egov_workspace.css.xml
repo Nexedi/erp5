@@ -87,7 +87,7 @@ div#main_content fieldset legend {\n
 div#main_content fieldset label {\n
   margin: 0;\n
   display: block;\n
-  width: 11em;\n
+  width: 20em;\n
   text-align: right;\n
   float: left;\n
   text-transform: capitalize;\n

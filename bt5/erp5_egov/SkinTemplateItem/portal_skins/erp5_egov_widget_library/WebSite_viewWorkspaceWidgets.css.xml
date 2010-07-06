@@ -64,7 +64,7 @@
 \n
 \n
 .widget_space div.field{\n
-  clear:none !important;\n
+  /*clear:none !important;*/\n
   min-width:185px;\n
   /*width:47%;*/\n
 }\n
