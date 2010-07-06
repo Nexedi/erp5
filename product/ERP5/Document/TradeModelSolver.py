@@ -137,4 +137,6 @@ class TradeModelSolver(AcceptSolver):
                                simulation_movement.getProperty(solved_property))
 
     # Finish solving
-    self.succeed()
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      solver, 'succeed'):
+      self.succeed()
