@@ -1,3 +1,6 @@
+2010-07-06 kazuhiko
+* Add delivery_solver base category that is used to specify available delivery solver portal types per target solver portal type.
+
 2010-07-05 kazuhiko
 * Move Solver Process related actions from the experimental erp5_simulation business template to the erp5_base business template.
 
