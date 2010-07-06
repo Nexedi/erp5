@@ -762,7 +762,7 @@ class XMLSyncUtilsMixin(SyncCode):
           gid = subscriber.getGidFromObject(object)
           signature = Signature(id=gid, object=object).__of__(subscriber)
           signature.setTempXML(xml_string)
-          if xml_string.count('\n') > self.MAX_LINES:
+          if xml_string and xml_string.count('\n') > self.MAX_LINES:
             more_data = True
             xml_string, rest_string = self.cutXML(xml_string)
             signature.setPartialXML(rest_string)
@@ -770,7 +770,9 @@ class XMLSyncUtilsMixin(SyncCode):
             signature.setAction('Add')
           #in first, we try with rid if there is one
           gid = signature.getRid() or signature.getGid()
-          syncml_data_list.append(self.addXMLObject(
+          # XML method might returns None value
+          if xml_string:
+            syncml_data_list.append(self.addXMLObject(
                                   cmd_id=cmd_id,
                                   object=object,
                                   gid=gid,
