@@ -2233,6 +2233,9 @@ msgstr "Le client doit être défini"
 msgid "Client must be validated"
 msgstr "Le client doit être validé"
 
+msgid "Clients"
+msgstr "Clients"
+
 msgid "Clone"
 msgstr "Cloner"
 
@@ -10264,6 +10267,9 @@ msgstr "Référence fournisseur"
 
 msgid "Supplier must be defined"
 msgstr "Le fournisseur doit être défini"
+
+msgid "Suppliers"
+msgstr "Fournisseurs"
 
 msgid "Supplies"
 msgstr "Livraisons"
