@@ -900,7 +900,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
         to avoid ambiguity
         """
         xpath_expression = original_xpath_expression
-        get_target_parent = xml.xpath('name()') in self.XUPDATE_INSERT
+        get_target_parent = subnode.xpath('name()') in self.XUPDATE_INSERT
         context = self.getContextFromXpath(object, xpath_expression,
                                            get_target_parent=get_target_parent)
         base_xpath_expression = xpath_expression\
