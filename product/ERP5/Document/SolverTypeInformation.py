@@ -215,3 +215,21 @@ class SolverTypeInformation(Predicate, ERP5TypeInformation):
 
     method = getattr(solver, method_id)
     return method()
+
+  def solve(self, delivery_list=None, configuration_dict=None,
+            activate_kw=None, **kw):
+    if delivery_list is None:
+      return
+    if configuration_dict is None:
+      configuration_dict = {}
+    solver_process_tool = self.getPortalObject().portal_solver_processes
+    solver_process = solver_process_tool.newContent(
+      portal_type='Solver Process',
+      temp_object=True)
+    solver = solver_process.newContent(portal_type=self.getId(),
+                                       delivery_list=delivery_list)
+    solver.updateConfiguration(**configuration_dict)
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      solver, 'start_solving'):
+      solver.startSolving()
+    solver.solve(activate_kw=activate_kw)

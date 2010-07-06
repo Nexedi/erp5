@@ -179,8 +179,16 @@ class SolverProcess(XMLObject, ActiveProcess):
     """
     isTransitionPossible = self.getPortalObject().portal_workflow.isTransitionPossible
     for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
-      if isTransitionPossible(solver, 'start_solving'):
-        solver.startSolving()
+      if solver.isTempObject():
+        solver_type = solver._getPortalTypeValue()
+        solver_type.activate(activate_kw=activate_kw).solve(
+          activate_kw=activate_kw,
+          delivery_list=solver.getDeliveryList(),
+          configuration_dict=solver.getConfigurationPropertyDict()
+          )
+      else:
+        if isTransitionPossible(solver, 'start_solving'):
+          solver.startSolving()
         solver.activate(active_process=self, activate_kw=activate_kw).solve(
           activate_kw=activate_kw)
 
