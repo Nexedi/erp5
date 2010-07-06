@@ -371,7 +371,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>organisation_module_supplier_selection</string> </value>
+                    <value> <string>erp5_site_client_node_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
