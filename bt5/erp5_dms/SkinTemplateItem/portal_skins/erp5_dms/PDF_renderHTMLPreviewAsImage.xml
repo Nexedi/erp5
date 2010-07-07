@@ -42,8 +42,8 @@
 <div class="pdf-preview-content"\n
      tal:define="frame request/frame|\n
                    python:here.PDF_getPageNumberFromSelectionIndex(request.get(\'selection_index\', 0));\n
-                 display request/display|string:xlarge;\n
-                 format request/format|string:png;">\n
+                 display python: request.get(\'display\', context.portal_preferences.getPreference(\'preferred_image_size\', \'large\'));\n
+                 format python: request.get(\'format\', context.portal_preferences.getPreference(\'preferred_image_format\', \'png\'))">\n
   <img src="" alt=""\n
       tal:attributes="src\n
         string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}&resolution:int=300"/>\n
