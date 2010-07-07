@@ -59,7 +59,7 @@
 .attachment_list_ListContent li a,\n
 .attachment_list_ListContent li .attachment_list_getSourceReference,\n
 .attachment_list_ListContent li .attachment_list_content_type,\n
-.attachment_list_ListContent li .attachment_list_getOwner,\n
+.attachment_list_ListContent li .attachment_list_application_requester,\n
 .attachment_list_ListContent li .attachment_list_creation_date{\n
   padding:2px;\n
 }\n
@@ -76,7 +76,7 @@
   color:#0B850B;\n
 }\n
 \n
-/*.attachment_list_ListContent li .attachment_list_getOwner,\n
+/*.attachment_list_ListContent li .attachment_list_application_requester,\n
 .attachment_list_ListContent li .attachment_list_creation_date{\n
   position:absolute;\n
   margin-top:1.2em;\n
@@ -86,7 +86,7 @@
   left:80px;\n
 }\n
 \n
-.attachment_list_ListContent li .attachment_list_getOwner{\n
+.attachment_list_ListContent li .attachment_list_application_requester{\n
   left:30px;\n
 }\n
  \n
@@ -94,12 +94,12 @@
   margin-bottom: 1em;\n
 }\n
 \n
-.attachment_list_ListContent .attachment_list_getOwner{\n
+.attachment_list_ListContent .attachment_list_application_requester{\n
   font-weight:bold;\n
 }\n
 \n
 .attachment_list_ListContent .added_by,\n
-.attachment_list_ListContent .attachment_list_getOwner,\n
+.attachment_list_ListContent .attachment_list_application_requester,\n
 .attachment_list_ListContent .at,\n
 .attachment_list_ListContent .attachment_list_creation_date{\n
   font-style: italic;\n

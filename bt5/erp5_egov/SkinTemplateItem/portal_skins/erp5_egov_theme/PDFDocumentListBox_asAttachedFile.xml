@@ -94,7 +94,7 @@
                 <tal:block tal:define="object python: line.getObject()">\n
                   <li>\n
                     <tal:block tal:repeat="value line/render">\n
-                      <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] == \'getOwner\'">\n
+                      <tal:block tal:condition="python:line.renderer.getSelectedColumnList()[repeat[\'value\'].index][0] == \'application_requester\'">\n
                          <a href="lien" tal:attributes="href python: object.absolute_url()" i18n:translate="" i18n:domain="ui" target="_blank">See</a>\n
                          <tal:block tal:define="state python: line.getObject().aq_parent.getValidationState()"\n
                                    tal:condition="python:  state in (\'draft\')">\n
