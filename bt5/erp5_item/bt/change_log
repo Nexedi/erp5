@@ -1,4 +1,7 @@
 2010-07-06 tatuya
+* Fix the issue that Item_viewTrackingList shows editable fields in the listbox. They are no need.
+
+2010-07-06 tatuya
 * Fix the issue that the order of the listbox field in Item_viewTrackingList view was wrong.
 
 2010-06-22 tatuya
