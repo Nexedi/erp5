@@ -247,15 +247,10 @@ function makeThumnailNode(parent_node, frame, src){\n
 }\n
 \n
 function makeThumbnailNodes(start, end){\n
-  function iter(n, req){\n
-    if(n>start){\n
-      makeThumnailNode(parent_node, n-1, req.responseText);\n
-    }\n
-    if(n>=end){return;}\n
-    var d = doSimpleXMLHttpRequest("PDF_getThumbnailUrl", {frame:n});\n
-    d.addCallback(iter, n+1);\n
-  }\n
-  iter(start);\n
+  forEach(MochiKit.Iter.range(start,end), \n
+    function(frame_number){\n
+      makeThumnailNode(parent_node, frame_number, "index_html?frame="+frame_number+"&display=thumbnail&format=png");\n
+    });\n
 }\n
 \n
 makeThumbnailNodes(START_FRAME, END_FRAME);\n
