@@ -1,3 +1,6 @@
+2010-07-08 mohamadou
+* revert the last commit, setting permission on this state breaks some sites security.
+
 2010-06-08 mohamadou
 * set permission on embedded state to allow assignee and assignor access the document.
 

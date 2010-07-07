@@ -62,49 +62,31 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <tuple>
-                        <string>Agent</string>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Change local roles</string> </key>
                     <value>
-                      <list>
-                        <string>Manager</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <tuple>
-                        <string>Agent</string>
-                        <string>Assignee</string>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                        <string>Owner</string>
-                      </tuple>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
