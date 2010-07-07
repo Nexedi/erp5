@@ -49,53 +49,62 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Agent</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Change Images and Files</string> </key>
-                    <value>
-                      <list/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Change local roles</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>Manager</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <list/>
+                      <tuple>
+                        <string>Agent</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>

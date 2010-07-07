@@ -1,3 +1,6 @@
+2010-06-08 mohamadou
+* set permission on embedded state to allow assignee and assignor access the document.
+
 2010-06-01 mayoro
 * add delete transtion from embedded because needed in erp5_egov
 * allow owner to delete documents in embedded state
