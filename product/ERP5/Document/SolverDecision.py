@@ -129,17 +129,15 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     Returns the HTML message that describes the detail of divergences to
     be solved with this Solver Decision.
     """
-    movement_list = self.getDeliveryValueList()
     message_list = []
     for tester in self.getCausalityValueList():
-      for movement in movement_list:
-        for simulation_movement in movement.getDeliveryRelatedValueList():
-          message = tester.getExplanationMessage(simulation_movement)
-          if message is None:
-            continue
-          if all or len(message_list) == 0:
-            message_list.append(message)
-          elif len(message_list) == 1:
-            # XXX it should be a link to the detailed view.
-            message_list.append('...')
+      for simulation_movement in self.getDeliveryValueList():
+        message = tester.getExplanationMessage(simulation_movement)
+        if message is None:
+          continue
+        if all or len(message_list) == 0:
+          message_list.append(message)
+        elif len(message_list) == 1:
+          # XXX it should be a link to the detailed view.
+          message_list.append('...')
     return ''.join(message_list)
