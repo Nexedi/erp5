@@ -62,12 +62,6 @@ class SolverType:
           'mode':       'w',
           'label':      'Process Exclusive'
          },
-        { 'id':         'delivery_solver',
-          'type':       'tokens',
-          'default':    (),
-          'mode':       'w',
-          'label':      'Delivery Solvers'
-         },
         { 'id':         'automatic_solver',
           'type':       'boolean',
           'mode':       'w',
