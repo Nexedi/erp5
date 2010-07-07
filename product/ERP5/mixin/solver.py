@@ -46,3 +46,15 @@ class SolverMixin:
 
   def getPortalTypeValue(self):
     return self.getPortalObject().portal_solvers._getOb(self.getPortalType())
+
+  def searchDeliverySolverList(self, **kw):
+    """
+    this method returns a list of delivery solvers
+
+    XXX here we cannot test delivery solver as a predicate, because
+    predicate's context should be Solver Decision, not a target
+    solver.
+    """
+    target_solver_type = self.getPortalTypeValue()
+    solver_list = target_solver_type.getDeliverySolverValueList()
+    return solver_list
