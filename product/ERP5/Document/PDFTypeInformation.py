@@ -428,10 +428,11 @@ class PDFTypeInformation(ERP5TypeInformation):
       scribus_parser = ScribusParser(import_scribus_file)
       import_scribus_file.close()
       return scribus_parser.getERP5PropertyDict()
+
     generateParsedScribus = CachingMethod(generateParsedScribus,
                                         ('PDFTypeInformation_generateParsedScribus',
                                         md5.new(scribus_form.getData()).digest()),
-                                        cache_factory='dms_cache_factory')
+                                        cache_factory='erp5_content_long')
     return generateParsedScribus()
 
   def getERP5Form(self):
@@ -594,7 +595,7 @@ class PDFTypeInformation(ERP5TypeInformation):
     generateERP5FormCSS = CachingMethod(generateERP5FormCSS,
                                         ('PDFTypeInformation_generateERP5FormCSS',
                                         md5.new(self.getDefaultScribusFormValue().getData()).digest()),
-                                        cache_factory='dms_cache_factory')
+                                        cache_factory='erp5_content_long')
     self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/css')
     return generateERP5FormCSS()
 
@@ -702,9 +703,13 @@ class PDFTypeInformation(ERP5TypeInformation):
     portal_type_name = self.getId().replace(' ','')
     pdf_form_name ='%s_view%sAsPdf' % (portal_type_name, portal_type_name)
     action_list = ERP5TypeInformation.getCacheableActionList(self)
+    if self.getPortalType() == "EGov Type":
+      name = 'View'
+    else:
+      name = 'Document Procedure Definition'
     return list(action_list) + [
-      CacheableAction(id='view',
-                      name='Form',
+      CacheableAction(id='form',
+                      name=name,
                       description='',
                       category='object_view',
                       priority=0.5,
