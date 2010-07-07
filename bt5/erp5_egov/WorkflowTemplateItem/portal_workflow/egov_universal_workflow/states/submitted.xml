@@ -31,8 +31,9 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>accept</string>
-                <string>accept_action</string>
+                <string>automatic_receive_action</string>
+                <string>receive</string>
+                <string>receive_action</string>
                 <string>transfer</string>
                 <string>transfer_action</string>
               </tuple>

@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
+        <global name="WorklistDefinition" module="Products.DCWorkflow.Worklists"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -11,19 +11,19 @@
       <dictionary>
         <item>
             <key> <string>actbox_category</string> </key>
-            <value> <string>workflow</string> </value>
+            <value> <string>global</string> </value>
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Complete</string> </value>
+            <value> <string>Requested forms to allocate</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
-            <value> <string>%(content_url)s/Base_viewWorkflowActionDialog?workflow_action=complet_action</string> </value>
-        </item>
-        <item>
-            <key> <string>after_script_name</string> </key>
-            <value> <string>complet</string> </value>
+            <value> <string encoding="cdata"><![CDATA[
+
+Base_viewSearchResultList?validation_state=requested&reset=1
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -37,23 +37,13 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>complet_action</string> </value>
+            <value> <string>requested_forms_to_view</string> </value>
         </item>
         <item>
-            <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>script_name</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>trigger_type</string> </key>
-            <value> <int>1</int> </value>
+            <key> <string>var_matches</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -74,6 +64,33 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>validation_state</string> </key>
+                    <value>
+                      <tuple>
+                        <string>requested</string>
+                      </tuple>
+                    </value>
+                </item>
+              </dictionary>
             </value>
         </item>
       </dictionary>

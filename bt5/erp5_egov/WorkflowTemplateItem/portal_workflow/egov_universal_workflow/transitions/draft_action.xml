@@ -71,8 +71,8 @@
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
+                <string>Owner</string>
+                <string>Agent</string>
               </tuple>
             </value>
         </item>

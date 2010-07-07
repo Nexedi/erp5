@@ -160,7 +160,7 @@ class EGovTypeInformation(PDFTypeInformation):
                           icon=None,
                           action='string:${object_url}/Base_viewWorkflowActionDialog?workflow_action=open_action',
                           condition="python:object.getValidationState() in ['assigned', 'suspended', 'accepted']",
-                          permission_list=['Modify Portal Content']),
+                          ),
         )
 
       # Add "request" type actions
@@ -174,7 +174,7 @@ class EGovTypeInformation(PDFTypeInformation):
                           icon=None,
                           action='string:${object_url}/Base_viewWorkflowActionDialog?workflow_action=request_action',
                           condition="python:object.getValidationState() in ['opened', 'suspended']",
-                          permission_list=['Modify Portal Content']),
+                          ),
         )
       # Add "allocate" type actions (if any)
       for title in self._getAllocateActionTitleList():
@@ -187,7 +187,7 @@ class EGovTypeInformation(PDFTypeInformation):
                           icon=None,
                           action='string:${object_url}/Base_viewWorkflowActionDialog?workflow_action=allocate_action',
                           condition="python:object.getValidationState() in ['requested', 'suspended']",
-                          permission_list=['Modify Portal Content']),
+                          ),
         )
 
       # Add "suspend" type actions (if any)
@@ -201,7 +201,7 @@ class EGovTypeInformation(PDFTypeInformation):
                           icon=None,
                           action='string:${object_url}/Base_viewWorkflowActionDialog?workflow_action=suspend_action',
                           condition="python:object.getValidationState() in ['opened', 'allocated']",
-                          permission_list=['Modify Portal Content']),
+                          ),
         )
 
       # Add "approuve" type actions (if any)
@@ -213,22 +213,22 @@ class EGovTypeInformation(PDFTypeInformation):
                           category='workflow',
                           priority=10.4,
                           icon=None,
-                          action='string:${object_url}/Base_viewWorkflowActionDialog?workflow_action=approuve_action',
+                          action='string:${object_url}/Base_viewWorkflowActionDialog?workflow_action=approve_action',
                           condition="python:object.getValidationState() in ['completed',]",
-                          permission_list=['Modify Portal Content']),
+                          ),
         )
       # Add "refuse" type actions (if any)
       for title in self._getRefuseActionTitleList():
         action_list.append(
-          CacheableAction(id='refuse_%s' % title.lower().strip().replace(' ','_'),
+          CacheableAction(id='reject_%s' % title.lower().strip().replace(' ','_'),
                           name=title,
-                          description='Refuse the form',
+                          description='Reject the form',
                           category='workflow',
                           priority=10.5,
                           icon=None,
-                          action='string:${object_url}/Base_viewWorkflowActionDialog?workflow_action=refuse_action',
+                          action='string:${object_url}/Base_viewWorkflowActionDialog?workflow_action=reject_action',
                           condition="python:object.getValidationState() in ['completed',]",
-                          permission_list=['Modify Portal Content']),
+                          ),
         )
 
     return action_list

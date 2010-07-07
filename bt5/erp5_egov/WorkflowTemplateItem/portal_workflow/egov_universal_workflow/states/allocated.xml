@@ -31,8 +31,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>complet</string>
-                <string>complet_action</string>
+                <string>complete</string>
+                <string>complete_action</string>
                 <string>suspend</string>
                 <string>suspend_action</string>
               </tuple>
@@ -80,6 +80,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

@@ -21,7 +21,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-Base_viewSearchResultList?validation_state=accepted&reset=1
+Base_viewSearchResultList?validation_state=receivable&reset=1
 
 ]]></string> </value>
         </item>
@@ -86,7 +86,7 @@ Base_viewSearchResultList?validation_state=accepted&reset=1
                     <key> <string>validation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>accepted</string>
+                        <string>receivable</string>
                       </tuple>
                     </value>
                 </item>

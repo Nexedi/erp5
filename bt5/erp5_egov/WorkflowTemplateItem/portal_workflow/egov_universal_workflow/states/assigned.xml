@@ -33,8 +33,8 @@
               <tuple>
                 <string>assign</string>
                 <string>assign_action</string>
-                <string>complet</string>
-                <string>complet_action</string>
+                <string>complete</string>
+                <string>complete_action</string>
                 <string>open</string>
                 <string>open_action</string>
               </tuple>
@@ -71,7 +71,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -116,7 +115,6 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>

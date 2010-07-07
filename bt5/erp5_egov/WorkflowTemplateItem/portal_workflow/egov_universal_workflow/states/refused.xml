@@ -65,7 +65,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Member</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
@@ -74,23 +73,21 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Member</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
-                        <string>Member</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Member</string>
+                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
@@ -110,7 +107,6 @@
                         <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Member</string>
                         <string>Owner</string>
                       </tuple>
                     </value>

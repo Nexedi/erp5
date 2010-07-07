@@ -78,6 +78,7 @@
             <value>
               <tuple>
                 <string>Owner</string>
+                <string>Agent</string>
               </tuple>
             </value>
         </item>

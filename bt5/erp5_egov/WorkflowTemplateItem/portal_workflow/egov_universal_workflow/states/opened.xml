@@ -33,8 +33,8 @@
               <tuple>
                 <string>assign</string>
                 <string>assign_action</string>
-                <string>complet</string>
-                <string>complet_action</string>
+                <string>complete</string>
+                <string>complete_action</string>
                 <string>request</string>
                 <string>request_action</string>
                 <string>suspend</string>
@@ -84,6 +84,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Manager</string>
                       </tuple>
                     </value>

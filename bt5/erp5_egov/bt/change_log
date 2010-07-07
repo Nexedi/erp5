@@ -1,3 +1,12 @@
+2010-07-07 mayoro
+* rename complet transition to complete (mistake) and approuve to approve
+* change permission on states
+* modify role on transitions
+* add automatic transitions
+* add workflists
+* change transition in EGovTypeInformation according to workflow changes
+* remove permissions on renamed actions (managed on workflow transition)
+
 2010-07-06 mayoro
 * correct display of advanced search dialog
 * correct display of explanation in attachments

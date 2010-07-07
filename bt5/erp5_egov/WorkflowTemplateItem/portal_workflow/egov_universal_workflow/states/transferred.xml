@@ -31,8 +31,9 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>accept</string>
-                <string>accept_action</string>
+                <string>automatic_receive_action</string>
+                <string>receive</string>
+                <string>receive_action</string>
                 <string>transfer</string>
                 <string>transfer_action</string>
               </tuple>
@@ -67,10 +68,8 @@
                         <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Member</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
@@ -112,10 +111,8 @@
                         <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Member</string>
                         <string>Owner</string>
                       </tuple>
                     </value>
