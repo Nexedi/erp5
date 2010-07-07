@@ -431,6 +431,9 @@ class TestPackingListMixin(TestOrderMixin):
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
     self.assertEquals(len(simulation_movement_list),1)
+    delivery_applied_rule = simulation_movement_list[0].objectValues()[0]
+    simulation_movement_list = delivery_applied_rule.objectValues()
+    self.assertEquals(len(simulation_movement_list),1)
     for simulation_movement in simulation_movement_list:
       self.assertEquals(simulation_movement.getStartDate(),self.datetime + 15)
 
