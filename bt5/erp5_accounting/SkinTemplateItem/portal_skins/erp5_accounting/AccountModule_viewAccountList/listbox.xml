@@ -149,6 +149,10 @@
                           <string>financial_section_title</string>
                           <string>Financial Section</string>
                         </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -304,6 +308,10 @@
                         <tuple>
                           <string>financial_section_title</string>
                           <string>Financial Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
                         </tuple>
                       </list>
                     </value>

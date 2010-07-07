@@ -212,6 +212,10 @@
                           <string>translated_causality_state_title</string>
                           <string>Causality State</string>
                         </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -428,6 +432,10 @@
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -497,6 +505,10 @@
                         <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner_title</string>
+                          <string>Owner</string>
                         </tuple>
                       </list>
                     </value>
