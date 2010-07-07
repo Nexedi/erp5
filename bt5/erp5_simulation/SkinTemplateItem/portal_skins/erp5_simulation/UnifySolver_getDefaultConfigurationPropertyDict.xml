@@ -58,7 +58,7 @@ This script returns a dictionary of default properties for Unify Solver.\n
 \n
 This is a sample implementation that returns the first item in each list.\n
 """\n
-value_list_dict = context.UnifySolver_getDefaultConfigurationPropertyListDict()\n
+value_list_dict = context.UnifySolver_getConfigurationPropertyListDict()\n
 value_dict = {}\n
 for property_id, value_list in value_list_dict.items():\n
   value_dict[property_id] = value_list[0]\n
