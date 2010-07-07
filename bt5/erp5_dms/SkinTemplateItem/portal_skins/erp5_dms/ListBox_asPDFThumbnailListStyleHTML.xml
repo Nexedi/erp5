@@ -226,10 +226,12 @@
 <script type="text/javascript"\n
   tal:define="size python:len(line_list);\n
               start_frame python:here.renderer.getLineStart();\n
-              end_frame python:start_frame+size;"\n
+              end_frame python:start_frame+size;\n
+              format python: real_context.portal_preferences.getPreference(\'preferred_image_format\', \'png\')"\n
   tal:content="string:var START_FRAME=${start_frame};\n
                       var END_FRAME=${end_frame};\n
                       var SELECTION_NAME=\'${selection_name}\';\n
+                      var FORMAT=\'${format}\';\n
   ">\n
 </script>\n
 \n
@@ -249,7 +251,7 @@ function makeThumnailNode(parent_node, frame, src){\n
 function makeThumbnailNodes(start, end){\n
   forEach(MochiKit.Iter.range(start,end), \n
     function(frame_number){\n
-      makeThumnailNode(parent_node, frame_number, "index_html?frame="+frame_number+"&display=thumbnail&format=png");\n
+      makeThumnailNode(parent_node, frame_number, "index_html?frame="+frame_number+"&display=thumbnail&format="+FORMAT);\n
     });\n
 }\n
 \n
