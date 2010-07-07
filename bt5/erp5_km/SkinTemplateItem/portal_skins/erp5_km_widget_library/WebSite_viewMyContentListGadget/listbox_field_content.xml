@@ -307,7 +307,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python: \'<div><a href= "%s/view"><img class="left" src="%s?display=thumbnail&format=PNG&" /><span style="font-size: normal">%s</span></a></div><p class="clear" />\' % (cell.absolute_url(), cell.Base_getThumbnailAbsoluteUrl(), cell.getDescription())
+python: \'<div><a href= "%s/view"><img class="left" src="%s?display=thumbnail&format=%s&" /><span style="font-size: normal">%s</span></a></div><p class="clear" />\' % (cell.absolute_url(), cell.Base_getThumbnailAbsoluteUrl(), cell.getObject().portal_preferences.getPreference(\'preferred_image_format\', \'png\'), cell.getDescription())
 
 ]]></string> </value>
         </item>
