@@ -76,7 +76,7 @@
         </item>
         <item>
             <key> <string>solver_action_title</string> </key>
-            <value> <string>LIFO</string> </value>
+            <value> <string>Last In, First Out</string> </value>
         </item>
       </dictionary>
     </pickle>
