@@ -337,10 +337,10 @@ msgid "Apply Changes to Skins"
 msgstr "スキンに変更を適用する"
 
 msgid "Apply Purchase Trade Condition"
-msgstr "購入先の取引条件を適用する"
+msgstr "仕入先の取引条件を適用する"
 
 msgid "Apply Sale Trade Condition"
-msgstr "販売の取引条件を適用する"
+msgstr "得意先の取引条件を適用する"
 
 msgid "Apply Trade Condition"
 msgstr "取引条件を適用する"
@@ -4615,28 +4615,28 @@ msgid "Sale Supply Cell"
 msgstr "販売先の供給条件セル"
 
 msgid "Sale Supply Line"
-msgstr "販売先の供給条件明細"
+msgstr "得意先の供給条件明細"
 
 msgid "Sale Supply Lines"
-msgstr "販売先の供給条件明細"
+msgstr "得意先の供給条件明細"
 
 msgid "Sale Supply Module"
-msgstr "販売先の供給条件モジュール"
+msgstr "得意先の供給条件モジュール"
 
 msgid "Sale Supply"
-msgstr "販売先の供給条件"
+msgstr "得意先の供給条件"
 
 msgid "Sale Trade Condition List"
-msgstr "販売の取引条件リスト"
+msgstr "得意先の取引条件リスト"
 
 msgid "Sale Trade Condition Module"
-msgstr "販売の取引条件モジュール"
+msgstr "得意先の取引条件モジュール"
 
 msgid "Sale Trade Condition must be defined"
-msgstr "販売の取引条件は必須です"
+msgstr "得意先の取引条件は必須です"
 
 msgid "Sale Trade Condition"
-msgstr "販売の取引条件"
+msgstr "得意先の取引条件"
 
 msgid "Sale Trade Conditions to Validate"
 msgstr "承認すべき得意先の取引条件"
@@ -4645,7 +4645,7 @@ msgid "Sale Trade Conditions"
 msgstr "得意先の取引条件"
 
 msgid "Sale trade condition"
-msgstr "販売の取引条件"
+msgstr "得意先の取引条件"
 
 msgid "Sale"
 msgstr "販売"
