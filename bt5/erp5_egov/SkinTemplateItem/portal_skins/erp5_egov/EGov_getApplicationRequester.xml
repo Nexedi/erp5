@@ -57,10 +57,7 @@
   return first_name plus last  name of the owner of document if the document belong\n
   to a registry person in person_module otherwise it\'a an anonymous requester\n
 """\n
-\n
-if \'id\' in context.owner_info().keys():\n
-  owner = context.owner_info()[\'id\']\n
-\n
+owner = context.owner_info()[\'id\']\n
 owner_object = context.portal_catalog.getResultValue(portal_type=\'Person\', reference=owner)\n
 \n
 owner_name = \'Requester\'\n
@@ -126,9 +123,9 @@ return owner_name\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_getitem_</string>
                             <string>owner</string>
                             <string>owner_object</string>
                             <string>owner_name</string>

@@ -1,4 +1,7 @@
 2010-07-07 mayoro
+* remove test because id will be always present in owner_info
+
+2010-07-07 mayoro
 * display name of requester in attachment list
 
 2010-07-07 mayoro
