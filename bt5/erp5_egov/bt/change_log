@@ -1,4 +1,7 @@
 2010-07-07 mayoro
+* change automatic transitions
+
+2010-07-07 mayoro
 * rename complet transition to complete (mistake) and approuve to approve
 * change permission on states
 * modify role on transitions

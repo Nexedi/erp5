@@ -23,7 +23,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>receive</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -41,7 +41,7 @@
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>receivable</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
