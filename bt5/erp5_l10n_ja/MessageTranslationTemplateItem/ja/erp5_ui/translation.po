@@ -163,7 +163,7 @@ msgid "Accounting Workflow"
 msgstr "会計ワークフロー"
 
 msgid "Accounting"
-msgstr "納品書・請求書"
+msgstr "会計取引"
 
 msgid "Accounts to Validate"
 msgstr "承認すべき勘定科目"
@@ -2731,10 +2731,10 @@ msgid "Invalidated"
 msgstr "却下済み"
 
 msgid "Inventories to validate"
-msgstr "承認すべき在庫目録"
+msgstr "承認すべき棚卸"
 
 msgid "Inventories"
-msgstr "在庫目録"
+msgstr "棚卸"
 
 msgid "Inventory Cell"
 msgstr "棚卸セル"
@@ -4015,37 +4015,37 @@ msgid "Purchase Price"
 msgstr "購入単価"
 
 msgid "Purchase Supplies"
-msgstr "購入先の供給条件"
+msgstr "仕入先の供給条件"
 
 msgid "Purchase Supply Cell"
-msgstr "購入先の供給条件セル"
+msgstr "仕入先の供給条件セル"
 
 msgid "Purchase Supply Line"
-msgstr "購入先の供給条件明細"
+msgstr "仕入先の供給条件明細"
 
 msgid "Purchase Supply Lines"
-msgstr "購入先の供給条件明細"
+msgstr "仕入先の供給条件明細"
 
 msgid "Purchase Supply Module"
-msgstr "購入先の供給条件モジュール"
+msgstr "仕入先の供給条件モジュール"
 
 msgid "Purchase Supply"
-msgstr "購入先の供給条件"
+msgstr "仕入先の供給条件"
 
 msgid "Purchase Trade Condition Module"
-msgstr "購入の取引条件モジュール"
+msgstr "仕入先の取引条件モジュール"
 
 msgid "Purchase Trade Condition must be defined"
-msgstr "購入先の取引条件は必須です"
+msgstr "仕入先の取引条件は必須です"
 
 msgid "Purchase Trade Condition"
-msgstr "購入先の取引条件"
+msgstr "仕入先の取引条件"
 
 msgid "Purchase Trade Conditions to Validate"
-msgstr "承認すべき購入先の取引条件"
+msgstr "承認すべき仕入先の取引条件"
 
 msgid "Purchase Trade Conditions"
-msgstr "購入先の取引条件"
+msgstr "仕入先の取引条件"
 
 msgid "Purchase"
 msgstr "購入"
