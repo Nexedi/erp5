@@ -44,5 +44,5 @@ class SolverMixin:
 
   # Implementation of ISolver
 
-  def _getPortalTypeValue(self):
+  def getPortalTypeValue(self):
     return self.getPortalObject().portal_solvers._getOb(self.getPortalType())
