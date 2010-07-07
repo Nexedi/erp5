@@ -123,25 +123,3 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
       prevision_value = prevision_movement.getProperty(tested_property)
       property_dict[tested_property] = prevision_value
     return property_dict
-
-  def accept(self, simulation_movement):
-    """
-    Copies the properties handled by the divergence tester
-    from the related delivery movement to simulation_movement.
-
-    NOTE: the future existence of this method is still unknown
-    because it is likely to be implemented in TargetSolver
-    instead.
-    """
-    raise NotImplementedError
-
-  def adopt(self, simulation_movement):
-    """
-    Copies the properties handled by the divergence tester
-    from simulation_movement to the related delivery movement
-
-    NOTE: the future existence of this method is still unknown
-    because it is likely to be implemented in TargetSolver
-    instead.
-    """
-    raise NotImplementedError
