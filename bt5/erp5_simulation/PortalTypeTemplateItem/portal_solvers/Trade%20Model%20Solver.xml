@@ -61,12 +61,6 @@
             </value>
         </item>
         <item>
-            <key> <string>delivery_solver</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>The Trade Model Solver solves the divergence by accepting the decision and updating a simulation movement, and also updates trade model related movements.</string> </value>
         </item>

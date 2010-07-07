@@ -65,12 +65,6 @@
             <value> <string>UnifySolver_getDefaultConfigurationPropertyDict</string> </value>
         </item>
         <item>
-            <key> <string>delivery_solver</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
             <value> <string>The Unify Solver solves the divergence by unifying the value with a selected one and updating a simulation movement.</string> </value>
         </item>
