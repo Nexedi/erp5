@@ -213,4 +213,17 @@ class HtmlStylePreference:
       'type'        : 'int',
       'default'     : 1024,
       'preference'  : 1,
-      'mode'        : 'w' },)
+      'mode'        : 'w' },
+    { 'id'          : 'preferred_image_format',
+      'description' : 'Preferred image format.',
+      'type'        : 'string',
+      'preference'  : 1,
+      'default'     : 'png',
+      'mode'        : 'w' },
+    { 'id'          : 'preferred_image_size',
+      'description' : 'Preferred image size.',
+      'type'        : 'string',
+      'preference'  : 1,
+      'default'     : 'large',
+      'mode'        : 'w' },
+)
