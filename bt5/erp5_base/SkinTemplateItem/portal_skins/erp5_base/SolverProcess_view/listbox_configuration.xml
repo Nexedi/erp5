@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_solver</string> </value>
+            <value> <string>listbox_configuration</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -113,7 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:cell.getSolverId()</string> </value>
+            <value> <string>python:repr(cell.getConfigurationPropertyDict())</string> </value>
         </item>
       </dictionary>
     </pickle>

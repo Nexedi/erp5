@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>solver_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -100,12 +100,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_portal_type</string>
                           <string>Portal Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>configuration</string>
+                          <string>Configuration</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

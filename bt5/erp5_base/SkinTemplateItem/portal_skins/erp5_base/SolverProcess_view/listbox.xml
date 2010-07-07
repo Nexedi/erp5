@@ -361,24 +361,12 @@
                           <string>Divergence</string>
                         </tuple>
                         <tuple>
-                          <string>Line or Cell</string>
-                          <string>Line or Cell</string>
-                        </tuple>
-                        <tuple>
-                          <string>Prevision</string>
-                          <string>Prevision</string>
-                        </tuple>
-                        <tuple>
-                          <string>Current Value</string>
-                          <string>Current Value</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_solver</string>
-                          <string>Delivery Solver</string>
-                        </tuple>
-                        <tuple>
                           <string>solver</string>
                           <string>Target Solver</string>
+                        </tuple>
+                        <tuple>
+                          <string>configuration</string>
+                          <string>Configuration</string>
                         </tuple>
                         <tuple>
                           <string>description</string>
@@ -406,6 +394,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
                       <list/>
@@ -422,16 +416,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>delivery_solver</string>
-                          <string>Delivery Solver</string>
-                        </tuple>
-                        <tuple>
-                          <string>solver</string>
-                          <string>Target Solver</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -547,7 +532,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Decisions</string> </value>
+                    <value> <string>Solver Decisions</string> </value>
                 </item>
                 <item>
                     <key> <string>untranslatable_columns</string> </key>
@@ -578,7 +563,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>contentValues</string> </value>
+            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>

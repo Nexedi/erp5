@@ -79,6 +79,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>solver_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -92,8 +93,9 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_delivery_solver</string>
+                        <string>listbox_configuration</string>
                         <string>listbox_solver</string>
+                        <string>solver_listbox_configuration</string>
                       </list>
                     </value>
                 </item>
