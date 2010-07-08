@@ -35,7 +35,7 @@ class RecursiveReindexInteractor(Interactor):
   subdocuments are modified.
   """
   def install(self):
-    from Products.ERP5Type.Document.TradeCondition import TradeCondition
+    from Products.ERP5.Document.TradeCondition import TradeCondition
     self.on(TradeCondition.reindexObject).doAfter(self.recursiveReindexObject)
 
   def recursiveReindexObject(self, method_call_object, *args, **kw):
