@@ -353,12 +353,12 @@ class TestEgov(ERP5TypeTestCase):
     vat_declaration.PDFDocument_getApplicationIncomeDict()
     vat_declaration.PDFDocument_getReportSectionList()
     vat_declaration.PDFDocument_viewHistory()
-    self.portal.portal_workflow.doActionFor(vat_declaration, 'accept_action')
-    self.assertEquals('accepted', vat_declaration.getValidationState())
+    self.portal.portal_workflow.doActionFor(vat_declaration, 'receive_action')
+    self.assertEquals('receivable', vat_declaration.getValidationState())
     self.assertEquals(vat_declaration.getTypeInfo().getStepReviewRequest(),None)
     self.portal.portal_workflow.doActionFor(vat_declaration, 'assign_action')
     self.assertEquals('assigned', vat_declaration.getValidationState())
-    self.portal.portal_workflow.doActionFor(vat_declaration, 'complet_action')
+    self.portal.portal_workflow.doActionFor(vat_declaration, 'complete_action')
     self.assertEquals('completed', vat_declaration.getValidationState())
 
 
