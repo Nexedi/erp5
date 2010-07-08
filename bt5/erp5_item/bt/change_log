@@ -1,3 +1,6 @@
+2010-07-08 tatuya
+* Fix a issue that items can not be created with more than two dimesion variations at the first input.
+
 2010-07-06 tatuya
 * Fix the issue that Item_viewTrackingList shows editable fields in the listbox. They are no need.
 
