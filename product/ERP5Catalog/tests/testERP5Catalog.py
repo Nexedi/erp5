@@ -3524,6 +3524,125 @@ VALUES
       sql_catalog.sql_search_tables = current_sql_search_tables
       transaction.commit()
 
+  def test_PersonDocumentWithMonovaluedLocalRole(self):
+    user = 'person_document_user_name'
+
+    sql_connection = self.getSQLConnection()
+    def query(sql):
+      result = sql_connection.manage_test(sql)
+      return result.dictionaries()
+
+    # Add a new table to the catalog
+    sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+
+    local_roles_table = "person_document_test_user_or_group_local_roles"
+
+    create_local_role_table_sql = """
+CREATE TABLE `%s` (
+  `uid` BIGINT UNSIGNED NOT NULL,
+  `viewable_assignee_reference` varchar(32) NOT NULL default '',
+  PRIMARY KEY  (`uid`),
+  KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
+) TYPE=InnoDB;
+    """ % local_roles_table
+    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+          id = 'z_create_%s' % local_roles_table,
+          title = '',
+          arguments = "",
+          connection_id = 'erp5_sql_connection',
+          template = create_local_role_table_sql)
+
+    drop_local_role_table_sql = """
+DROP TABLE IF EXISTS %s
+    """ % local_roles_table
+    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+          id = 'z0_drop_%s' % local_roles_table,
+          title = '',
+          arguments = "",
+          connection_id = 'erp5_sql_connection',
+          template = drop_local_role_table_sql)
+
+    catalog_local_role_sql = """
+REPLACE INTO
+  %s
+VALUES
+<dtml-in prefix="loop" expr="_.range(_.len(uid))">
+(
+  <dtml-sqlvar expr="uid[loop_item]" type="int">,  
+  <dtml-sqlvar expr="getViewPermissionAssignee[loop_item] or ''" type="string" optional>
+)
+<dtml-if sequence-end>
+<dtml-else>
+,
+</dtml-if>
+</dtml-in>
+    """ % local_roles_table
+    sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
+          id = 'z_catalog_%s_list' % local_roles_table,
+          title = '',
+          connection_id = 'erp5_sql_connection',
+          arguments = "\n".join(['uid',
+                                 'getViewPermissionAssignee']),
+          template = catalog_local_role_sql)
+
+    transaction.commit()
+    current_sql_catalog_object_list = sql_catalog.sql_catalog_object_list
+    sql_catalog.sql_catalog_object_list = \
+      current_sql_catalog_object_list + \
+         ('z_catalog_%s_list' % local_roles_table,)
+    current_sql_clear_catalog = sql_catalog.sql_clear_catalog
+    sql_catalog.sql_clear_catalog = \
+      current_sql_clear_catalog + \
+         ('z0_drop_%s' % local_roles_table, 'z_create_%s' % local_roles_table)
+
+    current_sql_catalog_role_keys = \
+          sql_catalog.sql_catalog_role_keys
+    sql_catalog.sql_catalog_role_keys = (
+        'Owner | viewable_owner',
+        'Assignee | %s.viewable_assignee_reference' % \
+       local_roles_table,)
+
+    current_sql_search_tables = sql_catalog.sql_search_tables
+    sql_catalog.sql_search_tables = sql_catalog.sql_search_tables + \
+        [local_roles_table]
+
+    portal = self.getPortal()
+    transaction.commit()
+
+    try:
+      # Clear catalog
+      portal_catalog = self.getCatalogTool()
+      portal_catalog.manage_catalogClear()
+      transaction.commit()
+      self.portal.portal_caches.clearAllCache()
+      transaction.commit()
+
+      person = self.portal.person_module.newContent(portal_type='Person',
+          reference=user)
+      person.manage_setLocalRoles(user, ['Assignee'])
+      transaction.commit()
+      self.tic()
+
+      roles_and_users_result = query('select * from roles_and_users where uid = (select security_uid from catalog where uid = %s)' % person.getUid())
+      local_roles_table_result = query('select * from %s where uid = %s' % (local_roles_table, person.getUid()))[0]
+      
+      # check that local seucirty table is clean about created person object
+      self.assertSameSet(
+          sorted([q['allowedRolesAndUsers'] for q in roles_and_users_result]),
+          ['Assignee', 'Assignor', 'Associate', 'Auditor', 'Author', 'Manager']
+      )
+      # check that user has optimised security declaration
+      self.assertEqual(local_roles_table_result['viewable_assignee_reference'], user)
+    finally:
+      sql_catalog.sql_catalog_object_list = \
+        current_sql_catalog_object_list
+      sql_catalog.sql_clear_catalog = \
+        current_sql_clear_catalog
+      sql_catalog.sql_catalog_role_keys = \
+          current_sql_catalog_role_keys
+      sql_catalog.sql_search_tables = current_sql_search_tables
+      transaction.commit()
+
   def test_ObjectReindexationConcurency(self, quiet=quiet, run=run_all_test):
     if not run:
       return
