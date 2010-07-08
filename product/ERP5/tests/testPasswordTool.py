@@ -437,6 +437,40 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.tic()
     self._assertUserExists('userZ ', 'newZ2')
 
+  def test_no_email_on_person(self):
+    person = self.portal.person_module.newContent(portal_type="Person",
+                                    reference="user",
+                                    password="password",)
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.open()
+
+    transaction.commit()
+    self.tic()
+    self.logout()
+    ret = self.portal.portal_password.mailPasswordResetRequest(user_login='user')
+    self.assertEquals("User user does not have an email address, please contact"
+        " site administrator directly", str(ret))
+
+  def test_acquired_email_on_person(self):
+    organisation = self.portal.organisation_module.newContent(
+                                    portal_type='Organisation',
+                                    default_email_text="organisation@example.com",)
+    person = self.portal.person_module.newContent(portal_type="Person",
+                                    reference="user",
+                                    password="password",
+                                    default_career_subordination_value=organisation)
+    assignment = person.newContent(portal_type='Assignment')
+    assignment.open()
+
+    transaction.commit()
+    self.tic()
+    self._assertUserExists('user', 'password')
+    self.logout()
+    ret = self.portal.portal_password.mailPasswordResetRequest(user_login='user')
+    self.assertEquals("User user does not have an email address, please contact"
+        " site administrator directly", str(ret))
+
+
 class TestPasswordToolWithCRM(TestPasswordTool):
   """
   Test reset of password
