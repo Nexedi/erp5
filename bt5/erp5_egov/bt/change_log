@@ -1,4 +1,8 @@
 2010-07-08 mayoro
+* remove wrong condition
+* change pending worklist permissions
+
+2010-07-08 mayoro
 * add tabber-cookie.js
 * order action buttons on header workspaces
 * Allow change password in citizen's home page

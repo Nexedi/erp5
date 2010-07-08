@@ -61,10 +61,8 @@ Base_viewSearchResultList?validation_state=pending&reset=1
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Auditor</string>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Associate</string>
               </tuple>
             </value>
         </item>
