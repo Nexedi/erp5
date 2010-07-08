@@ -493,6 +493,7 @@ div.bottom_actions button.saveView span.image {\n
 \n
 .section_description{\n
   padding-top: 0.5em;\n
+  margin-left: 0.8em;\n
   font-size: 1.1em;\n
   font-style: italic;\n
 }\n

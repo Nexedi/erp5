@@ -69,13 +69,14 @@ if portal_type_object.getStepAttachment():\n
     type = getattr(portal_type_object, "getAttachmentModel%s" % i, None)\n
     if type is not None:\n
       type = type()\n
+      attachement_format = \'   Format :  %s\' % type\n
     else:\n
       type = []\n
     if requirement is not None and requirement() is not None:\n
       required = require[requirement()]\n
     if title is not None and title()!="" and attachment is not None and attachment():\n
       attachement_type_dict[title()] = {\n
-           \'description\': "",\n
+           \'description\': attachement_format,\n
            \'requirement\': required,  \n
            \'outcome\'    : False,\n
            \'type\'       : type,\n
@@ -136,6 +137,7 @@ return attachement_type_dict\n
                             <string>requirement</string>
                             <string>attachment</string>
                             <string>type</string>
+                            <string>attachement_format</string>
                             <string>required</string>
                             <string>False</string>
                             <string>_write_</string>
