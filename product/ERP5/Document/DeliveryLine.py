@@ -240,10 +240,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
           # And apply
           getattr(my_simulation_movement.getObject(), method_id)()
 
-    def reindexObject(self, *k, **kw):
-      """Reindex children"""
-      self.recursiveReindexObject(*k, **kw)
-
     security.declareProtected(Permissions.AccessContentsInformation, 'getInventoriatedQuantity')
     def getInventoriatedQuantity(self):
       """

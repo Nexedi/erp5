@@ -467,17 +467,6 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
 
 
     #######################################################
-    # Defer indexing process
-    def reindexObject(self, *k, **kw):
-      """
-        Reindex children and simulation
-      """
-      self.recursiveReindexObject(*k, **kw)
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # Make sure expanded simulation is still OK (expand and reindex)
-      # self.activate().applyToDeliveryRelatedMovement(method_id = 'expand')
-
-    #######################################################
     # Stock Management
     def _getMovementResourceList(self):
       resource_dict = {}
