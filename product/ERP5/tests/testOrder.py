@@ -39,6 +39,17 @@ from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.ZSQLCatalog.SQLCatalog import Catalog
+
+def catalogObjectListWrapper(self, object_list, method_id_list=None,
+    disable_cache=0, check_uid=1, idxs=None):
+  """Wrapper to mark inside of portal object list of catalogged objects"""
+  import transaction
+  portal = self.getPortalObject()
+  for q in object_list:
+    portal.catalogged_object_path_dict[q.getPath()] = 1
+  transaction.commit()
 
 class TestOrderMixin:
 
@@ -68,6 +79,13 @@ class TestOrderMixin:
     uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
+
+  def wrap_catalogObjectList(self):
+    self.original_catalogObjectList = Catalog.catalogObjectList
+    Catalog.catalogObjectList = catalogObjectListWrapper
+
+  def unwrap_catalogObjectList(self):
+    Catalog.catalogObjectList = self.original_catalogObjectList
 
   def setUpPreferences(self):
     #create apparel variation preferences
@@ -2843,63 +2861,40 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   def test_subcontent_reindexing(self):
     """Tests, that modification on Order are propagated to lines and cells
     during reindxation"""
-    organisation1 = self.portal.organisation_module.newContent(
-                              portal_type='Organisation')
-    organisation2 = self.portal.organisation_module.newContent(
-                              portal_type='Organisation')
-    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
-                              portal_type=self.order_portal_type,
-                              source_value=organisation1)
-    order_line = order.newContent(portal_type=self.order_line_portal_type)
-    inner_order_line = order.newContent(portal_type=self.order_line_portal_type
-        ).newContent(portal_type=self.order_line_portal_type)
-    order_cell = order.newContent(portal_type=self.order_line_portal_type)\
-        .newContent(portal_type=self.order_cell_portal_type)
-    self.stepTic()
-    # self-tests...
-    # ...assertions of acquisition
-    source, source_uid = order.getSource(), order.getSourceUid()
-    self.assertEqual(source, order_line.getSource())
-    self.assertEqual(source, inner_order_line.getSource())
-    self.assertEqual(source, order_cell.getSource())
-    # ...assertions that only acquisition is used
-    self.assertFalse('source/'+source in order_line.getCategoryList())
-    self.assertFalse('source/'+source in inner_order_line.getCategoryList())
-    self.assertFalse('source/'+source in order_cell.getCategoryList())
-    # ...assertions that they are movement
-    self.assertTrue(order_line.isMovement())
-    self.assertTrue(order_cell.isMovement())
-    self.assertTrue(inner_order_line.isMovement())
-    # real assertions
-    kw = {"movement.source_uid":source_uid}
-    catalog_tool = self.portal.portal_catalog
-    self.assertEqual(1, len(catalog_tool(uid=order.getUid(),
-      source_relative_url=source)))
-    self.assertEqual(1, len(catalog_tool(uid=order_line.getUid(), **kw)))
-    self.assertEqual(1, len(catalog_tool(uid=inner_order_line.getUid(), **kw)))
-    self.assertEqual(1, len(catalog_tool(uid=order_cell.getUid(), **kw)))
-
-    # change to different source
-    order.setSourceValue(organisation2)
-    self.stepTic()
-
-    # ...assertions of acquisition
-    source, source_uid = order.getSource(), order.getSourceUid()
-    self.assertEqual(source, order_line.getSource())
-    self.assertEqual(source, inner_order_line.getSource())
-    self.assertEqual(source, order_cell.getSource())
-    # ...assertions that only acquisition is used
-    self.assertFalse('source/'+source in order_line.getCategoryList())
-    self.assertFalse('source/'+source in inner_order_line.getCategoryList())
-    self.assertFalse('source/'+source in order_cell.getCategoryList())
-    # real assertions
-    kw = {"movement.source_uid":source_uid}
-    catalog_tool = self.portal.portal_catalog
-    self.assertEqual(1, len(catalog_tool(uid=order.getUid(),
-      source_relative_url=source)))
-    self.assertEqual(1, len(catalog_tool(uid=order_line.getUid(), **kw)))
-    self.assertEqual(1, len(catalog_tool(uid=inner_order_line.getUid(), **kw)))
-    self.assertEqual(1, len(catalog_tool(uid=order_cell.getUid(), **kw)))
+    self.portal.catalogged_object_path_dict = PersistentMapping()
+    transaction.commit()
+    try:
+      # wrap call to catalogObjectList
+      self.wrap_catalogObjectList()
+      # prepare test data
+      order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                                portal_type=self.order_portal_type)
+      order_line = order.newContent(portal_type=self.order_line_portal_type)
+      inner_order_line = order.newContent(
+          portal_type=self.order_line_portal_type).newContent(
+              portal_type=self.order_line_portal_type)
+      order_cell = order_line.newContent(
+          portal_type=self.order_cell_portal_type)
+      expected_path_list = [order.getPath(), order_line.getPath(),
+          inner_order_line.getPath(), order_cell.getPath()]
+      self.stepTic()
+      # check that all would be catalogged
+      self.assertSameSet(
+        self.portal.catalogged_object_path_dict.keys(),
+        expected_path_list
+      )
+      # do real assertions
+      self.portal.catalogged_object_path_dict = PersistentMapping()
+      transaction.commit()
+      order.reindexObject()
+      self.stepTic()
+      self.assertSameSet(
+        self.portal.catalogged_object_path_dict.keys(),
+        expected_path_list
+      )
+    finally:
+      # unwrap catalogObjectList
+      self.unwrap_catalogObjectList()
 
 def test_suite():
   suite = unittest.TestSuite()
