@@ -2509,9 +2509,11 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       return aq_base(getattr(self.getContext(), method_id)).__of__(context)
     # Try to get a page template from acquisition context then portal object
     # and fallback on default page template.
-    return getattr(self.getContext(), 'ListBox_asHTML',
-           getattr(context.getPortalObject(), 'ListBox_asHTML', context.asHTML)
-           ).__of__(context)
+    page_template = getattr(self.getContext(), 'ListBox_asHTML', None)
+    if page_template is None:
+        portal_object = context.getPortalObject()
+        page_template = getattr(portal_object, 'ListBox_asHTML', context.asHTML)
+    return page_template.__of__(context)
 
   def render(self, **kw):
     """Render the data in HTML.
