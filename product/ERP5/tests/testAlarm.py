@@ -749,6 +749,22 @@ class TestAlarm(ERP5TypeTestCase):
     catalog_alarm_date = alarm_list[0].alarm_date
     self.assertEqual(date.toZone('UTC'), catalog_alarm_date)
 
+  def test_21b_AlarmCatalogPresenceWithInitialEmptyStartDate(self):
+    """Check that alarm date is properly stored in catalog if
+       initially the periodicity start date was not there and
+       then set later"""
+    date = DateTime().earliestTime()
+    alarm = self.newAlarm(enabled=True, periodicity_start_date=None)
+    transaction.commit()
+    self.tic()
+    alarm_list = alarm.Alarm_zGetAlarmDate(uid=alarm.getUid())
+    self.assertEqual(None, alarm_list[0].alarm_date)
+    alarm.edit(periodicity_start_date=date)
+    transaction.commit()
+    self.tic()
+    alarm_list = alarm.Alarm_zGetAlarmDate(uid=alarm.getUid())
+    self.assertEqual(date.toZone('UTC'), alarm_list[0].alarm_date)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAlarm))
