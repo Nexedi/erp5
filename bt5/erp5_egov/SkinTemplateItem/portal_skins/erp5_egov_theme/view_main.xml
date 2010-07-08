@@ -65,7 +65,8 @@
             tal:content="string:installUnsavedChangesWarning(\'$message\')">\n
           </script>\n
           <div class="document"\n
-               tal:define="actions actions/object_view | python: []">\n
+               tal:define="actions actions/object_view | python: [];\n
+                           current_action  python: context.EGov_getDefaultCurrentAction(actions,current_action);">\n
             <div class="actions"\n
                  tal:condition="python: (not is_web_mode or editable_mode) and len(actions)">\n
               <button tal:condition="python: not is_web_mode and form_action"\n

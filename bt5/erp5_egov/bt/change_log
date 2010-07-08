@@ -1,3 +1,6 @@
+2010-07-08 mayoro
+* Select View tab corresponding to generated form
+
 2010-07-07 mayoro
 * remove using getOwner (private method)
 * remove proxy roles
