@@ -3525,6 +3525,11 @@ VALUES
       transaction.commit()
 
   def test_PersonDocumentWithMonovaluedLocalRole(self):
+    """Test when user is added, which has local roles on own Person Document
+
+    This is a case when Person document containting reference with local role
+    which shall be monovalued is reindexed for first time.
+    """
     user = 'person_document_user_name'
 
     sql_connection = self.getSQLConnection()
