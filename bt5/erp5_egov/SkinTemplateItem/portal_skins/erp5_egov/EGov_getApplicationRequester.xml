@@ -54,8 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  return first_name plus last  name of the owner of document if the document belong\n
-  to a registry person in person_module otherwise it\'a an anonymous requester\n
+  return firstname plus lastname of the owner of document if the document belong\n
+  to a registred person in person_module otherwise it\'s an anonymous requester\n
 """\n
 owner = context.owner_info()[\'id\']\n
 owner_object = context.portal_catalog.getResultValue(portal_type=\'Person\', reference=owner)\n
@@ -66,7 +66,7 @@ if owner_object is not None:\n
    if  owner_object.getFirstName() + owner_object.getLastName() != \'\':\n
      owner_name = "%s %s" % (owner_object.getFirstName(), owner_object.getLastName())\n
    else:\n
-     owner_name = context.getOwner()\n
+     owner_name = owner\n
 return owner_name\n
 </string> </value>
         </item>
@@ -83,20 +83,7 @@ return owner_name\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Agent</string>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
-                <string>Owner</string>
-                <string>Reviewer</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
