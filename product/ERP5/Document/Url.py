@@ -73,7 +73,7 @@ class UrlMixIn:
 
     return '%s://%s' % (protocol, url_string)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromURL')
   def fromURL(self, url):
     """
     Analyses a URL and splits it into two parts. URLs
