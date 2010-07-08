@@ -1576,78 +1576,30 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
   def test_subcontent_reindexing_packing_list_line_cell(self):
     """Tests, that indexation of Packing List are propagated to subobjects
     during reindxation"""
-    self.portal.catalogged_object_path_dict = PersistentMapping()
-    transaction.commit()
-    try:
-      # wrap call to catalogObjectList
-      self.wrap_catalogObjectList()
-      # prepare test data
-      packing_list = self.portal.getDefaultModule(
-          self.packing_list_portal_type).newContent(
-              portal_type=self.packing_list_portal_type)
-      packing_list_line = packing_list.newContent(
-          portal_type=self.packing_list_line_portal_type)
-      packing_list_cell = packing_list_line.newContent(
-          portal_type=self.packing_list_cell_portal_type)
-      expected_path_list = [packing_list.getPath(),
-          packing_list_line.getPath(), packing_list_cell.getPath()]
-      self.stepTic()
-      # check that all would be catalogged
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-      # do real assertions
-      self.portal.catalogged_object_path_dict = PersistentMapping()
-      transaction.commit()
-      packing_list.reindexObject()
-      self.stepTic()
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-    finally:
-      # unwrap catalogObjectList
-      self.unwrap_catalogObjectList()
+    packing_list = self.portal.getDefaultModule(
+        self.packing_list_portal_type).newContent(
+            portal_type=self.packing_list_portal_type)
+    packing_list_line = packing_list.newContent(
+        portal_type=self.packing_list_line_portal_type)
+    packing_list_cell = packing_list_line.newContent(
+        portal_type=self.packing_list_cell_portal_type)
+    self._testSubContentReindexing(packing_list, [packing_list_line,
+      packing_list_cell])
 
   def test_subcontent_reindexing_packing_list_container_line_cell(self):
     """Tests, that indexation of Packing List are propagated to subobjects
     during reindxation, for Container, Container Line and Container Cell"""
-    self.portal.catalogged_object_path_dict = PersistentMapping()
-    transaction.commit()
-    try:
-      # wrap call to catalogObjectList
-      self.wrap_catalogObjectList()
-      # prepare test data
-      packing_list = self.portal.getDefaultModule(
-          self.packing_list_portal_type).newContent(
-              portal_type=self.packing_list_portal_type)
-      container = packing_list.newContent(
-          portal_type=self.container_portal_type)
-      container_line = container.newContent(
-          portal_type=self.container_line_portal_type)
-      container_cell = container_line.newContent(
-          portal_type=self.container_cell_portal_type)
-      expected_path_list = [packing_list.getPath(), container.getPath(),
-          container_line.getPath(), container_cell]
-      self.stepTic()
-      # check that all would be catalogged
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-      # do real assertions
-      self.portal.catalogged_object_path_dict = PersistentMapping()
-      transaction.commit()
-      packing_list.reindexObject()
-      self.stepTic()
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-    finally:
-      # unwrap catalogObjectList
-      self.unwrap_catalogObjectList()
+    packing_list = self.portal.getDefaultModule(
+        self.packing_list_portal_type).newContent(
+            portal_type=self.packing_list_portal_type)
+    container = packing_list.newContent(
+        portal_type=self.container_portal_type)
+    container_line = container.newContent(
+        portal_type=self.container_line_portal_type)
+    container_cell = container_line.newContent(
+        portal_type=self.container_cell_portal_type)
+    self._testSubContentReindexing(packing_list, [container, container_line,
+      container_cell])
 
 class TestAutomaticSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0

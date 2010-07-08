@@ -87,6 +87,33 @@ class TestOrderMixin:
   def unwrap_catalogObjectList(self):
     Catalog.catalogObjectList = self.original_catalogObjectList
 
+  def _testSubContentReindexing(self, parent_document, children_document_list):
+    """Helper method which shall be called *before* tic or commit"""
+    self.portal.catalogged_object_path_dict = PersistentMapping()
+    transaction.commit()
+    expected_path_list = [q.getPath() for q in children_document_list +
+        [parent_document]]
+    try:
+      # wrap call to catalogObjectList
+      self.wrap_catalogObjectList()
+      self.stepTic()
+      self.assertSameSet(
+        self.portal.catalogged_object_path_dict.keys(),
+        expected_path_list
+      )
+      # do real assertions
+      self.portal.catalogged_object_path_dict = PersistentMapping()
+      transaction.commit()
+      parent_document.reindexObject()
+      self.stepTic()
+      self.assertSameSet(
+        self.portal.catalogged_object_path_dict.keys(),
+        expected_path_list
+      )
+    finally:
+      # unwrap catalogObjectList
+      self.unwrap_catalogObjectList()
+
   def setUpPreferences(self):
     #create apparel variation preferences
     portal_preferences = self.getPreferenceTool()
@@ -2861,40 +2888,15 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   def test_subcontent_reindexing(self):
     """Tests, that modification on Order are propagated to lines and cells
     during reindxation"""
-    self.portal.catalogged_object_path_dict = PersistentMapping()
-    transaction.commit()
-    try:
-      # wrap call to catalogObjectList
-      self.wrap_catalogObjectList()
-      # prepare test data
-      order = self.portal.getDefaultModule(self.order_portal_type).newContent(
-                                portal_type=self.order_portal_type)
-      order_line = order.newContent(portal_type=self.order_line_portal_type)
-      inner_order_line = order.newContent(
-          portal_type=self.order_line_portal_type).newContent(
-              portal_type=self.order_line_portal_type)
-      order_cell = order_line.newContent(
-          portal_type=self.order_cell_portal_type)
-      expected_path_list = [order.getPath(), order_line.getPath(),
-          inner_order_line.getPath(), order_cell.getPath()]
-      self.stepTic()
-      # check that all would be catalogged
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-      # do real assertions
-      self.portal.catalogged_object_path_dict = PersistentMapping()
-      transaction.commit()
-      order.reindexObject()
-      self.stepTic()
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-    finally:
-      # unwrap catalogObjectList
-      self.unwrap_catalogObjectList()
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type)
+    order_line = order.newContent(portal_type=self.order_line_portal_type)
+    inner_order_line = order_line.newContent(
+            portal_type=self.order_line_portal_type)
+    order_cell = order_line.newContent(
+        portal_type=self.order_cell_portal_type)
+    self._testSubContentReindexing(order, [order_line, inner_order_line,
+      order_cell])
 
 def test_suite():
   suite = unittest.TestSuite()
