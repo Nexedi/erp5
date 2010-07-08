@@ -69,7 +69,7 @@ def getPropertiesCSSDict(parsed_scribus
     properties_css_page = {}
     properties_css_pagediv = {}
     properties_page = {}
-    properties_css_page['position'] = 'relative'
+    #properties_css_page['position'] = 'relative'
     # creating image class for background
     properties_css_background = {}
     # making background id
@@ -432,7 +432,7 @@ class PDFTypeInformation(ERP5TypeInformation):
     generateParsedScribus = CachingMethod(generateParsedScribus,
                                         ('PDFTypeInformation_generateParsedScribus',
                                         md5.new(scribus_form.getData()).digest()),
-                                        cache_factory='dms_cache_long')
+                                        cache_factory='dms_cache_factory')
     return generateParsedScribus()
 
   def getERP5Form(self):
@@ -545,7 +545,7 @@ class PDFTypeInformation(ERP5TypeInformation):
     #generateERP5Form = CachingMethod(generateERP5Form,
     #                                ('PDFTypeInformation_generateERP5Form',
     #                                md5.new(self.getDefaultScribusFormValue().getData()).digest()),
-    #                                cache_factory='dms_cache_long')
+    #                                cache_factory='dms_cache_factory')
     return generateERP5Form().__of__(self)
 
   # XXX criticize ERP5.Document.Image
@@ -708,7 +708,7 @@ class PDFTypeInformation(ERP5TypeInformation):
     else:
       name = 'Document Procedure Definition'
     return list(action_list) + [
-      CacheableAction(id='form',
+      CacheableAction(id='view',
                       name=name,
                       description='',
                       category='object_view',
