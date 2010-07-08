@@ -1,4 +1,10 @@
-2010-07-09 mohamadou
+2010-07-08 mayoro
+* add tabber-cookie.js
+* order action buttons on header workspaces
+* Allow change password in citizen's home page
+* give proxy role manager to allow accessing  owner_info
+
+2010-07-08 mohamadou
 * set Type Aquire Local Roles on portal_types used as attachments.
 
 2010-07-08 mayoro
