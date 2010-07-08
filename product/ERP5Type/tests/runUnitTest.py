@@ -220,8 +220,6 @@ if 'SOFTWARE_HOME' in os.environ:
   if not os.path.exists(software_home):
     raise ValueError('SOFTWARE_HOME is set to non existing directory %r'
                       % (software_home,))
-  # software_home is zope_home/lib/python, remove lib/python
-  zope_home = os.path.split(os.path.split(software_home)[0])[0]
 else:
   common_paths = [
     '/usr/lib/erp5/lib/python',
@@ -246,8 +244,10 @@ else:
       break
   else:
     sys.exit('No Zope2 software_home found')
-  zope_home = os.path.dirname(os.path.dirname(software_home))
   os.environ['SOFTWARE_HOME'] = software_home
+
+# software_home is zope_home/lib/python, remove lib/python
+zope_home = os.path.dirname(os.path.dirname(software_home))
 
 # SOFTWARE_HOME must be early in sys.path, otherwise some products will
 # import ImageFile from PIL instead of from Zope!
