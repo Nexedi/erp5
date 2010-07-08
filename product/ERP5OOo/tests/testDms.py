@@ -1528,6 +1528,11 @@ class TestDocument(TestDocumentMixin):
           <h1>My splendid title</h1>
         </div>
         <script type="text/javascript" src="http://example.com/something.js"/>
+        <script type="text/javascript">
+          alert("da");
+        </script>
+        <a href="javascript:DosomethingNasty()">Link</a>
+        <a onClick="javascript:DosomethingNasty()">Another Link</a>
         <p>éàèù</p>
       </body>
     </html>
@@ -1535,7 +1540,6 @@ class TestDocument(TestDocumentMixin):
     web_page.edit(text_content=html_content)
 
     # Check that outputed stripped html is safe
-
     safe_html = web_page.asStrippedHTML()
     self.assertTrue('My splendid title' in safe_html)
     self.assertTrue('script' not in safe_html, safe_html)
@@ -1546,6 +1550,10 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue('#FFAA44' not in safe_html)
     self.assertTrue('5;url=http://example.com/' not in safe_html)
     self.assertTrue('Set-Cookie' not in safe_html)
+    self.assertTrue('javascript' not in safe_html)
+    self.assertTrue('alert("da");' not in safe_html)
+    self.assertTrue('javascript:DosomethingNasty()' not in safe_html)
+    self.assertTrue('onClick' not in safe_html)
 
     # Check that outputed entire html is safe
     entire_html = web_page.asEntireHTML()
@@ -1558,6 +1566,10 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue('<style' in entire_html)
     self.assertTrue('#FFAA44' in entire_html)
     self.assertTrue('charset=utf-8' in entire_html)
+    self.assertTrue('javascript' not in entire_html)
+    self.assertTrue('alert("da");' not in entire_html)
+    self.assertTrue('javascript:DosomethingNasty()' not in entire_html)
+    self.assertTrue('onClick' not in entire_html)
 
     # now check converted value is stored in cache
     format = 'html'
