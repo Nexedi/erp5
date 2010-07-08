@@ -1890,6 +1890,11 @@ return 1
     self.assertTrue(web_page_5==web_page_6)
     self.assertTrue(web_page_6.getRevision()=='7')
 
+    # test contribute link is a safe html (duplicates parts of test_safeHTML_conversion)
+    web_page_6_entire_html = web_page_6.asEntireHTML()
+    self.assertTrue('<script' not in web_page_6_entire_html)
+    self.assertTrue('<javascript' not in web_page_6_entire_html)
+
   def test_getTargetFormatItemList(self):
     """
      Test getting target conversion format item list.
