@@ -33,9 +33,26 @@ from Products import ERP5Security
 from Products import PluggableAuthService
 from zLOG import LOG, WARNING, INFO
 
+def allowAccessOnContributionRegistryPortalTypes(self):
+  ''' Set Type Acquire Local Role '''
+
+  self.portal = self.getPortalObject()
+  portal_contribution_registry = self.portal.portal_contribution_registry
+  pt_title_list =  [p.getTitle() for p in portal_contribution_registry.contentValues()]
+  exclude_pt_title_list = ['Web Page', 'DMS Ingestion', 'Default Predicate']
+  
+  for pt_title in pt_title_list:
+    if pt_title not in exclude_pt_title_list:
+      portal_type_object = self.portal.portal_types.getTypeInfo(pt_title)
+      #set acquired local role on the portal type
+      portal_type_object.setTypeAcquireLocalRole(1)
+ 
+  return '- Access on Contribution Registry Portal Types allowed'
 
 def allowAccessOnPersonAndOrganisation(self):
-  '''use safi PAS to be able to login organisation'''
+  '''Add local role on person and organisation to give
+     administrative agent access.
+   '''
 
   self.portal = self.getPortalObject()
   person_portal_type = self.portal.portal_types.getTypeInfo('Person')
@@ -147,6 +164,7 @@ def setUpInstance(self):
   message_list = []
   message_list.append(setUpEGovSecurityManager(self))
   message_list.append(allowAccessOnPersonAndOrganisation(self))
+  message_list.append(allowAccessOnContributionRegistryPortalTypes(self))
   message_list.append(publishAllWebPages(self))
 
   message_list.append('')
