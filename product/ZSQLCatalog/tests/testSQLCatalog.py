@@ -454,6 +454,8 @@ class TestSQLCatalog(unittest.TestCase):
   def test_007_testScriptableKey(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='%a%'), operator='and'),
                  {'scriptable_keyword': '%a%'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='=', keyword='%a%'), operator='and'),
+                 {'default': 'scriptable_keyword:%a%'})
 
   def test_008_testRawKey(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='=', default='%a%'), operator='and'),

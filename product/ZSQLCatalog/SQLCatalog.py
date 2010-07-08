@@ -1841,11 +1841,14 @@ class Catalog(Folder,
     """
       Tells wether given name is or not an existing column.
 
-      Warning: This includes "virtual" columns, such as related keys.
+      Warning: This includes "virtual" columns, such as related keys and
+      scriptable keys.
     """
-    result = column_id in self.getColumnMap()
+    result = self.getScriptableKeyScript(column_id) is not None
     if not result:
-      result = self.getRelatedKeyDefinition(column_id) is not None
+      result = column_id in self.getColumnMap()
+      if not result:
+        result = self.getRelatedKeyDefinition(column_id) is not None
     return result
 
   @profiler_decorator
@@ -2010,7 +2013,12 @@ class Catalog(Folder,
 
       Expected node API is described in interfaces/abstract_syntax_node.py .
     """
-    search_key, related_key_definition = self.getColumnSearchKey(key)
+    script = self.getScriptableKeyScript(key)
+    if script is None:
+      search_key, related_key_definition = self.getColumnSearchKey(key)
+    else:
+      search_key = SearchKeyWrapperForScriptableKey(key, script)
+      related_key_definition = None
     if search_key is None:
       # Unknown, skip loudly
       LOG('SQLCatalog', WARNING, 'Unknown column %r, skipped.' % (key, ))
@@ -2604,6 +2612,33 @@ def getSearchKeyInstance(search_key_class_name, column):
   except KeyError:
     result = instance_dict[column] = search_key_class(column)
   return result
+
+class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
+  """
+    This SearchKey is a simple wrapper around a ScriptableKey, so such script
+    can be used in place of a regular SearchKey.
+  """
+  default_comparison_operator = None
+  get_operator_from_value = False
+
+  def __init__(self, column, script):
+    self.script = script
+    super(SearchKeyWrapperForScriptableKey, self).__init__(column)
+
+  def buildQuery(self, search_value, group=None, logical_operator=None,
+                 comparison_operator=None):
+    # XXX: It would be better to extend ScriptableKey API to support other
+    # parameters.
+    if group is not None:
+      raise ValueError, 'ScriptableKey cannot be used inside a group ' \
+        '(%r given).' % (group, )
+    if logical_operator is not None:
+      raise ValueError, 'ScriptableKey ignores logical operators ' \
+        '(%r given).' % (logical_operator, )
+    if comparison_operator != '':
+      raise ValueError, 'ScriptableKey ignores comparison operators ' \
+        '(%r given).' % (comparison_operator, )
+    return self.script(search_value)
 
 from Operator import operator_dict
 def getComparisonOperatorInstance(operator):
