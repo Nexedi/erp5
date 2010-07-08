@@ -39,8 +39,11 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
+HTTP_OK = 200
+MOVED_TEMPORARILY = 302
 
 class TestERP5Web(ERP5TypeTestCase):
   """Test for erp5_web business template.
@@ -1157,6 +1160,132 @@ Hé Hé Hé!""", page.asText().strip())
     # Check that we try to display a page with 404.error.page reference
     self.assertEqual(request.traverse(path).absolute_url().split('/')[-1],
     '404.error.page')
+
+  @expectedFailure
+  def test_17_WebSectionEditionWithLanguageInURL(self):
+    """
+    Check that editing a web section with the language in the URL
+    does not prevent indexation.
+
+    - Create a web site
+    - Activate the language in the URL
+    - Create a web section
+    - Access it using another language and edit it
+    - Check that web section is correctly indexed
+    """
+    portal = self.getPortal()
+    request = self.app.REQUEST
+
+    language = 'de'
+
+    website = self.setupWebSite()
+    # Check that language in defined in the URL
+    self.assertEquals(True, website.getStaticLanguageSelection())
+    self.assertNotEquals(language, website.getDefaultAvailableLanguage())
+
+    websection = self.setupWebSection()
+    self.assertEquals(websection.getId(), websection.getTitle())
+
+    transaction.commit()
+    self.tic()
+
+    response = self.publish('/%s/%s/%s/%s/Base_editAndEditAsWeb' % \
+                    (self.portal.getId(), website.getRelativeUrl(), 
+                     language, websection.getId()),
+                     basic='ERP5TypeTestCase:',
+                     request_method='POST',
+                     extra={
+                       'form_id': 'WebSection_view',
+                       'form_action': 'Base_edit',
+                       'edit_document_url': '%s/%s/%s/WebSection_view' % \
+                           (website.absolute_url(), language,
+                             websection.getId()),
+                       'field_my_title': '%s_edited' % websection.getId(),
+                     }
+                    )
+   
+    self.assertEquals(MOVED_TEMPORARILY, response.getStatus())
+    new_location = response.getHeader('Location')
+    new_location = new_location.split('/', 3)[-1]
+
+    transaction.commit()
+    self.tic()
+
+    response = self.publish(new_location, basic='ERP5TypeTestCase:',)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEquals('text/html; charset=utf-8', 
+                      response.getHeader('content-type'))
+    self.assertTrue("Data updated." in response.getBody())
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals('%s_edited' % websection.getId(), websection.getTitle())
+    self.assertEquals(1, len(self.portal.portal_catalog(
+                                    relative_url=websection.getRelativeUrl(), 
+                                    title=websection.getTitle())))
+
+  @expectedFailure
+  def test_18_WebSiteEditionWithLanguageInURL(self):
+    """
+    Check that editing a web section with the language in the URL
+    does not prevent indexation.
+
+    - Create a web site
+    - Activate the language in the URL
+    - Access it using another language and edit it
+    - Check that web site is correctly modified
+    """
+    portal = self.getPortal()
+    request = self.app.REQUEST
+
+    language = 'de'
+
+    website = self.setupWebSite()
+    # Check that language in defined in the URL
+    self.assertEquals(True, website.getStaticLanguageSelection())
+    self.assertNotEquals(language, website.getDefaultAvailableLanguage())
+
+    self.assertEquals(website.getId(), website.getTitle())
+
+    transaction.commit()
+    self.tic()
+
+    response = self.publish('/%s/%s/%s/Base_editAndEditAsWeb' % \
+                    (self.portal.getId(), website.getRelativeUrl(), 
+                     language),
+                     basic='ERP5TypeTestCase:',
+                     request_method='POST',
+                     extra={
+                       'form_id': 'WebSite_view',
+                       'form_action': 'Base_edit',
+                       'edit_document_url': '%s/%s/WebSite_view' % \
+                           (website.absolute_url(), language),
+                       'field_my_title': '%s_edited' % website.getId(),
+                       'field_my_id': language,
+                     }
+                    )
+   
+    self.assertEquals(MOVED_TEMPORARILY, response.getStatus())
+    new_location = response.getHeader('Location')
+    new_location = new_location.split('/', 3)[-1]
+
+    transaction.commit()
+    self.tic()
+
+    response = self.publish(new_location, basic='ERP5TypeTestCase:',)
+    self.assertEquals(HTTP_OK, response.getStatus())
+    self.assertEquals('text/html; charset=utf-8', 
+                      response.getHeader('content-type'))
+    self.assertTrue("Data updated." in response.getBody())
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals('%s_edited' % website.getId(), website.getTitle())
+    self.assertEquals(1, len(self.portal.portal_catalog(
+                                    relative_url=website.getRelativeUrl(), 
+                                    title=website.getTitle())))
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
