@@ -129,7 +129,7 @@ class IndexableObjectWrapper(object):
                 # support special case - reindex person for first time, when
                 # it is not returned yet by getUserById, as it is not available
                 # yet in catalog
-                or (self.getPortalType()=='Person' and
+                or (self.getPortalType() == 'Person' and
                   self.getReference() == user)):
               # If role is monovalued, check if key is a user.
               # If not, continue to index it in roles_and_users table.
