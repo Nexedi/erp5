@@ -414,8 +414,13 @@ class ContributionTool(BaseTool):
     # when
     #   o = folder._getOb(id)
     # was called in DocumentConstructor
-    result = BaseTool._getOb(self, id, default=default)
-    if result is not _marker:
+    if default is _marker:
+      result = BaseTool._getOb(self, id)
+    else:
+      result = BaseTool._getOb(self, id, default=default)
+    if result is not None:
+      # if result is None, ignore it at this stage
+      # we can be more lucky with portal_catalog
       return result
 
     # Return an object listed by listDAVObjects
@@ -423,7 +428,8 @@ class ContributionTool(BaseTool):
     object = self.getPortalObject().portal_catalog.unrestrictedGetResultValue(uid=uid)
     if object is not None:
       return object.getObject() # Make sure this does not break security. XXX
-
+    if default is not _marker:
+      return default
     # Raise an AttributeError the same way as in OFS.ObjectManager._getOb
     raise AttributeError, id
 
