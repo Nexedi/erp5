@@ -440,6 +440,7 @@ class ContributionTool(BaseTool):
     """
       Get all contents contributed by the current user. This is
       delegated to a script in order to help customisation.
+    XXX Killer feature, it is not scalable
     """
     method = getattr(self, 'ContributionTool_getMyContentList', None)
     if method is not None:
