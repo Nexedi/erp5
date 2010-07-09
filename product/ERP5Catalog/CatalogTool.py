@@ -125,12 +125,7 @@ class IndexableObjectWrapper(object):
         for user, roles in localroles.iteritems():
           prefix = 'user:' + user
           for role in roles:
-            if (role in role_dict) and (getUserById(user) is not None
-                # support special case - reindex person for first time, when
-                # it is not returned yet by getUserById, as it is not available
-                # yet in catalog
-                or (self.getPortalType() == 'Person' and
-                  self.getReference() == user)):
+            if (role in role_dict) and (getUserById(user) is not None):
               # If role is monovalued, check if key is a user.
               # If not, continue to index it in roles_and_users table.
               user_role_dict[role] = user
