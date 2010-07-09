@@ -114,7 +114,7 @@ class TextContent:
       body = bodyfinder(text)
     else:
       headers, body = parseHeadersBody(text, headers)
-    return headers, body, format
+    return headers, text, format
 
   ## FTP handlers
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
@@ -187,7 +187,7 @@ class TextContent:
       bodytext = self._htmlsrc % {
           'title': self.getTitle(),
           'metatags': hdrtext,
-          'body': self.getTextContent(''),
+          'body': self.asStrippedHTML(''),
           }
     else:
       hdrtext = formatRFC822Headers( hdrlist )
