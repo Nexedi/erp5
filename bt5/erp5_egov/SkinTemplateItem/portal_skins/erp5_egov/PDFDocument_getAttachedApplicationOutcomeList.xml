@@ -58,8 +58,8 @@
 \'\'\'\n
 \n
 request_outcome_title_list = []\n
-sub_object_list = [x.getObject().getTitle() for x in context.searchFolder(validation_state=[\'draft\',\'embedded\'])]\n
-return [x for x in sub_object_list if x in request_outcome_title_list]\n
+sub_object_list = [x.getObject() for x in context.searchFolder(validation_state=[\'draft\',\'embedded\'])]\n
+return [x for x in sub_object_list if x.getTitle() in request_outcome_title_list]\n
 </string> </value>
         </item>
         <item>
