@@ -48,15 +48,40 @@
 \n
 <div class="download-document-format-list-container"\n
      tal:define="target_format_item_list python: here.getTargetFormatItemList();\n
-                       document_url here/absolute_url">\n
- <span onClick="javascript:toggleElement(\'div\', \'download-document-format-list-menu\');"> Download</span>\n
+                 document_url here/absolute_url;\n
+                 list_index python: 5">\n
+ <span i18n:domain="erp5_ui" \n
+       i18n:translate=""\n
+       onClick="javascript:toggleElement(\'div\', \'download-document-format-list-menu\');"> Download</span>\n
   <div class="download-document-format-list-menu" style="opacity: 0.999999; display: none;">\n
     <ul>\n
-      <li class="separator"><a tal:attributes="href document_url"> Original </a></li>\n
-      <li tal:repeat="target_format_item target_format_item_list">\n
-        <a tal:attributes="href python: \'%s?format=%s\' %(document_url, target_format_item[1])"\n
+      <li class="separator">\n
+        <a tal:attributes="href document_url"\n
+           i18n:domain="erp5_ui" \n
+           i18n:translate=""\n
+           title="Download in original format">Original</a>\n
+      </li>\n
+      <li tal:repeat="target_format_item python: target_format_item_list[:list_index]">\n
+        <a tal:attributes="href python: \'%s?format=%s\' %(document_url, target_format_item[1]);\n
+                           title python: \'Download in %s format\' %target_format_item[0];"\n
            tal:content="python: target_format_item[0]"/>\n
       </li>\n
+      <!-- Show more than list_index in initially hidden div -->\n
+      <tal:block tal:condition="python: len(target_format_item_list)>list_index">\n
+        <div class="download-document-format-list-menu-hidden" style="opacity: 0.999999; display: none;">\n
+          <li tal:repeat="target_format_item python: target_format_item_list[list_index:]">\n
+            <a tal:attributes="href python: \'%s?format=%s\' %(document_url, target_format_item[1]);\n
+                               title python: \'Download in %s format\' %target_format_item[0];"\n
+               tal:content="python: target_format_item[0]"/>\n
+          </li>\n
+        </div>\n
+        <li class="toggle-hidden-format-dialog-selection-link">\n
+          <span onClick="javascript:toggleHiddenFormatDialogSelection();"\n
+                i18n:domain="erp5_ui" \n
+                i18n:translate=""\n
+                title="Show more download formats"> More... </span>\n
+        </li>\n
+      </tal:block>\n
     </ul>\n
   </div>\n
 \n

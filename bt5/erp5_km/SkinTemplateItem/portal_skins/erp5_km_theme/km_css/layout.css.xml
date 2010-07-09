@@ -1544,6 +1544,7 @@ div.download-document-format-list-menu{\n
   border: 1px solid #A8A799;\n
   background-color: #FFFFFF;\n
 }\n
+\n
 div.download-document-format-list-container span:hover,\n
 div.download-document-format-list-menu ul li:hover{\n
   background-color: #A8A799;\n
@@ -1564,7 +1565,9 @@ div.download-document-format-list-menu ul li.separator{\n
   padding-bottom:3px;\n
 }\n
 \n
-\n
+div.download-document-format-list-menu ul li.toggle-hidden-format-dialog-selection-link{\n
+  height:20px;\n
+}\n
 \n
 
 

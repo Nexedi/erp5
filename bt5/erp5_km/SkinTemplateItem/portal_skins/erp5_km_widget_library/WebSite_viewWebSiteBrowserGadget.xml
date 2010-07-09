@@ -60,7 +60,7 @@
   </tal:block>\n
 \n
   <tal:block tal:condition="python: len(section_list)==0">\n
-<p i18n:domain="erp5_ui" i18n:translate=""> No subsections found. </p>\n
+    <p i18n:domain="erp5_ui" i18n:translate=""> No subsections found. </p>\n
   </tal:block>\n
   \n
 </div>\n

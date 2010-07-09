@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts78059655.7</string> </value>
+            <value> <string>ts78681256.09</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -70,6 +70,11 @@ function toggleElement(tag_name, class_name){\n
   MochiKit.Visual.toggle(dom_element);\n
 }\n
 \n
+function toggleHiddenFormatDialogSelection(){\n
+  toggleElement(\'div\', \'download-document-format-list-menu-hidden\');\n
+  MochiKit.DOM.removeElement(MochiKit.DOM.getFirstElementByTagAndClassName(\'li\', \'toggle-hidden-format-dialog-selection-link\'));\n
+}\n
+\n
 MochiKit.DOM.addLoadEvent(setScreenClass);\n
 connect(window, "onresize", setScreenClass);\n
 \n
@@ -88,7 +93,7 @@ function setScreenClass(){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1540</int> </value>
+            <value> <int>1787</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
