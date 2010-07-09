@@ -234,14 +234,10 @@ class Folder:
     if myType is not None and not myType.allowType( portal_type ) and \
        'portal_contributions' not in self.getPhysicalPath():
       raise ValueError('Disallowed subobject type: %s' % portal_type)
-    pt.constructContent( type_name=portal_type,
-                         container=self,
-                         id=name,
-                         is_indexable=0
-                         )
+    container = self.getPortalObject().getDefaultModule(portal_type)
+    pt.constructContent(type_name=portal_type,
+                        container=container,
+                        id=name)
 
-    # constructContent does too much, so the object has to be removed again
-    obj = aq_base( self._getOb( name ) )
-    self._delObject( name ) # _delObject will not invoke the catalog since is_indexable was set to 0
-    delattr(obj, 'isIndexable') # Allow indexing again (standard case)
-    return obj
+    document = container._getOb(name)
+    return document
