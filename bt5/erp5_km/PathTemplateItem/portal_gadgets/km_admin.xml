@@ -13,16 +13,30 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <list>
-                <string>Anonymous</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
               </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <list>
-                <string>Anonymous</string>
-              </list>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -112,15 +126,15 @@
         </item>
         <item>
             <key> <string>comment</string> </key>
-            <value> <string>This gadget is obsolete as being replaced by bottom web toolbar.\r\n
-Still it\'s left as older system may still use it (but it\'s hidden from "Add gadgets" dialog).\r\n
-If for some reason one wants to use it set "Gadget Type" to Web Section"</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>This gadget is obsolete as being replaced by bottom web toolbar.\n
+Still it\'s left as older system may still use it (but it\'s hidden from "Add gadgets" dialog).\n
+If for some reason one wants to use it set "Gadget Type" to Web Section"</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -148,7 +162,7 @@ If for some reason one wants to use it set "Gadget Type" to Web Section"</string
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Toolbox</string> </value>
+            <value> <string>Toolbox (deprecated)</string> </value>
         </item>
         <item>
             <key> <string>view_form_id</string> </key>

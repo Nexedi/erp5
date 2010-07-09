@@ -15,7 +15,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts78326871.69</string> </value>
+            <value> <string>ts78677337.18</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -319,9 +319,11 @@ div.gadget-website-browser ul.second_level{\n
 div.gadget-website-browser ul.first_level {\n
   padding-bottom: 0.5em;\n
 }\n
+/*\n
 div.gadget-website-browser .section-link{\n
   font-size: 115%;\n
 }\n
+*/\n
 \n
 div.gadget-website-browser ul.second_level{\n
   padding-left: 0.7em;\n
@@ -502,7 +504,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8199</int> </value>
+            <value> <int>8205</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
