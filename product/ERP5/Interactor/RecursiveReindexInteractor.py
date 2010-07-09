@@ -38,15 +38,6 @@ class RecursiveReindexInteractor(Interactor):
     from Products.ERP5.Document.TradeCondition import TradeCondition
     self.on(TradeCondition.reindexObject).doAfter(self.recursiveReindexObject)
 
-    from Products.ERP5.Document.Delivery import Delivery
-    self.on(Delivery.reindexObject).doAfter(self.recursiveReindexObject)
-
-    from Products.ERP5.Document.Container import Container
-    self.on(Container.reindexObject).doAfter(self.recursiveReindexObject)
-
-    from Products.ERP5.Document.DeliveryLine import DeliveryLine
-    self.on(DeliveryLine.reindexObject).doAfter(self.recursiveReindexObject)
-
   def recursiveReindexObject(self, method_call_object, *args, **kw):
     """
       Reindex content inside
