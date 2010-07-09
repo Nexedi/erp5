@@ -55,9 +55,9 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Returns the name of the owner of current document\n
 """\n
-owner = context.getViewPermissionOwner()\n
-if owner:\n
-  found_user_list = context.acl_users.erp5_users.getUserByLogin(owner)\n
+owner_id_list = [i[0] for i in context.get_local_roles() if \'Owner\' in i[1]]\n
+if owner_id_list:\n
+  found_user_list = context.acl_users.erp5_users.getUserByLogin(owner_id_list[0])\n
   if found_user_list:\n
     return found_user_list[0].getTitle()\n
 \n
@@ -98,11 +98,16 @@ return owner\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>owner</string>
-                            <string>found_user_list</string>
+                            <string>i</string>
                             <string>_getitem_</string>
+                            <string>owner_id_list</string>
+                            <string>found_user_list</string>
+                            <string>owner</string>
                           </tuple>
                         </value>
                     </item>
