@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Returns the list of columns to use in accounting reports (GL, account statement, journal)\n
 """\n
-\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
 \n
@@ -72,13 +72,19 @@ if project_item_list:\n
   analytic_column_list += ((\'project\', \'Project\'),)\n
 for v, k in project_item_list:\n
   if k:\n
-    project_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v\n
+    if k == \'None\' or isinstance(k, Query):\n
+      project_title_dict[None] = \'\'\n
+    else:\n
+      project_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v\n
 function_item_list = context.AccountingTransactionLine_getFunctionItemList()\n
 if function_item_list:\n
   analytic_column_list += ((\'function\', context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),)\n
 for v, k in function_item_list:\n
   if k:\n
-    function_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v\n
+    if k == \'None\' or isinstance(k, Query):\n
+      function_title_dict[None] = \'\'\n
+    else:\n
+      function_title_dict[portal.portal_categories.restrictedTraverse(k).getUid()] = v\n
 for base_category in \\\n
     portal.portal_preferences.getPreferredAccountingTransactionLineAnalyticBaseCategoryList() or []:\n
   title = portal.portal_categories.restrictedTraverse(base_category).getTitle()\n
@@ -121,6 +127,8 @@ return analytic_column_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -135,6 +143,8 @@ return analytic_column_list\n
                             <string>_getiter_</string>
                             <string>v</string>
                             <string>k</string>
+                            <string>isinstance</string>
+                            <string>None</string>
                             <string>function_item_list</string>
                             <string>base_category</string>
                             <string>title</string>

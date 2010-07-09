@@ -58,6 +58,7 @@
 This script is indented to be used on custom listfields for accounting lines, and on reports.\n
 If this script returns an empty list, it means that reports by project are disabled.\n
 """\n
+from Products.ERP5Type.Message import translateString\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
 \n
@@ -82,7 +83,7 @@ if context.getPortalType() == \'Accounting Transaction Module\':\n
   project_list.sort(key=lambda x:x[0])\n
   if not project_list:\n
     return [] # returning an empty list, not to add project column on reports\n
-  return [(\'\', \'\')] + project_list\n
+  return [(\'\', \'\'), (translateString(\'No Project\'), \'None\')] + project_list\n
   \n
 # case 2: script is used on custom listfields.\n
 #  for now the script has to be customized in such case.\n
@@ -124,6 +125,8 @@ return [(\'\', \'\')]\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>

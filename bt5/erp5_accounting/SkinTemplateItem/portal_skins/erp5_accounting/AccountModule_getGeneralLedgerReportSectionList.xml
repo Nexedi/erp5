@@ -57,6 +57,7 @@
 
 """Get the report sections for general ledger\n
 """\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 from Products.ERP5Form.Report import ReportSection\n
 portal   = context.portal_url.getPortalObject()\n
 request  = portal.REQUEST\n
@@ -101,10 +102,16 @@ params = dict(precision=precision,\n
               hide_grouping=request.get(\'omit_grouping_reference\', False))\n
 project = request.get(\'project\')\n
 if project:\n
-  params[\'project_uid\'] = portal.portal_categories.restrictedTraverse(project).getUid()\n
+  if project == \'None\':\n
+    params[\'project_uid\'] = Query(project_uid=None)\n
+  else:\n
+    params[\'project_uid\'] = portal.portal_categories.restrictedTraverse(project).getUid()\n
 function = request.get(\'function\')\n
 if function:\n
-  params[\'function_uid\'] = portal.portal_categories.restrictedTraverse(function).getUid()\n
+  if function == \'None\':\n
+    params[\'function_uid\'] = Query(function_uid=None)\n
+  else:\n
+    params[\'function_uid\'] = portal.portal_categories.restrictedTraverse(function).getUid()\n
 \n
 default_selection_params = params.copy()\n
 \n
@@ -376,7 +383,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                             at_date=at_date,\n
                             group_by_node=1,\n
                             group_by_section=0,\n
-                            group_by_paymnent=1,\n
+                            group_by_payment=1,\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, None, inventory.payment_uid)\n
@@ -405,7 +412,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                             at_date=from_date,\n
                             group_by_node=1,\n
                             group_by_section=0,\n
-                            group_by_paymnent=1,\n
+                            group_by_payment=1,\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, None, inventory.payment_uid)\n
@@ -481,6 +488,8 @@ return report_section_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
                             <string>_getattr_</string>

@@ -112,12 +112,21 @@ params = dict(at_date=at_date,\n
 if from_date:\n
   params[\'from_date\'] = from_date\n
 if payment:\n
-  params[\'payment_uid\'] = traverse(payment).getUid()\n
+  if payment == \'None\':\n
+    params[\'payment_uid\'] = payment\n
+  else:\n
+    params[\'payment_uid\'] = traverse(payment).getUid()\n
 if project:\n
-  params[\'project_uid\'] = traverse(project).getUid()\n
+  if project == \'None\':\n
+    params[\'project_uid\'] = project\n
+  else:\n
+    params[\'project_uid\'] = traverse(project).getUid()\n
 if function:\n
-  params[\'function_uid\'] = traverse(function).getUid()\n
-  params[\'function\'] = function\n
+  if function == \'None\':\n
+    params[\'function_uid\'] = function\n
+  else:\n
+    params[\'function_uid\'] = traverse(function).getUid()\n
+    params[\'function\'] = function\n
 if mirror_section:\n
   params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()\n
 if parent_portal_type:\n

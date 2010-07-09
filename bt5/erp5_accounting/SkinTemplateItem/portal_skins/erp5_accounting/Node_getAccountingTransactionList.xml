@@ -55,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Log import log\n
 portal = context.getPortalObject()\n
@@ -74,12 +75,24 @@ if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
 if kw.get(\'mirror_section_uid\'):\n
   params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
-if kw.get(\'payment_uid\'):\n
-  params[\'payment_uid\'] = kw[\'payment_uid\']\n
-if kw.get(\'project_uid\'):\n
-  params[\'project_uid\'] = kw[\'project_uid\']\n
-if kw.get(\'function_uid\'):\n
-  params[\'function_uid\'] = kw[\'function_uid\']\n
+payment_uid = kw.get(\'payment_uid\')\n
+if payment_uid:\n
+  if payment_uid == \'None\':\n
+    params[\'payment_uid\'] = Query(payment_uid=None)\n
+  else:\n
+    params[\'payment_uid\'] = payment_uid\n
+project_uid = kw.get(\'project_uid\')\n
+if project_uid:\n
+  if project_uid == \'None\':\n
+    params[\'project_uid\'] = Query(project_uid=None)\n
+  else:\n
+    params[\'project_uid\'] = project_uid\n
+function_uid = kw.get(\'function_uid\')\n
+if function_uid:\n
+  if function_uid == \'None\':\n
+    params[\'function_uid\'] = Query(function_uid=None)\n
+  else:\n
+    params[\'function_uid\'] = function_uid\n
 if node_category_strict_membership:\n
   params[\'node_category_strict_membership\'] = node_category_strict_membership\n
 if node_category:\n
@@ -208,7 +221,6 @@ if from_date or is_pl_account:\n
 if context.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
   params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
 \n
-\n
 # We try not to convert to a list, hence the copy & paste\n
 return portal.portal_simulation.getMovementHistoryList(\n
                  from_date=from_date,\n
@@ -267,6 +279,8 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>selection_name</string>
                             <string>src__</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>Products.ERP5Type.Log</string>
@@ -279,6 +293,9 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
+                            <string>payment_uid</string>
+                            <string>project_uid</string>
+                            <string>function_uid</string>
                             <string>new_result</string>
                             <string>net_balance</string>
                             <string>False</string>

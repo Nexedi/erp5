@@ -53,7 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
+portal = context.getPortalObject()\n
 params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
 getInventoryAssetPrice = portal.portal_simulation.getInventoryAssetPrice\n
 getSelectionDomainDictFor = context.portal_selections.getSelectionDomainDictFor\n
@@ -64,14 +65,25 @@ if kw.get(\'node_uid\'):\n
 if kw.get(\'mirror_section_uid\'):\n
   params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
 \n
-if kw.get(\'function_uid\'):\n
-  params[\'function_uid\'] = kw[\'function_uid\']\n
-if kw.get(\'project_uid\'):\n
-  params[\'project_uid\'] = kw[\'project_uid\']\n
+payment_uid = kw.get(\'payment_uid\')\n
+if payment_uid:\n
+  if payment_uid == \'None\':\n
+    params[\'payment_uid\'] = Query(payment_uid=None)\n
+  else:\n
+    params[\'payment_uid\'] = payment_uid\n
+project_uid = kw.get(\'project_uid\')\n
+if project_uid:\n
+  if project_uid == \'None\':\n
+    params[\'project_uid\'] = Query(project_uid=None)\n
+  else:\n
+    params[\'project_uid\'] = project_uid\n
+function_uid = kw.get(\'function_uid\')\n
+if function_uid:\n
+  if function_uid == \'None\':\n
+    params[\'function_uid\'] = Query(function_uid=None)\n
+  else:\n
+    params[\'function_uid\'] = function_uid\n
 \n
-# FIXME: bank account uses quantity, not total_price\n
-if kw.get(\'payment_uid\'):\n
-  params[\'payment_uid\'] = kw[\'payment_uid\']\n
 if kw.get(\'node_category_strict_membership\'):\n
   params[\'node_category_strict_membership\'] = \\\n
                 kw[\'node_category_strict_membership\']\n
@@ -179,6 +191,8 @@ return getInventoryAssetPrice(\n
                             <string>omit_output</string>
                             <string>selection_name</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -187,9 +201,12 @@ return getInventoryAssetPrice(\n
                             <string>getSelectionDomainDictFor</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
+                            <string>payment_uid</string>
+                            <string>None</string>
+                            <string>project_uid</string>
+                            <string>function_uid</string>
                             <string>node</string>
                             <string>period_start_date</string>
-                            <string>None</string>
                             <string>at_date</string>
                             <string>_apply_</string>
                             <string>period_openning_balance</string>

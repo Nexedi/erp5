@@ -55,6 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 from Products.PythonScripts.standard import Object\n
 from ZTUtils import LazyFilter\n
 \n
@@ -90,9 +91,15 @@ if group_analytic:\n
 if portal_type and portal_type != portal.getPortalAccountingTransactionTypeList():\n
   inventory_params[\'parent_portal_type\'] = portal_type\n
 if function:\n
-  inventory_params[\'function\'] = function\n
+  if function == \'None\':\n
+    inventory_params[\'function_uid\'] = Query(function_uid=None)\n
+  else:\n
+    inventory_params[\'function\'] = function\n
 if project:\n
-  inventory_params[\'project\'] = project\n
+  if project == \'None\':\n
+    inventory_params[\'project_uid\'] = Query(project_uid=None)\n
+  else:\n
+    inventory_params[\'project\'] = project\n
 if mirror_section_category:\n
   inventory_params[\'mirror_section_category\'] = mirror_section_category\n
 \n
@@ -818,6 +825,8 @@ return new_line_list\n
                             <string>group_analytic</string>
                             <string>mirror_section_category</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
                             <string>ZTUtils</string>
@@ -844,6 +853,7 @@ return new_line_list\n
                             <string>inventory_params</string>
                             <string>_write_</string>
                             <string>tuple</string>
+                            <string>None</string>
                             <string>MARKER</string>
                             <string>line_per_account</string>
                             <string>account_used</string>
@@ -859,7 +869,6 @@ return new_line_list\n
                             <string>total_final_balance_if_credit</string>
                             <string>False</string>
                             <string>getKey</string>
-                            <string>None</string>
                             <string>analytic_title_dict</string>
                             <string>getAnalyticTitleFromUid</string>
                             <string>_apply_</string>
