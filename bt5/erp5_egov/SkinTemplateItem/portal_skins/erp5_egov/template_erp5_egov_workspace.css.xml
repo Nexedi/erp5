@@ -52,11 +52,9 @@
 \n
 \n
 /* hide tabs */\n
-.document > .actions,\n
-.bottom_actions{\n
+.document > .actions {\n
   display: none;\n
 }\n
-\n
 \n
 div#main_content fieldset {\n
   margin: 1em 0;\n
