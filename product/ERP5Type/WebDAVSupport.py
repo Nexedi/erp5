@@ -129,7 +129,7 @@ class TextContent:
       headers, body, format = self.handleText(text=body)
       content_type = REQUEST.get_header('Content-Type', '')
       headers.setdefault('content_type', content_type)
-      headers['text_content'] = body
+      headers['file'] = body
       self._edit(**headers)
     except 'EditingConflict', msg:
       # XXX Can we get an error msg through?  Should we be raising an
