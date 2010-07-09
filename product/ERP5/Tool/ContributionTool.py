@@ -232,7 +232,8 @@ class ContributionTool(BaseTool):
     # Then put the file inside ourselves for a short while
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(file_name, portal_type, user_login=user_login, id=id,
+    document = self._setObject(file_name, None, portal_type=portal_type,
+                               user_login=user_login, id=id,
                                container=container,
                                discover_metadata=discover_metadata,
                                )
@@ -320,8 +321,8 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # WebDAV virtual folder support
-  def _setObject(self, name, portal_type, user_login=None, container=None,
-                       id=None, discover_metadata=1):
+  def _setObject(self, name, ob, portal_type=None, user_login=None,
+                 container=None, id=None, discover_metadata=1):
     """
       portal_contribution_registry will find appropriate portal type
       name by file_name and content itself.
@@ -335,6 +336,12 @@ class ContributionTool(BaseTool):
     # will be removed later on. We can safely store the
     # document inside us at this stage. Else we
     # must find out where to store it.
+    if ob is not None:
+      # Call from webdav API
+      # redefine parameters
+      portal_type = ob.getPortalType()
+      container = ob.getParentValue()
+      id = ob.getId()
     if not portal_type:
       document = BaseTool.newContent(self, id=name,
                                      portal_type=portal_type,
