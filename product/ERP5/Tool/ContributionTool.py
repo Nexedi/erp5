@@ -424,7 +424,9 @@ class ContributionTool(BaseTool):
       return result
 
     # Return an object listed by listDAVObjects
-    uid = str(id).split('-')[-1]
+    # ids are concatenation of uid + '-' + standard file name of documents
+    # get the uid
+    uid = str(id).split('-', 1)[0]
     object = self.getPortalObject().portal_catalog.unrestrictedGetResultValue(uid=uid)
     if object is not None:
       return object.getObject() # Make sure this does not break security. XXX
@@ -451,12 +453,8 @@ class ContributionTool(BaseTool):
     def wrapper(o_list):
       for o in o_list:
         o = o.getObject()
-        reference = o.getReference()
-        if reference:
-          id = '%s-%s' % (reference, o.getUid())
-        else:
-          id = '%s' % o.getUid()
-        yield o.getObject().asContext(id=id)
+        id = '%s-%s' % (o.getUid(), o.getStandardFileName(),)
+        yield o.asContext(id=id)
 
     return wrapper(object_list)
 
