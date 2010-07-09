@@ -2668,7 +2668,7 @@ msgid "Internal Orders"
 msgstr "移送依頼"
 
 msgid "Internal Packing List Cell"
-msgstr "移送明細"
+msgstr "移送明細書セル"
 
 msgid "Internal Packing List Line"
 msgstr "移送明細"
@@ -2686,13 +2686,13 @@ msgid "Internal Packing List Recipient"
 msgstr "届け先"
 
 msgid "Internal Packing List related to Internal Order."
-msgstr "関連する移送明細"
+msgstr "関連する移送明細書"
 
 msgid "Internal Packing List"
-msgstr "移送明細"
+msgstr "移送明細書"
 
 msgid "Internal Packing Lists"
-msgstr "移送明細"
+msgstr "移送明細書"
 
 msgid "Internal Price"
 msgstr "原価"
@@ -4216,7 +4216,7 @@ msgid "Related Events"
 msgstr "関連するイベント"
 
 msgid "Related Internal Packing List"
-msgstr "関連する移送明細"
+msgstr "関連する移送明細書"
 
 msgid "Related Invoice"
 msgstr "関連する請求書"

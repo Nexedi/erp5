@@ -1,4 +1,7 @@
 2010-07-09 tatuya
+* Fix the translations of Internal Packing List. Because they were not consistent.
+
+2010-07-09 tatuya
 * Modify the translations of Sale Packing List, Sale Packing List Line and Purchase Packing List, Purchase Packing List Line.Because they were not natural as Japanese.
 
 2010-07-07 tatuya
