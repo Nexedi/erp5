@@ -76,7 +76,7 @@
         </item>
         <item>
             <key> <string>multiple_instances_allowed</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
