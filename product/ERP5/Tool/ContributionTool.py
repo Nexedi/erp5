@@ -379,19 +379,7 @@ class ContributionTool(BaseTool):
             ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
           .discoverMetadata(file_name=name, user_login=user_login)
       else:
-        if existing_document.isExternalDocument():
-          document = existing_document
-          # If this is an external document, update its content
-          # document.activate().updateContentFromURL() # XXX I think this is no longer useful with alarms
-          # XXX - Make sure this does not increase ZODB
-          # XXX - what to do also with parameters (put again edit_kw) ?
-          # Providing some information to the use about the fact
-          # this was an existing document would also be great
-        else:
-          # We may have to implement additional revision support
-          # to support in place contribution (ie. for a given ID)
-          # but is this really useful ?
-          raise NotImplementedError
+        document = existing_document
       # Keep the document close to us - this is only useful for
       # file upload from webdav
       if not hasattr(self, '_v_document_cache'):
