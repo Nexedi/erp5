@@ -362,7 +362,7 @@ class ContributionTool(BaseTool):
         new_id = module.generateNewId()
       else:
         new_id = id
-      existing_document = module.get(new_id, None)
+      existing_document = module._getOb(new_id, None)
       if existing_document is None:
         # There is no preexisting document - we can therefore
         # set the new object
