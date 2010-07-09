@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
-"POT-Creation-Date: 2010-07-07 07:06+JST\n"
-"PO-Revision-Date: 2010-07-07 07:06+JST\n"
+"POT-Creation-Date: 2010-07-08 07:06+JST\n"
+"PO-Revision-Date: 2010-07-08 07:06+JST\n"
 "Last-Translator:  <>\n"
 "Language-Team: ja <>\n"
 "MIME-Version: 1.0\n"
@@ -3238,7 +3238,7 @@ msgid "No Sale Order Related"
 msgstr "見積・受注との関連がありません"
 
 msgid "No Sale Packing List Related"
-msgstr "関連する出荷明細がありません"
+msgstr "関連する出荷明細書がありません"
 
 msgid "No Trade Condition."
 msgstr "取引条件がありません。"
@@ -3937,7 +3937,7 @@ msgid "Purchase Order Module"
 msgstr "発注モジュール"
 
 msgid "Purchase Order related to Purchase Packing List."
-msgstr "入荷明細に関連した発注"
+msgstr "入荷明細書に関連した発注"
 
 msgid "Purchase Order"
 msgstr "発注"
@@ -3961,55 +3961,55 @@ msgid "Purchase Orders"
 msgstr "発注"
 
 msgid "Purchase Packing List Cell"
-msgstr "入荷明細セル"
+msgstr "入荷明細書セル"
 
 msgid "Purchase Packing List Details"
-msgstr "入荷明細詳細"
+msgstr "入荷明細書詳細"
 
 msgid "Purchase Packing List Line"
-msgstr "入荷明細明細"
+msgstr "入荷明細"
 
 msgid "Purchase Packing List Lines"
-msgstr "入荷明細明細"
+msgstr "入荷明細"
 
 msgid "Purchase Packing List Module"
-msgstr "入荷明細モジュール"
+msgstr "入荷明細書モジュール"
 
 msgid "Purchase Packing List Movements"
-msgstr "入荷明細の動き"
+msgstr "入荷明細書の動き"
 
 msgid "Purchase Packing List related to Purchase Order."
-msgstr "発注に関連した入荷明細"
+msgstr "発注に関連した入荷明細書"
 
 msgid "Purchase Packing List to Confirm (%(count)s)"
-msgstr "要確認入荷明細 (%(count)s)"
+msgstr "要確認入荷明細書 (%(count)s)"
 
 msgid "Purchase Packing List to Confirm"
-msgstr "要確認入荷明細"
+msgstr "要確認入荷明細書"
 
 msgid "Purchase Packing List to Receive (%(count)s)"
-msgstr "要受取入荷明細(%(count)s)"
+msgstr "要受取入荷明細書(%(count)s)"
 
 msgid "Purchase Packing List to Receive"
-msgstr "要受取入荷明細"
+msgstr "要受取入荷明細書"
 
 msgid "Purchase Packing List to Solve (%(count)s)"
-msgstr "要解決入荷明細(%(count)s)"
+msgstr "要解決入荷明細書(%(count)s)"
 
 msgid "Purchase Packing List to Solve"
-msgstr "要解決入荷明細"
+msgstr "要解決入荷明細書"
 
 msgid "Purchase Packing List to Validate (%(count)s)"
-msgstr "要確定入荷明細(%(count)s)"
+msgstr "要確定入荷明細書(%(count)s)"
 
 msgid "Purchase Packing List to Validate"
-msgstr "要確定入荷明細"
+msgstr "要確定入荷明細書"
 
 msgid "Purchase Packing List"
-msgstr "入荷明細"
+msgstr "入荷明細書"
 
 msgid "Purchase Packing Lists"
-msgstr "入荷明細"
+msgstr "入荷明細書"
 
 msgid "Purchase Price"
 msgstr "購入単価"
@@ -4237,7 +4237,7 @@ msgid "Related Purchase Order"
 msgstr "関連する発注"
 
 msgid "Related Purchase Packing List"
-msgstr "関連する入荷明細"
+msgstr "関連する入荷明細書"
 
 msgid "Related Purchase Trade Condition"
 msgstr "関連する購入先の取引条件"
@@ -4258,7 +4258,7 @@ msgid "Related Sale Order"
 msgstr "関連する見積・受注"
 
 msgid "Related Sale Packing List"
-msgstr "関連する出荷明細"
+msgstr "関連する出荷明細書"
 
 msgid "Related Supply Lines"
 msgstr "関連する単価情報"
@@ -4534,7 +4534,7 @@ msgid "Sale Order related to Sale Invoice Transaction."
 msgstr "売上請求取引に関連した見積・受注"
 
 msgid "Sale Order related to Sale Packing List."
-msgstr "出荷明細に関連した見積・受注"
+msgstr "出荷明細書に関連した見積・受注"
 
 msgid "Sale Order"
 msgstr "見積・受注"
@@ -4558,28 +4558,28 @@ msgid "Sale Orders"
 msgstr "見積・受注"
 
 msgid "Sale Packing List Cell"
-msgstr "出荷明細セル"
+msgstr "出荷明細書セル"
 
 msgid "Sale Packing List Details"
-msgstr "出荷明細詳細"
+msgstr "出荷明細書詳細"
 
 msgid "Sale Packing List Line"
-msgstr "出荷明細明細"
+msgstr "出荷明細"
 
 msgid "Sale Packing List Lines"
-msgstr "出荷明細明細"
+msgstr "出荷明細"
 
 msgid "Sale Packing List Module"
-msgstr "出荷明細モジュール"
+msgstr "出荷明細書モジュール"
 
 msgid "Sale Packing List Movements"
-msgstr "出荷明細の動き"
+msgstr "出荷明細書の動き"
 
 msgid "Sale Packing List related to Sale Invoice Transaction."
-msgstr "売上請求取引に関連した出荷明細"
+msgstr "売上請求取引に関連した出荷明細書"
 
 msgid "Sale Packing List related to Sale Order."
-msgstr "見積・受注に関連した出荷明細"
+msgstr "見積・受注に関連した出荷明細書"
 
 msgid "Sale Packing List to Prepare (%(count)s)"
 msgstr "出荷準備中(%(count)s)"
@@ -4588,13 +4588,13 @@ msgid "Sale Packing List to Prepare"
 msgstr "出荷準備中"
 
 msgid "Sale Packing List to Process (%(count)s)"
-msgstr "要処理出荷明細(%(count)件)"
+msgstr "要処理出荷明細書(%(count)件)"
 
 msgid "Sale Packing List to Process"
-msgstr "要処理出荷明細"
+msgstr "要処理出荷明細書"
 
 msgid "Sale Packing List to Ship (%(count)s)"
-msgstr "要発送出荷明細(%(count)件)"
+msgstr "要発送出荷明細書(%(count)件)"
 
 msgid "Sale Packing List to Solve"
 msgstr "解決すべき販売用の梱包明細書"
@@ -4603,10 +4603,10 @@ msgid "Sale Packing List to Validate"
 msgstr "承認すべき販売用の梱包明細書"
 
 msgid "Sale Packing List"
-msgstr "出荷明細"
+msgstr "出荷明細書"
 
 msgid "Sale Packing Lists"
-msgstr "出荷明細"
+msgstr "出荷明細書"
 
 msgid "Sale Supplies"
 msgstr "得意先の供給条件"
