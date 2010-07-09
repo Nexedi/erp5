@@ -83,6 +83,13 @@ class TestEgov(ERP5TypeTestCase):
     uf = self.getPortal().acl_users
     uf._doAddUser('citizen', '', ['Agent',], [])
 
+  def createAgentUser(self):
+    """
+    Create a user with Agent role to allow create and submit requests
+    """
+    uf = self.getPortal().acl_users
+    uf._doAddUser('agent', '', ['Assignee',], [])
+
   def createValidatorUser(self):
     """
     Create a user with Agent role to allow create and submit requests
@@ -346,21 +353,28 @@ class TestEgov(ERP5TypeTestCase):
     self.changeSkin('EGov') 
     self.portal.portal_workflow.doActionFor(vat_declaration, 'submit_draft_action')
     self.assertEquals('submitted', vat_declaration.getValidationState())
-    self.createValidatorUser()
+    self.createAgentUser()
     self.logout()
-    self.login('major')
+    self.login('agent')
     vat_declaration.view()
     vat_declaration.PDFDocument_getApplicationIncomeDict()
     vat_declaration.PDFDocument_getReportSectionList()
     vat_declaration.PDFDocument_viewHistory()
     self.portal.portal_workflow.doActionFor(vat_declaration, 'receive_action')
-    self.assertEquals('receivable', vat_declaration.getValidationState())
-    self.assertEquals(vat_declaration.getTypeInfo().getStepReviewRequest(),None)
-    self.portal.portal_workflow.doActionFor(vat_declaration, 'assign_action')
-    self.assertEquals('assigned', vat_declaration.getValidationState())
-    self.portal.portal_workflow.doActionFor(vat_declaration, 'complete_action')
-    self.assertEquals('completed', vat_declaration.getValidationState())
-
+    if vat_declaration.getTypeInfo().getStepReviewRequest() is None:
+      self.assertEquals('completed', vat_declaration.getValidationState())
+    """
+    else:
+      self.assertEquals('receivable', vat_declaration.getValidationState())
+      self.assertEquals(vat_declaration.getTypeInfo().getStepReviewRequest(),None)
+      self.portal.portal_workflow.doActionFor(vat_declaration, 'assign_action')
+      self.assertEquals('assigned', vat_declaration.getValidationState())
+      self.createValidatorUser()
+      self.logout()
+      self.login('major')
+      self.portal.portal_workflow.doActionFor(vat_declaration, 'complete_action')
+      self.assertEquals('completed', vat_declaration.getValidationState())
+    """
 
 def test_suite():
   suite = unittest.TestSuite()
