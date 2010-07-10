@@ -480,18 +480,25 @@ def createDateTimeFromMillis(millis):
 
 def getNumberOfDayInMonth(date):
   month = date.month()
-  if month < 10 and month != 2:
-    if month % 2 == 0:
-      return 30
-    return 31
-  elif month >=10 and month != 2:
-    if month % 2 == 0:
-      return 31
-    return 30
-  else:
+  mapping = {
+    1:31,
+    3:31,
+    4:30,
+    5:31,
+    6:30,
+    7:31,
+    8:31,
+    9:30,
+    10:31,
+    11:30,
+    12:31
+    }
+  if month == 2:
     if date.isLeapYear():
       return 29
     return 28
+  else:
+    return mapping[month]
 
 def atTheEndOfPeriod(date, period):
   """
