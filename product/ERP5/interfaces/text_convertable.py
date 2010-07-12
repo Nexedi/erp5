@@ -29,7 +29,23 @@
 
 from zope.interface import Interface
 
-class ITextConvertable(Interface):
+class ITextConvertableLegacy(Interface):
+  """
+  Legacy ITextConvertable interface specification
+
+  Documents which implement the ITextConvertable interface
+  can be converted to plain text.
+  """
+
+  def asTextContent(**kw):
+    """
+    Converts the current document to plain text
+
+    kw -- optional parameters which can be passed to the
+          conversion engine
+    """
+
+class ITextConvertable(ITextConvertableLegacy):
   """
   Text Convertable interface specification
 

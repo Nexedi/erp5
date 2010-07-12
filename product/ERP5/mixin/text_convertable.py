@@ -27,14 +27,35 @@
 #
 ##############################################################################
 
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type import Permissions
+from warnings import warn
+
 class TextConvertableMixin:
   """
   This class provides a generic implementation of ITextConvertable.
   """
 
+  # Declarative security
+  security = ClassSecurityInfo()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asText')
   def asText(self, **kw):
     """
+    Converts the current document to plain text
     """
     kw.pop('format', None)
     mime, data = self.convert(format='txt', **kw)
     return str(data)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'asTextContent')
+  def asTextContent(self, **kw):
+    """
+    Converts the current document to plain text
+    Backward (legacy) compatibility
+    """
+    warn("asTextContent() function is deprecated. Use asText() instead.", \
+          DeprecationWarning, stacklevel=2)
+    return self.asText(**kw)
