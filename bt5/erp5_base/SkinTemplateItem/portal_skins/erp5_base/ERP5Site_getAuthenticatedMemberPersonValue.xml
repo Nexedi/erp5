@@ -56,15 +56,14 @@
             <value> <string>"""Find and returns Person object for current logged in user.\n
 Returns None if no corresponding person, for example when not using ERP5Security.ERP5UserManager.\n
 """\n
+portal = context.getPortalObject()\n
 if user_name is None:\n
-  user_name = context.portal_membership.getAuthenticatedMember()\n
+  user_name = portal.portal_membership.getAuthenticatedMember()\n
 \n
-found_user_list = context.acl_users.erp5_users.getUserByLogin(str(user_name))\n
-found_users = len(found_user_list)\n
-if found_users != 1:\n
-  return None\n
-\n
-return found_user_list[0]\n
+from Products.ERP5Security.ERP5UserManager import getUserByLogin\n
+found_user_list = getUserByLogin(portal, str(user_name))\n
+if len(found_user_list) == 1:\n
+  return found_user_list[0]\n
 </string> </value>
         </item>
         <item>
@@ -110,13 +109,15 @@ return found_user_list[0]\n
                         <value>
                           <tuple>
                             <string>user_name</string>
-                            <string>None</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>None</string>
+                            <string>Products.ERP5Security.ERP5UserManager</string>
+                            <string>getUserByLogin</string>
                             <string>str</string>
                             <string>found_user_list</string>
                             <string>len</string>
-                            <string>found_users</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>

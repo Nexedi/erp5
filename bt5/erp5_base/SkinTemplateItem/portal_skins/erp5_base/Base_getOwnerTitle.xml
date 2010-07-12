@@ -57,11 +57,10 @@
 """\n
 owner_id_list = [i[0] for i in context.get_local_roles() if \'Owner\' in i[1]]\n
 if owner_id_list:\n
-  found_user_list = context.acl_users.erp5_users.getUserByLogin(owner_id_list[0])\n
+  from Products.ERP5Security.ERP5UserManager import getUserByLogin\n
+  found_user_list = getUserByLogin(context.getPortalObject(), tuple(owner_id_list))\n
   if found_user_list:\n
     return found_user_list[0].getTitle()\n
-\n
-return owner\n
 </string> </value>
         </item>
         <item>
@@ -106,8 +105,10 @@ return owner\n
                             <string>i</string>
                             <string>_getitem_</string>
                             <string>owner_id_list</string>
+                            <string>Products.ERP5Security.ERP5UserManager</string>
+                            <string>getUserByLogin</string>
+                            <string>tuple</string>
                             <string>found_user_list</string>
-                            <string>owner</string>
                           </tuple>
                         </value>
                     </item>
