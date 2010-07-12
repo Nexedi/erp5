@@ -629,8 +629,9 @@ class BusinessProcess(Path, XMLObject):
     API less uniform.
     """
     remaining_trade_phase_list = []
+    trade_state = business_link.getSuccessor()
     for link in [x for x in self.objectValues(portal_type="Business Link") \
-        if x.getPredecessorValue() == trade_state]:
+        if x.getPredecessor() == trade_state]:
       # XXX When no simulations related to link, what should link.isCompleted return?
       #     if True we don't have way to add remaining trade phases to new movement
       if not (link.getRelatedSimulationMovementValueList(explanation) and
