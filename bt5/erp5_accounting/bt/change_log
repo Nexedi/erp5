@@ -1,5 +1,5 @@
 2010-07-12 yusei
-* Update Node_statAccountingBalance and accept "at_date" parameter.
+* Update Node_statAccountingBalance and accept "at_date", "from_date", "to_date" parameters.
 
 2010-05-28 lucas
 * Added quantity into Expandable Properties of the default_accounting_transaction_rule object.
