@@ -6,7 +6,6 @@ portal_types/EGov Type/default_pdf_form
 portal_types/EGov Type/default_scribus_form
 portal_types/Meta EGov Type/default_pdf_form
 portal_types/Meta EGov Type/default_scribus_form
-root_http_skin_cache
 web_page_module/15
 web_page_module/9
 web_site_module/ecitizen

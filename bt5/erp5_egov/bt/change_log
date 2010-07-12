@@ -1,3 +1,8 @@
+2010-07-12 mayoro
+* remove document_publication_workflow
+* remove catalog method it's in erp5_egov_mysql_innodb_catalog
+* use http_cache insted of root_http_skin_cache (removed)
+
 2010-07-08 mayoro
 * display bottom_actions
 * remove added button
