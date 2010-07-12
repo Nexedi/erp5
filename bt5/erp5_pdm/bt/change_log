@@ -1,3 +1,6 @@
+2010-07-12 yusei
+* Fix industrial phase list field bug on Transformation_view.
+
 2010-06-14 kazuhiko
 * Fix a bug in Base_validateEan13Code that does not work in the case where the check digit is 0.
 

@@ -126,7 +126,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/getIndustrialPhaseTranslatedTitle</string> </value>
+            <value> <string>cell/getIndustrialPhase</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -142,7 +142,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/portal_categories/industrial_phase/getCategoryChildLogicalPathItemList</string> </value>
+            <value> <string>cell/portal_categories/industrial_phase/getCategoryChildTranslatedLogicalPathItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
