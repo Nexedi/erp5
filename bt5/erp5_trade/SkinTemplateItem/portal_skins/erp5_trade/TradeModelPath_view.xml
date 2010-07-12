@@ -114,7 +114,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_trade_phase</string>
+                        <string>my_trade_phase_list</string>
                         <string>my_lead_time</string>
                         <string>my_end_of</string>
                         <string>my_wait_time</string>

@@ -303,6 +303,7 @@
                         <string>my_view_mode_listbox</string>
                         <string>my_view_mode_predecessor</string>
                         <string>my_view_mode_successor</string>
+                        <string>my_view_mode_trade_phase_list</string>
                       </list>
                     </value>
                 </item>
