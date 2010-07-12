@@ -114,7 +114,7 @@ class MovementGeneratorMixin:
 
     # Extend movement properties
     for movement in result:
-      movement._edit(self._getUpdatePropertyDict(movement))
+      movement._edit(**self._getUpdatePropertyDict(movement))
       
     # And return list of generated movements
     return result
