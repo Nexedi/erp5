@@ -715,7 +715,7 @@ def main():
       _print("Profiler support is not available from ZopeTestCase in Zope 2.12\n")
   else:
     profiler.print_stats()
-  return result and len(result.failures) + len(result.errors) or 0
+  return result and len(result.failures) + len(result.errors) and 1 or 0
 
 if __name__ == '__main__':
   # Force stdout to be totally unbuffered.
