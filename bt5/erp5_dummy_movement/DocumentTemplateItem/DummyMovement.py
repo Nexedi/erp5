@@ -86,6 +86,12 @@ class DummyMovement(Movement):
       raise ValueError
 
   def getDeliveryValue(self):
+    """
+    Deprecated, we should use getRootDeliveryValue instead
+    """
+    return self.getRootDeliveryValue()
+
+  def getRootDeliveryValue(self):
     """In the tests, dummy movements are not always stored in a delivery, here
     we try to support both cases.
     """
