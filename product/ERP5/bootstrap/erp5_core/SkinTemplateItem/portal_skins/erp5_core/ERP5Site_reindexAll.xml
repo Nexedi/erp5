@@ -61,14 +61,33 @@ if clear_catalog:\n
   catalog = portal.portal_catalog.getSQLCatalog(sql_catalog_id)\n
   catalog.manage_catalogClear()\n
 \n
+print "#### Indexing preferences ####"\n
+tag = \'portal_preferences\'\n
+context.portal_preferences.activate(\n
+                    tag=tag,\n
+                    priority=additional_priority).Folder_reindexAll(\n
+                                         folder_tag=tag,\n
+                                         object_tag=tag,\n
+                                         object_priority=additional_priority,\n
+                                         sql_catalog_id=sql_catalog_id,\n
+                                         passive_commit=passive_commit,\n
+                                         start_tree=start_tree,\n
+                                         stop_tree=stop_tree,)\n
+# clear cache after reindexing preferences\n
+context.portal_caches.activate(tag=\'%s_clear_cache\' %tag,\n
+                               priority=additional_priority,\n
+                               after_tag=tag).clearAllCache()\n
+\n
 # Reindex person module\n
 print "#### Indexing person_module, stage 1 ####"\n
 person_module=getattr(portal, \'person_module\', None)\n
 higher_priority = 1 + additional_priority\n
 if person_module is not None :\n
   tag = \'person_stage_1\'\n
+  folder_after_tag = (\'portal_preferences\', \'portal_preferences_clear_cache\',)\n
   person_module.activate(tag=tag,\n
-                         priority=higher_priority).Folder_reindexAll(\n
+                         priority=higher_priority,\n
+                         after_tag=folder_after_tag).Folder_reindexAll(\n
                                          folder_tag=tag,\n
                                          object_tag=tag,\n
                                          object_priority=higher_priority,\n
@@ -101,14 +120,13 @@ context.portal_categories.activate(\n
                                          passive_commit=passive_commit,)\n
 \n
 print "#### Indexing alarms ####"\n
-print "#### Indexing preferences ####"\n
 print "#### Indexing active results ####"\n
 folder_tag = \'module\'\n
 folder_after_tag = (\'category\', \'person_stage_1\', \'group_person_stage_1\')\n
 object_tag = \'document\'\n
 object_after_tag = folder_after_tag\n
 object_priority = 2 + additional_priority\n
-for folder in [context.portal_alarms, context.portal_preferences, context.portal_activities]:\n
+for folder in [context.portal_alarms, context.portal_activities]:\n
   folder.activate(\n
                     tag=folder_tag,\n
                     priority=object_priority,\n
@@ -295,13 +313,13 @@ return printed\n
                             <string>context</string>
                             <string>portal</string>
                             <string>catalog</string>
+                            <string>tag</string>
                             <string>getattr</string>
                             <string>None</string>
                             <string>person_module</string>
                             <string>higher_priority</string>
-                            <string>tag</string>
-                            <string>folder_tag</string>
                             <string>folder_after_tag</string>
+                            <string>folder_tag</string>
                             <string>object_tag</string>
                             <string>object_after_tag</string>
                             <string>object_priority</string>
