@@ -69,10 +69,6 @@ class CachedConvertableMixin:
 
   # Declarative security
   security = ClassSecurityInfo()
-
-
-  # Declarative security
-  security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def _getCacheFactory(self):
