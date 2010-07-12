@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Supply Link defines possible movements of resources between source and destination Supply Nodes. Each Supply Link is associated with one or more industrial phases.</string> </value>
+            <value> <string>A Trade Model Path defines the arrow (sources, destinations), the dates and the quantity shares of a given amount generates by a Trade Model. Trade Model Path can be used to specify the tax office for a given a tax, the production facility for a given production phase or to split a payment in multiple payments to different banks.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -55,7 +55,9 @@
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>trade_model_path</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -64,11 +66,15 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
