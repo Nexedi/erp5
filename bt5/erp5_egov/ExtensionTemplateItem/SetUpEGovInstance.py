@@ -158,6 +158,14 @@ def publishAllWebPages(self):
       web_page.publish()
   return '- All web pages are published'
 
+def allowAddingEGovTypes(self):
+  '''Allow adding instance of portal_type EGov Type and Meta EGov Type'''
+  types_tool = self.getPortalObject().portal_types.getTypeInfo()
+  allowed_content_type_list = types_tool.getTypeAllowedContentTypeList()
+  allowed_content_type_list.append('Meta EGov Type')
+  allowed_content_type_list.append('EGov Type')
+  types_tool.setTypeAllowedContentTypeList(allowed_content_type_list)
+  return '- Instance of EGov Type and Meta EGov Type are allowed'
 
 def setUpInstance(self):
   '''call all other set up method to prepare the site for eGOV Instance'''
@@ -166,7 +174,7 @@ def setUpInstance(self):
   message_list.append(allowAccessOnPersonAndOrganisation(self))
   message_list.append(allowAccessOnContributionRegistryPortalTypes(self))
   message_list.append(publishAllWebPages(self))
-
+  message_list.append(allowAddingEGovTypes(self))
   message_list.append('')
   message_list.append('Set Up sequence completed')
   return '\n'.join(message_list)
