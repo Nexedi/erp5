@@ -4,21 +4,18 @@
   <item>File</item>
   <item>PDF</item>
   <item>Role Information</item>
-  <item>Translation Information</item>
  </portal_type>
  <portal_type id="Meta EGov Type">
   <item>Action Information</item>
   <item>File</item>
   <item>PDF</item>
   <item>Role Information</item>
-  <item>Translation Information</item>
  </portal_type>
  <portal_type id="PDF Type">
   <item>Action Information</item>
   <item>File</item>
   <item>PDF</item>
   <item>Role Information</item>
-  <item>Translation Information</item>
  </portal_type>
  <portal_type id="Types Tool">
   <item>Base Type</item>

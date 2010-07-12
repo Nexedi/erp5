@@ -2,16 +2,12 @@ EGov Type | action_view
 EGov Type | base_view
 EGov Type | egov_view
 EGov Type | role_view
-EGov Type | translation_view
 Meta EGov Type | action_view
 Meta EGov Type | base_view
 Meta EGov Type | egov_view
 Meta EGov Type | role_view
-Meta EGov Type | translation_view
 PDF Type | action_view
 PDF Type | base_view
 PDF Type | role_view
-PDF Type | translation_view
-Translation Information | view
 Types Tool | view
 portal_actions | create_procedure
