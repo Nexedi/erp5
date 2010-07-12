@@ -187,7 +187,7 @@ class BusinessProcess(Path, XMLObject):
     if not reference_date_method_id:
       raise ValueError('a reference date method must be defined on every Trade Model Path')
 
-    explanation_cache = _getExplanationCache(self, explanation)
+    explanation_cache = _getExplanationCache(explanation)
     reference_date = explanation_cache.getReferenceDate(self, trade_date, reference_date_method_id)
 
     # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)
