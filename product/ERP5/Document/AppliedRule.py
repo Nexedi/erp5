@@ -35,7 +35,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.mixin.explainable import ExplainableMixin
-from Products.ERP5Legacy.Document.Rule import Rule
+from Products.ERP5.mixin.rule import RuleMixin
 
 TREE_DELIVERED_CACHE_KEY = 'AppliedRule._isTreeDelivered_cache'
 TREE_DELIVERED_CACHE_ENABLED = 'TREE_DELIVERED_CACHE_ENABLED'
@@ -225,4 +225,4 @@ class AppliedRule(XMLObject, ExplainableMixin):
       """
        Return a list of movements.
       """
-      return self.objectValues(portal_type=Rule.movement_type)
+      return self.objectValues(portal_type=RuleMixin.movement_type)
