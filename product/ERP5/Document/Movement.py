@@ -538,7 +538,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
       Returns the object explanation of this movement.
     """
-    return self.getDeliveryValue()
+    return self.getRootDeliveryValue()
  
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanationTitle')
