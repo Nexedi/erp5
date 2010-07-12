@@ -65,6 +65,27 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ZCatalog.Lazy import LazyMap
 
+def simple_decorator(decorator):
+  """Decorator to turn simple function into well-behaved decorator
+
+  See also http://wiki.python.org/moin/PythonDecoratorLibrary
+
+  XXX We should use http://pypi.python.org/pypi/decorator/ instead,
+      to make decorators ZPublisher-friendly.
+  """
+  def new_decorator(f):
+    g = decorator(f)
+    g.__name__ = f.__name__
+    g.__doc__ = f.__doc__
+    g.__dict__.update(f.__dict__)
+    return g
+  # Now a few lines needed to make simple_decorator itself
+  # be a well-behaved decorator.
+  new_decorator.__name__ = decorator.__name__
+  new_decorator.__doc__ = decorator.__doc__
+  new_decorator.__dict__.update(decorator.__dict__)
+  return new_decorator
+
 from Products.ERP5Type import Permissions
 
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
@@ -194,6 +215,7 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
     file.write(warnings.formatwarning(message, category, filename, lineno))
 warnings.showwarning = _showwarning
 
+@simple_decorator
 def deprecated(wrapped):
   message = "Use of '%s' function (%s, line %s) is deprecated." % (
     wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)

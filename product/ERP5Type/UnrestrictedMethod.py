@@ -34,6 +34,7 @@ try:
   from Zope2 import app
 except ImportError:
   from Zope import app
+from Products.ERP5Type.Utils import simple_decorator
 
 class PrivilegedUser(UnrestrictedUser):
   """User that bypasses all security checks, but retains an original
@@ -48,6 +49,7 @@ class PrivilegedUser(UnrestrictedUser):
     """Get the ID of the user. This is disabled in UnrestrictedUser."""
     return self.getUserName()
 
+@simple_decorator
 def UnrestrictedMethod(function):
   """Decorator to bypass all security checks.
 
@@ -66,10 +68,7 @@ def UnrestrictedMethod(function):
 
   This method is dangerous. Enough said. Be careful.
   """
-  wrapper = lambda *args, **kw: unrestricted_apply(function, args, kw)
-  wrapper.__doc__ = function.__doc__
-  wrapper.__name__ = function.__name__
-  return wrapper
+  return lambda *args, **kw: unrestricted_apply(function, args, kw)
 
 def unrestricted_apply(function, args=(), kw={}):
     """Function to bypass all security checks
