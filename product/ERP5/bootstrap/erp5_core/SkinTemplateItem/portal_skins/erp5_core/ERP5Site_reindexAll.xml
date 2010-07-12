@@ -73,10 +73,6 @@ context.portal_preferences.activate(\n
                                          passive_commit=passive_commit,\n
                                          start_tree=start_tree,\n
                                          stop_tree=stop_tree,)\n
-# clear cache after reindexing preferences\n
-context.portal_caches.activate(tag=\'%s_clear_cache\' %tag,\n
-                               priority=additional_priority,\n
-                               after_tag=tag).clearAllCache()\n
 \n
 # Reindex person module\n
 print "#### Indexing person_module, stage 1 ####"\n
@@ -84,7 +80,7 @@ person_module=getattr(portal, \'person_module\', None)\n
 higher_priority = 1 + additional_priority\n
 if person_module is not None :\n
   tag = \'person_stage_1\'\n
-  folder_after_tag = (\'portal_preferences\', \'portal_preferences_clear_cache\',)\n
+  folder_after_tag = (\'portal_preferences\',)\n
   person_module.activate(tag=tag,\n
                          priority=higher_priority,\n
                          after_tag=folder_after_tag).Folder_reindexAll(\n
