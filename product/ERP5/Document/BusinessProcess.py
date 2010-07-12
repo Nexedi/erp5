@@ -197,7 +197,7 @@ class BusinessProcess(Path, XMLObject):
     elif delay_mode == 'max':
       delay = trade_model_path.getMaxDelay()
     else:
-      delay = (business_link.getMaxDelay() + trade_model_path.getMinDelay()) / 2.0
+      delay = (trade_model_path.getMaxDelay() + trade_model_path.getMinDelay()) / 2.0
     stop_date = start_date + delay
         
     return start_date, stop_date
@@ -744,7 +744,7 @@ class BusinessProcess(Path, XMLObject):
     # and specifying units
     if trade_model_path.getQuantity():
       property_dict['quantity'] = trade_model_path.getQuantity()
-    elif business_link.getEfficiency():
+    elif trade_model_path.getEfficiency():
       property_dict['quantity'] = amount.getQuantity() *\
         trade_model_path.getEfficiency()
     else:
