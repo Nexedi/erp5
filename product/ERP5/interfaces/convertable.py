@@ -29,34 +29,13 @@
 
 from zope.interface import Interface
 
-class IConvertable(Interface):
+class IFormatConvertable(Interface):
   """
-  Convertable interface specification
+  Format Convertable interface specification
 
-  Documents which implement IConvertable can be converted
-  to multiple formats. IConvertable also provides 
-  methods to list possible formats which documents can
+  IFormatConvertable provides methods to list possible formats which documents can
   be converted to.
   """
-
-  def convert(format, **kw):
-    """
-    Converts the current document to the specified format
-    taking into account optional parameters. This method
-    returns a tuple of two values: a mime type string and
-    the converted data.
-    
-    This methods raises a ConversionError if the target format
-    is not allowed, or an Unauthorized error if the target format
-    is not permitted.
-
-    format -- the target conversion format specified either as an
-              extension (ex. 'png') or as a mime type
-              string (ex. 'text/plain')
-
-    kw -- optional parameters which can be passed to the
-          conversion engine
-    """
 
   def isTargetFormatAllowed(format):
     """
@@ -110,3 +89,29 @@ class IConvertable(Interface):
     passed to IConvertable.convert or to IDownloadable.index_html
     """
 
+class IConvertable(IFormatConvertable):
+  """
+  Convertable interface specification
+
+  Documents which implement IConvertable can be converted
+  to multiple formats.
+  """
+
+  def convert(format, **kw):
+    """
+    Converts the current document to the specified format
+    taking into account optional parameters. This method
+    returns a tuple of two values: a mime type string and
+    the converted data.
+    
+    This methods raises a ConversionError if the target format
+    is not allowed, or an Unauthorized error if the target format
+    is not permitted.
+
+    format -- the target conversion format specified either as an
+              extension (ex. 'png') or as a mime type
+              string (ex. 'text/plain')
+
+    kw -- optional parameters which can be passed to the
+          conversion engine
+    """
