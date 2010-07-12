@@ -85,7 +85,7 @@ return model_list[0]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference=None, unique_per_account=False</string> </value>
+            <value> <string>reference=None, unique_per_account=True</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -142,7 +142,7 @@ return model_list[0]\n
             <value>
               <tuple>
                 <none/>
-                <int>0</int>
+                <int>1</int>
               </tuple>
             </value>
         </item>
