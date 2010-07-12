@@ -128,6 +128,39 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     if new_order_rule.getValidationState() != 'validated':
       new_order_rule.validate()
 
+  def stepCreateOrder(self,sequence=None, sequence_list=None, **kw):
+    """
+      Create a empty order
+    """
+    organisation = sequence.get('organisation')
+    project = sequence.get('project')
+#     person = sequence.get('person')
+    portal = self.getPortal()
+    order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
+    order = order_module.newContent(portal_type=self.order_portal_type)
+    order.edit(
+      title = "Order%s" % order.getId(),
+      specialise='business_process_module/erp5_default_business_process',
+      start_date = self.datetime + 10,
+      stop_date = self.datetime + 20,
+    )
+    if organisation is not None:
+      order.edit(source_value=organisation,
+                 source_section_value=organisation,
+                 destination_value=organisation,
+                 destination_section_value=organisation,
+                 # Added for test Packing List Copy
+                 source_decision_value=organisation,
+                 destination_decision_value=organisation,
+                 source_administration_value=organisation,
+                 destination_administration_value=organisation,
+                 )
+    if project is not None:
+      order.edit(source_project_value=project,
+                 destination_project_value=project,
+                 )
+    sequence.edit( order = order )
+
   def _acceptDecisionQuantity(self, document):
     solver_tool = self.portal.portal_solvers
     solver_process = solver_tool.newSolverProcess(document)
