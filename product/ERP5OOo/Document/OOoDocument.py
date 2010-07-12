@@ -396,14 +396,6 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
     else:
       return self.getConversion(format=original_format, display=display)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                                                               'asTextContent')
-  def asTextContent(self):
-    """
-      Backward compatibility
-    """
-    return self.asText()
-
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
   def _populateConversionCacheWithHTML(self, zip_file=None):
