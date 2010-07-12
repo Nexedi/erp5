@@ -106,9 +106,8 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
     if trade_model is None:
       return result
 
-    context_movement = context.getParentValue()
-    rule = context.getSpecialiseValue()
-    for amount in context_movement.getAggregatedAmountList(
+    rule = self._applied_rule.getSpecialiseValue()
+    for amount in simulation_movement.getAggregatedAmountList(
         # XXX add a 'trade_amount_generator' group type
         amount_generator_type_list=('Purchase Trade Condition',
                                     'Sale Trade Condition',
@@ -124,7 +123,7 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
 
       business_path = business_path_list[0]
 
-      kw = self._getPropertyAndCategoryList(context_movement, business_path,
+      kw = self._getPropertyAndCategoryList(simulation_movement, business_path,
                                             rule)
 
       # rule specific
@@ -141,7 +140,7 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
       kw['delivery'] = None # Where does this come from ??? XXX-JPS - Why not None ?
                             # XXX-JPS Way too many properties are copied
 
-      simulation_movement = context.newContent(
+      simulation_movement = self._applied_rule.newContent(
         portal_type=RuleMixin.movement_type,
         temp_object=True,
         **kw)
