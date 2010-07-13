@@ -199,6 +199,7 @@ class MatrixBoxWidget(Widget.Widget):
         if context is None:
           return ''
         as_cell_range_script_id = field.get_value('as_cell_range_script_id')
+        extra_dimension_category_list_list = [None]
         if as_cell_range_script_id:
           lines = []
           columns = []
@@ -214,9 +215,17 @@ class MatrixBoxWidget(Widget.Widget):
             elif len_dimension_list >= 3:
               lines, columns, tabs = dimension_list[:3]
               if len_dimension_list > 3:
-                raise NotImplementedError(
-                        "Matrix box does not support %s dimensions" %
-                        len_dimension_list)
+                extra_dimension_list = dimension_list[3:]
+
+                extra_dimension_category_label_dict = {}
+                extra_dimension_category_index_dict = {}
+                for extra_dimension in extra_dimension_list:
+                  for index, (category, label) in enumerate(extra_dimension):
+                    extra_dimension_category_label_dict[category] = label
+                    extra_dimension_category_index_dict[category] = index
+                from Products.ERP5Type.Utils import cartesianProduct
+                extra_dimension_category_list_list = cartesianProduct(
+                    [[category for category, label in extra_dimension] for extra_dimension in extra_dimension_list])
         else:
           lines = field.get_value('lines')
           columns = field.get_value('columns')
@@ -251,174 +260,186 @@ class MatrixBoxWidget(Widget.Widget):
         url = REQUEST.URL
 
         list_html = ''
-        k = 0
 
-        # Create one table per tab
-        for tab in tabs:
-          tab_id = tab[0]
-          if (tab_id is not None) and \
-             (not isinstance(tab_id, (list, tuple))):
-            tab_id = [tab_id]
+        for extra_dimension_category_list in extra_dimension_category_list_list:
+          if extra_dimension_category_list is None:
+            extra_dimension_label = ''
+            extra_dimension_position = ()
+            extra_dimension_index = ''
+            extra_dimension_category_list = []
+          else:
+            extra_dimension_label = ','+','.join([extra_dimension_category_label_dict[category]
+                                                  for category in extra_dimension_category_list])
+            extra_dimension_position = tuple([extra_dimension_category_index_dict[category]
+                                              for category in extra_dimension_category_list])
+            extra_dimension_index = '_'+'_'.join(map(str, extra_dimension_position))
+          # Create one table per tab
+          k = 0
+          for tab in tabs:
+            tab_id = tab[0]
+            if (tab_id is not None) and \
+               (not isinstance(tab_id, (list, tuple))):
+              tab_id = [tab_id]
             
-          if render_format == 'list':
-            list_result_tab = [[tab[1]]]
-
-          # Create the header of the table - this should probably become DTML
-          first_tab = tab[1] or ''
-          header = """\
-  <!-- Matrix Content -->
-  %s<br/>
-  <div class="MatrixContent">
-   <table cellpadding="0" cellspacing="0" border="0">
-  """ % first_tab
-
-          # Create the footer. This should be replaced by DTML
-          # And work as some kind of parameter
-          footer = """\
-     <tr>
-      <td colspan="%s" align="center" valign="middle"
-          class="Data footer">
-      </td>
-     </tr>
-    </table>
-   </div>
-  """ % len(columns)
-
-          list_header = """\
-  <tr class="matrixbox_label_line"><td class=\"Data\"></td>
-  """
-
-          for cname in columns:
-            first_column = cname[1] or ''
-            list_header = list_header + ("<td class=\"Data\">%s</td>\n" %
-                                           first_column)
             if render_format == 'list':
-              list_result_tab[0].append(cname[1])
-
-          list_header = list_header + "</tr>"
-
-          # Build Lines
-          i = 0
-          j = 0
-          list_body = ''
-          for l in lines:
-
-            if not i % 2:
-              td_css = 'DataA'
-            else:
-              td_css = 'DataB'
-            list_body = list_body + '\n<tr class=\"%s\"><td class=\"matrixbox_label_column\">%s</td>' % (td_css, str(l[1]))
+              list_result_tab = [[tab[1]]]
+            
+            # Create the header of the table - this should probably become DTML
+            first_tab = tab[1] or ''
+            header = """\
+    <!-- Matrix Content -->
+    <div class="matrixbox_label_tab">%s</div>
+    <div class="MatrixContent">
+     <table cellpadding="0" cellspacing="0" border="0">
+    """ % (first_tab+extra_dimension_label)
+            
+            # Create the footer. This should be replaced by DTML
+            # And work as some kind of parameter
+            footer = """\
+       <tr>
+        <td colspan="%s" align="center" valign="middle"
+            class="Data footer">
+        </td>
+       </tr>
+      </table>
+     </div>
+    """ % len(columns)
+            
+            list_header = """\
+    <tr class="matrixbox_label_line"><td class=\"Data\"></td>
+    """
+              
+            for cname in columns:
+              first_column = cname[1] or ''
+              list_header = list_header + ("<td class=\"Data\">%s</td>\n" %
+                                             first_column)
+              if render_format == 'list':
+                list_result_tab[0].append(cname[1])
+            
+            list_header = list_header + "</tr>"
+            
+            # Build Lines
+            i = 0
             j = 0
-            
-            if render_format == 'list':
-              list_result_lines = [ str(l[1]) ]
-
-            for c in columns:
-              has_error = 0
-              column_id = c[0]
-              if (column_id is not None) and \
-                 (not isinstance(column_id, (list, tuple))):
-                column_id = [column_id]
-              if column_id is None:
-                kw = [l[0]]
-              elif tab_id is None:
-                kw = [l[0], c[0]]
+            list_body = ''
+            for l in lines:
+              
+              if not i % 2:
+                td_css = 'DataA'
               else:
-                kw = [l[0], c[0]] + tab_id
-              kwd = {}
-              kwd['base_id'] = cell_base_id
-              cell = cell_getter_method(*kw, **kwd)
-              REQUEST['cell'] = cell
-
-              cell_body = ''
-
-              for attribute_id in editable_attribute_ids:
-                my_field_id = '%s_%s' % (field.id, attribute_id)
-                if form.has_field(my_field_id):
-                  my_field = form.get_field(my_field_id)
-                  key = my_field.id + '_cell_%s_%s_%s' % (i,j,k)
-                  if cell is not None:
-                    attribute_value = my_field.get_value('default',
-                           cell=cell, cell_index=kw, cell_position = (i,j,k))
-
-                    if render_format=='html':
-                      display_value = attribute_value
-                      if field_errors:
-                        # Display previous value in case of any error
-                        # in this form because we have no cell to get
-                        # value from
-                        display_value = REQUEST.get('field_%s' % key,
-                                                  attribute_value)
-                      else:
+                td_css = 'DataB'
+              list_body = list_body + '\n<tr class=\"%s\"><td class=\"matrixbox_label_column\">%s</td>' % (td_css, str(l[1]))
+              j = 0
+              
+              if render_format == 'list':
+                list_result_lines = [ str(l[1]) ]
+              
+              for c in columns:
+                has_error = 0
+                column_id = c[0]
+                if (column_id is not None) and \
+                   (not isinstance(column_id, (list, tuple))):
+                  column_id = [column_id]
+                if column_id is None:
+                  kw = [l[0]]
+                elif tab_id is None:
+                  kw = [l[0], c[0]]
+                else:
+                  kw = [l[0], c[0]] + tab_id + extra_dimension_category_list
+                kwd = {}
+                kwd['base_id'] = cell_base_id
+                cell = cell_getter_method(*kw, **kwd)
+                REQUEST['cell'] = cell
+                
+                cell_body = ''
+                
+                for attribute_id in editable_attribute_ids:
+                  my_field_id = '%s_%s' % (field.id, attribute_id)
+                  if form.has_field(my_field_id):
+                    my_field = form.get_field(my_field_id)
+                    key = my_field.id + '_cell_%s_%s_%s%s' % (i,j,k,extra_dimension_index)
+                    if cell is not None:
+                      attribute_value = my_field.get_value('default',
+                             cell=cell, cell_index=kw, cell_position = ((i,j,k)+extra_dimension_position))
+                      
+                      if render_format=='html':
                         display_value = attribute_value
-                      if field_errors.has_key(key):
-                        # Display error message if this cell has an error
-                        has_error = 1
-                        cell_body += '<span class="input">%s</span>%s' % (
-                            my_field.render(value=display_value,
-                                            REQUEST=REQUEST,
-                                            key=key),
-                            translateString(field_errors[key].error_text))
-                      else:
-                        cell_body += '<span class="input">%s</span>' %\
-                                         my_field.render(
-                                            value=display_value,
-                                            REQUEST=REQUEST,
-                                            key=key)
-
-                    elif render_format == 'list':
-                      if not my_field.get_value('hidden'):
-                        list_result_lines.append(attribute_value)
-
-                  else:
-                    attribute_value = my_field.get_value('default', cell=None,
-                        cell_index=kw, cell_position=(i,j,k))
-                    if render_format == 'html':
-                      if field_errors:
-                        # Display previous value in case of any error
-                        # in this form because we have no cell to get
-                        # value from
-                        display_value = REQUEST.get('field_%s' % key,
-                                                  attribute_value)
-                      else:
-                        display_value = attribute_value
-                      if field_errors.has_key(key):
-                        # Display error message if this cell has an error
-                        has_error = 1
-                        cell_body += '<span class="input">%s</span>%s' % (
-                            my_field.render(value=display_value,
-                                            REQUEST=REQUEST,
-                                            key=key),
-                            translateString(field_errors[key].error_text))
-                      else:
-                        cell_body += '<span class="input">%s</span>' %\
-                                         my_field.render(
-                                            value=display_value,
-                                            REQUEST=REQUEST,
-                                            key=key)
-                    elif render_format == 'list':
-                      list_result_lines.append(None)
-
-              css = td_css
-              if has_error :
-                css = 'error'
-              list_body = list_body + \
-                    ('<td class=\"%s\">%s</td>' % (css, cell_body))
-              j += 1
-
-            list_body = list_body + '</tr>'
-            i += 1
+                        if field_errors:
+                          # Display previous value in case of any error
+                          # in this form because we have no cell to get
+                          # value from
+                          display_value = REQUEST.get('field_%s' % key,
+                                                    attribute_value)
+                        else:
+                          display_value = attribute_value
+                        if field_errors.has_key(key):
+                          # Display error message if this cell has an error
+                          has_error = 1
+                          cell_body += '<span class="input">%s</span>%s' % (
+                              my_field.render(value=display_value,
+                                              REQUEST=REQUEST,
+                                              key=key),
+                              translateString(field_errors[key].error_text))
+                        else:
+                          cell_body += '<span class="input">%s</span>' %\
+                                           my_field.render(
+                                              value=display_value,
+                                              REQUEST=REQUEST,
+                                              key=key)
+                        
+                      elif render_format == 'list':
+                        if not my_field.get_value('hidden'):
+                          list_result_lines.append(attribute_value)
+                      
+                    else:
+                      attribute_value = my_field.get_value('default', cell=None,
+                          cell_index=kw, cell_position=((i,j,k)+extra_dimension_position))
+                      if render_format == 'html':
+                        if field_errors:
+                          # Display previous value in case of any error
+                          # in this form because we have no cell to get
+                          # value from
+                          display_value = REQUEST.get('field_%s' % key,
+                                                    attribute_value)
+                        else:
+                          display_value = attribute_value
+                        if field_errors.has_key(key):
+                          # Display error message if this cell has an error
+                          has_error = 1
+                          cell_body += '<span class="input">%s</span>%s' % (
+                              my_field.render(value=display_value,
+                                              REQUEST=REQUEST,
+                                              key=key),
+                              translateString(field_errors[key].error_text))
+                        else:
+                          cell_body += '<span class="input">%s</span>' %\
+                                           my_field.render(
+                                              value=display_value,
+                                              REQUEST=REQUEST,
+                                              key=key)
+                      elif render_format == 'list':
+                        list_result_lines.append(None)
+                        
+                css = td_css
+                if has_error :
+                  css = 'error'
+                list_body = list_body + \
+                      ('<td class=\"%s\">%s</td>' % (css, cell_body))
+                j += 1
+                
+              list_body = list_body + '</tr>'
+              i += 1
+              
+              if render_format == 'list':
+                list_result_tab.append(list_result_lines)
+                
+            list_html += header + list_header + \
+                    list_body + footer
+            k += 1
             
             if render_format == 'list':
-              list_result_tab.append(list_result_lines)
-
-          list_html += header + list_header + \
-                  list_body + footer
-          k += 1
-
-          if render_format == 'list':
-            list_result.append(list_result_tab)
-        
+              list_result.append(list_result_tab)
+          
         if render_format == 'list':
           return list_result
 
@@ -442,6 +463,7 @@ class MatrixBoxValidator(Validator.Validator):
           context = getattr(here,getter_method_id)()
           if context is None:
             return {}
+        extra_dimension_category_list_list = [None]
         if as_cell_range_script_id:
           lines = []
           columns = []
@@ -457,9 +479,17 @@ class MatrixBoxValidator(Validator.Validator):
             elif len_dimension_list >= 3:
               lines, columns, tabs = dimension_list[:3]
               if len_dimension_list > 3:
-                raise NotImplementedError(
-                        "Matrix box does not support %s dimensions" %
-                        len_dimension_list)
+                extra_dimension_list = dimension_list[3:]
+
+                extra_dimension_category_label_dict = {}
+                extra_dimension_category_index_dict = {}
+                for extra_dimension in extra_dimension_list:
+                  for index, (category, label) in enumerate(extra_dimension):
+                    extra_dimension_category_label_dict[category] = label
+                    extra_dimension_category_index_dict[category] = index
+                from Products.ERP5Type.Utils import cartesianProduct
+                extra_dimension_category_list_list = cartesianProduct(
+                    [[category for category, label in extra_dimension] for extra_dimension in extra_dimension_list])
         else:
           lines = field.get_value('lines')
           columns = field.get_value('columns')
@@ -484,58 +514,70 @@ class MatrixBoxValidator(Validator.Validator):
         tab_ids = [x[0] for x in tabs]
         editable_attribute_ids = [x[0] for x in editable_attributes]
 
-        k = 0
         result = {}
-        # Create one table per tab
-        for tab_id in tab_ids:
-          if (tab_id is not None) and \
-             (not isinstance(tab_id, (list, tuple))):
-            tab_id = [tab_id]
-
-          i = 0
-          j = 0
-          for l in line_ids:
+        for extra_dimension_category_list in extra_dimension_category_list_list:
+          if extra_dimension_category_list is None:
+            extra_dimension_label = ''
+            extra_dimension_position = ()
+            extra_dimension_index = ''
+            extra_dimension_category_list = []
+          else:
+            extra_dimension_label = ','+','.join([extra_dimension_category_label_dict[category]
+                                                  for category in extra_dimension_category_list])
+            extra_dimension_position = tuple([extra_dimension_category_index_dict[category]
+                                              for category in extra_dimension_category_list])
+            extra_dimension_index = '_'+'_'.join(map(str, extra_dimension_position))
+          k = 0
+          # Create one table per tab
+          for tab_id in tab_ids:
+            if (tab_id is not None) and \
+               (not isinstance(tab_id, (list, tuple))):
+              tab_id = [tab_id]
+            
+            i = 0
             j = 0
-            for c in column_ids:
-              if c is None:
-                kw = [l]
-              elif tab_id is None:
-                kw = [l, c]
-              else:
-                kw = [l, c] + tab_id
-              kw = tuple(kw)
-              kwd = {}
-              kwd['base_id'] = cell_base_id
-              cell = cell_getter_method(*kw, **kwd)
-
-              for attribute_id in editable_attribute_ids:
-
-                my_field_id = '%s_%s' % (field.id, attribute_id)
-                if form.has_field(my_field_id):
-                  my_field = form.get_field(my_field_id)
-                  if my_field.get_value('editable'):
-                    key = 'field_' + my_field.id + '_cell_%s_%s_%s' % (i,j,k)
-                    attribute_value = my_field.get_value('default',
-                        cell=cell, cell_index=kw, cell_position = (i,j,k))
-                    value = None
-                    try :
-                      value = my_field.validator.validate(
-                                      my_field, key, REQUEST)
-                    except ValidationError, err :
-                      err.field_id = my_field.id + '_cell_%s_%s_%s' % (i,j,k)
-                      error_list.append(err)
-
-                    if (attribute_value != value or \
-                        attribute_value not in ('',None,(),[])) \
-                        and not my_field.get_value('hidden'):
-                      # Only validate modified values from visible fields
-                      result.setdefault(kw, {})[attribute_id] = value
-                    else:
-                      if result.has_key(kw):
-                        result[kw][attribute_id] = value
-              j += 1
-            i += 1
-          k += 1
+            for l in line_ids:
+              j = 0
+              for c in column_ids:
+                if c is None:
+                  kw = [l]
+                elif tab_id is None:
+                  kw = [l, c]
+                else:
+                  kw = [l, c] + tab_id + extra_dimension_category_list
+                kw = tuple(kw)
+                kwd = {}
+                kwd['base_id'] = cell_base_id
+                cell = cell_getter_method(*kw, **kwd)
+                
+                for attribute_id in editable_attribute_ids:
+                
+                  my_field_id = '%s_%s' % (field.id, attribute_id)
+                  if form.has_field(my_field_id):
+                    my_field = form.get_field(my_field_id)
+                    if my_field.get_value('editable'):
+                      key = 'field_' + my_field.id + '_cell_%s_%s_%s%s' % (i,j,k,extra_dimension_index)
+                      attribute_value = my_field.get_value('default',
+                          cell=cell, cell_index=kw, cell_position = ((i,j,k)+extra_dimension_position))
+                      value = None
+                      try :
+                        value = my_field.validator.validate(
+                                        my_field, key, REQUEST)
+                      except ValidationError, err :
+                        err.field_id = my_field.id + '_cell_%s_%s_%s%s' % (i,j,k,extra_dimension_index)
+                        error_list.append(err)
+                        
+                      if (attribute_value != value or \
+                          attribute_value not in ('',None,(),[])) \
+                          and not my_field.get_value('hidden'):
+                        # Only validate modified values from visible fields
+                        result.setdefault(kw, {})[attribute_id] = value
+                      else:
+                        if result.has_key(kw):
+                          result[kw][attribute_id] = value
+                j += 1
+              i += 1
+            k += 1
         if len(error_list):
           raise FormValidationError(error_list, {})
         return result
