@@ -1,3 +1,6 @@
+2010-07-13 yusei
+* Support more than four dimensional matrix.
+
 2010-07-02 Kazuhiko
 * Allow Manager to invoke validation_workflow's actions.
 
