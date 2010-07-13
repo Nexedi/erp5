@@ -62,9 +62,9 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left (Document Reference)</string>
-                <string>right (Publication Information)</string>
-                <string>center</string>
+                <string>left (Product Reference)</string>
+                <string>right (Product Classification)</string>
+                <string>center (Product Description)</string>
                 <string>bottom (Preview)</string>
                 <string>hidden</string>
               </list>
@@ -81,7 +81,7 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>center</string> </key>
+                    <key> <string>center (Product Description)</string> </key>
                     <value>
                       <list>
                         <string>my_url_string</string>
@@ -96,19 +96,22 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left (Document Reference)</string> </key>
+                    <key> <string>left (Product Reference)</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_follow_up_title_list</string>
                         <string>my_content_type</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right (Publication Information)</string> </key>
+                    <key> <string>right (Product Classification)</string> </key>
                     <value>
                       <list>
+                        <string>my_product_line_list</string>
+                        <string>my_group_list</string>
                         <string>my_activity_list</string>
                         <string>my_region_list</string>
                         <string>my_subject_list</string>
