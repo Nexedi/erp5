@@ -85,15 +85,18 @@
 ##############################################################################
 database_type='MySQL'
 
-import os
+import os.path
 from db import ThreadedDeferredDB
-import Shared.DC.ZRDB.Connection, sys, DABase
+import Shared.DC.ZRDB
+import DABase
 from App.Dialogs import MessageDialog
 from App.special_dtml import HTMLFile
 from App.ImageFile import ImageFile
 from ExtensionClass import Base
 from DateTime import DateTime
 from thread import allocate_lock
+
+SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 
 manage_addZMySQLDeferredConnectionForm=HTMLFile('deferredConnectionAdd',globals())
 
@@ -170,7 +173,7 @@ __ac_permissions__=(
     )
 
 misc_={'conn': ImageFile(
-    os.path.join('Shared','DC','ZRDB','www','DBAdapterFolder_icon.gif'))}
+    os.path.join(SHARED_DC_ZRDB_LOCATION,'www','DBAdapterFolder_icon.gif'))}
 
 for icon in ('table', 'view', 'stable', 'what',
              'field', 'text','bin','int','float',

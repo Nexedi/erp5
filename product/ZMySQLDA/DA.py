@@ -90,7 +90,8 @@ __version__='$Revision: 1.4 $'[11:-2]
 
 import os
 from db import ThreadedDB
-import Shared.DC.ZRDB.Connection, sys, DABase
+import Shared.DC.ZRDB
+import DABase
 from App.Dialogs import MessageDialog
 from App.special_dtml import HTMLFile
 from App.ImageFile import ImageFile
@@ -98,6 +99,8 @@ from ExtensionClass import Base
 from DateTime import DateTime
 from thread import allocate_lock
 from Acquisition import aq_parent
+
+SHARED_DC_ZRDB_LOCATION = os.path.dirname(Shared.DC.ZRDB.__file__)
 
 manage_addZMySQLConnectionForm=HTMLFile('connectionAdd',globals())
 
@@ -177,7 +180,7 @@ __ac_permissions__=(
     )
 
 misc_={'conn': ImageFile(
-    os.path.join('Shared','DC','ZRDB','www','DBAdapterFolder_icon.gif'))}
+    os.path.join(SHARED_DC_ZRDB_LOCATION,'www','DBAdapterFolder_icon.gif'))}
 
 for icon in ('table', 'view', 'stable', 'what',
 	     'field', 'text','bin','int','float',
