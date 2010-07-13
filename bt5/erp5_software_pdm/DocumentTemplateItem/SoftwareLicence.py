@@ -32,12 +32,12 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.Document.TextDocument import TextDocument
 
-class SoftwareLicense(Item, TextDocument):
+class SoftwareLicence(Item, TextDocument):
     """
     """
 
-    meta_type = 'ERP5 Software License'
-    portal_type = 'Software License'
+    meta_type = 'ERP5 Software Licence'
+    portal_type = 'Software Licence'
     add_permission = Permissions.AddPortalContent
 
     # Declarative security
