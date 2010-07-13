@@ -3,6 +3,7 @@
   <item>Software Licence</item>
  </portal_type>
  <portal_type id="Software Product">
+  <item>Purchase Supply Line</item>
   <item>Sale Supply Line</item>
  </portal_type>
  <portal_type id="Software Product Module">

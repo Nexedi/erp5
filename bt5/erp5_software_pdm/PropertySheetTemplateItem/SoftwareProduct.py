@@ -61,4 +61,4 @@ class SoftwareProduct:
             'mode'        : 'w' },
 
     )
-    _categories = ('activity', 'region', 'publication_section', 'mime_type',)
+    _categories = ('activity', 'region', 'aggregate',)

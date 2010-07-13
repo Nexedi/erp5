@@ -55,3 +55,19 @@ class SoftwareProduct(Resource):
     # content_type property is also a method from PortalFolder, so we need a
     # valid type by default.
     content_type = ''
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'SearchableText')
+    def SearchableText(self):
+        """Text for full text search"""
+        text_list = []
+        for prop in ( self.getTitle(),
+                      self.getDescription(),
+                      self.getUrlString(),
+                      ):
+            if prop:
+                text_list.append(str(prop))
+        for subject in self.getSubjectList():
+            text_list.append(str(subject))
+
+        return ' '.join(text_list)

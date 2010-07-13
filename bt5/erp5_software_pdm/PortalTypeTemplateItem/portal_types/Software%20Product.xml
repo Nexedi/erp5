@@ -35,6 +35,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>ERP5 default document. Supports synchronisation and XML.</string> </value>
         </item>
@@ -120,7 +126,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <string>content_translation</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -140,7 +146,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <string>content_translation</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
