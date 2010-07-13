@@ -32,7 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.Document.TextDocument import TextDocument
 
-class SoftwareLicence(Item, TextDocument):
+class SoftwareLicence(TextDocument, Item):
     """
     """
 
@@ -43,3 +43,19 @@ class SoftwareLicence(Item, TextDocument):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+    def getSearchableText(self):
+        """Text for full text search"""
+        text_list = []
+        for prop in ( self.getTitle(),
+                      self.getDescription(),
+                      self.getShortTitle(),
+                      ):
+            if prop:
+                text_list.append(str(prop))
+        for subject in self.getSubjectList():
+            text_list.append(str(subject))
+
+        return ' '.join(text_list)
+
+    SearchableText = getSearchableText
