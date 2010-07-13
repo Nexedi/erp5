@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_doSelect</string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -56,16 +56,18 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>left (Document Reference)</string>
+                <string>right (Publication Information)</string>
                 <string>left</string>
                 <string>right</string>
                 <string>center</string>
-                <string>bottom</string>
+                <string>bottom (Preview)</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -75,15 +77,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom</string> </key>
+                    <key> <string>bottom (Preview)</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>iframe_content</string>
+                        <string>text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_description</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -95,8 +102,20 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left (Document Reference)</string> </key>
+                    <value>
                       <list>
-                        <string>listbox</string>
+                        <string>my_title</string>
+                        <string>my_short_title</string>
+                        <string>my_reference</string>
+                        <string>my_version</string>
+                        <string>my_language</string>
+                        <string>my_effective_date</string>
+                        <string>my_revision</string>
                       </list>
                     </value>
                 </item>
@@ -106,12 +125,20 @@
                       <list/>
                     </value>
                 </item>
+                <item>
+                    <key> <string>right (Publication Information)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_translated_validation_state_title</string>
+                      </list>
+                    </value>
+                </item>
               </dictionary>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SoftwareLicenseModule_viewSoftwareLicenseList</string> </value>
+            <value> <string>SoftwareLicence_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,11 +146,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>SoftwareLicenseModule_viewSoftwareLicenseList</string> </value>
+            <value> <string>SoftwareLicence_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_list</string> </value>
+            <value> <string>form_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -135,7 +162,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Software Licenses</string> </value>
+            <value> <string>Sofware Licence</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

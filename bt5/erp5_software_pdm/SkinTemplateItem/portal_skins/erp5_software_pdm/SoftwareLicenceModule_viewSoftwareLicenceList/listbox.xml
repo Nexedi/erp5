@@ -180,8 +180,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Software License</string>
-                          <string>Software License</string>
+                          <string>Software Licence</string>
+                          <string>Software Licence</string>
                         </tuple>
                       </list>
                     </value>
@@ -192,7 +192,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Software Licenses</string> </value>
+                    <value> <string>Software Licences</string> </value>
                 </item>
               </dictionary>
             </value>

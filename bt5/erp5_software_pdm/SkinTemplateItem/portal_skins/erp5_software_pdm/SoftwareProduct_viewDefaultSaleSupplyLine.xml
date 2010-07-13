@@ -144,7 +144,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Resource_viewDefaultSupplyLine</string> </value>
+            <value> <string>SoftwareProduct_viewDefaultSaleSupplyLine</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -168,6 +168,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

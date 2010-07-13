@@ -1,5 +1,5 @@
 <module>
- <id>software_license_module</id>
+ <id>software_licence_module</id>
  <permission_list>
   <permission type='tuple'>
    <name>Access Transient Objects</name>
@@ -91,6 +91,6 @@
    <role>Manager</role>
   </permission>
  </permission_list>
- <portal_type>Software License Module</portal_type>
- <title>Software Licenses</title>
+ <portal_type>Software Licence Module</portal_type>
+ <title>Software Licences</title>
 </module>

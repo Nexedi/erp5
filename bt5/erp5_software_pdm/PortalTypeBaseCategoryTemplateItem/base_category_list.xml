@@ -2,7 +2,7 @@
  <portal_type id="Sale Supply Line">
   <item>aggregate</item>
  </portal_type>
- <portal_type id="Software License Module">
+ <portal_type id="Software Licence Module">
   <item>business_application</item>
  </portal_type>
  <portal_type id="Software Product Module">

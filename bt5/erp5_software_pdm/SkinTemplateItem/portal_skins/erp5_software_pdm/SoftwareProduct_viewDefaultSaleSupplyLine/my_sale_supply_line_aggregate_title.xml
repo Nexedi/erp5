@@ -495,8 +495,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Software License</string>
-                          <string>Software License</string>
+                          <string>Software Licence</string>
+                          <string>Software Licence</string>
                         </tuple>
                       </list>
                     </value>
@@ -506,8 +506,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>SoftwareLicenseModule_viewSoftwareLicenseList/listbox</string>
-                          <string>Software Licenses</string>
+                          <string>SoftwareLicenceModule_viewSoftwareLicenceList/listbox</string>
+                          <string>Software Licences</string>
                         </tuple>
                       </list>
                     </value>
@@ -536,7 +536,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>License</string> </value>
+                    <value> <string>Licence</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
