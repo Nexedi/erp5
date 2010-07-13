@@ -68,6 +68,8 @@ from Products.ERP5Type.tests.utils import createZODBPythonScript
 import os
 from threading import Thread
 import httplib
+import urllib
+from PIL import Image
 
 QUIET = 0
 
@@ -1920,7 +1922,76 @@ return 1
     image=self.portal.image_module.newContent(portal_type='Image',
                                                     content_type='image/png')
     self.assertTrue('txt' in image.getTargetFormatList())
-  
+
+  def test_convertToImageOnTraversal(self):
+    """
+    Test converting to image all Document portal types on traversal i.e.:
+     - image_module/1?quality=100&display=xlarge&format=jpeg
+     - document_module/1?quality=100&display=large&format=jpeg
+     - etc ...
+    """
+    # Create OOo document
+    ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    ooo_document.edit(file=upload_file)
+
+    pdf_document = self.portal.document_module.newContent(portal_type='PDF')
+    upload_file = makeFileUpload('TEST-en-002.pdf')
+    pdf_document.edit(file=upload_file)
+
+    image_document = self.portal.image_module.newContent(portal_type='Image')
+    upload_file = makeFileUpload('TEST-en-002.png')
+    image_document.edit(file=upload_file)
+    self.stepTic()
+
+    def getPreferences(image_display):
+      preference_tool = self.portal.getPortalObject().portal_preferences
+      height_preference = 'preferred_%s_image_height' % (image_display,)
+      width_preference = 'preferred_%s_image_width' % (image_display,)
+      height = int(preference_tool.getPreference(height_preference))
+      width = int(preference_tool.getPreference(width_preference))
+      return (width, height)
+
+    def getURLSize(uri, **kw):
+      # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
+      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+      format=kw.get('format', 'jpeg')
+      infile = urllib.urlopen(url)
+      # save as file with proper incl. format filename (for some reasons PIL uses this info)
+      filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
+      f = open(filename, "w")
+      f.write(infile.read())
+      f.close()
+      infile.close()
+      image = Image.open(filename)
+      image_size = image.size
+      os.remove(filename)
+      return image_size
+
+    ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
+    pdf_document_url = '%s/%s' %(self.portal.absolute_url(), pdf_document.getRelativeUrl())
+    image_document_url = '%s/%s' %(self.portal.absolute_url(), image_document.getRelativeUrl())
+    for display in ('nano', 'micro', 'thumbnail', 'xsmall', 'small', 'medium', 'large', 'xlarge',):
+      max_tollerance_px = 1
+      preffered_size_for_display = getPreferences(display)
+      for format in ('png', 'jpeg', 'gif',):
+        convert_kw = {'display':display, \
+                      'format':format, \
+                      'quality':100}
+        # Note: due to some image interpolations it's possssible that we have a difference of max_tollerance_px 
+        # so allow some tollerance which is produced by respective portal_transform command
+
+        # any OOo based portal type
+        ooo_document_image_size = getURLSize(ooo_document_url, **convert_kw)
+        self.assertTrue(max(preffered_size_for_display) - max(ooo_document_image_size) <= max_tollerance_px)
+
+        # PDF
+        pdf_document_image_size = getURLSize(pdf_document_url, **convert_kw)
+        self.assertTrue(max(preffered_size_for_display) - max(pdf_document_image_size) <= max_tollerance_px)
+
+        # Image
+        image_document_image_size = getURLSize(image_document_url, **convert_kw)
+        self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
