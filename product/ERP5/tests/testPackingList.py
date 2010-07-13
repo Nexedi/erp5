@@ -1608,9 +1608,6 @@ class TestAutomaticSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     TestPackingListMixin.afterSetUp(self)
     types_tool = self.portal.portal_types
     solver_process_type_info = types_tool['Solver Process']
-    if 'portal_solvers' not in types_tool.type_provider_list:
-      types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
-                                      ('portal_solvers',)
     self.original_allowed_content_types = solver_process_type_info.getTypeAllowedContentTypeList()
     self.added_target_solver_list = []
 
