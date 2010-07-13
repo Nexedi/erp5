@@ -1601,7 +1601,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self._testSubContentReindexing(packing_list, [container, container_line,
       container_cell])
 
-class TestAutomaticSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
+class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0
 
   def afterSetUp(self, quiet=1, run=1):
@@ -1661,6 +1661,34 @@ class TestAutomaticSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
       solver=('portal_solvers/Automatic Quantity Adopt Solver',))
 
+  def stepSetUpMovementSplitSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Movement Split Solver',
+                            'MovementSplitSolver', ())
+
+  def stepSplitMovementWithVariatedResources(self, sequence=None,
+                                             sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    simulation_movement_list = sum(
+      [x.getDeliveryRelatedValueList() for x in \
+       packing_list.getMovementList()[:10]], [])
+    solver_process = self.portal.portal_solver_processes.newContent(
+      portal_type='Solver Process')
+    target_solver = solver_process.newContent(
+      portal_type='Movement Split Solver',
+      delivery_value_list=simulation_movement_list)
+    target_solver.solve()
+
+  def stepCheckSplitMovementWithVariatedResources(self, sequence=None,
+                                                  sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    order = packing_list.getCausalityValue()
+    new_packing_list = filter(lambda x:x != packing_list,
+                              order.getCausalityRelatedValueList(
+      portal_type=packing_list.getPortalType()))[0]
+    self.assertEquals(len(packing_list.getMovementList()),
+                      len(order.getMovementList()) - 10)
+    self.assertEquals(len(new_packing_list.getMovementList()), 10)
+
   def test_01_PackingListDecreaseQuantity(self, quiet=quiet):
     """
       Change the quantity on an delivery line, then
@@ -1703,6 +1731,30 @@ class TestAutomaticSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
 
     sequence_list.play(self, quiet=quiet)
 
+  def test_09_AddContainersWithVariatedResources(self, quiet=quiet):
+    sequence_list = SequenceList()
+
+    # Test with a order with cells
+    sequence_string = '\
+                      stepSetUpMovementSplitSolver \
+                      ' + self.variated_default_sequence + '\
+                      stepAddPackingListContainer \
+                      stepAddPackingListContainerLine \
+                      stepSetContainerLineSmallQuantity \
+                      stepCheckContainerLineSmallQuantity \
+                      stepCheckPackingListIsNotPacked \
+                      stepSetContainerFullQuantity \
+                      stepTic \
+                      stepCheckPackingListIsPacked \
+                      stepSplitMovementWithVariatedResources \
+                      stepTic \
+                      stepCheckSplitMovementWithVariatedResources \
+                      '
+    # XXX Check if there is a new packing list created
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
   """
@@ -1740,6 +1792,6 @@ class TestPurchasePackingList(TestPurchasePackingListMixin, TestPackingList):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPackingList))
-  suite.addTest(unittest.makeSuite(TestAutomaticSolvingPackingList))
+  suite.addTest(unittest.makeSuite(TestSolvingPackingList))
   suite.addTest(unittest.makeSuite(TestPurchasePackingList))
   return suite
