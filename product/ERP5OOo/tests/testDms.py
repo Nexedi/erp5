@@ -70,6 +70,7 @@ from threading import Thread
 import httplib
 import urllib
 from PIL import Image
+from AccessControl import Unauthorized
 
 QUIET = 0
 
@@ -1773,10 +1774,6 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
     document = module.newContent(portal_type=portal_type, file=upload_file)
     self.assertEquals(document.asText(), 'ERP5 is a free software.\n')
-    upload_file = makeFileUpload('TEST.Large.Document.pdf')
-    document = module.newContent(portal_type=portal_type, file=upload_file)
-    from AccessControl import Unauthorized
-    self.assertRaises(Unauthorized, document.asText)
 
   def createRestrictedSecurityHelperScript(self):
     script_content_list = ['format=None, **kw', """
@@ -1992,6 +1989,18 @@ return 1
         # Image
         image_document_image_size = getURLSize(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
+
+  def test_checkConversionFormatPermission(self):
+    """
+     Test various use cases when conversion can be not allowed
+    """
+    portal_type = 'PDF'
+    module = self.portal.getDefaultModule(portal_type)
+    upload_file = makeFileUpload('TEST.Large.Document.pdf')
+    pdf = module.newContent(portal_type=portal_type, file=upload_file)
+
+    # if PDF size is larger than A4 format system should deny conversion
+    self.assertRaises(Unauthorized, pdf.convert, format='jpeg')
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
