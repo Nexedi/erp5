@@ -34,6 +34,7 @@ class CheckPayment:
         {   'id'          : 'unique_per_account',
             'description' : 'If the check has an number that must be unique per account',
             'type'        : 'boolean',
+            'default'     : True,
             'mode'        : 'w' },
     )
   
