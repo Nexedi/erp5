@@ -523,7 +523,7 @@ class BusinessProcess(Path, XMLObject):
     trade_state -- a Trade State category
     """
     for business_link in self.getBusinessLinkValueList(successor=trade_state):
-      if not closure_process.isBusinessLinkCompleted(explanation, business_link):
+      if not self.isBusinessLinkCompleted(explanation, business_link):
         return False
     return True      
 
@@ -606,13 +606,16 @@ class BusinessProcess(Path, XMLObject):
     return True
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRemainingTradePhaseList')
-  def getRemainingTradePhaseList(self, business_link, trade_phase_list=None):
+  def getRemainingTradePhaseList(self, explanation, business_link, trade_phase_list=None):
     """Returns the list of remaining trade phases which to be achieved
     as part of a business process. This list is calculated by analysing 
     the graph of business link and trade states, starting from a given
     business link. The result if filtered by a list of trade phases. This
     method is useful mostly for production and MRP to manage a distributed
     supply and production chain.
+
+    explanation -- an Order, Order Line, Delivery or Delivery Line or
+                   Applied Rule which implicitely defines a simulation subtree
 
     business_link -- a Business Link document
 
