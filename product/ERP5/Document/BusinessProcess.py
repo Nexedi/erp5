@@ -131,9 +131,9 @@ class BusinessProcess(Path, XMLObject):
     if trade_phase is None:
       trade_phase = set()
     elif not isinstance(trade_phase, (list, tuple)):
-      trade_phase = set((trade_phase,))
-    else:
-      trade_phase = set(trade_phase)
+      trade_phase = (trade_phase,)
+    trade_phase = set([x.split('trade_phase/', 1)[-1] \
+                       for x in trade_phase])
     result = []
     if kw.get('portal_type', None) is None:
       kw['portal_type'] = self.getPortalTradeModelPathTypeList()
