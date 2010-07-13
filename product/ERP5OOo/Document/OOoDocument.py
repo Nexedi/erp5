@@ -48,6 +48,7 @@ from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, PermanentURLMixIn,\
 VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from AccessControl.SecurityManagement import setSecurityManager
+from Products.ERP5Type.Utils import fill_args_from_request
 from zLOG import LOG, ERROR
 
 # Mixin Import
@@ -153,6 +154,12 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
   # regular expressions for stripping xml from ODF documents
   rx_strip = re.compile('<[^>]*?>', re.DOTALL|re.MULTILINE)
   rx_compr = re.compile('\s+')
+
+  security.declareProtected('View', 'index_html')
+  @fill_args_from_request('display', 'quality', 'resolution')
+  def index_html(self, REQUEST, *args, **kw):
+    """Return the document data."""
+    return Document.index_html(self, REQUEST, *args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isSupportBaseDataConversion')
@@ -372,13 +379,14 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
         and not requires_pdf_first:
         self.setConversion(data, mime, format=original_format)
       else:
+        # create temporary image and use it to resize accordingly
         temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
                                        file=cStringIO.StringIO(),
                                        file_name=self.getId(),
                                        temp_object=1)
         temp_image._setData(data)
-        mime, data = temp_image.convert(original_format, display=display)
+        mime, data = temp_image.convert(original_format, display=display, **kw)
         if requires_pdf_first:
           if display is None:
             self.setConversion(data, mime, format=original_format)
