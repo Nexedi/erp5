@@ -48,6 +48,7 @@ class RoundingModel(Predicate):
                      PropertySheet.DublinCore,
                      PropertySheet.Predicate,
                      PropertySheet.SortIndex,
+                     PropertySheet.Reference,
                      PropertySheet.RoundingModel,
                      )
 
