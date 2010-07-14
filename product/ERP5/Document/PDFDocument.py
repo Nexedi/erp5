@@ -90,6 +90,11 @@ class PDFDocument(Image):
     elif format is None:
       return self.getContentType(), self.getData()
     else:
+      if kw.get('frame', None) is None:
+        # when converting to image from PDF we care for first page only
+        # this will make sure that only first page is used and not whole content of
+        # PDF file read & converted which is a performance issue
+        kw['frame'] = 0
       return Image._convert(self, format, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
