@@ -1,3 +1,6 @@
+2010-07-14 yusei
+* Set reference field to Rounding Model view form.
+
 2010-07-06 kazuhiko
 * Add delivery_solver base category that is used to specify available delivery solver portal types per target solver portal type.
 
