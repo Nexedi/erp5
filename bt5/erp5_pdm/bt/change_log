@@ -1,4 +1,7 @@
 2010-07-14 yusei
+* Supply portal types do not acquire local roles.
+
+2010-07-14 yusei
 * Since Supply Line is an old portal type, move it to hidden content type list and hide it from users.
 
 2010-07-12 yusei
