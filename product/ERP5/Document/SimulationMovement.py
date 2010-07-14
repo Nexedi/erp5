@@ -690,11 +690,14 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
 
       for id, t in tree_node.visited_movement_dict.iteritems():
         subdocument, path = t
-        to_check = path_set_to_check.copy()
-        to_check.discard(path)
-        if not to_check:
-          # no more paths to check in this branch
-          continue
+        to_check = path_set_to_check
+        # do we need to change/copy the set?
+        if path in to_check:
+          if len(to_check) == 1:
+            # no more paths to check in this branch
+            continue
+          to_check = to_check.copy()
+          to_check.remove(path)
         subtree = tree_node.get(id, treeNode())
         for d in descendantGenerator(subdocument, subtree, to_check):
           yield d
