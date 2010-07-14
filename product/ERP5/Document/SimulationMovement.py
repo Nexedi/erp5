@@ -680,6 +680,13 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
             tree_node.visited_movement_dict[id] = t
             if path in path_set_to_check:
               yield t
+          else:
+            # it must be an Applied Rule
+            subtree = tree_node.get(id, treeNode())
+            for d in descendantGenerator(subdocument,
+                                         subtree,
+                                         path_set_to_check):
+              yield d
 
       for id, t in tree_node.visited_movement_dict.iteritems():
         subdocument, path = t
