@@ -314,7 +314,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
       if len(format_list):
         format = format_list[0]
       else:
-        # We must fist make a PDF
+        # We must fist make a PDF which will be used to produce an image out of it
         requires_pdf_first = 1
         format_list = [x for x in self.getTargetFormatList()
                                           if x.endswith('pdf')]
@@ -386,17 +386,14 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
                                        file_name=self.getId(),
                                        temp_object=1)
         temp_image._setData(data)
-        mime, data = temp_image.convert(original_format, display=display, **kw)
-        if requires_pdf_first:
-          if display is None:
-            self.setConversion(data, mime, format=original_format)
-          else:
-            self.setConversion(data, mime, format=original_format, display=display)
+        # we care for first page only
+        mime, data = temp_image.convert(original_format, display=display, frame=0, **kw)
+        # store conversion
+        if display is None:
+          self.setConversion(data, mime, format=original_format)
         else:
-          if display is None:
-            self.setConversion(data, mime, format=original_format)
-          else:
-            self.setConversion(data, mime, format=original_format, display=display)
+          self.setConversion(data, mime, format=original_format, display=display)
+
     if requires_pdf_first:
       format = original_format
     if display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
