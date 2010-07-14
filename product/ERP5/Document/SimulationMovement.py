@@ -631,7 +631,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
         self.visited_dict = dict()
 
     path_tree = treeNode()
-    def updateTree(simulation_movement):
+    def updateTree(simulation_movement, path):
       tree_node = path_tree
       movement_path = simulation_movement.getPhysicalPath()
       simulation_movement_id = movement_path[-1]
@@ -639,7 +639,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       for path_id in movement_path[:-1]:
         tree_node = tree_node.setdefault(path_id, treeNode())
       # and mark the object as visited
-      tree_node.visited_dict[simulation_movement_id] = simulation_movement
+      tree_node.visited_dict[simulation_movement_id] = (simulation_movement, path)
 
     portal_catalog = self.getPortalObject().portal_catalog
     catalog_simulation_movement_list = portal_catalog(
@@ -648,33 +648,47 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       path='%s/%%' % self.getPath())
 
     for movement in catalog_simulation_movement_list:
-      if not isBuiltAndCompleted(movement, movement.getCausalityValue()):
+      path = movement.getCausalityValue()
+      if not isBuiltAndCompleted(movement, path):
         return False
-      updateTree(movement)
+      updateTree(movement, path)
 
     ### Step 3:
     ## We had no luck, we have to explore descendant movements in ZODB
     #
-    def descendantGenerator(document, tree_node):
+    def descendantGenerator(document, tree_node, path_set_to_check):
       """
       generator yielding Simulation Movement descendants of document.
       It does _not_ explore the whole subtree if iteration is stopped.
 
       It uses the tree we built previously to avoid loading again ZODB
       objects that we already loaded during catalog querying
+
+      path_set_to_check contains a set of Business Paths that we are
+      interested in. A branch is only explored if this set is not
+      empty; a movement is only yielded if its causality value is in this set
       """
       object_id_list = document.objectIds()
       for id in object_id_list:
         if id not in tree_node.visited_dict:
           # we had not visited it in step #2
-          subdocument = document[id]
+          subdocument = document._getOb(id)
           if subdocument.getPortalType() == "Simulation Movement":
-            tree_node.visited_dict[id] = subdocument
-            yield subdocument
+            path = subdocument.getCausalityValue()
+            t = (subdocument, path)
+            tree_node.visited_dict[id] = t
+            if path in path_set_to_check:
+              yield t
 
-      for id, subdocument in tree_node.visited_dict.iteritems():
+      for id, t in tree_node.visited_dict.iteritems():
+        subdocument, path = t
+        to_check = path_set_to_check.copy()
+        to_check.discard(path)
+        if not to_check:
+          # no more paths to check in this branch
+          continue
         subtree = tree_node.get(id, treeNode())
-        for d in descendantGenerator(subdocument, subtree):
+        for d in descendantGenerator(subdocument, subtree, to_check):
           yield d
 
     # descend in the tree to find self:
@@ -683,10 +697,9 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       tree_node = tree_node.setdefault(path_id, treeNode())
 
     # explore subobjects of self
-    for descendant in descendantGenerator(self, tree_node):
-      path = descendant.getCausalityValue()
-      if path not in remaining_path_set:
-        continue
+    for descendant, path in descendantGenerator(self,
+                                                tree_node,
+                                                remaining_path_set):
       if not isBuiltAndCompleted(descendant, path):
         return False
 
