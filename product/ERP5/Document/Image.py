@@ -44,7 +44,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, ConversionError,\
-                                                         VALID_TEXT_FORMAT_LIST
+                     VALID_TEXT_FORMAT_LIST, DEFAULT_DISPLAY_ID_LIST, DEFAULT_QUALITY, _MARKER
 from os.path import splitext
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
@@ -52,16 +52,8 @@ from zLOG import LOG, WARNING
 
 # import mixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
-
 from Products.CMFCore.utils import getToolByName
 
-DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
-                            'xsmall', 'small', 'medium',
-                            'large', 'large', 'xlarge',)
-
-DEFAULT_QUALITY = 75
-
-_MARKER = []
 class Image(TextConvertableMixin, File, OFSImage):
   """
     An Image is a File which contains image data. It supports

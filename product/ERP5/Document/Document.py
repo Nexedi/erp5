@@ -65,10 +65,17 @@ VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
 # these property ids are unchangable
 FIXED_PROPERTY_IDS = ('id', 'uid', 'rid', 'sid')
 
+# XXX: move to an easier to configure place (System Preference ?)
 VALID_TEXT_FORMAT_LIST = ('text', 'txt', 'html', 'base_html',
                           'stripped-html')
 
 VALID_IMAGE_FORMAT_LIST = ('jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm', 'tiff')
+
+DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
+                            'xsmall', 'small', 'medium',
+                            'large', 'large', 'xlarge',)
+
+DEFAULT_QUALITY = 75
 
 class SnapshotMixin:
   """
