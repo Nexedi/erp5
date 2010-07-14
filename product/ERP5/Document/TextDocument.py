@@ -33,7 +33,7 @@ from zLOG import LOG, WARNING
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Document import Document, ConversionError
+from Products.ERP5.Document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
 from Products.ERP5.Document.File import File
 from Products.ERP5Type.WebDAVSupport import TextContent
 import re
@@ -45,9 +45,6 @@ try:
   from string import Template
 except ImportError:
   from Products.ERP5Type.patches.string import Template
-
-DEFAULT_CONTENT_TYPE = 'text/html'
-_MARKER = []
 
 class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                                             TextContent, File):

@@ -77,6 +77,9 @@ DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
 
 DEFAULT_QUALITY = 75
 
+DEFAULT_CONTENT_TYPE = 'text/html'
+
+
 class SnapshotMixin:
   """
     This class provides a generic API to store in the ZODB
