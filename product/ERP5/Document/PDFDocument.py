@@ -153,7 +153,7 @@ class PDFDocument(Image):
           text += result
       return text
 
-  security.declareProtected('View', 'getSizeFromImageDisplay')
+  security.declareProtected(Permissions.View, 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
     """
     Return the size for this image display, or None if this image display name

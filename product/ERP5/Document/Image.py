@@ -183,7 +183,7 @@ class Image(TextConvertableMixin, File, OFSImage):
   # Photo display methods
   #
 
-  security.declareProtected('View', 'tag')
+  security.declareProtected(Permissions.View, 'tag')
   def tag(self, display=None, height=None, width=None, cookie=0,
                 alt=None, css_class=None, format=None, quality=DEFAULT_QUALITY,
                 resolution=None, frame=None, **kw):
@@ -243,7 +243,7 @@ class Image(TextConvertableMixin, File, OFSImage):
   def __str__(self):
     return self.tag()
 
-  security.declareProtected('Access contents information', 'displayIds')
+  security.declareProtected(Permissions.AccessContentsInformation, 'displayIds')
   def displayIds(self, exclude=('thumbnail',)):
     """Return list of display Ids."""
     id_list = list(DEFAULT_DISPLAY_ID_LIST)
@@ -259,7 +259,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     id_list.sort(key=getSurfaceArea)
     return id_list
 
-  security.declareProtected('Access contents information', 'displayLinks')
+  security.declareProtected(Permissions.AccessContentsInformation, 'displayLinks')
   def displayLinks(self, exclude=('thumbnail',)):
     """Return list of HTML <a> tags for displays."""
     links = []
@@ -267,7 +267,7 @@ class Image(TextConvertableMixin, File, OFSImage):
         links.append('<a href="%s?display=%s">%s</a>' % (self.REQUEST['URL'], display, display))
     return links
 
-  security.declareProtected('Access contents information', 'displayMap')
+  security.declareProtected(Permissions.AccessContentsInformation, 'displayMap')
   def displayMap(self, exclude=None, format=None, quality=DEFAULT_QUALITY,\
                                                               resolution=None):
     """Return list of displays with size info."""
@@ -345,7 +345,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     return mime, image.data
 
   # Display
-  security.declareProtected('View', 'index_html')
+  security.declareProtected(Permissions.View, 'index_html')
   @fill_args_from_request('display', 'quality', 'resolution', 'frame')
   def index_html(self, REQUEST, *args, **kw):
     """Return the image data."""
@@ -445,7 +445,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     """At least see if it *might* be valid."""
     return self.getWidth() and self.getHeight() and self.getData() and self.getContentType()
 
-  security.declareProtected('View', 'getSizeFromImageDisplay')
+  security.declareProtected(Permissions.View, 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
     """Return the size for this image display,
        or dimension of this image.
@@ -470,4 +470,3 @@ class Image(TextConvertableMixin, File, OFSImage):
     """
     File.PUT(self, REQUEST, RESPONSE)
     self._update_image_info()
-

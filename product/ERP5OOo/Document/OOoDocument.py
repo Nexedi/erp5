@@ -155,7 +155,7 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
   rx_strip = re.compile('<[^>]*?>', re.DOTALL|re.MULTILINE)
   rx_compr = re.compile('\s+')
 
-  security.declareProtected('View', 'index_html')
+  security.declareProtected(Permissions.View, 'index_html')
   @fill_args_from_request('display', 'quality', 'resolution')
   def index_html(self, REQUEST, *args, **kw):
     """Return the document data."""
