@@ -619,16 +619,17 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     class treeNode(dict):
       """
       Used to cache accesses to ZODB objects.
-      The idea is to put in visited_dict the objects we've already
+      The idea is to put in visited_movement_dict the objects we've already
       loaded from ZODB in Step #2 to avoid loading them again in Step #3.
 
       - self represents a single ZODB container c
-      - self.visited_dict contains an id->(ZODB obj) cache for subobjects of c
+      - self.visited_movement_dict contains an id->(ZODB obj) cache for
+        subobjects of c
       - self[id] contains the treeNode representing c[id]
       """
       def __init__(self):
         dict.__init__(self)
-        self.visited_dict = dict()
+        self.visited_movement_dict = dict()
 
     path_tree = treeNode()
     def updateTree(simulation_movement, path):
@@ -639,7 +640,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       for path_id in movement_path[:-1]:
         tree_node = tree_node.setdefault(path_id, treeNode())
       # and mark the object as visited
-      tree_node.visited_dict[simulation_movement_id] = (simulation_movement, path)
+      tree_node.visited_movement_dict[simulation_movement_id] = (simulation_movement, path)
 
     portal_catalog = self.getPortalObject().portal_catalog
     catalog_simulation_movement_list = portal_catalog(
@@ -670,17 +671,17 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       """
       object_id_list = document.objectIds()
       for id in object_id_list:
-        if id not in tree_node.visited_dict:
+        if id not in tree_node.visited_movement_dict:
           # we had not visited it in step #2
           subdocument = document._getOb(id)
           if subdocument.getPortalType() == "Simulation Movement":
             path = subdocument.getCausalityValue()
             t = (subdocument, path)
-            tree_node.visited_dict[id] = t
+            tree_node.visited_movement_dict[id] = t
             if path in path_set_to_check:
               yield t
 
-      for id, t in tree_node.visited_dict.iteritems():
+      for id, t in tree_node.visited_movement_dict.iteritems():
         subdocument, path = t
         to_check = path_set_to_check.copy()
         to_check.discard(path)
