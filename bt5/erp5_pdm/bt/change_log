@@ -1,3 +1,6 @@
+2010-07-14 yusei
+* Since Supply Line is an old portal type, move it to hidden content type list and hide it from users.
+
 2010-07-12 yusei
 * Fix industrial phase list field bug on Transformation_view.
 
