@@ -550,6 +550,7 @@ class TemplateTool (BaseTool):
       """
       # XXX: should check for file presence before trying to execute.
       # XXX: should check if the unit test file is configured in the BT
+      site_configuration = getConfiguration()
       from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
       if RESPONSE is not None:
         outfile = RESPONSE
@@ -561,6 +562,9 @@ class TemplateTool (BaseTool):
         RESPONSE.setHeader('Content-type', 'text/plain')
       test_cmd_args = [sys.executable, getUnitTestFile()]
       test_cmd_args += ['--erp5_sql_connection_string', sql_connection_string]
+      # pass currently used product path to test runner
+      test_cmd_args += ['--products_path', ','.join(
+        site_configuration.products)]
       test_cmd_args += test_list
       # prepare message - intentionally without any additional formatting, as
       # only developer will read it, and they will have to understand issues in
