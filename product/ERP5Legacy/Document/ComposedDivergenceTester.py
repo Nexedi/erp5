@@ -71,3 +71,9 @@ class ComposedDivergenceTester(XMLObject):
       message = tester.explain(simulation_movement)
       message_list.extend(message)
     return message_list
+
+  def getTestedPropertyList(self, default=None):
+    """
+    Returns all tested properties in inside testers.
+    """
+    return sum([x.getTestedPropertyList() for x in self.objectValues()], [])
