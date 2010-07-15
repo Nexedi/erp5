@@ -169,8 +169,8 @@ def int_or_long(s):
 class ThreadedDB:
     """
       This class is an interface to DB.
-      Its caracteristic is that an instance of this class interfaces multiple
-      instanes of DB class, each one being bound to a specific thread.
+      Its characteristic is that an instance of this class interfaces multiple
+      instances of DB class, each one being bound to a specific thread.
     """
 
     conv=conversions.copy()
@@ -296,6 +296,10 @@ class ThreadedDB:
 
     def string_literal(self, *args, **kw):
         return self._access_db(method_id='string_literal', args=args, kw=kw)
+
+    def setSortKey(self, *args, **kw):
+        return self._access_db(method_id='setSortKey', args=args, kw=kw)
+
 
 class DB(TM):
 
