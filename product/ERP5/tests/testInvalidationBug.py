@@ -54,16 +54,17 @@ class TestInvalidationBug(ERP5TypeTestCase):
 
   def testCommitOrder(self):
     """Check order of resources being committed"""
-    module = self.getPortalObject().organisation_module
+    module = self.portal.organisation_module
     organisation = module.newContent()    # modify ZODB and create activity
     organisation.immediateReindexObject() # modify catalog
     path = organisation.getPath()
     test_list = []
     for connection_id, table in (('erp5_sql_connection', 'catalog'),
                                  ('cmf_activity_sql_connection', 'message')):
-      connection = self.portal[connection_id]
-      connection = connection.__class__('_' + connection_id, '',
-                                        '-' + connection.connection_string)
+      conn_class = self.portal[connection_id].__class__
+      conn_string = self.portal[connection_id].connection_string
+      connection = conn_class('_' + connection_id, '',
+                              '-' + conn_string).__of__(self.portal)
       query = "rollback\0select * from %s where path='%s'" % (table, path)
       test_list.append(lambda manage_test=connection.manage_test, query=query:
          len(manage_test(query)))
