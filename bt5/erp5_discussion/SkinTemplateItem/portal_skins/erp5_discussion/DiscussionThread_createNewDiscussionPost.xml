@@ -72,7 +72,7 @@ discussion_post = context.newContent(\n
                     language = language)\n
 \n
 # depending on security model Post can be submited for review\n
-portal_status_message = "New post created."\n
+portal_status_message = "New post created in background."\n
 discussion_post.release()\n
 \n
 return context.Base_redirect(form_id,\n

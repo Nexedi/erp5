@@ -42,7 +42,7 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5Form.PreferenceTool import Priority
 
 SOURCE = 'source'
 DESTINATION = 'destination'
@@ -206,6 +206,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     """
     if os.environ.get('erp5_save_data_fs'):
       return
+    self.login('ERP5TypeTestCase')
     transaction.abort()
     self.accounting_module.manage_delObjects(
                       list(self.accounting_module.objectIds()))
@@ -243,7 +244,7 @@ class AccountingTestCase(ERP5TypeTestCase):
     # standalone accounting and only installs erp5_accounting_ui_test to have
     # some default content created.
     return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_accounting_ui_test', 'erp5_ods_style')
+            'erp5_project', 'erp5_accounting_ui_test', 'erp5_ods_style')
 
 
 class TestAccounts(AccountingTestCase):
@@ -863,14 +864,6 @@ class TestTransactionValidation(AccountingTestCase):
 class TestClosingPeriod(AccountingTestCase):
   """Various tests for closing the period.
   """
-  def beforeTearDown(self):
-    transaction.abort()
-    # we manually remove the content of stock table, because unindexObject
-    # might not work correctly on Balance Transaction, and we don't want
-    # leave something in stock table that will change the next test.
-    self.portal.erp5_sql_connection.manage_test('truncate stock')
-    transaction.commit()
-
   def test_createBalanceOnNode(self):
     period = self.section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
@@ -1333,6 +1326,11 @@ class TestClosingPeriod(AccountingTestCase):
       "SELECT date FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
 
+    # we can reindex again
+    balance_transaction.reindexObject()
+    transaction.commit()
+    self.tic()
+
 
   def test_createBalanceOnMirrorSectionMultiCurrencySameMirrorSection(self):
     pl = self.portal.account_module.newContent(
@@ -1465,6 +1463,11 @@ class TestClosingPeriod(AccountingTestCase):
       "SELECT date FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
 
+    # we can reindex again
+    balance_transaction.reindexObject()
+    transaction.commit()
+    self.tic()
+
 
   def test_AccountingPeriodWorkflow(self):
     """Tests that accounting_period_workflow creates a balance transaction.
@@ -1588,6 +1591,11 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(2, len(section_balance_transaction.getMovementList()))
     self.assertEquals([], section_balance_transaction.checkConsistency())
 
+    transaction.commit()
+    self.tic()
+    # we can reindex again
+    main_section_balance_transaction.reindexObject()
+    section_balance_transaction.reindexObject()
     transaction.commit()
     self.tic()
 
@@ -1731,7 +1739,12 @@ class TestClosingPeriod(AccountingTestCase):
           if m.getDestinationValue() == self.account_module.stocks]
     self.assertEquals(1, len(stock_movement_list))
     self.assertEquals(500, stock_movement_list[0].getDestinationCredit())
-    
+
+    transaction.commit()
+    self.tic()
+    balance_transaction.reindexObject()
+    transaction.commit()
+    self.tic()
 
   def test_InventoryIndexingNodeAndMirrorSection(self):
     # Balance Transactions are indexed as Inventories.
@@ -1761,7 +1774,8 @@ class TestClosingPeriod(AccountingTestCase):
                 destination_credit=100,)
     balance.stop()
     balance.deliver()
-    balance.immediateReindexObject()
+    transaction.commit()
+    self.tic()
 
     # now check inventory
     stool = self.getSimulationTool()
@@ -1791,6 +1805,16 @@ class TestClosingPeriod(AccountingTestCase):
     # the account 'stocks' has a balance of -100
     node_uid = self.account_module.stocks.getUid()
     self.assertEquals(-100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid))
+
+    # we can reindex again
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
+    # the account 'receivable' still has a balance of 100
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(100, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
 
@@ -1836,6 +1860,10 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(-90, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
+    # we can reindex again
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
 
   def test_IndexingBalanceTransactionLinesWithSameNodes(self):
     # Indexes balance transaction without any previous inventory.
@@ -1877,19 +1905,35 @@ class TestClosingPeriod(AccountingTestCase):
                               mirror_section_uid=self.organisation_module\
                                                     .client_2.getUid(),
                               node_uid=node_uid))
+    # we can reindex again
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
     
-
   def test_BalanceTransactionLineBrainGetObject(self):
     # Balance Transaction Line can be retrieved using Brain.getObject
+    existing_transaction = self._makeOne(
+               start_date=DateTime(2006, 1, 31),
+               portal_type='Sale Invoice Transaction',
+               simulation_state='delivered',
+               lines=(dict(source_value=self.account_module.receivable,
+                           source_debit=30),
+                      dict(source_value=self.account_module.goods_sales,
+                           source_credit=30)))
+
     balance = self.accounting_module.newContent(
                           portal_type='Balance Transaction',
+                          id='different_from_line',
                           destination_section_value=self.section,
                           start_date=DateTime(2006, 12, 31),
                           resource_value=self.currency_module.euro,)
+    # this line already exists in stock table, only the difference will be
+    # indexed
     balance_line = balance.newContent(
                 portal_type='Balance Transaction Line',
                 destination_value=self.account_module.receivable,
                 destination_debit=100,)
+    # this line does not already exist
     balance_line2 = balance.newContent(
                 portal_type='Balance Transaction Line',
                 destination_value=self.account_module.payable,
@@ -1907,10 +1951,12 @@ class TestClosingPeriod(AccountingTestCase):
     # there is one line in getMovementHistoryList:
     mvt_history_list = stool.getMovementHistoryList(
                               section_uid=self.section.getUid(),
-                              node_uid=node_uid)
-    self.assertEquals(1, len(mvt_history_list))
-    self.assertEquals(mvt_history_list[0].getObject(),
+                              node_uid=node_uid,
+                              sort_on=(('date', 'ASC'), ))
+    self.assertEquals(2, len(mvt_history_list))
+    self.assertEquals(mvt_history_list[1].getObject(),
                       balance_line)
+    self.assertEquals([30, 70], [b.total_price for b in mvt_history_list])
 
     # There is also one line on payable account
     node_uid = self.account_module.payable.getUid()
@@ -1921,6 +1967,81 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(mvt_history_list[0].getObject(),
                       balance_line2)
 
+    # we can reindex again
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
+
+  def test_BalanceTransactionLineBrainGetObjectDifferentThirdParties(self):
+    # Balance Transaction Line can be retrieved using Brain.getObject, when
+    # the balance is for different third parties
+    existing_transaction = self._makeOne(
+               start_date=DateTime(2006, 1, 30),
+               portal_type='Sale Invoice Transaction',
+               simulation_state='delivered',
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.receivable,
+                           source_debit=30),
+                      dict(source_value=self.account_module.goods_sales,
+                           source_credit=30)))
+    another_existing_transaction = self._makeOne(
+               start_date=DateTime(2006, 1, 31),
+               portal_type='Sale Invoice Transaction',
+               simulation_state='delivered',
+               destination_section_value=self.organisation_module.client_2,
+               lines=(dict(source_value=self.account_module.receivable,
+                           source_debit=40),
+                      dict(source_value=self.account_module.goods_sales,
+                           source_credit=40)))
+
+    balance = self.accounting_module.newContent(
+                          portal_type='Balance Transaction',
+                          id='different_from_line',
+                          destination_section_value=self.section,
+                          start_date=DateTime(2006, 12, 31),
+                          resource_value=self.currency_module.euro,)
+    
+    balance_line = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.receivable,
+                source_section_value=self.organisation_module.client_2,
+                destination_debit=100,)
+    balance_line2 = balance.newContent(
+                portal_type='Balance Transaction Line',
+                destination_value=self.account_module.payable,
+                destination_credit=100,)
+    balance.stop()
+    transaction.commit()
+    self.tic()
+    
+    stool = self.portal.portal_simulation
+    # the account 'receivable' has a balance of 100 + 30
+    node_uid = self.account_module.receivable.getUid()
+    self.assertEquals(130, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid,))
+    # there is one line in getMovementHistoryList:
+    mvt_history_list = stool.getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid,
+                              sort_on=(('date', 'ASC'), ))
+    self.assertEquals(3, len(mvt_history_list))
+    self.assertEquals(mvt_history_list[2].getObject(),
+                      balance_line)
+    self.assertEquals([30, 40, 60], [b.total_price for b in mvt_history_list])
+
+    # There is also one line on payable account
+    node_uid = self.account_module.payable.getUid()
+    mvt_history_list = stool.getMovementHistoryList(
+                              section_uid=self.section.getUid(),
+                              node_uid=node_uid)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(mvt_history_list[0].getObject(),
+                      balance_line2)
+
+    balance.reindexObject()
+    transaction.commit()
+    self.tic()
 
   def test_BalanceTransactionDate(self):
     # check that dates are correctly used for Balance Transaction indexing
@@ -2253,7 +2374,7 @@ class TestTransactions(AccountingTestCase):
     self.assertEquals(self.main_section,
         self.main_section.Organisation_getMappingRelatedOrganisation())
 
-    client = self.organisation_module.client_1
+    client = self.organisation_module.client_2
     self.assertEquals(None, client.getGroupValue())
     self.assertEquals(client,
         client.Organisation_getMappingRelatedOrganisation())
@@ -2474,15 +2595,36 @@ class TestTransactions(AccountingTestCase):
         self.assertEquals(100, line.getSourceCredit())
         self.assertEquals(None, line.getSourceTotalAssetPrice())
       
+  # tests for Invoice_getRemainingTotalPayablePrice
+  def test_Invoice_getRemainingTotalPayablePriceDeletedPayment(self):
+    """Checks in case of deleted Payments related to invoice"""
+    # Simple case of creating a related payment transaction.
+    payment_node = self.section.newContent(portal_type='Bank Account')
+    invoice = self._makeOne(
+               destination_section_value=self.organisation_module.client_1,
+               lines=(dict(source_value=self.account_module.goods_purchase,
+                           source_debit=100),
+                      dict(source_value=self.account_module.receivable,
+                           source_credit=100)))
+    payment = invoice.Invoice_createRelatedPaymentTransaction(
+                                  node=self.account_module.bank.getRelativeUrl(),
+                                  payment=payment_node.getRelativeUrl(),
+                                  payment_mode='check',
+                                  batch_mode=1)
+    transaction.commit()
+    self.tic()
+    remaining_price = invoice.Invoice_getRemainingTotalPayablePrice()
+    self.assertEqual(-100, remaining_price)
+    payment.delete()
+    transaction.commit()
+    self.tic()
+    remaining_price = invoice.Invoice_getRemainingTotalPayablePrice()
+    self.assertEqual(-100, remaining_price)
 
   # tests for Grouping References
   def test_GroupingReferenceResetedOnCopyPaste(self):
     accounting_module = self.portal.accounting_module
-    for portal_type in self.portal.getPortalAccountingTransactionTypeList():
-      if portal_type == 'Balance Transaction':
-        # Balance Transaction cannot be copy and pasted, because they are not
-        # in visible allowed types.
-        continue
+    for portal_type in accounting_module.getVisibleAllowedContentTypeList():
       accounting_transaction = accounting_module.newContent(
                             portal_type=portal_type)
       line = accounting_transaction.newContent(
@@ -3444,10 +3586,9 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
           len(portal.getPortalAccountingMovementTypeList()), 0)
     self.assertNotEquals(
           len(portal.getPortalAccountingTransactionTypeList()), 0)
-    for accounting_portal_type in portal\
-                    .getPortalAccountingTransactionTypeList():
+    for accounting_portal_type in accounting_module.allowedContentTypes():
       accounting_transaction = accounting_module.newContent(
-            portal_type = accounting_portal_type,
+            portal_type = accounting_portal_type.getId(),
             source_section_value = source_section_value,
             destination_section_value = destination_section_value,
             resource_value = resource_value )

@@ -265,7 +265,7 @@ form#main_form div#wrapper_header fieldset.widget hr{\n
 form#main_form div#wrapper_header fieldset.widget ul.onleft {\n
   list-style: none;\n
   padding: 5px;\n
-  margin: 20px 0 0 5px;\n
+  margin: 20px 0 0 45px;\n
   /*background: white;*/\n
   /*background: #fff url(erp5-website-field.png) top repeat-x;*/\n
   background: white url(img/title_gradient_bar.gif) right repeat-y; \n
@@ -493,6 +493,7 @@ div.bottom_actions button.saveView span.image {\n
 \n
 .section_description{\n
   padding-top: 0.5em;\n
+  margin-left: 0.8em;\n
   font-size: 1.1em;\n
   font-style: italic;\n
 }\n
@@ -527,21 +528,22 @@ div.section_title{\n
 div#main_content fieldset {\n
   margin: 0;\n
   border:none;\n
+  padding: 0;\n
 }\n
 \n
-.content fieldset.center,\n
-.content fieldset.left,\n
-.content fieldset.bottom{\n
+.content #fieldset_center,\n
+.content #fieldset_left,\n
+.content #fieldset_bottom{\n
   margin-left: 3em;\n
   margin-right: 3em;\n
 }\n
 \n
-.content fieldset.left{\n
+.content #fieldset_left{\n
   margin-top: 3em;\n
 }\n
 \n
 div#main_content fieldset.bottom{\n
-  padding:0;\n
+  padding:3em;\n
 }\n
 \n
 .inline,\n
@@ -581,6 +583,20 @@ fieldset.register_informations{\n
   width:800px !important;\n
 }\n
 \n
+.document .section_explanation{\n
+  background: white !important;\n
+  width:791px !important;\n
+  line-height: 3em;\n
+  marging-left: 2em;\n
+}\n
+\n
+div.section_explanation{\n
+  padding-left: 0.5em;\n
+}\n
+\n
+\n
+\n
+\n
 fieldset.white_background .input,\n
 fieldset.register_informations .input{\n
   padding: 0 2em 0 2em;\n
@@ -593,7 +609,7 @@ fieldset.register_informations{\n
 .field .input .title{\n
   margin-top: 1em;\n
   margin-bottom:0.5em;\n
-  font-size: 1.8em;\n
+  font-size: 1.7em;\n
 }\n
 \n
 .field .input .title .reference{\n
@@ -607,15 +623,45 @@ fieldset.register_informations{\n
 }\n
   \n
 .field .input .site_address{\n
-  font-size: 3em;\n
+  font-size: 2.6em;\n
   text-align: center;\n
   font-weight: bold;\n
   color:#FF6633;\n
   margin:1em;\n
 }\n
 \n
+.site_title{\n
+  padding-top: 5px;\n
+  padding-left: 25px;\n
+  font-size: 1.6em;\n
+  text-align: center;\n
+  font-weight: bold;\n
+  color:#296B4C;\n
+  margin:1em;\n
+}\n
+\n
+.notification_text{\n
+  font-size: 1.5em;\n
+}\n
+.notification_text .notification_bold{\n
+  font-size: 1.1em;\n
+  font-weight: bold;\n
+  color:#395F54;\n
+  margin-left: 0.2em;\n
+  margin-right: 0.2em;\n
+}\n
+\n
+.company_name{\n
+  font-size: 1em;\n
+  font-weight: bold;\n
+  color:#395F54;\n
+  text-align: center;\n
+  margin-left: 0.2em;\n
+  margin-right: 0.2em;\n
+}\n
+\n
 .login_and_password{\n
-  font-size: 2em;\n
+  font-size: 1.2em;\n
   line-height: 1em;\n
   margin-bottom: 0.2em;\n
 }\n
@@ -653,12 +699,12 @@ fieldset.register_informations{\n
 }\n
 \n
 \n
-#main_form #main_content fieldset.bottom .input .ListSummary{\n
+#main_form #main_content #fieldset_bottom .input .ListSummary{\n
   margin-top: 100px;\n
 }\n
 \n
-#main_form #main_content fieldset.bottom .input .ListSummary,\n
-#main_form #main_content fieldset.bottom .input .ListContent{\n
+#main_form #main_content #fieldset_bottom .input .ListSummary,\n
+#main_form #main_content #fieldset_bottom .input .ListContent{\n
   margin-right: 10%;\n
   margin-left: 10%;\n
 }\n

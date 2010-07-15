@@ -65,6 +65,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_title</string>
                         <string>my_role_name</string>
                         <string>my_agent_title_list</string>
                       </list>

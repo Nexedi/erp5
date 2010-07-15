@@ -34,10 +34,11 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Image import Image
-from Products.ERP5.Document.Document import ConversionError
-from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
+from Products.ERP5.Document.Document import ConversionError,\
+                                            VALID_TEXT_FORMAT_LIST
+from subprocess import Popen, PIPE
 
-class PDFDocument(Image, CachedConvertableMixin):
+class PDFDocument(Image):
   """
   PDFDocument is a subclass of Image which is able to
   extract text content from a PDF file either as text
@@ -65,41 +66,8 @@ class PDFDocument(Image, CachedConvertableMixin):
                     , PropertySheet.Periodicity
                     )
 
-  searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
-                              'version', 'short_title',
-                              'subject', 'source_reference', 'source_project_title',)
-
-  security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75, 
-                                          resolution=None, frame=0):
-    """
-      Returns data in the appropriate format (graphical)
-      it is always a zip because multi-page pdfs are converted into a zip
-      file of many images
-    """
-    _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
-    if format is '':
-      if self.getSourceReference() is not None:
-        filename = self.getSourceReference()
-      else:
-        filename = self.getId()
-      RESPONSE.setHeader('Content-Disposition',
-                         'attachment; filename="%s"' % filename)
-      RESPONSE.setHeader('Content-Type', 'application/pdf')
-      return str(self.data)
-    if format in ('html', 'txt', 'text'):
-      mime, data = self.convert(format)
-      RESPONSE.setHeader('Content-Length', len(data))
-      RESPONSE.setHeader('Content-Type', '%s;charset=UTF-8' % mime)
-      RESPONSE.setHeader('Accept-Ranges', 'bytes')
-      return data
-    return Image.index_html(self, REQUEST, RESPONSE, display=display,
-                            format=format, quality=quality,
-                            resolution=resolution, frame=frame)
-
   # Conversion API
-  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-  def convert(self, format, **kw):
+  def _convert(self, format, **kw):
     """
     Implementation of conversion for PDF files
     """
@@ -119,8 +87,15 @@ class PDFDocument(Image, CachedConvertableMixin):
         data = self._convertToText()
         self.setConversion(data, mime=mime, format='txt')
         return (mime, data)
+    elif format is None:
+      return self.getContentType(), self.getData()
     else:
-      return Image.convert(self, format, **kw)
+      if kw.get('frame', None) is None:
+        # when converting to image from PDF we care for first page only
+        # this will make sure that only first page is used and not whole content of
+        # PDF file read & converted which is a performance issue
+        kw['frame'] = 0
+      return Image._convert(self, format, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
   def populateContent(self):
@@ -136,18 +111,17 @@ class PDFDocument(Image, CachedConvertableMixin):
     """
       Convert the PDF text content to text with pdftotext
     """
-    if not self.data:
+    if not self.hasData():
       return ''
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(str(self.data))
+    tmp.write(self.getData())
     tmp.seek(0)
-    cmd = 'pdftotext -layout -enc UTF-8 -nopgbrk %s -' % tmp.name
-    r = os.popen(cmd)
-    h = r.read()
+    command_result = Popen(['pdftotext', '-layout', '-enc', 'UTF-8',
+                                                    '-nopgbrk', tmp.name, '-'],
+                                                  stdout=PIPE).communicate()[0]
+    h = command_result
     tmp.close()
-    r.close()
-    
-    if h != '':
+    if h:
       return h
     else:
       # Try to use OCR
@@ -158,24 +132,9 @@ class PDFDocument(Image, CachedConvertableMixin):
       text = ''
       content_information = self.getContentInformation()
       page_count = int(content_information.get('Pages', 0))
-      try:
-        # if the dimension is too big, rasterized image can be too
-        # big. so we limit the maximum of rasterized image to 4096
-        # pixles.
-        # XXX since the dimention can be different on each page, it is
-        # better to call 'pdfinfo -f page_num -l page_num' to get the
-        # size of each page.
-        max_size = 4096
-        size = content_information.get('Page size',
-                                       '%s x %s pts' % (max_size, max_size))
-        width = int(size.split(' ')[0])
-        height = int(size.split(' ')[2])
-        resolution = 72.0 * max_size / max(width, height)
-      except (ValueError, ZeroDivisionError):
-        resolution = None
       for page_number in range(page_count):
         src_mimetype, png_data = self.convert(
-            'png', quality=100, resolution=resolution,
+            'png', quality=100, resolution=300,
             frame=page_number, display='identical')
         if not src_mimetype.endswith('png'):
           continue
@@ -194,7 +153,7 @@ class PDFDocument(Image, CachedConvertableMixin):
           text += result
       return text
 
-  security.declareProtected('View', 'getSizeFromImageDisplay')
+  security.declareProtected(Permissions.View, 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
     """
     Return the size for this image display, or None if this image display name
@@ -216,18 +175,22 @@ class PDFDocument(Image, CachedConvertableMixin):
     NOTE: XXX check that command exists and was executed
     successfully
     """
-    if not self.data:
+    if not self.hasData():
       return ''
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(str(self.data))
+    tmp.write(self.getData())
     tmp.seek(0)
-    cmd = 'pdftohtml -enc UTF-8 -stdout -noframes -i %s' % tmp.name
-    r = os.popen(cmd)
-    h = r.read()
+    command_result = Popen(['pdftohtml', '-enc', 'UTF-8', '-stdout',
+                            '-noframes', '-i', tmp.name], stdout=PIPE)\
+                                                              .communicate()[0]
+
+    h = command_result
     tmp.close()
-    r.close()
-    h = h.replace('<BODY bgcolor="#A0A0A0"', '<BODY ') # Quick hack to remove bg color - XXX
-    h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1], 'href="asEntireHTML') # Make links relative
+    # Quick hack to remove bg color - XXX
+    h = h.replace('<BODY bgcolor="#A0A0A0"', '<BODY ')
+    # Make links relative
+    h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1],
+                                                          'href="asEntireHTML')
     return h
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
@@ -244,14 +207,13 @@ class PDFDocument(Image, CachedConvertableMixin):
     except AttributeError:
       pass
     tmp = tempfile.NamedTemporaryFile()
-    tmp.write(str(self.data))
+    tmp.write(self.getData())
     tmp.seek(0)
     try:
       # First, we use pdfinfo to get standard metadata
-      cmd = 'pdfinfo -meta -box %s' % tmp.name
-      r = os.popen(cmd)
-      h = r.read()
-      r.close()
+      command_result = Popen(['pdfinfo', '-meta', '-box', tmp.name],
+                                                  stdout=PIPE).communicate()[0]
+      h = command_result
       result = {}
       for line in h.splitlines():
         item_list = line.split(':')
@@ -260,23 +222,27 @@ class PDFDocument(Image, CachedConvertableMixin):
         result[key] = value
 
       # Then we use pdftk to get extra metadata
-      cmd = 'pdftk %s dump_data output' % tmp.name
-      r = os.popen(cmd)
-      h = r.read()
-      r.close()
-      line_list = (line for line in h.splitlines())
-      while True:
-        try:
-          line = line_list.next()
-        except StopIteration:
-          break
-        if line.startswith('InfoKey'):
-          key = line[len('InfoKey: '):]
-          line = line_list.next()
-          assert line.startswith('InfoValue: '),\
-              "Wrong format returned by pdftk dump_data"
-          value = line[len('InfoValue: '):]
-          result.setdefault(key, value)
+      try:
+        command_result = Popen(['pdftk', tmp.name, 'dump_data', 'output'],
+                                                  stdout=PIPE).communicate()[0]
+      except OSError:
+        # pdftk not found
+        pass
+      else:
+        h = command_result
+        line_list = (line for line in h.splitlines())
+        while True:
+          try:
+            line = line_list.next()
+          except StopIteration:
+            break
+          if line.startswith('InfoKey'):
+            key = line[len('InfoKey: '):]
+            line = line_list.next()
+            assert line.startswith('InfoValue: '),\
+                "Wrong format returned by pdftk dump_data"
+            value = line[len('InfoValue: '):]
+            result.setdefault(key, value)
     finally:
       tmp.close()
 
@@ -288,4 +254,4 @@ class PDFDocument(Image, CachedConvertableMixin):
       del self._content_information
     except (AttributeError, KeyError):
       pass
-    Image._setFile(self, data, precondition)
+    Image._setFile(self, data, precondition=precondition)

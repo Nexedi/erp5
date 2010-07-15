@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -52,9 +52,11 @@ class IDownloadable(Interface):
     kw -- optional conversion parameters
     """
 
-  def getStandardFileName():
+  def getStandardFileName(format=None):
     """
     Returns a standard file name for the document to download.
     This method is the reverse of
     IMetadataDiscoverable.getPropertyDictFromFileName.
-    """ 
+
+    format -- extension of returned file name
+    """

@@ -47,6 +47,14 @@ class TradeModelRule(Rule):
   def _isBPM(self):
     return True
 
+  def _getExpandableAmountPropertyDict(self, amount):
+    """Return a dict of properties extracted from an amount."""
+    d = {}
+    for property in ('price', 'resource_list', 'reference', 'quantity',
+                     'base_application_list', 'base_contribution_list', 'use'):
+      d[property] = amount.getProperty(property)
+    return d
+
   def _generatePrevisionList(self, applied_rule, **kw):
     """Generates list of movements (as dicts), and let parent class to decide
     which is to add, modify or delete"""
@@ -70,19 +78,10 @@ class TradeModelRule(Rule):
         business_path = business_path_list[0]
       else:
         business_path = None
+
       movement_kw = self._getExpandablePropertyDict(applied_rule,
         context_movement, business_path)
-
-      # rule specific
-      movement_kw['price'] = amount.getProperty('price')
-      movement_kw['resource_list'] = amount.getProperty('resource_list')
-      movement_kw['reference'] = amount.getProperty('reference')
-      movement_kw['quantity'] = amount.getProperty('quantity')
-      movement_kw['base_application_list'] = amount.getProperty(
-          'base_application_list')
-      movement_kw['base_contribution_list'] = amount.getProperty(
-          'base_contribution_list')
-
+      movement_kw.update(self._getExpandableAmountPropertyDict(amount))
       movement_list.append(movement_kw)
 
     return movement_list

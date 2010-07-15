@@ -111,7 +111,7 @@
                           <string>Material</string>
                         </tuple>
                         <tuple>
-                          <string>industrial_phase_translated_title</string>
+                          <string>industrial_phase</string>
                           <string>Industrial Phase</string>
                         </tuple>
                         <tuple>

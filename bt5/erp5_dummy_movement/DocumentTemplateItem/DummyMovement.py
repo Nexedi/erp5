@@ -42,9 +42,6 @@ class DummyMovement(Movement):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Declarative interfaces
-  __implements__ = ( interfaces.IVariated, )
-
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
@@ -89,9 +86,23 @@ class DummyMovement(Movement):
       raise ValueError
 
   def getDeliveryValue(self):
-    """A dummy movement doesn't have a delivery relation, so return self as delivery.
     """
+    Deprecated, we should use getRootDeliveryValue instead
+    """
+    return self.getRootDeliveryValue()
+
+  def getRootDeliveryValue(self):
+    """In the tests, dummy movements are not always stored in a delivery, here
+    we try to support both cases.
+    """
+    parent = self.getParentValue()
+    if hasattr(parent, 'getDeliveryValue'):
+      # we are in a delivery, make getDeliveryValue and therefore
+      # getExplanation value work like on real movements.
+      return parent.getDeliveryValue()
+    # return self, to have minimum support of getDeliveryValue
     return self
+
 
   def hasCellContent(self):
     return False

@@ -54,33 +54,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-returns the list of possible values.\n
-"""\n
-# XXX it does not support multiple tested properties.\n
-if configurable.getPortalType() == \'Solver Decision\':\n
-  solved_property = configurable.getCausalityValue(). \\\n
-                    getTestedProperty()\n
-else:\n
-  solved_property = configurable.getCausalityValue().getCausalityValue(). \\\n
-                    getTestedProperty()\n
+This script returns a dictionary of default properties for Unify Solver.\n
 \n
-value_list = []\n
-for movement in configurable.getDeliveryValueList():\n
-  value = movement.getProperty(solved_property)\n
-  if value not in value_list:\n
-    value_list.append(value)\n
-  simulation_movement_list = movement.getDeliveryRelatedValueList()\n
-  # if movement here is a delivery, we need to find simulation\n
-  # movements by its movements.\n
-  if len(simulation_movement_list) == 0:\n
-    simulation_movement_list = sum(\n
-      [x.getDeliveryRelatedValueList() \\\n
-       for x in configurable.getDeliveryValue().getMovementList()], [])\n
-  for simulation_movement in simulation_movement_list:\n
-    value = simulation_movement.getProperty(solved_property)\n
-    if value not in value_list:\n
-      value_list.append(value)\n
-return {\'value_list\':[(x, str(x)) for x in value_list]}\n
+This is a sample implementation that returns the first item in each list.\n
+"""\n
+value_list_dict = context.UnifySolver_getConfigurationPropertyListDict()\n
+value_dict = {}\n
+for property_id, value_list in value_list_dict.items():\n
+  value_dict[property_id] = value_list[0]\n
+return value_dict\n
 </string> </value>
         </item>
         <item>
@@ -91,7 +73,7 @@ return {\'value_list\':[(x, str(x)) for x in value_list]}\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>configurable</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -111,27 +93,21 @@ return {\'value_list\':[(x, str(x)) for x in value_list]}\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>configurable</string>
                             <string>_getattr_</string>
-                            <string>solved_property</string>
-                            <string>value_list</string>
+                            <string>context</string>
+                            <string>value_list_dict</string>
+                            <string>value_dict</string>
                             <string>_getiter_</string>
-                            <string>movement</string>
-                            <string>value</string>
-                            <string>simulation_movement_list</string>
-                            <string>len</string>
-                            <string>sum</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>simulation_movement</string>
-                            <string>str</string>
+                            <string>property_id</string>
+                            <string>value_list</string>
+                            <string>_getitem_</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

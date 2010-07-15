@@ -91,6 +91,12 @@ def expectedFailure(func):
     wrapper.__doc__ = func.__doc__
     return wrapper
 
+try:
+    BaseException
+except NameError:
+    # BACK: python < 2.5
+    BaseException = Exception
+
 class TestCase(unittest.TestCase):
     """We redefine here the run() method, and add a skipTest() method.
 
@@ -107,8 +113,6 @@ class TestCase(unittest.TestCase):
       _testMethodDoc = property(lambda self: self.__testMethodDoc)
 
     def run(self, result=None):
-        import pdb
-        #pdb.set_trace()
         orig_result = result
         if result is None:
             result = self.defaultTestResult()
@@ -138,8 +142,10 @@ class TestCase(unittest.TestCase):
                 result.addSkip(self, str(e))
             except SetupSiteError, e:
                 result.errors.append(None)
-            except Exception:
+            except BaseException, e:
                 result.addError(self, sys.exc_info())
+                if isinstance(e, (KeyboardInterrupt, SystemExit)):
+                    raise
             else:
                 try:
                     testMethod()
@@ -151,15 +157,19 @@ class TestCase(unittest.TestCase):
                     result.addUnexpectedSuccess(self)
                 except SkipTest, e:
                     result.addSkip(self, str(e))
-                except Exception:
+                except BaseException, e:
                     result.addError(self, sys.exc_info())
+                    if isinstance(e, (KeyboardInterrupt, SystemExit)):
+                        raise
                 else:
                     success = True
 
                 try:
                     self.tearDown()
-                except Exception:
+                except BaseException, e:
                     result.addError(self, sys.exc_info())
+                    if isinstance(e, (KeyboardInterrupt, SystemExit)):
+                        raise
                     success = False
 
             # BACK: Not needed for Python < 2.7
@@ -252,7 +262,10 @@ class TextTestRunner(unittest.TextTestRunner):
         result = self._makeResult()
         startTime = time.time()
         # BACK: 2.7 implementation wraps run with result.(start|stop)TestRun
-        test(result)
+        try:
+          test(result)
+        except KeyboardInterrupt:
+          pass
         stopTime = time.time()
         timeTaken = stopTime - startTime
         result.printErrors()

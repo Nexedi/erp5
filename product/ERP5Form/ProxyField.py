@@ -574,10 +574,7 @@ class ProxyField(ZMIField):
     """
     proxy_field = self.getTemplateField()
     if proxy_field:
-      url='/'.join((self.absolute_url(),
-                    self.get_value('form_id'),
-                    self.get_value('field_id'),
-                    'manage_main'))
+      url = "%s/manage_main" % proxy_field.absolute_url() 
       REQUEST.RESPONSE.redirect(url)
     else:
       # FIXME: should show some error message 
@@ -648,6 +645,13 @@ class ProxyField(ZMIField):
     """
       Return a callable expression and cacheable boolean flag
     """
+    # Some field types have their own get_value implementation,
+    # then we must use it always. This check must be done at first.
+    template_field = self.getRecursiveTemplateField()
+    # Old ListBox instance might have default attribute. so we need to check it.
+    if checkOriginalGetValue(template_field, id):
+      return _USE_ORIGINAL_GET_VALUE_MARKER, True
+
     try:
       tales_expr = self.get_tales_expression(id)
     except ValueError:
@@ -667,10 +671,6 @@ class ProxyField(ZMIField):
 
     # Get a normal value.
     try:
-      template_field = self.getRecursiveTemplateField()
-      # Old ListBox instance might have default attribute. so we need to check it.
-      if checkOriginalGetValue(template_field, id):
-        return _USE_ORIGINAL_GET_VALUE_MARKER, True
       value = self.get_recursive_orig_value(id)
     except KeyError:
       # For ListBox and other exceptional fields.
@@ -698,9 +698,15 @@ class ProxyField(ZMIField):
 
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
-    if ((id in self.widget.property_names) or
-        (not self.is_delegated(id))):
+    if id in self.widget.property_names:
       return ZMIField.get_value(self, id, **kw)
+    if not self.is_delegated(id):
+      original_template_field = self.getRecursiveTemplateField()
+      function = getOriginalGetValueFunction(original_template_field, id)
+      if function is not None:
+        return function(self, id, **kw)
+      else:
+        return ZMIField.get_value(self, id, **kw)
 
     field = self
     proxy_field = self.getTemplateField()
@@ -770,7 +776,7 @@ class ProxyField(ZMIField):
 #
 _get_value_exception_dict = {}
 
-def registerOriginalGetValueClassAndArgument(class_, argument_name_list=()):
+def registerOriginalGetValueClassAndArgument(class_, argument_name_list=(), get_value_function=None):
   """
   if field class has its own get_value implementation and
   must use it rather than ProxyField's one, then register it.
@@ -780,14 +786,18 @@ def registerOriginalGetValueClassAndArgument(class_, argument_name_list=()):
   """
   if not isinstance(argument_name_list, (list, tuple)):
     argument_name_list = (argument_name_list,)
-  _get_value_exception_dict[class_] = argument_name_list
+  if get_value_function is None:
+    get_value_function = ZMIField.get_value
+  _get_value_exception_dict[class_] = {'argument_name_list':argument_name_list,
+                                       'get_value_function':get_value_function}
 
 def checkOriginalGetValue(instance, argument_name):
   """
   if exception data is registered, then return True
   """
   class_ = aq_base(instance).__class__
-  argument_name_list = _get_value_exception_dict.get(class_)
+  dict_ = _get_value_exception_dict.get(class_, {})
+  argument_name_list = dict_.get('argument_name_list')
 
   if argument_name_list is None:
     return False
@@ -798,3 +808,8 @@ def checkOriginalGetValue(instance, argument_name):
   if argument_name in argument_name_list:
     return True
   return False
+
+def getOriginalGetValueFunction(instance, argument_name):
+  class_ = aq_base(instance).__class__
+  dict_ = _get_value_exception_dict.get(class_, {})
+  return dict_.get('get_value_function')

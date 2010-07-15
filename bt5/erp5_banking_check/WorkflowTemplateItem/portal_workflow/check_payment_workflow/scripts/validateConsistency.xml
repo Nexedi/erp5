@@ -107,13 +107,12 @@ if bank_account is None:\n
 \n
 # Check the check.\n
 check_number = transaction.getAggregateFreeText()\n
-check_resource = transaction.getAggregateResource()\n
 \n
-# Automated calculation of the aggregate resource\n
-if check_resource is None:\n
-  check_resource = transaction.Base_getCheckModelByBankAccount(\n
-                    bank_account=bank_account).getRelativeUrl()\n
-  transaction.edit(aggregate_resource=check_resource)\n
+# bind check payment with check model\n
+check_resource = bank_account.BankAccount_getCheckModel(\n
+  unique_per_account=transaction.isUniquePerAccount(),\n
+).getRelativeUrl()\n
+transaction.edit(aggregate_resource=check_resource)\n
 \n
 if not check_number:\n
   msg = Message(domain=\'ui\', message="Check not defined.")\n

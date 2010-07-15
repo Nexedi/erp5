@@ -112,7 +112,7 @@ class ProxiedMethod(Method):
     return method(*args, **kw)
 
 # generate all proxy method on EmailDocumentProxyMixin
-for method_id in ('getTextFormat', 
+for method_id in ('getContentType',
                   'getContentInformation', 'getAttachmentData',
                   'getAttachmentInformationList'):
   EmailDocumentProxyMixin.security.declareProtected(
@@ -121,7 +121,7 @@ for method_id in ('getTextFormat',
   setattr(EmailDocumentProxyMixin, method_id,
       ProxiedMethod(method_id))
 
-class EmailDocument(File, TextDocument):
+class EmailDocument(TextDocument):
   """
     EmailDocument is a File which stores its metadata in a form which
     is similar to a TextDocument.
@@ -168,6 +168,18 @@ class EmailDocument(File, TextDocument):
       result = message_from_string(str(self.getData()))
       self._v_message = result
     return result
+
+  def isSupportBaseDataConversion(self):
+    """
+    """
+    return False
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+  def hasBaseData(self):
+    """
+    """
+    return self.hasFile() or self.hasTextContent()
+
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
@@ -226,10 +238,8 @@ class EmailDocument(File, TextDocument):
           # get_filename return name only from Content-Disposition header
           # of the message but sometimes this value is stored in
           # Content-Type header
-          if 'Content-Type' in kw:
-            content_type_header = kw['Content-Type']
-          elif 'Content-type' in kw:
-            content_type_header = kw['Content-Type']
+          content_type_header = kw.get('Content-Type',
+                                                    kw.get('Content-type', ''))
           file_name_list = re.findall(file_name_regexp,
                                       content_type_header,
                                       re.MULTILINE)
@@ -238,12 +248,9 @@ class EmailDocument(File, TextDocument):
         if file_name:
           kw['file_name'] = file_name
         else:
-          content_disposition = None
+          content_disposition = kw.get('Content-Disposition', 
+                                           kw.get('Content-disposition', None))
           prefix = 'part_'
-          if 'Content-Disposition' in kw:
-            content_disposition = kw['Content-Disposition']
-          elif 'Content-disposition' in kw:
-            content_disposition = kw['Content-disposition']
           if content_disposition:
             if content_disposition.split(';')[0] == 'attachment':
               prefix = 'attachment_'
@@ -271,10 +278,8 @@ class EmailDocument(File, TextDocument):
             # get_filename return name only from Content-Disposition header
             # of the message but sometimes this value is stored in
             # Content-Type header
-            if 'Content-Type' in kw:
-              content_type_header = kw['Content-Type']
-            elif 'Content-type' in kw:
-              content_type_header = kw['Content-Type']
+            content_type_header = kw.get('Content-Type',
+                                                    kw.get('Content-type', ''))
             file_name_list = re.findall(file_name_regexp,
                                         content_type_header,
                                         re.MULTILINE)
@@ -422,6 +427,7 @@ class EmailDocument(File, TextDocument):
     main content (text/plain).
     TODO: add support for legacy objects
     """
+    self._checkConversionFormatPermission(None)
     if not self.hasFile() or self._baseGetTextContent() is not None:
       # Return the standard text content if no file was provided
       # Or standard text content is not empty.
@@ -477,8 +483,8 @@ class EmailDocument(File, TextDocument):
       return text_result
     return text_result or default
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getTextFormat')
-  def getTextFormat(self, default=_MARKER):
+  security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
+  def getContentType(self, default=_MARKER):
     """
     Returns the format of the email (text or html).
     
@@ -487,9 +493,9 @@ class EmailDocument(File, TextDocument):
     if not self.hasFile():
       # Return the standard text format if no file was provided
       if default is _MARKER:
-        return self._baseGetTextFormat()
+        return TextDocument.getContentType(self)
       else:
-        return self._baseGetTextFormat(default)
+        return TextDocument.getContentType(self, default)
     is_alternative = False
     for part in self._getMessage().walk():
       if part.is_multipart():
@@ -546,11 +552,11 @@ class EmailDocument(File, TextDocument):
       This is used in order to respond to a mail,
       this put a '> ' before each line of the body
     """
-    if self.getTextFormat() == 'text/plain':
+    if self.getContentType() == 'text/plain':
       body = self.asText()
       if body:
         return '> ' + str(body).replace('\n', '\n> ')
-    elif self.getTextFormat() == 'text/html':
+    elif self.getContentType() == 'text/html':
       return '<br/><blockquote type="cite">\n%s\n</blockquote>' %\
                                 self.asStrippedHTML()
     return ''
@@ -690,8 +696,6 @@ class EmailDocument(File, TextDocument):
         # is not (yet) part of Document API
         if getattr(attachment, 'getContentType', None) is not None:
           mime_type = attachment.getContentType()
-        elif getattr(attachment, 'getTextFormat', None) is not None:
-          mime_type = attachment.getTextFormat()
         else:
           raise ValueError, "Cannot find mimetype of the document."
 

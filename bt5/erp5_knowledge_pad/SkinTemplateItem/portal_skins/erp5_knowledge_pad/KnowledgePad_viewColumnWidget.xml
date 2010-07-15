@@ -117,7 +117,8 @@
 \n
               <tal:block tal:condition="python: edit_form_object is not None"\n
                          tal:define="box_relative_url python: box.getRelativeUrl();\n
-                                     form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_relative_url.replace(\'/\', \'_\');">\n
+                                     box_dom_id python: box_relative_url.replace(\'/\', \'_\');\n
+                                     form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_dom_id;">\n
 \n
                 <!-- render edit gadget preferences form -->\n
                 <span tal:replace="structure python: edit_form_object(key_prefix=form_fields_main_prefix)"/>\n
@@ -133,7 +134,8 @@
                               i18n:domain="ui"\n
                               tal:attributes="onclick python: \n
                                 \'submitSynchronousGadgetPreferenceForm(\\\'%s\\\',\\\'%s\\\')\' \n
-                                  %(form_fields_main_prefix, box_relative_url)">Save</button>\n
+                                  %(form_fields_main_prefix, box_relative_url);\n
+                                              id string: submit_button_${box_dom_id};">Save</button>\n
 \n
                 </tal:block>\n
 \n
@@ -149,7 +151,8 @@
                                       view_form_id, \n
                                       box_relative_url, \n
                                       view_form_dom_id,\n
-                                      form_fields_main_prefix)">Save</button>\n
+                                      form_fields_main_prefix);\n
+                                          id string: submit_button_${box_dom_id};">Save</button>\n
 \n
                 </tal:block>\n
               </tal:block>\n

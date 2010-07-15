@@ -26,7 +26,7 @@ from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.interfaces.plugins import IAuthenticationPlugin
 from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlugin
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import CachingMethod, transactional_cached
 from ZODB.POSException import ConflictError
 import sys
 from DateTime import DateTime
@@ -63,6 +63,36 @@ class _AuthenticationFailure(Exception):
   account is ready (like when the indexing not finished, an assignment not open
   etc...)
   """
+
+@transactional_cached(lambda portal, *args: args)
+def getUserByLogin(portal, login, exact_match=True):
+  if isinstance(login, basestring):
+    login = login,
+  if exact_match:
+    reference_key = 'ExactMatch'
+  else:
+    reference_key = 'Keyword'
+  result = portal.portal_catalog.unrestrictedSearchResults(
+      select_expression='reference',
+      portal_type="Person",
+      reference=dict(query=login, key=reference_key))
+  # XXX: Here, we filter catalog result list ALTHOUGH we did pass
+  # parameters to unrestrictedSearchResults to restrict result set.
+  # This is done because the following values can match person with
+  # reference "foo":
+  # "foo " because of MySQL (feature, PADSPACE collation):
+  #  mysql> SELECT reference as r FROM catalog
+  #      -> WHERE reference="foo      ";
+  #  +-----+
+  #  | r   |
+  #  +-----+
+  #  | foo |
+  #  +-----+
+  #  1 row in set (0.01 sec)
+  # "bar OR foo" because of ZSQLCatalog tokenizing searched strings
+  #  by default (feature).
+  return [x.getObject() for x in result if not exact_match
+                                           or x['reference'] in login]
 
 
 class ERP5UserManager(BasePlugin):
@@ -180,81 +210,30 @@ class ERP5UserManager(BasePlugin):
 
         return tuple(user_info)
 
-
     def getUserByLogin(self, login, exact_match=True):
         # Search the Catalog for login and return a list of person objects
         # login can be a string or a list of strings
         # (no docstring to prevent publishing)
         if not login:
           return []
-
-        portal = self.getPortalObject()
-
-        def _getUserByLogin(login, exact_match):
-          # because we aren't logged in, we have to create our own
-          # SecurityManager to be able to access the Catalog
-          if isinstance(login, list):
-            login = tuple(login)
-          elif not isinstance(login, tuple):
-            login = (str(login),)
-          sm = getSecurityManager()
-          if sm.getUser().getId() != SUPER_USER:
-            newSecurityManager(self, self.getUser(SUPER_USER))
-  
-          try:
-            try:
-              if exact_match:
-                reference_key = 'ExactMatch'
-              else:
-                reference_key = 'Keyword'
-
-              result = portal.portal_catalog.unrestrictedSearchResults(
-                                        select_expression='reference',
-                                        portal_type="Person",
-                                        reference=dict(query=login,
-                                                       key=reference_key))
-            except ConflictError:
-              raise
-            except:
-              LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
-              # Here we must raise an exception to prevent callers from caching
-              # a result of a degraded situation.
-              # The kind of exception does not matter as long as it's catched by
-              # PAS and causes a lookup using another plugin or user folder.
-              # As PAS does not define explicitely such exception, we must use
-              # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
-              raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
-          finally:
-            setSecurityManager(sm)
-          # XXX: Here, we filter catalog result list ALTHOUGH we did pass
-          # parameters to unrestrictedSearchResults to restrict result set.
-          # This is done because the following values can match person with
-          # reference "foo":
-          # "foo " because of MySQL (feature, PADSPACE collation):
-          #  mysql> SELECT reference as r FROM catalog
-          #      -> WHERE reference="foo      ";
-          #  +-----+
-          #  | r   |
-          #  +-----+
-          #  | foo |
-          #  +-----+
-          #  1 row in set (0.01 sec)
-          # "bar OR foo" because of ZSQLCatalog tokenizing searched strings
-          #  by default (feature).
-          result = [x.path for x in result if (not exact_match)
-                          or x['reference'] in login]
-          if not result:
-            raise _AuthenticationFailure()
-          return result
-
-        _getUserByLogin = CachingMethod(_getUserByLogin,
-                                        id='ERP5UserManager_getUserByLogin',
-                                        cache_factory='erp5_content_short')
+        if isinstance(login, list):
+          login = tuple(login)
+        elif not isinstance(login, tuple):
+          login = str(login)
         try:
-          return [portal.unrestrictedTraverse(x) for x in
-                              _getUserByLogin(login, exact_match)]
-        except _AuthenticationFailure:
-          return []
+          return getUserByLogin(self.getPortalObject(), login, exact_match)
+        except ConflictError:
+          raise
+        except:
+          LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
+          # Here we must raise an exception to prevent callers from caching
+          # a result of a degraded situation.
+          # The kind of exception does not matter as long as it's catched by
+          # PAS and causes a lookup using another plugin or user folder.
+          # As PAS does not define explicitely such exception, we must use
+          # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
+          raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
+
 
 classImplements( ERP5UserManager
                , IAuthenticationPlugin

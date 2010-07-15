@@ -10,6 +10,8 @@ portal_gadgets/erp5_persons
 portal_gadgets/erp5_persons/**
 portal_gadgets/erp5_rss
 portal_gadgets/erp5_rss/**
+portal_gadgets/erp5_web_section_random_page
+portal_gadgets/erp5_web_section_random_page/**
 portal_gadgets/erp5_worklists
 portal_gadgets/erp5_worklists/**
 portal_gadgets/google_calendar

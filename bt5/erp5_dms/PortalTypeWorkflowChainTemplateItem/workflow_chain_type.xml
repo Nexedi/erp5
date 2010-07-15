@@ -1,50 +1,46 @@
 <workflow_chain>
  <chain>
   <type>Document Ingestion Message</type>
-  <workflow>cached_convertible_interaction_workflow, document_ingestion_interaction_workflow, document_ingestion_workflow, edit_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_ingestion_interaction_workflow, document_ingestion_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Drawing</type>
-  <workflow>document_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
   <type>File</type>
-  <workflow>document_interaction_workflow, document_publication_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
+  <workflow>document_publication_workflow, document_security_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Image</type>
-  <workflow>document_interaction_workflow, document_publication_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
+  <workflow>document_publication_workflow, document_security_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>PDF</type>
-  <workflow>cached_convertible_interaction_workflow, document_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
- </chain>
- <chain>
-  <type>Person</type>
-  <workflow>local_permission_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Presentation</type>
-  <workflow>cached_convertible_interaction_workflow, document_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
   <type>RSS Feed</type>
-  <workflow>cached_convertible_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Spreadsheet</type>
-  <workflow>cached_convertible_interaction_workflow, document_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
   <type>Text</type>
-  <workflow>cached_convertible_interaction_workflow, document_interaction_workflow, document_publication_workflow, edit_workflow, local_permission_interaction_workflow, processing_status_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_publication_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
   <type>URL Crawler</type>
-  <workflow>document_publication_workflow, edit_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>document_publication_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Web Page</type>
-  <workflow>-publication_workflow, document_interaction_workflow, document_publication_workflow, local_permission_interaction_workflow</workflow>
+  <workflow>-publication_workflow, document_publication_workflow</workflow>
  </chain>
 </workflow_chain>

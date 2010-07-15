@@ -47,7 +47,7 @@ Description:\n
 \n
 <tal:block metal:define-macro="main">\n
   <div id="register_button">\n
-    <a href="captcha/CheckCaptcha" i18n:domain="ui" i18n:translate="">Register >></a>\n
+    <a href="captcha/CheckCaptcha/view" i18n:domain="ui" i18n:translate="">Register >></a>\n
   </div>\n
   <div class="clear"></div>\n
 </tal:block>\n

@@ -439,7 +439,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     def getTypeList(group):
       type_list = []
-      for pt in self.portal_types.objectValues():
+      for pt in self.portal_types.listTypeInfo():
         if group in getattr(pt, 'group_list', ()):
           type_list.append(pt.getId())
 
@@ -1092,6 +1092,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     return self._getPortalGroupedTypeList('target_solver')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalTargetSolverTypeList')
+  def getPortalDeliverySolverTypeList(self):
+    """
+    Return delivery solver types.
+    """
+    return self._getPortalGroupedTypeList('delivery_solver')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalAmountGeneratorTypeList')
   def getPortalAmountGeneratorTypeList(self):
     """
@@ -1163,6 +1171,14 @@ class ERP5Site(FolderMixIn, CMFSite):
     Return inventory movement types.
     """
     return self._getPortalGroupedTypeList('inventory_movement')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalInventoryTypeList')
+  def getPortalInventoryTypeList(self):
+    """
+    Return inventory types.
+    """
+    return self._getPortalGroupedTypeList('inventory')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalMovementGroupTypeList')
@@ -1561,8 +1577,6 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Memcached Tool', None)
     if not p.hasObject('portal_types'):
       addTool('ERP5 Types Tool', None)
-      #transaction.get().beforeCommitHook(lambda:
-      #  p.portal_types.Base_setDefaultSecurity())
 
     try:
       addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
@@ -1805,7 +1819,7 @@ class ERP5Generator(PortalGenerator):
       setattr(p, 'isIndexable', ConstantGetter('isIndexable', value=True))
       # Clear portal ids sql table, like this we do not take
       # ids for a previously created web site
-      p.portal_ids.initializeGenerator(all=True)
+      p.portal_ids.clearGenerator(all=True)
       # Then clear the catalog and reindex it
       p.portal_catalog.manage_catalogClear()
       # Calling ERP5Site_reindexAll is useless.

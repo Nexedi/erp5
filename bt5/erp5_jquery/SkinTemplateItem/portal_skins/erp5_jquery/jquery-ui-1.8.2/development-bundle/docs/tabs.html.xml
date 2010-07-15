@@ -1,0 +1,1565 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<ul class="UIAPIPlugin-toc">\n
+<li><a href="#overview">Overview</a></li>\n
+<li><a href="#options">Options</a></li>\n
+<li><a href="#events">Events</a></li>\n
+<li><a href="#methods">Methods</a></li>\n
+<li><a href="#theming">Theming</a></li>\n
+</ul>\n
+<div class="UIAPIPlugin">\n
+  <h1>jQuery UI Tabs</h1>\n
+  <div id="overview">\n
+    <h2 class="top-header">Overview</h2>\n
+    <div id="overview-main">\n
+        <p>Tabs are generally used to break content into multiple sections that can be swapped to save space, much like an accordion.</p>\n
+<p>By default a tab widget will swap between tabbed sections onClick, but the events can be changed to onHover through an option. Tab content can be loaded via Ajax by setting an href on a tab.</p>\n
+<table id="toc" class="toc" summary="Contents"><tr><td><div id="toctitle"><h2>Contents</h2></div>\n
+<ul>\n
+<li class="toclevel-1"><a href="#Events"><span class="tocnumber">1</span> <span class="toctext">Events</span></a></li>\n
+<li class="toclevel-1"><a href="#Ajax_mode"><span class="tocnumber">2</span> <span class="toctext">Ajax mode</span></a>\n
+<ul>\n
+<li class="toclevel-2"><a href="#Back_button_and_bookmarking"><span class="tocnumber">2.1</span> <span class="toctext">Back button and bookmarking</span></a></li>\n
+</ul>\n
+</li>\n
+<li class="toclevel-1"><a href="#How_to..."><span class="tocnumber">3</span> <span class="toctext">How to...</span></a>\n
+<ul>\n
+<li class="toclevel-2"><a href="#...retrieve_the_index_of_the_currently_selected_tab"><span class="tocnumber">3.1</span> <span class="toctext">...retrieve the index of the currently selected tab</span></a></li>\n
+<li class="toclevel-2"><a href="#...open_links_in_the_current_tab_instead_of_leaving_the_page"><span class="tocnumber">3.2</span> <span class="toctext">...open links in the current tab instead of leaving the page</span></a></li>\n
+<li class="toclevel-2"><a href="#...select_a_tab_from_a_text_link_instead_of_clicking_a_tab_itself"><span class="tocnumber">3.3</span> <span class="toctext">...select a tab from a text link instead of clicking a tab itself</span></a></li>\n
+<li class="toclevel-2"><a href="#...prevent_switching_to_the_tab_on_click_depending_on_form_validation"><span class="tocnumber">3.4</span> <span class="toctext">...prevent switching to the tab on click depending on form validation</span></a></li>\n
+<li class="toclevel-2"><a href="#...immediately_select_a_just_added_tab"><span class="tocnumber">3.5</span> <span class="toctext">...immediately select a just added tab</span></a></li>\n
+<li class="toclevel-2"><a href="#...follow_a_tab.27s_URL_instead_of_loading_its_content_via_ajax"><span class="tocnumber">3.6</span> <span class="toctext">...follow a tab\'s URL instead of loading its content via ajax</span></a></li>\n
+<li class="toclevel-2"><a href="#...prevent_a_FOUC_.28Flash_of_Unstyled_Content.29_before_tabs_are_initialized"><span class="tocnumber">3.7</span> <span class="toctext">...prevent a FOUC (Flash of Unstyled Content) before tabs are initialized</span></a></li>\n
+</ul>\n
+</li>\n
+<li class="toclevel-1"><a href="#Why_does..."><span class="tocnumber">4</span> <span class="toctext">Why does...</span></a>\n
+<ul>\n
+<li class="toclevel-2"><a href="#...my_slider.2C_Google_Map.2C_sIFR_etc._not_work_when_placed_in_a_hidden_.28inactive.29_tab.3F"><span class="tocnumber">4.1</span> <span class="toctext">...my slider, Google Map, sIFR etc. not work when placed in a hidden (inactive) tab?</span></a></li>\n
+</ul>\n
+</li>\n
+</ul>\n
+</td></tr></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=1" title="Template:UIAPIPlugin">edit</a>]</div><a name="Events"></a><h2>Events</h2>\n
+<p>A series of events fire when interacting with a tabs interface:\n
+</p>\n
+<ul><li> tabsselect, tabsload, tabsshow (in that order)\n
+</li><li> tabsadd, tabsremove\n
+</li><li> tabsenable, tabsdisable\n
+</li></ul>\n
+<p>Event binding example:\n
+</p>\n
+<pre>$(\'#example\').bind(\'tabsselect\', function(event, ui) {\n
+\n
+    // Objects available in the function context:\n
+    ui.tab     // anchor element of the selected (clicked) tab\n
+    ui.panel   // element, that contains the selected/clicked tab contents\n
+    ui.index   // zero-based index of the selected (clicked) tab\n
+\n
+});</pre>\n
+<p>Note that if a handler for the tabsselect event returns false, the clicked tab will not become selected (useful for example if switching to the next tab requires a form validation).\n
+</p>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=2" title="Template:UIAPIPlugin">edit</a>]</div><a name="Ajax_mode"></a><h2> Ajax mode </h2>\n
+<p>Tabs supports loading tab content via Ajax in an unobtrusive manner.\n
+</p><p>The HTML you need is slightly different from the one that is used for static tabs: A list of links pointing to existing resources (from where the content gets loaded) and no additional containers at all (unobtrusive!). The containers\' markup is going to be created on the fly:\n
+</p>\n
+<pre>\n
+&lt;div id=&quot;example&quot;&gt;\n
+     &lt;ul&gt;\n
+         &lt;li&gt;&lt;a href=&quot;ahah_1.html&quot;&gt;&lt;span&gt;Content 1&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;\n
+         &lt;li&gt;&lt;a href=&quot;ahah_2.html&quot;&gt;&lt;span&gt;Content 2&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;\n
+         &lt;li&gt;&lt;a href=&quot;ahah_3.html&quot;&gt;&lt;span&gt;Content 3&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;\n
+     &lt;/ul&gt;\n
+&lt;/div&gt;\n
+</pre>\n
+<p>Obviously this degrades gracefully - the links, e.g. the content, will still be accessible with JavaScript disabled.\n
+</p><p>Note that if you wish to reuse an existing container, you\n
+could do so by matching a title attribute and the container\'s id:\n
+</p>\n
+<pre>\n
+&lt;li&gt;&lt;a href=&quot;hello/world.html&quot; title=&quot;Todo Overview&quot;&gt; ... &lt;/a&gt;&lt;/li&gt;\n
+</pre>\n
+<p>and a container like:\n
+</p>\n
+<pre>\n
+&lt;div id=&quot;Todo_Overview&quot;&gt; ... &lt;/div&gt;\n
+</pre>\n
+<p>(Note how white space is replaced with an underscore)\n
+</p><p>This is useful if you want a human readable hash in the URL instead of\n
+a cryptic generated one.\n
+</p>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=3" title="Template:UIAPIPlugin">edit</a>]</div><a name="Back_button_and_bookmarking"></a><h3>Back button and bookmarking</h3>\n
+<p>Tabs 2 already supported this functionality, although the history plugin needs a rewrite first (it doesn\'t support Safari 3 and is in general a little inflexible) before it can be build back into the tabs. It is planned and Klaus is working on it whenever he finds the time. Actual bugs in the UI Tabs plugin itself always have higher priority though.\n
+</p>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=4" title="Template:UIAPIPlugin">edit</a>]</div><a name="How_to..."></a><h2>How to...</h2>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=5" title="Template:UIAPIPlugin">edit</a>]</div><a name="...retrieve_the_index_of_the_currently_selected_tab"></a><h3>...retrieve the index of the currently selected tab</h3>\n
+<pre>var $tabs = $(\'#example\').tabs();\n
+var selected = $tabs.tabs(\'option\', \'selected\'); // =&gt; 0</pre>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=6" title="Template:UIAPIPlugin">edit</a>]</div><a name="...open_links_in_the_current_tab_instead_of_leaving_the_page"></a><h3>...open links in the current tab instead of leaving the page</h3>\n
+<p>"Hijax" links after tab content has been loaded:\n
+</p>\n
+<pre>$(\'#example\').tabs({\n
+    load: function(event, ui) {\n
+        $(\'a\', ui.panel).click(function() {\n
+            $(ui.panel).load(this.href);\n
+            return false;\n
+        });\n
+    }\n
+});</pre>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=7" title="Template:UIAPIPlugin">edit</a>]</div><a name="...select_a_tab_from_a_text_link_instead_of_clicking_a_tab_itself"></a><h3>...select a tab from a text link instead of clicking a tab itself</h3>\n
+<pre>var $tabs = $(\'#example\').tabs(); // first tab selected\n
+\n
+$(\'#my-text-link\').click(function() { // bind click event to link\n
+    $tabs.tabs(\'select\', 2); // switch to third tab\n
+    return false;\n
+});</pre>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=8" title="Template:UIAPIPlugin">edit</a>]</div><a name="...prevent_switching_to_the_tab_on_click_depending_on_form_validation"></a><h3>...prevent switching to the tab on click depending on form validation</h3>\n
+<p>Returning false in the tabs select handler prevents the clicked tab from becoming selected.\n
+</p>\n
+<pre>$(\'#example\').tabs({\n
+    select: function(event, ui) {\n
+        var isValid = ... // form validation returning true or false\n
+        return isValid;\n
+    }\n
+});</pre>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=9" title="Template:UIAPIPlugin">edit</a>]</div><a name="...immediately_select_a_just_added_tab"></a><h3>...immediately select a just added tab</h3>\n
+<pre>var $tabs = $(\'#example\').tabs({\n
+    add: function(event, ui) {\n
+        $tabs.tabs(\'select\', \'#\' + ui.panel.id);\n
+    }\n
+});</pre>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=10" title="Template:UIAPIPlugin">edit</a>]</div><a name="...follow_a_tab.27s_URL_instead_of_loading_its_content_via_ajax"></a><h3>...follow a tab\'s URL instead of loading its content via ajax</h3>\n
+<p>Note that opening a tab in a new window is unexpected, e.g.\n
+inconsistent behaviour exposing a usablity problem (<a href="http://www.useit.com/alertbox/tabs.html" class="external free" title="http://www.useit.com/alertbox/tabs.html">http://www.useit.com/alertbox/tabs.html</a>).\n
+</p>\n
+<pre>$(\'#example\').tabs({\n
+    select: function(event, ui) {\n
+        var url = $.data(ui.tab, \'load.tabs\');\n
+        if( url ) {\n
+            location.href = url;\n
+            return false;\n
+        }\n
+        return true;\n
+    }\n
+});</pre>\n
+<p><br />\n
+</p>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=11" title="Template:UIAPIPlugin">edit</a>]</div><a name="...prevent_a_FOUC_.28Flash_of_Unstyled_Content.29_before_tabs_are_initialized"></a><h3>...prevent a FOUC (Flash of Unstyled Content) before tabs are initialized</h3>\n
+<p>Add the necessary classes to hide an inactive tab panel to the HTML right away - note that this will <b>not</b> degrade gracefully with JavaScript being disabled:\n
+</p>\n
+<pre>&lt;div id=&quot;example&quot; class=&quot;ui-tabs&quot;&gt;\n
+  ...\n
+  &lt;div id=&quot;a-tab-panel&quot; class=&quot;ui-tabs-hide&quot;&gt; &lt;/div&gt;\n
+  ...\n
+&lt;/div&gt;</pre>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=12" title="Template:UIAPIPlugin">edit</a>]</div><a name="Why_does..."></a><h2>Why does...</h2>\n
+<div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/Template:UIAPIPlugin?section=13" title="Template:UIAPIPlugin">edit</a>]</div><a name="...my_slider.2C_Google_Map.2C_sIFR_etc._not_work_when_placed_in_a_hidden_.28inactive.29_tab.3F"></a><h3>...my slider, Google Map, sIFR etc. not work when placed in a hidden (inactive) tab?</h3>\n
+<p>Any component that requires some dimensional computation for its initialization won\'t work in a hidden tab, because the tab panel itself is hidden via <code>display: none</code> so that any elements inside won\'t report their actual width and height (0 in most browsers).\n
+</p><p>There\'s an easy workaround. Use the <em>off-left technique</em> for hiding inactive tab panels. E.g. in your style sheet replace the rule for the class selector ".ui-tabs .ui-tabs-hide" with\n
+</p>\n
+<pre>.ui-tabs .ui-tabs-hide {\n
+    position: absolute;\n
+    left: -10000px;\n
+}</pre>\n
+<p>For Google maps you can also resize the map once the tab is displayed like this:\n
+</p>\n
+<pre>$(\'#example\').bind(\'tabsshow\', function(event, ui) {\n
+    if (ui.panel.id == &quot;map-tab&quot;) {\n
+        resizeMap();\n
+    }\n
+});</pre>\n
+resizeMap() will call Google Maps\' checkResize() on the particular map.\n
+    </div>\n
+    <div id="overview-dependencies">\n
+        <h3>Dependencies</h3>\n
+        <ul>\n
+<li>UI Core</li>\n
+<li>To use the cookie option: <a href="http://plugins.jquery.com/project/cookie" class="external text" title="http://plugins.jquery.com/project/cookie">jquery.cookie.js</a></li>\n
+<li>Required CSS:\n
+<pre>.ui-tabs .ui-tabs-hide {\n
+     display: none;\n
+}</pre></li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-example">\n
+        <h3>Example</h3>\n
+        <div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<p><div id="demo" class="tabs-container" rel="295">\n
+A simple jQuery UI Tabs.<br />\n
+</p>\n
+<pre>$(&quot;#tabs&quot;).tabs();\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js&quot;&gt;&lt;/script&gt;\n
+  \n
+  &lt;script&gt;\n
+  $(document).ready(function() {\n
+    $(&quot;#tabs&quot;).tabs();\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;div id=&quot;tabs&quot;&gt;\n
+    &lt;ul&gt;\n
+        &lt;li&gt;&lt;a href=&quot;#fragment-1&quot;&gt;&lt;span&gt;One&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;\n
+        &lt;li&gt;&lt;a href=&quot;#fragment-2&quot;&gt;&lt;span&gt;Two&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;\n
+        &lt;li&gt;&lt;a href=&quot;#fragment-3&quot;&gt;&lt;span&gt;Three&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;\n
+    &lt;/ul&gt;\n
+    &lt;div id=&quot;fragment-1&quot;&gt;\n
+        &lt;p&gt;First tab is active by default:&lt;/p&gt;\n
+        &lt;pre&gt;&lt;code&gt;$(\'#example\').tabs();&lt;/code&gt;&lt;/pre&gt;\n
+    &lt;/div&gt;\n
+    &lt;div id=&quot;fragment-2&quot;&gt;\n
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n
+    &lt;/div&gt;\n
+    &lt;div id=&quot;fragment-3&quot;&gt;\n
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.\n
+    &lt;/div&gt;\n
+&lt;/div&gt;\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+    </div>\n
+  </div>\n
+  <div id="options">\n
+    <h2 class="top-header">Options</h2>\n
+    <ul class="options-list">\n
+      \n
+<li class="option" id="option-disabled">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-disabled">disabled</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Disables (true) or enables (false) the tabs. Can be set when initialising (first creating) the tabs.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>disabled</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ disabled: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>disabled</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var disabled = $( ".selector" ).tabs( "option", "disabled" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "disabled", true );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-ajaxOptions">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-ajaxOptions">ajaxOptions</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Options</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">null</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Additional Ajax options to consider when loading tab content (see $.ajax).</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>ajaxOptions</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ ajaxOptions: { async: false } });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>ajaxOptions</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var ajaxOptions = $( ".selector" ).tabs( "option", "ajaxOptions" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "ajaxOptions", { async: false } );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-cache">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-cache">cache</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Whether or not to cache remote tabs content, e.g. load only once or with every click. Cached content is being lazy loaded, e.g once and only once for the first click. Note that to prevent the actual Ajax requests from being cached by the browser you need to provide an extra cache: false flag to ajaxOptions.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>cache</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ cache: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>cache</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var cache = $( ".selector" ).tabs( "option", "cache" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "cache", true );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-collapsible">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-collapsible">collapsible</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Set to true to allow an already selected tab to become unselected again upon reselection.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>collapsible</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ collapsible: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>collapsible</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var collapsible = $( ".selector" ).tabs( "option", "collapsible" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "collapsible", true );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-cookie">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-cookie">cookie</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Object</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">null</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Store the latest selected tab in a cookie. The cookie is then used to determine the initially selected tab if the <i>selected</i> option is not defined. Requires cookie plugin. The object needs to have key/value pairs of the form the cookie plugin expects as options. Available options (example): &#123; expires: 7, path: \'/\', domain: \'jquery.com\', secure: true &#125;. Since jQuery UI 1.7 it is also possible to define the cookie name being used via <i>name</i> property.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>cookie</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ cookie: { expires: 30 } });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>cookie</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var cookie = $( ".selector" ).tabs( "option", "cookie" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "cookie", { expires: 30 } );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-deselectable">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-deselectable">deselectable</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Boolean</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">false</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>deprecated in jQuery UI 1.7, use collapsible.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>deselectable</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ deselectable: true });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>deselectable</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var deselectable = $( ".selector" ).tabs( "option", "deselectable" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "deselectable", true );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-disabled">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-disabled">disabled</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Array&lt;Number&gt;</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">[]</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>An array containing the position of the tabs (zero-based index) that should be disabled on initialization.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>disabled</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ disabled: [1, 2] });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>disabled</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var disabled = $( ".selector" ).tabs( "option", "disabled" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "disabled", [1, 2] );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-event">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-event">event</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'click\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>The type of event to be used for selecting a tab.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>event</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ event: \'mouseover\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>event</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var event = $( ".selector" ).tabs( "option", "event" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "event", \'mouseover\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-fx">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-fx">fx</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Options, Array&lt;Options&gt;</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">null</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Enable animations for hiding and showing tab panels. The duration option can be a string representing one of the three predefined speeds ("slow", "normal", "fast") or the duration in milliseconds to run an animation (default is "normal").</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>fx</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ fx: { opacity: \'toggle\' } });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>fx</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var fx = $( ".selector" ).tabs( "option", "fx" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "fx", { opacity: \'toggle\' } );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-idPrefix">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-idPrefix">idPrefix</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'ui-tabs-\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>If the remote tab, its anchor element that is, has no title attribute to generate an id from, an id/fragment identifier is created from this prefix and a unique id returned by $.data(el), for example "ui-tabs-54".</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>idPrefix</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ idPrefix: \'ui-tabs-primary\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>idPrefix</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var idPrefix = $( ".selector" ).tabs( "option", "idPrefix" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "idPrefix", \'ui-tabs-primary\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-panelTemplate">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-panelTemplate">panelTemplate</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'&lt;div&gt;&lt;/div&gt;\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>HTML template from which a new tab panel is created in case of adding a tab with the add method or when creating a panel for a remote tab on the fly.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>panelTemplate</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ panelTemplate: \'&lt;li&gt;&lt;/li&gt;\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>panelTemplate</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var panelTemplate = $( ".selector" ).tabs( "option", "panelTemplate" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "panelTemplate", \'&lt;li&gt;&lt;/li&gt;\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-selected">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-selected">selected</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Number</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">0</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Zero-based index of the tab to be selected on initialization. To set all tabs to unselected pass -1 as value.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>selected</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ selected: 3 });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>selected</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var selected = $( ".selector" ).tabs( "option", "selected" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "selected", 3 );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-spinner">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-spinner">spinner</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'&lt;em&gt;Loading&amp;#8230;&lt;/em&gt;\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>The HTML content of this string is shown in a tab title while remote content is loading. Pass in empty string to deactivate that behavior. An span element must be present in the A tag of the title, for the spinner content to be visible.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>spinner</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ spinner: \'Retrieving data...\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>spinner</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var spinner = $( ".selector" ).tabs( "option", "spinner" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "spinner", \'Retrieving data...\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-tabTemplate">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-tabTemplate">tabTemplate</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+      <dt class="option-default-label">Default:</dt>\n
+        <dd class="option-default">\'&lt;li&gt;&lt;a href&#61;"#&#123;href&#125;"&gt;&lt;span&gt;#&#123;label&#125;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;\'</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>HTML template from which a new tab is created and added. The placeholders #&#123;href&#125; and #&#123;label&#125; are replaced with the url and tab label that are passed as arguments to the add method.</p>\n
+  </div>\n
+  <div class="option-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="option-examples-list">\n
+    \n
+<dt>\n
+  Initialize a tabs with the <code>tabTemplate</code> option specified.\n
+</dt>\n
+<dd>\n
+<pre><code>$( ".selector" ).tabs({ tabTemplate: \'&lt;div&gt;&lt;a href&#61;"#&#123;href&#125;"&gt;&lt;span&gt;#&#123;label&#125;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;\' });</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Get or set the <code>tabTemplate</code> option, after init.\n
+</dt>\n
+<dd>\n
+<pre><code>//getter\n
+var tabTemplate = $( ".selector" ).tabs( "option", "tabTemplate" );\n
+//setter\n
+$( ".selector" ).tabs( "option", "tabTemplate", \'&lt;div&gt;&lt;a href&#61;"#&#123;href&#125;"&gt;&lt;span&gt;#&#123;label&#125;&lt;/span&gt;&lt;/a&gt;&lt;/div&gt;\' );</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="events">\n
+    <h2 class="top-header">Events</h2>\n
+    <ul class="events-list">\n
+      \n
+<li class="event" id="event-select">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-select">select</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">tabsselect</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when clicking a tab.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>select</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).tabs({\n
+   select: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>select</code> event by type: <code>tabsselect</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;tabsselect&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-load">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-load">load</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">tabsload</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered after the content of a remote tab has been loaded.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>load</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).tabs({\n
+   load: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>load</code> event by type: <code>tabsload</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;tabsload&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-show">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-show">show</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">tabsshow</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a tab is shown.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>show</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).tabs({\n
+   show: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>show</code> event by type: <code>tabsshow</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;tabsshow&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-add">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-add">add</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">tabsadd</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a tab is added.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>add</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).tabs({\n
+   add: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>add</code> event by type: <code>tabsadd</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;tabsadd&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-remove">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-remove">remove</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">tabsremove</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a tab is removed.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>remove</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).tabs({\n
+   remove: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>remove</code> event by type: <code>tabsremove</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;tabsremove&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-enable">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-enable">enable</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">tabsenable</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a tab is enabled.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>enable</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).tabs({\n
+   enable: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>enable</code> event by type: <code>tabsenable</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;tabsenable&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="event" id="event-disable">\n
+  <div class="event-header">\n
+    <h3 class="event-name"><a href="#event-disable">disable</a></h3>\n
+    <dl>\n
+      <dt class="event-type-label">Type:</dt>\n
+        <dd class="event-type">tabsdisable</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="event-description">\n
+    <p>This event is triggered when a tab is disabled.</p>\n
+  </div>\n
+  <div class="event-examples">\n
+    <h4>Code examples</h4>\n
+    <dl class="event-examples-list">\n
+    \n
+<dt>\n
+  Supply a callback function to handle the <code>disable</code> event as an init option.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).tabs({\n
+   disable: function(event, ui) { ... }\n
+});</code></pre>\n
+</dd>\n
+\n
+    \n
+<dt>\n
+  Bind to the <code>disable</code> event by type: <code>tabsdisable</code>.\n
+</dt>\n
+<dd>\n
+<pre><code>$( &quot;.selector&quot; ).bind( &quot;tabsdisable&quot;, function(event, ui) {\n
+  ...\n
+});</code></pre>\n
+</dd>\n
+\n
+    </dl>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="methods">\n
+    <h2 class="top-header">Methods</h2>\n
+    <ul class="methods-list">\n
+      \n
+<li class="method" id="method-destroy">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-destroy">destroy</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "destroy"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Remove the tabs functionality completely. This will return the element back to its pre-init state.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-disable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-disable">disable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "disable"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Disable the tabs.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-enable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-enable">enable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "enable"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Enable the tabs.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "option"\n
+\n
+, optionName\n
+\n
+, <span class="optional">[</span>value<span class="optional">] </span>\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Get or set any tabs option. If no value is specified, will act as a getter.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-option">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-option">option</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "option"\n
+\n
+, options\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Set multiple tabs options at once by providing an options object.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-widget">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-widget">widget</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "widget"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Returns the .ui-tabs element.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-add">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-add">add</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "add"\n
+\n
+, url\n
+\n
+, label\n
+\n
+, <span class="optional">[</span>index<span class="optional">] </span>\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Add a new tab. The second argument is either a URL consisting of a fragment identifier only to create an in-page tab or a full url (relative or absolute, no cross-domain support) to turn the new tab into an Ajax (remote) tab. The third is the zero-based position where to insert the new tab. Optional, by default a new tab is appended at the end.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-remove">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-remove">remove</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "remove"\n
+\n
+, index\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Remove a tab. The second argument is the zero-based index of the tab to be removed.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-enable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-enable">enable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "enable"\n
+\n
+, index\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Enable a disabled tab.  To enable more than one tab at once reset the disabled property like: <code>$(\'#example\').tabs("option","disabled",[]);</code>. The second argument is the zero-based index of the tab to be enabled.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-disable">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-disable">disable</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "disable"\n
+\n
+, index\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Disable a tab. The selected tab cannot be disabled. To disable more than one tab at once use: <code>$(\'#example\').tabs("option","disabled", [1, 2, 3]);</code>  The second argument is the zero-based index of the tab to be disabled.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-select">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-select">select</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "select"\n
+\n
+, index\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Select a tab, as if it were clicked. The second argument is the zero-based index of the tab to be selected or the id selector of the panel the tab is associated with (the tab\'s href fragment identifier, e.g. hash, points to the panel\'s id).</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-load">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-load">load</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "load"\n
+\n
+, index\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Reload the content of an Ajax tab programmatically. This method always loads the tab content from the remote location, even if cache is set to true. The second argument is the zero-based index of the tab to be reloaded.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-url">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-url">url</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "url"\n
+\n
+, index\n
+\n
+, url\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Change the url from which an Ajax (remote) tab will be loaded. The specified URL will be used for subsequent loads. Note that you can not only change the URL for an existing remote tab with this method, but also turn an in-page tab into a remote tab.  The second argument is the zero-based index of the tab of which its URL is to be updated.  The third is a URL the content of the tab is loaded from.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-length">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-length">length</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "length"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Retrieve the number of tabs of the first matched tab pane.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-abort">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-abort">abort</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "abort"\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Terminate all running tab ajax requests and animations.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="method" id="method-rotate">\n
+  <div class="method-header">\n
+    <h3 class="method-name"><a href="#method-rotate">rotate</a></h3>\n
+    <dl>\n
+      <dt class="method-signature-label">Signature:</dt>\n
+        <dd class="method-signature">.tabs( "rotate"\n
+\n
+, ms\n
+\n
+, <span class="optional">[</span>continuing<span class="optional">] </span>\n
+\n
+\n
+\n
+)</dd>\n
+    </dl>\n
+  </div>\n
+  <div class="method-description">\n
+    <p>Set up an automatic rotation through tabs of a tab pane.  The second argument is an amount of time in milliseconds until the next tab in the cycle gets activated. Use 0 or null to stop the rotation.  The third controls whether or not to continue the rotation after a tab has been selected by a user. Default: false.</p>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+  <div id="theming">\n
+    <h2 class="top-header">Theming</h2>\n
+    <p>The jQuery UI Tabs plugin uses the jQuery UI CSS Framework to style its look and feel, including colors and background textures. We recommend using the ThemeRoller tool to create and download custom themes that are easy to build and maintain.\n
+</p>\n
+  <p>If a deeper level of customization is needed, there are widget-specific classes referenced within the jquery.ui.tabs.css stylesheet that can be modified. These classes are highlighed in bold below.\n
+</p>\n
+    \n
+  <h3>Sample markup with jQuery UI CSS Framework classes</h3>\n
+  &lt;div class=&quot;<strong>ui-tabs</strong> ui-widget ui-widget-content ui-corner-all&quot; id=&quot;tabs&quot;&gt;<br />\n
+&nbsp;&nbsp;&nbsp;&lt;ul class=&quot;<strong>ui-tabs-nav</strong> ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all&quot;&gt;<br />\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li class=&quot;ui-state-default ui-corner-top ui-tabs-selected ui-state-active&quot;&gt;&lt;a href=&quot;#tabs-1&quot;&gt;Nunc tincidunt&lt;/a&gt;&lt;/li&gt;<br />\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li class=&quot;ui-state-default ui-corner-top&quot;&gt;&lt;a href=&quot;#tabs-2&quot;&gt;Proin dolor&lt;/a&gt;&lt;/li&gt;<br />\n
+&nbsp;&nbsp;&nbsp;&lt;div class=&quot;<strong>ui-tabs-panel</strong> ui-widget-content ui-corner-bottom&quot; id=&quot;tabs-1&quot;&gt;<br />\n
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Tab one content goes here.&lt;/p&gt;<br />\n
+&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />\n
+&nbsp;&nbsp;&nbsp; ...<br />\n
+&lt;/div&gt;<br />\n
+  <p class="theme-note">\n
+    <strong>\n
+      Note: This is a sample of markup generated by the tabs plugin, not markup you should use to create a tabs. The only markup needed for that is <br />&lt;div id=&quot;tabs&quot;&gt;<br />\n
+&#160;&#160;&#160;&lt;ul&gt;<br />\n
+&#160;&#160;&#160;&#160;&#160;&#160;&lt;li&gt;&lt;a href=&quot;#tabs-1&quot;&gt;Nunc tincidunt&lt;/a&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&#160;&#160;&#160;&lt;li&gt;&lt;a href=&quot;#tabs-2&quot;&gt;Proin dolor&lt;/a&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&#160;&#160;&#160;&lt;li&gt;&lt;a href=&quot;#tabs-3&quot;&gt;Aenean lacinia&lt;/a&gt;&lt;/li&gt;<br />\n
+&#160;&#160;&#160;&lt;/ul&gt;<br />\n
+&#160;&#160;&#160;&lt;div id=&quot;tabs-1&quot;&gt;<br />\n
+&#160;&#160;&#160;&#160;&#160;&#160;&lt;p&gt;Tab 1 content&lt;/p&gt;<br />\n
+&#160;&#160;&#160;&lt;/div&gt;<br />\n
+&#160;&#160;&#160;&lt;div id=&quot;tabs-2&quot;&gt;<br />\n
+&#160;&#160;&#160;&#160;&#160;&#160;&lt;p&gt;Tab 2 content&lt;/p&gt;<br />\n
+&#160;&#160;&#160;&lt;/div&gt;<br />\n
+&#160;&#160;&#160;&lt;div id=&quot;tabs-3&quot;&gt;<br />\n
+&#160;&#160;&#160;&#160;&#160;&#160;&lt;p&gt;Tab 3 content&lt;/p&gt;<br />\n
+&#160;&#160;&#160;&lt;/div&gt;<br />\n
+&lt;/div&gt;.\n
+    </strong>\n
+  </p>\n
+\n
+  </div>\n
+</div>\n
+\n
+</p><!-- \n
+Pre-expand include size: 56186 bytes\n
+Post-expand include size: 95623 bytes\n
+Template argument size: 57017 bytes\n
+Maximum: 2097152 bytes\n
+-->\n
+\n
+<!-- Saved in parser cache with key jqdocs_docs:pcache:idhash:3777-1!1!0!!en!2 and timestamp 20100520043008 -->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>tabs.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

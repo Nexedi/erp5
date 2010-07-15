@@ -83,6 +83,8 @@
                     <value>
                       <list>
                         <string>listbox_Base_showFoundText</string>
+                        <string>listbox_getIconAsHTML</string>
+                        <string>listbox_getSummaryAsHTML</string>
                       </list>
                     </value>
                 </item>

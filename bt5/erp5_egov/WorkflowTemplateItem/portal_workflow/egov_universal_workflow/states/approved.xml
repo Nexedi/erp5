@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An application in approved state is an application which have been review and approved : it could be signed.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -31,8 +31,10 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>sign</string>
-                <string>sign_action</string>
+                <string>available</string>
+                <string>available_action</string>
+                <string>complete</string>
+                <string>complete_action</string>
               </tuple>
             </value>
         </item>
@@ -62,9 +64,12 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>
@@ -74,33 +79,42 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Manager</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Author</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Manager</string>
+                        <string>Author</string>
                       </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Set own password</string> </key>
+                    <value>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
+                        <string>Associate</string>
                         <string>Auditor</string>
+                        <string>Author</string>
                         <string>Manager</string>
                         <string>Owner</string>
                       </tuple>

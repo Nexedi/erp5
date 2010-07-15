@@ -149,7 +149,7 @@ for l in result:\n
                    , balance            = l.balance\n
                    , credit             = l.credit\n
                    , debit              = l.debit\n
-                   , date               = l.date\n
+                   , date               = l.date.toZone(l.getObject().getStartDate().timezone())\n
                    , section_title      = l.section_title\n
                    , specific_reference = l.specific_reference\n
                    )\n

@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getDependencyList</string> </value>
+            <value> <string>python: \',\'.join(here.getDependencyList())</string> </value>
         </item>
       </dictionary>
     </pickle>

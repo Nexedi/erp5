@@ -13,8 +13,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>hash_script_id</string>
                 <string>items</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -74,6 +75,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -83,11 +88,21 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_field</string> </value>
+                    <value> <string>my_parallel_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>hash_script_id</string> </key>
+                    <value> <string>Base_hashCategoryList</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -114,7 +129,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'\', \'\')] + [(x.getTitle(), x.getRelativeUrl()) for x in here.portal_catalog(portal_type=[\'Product Individual Variation\',\'Service Individual Variation\'])]</string> </value>
+            <value> <string>python: cell.getVariationRangeCategoryList()</string> </value>
         </item>
       </dictionary>
     </pickle>

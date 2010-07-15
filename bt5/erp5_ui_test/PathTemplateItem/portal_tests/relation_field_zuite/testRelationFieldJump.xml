@@ -184,6 +184,43 @@ will be shown\n
   <td></td>\n
 </tr>\n
 \n
+<!-- go back to the multi relation field -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewRelationField</td>\n
+  <td></td>\n
+</tr>\n
+<!-- select again the jump -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//fieldset[@class=\'left editable\']/div[4]/div/a/img[@alt="jump"]</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<!-- do sort on the title column default sort bring Title 0 in first place-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
+  <td>Title 0</td>\n
+</tr>\n
+<!-- do revert sort on the title column, it will bring Title 1 in first place-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
+  <td></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
+  <td>Title 1</td>\n
+</tr>\n
 </tbody></table>\n
 </body>\n
 </html>\n

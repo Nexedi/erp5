@@ -43,12 +43,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Search Top Box hitting Enter</title>\n
+<title tal:content="template/getId"/>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test a search on the top box hitting enter</td></tr>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
 </thead><tbody>\n
 \n
 \n
@@ -58,7 +58,7 @@
 \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/view</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -75,7 +75,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -87,11 +87,6 @@
   <td>keyPressAndWait</td>\n
   <td>field_your_search_text</td>\n
   <td>\\13</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//div[@class=\'searchResultHeader\']/span[@class=\'right\']/em[2]</td>\n
-  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

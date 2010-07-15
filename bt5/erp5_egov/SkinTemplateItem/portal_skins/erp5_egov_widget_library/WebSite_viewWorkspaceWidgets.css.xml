@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_skin_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -60,7 +64,7 @@
 \n
 \n
 .widget_space div.field{\n
-  clear:none !important;\n
+  /*clear:none !important;*/\n
   min-width:185px;\n
   /*width:47%;*/\n
 }\n

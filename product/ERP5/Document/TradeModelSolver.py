@@ -55,24 +55,27 @@ class TradeModelSolver(AcceptSolver):
   zope.interface.implements(interfaces.ISolver,)
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
     Adopt new values to simulation movements, with keeping the original
     one recorded, and then update Trade Model related lines accordingly.
     """
     configuration_dict = self.getConfigurationPropertyDict()
-    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
+    portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
     solved_property_list = configuration_dict.get('tested_property_list',
                                                   portal_type.getTestedPropertyList())
+    delivery_dict = {}
+    for simulation_movement in self.getDeliveryValueList():
+      delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
+                               []).append(simulation_movement)
 
     # Here, items of delivery_list should be movements, not deliveries.
-    solved_movement_list = self.getDeliveryValueList()
-    delivery_list = []
-    for solved_movement in solved_movement_list:
-      delivery = solved_movement.getDeliveryValue()
-      if delivery not in delivery_list:
-        delivery_list.append(delivery)
-    all_movement_list = sum([x.getMovementList() for x in delivery_list], [])
+    delivery_set = set()
+    solved_movement_list = delivery_dict.iterkeys()
+    for movement in solved_movement_list:
+      delivery = movement.getRootDeliveryValue()
+      delivery_set.add(delivery)
+    all_movement_list = sum([x.getMovementList() for x in delivery_set], [])
 
     # First, separate movements into invoice lines and trade model
     # related lines.
@@ -88,8 +91,11 @@ class TradeModelSolver(AcceptSolver):
 
     # Second, apply changes on invoice lines to simulation movements,
     # then expand.
-    for movement in solved_movement_list:
-      for simulation_movement in movement.getDeliveryRelatedValueList():
+    for movement, simulation_movement_list in delivery_dict.iteritems():
+      for simulation_movement in simulation_movement_list:
+        if activate_kw is not None:
+          simulation_movement.setDefaultActivateParameters(
+            activate_kw=activate_kw, **activate_kw)
         value_dict = {}
         for solved_property in solved_property_list:
           new_value = movement.getProperty(solved_property)
@@ -102,11 +108,14 @@ class TradeModelSolver(AcceptSolver):
           if not simulation_movement.isPropertyRecorded(property_id):
             simulation_movement.recordProperty(property_id)
           simulation_movement.setMappedProperty(property_id, value)
-        simulation_movement.expand()
+        simulation_movement.expand(activate_kw=activate_kw)
 
     # Third, adopt changes on trade model related lines.
     # XXX non-linear case is not yet supported.
     for movement in trade_model_related_movement_list:
+      if activate_kw is not None:
+        movement.setDefaultActivateParameters(
+          activate_kw=activate_kw, **activate_kw)
       for solved_property in solved_property_list:
         if solved_property == 'quantity':
           simulation_movement_list = movement.getDeliveryRelatedValueList()
@@ -118,7 +127,8 @@ class TradeModelSolver(AcceptSolver):
             delivery_ratio = quantity / total_quantity
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
-                                     delivery_error=delivery_error)
+                                     delivery_error=delivery_error,
+                                     activate_kw=activate_kw)
         else:
           # XXX TODO we need to support multiple values for categories or
           # list type property.
@@ -127,4 +137,6 @@ class TradeModelSolver(AcceptSolver):
                                simulation_movement.getProperty(solved_property))
 
     # Finish solving
-    self.succeed()
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      self, 'succeed'):
+      self.succeed()

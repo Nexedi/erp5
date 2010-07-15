@@ -46,6 +46,9 @@ print sys.version_info[:2]
 
   def test_required_libraries(self):
     """Checks possiblity of importing libraries"""
+    ignored_library_list = createCleanList("""
+      socks
+    """)
     required_library_list = createCleanList("""
       ERP5Diff
       MySQLdb
@@ -68,7 +71,6 @@ print sys.version_info[:2]
       pytz
       readline
       simplejson
-      socks
       threadframe
       uuid
       xml
@@ -88,6 +90,15 @@ print sys.version_info[:2]
 class AssertLddLibs(unittest.TestCase):
   """Checks for dynamic libraries"""
 
+  def test_ocropus(self):
+    """Senna as an library"""
+    result = os.system("ldd parts/ocropus/bin/ocropus | grep -q "
+        "'parts/ocropus/lib/libocropus.so'")
+    self.assertEqual(result, 0)
+    result = os.system("ldd parts/ocropus/bin/ocropus | grep -q "
+        "'parts/.*/lib/libiulib.so'")
+    self.assertEqual(result, 0)
+
   def test_tritonn_senna(self):
     """Senna as an library"""
     result = os.system("ldd parts/mysql-tritonn-5.0/libexec/mysqld | grep -q "
@@ -96,15 +107,75 @@ class AssertLddLibs(unittest.TestCase):
 
   def test_MySQLdb(self):
     """Checks proper linking to mysql library from MySQLdb egg"""
-    result = os.system("ldd develop-eggs/MySQL_python-1.2.3c1-py2.4-linux-x86"
-       "_64.egg/_mysql.so | grep -q 'parts/mysql-tritonn-5.0/lib/mysql/libmys"
-       "qlclient_r.so'")
-    self.assertEqual(result, 0)
+    error_list = []
+    for d in os.listdir('develop-eggs'):
+      if d.startswith('MySQL_python'):
+        path = os.path.join('develop-eggs', d, '_mysql.so')
+        if os.system("ldd %s | grep -q 'parts/mysql-tritonn-5.0/lib/my"
+            "sql/libmysqlclient_r.so'" % path) != 0:
+          error_list.append(path)
+    self.assertEqual(error_list, [])
 
   def test_memcached_libevent(self):
     """Checks proper liunking to libevent from memcached"""
     result = os.system("ldd parts/memcached/bin/memcached | grep -q 'parts/li"
         "bevent/lib/libevent'")
+
+class AssertSoftwareRunable(unittest.TestCase):
+  def test_HaProxy(self):
+    stdout, stderr = subprocess.Popen(["parts/haproxy/sbin/haproxy", "-v"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('HA-Proxy'))
+
+  def test_Apache(self):
+    stdout, stderr = subprocess.Popen(["parts/apache/bin/httpd", "-v"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('Server version: Apache'))
+
+  def test_Ocropus(self):
+    stdout, stderr = subprocess.Popen(["parts/ocropus/bin/ocropus"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stdout, '')
+    self.assertTrue('splitting books' in stderr)
+
+  def test_TokyoCabinet(self):
+    stdout, stderr = subprocess.Popen(["parts/tokyocabinet/bin/tcamgr",
+      "version"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('Tokyo Cabinet'))
+
+  def test_Flare(self):
+    stdout, stderr = subprocess.Popen(["parts/flare/bin/flarei", "-v"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('flare'))
+
+  def test_rdiff_backup(self):
+    stdout, stderr = subprocess.Popen(["bin/rdiff-backup", "-V"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertEqual(stdout.strip(), 'rdiff-backup 1.0.5')
+
+  def test_imagemagick(self):
+    binary_list = [ 'animate', 'composite', 'convert', 'identify', 'mogrify',
+        'stream', 'compare', 'conjure', 'display', 'import', 'montage']
+    base = os.path.join('parts', 'imagemagick', 'bin')
+    error_list = []
+    for binary in binary_list:
+      stdout, stderr = subprocess.Popen([os.path.join(base, binary), "-version"],
+          stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+      if 'Version: ImageMagick' not in stdout:
+        error_list.append(binary)
+    self.assertEqual([], error_list)
+
+  def test_w3m(self):
+    stdout, stderr = subprocess.Popen(["parts/w3m/bin/w3m", "-V"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stderr, '')
+    self.assertTrue(stdout.startswith('w3m version w3m/0.5.2'))
 
 class AssertApache(unittest.TestCase):
   """Tests for built apache"""

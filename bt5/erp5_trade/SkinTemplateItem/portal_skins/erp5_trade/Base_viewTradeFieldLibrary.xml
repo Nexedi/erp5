@@ -245,10 +245,6 @@
                         <string>my_dialog_mode_gross_weight</string>
                         <string>my_dialog_mode_next_container_int_index</string>
                         <string>my_view_mode_trade_condition_specialise_title_list</string>
-                        <string>my_dialog_mode_listbox_inventory</string>
-                        <string>my_dialog_mode_listbox_reference</string>
-                        <string>my_dialog_mode_listbox_title</string>
-                        <string>my_dialog_mode_total_price</string>
                         <string>my_view_mode_efficiency</string>
                         <string>my_view_mode_end_of</string>
                         <string>my_view_mode_lead_time</string>
@@ -262,7 +258,6 @@
                         <string>my_view_mode_frozen_state_list</string>
                         <string>my_view_mode_order_builder_list</string>
                         <string>my_view_mode_source_method_id</string>
-                        <string>my_view_mode_test_method_id</string>
                         <string>my_view_mode_trade_phase</string>
                         <string>my_view_mode_business_process_specialise_title_list</string>
                         <string>my_view_mode_listbox_delivery_builder_title_list</string>
@@ -304,6 +299,13 @@
                         <string>my_view_mode_predecessor</string>
                         <string>my_view_mode_successor</string>
                         <string>my_view_mode_trade_phase_list</string>
+                        <string>my_view_mode_matrix_box</string>
+                        <string>my_view_mode_planning_box</string>
+                        <string>my_report_mode_report_box</string>
+                        <string>my_view_mode_preferred_trade_base_amount_list</string>
+                        <string>my_view_mode_movement_use</string>
+                        <string>my_view_mode_listbox_resource_relative_url</string>
+                        <string>my_view_mode_listbox_movement_relative_url</string>
                       </list>
                     </value>
                 </item>

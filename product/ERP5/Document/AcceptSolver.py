@@ -58,37 +58,36 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
   zope.interface.implements(interfaces.ISolver,)
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
     Adopt new property to simulation movements, with keeping the
     original one recorded.
     """
     configuration_dict = self.getConfigurationPropertyDict()
-    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
-    solved_property_list = configuration_dict.get('tested_property_list',
-                                                  portal_type.getTestedPropertyList())
-    for movement in self.getDeliveryValueList():
-      simulation_movement_list = movement.getDeliveryRelatedValueList()
-      # if movement here is a delivery, we need to find simulation
-      # movements by its movements.
-      if len(simulation_movement_list) == 0:
-        simulation_movement_list = sum(
-          [x.getDeliveryRelatedValueList() \
-           for x in self.getDeliveryValue().getMovementList()], [])
-      for simulation_movement in simulation_movement_list:
-        value_dict = {}
-        for solved_property in solved_property_list:
-          new_value = movement.getProperty(solved_property)
-          # XXX hard coded
-          if solved_property == 'quantity':
-            new_quantity = new_value * simulation_movement.getDeliveryRatio()
-            value_dict.update({'quantity':new_quantity})
-          else:
-            value_dict.update({solved_property:new_value})
-        for property_id, value in value_dict.iteritems():
-          if not simulation_movement.isPropertyRecorded(property_id):
-            simulation_movement.recordProperty(property_id)
-          simulation_movement.setMappedProperty(property_id, value)
-        simulation_movement.expand()
+    solved_property_list = configuration_dict.get('tested_property_list', None)
+    if solved_property_list is None:
+      portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
+      solved_property_list = portal_type.getTestedPropertyList()
+    for simulation_movement in self.getDeliveryValueList():
+      if activate_kw is not None:
+        simulation_movement.setDefaultActivateParameters(
+        activate_kw=activate_kw, **activate_kw)
+      movement = simulation_movement.getDeliveryValue()
+      value_dict = {}
+      for solved_property in solved_property_list:
+        new_value = movement.getProperty(solved_property)
+        # XXX hard coded
+        if solved_property == 'quantity':
+          new_quantity = new_value * simulation_movement.getDeliveryRatio()
+          value_dict.update({'quantity':new_quantity})
+        else:
+          value_dict.update({solved_property:new_value})
+      for property_id, value in value_dict.iteritems():
+        if not simulation_movement.isPropertyRecorded(property_id):
+          simulation_movement.recordProperty(property_id)
+        simulation_movement.setMappedProperty(property_id, value)
+      simulation_movement.expand(activate_kw=activate_kw)
     # Finish solving
-    self.succeed()
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      self, 'succeed'):
+      self.succeed()

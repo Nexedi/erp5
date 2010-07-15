@@ -380,12 +380,11 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
     </table:table-row>\n
   \n
     <tal:block tal:condition="python: same_type(line, []) and len(line)">\n
-      <table:table-row-group table:display="false">\n
+      <table:table-row-group>\n
         <tal:block tal:repeat="subline line">\n
           <tal:block tal:condition="python: not same_type(subline, [])">\n
             <!--simple row level 2 -->\n
             <table:table-row table:style-name="Level3" \n
-              tal:attributes="table:visibility python: repeat[\'subline\'].first and \'collapse\' or None"\n
               tal:condition="subline/is_level_3 | nothing">\n
            <table:table-cell table:style-name="Level3Cell1" office:value-type="string">\n
              <text:p><tal:block tal:replace="subline/title"/></text:p>\n
@@ -413,10 +412,9 @@ AQABAEMAAAB9AQAAAAA=</string> </value>
         </tal:block>\n
 \n
     <tal:block tal:condition="python: same_type(subline, []) and len(subline)">\n
-      <table:table-row-group table:display="false">\n
+      <table:table-row-group>\n
         <tal:block tal:repeat="subsubline subline">\n
           <table:table-row table:style-name="Level4" \n
-            tal:attributes="table:visibility python: repeat[\'subsubline\'].first and \'collapse\' or None"\n
             tal:condition="subsubline/is_level_4 | nothing">\n
          <table:table-cell table:style-name="Level4Cell1" office:value-type="string">\n
            <text:p><tal:block tal:replace="subsubline/title"/></text:p>\n

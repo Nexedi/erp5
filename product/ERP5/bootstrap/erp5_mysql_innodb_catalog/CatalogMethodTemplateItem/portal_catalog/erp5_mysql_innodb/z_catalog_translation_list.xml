@@ -42,6 +42,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>portal_type</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>translated_message</string> </key>
                                 <value>
                                   <dictionary/>
@@ -56,6 +62,7 @@
                           <list>
                             <string>language</string>
                             <string>message_context</string>
+                            <string>portal_type</string>
                             <string>original_message</string>
                             <string>translated_message</string>
                           </list>
@@ -76,6 +83,7 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>language\r\n
 message_context\r\n
+portal_type\r\n
 original_message\r\n
 translated_message</string> </value>
         </item>
@@ -122,6 +130,7 @@ INSERT INTO translation VALUES \n
 (\n
   <dtml-sqlvar expr="language[loop_item]" type="string">,\n
   <dtml-sqlvar expr="message_context[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
   <dtml-sqlvar expr="original_message[loop_item]" type="string">,\n
   <dtml-sqlvar expr="translated_message[loop_item]" type="string">\n
 )\n
@@ -172,6 +181,7 @@ INSERT INTO translation VALUES \n
 (\n
   <dtml-sqlvar expr="language[loop_item]" type="string">,\n
   <dtml-sqlvar expr="message_context[loop_item]" type="string">,\n
+  <dtml-sqlvar expr="portal_type[loop_item]" type="string">,\n
   <dtml-sqlvar expr="original_message[loop_item]" type="string">,\n
   <dtml-sqlvar expr="translated_message[loop_item]" type="string">\n
 )\n

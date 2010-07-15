@@ -14,6 +14,7 @@ Accounting Transaction | Accounting Transaction Line
 Accounting Transaction | File
 Accounting Transaction | Image
 Balance Transaction | Balance Transaction Line
+Internal Invoice Transaction | Internal Invoice Transaction Line
 Invoice Root Simulation Rule | Category Divergence Tester
 Invoice Root Simulation Rule | Property Divergence Tester
 Invoice Root Simulation Rule | Quantity Divergence Tester

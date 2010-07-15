@@ -77,17 +77,17 @@ def getGapItemList(only_preferred_gap): \n
                     .getPreferredAccountingTransactionGap()\n
     if gap_root:\n
       return ctool.resolveCategory(gap_root).getCategoryChildItemList(\n
-        base=0, is_self_excluded=1, display_method=display, sort_method=sort)\n
+        base=False, is_self_excluded=True, display_method=display, sort_method=sort)\n
 \n
   result = []  \n
   for country in ctool.gap.contentValues():\n
     for gap_root in country.contentValues():\n
       result.extend(gap_root.getCategoryChildItemList(\n
-        base=0, is_self_excluded=1, display_method=display, sort_method=sort))\n
+        base=False, is_self_excluded=True, display_method=display, sort_method=sort))\n
   return result\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
-getGapItemList = CachingMethod(getGapItemList, id=\'Account_getGapItemList\')\n
+getGapItemList = CachingMethod(getGapItemList, id=\'Account_getGapItemList\', cache_factory=\'erp5_content_long\')\n
 return getGapItemList(only_preferred_gap=only_preferred_gap)\n
 </string> </value>
         </item>

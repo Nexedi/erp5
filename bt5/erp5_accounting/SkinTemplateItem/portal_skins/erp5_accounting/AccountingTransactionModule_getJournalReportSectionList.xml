@@ -61,6 +61,7 @@ Base_translateString = container.Base_translateString\n
 \n
 portal_type = request[\'portal_type\']\n
 simulation_state = request[\'simulation_state\']\n
+hide_analytic = request[\'hide_analytic\']\n
 at_date = request[\'at_date\'].latestTime()\n
 from_date = request.get(\'from_date\') or at_date.earliestTime()\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
@@ -76,26 +77,39 @@ precision = context.account_module.getQuantityPrecisionFromResource(currency)\n
 # we set the precision in request, for formatting on editable fields\n
 request.set(\'precision\', precision)\n
 \n
-if len(portal_type) > 1:\n
-  selection_columns = [\n
-    (\'specific_reference\', \'Transaction Reference\'),\n
-    (\'date\', \'Date\'),\n
-    (\'title\', \'Accounting Transaction Title\'),\n
-    (\'portal_type\', \'Journal Type\'),\n
-    (\'node_title\', \'Account\'),\n
-    (\'mirror_section_title\', \'Third Party\'),\n
-    (\'debit\', \'Debit\'),\n
-    (\'credit\', \'Credit\')]\n
-else:\n
-  selection_columns = [\n
-    (\'specific_reference\', \'Transaction Reference\'),\n
-    (\'date\', \'Date\'),\n
-    (\'title\', \'Accounting Transaction Title\'),\n
-    (\'node_title\', \'Account\'),\n
-    (\'mirror_section_title\', \'Third Party\'),\n
-    (\'debit\', \'Debit\'),\n
-    (\'credit\', \'Credit\')]\n
+selection_params = dict(portal_type=portal_type,\n
+                        section_uid=section_uid,\n
+                        precision=precision,\n
+                        simulation_state=simulation_state,\n
+                        at_date=at_date,\n
+                        from_date=from_date,\n
+                        payment_mode=payment_mode,\n
+                        gap_root=gap_root,\n
+                        payment=payment)\n
 \n
+analytic_column_list = ()\n
+if hide_analytic:\n
+  selection_params[\'group_by\'] = ( \'explanation_uid\',\n
+                                   \'mirror_section_uid\',\n
+                                   \'payment_uid\',\n
+                                   \'node_uid\' )\n
+else:\n
+  analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
+  selection_params[\'analytic_column_list\'] = analytic_column_list\n
+\n
+selection_columns = (\n
+    (\'specific_reference\', \'Transaction Reference\'),\n
+    (\'date\', \'Date\'),\n
+    (\'title\', \'Accounting Transaction Title\'),\n
+    (\'parent_reference\', \'Document Reference\'),)\n
+if len(portal_type) > 1:\n
+  selection_columns += (\n
+    (\'portal_type\', \'Journal Type\'), )\n
+selection_columns += analytic_column_list + (\n
+    (\'node_title\', \'Account\'),\n
+    (\'mirror_section_title\', \'Third Party\'),\n
+    (\'debit\', \'Debit\'),\n
+    (\'credit\', \'Credit\'))\n
 \n
 return [ReportSection(\n
           path=context.getPhysicalPath(),\n
@@ -103,15 +117,7 @@ return [ReportSection(\n
           selection_name=\'journal_selection\',\n
           form_id=\'AccountingTransactionModule_viewJournalSection\',\n
           selection_columns=selection_columns,\n
-          selection_params=dict(portal_type=portal_type,\n
-                                section_uid=section_uid,\n
-                                precision=precision,\n
-                                simulation_state=simulation_state,\n
-                                at_date=at_date,\n
-                                from_date=from_date,\n
-                                payment_mode=payment_mode,\n
-                                gap_root=gap_root,\n
-                                payment=payment))]\n
+          selection_params=selection_params)]\n
 
 
 ]]></string> </value>
@@ -159,6 +165,7 @@ return [ReportSection(\n
                             <string>_getitem_</string>
                             <string>portal_type</string>
                             <string>simulation_state</string>
+                            <string>hide_analytic</string>
                             <string>at_date</string>
                             <string>from_date</string>
                             <string>context</string>
@@ -168,9 +175,13 @@ return [ReportSection(\n
                             <string>gap_root</string>
                             <string>currency</string>
                             <string>precision</string>
-                            <string>len</string>
-                            <string>selection_columns</string>
                             <string>dict</string>
+                            <string>selection_params</string>
+                            <string>analytic_column_list</string>
+                            <string>_write_</string>
+                            <string>selection_columns</string>
+                            <string>len</string>
+                            <string>_inplacevar_</string>
                           </tuple>
                         </value>
                     </item>

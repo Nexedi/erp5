@@ -16,19 +16,71 @@
 ##############################################################################
 
 import imp, sys, warnings
+from itertools import chain
 import zope.interface
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from OFS.Folder import Folder as OFSFolder
 import transaction
-from Products.CMFCore import TypesTool as CMFCore_TypesTool
+from Products.CMFCore import TypesTool as CMFCore_TypesToolModule
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
+from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
 
-class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
+
+class ComposedObjectIds(object):
+  """Sequence type used to iterate efficiently over a union of folders
+
+  Returned values are ids of contained objects.
+  This type should used instead of building a simple list from the concatenation
+  of multiple calls on objectIds.
+
+  Note this class even implements '__contains__', which makes:
+    'some_id' in ComposedObjectIds([container])
+  faster than:
+    'some_id' in container.objectIds()
+
+  XXX Is it only useful for TypesTool ?
+      If not, this should it be moved in another place, like ERP5Type.Utils
+  """
+  __allow_access_to_unprotected_subobjects__ = 1
+
+  def __init__(self, container_list):
+    self._container_list = container_list
+
+  def __contains__(self, item):
+    for container in self._container_list:
+      if container.has_key(item):
+        return True
+    return False
+
+  def __iter__(self):
+    return chain(*[container.objectIds() for container in self._container_list])
+
+  def __len__(self):
+    return sum(map(len, self._container_list))
+
+  def __getitem__(self, item):
+    for container in self._container_list:
+      count = len(container)
+      if item < count:
+        return container.objectIds()[item]
+      item -= count
+    raise IndexError
+
+
+CMFCore_TypesTool = CMFCore_TypesToolModule.TypesTool
+
+class TypeProvider(BaseTool, CMFCore_TypesTool):
+  """Provides portal content types
+  """
+  zope.interface.implements(ITypeProvider)
+
+
+class TypesTool(TypeProvider):
   """Provides a configurable registry of portal content types
   """
   id = 'portal_types'
@@ -36,8 +88,58 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
   portal_type = 'Types Tool'
   allowed_types = ()
 
+  zope.interface.implements(ITypesTool)
+
+  # TODO: UI to configure this is missing
+  type_provider_list = ( )
+
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def listContentTypes(self, container=None):
+    """List content types from all providers
+    """
+    if container is not None:
+      # XXX Slow legacy implementation. Is 'container_list' parameter useful ?
+      return CMFCore_TypesTool.listContentTypes(self, container)
+    object_list = [self]
+    _getOb = self.getPortalObject()._getOb
+    for provider in self.type_provider_list:
+      provider_value = _getOb(provider, None)
+      if provider_value:
+        object_list.append(provider_value)
+    return ComposedObjectIds(object_list)
+
+  def listTypeInfo(self, container=None):
+    """List type information from all providers
+    """
+    listTypeInfo = CMFCore_TypesTool.listTypeInfo
+    type_info_list = listTypeInfo(self, container=container)
+    _getOb = self.getPortalObject()._getOb
+    for provider in self.type_provider_list:
+      provider_value = _getOb(provider, None)
+      if provider_value is not None:
+        type_info_list += listTypeInfo(provider_value, container=container)
+    return type_info_list
+
+  def _aq_dynamic(self, id):
+    """Get a type information from a provider
+    """
+    result = BaseTool._aq_dynamic(self, id)
+    if result is not None:
+      return result
+
+    if id in self.type_provider_list:
+      return None
+
+    default = []
+    for provider in self.type_provider_list:
+      provider_value = getattr(self, provider, None)
+      if provider_value is not None:
+        ob = provider_value._getOb(id, default=default)
+        if ob is not default:
+          return ob
+    return None
 
   security.declarePrivate('getActionListFor')
   def getActionListFor(self, ob=None):
@@ -57,7 +159,7 @@ class TypesTool(BaseTool, CMFCore_TypesTool.TypesTool):
         portal_type = aq_base(portal_type).getPortalType()
       except AttributeError:
         return None
-    return self._getOb(portal_type, None)
+    return getattr(self, portal_type, None)
 
   security.declareProtected(Permissions.AddPortalContent, 'listDefaultTypeInformation')
   def listDefaultTypeInformation(self):
@@ -238,4 +340,6 @@ class OldTypesTool(OFSFolder):
       return OFSFolder.__of__(self, parent)
     return UnrestrictedMethod(base_self._migrateTypesTool)(parent)
 
-CMFCore_TypesTool.TypesTool = OldTypesTool
+# Change the CMFCore's TypesTool to automatically migrate to ERP5Type's
+# TypesTool
+CMFCore_TypesToolModule.TypesTool = OldTypesTool

@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>style_cache</string> </value>
+            <value> <string>root_http_skin_cache</string> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -449,7 +449,7 @@ div#main_content > fieldset.webcontent {\n
 /* TODO: redo webcontent header spacing policy because lack of consistency\n
          (not tested with huge titles) */\n
 \n
-div#main_content > fieldset.webcontent {padding: 2em}\n
+div#main_content > fieldset#fieldset_webcontent {padding: 2em}\n
 \n
 div#main_content > fieldset.header {\n
   padding-bottom: 1em;\n

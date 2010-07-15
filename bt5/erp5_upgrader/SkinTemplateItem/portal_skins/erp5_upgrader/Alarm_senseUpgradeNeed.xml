@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+This script is used in an alarm that acts as a cron job.\n
+It will start an instance upgrade if any of the following alarms:\n
+- bt5_upgrader (supported)\n
+- product_upgrader (supported)\n
+- system_upgrader (supported)\n
+\n
+"sense" a need of an upgrade. This alarm is likely to disappear soon as it\'s needed \n
+ due to lack of functionality (which is that alarms can not automatically "solve" themselves).\n
+"""\n
+context.ERP5Site_setupUpgraderSkinSelection()\n
+\n
+portal_alarms = context.getPortalObject().portal_alarms\n
+activate = context.portal_activities.activate\n
+previous_tag = None\n
+\n
+# XXX get the last activate process if exists\n
+active_process = context.getLastActiveProcess()\n
+if active_process is None or ((DateTime() - active_process.getStartDate()) > 1):\n
+  active_process = context.newActiveProcess()\n
+\n
+active_process = active_process.getPath()\n
+\n
+def launchUpgraderAlarm(alarm_id, after_method_id=[]):\n
+  """\n
+   Get the alarm and use sense and solve\n
+  """\n
+  upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n
+  if upgrader_alarm is not None and upgrader_alarm.sense():\n
+    # call solve method\n
+    activate(active_process=active_process,\n
+             activity=\'SQLQueue\', \n
+             priority=2).Alarm_saveActiveResult(\n
+                            summary=upgrader_alarm.getTitle(),  \n
+                            severity=0, \n
+                            detail="Upgrade Required for %s" % \\\n
+                                             (upgrader_alarm.getTitle()))\n
+    \n
+    kw = dict(tag=alarm_id)\n
+    if len(after_method_id) > 0:\n
+      kw["after_method_id"] = after_method_id\n
+    # alarm.solve() dos not support activate parameters\n
+    # so it is not possible to use it directly.\n
+    method_id = upgrader_alarm.getSolveMethodId()\n
+    if method_id not in (None, \'\'):\n
+      method = getattr(upgrader_alarm.activate(**kw), method_id)\n
+      method()\n
+    return [ method_id ]\n
+  return after_method_id\n
+    \n
+# There is one strict order to run the alarms\n
+# This is required because the one alarms depends the previous one be\n
+# Fully done.\n
+previous_method_id = launchUpgraderAlarm(\'system_upgrader\')\n
+previous_method_id = launchUpgraderAlarm(\'product_upgrader\', \n
+                                     after_method_id = previous_method_id)\n
+\n
+\n
+previous_method_id.extend(["ERP5Site_restartZopeInstance",\n
+                           "ERP5Site_clearActivities"])\n
+\n
+previous_method_id = launchUpgraderAlarm(\'bt5_upgrader\', \n
+                                    after_method_id = previous_method_id)\n
+\n
+previous_method_id.extend([\'updateBusinessTemplateFromUrl\',\n
+                           \'TemplateTool_reinstallBT5\',\n
+                           \'immediateReindexObject\'])\n
+\n
+previous_method_id = launchUpgraderAlarm(\'finalize_upgrader\',\n
+                                   after_method_id = previous_method_id)\n
+\n
+for alarm_id in [\'system_upgrader\', \'product_upgrader\', \n
+               \'bt5_upgrader\' , \'finalize_upgrader\']:\n
+\n
+   upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n
+   if upgrader_alarm is not None and upgrader_alarm.sense():\n
+     # Upgrade still needed for part.\n
+     #return\n
+     # XXX Do not retry run upgrader again, this is cause too much\n
+     # noise during this stage of development.\n
+     pass\n
+\n
+# Nothing else to do, so we can disable.\n
+context.setEnabled(False)\n
+return\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>0</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_alarms</string>
+                            <string>activate</string>
+                            <string>None</string>
+                            <string>previous_tag</string>
+                            <string>active_process</string>
+                            <string>DateTime</string>
+                            <string>launchUpgraderAlarm</string>
+                            <string>previous_method_id</string>
+                            <string>_getiter_</string>
+                            <string>alarm_id</string>
+                            <string>getattr</string>
+                            <string>upgrader_alarm</string>
+                            <string>False</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Alarm_senseUpgradeNeed</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

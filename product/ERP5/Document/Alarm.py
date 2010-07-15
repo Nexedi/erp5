@@ -75,6 +75,7 @@ class Alarm(XMLObject, PeriodicityMixin):
                     , PropertySheet.Periodicity
                     , PropertySheet.Document
                     , PropertySheet.Task
+                    , PropertySheet.Configurable
                     , PropertySheet.Alarm
                     )
 

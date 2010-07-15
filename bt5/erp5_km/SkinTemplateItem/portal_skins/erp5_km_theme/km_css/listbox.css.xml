@@ -1,0 +1,339 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+\n
+/* Search popup fix*/\n
+div.search_popup{\n
+  left:200px;\n
+  position:absolute;\n
+  top:-120px;\n
+  width:250px;\n
+}\n
+\n
+\n
+/******************/ \n
+/* Listbox action */\n
+/******************/\n
+.listbox-action-widget {\n
+  float:none;\n
+}\n
+.listbox-action-widget div.bottom_actions{\n
+  float:left;\n
+  background-color:#E0DFD1;\n
+  padding-left:0.5em;\n
+  padding-bottom:0.2em;\n
+}\n
+\n
+/* Title of the bar */\n
+.listbox_actions_title{\n
+  color:#FFFFFF;\n
+  display:block;\n
+  font-size:15px;\n
+  text-align:left;\n
+  width:100%;\n
+  float:left;\n
+\n
+}\n
+\n
+/* Sub container for the buttons*/\n
+.buttons_group {\n
+  margin-right:30px;\n
+  padding-top:3px;\n
+  width:auto;\n
+  overflow: auto;\n
+}\n
+\n
+/* Buttons */\n
+.listbox-action-widget button, .listbox-action-widget a.button {\n
+  background-image: url(\'./km_img/button_background.png\') ;\n
+  background-position: 100% 0;\n
+  background-color: inherit;\n
+  border:0 none;\n
+  color:#5F5A55;\n
+  cursor:pointer;\n
+  height:27px;\n
+  float:left;\n
+  margin-right:3px;\n
+  margin-bottom:3px;\n
+  width: auto;\n
+}\n
+.listbox-action-widget button:hover,.listbox-action-widget a:hover {\n
+ background-position:100% 100%;\n
+}\n
+\n
+/* a as button */\n
+.listbox-action-widget a.button{\n
+  display:block;\n
+  margin-left: 9px;\n
+}\n
+\n
+/* Image in button */\n
+.listbox-action-widget span.image{\n
+  background-repeat:no-repeat;\n
+  background-position:center center;\n
+  display:block;\n
+  position:relative;\n
+  float:left;\n
+  height:20px;\n
+  width:20px;\n
+  margin-top:3px;\n
+  z-index:2;\n
+  left:-5px;\n
+}\n
+\n
+/* Description of botton */\n
+.listbox-action-widget span.description{\n
+  font-size:10px;\n
+}\n
+\n
+/* Global button span */\n
+.listbox-action-widget button > span, .listbox-action-widget a > span{\n
+  display:block;\n
+  background-color:inherit;\n
+  background-image:url(\'./km_img/button_background.png\');\n
+  background-position:0 0;\n
+  display:block;\n
+  height:27px;\n
+  left:-8px;\n
+  line-height:27px;\n
+  margin:0;\n
+  padding:0 0 0 5px;\n
+  position:relative;\n
+  white-space:nowrap;\n
+  width:100%;\n
+}\n
+.listbox-action-widget button:hover > span, .listbox-action-widget a:hover > span{\n
+  background-position:0 100%;\n
+}\n
+.listbox-action-widget span.description span {\n
+  left:4px;\n
+  position:relative;\n
+}\n
+\n
+\n
+/*Define all button image*/\n
+<tal:block tal:define="buttons python: [\'cut\',\'copy\',\'paste\',\'delete\',\'print\',\'new\',\'reset\',\'filter\',\'find\',\'sort\',\'config\']">\n
+<tal:block tal:repeat ="button buttons">\n
+<tal:block tal:content="python: \'\'\'\n
+.%(button)s_button span.image{\n
+  background-image:url(\'./km_img/%(button)s.png\');\n
+}\'\'\' % {\'button\':button}"\n
+/>\n
+</tal:block>\n
+</tal:block>\n
+\n
+\n
+/*********************/\n
+/*   Listbox style   */\n
+/*********************/\n
+.listbox_left {\n
+  margin-right: 4px;\n
+  width: auto;\n
+  float: left;\n
+}\n
+\n
+.listbox_center{\n
+  float: left;\n
+}\n
+.listbox_head{\n
+  color:#9D968D;\n
+  font-weight:bold;\n
+  margin-bottom: 10px;\n
+}\n
+\n
+/* List mode selection*/\n
+.list_mode_selection{\n
+  height: 22px;\n
+  width: auto;\n
+  float: left;\n
+}\n
+\n
+.list_mode_selection input{\n
+  width: auto;\n
+}\n
+\n
+/*Footer block*/\n
+.listbox_footer{\n
+ background-color:#F0EFE9;\n
+ float:left;\n
+ margin-bottom:0.3em;\n
+ margin-top:0.3em;\n
+ min-height:28px;\n
+ padding-left:0.2em;\n
+ \n
+}\n
+\n
+/* Listbox Footer in gadget mode */\n
+.block .listbox_footer{\n
+   background-color: transparent;\n
+}\n
+\n
+.listbox_footer_box {\n
+  padding-top:5px;\n
+  padding-bottom:5px;\n
+  width: 50%;\n
+  float:left;\n
+}\n
+\n
+/*Display selection choice*/\n
+.display_selection {\n
+  width:auto;\n
+  float:left;\n
+}\n
+.display_selection span{\n
+  font-weight:bold;\n
+  padding-left:10px;\n
+  vertical-align:-4px;\n
+}\n
+.display_selection ul{\n
+  display:inline;\n
+  padding-left:0;\n
+  margin: 0;\n
+  vertical-align: -4px;\n
+}\n
+.display_selection li{\n
+  display: inline;\n
+}\n
+\n
+/* Search bar */\n
+div.extendedSearchBar {\n
+  float:left;\n
+  margin-top:0;\n
+  padding:1em 0 0.5em;\n
+}\n
+div.extendedSearchBar input.button{\n
+ background-image: url(\'./km_img/search_background.png\');\n
+ background-color: inherit;\n
+ border: 0 none;\n
+ color:#FFFFFF;\n
+}\n
+div.resultList{\n
+  float:left;\n
+}\n
+div.searchResultHeader{\n
+  float:left;\n
+}\n
+/* Pagination*/\n
+.listbox_pagination {\n
+  width:auto;\n
+  margin:auto;\n
+  text-align:right;\n
+  padding-right: 0.5em;\n
+}\n
+.listbox_pagination input{\n
+  text-align:center;\n
+  width: 20px;\n
+}\n
+\n
+/* Report tree */\n
+a.tree_closed {\n
+  background:transparent url(\'./km_img/tree_closed.png\') no-repeat scroll left center;\n
+  padding-left:15px;\n
+}\n
+\n
+a.tree_open {\n
+  background:transparent url(\'./km_img/tree_open.png\') no-repeat scroll left center;\n
+  padding-left:15px;\n
+}\n
+\n
+/*Table Listbox elements */\n
+.listbox th {\n
+  text-align:left;\n
+  vertical-align: top;\n
+}\n
+.listbox_search_line, .listbox_label_line{\n
+  background-color: #F0EFE9;\n
+}\n
+.listbox_search_line th{\n
+  background-color: inherit;\n
+}\n
+\n
+.listbox select {\n
+  max-width: 145px;\n
+}\n
+\n
+button.sort_button_desc{\n
+  background-image: url(\'./km_img/switch_desc.png\');\n
+}\n
+button.sort_button_asc{\n
+  background-image: url(\'./km_img/switch_asc.png\');\n
+}\n
+\n
+/* in search mode listbox may contain top/ bottom quick search inputs */\n
+div.search-text-listbox{\n
+  text-align: center;\n
+  float:left;\n
+  height:auto; \n
+  margin-bottom:0.5em;\n
+  margin-top:0.5em;\n
+}\n
+div.search-text-listbox input{\n
+  width: auto;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>listbox.css</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

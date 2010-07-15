@@ -32,5 +32,9 @@ class MovementGroup:
        'type'        : 'lines',
        'default'     : (),
        'mode'        : 'w' },
+    {  'id'          : 'update_always',
+       'description' : 'Update existing document always if enabled',
+       'type'        : 'boolean',
+       'mode'        : 'w' },
     )
   _categories = ('collect_order_group', 'divergence_scope',)

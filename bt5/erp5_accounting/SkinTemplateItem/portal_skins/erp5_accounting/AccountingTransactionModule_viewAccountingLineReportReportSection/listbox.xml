@@ -13,7 +13,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
                 <string>editable_columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
@@ -79,129 +78,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>int_index</string>
-                          <string>Int Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>parent_description</string>
-                          <string>Description</string>
-                        </tuple>
-                        <tuple>
-                          <string>parent_reference</string>
-                          <string>Invoice Number</string>
-                        </tuple>
-                        <tuple>
-                          <string>specific_reference</string>
-                          <string>Transaction Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>node_reference</string>
-                          <string>Account Code</string>
-                        </tuple>
-                        <tuple>
-                          <string>node_title</string>
-                          <string>Account Name</string>
-                        </tuple>
-                        <tuple>
-                          <string>node_account_type_title</string>
-                          <string>Account Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>node_financial_section_title</string>
-                          <string>Financial Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>section_title</string>
-                          <string>Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>payment_title</string>
-                          <string>Section Bank Account</string>
-                        </tuple>
-                        <tuple>
-                          <string>payment_mode</string>
-                          <string>Payment Mode</string>
-                        </tuple>
-                        <tuple>
-                          <string>mirror_section_title</string>
-                          <string>Third Party</string>
-                        </tuple>
-                        <tuple>
-                          <string>mirror_payment_title</string>
-                          <string>Third Party Bank Account</string>
-                        </tuple>
-                        <tuple>
-                          <string>mirror_section_region_title</string>
-                          <string>Third Party Region</string>
-                        </tuple>
-                        <tuple>
-                          <string>function_title</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
-                          <string>project_title</string>
-                          <string>Project</string>
-                        </tuple>
-                        <tuple>
-                          <string>product_line</string>
-                          <string>Product Line</string>
-                        </tuple>
-                        <tuple>
-                          <string>string_index</string>
-                          <string>String Index</string>
-                        </tuple>
-                        <tuple>
-                          <string>date</string>
-                          <string>Operation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>debit</string>
-                          <string>Converted Debit</string>
-                        </tuple>
-                        <tuple>
-                          <string>credit</string>
-                          <string>Converted Credit</string>
-                        </tuple>
-                        <tuple>
-                          <string>currency</string>
-                          <string>Accounting Currency</string>
-                        </tuple>
-                        <tuple>
-                          <string>debit_quantity</string>
-                          <string>Debit</string>
-                        </tuple>
-                        <tuple>
-                          <string>credit_quantity</string>
-                          <string>Credit</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource</string>
-                          <string>Transaction Currency</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Line Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>parent_translated_portal_type</string>
-                          <string>Transaction Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>State</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
@@ -218,11 +94,11 @@
                           <string>Credit</string>
                         </tuple>
                         <tuple>
-                          <string>debit_quantity</string>
+                          <string>debit_price</string>
                           <string>Original Debit</string>
                         </tuple>
                         <tuple>
-                          <string>credit_quantity</string>
+                          <string>credit_price</string>
                           <string>Original Credit</string>
                         </tuple>
                       </list>

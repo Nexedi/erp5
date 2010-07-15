@@ -56,7 +56,6 @@
             <value> <string># Remove empty items\n
 item_list = filter(lambda x: x not in [(\'\',\'\'), [\'\',\'\']],\\\n
                    item_list)\n
-\n
 sub_field_dict = {}\n
 split_depth = 1\n
 resource = context.getResourceValue()\n
@@ -69,7 +68,6 @@ else :\n
 for item in item_list:\n
   # Get value of the item\n
   item_value = item[int(not is_right_display)]\n
-\n
   # Hash key from item_value\n
   item_split = string.split(item_value, \'/\')\n
   item_key = string.join(item_split[:split_depth] , \'/\' )\n
@@ -83,17 +81,17 @@ for item in item_list:\n
     if base_category in not_option_base_category_list:\n
       required_value = 1\n
     sub_field_property_dict[\'required\'] = required_value\n
-    sub_field_property_dict[\'field_type\'] = \'MultiListField\'\n
-    sub_field_property_dict[\'size\'] = 5\n
+    sub_field_property_dict[\'field_type\'] = \'ListField\'\n
+    sub_field_property_dict[\'size\'] = 1\n
     sub_field_property_dict[\'item_list\'] = [(\'\',\'\')]\n
     sub_field_property_dict[\'value\'] = []\n
     sub_field_dict[item_key] = sub_field_property_dict\n
 \n
   sub_field_dict[item_key][\'item_list\'] =\\\n
      sub_field_dict[item_key][\'item_list\'] + [item]\n
-  if item_value in value_list:\n
-    sub_field_dict[item_key][\'value\'] =\\\n
-      sub_field_dict[item_key][\'value\'] + [item_value]\n
+\n
+  if item in value_list:\n
+    sub_field_dict[item_key][\'value\'] = item\n
 \n
 return sub_field_dict.values()\n
 </string> </value>

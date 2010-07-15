@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Autocomplete Remote JSONP datasource demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.autocomplete.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\tfunction log(message) {\n
+\t\t\t$("<div/>").text(message).prependTo("#log");\n
+\t\t\t$("#log").attr("scrollTop", 0);\n
+\t\t}\n
+\t\t\n
+\t\t$("#city").autocomplete({\n
+\t\t\tsource: function(request, response) {\n
+\t\t\t\t$.ajax({\n
+\t\t\t\t\turl: "http://ws.geonames.org/searchJSON",\n
+\t\t\t\t\tdataType: "jsonp",\n
+\t\t\t\t\tdata: {\n
+\t\t\t\t\t\tfeatureClass: "P",\n
+\t\t\t\t\t\tstyle: "full",\n
+\t\t\t\t\t\tmaxRows: 12,\n
+\t\t\t\t\t\tname_startsWith: request.term\n
+\t\t\t\t\t},\n
+\t\t\t\t\tsuccess: function(data) {\n
+\t\t\t\t\t\tresponse($.map(data.geonames, function(item) {\n
+\t\t\t\t\t\t\treturn {\n
+\t\t\t\t\t\t\t\tlabel: item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName,\n
+\t\t\t\t\t\t\t\tvalue: item.name\n
+\t\t\t\t\t\t\t}\n
+\t\t\t\t\t\t}))\n
+\t\t\t\t\t}\n
+\t\t\t\t})\n
+\t\t\t},\n
+\t\t\tminLength: 2,\n
+\t\t\tselect: function(event, ui) {\n
+\t\t\t\tlog(ui.item ? ("Selected: " + ui.item.label) : "Nothing selected, input was " + this.value);\n
+\t\t\t},\n
+\t\t\topen: function() {\n
+\t\t\t\t$(this).removeClass("ui-corner-all").addClass("ui-corner-top");\n
+\t\t\t},\n
+\t\t\tclose: function() {\n
+\t\t\t\t$(this).removeClass("ui-corner-top").addClass("ui-corner-all");\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\t</script>\n
+\t<style>\n
+\t\t.ui-autocomplete-loading { background: url(indicator.gif) no-repeat right; }\n
+\t\t#city { width: 25em; }\n
+\t</style>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<div class="ui-widget">\n
+\t<label for="city">Your city: </label>\n
+\t<input id="city" />\n
+\tPowered by <a href="http://geonames.org">geonames.org</a>\n
+</div>\n
+\n
+<div class="ui-widget" style="margin-top:2em; font-family:Arial">\n
+\tResult:\n
+\t<div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+<p>\n
+The Autocomplete widgets provides suggestions while you type into the field. Here the suggestions are cities, displayed when at least two characters are entered into the field.\n
+</p>\n
+<p>\n
+In this case, the datasource is the <a href="http://geonames.org">geonames.org webservice</a>. While only the city name itself ends up in the input after selecting an element, more info is displayed in the suggestions to help find the right entry. That data is also available in callbacks, as illustrated by the Result area below the input. \n
+</p>\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>remote-jsonp.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

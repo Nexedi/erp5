@@ -1,0 +1,173 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Tabs - Simple manipulation</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.button.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.tabs.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.dialog.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t\t#dialog label, #dialog input { display:block; }\n
+\t\t#dialog label { margin-top: 0.5em; }\n
+\t\t#dialog input, #dialog textarea { width: 95%; }\n
+\t\t#tabs { margin-top: 1em; }\n
+\t\t#tabs li .ui-icon-close { float: left; margin: 0.4em 0.2em 0 0; cursor: pointer; }\n
+\t\t#add_tab { cursor: pointer; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\tvar $tab_title_input = $(\'#tab_title\'), $tab_content_input = $(\'#tab_content\');\n
+\t\tvar tab_counter = 2;\n
+\n
+\t\t// tabs init with a custom tab template and an "add" callback filling in the content\n
+\t\tvar $tabs = $(\'#tabs\').tabs({\n
+\t\t\ttabTemplate: \'<li><a href="#{href}">#{label}</a> <span class="ui-icon ui-icon-close">Remove Tab</span></li>\',\n
+\t\t\tadd: function(event, ui) {\n
+\t\t\t\tvar tab_content = $tab_content_input.val() || \'Tab \'+tab_counter+\' content.\';\n
+\t\t\t\t$(ui.panel).append(\'<p>\'+tab_content+\'</p>\');\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// modal dialog init: custom buttons and a "close" callback reseting the form inside\n
+\t\tvar $dialog = $(\'#dialog\').dialog({\n
+\t\t\tautoOpen: false,\n
+\t\t\tmodal: true,\n
+\t\t\tbuttons: {\n
+\t\t\t\t\'Add\': function() {\n
+\t\t\t\t\taddTab();\n
+\t\t\t\t\t$(this).dialog(\'close\');\n
+\t\t\t\t},\n
+\t\t\t\t\'Cancel\': function() {\n
+\t\t\t\t\t$(this).dialog(\'close\');\n
+\t\t\t\t}\n
+\t\t\t},\n
+\t\t\topen: function() {\n
+\t\t\t\t$tab_title_input.focus();\n
+\t\t\t},\n
+\t\t\tclose: function() {\n
+\t\t\t\t$form[0].reset();\n
+\t\t\t}\n
+\t\t});\n
+\n
+\t\t// addTab form: calls addTab function on submit and closes the dialog\n
+\t\tvar $form = $(\'form\',$dialog).submit(function() {\n
+\t\t\taddTab();\n
+\t\t\t$dialog.dialog(\'close\');\n
+\t\t\treturn false;\n
+\t\t});\n
+\n
+\t\t// actual addTab function: adds new tab using the title input from the form above\n
+\t\tfunction addTab() {\n
+\t\t\tvar tab_title = $tab_title_input.val() || \'Tab \'+tab_counter;\n
+\t\t\t$tabs.tabs(\'add\', \'#tabs-\'+tab_counter, tab_title);\n
+\t\t\ttab_counter++;\n
+\t\t}\n
+\n
+\t\t// addTab button: just opens the dialog\n
+\t\t$(\'#add_tab\')\n
+\t\t\t.button()\n
+\t\t\t.click(function() {\n
+\t\t\t\t$dialog.dialog(\'open\');\n
+\t\t\t});\n
+\n
+\t\t// close icon: removing the tab on click\n
+\t\t// note: closable tabs gonna be an option in the future - see http://dev.jqueryui.com/ticket/3924\n
+\t\t$(\'#tabs span.ui-icon-close\').live(\'click\', function() {\n
+\t\t\tvar index = $(\'li\',$tabs).index($(this).parent());\n
+\t\t\t$tabs.tabs(\'remove\', index);\n
+\t\t});\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+\t<div id="dialog" title="Tab data">\n
+\t\t<form>\n
+\t\t\t<fieldset class="ui-helper-reset">\n
+\t\t\t\t<label for="tab_title">Title</label>\n
+\t\t\t\t<input type="text" name="tab_title" id="tab_title" value="" class="ui-widget-content ui-corner-all" />\n
+\t\t\t\t<label for="tab_content">Content</label>\n
+\t\t\t\t<textarea name="tab_content" id="tab_content" class="ui-widget-content ui-corner-all"></textarea>\n
+\t\t\t</fieldset>\n
+\t\t</form>\n
+\t</div>\n
+\n
+\t<button id="add_tab">Add Tab</button>\n
+\n
+\t<div id="tabs">\n
+\t\t<ul>\n
+\t\t\t<li><a href="#tabs-1">Nunc tincidunt</a> <span class="ui-icon ui-icon-close">Remove Tab</span></li>\n
+\t\t</ul>\n
+\t\t<div id="tabs-1">\n
+\t\t\t<p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a, risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris. Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem. Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo. Vivamus sed magna quis ligula eleifend adipiscing. Duis orci. Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique tempus lectus.</p>\n
+\t\t</div>\n
+\t</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\t<p>Simple tabs adding and removing.</p>\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>manipulation.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

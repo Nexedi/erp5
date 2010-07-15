@@ -424,7 +424,7 @@ class Amount(Base, Variated):
       return
     tv[key] = 1
     try:
-      resource = self.getResourceValue()
+      resource = context.getResourceValue()
       if resource is not None:
         operand_dict = resource.getPriceParameterDict(context=context)
         if operand_dict is not None:
@@ -434,7 +434,7 @@ class Amount(Base, Variated):
       del tv[key]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getBaseUnitPrice')
-  def getBaseUnitPrice(self, **kw):
+  def getBaseUnitPrice(self, context=None, **kw):
     """
       Get the base unit price.
 
@@ -443,7 +443,9 @@ class Amount(Base, Variated):
     local_base_unit_price = self._baseGetBaseUnitPrice()
     if local_base_unit_price is None:
       # We must find a base unit price for this movement
-      local_base_unit_price = self._getBaseUnitPrice(context=self)
+      if context is None:
+        context = self
+      local_base_unit_price = self._getBaseUnitPrice(context=context)
     return local_base_unit_price
 
   security.declareProtected(Permissions.AccessContentsInformation, 

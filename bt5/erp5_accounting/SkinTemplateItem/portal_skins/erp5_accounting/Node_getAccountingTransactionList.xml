@@ -55,14 +55,16 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Log import log\n
 portal = context.getPortalObject()\n
+request = portal.REQUEST\n
 params = portal.ERP5Accounting_getParams(selection_name=selection_name)\n
 \n
 if params.get(\'precision\', None) is not None:\n
   # listbox editable float fields uses request/precision to format the value.\n
-  context.REQUEST.set(\'precision\', params[\'precision\'])\n
+  request.set(\'precision\', params[\'precision\'])\n
 \n
 if not from_date:\n
   from_date = portal.portal_preferences\\\n
@@ -73,20 +75,33 @@ if kw.get(\'node_uid\'):\n
   params[\'node_uid\'] = kw[\'node_uid\']\n
 if kw.get(\'mirror_section_uid\'):\n
   params[\'mirror_section_uid\'] = kw[\'mirror_section_uid\']\n
-if kw.get(\'payment_uid\'):\n
-  params[\'payment_uid\'] = kw[\'payment_uid\']\n
-if kw.get(\'project_uid\'):\n
-  params[\'project_uid\'] = kw[\'project_uid\']\n
-if kw.get(\'function_uid\'):\n
-  params[\'function_uid\'] = kw[\'function_uid\']\n
+payment_uid = kw.get(\'payment_uid\')\n
+if payment_uid:\n
+  if payment_uid == \'None\':\n
+    params[\'payment_uid\'] = Query(payment_uid=None)\n
+  else:\n
+    params[\'payment_uid\'] = payment_uid\n
+project_uid = kw.get(\'project_uid\')\n
+if project_uid:\n
+  if project_uid == \'None\':\n
+    params[\'project_uid\'] = Query(project_uid=None)\n
+  else:\n
+    params[\'project_uid\'] = project_uid\n
+function_uid = kw.get(\'function_uid\')\n
+if function_uid:\n
+  if function_uid == \'None\':\n
+    params[\'function_uid\'] = Query(function_uid=None)\n
+  else:\n
+    params[\'function_uid\'] = function_uid\n
 if node_category_strict_membership:\n
   params[\'node_category_strict_membership\'] = node_category_strict_membership\n
 if node_category:\n
   params[\'node_category\'] = node_category\n
+if mirror_section_category:\n
+  params[\'mirror_section_category\'] = mirror_section_category\n
 \n
 if not \'parent_portal_type\' in params:\n
   params.setdefault(\'portal_type\', portal.getPortalAccountingMovementTypeList())\n
-\n
 \n
 # Create the related accouting line list\n
 new_result  = []\n
@@ -138,8 +153,10 @@ if from_date or is_pl_account:\n
       period_openning_balance = 0\n
     else:\n
       period_openning_balance = getInventoryAssetPrice(\n
-                                              to_date=period_start_date,\n
+                                              to_date=min(period_start_date,\n
+                                                          from_date),\n
                                               **get_inventory_kw)\n
+\n
     # then all movement between period_start_date and from_date\n
     previous_total_debit  = getInventoryAssetPrice(omit_output=True,\n
            from_date=period_start_date,\n
@@ -152,6 +169,9 @@ if from_date or is_pl_account:\n
 \n
   if previous_total_credit != 0:\n
     previous_total_credit = - previous_total_credit\n
+\n
+  if \'group_by\' in kw:\n
+    params[\'group_by\'] = kw[\'group_by\']\n
 \n
   # Show the previous balance if not empty\n
   if previous_total_credit != 0 or previous_total_debit != 0:\n
@@ -175,6 +195,8 @@ if from_date or is_pl_account:\n
         Movement_getMirrorSectionTitle=\'\',\n
         Movement_getNodeGapId=\'\',\n
         Movement_getExplanationUrl=lambda **kw: \'\',\n
+        Movement_getFunctionTitle=lambda: \'\',\n
+        Movement_getProjectTitle=lambda: \'\',\n
         Node_statAccountingBalance=\'\',\n
         getTranslatedSimulationStateTitle=\'\',\n
       )\n
@@ -199,7 +221,6 @@ if from_date or is_pl_account:\n
 if context.portal_selections.getSelectionParamsFor(selection_name).get(\'hide_grouping\'):\n
   params[\'where_expression\'] = \'catalog.grouping_reference is NULL\'\n
 \n
-\n
 # We try not to convert to a list, hence the copy & paste\n
 return portal.portal_simulation.getMovementHistoryList(\n
                  from_date=from_date,\n
@@ -208,7 +229,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                  selection_domain=context.portal_selections.getSelectionDomainDictFor(selection_name),\n
                  selection_domain_join_column=\'section_uid\',\n
                  sort_on=sort_on,\n
-                  ignore_group_by=True,\n
+                 ignore_group_by=True,\n
                  src__=src__,\n
                  **params)\n
 
@@ -223,7 +244,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, src__=0, **kw</string> </value>
+            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, mirror_section_category=None, from_date=None, selection_name=None, src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -243,7 +264,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
+                        <value> <int>8</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -253,10 +274,13 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>sort_on</string>
                             <string>node_category</string>
                             <string>node_category_strict_membership</string>
+                            <string>mirror_section_category</string>
                             <string>from_date</string>
                             <string>selection_name</string>
                             <string>src__</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>Products.ERP5Type.Log</string>
@@ -264,10 +288,14 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>request</string>
                             <string>params</string>
                             <string>None</string>
                             <string>_getitem_</string>
                             <string>_write_</string>
+                            <string>payment_uid</string>
+                            <string>project_uid</string>
+                            <string>function_uid</string>
                             <string>new_result</string>
                             <string>net_balance</string>
                             <string>False</string>
@@ -281,6 +309,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
                             <string>getInventoryAssetPrice</string>
                             <string>period_openning_balance</string>
                             <string>_apply_</string>
+                            <string>min</string>
                             <string>True</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
@@ -299,6 +328,7 @@ return portal.portal_simulation.getMovementHistoryList(\n
               <tuple>
                 <none/>
                 <list/>
+                <none/>
                 <none/>
                 <none/>
                 <none/>

@@ -15,8 +15,10 @@ Product | Supply Line
 Purchase Supply Line | Predicate
 Purchase Supply Line | Purchase Supply Cell
 Purchase Supply | Supply Line
+Purchase Supply | Supply Line
 Sale Supply Line | Predicate
 Sale Supply Line | Sale Supply Cell
+Sale Supply | Supply Line
 Sale Supply | Supply Line
 Service | Internal Supply Line
 Service | Purchase Supply Line

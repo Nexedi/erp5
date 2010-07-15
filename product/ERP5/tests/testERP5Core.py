@@ -490,6 +490,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     transaction.savepoint(optimistic=True)
     self.assertEquals(len(module.objectValues()), 2)
 
+  def test_getPropertyForUid(self):
+    error_list = []
+    for i in self.portal.objectValues():
+      if i.getUid() != 0 and i.getUid() != i.getProperty('uid'):
+        error_list.append((i.getId(), i.getUid(), i.getProperty('uid')))
+    self.assertEquals(error_list, [])
 
 def test_suite():
   suite = unittest.TestSuite()

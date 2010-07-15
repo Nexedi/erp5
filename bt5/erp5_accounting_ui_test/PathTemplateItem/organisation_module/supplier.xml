@@ -78,6 +78,8 @@
             <value>
               <tuple>
                 <string>region/region</string>
+                <string>group/vendor</string>
+                <string>role/supplier</string>
               </tuple>
             </value>
         </item>

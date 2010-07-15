@@ -62,6 +62,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>top login</string>
                 <string>menu navbar</string>
                 <string>menu meta</string>
                 <string>path tools</string>
@@ -71,6 +72,7 @@
                 <string>bottom gadget (Bottom Gadget)</string>
                 <string>right column gadget (Right Gadget)</string>
                 <string>footer</string>
+                <string>web-toolbar</string>
               </list>
             </value>
         </item>
@@ -136,7 +138,6 @@
                     <value>
                       <list>
                         <string>breadcrumb_widget</string>
-                        <string>widget_management</string>
                         <string>language_widget</string>
                       </list>
                     </value>
@@ -145,6 +146,7 @@
                     <key> <string>right column gadget (Right Gadget)</string> </key>
                     <value>
                       <list>
+                        <string>widget_management</string>
                         <string>right_gadget</string>
                       </list>
                     </value>
@@ -154,6 +156,20 @@
                     <value>
                       <list>
                         <string>splash_widget</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>top login</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>web-toolbar</string> </key>
+                    <value>
+                      <list>
+                        <string>toolbar</string>
                       </list>
                     </value>
                 </item>

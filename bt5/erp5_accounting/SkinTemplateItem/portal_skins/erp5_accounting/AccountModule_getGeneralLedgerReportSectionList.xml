@@ -57,9 +57,10 @@
 
 """Get the report sections for general ledger\n
 """\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 from Products.ERP5Form.Report import ReportSection\n
-request  = context.REQUEST\n
 portal   = context.portal_url.getPortalObject()\n
+request  = portal.REQUEST\n
 cat_tool = portal.portal_categories\n
 sim_tool = portal.portal_simulation\n
 Base_translateString = context.Base_translateString\n
@@ -69,11 +70,15 @@ section_category    = request[\'section_category\']\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
                         section_category, request[\'section_category_strict\'])\n
 simulation_state    = request[\'simulation_state\']\n
+hide_analytic  = request[\'hide_analytic\']\n
 from_date           = request.get(\'from_date\', None)\n
-gap                 = request.get(\'gap\', None)\n
-# XXX the field should maybe use base=1 on the category...\n
-if gap:\n
-  gap = \'gap/%s\' % gap\n
+mirror_section_category_list = request.get(\'mirror_section_category_list\',\n
+                                            None)\n
+gap_list = []\n
+for gap in request.get(\'gap_list\', ()):\n
+  # XXX the field should maybe use base=1 on the category...\n
+  gap_list.append(\'gap/%s\' % gap)\n
+\n
 display_categories  = request.get(\'display_categories\', False)\n
 period_start_date = context\\\n
     .Base_getAccountingPeriodStartDateForSectionCategory(\n
@@ -95,29 +100,43 @@ params = dict(precision=precision,\n
               movement_portal_type=portal.getPortalAccountingMovementTypeList(),\n
               no_mirror_section_uid_cache=1,\n
               hide_grouping=request.get(\'omit_grouping_reference\', False))\n
+project = request.get(\'project\')\n
+if project:\n
+  if project == \'None\':\n
+    params[\'project_uid\'] = Query(project_uid=None)\n
+  else:\n
+    params[\'project_uid\'] = portal.portal_categories.restrictedTraverse(project).getUid()\n
+function = request.get(\'function\')\n
+if function:\n
+  if function == \'None\':\n
+    params[\'function_uid\'] = Query(function_uid=None)\n
+  else:\n
+    params[\'function_uid\'] = portal.portal_categories.restrictedTraverse(function).getUid()\n
 \n
-if len(simulation_state) > 1:\n
-  account_columns = (\n
-      (\'Movement_getSpecificReference\', \'Reference\'),\n
-      (\'Movement_getExplanationTitle\', \'Title\'),\n
-      (\'date\', \'Date\'),\n
-      (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
-      (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
-      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
-      (\'getTranslatedSimulationStateTitle\', \'State\'),\n
-      (\'debit\', \'Debit\'),\n
-      (\'credit\', \'Credit\'),\n
-      (\'running_total_price\', \'Net\'), )\n
+default_selection_params = params.copy()\n
+\n
+analytic_column_list = ()\n
+if hide_analytic:\n
+  default_selection_params[\'group_by\'] = ( \'explanation_uid\',\n
+                                           \'mirror_section_uid\',\n
+                                           \'payment_uid\' )\n
 else:\n
-  account_columns = (\n
+  analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
+\n
+account_columns = (\n
       (\'Movement_getSpecificReference\', \'Reference\'),\n
       (\'Movement_getExplanationTitle\', \'Title\'),\n
       (\'date\', \'Date\'),\n
       (\'Movement_getExplanationTranslatedPortalType\', \'Type\'),\n
-      (\'Movement_getExplanationReference\', \'Invoice Number\'),\n
-      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),\n
-      (\'debit\', \'Debit\'),\n
-      (\'credit\', \'Credit\'),\n
+      (\'Movement_getExplanationReference\', \'Document Reference\'),\n
+      (\'Movement_getMirrorSectionTitle\', \'Third Party\'),)\n
+if len(simulation_state) > 1:\n
+  account_columns += (\n
+      (\'getTranslatedSimulationStateTitle\', \'State\'),)\n
+account_columns += analytic_column_list\n
+account_columns += (\n
+      (\'debit_price\', \'Debit\'),\n
+      (\'credit_price\', \'Credit\'),\n
       (\'running_total_price\', \'Net\'), )\n
 \n
 # utility functions\n
@@ -182,8 +201,14 @@ account_type_to_group_by_mirror_section = [\n
                   \'account_type/liability/payable\', ]\n
 \n
 \n
-if gap or gap_root:\n
-  params[\'node_category\'] = gap or gap_root\n
+if gap_list or gap_root:\n
+  params[\'node_category\'] = gap_list or gap_root\n
+  default_selection_params[\'node_category\'] = gap_list or gap_root\n
+\n
+if mirror_section_category_list:\n
+  params[\'mirror_section_category\'] = mirror_section_category_list\n
+  default_selection_params[\'mirror_section_category\'] =\\\n
+        mirror_section_category_list\n
 \n
 report_section_list = []\n
 \n
@@ -204,7 +229,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   key = (inventory.node_relative_url, None, None)\n
   existing_section_dict[key] = True\n
   \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -218,9 +243,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -239,7 +262,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
     continue\n
   existing_section_dict[key] = True\n
   \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -253,9 +276,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 \n
 # profit & loss -> same, but from date limited to the current period\n
@@ -270,7 +291,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, None, None)\n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = max(from_date, period_start_date)\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'period_start_date\'] = max(from_date, period_start_date)\n
@@ -285,9 +306,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 # group by mirror_section\n
 # movements in the period\n
@@ -304,7 +323,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   key = (inventory.node_relative_url, inventory.mirror_section_uid, None)\n
   existing_section_dict[key] = True\n
 \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -318,9 +337,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -340,7 +357,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
     continue\n
   existing_section_dict[key] = True\n
 \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -354,9 +371,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 \n
 # group by payment\n
@@ -368,13 +383,13 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                             at_date=at_date,\n
                             group_by_node=1,\n
                             group_by_section=0,\n
-                            group_by_paymnent=1,\n
+                            group_by_payment=1,\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, None, inventory.payment_uid)\n
   existing_section_dict[key] = True\n
 \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -388,9 +403,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
                       selection_columns=account_columns,\n
-                      listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      listbox_display_mode=\'FlatListMode\',))\n
 \n
 # non zero balance at begining of period\n
 for inventory in portal.portal_simulation.getInventoryList(\n
@@ -399,7 +412,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                             at_date=from_date,\n
                             group_by_node=1,\n
                             group_by_section=0,\n
-                            group_by_paymnent=1,\n
+                            group_by_payment=1,\n
                             group_by_resource=0,\n
                             **params):\n
   key = (inventory.node_relative_url, None, inventory.payment_uid)\n
@@ -409,7 +422,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
     continue\n
   existing_section_dict[key] = True\n
 \n
-  selection_params = params.copy()\n
+  selection_params = default_selection_params.copy()\n
   selection_params[\'from_date\'] = from_date\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
@@ -422,14 +435,12 @@ for inventory in portal.portal_simulation.getInventoryList(\n
                       form_id=\'Account_viewAccountingTransactionList\',\n
                       selection_name=\'account_preference_selection\',\n
                       selection_params=selection_params,\n
-                      selection_columns=account_columns,\n
                       listbox_display_mode=\'FlatListMode\',\n
-                      selection_sort_order=[(\'stock.date\',\n
-                                             \'ascending\')]))\n
+                      selection_columns=account_columns, ))\n
 \n
 report_section_list.sort(key=ReportSection.getTitle)\n
 \n
-total_params = params.copy()\n
+total_params = default_selection_params.copy()\n
 total_params[\'at_date\'] = at_date\n
 report_section_list.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
@@ -477,12 +488,14 @@ return report_section_list\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>Products.ERP5Form.Report</string>
                             <string>ReportSection</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>request</string>
                             <string>portal</string>
+                            <string>request</string>
                             <string>cat_tool</string>
                             <string>sim_tool</string>
                             <string>Base_translateString</string>
@@ -491,8 +504,12 @@ return report_section_list\n
                             <string>section_category</string>
                             <string>section_uid</string>
                             <string>simulation_state</string>
+                            <string>hide_analytic</string>
                             <string>None</string>
                             <string>from_date</string>
+                            <string>mirror_section_category_list</string>
+                            <string>gap_list</string>
+                            <string>_getiter_</string>
                             <string>gap</string>
                             <string>False</string>
                             <string>display_categories</string>
@@ -504,8 +521,13 @@ return report_section_list\n
                             <string>_write_</string>
                             <string>dict</string>
                             <string>params</string>
-                            <string>len</string>
+                            <string>project</string>
+                            <string>function</string>
+                            <string>default_selection_params</string>
+                            <string>analytic_column_list</string>
                             <string>account_columns</string>
+                            <string>len</string>
+                            <string>_inplacevar_</string>
                             <string>traverse</string>
                             <string>account_name_cache</string>
                             <string>getAccountName</string>
@@ -515,7 +537,6 @@ return report_section_list\n
                             <string>getFullAccountName</string>
                             <string>account_type_to_group_by_node</string>
                             <string>profit_and_loss_account_type</string>
-                            <string>_getiter_</string>
                             <string>account_type_value</string>
                             <string>append</string>
                             <string>$append0</string>

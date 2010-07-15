@@ -28,9 +28,7 @@
 
 import unittest
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
@@ -40,9 +38,6 @@ except ImportError:
   pass
 
 class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
-    run_all_test = 1
-    quiet = 1
-
     # Some helper methods
 
     def getTitle(self):
@@ -57,16 +52,10 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
     def afterSetUp(self):
       self.login()
 
-    def test_01_DictInterface(self, quiet=quiet, run=run_all_test):
-      """Check if a transaction variable behaves in the same way as a dict.
-      """
-      if not run: return
-      if not quiet:
-        message = 'Test Dict Interface'
-        ZopeTestCase._print('\n '+message)
-        LOG('Testing... ', 0, message)
-
-      tv = getTransactionalVariable(self.getPortal())
+    def test_01_DictInterface(self):
+      """Check if a transaction variable behaves in the same way as a dict.  """
+   
+      tv = getTransactionalVariable(self.portal)
       self.failIfEqual(tv, None)
 
       # Test frequently used dict methods. This does not cover everything,
@@ -89,17 +78,11 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       self.failIf('foo' in tv)
       self.failUnlessEqual(len(tv), 1)
 
-    def test_02_Expiration(self, quiet=quiet, run=run_all_test):
+    def test_02_Expiration(self):
       """Check if a transaction variable does not persist over multiple
       transactions.
       """
-      if not run: return
-      if not quiet:
-        message = 'Test Expiration'
-        ZopeTestCase._print('\n '+message)
-        LOG('Testing... ', 0, message)
-
-      tv = getTransactionalVariable(self.getPortal())
+      tv = getTransactionalVariable(self.portal)
       self.failIfEqual(tv, None)
 
       tv.clear()
@@ -117,17 +100,11 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       get_transaction().abort()
       self.failIf('toto' in tv)
 
-    def test_03_Durability(self, quiet=quiet, run=run_all_test):
+    def test_03_Durability(self):
       """Check if a transaction variable does not disappear within the same
       transaction.
       """
-      if not run: return
-      if not quiet:
-        message = 'Test Durability'
-        ZopeTestCase._print('\n '+message)
-        LOG('Testing... ', 0, message)
-
-      tv = getTransactionalVariable(self.getPortal())
+      tv = getTransactionalVariable(self.portal)
       self.failIfEqual(tv, None)
 
       tv.clear()

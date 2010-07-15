@@ -330,11 +330,19 @@ class Rule(Predicate, XMLObject):
     mutable_movement_list = []
     deletable_movement_list = []
 
+    is_root = applied_rule.isRootAppliedRule()
     for movement in applied_rule.contentValues(portal_type=self.movement_type):
+      # XXX in root applied rule case, movement.isFrozen() is not a good
+      # criteria to determine if movement is immutable or not. Same for
+      # non-root case?
       if movement.isFrozen():
         immutable_movement_list.append(movement)
       else:
-        if movement._isTreeDelivered():
+        if is_root and not movement.hasOrder():
+          ignore_first = True
+        else:
+          ignore_first = False
+        if movement._isTreeDelivered(ignore_first=ignore_first):
           mutable_movement_list.append(movement)
         else:
           deletable_movement_list.append(movement)
@@ -361,11 +369,13 @@ class Rule(Predicate, XMLObject):
 
     return input_movement_and_path_list
 
-  def _getCompensatedMovementListBPM(self, applied_rule, **kw):
+  def _getCompensatedMovementList(self, applied_rule,
+                                  matching_property_list=None, **kw):
     """Compute the difference between prevision and existing movements
 
     Immutable movements need compensation, mutable ones needs to be modified
     """
+    is_bpm = self._isBPM()
     add_list = [] # list of movements to be added
     modify_dict = {} # dict of movements to be modified
     delete_list = [] # list of movements to be deleted
@@ -378,10 +388,13 @@ class Rule(Predicate, XMLObject):
                     + deletable_movement_list
     non_matched_list = movement_list[:] # list of remaining movements
 
+    if matching_property_list is None:
+      matching_property_list = self.getMatchingPropertyList()
+
     for prevision in prevision_list:
       p_matched_list = []
       for movement in non_matched_list:
-        for prop in self.getMatchingPropertyList():
+        for prop in matching_property_list:
           if movement.isPropertyRecorded(prop):
             movement_value = movement.getRecordedProperty(prop)
           else:
@@ -414,13 +427,19 @@ class Rule(Predicate, XMLObject):
               break
           else:
             # no modifiable movement was found, need to compensate by quantity
-            raise NotImplementedError('Need to generate quantity compensation')
+            if is_bpm:
+              raise NotImplementedError('Need to generate quantity compensation in %s, because all matched movements are immutable : %r.' % (applied_rule.getRelativeUrl(), [x.getRelativeUrl() for x in p_matched_list]))
+            else:
+              prevision['quantity'] = q_diff
+              add_list.append(prevision)
 
         for movement in p_matched_list:
           if movement in (mutable_movement_list \
               + deletable_movement_list):
             prop_dict = modify_dict.setdefault(movement.getId(), {})
             for k, v in prevision.items():
+              if k in ('quantity',):
+                continue
               if movement.isPropertyRecorded(k):
                 movement_value = movement.getRecordedProperty(k)
                 if isinstance(movement_value, list) and not isinstance(v, list):
@@ -430,7 +449,7 @@ class Rule(Predicate, XMLObject):
                     movement_value = None
               else:
                 movement_value = movement.getProperty(k)
-              if k not in ('quantity',) and v != movement_value:
+              if v != movement_value:
                 prop_dict.setdefault(k, v)
 
         # update movement lists
@@ -458,129 +477,6 @@ class Rule(Predicate, XMLObject):
 
     return (add_list, modify_dict, delete_list)
 
-  def _getCompensatedMovementList(self, applied_rule,
-                                  matching_property_list=None, **kw):
-    """
-    Compute the difference between prevision and existing movements
-
-    immutable movements need compensation, mutables needs to be modified
-
-    XXX For now, this implementation is too simple. It could be improved by
-    using MovementGroups
-    """
-    if self._isBPM():
-      return self._getCompensatedMovementListBPM(applied_rule, **kw)
-    add_list = [] # list of movements to be added
-    modify_dict = {} # dict of movements to be modified
-    delete_list = [] # list of movements to be deleted
-
-    prevision_list = self._generatePrevisionList(applied_rule, **kw)
-    immutable_movement_list, mutable_movement_list, \
-        deletable_movement_list = self._getCurrentMovementList(applied_rule,
-                                                               **kw)
-    movement_list = immutable_movement_list + mutable_movement_list \
-                    + deletable_movement_list
-    non_matched_list = movement_list[:] # list of remaining movements
-
-    if matching_property_list is None:
-      matching_property_list = self.getMatchingPropertyList()
-
-    for prevision in prevision_list:
-      p_matched_list = []
-      for movement in non_matched_list:
-        for prop in matching_property_list:
-          if movement.isPropertyRecorded(prop):
-            movement_value = movement.getRecordedProperty(prop)
-          else:
-            movement_value = movement.getProperty(prop)
-          if prevision.get(prop) != movement_value:
-            break
-        else:
-          p_matched_list.append(movement)
-
-      # XXX hardcoded ...
-#       LOG("Rule, _getCompensatedMovementList", WARNING,
-#           "Hardcoded properties check")
-      # Movements exist, we'll try to make them match the prevision
-      if p_matched_list != []:
-        # Check the quantity
-        m_quantity = 0.0
-        for movement in p_matched_list:
-          if movement.isPropertyRecorded('quantity'):
-            m_quantity += movement.getRecordedProperty('quantity')
-          else:
-            m_quantity += movement.getQuantity()
-        if m_quantity != prevision.get('quantity'):
-          q_diff = prevision.get('quantity') - m_quantity
-          # try to find a movement that can be edited
-          for movement in p_matched_list:
-            if movement in (mutable_movement_list \
-                + deletable_movement_list):
-              # mark as requiring modification
-              prop_dict = modify_dict.setdefault(movement.getId(), {})
-              #prop_dict['quantity'] = movement.getCorrectedQuantity() + \
-              prop_dict['quantity'] = movement.getQuantity() + \
-                  q_diff
-              break
-          # no modifiable movement was found, need to create one
-          else:
-            prevision['quantity'] = q_diff
-            add_list.append(prevision)
-
-        # Check the date
-        for movement in p_matched_list:
-          if movement in (mutable_movement_list \
-              + deletable_movement_list):
-            prop_dict = modify_dict.setdefault(movement.getId(), {})
-            for prop in ('start_date', 'stop_date'):
-              #XXX should be >= 15
-              if movement.isPropertyRecorded(prop):
-                movement_value = movement.getRecordedProperty(prop)
-              else:
-                movement_value = movement.getProperty(prop)
-              if prevision.get(prop) != movement_value:
-                prop_dict[prop] = prevision.get(prop)
-                break
-
-            for k, v in prevision.items():
-              if k not in ('quantity', 'start_date', 'stop_date'):
-                if movement.isPropertyRecorded(k):
-                  movement_value = movement.getRecordedProperty(k)
-                  if isinstance(movement_value, list) and not isinstance(v, list):
-                    try:
-                      movement_value = movement_value[0]
-                    except IndexError:
-                      movement_value = None
-                else:
-                  movement_value = movement.getProperty(k)
-                if v != movement_value:
-                  prop_dict.setdefault(k, v)
-
-        # update movement lists
-        for movement in p_matched_list:
-          non_matched_list.remove(movement)
-
-      # No movement matched, we need to create one
-      else:
-        add_list.append(prevision)
-
-    # delete non matched movements
-    for movement in non_matched_list:
-      if movement in deletable_movement_list:
-        # delete movement
-        delete_list.append(movement.getId())
-      elif movement in mutable_movement_list:
-        # set movement quantity to 0 to make it "void"
-        prop_dict = modify_dict.setdefault(movement.getId(), {})
-        prop_dict['quantity'] = 0.0
-      else:
-        # movement not modifiable, we can decide to create a compensation
-        # with negative quantity
-        raise NotImplementedError(
-                "Can not create a compensation movement for %s" % \
-                movement.getRelativeUrl())
-    return (add_list, modify_dict, delete_list)
-
   def _getExpandablePropertyDict(self, applied_rule, movement, business_path=None,
       **kw):
     """
@@ -591,7 +487,12 @@ class Rule(Predicate, XMLObject):
 
     default_property_list = self.getExpandablePropertyList()
     for prop in default_property_list:
-      property_dict[prop] = movement.getProperty(prop)
+      # getProprety('title') returns the ID if title is not set, but we
+      # don't want to propagate such a value in simulation movements.
+      if prop in ('title',) and not movement.hasProperty(prop):
+        property_dict[prop] = None
+      else:
+        property_dict[prop] = movement.getProperty(prop)
 
     # rule specific
     property_dict.update(**self._getExpandablePropertyUpdateDict(applied_rule,
@@ -630,4 +531,20 @@ class Rule(Predicate, XMLObject):
 
     return property_dict
 
+  def _getDivergenceTesterList(self, exclude_quantity=True):
+    """
+    Return the applicable divergence testers which must
+    be used to test movement divergence. (ie. not all
+    divergence testers of the Rule)
 
+     exclude_quantity -- if set to true, do not consider
+                         quantity divergence testers
+    """
+    tester_list = self.objectValues(
+      portal_type=self.getPortalDivergenceTesterTypeList())
+    if exclude_quantity:
+      # XXX hardcoded
+      return filter(lambda x:x.getPortalType() != 'Quantity Divergence Tester',
+                    tester_list)
+    else:
+      return tester_list

@@ -70,9 +70,8 @@ if application_number:\n
   if document is not None:\n
     if state == \'draft\':\n
       form_id=\'view\'\n
-    elif document.getPortalType() == \'Subscription Form\':\n
-      if state != \'draft\':\n
-        form_id=\'PDFDocument_viewAnonymousHistory\'\n
+    else:\n
+      form_id=\'PDFDocument_viewHistory\'\n
     return document.Base_redirect(form_id=form_id, keep_items=keep_items)\n
 \n
 # Prepare message\n

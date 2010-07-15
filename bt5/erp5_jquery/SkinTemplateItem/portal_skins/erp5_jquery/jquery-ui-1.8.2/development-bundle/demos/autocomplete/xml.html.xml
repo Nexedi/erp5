@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Autocomplete Remote datasource demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.autocomplete.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\tfunction log(message) {\n
+\t\t\t$("<div/>").text(message).prependTo("#log");\n
+\t\t\t$("#log").attr("scrollTop", 0);\n
+\t\t}\n
+\t\t\n
+\t\t$.ajax({\n
+\t\t\turl: "london.xml",\n
+\t\t\tdataType: "xml",\n
+\t\t\tsuccess: function(xmlResponse) {\n
+\t\t\t\tvar data = $("geoname", xmlResponse).map(function() {\n
+\t\t\t\t\treturn {\n
+\t\t\t\t\t\tvalue: $("name", this).text() + ", " + ($.trim($("countryName", this).text()) || "(unknown country)"),\n
+\t\t\t\t\t\tid: $("geonameId", this).text()\n
+\t\t\t\t\t};\n
+\t\t\t\t}).get();\n
+\t\t\t\t$("#birds").autocomplete({\n
+\t\t\t\t\tsource: data,\n
+\t\t\t\t\tminLength: 0,\n
+\t\t\t\t\tselect: function(event, ui) {\n
+\t\t\t\t\t\tlog(ui.item ? ("Selected: " + ui.item.value + ", geonameId: " + ui.item.id) : "Nothing selected, input was " + this.value);\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t})\n
+\t\t\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<div class="ui-widget">\n
+\t<label for="birds">London matches: </label>\n
+\t<input id="birds" />\n
+</div>\n
+\n
+<div class="ui-widget" style="margin-top:2em; font-family:Arial">\n
+\tResult:\n
+\t<div id="log" style="height: 200px; width: 300px; overflow: auto;" class="ui-widget-content"></div>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+<p>\n
+This demo shows how to retrieve some XML data, parse it using jQuery\'s methods, then provide it to the autocomplete as the datasource.\n
+</p>\n
+<p>\n
+This should also serve as a reference on how to parse a remote XML datasource - the parsing would just happen for each request within the source-callback.\n
+</p>\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>xml.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

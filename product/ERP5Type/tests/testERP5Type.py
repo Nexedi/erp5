@@ -34,10 +34,9 @@ import sys
 import transaction
 from random import randint
 from Acquisition import aq_base
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
-from zLOG import LOG, INFO
+from zLOG import INFO
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -102,9 +101,6 @@ class %(property_sheet_name)s:
 class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     """Tests ERP5TypeInformation and per portal type generated accessors.
     """
-    run_all_test = 1
-    quiet = 1
-
     # Some helper methods
 
     def getTitle(self):
@@ -137,8 +133,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       transaction.commit()
       self.tic()
 
-    def loginWithNoRole(self, quiet=0, run=run_all_test):
-      uf = self.getPortal().acl_users
+    def loginWithNoRole(self):
+      uf = self.portal.acl_users
       uf._doAddUser('ac', '', [], [])
       user = uf.getUserById('ac').__of__(uf)
       newSecurityManager(None, user)
@@ -147,13 +143,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       return str(randint(-10000000,100000000))
 
     def getTemplateTool(self):
-      return getattr(self.getPortal(), 'portal_templates', None)
+      return getattr(self.portal, 'portal_templates', None)
 
     def getCategoryTool(self):
-      return getattr(self.getPortal(), 'portal_categories', None)
+      return getattr(self.portal, 'portal_categories', None)
 
     def getTypeTool(self):
-      return getattr(self.getPortal(), 'portal_types', None)
+      return getattr(self.portal, 'portal_types', None)
 
     # Here are the tests
     def testHasTemplateTool(self):
@@ -194,9 +190,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(business_template.getTitle(), test_string)
     
     # Test Dynamic Code Generation
-    def test_02_AqDynamic(self, quiet=quiet, run=run_all_test):
-      if not run: return
-      portal = self.getPortal()
+    def test_02_AqDynamic(self):
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
       from Products.ERP5Type import Document
@@ -210,9 +204,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Person class should now have method getFirstName
       self.assertTrue(hasattr(person, 'getFirstName'))
 
-    def test_03_NewTempObject(self, quiet=quiet, run=run_all_test):
-      if not run: return
-      portal = self.getPortal()
+    def test_03_NewTempObject(self):
+      portal = self.portal
 
       from Products.ERP5Type.Document import newTempPerson
       o = newTempPerson(portal, 1.2)
@@ -227,12 +220,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(str(o.getId()), str(-123))
 
       # Try to edit with any property and then get it with getProperty
-      o = newTempOrganisation(portal,'a') 
+      o = newTempOrganisation(portal,'a')
       o.edit(tutu='toto')
       self.assertEquals(o.getProperty('tutu'), 'toto')
 
       # Same thing with an integer
-      o = newTempOrganisation(portal,'b') 
+      o = newTempOrganisation(portal,'b')
       o.edit(tata=123)
       self.assertEquals(o.getProperty('tata'), 123)
 
@@ -240,7 +233,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(o.isTempObject(), 1)
 
       # Create a subobject and make sure it is a Temp Object
-      a = o.newContent(portal_type = 'Telephone')      
+      a = o.newContent(portal_type = 'Telephone')
       self.assertEquals(a.isTempObject(), 1)
 
       # Test newContent with the temp_object parameter
@@ -333,7 +326,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           self.portal.portal_url.getRelativeContentPath(child11))
 
 
-    def test_04_CategoryAccessors(self, quiet=quiet, run=run_all_test):
+    def test_04_CategoryAccessors(self):
       """
         This test provides basic testing of category
         accessors using the region base category.
@@ -354,8 +347,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         of a region and should thus be accessible from the region
         category through getRegionRelated accessors
       """
-      if not run: return
-      portal = self.getPortal()
       region_category = self.getPortal().portal_categories.region
       
       category_title = "Solar System"
@@ -435,7 +426,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(person_object.hasActivity())
       self.tic()
 
-    def test_05_setProperty(self, quiet=quiet, run=run_all_test):
+    def test_05_setProperty(self):
       """
         In this test we create a subobject (ie. a phone number)
         and show the difference between calling getProperty and
@@ -451,8 +442,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         using getProperty / setProperty as a generic way to use
         accessors from subobjects.
       """
-      if not run: return
-      portal = self.getPortal()
       module = self.getOrganisationModule()
       organisation = module.newContent(id='1', portal_type='Organisation')
       organisation.setDefaultTelephoneText('+55(0)66-5555')
@@ -467,9 +456,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(organisation.default_telephone.corporate_name,'Toto')
       self.assertEquals(organisation.default_telephone.getProperty('corporate_name'),'Toto')
 
-    def test_06_CachingMethod(self, quiet=quiet, run=run_all_test):
+    def test_06_CachingMethod(self):
       """Tests Caching methods."""
-      if not run: return
       cached_var = cached_var_orig = 'cached_var1'
 
       def _cache():
@@ -488,11 +476,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       clearCache()
       self.assertEquals(cache(), cached_var)
 
-    def test_07_afterCloneScript(self, quiet=quiet, run=run_all_test):
+    def test_07_afterCloneScript(self):
       """manage_afterClone can call a type based script."""
-      if not run: return
       # setup the script for Person portal type
-      custom_skin = self.getPortal().portal_skins.custom
+      custom_skin = self.portal.portal_skins.custom
       method_id = 'Person_afterClone'
       if method_id in custom_skin.objectIds():
         custom_skin.manage_delObjects([method_id])
@@ -534,10 +521,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       new_orga = folder[new_id]
       self.assertEquals(new_orga.getTitle(), 'something')
       
-    def test_08_AccessorGeneration(self, quiet=quiet, run=run_all_test):
+    def test_08_AccessorGeneration(self):
       """Tests accessor generation doesn't generate error messages.
       """
-      if not run: return
       from Products.ERP5Type.Base import _aq_reset
       _aq_reset()
       self._catch_log_errors(ignored_level=INFO)
@@ -549,13 +535,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       finally:
         self._ignore_log_errors()
     
-    def test_09_RenameObjects(self, quiet=quiet, run=run_all_test):
+    def test_09_RenameObjects(self):
       """Test object renaming.
 
          As we overloaded some parts of OFS, it's better to test again some basic
          features.
       """
-      if not run: return
       folder = self.getOrganisationModule()
       id_list = [chr(x) for x in range(ord('a'), ord('z')+1)]
       for id_ in id_list:
@@ -576,13 +561,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         new_id = '%s_new' % id_
         self.assertEquals(folder._getOb(new_id).getId(), new_id)
 
-    def test_10_ConstraintNotFound(self, quiet=quiet, run=run_all_test):
+    def test_10_ConstraintNotFound(self):
       """
       When a Constraint is not found while importing a PropertySheet,
       AttributeError was raised, and generated a infinite loop.
       This is a test to make sure this will not happens any more
       """
-      if not run: return
       text = """
 class TestPropertySheet:
     \"\"\"
@@ -611,7 +595,7 @@ class TestPropertySheet:
       organisation =  self.assertRaises(ConstraintNotFound, folder.newContent,
                                         portal_type='Organisation')
 
-    def test_11_valueAccessor(self, quiet=quiet, run=run_all_test):
+    def test_11_valueAccessor(self):
       """
         The purpose of this test is to make sure that category accessors
         work as expected.
@@ -625,15 +609,8 @@ class TestPropertySheet:
         The test is implemented for both Category and Value
         accessors.
       """
-      if not run: return
-
-      if not quiet:
-        message = 'Test Category setters'
-        ZopeTestCase._print('\n '+message)
-        LOG('Testing... ', 0, message)
-
       # Create a few categories
-      region_category = self.getPortal().portal_categories.region
+      region_category = self.portal.portal_categories.region
       alpha = region_category.newContent(
               portal_type = "Category",
               id =          "alpha",
@@ -774,20 +751,13 @@ class TestPropertySheet:
       person.setRegionUid([person.getUid(), alpha.getUid(), beta.getUid()])
       self.assertEquals(person.getRegionList(), [person.getRelativeUrl(), 'alpha', 'beta'])
 
-    def test_12_listAccessor(self, quiet=quiet, run=run_all_test):
+    def test_12_listAccessor(self):
       """
       The purpose of this test is to make sure that accessor for
       sequence types support the same kind of semantics as the
       one on categories. We use 'subject' of the DublinCore propertysheet
       on organisation documents for this test.
       """
-      if not run: return
-
-      if not quiet:
-        message = 'Test Category setters'
-        ZopeTestCase._print('\n '+message)
-        LOG('Testing... ', 0, message)
-
       # Create a new person
       module = self.getPersonModule()
       person = module.newContent(portal_type='Person')
@@ -821,7 +791,7 @@ class TestPropertySheet:
       self.assertEquals(result, ['alpha', 'beta'])
       self.assertEquals(person.getSubjectList(), ['alpha', 'beta'])
 
-    def test_13_acquiredAccessor(self, quiet=quiet, run=run_all_test):
+    def test_13_acquiredAccessor(self):
       """
       The purpose of this test is to make sure that accessor for
       sequence types support the same kind of semantics as the
@@ -843,7 +813,6 @@ class TestPropertySheet:
       """
       Tests that the default value is returned correctly
       """
-      portal = self.getPortal()
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
       
@@ -875,12 +844,10 @@ class TestPropertySheet:
       self.assertEquals(person.getProperty(property_name, 'foo'), 'foo')
       self.assertEquals(person.getProperty(property_name, d='foo'), 'foo')
 
-    def test_15b_DefaultValueDefinedOnPropertySheet(self, quiet=quiet, 
-                                                    run=run_all_test):
+    def test_15b_DefaultValueDefinedOnPropertySheet(self):
       """Tests that the default value is returned correctly when a default
       value is defined using the property sheet.
       """
-      if not run: return
       self._addProperty('Person', '''{'id': 'dummy_ps_prop',
                                       'type': 'string',
                                       'mode': 'w',
@@ -953,10 +920,9 @@ class TestPropertySheet:
       self.assertEquals('foo',
                         person.getDescription('foo'))
 
-    def test_16_SimpleStringAccessor(self,quiet=quiet, run=run_all_test):
+    def test_16_SimpleStringAccessor(self):
       """Tests a simple string accessor.
       This is also a way to test _addProperty method """
-      if not run: return
       self._addProperty('Person', '''{'id': 'dummy_ps_prop',
                                       'type': 'string',
                                       'mode': 'w',}''')
@@ -1054,11 +1020,10 @@ class TestPropertySheet:
                         'acquired_property_id': ('title', 'reference'),
                         'mode':       'w', }'''
 
-    def test_18_SimpleContentAccessor(self,quiet=quiet, run=run_all_test):
+    def test_18_SimpleContentAccessor(self):
       """Tests a simple content accessor.
       This tests content accessors, for properties that have class methods.
       """
-      if not run: return
       # For testing purposes, we add a default_organisation inside a person, 
       # and we add code to generate a 'default_organisation_title' property on
       # this person that will returns the organisation title.
@@ -1213,10 +1178,9 @@ class TestPropertySheet:
             'acquisition_depends'      : None,
             'mode':       'w', }'''
     
-    def test_19_AcquiredContentAccessor(self,quiet=quiet, run=run_all_test):
+    def test_19_AcquiredContentAccessor(self):
       """Tests an acquired content accessor.
       """
-      if not run: return
       # For testing purposes, we add a default_organisation inside a person, 
       # and we add code to generate a 'default_organisation_title' property on
       # this person that will returns the organisation title. If this is not
@@ -1249,12 +1213,11 @@ class TestPropertySheet:
       self.assertEquals(other_pers_title,
                         other_pers.getDefaultOrganisationTitle())
 
-    def test_19b_AcquiredContentAccessorWithIdClash(self,quiet=quiet, run=run_all_test):
+    def test_19b_AcquiredContentAccessorWithIdClash(self):
       """Tests a content setters do not set the property on acquired object
       that may have the same id, using same scenario as test_19
       Note that we only test Setter for now.
       """
-      if not run: return
       self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
@@ -1293,12 +1256,11 @@ class TestPropertySheet:
             'acquisition_depends'      : None,
             'mode':       'rw', }'''
     
-    def test_19c_AcquiredTokensAccessor(self,quiet=quiet, run=run_all_test):
+    def test_19c_AcquiredTokensAccessor(self):
       """Tests an acquired tokens accessor.
          We check in particular that getDefault[Property] and 
          setDefault[Property] are working correctly
       """
-      if not run: return
       self._addProperty('Person', self.DEFAULT_LANGUAGE_PROP)
       self._addProperty('Email', self.DEFAULT_LANGUAGE_PROP)
 
@@ -1318,11 +1280,10 @@ class TestPropertySheet:
 
 
 
-    def test_20_AsContext(self,quiet=quiet, run=run_all_test):
+    def test_20_AsContext(self):
       """asContext method return a temporary copy of an object.
       Any modification made to the copy does not change the original object.
       """
-      if not run: return
       obj = self.getPersonModule().newContent(portal_type='Person')
       obj.setTitle('obj title')
       copy = obj.asContext()
@@ -1357,10 +1318,9 @@ class TestPropertySheet:
       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       self.assertEquals(None, obj.getGender())
 
-    def test_21_ActionCondition(self, quiet=quiet, run=run_all_test):
+    def test_21_ActionCondition(self):
       """Tests action conditions
       """
-      if not run: return
       type_tool = self.getTypeTool()
       portal_type_object = type_tool['Organisation']
       def addCustomAction(name,condition):
@@ -1467,15 +1427,13 @@ class TestPropertySheet:
       # Avoid deletion of actions fo rother tests
       transaction.abort()
 
-    def test_22_securityReindex(self, quiet=quiet, run=run_all_test):
+    def test_22_securityReindex(self):
       """
       Tests that the security is reindexed when a role is changed on an object.
       
       Note: Turn on Person.acquire_local_roles to 0 in afterSetUp.
       """
-      if not run: return
-
-      portal = self.getPortal()
+      portal = self.portal
 
       # turn on Person.acquire_local_roles
       person = self.getTypesTool().getTypeInfo('Person')
@@ -1527,18 +1485,16 @@ class TestPropertySheet:
       self.logout()
       self.login()
 
-    def test_23_titleIsNotDefinedByDefault(self, quiet=quiet, run=run_all_test):
+    def test_23_titleIsNotDefinedByDefault(self):
       """
       Tests that no title attribute is set on new content
       """
-      if not run: return
-      portal = self.getPortal()
       person_module = self.getPersonModule()
       person = person_module.newContent(portal_type='Person')
       self.assertFalse(person.hasTitle())
       self.assertFalse(person.__dict__.has_key('title'))
 
-    def test_24_relatedValueAccessor(self, quiet=quiet, run=run_all_test):
+    def test_24_relatedValueAccessor(self):
       """
       The purpose of this test is to make sure that category related 
       accessors work as expected.
@@ -1548,15 +1504,8 @@ class TestPropertySheet:
 
       Test that checked_permission is well configured for View permission
       """
-      if not run: return
-
-      if not quiet:
-        message = 'Test Related Value Accessors'
-        ZopeTestCase._print('\n '+message)
-        LOG('Testing... ', 0, message)
-
       # Create a few categories
-      region_category = self.getPortal().portal_categories.region
+      region_category = self.portal.portal_categories.region
       alpha = region_category.newContent(
               portal_type = "Category",
               id =          "alpha",
@@ -1636,7 +1585,7 @@ class TestPropertySheet:
                                              checked_permission="View"), 
              [doo.getTitle(), bar.getTitle(), ])
 
-    def test_25_AqDynamicWithTempObject(self, quiet=quiet, run=run_all_test):
+    def test_25_AqDynamicWithTempObject(self):
       """Check if _aq_dynamic works correctly, regardless of whether
       it is first called for a temporary object or a persistent object.
 
@@ -1646,9 +1595,7 @@ class TestPropertySheet:
       such methods from a persistent object may fail, because such a
       persistent object is not an instance of the temporary document class.
       """
-      if not run: return
-      portal = self.getPortal()
-
+      portal = self.portal
       # Clear out all generated methods.
       _aq_reset()
 
@@ -1716,7 +1663,7 @@ class TestPropertySheet:
       obj.setFooBar('something')
       self.assertTrue(obj.hasFooBar())
 
-    def test_27_categoryAccessors(self, quiet=quiet, run=run_all_test):
+    def test_27_categoryAccessors(self):
       """
       The purpose of this test is to make sure that category
       accessors work as expected.
@@ -1727,13 +1674,6 @@ class TestPropertySheet:
       Test that checked_permission is well configured 
       for View permission
       """
-      if not run: return
-
-      if not quiet:
-        message = 'Test Category Accessors'
-        ZopeTestCase._print('\n '+message)
-        LOG('Testing... ', 0, message)
-
       # Create a few categories
       region_category = self.getPortal().portal_categories.region
       beta_id = "beta"
@@ -2335,11 +2275,10 @@ class TestPropertySheet:
       self.assertRaises(ValueError, getattr, not_ok, 'attr')
       self.assertFalse(hasattr(not_ok, 'attr'))
 
-    def test_renameObjectsReindexSubobjects(self, quiet=quiet, run=run_all_test):
+    def test_renameObjectsReindexSubobjects(self):
       """Test that renaming an object with subobjects causes them to be
          reindexed (their path must be updated).
       """
-      if not run: return
       folder = self.getOrganisationModule()
       sql_catalog = self.portal.portal_catalog.getSQLCatalog()
       initial_id = 'foo'
@@ -2358,24 +2297,22 @@ class TestPropertySheet:
       subdocument_record = sql_catalog.getRecordForUid(subdocument.uid)
       self.assertEqual(subdocument.getPath(), subdocument_record.path)
 
-    def test_getCreationDate(self, quiet=quiet, run=run_all_test):
+    def test_getCreationDate(self):
       """
       Check that getCreationDate does not acquire creation_date property from
       site.
       """
-      if not run: return
       portal = self.getPortalObject()
       folder = self.getOrganisationModule()
       object = folder.newContent(portal_type='Organisation')
       self.assertNotEquals(object.getCreationDate(), portal.CreationDate())
       self.assertNotEquals(object.getCreationDate(), folder.getCreationDate())
 
-    def test_copyWithoutModificationRight(self, quiet=quiet, run=run_all_test):
+    def test_copyWithoutModificationRight(self):
       """
       Check that it is possible to copy an object on which user doesn't have
       "Modify portal content" permission.
       """
-      if not run: return
       portal = self.getPortalObject()
       folder = self.getOrganisationModule()
       object = folder.newContent(portal_type='Organisation')
@@ -2599,7 +2536,7 @@ class TestPropertySheet:
       self.assertRaises(TypeError, person.setPropertyList, 'foo_bar', 
                         ['a', 'b'])
 
-    def testPropertyListOnMonoValuedAcquiredProperty(self,quiet=quiet, run=run_all_test):
+    def testPropertyListOnMonoValuedAcquiredProperty(self):
       """
       Check that we can use setPropertyList and getPropertyList
       on a mono valued acquired property
@@ -2734,6 +2671,43 @@ class TestPropertySheet:
       method = getattr(person, 'providesICategoryAccessProvider', None)
       self.assertNotEquals(None, method)
       self.assertTrue(method())
+
+    def test_type_provider(self):
+      from Products.ERP5Type.Tool.TypesTool import TypeProvider
+      class DummyTypeProvider(TypeProvider):
+        id = 'dummy_type_provider'
+       # portal_type = 'Dummy Type Provider'
+      
+      self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+      types_tool = self.portal.portal_types
+      # register our dummy type provider
+      types_tool.type_provider_list = types_tool.type_provider_list + (
+                                            'dummy_type_provider',)
+      
+      # types created in our type provider are available
+      dummy_type = self.portal.dummy_type_provider.newContent(
+              portal_type='Base Type',
+              id='Dummy Type',
+              type_factory_method_id='addFolder', )
+
+      # our type is available from types tool
+      self.assertNotEquals(None, types_tool.getTypeInfo('Dummy Type'))
+      self.assertTrue('Dummy Type' in [ti.getId() for ti in
+                                        types_tool.listTypeInfo()])
+
+      # not existing types are not an error
+      self.assertEquals(None, types_tool.getTypeInfo(self.id()))
+
+      # we can create instances from our type provider
+      container = self.portal.newContent(portal_type='Folder', id='test_folder')
+      dummy_instance = container.newContent(portal_type='Dummy Type')
+      
+      # and use generated accessors on them
+      dummy_type.edit(type_property_sheet_list=('Reference', ))
+
+      dummy_instance.setReference('test')
+      self.assertEquals('test', dummy_instance.getReference())
+
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests

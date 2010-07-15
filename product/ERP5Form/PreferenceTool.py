@@ -27,7 +27,9 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager,\
+                          setSecurityManager, newSecurityManager
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from zLOG import LOG, PROBLEM
@@ -39,9 +41,14 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
 from Products.ERP5Form import _dtmldir
-from Products.ERP5Form.Document.Preference import Priority
 
 _marker = object()
+
+class Priority:
+  """ names for priorities """
+  SITE  = 1
+  GROUP = 2
+  USER  = 3
 
 def updatePreferenceClassPropertySheetList():
   # The Preference class should be imported from the common location
@@ -90,6 +97,8 @@ def createPreferenceToolAccessorList(portal) :
   # Generate common method names
   for prop in property_list:
     if prop.get('preference'):
+      # XXX read_permission and write_permissions defined at
+      # property sheet are not respected by this.
       # only properties marked as preference are used
       attribute = prop['id']
       attr_list = [ 'get%s' % convertToUpperCase(attribute)]
@@ -156,6 +165,8 @@ class PreferenceTool(BaseTool):
   allowed_types = ( 'ERP5 Preference',)
   security      = ClassSecurityInfo()
 
+  aq_preference_generated = False
+
   security.declareProtected(
        Permissions.ManagePortal, 'manage_overview' )
   manage_overview = DTMLFile( 'explainPreferenceTool', _dtmldir )
@@ -184,6 +195,21 @@ class PreferenceTool(BaseTool):
     if method is not None:
       return method(default)
     return default
+
+  def _aq_dynamic(self, id):
+    base_value = PreferenceTool.inheritedAttribute('_aq_dynamic')(self, id)
+    if not PreferenceTool.aq_preference_generated:
+      updatePreferenceClassPropertySheetList()
+
+      portal = self.getPortalObject()
+      while portal.portal_type != 'ERP5 Site':
+        portal = portal.aq_parent.aq_inner.getPortalObject()
+      createPreferenceToolAccessorList(portal)
+
+      PreferenceTool.aq_preference_generated = True
+      if base_value is None:
+        return getattr(self, id)
+    return base_value
 
   security.declareProtected(Permissions.ModifyPortalContent, "setPreference")
   def setPreference(self, pref_name, value) :
@@ -273,6 +299,26 @@ class PreferenceTool(BaseTool):
         if template is not None:
           template_list.append(template)
     return template_list
+
+  security.declareProtected(Permissions.ManagePortal,
+                            'createPreferenceForUser')
+  def createPreferenceForUser(self, username, enable=True):
+    """Creates a preference for a given user, and optionnally enable the
+    preference.
+    """
+    security_manager = getSecurityManager()
+    try:
+      user_folder = self.getPortalObject().acl_users
+      user = user_folder.getUserById(username)
+      if user is None:
+        raise ValueError("User %r not found" % (username, ))
+      newSecurityManager(None, user.__of__(user_folder))
+      preference = self.newContent(portal_type='Preference')
+      if enable:
+        preference.enable()
+      return preference
+    finally:
+      setSecurityManager(security_manager)
 
 InitializeClass(PreferenceTool)
 

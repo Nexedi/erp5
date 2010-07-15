@@ -73,7 +73,19 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>size</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -134,7 +146,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:map(lambda x: (x, \'portal_types/%s\' % x), here.getPortalTargetSolverTypeList())</string> </value>
+            <value> <string>python:map(lambda x: (x, \'portal_solvers/%s\' % x), here.getPortalTargetSolverTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>

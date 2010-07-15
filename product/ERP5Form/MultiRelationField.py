@@ -261,7 +261,15 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       sub_html_string = widget_instance.render(field, key, 
                                                value_instance, REQUEST)
       if relation_item_list is not None:
-        if relation_item_list != []:
+        ####################################
+        # Render wheel
+        ####################################
+        sub_html_string += self.render_wheel(
+                  field, value_instance, REQUEST,
+                  relation_index=relation_field_index,
+                  sub_index=sub_index)
+
+        if relation_item_list:
           ####################################
           # Render listfield
           ####################################
@@ -272,16 +280,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                                 field, relation_field_id, None, REQUEST)
           REQUEST['relation_item_list'] = None
 
-
-        else:
-          ####################################
-          # Render wheel
-          ####################################
-          sub_html_string += self.render_wheel(
-                    field, value_instance, REQUEST, 
-                    relation_index=relation_field_index,
-                    sub_index=sub_index)
-      html_string_list.append(sub_html_string)  
+      html_string_list.append(sub_html_string)
     ####################################
     # Generate html
     ####################################

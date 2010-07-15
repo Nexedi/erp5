@@ -6,9 +6,9 @@ import os
 CMDS = """
 cd %s/*
 libtoolize -c -f
-aclocal-1.9
+which aclocal-1.9 >/dev/null 2>/dev/null && aclocal-1.9 || aclocal
 autoheader
-automake-1.9 -c -a -i
+which automake-1.9 >/dev/null 2>/dev/null && automake-1.9 -c -a -i || automake -c -a -i
 autoconf
 touch sql/sql_yacc.yy
 """.strip()

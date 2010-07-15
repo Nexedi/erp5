@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>If all required attachments are provides and if the form has been correctly fill, Complete action could be invoke by the agent in charge of the application.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -49,7 +49,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Complete</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>

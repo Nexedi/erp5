@@ -62,6 +62,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
+                <string>top login</string>
                 <string>menu navbar</string>
                 <string>menu meta</string>
                 <string>path tools</string>
@@ -70,6 +71,7 @@
                 <string>headline</string>
                 <string>bottom gadget (Bottom Gadget)</string>
                 <string>right column gadget (Right Gadget)</string>
+                <string>web-toolbar</string>
                 <string>footer</string>
               </list>
             </value>
@@ -147,6 +149,20 @@
                     <value>
                       <list>
                         <string>splash_widget</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>top login</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>web-toolbar</string> </key>
+                    <value>
+                      <list>
+                        <string>toolbar</string>
                       </list>
                     </value>
                 </item>

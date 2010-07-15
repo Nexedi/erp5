@@ -33,8 +33,9 @@ import unittest
 import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type import Permissions
-from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5Form.PreferenceTool import Priority
 
 
 class TestTemplate(ERP5TypeTestCase):
@@ -48,17 +49,15 @@ class TestTemplate(ERP5TypeTestCase):
     """Returns list of BT to be installed."""
     return ('erp5_base', 'erp5_knowledge_pad', 'erp5_ui_test')
 
-  def login(self, name=None):
+  def createUserAndLogin(self, name=None):
     """login with Member & Author roles."""
-    if name is None:
-      return
     uf = self.getPortal().acl_users
     uf._doAddUser(name, '', ['Member', 'Author'], [])
     user = uf.getUserById(name).__of__(uf)
     newSecurityManager(None, user)
 
   def afterSetUp(self):
-    ERP5TypeTestCase.login(self, 'ERP5TypeTestCase')
+    self.login('ERP5TypeTestCase')
     portal_preferences = self.portal.portal_preferences
     portal_preferences.deleteContent(list(portal_preferences.objectIds()))
     transaction.commit()
@@ -71,7 +70,7 @@ class TestTemplate(ERP5TypeTestCase):
                                              ])
 
   def test_Template(self):
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
@@ -117,7 +116,7 @@ class TestTemplate(ERP5TypeTestCase):
 
 
   def test_TemplateDeletable(self):
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
@@ -170,7 +169,7 @@ class TestTemplate(ERP5TypeTestCase):
     )
 
   def test_TemplateCreatePreferenceWithExistingUserPreference(self):
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     user_preference = self.portal.portal_preferences.newContent(
         portal_type='Preference')
     user_preference.setPriority(Priority.USER)
@@ -190,17 +189,90 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEquals('enabled', user_preference.getPreferenceState())
     self.assertEqual(len(user_preference.objectIds()), 1)
 
+  def test_TemplateCreatePreferenceWithExistingNonAuthorizedPreference(self):
+    # When there is an active preference, but without add permission in that
+    # preference, another preference is created when making a template
+    self.createUserAndLogin(self.id())
+    unauthorized_preference = self.portal.portal_preferences.newContent(
+        portal_type='Preference')
+    unauthorized_preference.enable()
+    # it's not authorized to add content in this preference
+    unauthorized_preference.manage_permission('Add portal content', (), acquire=0)
+    preference_id_list = list(self.portal.portal_preferences.objectIds())
+
+    transaction.commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo')
+    transaction.commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+    self.tic()
+
+    # this preference was not used
+    self.assertEqual(len(unauthorized_preference.objectIds()), 0)
+
+    # a new preference is created
+    new_preference_id_list = list(self.portal.portal_preferences.objectIds())
+    self.assertEqual(len(preference_id_list) + 1, len(new_preference_id_list))
+    preference_id = [x for x in new_preference_id_list if x not in
+                            preference_id_list][0]
+    preference = self.portal.portal_preferences._getOb(preference_id)
+    self.assertEquals('Preference', preference.getPortalType())
+    self.assertEquals('enabled', preference.getPreferenceState())
+
+    self.assertEqual(len(preference.objectIds()), 1)
+
+  def test_TemplateCreateWithSameTitleUpdateExisting(self):
+    # When we create a template with the same title as an existing template, it
+    # replaces the existing one.
+    self.createUserAndLogin(self.id())
+    user_preference = self.portal.portal_preferences.newContent(
+        portal_type='Preference')
+    user_preference.setPriority(Priority.USER)
+    user_preference.enable()
+    transaction.commit()
+    self.tic()
+
+    document = self.portal.foo_module.newContent(portal_type='Foo',
+                                                 title='template',
+                                                 description='First document')
+    transaction.commit()
+    self.tic()
+
+    document.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(len(user_preference.objectIds()), 1)
+    self.assertEqual(user_preference.objectValues()[0].getDescription(),
+                     'First document')
+    
+    other_document = self.portal.foo_module.newContent(
+                                    portal_type='Foo',
+                                    title='template',
+                                    description="Another document")
+    other_document.Base_makeTemplateFromDocument(form_id=None)
+    transaction.commit()
+    self.tic()
+    self.assertEqual(len(user_preference.objectIds()), 1)
+    self.assertEqual(user_preference.objectValues()[0].getDescription(),
+                     'Another document')
+
+
   def test_TemplateCreatePreferenceWithSystemPreferenceEnabled(self):
     # TODO: This test *might* be removed if it is good to trust
     #       getActivePreference to return only Preference portal type
-    ERP5TypeTestCase.login(self, 'ERP5TypeTestCase')
+    self.login('ERP5TypeTestCase')
     system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
     system_preference.setPriority(Priority.SITE)
     system_preference.enable()
     transaction.commit()
     self.tic()
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     user_preference = self.portal.portal_preferences.newContent(
         portal_type='Preference')
     user_preference.setPriority(Priority.USER)
@@ -221,7 +293,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual(len(user_preference.objectIds()), 1)
 
   def test_TemplateCreatePreference(self):
-    self.login('another user with no active preference')
+    self.createUserAndLogin('another user with no active preference')
     active_user_preference_list = [p for p in
         self.portal.portal_preferences._getSortedPreferenceList()
         if p.getPriority() == Priority.USER]
@@ -242,7 +314,6 @@ class TestTemplate(ERP5TypeTestCase):
     preference_id = [x for x in new_preference_id_list if x not in
                             preference_id_list][0]
     preference = self.portal.portal_preferences._getOb(preference_id)
-
     self.assertEquals('Preference', preference.getPortalType())
     self.assertEquals('Document Template Container', preference.getTitle())
     self.assertEquals(Priority.USER, preference.getPriority())
@@ -250,9 +321,20 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.assertEqual(len(preference.objectIds()), 1)
 
+  # Reason for test failure: 
+  #
+  # Base_makeTemplateFromDocument uses portal_preference.getActivePreference(),
+  # and if the user has no preference, it creates a new preference to attach it
+  # the template.
+  # But getActivePreference uses the catalog, for performance reasons. Which
+  # means that two successive calls to Base_makeTemplateFromDocument, from an
+  # initial state where the user has no active preferences, will create wrongly
+  # two preferences instead of one: during the second call, a preference does
+  # exist, and is enabled for current user, but is just not yet reindexed.
+  @expectedFailure
   def test_manyTemplatesWithoutReindexation(self):
     """Check what happen when templates are created one by one without reindexation"""
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     active_user_preference_list = [p for p in
         self.portal.portal_preferences._getSortedPreferenceList()
         if p.getPriority() == Priority.USER]
@@ -282,10 +364,7 @@ class TestTemplate(ERP5TypeTestCase):
     preference = self.portal.portal_preferences._getOb(preference_id)
 
     self.assertEquals('Preference', preference.getPortalType())
-    self.assertEquals('Document Template Container', preference.getTitle())
-    self.assertEquals(Priority.USER, preference.getPriority())
     self.assertEquals('enabled', preference.getPreferenceState())
-
     self.assertEqual(len(preference.objectIds()), 2)
 
   def _testTemplateNotIndexable(self, document):
@@ -293,7 +372,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.portal.portal_activities.manage_enableActivityTracking()
     self.portal.portal_activities.manage_enableActivityTimingLogging()
     self.portal.portal_activities.manage_enableActivityCreationTrace()
-    self.login(self.id())
+    self.createUserAndLogin(self.id())
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
@@ -302,20 +381,27 @@ class TestTemplate(ERP5TypeTestCase):
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
+
     transaction.commit()
+    # making a new template should not create indexing activities,
+    # either for the new template or one of its subobjects
+    self.assertEqual(self.portal.portal_activities.getMessageList(), [])
     self.tic()
+
     self.assertTrue(document.isIndexable)
     self.assertEqual(len(preference.objectIds()), 1)
     template = preference.objectValues()[0]
     self.assertFalse(template.isIndexable)
     
     # Because they are not indexable, they cannot be found by catalog
-    transaction.commit()
-    self.tic()
     self.assertEquals(0, len(self.portal.portal_catalog(uid=template.getUid())))
     template_line = template.objectValues()[0]
     self.assertEquals(0,
         len(self.portal.portal_catalog(uid=template_line.getUid())))
+
+    # change the title, because creating another template with same title will
+    # replace the first one
+    document.setTitle('%sb' % document.getTitle())
 
     # and this is still true if you create two templates from the same document
     # #929

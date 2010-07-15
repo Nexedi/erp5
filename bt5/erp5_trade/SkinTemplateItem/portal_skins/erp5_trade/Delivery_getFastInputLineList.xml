@@ -53,80 +53,189 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script creates a list of empty lines when called for\n
-  the first time.When called the next time, it displays on \n
-  the fast input all documents lines already added and \n
-  updates them based on fast input entries.\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  This script creates a list of empty lines when called with\n
+  read_document_lines to False. Otherwise, it displays on \n
+  the fast input all documents lines already added\n
 """\n
 from Products.ERP5Type.Document import newTempBase\n
-portal = context.getPortalObject()\n
-getobject = portal.portal_catalog.getobject\n
 request = context.REQUEST\n
 trade_document = context\n
 result = []\n
-line_list = context.contentValues(portal_type=line_portal_type)\n
 \n
-source_section = context.getSourceSectionValue()\n
-if no_inventory is False and source_section is None:\n
+# Retrieve lines portal type\n
+line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \\\n
+                         if x in context.getPortalMovementTypeList()]\n
+line_portal_type = line_portal_type_list[0]\n
+\n
+if read_document_lines:\n
+  line_list = context.contentValues(portal_type=line_portal_type)\n
+else:\n
+  line_list = []\n
+\n
+use_list = []\n
+# Check if the section and use preference are defined\n
+if line_portal_type in context.getPortalSaleTypeList():\n
+  section_uid = context.getSourceSectionUid()\n
+  use_list = context.portal_preferences.getPreferredSaleUseList()\n
+elif line_portal_type in context.getPortalPurchaseTypeList():\n
+  section_uid = context.getDestinationSectionUid()\n
+  use_list = context.portal_preferences.getPreferredPurchaseUseList()\n
+elif line_portal_type in context.getPortalInternalTypeList() + context.getPortalInventoryMovementTypeList():\n
+  section_uid = ""\n
+  use_list = context.portal_preferences.getPreferredPurchaseUseList() + \\\n
+             context.portal_preferences.getPreferredSaleUseList()\n
+else:\n
   from Products.ERP5Type.Message import translateString\n
   return context.Base_redirect(\'view\', keep_items=dict(\n
-    portal_status_message=translateString(\'Source section must be defined.\')))\n
+    portal_status_message=translateString(\'Type of document not known to retrieve section.\')))\n
+\n
+if len(use_list) == 0:\n
+  from Products.ERP5Type.Message import translateString\n
+  return context.Base_redirect(\'view\', keep_items=dict(\n
+    portal_status_message=translateString(\'Use preference must be defined.\')))\n
+  \n
+if section_uid is None:\n
+  from Products.ERP5Type.Message import translateString\n
+  return context.Base_redirect(\'view\', keep_items=dict(\n
+    portal_status_message=translateString(\'Section must be defined.\')))\n
 \n
 len_line_list = len(line_list)\n
-used_id = [] # list use to make sure we do not generate two line with same uid\n
+used_id = [] # list use to make sure we do not generate two line with same id/uid\n
+used_id_append = used_id.append\n
+result_append = result.append\n
 \n
 # first browse document\'s lines\n
-if len_line_list!=0:\n
-  for line in line_list:\n
-    obj=trade_document.newContent(portal_type=line_portal_type,\n
-                          id=line.getId(),\n
-                          uid="new_%s" % line.getId(),\n
-                          temp_object=1,\n
-                          is_indexable=0,)\n
-    used_id.append(int(line.getId()))\n
+for line in line_list:\n
+  resource = line.getResourceValue()\n
 \n
-    obj.edit(title=line.getResourceTitle(),\n
-             reference=line.getResourceReference(),\n
-             quantity=line.getQuantity(),\n
-             quantity_unit=line.getQuantityUnitList(),\n
-             total_price=line.getTotalPrice(),\n
-             )\n
-    if no_inventory is False:\n
-      obj.edit(\n
-        getAvailableInventory=line.getResourceValue().getAvailableInventory(\n
-                                  section_uid=source_section.getUid(),\n
-                                  variation_text=line.getVariationText()),\n
-        getCurrentInventory=line.getResourceValue().getCurrentInventory(\n
-                                  section_uid=source_section.getUid(),\n
-                                  variation_text=line.getVariationText()),\n
-        inventory=line.getResourceValue().getInventory(\n
-                                  section_uid=source_section.getUid(),\n
-                                  variation_text=line.getVariationText()))\n
-    result.append(obj)\n
+  line_id = int(line.getId())\n
 \n
-# then fill the remaining lines with empty ones\n
-for i in range(len_line_list+1,lines_num+1):\n
-   resource_relative_url = getattr(request,"field_listbox_resource_relative_url_new_%s"%i,None)\n
-   while i in used_id:\n
-     # do not used an id from previously generated lines\n
-     i+=1\n
-   obj=trade_document.newContent(portal_type=line_portal_type,\n
-                             id = i,\n
-                             uid="new_%s" % i,\n
-                             temp_object=1,\n
-                             getAvailableInventory=0,\n
-                             getCurrentInventory=0,\n
-                             is_indexable=0,)\n
-   used_id.append(i)\n
+  # First check if cells are defined\n
+  cell_list = line.getCellValueList()\n
+  if len(cell_list):\n
+    for cell in cell_list:\n
+      while line_id in used_id:\n
+        # do not used an id from previously generated lines\n
+        line_id+=1\n
+      context.log("inventory values a = %s, c = %s, f = %s" %(resource.getAvailableInventory(\n
+        section_uid=section_uid,\n
+        variation_text=cell.getVariationText()),\n
+                                                              resource.getCurrentInventory(\n
+        section_uid=section_uid,\n
+        variation_text=cell.getVariationText()),\n
+                                                              resource.getInventory(\n
+        section_uid=section_uid,\n
+        variation_text=cell.getVariationText())))\n
 \n
-   if resource_relative_url not in (\'\',None):\n
-    resource = context.restrictedTraverse(resource_relative_url)\n
-    obj.setResourceValue(resource)\n
-   result.append(obj)\n
+      obj = trade_document.newContent(portal_type=line_portal_type,\n
+                                      id=line_id,\n
+                                      source=cell.getRelativeUrl(), # use as a link to the already create line/cell\n
+                                      uid="new_%s" % line_id,\n
+                                      temp_object=1,\n
+                                      is_indexable=0,\n
+                                      title=resource.getTitle(),\n
+                                      resource_value=resource,\n
+                                      reference=resource.getReference(),\n
+                                      quantity=cell.getQuantity(),\n
+                                      price=cell.getPrice(),\n
+                                      total_price=cell.getTotalPrice(),\n
+                                      variation_category_list = cell.getVariationCategoryList(),\n
+                                      available_quantity=resource.getAvailableInventory(\n
+                                                                 section_uid=section_uid,\n
+                                                                 variation_text=cell.getVariationText()),\n
+                                      current_quantity=resource.getCurrentInventory(\n
+                                                                 section_uid=section_uid,\n
+                                                                 variation_text=cell.getVariationText()),\n
+                                      inventory=resource.getInventory(\n
+                                                                 section_uid=section_uid,\n
+                                                                 variation_text=cell.getVariationText()))\n
+      result_append(obj)\n
+      used_id_append(line_id)\n
+  else:\n
+    while line_id in used_id:\n
+      # do not used an id from previously generated lines\n
+      line_id+=1\n
+    context.log("inventory values a = %s, c = %s, f = %s" %(resource.getAvailableInventory(\n
+        section_uid=section_uid,\n
+        variation_text=line.getVariationText()),\n
+                                                              resource.getCurrentInventory(\n
+        section_uid=section_uid,\n
+        variation_text=line.getVariationText()),\n
+                                                              resource.getInventory(\n
+        section_uid=section_uid,\n
+        variation_text=line.getVariationText())))\n
+\n
+    obj = trade_document.newContent(portal_type=line_portal_type,\n
+                                    id=line_id,\n
+                                    uid="new_%s" % line_id,\n
+                                    source=line.getRelativeUrl(),\n
+                                    temp_object=1,\n
+                                    is_indexable=0,\n
+                                    title=resource.getTitle(),\n
+                                    resource_value=resource,\n
+                                    reference=resource.getReference(),\n
+                                    quantity=line.getQuantity(),\n
+                                    price = line.getPrice(),\n
+                                    total_price=line.getTotalPrice(),\n
+                                    variation_category_list = line.getVariationCategoryList(),\n
+                                    available_quantity=resource.getAvailableInventory(\n
+                                                               section_uid=section_uid,\n
+                                                               variation_text=line.getVariationText()),\n
+                                    current_quantity=resource.getCurrentInventory(\n
+                                                               section_uid=section_uid,\n
+                                                               variation_text=line.getVariationText()),\n
+                                    inventory=resource.getInventory(\n
+                                                               section_uid=section_uid,\n
+                                                               variation_text=line.getVariationText()))\n
+\n
+    result_append(obj)\n
+    used_id_append(line_id)\n
+\n
+# then add empty lines\n
+empty_line_cpt = 1 # this counter is used so that we always add a fix\n
+                   # number of empty lines into the listbox, thus user\n
+                   # just have to click "update" to get new empty lines\n
+i = len_line_list + 1\n
+if read_document_lines is False:\n
+  while empty_line_cpt <= lines_num:\n
+     while i in used_id:\n
+       # do not used an id from previously generated lines\n
+       i+=1\n
+     # Retrieve values set by the update script\n
+     resource_relative_url = getattr(request,"field_listbox_resource_relative_url_new_%s"%i,None)\n
+     resource_title = getattr(request,"field_listbox_title_new_%s"%i,None)\n
+     reference = getattr(request,"field_listbox_reference_new_%s"%i,None)\n
+\n
+     obj=trade_document.newContent(portal_type=line_portal_type,\n
+                                   id = i,\n
+                                   uid="new_%s" % i,\n
+                                   temp_object=1,\n
+                                   reference=None, # otherwise it is acquired on parent\n
+                                   is_indexable=0,)\n
+\n
+     used_id_append(i)\n
+     # Set values inputted by user\n
+     if resource_title not in (\'\',None):\n
+       empty_line_cpt -= 1\n
+       obj.edit(resource_title=resource_title)\n
+     if reference not in (\'\',None):\n
+       empty_line_cpt -= 1\n
+       obj.edit(reference=reference)\n
+     # if a resource is selected, use it\n
+     if resource_relative_url not in (\'\',None):\n
+       empty_line_cpt -= 1\n
+       resource = context.restrictedTraverse(resource_relative_url)\n
+       obj.setResourceValue(resource)\n
+     empty_line_cpt += 1\n
+     result_append(obj)\n
 \n
 return result\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -136,7 +245,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>line_portal_type, lines_num=10, no_inventory=False, **kw</string> </value>
+            <value> <string>lines_num=10, read_document_lines=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -156,45 +265,56 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>line_portal_type</string>
                             <string>lines_num</string>
-                            <string>no_inventory</string>
+                            <string>read_document_lines</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>portal</string>
-                            <string>getobject</string>
                             <string>request</string>
                             <string>trade_document</string>
                             <string>result</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
+                            <string>line_portal_type_list</string>
+                            <string>_getitem_</string>
+                            <string>line_portal_type</string>
                             <string>line_list</string>
-                            <string>source_section</string>
-                            <string>False</string>
-                            <string>None</string>
+                            <string>use_list</string>
+                            <string>section_uid</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>dict</string>
                             <string>len</string>
+                            <string>None</string>
                             <string>len_line_list</string>
                             <string>used_id</string>
-                            <string>_getiter_</string>
+                            <string>used_id_append</string>
+                            <string>result_append</string>
                             <string>line</string>
-                            <string>obj</string>
+                            <string>resource</string>
                             <string>int</string>
-                            <string>range</string>
+                            <string>line_id</string>
+                            <string>cell_list</string>
+                            <string>cell</string>
+                            <string>_inplacevar_</string>
+                            <string>obj</string>
+                            <string>empty_line_cpt</string>
                             <string>i</string>
+                            <string>False</string>
                             <string>getattr</string>
                             <string>resource_relative_url</string>
-                            <string>_inplacevar_</string>
-                            <string>resource</string>
+                            <string>resource_title</string>
+                            <string>reference</string>
                           </tuple>
                         </value>
                     </item>

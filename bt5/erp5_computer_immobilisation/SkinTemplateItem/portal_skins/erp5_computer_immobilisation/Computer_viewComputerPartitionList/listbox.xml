@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>default_params</string>
                 <string>anchor</string>
+                <string>columns</string>
+                <string>default_params</string>
+                <string>portal_types</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>

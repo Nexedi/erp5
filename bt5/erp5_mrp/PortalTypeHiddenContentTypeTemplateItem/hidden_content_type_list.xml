@@ -1,6 +1,7 @@
 <hidden_content_type_list>
  <portal_type id="Production Order Line">
   <item>Delivery Cell</item>
+  <item>Production Order Cell</item>
  </portal_type>
  <portal_type id="Production Packing List Line">
   <item>Delivery Cell</item>

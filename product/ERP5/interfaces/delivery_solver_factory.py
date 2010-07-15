@@ -35,51 +35,24 @@ class IDeliverySolverFactory(Interface):
   IDeliverySolverFactory provides methods to create delivery
   solver instances and retrieve metadata related to delivery
   solvers.
-
-  NOTE:
-    - wouldn't it be better to use ERP5 document
-      classes for delivery solvers.
-      (only meaningful reason: use activities to
-      setTotalQuantity on 10,000+ movements)
   """
 
-  def newDeliverySolver(class_name, movement_list):
+  def newDeliverySolver(portal_type, movement_list):
     """
     Return a new instance of delivery solver of the given
-    class_name and with appropriate parameters.
+    portal_type and with appropriate parameters.
 
-    class_name -- the class name of the delivery solver.
+    portal_type -- the portal_type of the delivery solver.
 
     movement_list -- movements to initialise the instance with
     """
 
-  def getDeliverySolverClassNameList():
+  def getDeliverySolverTranslatedItemList(portal_type_list=None):
     """
-    Return the list of class names of available delivery solvers.
-    """
-
-  def getDeliverySolverTranslatedItemList(class_name_list=None):
-    """
-    Return the list of translated titles and class names of available
+    Return the list of translated titles and portal types of available
     delivery solvers. Use this method to fill listfields in user interface
     forms.
 
-    class_name_list -- optional parameter to filter results only
-                       with provided class names
-    """
-
-  def getDeliverySolverTranslatedTitle(class_name):
-    """
-    Return the title to be used in the user interface for the
-    delivery solver with given class_name
-
-    class_name -- the class name of a delivery solver
-    """
-
-  def getDeliverySolverTranslatedDescription(class_name):
-    """
-    Return the description to be used in the user interface for the
-    delivery solver with given class_name
-
-    class_name -- the class name of a delivery solver
+    portal_type_list -- optional parameter to filter results only
+                       with provided portal types
     """

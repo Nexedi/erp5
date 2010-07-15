@@ -55,18 +55,16 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Returns the item list of possible functions to use on accounting lines.\n
 """\n
+portal = context.getPortalObject()\n
 \n
-# Configure this ... maybe it will be a system preference\n
-function_base_category_id = None\n
-\n
-if function_base_category_id is not None:\n
-  portal = context.getPortalObject()\n
-  return getattr(portal.portal_categories[function_base_category_id], \n
+function_base_category = portal.portal_preferences.getPreferredAccountingTransactionLineFunctionBaseCategory()\n
+if function_base_category:\n
+  return getattr(portal.portal_categories.restrictedTraverse(function_base_category),\n
                   portal.portal_preferences.getPreference(\'preferred_category_child_item_list_method_id\',\n
                         \'getCategoryChildCompactLogicalPathItemList\'))(\n
                               local_sort_id=(\'int_index\', \'translated_title\'),\n
                               checked_permission=\'View\',\n
-                              base=1) \n
+                              base=True) \n
 \n
 return ()\n
 </string> </value>
@@ -105,13 +103,12 @@ return ()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>None</string>
-                            <string>function_base_category_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>function_base_category</string>
                             <string>getattr</string>
-                            <string>_getitem_</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>

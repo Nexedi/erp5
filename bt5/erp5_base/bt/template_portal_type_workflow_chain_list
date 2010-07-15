@@ -16,14 +16,18 @@ Currency | edit_workflow
 Currency | validation_workflow
 Email | edit_workflow
 Fax | edit_workflow
-File | cached_convertible_interaction_workflow
+File | document_conversion_interaction_workflow
+File | document_security_interaction_workflow
 File | edit_workflow
-Image | cached_convertible_interaction_workflow
+Image | document_conversion_interaction_workflow
+Image | document_security_interaction_workflow
 Image | edit_workflow
 Link | edit_workflow
-Notification Message | cached_convertible_interaction_workflow
+Notification Message | document_conversion_interaction_workflow
+Notification Message | document_security_interaction_workflow
 Notification Message | edit_workflow
 Notification Message | notification_message_workflow
+Notification Message | processing_status_workflow
 Organisation | edit_workflow
 Organisation | validation_workflow
 Person | edit_workflow
@@ -38,4 +42,7 @@ Role Definition | edit_workflow
 Role Definition | local_permission_interaction_workflow
 Rounding Model | validation_workflow
 Simulation Movement | simulation_movement_causality_interaction_workflow
+Solver Process | solver_process_workflow
+Solver Type | edit_workflow
+Solver Type | validation_workflow
 Telephone | edit_workflow

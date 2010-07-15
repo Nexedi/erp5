@@ -108,7 +108,8 @@ def getIsSourceMovementItemList(invoice):\n
   movement_item_list = [(is_source, m) for m in invoice.getMovementList(\n
           portal_type=portal.getPortalAccountingMovementTypeList())]\n
   for btt in context.getCausalityRelatedValueList(\n
-                        portal_type=\'Balance Transfer Transaction\'):\n
+                        portal_type=\'Balance Transfer Transaction\',\n
+                        checked_permission=\'Access contents information\'):\n
     if simulation_state and btt.getSimulationState() not in simulation_state:\n
       continue\n
     btt_is_source = btt.AccountingTransaction_isSourceView()\n
@@ -156,7 +157,8 @@ for is_source, line in getIsSourceMovementItemList(context):\n
 \n
 \n
 related_transaction_list = context.getCausalityRelatedValueList(\n
-                          portal_type=accounting_transaction_type_list)\n
+                          portal_type=accounting_transaction_type_list,\n
+                          checked_permission=\'Access contents information\')\n
 \n
 # substract all causalities\n
 for related_transaction in related_transaction_list:\n

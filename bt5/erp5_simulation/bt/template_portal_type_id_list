@@ -7,10 +7,6 @@ Net Converted Quantity Divergence Tester
 Production Reduction Solver
 Quantity Cancel Solver
 Quantity Split Solver
-Solver Decision
-Solver Process
-Solver Tool
-Solver Type
 String Divergence Tester
 Trade Model Solver
 Unify Solver

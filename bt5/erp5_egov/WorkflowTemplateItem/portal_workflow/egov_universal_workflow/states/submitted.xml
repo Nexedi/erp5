@@ -31,10 +31,11 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>sign</string>
-                <string>sign_action</string>
-                <string>validate</string>
-                <string>validate_action</string>
+                <string>automatic_receive_action</string>
+                <string>receive</string>
+                <string>receive_action</string>
+                <string>transfer</string>
+                <string>transfer_action</string>
               </tuple>
             </value>
         </item>
@@ -64,6 +65,7 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>
@@ -76,6 +78,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
@@ -84,25 +87,28 @@
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Set own password</string> </key>
+                    <value>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Auditor</string>

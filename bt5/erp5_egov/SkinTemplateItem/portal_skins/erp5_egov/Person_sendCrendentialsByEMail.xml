@@ -87,8 +87,8 @@ if len(result) == 0:\n
 person = result[0]\n
 \n
 # Build the message and translate it\n
-subject = translateString("Your credential for ${site_address}", mapping=dict(site_address=\'www.safi.sn\'))\n
-msg = """Thanks for registrering to SAFI. Now you can connect in on ${site_address} with this credentials : \n
+subject = translateString("Your credential for ${site_address}", mapping=dict(site_address=\'www.erp5.org\'))\n
+msg = """Thanks for registrering to ERP5 EGov. Now you can connect in on ${site_address} with this credentials : \n
 \n
 Login : ${login}\n
 Password : ${password}\n
@@ -96,9 +96,9 @@ Password : ${password}\n
 This credentials are usefull to track your application and more. Please visit ${site_address} for more information.\n
 """\n
 msg = translateString(msg,\n
-             mapping=dict(site_address=\'www.safi.sn\',\n
+             mapping=dict(site_address=\'www.erp5.org\',\n
                           login=person.getReference(),\n
-                          password=person.getPassword())\n
+                          password=not_encrypt_password)\n
             )\n
 \n
 # We can now notify the owner through the notification tool\n
@@ -117,7 +117,7 @@ context.portal_notifications.sendMessage(recipient=person.getReference(), \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>not_encrypt_password=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -146,12 +146,13 @@ context.portal_notifications.sendMessage(recipient=person.getReference(), \n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>not_encrypt_password</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>_getattr_</string>
@@ -177,7 +178,9 @@ context.portal_notifications.sendMessage(recipient=person.getReference(), \n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

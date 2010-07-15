@@ -58,21 +58,16 @@ response = request.RESPONSE\n
 \n
 from zExceptions import Unauthorized\n
 \n
-if hasattr(context,\'getContentType\'):\n
-  response.setHeader(\'Content-type\', context.getContentType())\n
-else:\n
-  response.setHeader(\'Content-type\', context.getFormat())\n
-\n
-file_name = context.getSourceReference() or context.getTitle() or context.getId()\n
+# Always force download of document even if format is supported\n
+# by browser\n
+file_name = context.getStandardFileName(None)\n
 response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % file_name)\n
 \n
 try:\n
-  result = context.index_html(request, response)\n
+  return context.index_html(request, response)\n
 except Unauthorized:\n
   msg = context.Base_translateString("You do not have enough permission for converting this document.")\n
   return context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
-\n
-return result\n
 </string> </value>
         </item>
         <item>
@@ -115,10 +110,9 @@ return result\n
                             <string>response</string>
                             <string>zExceptions</string>
                             <string>Unauthorized</string>
-                            <string>hasattr</string>
                             <string>context</string>
+                            <string>None</string>
                             <string>file_name</string>
-                            <string>result</string>
                             <string>msg</string>
                             <string>dict</string>
                           </tuple>

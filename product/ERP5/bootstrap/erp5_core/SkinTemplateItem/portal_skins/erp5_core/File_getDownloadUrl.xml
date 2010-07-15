@@ -53,21 +53,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
-\n
-index = context.portal_selections.getSelectionIndexFor(selection_name)\n
-object = brain.getObject()\n
-if object is None:\n
-  return None\n
-\n
-url = object.absolute_url()\n
-method = \'Base_download\'\n
-kw = { \n
-      \'selection_name\' : selection_name,\n
-      \'selection_index\' : index,\n
-     }\n
-\n
-return url + \'/\' + method + \'?\' + make_query(kw)\n
+            <value> <string>if brain is None:\n
+  brain = context\n
+return \'%s/Base_download\' % brain.absolute_url()\n
 </string> </value>
         </item>
         <item>
@@ -107,16 +95,9 @@ return url + \'/\' + method + \'?\' + make_query(kw)\n
                             <string>brain</string>
                             <string>selection</string>
                             <string>selection_name</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>index</string>
-                            <string>object</string>
                             <string>None</string>
-                            <string>url</string>
-                            <string>method</string>
-                            <string>kw</string>
+                            <string>context</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>

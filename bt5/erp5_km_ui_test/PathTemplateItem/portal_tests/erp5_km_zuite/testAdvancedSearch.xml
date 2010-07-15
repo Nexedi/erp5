@@ -43,12 +43,12 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Search Top Box hitting Enter</title>\n
+<title tal:content="template/getId"/>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test a search on the top box hitting enter</td></tr>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
 </thead><tbody>\n
 \n
 \n
@@ -57,30 +57,28 @@
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />\n
 \n
 <tr>\n
-  <td>open</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/view</td>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>open</td>\n
-  <td>${base_url}/web_site_module/Zuite_waitForActivities</td>\n
-  <td></td>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertTextPresent</td>\n
+  <td>verifyTextPresent</td>\n
   <td>Done.</td>\n
   <td></td>\n
-  <td></td>\n
-</tr>\n
+</tr> \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Advanced Search</td>\n
+  <td>link=Search</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -95,28 +93,22 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//div[@class=\'searchResultHeader\']/span[@class=\'right\']/em[2]</td>\n
-  <td>1</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
   <td>//tr[@id=\'listbox_data_line_0\']//span[@class=\'search_result_title\']</td>\n
   <td>test_km_web_site_page</td>\n
-</tr>\n
-<!-- Table mode -->\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>style_toggle_icon</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyElementPresent</td>\n
-  <td>link=Web Page</td>\n
-  <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
   <td>link=km.web.site.test.page</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Search Results</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Summary</td>\n
   <td></td>\n
 </tr>\n
 \n

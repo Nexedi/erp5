@@ -426,15 +426,27 @@ class SimulationTool(BaseTool):
         # Some columns cannot be found automatically, prepend table name to
         # avoid ambiguities.
 
-        # Group-by expression
+        # Group-by expression  (eg. group_by=['node_uid'])
         group_by = new_kw.pop('group_by', [])
-        column_group_by = new_kw.pop('column_group_by', [])
 
+        # group by from stock table (eg. group_by_node=True)
+        column_group_by = new_kw.pop('column_group_by', [])
         if column_group_by:
           group_by.extend(['%s.%s' % (table, x) for x in column_group_by])
+
+        # group by from related keys columns (eg. group_by_node_category=True)
         related_key_group_by = new_kw.pop('related_key_group_by', [])
         if related_key_group_by:
           group_by.extend(['%s_%s' % (table, x) for x in related_key_group_by])
+        
+        # group by involving a related key (eg. group_by=['product_line_uid'])
+        related_key_dict_passthrough_group_by = new_kw.get(
+                'related_key_dict_passthrough', dict()).pop('group_by', [])
+        if isinstance(related_key_dict_passthrough_group_by, basestring):
+          related_key_dict_passthrough_group_by = (
+                related_key_dict_passthrough_group_by,)
+        group_by.extend(related_key_dict_passthrough_group_by)
+
         if group_by:
           new_kw['group_by'] = group_by
 
@@ -962,6 +974,7 @@ class SimulationTool(BaseTool):
         group_by_section_category_strict_membership=0,
         group_by_resource=None,
         movement_list_mode=0,
+        group_by=None,
         **ignored):
       """
       Set defaults group_by parameters
@@ -979,7 +992,7 @@ class SimulationTool(BaseTool):
       group by statements in SQL).
       """
       new_group_by_dict = {}
-      if not ignore_group_by:
+      if not ignore_group_by and group_by is None:
         if group_by_node or group_by_mirror_node or group_by_section or \
            group_by_project or group_by_function or \
            group_by_mirror_section or group_by_payment or \
@@ -1196,6 +1209,7 @@ class SimulationTool(BaseTool):
                 date = inventory_date_line_dict['date']
                 non_date_value_dict = dict([(k, v) for k, v \
                   in inventory_date_line_dict.iteritems() if k != 'date'])
+
                 equal_date_query_list.append(
                   ComplexQuery(
                     ComplexQuery(operator='AND',
@@ -1566,24 +1580,59 @@ class SimulationTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryAssetPrice')
     def getInventoryAssetPrice(self, src__=0, 
-                               simulation_period='', **kw):
+                               simulation_period='',
+                               valuation_method=None,
+                               **kw):
       """
       Same thing as getInventory but returns an asset
       price rather than an inventory.
-      """
-      method = getattr(self,'get%sInventoryList' % simulation_period)
-      kw['ignore_group_by'] = 1
-      result = method( src__=src__, inventory_list=0, **kw)
-      if src__ :
-        return result
 
-      total_result = 0.0
-      if len(result) > 0:
+      If valuation method is None, returns the sum of total prices.
+
+      Else it should be a string, in:
+        Filo
+        Fifo
+        WeightedAverage
+        MonthlyWeightedAverage
+        MovingAverage
+      When using a specific valuation method, a resource_uid is expected
+      as well as one of (section_uid or node_uid).
+      """
+      if valuation_method is None:
+        method = getattr(self,'get%sInventoryList' % simulation_period)
+        kw['ignore_group_by'] = 1
+        result = method( src__=src__, inventory_list=0, **kw)
+        if src__ :
+          return result
+
+        if len(result) == 0:
+          return 0.0
+
+        total_result = 0.0
         for result_line in result:
           if result_line.total_price is not None:
             total_result += result_line.total_price
 
-      return total_result
+        return total_result
+
+      if valuation_method not in ('Fifo', 'Filo', 'WeightedAverage',
+        'MonthlyWeightedAverage', 'MovingAverage'):
+        raise ValueError("Invalid valuation method: %s" % valuation_method)
+
+      assert 'node_uid' in kw or 'section_uid' in kw
+      sql_kw = self._generateSQLKeywordDict(**kw)
+
+      if 'section_uid' in kw:
+        # ignore internal movements
+        sql_kw['where_expression'] += ' AND ' \
+          'stock.section_uid!=stock.mirror_section_uid'
+
+      result = self.Resource_zGetAssetPrice(
+          valuation_method=valuation_method,
+          **sql_kw)
+
+      if len(result) > 0:
+        return result[-1].total_asset_price
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryAssetPrice')

@@ -56,34 +56,39 @@ class UnifySolver(AcceptSolver):
   zope.interface.implements(interfaces.ISolver,)
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
     Adopt new property to simulation movements, with keeping the
     original one recorded.
     """
     configuration_dict = self.getConfigurationPropertyDict()
-    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
+    portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
     solved_property_list = configuration_dict.get('tested_property_list',
                                                   portal_type.getTestedPropertyList())
     # XXX it does not support multiple tested properties.
     solved_property = solved_property_list[0]
-    for movement in self.getDeliveryValueList():
+    delivery_dict = {}
+    for simulation_movement in self.getDeliveryValueList():
+      delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
+                               []).append(simulation_movement)
+    for movement, simulation_movement_list in delivery_dict.iteritems():
+      if activate_kw is not None:
+        movement.setDefaultActivateParameters(
+          activate_kw=activate_kw, **activate_kw)
       configuration_dict = self.getConfigurationPropertyDict()
       new_value = configuration_dict.get('value')
       movement.setProperty(solved_property, new_value)
-      simulation_movement_list = movement.getDeliveryRelatedValueList()
-      # if movement here is a delivery, we need to find simulation
-      # movements by its movements.
-      if len(simulation_movement_list) == 0:
-        simulation_movement_list = sum(
-          [x.getDeliveryRelatedValueList() \
-           for x in self.getDeliveryValue().getMovementList()], [])
       for simulation_movement in simulation_movement_list:
+        if activate_kw is not None:
+          simulation_movement.setDefaultActivateParameters(
+            activate_kw=activate_kw, **activate_kw)
         value_dict = {solved_property:new_value}
         for property_id, value in value_dict.iteritems():
           if not simulation_movement.isPropertyRecorded(property_id):
             simulation_movement.recordProperty(property_id)
           simulation_movement.setMappedProperty(property_id, value)
-        simulation_movement.expand()
+        simulation_movement.expand(activate_kw=activate_kw)
     # Finish solving
-    self.succeed()
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      self, 'succeed'):
+      self.succeed()

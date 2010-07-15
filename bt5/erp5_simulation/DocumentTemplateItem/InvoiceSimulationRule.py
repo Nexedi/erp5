@@ -93,15 +93,5 @@ class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
 
 class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
 
-  def _getUpdatePropertyDict(self, input_movement):
-    root_simulation_movement = input_movement.getRootSimulationMovement()
-    source = input_movement.getSourceAdministration() or \
-              root_simulation_movement.getSource()
-    destination = input_movement.getDestinationAdministration() or \
-                  root_simulation_movement.getDestination()
-    return {'portal_type': RuleMixin.movement_type,
-            'order':None, 'delivery':None,
-            'source':source, 'destination':destination}
-
   def _getInputMovementList(self, movement_list=None, rounding=None):
     return [self._applied_rule.getParentValue(),]

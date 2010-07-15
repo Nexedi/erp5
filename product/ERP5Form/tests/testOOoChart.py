@@ -37,7 +37,7 @@ from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
 from Acquisition import aq_base
 from Products.ERP5Type.Globals import get_request
-from Products.ERP5OOo.Document.OOoDocument import STANDARD_IMAGE_FORMAT_LIST
+from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
 from Products.ERP5Type.Core.Folder import Folder
 from lxml import etree
 
@@ -55,7 +55,13 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       return 'Test OOoChart'
 
     def getBusinessTemplateList(self):
-      return ('erp5_base', 'erp5_ui_test', 'erp5_odt_style', 'erp5_ods_style',)
+      return ('erp5_base', 
+              'erp5_ingestion',
+              'erp5_web',
+              'erp5_dms',
+              'erp5_ui_test', 
+              'erp5_odt_style',
+              'erp5_ods_style')
 
     def afterSetUp(self):
       self.auth = 'ERP5TypeTestCase:'
@@ -149,7 +155,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       # test content type : application/vnd.oasis.opendocument.graphics
       self.assertTrue(content_type.startswith(self.content_type), content_type)
       content_disposition = response.getHeader('content-disposition')
-      self.assertEquals('inline', content_disposition.split(';')[0])
+      self.assertEquals('attachment', content_disposition.split(';')[0])
       # Test ODG (zip)
       body = response.getBody()
       # Test Validation Relax NG
@@ -176,7 +182,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       # Test the differents render
       # render image
-      for image_format in STANDARD_IMAGE_FORMAT_LIST:
+      for image_format in VALID_IMAGE_FORMAT_LIST:
         response = self.publish(
                       '/%s/%s/%s?render_format=%s&display=medium'
                       % (self.portal.getId(), self.form_id, self.ooo_chart_id, image_format), self.auth )
@@ -242,7 +248,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       # test content type : application/vnd.oasis.opendocument.graphics
       self.assertTrue(content_type.startswith(self.content_type), content_type)
       content_disposition = response.getHeader('content-disposition')
-      self.assertEquals('inline', content_disposition.split(';')[0])
+      self.assertEquals('attachment', content_disposition.split(';')[0])
       # Test ODG (zip)
       body = response.getBody()
       # Test Validation Relax NG
@@ -269,7 +275,7 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
 
       # Test the differents render
       # render image
-      for image_format in STANDARD_IMAGE_FORMAT_LIST:
+      for image_format in VALID_IMAGE_FORMAT_LIST:
         response = self.publish(
                       '/%s/%s/%s?render_format=%s&display=medium'
                       % (self.portal.getId(), self.form_id, self.ooo_chart_id, image_format), self.auth )

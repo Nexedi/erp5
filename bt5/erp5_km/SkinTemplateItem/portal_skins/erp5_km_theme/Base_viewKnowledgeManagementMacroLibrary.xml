@@ -58,23 +58,30 @@
                tal:condition="not: exists_siblings">\n
              <a tal:content="root_section/Base_getTitle"\n
                 tal:attributes="href root_section/absolute_url;\n
-                                title section/Base_getTitle;"/>\n
+                                title root_section/Base_getTitle"/>\n
            </li>\n
            <li class="non-empty-list-node"\n
-               tal:condition="exists_siblings">\n
+               tal:condition="exists_siblings"\n
+               tal:define="section_title root_section/Base_getTitle">\n
              <img src="images/tree_closed.png" \n
                   alt=""\n
-                  tal:attributes="id image_dom_id"/>\n
-             <span tal:content="root_section/Base_getTitle"\n
+                  tal:attributes="id image_dom_id;\n
+                                  onclick python: \'toggleSection(\\\'%s\\\', \\\'%s\\\')\' %(section_dom_id, image_dom_id)"/>\n
+             <span tal:content="section_title"\n
                    style="cursor:pointer;"\n
-                   tal:attributes="onclick python: \'toggleSection(\\\'%s\\\', \\\'%s\\\')\' %(section_dom_id, image_dom_id)"/>\n
+                   tal:attributes="onclick python: \'toggleSection(\\\'%s\\\', \\\'%s\\\')\' %(section_dom_id, image_dom_id);\n
+                                   title section_title"/>\n
              <div style="display:none;"\n
                   tal:attributes="id section_dom_id">\n
                <ul class="third_level">\n
-                 <li tal:repeat="section siblings">\n
-                   <a href="#" \n
-                      tal:content="section/Base_getTitle"\n
-                      tal:attributes="href section/absolute_url">Theme</a>\n
+                 <li tal:repeat="sibling siblings">\n
+                   <tal:block tal:define="sibling_section_title sibling/Base_getTitle;\n
+                                          sibling_section_url sibling/absolute_url">\n
+                     <a href="#" \n
+                        tal:content="sibling_section_title"\n
+                        tal:attributes="href sibling_section_url;\n
+                                        title sibling_section_title"/>\n
+                   </tal:block>\n
                  </li>\n
                </ul>\n
              </div>\n

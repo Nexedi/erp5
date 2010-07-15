@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -35,15 +36,18 @@ import sys
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
+from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions, tarfile
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
+from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
 from Products.ERP5 import _dtmldir
 from cStringIO import StringIO
 from urllib import pathname2url, urlopen, splittype, urlretrieve
+import urllib2
 import re
 from xml.dom.minidom import parse
 from xml.parsers.expat import ExpatError
@@ -58,6 +62,8 @@ import subprocess
 
 
 WIN = os.name == 'nt'
+
+_MARKER = []
 
 class BusinessTemplateUnknownError(Exception):
   """ Exception raised when the business template
@@ -134,14 +140,27 @@ class TemplateTool (BaseTool):
       DeprecationWarning('getInstalledBusinessTemplatesList is deprecated; Use getInstalledBusinessTemplateList instead.', DeprecationWarning)
       return self.getInstalledBusinessTemplateList()
 
-    def getInstalledBusinessTemplateList(self):
+    def _getInstalledBusinessTemplateList(self, only_title=0):
       """Get the list of installed business templates.
       """
       installed_bts = []
       for bt in self.contentValues(portal_type='Business Template'):
         if bt.getInstallationState() == 'installed':
-          installed_bts.append(bt)
+          bt5 = bt
+          if only_title:
+            bt5 = bt.getTitle()
+          installed_bts.append(bt5)
       return installed_bts
+
+    def getInstalledBusinessTemplateList(self):
+      """Get the list of installed business templates.
+      """
+      return self._getInstalledBusinessTemplateList(only_title=0)
+
+    def getInstalledBusinessTemplateTitleList(self):
+      """Get the list of installed business templates.
+      """
+      return self._getInstalledBusinessTemplateList(only_title=1)
 
     def getInstalledBusinessTemplateRevision(self, title, **kw):
       """
@@ -1027,7 +1046,7 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplatesFromRepositories' )
     def installBusinessTemplatesFromRepositories(self, template_list,
-        only_newer=True):
+        only_newer=True, update_catalog=_MARKER):
       """Installs template_list from configured repositories by default only newest"""
       # XXX-Luke: This method could replace
       # TemplateTool_installRepositoryBusinessTemplateList while still being
@@ -1042,7 +1061,10 @@ class TemplateTool (BaseTool):
               template_name]['revision']:
             template_document = self.download(template_dict[template_name][
               'url'])
-            template_document.install()
+            if update_catalog is _MARKER:
+              template_document.install()
+            else:
+              template_document.install(update_catalog=update_catalog)
             opreation_log.append('Installed %s with revision %s' % (
               template_document.getTitle(), template_document.getRevision()))
           else:
@@ -1050,5 +1072,113 @@ class TemplateTool (BaseTool):
         else:
           opreation_log.append('Not found in repositories %s' % template_name)
       return opreation_log
+
+    security.declareProtected(Permissions.ManagePortal,
+            'updateBusinessTemplateFromUrl')
+    def updateBusinessTemplateFromUrl(self, download_url, id=None,
+                                         keep_original_list=[],
+                                         before_triggered_bt5_id_list=[],
+                                         after_triggered_bt5_id_list=[],
+                                         update_catalog=0,
+                                         reinstall=False,
+                                         active_process=None):
+      """ 
+        This method download and install a bt5, from a URL.
+      """
+      if active_process is None:
+        installed_dict = {}
+        def log(msg):
+          LOG('TemplateTool.updateBusinessTemplateFromUrl', INFO, msg)
+      else:
+        active_process = self.unrestrictedTraverse(active_process)
+        if getattr(aq_base(active_process), 'installed_dict', None) is None:
+          active_process.installed_dict = PersistentMapping()
+        installed_dict = active_process.installed_dict
+        message_list = []
+        log = message_list.append
+
+      log("Installing %s ..." % download_url)
+      imported_bt5 = self.download(url = download_url, id = id)
+      bt_title = imported_bt5.getTitle()
+      BusinessTemplate_getModifiedObject = \
+        aq_base(getattr(self, 'BusinessTemplate_getModifiedObject'))
+
+      listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
+      if reinstall:
+        log('Reinstall all items')
+        install_kw = dict.fromkeys(imported_bt5.getItemsList(), 'install')
+      else:
+        install_kw = {}
+      for listbox_line in listbox_object_list:
+        item = listbox_line.object_id
+        state = listbox_line.object_state
+        removed = state.startswith('Removed')
+        if removed:
+          # The following condition could not be used to automatically decide
+          # if an item must be kept or not. For example, this would not work
+          # for items installed by PortalTypeWorkflowChainTemplateItem.
+          maybe_moved = installed_dict.get(listbox_line.object_id, '')
+          log('%s: %s%s' % (state, item,
+            maybe_moved and ' (moved to %s ?)' % maybe_moved))
+        else:
+          installed_dict[item] = bt_title
+        # if a bt5 item is removed we may still want to keep it
+        if ((removed or state in ('Modified', 'New'))
+            and item in keep_original_list):
+          install_kw[item] = 'nothing'
+          log("Keep %r" % item)
+        else:
+          install_kw[item] = listbox_line.choice_item_list[0][1]
+
+      # Run before script list
+      for before_triggered_bt5_id in before_triggered_bt5_id_list:
+        log('Execute %r' % before_triggered_bt5_id)
+        imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
+
+      imported_bt5.install(object_to_update=install_kw,
+                           update_catalog=update_catalog)
+
+      # Run After script list
+      for after_triggered_bt5_id in after_triggered_bt5_id_list:
+        log('Execute %r' % after_triggered_bt5_id)
+        imported_bt5.unrestrictedTraverse(after_triggered_bt5_id)()
+      if active_process is not None:
+        active_process.postResult(ActiveResult(
+          '%03u. %s' % (len(active_process.getResultList()) + 1, bt_title),
+          detail='\n'.join(message_list)))
+      else:
+        log("Updated %s from %s" % (bt_title, download_url))
+
+    security.declareProtected(Permissions.ManagePortal,
+            'getBusinessTemplateUrl')
+    def getBusinessTemplateUrl(self, base_url_list, bt5_title):
+      """
+        This method verify if the business template are available
+        into one url (repository).
+      """
+      # This list could be preconfigured at some properties or
+      # at preferences.
+      for base_url in base_url_list:
+        url = "%s/%s" % (base_url, bt5_title)
+        if base_url == "INSTANCE_HOME_REPOSITORY":
+          url = "file://%s/bt5/%s" % (getConfiguration().instancehome, 
+                                      bt5_title)
+          LOG('ERP5', INFO, "TemplateTool: INSTANCE_HOME_REPOSITORY is %s." \
+              % url)
+        try:
+          urllib2.urlopen(url)
+          return url
+        except (urllib2.HTTPError, OSError):
+          # XXX Try again with ".bt5" in case the folder format be used
+          # Instead tgz one.
+          url = "%s.bt5" % url
+          try:
+            urllib2.urlopen(url)
+            return url
+          except (urllib2.HTTPError, OSError):
+            pass
+      LOG('ERP5', INFO, 'TemplateTool: %s was not found into the url list: ' 
+                        '%s.' % (bt5_title, base_url_list))
+      return None
 
 InitializeClass(TemplateTool)

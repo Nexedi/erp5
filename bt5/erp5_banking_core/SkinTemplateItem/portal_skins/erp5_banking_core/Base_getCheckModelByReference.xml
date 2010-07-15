@@ -60,8 +60,11 @@ from Products.ERP5Type.Message import Message\n
 if reference is None:\n
   msg = Message(domain=\'ui\', message="Check not defined.")\n
   raise ValidationFailed, (msg,)\n
-model_list = [x for x in context.checkbook_model_module.objectValues()\n
-              if x.getReference()==reference]\n
+model_list = [x\n
+  for x in context.checkbook_model_module.objectValues()\n
+  if x.getReference() == reference\n
+  and x.isUniquePerAccount() == unique_per_account\n
+]\n
 model_list_len = len(model_list)\n
 if model_list_len == 0:\n
   msg = Message(domain=\'ui\', message="Check not defined.")\n
@@ -82,7 +85,7 @@ return model_list[0]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>reference=None</string> </value>
+            <value> <string>reference=None, unique_per_account=True</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -102,13 +105,14 @@ return model_list[0]\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>reference</string>
+                            <string>unique_per_account</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
                             <string>Products.ERP5Type.Message</string>
@@ -138,6 +142,7 @@ return model_list[0]\n
             <value>
               <tuple>
                 <none/>
+                <int>1</int>
               </tuple>
             </value>
         </item>

@@ -75,6 +75,8 @@ if \'parent_portal_type\' in params:\n
 \n
 total_debit = 0\n
 total_credit = 0\n
+total_debit_price = 0\n
+total_credit_price = 0\n
 \n
 line_list = []\n
 for brain in portal.Base_zGetNotGroupedMovementList(\n
@@ -97,8 +99,9 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
     if portal_type_filter and \\\n
           transaction.getPortalType() not in portal_type_list:\n
       continue\n
-    \n
-    if transaction.AccountingTransaction_isSourceView():\n
+\n
+    is_source = transaction.AccountingTransaction_isSourceView()\n
+    if is_source:\n
       if payment_uid and mvt.getSourcePaymentUid() != payment_uid:\n
         continue\n
       if project_uid and mvt.getSourceProjectUid() != project_uid:\n
@@ -107,6 +110,7 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
         continue\n
       specific_reference = transaction.getSourceReference()\n
       mirror_section_title = transaction.getDestinationSectionTitle()\n
+      section_title = transaction.getSourceSectionTitle()\n
     else:\n
       if payment_uid and mvt.getDestinationPaymentUid() != payment_uid:\n
         continue\n
@@ -116,32 +120,65 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
         continue\n
       specific_reference = transaction.getDestinationReference()\n
       mirror_section_title = transaction.getSourceSectionTitle()\n
+      section_title = transaction.getDestinationSectionTitle()\n
     \n
 \n
-    debit = max(brain.total_price, 0)\n
+    debit = max(brain.total_quantity, 0)\n
     total_debit += debit\n
-    credit = max(-brain.total_price, 0)\n
+    credit = max(-brain.total_quantity, 0)\n
     total_credit += credit\n
+\n
+    debit_price = max(brain.total_price, 0)\n
+    total_debit_price += debit_price\n
+    credit_price = max(-brain.total_price, 0)\n
+    total_credit_price += credit_price\n
 \n
     brain_date = brain.date\n
     if mvt.getStartDate():\n
       brain_date = brain_date.toZone(mvt.getStartDate().timezone())\n
     \n
-    line_list.append(\n
-          Object(uid=\'new_000\',\n
-                 total_price=brain.total_price,\n
-                 date=brain.date,\n
-                 Movement_getSpecificReference=specific_reference,\n
-                 Movement_getMirrorSectionTitle=mirror_section_title,\n
-                 debit=debit,\n
-                 credit=credit,\n
-                 Movement_getExplanationTitle=\n
-                   mvt.hasTitle() and mvt.getTitle() or transaction.getTitle()))\n
+    line = Object(uid=\'new_000\',\n
+                  total_price=brain.total_price,\n
+                  date=brain.date,\n
+                  Movement_getSpecificReference=specific_reference,\n
+                  Movement_getMirrorSectionTitle=mirror_section_title,\n
+                  section_title=section_title,\n
+                  debit=debit,\n
+                  credit=credit,\n
+                  debit_price=debit_price,\n
+                  credit_price=credit_price,\n
+                  Movement_getExplanationTitle=\n
+                    mvt.hasTitle() and mvt.getTitle() or transaction.getTitle())\n
+\n
+    analytic_info = dict()\n
+    for analytic_column, analytic_column_title in analytic_column_list:\n
+      if analytic_column == \'project\':\n
+        if is_source:\n
+          analytic_info[\'project\'] = mvt.asContext(project_uid=mvt.getSourceProjectUid()).Movement_getProjectTitle()\n
+        else:\n
+          analytic_info[\'project\'] = mvt.asContext(project_uid=mvt.getDestinationProjectUid()).Movement_getProjectTitle()\n
+      elif analytic_column == \'function\':\n
+        if is_source:\n
+          analytic_info[\'function\'] = mvt.asContext(function_uid=mvt.getDestinationFunctionUid()).Movement_getFunctionTitle()\n
+        else:\n
+          analytic_info[\'function\'] = mvt.asContext(function_uid=mvt.getDestinationFunctionUid()).Movement_getFunctionTitle()\n
+      else:\n
+        analytic_info[analytic_column] = mvt.getProperty(analytic_column)\n
+\n
+    line.update(analytic_info)\n
+    line_list.append(line)\n
+\n
 \n
 context.REQUEST.set(\n
   \'Account_statNotGroupedAccountingTransactionList.total_debit\', total_debit)\n
 context.REQUEST.set(\n
   \'Account_statNotGroupedAccountingTransactionList.total_credit\', total_credit)\n
+context.REQUEST.set(\n
+  \'Account_statNotGroupedAccountingTransactionList.total_debit_price\',\n
+  total_debit_price)\n
+context.REQUEST.set(\n
+  \'Account_statNotGroupedAccountingTransactionList.total_credit_price\',\n
+  total_credit_price)\n
 return line_list\n
 </string> </value>
         </item>
@@ -153,7 +190,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, function=None, project_uid=None, **kw</string> </value>
+            <value> <string>selection=None, sort_on=[], node_category=None, node_category_strict_membership=None, from_date=None, selection_name=None, function=None, project_uid=None, analytic_column_list=(), **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -173,7 +210,7 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>8</int> </value>
+                        <value> <int>9</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -187,6 +224,7 @@ return line_list\n
                             <string>selection_name</string>
                             <string>function</string>
                             <string>project_uid</string>
+                            <string>analytic_column_list</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -208,18 +246,30 @@ return line_list\n
                             <string>portal_type_list</string>
                             <string>total_debit</string>
                             <string>total_credit</string>
+                            <string>total_debit_price</string>
+                            <string>total_credit_price</string>
                             <string>line_list</string>
                             <string>_getiter_</string>
                             <string>brain</string>
                             <string>mvt</string>
                             <string>transaction</string>
+                            <string>is_source</string>
                             <string>specific_reference</string>
                             <string>mirror_section_title</string>
+                            <string>section_title</string>
                             <string>max</string>
                             <string>debit</string>
                             <string>_inplacevar_</string>
                             <string>credit</string>
+                            <string>debit_price</string>
+                            <string>credit_price</string>
                             <string>brain_date</string>
+                            <string>line</string>
+                            <string>dict</string>
+                            <string>analytic_info</string>
+                            <string>analytic_column</string>
+                            <string>analytic_column_title</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>
@@ -240,6 +290,7 @@ return line_list\n
                 <none/>
                 <none/>
                 <none/>
+                <tuple/>
               </tuple>
             </value>
         </item>

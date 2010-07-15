@@ -30,10 +30,13 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.Document.BusinessTemplate import getChainByType
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testOrder import TestOrderMixin
 from DateTime import DateTime
+from Products.ERP5Type.Globals import PersistentMapping
 
 class TestPackingListMixin(TestOrderMixin):
   """
@@ -428,6 +431,9 @@ class TestPackingListMixin(TestOrderMixin):
     """
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
+    self.assertEquals(len(simulation_movement_list),1)
+    delivery_applied_rule = simulation_movement_list[0].objectValues()[0]
+    simulation_movement_list = delivery_applied_rule.objectValues()
     self.assertEquals(len(simulation_movement_list),1)
     for simulation_movement in simulation_movement_list:
       self.assertEquals(simulation_movement.getStartDate(),self.datetime + 15)
@@ -1567,6 +1573,187 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
+  def test_subcontent_reindexing_packing_list_line_cell(self):
+    """Tests, that indexation of Packing List are propagated to subobjects
+    during reindxation"""
+    packing_list = self.portal.getDefaultModule(
+        self.packing_list_portal_type).newContent(
+            portal_type=self.packing_list_portal_type)
+    packing_list_line = packing_list.newContent(
+        portal_type=self.packing_list_line_portal_type)
+    packing_list_cell = packing_list_line.newContent(
+        portal_type=self.packing_list_cell_portal_type)
+    self._testSubContentReindexing(packing_list, [packing_list_line,
+      packing_list_cell])
+
+  def test_subcontent_reindexing_packing_list_container_line_cell(self):
+    """Tests, that indexation of Packing List are propagated to subobjects
+    during reindxation, for Container, Container Line and Container Cell"""
+    packing_list = self.portal.getDefaultModule(
+        self.packing_list_portal_type).newContent(
+            portal_type=self.packing_list_portal_type)
+    container = packing_list.newContent(
+        portal_type=self.container_portal_type)
+    container_line = container.newContent(
+        portal_type=self.container_line_portal_type)
+    container_cell = container_line.newContent(
+        portal_type=self.container_cell_portal_type)
+    self._testSubContentReindexing(packing_list, [container, container_line,
+      container_cell])
+
+class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
+  quiet = 0
+
+  def afterSetUp(self, quiet=1, run=1):
+    TestPackingListMixin.afterSetUp(self)
+    types_tool = self.portal.portal_types
+    solver_process_type_info = types_tool['Solver Process']
+    self.original_allowed_content_types = solver_process_type_info.getTypeAllowedContentTypeList()
+    self.added_target_solver_list = []
+
+  def beforeTearDown(self, quiet=1, run=1):
+    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+      solver=())
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    solver_process_type_info.setTypeAllowedContentTypeList(self.original_allowed_content_types)
+    self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
+    transaction.commit()
+    self.tic()
+    beforeTearDown = getattr(TestPackingListMixin, 'beforeTearDown',
+                             ERP5TypeTestCase.beforeTearDown)
+    beforeTearDown(self)
+
+  @UnrestrictedMethod
+  def _setUpTargetSolver(self, solver_id, solver_class, tested_property_list):
+    solver_tool = self.portal.portal_solvers
+    solver = solver_tool.newContent(
+      portal_type='Solver Type',
+      id=solver_id,
+      tested_property_list=tested_property_list,
+      automatic_solver=1,
+      type_factory_method_id='add%s' % solver_class,
+      type_group_list=('target_solver',),
+    )
+    solver.setCriterion(property='portal_type',
+                        identity=['Simulation Movement',])
+    solver.setCriterionProperty('portal_type')
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    solver_process_type_info.setTypeAllowedContentTypeList(
+      solver_process_type_info.getTypeAllowedContentTypeList() + \
+      [solver_id]
+    )
+    (default_chain, chain_dict) = getChainByType(self.portal)
+    chain_dict['chain_%s' % solver_id] = 'solver_workflow'
+    self.portal.portal_workflow.manage_changeWorkflows(default_chain,
+                                                       props=chain_dict)
+    self.portal.portal_caches.clearAllCache()
+    self.added_target_solver_list.append(solver_id)
+
+  def stepSetUpAutomaticQuantityAcceptSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Automatic Quantity Accept Solver',
+                            'AcceptSolver', ('quantity',))
+    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+      solver=('portal_solvers/Automatic Quantity Accept Solver',))
+
+  def stepSetUpAutomaticQuantityAdoptSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Automatic Quantity Adopt Solver',
+                            'AdoptSolver', ('quantity',))
+    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+      solver=('portal_solvers/Automatic Quantity Adopt Solver',))
+
+  def stepSetUpMovementSplitSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Movement Split Solver',
+                            'MovementSplitSolver', ())
+
+  def stepSplitMovementWithVariatedResources(self, sequence=None,
+                                             sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    simulation_movement_list = sum(
+      [x.getDeliveryRelatedValueList() for x in \
+       packing_list.getMovementList()[:10]], [])
+    solver_process = self.portal.portal_solver_processes.newContent(
+      portal_type='Solver Process')
+    target_solver = solver_process.newContent(
+      portal_type='Movement Split Solver',
+      delivery_value_list=simulation_movement_list)
+    target_solver.solve()
+
+  def stepCheckSplitMovementWithVariatedResources(self, sequence=None,
+                                                  sequence_list=None):
+    packing_list = sequence.get('packing_list')
+    order = packing_list.getCausalityValue()
+    new_packing_list = filter(lambda x:x != packing_list,
+                              order.getCausalityRelatedValueList(
+      portal_type=packing_list.getPortalType()))[0]
+    self.assertEquals(len(packing_list.getMovementList()),
+                      len(order.getMovementList()) - 10)
+    self.assertEquals(len(new_packing_list.getMovementList()), 10)
+
+  def test_01_PackingListDecreaseQuantity(self, quiet=quiet):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is solved automatically
+      with accept solver.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetUpAutomaticQuantityAcceptSolver \
+                      ' + self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_02_PackingListDecreaseQuantity(self, quiet=quiet):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is solved automatically
+      with adopt solver.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetUpAutomaticQuantityAdoptSolver \
+                      ' + self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_09_AddContainersWithVariatedResources(self, quiet=quiet):
+    sequence_list = SequenceList()
+
+    # Test with a order with cells
+    sequence_string = '\
+                      stepSetUpMovementSplitSolver \
+                      ' + self.variated_default_sequence + '\
+                      stepAddPackingListContainer \
+                      stepAddPackingListContainerLine \
+                      stepSetContainerLineSmallQuantity \
+                      stepCheckContainerLineSmallQuantity \
+                      stepCheckPackingListIsNotPacked \
+                      stepSetContainerFullQuantity \
+                      stepTic \
+                      stepCheckPackingListIsPacked \
+                      stepSplitMovementWithVariatedResources \
+                      stepTic \
+                      stepCheckSplitMovementWithVariatedResources \
+                      '
+    # XXX Check if there is a new packing list created
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
 
 class TestPurchasePackingListMixin(TestPackingListMixin):
   """Mixing class with steps to test purchase packing lists.
@@ -1595,7 +1782,9 @@ class TestPurchasePackingListMixin(TestPackingListMixin):
   stepCheckPackingListIsNotPacked = ignored_step
   stepCheckPackingListIsPacked = ignored_step
   stepCheckNewPackingListIsPacked = ignored_step
-
+  def test_subcontent_reindexing_packing_list_container_line_cell(self):
+    """No need to check Containers in Purchase Packing List"""
+    pass
 
 class TestPurchasePackingList(TestPurchasePackingListMixin, TestPackingList):
   """Tests for purchase packing list.
@@ -1603,5 +1792,6 @@ class TestPurchasePackingList(TestPurchasePackingListMixin, TestPackingList):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPackingList))
+  suite.addTest(unittest.makeSuite(TestSolvingPackingList))
   suite.addTest(unittest.makeSuite(TestPurchasePackingList))
   return suite

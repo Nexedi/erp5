@@ -33,16 +33,18 @@ import email.Header
 import transaction
 
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.ERP5Type.tests.utils import DummyMailHost
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5OOo.tests.testIngestion import conversion_server_host
+from Products.ERP5Type.tests.utils import DummyMailHost, FileUpload
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+                                                       _getConversionServerDict
 from Products.ERP5OOo.tests.testIngestion import FILE_NAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
 
-TEST_HOME = os.path.dirname(__file__)
+def makeFilePath(name):
+  return os.path.join(os.path.dirname(__file__), 'test_data', 'crm_emails', name)
 
-def openTestFile(filename):
-  return file(os.path.join(TEST_HOME, 'test_data', 'crm_emails', filename))
+def makeFileUpload(name):
+  path = makeFilePath(name)
+  return FileUpload(path, name)
 
 clear_module_name_list = """
 campaign_module
@@ -345,7 +347,7 @@ class TestCRM(BaseTestCRM):
                                                   follow_up=ticket_url,
                                                   title='Event Title',
                                                   text_content='Event Content',
-                                                  text_format='text/plain')
+                                                  content_type='text/plain')
       transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
@@ -358,7 +360,7 @@ class TestCRM(BaseTestCRM):
       self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
       new_event = event.getCausalityRelatedValue()
       self.assertEqual(new_event.getFollowUp(), ticket_url)
-      self.assertEqual(new_event.getTextFormat(), 'text/plain')
+      self.assertEqual(new_event.getContentType(), 'text/plain')
       self.assertEqual(new_event.getTextContent(), '> Event Content')
       self.assertEqual(new_event.getTitle(), 'Re: Event Title')
 
@@ -458,13 +460,14 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEquals(len(self.portal.event_module), 1)
     self.assertEquals(event, self.portal.event_module.contentValues()[0])
     self.assertEquals('Mail Message', event.getPortalType())
-    self.assertEquals('message/rfc822', event.getContentType())
+    self.assertEquals('text/plain', event.getContentType())
+    self.assertEquals('message/rfc822', event._baseGetContentType())
     # check if parsing of metadata from content is working
     content_dict = {'source_list': ['person_module/sender'],
                     'destination_list': ['person_module/me',
                                          'person_module/he']}
     self.assertEquals(event.getPropertyDictFromContent(), content_dict)
-  
+
   def test_title(self):
     # title is found automatically, based on the Subject: header in the mail
     event = self._ingestMail('simple')
@@ -632,7 +635,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertTrue('<form' not in document.getAttachmentData(4))
     self.assertEquals('This is my content.\n*ERP5* is a Free _Software_\n',
                       document.getAttachmentData(2))
-    self.assertEquals('text/html', document.getTextFormat())
+    self.assertEquals('text/html', document.getContentType())
     self.assertEquals('\n<html>\n<head>\n\n<meta http-equiv="content-type"'\
                       ' content="text/html; charset=utf-8" />\n'\
                       '</head>\n<body text="#000000"'\
@@ -649,7 +652,7 @@ class TestCRMMailIngestion(BaseTestCRM):
                       mixed_document.getTextContent())
     self.assertEquals('Hi, this is the Message.\nERP5 is a free software.\n\n',
                       mixed_document.getTextContent())
-    self.assertEquals('text/plain', mixed_document.getTextFormat())
+    self.assertEquals('text/plain', mixed_document.getContentType())
 
 
 ## TODO:
@@ -702,8 +705,9 @@ class TestCRMMailSend(BaseTestCRM):
 
     # set preference
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() == 'disabled':
@@ -823,7 +827,7 @@ class TestCRMMailSend(BaseTestCRM):
     event = self.portal.event_module.newContent(portal_type='Mail Message')
     event.setSource('person_module/me')
     event.setDestination('person_module/recipient')
-    event.setTextFormat('text/html')
+    event.setContentType('text/html')
     event.setTextContent('Hello<br/>World')
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
@@ -877,7 +881,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
 
     def add_document(filename, id, container, portal_type):
-      f = openTestFile(filename)
+      f = makeFileUpload(filename)
       document = container.newContent(id=id, portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
@@ -933,7 +937,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
 
     def add_document(filename, id, container, portal_type):
-      f = openTestFile(filename)
+      f = makeFileUpload(filename)
       document = container.newContent(id=id, portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
@@ -989,7 +993,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
 
     def add_document(filename, id, container, portal_type):
-      f = openTestFile(filename)
+      f = makeFileUpload(filename)
       document = container.newContent(id=id, portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
@@ -1045,7 +1049,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document which will be attached.
 
     def add_document(filename, id, container, portal_type):
-      f = openTestFile(filename)
+      f = makeFileUpload(filename)
       document = container.newContent(id=id, portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
@@ -1197,7 +1201,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document on a person which will be attached.
 
     def add_document(filename, id, container, portal_type):
-      f = openTestFile(filename)
+      f = makeFileUpload(filename)
       document = container.newContent(id=id, portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document
@@ -1234,6 +1238,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
+        break
     self.assertEqual(part.get_payload(decode=True), event.getTextContent())
 
     # Check attachment
@@ -1255,7 +1260,7 @@ class TestCRMMailSend(BaseTestCRM):
     # Add a document on a person which will be attached.
 
     def add_document(filename, id, container, portal_type):
-      f = openTestFile(filename)
+      f = makeFileUpload(filename)
       document = container.newContent(id=id, portal_type=portal_type)
       document.edit(file=f, reference=filename)
       return document

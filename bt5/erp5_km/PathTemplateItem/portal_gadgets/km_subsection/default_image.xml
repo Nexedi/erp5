@@ -56,6 +56,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>1d8af130746233ea7c5663fa792e78cc</string> </value>
+        </item>
+        <item>
             <key> <string>content_type</string> </key>
             <value> <string>image/jpeg</string> </value>
         </item>

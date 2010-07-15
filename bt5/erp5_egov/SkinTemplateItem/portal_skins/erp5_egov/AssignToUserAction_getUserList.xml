@@ -55,15 +55,18 @@
             <key> <string>_body</string> </key>
             <value> <string>\'\'\'This script return the list of all users that is possible to assign the application\'\'\'\n
 \n
-# XXX for now, it returns every people who works in cge\n
-# in future, the site and function should be take into account\n
+group = context.getTypeInfo().getOrganisationDirectionService()\n
 \n
-cat = context.restrictedTraverse(\'portal_categories/group/dgid/di/cge\')\n
-cat_uid = cat.getUid()\n
-agent_list = context.portal_catalog(portal_type=\'Assignment\',\n
-                                    group_uid=cat_uid)\n
+cat = context.restrictedTraverse(\'portal_categories/group/%s\' % group)\n
 \n
-return [(agent.getParentValue().getReference(), agent.getParentValue().getReference()) for agent in agent_list if agent.getParentValue().getReference()]\n
+if cat is not None:\n
+  cat_uid = cat.getUid()\n
+  agent_list = context.portal_catalog(portal_type=\'Assignment\',\n
+                                      group_uid=cat_uid)\n
+\n
+  return [(agent.getParentValue().getReference(), agent.getParentValue().getReference()) for agent in agent_list if agent.getParentValue().getReference()]\n
+else:\n
+  return []\n
 </string> </value>
         </item>
         <item>
@@ -110,7 +113,9 @@ return [(agent.getParentValue().getReference(), agent.getParentValue().getRefere
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>group</string>
                             <string>cat</string>
+                            <string>None</string>
                             <string>cat_uid</string>
                             <string>agent_list</string>
                             <string>append</string>

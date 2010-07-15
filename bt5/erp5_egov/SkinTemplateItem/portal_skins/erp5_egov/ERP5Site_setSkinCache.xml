@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>cache_manager_id = \'root_http_skin_cache\'\n
+            <value> <string>cache_manager_id = \'http_cache\'\n
 result = []\n
 \n
 def setCache(skin):\n

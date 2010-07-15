@@ -73,8 +73,8 @@ if len(id_list) >1:\n
   return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n
 \n
 object = getattr(context, id_list[0], None)\n
+\n
 portal.portal_workflow.doActionFor(object, \'delete_action\')\n
-#context.manage_delObjects(id_list)\n
 message = N_(\'Attachment ${file_name} has been deleted\', mapping = { \'file_name\': \'"%s"\' % file_name})\n
 qs = \'?portal_status_message=%s\' % message\n
 return request.RESPONSE.redirect( context.absolute_url() + \'/\' + form_id + qs )\n

@@ -49,7 +49,8 @@ from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  TestTool, DomainTool, AlarmTool, OrderTool, DeliveryTool,\
                  TrashTool, ContributionTool, NotificationTool, PasswordTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
-                 AcknowledgementTool, SolverTool, ConversionTool, RoundingTool
+                 AcknowledgementTool, SolverTool, SolverProcessTool,\
+                 ConversionTool, RoundingTool
 import ERP5Site
 object_classes = ( ERP5Site.ERP5Site,
                  )
@@ -72,6 +73,7 @@ portal_tools = ( CategoryTool.CategoryTool,
                  IntrospectionTool.IntrospectionTool,
                  AcknowledgementTool.AcknowledgementTool,
                  SolverTool.SolverTool,
+                 SolverProcessTool.SolverProcessTool,
                  ConversionTool.ConversionTool,
                  RoundingTool.RoundingTool,
                 )

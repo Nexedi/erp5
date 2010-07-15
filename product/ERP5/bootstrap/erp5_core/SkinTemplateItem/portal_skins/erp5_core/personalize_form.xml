@@ -55,13 +55,14 @@
             <key> <string>_body</string> </key>
             <value> <string># make default CMF personalize_form redirect to the preference tool\n
 \n
-from ZTUtils import make_query\n
-args = {}\n
-if portal_status_message is not None :\n
-  args[\'portal_status_message\'] = portal_status_message\n
+preference_tool = context.getPortalObject().portal_preferences\n
 \n
-context.REQUEST.RESPONSE.redirect(\n
-   "%s/portal_preferences/view?%s" % ( context.getPortalObject().absolute_url(), make_query(args)))\n
+preference = preference_tool.getActivePreference()\n
+\n
+if preference is not None and preference.getPriority() == 3: # XXX: 3 is Priority.USER\n
+  return preference.Base_redirect(\'view\')\n
+\n
+return preference_tool.Base_redirect(\'view\')\n
 </string> </value>
         </item>
         <item>
@@ -72,7 +73,7 @@ context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form=None, message=None, portal_status_message=None, **kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -92,23 +93,18 @@ context.REQUEST.RESPONSE.redirect(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>form</string>
-                            <string>message</string>
-                            <string>portal_status_message</string>
                             <string>kw</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>args</string>
-                            <string>None</string>
-                            <string>_write_</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>preference_tool</string>
+                            <string>preference</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -120,11 +116,7 @@ context.REQUEST.RESPONSE.redirect(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

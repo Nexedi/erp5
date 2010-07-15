@@ -71,6 +71,7 @@ expand_accounts = request.get(\'expand_accounts\', False)\n
 show_empty_accounts = request[\'show_empty_accounts\']\n
 per_account_class_summary = request[\'per_account_class_summary\']\n
 gap_root = request.get(\'gap_root\', None)\n
+mirror_section_category = request.get(\'mirror_section_category_list\', None)\n
 section_uid = portal.Base_getSectionUidListForSectionCategory(\n
                                    request[\'section_category\'],\n
                                    request[\'section_category_strict\'])\n
@@ -91,24 +92,57 @@ request.set(\'precision\', precision)\n
 \n
 # optional GAP filter\n
 node_uid = []\n
-gap = request.get(\'gap\', None)\n
-if gap:\n
-  gap_value = portal.portal_categories.gap.restrictedTraverse(gap)\n
-  node_uid = [x.uid for x in gap_value.getCategoryMemberValueList(\n
-                portal_type=\'Account\')] or -1\n
+gap_uid_list = []\n
+for gap in request.get(\'gap_list\', ()):\n
+  gap_uid_list.append(portal.portal_categories.gap.restrictedTraverse(gap).getUid())\n
+if gap_uid_list:\n
+  node_uid = [x.uid for x in portal.portal_catalog(\n
+                                   portal_type=\'Account\',\n
+                                   default_gap_uid=gap_uid_list)] or -1\n
 \n
 request.set(\'is_accounting_report\', True)\n
+group_analytic = request[\'group_analytic\']\n
+group_analytic_uid = ()\n
 \n
-# flat_mode is a boolean that indicate wether we should use a report tree or a\n
-# flat list of all accounts.\n
-if request.get(\'tree_mode\', False): # TODO\n
-  raise \'Tree mode no longer supported\'\n
+extra_columns = ()\n
+if expand_accounts:\n
+  extra_columns += (\'mirror_section_title\', \'Third Party\'),\n
 \n
+possible_analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
+for analytic in group_analytic:\n
+  if analytic == \'project\':\n
+    extra_columns += ((\'project_uid\', \'Project\', ), )\n
+    group_analytic_uid += (\'project_uid\',)\n
+  elif analytic == \'function\':\n
+    extra_columns += ((\'function_uid\',\n
+        context.AccountingTransactionLine_getFunctionBaseCategoryTitle()),)\n
+    group_analytic_uid += (\'function_uid\',)\n
+  else:\n
+    for analytic_column in possible_analytic_column_list:\n
+      if analytic_column[0] == analytic:\n
+        uid_key = \'strict_%s\' % analytic_column[0].replace(\'_translated_title\', \'_uid\')\n
+        group_analytic_uid += (uid_key, )\n
+        extra_columns += ((uid_key, analytic_column[1]),)\n
+    \n
+\n
+selection_columns = (\n
+  (\'node_id\', \'GAP Account ID\'),\n
+  (\'node_title\', \'Account Name\'),\n
+  ) + extra_columns + (\n
+  (\'initial_debit_balance\', \'Initial Debit Balance\'),\n
+  (\'initial_credit_balance\', \'Initial Credit Balance\'),\n
+  (\'debit\', \'Debit Transactions\'),\n
+  (\'credit\', \'Credit Transactions\'),\n
+  (\'final_debit_balance\', \'Final Debit Balance\'),\n
+  (\'final_credit_balance\', \'Final Credit Balance\'),\n
+  (\'final_balance_if_debit\', \'Final Balance (Debit)\'),\n
+  (\'final_balance_if_credit\', \'Final Balance (Credit)\'),\n
+)\n
 return [ ReportSection(\n
             path=portal.account_module.getPhysicalPath(),\n
-            level=1,\n
             form_id=\'AccountModule_viewAccountListForTrialBalance\',\n
             selection_name=\'trial_balance_selection\',\n
+            selection_columns=selection_columns,\n
             selection_params=dict(show_empty_accounts=show_empty_accounts,\n
                                   expand_accounts=expand_accounts,\n
                                   at_date=at_date.latestTime(),\n
@@ -121,7 +155,10 @@ return [ ReportSection(\n
                                   portal_type=portal_type,\n
                                   simulation_state=simulation_state,\n
                                   precision=precision,\n
+                                  group_analytic=group_analytic_uid,\n
                                   node_uid=node_uid,\n
+                                  mirror_section_category=\n
+                                          mirror_section_category,\n
                                   per_account_class_summary=\n
                                           per_account_class_summary,\n
                                   gap_root=gap_root,), )]\n
@@ -181,18 +218,28 @@ return [ ReportSection(\n
                             <string>show_empty_accounts</string>
                             <string>per_account_class_summary</string>
                             <string>gap_root</string>
+                            <string>mirror_section_category</string>
                             <string>section_uid</string>
                             <string>period_start_date</string>
                             <string>currency</string>
                             <string>precision</string>
                             <string>node_uid</string>
+                            <string>gap_uid_list</string>
+                            <string>_getiter_</string>
                             <string>gap</string>
-                            <string>gap_value</string>
                             <string>append</string>
                             <string>$append0</string>
-                            <string>_getiter_</string>
                             <string>x</string>
                             <string>True</string>
+                            <string>group_analytic</string>
+                            <string>group_analytic_uid</string>
+                            <string>extra_columns</string>
+                            <string>_inplacevar_</string>
+                            <string>possible_analytic_column_list</string>
+                            <string>analytic</string>
+                            <string>analytic_column</string>
+                            <string>uid_key</string>
+                            <string>selection_columns</string>
                             <string>dict</string>
                           </tuple>
                         </value>

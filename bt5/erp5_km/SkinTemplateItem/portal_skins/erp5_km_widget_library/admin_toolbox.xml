@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!-- Floating Panel -->\n
+\n
+<!-- header_definitions must be re-called and is_web_mode redefined because calling\n
+     the current page template through editor_field in the form layout seems to reset\n
+     the context needed by action drop-down list.\n
+\n
+     TODO: Is this case should be handle by automatically by erp5_xhtml_style ?\n
+           More translation is required.\n
+-->\n
+\n
+<tal:block\n
+  tal:define="is_web_mode  python: True;\n
+              actions      request/actions | python:\n
+                           here.Base_filterDuplicateActions(\n
+                             here.portal_actions.listFilteredActionsFor(here));\n
+              dummy        python:request.set(\'actions\', actions);\n
+              portal_type  here/getPortalType">\n
+\n
+  <!-- XXX is this really useful - called how many times ?? - tried to removed but failed -->\n
+  <!-- <tal:block metal:use-macro="here/global_definitions/macros/header_definitions"/> -->\n
+\n
+\n
+  <!-- Edit button menu -->\n
+  <div class="inner section">\n
+    <h3 i18n:translate="" i18n:domain="ui">Edit</h3>\n
+    <tal:block tal:define="edit_link_list python: here.Base_getAdminToolboxEditShortcutList()">\n
+      <tal:block tal:repeat="link edit_link_list">\n
+        <a tal:attributes="href python: link[\'url\']" class=\'bt-edit\'>\n
+<strong>\n
+          <img tal:attributes="src   python: link[\'icon\'];\n
+                               title python: link[\'label\'];\n
+                               alt   python: \'%s Icon\' % link[\'label\'];"/>\n
+          <tal:block tal:replace="python: link[\'title\']"/>\n
+</strong>\n
+\n
+\n
+        </a>\n
+      </tal:block>\n
+    </tal:block>\n
+  </div>\n
+\n
+  <!-- A pop-up menu with all actions which can be applied to\n
+       the current object and which have no button equivalent\n
+\n
+       We need to setup the actions variable from the request because\n
+       this template is called from outside the main rendering process\n
+\n
+       XXX - the location of context_box_render is hardcoded.\n
+  -->\n
+  <div class="inner section">\n
+    <h3><tal:block tal:content="portal_type"/> Actions</h3>\n
+    <tal:block metal:use-macro="here/portal_skins/erp5_xhtml_style/context_box_render/macros/action"/>\n
+  </div>\n
+\n
+  <!-- Document creation panel.\n
+  \n
+       This part is displayed for any document apart Web Site and Web Section.\n
+       But if Web Site and Web Section have a default page, then it will be displayed anyway\n
+       in order to let the user clone the default page.\n
+\n
+       XXX - This is not so good to create new content in a section\n
+             Behaviour should be to create content in section / site\n
+  -->\n
+  <div class="inner section"\n
+       tal:condition="python: here.isDocument">\n
+      <h3>\n
+        <span id="create_new_document_title"></span>\n
+        <span id="clone_document_title">\n
+          <tal:block \n
+            tal:replace="python: \'Clone %s\' % portal_type"/>\n
+        </span>\n
+      </h3>\n
+\n
+      <fieldset>\n
+\n
+        <div class="field">\n
+          <label i18n:translate="" i18n:domain="ui">Title</label>\n
+          <div class="input">\n
+            <input class="input" size="12" \n
+                    type="text" name="clone_title"\n
+                    tal:attributes="value here/getTitle | nothing"/>\n
+          </div>\n
+        </div>\n
+\n
+        <div class="field">\n
+          <label i18n:translate="" i18n:domain="ui">Reference</label>\n
+          <div class="input">\n
+            <input class="input" size="12" \n
+                    type="text" name="clone_reference"\n
+                    tal:attributes="value here/getReference | nothing"/>\n
+          </div>\n
+        </div>\n
+\n
+        <div class="field">\n
+          <label i18n:translate="" i18n:domain="ui">Version</label>\n
+          <div class="input">\n
+            <input class="input" size="5" \n
+                    type="text" name="clone_version"\n
+                    tal:attributes="value here/getVersion | nothing"/>\n
+          </div>\n
+        </div>\n
+\n
+        <div class="field">\n
+          <label i18n:translate="" i18n:domain="ui">Language</label>\n
+          <div class="input">\n
+            <input class="input" size="5"  \n
+                    type="text" name="clone_language"\n
+                    tal:attributes="value here/getLanguage | nothing"/>\n
+          </div>\n
+        </div>\n
+\n
+        <div class="field">\n
+          <label i18n:translate="" i18n:domain="ui">Portal type</label>\n
+          <div class="input">\n
+            <select class="input" name="clone_portal_type" \n
+                    size="1" onchange="setCreationMode(this)">\n
+              <option value="None" selected="selected">&mdash; Same as Current &mdash;</option>\n
+              <option tal:repeat="portal_type python: here.getPortalWebDocumentTypeList()"\n
+                      tal:content="portal_type"\n
+                      tal:attributes="value portal_type"\n
+                      i18n:translate="" i18n:domain="ui">portal_type</option>\n
+            </select>\n
+          </div>\n
+        </div>\n
+\n
+        <br />\n
+        <div class="clone-button">\n
+          <div class="input">\n
+            <button id="bt-clone" class="bt-med"\n
+                    title=\'Clone &amp; Edit\'\n
+                    name="Base_cloneContent:method">\n
+              <span id="duplicate_document_action">Clone &amp; Edit</span>\n
+            </button>\n
+          </div>\n
+        </div>\n
+\n
+      </fieldset>\n
+\n
+      <script type="text/javascript">\n
+      <!--\n
+        // preload action icons\n
+        if (document.images) {\n
+          clone_icon = new Image();\n
+          new_icon   = new Image();\n
+          clone_icon.src = "admin_toolbox_clone_document.png";\n
+          new_icon.src   = "admin_toolbox_new_document.png";\n
+        }\n
+\n
+        function setCreationMode (sel) {\n
+          // default is cloning\n
+          var action      = \'clone\';\n
+          var action_name = \'Clone &amp; Edit\';\n
+          var icon        = \'admin_toolbox_clone_document.png\';\n
+          var name        = \'Base_cloneContent:method\';\n
+          var clone_display = \'inline\';\n
+          var new_title   = \'\';\n
+\n
+          // a portal type is given, so create a new document\n
+          var portal_type = sel.options[sel.selectedIndex].value;\n
+          if (portal_type != \'None\') {\n
+            action      = \'new\'\n
+            action_name = \'Create New &amp; Edit\';\n
+            icon        = \'admin_toolbox_new_document.png\';\n
+            name        = \'Base_newContent:method\';\n
+            clone_display = \'none\';\n
+            new_title   = \'Create New Document\';\n
+          }\n
+\n
+          // update action dependent values\n
+          document.getElementById(\'create_new_document_title\').innerHTML = new_title;\n
+          document.getElementById(\'clone_document_title\'     ).style.display = clone_display;\n
+          document.getElementById(\'duplicate_document_action\').innerHTML = action_name;\n
+\n
+          // replace the action icon\n
+          document.getElementById(\'clone_action_icon\').src = eval(action + "_icon.src");\n
+\n
+          // update action button alt & title\n
+          var button   = document.getElementById(\'clone_action_button\');\n
+          button.alt   = action_name;\n
+          button.title = action_name;\n
+          button.name  = name;\n
+        }\n
+      -->\n
+      </script>\n
+  </div>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>admin_toolbox</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Deprecated</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

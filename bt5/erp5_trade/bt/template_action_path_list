@@ -16,6 +16,8 @@ Internal Order Line | profile_view
 Internal Order Line | quantity_view
 Internal Order Line | view
 Internal Order Module | view
+Internal Order | fast_input
+Internal Order | fast_input_update
 Internal Order | jump_to_related_internal_packing_list
 Internal Order | order_print
 Internal Order | view
@@ -29,6 +31,8 @@ Internal Packing List Module | delivery_line_report
 Internal Packing List Module | view
 Internal Packing List Module | workflow_report
 Internal Packing List | details
+Internal Packing List | fast_input
+Internal Packing List | fast_input_update
 Internal Packing List | payment_condition
 Internal Packing List | profile_view
 Internal Packing List | view
@@ -40,7 +44,8 @@ Inventory Line | view
 Inventory Module | view
 Inventory Module | view_stock_export
 Inventory Module | view_stock_report
-Inventory | inventory_fast_input
+Inventory | fast_input
+Inventory | fast_input_update
 Inventory | view
 Order Root Simulation Rule | view
 Order Rule | view
@@ -64,10 +69,13 @@ Purchase Order Module | order_export
 Purchase Order Module | order_report
 Purchase Order Module | view
 Purchase Order | apply_trade_condition
+Purchase Order | fast_input
+Purchase Order | fast_input_update
 Purchase Order | jump_to_related_purchase_packing_list
 Purchase Order | order_print
 Purchase Order | payment_condition
 Purchase Order | profile_view
+Purchase Order | reset_movement_price_list
 Purchase Order | view
 Purchase Order | view_stock
 Purchase Order | view_trade_model
@@ -82,11 +90,14 @@ Purchase Packing List Line | view_price
 Purchase Packing List Module | delivery_line_report
 Purchase Packing List Module | view
 Purchase Packing List | details
+Purchase Packing List | fast_input
+Purchase Packing List | fast_input_update
 Purchase Packing List | jump_related_order
 Purchase Packing List | jump_related_purchase_invoice
 Purchase Packing List | packing_list_print
 Purchase Packing List | payment_condition
 Purchase Packing List | profile_view
+Purchase Packing List | reset_movement_price_list
 Purchase Packing List | view
 Purchase Packing List | view_stock
 Purchase Trade Condition Module | view
@@ -102,6 +113,7 @@ Returned Purchase Packing List Line | view
 Returned Purchase Packing List Module | delivery_line_report
 Returned Purchase Packing List Module | view
 Returned Purchase Packing List Module | workflow_report
+Returned Purchase Packing List | details
 Returned Purchase Packing List | jump_related_purchase_invoice
 Returned Purchase Packing List | payment_condition
 Returned Purchase Packing List | profile_view
@@ -115,6 +127,7 @@ Returned Sale Packing List Line | view
 Returned Sale Packing List Module | delivery_line_report
 Returned Sale Packing List Module | view
 Returned Sale Packing List Module | workflow_report
+Returned Sale Packing List | details
 Returned Sale Packing List | jump_related_sale_invoice
 Returned Sale Packing List | payment_condition
 Returned Sale Packing List | profile_view
@@ -132,13 +145,15 @@ Sale Order Module | order_report
 Sale Order Module | view
 Sale Order Module | workflow_report
 Sale Order | apply_trade_condition
+Sale Order | fast_input
+Sale Order | fast_input_update
 Sale Order | jump_to_related_sale_packing_list
 Sale Order | order_print
 Sale Order | order_summary
 Sale Order | payment_condition
 Sale Order | profile_view
 Sale Order | reference_generate
-Sale Order | sale_order_fast_input
+Sale Order | reset_movement_price_list
 Sale Order | sale_order_planning
 Sale Order | view
 Sale Order | view_stock
@@ -154,12 +169,14 @@ Sale Packing List Module | view
 Sale Packing List Module | workflow_report
 Sale Packing List | container_fast_input
 Sale Packing List | details
+Sale Packing List | fast_input
+Sale Packing List | fast_input_update
 Sale Packing List | jump_related_order
 Sale Packing List | jump_related_sale_invoice
 Sale Packing List | packing_list_print
 Sale Packing List | payment_condition
 Sale Packing List | profile_view
-Sale Packing List | sale_packing_list_fast_input
+Sale Packing List | reset_movement_price_list
 Sale Packing List | view
 Sale Packing List | view_container_list
 Sale Packing List | view_stock

@@ -109,6 +109,7 @@ portal = context.getPortalObject()\n
 valid_portal_type_list = portal.getPortalDocumentTypeList()\n
 portal_type = document.getPortalType()\n
 if portal_type not in valid_portal_type_list:\n
+\n
   if view and portal_type not in html_portal_type_list:\n
     return \'%s/view\' % document.absolute_url()\n
   return document.absolute_url()\n
@@ -124,6 +125,7 @@ if document.getValidationState() not in validation_state:\n
 # Return the URL\n
 if view and portal_type not in html_portal_type_list:\n
   return \'%s/%s/view\' % (context.absolute_url(), reference)\n
+\n
 return "%s/%s" % (context.absolute_url(), reference)\n
 </string> </value>
         </item>

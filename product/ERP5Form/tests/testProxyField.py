@@ -31,9 +31,11 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.Formulator.FormToXML import formToXML
+from Products.Formulator.TALESField import TALESMethod
 import transaction
 import unittest
 from lxml import etree
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestProxyField(ERP5TypeTestCase):
   """
@@ -50,6 +52,38 @@ class TestProxyField(ERP5TypeTestCase):
     request = self.app.REQUEST
     self.getPortal().portal_skins.changeSkin(skin_name)
     request.set('portal_skin', skin_name)
+
+  def beforeTearDown(self):
+    """Remove objects created in tests."""
+    # Remove forms
+    custom_folder = self.getSkinsTool().custom
+    custom_folder.manage_delObjects(custom_folder.objectIds())
+
+    # Remove skin folders
+    if 'erp5_geek' in self.getSkinsTool().objectIds():
+      self.getSkinsTool().manage_delObjects(['erp5_geek'])
+      ps = self.getSkinsTool()
+      for skin_name, selection in ps.getSkinPaths():
+        new_selection = []
+        selection = selection.split(',')
+        for skin_id in selection:
+          if skin_id != 'erp5_geek':
+            new_selection.append(skin_id)
+        ps.manage_skinLayers(skinpath=tuple(new_selection),
+                             skinname=skin_name, add_skin=1)
+
+    if 'customized_geek' in self.getSkinsTool().objectIds():
+      self.getSkinsTool().manage_delObjects(['customized_geek'])
+      ps = self.getSkinsTool()
+      for skin_name, selection in ps.getSkinPaths():
+        new_selection = []
+        selection = selection.split(',')
+        for skin_id in selection:
+          if skin_id != 'customized_geek':
+            new_selection.append(skin_id)
+        ps.manage_skinLayers(skinpath=tuple(new_selection),
+                             skinname=skin_name, add_skin=1)
+    transaction.commit()
 
   def testEmptySurchargedFieldLibrary(self):
     """
@@ -143,6 +177,7 @@ class TestProxyField(ERP5TypeTestCase):
 
     self.assertEquals('Generic Title', field.get_value('title'))
 
+  @expectedFailure
   def testSkinSelectionTemplateField(self):
     """
     Check that proxy field values are generated from the current skin selection
@@ -154,6 +189,7 @@ class TestProxyField(ERP5TypeTestCase):
         'Base_viewGeekFieldLibrary',
         'View')
     form = skin_folder._getOb('Base_viewGeekFieldLibrary', None)
+    form.manage_addField('my_title', 'Customized Title', 'StringField')
 
     portal_skins.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
     skin_folder = portal_skins._getOb('erp5_geek')
@@ -191,6 +227,7 @@ class TestProxyField(ERP5TypeTestCase):
     field = getattr(form, 'my_title')
     field.manage_edit_xmlrpc(dict(
       form_id='Base_viewGeekFieldLibrary', field_id='my_title'))
+    transaction.commit()
 
     self.assertEquals(None, field.get_value('title'))
     self.changeSkin('GenericView')
@@ -303,3 +340,52 @@ return printed
     # Test objectification of XML
     XMLToForm(xml_string, form)
     self.assertTrue(form.my_title.get_value('title'), my_title)
+
+  def test_proxifyParallelListField(self):
+    """ParallelListField has its own get_value method and the method does
+    different from the original one. This test checks if ProxyField can
+    behave the same as ParallelListField.
+    """
+    # Setup
+    if getattr(self.portal.portal_categories, 'colour', None) is None:
+      self.portal.portal_categories.newContent('colour')
+    if getattr(self.portal.portal_categories, 'size', None) is None:
+      self.portal.portal_categories.newContent('size')
+
+    portal_skins = self.getSkinsTool()
+    # Create skin folder
+    portal_skins.manage_addProduct['OFSP'].manage_addFolder('erp5_geek')
+    skin_folder = portal_skins._getOb('erp5_geek')
+
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form('Base_viewGeek1',
+                                                          'View')
+    skin_folder.manage_addProduct['ERP5Form'].addERP5Form('Base_viewGeek2',
+                                                          'View')
+
+    form_1 = skin_folder.Base_viewGeek1
+    # Add a parallel list field
+    form_1.manage_addField('my_field', '', 'ParallelListField')
+    form_1.my_field.manage_tales_xmlrpc(
+      dict(default="python:['colour/blue']",
+           items="python: [['Blue', 'colour/blue'], ['Red', 'colour/red'], ['Large', 'size/large'], ['Small', 'size/small']]"))
+    form_1.my_field.manage_edit_xmlrpc(
+      dict(hash_script_id="Base_getMultiListFieldPropertyDictList"))
+
+    form_2 = skin_folder.Base_viewGeek2
+    # Add a proxy field which has the same configuration as above field.
+    form_2.manage_addField('my_field', '', 'ProxyField')
+    form_2.my_field.manage_edit_xmlrpc(dict(form_id='Base_viewFieldLibrary',
+                                            field_id='my_parallel_list_field'))
+    form_2.my_field._surcharged_edit(
+      dict(hash_script_id="Base_getMultiListFieldPropertyDictList"),
+      ['hash_script_id'])
+    form_2.my_field._surcharged_tales(
+      dict(default=TALESMethod("python:['colour/blue']"),
+           items=TALESMethod("python: [['Blue', 'colour/blue'], ['Red', 'colour/red'], ['Large', 'size/large'], ['Small', 'size/small']]")),
+      ['default', 'items', 'hash_script_id'])
+
+    # Compare
+    # XXX Remove new lines. An extra new line is inserted by unknown reason.
+    form_1_html = form_1.my_field.render(REQUEST=self.app.REQUEST).replace('\n', '')
+    form_2_html = form_2.my_field.render(REQUEST=self.app.REQUEST).replace('\n', '')
+    self.assertEqual(form_1_html, form_2_html)

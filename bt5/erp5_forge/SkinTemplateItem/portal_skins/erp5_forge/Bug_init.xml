@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Define a Reporter as Source Trade\n
-person =  context.Bug_getUserPersonValue()\n
+person =  context.ERP5Site_getAuthenticatedMemberPersonValue()\n
 \n
 if person is not None:\n
   context.setSourceTradeValue(person)\n

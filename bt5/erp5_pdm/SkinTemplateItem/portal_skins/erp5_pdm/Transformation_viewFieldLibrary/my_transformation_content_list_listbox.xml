@@ -181,6 +181,10 @@
                           <string>efficiency</string>
                           <string>efficiency</string>
                         </tuple>
+                        <tuple>
+                          <string>industrial_phase</string>
+                          <string>industrial_phase</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

@@ -15,6 +15,7 @@ from Products.PortalTransforms.utils import safeToInt
 
 from lxml import etree
 from lxml.etree import HTMLParser as LHTMLParser
+from lxml.html import tostring
 
 # tag mapping: tag -> short or long tag
 VALID_TAGS = VALID_TAGS.copy()
@@ -38,19 +39,64 @@ VALID_TAGS['tfoot'] = 1
 VALID_TAGS['col'] = 1
 VALID_TAGS['colgroup'] = 1
 
+# HTML5 tags that should be allowed:
+VALID_TAGS['article'] = 1
+VALID_TAGS['aside'] = 1
+VALID_TAGS['audio'] = 1
+VALID_TAGS['canvas'] = 1
+VALID_TAGS['command'] = 1
+VALID_TAGS['datalist'] = 1
+VALID_TAGS['details'] = 1
+VALID_TAGS['dialog'] = 1
+VALID_TAGS['figure'] = 1
+VALID_TAGS['footer'] = 1
+VALID_TAGS['header'] = 1
+VALID_TAGS['hgroup'] = 1
+VALID_TAGS['keygen'] = 1
+VALID_TAGS['mark'] = 1
+VALID_TAGS['meter'] = 1
+VALID_TAGS['nav'] = 1
+VALID_TAGS['output'] = 1
+VALID_TAGS['progress'] = 1
+VALID_TAGS['rp'] = 1
+VALID_TAGS['rt'] = 1
+VALID_TAGS['ruby'] = 1
+VALID_TAGS['section'] = 1
+VALID_TAGS['source'] = 1
+VALID_TAGS['time'] = 1
+VALID_TAGS['video'] = 1
+
+
 msg_pat = """
 <div class="system-message">
 <p class="system-message-title">System message: %s</p>
 %s</d>
 """
 
-def hasScript(s):
-   """ Dig out evil Java/VB script inside an HTML attribute """
+# we inconditionally remove all meta tags with http-equiv
+# except for content-type, because:
+# * refresh can redirect;
+# * set-cookie expose confidential data;
+# * www-authenticate can disturb authentication on portal;
+# * expires can disbale caching features
+# * ...
+ALLOWED_HTTP_EQUIV_VALUE_LIST = ('content-type',)
 
-   # look for "script" and "expression"
-   javascript_pattern = re.compile("([\s\n]*?s[\s\n]*?c[\s\n]*?r[\s\n]*?i[\s\n]*?p[\s\n]*?t[\s\n]*?:)|([\s\n]*?e[\s\n]*?x[\s\n]*?p[\s\n]*?r[\s\n]*?e[\s\n]*?s[\s\n]*?s[\s\n]*?i[\s\n]*?o[\s\n]*?n)", re.DOTALL|re.IGNORECASE)
+def hasScript(s):
+   """
+   >>> hasScript('script:evil(1);')
+   True
+   >>> hasScript('expression:evil(1);')
+   True
+   >>> hasScript('http://foo.com/ExpressionOfInterest.doc')
+   False
+   """
    s = decode_htmlentities(s)
-   return javascript_pattern.findall(s)
+   s = ''.join(s.split()).lower()
+   for t in ('script:', 'expression:', 'expression('):
+      if t in s:
+         return True
+   return False
 
 def decode_htmlentities(s):
    """ XSS code can be hidden with htmlentities """
@@ -71,6 +117,19 @@ def decode_htmlentity(m):
    except ValueError:
       return entity_value
 
+charset_parser = re.compile('charset="?(?P<charset>[^"]*)"?$')
+class CharsetReplacer:
+  def __init__(self, encoding):
+    self.encoding = encoding
+
+  def __call__(self, match):
+    if match is None:
+      return ''
+    charset = match.group('charset')
+    if charset != self.encoding:
+      return match.group(0).replace(charset, self.encoding)
+    return match.group(0)
+
 class StrippingParser(HTMLParser):
     """Pass only allowed tags;  raise exception for known-bad.
 
@@ -80,7 +139,8 @@ class StrippingParser(HTMLParser):
 
     from htmlentitydefs import entitydefs # replace entitydefs from sgmllib
 
-    def __init__(self, valid, nasty, remove_javascript, raise_error):
+    def __init__(self, valid, nasty, remove_javascript, raise_error,
+                 default_encoding):
         HTMLParser.__init__( self )
         self.result = []
         self.valid = valid
@@ -88,6 +148,8 @@ class StrippingParser(HTMLParser):
         self.remove_javascript = remove_javascript
         self.raise_error = raise_error
         self.suppress = False
+        self.default_encoding = default_encoding
+        self.original_charset = None
 
     def handle_data(self, data):
         if self.suppress: return
@@ -117,14 +179,17 @@ class StrippingParser(HTMLParser):
     def handle_starttag(self, tag, attrs):
         """ Delete all tags except for legal ones.
         """
-
         if self.suppress: return
 
+        if tag.lower() == 'meta':
+          for k, v in attrs:
+            if k.lower() == 'http-equiv' and v.lower() not in\
+                                                 ALLOWED_HTTP_EQUIV_VALUE_LIST:
+              return
         if self.valid.has_key(tag):
             self.result.append('<' + tag)
 
             remove_script = getattr(self,'remove_javascript',True)
-
             for k, v in attrs:
                 if remove_script and k.strip().lower().startswith('on'):
                     if not self.raise_error: continue
@@ -134,6 +199,14 @@ class StrippingParser(HTMLParser):
                 elif remove_script and hasScript(v):
                     if not self.raise_error: continue
                     else: raise IllegalHTML, 'Script URI "%s" not allowed.' % v
+                elif tag.lower() == 'meta' and k.lower() == 'content' and\
+                     self.default_encoding and self.default_encoding not in v:
+                    match = charset_parser.search(v)
+                    if match is not None:
+                      self.original_charset = match.group('charset')
+                    self.result.append(' %s="%s"' % (k, 
+                  charset_parser.sub(CharsetReplacer(self.default_encoding), v)
+                                                    ,))
                 else:
                     self.result.append(' %s="%s"' % (k, v))
 
@@ -162,15 +235,22 @@ class StrippingParser(HTMLParser):
         return ''.join(self.result)
 
 def scrubHTML(html, valid=VALID_TAGS, nasty=NASTY_TAGS,
-              remove_javascript=True, raise_error=True):
+              remove_javascript=True, raise_error=True,
+              default_encoding=None):
 
     """ Strip illegal HTML tags from string text.
     """
+
     parser = StrippingParser(valid=valid, nasty=nasty,
                              remove_javascript=remove_javascript,
-                             raise_error=raise_error)
+                             raise_error=raise_error,
+                             default_encoding=default_encoding)
     parser.feed(html)
     parser.close()
+    if parser.original_charset:
+      result = parser.getResult().decode(parser.original_charset)\
+                                                      .encode(default_encoding)
+      return result
     return parser.getResult()
 
 class SafeHTML:
@@ -206,6 +286,7 @@ class SafeHTML:
             'nasty_tags': NASTY_TAGS,
             'remove_javascript': 1,
             'disable_transform': 0,
+            'default_encoding': 'utf-8',
             }
 
         self.config_metadata = {
@@ -230,7 +311,11 @@ class SafeHTML:
                                    'This does not effect <script> tags. 0 to leave the attributes.'),
             'disable_transform' : ("int",
                                    'disable_transform',
-                                   'If 1, nothing is done.')
+                                   'If 1, nothing is done.'),
+            'default_encoding': ('string',
+                                 'default_encoding',
+                                 'Encoding used for html string.'\
+                                     ' If encoding is different, the string will be converted' ),
             }
 
         self.config.update(kwargs)
@@ -269,7 +354,8 @@ class SafeHTML:
                     valid=self.config.get('valid_tags', {}),
                     nasty=self.config.get('nasty_tags', {}),
                     remove_javascript=self.config.get('remove_javascript', True),
-                    raise_error=False)
+                    raise_error=False,
+                    default_encoding=self.config.get('default_encoding', 'utf-8'))
             except IllegalHTML, inst:
                 data.setData(msg_pat % ("Error", str(inst)))
                 break
@@ -292,7 +378,8 @@ class SafeHTML:
                     lparser = LHTMLParser(recover=True,
                                           remove_comments=True)
                 repaired_html_tree = etree.HTML(orig, parser=lparser)
-                html_string = etree.tostring(repaired_html_tree)
+                html_string = tostring(repaired_html_tree,
+                                       include_meta_content_type=True)
                 # avoid breaking now.
                 # continue into the loop with repaired html
             else:

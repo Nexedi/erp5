@@ -56,6 +56,9 @@ class IBaseConvertable(Interface):
           method and which will eventually end up in the 
           workflow history as a way to inform the user of
           the results of the conversion process.
+
+    TODO::
+      - XXX-JPS usefulness is really uncertain
     """
 
   def convertToBaseFormat():

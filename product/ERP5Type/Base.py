@@ -31,6 +31,7 @@ from struct import unpack
 from copy import copy
 import warnings
 import types
+from threading import local
 
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
@@ -167,9 +168,9 @@ class WorkflowMethod(Method):
 
     # New implementation does not use any longer wrapWorkflowMethod
     # but directly calls the workflow methods
-    wf = getToolByName(instance, 'portal_workflow', None)
-
-    if wf is None:
+    try:
+      wf = getToolByName(instance.getPortalObject(), 'portal_workflow')
+    except AttributeError:
       # XXX instance is unwrapped(no acquisition)
       # XXX I must think that what is a correct behavior.(Yusei)
       return self._m(instance, *args, **kw)
@@ -292,7 +293,11 @@ def _aq_reset():
   Base.aq_method_generated = {}
   Base.aq_portal_type = {}
   Base.aq_related_generated = 0
-  Base.aq_preference_generated = 0
+  try:
+    from Products.ERP5Form.PreferenceTool import PreferenceTool
+    PreferenceTool.aq_preference_generated = False
+  except ImportError:
+    LOG('ERP5Type', LOG, "ERP5Form.PreferenceTool not found")
 
   # Some method generations are based on portal methods, and portal methods cache results.
   # So it is safer to invalidate the cache.
@@ -426,8 +431,9 @@ class PropertyHolder:
     Return a list of tuple (id, method) for every accessor
     """
     accessor_method_item_list = []
+    accessor_method_item_list_append = accessor_method_item_list.append
     for x, y in self._getItemList():
-      if isinstance(y, types.TupleType):
+      if isinstance(y, tuple):
         if y is WORKFLOW_METHOD_MARKER or x == '__ac_permissions__':
           continue
         if len(y) == 0:
@@ -436,7 +442,7 @@ class PropertyHolder:
           continue
       elif not isinstance(y, Accessor):
         continue
-      accessor_method_item_list.append((x, y))
+      accessor_method_item_list_append((x, y))
     return accessor_method_item_list
 
   def getAccessorMethodIdList(self):
@@ -564,7 +570,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
     # Always do it before processing klass.property_sheets (for compatibility).
     # Because of the order we generate accessors, it is still possible
     # to overload data access for some accessors.
-    ptype_object = portal.portal_types._getOb(ptype, None)
+    ptype_object = portal.portal_types.getTypeInfo(ptype)
     if ptype_object is not None:
       ptype_object.updatePropertySheetDefinitionDict(ps_definition_dict)
 
@@ -755,11 +761,9 @@ class Base( CopyContainer,
 
   # Dynamic method acquisition system (code generation)
   aq_method_generated = {}
+  aq_method_generating = local()
   aq_portal_type = {}
   aq_related_generated = 0
-
-  aq_preference_generated = 0
-  # FIXME: Preference should not be included in ERP5Type
 
   # Declarative security - in ERP5 we use AccessContentsInformation to
   # define the right of accessing content properties as opposed
@@ -886,99 +890,89 @@ class Base( CopyContainer,
       return accessor
     except KeyError:
       property_holder = None
+      if getattr(Base.aq_method_generating, 'aq_key', None) == aq_key:
+        # We are already generating for this aq_key, return not to generate
+        # again.
+        return None
 
-    if id in ('portal_types', 'portal_url', 'portal_workflow'):
-      # This is required to precent infinite loop (we need to access portal_types tool)
-      return None
+    # Store that we are generating for this aq_key, then when we will recurse
+    # in _aq_dynamic during generation for this aq_key, we'll return to prevent
+    # infinite loops. While generating for one aq_key, we will probably have to
+    # generate for another aq_key, a typical example is that to generate
+    # methods for a document, we'll have to generate methods for Types Tool and
+    # Base Category portal.
+    Base.aq_method_generating.aq_key = aq_key
+    try:
+      # Proceed with property generation
+      if self.isTempObject():
+        # If self is a temporary object, generate methods for the base
+        # document class rather than for the temporary document class.
+        # Otherwise, instances of the base document class would fail
+        # in calling such methods, because they are not instances of
+        # the temporary document class.
+        klass = klass.__bases__[0]
 
-    # Proceed with property generation
-    if self.isTempObject():
-      # If self is a temporary object, generate methods for the base
-      # document class rather than for the temporary document class.
-      # Otherwise, instances of the base document class would fail
-      # in calling such methods, because they are not instances of
-      # the temporary document class.
-      klass = klass.__bases__[0]
-    generated = 0 # Prevent infinite loops
+      generated = False # Prevent infinite loops
 
-    # Generate class methods
-    if not Base.aq_method_generated.has_key(klass):
-      initializeClassDynamicProperties(self, klass)
-      generated = 1
+      # Generate class methods
+      if klass not in Base.aq_method_generated:
+        initializeClassDynamicProperties(self, klass)
+        generated = True
 
-    # Iterate until an ERP5 Site is obtained.
-    portal = self.getPortalObject()
-    while portal.portal_type != 'ERP5 Site':
-      portal = portal.aq_parent.aq_inner.getPortalObject()
+      # Iterate until an ERP5 Site is obtained.
+      portal = self.getPortalObject()
+      while portal.portal_type != 'ERP5 Site':
+        portal = portal.aq_parent.aq_inner.getPortalObject()
 
-    # Generate portal_type methods
-    if not Base.aq_portal_type.has_key(aq_key):
-      if ptype == 'Preference':
-        # XXX-JPS this should be moved to Preference class
-        from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
-        updatePreferenceClassPropertySheetList()
-      initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal)
-      generated = 1
+      # Generate portal_type methods
+      if aq_key not in Base.aq_portal_type:
+        initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal)
+        generated = True
 
-    # Generate Related Accessors
-    if not Base.aq_related_generated:
-      from Utils import createRelatedValueAccessors
-      generated = 1
-      portal_types = getToolByName(portal, 'portal_types', None)
-      generated_bid = {}
-      econtext = createExpressionContext(object=self, portal=portal)
-      for pid, ps in PropertySheet.__dict__.iteritems():
-        if pid[0] != '_':
-          base_category_list = []
-          for cat in getattr(ps, '_categories', ()):
-            if isinstance(cat, Expression):
-              result = cat(econtext)
-              if isinstance(result, (list, tuple)):
-                base_category_list.extend(result)
+      # Generate Related Accessors
+      if not Base.aq_related_generated:
+        from Utils import createRelatedValueAccessors
+        generated = True
+        portal_types = getToolByName(portal, 'portal_types', None)
+        generated_bid = {}
+        econtext = createExpressionContext(object=self, portal=portal)
+        for pid, ps in PropertySheet.__dict__.iteritems():
+          if pid[0] != '_':
+            base_category_list = []
+            for cat in getattr(ps, '_categories', ()):
+              if isinstance(cat, Expression):
+                result = cat(econtext)
+                if isinstance(result, (list, tuple)):
+                  base_category_list.extend(result)
+                else:
+                  base_category_list.append(result)
               else:
-                base_category_list.append(result)
-            else:
-              base_category_list.append(cat)
-          for bid in base_category_list:
-            if bid not in generated_bid:
-              #LOG( "Create createRelatedValueAccessors %s" % bid,0,'')
+                base_category_list.append(cat)
+            for bid in base_category_list:
+              if bid not in generated_bid:
+                createRelatedValueAccessors(property_holder, bid)
+                generated_bid[bid] = 1
+        for ptype in portal_types.listTypeInfo():
+          for bid in ptype.getTypeBaseCategoryList():
+            if bid not in generated_bid :
               createRelatedValueAccessors(property_holder, bid)
               generated_bid[bid] = 1
-      for ptype in portal_types.objectValues():
-        for bid in ptype.getTypeBaseCategoryList():
-          if bid not in generated_bid :
-            createRelatedValueAccessors(property_holder, bid)
-            generated_bid[bid] = 1
 
-      Base.aq_related_generated = 1
+        Base.aq_related_generated = 1
 
-    # Generate preference methods (since side effect is to reset Preference accessors)
-    # XXX-JPS - This should be moved to PreferenceTool
-    if not Base.aq_preference_generated:
-      try :
-        from Products.ERP5Form.PreferenceTool import createPreferenceToolAccessorList
-        from Products.ERP5Form.PreferenceTool import updatePreferenceClassPropertySheetList
-        updatePreferenceClassPropertySheetList()
-        createPreferenceToolAccessorList(portal)
-      except ImportError, e :
-        LOG('Base._aq_dynamic', WARNING,
-            'unable to create methods for PreferenceTool', e)
-        raise
-      Base.aq_preference_generated = 1
-
-    # Always try to return something after generation
-    if generated:
-      # We suppose that if we reach this point
-      # then it means that all code generation has succeeded
-      # (no except should hide that). We can safely return None
-      # if id does not exist as a dynamic property
-      # Baseline: accessor generation failures should always
-      #           raise an exception up to the user
-      #LOG('_aq_dynamic', 0, 'getattr self = %r, id = %r' % (self, id))
-      return getattr(self, id, None)
+      # Always try to return something after generation
+      if generated:
+        # We suppose that if we reach this point
+        # then it means that all code generation has succeeded
+        # (no except should hide that). We can safely return None
+        # if id does not exist as a dynamic property
+        # Baseline: accessor generation failures should always
+        #           raise an exception up to the user
+        return getattr(self, id, None)
+    finally:
+      Base.aq_method_generating.aq_key = None
 
     # Proceed with standard acquisition
-    #LOG('_aq_dynamic', 0, 'not generated; return None for id = %r, self = %r' % (id, self))
     return None
 
   psyco.bind(_aq_dynamic)
@@ -1623,10 +1617,12 @@ class Base( CopyContainer,
       keep_existing -- if set to 1 or True, only those properties for which
       hasProperty is False will be updated.
     """
+    key_list = kw.keys()
+    if len(key_list) == 0:
+      return
     modified_property_dict = self._v_modified_property_dict = {}
     modified_object_dict = {}
 
-    key_list = kw.keys()
     unordered_key_list = [k for k in key_list if k not in edit_order]
     ordered_key_list = [k for k in edit_order if k in key_list]
     restricted_method_list = []
@@ -1645,6 +1641,10 @@ class Base( CopyContainer,
           for method in permissions[1]:
             restricted_method_list.append(method)
 
+    getProperty = self.getProperty
+    hasProperty = self.hasProperty
+    _setProperty = self._setProperty
+
     def setChangedPropertyList(key_list):
       not_modified_list = []
       for key in key_list:
@@ -1653,9 +1653,9 @@ class Base( CopyContainer,
         old_value = None
         if not force_update:
           try:
-            old_value = self.getProperty(key, evaluate=0)
+            old_value = getProperty(key, evaluate=0)
           except TypeError:
-            old_value = self.getProperty(key)
+            old_value = getProperty(key)
 
         if old_value != kw[key] or force_update:
           # We keep in a thread var the previous values
@@ -1663,7 +1663,7 @@ class Base( CopyContainer,
           # XXX If iteraction workflow script is triggered by edit and calls
           # edit itself, this is useless as the dict will be overwritten
           # If the keep_existing flag is set to 1, we do not update properties which are defined
-          if not keep_existing or not self.hasProperty(key):
+          if not keep_existing or not hasProperty(key):
             if restricted:
               accessor_name = 'set' + UpperCase(key)
               if accessor_name in restricted_method_list:
@@ -1671,7 +1671,7 @@ class Base( CopyContainer,
                 guarded_getattr(self, accessor_name)
             modified_property_dict[key] = old_value
             if key != 'id':
-              modified_object_list = self._setProperty(key, kw[key])
+              modified_object_list = _setProperty(key, kw[key])
               # BBB: if the setter does not return anything, assume
               # that self has been modified.
               if modified_object_list is None:
@@ -1933,7 +1933,7 @@ class Base( CopyContainer,
     """
     return self.absolute_url()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalObject')
+  security.declarePublic('getPortalObject')
   def getPortalObject(self):
     """
       Returns the portal object
@@ -3044,6 +3044,20 @@ class Base( CopyContainer,
     #  LOG('Base.setBinaryData',0,'data for : %s' % str(self))
     #  self.data = data
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+          'getRedirectParameterDictAfterAdd')
+  def getRedirectParameterDictAfterAdd(self, container, **kw):
+    """Return a dict of parameters to specify where the user is redirected
+    to after a new object is added in the UI."""
+    method = self._getTypeBasedMethod('getRedirectParameterDictAfterAdd',
+                                      'Base_getRedirectParameterDictAfterAdd')
+    if method is not None:
+      return method(container, **kw)
+
+    # XXX this should not happen, unless the Business Template is broken.
+    return dict(redirect_url=context.absolute_url() + '/view',
+                selection_index=None, selection_name=None)
+
   # Hash method
   def __hash__(self):
     return hash(self.getUid())
@@ -3110,7 +3124,7 @@ class Base( CopyContainer,
         script_id = script_name_begin.replace(' ','') + script_name_end
         script = getattr(self, script_id, None)
         if script is not None:
-          type_base_cache[cache_key] = aq_base(script)
+          type_base_cache[cache_key] = aq_inner(script)
           return script
       type_base_cache[cache_key] = None
 
@@ -3415,11 +3429,6 @@ class Base( CopyContainer,
     parent = self.getParentValue()
     if parent.getPortalType() != "Preference" and not parent.isTemplate:
       raise ValueError, "Template documents can not be created outside Preferences"
-    # Make sure this object is not in the catalog
-    catalog = getToolByName(self, 'portal_catalog', None)
-    if catalog is not None:
-       catalog.unindexObject(self, uid=self.getUid())
-    self.isIndexable = ConstantGetter('isIndexable', value=False)
     self.isTemplate = ConstantGetter('isTemplate', value=True)
     # XXX reset security here
 

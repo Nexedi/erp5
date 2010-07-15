@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts65545393.87</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>effects.pulsate.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+ * jQuery UI Effects Pulsate 1.7.2\n
+ *\n
+ * Copyright (c) 2009 AUTHORS.txt (http://jqueryui.com/about)\n
+ * Dual licensed under the MIT (MIT-LICENSE.txt)\n
+ * and GPL (GPL-LICENSE.txt) licenses.\n
+ *\n
+ * http://docs.jquery.com/UI/Effects/Pulsate\n
+ *\n
+ * Depends:\n
+ *\teffects.core.js\n
+ */\n
+(function($) {\n
+\n
+$.effects.pulsate = function(o) {\n
+\n
+\treturn this.queue(function() {\n
+\n
+\t\t// Create element\n
+\t\tvar el = $(this);\n
+\n
+\t\t// Set options\n
+\t\tvar mode = $.effects.setMode(el, o.options.mode || \'show\'); // Set Mode\n
+\t\tvar times = o.options.times || 5; // Default # of times\n
+\t\tvar duration = o.duration ? o.duration / 2 : $.fx.speeds._default / 2;\n
+\n
+\t\t// Adjust\n
+\t\tif (mode == \'hide\') times--;\n
+\t\tif (el.is(\':hidden\')) { // Show fadeIn\n
+\t\t\tel.css(\'opacity\', 0);\n
+\t\t\tel.show(); // Show\n
+\t\t\tel.animate({opacity: 1}, duration, o.options.easing);\n
+\t\t\ttimes = times-2;\n
+\t\t}\n
+\n
+\t\t// Animate\n
+\t\tfor (var i = 0; i < times; i++) { // Pulsate\n
+\t\t\tel.animate({opacity: 0}, duration, o.options.easing).animate({opacity: 1}, duration, o.options.easing);\n
+\t\t};\n
+\t\tif (mode == \'hide\') { // Last Pulse\n
+\t\t\tel.animate({opacity: 0}, duration, o.options.easing, function(){\n
+\t\t\t\tel.hide(); // Hide\n
+\t\t\t\tif(o.callback) o.callback.apply(this, arguments); // Callback\n
+\t\t\t});\n
+\t\t} else {\n
+\t\t\tel.animate({opacity: 0}, duration, o.options.easing).animate({opacity: 1}, duration, o.options.easing, function(){\n
+\t\t\t\tif(o.callback) o.callback.apply(this, arguments); // Callback\n
+\t\t\t});\n
+\t\t};\n
+\t\tel.queue(\'fx\', function() { el.dequeue(); });\n
+\t\tel.dequeue();\n
+\t});\n
+\n
+};\n
+\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <long>1505</long> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

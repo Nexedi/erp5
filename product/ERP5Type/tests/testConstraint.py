@@ -29,17 +29,13 @@
 
 import transaction
 import unittest
-import os
 
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
+from Products.ERP5Type.tests.Sequence import SequenceList
 
 
 class TestConstraint(PropertySheetTestCase):
-
-  run_all_test = 1
-  quiet = not os.environ.get('VERBOSE', 0)
 
   object_portal_type = "Organisation"
   object_content_portal_type = "Address"
@@ -305,11 +301,10 @@ class TestConstraint(PropertySheetTestCase):
                                   id='default_constraint',
                                   description='constraint test')
 
-  def test_01_Constraint(self, quiet=quiet, run=run_all_test):
+  def test_01_Constraint(self):
     """
       Test default Constraint class
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint without any configuration
     sequence_string = '\
@@ -319,7 +314,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCreatePropertyExistence0(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -379,11 +374,10 @@ class TestConstraint(PropertySheetTestCase):
                                   description='propertyExistence test',
                                   title=None)
 
-  def test_02_PropertyExistence(self, quiet=quiet, run=run_all_test):
+  def test_02_PropertyExistence(self):
     """
       Test property existence
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint without any configuration
     sequence_string = '\
@@ -460,7 +454,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCreatePropertyTypeValidity(self, sequence=None,
                                      sequence_list=None, **kw):
@@ -472,11 +466,10 @@ class TestConstraint(PropertySheetTestCase):
                                   id='property_type_validity',
                                   description='propertyTypeValidity test')
 
-  def test_03_PropertyTypeValidity(self, quiet=quiet, run=run_all_test):
+  def test_03_PropertyTypeValidity(self):
     """
       Test property type validity
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint without any configuration
     sequence_string = '\
@@ -561,7 +554,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCreateAttributeEquality0(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -584,11 +577,10 @@ class TestConstraint(PropertySheetTestCase):
                                   description='AttributeEquality test',
                                   title=self.object_title)
 
-  def test_04_AttributeEquality(self, quiet=quiet, run=run_all_test):
+  def test_04_AttributeEquality(self):
     """
       Test attribute equality
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint without any configuration
     sequence_string = '\
@@ -627,7 +619,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCreateCategoryExistence0(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -673,11 +665,10 @@ class TestConstraint(PropertySheetTestCase):
                                   group=None,
                                   portal_type = ('Organisation', ))
 
-  def test_05_CategoryExistence(self, quiet=quiet, run=run_all_test):
+  def test_05_CategoryExistence(self):
     """
       Test category existence
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint without any configuration
     sequence_string = '\
@@ -743,7 +734,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCreateCategoryMembershipArity0(self, sequence=None,
                                          sequence_list=None, **kw):
@@ -815,11 +806,10 @@ class TestConstraint(PropertySheetTestCase):
                                   portal_type=('Category', ),
                                   base_category=('group', ))
 
-  def test_06_CategoryMembershipArity(self, quiet=quiet, run=run_all_test):
+  def test_06_CategoryMembershipArity(self):
     """
       Test category existence
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint with min=0, max=0
     sequence_string = '\
@@ -966,7 +956,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_CategoryMembershipArityNoMax(self):
     obj = self._makeOne()
@@ -1041,11 +1031,10 @@ class TestConstraint(PropertySheetTestCase):
                             portal_type=('Organisation', ),
                             base_category=('group', ))
 
-  def test_07_CategoryRelatedMembershipArity(self, quiet=quiet, run=run_all_test):
+  def test_07_CategoryRelatedMembershipArity(self):
     """
       Test related category existence
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint with min=0, max=0
     sequence_string = '\
@@ -1110,7 +1099,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintFailed \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_RelatedCategoryMembershipArityNoMax(self):
     related_obj = self._makeOne()
@@ -1304,12 +1293,10 @@ class TestConstraint(PropertySheetTestCase):
         content_object = content_object,
     )
 
-  def test_ContentExistenceConstraint(self, quiet=quiet, run=run_all_test):
+  def test_ContentExistenceConstraint(self):
     """
       Tests Content Existence
     """
-
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint without any content
     sequence_string = '\
@@ -1328,7 +1315,7 @@ class TestConstraint(PropertySheetTestCase):
               CheckIfConstraintSucceeded \
               '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def stepCreateStringAttributeMatch(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1362,11 +1349,10 @@ class TestConstraint(PropertySheetTestCase):
         object = object,
     )
 
-  def test_StringAttributeMatchConstraint(self, quiet=quiet, run=run_all_test):
+  def test_StringAttributeMatchConstraint(self):
     """
-      Tests Content Existence
+      Tests string attribute match
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint with empty Title
     sequence_string = '\
@@ -1396,7 +1382,7 @@ class TestConstraint(PropertySheetTestCase):
               '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_RegisterWithPropertySheet(self):
     # constraint are registred in property sheets
@@ -1454,6 +1440,11 @@ class TestConstraint(PropertySheetTestCase):
             'acquisition_portal_type':('Category'),
             'acquisition_accessor_id':'getTitle',
             'mode':''},)
+          _constraints = (
+            { 'type': 'PropertyTypeValidity',
+              'id': 'type_check',
+              'description': "Type Validity Check Error",
+            }, )
       ''')
     self.assertEquals([], person.checkConsistency())
     group3 = self.category_tool.restrictedTraverse(
@@ -1522,11 +1513,10 @@ class TestConstraint(PropertySheetTestCase):
                                   condition="object/getTitle")
     sequence.set('constraint', constraint)
 
-  def test_08_AttributeUnicity(self, quiet=quiet, run=run_all_test):
+  def test_08_AttributeUnicity(self):
     """
       Test attribute unicity
     """
-    if not run: return
     sequence_list = SequenceList()
     # Test Constraint without unicity on title
     sequence_string = '\
@@ -1560,7 +1550,7 @@ class TestConstraint(PropertySheetTestCase):
               '
     sequence_list.addSequenceString(sequence_string)
 
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
 def test_suite():
   suite = unittest.TestSuite()

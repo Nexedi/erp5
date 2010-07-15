@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_skin_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -48,11 +52,9 @@
 \n
 \n
 /* hide tabs */\n
-.document > .actions,\n
-.bottom_actions{\n
+.document > .actions {\n
   display: none;\n
 }\n
-\n
 \n
 div#main_content fieldset {\n
   margin: 1em 0;\n
@@ -83,7 +85,7 @@ div#main_content fieldset legend {\n
 div#main_content fieldset label {\n
   margin: 0;\n
   display: block;\n
-  width: 11em;\n
+  width: 20em;\n
   text-align: right;\n
   float: left;\n
   text-transform: capitalize;\n

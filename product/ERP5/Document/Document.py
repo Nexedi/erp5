@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-import re, sys
+import re, sys, os
 from operator import add
 from zLOG import LOG
 from AccessControl import ClassSecurityInfo, getSecurityManager
@@ -38,9 +38,9 @@ from Products.ERP5Type.Globals import get_request
 from Products.CMFCore.utils import getToolByName, _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.DateUtils import convertDateToHour, number_of_hours_in_day, number_of_hours_in_year
-from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.Base import WorkflowMethod
+from Products.ERP5Type.DateUtils import convertDateToHour,\
+                                number_of_hours_in_day, number_of_hours_in_year
+from Products.ERP5Type.Utils import convertToUpperCase, fill_args_from_request
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
@@ -50,17 +50,35 @@ from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from AccessControl import Unauthorized
 import zope.interface
-import cStringIO
-from OFS.Image import Pdata
 from Products.PythonScripts.Utility import allow_class
+import tempfile
+from subprocess import Popen, PIPE
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
+from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+from Products.ERP5.mixin.downloadable import DownloadableMixin
+from Products.ERP5.mixin.document import DocumentMixin
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
 # these property ids are unchangable
-FIXED_PROPERTY_IDS =  ('id', 'uid', 'rid', 'sid')
+FIXED_PROPERTY_IDS = ('id', 'uid', 'rid', 'sid')
+
+# XXX: move to an easier to configure place (System Preference ?)
+VALID_TEXT_FORMAT_LIST = ('text', 'txt', 'html', 'base_html',
+                          'stripped-html')
+
+VALID_IMAGE_FORMAT_LIST = ('jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm', 'tiff')
+
+DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
+                            'xsmall', 'small', 'medium',
+                            'large', 'large', 'xlarge',)
+
+DEFAULT_QUALITY = 75
+
+DEFAULT_CONTENT_TYPE = 'text/html'
+
 
 class SnapshotMixin:
   """
@@ -121,12 +139,9 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
   # Declarative security
   security = ClassSecurityInfo()
 
-  ### Extensible content
-  def _getExtensibleContent(self, request, name):
-    # Permanent URL traversal
-    # First we must get the logged user by forcing identification
+  def _forceIdentification(self, request):
+    # force identification (usable for extensible content)
     cache = getReadOnlyTransactionCache(self)
-    # LOG('getReadOnlyTransactionCache', 0, repr(cache)) # Currently, it is always None
     if cache is not None:
       key = ('__bobo_traverse__', self, 'user')
       try:
@@ -172,14 +187,23 @@ class PermanentURLMixIn(ExtensibleTraversableMixIn):
                     # do not try to change SecurityManager
       if cache is not None:
         cache[key] = user
+
+    old_manager = None
     if user is not None:
       # We need to perform identification
       old_manager = getSecurityManager()
       newSecurityManager(get_request(), user)
+
+    return old_manager, user
+
+  ### Extensible content
+  def _getExtensibleContent(self, request, name):
+    # Permanent URL traversal
+    old_manager, user = self._forceIdentification(request)
     # Next get the document per name
     portal = self.getPortalObject()
     document = self.getDocumentValue(name=name, portal=portal)
-    # Last, cleanup everything
+    # restore original security context if there's a logged in user
     if user is not None:
       setSecurityManager(old_manager)
     if document is not None:
@@ -235,11 +259,10 @@ class DocumentProxyMixin:
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'index_html' )
-  def index_html(self, REQUEST, RESPONSE, **kw):
+  security.declareProtected(Permissions.AccessContentsInformation,'index_html')
+  def index_html(self, REQUEST, *args, **kw):
     """ Only a proxy method """
-    return self.getProxiedDocument().index_html(REQUEST, RESPONSE, **kw)
+    return self.getProxiedDocument().index_html(REQUEST, *args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getProxiedDocument' )
@@ -306,7 +329,9 @@ class UpdateMixIn:
     return method()
 
 
-class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, SnapshotMixin, UpdateMixIn):
+class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
+               SnapshotMixin, UpdateMixIn, TextConvertableMixin,
+               DownloadableMixin, DocumentMixin):
   """Document is an abstract class with all methods related to document
   management in ERP5. This includes searchable text, explicit relations,
   implicit relations, metadata, versions, languages, etc.
@@ -511,38 +536,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
                     )
 
   searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
-                              'version', 'short_title',
-                              'subject', 'source_reference',)
+                              'version', 'short_title', 'subject',
+                              'source_reference', 'source_project_title')
 
-  ### Content processing methods
-  security.declareProtected(Permissions.View, 'index_html')
-  def index_html(self, REQUEST, RESPONSE, format=None, **kw):
-    """
-      We follow here the standard Zope API for files and images
-      and extend it to support format conversion. The idea
-      is that an image which ID is "something.jpg" should
-      ne directly accessible through the URL
-      /a/b/something.jpg. The same is true for a file and
-      for any document type which primary purpose is to
-      be used by a helper application rather than displayed
-      as HTML in a web browser. Exceptions to this approach
-      include Web Pages which are intended to be primarily rendered
-      withing the layout of a Web Site or withing a standard ERP5 page.
-      Please refer to the index_html of TextDocument.
-
-      Should return appropriate format (calling convert
-      if necessary) and set headers.
-
-      format -- the format specied in the form of an extension
-      string (ex. jpeg, html, text, txt, etc.)
-
-      **kw -- can be various things - e.g. resolution
-
-      TODO:
-      - implement guards API so that conversion to certain
-        formats require certain permission
-    """
-    raise NotImplementedError
 
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
@@ -585,6 +581,8 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
 
   # Compatibility with CMF Catalog
   SearchableText = getSearchableText
+
+  index_html = DownloadableMixin.index_html
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isExternalDocument')
   def isExternalDocument(self):
@@ -964,11 +962,11 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       Based on the document content, find out as many properties as needed.
       returns properties which should be set on the document
     """
-    if getattr(self, 'hasData', None) is not None and not self.hasData():
-      # if document is empty, we will not find anything in its content
-      return dict()
-    if not self.hasBaseData():
-      raise NotConvertedError
+    # accesss data through convert
+    mime, content = self.convert(None)
+    if not content:
+       # if document is empty, we will not find anything in its content
+      return {}
     method = self._getTypeBasedMethod('getPropertyDictFromContent',
         fallback_script_id='Document_getPropertyDictFromContent')
     return method()
@@ -992,9 +990,9 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       set on the document by ContributionTool.newContent as soon
       as the document was created.
     """
-    if hasattr(self, '_backup_input'):
-      return getattr(self, '_backup_input')
-    kw = {}
+    kw = getattr(self, '_backup_input', {})
+    if kw:
+      return kw
     for id in self.propertyIds():
       # We should not consider file data
       if id not in ('data', 'categories_list', 'uid', 'id',
@@ -1005,16 +1003,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
                             # if we are garanteed that _backup_input does not
                             # disappear within a given transaction
     return kw
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getStandardFileName')
-  def getStandardFileName(self):
-    """
-    Returns the document coordinates as a standard file name. This
-    method is the reverse of getPropertyDictFromFileName.
-    """
-    method = self._getTypeBasedMethod('getStandardFileName',
-        fallback_script_id = 'Document_getStandardFileName')
-    return method()
 
   ### Metadata disovery and ingestion methods
   security.declareProtected(Permissions.ModifyPortalContent, 'discoverMetadata')
@@ -1082,50 +1070,16 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     method = self._getTypeBasedMethod('finishIngestion', fallback_script_id='Document_finishIngestion')
     return method()
 
-  # Conversion methods
-  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-  def convert(self, format, **kw):
-    """
-      Main content conversion function, returns result which should
-      be returned and stored in cache.
-      format - the format specied in the form of an extension
-      string (ex. jpeg, html, text, txt, etc.)
-      **kw can be various things - e.g. resolution
-
-      Default implementation returns an empty string (html, text)
-      or raises an error.
-
-      TODO:
-      - implement guards API so that conversion to certain
-        formats require certain permission
-    """
-    if format == 'html':
-      return 'text/html', '' # XXX - Why ?
-    if format in ('text', 'txt'):
-      return 'text/plain', '' # XXX - Why ?
-    raise NotImplementedError
-
   security.declareProtected(Permissions.View, 'asSubjectText')
   def asSubjectText(self, **kw):
     """
       Converts the subject of the document to a textual representation.
     """
-    subject = self.getSubject()
+    subject = self.getSubject('')
     if not subject:
       # XXX not sure if this fallback is a good idea.
-      subject = self.getTitle()
-    if subject is None:
-      subject = ''
+      subject = self.getTitle('')
     return str(subject)
-
-  security.declareProtected(Permissions.View, 'asText')
-  def asText(self, **kw):
-    """
-      Converts the content of the document to a textual representation.
-    """
-    kw['format'] = 'txt'
-    mime, data = self.convert(**kw)
-    return str(data)
 
   security.declareProtected(Permissions.View, 'asEntireHTML')
   def asEntireHTML(self, **kw):
@@ -1154,8 +1108,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       A private method which converts to HTML. This method
       is the one to override in subclasses.
     """
-    if not self.hasBaseData():
-      raise ConversionError('This document has not been processed yet.')
     kw['format'] = 'html'
     mime, html = self.convert(**kw)
     return html
@@ -1169,7 +1121,8 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     """
     return self._stripHTML(self._asHTML(**kw))
 
-  def _guessEncoding(self, string):
+  security.declarePrivate('_guessEncoding')
+  def _guessEncoding(self, string, mime='text/html'):
     """
       Try to guess the encoding for this string.
       Returns None if no encoding can be guessed.
@@ -1177,8 +1130,24 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
     try:
       import chardet
     except ImportError:
-      return None
-    return chardet.detect(string).get('encoding', None)
+      chardet = None
+    if chardet is not None and (mime == 'text/html'\
+                                               or os.sys.platform != 'linux2'):
+      # chardet works fine on html document and its platform independent
+      return chardet.detect(string).get('encoding', None)
+    else:
+      # file command provide better result
+      # for text/plain documents
+      # store the content into tempfile
+      file_descriptor, path = tempfile.mkstemp()
+      file_object = os.fdopen(file_descriptor, 'w')
+      file_object.write(string)
+      file_object.close()
+      # run file command against tempfile to and read encoded
+      command_result = Popen(['file', '-b', '--mime-encoding', path],
+                                                  stdout=PIPE).communicate()[0]
+      # return detected encoding
+      return command_result.strip()
 
   def _stripHTML(self, html, charset=None):
     """
@@ -1208,57 +1177,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       result['title'] = title_list[0]
     return result
 
-  # Base format support
-  security.declareProtected(Permissions.ModifyPortalContent, 'convertToBaseFormat')
-  def convertToBaseFormat(self, **kw):
-    """
-      Converts the content of the document to a base format
-      which is later used for all conversions. This method
-      is common to all kinds of documents and handles
-      exceptions in a unified way.
-
-      Implementation is delegated to _convertToBaseFormat which
-      must be overloaded by subclasses of Document which
-      need a base format.
-
-      convertToBaseFormat is called upon file upload, document
-      ingestion by the processing_status_workflow.
-
-      NOTE: the data of the base format conversion should be stored
-      using the base_data property. Refer to Document.py propertysheet.
-      Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
-    """
-    if getattr(self, 'hasData', None) is not None and not self.hasData():
-      # Empty document cannot be converted
-      return
-    try:
-      message = self._convertToBaseFormat() # Call implemetation method
-      if message is None:
-        # XXX Need to translate.
-        message = 'Converted to %s.' % self.getBaseContentType()
-      self.convertFile(comment=message) # Invoke workflow method
-    except NotImplementedError:
-      message = ''
-    return message
-
-  def _convertToBaseFormat(self):
-    """
-    """
-    raise NotImplementedError
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isSupportBaseDataConversion')
-  def isSupportBaseDataConversion(self):
-    """
-    """
-    return False
-
-  def convertFile(self, **kw): # XXX - It it really useful to explicitly define ?
-    """
-    Workflow transition invoked when conversion occurs.
-    """
-  convertFile = WorkflowMethod(convertFile)
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMetadataMappingDict')
   def getMetadataMappingDict(self):
@@ -1274,18 +1192,6 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
       return method()
     else:
       return {}
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'updateBaseMetadata')
-  def updateBaseMetadata(self, **kw):
-    """
-    Update the base format data with the latest properties entered
-    by the user. For example, if title is changed in ERP5 interface,
-    the base format file should be updated accordingly.
-
-    Default implementation does nothing. Refer to OOoDocument class
-    for an example of implementation.
-    """
-    pass
 
   # Transformation API
   security.declareProtected(Permissions.ModifyPortalContent, 'populateContent')
@@ -1367,61 +1273,3 @@ class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin, S
         # but not in http://www.some.site/at
         base_url = '/'.join(base_url_list[:-1])
     return base_url
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
-  def _setBaseData(self, data):
-    """
-      XXX - it is really wrong to put this method here since not
-      all documents are subclasses of "File". Instead, there should
-      be a interface for all classes which can convert their data
-      to a base format.
-    """
-    if not isinstance(data, Pdata) and data is not None:
-      file = cStringIO.StringIO(data)
-      data, size = self._read_data(file)
-    self._baseSetBaseData(data)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getBaseData')
-  def getBaseData(self, default=None):
-    """return BaseData as str."""
-    base_data = self._baseGetBaseData()
-    if base_data is None:
-      return None
-    else:
-      return str(base_data)
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setData')
-  def _setData(self, data):
-    """
-      XXX - it is really wrong to put this method here since not
-      all documents are subclasses of "File". Instead, there should
-      be a interface for all classes which can act as a File.
-    """
-    size = None
-    # update_data use len(data) when size is None, which breaks this method.
-    # define size = 0 will prevent len be use and keep the consistency of 
-    # getData() and setData()
-    if data is None:
-      size = 0
-    if not isinstance(data, Pdata) and data is not None:
-      file = cStringIO.StringIO(data)
-      data, size = self._read_data(file)
-    if getattr(self, 'update_data', None) is not None:
-      # We call this method to make sure size is set and caches reset
-      self.update_data(data, size=size)
-    else:
-      self._baseSetData(data) # XXX - It would be better to always use this accessor
-      self.size=size # Using accessor or caching method would be better
-      self.ZCacheable_invalidate()
-      self.ZCacheable_set(None)
-      self.http__refreshEtag()
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getData')
-  def getData(self, default=None):
-    """return Data as str."""
-    data = self._baseGetData()
-    if data is None:
-      return None
-    else:
-      return str(data)

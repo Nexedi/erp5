@@ -1,3 +1,15 @@
+2010-07-08 tatuya
+* Fix a issue that items can not be created with more than two dimesion variations at the first input.
+
+2010-07-06 tatuya
+* Fix the issue that Item_viewTrackingList shows editable fields in the listbox. They are no need.
+
+2010-07-06 tatuya
+* Fix the issue that the order of the listbox field in Item_viewTrackingList view was wrong.
+
+2010-06-22 tatuya
+* Fix a issue that Aggregate Items view caused an attribute error when there is a document which is not a movement, ex payment condition.
+
 2009-05-01 yusei
 * Fix broken Item_view form. Don't forget to commit form itself when you add a new field. Partial commit break business template.
 

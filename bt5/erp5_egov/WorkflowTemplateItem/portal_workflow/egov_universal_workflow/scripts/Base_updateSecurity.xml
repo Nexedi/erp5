@@ -53,8 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>document = state_change[\'object\']\n
-document.activate().updateLocalRolesOnSecurityGroups()\n
+            <value> <string>procedure = state_change[\'object\']\n
+procedure.activate().updateLocalRolesOnSecurityGroups()\n
 </string> </value>
         </item>
         <item>
@@ -93,7 +93,7 @@ document.activate().updateLocalRolesOnSecurityGroups()\n
                           <tuple>
                             <string>state_change</string>
                             <string>_getitem_</string>
-                            <string>document</string>
+                            <string>procedure</string>
                             <string>_getattr_</string>
                           </tuple>
                         </value>

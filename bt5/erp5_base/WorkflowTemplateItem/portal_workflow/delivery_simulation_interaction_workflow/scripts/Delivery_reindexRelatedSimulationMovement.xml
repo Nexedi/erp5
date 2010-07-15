@@ -72,7 +72,7 @@ because that delivery builder builds after that tag.\n
 """\n
 \n
 delivery = state_change[\'object\']\n
-tag = \'%s_updateAppliedRule\' % delivery.getPath()\n
+tag = \'%s_expand\' % delivery.getPath()\n
 delivery.applyToDeliveryRelatedMovement(method_id=\'recursiveReindexObject\',\n
                                         activate_kw=dict(tag=tag))\n
 </string> </value>

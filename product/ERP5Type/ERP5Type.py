@@ -249,6 +249,7 @@ class ERP5TypeInformation(XMLObject,
       'delivery', 'delivery_movement',
       'order', 'order_movement',
       'container', 'container_line',
+      'inventory',
       # Different Aspects of Supplier-Customer relation
       'sale', 'purchase', 'internal',
       # PDM
@@ -264,7 +265,7 @@ class ERP5TypeInformation(XMLObject,
       'recent_document', 'my_document', 'template_document',
       'crawler_index',
       # Solvers and simulation
-      'divergence_tester', 'target_solver',
+      'divergence_tester', 'target_solver', 'delivery_solver',
       'amount_generator',  'amount_generator_line', 'amount_generator_cell',
       # Business Processes
       'trade_model_path', 'business_link', 'business_process',

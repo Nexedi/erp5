@@ -13,16 +13,30 @@
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
               <list>
-                <string>Anonymous</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
               </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <list>
-                <string>Anonymous</string>
-              </list>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -48,6 +62,7 @@
             <value>
               <tuple>
                 <string>gadget_type/web_front</string>
+                <string>gadget_type/web_section</string>
               </tuple>
             </value>
         </item>
@@ -61,7 +76,7 @@
         </item>
         <item>
             <key> <string>multiple_instances_allowed</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -73,7 +88,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Web Site Browser</string> </value>
+            <value> <string>Browser</string> </value>
         </item>
         <item>
             <key> <string>view_form_id</string> </key>

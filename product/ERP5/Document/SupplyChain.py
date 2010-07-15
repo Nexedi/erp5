@@ -97,16 +97,18 @@ class SupplyChain(Path, XMLObject):
                                  portal_type=self.supply_link_portal_type)
     # Search next link
     next_node_value = current_supply_link.getNextNodeValue()
-    next_supply_link_list = [x for x in supply_link_list if \
-                             x.getCurrentNodeValue() == next_node_value]
-    # Prevent infinite loop
-    if current_supply_link in next_supply_link_list:
-      next_supply_link_list.remove(current_supply_link)
-    # Get only production node in the list, or return the entire list
-    next_production_list = [x for x in next_supply_link_list \
-                                if x.isProductionSupplyLink()]
+
+    next_supply_link_list = []
+    next_production_list = []
+    for supply_link in supply_link_list:
+      if supply_link != current_supply_link and \
+          supply_link.getCurrentNodeValue() == next_node_value:
+        next_supply_link_list.append(supply_link)
+        if supply_link.isProductionSupplyLink():
+          next_production_list.append(supply_link)
+
     if next_production_list != []:
-      next_supply_link_list = next_production_list 
+      return next_production_list
     return next_supply_link_list
 
   security.declareProtected(Permissions.View,
@@ -140,39 +142,41 @@ class SupplyChain(Path, XMLObject):
     """
       Return the previous SupplyLink  list.
     """
-    if current_supply_link is not None:
-      # Get all SupplyLink in the SupplyChain
-      supply_link_list = self.objectValues(
-                                 portal_type=self.supply_link_portal_type)
-      # Destination of valid link must be the source of the current link.
-      current_node_value = current_supply_link.getCurrentNodeValue()
-      previous_supply_link_list = [
-                                 x for x in supply_link_list if\
-                                 x.getNextNodeValue() == current_node_value]
-      # Prevent infinite loop
-      if current_supply_link in previous_supply_link_list:
-        previous_supply_link_list.remove(current_supply_link)
-      # Get only production node in the list, or return the entire list
-      previous_production_list = [x for x in previous_supply_link_list\
-                                  if x.isProductionSupplyLink()]
-      if previous_production_list != []:
-        previous_supply_link_list = previous_production_list
-    else:
+    if current_supply_link is None:
       # No current_supply_link defined, we need to return the last SupplyLink
-      previous_supply_link_list = [self.getLastLink()]
-    # Return result
+      return [self.getLastLink()]
+
+    # Get all SupplyLink in the SupplyChain
+    supply_link_list = self.objectValues(
+                               portal_type=self.supply_link_portal_type)
+    # Destination of valid link must be the source of the current link.
+    current_node_value = current_supply_link.getCurrentNodeValue()
+
+    previous_supply_link_list = []
+    previous_production_list = []
+    for supply_link in supply_link_list:
+      if supply_link != current_supply_link and \
+        supply_link.getNextNodeValue() == current_node_value:
+        previous_supply_link_list.append(supply_link)
+        if supply_link.isProductionSupplyLink():
+          previous_production_list.append(supply_link)
+
+    if previous_production_list != []:
+      return previous_production_list
     return previous_supply_link_list
 
   security.declareProtected(Permissions.View,
                             'getPreviousProductionSupplyLinkList')
   def getPreviousProductionSupplyLinkList(self, current_supply_link, 
-                                          recursive=0, all=0,
+                                          recursive=False, all=False,
                                           checked_link_list=None):
     """
       Return the previous SupplyLink which represents a production.
-      If recursive=1, browse the SupplyChain until a valid link is found.
+      If recursive, browse the SupplyChain until a valid link is found.
       checked_link_list is used to prevent infinite loop.
     """
+    # XXX document "all" parameter if you can
+
     # Initialize checked_link_list parameter...
     if checked_link_list is None:
       checked_link_list = []
@@ -181,52 +185,53 @@ class SupplyChain(Path, XMLObject):
     if current_supply_link in checked_link_list:
       raise SupplyChainError,\
             "SupplyLink %r is in a loop." % current_supply_link
-    else:
-      transformation_link_list = []
-      checked_link_list.append(current_supply_link)
-      # Get the previous link list
-      previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
-      # Test each link
-      for previous_link in previous_link_list:
-        continue_recursivity = 0
-        # Great, we find a valid one
-        if previous_link.isProductionSupplyLink():
-          transformation_link_list.append(previous_link)
-          # Prevent infinite loop when 2 production_link have the same
-          # destination
-          if (current_supply_link is not None) and \
-             (current_supply_link.isProductionSupplyLink()):
-            raise SupplyChainError,\
-                  "Those SupplyLinks are in conflict: %r and %r" %\
-                  (current_supply_link.getRelativeUrl(),\
-                   previous_link.getRelativeUrl())
-          if all == 1:
-            continue_recursivity=1
-        # Reject the current
-        elif (recursive==1):
-          continue_recursivity=1
-        # Continue to browse the chain ?
-        if continue_recursivity == 1:
-          # Browse the previous link
-          transformation_link_list.extend(
-            self.getPreviousProductionSupplyLinkList(
-                                         previous_link, 
-                                         recursive=recursive, all=all,
-                                         checked_link_list=checked_link_list))
-      # Return result
-      return transformation_link_list
+
+    transformation_link_list = []
+    checked_link_list.append(current_supply_link)
+    # Get the previous link list
+    previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
+    # Test each link
+    for previous_link in previous_link_list:
+      if not previous_link.isProductionSupplyLink():
+        # current is invalid
+        if not recursive:
+          continue
+      else:
+        # Great, we found a valid one
+        transformation_link_list.append(previous_link)
+        # Prevent infinite loop when 2 production_link have the same
+        # destination
+        if (current_supply_link is not None) and \
+           (current_supply_link.isProductionSupplyLink()):
+          raise SupplyChainError,\
+                "Those SupplyLinks are in conflict: %r and %r" %\
+                (current_supply_link.getRelativeUrl(),\
+                 previous_link.getRelativeUrl())
+        if not recursive and not all:
+          continue
+
+      # Browse the previous link
+      transformation_link_list.extend(
+        self.getPreviousProductionSupplyLinkList(
+                                     previous_link, 
+                                     recursive=recursive, all=all,
+                                     checked_link_list=checked_link_list))
+    # Return result
+    return transformation_link_list
 
   security.declareProtected(Permissions.View,
                             'getPreviousPackingListSupplyLinkList')
   def getPreviousPackingListSupplyLinkList(self, current_supply_link, 
-                                           recursive=0, all=0,
+                                           recursive=False, all=False,
                                            checked_link_list=None,
                                            movement=None):
     """
       Return the previous SupplyLink which represents a production.
-      If recursive=1, browse the SupplyChain until a valid link is found.
+      If recursive, browse the SupplyChain until a valid link is found.
       checked_link_list is used to prevent infinite loop.
     """
+    # XXX document "all" parameter
+
     # Initialize checked_link_list parameter...
     if checked_link_list is None:
       checked_link_list = []
@@ -235,32 +240,32 @@ class SupplyChain(Path, XMLObject):
     if current_supply_link in checked_link_list:
       raise SupplyChainError,\
             "SupplyLink %r is in a loop." % current_supply_link
-    else:
-      packing_list_link_list = []
-      checked_link_list.append(current_supply_link)
-      # Get the previous link list
-      previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
-      # Test each link
-      for previous_link in previous_link_list:
-        concurrent_list = previous_link_list[:]
-        concurrent_list.remove(previous_link)
-        # Great, we find a valid one
-        if previous_link.isPackingListSupplyLink():
-          if (movement is None) or\
-             (previous_link.test(movement, concurrent_list)):
-            packing_list_link_list.append(previous_link)
-          # Browse the previous link
-          if (recursive==1):
-            packing_list_link_list.extend(
-              self.getPreviousPackingListSupplyLinkList(
-                                         previous_link, 
-                                         recursive=recursive,
-                                         checked_link_list=checked_link_list))
-      # Return result
-      return packing_list_link_list
+
+    packing_list_link_list = []
+    checked_link_list.append(current_supply_link)
+    # Get the previous link list
+    previous_link_list = self.getPreviousSupplyLinkList(current_supply_link)
+    # Test each link
+    for previous_link in previous_link_list:
+      concurrent_list = previous_link_list[:]
+      concurrent_list.remove(previous_link)
+      # Great, we find a valid one
+      if previous_link.isPackingListSupplyLink():
+        if (movement is None) or\
+           (previous_link.test(movement, concurrent_list)):
+          packing_list_link_list.append(previous_link)
+        # Browse the previous link
+        if recursive:
+          packing_list_link_list.extend(
+            self.getPreviousPackingListSupplyLinkList(
+                                       previous_link,
+                                       recursive=recursive,
+                                       checked_link_list=checked_link_list))
+    # Return result
+    return packing_list_link_list
 
   def getPreviousIndustrialPhaseList(self, current_supply_link, method_id,
-                                     include_current=0, all=0):
+                                     include_current=False, all=False):
     """
       Return recursively all previous industrial phase.
     """
@@ -268,7 +273,7 @@ class SupplyChain(Path, XMLObject):
     previous_supply_link_list = method(current_supply_link, recursive=1,
                                        all=all)
     # Add the current industrial phase
-    if (include_current == 1):
+    if include_current:
       previous_supply_link_list.append(current_supply_link)
     # Generate the industrial phase list, and remove double
     ind_phase_dict = {}
@@ -284,7 +289,7 @@ class SupplyChain(Path, XMLObject):
   security.declareProtected(Permissions.View,
                             'getPreviousProductionIndustrialPhaseList')
   def getPreviousProductionIndustrialPhaseList(self, current_supply_link,
-                                               all=0):
+                                               all=False):
     """
       Return recursively all previous industrial phase representing 
       a production.
@@ -304,7 +309,7 @@ class SupplyChain(Path, XMLObject):
     return self.getPreviousIndustrialPhaseList(
                                    current_supply_link,
                                    "getPreviousPackingListSupplyLinkList",
-                                   include_current=1)
+                                   include_current=True)
 
   security.declareProtected(Permissions.View,
                             'test')

@@ -28,10 +28,8 @@
 
 import unittest
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Tool.SessionTool import SESSION_CACHE_FACTORY
 from string import letters as LETTERS
@@ -52,7 +50,6 @@ primitives_kw = dict(attr_1 = ['list_item'], \
 
 class TestSessionTool(ERP5TypeTestCase):
 
-  run_all_test = 1
   session_id = "123456789"
 
   def getTitle(self):
@@ -75,7 +72,7 @@ class TestSessionTool(ERP5TypeTestCase):
                                 url_string='127.0.0.1:11211')
     self.login()
 
-  def login(self, quiet=0, run=run_all_test):
+  def login(self):
     uf = self.getPortal().acl_users
     uf._doAddUser('ivan', '', ['Manager'], [])
     uf._doAddUser('ERP5TypeTestCase', '', ['Manager'], [])
@@ -267,26 +264,12 @@ class TestSessionTool(ERP5TypeTestCase):
     session = self.portal.portal_sessions[self.session_id]
     self.assertEquals(session.get('key'),  'value')
 
-  def test_01_CheckSessionTool(self, quiet=0, run=run_all_test):
-    """ Create portal_sessions tool and needed cache factory. """
-    if not run:
-      return
-    if not quiet:
-      message = '\nCheck SessionTool '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    portal = self.getPortal()
-    self.assertNotEqual(None, getattr(portal, 'portal_sessions', None))
+  def test_01_CheckSessionTool(self):
+    """ Checks session tool is present """
+    self.assertNotEqual(None, getattr(self.portal, 'portal_sessions', None))
 
-  def test_02_RamSession(self, quiet=0, run=run_all_test):
+  def test_02_RamSession(self):
     """ Test RamSession which uses local RAM based cache plugin. """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest Ram Session.'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
     sequence_list = SequenceList()
     sequence_string =  'stepTestSetGet  \
                     stepTestAcquisitionRamSessionStorage \
@@ -301,15 +284,8 @@ class TestSessionTool(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_03_MemcachedDistributedSession(self, quiet=0, run=run_all_test):
+  def test_03_MemcachedDistributedSession(self):
     """ Test DistributedSession which uses memcached based cache plugin. """
-    if not run:
-      return
-    if not quiet:
-      message = '\nTest Distributed Session (memcached).'
-      ZopeTestCase._print(message)
-      LOG('Testing... ', 0, message)
-
     # create memcached plugin and test
     self._changeCachePlugin('Distributed Ram Cache')
     sequence_list = SequenceList()

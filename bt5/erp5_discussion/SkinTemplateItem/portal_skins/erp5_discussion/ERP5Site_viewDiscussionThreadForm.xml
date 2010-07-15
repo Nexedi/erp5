@@ -78,7 +78,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>your_listbox</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
@@ -91,7 +91,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_modification_date</string>
+                        <string>listbox_author</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -99,6 +102,7 @@
                     <value>
                       <list>
                         <string>your_add_new_thread_link</string>
+                        <string>listbox_last_post</string>
                       </list>
                     </value>
                 </item>

@@ -94,7 +94,7 @@
                        tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
                 <input type="hidden" name="view_document_url" value=""\n
                        tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
-                <button id="input-save-view" class="formbt" type="submit"\n
+                <button id="input-save-view" class="formbt save" type="submit"\n
                         title="Save &amp; View" name="Base_editAndViewAsWeb:method"\n
                         i18n:attributes="title" i18n:domain="ui">\n
                   <span>\n
@@ -102,7 +102,7 @@
                     <span class="description" i18n:translate="" i18n:domain="ui">Save &amp; View</span>\n
                   </span>\n
                 </button>\n
-                <button id="input-save-edit" class="formbt" type="submit"\n
+                <button id="input-save-edit" class="formbt save" type="submit"\n
                         title="Save &amp; Edit" name="Base_editAndEditAsWeb:method"\n
                         i18n:attributes="title" i18n:domain="ui">\n
                   <span>\n

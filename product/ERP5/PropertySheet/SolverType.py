@@ -62,11 +62,21 @@ class SolverType:
           'mode':       'w',
           'label':      'Process Exclusive'
          },
-        { 'id':         'delivery_solver',
-          'type':       'tokens',
+        { 'id':         'automatic_solver',
+          'type':       'boolean',
           'mode':       'w',
-          'label':      'Delivery Solvers'
+          'label':      'Solve automatically if True'
+         },
+        { 'id':         'default_configuration_property_dict_method_id',
+          'type':       'string',
+          'mode':       'w',
+          'description':'the method used to get a dict of default properties.',
+         },
+        { 'id':         'configuration_property_list_dict_method_id',
+          'type':       'string',
+          'mode':       'w',
+          'description':'the method used to get a dict of possible values.',
          },
     )
 
-    _categories = ('conflicting_solver',)
+    _categories = ('conflicting_solver', 'delivery_solver',)

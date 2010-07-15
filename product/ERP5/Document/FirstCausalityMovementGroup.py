@@ -40,18 +40,35 @@ class FirstCausalityMovementGroup(CausalityMovementGroup):
   def test(self, movement, property_dict, **kw):
     """Compare explanation to now if it is possible to update delivery"""
     explanation = property_dict.get('_explanation','')
-    if movement.getRelativeUrl() == explanation:
-      return True, {}
+    if movement == movement.getDeliveryValue():
+      # XXX what is the expected behaviour of this movement group in
+      # delivery level?
+      if movement.getRelativeUrl() == explanation:
+        return True, {}
+      else:
+        return False, {}
     else:
-      return False, {}
+      simulation_movement = movement.getDeliveryRelatedValue()
+      if simulation_movement is not None and \
+         self._getExplanationRelativeUrl(simulation_movement) == explanation:
+        return True, {}
+      else:
+        return False, {}
 
   def _getExplanationRelativeUrl(self, movement):
     """ Get the order value for a movement """
-    parent = movement.getParentValue().getParentValue()
+    applied_rule = movement.getParentValue()
+    if applied_rule.isRootAppliedRule():
+      return None
+    parent_movement = applied_rule.getParentValue()
     # Go upper into the simulation tree in order to find a delivery link
-    while parent.getDeliveryValue() is None and not(parent.isRootAppliedRule()):
-      parent = parent.getParentValue()
-    delivery_movement = parent.getDeliveryValue()
+    parent_delivery = parent_movement.getDeliveryValue()
+    applied_rule = parent_movement.getParentValue()
+    while parent_delivery is None and not applied_rule.isRootAppliedRule():
+      parent_movement = applied_rule.getParentValue()
+      parent_delivery = parent_movement.getDeliveryValue()
+      applied_rule = parent_movement.getParentValue()
+    delivery_movement = parent_delivery
     delivery_url = None
     if delivery_movement is not None:
       delivery = delivery_movement.getExplanationValue()

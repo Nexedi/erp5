@@ -54,16 +54,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Set preferred text format\n
-context.edit(text_format = context.portal_preferences.getPreferredTextFormat())\n
-context.setStartDate(DateTime())\n
+portal = context.getPortalObject()\n
+edit_kw = {\'content_type\': portal.portal_preferences.getPreferredTextFormat(),\n
+           \'start_date\': DateTime(),\n
+           \'destination_value_list\': context.BugLine_getRecipientValueList()}\n
 \n
 # Define a Reporter as Source Trade\n
-person =  context.Bug_getUserPersonValue()\n
+person = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
 if person is not None:\n
-  context.setSourceValue(person)\n
+  edit_kw[\'source_value\'] = person\n
 \n
-# Define Recipents\n
-context.setDestinationValueList(context.BugLine_getRecipientValueList())\n
+context.edit(**edit_kw)\n
 </string> </value>
         </item>
         <item>
@@ -104,9 +105,13 @@ context.setDestinationValueList(context.BugLine_getRecipientValueList())\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>DateTime</string>
+                            <string>edit_kw</string>
                             <string>person</string>
                             <string>None</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

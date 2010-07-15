@@ -64,9 +64,11 @@ if (business_process is not None and\n
 else:\n
   rule_reference=\'default_production_order_rule\'\n
 \n
-tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-activate_kw = {\'tag\':tag,\'priority\':3}\n
-order.activate(tag=tag).updateAppliedRule(rule_reference=rule_reference, activate_kw=activate_kw)\n
+path = order.getPath()\n
+tag = \'%s_updateAppliedRule\' % path\n
+expand_tag = \'%s_expand\' % path\n
+activate_kw = {\'tag\':expand_tag, \'priority\':3}\n
+order.activate(tag=tag, after_tag=expand_tag).updateAppliedRule(rule_reference=rule_reference, activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
@@ -112,7 +114,9 @@ order.activate(tag=tag).updateAppliedRule(rule_reference=rule_reference, activat
                             <string>None</string>
                             <string>context</string>
                             <string>rule_reference</string>
+                            <string>path</string>
                             <string>tag</string>
+                            <string>expand_tag</string>
                             <string>activate_kw</string>
                           </tuple>
                         </value>

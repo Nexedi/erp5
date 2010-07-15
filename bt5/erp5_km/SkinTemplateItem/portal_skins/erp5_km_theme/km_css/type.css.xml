@@ -49,6 +49,18 @@
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
 \n
+/*\n
+##  dreikelvin CSS Framework 3.5\n
+##\n
+##  Author & Copyright: Robert Jung 2008\n
+##  URL: http://design.dreikelvin.de/\n
+##\n
+##  CSS for "ERP5"\n
+##\n
+##\n
+*/\n
+/* ## XHTML basis elements ############################ start # */\n
+\n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 body {\n

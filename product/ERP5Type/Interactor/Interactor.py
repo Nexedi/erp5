@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2007-2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2007-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -78,7 +78,7 @@ class InteractorMethod(Method):
 
   def registerBeforeAction(self, action, args, kw):
     self.before_action_list.append((action, args, kw))
-  
+
   def registerAfterAction(self, action, args, kw):
     self.after_action_list.append((action, args, kw))
 
@@ -101,11 +101,23 @@ class InteractorSource:
     """
     self.method = method
 
+  def doBefore(self, action, *args, **kw):
+    """
+    """
+    if not isinstance(self.method, InteractorMethod):
+      im_class = self.method.im_class
+      # Turn this into an InteractorMethod
+      interactor_method = InteractorMethod(self.method)
+      setattr(im_class, self.method.__name__, interactor_method)
+      self.method = interactor_method
+    # Register the action
+    self.method.registerBeforeAction(action, args, kw)
+
   def doAfter(self, action, *args, **kw):
     """
     """
-    im_class = self.method.im_class
     if not isinstance(self.method, InteractorMethod):
+      im_class = self.method.im_class
       # Turn this into an InteractorMethod
       interactor_method = InteractorMethod(self.method)
       setattr(im_class, self.method.__name__, interactor_method)
@@ -115,7 +127,7 @@ class InteractorSource:
 
 class Interactor:
   """
-  Interactor base class. 
+  Interactor base class.
 
   TODO:
     - implement uninstall in a generic way
@@ -127,14 +139,14 @@ class Interactor:
     Install the interactions. This method must be subclassed.
     """
     raise NotImplementedError
-  
+
   def uninstall(self):
     """
     Uninstall the interactions. Default implementation is provided
     by Interactor base class.
     """
     raise NotImplementedError
-  
+
   # Interaction implementation
   def on(self, method):
     """

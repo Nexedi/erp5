@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block metal:define-macro="field_render">\n
+    <tal:block tal:condition="python: field.meta_type != \'HiddenStringField\'"\n
+               tal:define="field_id     field/id;\n
+               value        python: request.get(field_id, None);\n
+               render_prefix render_prefix | nothing;\n
+               field_errors python: request.get(\'field_errors\', {});\n
+               field_has_error  python: field_errors.has_key(field_id);\n
+               global form_id form_id | form/id | nothing;\n
+               field_description field/Field_getDescription;\n
+               is_web_mode is_web_mode | nothing">\n
+      <div tal:define="html_render  python: field.render_htmlgrid(value, request, render_prefix=render_prefix)"\n
+           tal:attributes="title field_description;\n
+           class python: \' \'.join([x for x in [\'field\', field.is_required() and \'required\' or None, field_has_error and \'error\' or None, field.get_value(\'css_class\') or None] if x is not None])"\n
+           i18n:attributes="title" i18n:domain="ui">\n
+        <tal:block tal:repeat="html_tuple html_render">\n
+          <label>\n
+            <tal:block tal:content="structure python: html_tuple[0]"\n
+                       i18n:translate="" i18n:domain="ui" />\n
+            <tal:block tal:condition="preferred_html_style_developper_mode">\n
+              <tal:block metal:use-macro="developper_shortcut_render/macros/field_developper" />\n
+            </tal:block>\n
+            <tal:block tal:condition="preferred_html_style_translator_mode">\n
+              <tal:block metal:use-macro="developper_shortcut_render/macros/field_translator" />\n
+            </tal:block>\n
+          </label>\n
+          <div class="input" tal:content="structure python: html_tuple[1]" />\n
+          <span tal:condition="field_has_error"\n
+                class="error"\n
+                tal:content="python: field_errors[field_id].error_text"\n
+                i18n:translate="" i18n:domain="ui" />\n
+          <p class="clear" tal:condition="not:is_web_mode"></p>\n
+        </tal:block>\n
+      </div>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>field_render</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

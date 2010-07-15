@@ -73,9 +73,14 @@ if len(jump_reference_list)==1:\n
 else:\n
   selection_uid_list = map(lambda x:x.getUid(),jump_reference_list)\n
   kw = {\'uid\': selection_uid_list}\n
+  # We need to reset the selection. Indeed, some sort columns done in another \n
+  # jump could be meaningless for this particular jump. The consequence could \n
+  # be an empty list\n
+  context.portal_selections.setSelectionFor(\'Base_jumpToRelatedObjectList\', None)\n
   context.portal_selections.setSelectionParamsFor(\'Base_jumpToRelatedObjectList\',kw)\n
   request.set(\'object_uid\', context.getUid())\n
   request.set(\'uids\', selection_uid_list)\n
+  request.set(\'original_form_id\', form_id)\n
   return context.Base_jumpToRelatedObjectList(uids=selection_uid_list, REQUEST=request)\n
 </string> </value>
         </item>
@@ -142,6 +147,7 @@ else:\n
                             <string>_getitem_</string>
                             <string>jump_reference</string>
                             <string>selection_uid_list</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

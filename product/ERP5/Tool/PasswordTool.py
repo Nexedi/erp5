@@ -72,22 +72,33 @@ class PasswordTool(BaseTool):
     if user_login is None:
       user_login = REQUEST["user_login"]
 
-    # check user exists
+    msg = None
+    # check user exists, and have an email
     user_list = self.getPortalObject().acl_users.\
                       erp5_users.getUserByLogin(user_login)
     if len(user_list) == 0:
       msg = translateString("User ${user} does not exist.",
                             mapping={'user':user_login})
+    else:
+      # We use checked_permission to prevent errors when trying to acquire
+      # email from organisation
+      user = user_list[0]
+      email_value = user.getDefaultEmailValue(
+              checked_permission='Access content information')
+      if email_value is None or not email_value.asText():
+        msg = translateString(
+            "User ${user} does not have an email address, please contact site "
+            "administrator directly", mapping={'user':user_login})
+      
+    if msg:
       if REQUEST is not None:
         parameter = urlencode(dict(portal_status_message=msg))
         ret_url = '%s/login_form?%s' % \
                   (self.getPortalObject().absolute_url(),
                   parameter)
         return REQUEST.RESPONSE.redirect( ret_url )
-      else:
-        return msg
+      return msg
 
-    user = user_list[0].getObject()
     # generate a random string
     random_url = self._generateUUID()
     parameter = urlencode(dict(reset_key=random_url))
@@ -213,11 +224,7 @@ class PasswordTool(BaseTool):
     self._password_request_dict.pop(password_key)
     persons = self.getPortalObject().acl_users.erp5_users.getUserByLogin(user_login)
     person = persons[0]
-    # Calling private method starts with __ from outside is normally BAD,
-    # but if we leave the method as a normal method starts with _ and follow
-    # our naming convention, then the method can be callable through edit
-    # method without appropriate permission check and then security breaks.
-    person._Person__setPasswordByForce(password)
+    person._forceSetPassword(password)
     person.reindexObject()
     if REQUEST is not None:
       msg = translateString("Password changed.")

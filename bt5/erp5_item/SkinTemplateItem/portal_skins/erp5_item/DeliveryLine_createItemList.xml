@@ -114,8 +114,8 @@ for line in kw.get(\'listbox\'):\n
     line_variation_category_list = []\n
     for variation in (\n
           line.get(\'line_variation_category_list\'),\n
-          line.get(\'tab_variation_category_list\'),\n
-          line.get(\'column_variation_category_list\'),):\n
+          line.get(\'column_variation_category_list\'),\n
+          line.get(\'tab_variation_category_list\'),):\n
       if variation:\n
         line_variation_category_list.append(variation)\n
 \n

@@ -3,6 +3,7 @@ from urllib2 import HTTPPasswordMgrWithDefaultRealm, HTTPBasicAuthHandler, \
 from xml.dom.minidom import parseString
 import md5
 from HTMLParser import HTMLParser
+import socket
 
 def getRssDataAsDict(url, username, password):
   passman = HTTPPasswordMgrWithDefaultRealm()
@@ -11,7 +12,13 @@ def getRssDataAsDict(url, username, password):
   opener = build_opener(auth_handler)
   install_opener(opener)
   try:
-    file = urlopen(url)
+    default_timeout = socket.getdefaulttimeout()
+    socket.setdefaulttimeout(5.0)
+    try:
+      file = urlopen(url)
+    finally:
+      socket.setdefaulttimeout(default_timeout)
+      
   except IOError , e:
     return {'title': 'Connection problem, please retry later.'}
   except ValueError , e:

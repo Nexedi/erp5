@@ -43,13 +43,13 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>Search Top Box Clicking</title>\n
+<title tal:content="template/getId"/>\n
 </head>\n
 <body tal:define="file_name string:tiolive-ERP5.DMS.TioLive-001-en.odp;\n
-                  full_filename_location python: here.ExpressZuite_getFilenameLocation(file_name)">\n
+                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test a search on the top box clicking on the search button</td></tr>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
 </thead><tbody>\n
 \n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
@@ -58,12 +58,12 @@
 \n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=New File</td>\n
+  <td>link=New Document</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -78,14 +78,82 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>Presentation created successfully</td>\n
+  <td>successfully</td>\n
   <td></td>\n
 </tr>\n
-<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/wait_for_activities">\n
-Wait for activities</span>\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//ul[@class="breadcrumb"]//li[3]/a@href</td>\n
+  <td>file_url</td>\n
+</tr>\n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site/en</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${file_url}?editable_mode:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Presentation</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>TioLive, ERP5, Freedom</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_reference</td>\n
+  <td>tiolive-ERP5.DMS.TioLive</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>tiolive-ERP5.DMS.TioLive-001-en.odp</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Presentation</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Converted</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr> \n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -118,8 +186,7 @@ Wait for activities</span>\n
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></string> </value>
         </item>

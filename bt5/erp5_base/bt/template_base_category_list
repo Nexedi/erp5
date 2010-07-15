@@ -2,8 +2,11 @@ agent
 agent_privilege
 bank_account_type
 collect_order_group
+conflicting_solver
+contributor
 currency_exchange_type
 delivery_builder
+delivery_solver
 destination_carrier
 destination_referral
 destination_region
@@ -33,6 +36,7 @@ salary_level
 site
 skill
 social_form
+solver
 source_carrier
 source_referral
 source_region

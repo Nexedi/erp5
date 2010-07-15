@@ -1,3 +1,49 @@
+2010-07-14 yusei
+* Set reference field to Rounding Model view form.
+
+2010-07-06 kazuhiko
+* Add delivery_solver base category that is used to specify available delivery solver portal types per target solver portal type.
+
+2010-07-05 kazuhiko
+* Move Solver Process related actions from the experimental erp5_simulation business template to the erp5_base business template.
+
+2010-07-02 kazuhiko
+* Use validation_workflow in Solver Type.
+* Use a different view form for Solver Type to display validation_state.
+
+2010-06-30 kazuhiko
+* Reimplement Delivery_solveDivergenceAutomatically by using Solver Process Tool's API instead of ad-hoc way.
+* Move Solver Decision portal type from the experimental erp5_simulation business template to the erp5_base business template.
+* Calculate and pass default values to automatic solvers.
+* Add fallback scripts for target solvers' default configuration values.
+
+2010-06-29 kazuhiko
+* Move portal_solvers and portal_solver_processes from the experimental erp5_simulation business template to the erp5_base business template.
+
+2010-06-28 kazuhiko
+* Add automatic divergence solving function in delivery_causality_workflow.
+
+2010-06-04 kazuhiko
+* Do not invoke simulation_movement_causality_interaction_workflow/interactions/calculate_causality for temporary documents.
+
+2010-05-28 kazuhiko
+* Rename 'force_update' property to 'update_always'.
+
+2010-05-24 kazuhiko
+* Improve activity dependencies for Delivery_updateAppliedRule, eg. delivery.activate(tag='(path)_updateAppliedRule', after_tag='(path)_expand').Delivery_updateAppliedRule(activate_kw={'tag':'(path)_expand'})
+
+2010-05-20 kazuhiko
+* Add checkboxes for force_update property of Property Movement Group and Category Movement Group.
+
+2010-05-14 yo
+* Get rid of wrong acquisitions from the use category.
+
+2010-05-12 nicolas
+* add document_conversion_interaction_workflow
+* add document_security_interaction_workflow
+* move process_status_workflow from erp5_dms
+because Notification Message need it.
+
 2010-04-29 kazuhiko
 * Remove specialise base category because it already exists in erp5_core.
 

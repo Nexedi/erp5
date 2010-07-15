@@ -2,20 +2,18 @@
 from Products.PortalTransforms.libtransforms.commandtransform import commandtransform
 from Products.PortalTransforms.interfaces import idatastream
 from Products.ERP5Type.Document import newTempOOoDocument
+from Products.ERP5.Document.Document import ConversionError
 from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_base
 from zope.interface import implements
 from OFS.Image import Image as OFSImage
 from zLOG import LOG
 
-try:
-  from Products.ERP5OOo.OOoUtils import OOoBuilder
-  import re
-  from lxml import etree
-  from lxml.etree import ParseError, Element
-  import_succeed = 1
-except ImportError:
-  import_succeed = 0
+from Products.ERP5OOo.OOoUtils import OOoBuilder
+import re
+from lxml import etree
+from lxml.etree import ParseError, Element
+
 from urllib import unquote
 from urlparse import urlparse
 try:
@@ -25,9 +23,6 @@ except ImportError:
   from cgi import parse_qsl
 
 CLEAN_RELATIVE_PATH = re.compile('^../')
-
-class TransformError(Exception):
-  pass
 
 class OOoDocumentDataStream:
   """Handle OOoDocument in Portal Transforms"""
@@ -71,7 +66,7 @@ class OOOdCommandTransform(commandtransform):
       self.__name__ = name
     self.mimetype = mimetype
     self.context = context
-    if import_succeed and self.mimetype == 'text/html':
+    if self.mimetype == 'text/html':
       data = self.includeExternalCssList(data)
     self.data = data
 
@@ -116,19 +111,21 @@ class OOOdCommandTransform(commandtransform):
         if image is not None:
           odt_content_modified = True
           content_type = image.getContentType()
-          mimetype_list = getToolByName(self.context,
-                                        'mimetypes_registry').lookup(content_type)
-          #Need to improve default format handling
-          format = 'png'
-          if mimetype_list:
-            format = mimetype_list[0].minor()
+          mimetype_list = getToolByName(self.context.getPortalObject(),
+                                     'mimetypes_registry').lookup(content_type)
+
+          format = image_parameter_dict.pop('format', None)
+          for mimetype_object in mimetype_list:
+            if mimetype_object.extensions:
+              format = mimetype_object.extensions[0]
+              break
+            elif mimetype_object.globs:
+              format = mimetype_object.globs.strip('*.')
+              break
           if getattr(image, 'meta_type', None) == 'ERP5 Image':
             #ERP5 API
-            if 'format' in image_parameter_dict:
-              format = image_parameter_dict.pop('format')
-
-            # convert image according parameters
-            mime, image_data = image.convert(format, **image_parameter_dict)
+            # resize image according parameters
+            mime, image_data = image.convert(None, **image_parameter_dict)
             image = OFSImage(image.getId(), image.getTitle(), image_data)
 
           # image should be OFSImage
@@ -191,18 +188,22 @@ class OOOdCommandTransform(commandtransform):
 
   def convert(self):
     tmp_ooo = newTempOOoDocument(self.context, self.context.generateNewId())
+    # XXX We store the same content inside data and base_data
+    # otherwise conversion server fails to convert html=>odt for example.
+    # deeper investigation is required inside oood to understand this issue.
     tmp_ooo.edit( base_data=self.data,
+                  data=self.data,
                   fname=self.name(),
                   source_reference=self.name(),
-                  base_content_type=self.mimetype,)
-    tmp_ooo.oo_data = self.data
+                  base_content_type=self.mimetype,
+                  content_type=self.mimetype,)
     self.ooo = tmp_ooo
 
   def convertTo(self, format):
     if self.ooo.isTargetFormatAllowed(format):
       mime, data = self.ooo.convert(format)
-      if import_succeed and self.mimetype == 'text/html':
+      if self.mimetype == 'text/html':
         data = self.includeImageList(data)
       return data
     else:
-      raise TransformError
+      raise ConversionError('Format not allowed %s' % format)

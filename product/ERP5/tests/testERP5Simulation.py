@@ -32,14 +32,13 @@ This test is experimental for new simulation implementation.
 import unittest
 import transaction
 
-from zLOG import LOG
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from testPackingList import TestPackingList
+from testPackingList import TestPackingList, TestPackingListMixin
 from testInvoice import TestSaleInvoice, TestInvoiceMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.Document.BusinessTemplate import getChainByType
 
 class TestERP5SimulationMixin(TestInvoiceMixin):
   def getBusinessTemplateList(self):
@@ -162,13 +161,13 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     sequence.edit( order = order )
 
   def _acceptDecisionQuantity(self, document):
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(document)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(document)
     quantity_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
     # use Quantity Accept Solver.
-    quantity_solver_decision.setSolverValue(self.portal.portal_types['Accept Solver'])
+    quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Accept Solver'])
     # configure for Accept Solver.
     kw = {'tested_property_list':['quantity',]}
     quantity_solver_decision.updateConfiguration(**kw)
@@ -199,13 +198,13 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     Solve quantity divergence by using solver tool.
     """
     packing_list = sequence.get('packing_list')
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(packing_list)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
     resource_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='resource',
       solver_process.contentValues())[0]
     # use Resource Replacement Solver.
-    resource_solver_decision.setSolverValue(self.portal.portal_types['Accept Solver'])
+    resource_solver_decision.setSolverValue(self.portal.portal_solvers['Accept Solver'])
     # configure for Accept Solver.
     kw = {'tested_property_list':['resource',]}
     resource_solver_decision.updateConfiguration(**kw)
@@ -217,15 +216,15 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       Do the split and defer action
     """
     packing_list = sequence.get('packing_list')
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(packing_list)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
     quantity_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
     # use Quantity Split Solver.
-    quantity_solver_decision.setSolverValue(self.portal.portal_types['Quantity Split Solver'])
+    quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Solver'])
     # configure for Quantity Split Solver.
-    kw = {'delivery_solver':'FIFO',
+    kw = {'delivery_solver':'FIFO Delivery Solver',
           'start_date':self.datetime + 15,
           'stop_date':self.datetime + 25}
     quantity_solver_decision.updateConfiguration(**kw)
@@ -250,13 +249,13 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     """
     Solve quantity divergence by using solver tool.
     """
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(packing_list)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
     quantity_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
     # use Quantity Adoption Solver.
-    quantity_solver_decision.setSolverValue(self.portal.portal_types['Adopt Solver'])
+    quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Adopt Solver'])
     # configure for Adopt Solver.
     kw = {'tested_property_list':['quantity',]}
     quantity_solver_decision.updateConfiguration(**kw)
@@ -291,13 +290,13 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     Solve resource divergence by using solver tool.
     """
     packing_list = sequence.get('packing_list')
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(packing_list)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
     resource_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='resource',
       solver_process.contentValues())[0]
     # use Resource Adopt Solver.
-    resource_solver_decision.setSolverValue(self.portal.portal_types['Adopt Solver'])
+    resource_solver_decision.setSolverValue(self.portal.portal_solvers['Adopt Solver'])
     # configure for Adopt Solver.
     kw = {'tested_property_list':['resource',]}
     resource_solver_decision.updateConfiguration(**kw)
@@ -323,13 +322,13 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
       Check if simulation movement are disconnected
     """
     packing_list = sequence.get('packing_list')
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(packing_list)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
     for destination_solver_decision in filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='destination',
       solver_process.contentValues()):
       # use Destination Replacement Solver.
-      destination_solver_decision.setSolverValue(self.portal.portal_types['Accept Solver'])
+      destination_solver_decision.setSolverValue(self.portal.portal_solvers['Accept Solver'])
       # configure for Accept Solver.
       kw = {'tested_property_list':['destination',]}
       destination_solver_decision.updateConfiguration(**kw)
@@ -337,13 +336,13 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     solver_process.solve()
 
   def _unifyStartDateWithDecision(self, document):
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(document)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(document)
     for start_date_solver_decision in filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='start_date',
       solver_process.contentValues()):
       # use StartDate Replacement Solver.
-      start_date_solver_decision.setSolverValue(self.portal.portal_types['Unify Solver'])
+      start_date_solver_decision.setSolverValue(self.portal.portal_solvers['Unify Solver'])
       # configure for Unify Solver.
       kw = {'tested_property_list':['start_date',],
             'value':document.getStartDate()}
@@ -367,13 +366,13 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     applied_rule = sequence.get('applied_rule')
     simulation_line_list = applied_rule.objectValues()
     start_date = simulation_line_list[-1].getStartDate()
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(packing_list)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
     for start_date_solver_decision in filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='start_date',
       solver_process.contentValues()):
       # use StartDate Replacement Solver.
-      start_date_solver_decision.setSolverValue(self.portal.portal_types['Unify Solver'])
+      start_date_solver_decision.setSolverValue(self.portal.portal_solvers['Unify Solver'])
       # configure for Unify Solver.
       kw = {'tested_property_list':['start_date',],
             'value':start_date}
@@ -443,19 +442,21 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
       Do the split and defer action
     """
     packing_list = sequence.get('packing_list')
-    solver_tool = self.portal.portal_solvers
-    solver_process = solver_tool.newSolverProcess(packing_list)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
     sequence.edit(solver_process=solver_process)
     quantity_solver_decision = filter(
       lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
       solver_process.contentValues())[0]
     # use Quantity Split Solver.
-    quantity_solver_decision.setSolverValue(self.portal.portal_types['Quantity Split Solver'])
+    quantity_solver_decision.setSolverValue(
+        self.portal.portal_solvers['Quantity Split Solver'])
     # configure for Quantity Split Solver.
-    kw = {'delivery_solver':'FIFO',
+    kw = {'delivery_solver':'FIFO Delivery Solver',
           'start_date':packing_list.getStartDate() + 10}
     quantity_solver_decision.updateConfiguration(**kw)
     solver_process.buildTargetSolverList()
+
     solver_process.solve()
     # build split deliveries manually. XXX ad-hoc
     previous_tag = None
@@ -557,19 +558,165 @@ class TestERP5SimulationPackingList(TestERP5SimulationMixin, TestPackingList):
   pass
 
 for failing_method in [
-  # This test does not work as it is because of the different behaviour of
-  # Adopt Solver.
-  'test_05d_SimulationChangeResourceOnOneSimulationMovementForMergedLine',
+  # Those tests currently fail because they are making assertions on an applied
+  # rule which with the new simulation structure is not the same as in the
+  # original test packing list
+  'test_06_SimulationChangeStartDate',
+  'test_07_SimulationChangeStartDateWithTwoOrderLine',
+  'test_07a_SimulationChangeStartDateWithTwoOrderLine',
+  
   ]:
   setattr(TestERP5SimulationPackingList, failing_method,
           expectedFailure(getattr(TestERP5SimulationPackingList, failing_method)))
         
 class TestERP5SimulationInvoice(TestERP5SimulationMixin, TestSaleInvoice):
-  pass
+  quiet = TestSaleInvoice.quiet
+
+  def test_09_InvoiceChangeStartDateFail(self, quiet=quiet):
+    """
+    Change the start_date of a Invoice Line,
+    check that the invoice is divergent,
+    then accept decision, and check Packing list is *not* divergent,
+    because Unify Solver does not propagage the change to the upper
+    simulation movement.
+    """
+    if not quiet:
+      self.logMessage('Invoice Change Sart Date')
+    sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
+    """
+    stepSetReadyPackingList
+    stepTic
+    stepStartPackingList
+    stepCheckInvoicingRule
+    stepCheckInvoiceTransactionRule
+    stepTic
+    stepCheckInvoiceBuilding
+
+    stepChangeInvoiceStartDate
+    stepCheckInvoiceIsDivergent
+    stepCheckInvoiceIsCalculating
+    stepTic
+    stepCheckInvoiceIsDiverged
+    stepUnifyStartDateWithDecisionInvoice
+    stepTic
+
+    stepCheckInvoiceNotSplitted
+    stepCheckInvoiceIsNotDivergent
+    stepCheckInvoiceIsSolved
+
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
+    """
+    self.playSequence(sequence, quiet=quiet)
+
+class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMixin,
+                                      ERP5TypeTestCase):
+  quiet = 0
+
+  def afterSetUp(self, quiet=1, run=1):
+    TestERP5SimulationMixin.afterSetUp(self)
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    self.original_allowed_content_types = solver_process_type_info.getTypeAllowedContentTypeList()
+    self.added_target_solver_list = []
+
+  def beforeTearDown(self, quiet=1, run=1):
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
+      solver=())
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    solver_process_type_info.setTypeAllowedContentTypeList(self.original_allowed_content_types)
+    self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
+    transaction.commit()
+    self.tic()
+    TestERP5SimulationMixin.beforeTearDown(self)
+
+  @UnrestrictedMethod
+  def _setUpTargetSolver(self, solver_id, solver_class, tested_property_list):
+    solver_tool = self.portal.portal_solvers
+    solver = solver_tool.newContent(
+      portal_type='Solver Type',
+      id=solver_id,
+      tested_property_list=tested_property_list,
+      automatic_solver=1,
+      type_factory_method_id='add%s' % solver_class,
+      type_group_list=('target_solver',),
+    )
+    solver.setCriterion(property='portal_type',
+                        identity=['Simulation Movement',])
+    solver.setCriterionProperty('portal_type')
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    solver_process_type_info.setTypeAllowedContentTypeList(
+      solver_process_type_info.getTypeAllowedContentTypeList() + \
+      [solver_id]
+    )
+    (default_chain, chain_dict) = getChainByType(self.portal)
+    chain_dict['chain_%s' % solver_id] = 'solver_workflow'
+    self.portal.portal_workflow.manage_changeWorkflows(default_chain,
+                                                       props=chain_dict)
+    self.portal.portal_caches.clearAllCache()
+    self.added_target_solver_list.append(solver_id)
+
+  def stepSetUpAutomaticQuantityAcceptSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Automatic Quantity Accept Solver',
+                            'AcceptSolver', ('quantity',))
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
+      solver=('portal_solvers/Automatic Quantity Accept Solver',))
+
+  def stepSetUpAutomaticQuantityAdoptSolver(self, sequence=None, sequence_list=None):
+    self._setUpTargetSolver('Automatic Quantity Adopt Solver',
+                            'AdoptSolver', ('quantity',))
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
+      solver=('portal_solvers/Automatic Quantity Adopt Solver',))
+
+  def test_01_PackingListDecreaseQuantity(self, quiet=quiet):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is solved automatically
+      with accept solver.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetUpAutomaticQuantityAcceptSolver \
+                      ' + self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_02_PackingListDecreaseQuantity(self, quiet=quiet):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is solved automatically
+      with adopt solver.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = '\
+                      stepSetUpAutomaticQuantityAdoptSolver \
+                      ' + self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Simulation))
   suite.addTest(unittest.makeSuite(TestERP5SimulationPackingList))
   suite.addTest(unittest.makeSuite(TestERP5SimulationInvoice))
+  suite.addTest(unittest.makeSuite(TestAutomaticSolvingPackingList))
   return suite

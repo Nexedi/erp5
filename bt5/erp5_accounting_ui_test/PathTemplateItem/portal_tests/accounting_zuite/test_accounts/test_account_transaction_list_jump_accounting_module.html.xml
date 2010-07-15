@@ -100,9 +100,9 @@ Test Account Transaction List then jump to accounting module.\n
 \n
 <!-- Jump to Accounting Module {{{ -->\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=Transactions Related to This Account:</td>\n
-  <td></td>\n
+  <td>selectAndWait</td>\n
+  <td>select_jump</td>\n
+  <td>label=Accounting</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

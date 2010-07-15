@@ -43,7 +43,7 @@ class BalanceTransactionLine(AccountingTransactionLine, InventoryLine):
   meta_type = 'ERP5 Balance Transaction Line'
   portal_type = 'Balance Transaction Line'
   add_permission = Permissions.AddPortalContent
-  isIndexable = ConstantGetter('isIndexable', value=False)
+  isInventoryMovement = ConstantGetter('isInventoryMovement', value=True)
 
   # Declarative security
   security = ClassSecurityInfo()

@@ -61,32 +61,91 @@
 """\n
 \n
 from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.CMFCore.utils import getToolByName\n
+\n
 request=context.REQUEST\n
 \n
 message = \'\'\n
 \n
 # add the attachments :\n
 translateString = context.Base_translateString\n
-result, mode = context.Base_edit(\'PDFDocument_viewAttachmentReportSection\', silent_mode=1, field_prefix=\'your_\')\n
+\n
+if form_id == \'view\':\n
+  result, mode = context.asContext(edit=context.edit,\n
+            **{form_id: context.getTypeInfo().getERP5Form()}\n
+          ).Base_edit(\'PDFDocument_viewAttachmentReportSection\', silent_mode=1, field_prefix=\'your_\')\n
+else:\n
+  result, mode = context.Base_edit(\'PDFDocument_viewAttachmentReportSection\', silent_mode=1, field_prefix=\'your_\')\n
+\n
+bad_file = ""\n
 attachment_count = 0\n
 \n
 if mode == \'edit\':\n
   (kw, encapsulated_editor_list) = result\n
-  if kw.has_key(\'attachment\') and kw.has_key(\'attachment_title\'):\n
-    attachment_list = zip(kw[\'attachment\'], kw[\'attachment_title\'])\n
-    message = translateString("No attachment was added. Please select a file to add an attachment.")\n
+  if \'attachment_title\' in kw.keys():\n
+    if not same_type(kw[\'attachment_title\'], []):\n
+      attachment_title_list = []\n
+      attachment_file_list = []\n
+      attachment_title_list.append(kw[\'attachment_title\'])\n
+      attachment_file_list.append(kw[\'attachment\'])\n
+    else:\n
+      attachment_title_list = kw[\'attachment_title\']\n
+      attachment_file_list = kw[\'attachment\']\n
+    attachment_list = zip(attachment_file_list, attachment_title_list)\n
+    type_dict = {}\n
+    type_allowed_content_type_list = context.getTypeInfo().getTypeAllowedContentTypeList()\n
+    for i in range(len(attachment_list)+1)[1:]:\n
+      type = getattr(context.getTypeInfo(), "getAttachmentModel%s" % i, None)\n
+      title = getattr(context.getTypeInfo(), "getAttachmentTitle%s" % i, None) \n
+      if title is not None and type is not None:\n
+        type_object = context.restrictedTraverse(context.getPortalObject().getUrl()+"/portal_types/"+type())\n
+        type_dict[title()] =  type_object.getId()\n
+        if type_object.getId() not in type_allowed_content_type_list: \n
+          type_allowed_content_type_list.append(type_object.getId())\n
+    context.getTypeInfo().setTypeAllowedContentTypeList(type_allowed_content_type_list)\n
+    # use hidden_content_type_list to hide action Add on interfaces (like Add File) \n
+    context.getTypeInfo().setTypeHiddenContentTypeList(type_allowed_content_type_list)\n
+\n
     # XXX make sure it is a list\n
     for attachment, title in attachment_list:\n
       if attachment:\n
-        attachment_count += 1\n
-        file = context.newContent(portal_type=\'File\', file=attachment, title=title)\n
+        portal = context.getPortalObject()\n
+        attachment_portal_type =  context.EGov_guessPortalType(attachment)\n
+        if attachment_portal_type is not None and attachment_portal_type==type_dict[title]:\n
+            document_new_content_kw = {\n
+              \'file\': attachment,\n
+              \'portl_type\':type_dict[title],\n
+              \'container_path\':context.getUrl(),\n
+              \'file_name\':attachment.filename,\n
+            }\n
+            attachment_count += 1\n
+            container = getToolByName(portal, \'portal_contributions\', None)\n
+            document = container.newContent(**document_new_content_kw)\n
+            document_edit_kw = {\n
+              \'title\': title,\n
+            }\n
+            document.edit(**document_edit_kw)\n
+        else:\n
+            bad_file = "%s \'%s\' must be %s file"  % (bad_file, attachment.filename, type_dict[title])        \n
 \n
-if attachment_count:\n
-  message = translateString("Added ${attachment_count} attachment(s) to the current form.",\n
-                                mapping = dict(attachment_count=attachment_count))\n
+message = ""\n
+if attachment_count or bad_file:\n
+  if attachment_count:\n
+    message = translateString("Added ${attachment_count} attachment(s) to the current form.",\n
+                mapping = dict(attachment_count=attachment_count))\n
+  if bad_file:\n
+    message = translateString("${portal_status_message} ${bad_file}",\n
+                mapping = dict(portal_status_message=message , bad_file=bad_file)) \n
+else: \n
+  if context.PDFDocument_getRequirementCount() != 0: \n
+    message = translateString("Please add ${missing_file} missing file(s) to continue.", \n
+                             mapping = dict(missing_file=context.PDFDocument_getRequirementCount())) \n
+\n
 \n
 # edit the document with the entered data before to change of state\n
-base_edit_result = context.Base_edit(form_id=form_id, \n
+\n
+if form_id == \'view\':\n
+  base_edit_result = context.PDFDocument_edit(form_id=form_id, \n
                   selection_index=selection_index, \n
                   selection_name=selection_name, \n
                   dialog_id=dialog_id, \n
@@ -100,6 +159,10 @@ base_edit_result = context.Base_edit(form_id=form_id, \n
 if request.get(\'field_errors\', \'\'):\n
   return base_edit_result\n
 \n
+#if context.PDFDocument_getRequirementCount() != 0: \n
+#  return context.Base_redirect(\'PDFDocument_viewAttachmentList\', keep_items = dict(portal_status_message=message), **kw)\n
+\n
+message = \'\'\n
 return context.Base_redirect(next_url, keep_items = dict(portal_status_message=message), **kw)\n
 </string> </value>
         </item>
@@ -112,6 +175,14 @@ return context.Base_redirect(next_url, keep_items = dict(portal_status_message=m
         <item>
             <key> <string>_params</string> </key>
             <value> <string>form_id, next_url, selection_index=0, selection_name=\'\', dialog_id=\'\', ignore_layout=0, editable_mode=1, silent_mode=0, field_prefix=\'my_\', **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -149,26 +220,47 @@ return context.Base_redirect(next_url, keep_items = dict(portal_status_message=m
                             <string>kw</string>
                             <string>Products.DCWorkflow.DCWorkflow</string>
                             <string>ValidationFailed</string>
+                            <string>Products.CMFCore.utils</string>
+                            <string>getToolByName</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
                             <string>message</string>
                             <string>translateString</string>
+                            <string>_apply_</string>
                             <string>_getiter_</string>
                             <string>result</string>
                             <string>mode</string>
+                            <string>bad_file</string>
                             <string>attachment_count</string>
                             <string>encapsulated_editor_list</string>
-                            <string>zip</string>
+                            <string>same_type</string>
                             <string>_getitem_</string>
+                            <string>attachment_title_list</string>
+                            <string>attachment_file_list</string>
+                            <string>zip</string>
                             <string>attachment_list</string>
-                            <string>attachment</string>
+                            <string>type_dict</string>
+                            <string>type_allowed_content_type_list</string>
+                            <string>range</string>
+                            <string>len</string>
+                            <string>i</string>
+                            <string>getattr</string>
+                            <string>None</string>
+                            <string>type</string>
                             <string>title</string>
+                            <string>type_object</string>
+                            <string>_write_</string>
+                            <string>attachment</string>
+                            <string>portal</string>
+                            <string>attachment_portal_type</string>
+                            <string>document_new_content_kw</string>
                             <string>_inplacevar_</string>
-                            <string>file</string>
+                            <string>container</string>
+                            <string>document</string>
+                            <string>document_edit_kw</string>
                             <string>dict</string>
                             <string>base_edit_result</string>
-                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>

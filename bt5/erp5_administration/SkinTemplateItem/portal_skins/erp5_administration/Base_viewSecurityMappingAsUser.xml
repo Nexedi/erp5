@@ -59,8 +59,11 @@ group_id_list_generator = getattr(context, \'ERP5Type_asSecurityGroupId\')\n
 \n
 security_category_dict = {}\n
 for method_id, base_category_list in context.ERP5Type_getSecurityCategoryMapping():\n
-  security_category_dict.setdefault(tuple(base_category_list), []).extend(\n
-    getattr(context, method_id)(base_category_list, login, context, \'\'))\n
+  try:\n
+    security_category_dict.setdefault(tuple(base_category_list), []).extend(\n
+      getattr(context, method_id)(base_category_list, login, context, \'\'))\n
+  except: # XXX: it is not possible to log message with traceback from python script\n
+    print \'It was not possible to invoke method %s with base_category_list %s\'%(method_id, base_category_list)\n
 \n
 for base_category_list, category_value_list in security_category_dict.items():\n
   print \'base_category_list:\', base_category_list\n

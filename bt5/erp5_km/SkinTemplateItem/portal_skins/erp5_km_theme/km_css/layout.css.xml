@@ -49,7 +49,7 @@
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
 \n
-<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');"/>\n
 \n
 /*\n
 ##  dreikelvin CSS Framework 3.5\n
@@ -104,7 +104,7 @@ div {\n
 \n
 #mainwrapper {\n
 \n
-  min-height: 100%;\n
+\tmin-height: 100%;\n
 \twidth:952px;\n
 \tmargin: 0 auto;\n
 \n
@@ -114,7 +114,7 @@ div {\n
 #header {\n
 \n
 \tdisplay:block;\n
-  clear:both;\n
+\tclear:both;\n
 \n
 }\n
 \n
@@ -128,6 +128,10 @@ div {\n
 \n
 \tdisplay:none;\n
 \n
+}\n
+\n
+#center{\n
+  padding-top: 5px;\n
 }\n
 \n
 #center,\n
@@ -220,8 +224,8 @@ fieldset.right {\n
 \tfloat: left;\n
 \twidth:22.5%;\n
 \tposition:relative;\n
-  margin-left: 19px;\n
-  padding-top: 10px;\n
+\tmargin-left: 19px;\n
+\tpadding-top: 10px;\n
 \n
 }\n
 \n
@@ -229,7 +233,7 @@ fieldset.right {\n
 #km_front .text {\n
 \n
 \tpadding:10px;\n
-  width: auto;\n
+\twidth: auto;\n
 \n
 }\n
 \n
@@ -334,19 +338,34 @@ button, select, input {\n
 \n
 /* ## navigation ###################################### start # */\n
 \n
+#top-bar{\n
+\theight:61px;\n
+\tleft:0;\n
+\tposition:absolute;\n
+}\n
+#top{\n
+\n
+\ttext-align:right;\n
+\tline-height:30px;\n
+\n
+}\n
 #menu {\n
 \n
-\tfloat:left;\n
 \twidth:100%;\n
-\tmargin:0;\n
-\tpadding:10px 0 0 0;\n
+\theight:40px;\n
+\tmargin:0em;\n
+\tpadding:0px;\n
+        padding-top: 4px;\n
 \tz-index: 1;\n
+\tborder-style: none;\n
+\tborder-width:1px 1px 0;\n
 \n
 }\n
 \n
 #wrapper_path {\n
 \n
 \tfloat:left;\n
+\twidth: 100%;\n
 \n
 }\n
 \n
@@ -363,7 +382,7 @@ button, select, input {\n
 }\n
 \n
 #menu .navbar {\n
-\twidth:55%;\n
+\twidth:70%;\n
 }\n
 \n
 #menu ul li {\n
@@ -375,11 +394,21 @@ button, select, input {\n
 \n
 }\n
 \n
+/* Top menu collapse root element */\n
+#menu ul li.collapse-menu{\n
+  background: url(../km_img/collapse-down-arrow.gif) no-repeat transparent right 10px;\n
+  padding-right: 0px;\n
+}\n
+#menu ul li.non-collapse-menu{\n
+  background: none;\n
+  padding-right: 0px;\n
+}\n
+\n
 #menu .meta {\n
 \n
 \tfloat:right;\n
 \twidth:auto;\n
-  margin-right: 10px;\n
+\tmargin-right: 10px;\n
 \n
 }\n
 \n
@@ -389,7 +418,7 @@ button, select, input {\n
 \tdisplay: block;\n
 \tclear: both;\n
 \twidth:100%;\n
-  padding: 5px 0;\n
+\tpadding: 5px 0;\n
 \n
 }\n
 \n
@@ -397,7 +426,7 @@ button, select, input {\n
 #menu ul li a:link, #menu ul li a:active, #menu ul li a:visited {\n
 \n
 \theight:100%;\n
-\tline-height:42px;\n
+\tline-height:30px;\n
 \tfloat:left;\n
 \n
 }\n
@@ -406,19 +435,19 @@ button, select, input {\n
 \tcursor: default;\n
 }\n
 \n
-#menu ul li #n1:link, #menu ul li #n1:active, #menu ul li #n1:visited {\n
+#menu ul li #home-link:link, #menu ul li #home-link:active, #menu ul li #home-link:visited {\n
 \n
 \ttext-indent: -99999px;\n
 \tdisplay:block;\n
-\theight:17px;\n
+\theight:20px;\n
 \twidth:8px;\n
 \tposition: relative;\n
-\ttop: 10px;\n
-\tmargin-left:10px;\n
+\ttop: 0px;\n
+\tmargin:5px 0 5px 5px;\n
 \n
 }\n
 \n
-#menu #n7:link, #menu #n7:active, #menu #n7:visited {\n
+#menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
 \n
 \theight:20px;\n
 \tposition: relative;\n
@@ -433,7 +462,7 @@ ul.breadcrumb {\n
 \tmargin:0 0 0 5px;\n
 \tpadding:0;\n
 \twidth:auto;\n
-  height:100%;\n
+\theight:100%;\n
 \tfloat: left;\n
 \tposition: relative;\n
 \tz-index: 11;\n
@@ -444,22 +473,36 @@ ul.breadcrumb li {\n
 \n
 \tfloat:left;\n
 \tmargin-left:5px;\n
-  height:100%;\n
+\theight:100%;\n
 \n
 }\n
+\n
+div.breadcrumb{\n
+  float:left;\n
+  width: 85%\n
+}\n
+\n
+div.language-selection{\n
+  float:right;\n
+  width: 15%\n
+}\n
+\n
 \n
 ul.widget_management_box,\n
 ul.language_box{\n
 \n
 \tfloat:right;\n
-  margin:0;\n
+\tmargin:0;\n
 \tpadding: 0;\n
 \tz-index: 10;\n
 \tposition: relative;\n
-\tlist-style-type: none;\n
+\tlist-style-type: none!important;\n
 \n
 }\n
-\n
+ul.widget_management_box li{\n
+  float:right;\n
+  display: block;\n
+}\n
 ul.language_box li {\n
 \n
 \tfloat:left;\n
@@ -479,12 +522,17 @@ ul.language_box img {\n
 ul.language_box .selected img {\n
 \n
   padding:2px;\n
-  border:1px solid grey;\n
+  border:1px solid #808080;\n
   opacity:1;\n
 \n
 }\n
 \n
-ul.widget_management_box{\tpadding: 0 10px 0 0;}\n
+ul.language_box .not_selected img:hover{\n
+  border: 1px solid #808080;\n
+  padding:2px;\n
+}\n
+\n
+ul.widget_management_box{\tpadding: 0 0px 0 0;}\n
 \n
 ul.widget_management_box a {float:left;}\n
 \n
@@ -542,10 +590,10 @@ width: auto;\n
 }\n
 \n
 #tabs {\n
-\n
-\toverflow: hidden;\n
-\twidth:99%;\n
-\n
+  overflow: hidden;\n
+  width:99%;\n
+  border-bottom: none;\n
+  height: 35px;\n
 }\n
 \n
 #tabs ul {\n
@@ -564,7 +612,7 @@ width: auto;\n
 \tfloat:left;\n
 \toverflow: hidden;\n
 \tmargin: 0;\n
-  padding: 0 0 0 10px;\n
+\tpadding: 0 0 0 10px;\n
 \theight:22px;\n
 \twidth:auto;\n
 \tbackground: url(../km_img/tabs.png) no-repeat transparent;\n
@@ -580,6 +628,7 @@ width: auto;\n
 \theight:22px;\n
 \tline-height:24px;\n
 \tpadding-right:40px;\n
+\tpadding-top: 0em;\n
 \tposition: relative;\n
 \n
 }\n
@@ -603,7 +652,10 @@ width: auto;\n
 a#tabs-add:link, a#tabs-add:active, a#tabs-add:visited,\n
 a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10px; }\n
 \n
-#tabs_switcher{padding-top: 15px;}\n
+#tabs_switcher {\n
+  padding-top: 15px;\n
+  height:35px;\n
+}\n
 \n
 /* ## navigation ###################################### end ### */\n
 \n
@@ -630,83 +682,83 @@ img.float-left {\n
 \n
 /* ## element "boxes" ################################# start # */\n
 \n
-.gadget {\n
 \n
+/* Gadget layout */\n
+.block h3.handle{\n
+  margin:0;\n
+  padding:3px 0;\n
+  display: block;\n
+}\n
+\n
+.block h3.handle span{\n
+  padding: 0;\n
+  padding-left: 15px;\n
+}\n
+\n
+.block h3.handle span.gadget_title{\n
+  float:left;\n
+  left:12px;\n
+  position:absolute;\n
+}\n
+\n
+.block .box_inner_content, \n
+.block .minimize_wrapper, \n
+.block .content {\n
+  width: auto;\n
+}\n
+\n
+.gadget {\n
 \tmargin:0;\n
 \tpadding:0;\n
 \tborder:none;\n
-\n
-}\n
-\n
-.draggable_wrapper #page_wrapper h3 {\n
-\n
-\tmargin:0;\n
-\tpadding:8px 0;\n
-\tdisplay: block;\n
-\twhite-space: nowrap;\n
-\n
-}\n
-\n
-.gadget h3 span ,\n
-.draggable_wrapper #page_wrapper h3 span{\n
-\n
-  padding: 0 !important;\n
-\n
-}\n
-\n
-.draggable_wrapper #page_wrapper h3 span {\n
-\n
-  padding-left: 15px !important;\n
-\n
-}\n
-\n
-.gadget h3 span.handle,\n
-.draggable_wrapper #page_wrapper h3 span.handle{\n
-\n
-  min-height:16px !important;\n
-\n
-}\n
-\n
-.gadget .adminToolbox > label{\n
-\n
-  display:none;\n
-\n
-}\n
-\n
-.gadget .adminToolbox .inner select{\n
-\n
-  width: 100%;\n
-\n
-}\n
-\n
-div.adminToolbox button[type="submit"] {\n
-\n
-display:none;\n
-\n
-}\n
-\n
-div.adminToolbox fieldset {\n
-  display:block;\n
-}\n
-\n
-div.adminToolbox fieldset .clone-button{\n
-  text-align: center;\n
-}\n
-\n
-div.adminToolbox fieldset {\n
-  display:block;\n
-}\n
-\n
-div.adminToolbox fieldset .clone-button{\n
-  text-align: center;\n
 }\n
 \n
 .gadget .inner .table-b{\n
-\n
   table-layout: fixed;\n
   overflow: scroll;\n
+}\n
+\n
+.gadget h3 small {\n
+\twidth:50px;\n
+\tfloat:right;\n
+\tposition: absolute;\n
+\tright:0;\n
+\ttop:5px;\n
 \n
 }\n
+\n
+.gadget h3.handle a{\n
+\twidth: 11px;\n
+\theight: 11px;\n
+\ttext-indent: -999999px;\n
+\tmargin: 2px 5px 0 0;\n
+}\n
+\n
+.gadget .inner {\n
+\tpadding:10px;\n
+\twidth:auto;\n
+}\n
+\n
+.gadget .inner .post {\n
+\tpadding: 0 0 10px 0;\n
+}\n
+\n
+.gadget h4 {\n
+\tmargin:0;\n
+\tpadding: 0;\n
+}\n
+\n
+\n
+.gadget .inner .feed {\n
+\tmargin:0 0 0 20px;\n
+\tpadding:0;\n
+}\n
+\n
+.gadget p { \n
+  margin:0; \n
+}\n
+\n
+/* eof gadgets */\n
 \n
 div#mainwrapper div#wrapper_right{\n
   float:left;\n
@@ -719,29 +771,20 @@ div#km_left div#wrapper_bottom{ \n
   clear:left;\n
 }\n
 \n
-div#mainwrapper div#wrapper_right fieldset.widget .minimize_wrapper .content{\n
-\n
-  width: auto;\n
-\n
-}\n
-\n
-.box_inner_content {\n
-\n
-  width: auto;\n
-\n
-}\n
 \n
 div#mainwrapper div#wrapper_right fieldset.widget iframe {width: 100%;}\n
 div#mainwrapper div#wrapper_right fieldset.widget table.gadget td div {\n
-padding: 0 !important;\n
-margin: 0 !important;\n
-border: 0 !important;\n
+\tpadding: 0 !important;\n
+\tmargin: 0 !important;\n
+\tborder: 0 !important;\n
 }\n
-\n
+/*\n
 div#mainwrapper div#wrapper_right fieldset.widget div.field ul{\n
   list-style-position:inside;\n
   list-style-type:square;\n
 }\n
+*/\n
+\n
 div#mainwrapper div#wrapper_right fieldset.widget div.field label{\n
   display:block;\n
   float:left;\n
@@ -763,77 +806,6 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 div#mainwrapper div.wrapper div.gadget fieldset.widget div.field label{\n
   display:none;\n
 }\n
-\n
-\n
-\n
-.gadget h3 { padding: 2px 0; }\n
-\n
-.gadget .block h3 span.gadget_title {\n
-\n
-  float: left;\n
-  position: absolute;\n
-  left: 26px;\n
-\n
-}\n
-\n
-.gadget h3 small {\n
-\n
-\twidth:65px;\n
-\tfloat:right;\n
-\tposition: absolute;\n
-\tright:2px;\n
-\ttop:11px;\n
-\n
-}\n
-\n
-.gadget h3 small {\n
-\twidth:50px;\n
-\tfloat:right;\n
-\tposition: absolute;\n
-\tright:0;\n
-\ttop:5px;\n
-\n
-}\n
-\n
-.gadget h3.handle a,\n
-.draggable_wrapper #page_wrapper h3.handle a {\n
-\n
-\twidth: 11px;\n
-\theight: 11px;\n
-\ttext-indent: -999999px;\n
-\tmargin: 2px 5px 0 0;\n
-\n
-}\n
-\n
-.gadget .inner {\n
-\n
-\tpadding:10px;\n
-\twidth:auto;\n
-\n
-}\n
-\n
-.gadget .inner .post {\n
-\n
-\tpadding: 0 0 10px 0;\n
-\n
-}\n
-\n
-.gadget h4 {\n
-\n
-\tmargin:0;\n
-\tpadding: 0;\n
-\n
-}\n
-\n
-\n
-.gadget .inner .feed {\n
-\n
-\tmargin:0 0 0 20px;\n
-\tpadding:0;\n
-\n
-}\n
-\n
-.gadget p { margin:0; }\n
 \n
 .document > .content ul li {\n
 \n
@@ -872,8 +844,6 @@ table .right {\n
 }\n
 \n
 .gadget .inner .table-b{\n
-\n
-\n
 }\n
 \n
 .gadget .inner .table-b tr td{\n
@@ -885,16 +855,16 @@ table .right {\n
 #km_left .document > .content{\n
 \n
 \tfloat:left;\n
-  margin: 10px;\n
+\tmargin: 10px;\n
 \n
 }\n
 \n
 #km_front .document > .content{\n
 \n
 \tfloat:left;\n
-  padding: 10px;\n
-  width: auto;\n
-  min-width: 98%\n
+\tpadding: 10px;\n
+\twidth: auto;\n
+\tmin-width: 98%\n
 \n
 }\n
 \n
@@ -925,6 +895,7 @@ fieldset.right .gadget {\n
 \toverflow: hidden;\n
 \tposition: relative;\n
 \tmargin-top: -4.6em;\n
+\tpadding-bottom: 20px;\n
 \n
 }\n
 \n
@@ -987,7 +958,7 @@ form p,\n
 \n
 .meta {\n
 \n
-  line-height: 42px;\n
+  line-height:30px;\n
 \n
 }\n
 \n
@@ -1007,9 +978,10 @@ form p,\n
 }\n
 \n
 .meta .search_button {\n
-width: 20px;\n
-height: 20px;\n
-margin-top:11px;\n
+\twidth: 20px;\n
+\theight: 20px;\n
+\tmargin:5px 0 5px 5px;\n
+\tcursor:pointer;\n
 \n
 }\n
 \n
@@ -1026,7 +998,7 @@ margin-top:11px;\n
   font-size:1em;\n
   border: none;\n
   width: 120px;\n
-  margin-left: 40px;\n
+  margin-left: 10px;\n
 \n
 }\n
 .meta input.search_text:focus {color:#000000;}\n
@@ -1213,14 +1185,6 @@ button.bt-med span img {\n
 \n
 /* ## buttons ######################################### end ### */\n
 \n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
-\n
 #main_form {\n
 \n
   height:100%;\n
@@ -1240,6 +1204,7 @@ button.bt-med span img {\n
 \n
   float: left;\n
   width:75%;\n
+  padding-top: 0.3em;\n
 \n
 }\n
 \n
@@ -1341,13 +1306,18 @@ fieldset.right_registration select {\n
 \n
 /* ## screen sizes #################################### end ### */\n
 \n
-\n
-\n
-\n
 .listbox input {\n
 \n
   width: auto;\n
+  float:left;\n
 \n
+}\n
+\n
+/* Listbox page navigation */\n
+td.pageNavigation{\n
+  padding-bottom:0.5em;\n
+  padding-right:0.5em;\n
+  padding-top:1em;\n
 }\n
 \n
 .pageNavigation .input input[type="image"] {\n
@@ -1362,6 +1332,11 @@ fieldset.right_registration select {\n
 \n
 }\n
 \n
+#listbox_set_page, #listbox_next_page, #listbox_last_page, #listbox_first_page, #listbox_previous_page{\n
+  margin: 0em;\n
+  padding: 0em;\n
+  \n
+}\n
 \n
 #wrapper_splash .input img{\n
 \n
@@ -1372,11 +1347,228 @@ fieldset.right_registration select {\n
 }\n
 \n
 \n
-.related_docs {\n
-\n
-  max-width: 170px;\n
-\n
+/* gadget management block */\n
+div.gadget-management{\n
 }\n
+\n
+div.required label{\n
+  padding-top: 4px;\n
+  background:  url("../km_img/required_mark.png") no-repeat;\n
+}\n
+\n
+/* login form */\n
+fieldset.registration {\n
+  float:left;\n
+  width:42.5%;\n
+  background-color: #FFFFFF;\n
+  margin-right: 0.5%;\n
+  height: 775px;\n
+}\n
+\n
+/* Content formatting */\n
+div.document div.content div.text h1, h2, h3, h4, h5, h6, p{\n
+  /* XXX: generate it dynamically */\n
+}\n
+div.document div.content div.text blockquote, pre{\n
+  max-width: 600px;\n
+}\n
+\n
+div.document div.content div.text a{\n
+  color: #686868;\n
+}\n
+\n
+/* Web Toolbar */\n
+div.web-toolbar{\n
+  background-color: #000000;\n
+}\n
+\n
+div.web-toolbar h3{\n
+  color:#FFFFFF;\n
+  padding-top: 4px;\n
+}\n
+\n
+#wrapper_footer div.web-toolbar ul{\n
+  padding: 0em;\n
+  margin: 0em;\n
+}\n
+\n
+#wrapper_footer div.web-toolbar li.toolboxSection:hover, \n
+#wrapper_footer div.web-toolbar li.toolboxSection h3:hover {\n
+  background:#A8A799;\n
+}\n
+\n
+  \n
+div.web-toolbar div.menu{\n
+  background:#818364;\n
+  padding: 0em;\n
+  border-style: none;\n
+}\n
+\n
+div.web-toolbar div.menu ul li{\n
+  padding:0;\n
+  margin:0;\n
+  float:left;\n
+  width:100%;\n
+}\n
+\n
+div.web-toolbar div.menu li > a span, div.web-toolbar div.menu button, div.web-toolbar div.menu label{\n
+  color: #FFFFFF;\n
+}\n
+\n
+div.web-toolbar li > a span {\n
+  padding: 0.5em;\n
+}\n
+\n
+div.web-toolbar div.menu label{\n
+  font-weight: bold;\n
+  padding-left: 0.5em;\n
+  margin-bottom:1em;\n
+  margin-top:1em;\n
+}\n
+\n
+div.web-toolbar div.menu button{\n
+  color: #FFFFFF!important;\n
+  background-color: transparent;\n
+  padding-left: 1em;\n
+  padding-bottom:0.5em;\n
+}\n
+\n
+div.web-toolbar div.menu li:hover{\n
+  background-color: #000000;\n
+}\n
+\n
+div.web-toolbar li > a, div.web-toolbar button{\n
+  border-style: none;\n
+}\n
+div.web-toolbar div.menu div.field{\n
+  padding-left: 0.5em;\n
+  padding-right: 0.5em;\n
+}\n
+\n
+div.web-toolbar div.menu div.field input, div.web-toolbar div.menu div.field select, div.web-toolbar div.menu div.field button{\n
+  max-width: 90%;\n
+}\n
+\n
+#clone_action_button{\n
+  width: 80%;\n
+}\n
+/* Generic styles used in all ERP5 KM Styles */\n
+.doNotDisplay, \n
+.do_not_display  {\n
+  display: none\n
+}\n
+\n
+.hiddenLabel label,\n
+.hidden_label label { \n
+  display: none !important\n
+}\n
+\n
+fieldset.hidden_fieldset {\n
+  display: none;\n
+}\n
+\n
+input#hidden_button {\n
+  width: 0;\n
+  height: 0;\n
+  display: inline;\n
+  border-width: 0;\n
+  float: left;\n
+}\n
+\n
+/* Save button styling */\n
+div.actions button {\n
+  float: right;\n
+  z-index: 300;\n
+  top: -.5em;\n
+  right: 0;\n
+}\n
+\n
+/* Search Popup window */\n
+div.search_popup {\n
+  background-color: #FFFFFF;\n
+  border: 1px solid black;\n
+  display: none;\n
+  left: 500px;\n
+  padding: 10px;\n
+  position: fixed;\n
+  top: 130px;\n
+  width: 150px;\n
+  z-index: 100;\n
+}\n
+\n
+/* Search Bar */\n
+div.searchBar{\n
+  margin-bottom: 2em;\n
+  text-align: center;\n
+}\n
+\n
+div.extendedSearchBar{\n
+  margin-top: 1em;\n
+  padding: 0.2em;\n
+  text-align: center;\n
+}\n
+\n
+div.searchBar input, div.extendedSearchBar input {\n
+  width: auto;\n
+}\n
+\n
+div.centeredInner {\n
+  text-align: center;\n
+}\n
+\n
+/* Search listbox styling */\n
+div.searchDetails, span.found{\n
+  padding-top: 5px;\n
+}\n
+\n
+/* Download widget */\n
+div.download-document-format-list-container{\n
+  display:block;\n
+  float:left;\n
+  max-width: 200px;\n
+  color:#000000;\n
+}\n
+div.download-document-format-list-container span{\n
+  cursor: pointer; \n
+  display:block;\n
+  float:right;\n
+  background:transparent url(km_img/collapse-down-arrow.gif) no-repeat scroll right 6px;\n
+  padding: 3px;\n
+  padding-right: 10px;\n
+  font-weight: bold;\n
+}\n
+\n
+div.download-document-format-list-menu{\n
+  display:block;\n
+  float:left;\n
+  border: 1px solid #A8A799;\n
+  background-color: #FFFFFF;\n
+}\n
+\n
+div.download-document-format-list-container span:hover,\n
+div.download-document-format-list-menu ul li:hover{\n
+  background-color: #A8A799;\n
+}\n
+div.download-document-format-list-menu ul{\n
+  list-style-type:none;\n
+  padding:0em; \n
+  margin-bottom:0;\n
+  margin-top:0;\n
+}\n
+div.download-document-format-list-menu ul li{\n
+  margin-bottom:1px;\n
+  padding:0.2em;\n
+}\n
+div.download-document-format-list-menu ul li.separator{\n
+  border-bottom: 1px solid #A8A799;\n
+  margin-bottom:5px;\n
+  padding-bottom:3px;\n
+}\n
+\n
+div.download-document-format-list-menu ul li.toggle-hidden-format-dialog-selection-link{\n
+  height:20px;\n
+}\n
+\n
 
 
 ]]></string> </value>

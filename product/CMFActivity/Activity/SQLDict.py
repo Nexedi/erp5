@@ -379,7 +379,7 @@ class SQLDict(RAMDict, SQLBase):
         for m in message_list:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info=exc_info, log=False)
         try:
-          makeMessageListAvailable(message_list, uid_to_duplicate_uid_list_dict)
+          makeMessageListAvailable([x.uid for x in message_list], uid_to_duplicate_uid_list_dict)
         except:
           LOG('SQLDict', ERROR, 'Failed to free remaining messages: %r' % (message_list, ), error=sys.exc_info())
         else:

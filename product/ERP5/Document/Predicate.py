@@ -107,24 +107,30 @@ class Predicate(XMLObject):
 #        (self.getRelativeUrl(), context.getRelativeUrl()))
     for property, value in self._identity_criterion.iteritems():
       if isinstance(value, (list, tuple)):
-        result = result and (context.getProperty(property) in value)
+        result = context.getProperty(property) in value
       else:
-        result = result and (context.getProperty(property) == value)
+        result = context.getProperty(property) == value
 #      LOG('predicate test', 0,
 #          '%s after prop %s : %s == %s' % \
 #          (result, property, context.getProperty(property), value))
+      if not result:
+        return result
     for property, (min, max) in self._range_criterion.iteritems():
       value = context.getProperty(property)
       if min is not None:
-        result = result and (value >= min)
+        result = value >= min
 #        LOG('predicate test', 0,
 #            '%s after prop %s : %s >= %s' % \
 #            (result, property, value, min))
+        if not result:
+          return result
       if max is not None:
-        result = result and (value < max)
+        result = value < max
 #        LOG('predicate test', 0,
 #            '%s after prop %s : %s < %s' % \
 #            (result, property, value, max))
+        if not result:
+          return result
     multimembership_criterion_base_category_list = \
         self.getMultimembershipCriterionBaseCategoryList()
     membership_criterion_base_category_list = \
@@ -176,17 +182,19 @@ class Predicate(XMLObject):
 #        LOG('predicate test', 0,
 #            '%s after single membership to %s' % \
 #            (tested_base_category[bc], c))
-    result = result and (0 not in tested_base_category.values())
+    result = 0 not in tested_base_category.values()
 #    LOG('predicate test', 0,
 #        '%s after category %s ' % (result, tested_base_category.items()))
+    if not result:
+      return result
     # Test method calls
     test_method_id_list = self.getTestMethodIdList()
     if test_method_id_list is not None :
       for test_method_id in test_method_id_list :
-        if (test_method_id is not None) and result:
+        if test_method_id is not None:
           method = getattr(context,test_method_id)
           try:
-            result = result and method(self)
+            result = method(self)
           except TypeError:
             if method.func_code.co_argcount != isinstance(method, MethodType):
               raise
@@ -194,9 +202,11 @@ class Predicate(XMLObject):
             warn('Predicate %s uses an old-style method (%s) that does not'
                  ' take the predicate as argument' % (
                self.getRelativeUrl(), method.__name__), DeprecationWarning)
-            result = result and method()
-#        LOG('predicate test', 0,
-#            '%s after method %s ' % (result, test_method_id))
+            result = method()
+#          LOG('predicate test', 0,
+#              '%s after method %s ' % (result, test_method_id))
+          if not result:
+            return result
     return result
 
   @UnrestrictedMethod
@@ -235,7 +245,20 @@ class Predicate(XMLObject):
                                            'range' : 'max'
                                          }
       else:
-        catalog_kw[criterion.property] = criterion.identity
+        # if a filter was passed as argument
+        if catalog_kw.has_key(criterion.property):
+          if isinstance(catalog_kw[criterion.property], (tuple, list)):
+            catalog_filter_set = set(catalog_kw[criterion.property])
+          else:
+            catalog_filter_set = set([catalog_kw[criterion.property]])
+          if isinstance(criterion.identity, (tuple, list)):
+            parameter_filter_set = set(criterion.identity)
+          else:
+            parameter_filter_set = set([criterion.identity])
+          catalog_kw[criterion.property] = \
+              list(catalog_filter_set.intersection(parameter_filter_set))
+        else:
+          catalog_kw[criterion.property] = criterion.identity
 
     portal_catalog = getToolByName(self, 'portal_catalog')
 

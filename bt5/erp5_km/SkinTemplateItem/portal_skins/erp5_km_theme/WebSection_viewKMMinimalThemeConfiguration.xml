@@ -108,6 +108,7 @@
                         <string>my_layout_navigation_menu_opacity</string>
                         <string>my_layout_all_languages</string>
                         <string>my_layout_all_versions</string>
+                        <string>my_layout_max_breadcrumb_length</string>
                       </list>
                     </value>
                 </item>

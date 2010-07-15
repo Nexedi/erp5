@@ -49,14 +49,23 @@
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
 \n
+/*\n
+##  dreikelvin CSS Framework 3.5\n
+##\n
+##  Author & Copyright: Robert Jung 2008\n
+##  URL: http://design.dreikelvin.de/\n
+##\n
+##  CSS for "ERP5"\n
+##\n
+##\n
+*/\n
+/* ## XHTML basis elements ############################ start # */\n
+\n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
 \n
-\n
 body {\n
-\n
-  background: #e9e9e9;\n
-\n
+  background:#E9E9E9 url(../km_img/bg.png) repeat-x scroll 0 0;\n
 }\n
 \n
 .content .error .input {border:2px solid #FF4400;}\n
@@ -65,20 +74,13 @@ body {\n
   color:#FF4400;\n
 }\n
 \n
-\n
 #header {\n
-\n
-\tcolor:#a8a799;\n
-\n
+        color:#a8a799;\n
 }\n
 \n
 .breadcrumb li {\n
-\n
 \tcolor:#686868;\n
-\n
 }\n
-\n
-\n
 \n
 ::selection {\n
 \tbackground:#aaa;\n
@@ -94,78 +96,46 @@ body {\n
   margin-bottom:2px;\n
 }\n
 \n
-.draggable_wrapper #page_wrapper h3 {\n
-\n
-\tbackground: url(../km_img/widgethead.png) repeat-x #c1c0b4;\n
-  border-color:#C0BFB3 #C0BFB3 #9C9479;\n
-  border-style:solid;\n
-  border-width:1px;\n
-  color:#776D61;\n
-\n
-}\n
-\n
-.gadget .block > h3{\n
-\n
-\tbackground: url(../km_img/widgethead2.png) repeat-x #c1c0b4;\n
-}\n
-\n
-\n
-.gadget .post small {\n
-\n
-\tcolor:#827d5c;\n
-\n
-}\n
-\n
-.gadget h3 {\n
-\n
-  color:#767676;\n
+.block h3.handle{\n
+\tbackground: url(../km_img/widgethead.png) repeat-x scroll 0 -2px #c1c0b4;\n
+\tborder-color:#C0BFB3 #C0BFB3 #9C9479;\n
+\tborder-style:solid;\n
+\tborder-width:1px;\n
+\tcolor:#776D61;\n
+\tfont-size:10pt;\n
 \n
 }\n
 \n
 fieldset.left h4,\n
 fieldset.center h4,\n
 fieldset.right h4 {\n
-\n
 \tbackground-color:#efeee8;\n
-\n
 }\n
 \n
 .document > .content ul li {\n
-\n
   background:transparent url(../km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
-  no-repeat scroll 0 0.5em;\n
   margin:0 0 0.3em 2px;\n
   padding:0 0 0 12px;\n
   list-style-image:none;\n
   list-style-position:outside;\n
   list-style-type:none;\n
-\n
 }\n
 \n
 table {\n
-\n
 \tborder: 1px solid #ecebe2;\n
-\n
 }\n
 \n
 table.table-b { border:none; }\n
 \n
 table tr.thead {\n
-\n
 \tbackground-color:#ecebe2;\n
-\n
-\n
 }\n
 \n
 table.table-b tr.thead {\n
-\n
 \tbackground-color:#fff;\n
-\n
-\n
 }\n
 \n
 table th button {\n
-\n
   background-color:inherit;\n
   border-width:0;\n
   color:inherit;\n
@@ -176,180 +146,68 @@ table th button {\n
   text-align:left;\n
   background:transparent url(../km_img/switch.png) no-repeat scroll 100% 50%;\n
   padding:0 6px 0 0;\n
-\n
 }\n
 \n
-table tr.thead th { text-align: left; }\n
+table tr.thead th { \n
+  text-align: left; \n
+}\n
 \n
 table tbody tr td {\n
-\n
 \tborder-top: 1px solid #ecebe2;\n
 \tbackground-color: #FFFFFF;\n
 \t-webkit-transition-property: background;\n
-    -webkit-transition-duration: 0.2s;\n
-    -webkit-transition-timing-function: linear;\n
-\n
+\t-webkit-transition-duration: 0.2s;\n
+\t-webkit-transition-timing-function: linear;\n
 }\n
 \n
-table.table-b tbody tr td { border:none; }\n
+table.table-b tbody tr td { \n
+  border:none; \n
+}\n
 \n
 table tbody tr:hover td {\n
-\n
 \tbackground-color: #f7f6f0;\n
-\n
 }\n
 \n
 .pnav {\n
-\n
 \tbackground-color: #ecebe2;\n
-\n
 }\n
 \n
 #km_left .document > .content {\n
-\n
 \tbackground-color: #fff;\n
 \tborder:1px solid #c0bfb3;\n
-\n
 }\n
 \n
-h3 { color:#3f69be; }\n
-\n
 .section {\n
-\n
 \tborder-bottom: 1px solid #e9e9e9;\n
-\n
 }\n
 \n
 p.pub {\n
-\n
 \tbackground: url(../km_img/pub.png) no-repeat transparent;\n
 \tpadding: 0 0 0 15px;\n
-\n
 }\n
-\n
-#navigation_table td {\n
-\n
-\tbackground: url(../km_img/tabsbg.png) repeat-x transparent;\n
-\tbackground-position: 0 100%;\n
-\n
-}\n
-\n
-#tabs ul li{\n
-\n
-  list-style-image: none;\n
-\n
-}\n
-\n
-.border_bottom0px {\n
-\n
-  height: 35px;\n
-\n
-}\n
-\n
-#tabs ul li a, #tabs ul li.last a { background: none; }\n
-\n
-#tabs ul li a.tabs-hide:link, #tabs ul li a.tabs-hide:active, #tabs ul li a.tabs-hide:visited {\n
-\n
-\tbackground: url(../km_img/tabs-hide.png) no-repeat transparent;\n
-\tbackground-position: 0 -4px;\n
-\n
-}\n
-\n
-#tabs ul li.last a.tabs-add {\n
-\n
-\tbackground: url(../km_img/tabs-add.png) no-repeat transparent;\n
-\tbackground-position: 0 2px;\n
-\n
-}\n
-\n
-#tabs ul li.first a.tabs-hide:hover, #tabs ul li.last a.tabs-add:hover {\n
-\n
-\tbackground-position: 0 -20px;\n
-\n
-}\n
-\n
-\n
-#tabs ul li {\n
-\n
-\tbackground: url(../km_img/tabs.png) no-repeat transparent;\n
-\tbackground-position: 0 -44px;\n
-\tcolor: #e9e9e9;\n
-\n
-}\n
-\n
-#tabs ul li span {\n
-\n
-\tbackground: url(../km_img/tabs.png) no-repeat transparent;\n
-\tbackground-position: 100% -44px;\n
-\n
-}\n
-\n
-#tabs ul li.active, #tabs ul li:hover {\n
-\n
-\tbackground-position: 0 0;\n
-\n
-}\n
-\n
-#tabs ul li.active span, #tabs ul li:hover span {\n
-\n
-\tbackground-position: 100% 0;\n
-\n
-}\n
-\n
-#tabs ul li.active:hover {\n
-\n
-\tbackground-position: 0 -22px;\n
-\tcolor:#fff;\n
-\n
-}\n
-\n
-#tabs ul li.active:hover span {\n
-\n
-\tbackground-position: 100% -22px;\n
-\n
-}\n
-\n
-#tabs ul li.active:hover span a { color:#fafafa; }\n
-\n
-#tabs ul li span a { color: #e2e0d2; }\n
-\n
-#tabs ul li.first, #tabs ul li.last {\n
-\n
-\tbackground: none;\n
-\n
-}\n
-\n
-#navigation_table a, #navigation_table #tabs_switcher{\n
-\n
-  color:#9D968D;\n
-  font-weight:normal;\n
-\n
-}\n
-\n
-#navigation_table a:hover, #navigation_table #tabs_switcher:hover{color: #000; }\n
-\n
 \n
 #wrapper_footer {\n
-\n
 \tborder-top:1px solid #fcfbfb;\n
 \tbackground-color:#9d968d;\n
 \tcolor:#eae9df;\n
-\n
 }\n
-\n
 \n
 \n
 /* ## link styling ################################### start # */\n
 \n
-a:link, a:active, a:visited { color: #9d968d; font-weight:bold; }\n
+a:link, a:active, a:visited { \n
+  color: #9d968d; \n
+  font-weight:bold; \n
+}\n
 \n
-a:hover { color: #000; }\n
+a:hover { \n
+  color: #000; \n
+}\n
 \n
 #header a:link, #header a:active, #header a:visited {\n
-\n
-\tcolor:#a8a799;\n
+\tcolor:#fff;\n
 \tfont-weight:bold;\n
-\ttext-shadow: 0 1px 0 #fff;\n
+\ttext-shadow: 0 1px 0 #a8a799;\n
 }\n
 \n
 #header .meta div a:link, #header .meta div a:active, #header .meta div a:visited {\n
@@ -361,120 +219,98 @@ a:hover { color: #000; }\n
 }\n
 \n
 #header ul.breadcrumb li a:link, #header ul.breadcrumb li a:active, #header ul.breadcrumb li a:visited {\n
-\n
 \tcolor:#686868;\n
-\n
 }\n
 \n
 #header ul.breadcrumb li a:hover {\n
-\n
 \tcolor:#000;\n
-\n
 }\n
 \n
 .gadget table thead tr th a, .content table thead tr th a {\n
-\n
  \tcolor:#000;\n
  \tpadding-right:10px;\n
  \tbackground: url(../km_img/switch.png) no-repeat transparent;\n
  \tbackground-position: 100% 50%;\n
-\n
 }\n
 \n
-a.draft:link, a.draft:active, a.draft:visited, .draft { color:#4574cb; }\n
+a.draft:link, a.draft:active, a.draft:visited, .draft { \n
+  color:#4574cb; \n
+}\n
 \n
-a.inactive:link, a.inactive:active, a.inactive:visited, .inactive { color:#cb4545; }\n
+a.inactive:link, a.inactive:active, a.inactive:visited, .inactive { \n
+  color:#cb4545; \n
+}\n
 \n
-a.pub:link, a.pub:active, a.pub:visited, .pub { color:#45cb45; }\n
+a.pub:link, a.pub:active, a.pub:visited, .pub { \n
+  color:#45cb45; \n
+}\n
 \n
 \n
 #footer a:link, #footer a:active, #footer a:visited,\n
-#footer ul li a:link, #footer ul li a:active, #footer ul li a:visited { color:#eae9df; }\n
+#footer ul li a:link, #footer ul li a:active, #footer ul li a:visited { \n
+  color:#eae9df; \n
+}\n
 \n
 #footer a:hover, #footer ul li a:hover { color:#fff; }\n
 \n
 /* ## link styling ################################### end ### */\n
 \n
-/* ## navigation ###################################### start # */\n
-\n
-\n
-#menu ul li #n1:link, #menu ul li #n1:active, #menu ul li #n1:visited {\n
-\n
+#menu ul li #home-link:link, \n
+#menu ul li #home-link:active, \n
+#menu ul li #home-link:visited {\n
 \tbackground: url(../km_img/home.gif) no-repeat transparent;\n
-\n
 }\n
 \n
-#menu ul li #n1:hover {\n
-\n
+#menu ul li #home-link:hover {\n
 \tbackground-position: 0 100%;\n
-\n
 }\n
 \n
-#menu #n7:link, #menu #n7:active, #menu #n7:visited {\n
-\n
-\tbackground: url(../km_img/login.gif) no-repeat transparent;\n
+#menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
+  background: url(../km_img/login.gif) no-repeat transparent;\n
   background-position: 0 -3px;\n
-\n
 }\n
 \n
-#menu #n7:hover {\n
-\n
+#menu #login-logout-link:hover {\n
 \tbackground-position: 0 -23px;\n
-\n
 }\n
 \n
 .pnav a:link, .pnav a:active, .pnav a:visited {\n
-\n
 \tcolor:#828282;\n
-\n
 }\n
 \n
 .pnav a:hover {\n
-\n
 \tcolor:#000;\n
-\n
 }\n
 \n
 .actions ul li a:link, .actions ul li a:active, .actions ul li a:visited {\n
-\n
 \tbackground-color: #b7e2b7;\n
 \tborder:1px solid #b7e2b7;\n
 \tcolor:#323232;\n
-\n
 }\n
 \n
 .actions ul li.selected a:link, .actions ul li.selected a:active, .actions ul li.selected a:visited, .actions ul li a:hover {\n
-\n
 \tbackground: #4bcc4b;\n
 \tborder:1px solid #4bcc4b;\n
 \tcolor:#fff;\n
-\n
 }\n
 \n
 /* ## navigation ###################################### end ### */\n
 \n
 a.bt-download:link, a.bt-download:active, a.bt-download:visited {\n
-\n
 \tbackground: url(../km_img/icon-save.png) no-repeat transparent;\n
-\n
 }\n
 \n
 a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-\n
 \tbackground: url(../km_img/icon-rss.png) no-repeat transparent;\n
-\n
 }\n
 \n
 a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
 a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-\n
 \tbackground-position: 100% 50%;\n
 \tcolor:#000;\n
-\n
 }\n
 \n
 /* ## buttons ######################################### start # */\n
-\n
 \n
 a.block-refresh { background-position: 0 0; }\n
 \n
@@ -493,31 +329,23 @@ a.block-remove:hover { background-position: -34px 100% !important; }\n
 a.block-edit-form:hover { background-position: -51px 100% !important; }\n
 \n
 a.bt-edit:link, a.bt-edit:active, a.bt-edit:visited {\n
-\n
 \tbackground: url(../km_img/bt-edit.png) no-repeat transparent;\n
-\n
 }\n
 \n
 a.bt-edit:link strong, a.bt-edit:active strong,\n
 a.bt-edit:visited strong {\n
-\n
 \tbackground: url(../km_img/bt-edit.png) no-repeat transparent;\n
 \tbackground-position: 100% 0;\n
 \tcolor:#828282;\n
-\n
 }\n
 \n
 a.bt-edit:hover {\n
-\n
 \tbackground-position: 0 100%;\n
-\n
 }\n
 \n
 a.bt-edit:hover strong {\n
-\n
 \tcolor:#4f4f4f;\n
 \tbackground-position: 100% 100%;\n
-\n
 }\n
 \n
 button.formbt, button.bt-med span, .bt-small span { color:#828282; }\n
@@ -525,7 +353,10 @@ button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { color
 \n
 button.formbt, button.formbt > span { background: url(../km_img/formbt.png) no-repeat transparent; }\n
 \n
-button.bt-med, button.bt-med span { background: url(../km_img/button-med.png) no-repeat transparent; }\n
+button.bt-med, button.bt-med span { \n
+  background: url(../km_img/button-med.png) no-repeat transparent; \n
+  background-color: #E9E9E9;\n
+}\n
 \n
 .bt-small, .bt-small span { background: url(../km_img/button-small.png) no-repeat transparent; }\n
 \n
@@ -540,43 +371,66 @@ button#input-save-edit span.image {background: url(../km_img/bt-save.png) no-rep
 \n
 button#input-save-edit span.image,\n
 button#input-save-view span.image {\n
-\n
-\tposition: relative;\n
-\tmargin:8px;\n
+  position: relative;\n
+  margin:8px;\n
   float: left;\n
   width: 19px;\n
   height: 18px;\n
-\n
 }\n
 \n
 /* ## buttons ######################################### end ### */\n
 \n
 \n
 /* ## form styling #################################### start # */\n
-\n
-.search_button {\n
-/*\n
-\tbackground: url(../km_img/bt-qsearch.gif) no-repeat transparent;\n
-\ttext-indent:-999999px;\n
-*/\n
-}\n
-\n
+.meta input.search_button:hover,\n
 .search_button:hover {\n
-\n
 \tbackground-position: 0 100%;\n
-\n
 }\n
 \n
 label {\n
-\n
 \tcolor:#9d968d;\n
-\n
 }\n
 \n
 \n
 /* ## form styling #################################### end ### */\n
 \n
+/* Search pop up styling */\n
+div.popup_row .reference{\n
+  color: inherit;\n
+}\n
 \n
+/* Search listbox styling */\n
+span.search_result_title{\n
+  color: #1111CC;\n
+}\n
+\n
+span.search_result_portal_type{\n
+  color: inherit;\n
+}\n
+\n
+span.found{\n
+  color: #000000;\n
+}\n
+\n
+span.found em{\n
+  font-weight: bold;\n
+}\n
+\n
+div.searchDetails a.section-link{\n
+  color: inherit;\n
+}\n
+\n
+div.searchDetails a.reference-link{\n
+  color: #228822;\n
+}\n
+\n
+div.searchDetails a.owner-link{\n
+  color: inherit;\n
+}\n
+\n
+div.searchDetails a.modification-date-link{\n
+  color: inherit;\n
+}\n
 
 
 ]]></string> </value>

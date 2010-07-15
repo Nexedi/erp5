@@ -57,19 +57,27 @@
 
 request=context.REQUEST\n
 \n
+\n
 # check captcha\n
 if not context.isCaptchaTextCorrect(captcha_text):\n
   message = "text entered at the right of the picture is wrong"\n
   translated_message = context.Base_translateString(message)\n
   return request[\'RESPONSE\'].redirect(\n
-             "%s?portal_status_message=%s" %\n
+             "%s/view?portal_status_message=%s" %\n
              (context.absolute_url(), translated_message))\n
 \n
-# create a new subscription form\n
-module = context.getDefaultModule(portal_type=\'Subscription Form\')\n
-form = module.newContent(portal_type=\'Subscription Form\')\n
-\n
 web_site_url = context.getWebSiteValue().absolute_url()\n
+\n
+portal_type = request.get(\'portal_type\',\'\')\n
+\n
+if portal_type == \'\': \n
+  return request[\'RESPONSE\'].redirect(web_site_url) \n
+\n
+ \n
+# create a new anonymous procedure\n
+module = context.getDefaultModule(portal_type=portal_type)\n
+form = module.newContent(portal_type=portal_type)\n
+\n
 module_id = module.getId()\n
 new_object_id = form.getId()\n
 \n
@@ -83,7 +91,8 @@ password = context.Person_generatePassword()\n
 form.setPassword(password)\n
 \n
 # the ownership is the form itself\n
-form.manage_addLocalRoles(new_object_id, [\'Owner\',])\n
+form.manage_addLocalRoles(new_object_id, [\'Owner\',\'Agent\'])\n
+\n
 \n
 # login with this new form\n
 # set in the request wich module is used for this annonymous application\n
@@ -146,9 +155,10 @@ return result\n
                             <string>message</string>
                             <string>translated_message</string>
                             <string>_getitem_</string>
+                            <string>web_site_url</string>
+                            <string>portal_type</string>
                             <string>module</string>
                             <string>form</string>
-                            <string>web_site_url</string>
                             <string>module_id</string>
                             <string>new_object_id</string>
                             <string>redirect_url</string>

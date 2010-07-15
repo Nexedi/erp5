@@ -472,7 +472,7 @@ class OOoTemplate(ZopePageTemplate):
     # Retrieve master document
     ooo_document = None
     # If script is setting, call it
-    if (self.ooo_script_name is not None) and (self.ooo_script_name != ''):
+    if self.ooo_script_name:
       ooo_script = getattr(here, self.ooo_script_name)
       ooo_document = ooo_script(self.ooo_stylesheet)
     else:
@@ -568,18 +568,24 @@ class OOoTemplate(ZopePageTemplate):
             'Validation of %s failed:\n%s' % (self.getId(), ''.join(err_list)))
 
     format = opts.get('format', request.get('format', None))
+
+    from Products.ERP5Type.Document import newTempOOoDocument
+    tmp_ooo = newTempOOoDocument(self, self.title_or_id())
+    tmp_ooo.edit(data=ooo,
+                 source_reference='%s.%s' % (self._getFileName(), format),
+                 content_type=self.content_type,)
     if format:
-      return self._asFormat(ooo, format, request, batch_mode)
+      # Performance improvement: 
+      # Call convertToBaseFormat only if user
+      # ask a particular output format
+      tmp_ooo.convertToBaseFormat()
 
-    if not format and not batch_mode:
-      request.RESPONSE.setHeader('Content-Type',
-          '%s; charset=utf-8' % self.content_type)
-      request.RESPONSE.setHeader('Content-disposition',
-          'inline;filename="%s%s"' % (self._getFileName(),
-                                      guess_extension(self.content_type) or ''))
+    if request is not None and not batch_mode:
+      return tmp_ooo.index_html(REQUEST=request,
+                                RESPONSE=request.RESPONSE,
+                                format=format)
+    return tmp_ooo.convert(format)[1]
 
-    return ooo
-  
   def om_icons(self):
     """Return a list of icon URLs to be displayed by an ObjectManager"""
     icons = ({'path': 'misc_/ERP5OOo/OOo.png',
@@ -591,47 +597,6 @@ class OOoTemplate(ZopePageTemplate):
                           'alt': 'Error',
                           'title': 'This template has an error'},)
     return icons
-
-  def _asPdf(self, ooo, REQUEST=None):
-    """
-    Return OOo report as pdf
-    """
-    return self._asFormat(ooo, 'pdf', REQUEST)
-
-  def _asFormat(self, ooo, format, REQUEST=None, batch_mode=0):
-    # Now create a temp OOoDocument to convert data to pdf
-    from Products.ERP5Type.Document import newTempOOoDocument
-    tmp_ooo = newTempOOoDocument(self, self.title_or_id())
-    tmp_ooo.edit(base_data=ooo,
-                 fname=self.title_or_id(),
-                 source_reference=self.title_or_id(),
-                 base_content_type=self.content_type,)
-    tmp_ooo.oo_data = ooo
-    if format == 'pdf' and not batch_mode:
-      # Slightly different implementation
-      # now convert it to pdf
-      tgts = [x[1] for x in tmp_ooo.getTargetFormatItemList()
-              if x[1].endswith('pdf')]
-      if len(tgts) > 1:
-        REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
-        raise ValueError, 'multiple pdf formats found - this shouldnt happen'
-      if len(tgts) == 0:
-        REQUEST.RESPONSE.setHeader('Content-type', 'text/html')
-        raise ValueError, 'no pdf format found'
-      fmt = tgts[0]
-      mime, data = tmp_ooo.convert(fmt)
-      if REQUEST is not None:
-          REQUEST.RESPONSE.setHeader('Content-type', 'application/pdf')
-          REQUEST.RESPONSE.setHeader('Content-disposition',
-              'attachment;filename="%s.pdf"' % self._getFileName())
-      return data
-    mime, data = tmp_ooo.convert(format)
-    if REQUEST is not None and not batch_mode:
-      REQUEST.RESPONSE.setHeader('Content-type', mime)
-      REQUEST.RESPONSE.setHeader('Content-disposition',
-          'attachment;filename="%s.%s"' % (self._getFileName(),format))
-        # FIXME the above lines should return zip format when html was requested
-    return data
 
   def _getFileName(self):
     """Returns the filename used for content-disposition header.

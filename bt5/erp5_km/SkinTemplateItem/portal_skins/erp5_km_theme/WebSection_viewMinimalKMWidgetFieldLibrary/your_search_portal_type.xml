@@ -194,7 +194,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden_label</string> </value>
+                    <value> <string>hidden_label search-portal-type-select</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>

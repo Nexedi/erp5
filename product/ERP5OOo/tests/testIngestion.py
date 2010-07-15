@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Bartek Gorny <bg@erp5.pl>
 #                    Jean-Paul Smets <jp@nexedi.com>
 #                    Ivan Tyagov <ivan@nexedi.com>
@@ -31,27 +31,25 @@
 
 import unittest
 import os, cStringIO, zipfile
-from xml.dom.minidom import parseString
+from lxml import etree
 import transaction
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+                                                       _getConversionServerDict
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5OOo.Document.OOoDocument import ConversionError
+from Products.ERP5OOo.OOoUtils import OOoBuilder
 from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
-
-# Define the conversion server host
-conversion_server_host = ('127.0.0.1', 8008)
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
-NON_PROCESSABLE_PORTAL_TYPE_LIST = ('Image', 'File', 'PDF')
 
 def printAndLog(msg):
   """
@@ -125,8 +123,9 @@ class TestIngestion(ERP5TypeTestCase):
 
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() != 'global':
@@ -143,16 +142,6 @@ class TestIngestion(ERP5TypeTestCase):
       factory(id=script_id)
     script = getattr(context, script_id)
     script.ZPythonScript_edit('email_to, event, doc, **kw', 'return')
-
-  def login(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Create a new manager user and login.
-    """
-    user_name = 'dms_user'
-    user_folder = self.portal.acl_users
-    user_folder._doAddUser(user_name, '', ['Manager', 'Owner', 'Assignor'], [])
-    user = user_folder.getUserById(user_name).__of__(user_folder)
-    newSecurityManager(None, user)
 
   def createDefaultCategoryList(self):
     """
@@ -296,12 +285,9 @@ class TestIngestion(ERP5TypeTestCase):
       document.edit(file=f)
       self.stepTic()
       self.failUnless(document.hasFile())
-      if document.getPortalType() in NON_PROCESSABLE_PORTAL_TYPE_LIST:
-        # File and images do not support conversion to text in DMS
-        # PDF has not implemented _convertToBaseFormat() so can not be converted
-        self.assertEquals(document.getExternalProcessingState(), 'uploaded')
-      else:
-        self.assertEquals(document.getExternalProcessingState(), 'converted') # this is how we know if it was ok or not
+      if document.isSupportBaseDataConversion():
+        # this is how we know if it was ok or not
+        self.assertEquals(document.getExternalProcessingState(), 'converted')
         self.assert_('magic' in document.SearchableText())
         self.assert_('magic' in str(document.asText()))
 
@@ -363,10 +349,7 @@ class TestIngestion(ERP5TypeTestCase):
       count+=1
       self.assertEquals(document.getPortalType(), portal_type)
       self.assertEquals(document.getReference(), 'TEST')
-      if document.getPortalType() in NON_PROCESSABLE_PORTAL_TYPE_LIST:
-        # Image, File and PDF are not converted to a base format
-        self.assertEquals(document.getExternalProcessingState(), 'uploaded')
-      else:
+      if document.isSupportBaseDataConversion():
         # We check if conversion has succeeded by looking
         # at the external_processing workflow
         self.assertEquals(document.getExternalProcessingState(), 'converted')
@@ -684,18 +667,15 @@ class TestIngestion(ERP5TypeTestCase):
     # need oood for getting/setting metadata...
     document = self.getDocument('one')
     newcontent = document.getBaseData()
-    cs = cStringIO.StringIO()
-    cs.write(str(newcontent))
-    z = zipfile.ZipFile(cs)
-    s = z.read('meta.xml')
-    xmlob = parseString(s)
-    title = xmlob.getElementsByTagName('dc:title')[0].childNodes[0].data
-    self.assertEquals(title, u'another title')
-    subject = xmlob.getElementsByTagName('meta:keyword')[0].childNodes[0].data
+    builder = OOoBuilder(newcontent)
+    xml_tree = etree.fromstring(builder.extract('meta.xml'))
+    title = xml_tree.find('*/{%s}title' % xml_tree.nsmap['dc']).text
+    self.assertEquals(title, 'another title')
+    subject = xml_tree.find('*/{%s}keyword' % xml_tree.nsmap['meta']).text
     self.assertEquals(subject, u'another subject')
-    description = xmlob.getElementsByTagName('dc:description')[0].childNodes[0].data
+    description = xml_tree.find('*/{%s}description' % xml_tree.nsmap['dc']).text
     self.assertEquals(description, u'another description')
-    
+
   def stepIngestTextFormats(self, sequence=None, sequence_list=None, **kw):
     """
       ingest all supported text formats
@@ -962,10 +942,8 @@ class TestIngestion(ERP5TypeTestCase):
                                language='en',
                                version='002')
       self.assertNotEquals(None, ingested_document)
-      if portal_type not in NON_PROCESSABLE_PORTAL_TYPE_LIST:
+      if ingested_document.isSupportBaseDataConversion():
         self.assertEquals('converted', ingested_document.getExternalProcessingState())
-      else:
-        self.assertEquals('uploaded', ingested_document.getExternalProcessingState())
       # check aggregate between 'Document Ingestion Message' and ingested document
       self.assertTrue(ingested_document in attachment_list)
     return attachment_list, ingested_document
@@ -1010,8 +988,9 @@ class TestIngestion(ERP5TypeTestCase):
     if not run: return
     if not quiet: printAndLog('test_01_PreferenceSetup')
     preference_tool = self.portal.portal_preferences
-    self.assertEquals(preference_tool.getPreferredOoodocServerAddress(), conversion_server_host[0])
-    self.assertEquals(preference_tool.getPreferredOoodocServerPortNumber(), conversion_server_host[1])
+    conversion_dict = _getConversionServerDict()
+    self.assertEquals(preference_tool.getPreferredOoodocServerAddress(), conversion_dict['hostname'])
+    self.assertEquals(preference_tool.getPreferredOoodocServerPortNumber(), conversion_dict['port'])
     self.assertEquals(preference_tool.getPreferredDocumentFileNameRegularExpression(), FILE_NAME_REGULAR_EXPRESSION)
     self.assertEquals(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
     
@@ -1475,9 +1454,31 @@ class TestIngestion(ERP5TypeTestCase):
     self.stepTic()
     self.assertEquals(document.getSourceReference(), my_filename)
 
+  def test_16_TestMetadataDiscoveryFromUserLogin(self):
+    """
+      Test that  user_login is used to discover meta data (group, function, etc.. from Assignment)
+    """
+    portal = self.portal
+    contribution_tool = getToolByName(portal, 'portal_contributions')
+    # create an user to simulate upload from him
+    user = self.createUser(reference='contributor1')
+    assignment = self.createUserAssignment(user, \
+                                           dict(group='anybody',
+                                                function='function/musician/wind/saxophone',
+                                                site='site/arctic/spitsbergen'))
+    portal.document_module.manage_setLocalRoles('contributor1', ['Assignor',])
+    self.stepTic()
+    file_object = makeFileUpload('TEST-en-002.doc')
+    document = contribution_tool.newContent(file=file_object)
+    document.discoverMetadata(document.getSourceReference(), 'contributor1') 
+    self.stepTic()
+    self.assertEquals(document.getSourceReference(), 'TEST-en-002.doc')
+    self.assertEquals('function/musician/wind/saxophone', document.getFunction())
+    self.assertEquals('anybody', document.getGroup())
+    self.assertEquals('site/arctic/spitsbergen', document.getSite())
+
 # Missing tests
 """
-    property_dict = context.getPropertyDictFromUserLogin()
     property_dict = context.getPropertyDictFromInput()
 """
 

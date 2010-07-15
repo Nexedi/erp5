@@ -1,0 +1,460 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>valuation_method</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>where_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>where_expression</string>
+                            <string>valuation_method</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>where_expression\r\n
+valuation_method</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Resource_zGetAssetPrice</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<dtml-if "\'WeightedAverage\' in valuation_method">\n
+\n
+/*\n
+Almost the same SQL for WeightedAverage/MonthlyWeightedAverage\n
+since they rely on the same kind of "split by period" model.\n
+\n
+First split timeframe into Year (or Month) periods, and fold all movements\n
+during each period.\n
+Then perform a weighted average over all periods.\n
+*/\n
+\n
+set @total_asset_price=0, @total_quantity=0\n
+<dtml-var sql_delimiter>\n
+select\n
+    byperiod.*,\n
+    (@unit_price:=(@total_asset_price+incoming_total_price)/(@total_quantity+incoming_total_quantity)) as unit_price,\n
+    (@total_asset_price:=\n
+        @total_asset_price +\n
+        incoming_total_price +\n
+        outgoing_total_quantity * @unit_price) as total_asset_price,\n
+    (@total_quantity:=@total_quantity+quantity_diff) as total_quantity\n
+from\n
+    (\n
+        select\n
+            month(date) as d_month,\n
+            year(date) as d_year,\n
+            SUM(IF(quantity>0, total_price, 0)) as incoming_total_price,\n
+            SUM(IF(quantity>0, quantity, 0)) as incoming_total_quantity,\n
+            SUM(IF(quantity>0, 0, quantity)) as outgoing_total_quantity,\n
+            SUM(quantity) as quantity_diff\n
+        from\n
+            stock, catalog\n
+        where\n
+          <dtml-var where_expression>\n
+        group by\n
+            d_year<dtml-if "\'Monthly\' in valuation_method">, d_month</dtml-if>\n
+        order by\n
+            d_year<dtml-if "\'Monthly\' in valuation_method">, d_month</dtml-if>\n
+    ) as byperiod\n
+order by d_year<dtml-if "\'Monthly\' in valuation_method">, d_month</dtml-if>\n
+\n
+\n
+<dtml-elif "\'MovingAverage\'==valuation_method">\n
+/*\n
+Very similar to (Monthly)WeightedAverage except that we do not have to\n
+split the timeframe / fold movements and simply perform a weighted average\n
+on all single movements.\n
+*/\n
+\n
+set @total_asset_price=0, @total_quantity=0\n
+<dtml-var sql_delimiter>\n
+select\n
+    (@incoming_total_price:=IF(quantity>0, total_price, 0)) as incoming_total_price,\n
+\n
+    @unit_price:=((@total_asset_price+@incoming_total_price)/(@total_quantity+GREATEST(0, quantity))) as unit_price,\n
+    (@total_asset_price:=\n
+        @total_asset_price +\n
+        @incoming_total_price +\n
+        LEAST(0, quantity) * @unit_price) as total_asset_price,\n
+    (@total_quantity:=@total_quantity+quantity) as dummy\n
+from\n
+   stock, catalog\n
+where\n
+  <dtml-var where_expression>\n
+order by date\n
+\n
+<dtml-elif "valuation_method==\'Fifo\'">\n
+\n
+/*\n
+FIFO inventory valuation is about finding out the price of items in\n
+inventory that stay until t=END after transactions from t=0.\n
+For we care only about items found in inventory at t=END, it\n
+is interesting to notice that a few of the earliest movements can be\n
+discarded along the way of our computation:\n
+\n
+1)Assume that you know the @total_output_quantity during the considered\n
+  timeframe.\n
+2)Now notice that in this model you can fold all outgoing movements into a single\n
+  big movement of @total_output_quantity taking place a t=END, and obtain the\n
+  same, yet simpler to compute valuation.\n
+3)It is then easy to see that while the sum of quantities of incoming\n
+  movements accounts for less than @total_output_quantity, items queued in by\n
+  these movements will be completely removed by the final outgoing movement.\n
+  It is safe to ignore those first movements in our computation.\n
+\n
+This means that when iterating forward over incoming movements, from t=0 to t=END,\n
+incoming movements can be ignored until their cumulative quantity sum is larger\n
+than the total output quantity. After this, each incoming movement will stay\n
+forever in inventory.\n
+\n
+Thus, each movement has a value of:\n
+  max(0, (quantity-@unbalanced_output) * unit_price)\n
+if @unbalanced_output is initialized to @total_output_quantity and reduced by\n
+quantity at each step:\n
+  unbalanced_output=max(0, unbalanced_output-quantity)\n
+*/\n
+SET\n
+ @unbalanced_output:=\n
+   (SELECT\n
+      SUM(-quantity)\n
+    FROM\n
+      stock, catalog\n
+    WHERE\n
+      quantity < 0\n
+    AND\n
+      <dtml-var where_expression>\n
+    ),\n
+ @total_asset_price=0\n
+<dtml-var sql_delimiter>\n
+\n
+SELECT\n
+\n
+ (@total_asset_price:=@total_asset_price + \n
+   GREATEST(0, (quantity-@unbalanced_output) * total_price/quantity)\n
+ ) AS total_asset_price,\n
+ (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy\n
+ \n
+FROM\n
+ stock, catalog\n
+WHERE\n
+  quantity > 0\n
+AND\n
+  <dtml-var where_expression>\n
+order by date\n
+\n
+<dtml-elif "valuation_method==\'Filo\'">\n
+\n
+\n
+/*\n
+What matters for FILO inventory value is the amount that never goes out of inventory\n
+and stays in at the bottom of the pile until t=END:\n
+If, for each incoming movement, we are able to tell how many items of this movement\n
+are taken out of inventory in future, then we are finished: the remaining quantity\n
+of this movement will be found in the final inventory and should be counted in the\n
+valuation.\n
+\n
+To know the future/destiny of each incoming movement, the easier way is to\n
+iterate movements in a backwards fashion, from latest (t=END) to earliest (t=0),\n
+and remember how many items are removed from the inventory by outgoing movements.\n
+\n
+We sum in @unbalanced_output the (absolute) sum of outgoing movements quantities\n
+until we reach an incoming movement. Then:\n
+ - if incoming_movement.quantity > @unbalanced_output, we know for sure that\n
+   (quantity-@unbalanced_output) WILL remain in the inventory at t=END. We can thus\n
+   add (quantity-@unbalanced_output)*unit_price to asset_price, and reset\n
+   @unbalanced_output to zero.\n
+ - if incoming_movement.quantity <= @unbalanced_output then all of the current\n
+   movement got out of inventory between t=current and T=END. These items are not\n
+   present in the final inventory and can be discarded.\n
+   @unbalanced_inventory=@unbalanced_inventory - quantity\n
+*/\n
+\n
+SET @unbalanced_output=0, @total_asset_price=0\n
+<dtml-var sql_delimiter>\n
+SELECT\n
+  (@total_asset_price:=@total_asset_price +\n
+    IF(quantity <= 0, 0,\n
+    total_price/quantity * GREATEST(0, quantity-@unbalanced_output))) as total_asset_price,\n
+  (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy\n
+FROM\n
+ stock, catalog\n
+WHERE\n
+  <dtml-var where_expression>\n
+\n
+\n
+\n
+</dtml-if>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="__newobj__" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<dtml-if "\'WeightedAverage\' in valuation_method">\n
+\n
+/*\n
+Almost the same SQL for WeightedAverage/MonthlyWeightedAverage\n
+since they rely on the same kind of "split by period" model.\n
+\n
+First split timeframe into Year (or Month) periods, and fold all movements\n
+during each period.\n
+Then perform a weighted average over all periods.\n
+*/\n
+\n
+set @total_asset_price=0, @total_quantity=0\n
+<dtml-var sql_delimiter>\n
+select\n
+    byperiod.*,\n
+    (@unit_price:=(@total_asset_price+incoming_total_price)/(@total_quantity+incoming_total_quantity)) as unit_price,\n
+    (@total_asset_price:=\n
+        @total_asset_price +\n
+        incoming_total_price +\n
+        outgoing_total_quantity * @unit_price) as total_asset_price,\n
+    (@total_quantity:=@total_quantity+quantity_diff) as total_quantity\n
+from\n
+    (\n
+        select\n
+            month(date) as d_month,\n
+            year(date) as d_year,\n
+            SUM(IF(quantity>0, total_price, 0)) as incoming_total_price,\n
+            SUM(IF(quantity>0, quantity, 0)) as incoming_total_quantity,\n
+            SUM(IF(quantity>0, 0, quantity)) as outgoing_total_quantity,\n
+            SUM(quantity) as quantity_diff\n
+        from\n
+            stock, catalog\n
+        where\n
+          <dtml-var where_expression>\n
+        group by\n
+            d_year<dtml-if "\'Monthly\' in valuation_method">, d_month</dtml-if>\n
+        order by\n
+            d_year<dtml-if "\'Monthly\' in valuation_method">, d_month</dtml-if>\n
+    ) as byperiod\n
+order by d_year<dtml-if "\'Monthly\' in valuation_method">, d_month</dtml-if>\n
+\n
+\n
+<dtml-elif "\'MovingAverage\'==valuation_method">\n
+/*\n
+Very similar to (Monthly)WeightedAverage except that we do not have to\n
+split the timeframe / fold movements and simply perform a weighted average\n
+on all single movements.\n
+*/\n
+\n
+set @total_asset_price=0, @total_quantity=0\n
+<dtml-var sql_delimiter>\n
+select\n
+    (@incoming_total_price:=IF(quantity>0, total_price, 0)) as incoming_total_price,\n
+\n
+    @unit_price:=((@total_asset_price+@incoming_total_price)/(@total_quantity+GREATEST(0, quantity))) as unit_price,\n
+    (@total_asset_price:=\n
+        @total_asset_price +\n
+        @incoming_total_price +\n
+        LEAST(0, quantity) * @unit_price) as total_asset_price,\n
+    (@total_quantity:=@total_quantity+quantity) as dummy\n
+from\n
+   stock, catalog\n
+where\n
+  <dtml-var where_expression>\n
+order by date\n
+\n
+<dtml-elif "valuation_method==\'Fifo\'">\n
+\n
+/*\n
+FIFO inventory valuation is about finding out the price of items in\n
+inventory that stay until t=END after transactions from t=0.\n
+For we care only about items found in inventory at t=END, it\n
+is interesting to notice that a few of the earliest movements can be\n
+discarded along the way of our computation:\n
+\n
+1)Assume that you know the @total_output_quantity during the considered\n
+  timeframe.\n
+2)Now notice that in this model you can fold all outgoing movements into a single\n
+  big movement of @total_output_quantity taking place a t=END, and obtain the\n
+  same, yet simpler to compute valuation.\n
+3)It is then easy to see that while the sum of quantities of incoming\n
+  movements accounts for less than @total_output_quantity, items queued in by\n
+  these movements will be completely removed by the final outgoing movement.\n
+  It is safe to ignore those first movements in our computation.\n
+\n
+This means that when iterating forward over incoming movements, from t=0 to t=END,\n
+incoming movements can be ignored until their cumulative quantity sum is larger\n
+than the total output quantity. After this, each incoming movement will stay\n
+forever in inventory.\n
+\n
+Thus, each movement has a value of:\n
+  max(0, (quantity-@unbalanced_output) * unit_price)\n
+if @unbalanced_output is initialized to @total_output_quantity and reduced by\n
+quantity at each step:\n
+  unbalanced_output=max(0, unbalanced_output-quantity)\n
+*/\n
+SET\n
+ @unbalanced_output:=\n
+   (SELECT\n
+      SUM(-quantity)\n
+    FROM\n
+      stock, catalog\n
+    WHERE\n
+      quantity < 0\n
+    AND\n
+      <dtml-var where_expression>\n
+    ),\n
+ @total_asset_price=0\n
+<dtml-var sql_delimiter>\n
+\n
+SELECT\n
+\n
+ (@total_asset_price:=@total_asset_price + \n
+   GREATEST(0, (quantity-@unbalanced_output) * total_price/quantity)\n
+ ) AS total_asset_price,\n
+ (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy\n
+ \n
+FROM\n
+ stock, catalog\n
+WHERE\n
+  quantity > 0\n
+AND\n
+  <dtml-var where_expression>\n
+order by date\n
+\n
+<dtml-elif "valuation_method==\'Filo\'">\n
+\n
+\n
+/*\n
+What matters for FILO inventory value is the amount that never goes out of inventory\n
+and stays in at the bottom of the pile until t=END:\n
+If, for each incoming movement, we are able to tell how many items of this movement\n
+are taken out of inventory in future, then we are finished: the remaining quantity\n
+of this movement will be found in the final inventory and should be counted in the\n
+valuation.\n
+\n
+To know the future/destiny of each incoming movement, the easier way is to\n
+iterate movements in a backwards fashion, from latest (t=END) to earliest (t=0),\n
+and remember how many items are removed from the inventory by outgoing movements.\n
+\n
+We sum in @unbalanced_output the (absolute) sum of outgoing movements quantities\n
+until we reach an incoming movement. Then:\n
+ - if incoming_movement.quantity > @unbalanced_output, we know for sure that\n
+   (quantity-@unbalanced_output) WILL remain in the inventory at t=END. We can thus\n
+   add (quantity-@unbalanced_output)*unit_price to asset_price, and reset\n
+   @unbalanced_output to zero.\n
+ - if incoming_movement.quantity <= @unbalanced_output then all of the current\n
+   movement got out of inventory between t=current and T=END. These items are not\n
+   present in the final inventory and can be discarded.\n
+   @unbalanced_inventory=@unbalanced_inventory - quantity\n
+*/\n
+\n
+SET @unbalanced_output=0, @total_asset_price=0\n
+<dtml-var sql_delimiter>\n
+SELECT\n
+  (@total_asset_price:=@total_asset_price +\n
+    IF(quantity <= 0, 0,\n
+    total_price/quantity * GREATEST(0, quantity-@unbalanced_output))) as total_asset_price,\n
+  (@unbalanced_output:=GREATEST(0, @unbalanced_output-quantity)) as dummy\n
+FROM\n
+ stock, catalog\n
+WHERE\n
+  <dtml-var where_expression>\n
+\n
+\n
+\n
+</dtml-if>
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

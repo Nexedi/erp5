@@ -93,9 +93,12 @@ class DivergenceMessage(ObjectMessage):
     return None
 
   def __eq__(self, other):
-    return self.__dict__ == other.__dict__
+    try:
+      return self.__dict__ == other.__dict__
+    except AttributeError:
+      return False
 
   def __ne__(self, other):
-    return self.__dict__ != other.__dict__
+    return not self.__eq__(other)
 
 allow_class(DivergenceMessage)

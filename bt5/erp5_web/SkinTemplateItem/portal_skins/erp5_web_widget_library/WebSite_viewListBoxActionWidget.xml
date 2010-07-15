@@ -47,39 +47,110 @@
 
 <tal:comment replace="nothing">Display button to manage element in listbox.\n
 The condition on list style is for compatibility.\n
-You can implement this in web site layout.</tal:comment>\n
+You can implement this in web site layout.\n
 \n
-<tal:block tal:define="list_style request/list_style | nothing;"\n
+XXX TODO: make print, sort, find, configure work\n
+</tal:comment>\n
+\n
+<tal:block tal:define="list_style request/list_style | nothing"\n
            tal:condition="python: list_style != \'search\'">\n
 \n
           <!-- Copy / Paste buttons -->\n
           <div class="bottom_actions">\n
-            <button type="submit" class="cut_button" title="Cut Personal"\n
+            <span class="listbox_actions_title" i18n:translate="">Actions</span>\n
+            <div class="buttons_group">\n
+            <button type="submit" class="cut_button" title="Cut"\n
                     name="Folder_cut:method"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description" i18n:translate="" i18n:domain="ui">Cut</span>\n
+                    i18n:attributes="title" >\n
+              <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Cut</span>\n
+              </span>\n
             </button>\n
             <button type="submit" class="copy_button" title="Copy"\n
                     name="Folder_copy:method"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description" i18n:translate="" i18n:domain="ui">Copy</span>\n
+                    i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Copy</span>\n
+              </span>\n
             </button>\n
             <button type="submit" class="paste_button" title="Paste"\n
                     name="Folder_paste:method"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description" i18n:translate="" i18n:domain="ui">Paste</span>\n
+                    i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Paste</span>\n
+              </span>\n
             </button>\n
-            <button type="submit" class="trash_button" title="Delete"\n
+            <button type="submit" class="delete_button" title="Delete"\n
                     name="Folder_deleteObjectList:method"\n
-                    i18n:attributes="title" i18n:domain="ui">\n
-              <span class="image"></span>\n
-              <span class="description" i18n:translate="" i18n:domain="ui">Delete</span>\n
+                    i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Delete</span>\n
+              </span>\n
             </button>\n
+            <!--button type="submit" class="print_button" title="Print"\n
+                    name="Folder_print:method"\n
+                    i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Print</span>\n
+              </span>\n
+            </button-->\n
+            <button type="submit" class="new_button" title="New"\n
+                    name="Folder_create:method"\n
+                    i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >New</span>\n
+              </span>\n
+            </button>\n
+            <button type="submit" class="reset_button" title="Reset"\n
+                    name="Folder_show:method"\n
+                    i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Reset</span>\n
+              </span>\n
+            </button>\n
+            <!--a tal:condition="sort_actions" class="sort_button button" title="Sort"\n
+               tal:attributes="href python: here.ERP5Site_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')"\n
+               i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Sort</span>\n
+              </span>\n
+            </a-->\n
+            <!--button type="submit" class="find_button" title="Search"\n
+                    name="Folder_search:method"\n
+                    i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Search</span>\n
+              </span>\n
+            </button-->\n
+            <button type="submit" class="filter_button" title="Filter"\n
+                    name="Folder_filter:method"\n
+                    i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Filter</span>\n
+              </span>\n
+            </button>\n
+            <!--a tal:condition="ui_actions" class="config_button button" title="Configure"\n
+               tal:attributes="href python: here.ERP5Site_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')"\n
+               i18n:attributes="title" >\n
+             <span>\n
+                <span class="image">&nbsp;</span>\n
+                <span class="description" i18n:translate="" >Configure</span>\n
+              </span>\n
+            </a-->\n
+            </div>\n
           </div>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

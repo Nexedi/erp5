@@ -34,6 +34,7 @@ import string
 import time
 import warnings
 import sys
+import inspect
 import persistent
 try:
   # Python 2.5 or later
@@ -63,6 +64,27 @@ from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ZCatalog.Lazy import LazyMap
+
+def simple_decorator(decorator):
+  """Decorator to turn simple function into well-behaved decorator
+
+  See also http://wiki.python.org/moin/PythonDecoratorLibrary
+
+  XXX We should use http://pypi.python.org/pypi/decorator/ instead,
+      to make decorators ZPublisher-friendly.
+  """
+  def new_decorator(f):
+    g = decorator(f)
+    g.__name__ = f.__name__
+    g.__doc__ = f.__doc__
+    g.__dict__.update(f.__dict__)
+    return g
+  # Now a few lines needed to make simple_decorator itself
+  # be a well-behaved decorator.
+  new_decorator.__name__ = decorator.__name__
+  new_decorator.__doc__ = decorator.__doc__
+  new_decorator.__dict__.update(decorator.__dict__)
+  return new_decorator
 
 from Products.ERP5Type import Permissions
 
@@ -193,6 +215,7 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
     file.write(warnings.formatwarning(message, category, filename, lineno))
 warnings.showwarning = _showwarning
 
+@simple_decorator
 def deprecated(wrapped):
   message = "Use of '%s' function (%s, line %s) is deprecated." % (
     wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
@@ -349,6 +372,38 @@ def Email_parseAddressHeader(text):
   this header
   """
   return AddressList(text).addresslist
+
+def fill_args_from_request(*optional_args):
+  """Method decorator to fill missing args from given request
+
+  Without this decorator, code would have to rely on ZPublisher to get
+  paramaters from the REQUEST, which leads to much code duplication (copy and
+  paster of possible paramaters with their default values).
+
+  This decorator optional takes an list of names for parameters that are not
+  required by the method.
+  """
+  def decorator(wrapped):
+    names = inspect.getargspec(wrapped)[0]
+    assert names[:2] == ['self', 'REQUEST']
+    del names[:2]
+    names += optional_args
+    def wrapper(self, REQUEST=None, *args, **kw):
+      if REQUEST is not None:
+        for k in names[len(args):]:
+          if k not in kw:
+            v = REQUEST.get(k, kw)
+            if v is not kw:
+              kw[k] = v
+      return wrapped(self, REQUEST, *args, **kw)
+    wrapper.__name__ = wrapped.__name__
+    wrapper.__doc__ = wrapped.__doc__
+    return wrapper
+  if len(optional_args) == 1 and not isinstance(optional_args[0], basestring):
+    function, = optional_args
+    optional_args = ()
+    return decorator(function)
+  return decorator
 
 #####################################################
 # Globals initialization
@@ -887,15 +942,23 @@ def importLocalDocument(class_id, document_path = None):
     path = document_path
   path = os.path.join(path, "%s.py" % class_id)
 
+  module_path = 'Products.ERP5Type.Document.' + class_id
+  document_module = sys.modules.get(module_path)
   # Import Document Class and Initialize it
   f = open(path)
   try:
-    document_module = imp.load_source(
-          'Products.ERP5Type.Document.%s' % class_id, path, f)
+    document_module = imp.load_source(module_path, path, f)
     document_class = getattr(document_module, class_id)
     document_constructor = DocumentConstructor(document_class)
     document_constructor_name = "add%s" % class_id
     document_constructor.__name__ = document_constructor_name
+  except Exception:
+    f.close()
+    if document_module is not None:
+      sys.modules[module_path] = document_module
+    raise
+  else:
+    f.close()
     setattr(Products.ERP5Type.Document, class_id, document_module)
     setattr(Products.ERP5Type.Document, document_constructor_name,
                                       document_constructor)
@@ -903,8 +966,6 @@ def importLocalDocument(class_id, document_path = None):
     ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(
         Permissions.AddPortalContent, document_constructor_name,)
     InitializeClass(document_class)
-  finally:
-    f.close()
 
   # Temp documents are created as standard classes with a different constructor
   # which patches some methods are the instance level to prevent reindexing
@@ -1510,12 +1571,8 @@ def setDefaultProperties(property_holder, object=None, portal=None):
         createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
-    from Products.ERP5Type.Constraint import PropertyTypeValidity
-    # Create the constraint method list - always check type
-    property_holder.constraints = [
-                  PropertyTypeValidity(id='type_check',
-                    description="Type Validity Check Error") ]
 
+    property_holder.constraints = []
     for const in constraint_list:
       createConstraintList(property_holder, constraint_definition=const)
     # ERP5 _properties and Zope _properties are somehow different
@@ -2853,6 +2910,7 @@ def createTranslationLanguageAccessors(property_holder, property,
     composed_id = '%s_translated_%s' % (language_key, property['id'])
     capitalised_compose_id = UpperCase(composed_id)
 
+    # get
     getter_accessor_args = (property['id'], property['type'], language, default)
     accessor_dict_list.append({'name': 'get' + capitalised_compose_id,
                                'class': Translation.TranslatedPropertyGetter,
@@ -2863,7 +2921,14 @@ def createTranslationLanguageAccessors(property_holder, property,
                                'argument': getter_accessor_args,
                                'permission': read_permission})
 
-    setter_accessor_args = (property['id'], property['type'], language)
+    # has
+    has_accessor_args = (property['id'], property['type'], language)
+    accessor_dict_list.append({'name': 'has' + capitalised_compose_id,
+                               'class': Translation.TranslatedPropertyTester,
+                               'argument': has_accessor_args,
+                               'permission': read_permission})
+
+    # set
     accessor_dict_list.append({'name':'set' + capitalised_compose_id,
                                'key': '_set' + capitalised_compose_id,
                                'class': Alias.Reindex,

@@ -1,3 +1,39 @@
+2010-07-15 yusei
+* Fix a bug on CategoryTool_getPreferredPredicateCategoryParentUidItemList to support multimembership category list.
+
+2010-07-13 yusei
+* Support more than four dimensional matrix.
+
+2010-07-02 Kazuhiko
+* Allow Manager to invoke validation_workflow's actions.
+
+2010-06-21 nicolas.dumazet
+* Add Resource_getAssetPrice to compute asset prices.
+
+2010-06-21 yo
+* Rewrite InventoryModule_reindexMovementList, as this script still assumed the older implementation of reindexObject which indexed a delta for each inventory movement, but now we index all movements from each inventory document at a time, thus this script started to do needless indexing.
+
+2010-06-14 Kazuhiko
+* Index portal_type in translation table to avoid unexpected verbose results of translated state search.
+
+2010-06-09 yusei
+* Fix a typo in CategoryTool_getPreferredPredicateCategoryParentUidItemList.
+
+2010-06-09 yusei
+* Add predicate category field to system preference. This preference is used for optimized predicate category search("non-left join version").
+
+2010-06-08 yusei
+* Add CategoryTool_getPreferredPredicateCategoryParentUidItemList for optimized predicate category search.
+
+2010-06-04 yo
+* Do not enable reindexing by default. Who has approved such a change? It is up to the system administrator to decide when the catalog can be cleared.
+
+2010-05-20 yo
+* Movement_getPriceCalculationOperandDict must take into account delivery types when getting Trade Conditions.
+
+2010-05-19 yusei
+* Add two work lists to validation workflow for supply portal types.
+
 2010-04-29 kazuhiko
 * Allow acquisition from parent in order type and delivery type for specialise base category.
 

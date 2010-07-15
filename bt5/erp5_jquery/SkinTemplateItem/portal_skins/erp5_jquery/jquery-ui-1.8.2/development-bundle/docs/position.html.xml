@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<ul class="UIAPIPlugin-toc">\n
+<li><a href="#overview">Overview</a></li>\n
+<li><a href="#options">Arguments</a></li>\n
+</ul>\n
+<div class="UIAPIPlugin">\n
+  <h1>jQuery UI Position Utility</h1>\n
+  <div id="overview">\n
+    <h2 class="top-header">Overview</h2>\n
+    <div id="overview-main">\n
+        <p>Utility script for absolutely positioning any widget relative to the window, document, a particular element, or the cursor/mouse.</p>\n
+<p>Do not need ui.core.js or effects.core.js.</p>\n
+    </div>\n
+    <div id="overview-dependencies">\n
+        <h3>Dependencies</h3>\n
+        <ul>\n
+<li><i>none (only jQuery core)</i></li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-example">\n
+        <h3>Example</h3>\n
+        <div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<p><div id="demo" class="tabs-container" rel="300">\n
+Clicking on the green element transfers to the other.<br />\n
+</p>\n
+<pre>\n
+$(&quot;#position1&quot;).position({\n
+  my: &quot;center&quot;,\n
+  at: &quot;center&quot;,\n
+  of: &quot;#targetElement&quot;\n
+});\n
+$(&quot;#position2&quot;).position({\n
+  my: &quot;left top&quot;,\n
+  at: &quot;left top&quot;,\n
+  of: &quot;#targetElement&quot;\n
+});\n
+$(&quot;#position3&quot;).position({\n
+  my: &quot;right center&quot;,\n
+  at: &quot;right bottom&quot;,\n
+  of: &quot;#targetElement&quot;\n
+});\n
+$(document).mousemove(function(ev){\n
+  $(&quot;#position4&quot;).position({\n
+    my: &quot;left bottom&quot;,\n
+    of: ev,\n
+    offset: &quot;3 -3&quot;,\n
+    collision: &quot;fit&quot;\n
+  });\n
+});\n
+\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;style type=&quot;text/css&quot;&gt;\n
+#targetElement { width:240px;height:200px;background-color:#999;margin:30px auto; }\n
+.positionDiv { width:50px;height:50px;opacity:0.6; }\n
+#position1 {background-color:#F00;}\n
+#position2 {background-color:#0F0;}\n
+#position3 {background-color:#00F;}\n
+#position4 {background-color:#FF0;}\n
+&lt;/style&gt;\n
+\n
+  &lt;script&gt;\n
+  $(document).ready(function() {\n
+    \n
+$(&quot;#position1&quot;).position({\n
+  my: &quot;center&quot;,\n
+  at: &quot;center&quot;,\n
+  of: &quot;#targetElement&quot;\n
+});\n
+$(&quot;#position2&quot;).position({\n
+  my: &quot;left top&quot;,\n
+  at: &quot;left top&quot;,\n
+  of: &quot;#targetElement&quot;\n
+});\n
+$(&quot;#position3&quot;).position({\n
+  my: &quot;right center&quot;,\n
+  at: &quot;right bottom&quot;,\n
+  of: &quot;#targetElement&quot;\n
+});\n
+$(document).mousemove(function(ev){\n
+  $(&quot;#position4&quot;).position({\n
+    my: &quot;left bottom&quot;,\n
+    of: ev,\n
+    offset: &quot;3 -3&quot;,\n
+    collision: &quot;fit&quot;\n
+  });\n
+});\n
+\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;div id=&quot;targetElement&quot;&gt;\n
+  &lt;div class=&quot;positionDiv&quot; id=&quot;position1&quot;&gt;&lt;/div&gt;\n
+  &lt;div class=&quot;positionDiv&quot; id=&quot;position2&quot;&gt;&lt;/div&gt;\n
+  &lt;div class=&quot;positionDiv&quot; id=&quot;position3&quot;&gt;&lt;/div&gt;\n
+  &lt;div class=&quot;positionDiv&quot; id=&quot;position4&quot;&gt;&lt;/div&gt;\n
+&lt;/div&gt;\n
+\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+    </div>\n
+  </div>\n
+  <div id="options">\n
+    <h2 class="top-header">Arguments</h2>\n
+    <ul class="options-list">\n
+      \n
+<li class="option" id="option-my">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-my">my</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Defines which position on <b>the element being positioned</b> to align with the target element: "horizontal vertical" alignment. A single value such as "right" will default to "right center", "top" will default to "center top" (following CSS convention). Acceptable values: "top", "center", "bottom", "left", "right". Example: "left top" or "center center"</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-at">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-at">at</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Defines which position on <b>the target element</b> to align the positioned element against: "horizontal vertical" alignment. A single value such as "right" will default to "right center", "top" will default to "center top" (following CSS convention). Acceptable values: "top", "center", "bottom", "left", "right". Example: "left top" or "center center"</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-of">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-of">of</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Selector</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Element to position against. You can use a browser event object contains pageX and pageY values. Example: "#top-menu"</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-offset">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-offset">offset</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>Add these left-top values to the calculated position, eg. "50 50" (left top) A single value such as "50" will apply to both.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-collision">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-collision">collision</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>When the positioned element overflows the window in some direction, move it to an alternative position. Similar to my and at, this accepts a single value or a pair for horizontal/vertical, eg. "flip", "fit", "fit flip", "fit none".\n
+</p>\n
+<ul><li> <b>flip</b>: to the opposite side and the collision detection is run again to see if it will fit. If it won\'t fit in either position, the center option should be used as a fall back.\n
+</li><li> <b>fit</b>: so the element keeps in the desired direction, but is re-positioned so it fits.\n
+</li><li> <b>none</b>: not do collision detection.\n
+</li></ul>\n
+<p></p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-using">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-using">using</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">Function</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>When specified the actual property setting is delegated to this callback. Receives a single parameter which is a hash of top and left values for the position that should be set.</p>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+</div>\n
+\n
+</p><!-- \n
+Pre-expand include size: 7124 bytes\n
+Post-expand include size: 10613 bytes\n
+Template argument size: 7243 bytes\n
+Maximum: 2097152 bytes\n
+-->\n
+\n
+<!-- Saved in parser cache with key jqdocs_docs:pcache:idhash:3784-1!1!0!!en!2 and timestamp 20100520115504 -->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>position.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

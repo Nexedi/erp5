@@ -37,6 +37,7 @@ class Constraint:
     """
       Default Constraint implementation
     """
+    __allow_access_to_unprotected_subobjects__ = 1
     implements( IConstraint, )
 
     _message_id_list = []

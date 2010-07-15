@@ -137,7 +137,6 @@ def getRelatedTradeConditionList(trade_condition):\n
           getRelatedTradeConditionList(related_trade_condition))\n
   return related_trade_condition_list\n
 \n
-\n
 try:\n
   explanation = context.getExplanationValue()\n
 except AttributeError:\n
@@ -148,7 +147,7 @@ if explanation is not None:\n
   explanation_type = explanation.getPortalType()\n
   high_priority_supply_line_list = []\n
   if explanation_type in context.getPortalInvoiceTypeList() +\\\n
-                              context.getPortalOrderTypeList():\n
+                              context.getPortalOrderTypeList() + context.getPortalDeliveryTypeList():\n
     # if there are trade conditions containing supply lines related to that\n
     # order/invoice, we give high priority to those supply lines\n
     for trade_condition in getRelatedTradeConditionList(explanation):\n

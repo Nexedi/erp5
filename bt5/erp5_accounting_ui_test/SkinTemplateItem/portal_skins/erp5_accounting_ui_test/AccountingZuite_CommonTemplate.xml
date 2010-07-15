@@ -45,7 +45,7 @@
     <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
     <tr>\n
       <td>setTimeout</td>\n
-      <td>600000</td>\n
+      <td>3600000</td>\n
       <td></td>\n
     </tr>\n
     <tr>\n

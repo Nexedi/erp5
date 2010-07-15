@@ -71,6 +71,10 @@
             </value>
         </item>
         <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>c1e9ff8be8dd4c90f5abe582a288f28e</string> </value>
+        </item>
+        <item>
             <key> <string>default_reference</string> </key>
             <value> <string>km.web.site.test.page</string> </value>
         </item>
@@ -98,8 +102,18 @@
             <key> <string>text_content</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<p>Content of the web page test_km_web_site_page :</p>\r\n
-<p>Pouet</p>
+<p>Content of the web page test_km_web_site_page :</p>\n
+<p>Pouet</p>\n
+<p>&nbsp;</p>\n
+<p>Basic content tags (for visual CSS quick fixes).</p>\n
+<h1>Heading 1</h1>\n
+<h2>Heading 2</h2>\n
+<h3>Heading 3</h3>\n
+<h4>Heading 4</h4>\n
+<h5>Heading 5</h5>\n
+<h6>Heading 1</h6>\n
+<p>paragraph</p>\n
+<p><a href="http://erp5.org">link</a></p>
 
 ]]></string> </value>
         </item>

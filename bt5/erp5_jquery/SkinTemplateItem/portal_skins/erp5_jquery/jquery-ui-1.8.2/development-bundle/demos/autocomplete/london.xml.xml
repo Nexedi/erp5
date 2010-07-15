@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n
+<geonames style="MEDIUM">\n
+<totalResultsCount>6987</totalResultsCount>\n
+<geoname>\n
+<name>London</name>\n
+<lat>51.5084152563931</lat>\n
+<lng>-0.125532746315002</lng>\n
+<geonameId>2643743</geonameId>\n
+<countryCode>GB</countryCode>\n
+<countryName>United Kingdom</countryName>\n
+\n
+<fcl>P</fcl>\n
+<fcode>PPLC</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>London</name>\n
+<lat>42.983389283</lat>\n
+<lng>-81.233042387</lng>\n
+<geonameId>6058560</geonameId>\n
+<countryCode>CA</countryCode>\n
+<countryName>Canada</countryName>\n
+\n
+<fcl>P</fcl>\n
+<fcode>PPL</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>East London</name>\n
+<lat>-33.0152850934643</lat>\n
+<lng>27.9116249084473</lng>\n
+<geonameId>1006984</geonameId>\n
+<countryCode>ZA</countryCode>\n
+<countryName>South Africa</countryName>\n
+\n
+<fcl>P</fcl>\n
+<fcode>PPL</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>City</name>\n
+<lat>51.5133363996235</lat>\n
+<lng>-0.0890064239501953</lng>\n
+<geonameId>2643744</geonameId>\n
+<countryCode>GB</countryCode>\n
+<countryName>United Kingdom</countryName>\n
+\n
+<fcl>A</fcl>\n
+<fcode>ADM2</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>London</name>\n
+<lat>37.1289771</lat>\n
+<lng>-84.0832646</lng>\n
+<geonameId>4298960</geonameId>\n
+<countryCode>US</countryCode>\n
+<countryName>United States</countryName>\n
+\n
+<fcl>P</fcl>\n
+<fcode>PPL</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>The Tower of London</name>\n
+<lat>51.5082349601834</lat>\n
+<lng>-0.0763034820556641</lng>\n
+<geonameId>6286786</geonameId>\n
+<countryCode>GB</countryCode>\n
+<countryName>United Kingdom</countryName>\n
+\n
+<fcl>S</fcl>\n
+<fcode>CSTL</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>London Reefs</name>\n
+<lat>8.85</lat>\n
+<lng>112.5333333</lng>\n
+<geonameId>1879967</geonameId>\n
+<countryCode>  </countryCode>\n
+<countryName>  </countryName>\n
+\n
+<fcl>U</fcl>\n
+<fcode>RFSU</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>Greater London</name>\n
+<lat>51.5</lat>\n
+<lng>-0.1666667</lng>\n
+<geonameId>2648110</geonameId>\n
+<countryCode>GB</countryCode>\n
+<countryName>United Kingdom</countryName>\n
+\n
+<fcl>A</fcl>\n
+<fcode>ADM2</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>London</name>\n
+<lat>46.1666667</lat>\n
+<lng>6.0166667</lng>\n
+<geonameId>2661811</geonameId>\n
+<countryCode>CH</countryCode>\n
+<countryName>Switzerland</countryName>\n
+\n
+<fcl>H</fcl>\n
+<fcode>STM</fcode>\n
+</geoname>\n
+<geoname>\n
+<name>London Borough of Islington</name>\n
+<lat>51.5333333</lat>\n
+<lng>-0.1333333</lng>\n
+<geonameId>3333156</geonameId>\n
+<countryCode>GB</countryCode>\n
+<countryName>United Kingdom</countryName>\n
+\n
+<fcl>A</fcl>\n
+<fcode>ADM2</fcode>\n
+</geoname>\n
+</geonames>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>london.xml</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

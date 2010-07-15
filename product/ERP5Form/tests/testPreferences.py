@@ -34,10 +34,11 @@ import transaction
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from zExceptions import Unauthorized
+from AccessControl.ZopeGuards import guarded_hasattr
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
-from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
 
 default_large_image_height, = [pref.get('default')
@@ -527,7 +528,56 @@ class TestPreferences(PropertySheetTestCase):
 
     self.assertTrue(portal_preferences.getDummy())
     self.assertTrue(portal_preferences.isDummy())
+
+  def test_property_sheet_security_on_permission(self):
+    """ Added a test to make sure permissions are used into portal
+        preference level. """
+    write_permission = 'Modify portal content'
+    read_permission = 'Manage portal'
+    self._addPropertySheet('Preference', 'DummyPreference',
+        '''class DummyPreference:
+             _properties= ( {'id': 'preferred_toto',
+                             'write_permission' : 'Modify portal content',
+                             'read_permission'  : 'Manage portal',
+                             'preference': 1,
+                             'type': 'string',},)''')
+
+    obj = self.portal.portal_preferences.newContent(portal_type='Preference')
+    obj.enable()
+    transaction.commit()
+    self.tic()
     
+    self.assertTrue(guarded_hasattr(obj, 'setPreferredToto'))
+    obj.setPreferredToto("A TEST")
+    self.assertTrue(guarded_hasattr(obj, 'getPreferredToto'))
+
+    obj.manage_permission(write_permission, [], 0)
+    self.assertFalse(guarded_hasattr(obj, 'setPreferredToto'))
+    self.assertTrue(guarded_hasattr(obj, 'getPreferredToto'))
+
+    obj.manage_permission(write_permission, ['Manager'], 1)
+    obj.manage_permission(read_permission, [], 0)
+    self.assertTrue(guarded_hasattr(obj, 'setPreferredToto'))
+    self.assertFalse(guarded_hasattr(obj, 'getPreferredToto'))
+
+    obj.manage_permission(read_permission, ['Manager'], 1)
+
+    transaction.commit()
+    self.tic()
+
+    preference_tool = self.portal.portal_preferences
+    self.assertTrue(guarded_hasattr(preference_tool, 'getPreferredToto'))
+    self.assertEquals("A TEST", preference_tool.getPreferredToto())
+
+    preference_tool.manage_permission(write_permission, [], 0)
+    self.assertTrue(guarded_hasattr(preference_tool, 'getPreferredToto'))
+
+    preference_tool.manage_permission(write_permission, ['Manager'], 1)
+    preference_tool.manage_permission(read_permission, [], 0)
+    obj.manage_permission(read_permission, [], 0)
+    self.assertFalse(guarded_hasattr(preference_tool, 'getPreferredToto'))
+
+    preference_tool.manage_permission(read_permission, ['Manager'], 1)
 
 def test_suite():
   suite = unittest.TestSuite()

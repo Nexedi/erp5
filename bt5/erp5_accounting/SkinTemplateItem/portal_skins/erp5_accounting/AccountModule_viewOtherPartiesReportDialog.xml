@@ -90,7 +90,7 @@
                     <value>
                       <list>
                         <string>your_simulation_state</string>
-                        <string>your_entity_role</string>
+                        <string>your_mirror_section_category_list</string>
                       </list>
                     </value>
                 </item>

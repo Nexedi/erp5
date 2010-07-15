@@ -54,6 +54,12 @@
             <value> <string>default_accounting_transaction_rule</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>expandable_property</string> </key>
             <value>
               <tuple>
@@ -63,6 +69,7 @@
                 <string>destination_payment</string>
                 <string>destination_project</string>
                 <string>destination_section</string>
+                <string>quantity</string>
                 <string>source_administration</string>
                 <string>source_decision</string>
                 <string>source_function</string>

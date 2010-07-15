@@ -46,13 +46,13 @@ class SolverProcess(XMLObject, ActiveProcess):
 
     - Target Solver documents which encapsulate the resolution
       heuristic in relation with DivergenceTester (ie. each
-      DivergenceTester must provide a list of Target Solver portal 
+      DivergenceTester must provide a list of Target Solver portal
       types whch are suitable to solve a given divergence) and
       which may eventually use a Delivery Solver each time divergence
       is related to quantities.
 
     Every Simulation Movement affected by a Solver Process has a relation
-    to the solver process through the "solver" base category.         
+    to the solver process through the "solver" base category.
   """
   meta_type = 'ERP5 Solver Process'
   portal_type = 'Solver Process'
@@ -81,10 +81,9 @@ class SolverProcess(XMLObject, ActiveProcess):
       Builds target solvers from solver decisions
     """
     movement_dict = {}
-    types_tool = self.portal_types
     message_list = []
 
-    # First create a mapping between delivery movements and solvers
+    # First create a mapping between simulation movements and solvers
     #   in order to know for each movements which solvers are needed
     #   and which parameters with
     #
@@ -108,7 +107,7 @@ class SolverProcess(XMLObject, ActiveProcess):
         if configuration_mapping not in movement_solver_configuration_list:
           movement_solver_configuration_list.append(configuration_mapping)
 
-    # Second, create a mapping between solvers and movements 
+    # Second, create a mapping between solvers and movements
     # and their configuration
     #
     #   solver_dict[solver] = {
@@ -139,7 +138,7 @@ class SolverProcess(XMLObject, ActiveProcess):
       for solver, movement_solver_configuration_list in movement_solver_dict.items():
         for configuration_mapping in movement_solver_configuration_list:
           # Detect conflicts. This includes finding out that a solver which
-          # is exclusive per movement, conflicts with another solver on the same 
+          # is exclusive per movement, conflicts with another solver on the same
           # movement
           solver_message_list = solver.getSolverConflictMessageList(movement, configuration_mapping, solver_dict, movement_dict)
           if solver_message_list:
@@ -154,8 +153,9 @@ class SolverProcess(XMLObject, ActiveProcess):
           if configuration_mapping not in movement_solver_configuration_list:
             movement_solver_configuration_list.append(configuration_mapping)
 
-    # Return empty list of conflicts
-    if message_list: return message_list
+    # If conflicts where detected, return them and do nothing
+    if message_list:
+      return message_list
 
     # Fourth, build target solvers
     for solver, solver_key_dict in grouped_solver_dict.items():
@@ -171,33 +171,41 @@ class SolverProcess(XMLObject, ActiveProcess):
     return []
 
   # ISolver implementation
-  # Solver Process Workflow Interface 
+  # Solver Process Workflow Interface
   #  NOTE: how can we consider that a workflow defines or provides an interface ?
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
       Start solving
     """
     isTransitionPossible = self.getPortalObject().portal_workflow.isTransitionPossible
     for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
-      if isTransitionPossible(solver, 'start_solving'):
-        solver.startSolving()
-        solver.activate(active_process=self).solve()
+      if solver.isTempObject():
+        solver_type = solver.getPortalTypeValue()
+        solver_type.activate(activate_kw=activate_kw).solve(
+          activate_kw=activate_kw,
+          delivery_list=solver.getDeliveryList(),
+          configuration_dict=solver.getConfigurationPropertyDict()
+          )
+      else:
+        if isTransitionPossible(solver, 'start_solving'):
+          solver.startSolving()
+        solver.activate(active_process=self, activate_kw=activate_kw).solve(
+          activate_kw=activate_kw)
 
   # API
   def isSolverDecisionListConsistent(self):
     """
-    Returns True is the Solver Process decisions do not 
+    Returns True is the Solver Process decisions do not
     need to be rebuilt, False else. This method can be
     invoked before invoking buildSolverDecisionList if
     this helps reducing CPU time.
     """
 
-  def buildSolverDecisionList(self, delivery_or_movement=None,
-                              temp_object=False):
+  def buildSolverDecisionList(self, delivery_or_movement=None):
     """
     Build (or rebuild) the solver decisions in the solver process
 
-    delivery_or_movement -- a movement, a delivery, 
+    delivery_or_movement -- a movement, a delivery,
                             or a list thereof
     """
     if delivery_or_movement is None:
@@ -211,58 +219,67 @@ class SolverProcess(XMLObject, ActiveProcess):
     for x in delivery_or_movement:
       if x.isDelivery():
         movement_list.extend(x.getMovementList())
+      else:
+        movement_list.append(x)
 
     # We suppose here that movement_list is a list of
-    # delivery lines. Let us group decisions in such way
+    # delivery movements. Let us group decisions in such way
     # that a single decision is created per divergence tester instance
-    # and per application level list
-    solver_tool = self.getParentValue()
+    # and per application level list and per available target solver
+    # list
+    solver_tool = self.getPortalObject().portal_solvers
     solver_decision_dict = {}
     for movement in movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
         for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList(exclude_quantity=False):
-          if divergence_tester.compare(simulation_movement, movement):
+          if divergence_tester.explain(simulation_movement) in (None, []):
             continue
-          application_list = map(lambda x:x.getRelativeUrl(), 
+          application_list = map(lambda x:x.getRelativeUrl(),
                  solver_tool.getSolverDecisionApplicationValueList(movement, divergence_tester))
           application_list.sort()
-          solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list))
+          solver_list = solver_tool.searchTargetSolverList(
+            divergence_tester, simulation_movement)
+          solver_list.sort(key=lambda x:x.getId())
+          solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list), tuple(solver_list))
           movement_dict = solver_decision_dict.setdefault(solver_decision_key, {})
-          movement_dict[movement] = None
+          movement_dict[simulation_movement] = None
 
     # Now build the solver decision instances based on the previous
     # grouping
     solver_decision_list = self.objectValues(portal_type='Solver Decision')
-    index = 1
     for solver_decision_key, movement_dict in solver_decision_dict.items():
-      causality, delivery_list = solver_decision_key
+      causality, delivery_list, solver_list = solver_decision_key
+      movement_url_list = [x.getRelativeUrl() for x in movement_dict.keys()]
+      movement_url_list.sort()
       matched_solver_decision_list = [
         x for x in solver_decision_list \
-        if x.getDeliveryList() == list(delivery_list) and \
+        if sorted(x.getDeliveryList()) == movement_url_list and \
         x.getCausality() == causality]
       if len(matched_solver_decision_list) > 0:
         solver_decision_list.remove(matched_solver_decision_list[0])
       else:
-        if temp_object:
-          new_decision = self.newContent(portal_type='Solver Decision',
-                                         temp_object=True,
-                                         #id=index,
-                                         uid='new_%s' % index)
-          index += 1
-        else:
-          new_decision = self.newContent(portal_type='Solver Decision')
-        new_decision._setDeliveryValueList(movement_dict.keys())
+        new_decision = self.newContent(portal_type='Solver Decision')
+        new_decision._setDeliveryList(movement_url_list)
         new_decision._setCausality(solver_decision_key[0])
+        # If we have only one available automatic solver, we just use it
+        # automatically.
+        automatic_solver_list = filter(lambda x:x.isAutomaticSolver(),
+                                       solver_list)
+        if len(automatic_solver_list) == 1:
+          automatic_solver = automatic_solver_list[0]
+          new_decision.setSolverValue(automatic_solver)
+          new_decision.updateConfiguration(
+            **automatic_solver.getDefaultConfigurationPropertyDict(
+            new_decision))
         # XXX We need a relation between Simulation Movement and Solver
         # Process, but ideally, the relation should be created when a
         # Target Solver processes, not when a Solver Decision is
         # created.
-        # for movement in movement_dict.keys():
-        #   for simulation_movement in movement.getDeliveryRelatedValueList():
-        #     solver_list = simulation_movement.getSolverValueList()
-        #     if self not in solver_list:
-        #       simulation_movement.setSolverValueList(
-        #         solver_list + [self])
+        # for simulation_movement in movement_dict.keys():
+        #   solver_list = simulation_movement.getSolverValueList()
+        #   if self not in solver_list:
+        #     simulation_movement.setSolverValueList(
+        #       solver_list + [self])
     # XXX what should we do for non-matched existing solver decisions?
     # do we need to cancel them by using an appropriate workflow?
 

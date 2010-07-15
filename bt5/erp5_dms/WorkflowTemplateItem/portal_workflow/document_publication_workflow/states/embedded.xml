@@ -31,6 +31,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>delete</string>
+                <string>delete_action</string>
                 <string>extract</string>
               </tuple>
             </value>
@@ -47,17 +49,14 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -68,12 +67,6 @@
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>Change Images and Files</string> </key>
                     <value>
                       <list/>
                     </value>

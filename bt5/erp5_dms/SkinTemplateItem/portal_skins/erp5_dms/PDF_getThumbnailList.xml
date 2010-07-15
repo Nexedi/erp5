@@ -56,10 +56,6 @@
             <value> <string>content_information = context.getContentInformation()\n
 \n
 page_number = int(content_information.get(\'Pages\', 0))\n
-format = \'jpg\'\n
-display = \'thumbnail\'\n
-pdf_url = context.absolute_url()\n
-\n
 limit = kw.get(\'limit\', (0, 0))\n
 list_start = int(kw.get(\'list_start\', 0))\n
 list_lines = int(kw.get(\'list_lines\', 0))\n
@@ -69,7 +65,6 @@ list_end = list_start + size\n
 page_list = range(page_number)\n
 \n
 result = []\n
-\n
 for i in page_list[list_start:list_end]:\n
   result.append(context)\n
 return result\n
@@ -115,9 +110,6 @@ return result\n
                             <string>content_information</string>
                             <string>int</string>
                             <string>page_number</string>
-                            <string>format</string>
-                            <string>display</string>
-                            <string>pdf_url</string>
                             <string>limit</string>
                             <string>list_start</string>
                             <string>list_lines</string>

@@ -44,6 +44,7 @@
                    xmlns:tal="http://xml.zope.org/namespaces/tal" \n
                    xmlns:metal="http://xml.zope.org/namespaces/metal"\n
                    xmlns:dc="http://purl.org/dc/elements/1.1/" \n
+                   xmlns:atom="http://www.w3.org/2005/Atom"\n
                    xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">\n
   <tal:block tal:define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'application/rss+xml;; charset=utf-8\');\n
                          rss_string string:RSS;\n
@@ -52,6 +53,7 @@
     <tal:block tal:define="listbox_fields python: [field for field in form.get_fields() if (field.meta_type == \'ListBox\' or field.meta_type == \'ProxyField\' and field.getRecursiveTemplateField().meta_type == \'ListBox\')]" >\n
 \n
   <channel>\n
+    <atom:link tal:attributes="href python:\'%s/%s\' % (here.absolute_url(), form.getId())" rel="self" type="application/rss+xml" />\n
     <title tal:content="here/Title">TITLE</title>\n
     <link tal:content="here/absolute_url">URL</link>\n
     <description tal:content="python: here.getProperty(\'description\')">DESCRIPTION</description>\n
@@ -62,7 +64,8 @@
 \n
     </tal:block>\n
   </tal:block>\n
-</rss>
+</rss>\n
+
 
 ]]></string> </value>
         </item>

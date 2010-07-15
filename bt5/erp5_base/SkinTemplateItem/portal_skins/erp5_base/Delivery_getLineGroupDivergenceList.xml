@@ -62,7 +62,8 @@ portal_object = context.getPortalObject()\n
 l = []\n
 \n
 for divergence in divergence_list:\n
-  if divergence.getCollectOrderGroup() != \'line\':\n
+  # XXX price is not built by builder, so collect order group is never set for price level divergence\n
+  if divergence.getCollectOrderGroup() != \'line\' and divergence.getProperty(\'tested_property\') != \'price\':\n
     continue\n
   decision_value = divergence.getProperty(\'decision_value\')\n
   decision_title = divergence.getProperty(\'decision_title\', decision_value)\n

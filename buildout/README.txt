@@ -111,9 +111,26 @@ $ ~/erp5.buildout/bin/python2.4 bootstrap/bootstrap.py -c my_instances.cfg
 $ bin/buildout -c my_instances.cfg
 $ var/bin/supervisord # it will start supervisor and configured software
 $ $EDITOR my_instances.cfg
-# add "runUnitTest" to parts, the "development-instance" part will be pulled
-# automatically as a dependency
+# add "runUnitTest" and "development-site" to parts
 $ bin/buildout -c my_instances.cfg
 
-Fully configured development instance will be available in var/zope-instance.
+Fully configured development instance will be available in var/development-site.
 
+Network based invocation
+========================
+
+Buildout profile can extend other ones from network. It is possible to play
+with ERP5 buildout that way.
+
+What to do:
+
+$ mkdir software
+$ cd software
+$ echo '[buildout]' >> buildout.cfg
+$ echo 'extends = https://svn.erp5.org/repos/public/erp5/trunk/buildout/buildout.cfg' >> buildout.cfg
+$ wget -qO - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S -
+$ bin/buildout
+
+After some time everything shall be locally available.
+
+Disclaimer: That way is still in early stage of development.

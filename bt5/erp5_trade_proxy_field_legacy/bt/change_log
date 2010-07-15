@@ -1,2 +1,6 @@
+2010-05-26 yo
+* Copy all fields of Base_viewTradeFieldLibrary from erp5_trade, so we can use new template fields even when this business template is installed.
+* Set the skin priority to 1.0 to make sure that the legacy skin is slightly higher than the new one.
+
 2010-02-22 Seb
 * Created this bt when working on cleanup of proxy in erp5_trade

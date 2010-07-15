@@ -32,6 +32,7 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from _mysql_exceptions import ProgrammingError
 
 class TestIdTool(ERP5TypeTestCase):
 
@@ -40,13 +41,13 @@ class TestIdTool(ERP5TypeTestCase):
     self.login()
     self.portal = self.getPortal()
     self.id_tool = self.portal.portal_ids
+    self.id_tool.initializeGenerator(all=True)
     self.createGenerators()
     transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
     self.id_tool.clearGenerator(all=True)
-    self.id_tool.initializeGenerator(all=True)
 
   def getTitle(self):
     """
@@ -155,7 +156,7 @@ class TestIdTool(ERP5TypeTestCase):
     zodb_generator = self.getLastGenerator('test_application_zodb')
     zodb_portal_type = 'ZODB Continuous Increasing Id Generator'
     self.assertEquals(zodb_generator.getPortalType(), zodb_portal_type)
-    self.assertEqual(getattr(zodb_generator, 'last_id_dict', None), None)
+    self.assertEqual(getattr(zodb_generator, 'last_id_dict', {}), {})
     # generate ids
     self.checkGenerateNewId('test_application_zodb')
     # check zodb dict
@@ -172,13 +173,14 @@ class TestIdTool(ERP5TypeTestCase):
     sql_generator = self.getLastGenerator('test_application_sql')
     sql_portal_type = 'SQL Non Continuous Increasing Id Generator'
     self.assertEquals(sql_generator.getPortalType(), sql_portal_type)
-    self.assertEqual(getattr(sql_generator, 'last_max_id_dict', None), None)
+    self.assertEquals(getattr(sql_generator, 'last_max_id_dict', {}), {})
     # retrieve method to recovery the last id in the database
     last_id_method = getattr(self.portal, 'IdTool_zGetLastId', None)
     self.assertNotEquals(last_id_method, None)
     # store the ids in zodb
     if store:
       sql_generator.setStoredInZodb(True)
+      sql_generator.setStoreInterval(1)
     # generate ids
     self.checkGenerateNewId('test_application_sql')
     # check last_id in sql
@@ -186,10 +188,10 @@ class TestIdTool(ERP5TypeTestCase):
     self.assertEquals(last_id_method(id_group='d02')[0]['LAST_INSERT_ID()'], 21)
     # check zodb dict
     if store:
-      self.assertEqual(sql_generator.last_max_id_dict['c02'].value, 0)
-      self.assertEqual(sql_generator.last_max_id_dict['d02'].value, 21)
+      self.assertEquals(sql_generator.last_max_id_dict['c02'].value, 0)
+      self.assertEquals(sql_generator.last_max_id_dict['d02'].value, 21)
     else:
-      self.assertEqual(getattr(sql_generator, 'last_max_id_dict', None), None)
+      self.assertEquals(getattr(sql_generator, 'last_max_id_dict', {}), {})
 
   def test_02b_generateNewIdWithSQLGeneratorWithoutStorageZODB(self):
     """
@@ -258,6 +260,76 @@ class TestIdTool(ERP5TypeTestCase):
     self.assertEquals([2, 3, 4], self.id_tool.generateNewIdList(
                                         id_generator='test_application_sql',
                                         id_group='a04', id_count=3))
+
+  def test_05_RebuildTableForDefaultSQLNonContinuousIncreasingIdGenerator(self):
+    """
+      It should be possible to reconstruct the portal_ids table thanks to
+      data stored in ZODB
+    """
+    portal = self.getPortalObject()
+    generator = self.id_tool._getLatestGeneratorValue(
+       'mysql_non_continuous_increasing')
+    self.assertTrue(generator is not None)
+    generator.generateNewId(id_group='foo_bar', default=4)
+    self.assertEquals(generator.last_max_id_dict['foo_bar'].value, 4)
+    portal.IdTool_zDropTable()
+    sql_connection = self.getSQLConnection()
+    query = 'select last_id from portal_ids where id_group="foo_bar"'
+    self.assertRaises(ProgrammingError, sql_connection.manage_test, query)
+    generator.rebuildSqlTable()
+    result =  sql_connection.manage_test(query)
+    self.assertEqual(result[0].last_id, 4)
+
+  def checkExportImportDict(self, id_generator):
+    """
+      Check export import on id generator
+    """
+    generator = self.getLastGenerator(id_generator)
+    self.assertEquals(0, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='06'))
+    id_dict = generator.exportGeneratorIdDict()
+    self.assertEquals(0, id_dict['06'])
+    generator.importGeneratorIdDict(id_dict={'06':6})
+    self.assertEquals(7, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='06'))
+  def test_06_ExportImportDict(self):
+    """
+      Check export import dict for generator sql and zodb
+    """
+    self.checkExportImportDict(id_generator='test_application_zodb')
+    self.checkExportImportDict(id_generator='test_application_sql')
+
+  def test_07_checkImportValueAndStoreInterval(self):
+    """
+      Check that the store_interval store the last_id every N increments
+      store_interval is only on SQL
+    """
+    id_generator = 'test_application_sql'
+    sql_generator = self.getLastGenerator(id_generator)
+    sql_generator.setStoredInZodb(True)
+    sql_generator.setStoreInterval(2)
+    #sql_generator.setStoreInterval(2)
+    self.assertEquals(0, self.id_tool.generateNewId(id_generator=id_generator, 
+                                                    id_group='07'))
+    self.assertEquals(sql_generator.last_max_id_dict['07'].value, 0)
+    self.assertEquals(1, self.id_tool.generateNewId(id_generator=id_generator, 
+                                                    id_group='07'))
+    # last_id isn't stored because 1 < last_id (0) + store_interval
+    self.assertEquals(sql_generator.last_max_id_dict['07'].value, 0)
+    self.assertEquals(2, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='07'))
+    self.assertEquals(sql_generator.last_max_id_dict['07'].value, 2)
+    
+    self.getLastGenerator(id_generator).\
+                 importGeneratorIdDict(id_dict = {'07':5})
+    self.assertEquals(6, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='07'))
+    # last_id stored because 6 < last_id (5) + store_interval
+    self.assertEquals(sql_generator.last_max_id_dict['07'].value, 5)
+    # the sql value is higher that zodb value so the export return the sql
+    # value
+    id_dict = self.getLastGenerator(id_generator).exportGeneratorIdDict()
+    self.assertEquals(id_dict['07'], 6)
 
 def test_suite():
   suite = unittest.TestSuite()

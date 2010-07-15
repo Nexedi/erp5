@@ -30,42 +30,26 @@
 from AccessControl.ZopeGuards import guarded_getattr
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING
-from Products.ERP5Type.Base import WorkflowMethod
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Document import Document, ConversionError
+from Products.ERP5.Document.Document import Document, ConversionError, _MARKER, DEFAULT_CONTENT_TYPE
+from Products.ERP5.Document.File import File
 from Products.ERP5Type.WebDAVSupport import TextContent
 import re
-import md5
 
+# Mixin Import
+from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
+from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 try:
   from string import Template
 except ImportError:
   from Products.ERP5Type.patches.string import Template
 
-DEFAULT_TEXT_FORMAT = 'text/html'
-
-class TextDocument(Document, TextContent):
-    """
-        A Document contains text which can be formatted using
-        *Structured Text* or *HTML*. Text can be automatically translated
-        through the use of 'message catalogs'.
-
-        Document inherits from XMLObject and can
-        be synchronized accross multiple sites.
-
-        Version Management: the notion of version depends on the
-        type of application. For example, in the case (1) of Transformation
-        (BOM), all versions are considered as equal and may be kept
-        indefinitely for both archive and usage purpose. In the case (2)
-        of Person data, the new version replaces the previous one
-        in place and is not needed for archive. In the case (3) of
-        a web page, the new version replaces the previous one,
-        the previous one being kept in place for archive.
-
-        Subcontent: documents may include subcontent (files, images, etc.)
-        so that publication of rich content can be path independent.
+class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
+                                                            TextContent, File):
+    """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
+    and ITextConvertable
     """
 
     meta_type = 'ERP5 Text Document'
@@ -87,65 +71,9 @@ class TextDocument(Document, TextContent):
                       , PropertySheet.ExternalDocument
                       , PropertySheet.Url
                       , PropertySheet.TextDocument
+                      , PropertySheet.Data
                       , PropertySheet.Reference
                       )
-
-    # Explicit inheritance
-    security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
-    PUT = TextContent.PUT # We have a security issue here with Zope < 2.8
-
-    security.declareProtected(Permissions.View, 'manage_FTPget')
-    manage_FTPget = TextContent.manage_FTPget
-
-    # File handling
-    security.declarePrivate( '_edit' )
-    def _edit(self, **kw):
-      """\
-        This is used to edit files which contain HTML content.
-      """
-      if kw.has_key('file'):
-        file = kw.get('file')
-        text_content = file.read()
-        headers, body, format = self.handleText(text=text_content)
-        kw.setdefault('text_format', format)
-        kw.setdefault('text_content', text_content)
-        del kw['file']
-      # The following has been commented because a TextDocument
-      # instance may contain something else than HTML
-      ## Check if it's safe to save HTML content
-      ## By default FCKEditor used to edit Web Pages wouldn't allow inserting
-      ## HTML tags (will replace them accordingly) so this is the last possible 
-      ## step where we can check if any other scripts wouldn't try to set manually
-      ## bad HTML content.
-      # if isHTMLSafe(kw.get('text_content', '')):
-      #  Document._edit(self, **kw)
-      # else:
-      #  raise ValueError, "HTML contains illegal tags."
-      Document._edit(self, **kw)
-
-    security.declareProtected( Permissions.ModifyPortalContent, 'edit' )
-    edit = WorkflowMethod( _edit )
-
-    # Default Display
-    security.declareProtected(Permissions.View, 'index_html')
-    def index_html(self, REQUEST, RESPONSE, format=None, **kw):
-      """
-        Unlike for images and files, we want to provide
-        in the case of HTML a nice standard display with
-        all the layout of a Web Site. If no format is provided,
-        the default rendering will use the standard ERP5 machinery.
-        By providing a format parameter, it is possible to
-        convert the text content into various formats.
-      """
-      if format is None:
-        # The default is to use ERP5 Forms to render the page
-        return self.view()
-      mime, data = self.convert(format=format) 
-      RESPONSE.setHeader('Content-Length', len(str(data))) # XXX - Not efficient 
-                                                           # if datastream instance
-      RESPONSE.setHeader('Content-Type', mime)
-      RESPONSE.setHeader('Accept-Ranges', 'bytes')
-      return data
 
     def _substituteTextContent(self, text, safe_substitute=True, **kw):
       # If a method for string substitutions of the text content, perform it.
@@ -195,56 +123,31 @@ class TextDocument(Document, TextContent):
       return self._substituteTextContent(subject, safe_substitute=safe_substitute,
                                          **substitution_method_parameter_dict)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-    def convert(self, format, substitution_method_parameter_dict=None,
+    def _convert(self, format, substitution_method_parameter_dict=None,
                 safe_substitute=True, charset=None, text_content=None, **kw):
       """
         Convert text using portal_transforms or oood
       """
-      # Accelerate rendering in Web mode
-      _setCacheHeaders(_ViewEmulator().__of__(self), {'format' : format})
-      # Return the raw content
-      if format == 'raw':
-        return 'text/plain', self.getTextContent()
+      src_mimetype = self.getContentType()
+      if not format and src_mimetype == 'text/html':
+        format = 'html' # Force safe_html
+      if not format:
+        # can return document without conversion
+        return src_mimetype, self.getTextContent()
       portal = self.getPortalObject()
       mime_type = getToolByName(portal, 'mimetypes_registry').\
                                             lookupExtension('name.%s' % format)
       original_mime_type = mime_type = str(mime_type)
-      src_mimetype = self.getTextFormat(DEFAULT_TEXT_FORMAT)
-      if not src_mimetype.startswith('text/'):
-        src_mimetype = 'text/%s' % src_mimetype
       if text_content is None:
         # check if document has set text_content and convert if necessary
         text_content = self.getTextContent()
       if text_content:
-        if not self.hasConversion(format=format, **kw):
+        kw['format'] = format
+        if not self.hasConversion(**kw):
           portal_transforms = getToolByName(portal, 'portal_transforms')
           filename = self.getSourceReference(self.getTitleOrId())
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'
-            if charset is None:
-              # find charset
-              re_match = self.charset_parser.search(text_content)
-              if re_match is not None:
-                charset = re_match.group('charset')
-            if charset and charset not in ('utf-8', 'UTF-8'):
-              try:
-                text_content = text_content.decode(charset).encode('utf-8')
-              except (UnicodeDecodeError, LookupError):
-                pass
-              else:
-                charset = 'utf-8' # Override charset if convertion succeeds
-                # change charset value in html_document as well
-                def subCharset(matchobj):
-                  keyword = matchobj.group('keyword')
-                  charset = matchobj.group('charset')
-                  if not (keyword or charset):
-                    # no match, return same string
-                    return matchobj.group(0)
-                  elif keyword:
-                    # if keyword is present, replace charset just after
-                    return keyword + 'utf-8'
-                text_content = self.charset_parser.sub(subCharset, text_content)
           result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
                                                    filename=filename,
@@ -252,11 +155,11 @@ class TextDocument(Document, TextContent):
                                                    encoding=charset)
           if result is None:
             raise ConversionError('TextDocument conversion error. '
-                                  'portal_transforms failed to convert'\
+                                  'portal_transforms failed to convert '\
                                   'to %s: %r' % (mime_type, self))
-          self.setConversion(result, original_mime_type, format=format, **kw)
+          self.setConversion(result, original_mime_type, **kw)
         else:
-          mime_type, result = self.getConversion(format=format, **kw)
+          mime_type, result = self.getConversion(**kw)
         if substitution_method_parameter_dict is None:
           substitution_method_parameter_dict = {}
         result = self._substituteTextContent(result, safe_substitute=safe_substitute,
@@ -276,39 +179,202 @@ class TextDocument(Document, TextContent):
         Returns the content base URL based on the actual content
         (in HTML)
       """
-      if self.hasBaseData():
+      if self.hasTextContent():
         html = self._asHTML()
         base_list = re.findall(self.base_parser, str(html))
         if base_list:
           return base_list[0]
       return Document.getContentBaseURL(self)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
+    security.declareProtected(Permissions.ModifyPortalContent, 'setBaseData')
+    def setBaseData(self, value):
+      """Store base_data into text_content
+      """
+      self._setTextContent(value)
+
+    security.declareProtected(Permissions.ModifyPortalContent, '_setBaseData')
+    _setBaseData = setBaseData
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                            '_baseSetBaseData')
+    _baseSetBaseData = _setBaseData
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                          'setBaseContentType')
+    def setBaseContentType(self, value):
+      """store value into content_type
+      """
+      self._setContentType(value)
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                         '_setBaseContentType')
+    _setBaseContentType = setBaseContentType
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                     '_baseSetBaseContentType')
+    _baseSetBaseContentType = _setBaseContentType
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                                 'getBaseData')
+    def getBaseData(self, default=_MARKER):
+      """
+      """
+      self._checkConversionFormatPermission(None)
+      if default is _MARKER:
+        return self.getTextContent()
+      else:
+        return self.getTextContent(default=default)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                                 'hasBaseData')
     def hasBaseData(self):
       """
-        A TextDocument store its data in the "text_content" property. Since
-        there is no such thing as base_data in TextDocument, having base_data
-        is equivalent to having some text_content.
       """
       return self.hasTextContent()
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getMimeTypeAndContent')
-    def getMimeTypeAndContent(self):
-      """This method returns a tuple which contains mimetype and content."""
-      return (self.getTextFormat(), self.getTextContent())
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                              'getContentType')
+    def getContentType(self, default=_MARKER):
+      """Backward compatibility, read content_type
+      from text_format property
+      """
+      if not self.hasContentType():
+        # getProperty can not be used
+        # because text_format is not registered in local_properties
+        if default is _MARKER:
+          return getattr(self, 'text_format', None)
+        else:
+          return getattr(self, 'text_format', default)
+      else:
+        if default is _MARKER:
+          return self._baseGetContentType()
+        else:
+          return self._baseGetContentType(default)
 
-    security.declareProtected(Permissions.ModifyPortalContent, 'updateContentMd5')
-    def updateContentMd5(self):
-     """Update md5 checksum from the original file
-     
-     XXX-JPS - this method is not part of any interfacce.
-               should it be public or private. It is called
-               by some interaction workflow already. Is
-               it general or related to caching only ?
-     """
-     data = self.getTextContent()
-     if data is not None:
-       data = str(data) # Usefull for Pdata
-       self._setContentMd5(md5.new(data).hexdigest()) # Reindex is useless
-     else:
-       self._setContentMd5(None)
+    # base_convertable support
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                 'isSupportBaseDataConversion')
+    def isSupportBaseDataConversion(self):
+      """
+      """
+      return True
+
+    def _convertToBaseFormat(self):
+      """Conversion to base format for TextDocument consist
+      to convert file content into utf-8
+      """
+      def guessCharsetAndConvert(document, text_content, content_type):
+        """
+        return encoded content_type and message if encoding
+        is not utf-8
+        """
+        codec = document._guessEncoding(text_content, content_type)
+        if codec is not None:
+          try:
+            text_content = text_content.decode(codec).encode('utf-8')
+          except (UnicodeDecodeError, LookupError):
+            message = 'Conversion to base format with codec %r fails' % codec
+            # try again with another guesser based on file command
+            codec = document._guessEncoding(text_content, 'text/plain')
+            if codec is not None:
+              try:
+                text_content = text_content.decode(codec).encode('utf-8')
+              except (UnicodeDecodeError, LookupError):
+                message = 'Conversion to base format with codec %r fails'\
+                                                                        % codec
+              else:
+                message = 'Conversion to base format with codec %r succeeds'\
+                                                                        % codec
+          else:
+            message = 'Conversion to base format with codec %r succeeds'\
+                                                                        % codec
+        else:
+          message = 'Conversion to base format without codec fails'
+        return text_content, message
+
+      content_type = self.getContentType() or DEFAULT_CONTENT_TYPE
+      text_content = self.getData()
+      if content_type == 'text/html':
+        re_match = self.charset_parser.search(text_content)
+        message = 'Conversion to base format succeeds'
+        if re_match is not None:
+          charset = re_match.group('charset')
+          if charset.lower() != 'utf-8':
+            try:
+              # Use encoding in html document
+              text_content = text_content.decode(charset).encode('utf-8')
+            except (UnicodeDecodeError, LookupError):
+              # Encoding read from document is wrong
+              text_content, message = guessCharsetAndConvert(self,
+                                                    text_content, content_type)
+            else:
+              message = 'Conversion to base format with charset %r succeeds'\
+                                                                      % charset
+              charset = 'utf-8' # Override charset if convertion succeeds
+              # change charset value in html_document as well
+              def subCharset(matchobj):
+                keyword = matchobj.group('keyword')
+                charset = matchobj.group('charset')
+                if not (keyword or charset):
+                  # no match, return same string
+                  return matchobj.group(0)
+                elif keyword:
+                  # if keyword is present, replace charset just after
+                  return keyword + 'utf-8'
+              text_content = self.charset_parser.sub(subCharset, text_content)
+        else:
+          text_content, message = guessCharsetAndConvert(self,
+                                                    text_content, content_type)
+      else:
+        # generaly text/plain
+        try:
+          # if succeeds, not need to change encoding
+          # it's already utf-8
+          text_content.decode('utf-8')
+        except (UnicodeDecodeError, LookupError), error_message:
+          text_content, message = guessCharsetAndConvert(self,
+                                                    text_content, content_type)
+        else:
+          message = 'Conversion to base format succeeds'
+      self._setBaseData(text_content)
+      self._setBaseContentType(content_type)
+      return message
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                              'getTextContent')
+    def getTextContent(self, default=_MARKER):
+      """Overriden method to check
+      permission to access content in raw format
+      """
+      self._checkConversionFormatPermission(None)
+      if default is _MARKER:
+        return self._baseGetTextContent()
+      else:
+        return self._baseGetTextContent(default)
+
+    # Backward compatibility for replacement of text_format by content_type
+    security.declareProtected(Permissions.AccessContentsInformation,
+                                                               'getTextFormat')
+    def getTextFormat(self, default=_MARKER):
+      """
+      """
+      LOG('TextDocument', WARNING,
+                'Usage of text_format is deprecated, use text_content instead')
+      return self.getContentType(default)
+
+    security.declareProtected(Permissions.ModifyPortalContent, 'setTextFormat')
+    def setTextFormat(self, value):
+      """
+      """
+      LOG('TextDocument', WARNING,
+                'Usage of text_format is deprecated, use text_content instead')
+      return self.setContentType(value)
+
+    security.declareProtected(Permissions.ModifyPortalContent,
+                                                              '_setTextFormat')
+    def _setTextFormat(self, value):
+      """
+      """
+      LOG('TextDocument', WARNING,
+                'Usage of text_format is deprecated, use text_content instead')
+      return self._setContentType(value)

@@ -187,73 +187,13 @@ class IDocument(Interface):
 
   def convert(format, **kw):
     """Call a wrapped function with CachingMethod and
-    return always converted result.
+    return always converted result: ie. tuple(content_type, data)
 
     format - the format specied in the form of an extension
     string (ex. jpeg, html, text, txt, etc.)
-    **kw can be various things - e.g. resolution
-    """
-
-  def generateCacheId(**kw):
-    """Return string to identify Document in cache pool with
-    all arguments used to convert the document
-    """
-
-  def convertToBaseFormat(**kw):
-    """Converts the content of the document to a base format
-    which is later used for all conversions. This method
-    is common to all kinds of documents and handles
-    exceptions in a unified way.
-
-    Implementation is delegated to _convertToBaseFormat which
-    must be overloaded by subclasses of Document which
-    need a base format.
-
-    convertToBaseFormat is called upon file upload, document
-    ingestion by the processing_status_workflow.
-
-    NOTE: the data of the base format conversion should be stored
-    using the base_data property. Refer to Document.py propertysheet.
-    Use accessors (getBaseData, setBaseData, hasBaseData, etc.)
-    """
-
-  def _convertToBaseFormat():
-    """Placeholder method. Must be subclassed by classes
-    which need a base format. Refer to OOoDocument
-    for an example of ODF base format which is used
-    as a way to convert about any file format into
-    about any file format.
-
-    Other possible applications: conversion of HTML
-    text to tiddy HTML such as described here:
-    http://www.xml.com/pub/a/2004/09/08/pyxml.html
-    so that resulting text can be processed more
-    easily by XSLT parsers. Conversion of internal
-    links to images of an HTML document to local
-    links (in combindation with populate).
-    """
-
-  def hasConversion(**kw):
-    """Return a boolean if conversion is cached
-    """
-
-  def setConversion(data, mime=None, calculation_time=None, **kw):
-    """Saves a version of the document in a given format; records mime type
-    and conversion time (which is right now).
-    """
-
-  def getConversion(**kw):
-    """Returns version of the document in a given format, if it has it; otherwise
-    returns empty string (the caller should check hasConversion before calling
-    this function.
-    """
-
-  def getConversionSize(**kw):
-    """Returns the size of the converted document.
-    """
-
-  def _getCacheFactory():
-    """Return list of cache plugins
+    if format is None means that we do not want to change the format
+    and return the raw data or a resized image in same format.
+    **kw - can be various things - e.g. resolution
     """
 
   def isSupportBaseDataConversion():

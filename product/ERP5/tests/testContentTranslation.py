@@ -149,6 +149,9 @@ class TestContentTranslation(ERP5TypeTestCase):
     self.assert_(getattr(person, 'getEnTranslatedFirstName', False))
     self.assert_(getattr(person, 'getEnTranslatedFirstName', False))
 
+    ##
+    # Add custom local.language
+    ##
     portal.Localizer._add_user_defined_language('Japanese Kana', 'ja-kana')
     portal.Localizer.add_language('ja-kana')
     transaction.commit()
@@ -156,6 +159,9 @@ class TestContentTranslation(ERP5TypeTestCase):
 
     self.assert_(getattr(person, 'setJaKanaTranslatedFirstName', False))
     self.assert_(getattr(person, 'getJaKanaTranslatedFirstName', False))
+    self.assert_(getattr(person, 'hasJaKanaTranslatedFirstName', False))
+
+    self.assert_(not person.hasJaKanaTranslatedFirstName())
 
     # if there is no translation, original value is returned.
     self.assertEqual('Yusei', person.getTranslatedFirstName())
@@ -168,6 +174,8 @@ class TestContentTranslation(ERP5TypeTestCase):
 
     person.setJaKanaTranslatedFirstName('タハラ')
     person.setJaKanaTranslatedLastName('ユウセイ')
+
+    self.assert_(person.hasJaKanaTranslatedFirstName())
 
     transaction.commit()
     self.tic()

@@ -58,9 +58,9 @@ from Products.ERP5Type.Log import log\n
 \n
 log("Event_getTextContentCorrespondToFormat is deprecated, use Event_getEditorFieldTextContent instead", level=100) # WARNING\n
 \n
-text_format = context.getTextFormat()\n
+content_type = context.getContentType()\n
 \n
-if text_format == \'text/html\' and context.hasFile():\n
+if content_type == \'text/html\' and context.hasFile():\n
   return context.asStrippedHTML()\n
 else:\n
   value = context.getTextContent()\n
@@ -111,7 +111,7 @@ else:\n
                             <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>text_format</string>
+                            <string>content_type</string>
                             <string>value</string>
                           </tuple>
                         </value>

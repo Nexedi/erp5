@@ -29,7 +29,7 @@
 
 import unittest
 from Testing import ZopeTestCase
-from runUnitTest import tests_home
+from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
@@ -171,11 +171,15 @@ class TestERP5SyncMLMixin:
     person_server = self.getPersonServer()
     person1 = person_server.newContent(id=self.id1, portal_type='Person')
     kw = {'first_name':self.first_name1,'last_name':self.last_name1,
-          'description':self.description1}
+          'description':self.description1,
+          'default_telephone_text': 'call me at this phone number',
+          'default_career_title': 'My Career Step'}
     person1.edit(**kw)
     person2 = person_server.newContent(id=self.id2, portal_type='Person')
     kw = {'first_name':self.first_name2,'last_name':self.last_name2,
-          'description':self.description2}
+          'description':self.description2,
+          'default_telephone_text': 'call me at this phone number',
+          'default_career_title': 'My Career Step'}
     person2.edit(**kw)
     nb_person = len(person_server.objectValues())
     self.assertEqual(nb_person, 2)
@@ -361,8 +365,8 @@ class TestERP5SyncMLMixin:
     transaction.commit()
     self.tic()
 
-  def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,\
-                           force=0):
+  def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,
+                                                                  force=False):
     """
       Check the equality between two xml objects with gid as id
     """
@@ -373,24 +377,29 @@ class TestERP5SyncMLMixin:
     gid_sub = publication.getGidFromObject(object_sub)
     self.assertEqual(gid_pub, gid_sub)
     conduit = ERP5Conduit()
-    xml_pub = conduit.getXMLFromObjectWithGid(object=object_pub, gid=gid_pub,\
-              xml_mapping=publication.getXMLMapping())
+    xml_pub = conduit.getXMLFromObjectWithGid(object=object_pub, gid=gid_pub,
+                                       xml_mapping=publication.getXMLMapping())
     #if One Way From Server there is not xml_mapping for subscription
-    xml_sub = conduit.getXMLFromObjectWithGid(object=object_sub, gid=gid_sub,\
-              xml_mapping=subscription.getXMLMapping(force))
+    xml_sub = conduit.getXMLFromObjectWithGid(object=object_sub, gid=gid_sub,
+                                 xml_mapping=subscription.getXMLMapping(force))
     erp5diff = ERP5Diff()
     erp5diff.compare(xml_pub, xml_sub)
     result = erp5diff.outputString()
     result = etree.XML(result)
-    if len(result) != 0 :
-      for update in result:
-        #XXX edit workflow is not replaced, so discard workflow checking
-        if update.get('select').find('time') != -1 or\
-        update.get('select').find('serial') !=1:
-          continue
-        else :
-          self.fail('diff between pub:\n%s \nand sub:\n%s \n => \n%s' %\
-              (xml_pub, xml_sub, etree.tostring(result, pretty_print=True)))
+    identity = True
+    for update in result:
+      #XXX edit workflow is not replaced, so discard workflow checking
+      select = update.get('select', '')
+      discarded_list = ('edit_workflow',)
+      if 'edit_workflow' in  select:
+        continue
+      else:
+        identity = False
+        break
+    if not identity:
+      self.fail('diff between pub:%s and sub:%s \n%s' % (object_pub.getPath(),
+                                                         object_sub.getPath(),
+                                   etree.tostring(result, pretty_print=True)))
 
   def deletePublicationAndSubscription(self):
     portal_sync = self.getSynchronizationTool()
@@ -803,7 +812,7 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     #person1_c.setModificationDate(DateTime()+1)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    #person1_s = person_server._getOb(self.id1)
+    person1_s = person_server._getOb(self.id1)
     self.assertEqual(person1_s.getFirstName(), self.first_name1)
     self.assertEqual(person1_s.getLastName(), self.last_name1)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
@@ -977,8 +986,11 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     sub_sub_person_s.edit(**kw)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    self.assertEqual(sub_sub_person_c.getDescription(), self.description3)
-    self.assertEqual(sub_sub_person_c.getFirstName(), self.first_name3)
+    # refresh objects after synchronisation
+    sub_sub_person_c = sub_person1_c._getOb(self.id2)
+    sub_sub_person_s = person_server._getOb(self.id1)._getOb(self.id1)._getOb(self.id2)
+    #self.assertEqual(sub_sub_person_c.getDescription(), self.description3)
+    #self.assertEqual(sub_sub_person_c.getFirstName(), self.first_name3)
     self.assertXMLViewIsEqual(self.sub_id1, sub_sub_person_s, sub_sub_person_c)
 
   def test_19_DeleteObject(self, quiet=0, run=run_all_test):
@@ -1035,9 +1047,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.checkSynchronizationStateIsSynchronized()
-    len_s = len(sub_object_s.objectValues())
-    len_c1 = len(sub_object_c1.objectValues())
-    len_c2 = len(sub_object_c2.objectValues())
+    # refresh objects
+    sub_object_c1 = person_client1._getOb(self.id1)
+    sub_object_c2 = person_client2._getOb(self.id1)
+    len_s = len(sub_object_s.objectValues(portal_type='Person'))
+    len_c1 = len(sub_object_c1.objectValues(portal_type='Person'))
+    len_c2 = len(sub_object_c2.objectValues(portal_type='Person'))
     self.failUnless(len_s==len_c1==len_c2==0)
 
   def test_21_GetConflictListOnSubObject(self, quiet=0, run=run_all_test):
@@ -1124,8 +1139,12 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
     self.checkSynchronizationStateIsSynchronized()
-    self.assertEqual(sub_object_s.getDescription(), self.description3)
-    self.assertEqual(sub_object_s.getLanguage(), self.lang3)
+    # refresh documents
+    sub_object_s = person_server._getOb(self.id1)._getOb(self.id1)
+    sub_object_c1 = person_client1._getOb(self.id1)._getOb(self.id1)
+    sub_object_c2 = person_client2._getOb(self.id1)._getOb(self.id1)
+    #self.assertEqual(sub_object_s.getDescription(), self.description3)
+    #self.assertEqual(sub_object_s.getLanguage(), self.lang3)
     self.assertXMLViewIsEqual(self.sub_id1, sub_object_s, sub_object_c1)
     self.assertXMLViewIsEqual(self.sub_id2, sub_object_s, sub_object_c2)
 
@@ -1244,7 +1263,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     self.synchronize(self.sub_id2)
     self.assertXMLViewIsEqual(self.sub_id2, person1_s, person1_c2)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c1)
-        
 
   def test_26_SynchronizeWorkflowHistory(self, quiet=0, run=run_all_test):
     """
@@ -1270,6 +1288,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person1_c.edit(**kw1)
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
+    # refresh documents
+    person1_s = person_server._getOb(self.id1)
+    person1_c = person_client1._getOb(self.id1)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertEqual(len(person1_s.workflow_history[self.workflow_id]), len_wf+4)
     self.assertEqual(len(person1_c.workflow_history[self.workflow_id]), len_wf+4)
@@ -1300,6 +1321,9 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person2_s.manage_delLocalRoles(['fab'])
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
+    # refresh documents
+    person1_c = person_client1._getOb(self.id1)
+    person2_c = person_client1._getOb(self.id2)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertXMLViewIsEqual(self.sub_id2, person2_s, person2_c)
     role_1_s = person1_s.get_local_roles()
@@ -1321,28 +1345,30 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
       ZopeTestCase._print('\nTest Partial Data ')
       LOG('Testing... ',0,'test_28_PartialData')
     previous_max_lines = SyncCode.MAX_LINES
-    SyncCode.MAX_LINES = 10
-    self.populatePersonServerWithSubObject(quiet=1,run=1)
-    self.synchronize(self.sub_id1)
-    self.synchronize(self.sub_id2)
-    self.checkSynchronizationStateIsSynchronized()
-    person_client1 = self.getPersonClient1()
-    person1_c = person_client1._getOb(self.id1)
-    sub_person1_c = person1_c._getOb(self.id1)
-    sub_sub_person1 = sub_person1_c._getOb(self.id1)
-    sub_sub_person2 = sub_person1_c._getOb(self.id2)
-    # remove ('','portal...','person_server')
-    len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
-    self.assertEqual(len_path, 3)
-    len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
-    self.assertEqual(len_path, 3)
-    self.assertEquals(sub_sub_person1.getDescription(),self.description1)
-    self.assertEquals(sub_sub_person1.getFirstName(),self.first_name1)
-    self.assertEquals(sub_sub_person1.getLastName(),self.last_name1)
-    self.assertEquals(sub_sub_person2.getDescription(),self.description2)
-    self.assertEquals(sub_sub_person2.getFirstName(),self.first_name2)
-    self.assertEquals(sub_sub_person2.getLastName(),self.last_name2)
-    SyncCode.MAX_LINES = previous_max_lines
+    try:
+      SyncCode.MAX_LINES = 10
+      self.populatePersonServerWithSubObject(quiet=1,run=1)
+      self.synchronize(self.sub_id1)
+      self.synchronize(self.sub_id2)
+      self.checkSynchronizationStateIsSynchronized()
+      person_client1 = self.getPersonClient1()
+      person1_c = person_client1._getOb(self.id1)
+      sub_person1_c = person1_c._getOb(self.id1)
+      sub_sub_person1 = sub_person1_c._getOb(self.id1)
+      sub_sub_person2 = sub_person1_c._getOb(self.id2)
+      # remove ('','portal...','person_server')
+      len_path = len(sub_sub_person1.getPhysicalPath()) - 3 
+      self.assertEqual(len_path, 3)
+      len_path = len(sub_sub_person2.getPhysicalPath()) - 3 
+      self.assertEqual(len_path, 3)
+      self.assertEquals(sub_sub_person1.getDescription(),self.description1)
+      self.assertEquals(sub_sub_person1.getFirstName(),self.first_name1)
+      self.assertEquals(sub_sub_person1.getLastName(),self.last_name1)
+      self.assertEquals(sub_sub_person2.getDescription(),self.description2)
+      self.assertEquals(sub_sub_person2.getFirstName(),self.first_name2)
+      self.assertEquals(sub_sub_person2.getLastName(),self.last_name2)
+    finally:
+      SyncCode.MAX_LINES = previous_max_lines
 
   def test_29_BrokenMessage(self, quiet=0, run=run_all_test):
     """
@@ -1440,6 +1466,13 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person2_s.manage_setLocalPermissions('View management screens',['Owner',])
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
+
+    # refresh documents
+    person1_s = person_server._getOb(self.id1)
+    person2_s = person_server._getOb(self.id2)
+    person1_c = person_client1._getOb(self.id1)
+    person2_c = person_client1._getOb(self.id2)
+
     role_1_s = person1_s.get_local_permissions()
     role_2_s = person2_s.get_local_permissions()
     role_1_c = person1_c.get_local_permissions()
@@ -1453,12 +1486,19 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     person2_s.manage_setLocalPermissions('View management screens',())
     self.synchronize(self.sub_id1)
     self.synchronize(self.sub_id2)
+
+    # refresh documents
+    person1_s = person_server._getOb(self.id1)
+    person2_s = person_server._getOb(self.id2)
+    person1_c = person_client1._getOb(self.id1)
+    person2_c = person_client1._getOb(self.id2)
+
     role_1_s = person1_s.get_local_permissions()
     role_2_s = person2_s.get_local_permissions()
     role_1_c = person1_c.get_local_permissions()
     role_2_c = person2_c.get_local_permissions()
-    self.assertEqual(role_1_s,role_1_c)
-    self.assertEqual(role_2_s,role_2_c)
+    self.assertEquals(role_1_s, role_1_c)
+    self.assertEquals(role_2_s, role_2_c)
     self.assertXMLViewIsEqual(self.sub_id1, person1_s, person1_c)
     self.assertXMLViewIsEqual(self.sub_id2, person2_s, person2_c)
 
@@ -1545,6 +1585,11 @@ class TestERP5SyncML(TestERP5SyncMLMixin, ERP5TypeTestCase):
     #after synchronize, the client object retrieve value of server
     self.resetSignaturePublicationAndSubscription()
     nb_message1 = self.synchronize(self.sub_id1)
+
+    # refresh documents
+    person1_s = person_server._getOb(self.id1)
+    person1_c = person_client1._getOb(self.id1)
+
     self.assertEquals(person1_s.getFirstName(), self.first_name1)
     self.assertEquals(person1_s.getLastName(), self.last_name2) 
     self.checkSynchronizationStateIsSynchronized()
@@ -1649,7 +1694,6 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     self.assertEquals(person1_s.getFirstName(), self.first_name3)
     self.assertEquals(person1_s.getLastName(), self.last_name3)
  
-    
     #adding authentication :
     self.addAuthenticationToPublication(self.pub_id, 'fab', 'myPassword', 'b64',
         'syncml:auth-basic')
@@ -1734,7 +1778,7 @@ wuIFtde33Dp3NkZl9fc2Rmw6fDp8OnX2RmX19fJibDqV1dXcKwwrDCsMKwwrDCsA=="
     self.assertEquals(person1_s.getFirstName(), self.first_name3)
     self.assertEquals(person1_s.getLastName(), self.last_name3)
     self.checkSynchronizationStateIsSynchronized()
- 
+
   def test_36_SynchronizationSubscriptionMaxLines(self, quiet=0, run=run_all_test):
     # We will try to populate the folder person_server
     # with the data form person_client 

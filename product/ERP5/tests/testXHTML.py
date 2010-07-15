@@ -116,6 +116,7 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_administration',
 
       'erp5_knowledge_pad',
+      'erp5_km',
 
       'erp5_trade_proxy_field_legacy', # it is necessary until all bt are well
                                        # reviewed. Many bt like erp5_project are
@@ -264,11 +265,18 @@ class TestXHTML(ERP5TypeTestCase):
           if list_action and list_action != 'list': # We assume that 'list'
                                                     # list_action exists
             if isinstance(list_action, str):
+              # list_action can be a fully qualified URL, we care for last part of it
+              list_action = list_action.split('/')[-1].split('?')[0]
               try:
-                list_action = list_action.split('?')[0]
                 method = self.portal.restrictedTraverse(list_action)
               except KeyError:
                 method = None
+              if method is None:
+                # list_action can actually exists but not in current skin, check if it can be found in portal_skins
+                found_list_action_list = skins_tool.ZopeFind(skins_tool, obj_ids=[list_action], search_sub=1)
+                if found_list_action_list:
+                  method = found_list_action_list[0][1]
+                  ZopeTestCase._print("List action %s for %s is not part of current skin but do exists in another skin folder.\n" % (list_action, form_path))
             else:
               method = list_action
             if not callable(method):

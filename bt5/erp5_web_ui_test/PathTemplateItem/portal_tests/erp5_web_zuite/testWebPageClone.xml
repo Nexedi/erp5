@@ -48,7 +48,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">Test Change Id Website</td></tr>\n
+<tr><td rowspan="1" colspan="3">Test Web Page Clone</td></tr>\n
 </thead><tbody>\n
 <tal:block metal:use-macro="here/Zuite_erp5_web_common/macros/init" />\n
 <tr>\n
@@ -101,7 +101,7 @@
 </tr>\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/web_site_module/test_web_site/web_page_module/test_web_page_2/test_page</td>\n
+  <td>${base_url}/web_site_module/test_web_site/web_page_module/test_web_page_2/test_page/view</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

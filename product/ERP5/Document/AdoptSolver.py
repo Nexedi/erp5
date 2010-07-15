@@ -60,27 +60,35 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
                            )
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
     Adopt new property to movements or deliveries.
     """
     configuration_dict = self.getConfigurationPropertyDict()
-    portal_type = self.getPortalObject().portal_types[self.getPortalType()]
+    portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
     solved_property_list = configuration_dict.get('tested_property_list',
                                                   portal_type.getTestedPropertyList())
-    for movement in self.getDeliveryValueList():
+    delivery_dict = {}
+    for simulation_movement in self.getDeliveryValueList():
+      delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
+                               []).append(simulation_movement)
+    for movement, simulation_movement_list in delivery_dict.iteritems():
+      if activate_kw is not None:
+        movement.setDefaultActivateParameters(
+          activate_kw=activate_kw, **activate_kw)
       for solved_property in solved_property_list:
         # XXX hardcoded
         if solved_property == 'quantity':
           total_quantity = sum(
             [x.getQuantity() for x in movement.getDeliveryRelatedValueList()])
           movement.setQuantity(total_quantity)
-          for simulation_movement in movement.getDeliveryRelatedValueList():
+          for simulation_movement in simulation_movement_list:
             quantity = simulation_movement.getQuantity()
             delivery_ratio = quantity / total_quantity
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
-                                     delivery_error=delivery_error)
+                                     delivery_error=delivery_error,
+                                     activate_kw=activate_kw)
         else:
           # XXX TODO we need to support multiple values for categories or
           # list type property.
@@ -88,4 +96,6 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
           movement.setProperty(solved_property,
                                simulation_movement.getProperty(solved_property))
     # Finish solving
-    self.succeed()
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      self, 'succeed'):
+      self.succeed()

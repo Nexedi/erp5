@@ -60,25 +60,19 @@
                        portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url());">\n
 \n
 <tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
-  <tal:block tal:define="person_object current_web_site/ERP5Site_getAuthenticatedMemberPersonValue">\n
-    <a tal:define="user_name python:person_object is not None and person_object.getTitle() or here.portal_membership.getAuthenticatedMember().getUserName()"\n
-      tal:attributes="href string:${portal_path}/WebSite_redirectToUserPerson">\n
-      <b tal:replace="user_name">\n
-        jp\n
-      </b>\n
-    </a>\n
-  </tal:block>\n
-  &nbsp;\n
-  <a id="n7" href="#" tal:attributes="href string:${portal_path}/WebSite_logout"\n
+  <a id="login-logout-link" \n
+     href="#" tal:attributes="href string:${portal_path}/WebSite_logout"\n
     i18n:translate="" i18n:domain="ui">\n
     Logout\n
   </a>\n
 </tal:block>\n
 \n
 <tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
-  <a id="n7" href="#" tal:attributes="href string:${portal_path}/login_form"\n
-    i18n:translate="" i18n:domain="ui">\n
-    Login\n
+  <a id="login-logout-link" \n
+     href="#" \n
+     tal:attributes="href string:${portal_path}/login_form"\n
+     i18n:translate="" i18n:domain="ui">\n
+     Login\n
   </a>\n
 </tal:block>\n
 \n

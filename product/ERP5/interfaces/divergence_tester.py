@@ -149,23 +149,3 @@ class IDivergenceTester(Interface):
     a simulation movement to the relevant level of
     delivery / line / cell.
     """
-
-  def accept(simulation_movement):
-    """
-    Copies the properties handled by the divergence tester
-    from the related delivery movement to simulation_movement.
-
-    NOTE: the future existence of this method is still unknown
-    because it is likely to be implemented in TargetSolver
-    instead.
-    """
-
-  def adopt(simulation_movement):
-    """
-    Copies the properties handled by the divergence tester
-    from simulation_movement to the related delivery movement
-
-    NOTE: the future existence of this method is still unknown
-    because it is likely to be implemented in TargetSolver
-    instead.
-    """

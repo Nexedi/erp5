@@ -60,11 +60,12 @@
                        anonymous_navigation_menu python:is_anonymous and current_web_site.getLayoutProperty(\'layout_anonymous_navigation_menu\');">\n
 \n
 <ul class="nav">\n
-  <li><a href="#" tal:attributes="href portal_path" id="n1">Home</a></li>\n
+  <li><a href="#" tal:attributes="href portal_path" id="home-link">Home</a></li>\n
 \n
   <tal:block tal:replace="structure here/WebSite_viewBrowseNavigationMenuWidget"/>\n
 \n
-  <li tal:condition="not:anonymous_navigation_menu">\n
+  <li class="collapse-menu" \n
+      tal:condition="not:anonymous_navigation_menu">\n
     <a href="#" tal:attributes="href string:${search_area_url}/ERP5Site_viewSearchResult">\n
       Documents<!--[if IE 7]><!-->\n
     </a><!--<![endif]-->\n
@@ -86,12 +87,14 @@
         </a>\n
       </li>\n
       <li>\n
-        <a i18n:translate="" i18n:domain="ui" tal:attributes="href string:${search_area_url}/Base_viewAdvancedSearchDialog">Advanced Search</a>\n
+        <a i18n:translate="" i18n:domain="ui" tal:attributes="href string:${search_area_url}/Base_viewAdvancedSearchDialog">\n
+          Search\n
+        </a>\n
       </li>\n
       <tal:block tal:condition="python: here.Base_checkPermission(\'portal_contributions\', \'Add portal content\')">\n
         <li>\n
           <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/Base_viewContributeFileDialog">\n
-            New File\n
+            New Document\n
           </a>\n
         </li>\n
         <li>\n
@@ -100,39 +103,12 @@
           </a>\n
         </li>\n
       </tal:block>\n
-      <tal:block tal:condition="python: here.Base_checkPermission(\'web_page_module\', \'Add portal content\')">\n
-        <li>\n
-          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/WebSection_createNewWebPage">\n
-            New Page\n
-          </a>\n
-        </li>\n
-      </tal:block>\n
-      <tal:block tal:condition="python: here.Base_checkPermission(\'person_module\', \'Add portal content\')">\n
-        <li>\n
-          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/PersonModule_createNewPerson">\n
-            New Contact\n
-          </a>\n
-        </li>\n
-      </tal:block>\n
-      <tal:block tal:condition="python: here.Base_checkPermission(\'project_module\', \'Add portal content\')">\n
-        <li>\n
-          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/ProjectModule_createNewProject">\n
-            New Project\n
-          </a>\n
-        </li>\n
-      </tal:block>\n
-      <tal:block tal:condition="python: here.Base_checkPermission(\'task_module\', \'Add portal content\')">\n
-        <li>\n
-          <a href="#" i18n:translate="" i18n:domain="ui" tal:attributes="href string:${current_web_section_url}/TaskModule_createNewTask">\n
-            New Task\n
-          </a>\n
-        </li>\n
-      </tal:block>\n
     </ul>\n
     <!--[if lte IE 6]></td></tr></table></a><![endif]-->\n
   </li>\n
-  <li tal:condition="python: here.Base_checkPermission(\'person_module\', \'View\')"><a href="#" i18n:translate="" i18n:domain="ui"\n
-         tal:attributes="href string:${portal_path}/person_module/PersonModule_viewPersonList">Contacts<!--[if IE 7]><!--></a><!--<![endif]-->\n
+  <li class="collapse-menu" tal:condition="python: here.Base_checkPermission(\'person_module\', \'View\')">\n
+    <a href="#" i18n:translate="" i18n:domain="ui"\n
+      tal:attributes="href string:${portal_path}/person_module/PersonModule_viewPersonList">Contacts<!--[if IE 7]><!--></a><!--<![endif]-->\n
 <!--[if lte IE 6]><table><tr><td><![endif]-->\n
     <ul>\n
       <li><a href="#" i18n:translate="" i18n:domain="ui"\n
@@ -144,14 +120,14 @@
 <!--[if lte IE 6]></td></tr></table></a><![endif]--></li>\n
 \n
   <tal:block tal:define="actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
-                         ordered_global_actions python: [x for x in getattr(here, \'portal_workflow\').listActionInfos() if x[\'workflow_id\'] == \'document_publication_workflow\'];\n
+                         ordered_global_actions python: [x for x in getattr(here, \'portal_workflow\').listActionInfos()];\n
                          absolute_url  context/absolute_url;\n
                          count python: reduce(lambda x, y: x+(y.has_key(\'count\') and y[\'count\'] or 0), ordered_global_actions, 0);\n
                          portal_url python: context.portal_url();">\n
-    <li tal:condition="not:is_anonymous">\n
+    <li class="collapse-menu"\n
+        tal:condition="not:is_anonymous">\n
       <a href="#" i18n:translate="" i18n:domain="ui">\n
         <tal:block i18n:translate="" i18n:domain="ui">Tasks</tal:block>\n
-        <tal:block tal:replace="python: \' (%s)\' % count"></tal:block>\n
       </a>\n
       <ul tal:condition="ordered_global_actions">\n
         <li tal:repeat="action ordered_global_actions">\n
@@ -177,7 +153,22 @@
     </li>\n
   </tal:block>\n
 \n
-  <li tal:condition="not:is_anonymous"><a href="WebSite_redirectToUserPreference" i18n:translate="" i18n:domain="ui">Settings</a></li>\n
+  <li class="collapse-menu"\n
+      tal:condition="not:is_anonymous">\n
+    <a href="#" i18n:translate="" i18n:domain="ui">Settings</a>\n
+    <ul>\n
+      <li>\n
+        <a tal:attributes="href string:${portal_path}/WebSite_redirectToUserPerson"\n
+            i18n:translate="" \n
+            i18n:domain="ui">My Profile</a>\n
+      </li>\n
+      <li>\n
+      <a href="WebSite_redirectToUserPreference" \n
+         i18n:translate="" \n
+         i18n:domain="ui">My Preferences</a>\n
+      </li>\n
+    </ul>\n
+  </li>\n
 </ul>\n
 \n
 </tal:block>\n

@@ -10,6 +10,10 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>root_http_skin_cache</string> </value>
+        </item>
+        <item>
             <key> <string>_bind_names</string> </key>
             <value>
               <object>
@@ -58,6 +62,19 @@
   float: right;\n
 }\n
 \n
+\n
+.wrapper .widget .adminSection select{\n
+  width: 122px;\n
+/*  margin-left:680px;\n
+  margin-top: 10px;*/\n
+  margin: 5px 20px 0 0;\n
+  float: right;\n
+}\n
+\n
+\n
+.wrapper .widget .adminSection{\n
+}\n
+\n
 .header .widget .adminSection{\n
 }\n
 \n
@@ -67,6 +84,9 @@
 }\n
 \n
 .header .widget .adminSection button{\n
+  display: none;\n
+}\n
+.wrapper .widget .adminSection button{\n
   display: none;\n
 }\n
 

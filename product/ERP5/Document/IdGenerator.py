@@ -55,32 +55,29 @@ class IdGenerator(Base):
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'getLatestVersionValue')
-  def getLatestVersionValue(self, **kw):
+  def getLatestVersionValue(self):
     """
       Return the last generator with the reference
     """
-    id_tool = getToolByName(self, 'portal_ids', None)
-    last_id = id_tool._getLatestIdGenerator(self.getReference())
-    last_version = id_tool._getOb(last_id)
-    return last_version
+    id_tool = self.getPortalObject().portal_ids
+    return id_tool._getLatestGeneratorValue(self.getReference())
+
+  def _getLatestSpecialiseValue(self):
+    specialise = self.getSpecialiseValue()
+    if specialise is None:
+      raise ValueError("The id generator %r doesn't have specialise value"
+                       %  self.getReference())
+    return specialise.getLatestVersionValue()
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewId')
-  def generateNewId(self, id_group=None, default=None,):
+  def generateNewId(self, *args, **kw):
     """
      Generate the next id in the sequence of ids of a particular group
      Use int to store the last_id, use also a persistant mapping for to be
      persistent.
     """
-    try:
-      specialise = self.getSpecialiseValue()
-    except AttributeError:
-      raise AttributeError, 'specialise is not defined'
-    if specialise is None:
-      raise ValueError, "the id generator %s doesn't have specialise value" %\
-                        self.getReference()
-    return specialise.getLatestVersionValue().generateNewId(id_group=id_group,
-                                              default=default)
+    return self._getLatestSpecialiseValue().generateNewId(*args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
       'generateNewIdList')
@@ -94,16 +91,10 @@ class IdGenerator(Base):
     """
     # For compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
-      raise AttributeError, 'id_group is not a string'
-    try:
-      specialise = self.getSpecialiseValue()
-    except AttributeError:
-      raise AttributeError, 'specialise is not defined'
-    if specialise is None:
-      raise ValueError, "the id generator %s doesn't have specialise value" %\
-                        self.getReference()
-    return specialise.getLatestVersionValue().generateNewIdList(id_group=id_group, \
-                                              id_count=id_count, default=default)
+      raise TypeError, 'id_group is not a string'
+    return self._getLatestSpecialiseValue().generateNewIdList(id_group=id_group,
+                                                              id_count=id_count,
+                                                              default=default)
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'initializeGenerator')
@@ -113,11 +104,7 @@ class IdGenerator(Base):
       is created. Some generators will need to do some initialization like
       creating SQL Database, prepare some data in ZODB, etc
     """
-    specialise = self.getSpecialiseValue()
-    if specialise is None:
-      raise ValueError, "the id generator %s doesn't have specialise value" %\
-                        self.getReference()
-    specialise.getLatestVersionValue().initializeGenerator()
+    self._getLatestSpecialiseValue().initializeGenerator()
 
   security.declareProtected(Permissions.ModifyPortalContent,
       'clearGenerator')
@@ -131,9 +118,21 @@ class IdGenerator(Base):
       in this case a particular error will be raised (to be determined and
       added here)
     """
-    specialise = self.getSpecialiseValue()
-    if specialise is None:
-      raise ValueError, "the id generator %s doesn't have specialise value" %\
-                        self.getReference()
-    specialise.getLatestVersionValue().clearGenerator()
+    self._getLatestSpecialiseValue().clearGenerator()
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'exportGeneratorIdDict')
+  def exportGeneratorIdDict(self):
+    """
+      Export last id values in a dictionnary in the form { group_id : last_id }
+    """
+    return self._getLatestSpecialiseValue().exportGeneratorIdDict()
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+      'importGeneratorIdDict')
+  def importGeneratorIdDict(self, *args, **kw):
+    """
+      Import data, this is usefull if we want to replace a generator by
+      another one.
+    """
+    return self._getLatestSpecialiseValue().importGeneratorIdDict(*args, **kw)

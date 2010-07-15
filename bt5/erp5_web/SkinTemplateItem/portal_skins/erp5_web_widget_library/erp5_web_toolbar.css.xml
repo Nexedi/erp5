@@ -60,19 +60,25 @@ div.web-toolbar {\n
 }\n
 div.web-toolbar h3 {\n
   height:20px;\n
-  font-size:100%;\n
+  font-size:100%!important;\n
   font-weight:bold;\n
-  padding:3px 10px;\n
+  padding:0px 10px;\n
+  margin: 0em;\n
   cursor:pointer;\n
 }\n
 div.web-toolbar h3:hover {\n
   background:#ccf;\n
 }\n
-div.web-toolbar u1 {\n
+div.web-toolbar ul {\n
   margin:0;\n
   padding:0;\n
   list-style:none\n
 }\n
+div.web-toolbar ul li{\n
+  background: none;\n
+  font-size:12px;\n
+}\n
+\n
 li.toolboxSection {\n
   display:inline;\n
   float:left;\n
@@ -107,7 +113,7 @@ div.web-toolbar li {\n
 div.web-toolbar li > a,\n
 div.web-toolbar li > a:hover,\n
 div.web-toolbar li > a:visited,\n
-div.web-toolbar li > a:active {text-decoration: none}\n
+div.web-toolbar li > a:active {text-decoration: none;}\n
 \n
 div.web-toolbar button[type="submit"] {\n
   display: none;\n
@@ -126,7 +132,8 @@ div.web-toolbar fieldset {               /* Should be the same as "fieldset" rul
 }\n
 div.web-toolbar fieldset > div.field {   /* Should be similar to "fieldset > div" rule */\n
   padding: 0;\n
-  margin: 0;\n
+  margin: 0!important;\n
+  margin-top: 3px;\n
   border: none;\n
   width: 100%;\n
 }\n
@@ -143,7 +150,7 @@ div.web-toolbar fieldset div.field label:after {content: inherit}\n
 div.web-toolbar li > a,\n
 div.web-toolbar button {\n
   border: 1px #ddd solid;\n
-  color: #999;\n
+  color: #999!important;\n
   background: #eee;\n
   cursor: pointer;\n
   display: block;\n
@@ -157,6 +164,7 @@ div.web-toolbar button {\n
   text-align:left;\n
   padding: .2em;\n
   display:block;\n
+  float:left;\n
 }\n
 \n
 div.web-toolbar li > a:hover,\n
@@ -186,6 +194,30 @@ div.web-toolbar li.toolboxSection label {\n
   display:block;\n
   margin:0.2em 0 0 0;\n
 }\n
+\n
+/* Menu items */\n
+div.web-toolbar div.menu{\n
+  width: auto;\n
+}\n
+div.web-toolbar div.menu label{\n
+  display:block!important;\n
+  float:left;\n
+  clear:both;\n
+}\n
+div.web-toolbar div.menu ul{\n
+  margin-left:0.5em;\n
+}\n
+\n
+div.web-toolbar div.menu ul li{\n
+  clear:both;\n
+}\n
+div.web-toolbar div.menu div.field{\n
+  margin-bottom:0.2em!important;\n
+}\n
+div.web-toolbar div.menu ul li a:active,a:visited,a:link{\n
+  color:auto !important;\n
+}\n
+\n
 </tal:block>\n
 
 

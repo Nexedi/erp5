@@ -315,17 +315,9 @@ class Delivery(XMLObject, ImmobilisationDelivery,
 
     def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement',
                                        method_id='expand', **kw):
-      for my_simulation_movement in self.getDeliveryRelatedValueList(
-                                      portal_type = 'Simulation Movement'):
+      for simulation_movement in self._getAllRelatedSimulationMovementList():
         # And apply
-        getattr(my_simulation_movement.getObject(), method_id)(**kw)
-
-      for m in self.getMovementList():
-        # Find related in simulation
-        for my_simulation_movement in m.getDeliveryRelatedValueList(
-                                  portal_type = 'Simulation Movement'):
-          # And apply
-          getattr(my_simulation_movement.getObject(), method_id)(**kw)
+        getattr(simulation_movement.getObject(), method_id)(**kw)
 
     #######################################################
     # Causality computation
@@ -365,8 +357,8 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       ## Note that fast option was removed. Now, fast=1 is ignored.
       
       # Check if the total quantity equals the total of each simulation movement quantity
-      for movement in self.getMovementList():
-        if movement.isDivergent():
+      for simulation_movement in self._getAllRelatedSimulationMovementList():
+        if simulation_movement.isDivergent():
           return 1
       return 0
 
@@ -376,21 +368,30 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       Return a list of messages that contains the divergences
       """
       divergence_list = []
-      for movement in self.getMovementList():
-         divergence_list.extend(movement.getDivergenceList())
+      for simulation_movement in self._getAllRelatedSimulationMovementList():
+         divergence_list.extend(simulation_movement.getDivergenceList())
       return divergence_list
 
     @UnrestrictedMethod
-    def updateCausalityState(self, **kw):
+    def updateCausalityState(self, solve_automatically=True, **kw):
       """
       This is often called as an activity, it will check if the
       deliver is convergent, and if so it will put the delivery
       in a solved state, if not convergent in a diverged state
       """
-      if getattr(self, 'diverge', None) is not None \
-            and getattr(self, 'converge', None) is not None:
+      isTransitionPossible = \
+          self.getPortalObject().portal_workflow.isTransitionPossible
+      if isTransitionPossible(self, 'diverge') and \
+          isTransitionPossible(self, 'converge'):
         if self.isDivergent(**kw):
-          self.diverge()
+          # If delivery is not simulated (PackingList.isDivergent()
+          # returns True in such a case), we cannot solve divergence
+          # anyway.
+          if self.isSimulated() and solve_automatically and \
+              isTransitionPossible(self, 'solve_automatically'):
+            self.solveAutomatically()
+          else:
+            self.diverge()
         else:
           self.converge()
 
@@ -825,16 +826,12 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       if excluded_rule_path_list is None:
         excluded_rule_path_list = []
       to_expand_list = []
-      # we might use a zsql method, because it can be very slow
-      for m in self.getMovementList():
-        if m.isSimulated():
-          sim_movement_list = m.getDeliveryRelatedValueList()
-          for sim_movement in sim_movement_list:
-            if sim_movement.getRootAppliedRule().getPath() \
-                not in excluded_rule_path_list:
-              parent_value = sim_movement.getParentValue()
-              if parent_value not in to_expand_list:
-                to_expand_list.append(parent_value)
+      for sim_movement in self._getAllRelatedSimulationMovementList():
+        if sim_movement.getRootAppliedRule().getPath() \
+            not in excluded_rule_path_list:
+          parent_value = sim_movement.getParentValue()
+          if parent_value not in to_expand_list:
+            to_expand_list.append(parent_value)
       for rule in to_expand_list:
         rule.expand(activate_kw=activate_kw,**kw)
         rule.recursiveReindexObject(activate_kw=activate_kw)
@@ -971,3 +968,25 @@ class Delivery(XMLObject, ImmobilisationDelivery,
               simulation_movement.getRelativeUrl())
 
       return disconnected_simulation_movement_list
+
+    def _getAllRelatedSimulationMovementList(self, **kw):
+      search_method = \
+          self.getPortalObject().portal_catalog.unrestrictedSearchResults
+      movement_uid_list = [x.getUid() for x in self.getMovementList()]
+      if len(movement_uid_list) == 0:
+        return []
+      sim_movement_list = search_method(portal_type='Simulation Movement',
+                                        delivery_uid=movement_uid_list, **kw)
+      return sim_movement_list
+
+    def getDivergentTesterAndSimulationMovementList(self):
+      """
+      This method returns a list of (tester, simulation_movement) for each divergence.
+      """
+      divergent_tester_list = []
+      for simulation_movement in self._getAllRelatedSimulationMovementList():
+        rule = simulation_movement.getParentValue().getSpecialiseValue()
+        for tester in rule._getDivergenceTesterList(exclude_quantity=False):
+          if tester.explain(simulation_movement) not in (None, []):
+            divergent_tester_list.append((tester, simulation_movement))
+      return divergent_tester_list

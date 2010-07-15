@@ -66,8 +66,9 @@ def getResourceItemList():\n
   url_list = context.portal_preferences.getPreferredEventResourceList()\n
   for url in url_list:\n
     try:\n
-      resource_value = context.getPortalObject().restrictedTraverse(url)\n
-      result.append((resource_value.getTranslatedTitle(), resource_value.getRelativeUrl()))\n
+      resource_value = context.getPortalObject().restrictedTraverse(url, None)\n
+      if resource_value is not None:\n
+        result.append((resource_value.getTranslatedTitle(), resource_value.getRelativeUrl()))\n
     except Unauthorized:\n
       pass\n
   return result\n

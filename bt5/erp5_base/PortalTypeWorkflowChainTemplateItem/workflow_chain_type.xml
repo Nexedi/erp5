@@ -49,11 +49,11 @@
  </chain>
  <chain>
   <type>File</type>
-  <workflow>cached_convertible_interaction_workflow, edit_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Image</type>
-  <workflow>cached_convertible_interaction_workflow, edit_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Link</type>
@@ -61,7 +61,7 @@
  </chain>
  <chain>
   <type>Notification Message</type>
-  <workflow>cached_convertible_interaction_workflow, edit_workflow, notification_message_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, notification_message_workflow, processing_status_workflow</workflow>
  </chain>
  <chain>
   <type>Organisation</type>
@@ -94,6 +94,14 @@
  <chain>
   <type>Simulation Movement</type>
   <workflow>simulation_movement_causality_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Solver Process</type>
+  <workflow>solver_process_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Solver Type</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Telephone</type>

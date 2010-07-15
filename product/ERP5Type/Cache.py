@@ -33,6 +33,7 @@ from AccessControl.SecurityInfo import allow_class
 from CachePlugins.BaseCache import CachedMethodError
 from zLOG import LOG, WARNING
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Utils import simple_decorator
 from warnings import warn
 
 DEFAULT_CACHE_SCOPE = 'GLOBAL'
@@ -281,6 +282,7 @@ def generateCacheIdWithoutFirstArg(method_id, *args, **kwd):
 
 def caching_instance_method(*args, **kw):
   kw.setdefault('cache_id_generator', generateCacheIdWithoutFirstArg)
+  @simple_decorator
   def wrapped(method):
     # The speed of returned function must be fast
     # so we instanciate CachingMethod now.
@@ -293,6 +295,7 @@ def caching_instance_method(*args, **kw):
   return wrapped
 
 def transactional_cached(key_method=lambda *args: args):
+  @simple_decorator
   def decorator(function):
     key = repr(function)
     def wrapper(*args, **kw):
@@ -303,7 +306,5 @@ def transactional_cached(key_method=lambda *args: args):
       except KeyError:
         cache[subkey] = result = function(*args, **kw)
         return result
-    wrapper.__doc__ = function.__doc__
-    wrapper.__name__ = function.__name__
     return wrapper
   return decorator

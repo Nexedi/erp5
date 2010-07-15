@@ -104,7 +104,7 @@ class IIdGenerator(Interface):
     added here)
     """
 
-  def importGeneratorIdDict(id_dict):
+  def importGeneratorIdDict(id_dict, clear=False):
     """
     Import data, this is usefull if we want to replace a generator by
     another one. It will allows to make the new generator starting from
@@ -114,6 +114,9 @@ class IIdGenerator(Interface):
 
     id_dict (dict)
       A dictionnary in the form { group_id : last_id }
+    
+    clear(bool)
+      A boolean to clear the generator before import the data
 
     This can be incompatible with some particular generator implementation,
     in this case a particular error will be raised (to be determined and

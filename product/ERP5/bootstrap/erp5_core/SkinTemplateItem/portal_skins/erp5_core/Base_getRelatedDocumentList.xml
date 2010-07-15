@@ -53,24 +53,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw.pop(\'relative_url\', None)\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
+kw.pop(\'relative_url\', None)\n
 kw.pop(\'follow_up_uid\', None)\n
-\n
-sub_document_list = context.portal_catalog(\n
-           portal_type=portal_type,\n
-           relative_url=\'%s/%%\' % context.getRelativeUrl(), **kw)\n
-\n
-follow_up_related_document_list = context.portal_catalog(\n
+portal_catalog=context.getPortalObject().portal_catalog\n
+follow_up_related_document_list = portal_catalog(\n
            portal_type=portal_type,\n
            follow_up_uid=context.getUid(), **kw)\n
 \n
-if not sub_document_list:\n
-  return follow_up_related_document_list\n
+kw[\'query\'] = Query(relative_url=\'%s/%%\' % context.getRelativeUrl())\n
+if follow_up_related_document_list:\n
+  kw[\'query\'] = ComplexQuery(\n
+    kw[\'query\'],\n
+    Query(uid=[x.getUid() for x in follow_up_related_document_list]),\n
+    operator=\'or\')\n
 \n
-if not follow_up_related_document_list:\n
-  return sub_document_list\n
-\n
-return [doc for doc in follow_up_related_document_list] + [doc for doc in sub_document_list]\n
+return portal_catalog(portal_type=portal_type, **kw)\n
 </string> </value>
         </item>
         <item>
@@ -109,16 +107,21 @@ return [doc for doc in follow_up_related_document_list] + [doc for doc in sub_do
                           <tuple>
                             <string>portal_type</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
+                            <string>ComplexQuery</string>
                             <string>_getattr_</string>
                             <string>None</string>
-                            <string>_apply_</string>
                             <string>context</string>
-                            <string>sub_document_list</string>
+                            <string>portal_catalog</string>
+                            <string>_apply_</string>
                             <string>follow_up_related_document_list</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>doc</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>

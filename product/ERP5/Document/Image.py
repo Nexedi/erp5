@@ -41,26 +41,20 @@ from Acquisition import aq_base
 from DocumentTemplate.DT_Util import html_quote
 from Products.CMFCore.utils import _setCacheHeaders, _ViewEmulator
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import ConversionError
-
+from Products.ERP5.Document.Document import Document, ConversionError,\
+                     VALID_TEXT_FORMAT_LIST, DEFAULT_DISPLAY_ID_LIST, DEFAULT_QUALITY, _MARKER
+from os.path import splitext
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
-try:
-    from OFS.content_types import guess_content_type
-except ImportError:
-    from zope.contenttype import guess_content_type
 from zLOG import LOG, WARNING
 
+# import mixin
+from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.CMFCore.utils import getToolByName
 
-default_displays_id_list = ('nano', 'micro', 'thumbnail',
-                            'xsmall', 'small', 'medium',
-                            'large', 'large', 'xlarge',)
-
-default_formats = ['jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm']
-
-class Image(File, OFSImage):
+class Image(TextConvertableMixin, File, OFSImage):
   """
     An Image is a File which contains image data. It supports
     various conversions of format, size, resolution through
@@ -160,7 +154,8 @@ class Image(File, OFSImage):
       Tries to get the width from the image data.
     """
     self._upradeImage()
-    if self.get_size() and not self.width: self._update_image_info()
+    if self.hasData() and not self.width:
+      self._update_image_info()
     return self.width
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getHeight')
@@ -169,26 +164,28 @@ class Image(File, OFSImage):
       Tries to get the height from the image data.
     """
     self._upradeImage()
-    if self.get_size() and not self.height: self._update_image_info()
+    if self.hasData() and not self.height:
+      self._update_image_info()
     return self.height
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentType')
-  def getContentType(self, format=''):
+  def getContentType(self, default=_MARKER):
     """Original photo content_type."""
     self._upradeImage()
-    if self.get_size() and not self._baseGetContentType(): self._update_image_info()
-    if format == '':
+    if self.hasData() and not self.hasContentType():
+      self._update_image_info()
+    if default is _MARKER:
       return self._baseGetContentType()
     else:
-      return guess_content_type('myfile.' + format)[0]
+      return self._baseGetContentType(default)
 
   #
   # Photo display methods
   #
 
-  security.declareProtected('View', 'tag')
+  security.declareProtected(Permissions.View, 'tag')
   def tag(self, display=None, height=None, width=None, cookie=0,
-                alt=None, css_class=None, format='', quality=75,
+                alt=None, css_class=None, format=None, quality=DEFAULT_QUALITY,
                 resolution=None, frame=None, **kw):
     """Return HTML img tag."""
     self._upradeImage()
@@ -199,24 +196,18 @@ class Image(File, OFSImage):
 
     # display may be set from a cookie.
     image_size = self.getSizeFromImageDisplay(display)
-    if (display is not None or resolution is not None or quality!=75 or format != ''\
-                            or frame is not None) and image_size:
-      kw = dict(display=display, format=format, quality=quality,
-                resolution=resolution, frame=frame, image_size=image_size)
-      try:
-        mime, image = self.getConversion(**kw)
-      except KeyError:
-        # Generate photo on-the-fly
-        mime, image = self._makeDisplayPhoto(**kw)
-        self.setConversion(image, mime, **kw)
-      width, height = (image.width, image.height)
-      # Set cookie for chosen size
-      if cookie:
-        self.REQUEST.RESPONSE.setCookie('display', display, path="/")
-    else:
-      # TODO: Add support for on-the-fly resize?
-      height = self.getHeight()
-      width = self.getWidth()
+    convert_kw = dict(format=format, quality=quality, resolution=resolution,
+                      frame=frame, image_size=image_size)
+    try:
+      mime, image = self.getConversion(**convert_kw)
+    except KeyError:
+      # Generate photo on-the-fly
+      mime, image = self._makeDisplayPhoto(**convert_kw)
+      self.setConversion(image, mime, **convert_kw)
+    width, height = image.width, image.height
+    # Set cookie for chosen size
+    if cookie:
+      self.REQUEST.RESPONSE.setCookie('display', display, path="/")
 
     if display:
       result = '<img src="%s?display=%s"' % (self.absolute_url(), display)
@@ -252,10 +243,10 @@ class Image(File, OFSImage):
   def __str__(self):
     return self.tag()
 
-  security.declareProtected('Access contents information', 'displayIds')
+  security.declareProtected(Permissions.AccessContentsInformation, 'displayIds')
   def displayIds(self, exclude=('thumbnail',)):
     """Return list of display Ids."""
-    id_list = list(default_displays_id_list)
+    id_list = list(DEFAULT_DISPLAY_ID_LIST)
     # Exclude specified displays
     if exclude:
       for id in exclude:
@@ -268,7 +259,7 @@ class Image(File, OFSImage):
     id_list.sort(key=getSurfaceArea)
     return id_list
 
-  security.declareProtected('Access contents information', 'displayLinks')
+  security.declareProtected(Permissions.AccessContentsInformation, 'displayLinks')
   def displayLinks(self, exclude=('thumbnail',)):
     """Return list of HTML <a> tags for displays."""
     links = []
@@ -276,21 +267,24 @@ class Image(File, OFSImage):
         links.append('<a href="%s?display=%s">%s</a>' % (self.REQUEST['URL'], display, display))
     return links
 
-  security.declareProtected('Access contents information', 'displayMap')
-  def displayMap(self, exclude=None, format='', quality=75, resolution=None):
+  security.declareProtected(Permissions.AccessContentsInformation, 'displayMap')
+  def displayMap(self, exclude=None, format=None, quality=DEFAULT_QUALITY,\
+                                                              resolution=None):
     """Return list of displays with size info."""
     displays = []
     for id in self.displayIds(exclude):
-      if self._isGenerated(id, format=format, quality=quality, resolution=resolution):
+      if self._isGenerated(id, format=format, quality=quality,\
+                                                        resolution=resolution):
         photo_width = self._photos[(id,format)].width
         photo_height = self._photos[(id,format)].height
         bytes = self._photos[(id,format)]._size()
         age = self._photos[(id,format)]._age()
       else:
         (photo_width, photo_height, bytes, age) = (None, None, None, None)
+      image_size = self.getSizeFromImageDisplay(id)
       displays.append({'id': id,
-                        'width': self.getSizeFromImageDisplay(id)[0],
-                        'height': self.getSizeFromImageDisplay(id)[1],
+                        'width': image_size[0],
+                        'height': image_size[1],
                         'photo_width': photo_width,
                         'photo_height': photo_height,
                         'bytes': bytes,
@@ -308,7 +302,7 @@ class Image(File, OFSImage):
                                 lookupExtension('name.%s' % format)
     mime_type = str(mime_type)
     src_mimetype = self.getContentType()
-    content = '%s' % self.getData()
+    content = self.getData()
     portal_transforms = getToolByName(self, 'portal_transforms')
     result = portal_transforms.convertToData(mime_type, content,
                                              object=self, context=self,
@@ -322,12 +316,11 @@ class Image(File, OFSImage):
     return mime_type, result
 
   # Conversion API
-  security.declareProtected(Permissions.AccessContentsInformation, 'convert')
-  def convert(self, format, display=None, quality=75, resolution=None, frame=None, **kw):
+  def _convert(self, format, **kw):
     """
     Implementation of conversion for Image files
     """
-    if format in ('text', 'txt', 'html', 'base_html', 'stripped-html'):
+    if format in VALID_TEXT_FORMAT_LIST:
       try:
         return self.getConversion(format=format)
       except KeyError:
@@ -335,64 +328,35 @@ class Image(File, OFSImage):
         data = aq_base(data)
         self.setConversion(data, mime=mime_type, format=format)
         return mime_type, data
-    image_size = self.getSizeFromImageDisplay(display)
-    if (display is not None or resolution is not None or quality != 75 or format != ''\
-                            or frame is not None) and image_size:
-      kw = dict(display=display, format=format, quality=quality,
-                resolution=resolution, frame=frame, image_size=image_size)
-      try:
-        mime, image = self.getConversion(**kw)
-      except KeyError:
-        mime, image = self._makeDisplayPhoto(**kw)
-        self.setConversion(image, mime, **kw)
-      return mime, image.data
-    return self.getContentType(), self.getData()
-
-  security.declareProtected(Permissions.View, 'getSearchableText')
-  def getSearchableText(self, md=None):
-    """
-      Converts the content of the document to a textual representation.
-    """
-    mime, data = self.convert(format='txt')
-    return str(data)
-
-  # Compatibility with CMF Catalog
-  SearchableText = getSearchableText
+    image_size = self.getSizeFromImageDisplay(kw.get('display'))
+    # store all keys usefull to convert or resize an image
+    # 'display' parameter can be discarded
+    convert_kw = {'quality': kw.get('quality', DEFAULT_QUALITY),
+                  'resolution': kw.get('resolution'),
+                  'frame': kw.get('frame'),
+                  'image_size': image_size,
+                  'format': format,
+                 }
+    try:
+      mime, image = self.getConversion(**convert_kw)
+    except KeyError:
+      mime, image = self._makeDisplayPhoto(**convert_kw)
+      self.setConversion(image, mime, **convert_kw)
+    return mime, image.data
 
   # Display
-  security.declareProtected('View', 'index_html')
-  def index_html(self, REQUEST, RESPONSE, display=None, format='', quality=75,
-                       resolution=None, frame=None):
+  security.declareProtected(Permissions.View, 'index_html')
+  @fill_args_from_request('display', 'quality', 'resolution', 'frame')
+  def index_html(self, REQUEST, *args, **kw):
     """Return the image data."""
     self._upradeImage()
-
-    # display may be set from a cookie (?)
-    image_size = self.getSizeFromImageDisplay(display)
-    kw = dict(display=display, format=format, quality=quality,
-              resolution=resolution, frame=frame, image_size=image_size)
-    _setCacheHeaders(_ViewEmulator().__of__(self), kw)
-
-    if (display is not None or resolution is not None or quality != 75 or format != ''\
-                            or frame is not None) and image_size:
-      try:
-        mime, image = self.getConversion(**kw)
-      except KeyError:
-        # Generate photo on-the-fly
-        mime, image = self._makeDisplayPhoto(**kw)
-        self.setConversion(image, mime, **kw)
-      RESPONSE.setHeader('Content-Type', mime)
-      return image.index_html(REQUEST, RESPONSE)
-
-    # Return original image
-    return OFSImage.index_html(self, REQUEST, RESPONSE)
-
+    return Document.index_html(self, REQUEST, *args, **kw)
 
   #
   # Photo processing
   #
 
-  def _resize(self, display, width, height, quality=75, format='',
-                    resolution=None, frame=None):
+  def _resize(self, quality, width, height, format, resolution, frame):
     """Resize and resample photo."""
     newimg = StringIO()
 
@@ -438,43 +402,26 @@ class Image(File, OFSImage):
     newimg.seek(0)
     return newimg
 
-  def _getDisplayData(self, display, format='', quality=75, resolution=None, frame=None,
-                      image_size=None):
+  def _getDisplayData(self, format, quality, resolution, frame, image_size):
     """Return raw photo data for given display."""
-    if display is None:
-      (width, height) = (self.getWidth(), self.getHeight())
-    elif image_size is None:
-      (width, height) = self.getSizeFromImageDisplay(display)
-    else:
-      (width, height) = image_size
-    if width == 0 and height == 0:
-      width = self.getWidth()
-      height = self.getHeight()
-    (width, height) = self._getAspectRatioSize(width, height)
-    if (width, height) == (0, 0):return self.getData()
-    return self._resize(display, width, height, quality, format=format,
-                        resolution=resolution, frame=frame)
+    width, height = self._getAspectRatioSize(*image_size)
+    if ((width, height) == image_size or (width, height) == (0, 0))\
+       and quality == DEFAULT_QUALITY and resolution is None and frame is None\
+       and not format:
+      # No resizing, no conversion, return raw image
+      return self.getData()
+    return self._resize(quality, width, height, format, resolution, frame)
 
-  def _getDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None,
-                       image_size=None):
-    """Return photo object for given display."""
-    try:
-        base, ext = string.split(self.id, '.')
-        id = base + '_' + display + '.' + ext
-    except ValueError:
-        id = self.id +'_'+ display
-    image = OFSImage(id, self.getTitle(), self._getDisplayData(display, format=format,
-                         quality=quality, resolution=resolution, frame=frame,
-                         image_size=image_size))
-    return image
-
-  def _makeDisplayPhoto(self, display, format='', quality=75, resolution=None, frame=None,
-                        image_size=None):
+  def _makeDisplayPhoto(self, format=None, quality=DEFAULT_QUALITY,
+                                 resolution=None, frame=None, image_size=None):
     """Create given display."""
-    image = self._getDisplayPhoto(display, format=format, quality=quality,
-                                           resolution=resolution, frame=frame,
-                                           image_size=image_size)
-    return (image.content_type, aq_base(image))
+    width, height = image_size
+    base, ext = splitext(self.id)
+    id = '%s_%s_%s.%s'% (base, width, height, ext,)
+    image = OFSImage(id, self.getTitle(), 
+                     self._getDisplayData(format, quality, resolution,
+                                                            frame, image_size))
+    return image.content_type, aq_base(image)
 
   def _getAspectRatioSize(self, width, height):
     """Return proportional dimensions within desired size."""
@@ -498,20 +445,19 @@ class Image(File, OFSImage):
     """At least see if it *might* be valid."""
     return self.getWidth() and self.getHeight() and self.getData() and self.getContentType()
 
-  security.declareProtected('View', 'getSizeFromImageDisplay')
+  security.declareProtected(Permissions.View, 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
+    """Return the size for this image display,
+       or dimension of this image.
     """
-    Return the size for this image display, or None if this image display name
-    is not known.
-    """
-    if image_display in default_displays_id_list:
+    if image_display in DEFAULT_DISPLAY_ID_LIST:
       preference_tool = self.getPortalObject().portal_preferences
       height_preference = 'preferred_%s_image_height' % (image_display,)
       width_preference = 'preferred_%s_image_width' % (image_display,)
       height = preference_tool.getPreference(height_preference)
       width = preference_tool.getPreference(width_preference)
       return (width, height)
-    return None
+    return self.getWidth(), self.getHeight()
 
   def _setFile(self, *args, **kw):
     """set the file content and reset image information.
@@ -524,19 +470,3 @@ class Image(File, OFSImage):
     """
     File.PUT(self, REQUEST, RESPONSE)
     self._update_image_info()
-
-  #
-  # FTP/WebDAV support
-  #
-
-      #if hasattr(self, '_original'):
-          ## Updating existing Photo
-          #self._original.manage_upload(file, self.content_type())
-          #if self._validImage():
-              #self._makeDisplayPhotos()
-
-  # Maybe needed
-  #def manage_afterClone(self, item):
-
-  # Maybe needed
-  #def manage_afterAdd(self, item, container):

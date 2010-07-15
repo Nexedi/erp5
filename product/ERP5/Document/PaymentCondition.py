@@ -32,26 +32,50 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TradeModelLine import TradeModelLine
 
 class PaymentCondition(TradeModelLine):
+  """
+    Payment Conditions are used to define all the parameters of a payment
+  """
+
+  meta_type = 'ERP5 Payment Condition'
+  portal_type = 'Payment Condition'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Amount
+                    , PropertySheet.PaymentCondition
+                    , PropertySheet.Chain
+                    , PropertySheet.SortIndex
+                    , PropertySheet.TradeModelLine
+                    )
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCalculationScript')
+  def getCalculationScript(self, context):
+    # In the case of Payment Condition, unlike Trade Model Line,
+    # it is not realistic to share the same method, so do not acquire
+    # a script from its parent.
+    #
+    # It is always complicated and different how to adopt the calculation of
+    # payment dates for each user, and it is not practical to force the
+    # user to set a script id in every Payment Condition, so it is better
+    # to use a type-based method here, unless a script is explicitly set.
+    script_id = self.getCalculationScriptId()
+    if script_id is not None:
+      method = getattr(context, script_id)
+      return method
+    method = self._getTypeBasedMethod('calculateMovement')
+    return method
+
+  def _isMatchedMovement(self, movement, base_application_list, tmp_movement):
+    """Override the original implementation and allow payment condition to
+    match to any movements
     """
-      Payment Conditions are used to define all the parameters of a payment
-    """
-
-    meta_type = 'ERP5 Payment Condition'
-    portal_type = 'Payment Condition'
-    add_permission = Permissions.AddPortalContent
-
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Amount
-                      , PropertySheet.PaymentCondition
-                      , PropertySheet.Chain
-                      , PropertySheet.SortIndex
-                      , PropertySheet.TradeModelLine
-                      )
+    return True

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002-2007 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2010 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,11 +27,11 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5Type.Cache import getReadOnlyTransactionCache
+from Products.ERP5.Document.Predicate import Predicate
 
-class SolverTypeInformation(ERP5TypeInformation):
+class SolverTypeInformation(Predicate, ERP5TypeInformation):
   """
     EXPERIMENTAL - DO NOT USE THIS CLASS BESIDES R&D
 
@@ -61,15 +61,15 @@ class SolverTypeInformation(ERP5TypeInformation):
 
     configuration_mapping -- a mapping of configuration parameters sorted in
                              canonical way. ((c1, v1), (c2, v2 ))
-  
-    solver_dict -- a dictionary of configuration parameters for 
+
+    solver_dict -- a dictionary of configuration parameters for
                    each solver
                       solver_dict[solver] = {
                          movement : [((c1, v1), (c2, v2 )),
                                      ((c1, v1), (c2, v2 )),
                                     ],}
 
-    movement_dict -- a dictionary of solver and configuration parameters for 
+    movement_dict -- a dictionary of solver and configuration parameters for
                      each movement
                        movement_dict[movement] = {
                                      solver : [((c1, v1), (c2, v2 )),
@@ -81,7 +81,7 @@ class SolverTypeInformation(ERP5TypeInformation):
       return method(movement, configuration_mapping, solver_dict, movement_dict)
 
     # Default Implementation (use categories and trivial case)
-    #  this default implementation should be applicable to most 
+    #  this default implementation should be applicable to most
     #  solvers so that use of Type Based methods is very rare
     for solver, configuration_list in movement_dict[movement].items():
       if solver is not self and solver.getTestedProperty() == self.getTestedProperty():
@@ -92,39 +92,39 @@ class SolverTypeInformation(ERP5TypeInformation):
 
   def getSolverProcessGroupingKey(self, movement, configuration_mapping, solver_dict, movement_dict):
     """
-    Returns a key which can be used to group solvers during the 
+    Returns a key which can be used to group solvers during the
     process to build Targer Solver instances from Solver Decisions.
     This key depends on the movement and on the configuration_dict.
 
     For example, the movement dependent key for a solver which reduces
     produced quantity is the releative URL of the production order which
-    this movement depends from (if it depennds on a single production 
+    this movement depends from (if it depennds on a single production
     order). If the same movement relates to multiple production orders,
     then the movement dependent grouping key should be None, but this
     could generate a different group for movements which depend on
-    a single production order and for movements which depend on 
+    a single production order and for movements which depend on
     multiple production orders. For this purpose, the grouping key
     can be decided by looking up other_movement_list, a dictionnary
     which provides for each movement solver by the same solver the
     configuration parameters.
 
     The configuration dependent key for a "universal" solver (ex.
-    Adopt, Accept) which tested property is configurable, is the 
+    Adopt, Accept) which tested property is configurable, is the
     tested property itself.
 
     movement -- a movement
 
     configuration_mapping -- a mapping of configuration parameters sorted in
                              canonical way. ((c1, v1), (c2, v2 ))
-  
-    solver_dict -- a dictionary of configuration parameters for 
+
+    solver_dict -- a dictionary of configuration parameters for
                    each solver
                       solver_dict[solver] = {
                          movement : [((c1, v1), (c2, v2 )),
                                      ((c1, v1), (c2, v2 )),
                                     ],}
 
-    movement_dict -- a dictionary of solver and configuration parameters for 
+    movement_dict -- a dictionary of solver and configuration parameters for
                      each movement
                        movement_dict[movement] = {
                                      solver : [((c1, v1), (c2, v2 )),
@@ -149,40 +149,14 @@ class SolverTypeInformation(ERP5TypeInformation):
 
     configurable -- a configurable document (Solver Decision
                     or Target Solver)
-                    
     """
-    # Implemented through type based method
-    # and using read transaction cache
-    if configurable.getPortalType() == 'Solver Decision':
-      try:
-        solver_portal_type = configurable.getSolverValue().getId()
-      except AttributeError:
-        return {}
+    method_id = self.getDefaultConfigurationPropertyDictMethodId()
+    if method_id:
+      return self._callMethod(configurable, method_id, {})
     else:
-      solver_portal_type = configurable.getPortalType()
+      return {}
 
-    cache = getReadOnlyTransactionCache(self)
-    if cache is not None:
-      key = ('getDefaultConfigurationPropertyDict', solver_portal_type)
-      try:
-        method = cache[key]
-      except KeyError:
-        method = self._getTypeBasedMethod(
-          'getDefaultConfigurationPropertyDict',
-          fallback_script_id='Solver_getDefaultConfigurationPropertyDict')
-        cache[key] = method
-    return method(configurable)
-
-  def getDefaultConfigurationPropertyList(self, id, configurable):
-    """
-    Returns a list of possible values for a given property
-    (public API)
-
-    configurable -- a configurable document (Solver Decision
-                    or Target Solver)
-    """
-
-  def getDefaultConfigurationProperty(self, id, configurable):
+  def getDefaultConfigurationProperty(self, property, configurable):
     """
     Returns the default value for a given property
     (public API)
@@ -192,3 +166,70 @@ class SolverTypeInformation(ERP5TypeInformation):
 
     TODO: XXX-JPS unify with IConfigurable
     """
+    return self.getDefaultConfigurationPropertyDict().get(property, None)
+
+  def getConfigurationPropertyListDict(self, configurable):
+    """
+    Returns a dictionary of possible values for specified
+    configurable object
+    (implementation)
+
+    configurable -- a configurable document (Solver Decision
+                    or Target Solver)
+    """
+    method_id = self.getConfigurationPropertyListDictMethodId()
+    if method_id:
+      return self._callMethod(configurable, method_id, {})
+    else:
+      return {}
+
+  def getConfigurationPropertyList(self, property, configurable):
+    """
+    Returns a list of possible values for a given property
+    (public API)
+
+    configurable -- a configurable document (Solver Decision
+                    or Target Solver)
+    """
+    return self.getConfigurationPropertyListDict().get(property, [])
+
+  def _callMethod(self, configurable, method_id, default=None):
+    # Implemented through type based method
+    # and using read transaction cache
+    portal_type = configurable.getPortalType()
+    if portal_type == 'Solver Decision':
+      try:
+        solver_portal_type = configurable.getSolverValue().getId()
+        solver = configurable.getParentValue().newContent(
+          portal_type=solver_portal_type,
+          temp_object=True,
+          delivery_list=configurable.getDeliveryList(),
+          causality_value=configurable)
+      except AttributeError:
+        return default
+    elif interfaces.ISolver.providedBy(configurable):
+      solver_portal_type = portal_type
+      solver = configurable
+    else:
+      raise NotImplementedError, '%s is not supported for configurable argument' % portal_type
+
+    method = getattr(solver, method_id)
+    return method()
+
+  def solve(self, delivery_list=None, configuration_dict=None,
+            activate_kw=None, **kw):
+    if delivery_list is None:
+      return
+    if configuration_dict is None:
+      configuration_dict = {}
+    solver_process_tool = self.getPortalObject().portal_solver_processes
+    solver_process = solver_process_tool.newContent(
+      portal_type='Solver Process',
+      temp_object=True)
+    solver = solver_process.newContent(portal_type=self.getId(),
+                                       delivery_list=delivery_list)
+    solver.updateConfiguration(**configuration_dict)
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      solver, 'start_solving'):
+      solver.startSolving()
+    solver.solve(activate_kw=activate_kw)

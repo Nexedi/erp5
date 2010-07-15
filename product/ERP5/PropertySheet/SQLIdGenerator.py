@@ -40,4 +40,10 @@ class SQLIdGenerator:
      'type'       :'boolean',
      'mode'       :'w'
     },
+    {'id'         :'store_interval',
+     'label'      :'The generator store the last id in the zodb \
+                   every store interval',
+     'type'       :'int',
+     'mode'       :'w'
+    },
   )

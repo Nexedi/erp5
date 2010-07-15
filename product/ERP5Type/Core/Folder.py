@@ -28,7 +28,7 @@
 ##############################################################################
 
 import transaction
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_parent, aq_inner
 from OFS.History import Historical
 import ExtensionClass
@@ -44,6 +44,7 @@ from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLExportImport import Folder_asXML
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type.WebDAVSupport import Folder as WebDAVFolder
+from Products.ERP5Type import Permissions
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
@@ -1081,16 +1082,46 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     return update_list
 
   security.declareProtected( Permissions.ModifyPortalContent, 'upgradeObjectClass' )
-  def upgradeObjectClass(self, test_before=None, from_class=None,\
-                         to_class=None, test_after=None):
+  def upgradeObjectClass(self, test_before, from_class, to_class, test_after,
+                               test_only=0):
     """
-    upgrade the class of all objects inside this
-    particular folder
-     test have to be a method with one parameter
-     migrations is a dictionnary of class, { from_class : to_class }
+    Upgrade the class of all objects inside this particular folder:
+      test_before and test_after have to be a method with one parameter.
+
+      from_class and to_class can be classes (o.__class___) or strings like:
+        'Products.ERP5Type.Document.Folder.Folder'
+    
+    XXX Some comments by Seb:
+    - it is not designed to work for modules with thousands of objects,
+      so it totally unusable when you have millions of objects
+    - it is totally unsafe. There is even such code inside :
+        self.manage_delObjects(id of original object)
+        commit()
+        self._setObject(new object instance)
+      So it is possible to definitely loose data.
+    - There is no proof that upgrade is really working. With such a
+      dangerous operation, it would be much more safer to have a proof,
+      something like the "fix point" after doing a synchronization. Such
+      checking should even be done before doing commit (like it might
+      be possible to export objects in the xml format used for exports
+      before and after, and run a diff). 
+
     """
-    #LOG("upradeObjectClass: folder ",0,self.id)
+    #LOG("upgradeObjectClass: folder ", 0, self.id)
     test_list = []
+    def getClassFromString(a_klass):
+      from_module = '.'.join(a_klass.split('.')[:-1])
+      real_klass = a_klass.split('.')[-1]
+      # XXX It is possible that API Change for Python 2.6.
+      mod = __import__(from_module, globals(), locals(),  [real_klass])
+      return getattr(mod, real_klass)
+
+    if isinstance(from_class, type('')):
+      from_class = getClassFromString(from_class)
+
+    if isinstance(to_class, type('')):
+      to_class = getClassFromString(to_class)
+
     folder = self.getObject()
     for o in self.listFolderContents():
       # Make sure this sub object is not the same as object
@@ -1101,32 +1132,36 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         if hasattr(obase,'upgradeObjectClass'):
           test_list += o.upgradeObjectClass(test_before=test_before, \
                           from_class=from_class, to_class=to_class,
-                          test_after=test_after)
+                          test_after=test_after, test_only=test_only)
+
         # Test if we must apply the upgrade
         if test_before(o) is not None:
-          LOG("upradeObjectClass: id ",0,id)
+          LOG("upgradeObjectClass: id ", 0, id)
           klass = obase.__class__
-          LOG("upradeObjectClass: klass ",0,str(klass))
-          LOG("upradeObjectClass: from_class ",0,str(from_class))
-          if klass == from_class:
+          LOG("upgradeObjectClass: klass ", 0 ,str(klass))
+          LOG("upgradeObjectClass: from_class ", 0 ,str(from_class))
+          if klass == from_class and not test_only:
             try:
-                newob = to_class(obase.id)
-                newob.id = obase.id # This line activates obase.
+              newob = to_class(obase.id)
+              newob.id = obase.id # This line activates obase.
             except AttributeError:
-                newob = to_class(id)
-                newob.id = id
+              newob = to_class(id)
+              newob.id = id
             keys = obase.__dict__.keys()
             for k in keys:
               if k not in ('id', 'meta_type', '__class__'):
                 setattr(newob,k,obase.__dict__[k])
 
             self.manage_delObjects(id)
-            LOG("upradeObjectClass: ",0,"add new object: %s" % str(newob.id))
+            LOG("upgradeObjectClass: ",0,"add new object: %s" % str(newob.id))
             transaction.commit() # XXX this commit should be after _setObject
-            LOG("upradeObjectClass: ",0,"newob.__class__: %s" % str(newob.__class__))
+            LOG("upgradeObjectClass: ",0,"newob.__class__: %s" % str(newob.__class__))
             self._setObject(id, newob)
             object_to_test = self._getOb(id)
             test_list += test_after(object_to_test)
+
+          if klass == from_class and test_only:
+            test_list += test_after(o)
 
     return test_list
 
@@ -1308,6 +1343,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     """
     portal = self.getPortalObject()
 
+    # If the user can manage the portal, do not hide any content types.
+    sm = getSecurityManager()
+    if sm.checkPermission(Permissions.ManagePortal, portal):
+      return [ti.id for ti in self.allowedContentTypes()]
+
     hidden_type_list = portal.portal_types.getTypeInfo(self)\
                                               .getTypeHiddenContentTypeList()
     return [ ti.id for ti in self.allowedContentTypes()
@@ -1425,7 +1465,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   def contentValues(self, *args, **kw):
     # Returns a list of documents contained in this folder.
     # ( no docstring to prevent publishing )
-    portal_type_id_list = self._getTypesTool().objectIds()
+    portal_type_id_list = self._getTypesTool().listContentTypes()
     filter_kw = kw.pop('filter', None) or {}
     portal_type = kw.pop('portal_type', None)
     if 'portal_type' in filter_kw:

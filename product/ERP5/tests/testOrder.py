@@ -39,6 +39,17 @@ from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.ZSQLCatalog.SQLCatalog import Catalog
+
+def catalogObjectListWrapper(self, object_list, method_id_list=None,
+    disable_cache=0, check_uid=1, idxs=None):
+  """Wrapper to mark inside of portal object list of catalogged objects"""
+  import transaction
+  portal = self.getPortalObject()
+  for q in object_list:
+    portal.catalogged_object_path_dict[q.getPath()] = 1
+  transaction.commit()
 
 class TestOrderMixin:
 
@@ -68,6 +79,40 @@ class TestOrderMixin:
     uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
+
+  def wrap_catalogObjectList(self):
+    self.original_catalogObjectList = Catalog.catalogObjectList
+    Catalog.catalogObjectList = catalogObjectListWrapper
+
+  def unwrap_catalogObjectList(self):
+    Catalog.catalogObjectList = self.original_catalogObjectList
+
+  def _testSubContentReindexing(self, parent_document, children_document_list):
+    """Helper method which shall be called *before* tic or commit"""
+    self.portal.catalogged_object_path_dict = PersistentMapping()
+    transaction.commit()
+    expected_path_list = [q.getPath() for q in children_document_list +
+        [parent_document]]
+    try:
+      # wrap call to catalogObjectList
+      self.wrap_catalogObjectList()
+      self.stepTic()
+      self.assertSameSet(
+        self.portal.catalogged_object_path_dict.keys(),
+        expected_path_list
+      )
+      # do real assertions
+      self.portal.catalogged_object_path_dict = PersistentMapping()
+      transaction.commit()
+      parent_document.reindexObject()
+      self.stepTic()
+      self.assertSameSet(
+        self.portal.catalogged_object_path_dict.keys(),
+        expected_path_list
+      )
+    finally:
+      # unwrap catalogObjectList
+      self.unwrap_catalogObjectList()
 
   def setUpPreferences(self):
     #create apparel variation preferences
@@ -1060,6 +1105,13 @@ class TestOrderMixin:
     order_line = sequence.get('order_line')
     order_line.setQuantity(order_line.getQuantity() + 111)
 
+  def stepDeleteOrderLine(self, sequence=None, sequence_list=None, **kw):
+    """
+      Delete order line
+    """
+    order_line = sequence.get('order_line')
+    order_line.getParentValue().manage_delObjects([order_line.getId()])
+
   def stepCheckOrderSimulationStable(self, sequence=None, \
       sequence_list=None, **kw):
     """
@@ -1741,6 +1793,21 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepPlanOrder \
                       stepTic \
                       stepOrderOrder \
+                      stepTic \
+                      stepCheckOrderSimulation \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    # Test when order line is deleted
+    sequence_string = '\
+                      stepCreateOrganisation \
+                      stepCreateProject \
+                      ' + self.non_variated_order_creation + '\
+                      stepOrderOrder \
+                      stepTic \
+                      stepDeleteOrderLine \
+                      stepTic \
+                      stepConfirmOrder \
                       stepTic \
                       stepCheckOrderSimulation \
                       '
@@ -2616,7 +2683,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
       self.fail(''.join(err_list))
     # The name of the printout is the reference of the order
     content_disposition = self.portal.REQUEST.RESPONSE.getHeader('content-disposition')
-    self.assertEquals(content_disposition, 'inline;filename="OrderReference.odt"')
+    self.assertEquals(content_disposition, 'attachment; filename="OrderReference.odt"')
 
   def test_Order_viewAsODT_person(self):
     # test order printout with a person as destination
@@ -2818,6 +2885,18 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
   # TODO: test with cells ?
 
+  def test_subcontent_reindexing(self):
+    """Tests, that modification on Order are propagated to lines and cells
+    during reindxation"""
+    order = self.portal.getDefaultModule(self.order_portal_type).newContent(
+                              portal_type=self.order_portal_type)
+    order_line = order.newContent(portal_type=self.order_line_portal_type)
+    inner_order_line = order_line.newContent(
+            portal_type=self.order_line_portal_type)
+    order_cell = order_line.newContent(
+        portal_type=self.order_cell_portal_type)
+    self._testSubContentReindexing(order, [order_line, inner_order_line,
+      order_cell])
 
 def test_suite():
   suite = unittest.TestSuite()

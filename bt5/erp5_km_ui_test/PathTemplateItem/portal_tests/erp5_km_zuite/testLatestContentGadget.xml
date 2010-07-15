@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title tal:content="template/getId"/>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
+</thead><tbody>\n
+\n
+\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+\n
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>click</td>\n
+  <td>//li[@id=\'select-module-toolbox\']/h3</td>\n
+   <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Documents\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//li[@id=\'action-document-toolbox\']/h3</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Add Drawing\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_title</td>\n
+  <td>test drawing</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_reference</td>\n
+  <td>test-drawing-document</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>subfield_field_my_group_list_default:list</td>\n
+  <td>label=Test Zuite Group/Section 1</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>input-save-edit</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//li[@id=\'action-document-toolbox\']/h3</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@title=\'Release Document\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Status changed</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Section 1</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Add Latest Content Gadget -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site/1/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site/1/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/km_latest_documents&amp;mode=web_section&amp;default_pad_group=default_section_pad</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Wait for activities to finish -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site/1/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForTextPresent</td>\n
+  <td>test drawing</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
+\n
+</tbody></table>\n
+</body>\n
+</html>\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testLatestContentGadget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -147,6 +147,7 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
         lines = []\n
         columns = []\n
         tabs = []\n
+        extra_dimension_list_list = []\n
         if as_cell_range_script_id:\n
           cell_range = getattr(matrix_context,\n
               as_cell_range_script_id)(matrixbox=True, base_id=cell_base_id)\n
@@ -156,6 +157,11 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
             lines, columns = cell_range\n
           elif len(cell_range) == 3:\n
             lines, columns, tabs = cell_range\n
+          elif len(cell_range) > 3:\n
+            lines = cell_range[0]\n
+            columns = cell_range[1]\n
+            tabs = cell_range[2]\n
+            extra_dimension_list_list = cell_range[3:]\n
         else:\n
           lines = matrixbox_field.get_value(\'lines\')\n
           columns = matrixbox_field.get_value(\'columns\')\n
@@ -164,11 +170,13 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
         column_ids = map(lambda x: x[0], columns)\n
         line_ids = map(lambda x: x[0], lines)\n
         tab_ids = map(lambda x: x[0], tabs)\n
+        extra_dimension_category_list_list = [[category for category, label in dimension_list] for dimension_list in extra_dimension_list_list]\n
 \n
         # There are 3 cases\n
         # Case 1: we do 1 dimensional matrix\n
         # Case 2: we do 2 dimensional matrix\n
         # Case 3: we do 2 dimensional matrix + tabs\n
+        # Case 4: we do 2 dimensional matrix + tabs + extra\n
         cell_range = matrix_context.getCellRange(base_id = cell_base_id)\n
         if (len(column_ids) == 0) or (column_ids[0] is None):\n
           matrixbox_cell_range = [line_ids]\n
@@ -182,8 +190,10 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
 \n
         else:\n
           matrixbox_cell_range = [line_ids, column_ids, tab_ids]\n
+          if extra_dimension_category_list_list:\n
+            matrixbox_cell_range = matrixbox_cell_range + extra_dimension_category_list_list\n
           if cell_range != matrixbox_cell_range:\n
-            matrix_context.setCellRange(line_ids, column_ids, tab_ids, base_id=cell_base_id)\n
+            matrix_context.setCellRange(base_id=cell_base_id, *matrixbox_cell_range)\n
 \n
       for k,v in matrixbox.items():\n
         # Only update cells which still exist\n

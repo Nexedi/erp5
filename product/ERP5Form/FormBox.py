@@ -88,11 +88,12 @@ class FormBoxWidget(Widget.Widget):
     """
         Render a form in a field
     """
-    # If FormBox is inside ListBox, we want use REQUEST['cell'] as
-    # 'here'.
-    # XXX REQUEST['cell'] will remain after ListBox rendering. We need a
-    # way to check if it is inside ListBox or not correctly.
-    here = REQUEST.get('cell', REQUEST['here'])
+    here = REQUEST['here']
+    # If 'cell' is not defined, we define 'cell' just same as 'here', so
+    # that we can use the same formbox for both ListBox and non-ListBox
+    # using 'cell' parameter.
+    if not REQUEST.has_key('cell'):
+      REQUEST.set('cell', here)
     try:
       form = getattr(here, field.get_value('formbox_target_id'))
     except AttributeError:

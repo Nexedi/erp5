@@ -34,6 +34,7 @@ class AccountingPreference:
   """
   
   _properties = (
+      # user preferences
     { 'id'          : 'preferred_accounting_transaction_from_date',
       'description' : 'The minimal date (inclusive) for transactions',
       'type'        : 'date',
@@ -54,6 +55,12 @@ class AccountingPreference:
       'description' : 'The section category for transactions; '\
                          'usually something like group/nexedi.',
       'type'        : 'string',
+      'preference'  : 1,
+      'mode'        : 'w'},
+    { 'id'          : 'preferred_accounting_section_category_strict',
+      'description' : 'Do we use strict section category membership by'
+                      ' default.',
+      'type'        : 'boolean',
       'preference'  : 1,
       'mode'        : 'w'},
     { 'id'          : 'preferred_accounting_transaction_source_section',
@@ -81,6 +88,22 @@ class AccountingPreference:
     { 'id'          : 'preferred_grouping_with_different_quantities',
       'description' : 'Allow grouping lines with different quantities',
       'type'        : 'boolean',
+      'preference'  : 1,
+      'write_permission': 'Manage properties',
+      'mode'        : 'w'},
+    { 'id'          : 'preferred_accounting_transaction_line_function_base_category',
+      'description' : 'Base category to use to specify analytics by function'
+                      ' on accounting lines',
+      'type'        : 'string',
+      'preference'  : 1,
+      'write_permission': 'Manage properties',
+      'mode'        : 'w'},
+    { 'id'          :
+        'preferred_accounting_transaction_line_analytic_base_category',
+      'description' : 'Base categories to use to specify analytics on '
+                      'accounting lines. Those categories will be used '
+                      'by direct category membership',
+      'type'        : 'tokens',
       'preference'  : 1,
       'write_permission': 'Manage properties',
       'mode'        : 'w'},

@@ -176,6 +176,7 @@ class ContributionTool(BaseTool):
         headers = url_file.headers
         if hasattr(headers, 'type'):
           mime_type = headers.type
+          kw['content_type'] = mime_type
       kw['file'] = file
 
     # If the portal_type was provided, we can go faster
@@ -231,7 +232,8 @@ class ContributionTool(BaseTool):
     # Then put the file inside ourselves for a short while
     if container_path is not None:
       container = self.getPortalObject().restrictedTraverse(container_path)
-    document = self._setObject(file_name, portal_type, user_login=user_login, id=id,
+    document = self._setObject(file_name, None, portal_type=portal_type,
+                               user_login=user_login, id=id,
                                container=container,
                                discover_metadata=discover_metadata,
                                )
@@ -245,7 +247,8 @@ class ContributionTool(BaseTool):
 
     # Then edit the document contents (so that upload can happen)
     document._edit(**kw)
-    if getattr(document, 'guessMimeType', None) is not None:
+    # if no content_type has been set, guess it
+    if 'content_type' not in kw and getattr(document, 'guessMimeType', None) is not None:
       # For File force to setup the mime_type
       document.guessMimeType(fname=file_name)
     if url:
@@ -318,8 +321,8 @@ class ContributionTool(BaseTool):
     return property_dict
 
   # WebDAV virtual folder support
-  def _setObject(self, name, portal_type, user_login=None, container=None,
-                       id=None, discover_metadata=1):
+  def _setObject(self, name, ob, portal_type=None, user_login=None,
+                 container=None, id=None, discover_metadata=1):
     """
       portal_contribution_registry will find appropriate portal type
       name by file_name and content itself.
@@ -333,6 +336,12 @@ class ContributionTool(BaseTool):
     # will be removed later on. We can safely store the
     # document inside us at this stage. Else we
     # must find out where to store it.
+    if ob is not None:
+      # Call from webdav API
+      # redefine parameters
+      portal_type = ob.getPortalType()
+      container = ob.getParentValue()
+      id = ob.getId()
     if not portal_type:
       document = BaseTool.newContent(self, id=name,
                                      portal_type=portal_type,
@@ -353,7 +362,7 @@ class ContributionTool(BaseTool):
         new_id = module.generateNewId()
       else:
         new_id = id
-      existing_document = module.get(new_id, None)
+      existing_document = module._getOb(new_id, None)
       if existing_document is None:
         # There is no preexisting document - we can therefore
         # set the new object
@@ -370,19 +379,7 @@ class ContributionTool(BaseTool):
             ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
           .discoverMetadata(file_name=name, user_login=user_login)
       else:
-        if existing_document.isExternalDocument():
-          document = existing_document
-          # If this is an external document, update its content
-          # document.activate().updateContentFromURL() # XXX I think this is no longer useful with alarms
-          # XXX - Make sure this does not increase ZODB
-          # XXX - what to do also with parameters (put again edit_kw) ?
-          # Providing some information to the use about the fact
-          # this was an existing document would also be great
-        else:
-          # We may have to implement additional revision support
-          # to support in place contribution (ie. for a given ID)
-          # but is this really useful ?
-          raise NotImplementedError
+        document = existing_document
       # Keep the document close to us - this is only useful for
       # file upload from webdav
       if not hasattr(self, '_v_document_cache'):
@@ -417,16 +414,24 @@ class ContributionTool(BaseTool):
     # when
     #   o = folder._getOb(id)
     # was called in DocumentConstructor
-    result = BaseTool._getOb(self, id, default=default)
-    if result is not _marker:
+    if default is _marker:
+      result = BaseTool._getOb(self, id)
+    else:
+      result = BaseTool._getOb(self, id, default=default)
+    if result is not None:
+      # if result is None, ignore it at this stage
+      # we can be more lucky with portal_catalog
       return result
 
     # Return an object listed by listDAVObjects
-    uid = str(id).split('-')[-1]
+    # ids are concatenation of uid + '-' + standard file name of documents
+    # get the uid
+    uid = str(id).split('-', 1)[0]
     object = self.getPortalObject().portal_catalog.unrestrictedGetResultValue(uid=uid)
     if object is not None:
       return object.getObject() # Make sure this does not break security. XXX
-
+    if default is not _marker:
+      return default
     # Raise an AttributeError the same way as in OFS.ObjectManager._getOb
     raise AttributeError, id
 
@@ -435,6 +440,7 @@ class ContributionTool(BaseTool):
     """
       Get all contents contributed by the current user. This is
       delegated to a script in order to help customisation.
+    XXX Killer feature, it is not scalable
     """
     method = getattr(self, 'ContributionTool_getMyContentList', None)
     if method is not None:
@@ -448,12 +454,8 @@ class ContributionTool(BaseTool):
     def wrapper(o_list):
       for o in o_list:
         o = o.getObject()
-        reference = o.getReference()
-        if reference:
-          id = '%s-%s' % (reference, o.getUid())
-        else:
-          id = '%s' % o.getUid()
-        yield o.getObject().asContext(id=id)
+        id = '%s-%s' % (o.getUid(), o.getStandardFileName(),)
+        yield o.asContext(id=id)
 
     return wrapper(object_list)
 
@@ -613,7 +615,7 @@ class ContributionTool(BaseTool):
       content.setContentMd5(new_content_md5)
 
   security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
-  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT, **kw):
+  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT, repeat_interval=1, batch_mode=True, **kw):
     """
       A wrapper method for newContent which provides extra safety
       in case or errors (ie. download, access, conflict, etc.).
@@ -624,13 +626,14 @@ class ContributionTool(BaseTool):
 
       NOTE: implementation needs to be done.
     """
+    document = None
     # First of all, make sure do not try to create an existing document
     if container_path is not None and id is not None:
       container = self.restrictedTraverse(container_path)
       document = container.get(id, None)
       if document is not None:
         # Document aleardy exists: no need to keep on crawling
-        return
+        return document
     try:
       document = self.newContent(container_path=container_path, id=id, **kw)
       if document.isIndexContent() and document.getCrawlingDepth() >= 0:
@@ -640,27 +643,31 @@ class ContributionTool(BaseTool):
         # If this is an index document, stop crawling if crawling_depth is 0
         document.activate().crawlContent()
     except urllib2.HTTPError, error:
-      if repeat == 0:
+      if repeat == 0 and batch_mode:
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid
         # crawling bad URL
         raise
-      # Catch any HTTP error
-      self.activate(at_date=DateTime() + 1).newContentFromURL(
-                        container_path=container_path, id=id,
-                        repeat=repeat - 1, **kw)
+      if repeat > 0:
+        # Catch any HTTP error
+        self.activate(at_date=DateTime() + repeat_interval).newContentFromURL(
+                          container_path=container_path, id=id,
+                          repeat=repeat - 1,
+                          repeat_interval=repeat_interval, **kw)
     except urllib2.URLError, error:
-      if repeat == 0:
+      if repeat == 0 and batch_mode:
         # XXX - Call the extendBadURLList method, --NOT Implemented--
         raise
-      print error.reason
       #if getattr(error.reason,'args',None):
         #if error.reason.args[0] == socket.EAI_AGAIN:
           ## Temporary failure in name resolution - try again in 1 day
-      self.activate(at_date=DateTime() + 1,
-                    activity="SQLQueue").newContentFromURL(
-                      container_path=container_path, id=id,
-                      repeat=repeat - 1, **kw)
+      if repeat > 0:
+        self.activate(at_date=DateTime() + repeat_interval,
+                      activity="SQLQueue").newContentFromURL(
+                        container_path=container_path, id=id,
+                        repeat=repeat - 1,
+                        repeat_interval=repeat_interval, **kw)
+    return document
 
   def _guessPortalType(self, name, typ, body):
     """

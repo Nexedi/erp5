@@ -75,6 +75,7 @@ class SolverDecision(ConfigurableMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.Comment
                     , PropertySheet.SolverSelection
                     , PropertySheet.Configurable
                     )
@@ -94,40 +95,49 @@ class SolverDecision(ConfigurableMixin, XMLObject):
     configurable object
     (implementation)
     """
-    # XXX To be implemented through type based method and using read
-    # transaction cache
-    try:
-      solver_portal_type = self.getSolverValue().getId()
-    except AttributeError:
+    solver_type = self.getSolverValue()
+    if solver_type is None:
       return {}
+    else:
+      return solver_type.getDefaultConfigurationPropertyDict(self)
 
-    solver = self.getParentValue().newContent(
-      portal_type=solver_portal_type,
-      temp_object=True,
-      delivery_list=self.getDeliveryList(),
-      causality_value=self)
-    method = solver._getTypeBasedMethod(
-      'getDefaultConfigurationPropertyDict',
-      fallback_script_id='Solver_getDefaultConfigurationPropertyDict')
+  def getConfigurationPropertyListDict(self):
+    """
+    Returns a dictionary of possible values for specified
+    configurable object
+    (implementation)
+    """
+    solver_type = self.getSolverValue()
+    if solver_type is None:
+      return {}
+    else:
+      return solver_type.getConfigurationPropertyListDict(self)
 
-    return method(self)
+  def searchDeliverySolverList(self, **kw):
+    """
+    this method returns a list of delivery solvers, as predicates against
+    solver decision.
+    """
+    target_solver_type = self.getSolverValue()
+    if target_solver_type is None:
+      return []
+    solver_list = target_solver_type.getDeliverySolverValueList()
+    return filter(lambda x:x.test(self), solver_list)
 
   def getExplanationMessage(self, all=False):
     """
     Returns the HTML message that describes the detail of divergences to
     be solved with this Solver Decision.
     """
-    movement_list = self.getDeliveryValueList()
     message_list = []
     for tester in self.getCausalityValueList():
-      for movement in movement_list:
-        for simulation_movement in movement.getDeliveryRelatedValueList():
-          message = tester.getExplanationMessage(simulation_movement)
-          if message is None:
-            continue
-          if all or len(message_list) == 0:
-            message_list.append(message)
-          elif len(message_list) == 1:
-            # XXX it should be a link to the detailed view.
-            message_list.append('...')
+      for simulation_movement in self.getDeliveryValueList():
+        message = tester.getExplanationMessage(simulation_movement)
+        if message is None:
+          continue
+        if all or len(message_list) == 0:
+          message_list.append(message)
+        elif len(message_list) == 1:
+          # XXX it should be a link to the detailed view.
+          message_list.append('...')
     return ''.join(message_list)

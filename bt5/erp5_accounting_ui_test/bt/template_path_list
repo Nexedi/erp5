@@ -35,6 +35,8 @@ portal_categories/group/vendor
 portal_categories/group/vendor/**
 portal_categories/payment_mode/cash
 portal_categories/payment_mode/check
+portal_categories/role/client
+portal_categories/role/supplier
 portal_preferences/accounting_zuite_preference
 portal_tests/accounting_zuite
 portal_tests/accounting_zuite/**

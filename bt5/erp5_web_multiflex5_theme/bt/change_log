@@ -1,3 +1,6 @@
+2010-06-21 Lucas
+* Added a draft script: WebSite_getSkinSignature
+
 2009-06-10 kazuhiko
 * news widget and search bar are enabled by existence of those section id configuration.
 

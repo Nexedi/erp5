@@ -26,28 +26,24 @@
 #
 ##############################################################################
 
-#
-# Prepare ERP5 Zelenium Test.
-#
-# usage: python runUnitTest.py --save [OPTION]... prepareFunctionalTest.py
-#
-
 import os
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
+from Products.ERP5Type.tests.runFunctionalTest import (
+    FunctionalTestRunner as FunctionalTestRunnerBase
+)
+
+class FunctionalTestRunner(FunctionalTestRunnerBase):
+
+  def __init__(self, host, port):
+    FunctionalTestRunnerBase.__init__(self, os.environ['INSTANCE_HOME'])
+    # local overrides
+    self.host = host
+    self.port = int(port)
+  
 os.environ['erp5_tests_portal_id'] = 'erp5_portal'
-
-MSG = '''
-This "test file" is intended to be used with --save option, for use with
-runFunctionalTest.py.
-
-It will now enter an IPython prompt so you can explore the environment either
-through IPython or through the "ZServer port" reported above.
-
-Once you exit the IPython prompt, this "test" will finish.
-'''.strip()
 
 class TestZelenium(ERP5TypeTestCase):
     def getBusinessTemplateList(self):
@@ -55,6 +51,7 @@ class TestZelenium(ERP5TypeTestCase):
           Return the list of business templates.
         """
         return ('erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
+                'erp5_knowledge_pad',
                 'erp5_trade', 'erp5_pdm', 'erp5_ooo_import',
                 'erp5_accounting', 'erp5_invoicing',
                 'erp5_simplified_invoicing', 'erp5_project',
@@ -64,16 +61,27 @@ class TestZelenium(ERP5TypeTestCase):
                 'erp5_project_ui_test',
                 'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
                 'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
-                # erp5_web_ui_test must run at the last.
+                'erp5_km', 'erp5_km_ui_test',
+                # erp5_web_ui_test must run at the last, because it logs out
+                # manager user and continue other tests as a user created in
+                # that test.
                 'erp5_web_ui_test',
-                # 'erp5_accounting_l10n_fr', 'erp5_payroll',
-                # 'erp5_payroll_ui_test',
                 )
 
-    def testInformation(self):
-        print MSG
-        import IPython.Shell
-        IPython.Shell.IPShellEmbed('')(local_ns=locals(), global_ns=globals())
+    def testFunctional(self):
+      # first of all, abort to get rid of the mysql participation inn this
+      # transaction
+      self.portal._p_jar.sync()
+      self.runner = FunctionalTestRunner(self.serverhost, self.serverport)
+      # XXX weak parsing of arguments, avoid spaces in argument values:
+      runner_arguments = os.environ.get('erp5_functional_test_arguments',
+                                        '').split()
+      self.runner.parseArgs(runner_arguments)
+      self.logMessage('starting functional test runner with arguments: %s' %
+                      runner_arguments)
+      self.runner.main()
+      self.runner.sendResult()
+
 
 def test_suite():
     suite = unittest.TestSuite()

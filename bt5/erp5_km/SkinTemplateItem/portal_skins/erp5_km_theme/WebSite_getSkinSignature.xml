@@ -72,10 +72,10 @@ default_skin = context.getSkinSelectionName() # No method available to retrieve 
 skin_selection = context.portal_skins.getSkinPath(default_skin).split(\',\')\n
 \n
 # Add here a line each an order error happens\n
-#skin_constraint.append(skin_selection.index(\'erp5_km\') < \\\n
-#                         skin_selection.index(\'erp5_knowledge_pad\'))\n
-#skin_constraint.append(skin_selection.index(\'erp5_km_theme\') < \\\n
-#                         skin_selection.index(\'erp5_knowledge_pad\'))\n
+skin_constraint.append(skin_selection.index(\'erp5_km\') < \\\n
+                         skin_selection.index(\'erp5_knowledge_pad\'))\n
+skin_constraint.append(skin_selection.index(\'erp5_km_theme\') < \\\n
+                         skin_selection.index(\'erp5_knowledge_pad\'))\n
 skin_constraint.append(skin_selection.index(\'erp5_km_theme\') < \\\n
                          skin_selection.index(\'erp5_web\'))\n
 skin_constraint.append(skin_selection.index(\'erp5_web\') < \\\n

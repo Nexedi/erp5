@@ -273,7 +273,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/getMaintainerList</string> </value>
+            <value> <string>python: \',\'.join(here.getMaintainerList())</string> </value>
         </item>
       </dictionary>
     </pickle>

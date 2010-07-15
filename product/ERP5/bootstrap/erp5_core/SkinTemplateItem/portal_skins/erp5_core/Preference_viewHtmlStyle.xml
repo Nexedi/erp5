@@ -107,6 +107,8 @@
                         <string>my_preferred_max_user_inactivity_duration</string>
                         <string>my_preferred_report_style</string>
                         <string>my_preferred_report_format</string>
+                        <string>my_preferred_image_format</string>
+                        <string>my_preferred_image_size</string>
                         <string>my_preferred_nano_image_height</string>
                         <string>my_preferred_nano_image_width</string>
                         <string>my_preferred_micro_image_height</string>

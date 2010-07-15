@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.ui.autocomplete.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/* Autocomplete\n
+----------------------------------*/\n
+.ui-autocomplete { position: absolute; cursor: default; }\t\n
+.ui-autocomplete-loading { background: white url(\'images/ui-anim_basic_16x16.gif\') right center no-repeat; }\n
+\n
+/* workarounds */\n
+* html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */\n
+\n
+/* Menu\n
+----------------------------------*/\n
+.ui-menu {\n
+\tlist-style:none;\n
+\tpadding: 2px;\n
+\tmargin: 0;\n
+\tdisplay:block;\n
+}\n
+.ui-menu .ui-menu {\n
+\tmargin-top: -3px;\n
+}\n
+.ui-menu .ui-menu-item {\n
+\tmargin:0;\n
+\tpadding: 0;\n
+\tzoom: 1;\n
+\tfloat: left;\n
+\tclear: left;\n
+\twidth: 100%;\n
+}\n
+.ui-menu .ui-menu-item a {\n
+\ttext-decoration:none;\n
+\tdisplay:block;\n
+\tpadding:.2em .4em;\n
+\tline-height:1.5;\n
+\tzoom:1;\n
+}\n
+.ui-menu .ui-menu-item a.ui-state-hover,\n
+.ui-menu .ui-menu-item a.ui-state-active {\n
+\tfont-weight: normal;\n
+\tmargin: -1px;\n
+}\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Autocomplete Accent Folding Demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.autocomplete.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\tvar names = [ "Jörn Zaefferer", "Scott González", "John Resig" ];\n
+\n
+\t\tvar accentMap = {\n
+\t\t\t\'á\':\'a\',\n
+\t\t\t\'ö\':\'o\'\n
+\t\t};\n
+\t\tvar normalize = function( term ) {\n
+\t\t\tvar ret = \'\';\n
+\t\t\tfor ( var i = 0; i < term.length; i++ ) {\n
+\t\t\t\tret += accentMap[ term.charAt(i) ] || term.charAt(i);\n
+\t\t\t}\n
+\t\t\treturn ret;\n
+\t\t};\n
+\n
+\t\t$( "#developer" ).autocomplete({\n
+\t\t\tsource: function( request, response ) {\n
+\t\t\t\tvar matcher = new RegExp( $.ui.autocomplete.escapeRegex( request.term ), "i" );\n
+\t\t\t\tresponse( $.grep( names, function( value ) {\n
+\t\t\t\t\tvalue = value.label || value.value || value;\n
+\t\t\t\t\treturn matcher.test( value ) || matcher.test( normalize( value ) );\n
+\t\t\t\t}) );\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<div class="ui-widget">\n
+\t<form>\n
+\t<label for="developer">Developer: </label>\n
+\t<input id="developer" />\n
+\t</form>\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+<p>\n
+The autocomplete field uses a custom source option which will match results that have accented characters even when the text field doesn\'t contain accented characters. However if the you type in accented characters in the text field it is smart enough not to show results that aren\'t accented.\n
+</p>\n
+<p>\n
+Try typing "Jo" to see "John" and "Jörn", then type "Jö" to see only "Jörn".\n
+</p>\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>folding.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

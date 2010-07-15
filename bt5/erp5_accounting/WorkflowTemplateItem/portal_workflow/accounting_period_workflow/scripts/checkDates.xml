@@ -62,6 +62,8 @@ closing_period = state_change[\'object\']\n
 portal = closing_period.getPortalObject()\n
 valid_state_list = [\'started\', \'stopped\', \'delivered\']\n
 \n
+closing_period.Base_checkConsistency()\n
+\n
 start_date = closing_period.getStartDate()\n
 stop_date = closing_period.getStopDate()\n
 \n

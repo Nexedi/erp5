@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL. All Rights Reserved.
@@ -93,8 +94,10 @@ class TextContent:
   security.declarePrivate('guessFormat')
   def guessFormat(self, text):
     """ Simple stab at guessing the inner format of the text """
-    if html_headcheck(text): return 'html'
-    else: return 'structured-text'
+    if html_headcheck(text):
+      return 'text/html'
+    else:
+      return 'text/structured'
 
   security.declarePrivate('handleText')
   def handleText(self, text, format=None):
@@ -102,7 +105,7 @@ class TextContent:
     headers = {}
     if not format:
       format = self.guessFormat(text)
-    if format == 'html':
+    if format == 'text/html':
       parser = SimpleHTMLParser()
       parser.feed(text)
       headers.update(parser.metatags)
@@ -111,7 +114,7 @@ class TextContent:
       body = bodyfinder(text)
     else:
       headers, body = parseHeadersBody(text, headers)
-    return headers, body, format
+    return headers, text, format
 
   ## FTP handlers
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
@@ -124,12 +127,9 @@ class TextContent:
 
     try:
       headers, body, format = self.handleText(text=body)
-      if REQUEST.get_header('Content-Type', '') == 'text/html':
-        text_format = 'html'
-      else:
-        text_format = format
-      if not headers.has_key('text_format'): headers['text_format'] = text_format
-      headers['text_content'] = body
+      content_type = REQUEST.get_header('Content-Type', '')
+      headers.setdefault('content_type', content_type)
+      headers['file'] = body
       self._edit(**headers)
     except 'EditingConflict', msg:
       # XXX Can we get an error msg through?  Should we be raising an
@@ -161,7 +161,7 @@ class TextContent:
     hdrlist = []
     for p in self.getPropertyMap():
       pid = p.get('base_id', p['id'])
-      if pid not in ('text_content',):
+      if pid not in ('text_content', 'data', 'base_data'):
         hdrlist.append((pid, self.getProperty(p['id'])))
     return hdrlist
 
@@ -187,11 +187,11 @@ class TextContent:
       bodytext = self._htmlsrc % {
           'title': self.getTitle(),
           'metatags': hdrtext,
-          'body': self.getTextContent(),
+          'body': self.asStrippedHTML(''),
           }
     else:
       hdrtext = formatRFC822Headers( hdrlist )
-      bodytext = '%s\r\n\r\n%s' % ( hdrtext, self.getTextContent() )
+      bodytext = '%s\r\n\r\n%s' % ( hdrtext, self.getTextContent('') )
 
     return bodytext
 
@@ -234,14 +234,10 @@ class Folder:
     if myType is not None and not myType.allowType( portal_type ) and \
        'portal_contributions' not in self.getPhysicalPath():
       raise ValueError('Disallowed subobject type: %s' % portal_type)
-    pt.constructContent( type_name=portal_type,
-                         container=self,
-                         id=name,
-                         is_indexable=0
-                         )
+    container = self.getPortalObject().getDefaultModule(portal_type)
+    pt.constructContent(type_name=portal_type,
+                        container=container,
+                        id=name)
 
-    # constructContent does too much, so the object has to be removed again
-    obj = aq_base( self._getOb( name ) )
-    self._delObject( name ) # _delObject will not invoke the catalog since is_indexable was set to 0
-    delattr(obj, 'isIndexable') # Allow indexing again (standard case)
-    return obj
+    document = container._getOb(name)
+    return document

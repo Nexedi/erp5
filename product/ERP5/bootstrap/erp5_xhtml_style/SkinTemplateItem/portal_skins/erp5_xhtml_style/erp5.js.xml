@@ -174,7 +174,7 @@ function fixLeftRightHeightAndFocus(fix_height) {\n
 // and modify respective main form action\n
 // if clear_changed_flag is set to true, changed will be set to false, so no\n
 // warning message about unsaved changes will be displayed\n
-function submitFormOnEnter(event, form, method_name, clear_changed_flag){\n
+function submitFormOnEnter(event, form, method_name, clear_changed_flag, element){\n
   if (clear_changed_flag == null){\n
     clear_changed_flag = false;\n
   }\n
@@ -186,6 +186,12 @@ function submitFormOnEnter(event, form, method_name, clear_changed_flag){\n
     if (clear_changed_flag==true) {\n
       changed = false;\n
     }\n
+    if(element!=null){\n
+      // disable other form elements having same name attribute\n
+      forEach(getElementsByTagAndClassName(element.tagName), function (input){\n
+        if((input.name == element.name) && (input!=element)){input.disabled = true;}\n
+      });\n
+     }\n
     form.submit();\n
   }\n
 }\n
@@ -253,38 +259,45 @@ while leaving the page, unless leaving by:\n
 */\n
 var addOnChangeEventHandler = function() {\n
   var master = document.getElementById("master");\n
-  divs = master.getElementsByTagName("div");\n
-  for (i=0; i<divs.length; i++) {\n
-    if (divs[i].getAttribute("class") == "input") {\n
-      nodes = divs[i].childNodes;\n
+  if (master) {\n
+    divs = master.getElementsByTagName("div");\n
+    for (i=0; i<divs.length; i++) {\n
+      if (divs[i].getAttribute("class") == "input") {\n
+        nodes = divs[i].childNodes;\n
 \n
-      for (j=0; j<nodes.length; j++) {\n
-        if (nodes[j].nodeName == "INPUT" ||\n
-            nodes[j].nodeName == "SELECT" ||\n
-            nodes[j].nodeName == "TEXTAREA") {\n
-            if (nodes[j].value == "update..." ||\n
-                (nodes[j].nodeName == "INPUT" &&\n
-                nodes[j].type == \'submit\')) {\n
-             // this is a relation field wheel or a submit form button\n
-           nodes[j].onclick = function() { changed = false;};\n
-          } else {\n
-            if (!nodes[j].onchange) {\n
-              nodes[j].onchange = function() { changed = true; };\n
+        for (j=0; j<nodes.length; j++) {\n
+          if (nodes[j].nodeName == "INPUT" ||\n
+              nodes[j].nodeName == "SELECT" ||\n
+              nodes[j].nodeName == "TEXTAREA") {\n
+              if (nodes[j].value == "update..." ||\n
+                  (nodes[j].nodeName == "INPUT" &&\n
+                  nodes[j].type == \'submit\')) {\n
+               // this is a relation field wheel or a submit form button\n
+             nodes[j].onclick = function() { changed = false;};\n
+            } else {\n
+              if (!nodes[j].onchange) {\n
+                nodes[j].onchange = function() { changed = true; };\n
+              }\n
+            }\n
+          } \n
+          /* Listbox or MatrixBox */\n
+          if (nodes[j].nodeName == "DIV" && (\n
+              nodes[j].getAttribute("class") == "listbox" ||\n
+              nodes[j].getAttribute("class") == "MatrixContent")) {\n
+            trs = nodes[j].getElementsByTagName(\'td\');\n
+            for (k=0; k<trs.length; k++){\n
+              if (trs[k].getAttribute("class") == "listbox_search_line") {\n
+                continue;\n
+              }\n
+              inputs = trs[k].getElementsByTagName(\'input\');\n
+              for (l=0; l<inputs.length; l++){\n
+                if (inputs[l].getAttribute("type") != "hidden" &&\n
+                    !inputs[l].onchange) {\n
+                  inputs[l].onchange = function() { changed = true; };\n
+                }\n
+              }\n
             }\n
           }\n
-        } \n
-        /* Listbox or MatrixBox */\n
-        if (nodes[j].nodeName == "DIV" && (\n
-            nodes[j].getAttribute("class") == "listbox" ||\n
-            nodes[j].getAttribute("class") == "MatrixContent")) {\n
-\n
-           inputs = nodes[j].getElementsByTagName(\'input\');\n
-           for (k=0; k<inputs.length; k++){\n
-             if (inputs[k].getAttribute("type") != "hidden" &&\n
-                 !inputs[k].onchange) {\n
-               inputs[k].onchange = function() { changed = true; };\n
-             }\n
-           }\n
         }\n
       }\n
     }\n
@@ -296,31 +309,33 @@ var addOnChangeEventHandler = function() {\n
 */\n
 var rewriteIndentedSelect = function() {\n
   var master = document.getElementById("master");\n
-  selects = master.getElementsByTagName("select");\n
-  for (i=0; i<selects.length; i++) {\n
-    options = selects[i].childNodes;\n
-    for (j=0; j<options.length; j++) {\n
-      if (options[j].nodeName != "OPTION") {\n
-        continue;\n
-      }\n
-      text = options[j].innerHTML;\n
-      if (text.substring(0, 1) == \'\\n\') {\n
-        text = text.substring(1, text.length);\n
-      }\n
-      level = 0;\n
-      if (text.substring(0, 6) == \'&nbsp;\') {\n
-        for (idx=0; idx <= text.length; idx+=6) {\n
-          if (text.substring(idx, idx+6) == \'&nbsp;\') {\n
-            level += 1;\n
-          } else {\n
-            break;\n
+  if (master){\n
+    selects = master.getElementsByTagName("select");\n
+    for (i=0; i<selects.length; i++) {\n
+      options = selects[i].childNodes;\n
+      for (j=0; j<options.length; j++) {\n
+        if (options[j].nodeName != "OPTION") {\n
+          continue;\n
+        }\n
+        text = options[j].innerHTML;\n
+        if (text.substring(0, 1) == \'\\n\') {\n
+          text = text.substring(1, text.length);\n
+        }\n
+        level = 0;\n
+        if (text.substring(0, 6) == \'&nbsp;\') {\n
+          for (idx=0; idx <= text.length; idx+=6) {\n
+            if (text.substring(idx, idx+6) == \'&nbsp;\') {\n
+              level += 1;\n
+            } else {\n
+              break;\n
+            }\n
           }\n
         }\n
-      }\n
-      if (level >= 1) {\n
-        level = level / 4.;\n
-        options[j].innerHTML = text.replace(/^(&nbsp;)+/, "");\n
-        options[j].style.paddingLeft = level+"em";\n
+        if (level >= 1) {\n
+          level = level / 4.;\n
+          options[j].innerHTML = text.replace(/^(&nbsp;)+/, "");\n
+          options[j].style.paddingLeft = level+"em";\n
+        }\n
       }\n
     }\n
   }\n

@@ -1,2 +1,2 @@
 #!/bin/bash
-${software_definition:software_home}/parts/apache/bin/httpd -f ${apache-conf:output} $*
+${:binary} -f ${:config-path} $*

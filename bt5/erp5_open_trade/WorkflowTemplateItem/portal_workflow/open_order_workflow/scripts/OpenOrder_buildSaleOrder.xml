@@ -56,13 +56,14 @@
             <value> <string>order = state_change[\'object\']\n
 transition_kw = state_change[\'kwargs\']\n
 \n
-previous_tag = order.getPath() + \'_firstUpdateAppliedRule\'\n
-expand_tag = order.getPath() + \'_expand\'\n
-activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
+path = order.getPath()\n
+tag = \'%s_updateAppliedRule\' % path\n
+expand_tag = \'%s_expand\' % path\n
+activate_kw = {\'tag\':expand_tag, \'priority\':3}\n
 kw = {}\n
 if transition_kw.get(\'calculation_base_date\') is not None:\n
   kw[\'calculation_base_date\'] = transition_kw[\'calculation_base_date\']\n
-order.activate(tag=expand_tag, after_tag=previous_tag).updateAppliedRule(\n
+order.activate(tag=tag, after_tag=expand_tag).updateAppliedRule(\n
              rule_reference=\'default_open_order_rule\', activate_kw=activate_kw, **kw)\n
 \n
 \n
@@ -111,7 +112,8 @@ if order_portal_type == \'Open Sale Order\':\n
                             <string>order</string>
                             <string>transition_kw</string>
                             <string>_getattr_</string>
-                            <string>previous_tag</string>
+                            <string>path</string>
+                            <string>tag</string>
                             <string>expand_tag</string>
                             <string>activate_kw</string>
                             <string>kw</string>

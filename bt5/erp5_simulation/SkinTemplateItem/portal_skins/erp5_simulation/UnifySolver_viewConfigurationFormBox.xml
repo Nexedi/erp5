@@ -75,6 +75,7 @@
                     <value>
                       <list>
                         <string>my_value</string>
+                        <string>my_tested_property_list</string>
                       </list>
                     </value>
                 </item>

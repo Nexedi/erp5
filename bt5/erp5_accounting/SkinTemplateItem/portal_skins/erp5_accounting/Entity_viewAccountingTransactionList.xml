@@ -76,7 +76,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
-                        <string>preferred_warning</string>
+                        <string>your_preferred_warning</string>
                       </list>
                     </value>
                 </item>
@@ -84,9 +84,9 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_credit</string>
+                        <string>listbox_credit_price</string>
                         <string>listbox_date</string>
-                        <string>listbox_debit</string>
+                        <string>listbox_debit_price</string>
                         <string>listbox_running_total_price</string>
                         <string>listbox_total_price</string>
                       </list>
@@ -97,8 +97,8 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>preferred_from_date</string>
-                        <string>preferred_at_date</string>
+                        <string>your_preferred_from_date</string>
+                        <string>your_preferred_at_date</string>
                       </list>
                     </value>
                 </item>
@@ -106,8 +106,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>preferred_section</string>
-                        <string>preferred_simulation_state</string>
+                        <string>your_preferred_section</string>
+                        <string>your_preferred_simulation_state</string>
                       </list>
                     </value>
                 </item>

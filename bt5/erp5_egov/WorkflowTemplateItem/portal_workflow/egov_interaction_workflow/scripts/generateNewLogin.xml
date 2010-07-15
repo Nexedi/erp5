@@ -64,10 +64,10 @@ inc = 1\n
 # XXX here it should be possible to use a regular expression\n
 login = text.lower()\n
 login = login.replace(\' \', \'_\')\n
-login = login.replace(\'\xc3\xa9\', \'e\')\n
-login = login.replace(\'\xc3\xa8\', \'e\')\n
-login = login.replace(\'\xc3\xa0\', \'a\')\n
-login = login.replace(\'\xc3\xa7\', \'c\')\n
+login = login.replace(\'é\', \'e\')\n
+login = login.replace(\'è\', \'e\')\n
+login = login.replace(\'à\', \'a\')\n
+login = login.replace(\'ç\', \'c\')\n
 \n
 new_login = login\n
 \n

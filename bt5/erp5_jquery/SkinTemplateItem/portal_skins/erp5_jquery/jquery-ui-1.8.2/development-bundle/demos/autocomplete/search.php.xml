@@ -1,0 +1,692 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?php\n
+\n
+$q = strtolower($_GET["term"]);\n
+if (!$q) return;\n
+$items = array(\n
+"Great <em>Bittern</em>"=>"Botaurus stellaris",\n
+"Little <em>Grebe</em>"=>"Tachybaptus ruficollis",\n
+"Black-necked Grebe"=>"Podiceps nigricollis",\n
+"Little Bittern"=>"Ixobrychus minutus",\n
+"Black-crowned Night Heron"=>"Nycticorax nycticorax",\n
+"Purple Heron"=>"Ardea purpurea",\n
+"White Stork"=>"Ciconia ciconia",\n
+"Spoonbill"=>"Platalea leucorodia",\n
+"Red-crested Pochard"=>"Netta rufina",\n
+"Common Eider"=>"Somateria mollissima",\n
+"Red Kite"=>"Milvus milvus",\n
+"Hen Harrier"=>"Circus cyaneus",\n
+"Montagu`s Harrier"=>"Circus pygargus",\n
+"Black Grouse"=>"Tetrao tetrix",\n
+"Grey Partridge"=>"Perdix perdix",\n
+"Spotted Crake"=>"Porzana porzana",\n
+"Corncrake"=>"Crex crex",\n
+"Common Crane"=>"Grus grus",\n
+"Avocet"=>"Recurvirostra avosetta",\n
+"Stone Curlew"=>"Burhinus oedicnemus",\n
+"Common Ringed Plover"=>"Charadrius hiaticula",\n
+"Kentish Plover"=>"Charadrius alexandrinus",\n
+"Ruff"=>"Philomachus pugnax",\n
+"Common Snipe"=>"Gallinago gallinago",\n
+"Black-tailed Godwit"=>"Limosa limosa",\n
+"Common Redshank"=>"Tringa totanus",\n
+"Sandwich Tern"=>"Sterna sandvicensis",\n
+"Common Tern"=>"Sterna hirundo",\n
+"Arctic Tern"=>"Sterna paradisaea",\n
+"Little Tern"=>"Sternula albifrons",\n
+"Black Tern"=>"Chlidonias niger",\n
+"Barn Owl"=>"Tyto alba",\n
+"Little Owl"=>"Athene noctua",\n
+"Short-eared Owl"=>"Asio flammeus",\n
+"European Nightjar"=>"Caprimulgus europaeus",\n
+"Common Kingfisher"=>"Alcedo atthis",\n
+"Eurasian Hoopoe"=>"Upupa epops",\n
+"Eurasian Wryneck"=>"Jynx torquilla",\n
+"European Green Woodpecker"=>"Picus viridis",\n
+"Crested Lark"=>"Galerida cristata",\n
+"White-headed Duck"=>"Oxyura leucocephala",\n
+"Pale-bellied Brent Goose"=>"Branta hrota",\n
+"Tawny Pipit"=>"Anthus campestris",\n
+"Whinchat"=>"Saxicola rubetra",\n
+"European Stonechat"=>"Saxicola rubicola",\n
+"Northern Wheatear"=>"Oenanthe oenanthe",\n
+"Savi`s Warbler"=>"Locustella luscinioides",\n
+"Sedge Warbler"=>"Acrocephalus schoenobaenus",\n
+"Great Reed Warbler"=>"Acrocephalus arundinaceus",\n
+"Bearded Reedling"=>"Panurus biarmicus",\n
+"Red-backed Shrike"=>"Lanius collurio",\n
+"Great Grey Shrike"=>"Lanius excubitor",\n
+"Woodchat Shrike"=>"Lanius senator",\n
+"Common Raven"=>"Corvus corax",\n
+"Yellowhammer"=>"Emberiza citrinella",\n
+"Ortolan Bunting"=>"Emberiza hortulana",\n
+"Corn Bunting"=>"Emberiza calandra",\n
+"Great Cormorant"=>"Phalacrocorax carbo",\n
+"Hawfinch"=>"Coccothraustes coccothraustes",\n
+"Common Shelduck"=>"Tadorna tadorna",\n
+"Bluethroat"=>"Luscinia svecica",\n
+"Grey Heron"=>"Ardea cinerea",\n
+"Barn Swallow"=>"Hirundo rustica",\n
+"Hooded Crow"=>"Corvus cornix",\n
+"Dunlin"=>"Calidris alpina",\n
+"Eurasian Pied Flycatcher"=>"Ficedula hypoleuca",\n
+"Eurasian Nuthatch"=>"Sitta europaea",\n
+"Short-toed Tree Creeper"=>"Certhia brachydactyla",\n
+"Wood Lark"=>"Lullula arborea",\n
+"Tree Pipit"=>"Anthus trivialis",\n
+"Eurasian Hobby"=>"Falco subbuteo",\n
+"Marsh Warbler"=>"Acrocephalus palustris",\n
+"Wood Sandpiper"=>"Tringa glareola",\n
+"Tawny Owl"=>"Strix aluco",\n
+"Lesser Whitethroat"=>"Sylvia curruca",\n
+"Barnacle Goose"=>"Branta leucopsis",\n
+"Common Goldeneye"=>"Bucephala clangula",\n
+"Western Marsh Harrier"=>"Circus aeruginosus",\n
+"Common Buzzard"=>"Buteo buteo",\n
+"Sanderling"=>"Calidris alba",\n
+"Little Gull"=>"Larus minutus",\n
+"Eurasian Magpie"=>"Pica pica",\n
+"Willow Warbler"=>"Phylloscopus trochilus",\n
+"Wood Warbler"=>"Phylloscopus sibilatrix",\n
+"Great Crested Grebe"=>"Podiceps cristatus",\n
+"Eurasian Jay"=>"Garrulus glandarius",\n
+"Common Redstart"=>"Phoenicurus phoenicurus",\n
+"Blue-headed Wagtail"=>"Motacilla flava",\n
+"Common Swift"=>"Apus apus",\n
+"Marsh Tit"=>"Poecile palustris",\n
+"Goldcrest"=>"Regulus regulus",\n
+"European Golden Plover"=>"Pluvialis apricaria",\n
+"Eurasian Bullfinch"=>"Pyrrhula pyrrhula",\n
+"Common Whitethroat"=>"Sylvia communis",\n
+"Meadow Pipit"=>"Anthus pratensis",\n
+"Greylag Goose"=>"Anser anser",\n
+"Spotted Flycatcher"=>"Muscicapa striata",\n
+"European Greenfinch"=>"Carduelis chloris",\n
+"Common Greenshank"=>"Tringa nebularia",\n
+"Great Spotted Woodpecker"=>"Dendrocopos major",\n
+"Greater Canada Goose"=>"Branta canadensis",\n
+"Mistle Thrush"=>"Turdus viscivorus",\n
+"Great Black-backed Gull"=>"Larus marinus",\n
+"Goosander"=>"Mergus merganser",\n
+"Great Egret"=>"Casmerodius albus",\n
+"Northern Goshawk"=>"Accipiter gentilis",\n
+"Dunnock"=>"Prunella modularis",\n
+"Stock Dove"=>"Columba oenas",\n
+"Common Wood Pigeon"=>"Columba palumbus",\n
+"Eurasian Woodcock"=>"Scolopax rusticola",\n
+"House Sparrow"=>"Passer domesticus",\n
+"Common House Martin"=>"Delichon urbicum",\n
+"Red Knot"=>"Calidris canutus",\n
+"Western Jackdaw"=>"Corvus monedula",\n
+"Brambling"=>"Fringilla montifringilla",\n
+"Northern Lapwing"=>"Vanellus vanellus",\n
+"European Reed Warbler"=>"Acrocephalus scirpaceus",\n
+"Lesser Black-backed Gull"=>"Larus fuscus",\n
+"Little Egret"=>"Egretta garzetta",\n
+"Little Stint"=>"Calidris minuta",\n
+"Common Linnet"=>"Carduelis cannabina",\n
+"Mute Swan"=>"Cygnus olor",\n
+"Common Cuckoo"=>"Cuculus canorus",\n
+"Black-headed Gull"=>"Larus ridibundus",\n
+"Greater White-fronted Goose"=>"Anser albifrons",\n
+"Great Tit"=>"Parus major",\n
+"Redwing"=>"Turdus iliacus",\n
+"Gadwall"=>"Anas strepera",\n
+"Fieldfare"=>"Turdus pilaris",\n
+"Tufted Duck"=>"Aythya fuligula",\n
+"Crested Tit"=>"Lophophanes cristatus",\n
+"Willow Tit"=>"Poecile montanus",\n
+"Eurasian Coot"=>"Fulica atra",\n
+"Common Blackbird"=>"Turdus merula",\n
+"Smew"=>"Mergus albellus",\n
+"Common Sandpiper"=>"Actitis hypoleucos",\n
+"Sand Martin"=>"Riparia riparia",\n
+"Purple Sandpiper"=>"Calidris maritima",\n
+"Northern Pintail"=>"Anas acuta",\n
+"Blue Tit"=>"Cyanistes caeruleus",\n
+"European Goldfinch"=>"Carduelis carduelis",\n
+"Eurasian Whimbrel"=>"Numenius phaeopus",\n
+"Common Reed Bunting"=>"Emberiza schoeniclus",\n
+"Eurasian Tree Sparrow"=>"Passer montanus",\n
+"Rook"=>"Corvus frugilegus",\n
+"European Robin"=>"Erithacus rubecula",\n
+"Bar-tailed Godwit"=>"Limosa lapponica",\n
+"Dark-bellied Brent Goose"=>"Branta bernicla",\n
+"Eurasian Oystercatcher"=>"Haematopus ostralegus",\n
+"Eurasian Siskin"=>"Carduelis spinus",\n
+"Northern Shoveler"=>"Anas clypeata",\n
+"Eurasian Wigeon"=>"Anas penelope",\n
+"Eurasian Sparrow Hawk"=>"Accipiter nisus",\n
+"Icterine Warbler"=>"Hippolais icterina",\n
+"Common Starling"=>"Sturnus vulgaris",\n
+"Long-tailed Tit"=>"Aegithalos caudatus",\n
+"Ruddy Turnstone"=>"Arenaria interpres",\n
+"Mew Gull"=>"Larus canus",\n
+"Common Pochard"=>"Aythya ferina",\n
+"Common Chiffchaff"=>"Phylloscopus collybita",\n
+"Greater Scaup"=>"Aythya marila",\n
+"Common Kestrel"=>"Falco tinnunculus",\n
+"Garden Warbler"=>"Sylvia borin",\n
+"Eurasian Collared Dove"=>"Streptopelia decaocto",\n
+"Eurasian Skylark"=>"Alauda arvensis",\n
+"Common Chaffinch"=>"Fringilla coelebs",\n
+"Common Moorhen"=>"Gallinula chloropus",\n
+"Water Pipit"=>"Anthus spinoletta",\n
+"Mallard"=>"Anas platyrhynchos",\n
+"Winter Wren"=>"Troglodytes troglodytes",\n
+"Common Teal"=>"Anas crecca",\n
+"Green Sandpiper"=>"Tringa ochropus",\n
+"White Wagtail"=>"Motacilla alba",\n
+"Eurasian Curlew"=>"Numenius arquata",\n
+"Song Thrush"=>"Turdus philomelos",\n
+"European Herring Gull"=>"Larus argentatus",\n
+"Grey Plover"=>"Pluvialis squatarola",\n
+"Carrion Crow"=>"Corvus corone",\n
+"Coal Tit"=>"Periparus ater",\n
+"Spotted Redshank"=>"Tringa erythropus",\n
+"Blackcap"=>"Sylvia atricapilla",\n
+"Egyptian Vulture"=>"Neophron percnopterus",\n
+"Razorbill"=>"Alca torda",\n
+"Alpine Swift"=>"Apus melba",\n
+"Long-legged Buzzard"=>"Buteo rufinus",\n
+"Audouin`s Gull"=>"Larus audouinii",\n
+"Balearic Shearwater"=>"Puffinus mauretanicus",\n
+"Upland Sandpiper"=>"Bartramia longicauda",\n
+"Greater Spotted Eagle"=>"Aquila clanga",\n
+"Ring Ouzel"=>"Turdus torquatus",\n
+"Yellow-browed Warbler"=>"Phylloscopus inornatus",\n
+"Blue Rock Thrush"=>"Monticola solitarius",\n
+"Buff-breasted Sandpiper"=>"Tryngites subruficollis",\n
+"Jack Snipe"=>"Lymnocryptes minimus",\n
+"White-rumped Sandpiper"=>"Calidris fuscicollis",\n
+"Ruddy Shelduck"=>"Tadorna ferruginea",\n
+"Cetti\'s Warbler"=>"Cettia cetti",\n
+"Citrine Wagtail"=>"Motacilla citreola",\n
+"Roseate Tern"=>"Sterna dougallii",\n
+"Black-legged Kittiwake"=>"Rissa tridactyla",\n
+"Pygmy Cormorant"=>"Phalacrocorax pygmeus",\n
+"Booted Eagle"=>"Aquila pennata",\n
+"Lesser White-fronted Goose"=>"Anser erythropus",\n
+"Little Bunting"=>"Emberiza pusilla",\n
+"Eleonora\'s Falcon"=>"Falco eleonorae",\n
+"European Serin"=>"Serinus serinus",\n
+"Twite"=>"Carduelis flavirostris",\n
+"Yellow-legged Gull"=>"Larus michahellis",\n
+"Gyr Falcon"=>"Falco rusticolus",\n
+"Greenish Warbler"=>"Phylloscopus trochiloides",\n
+"Red-necked Phalarope"=>"Phalaropus lobatus",\n
+"Mealy Redpoll"=>"Carduelis flammea",\n
+"Glaucous Gull"=>"Larus hyperboreus",\n
+"Great Skua"=>"Stercorarius skua",\n
+"Great Bustard"=>"Otis tarda",\n
+"Velvet Scoter"=>"Melanitta fusca",\n
+"Pine Grosbeak"=>"Pinicola enucleator",\n
+"House Crow"=>"Corvus splendens",\n
+"Hume`s Leaf Warbler"=>"Phylloscopus humei",\n
+"Great Northern Loon"=>"Gavia immer",\n
+"Long-tailed Duck"=>"Clangula hyemalis",\n
+"Lapland Longspur"=>"Calcarius lapponicus",\n
+"Northern Gannet"=>"Morus bassanus",\n
+"Eastern Imperial Eagle"=>"Aquila heliaca",\n
+"Little Auk"=>"Alle alle",\n
+"Lesser Spotted Woodpecker"=>"Dendrocopos minor",\n
+"Iceland Gull"=>"Larus glaucoides",\n
+"Parasitic Jaeger"=>"Stercorarius parasiticus",\n
+"Bewick`s Swan"=>"Cygnus bewickii",\n
+"Little Bustard"=>"Tetrax tetrax",\n
+"Little Crake"=>"Porzana parva",\n
+"Baillon`s Crake"=>"Porzana pusilla",\n
+"Long-tailed Jaeger"=>"Stercorarius longicaudus",\n
+"King Eider"=>"Somateria spectabilis",\n
+"Greater Short-toed Lark"=>"Calandrella brachydactyla",\n
+"Houbara Bustard"=>"Chlamydotis undulata",\n
+"Curlew Sandpiper"=>"Calidris ferruginea",\n
+"Common Crossbill"=>"Loxia curvirostra",\n
+"European Shag"=>"Phalacrocorax aristotelis",\n
+"Horned Grebe"=>"Podiceps auritus",\n
+"Common Quail"=>"Coturnix coturnix",\n
+"Bearded Vulture"=>"Gypaetus barbatus",\n
+"Lanner Falcon"=>"Falco biarmicus",\n
+"Middle Spotted Woodpecker"=>"Dendrocopos medius",\n
+"Pomarine Jaeger"=>"Stercorarius pomarinus",\n
+"Red-breasted Merganser"=>"Mergus serrator",\n
+"Eurasian Black Vulture"=>"Aegypius monachus",\n
+"Eurasian Dotterel"=>"Charadrius morinellus",\n
+"Common Nightingale"=>"Luscinia megarhynchos",\n
+"Northern willow warbler"=>"Phylloscopus trochilus acredula",\n
+"Manx Shearwater"=>"Puffinus puffinus",\n
+"Northern Fulmar"=>"Fulmarus glacialis",\n
+"Eurasian Eagle Owl"=>"Bubo bubo",\n
+"Orphean Warbler"=>"Sylvia hortensis",\n
+"Melodious Warbler"=>"Hippolais polyglotta",\n
+"Pallas\'s Leaf Warbler"=>"Phylloscopus proregulus",\n
+"Atlantic Puffin"=>"Fratercula arctica",\n
+"Black-throated Loon"=>"Gavia arctica",\n
+"Bohemian Waxwing"=>"Bombycilla garrulus",\n
+"Marsh Sandpiper"=>"Tringa stagnatilis",\n
+"Great Snipe"=>"Gallinago media",\n
+"Squacco Heron"=>"Ardeola ralloides",\n
+"Long-eared Owl"=>"Asio otus",\n
+"Caspian Tern"=>"Hydroprogne caspia",\n
+"Red-breasted Goose"=>"Branta ruficollis",\n
+"Red-throated Loon"=>"Gavia stellata",\n
+"Common Rosefinch"=>"Carpodacus erythrinus",\n
+"Red-footed Falcon"=>"Falco vespertinus",\n
+"Ross\'s Goose"=>"Anser rossii",\n
+"Red Phalarope"=>"Phalaropus fulicarius",\n
+"Pied Wagtail"=>"Motacilla yarrellii",\n
+"Rose-coloured Starling"=>"Sturnus roseus",\n
+"Rough-legged Buzzard"=>"Buteo lagopus",\n
+"Saker Falcon"=>"Falco cherrug",\n
+"European Roller"=>"Coracias garrulus",\n
+"Short-toed Eagle"=>"Circaetus gallicus",\n
+"Peregrine Falcon"=>"Falco peregrinus",\n
+"Merlin"=>"Falco columbarius",\n
+"Snow Goose"=>"Anser caerulescens",\n
+"Snowy Owl"=>"Bubo scandiacus",\n
+"Snow Bunting"=>"Plectrophenax nivalis",\n
+"Common Grasshopper Warbler"=>"Locustella naevia",\n
+"Golden Eagle"=>"Aquila chrysaetos",\n
+"Black-winged Stilt"=>"Himantopus himantopus",\n
+"Steppe Eagle"=>"Aquila nipalensis",\n
+"Pallid Harrier"=>"Circus macrourus",\n
+"European Storm-petrel"=>"Hydrobates pelagicus",\n
+"Horned Lark"=>"Eremophila alpestris",\n
+"Eurasian Treecreeper"=>"Certhia familiaris",\n
+"Taiga Bean Goose"=>"Anser fabalis",\n
+"Temminck`s Stint"=>"Calidris temminckii",\n
+"Terek Sandpiper"=>"Xenus cinereus",\n
+"Tundra Bean Goose"=>"Anser serrirostris",\n
+"European Turtle Dove"=>"Streptopelia turtur",\n
+"Leach`s Storm-petrel"=>"Oceanodroma leucorhoa",\n
+"Eurasian Griffon Vulture"=>"Gyps fulvus",\n
+"Paddyfield Warbler"=>"Acrocephalus agricola",\n
+"Osprey"=>"Pandion haliaetus",\n
+"Firecrest"=>"Regulus ignicapilla",\n
+"Water Rail"=>"Rallus aquaticus",\n
+"European Honey Buzzard"=>"Pernis apivorus",\n
+"Eurasian Golden Oriole"=>"Oriolus oriolus",\n
+"Whooper Swan"=>"Cygnus cygnus",\n
+"Two-barred Crossbill"=>"Loxia leucoptera",\n
+"White-tailed Eagle"=>"Haliaeetus albicilla",\n
+"Atlantic Murre"=>"Uria aalge",\n
+"Garganey"=>"Anas querquedula",\n
+"Black Redstart"=>"Phoenicurus ochruros",\n
+"Common Scoter"=>"Melanitta nigra",\n
+"Rock Pipit"=>"Anthus petrosus",\n
+"Lesser Spotted Eagle"=>"Aquila pomarina",\n
+"Cattle Egret"=>"Bubulcus ibis",\n
+"White-winged Black Tern"=>"Chlidonias leucopterus",\n
+"Black Stork"=>"Ciconia nigra",\n
+"Mediterranean Gull"=>"Larus melanocephalus",\n
+"Black Kite"=>"Milvus migrans",\n
+"Yellow Wagtail"=>"Motacilla flavissima",\n
+"Red-necked Grebe"=>"Podiceps grisegena",\n
+"Gull-billed Tern"=>"Gelochelidon nilotica",\n
+"Pectoral Sandpiper"=>"Calidris melanotos",\n
+"Barred Warbler"=>"Sylvia nisoria",\n
+"Red-throated Pipit"=>"Anthus cervinus",\n
+"Grey Wagtail"=>"Motacilla cinerea",\n
+"Richard`s Pipit"=>"Anthus richardi",\n
+"Black Woodpecker"=>"Dryocopus martius",\n
+"Little Ringed Plover"=>"Charadrius dubius",\n
+"Whiskered Tern"=>"Chlidonias hybrida",\n
+"Lesser Redpoll"=>"Carduelis cabaret",\n
+"Pallas\' Bunting"=>"Emberiza pallasi",\n
+"Ferruginous Duck"=>"Aythya nyroca",\n
+"Whistling Swan"=>"Cygnus columbianus",\n
+"Black Brant"=>"Branta nigricans",\n
+"Marbled Teal"=>"Marmaronetta angustirostris",\n
+"Canvasback"=>"Aythya valisineria",\n
+"Redhead"=>"Aythya americana",\n
+"Lesser Scaup"=>"Aythya affinis",\n
+"Steller`s Eider"=>"Polysticta stelleri",\n
+"Spectacled Eider"=>"Somateria fischeri",\n
+"Harlequin Duck"=>"Histronicus histrionicus",\n
+"Black Scoter"=>"Melanitta americana",\n
+"Surf Scoter"=>"Melanitta perspicillata",\n
+"Barrow`s Goldeneye"=>"Bucephala islandica",\n
+"Falcated Duck"=>"Anas falcata",\n
+"American Wigeon"=>"Anas americana",\n
+"Blue-winged Teal"=>"Anas discors",\n
+"American Black Duck"=>"Anas rubripes",\n
+"Baikal Teal"=>"Anas formosa",\n
+"Green-Winged Teal"=>"Anas carolinensis",\n
+"Hazel Grouse"=>"Bonasa bonasia",\n
+"Rock Partridge"=>"Alectoris graeca",\n
+"Red-legged Partridge"=>"Alectoris rufa",\n
+"Yellow-billed Loon"=>"Gavia adamsii",\n
+"Cory`s Shearwater"=>"Calonectris borealis",\n
+"Madeiran Storm-Petrel"=>"Oceanodroma castro",\n
+"Great White Pelican"=>"Pelecanus onocrotalus",\n
+"Dalmatian Pelican"=>"Pelecanus crispus",\n
+"American Bittern"=>"Botaurus lentiginosus",\n
+"Glossy Ibis"=>"Plegadis falcinellus",\n
+"Spanish Imperial Eagle"=>"Aquila adalberti",\n
+"Lesser Kestrel"=>"Falco naumanni",\n
+"Houbara Bustard"=>"Chlamydotis undulata",\n
+"Crab-Plover"=>"Dromas ardeola",\n
+"Cream-coloured Courser"=>"Cursorius cursor",\n
+"Collared Pratincole"=>"Glareola pratincola",\n
+"Black-winged Pratincole"=>"Glareola nordmanni",\n
+"Killdeer"=>"Charadrius vociferus",\n
+"Lesser Sand Plover"=>"Charadrius mongolus",\n
+"Greater Sand Plover"=>"Charadrius leschenaultii",\n
+"Caspian Plover"=>"Charadrius asiaticus",\n
+"American Golden Plover"=>"Pluvialis dominica",\n
+"Pacific Golden Plover"=>"Pluvialis fulva",\n
+"Sharp-tailed Sandpiper"=>"Calidris acuminata",\n
+"Broad-billed Sandpiper"=>"Limicola falcinellus",\n
+"Spoon-Billed Sandpiper"=>"Eurynorhynchus pygmaeus",\n
+"Short-Billed Dowitcher"=>"Limnodromus griseus",\n
+"Long-billed Dowitcher"=>"Limnodromus scolopaceus",\n
+"Hudsonian Godwit"=>"Limosa haemastica",\n
+"Little Curlew"=>"Numenius minutus",\n
+"Lesser Yellowlegs"=>"Tringa flavipes",\n
+"Wilson`s Phalarope"=>"Phalaropus tricolor",\n
+"Pallas`s Gull"=>"Larus ichthyaetus",\n
+"Laughing Gull"=>"Larus atricilla",\n
+"Franklin`s Gull"=>"Larus pipixcan",\n
+"Bonaparte`s Gull"=>"Larus philadelphia",\n
+"Ring-billed Gull"=>"Larus delawarensis",\n
+"American Herring Gull"=>"Larus smithsonianus",\n
+"Caspian Gull"=>"Larus cachinnans",\n
+"Ivory Gull"=>"Pagophila eburnea",\n
+"Royal Tern"=>"Sterna maxima",\n
+"Brünnich`s Murre"=>"Uria lomvia",\n
+"Crested Auklet"=>"Aethia cristatella",\n
+"Parakeet Auklet"=>"Cyclorrhynchus psittacula",\n
+"Tufted Puffin"=>"Lunda cirrhata",\n
+"Laughing Dove"=>"Streptopelia senegalensis",\n
+"Great Spotted Cuckoo"=>"Clamator glandarius",\n
+"Great Grey Owl"=>"Strix nebulosa",\n
+"Tengmalm`s Owl"=>"Aegolius funereus",\n
+"Red-Necked Nightjar"=>"Caprimulgus ruficollis",\n
+"Chimney Swift"=>"Chaetura pelagica",\n
+"Green Bea-Eater"=>"Merops orientalis",\n
+"Grey-headed Woodpecker"=>"Picus canus",\n
+"Lesser Short-Toed Lark"=>"Calandrella rufescens",\n
+"Eurasian Crag Martin"=>"Hirundo rupestris",\n
+"Red-rumped Swallow"=>"Cecropis daurica",\n
+"Blyth`s Pipit"=>"Anthus godlewskii",\n
+"Pechora Pipit"=>"Anthus gustavi",\n
+"Grey-headed Wagtail"=>"Motacilla thunbergi",\n
+"Yellow-Headed Wagtail"=>"Motacilla lutea",\n
+"White-throated Dipper"=>"Cinclus cinclus",\n
+"Rufous-Tailed Scrub Robin"=>"Cercotrichas galactotes",\n
+"Thrush Nightingale"=>"Luscinia luscinia",\n
+"White-throated Robin"=>"Irania gutturalis",\n
+"Caspian Stonechat"=>"Saxicola maura variegata",\n
+"Western Black-eared Wheatear"=>"Oenanthe hispanica",\n
+"Rufous-tailed Rock Thrush"=>"Monticola saxatilis",\n
+"Red-throated Thrush/Black-throated"=>"Turdus ruficollis",\n
+"American Robin"=>"Turdus migratorius",\n
+"Zitting Cisticola"=>"Cisticola juncidis",\n
+"Lanceolated Warbler"=>"Locustella lanceolata",\n
+"River Warbler"=>"Locustella fluviatilis",\n
+"Blyth`s Reed Warbler"=>"Acrocephalus dumetorum",\n
+"Caspian Reed Warbler"=>"Acrocephalus fuscus",\n
+"Aquatic Warbler"=>"Acrocephalus paludicola",\n
+"Booted Warbler"=>"Acrocephalus caligatus",\n
+"Marmora\'s Warbler"=>"Sylvia sarda",\n
+"Dartford Warbler"=>"Sylvia undata",\n
+"Subalpine Warbler"=>"Sylvia cantillans",\n
+"Ménétries\'s Warbler"=>"Sylvia mystacea",\n
+"Rüppel\'s Warbler"=>"Sylvia rueppelli",\n
+"Asian Desert Warbler"=>"Sylvia nana",\n
+"Western Orphean Warbler"=>"Sylvia hortensis hortensis",\n
+"Arctic Warbler"=>"Phylloscopus borealis",\n
+"Radde`s Warbler"=>"Phylloscopus schwarzi",\n
+"Western Bonelli`s Warbler"=>"Phylloscopus bonelli",\n
+"Red-breasted Flycatcher"=>"Ficedula parva",\n
+"Eurasian Penduline Tit"=>"Remiz pendulinus",\n
+"Daurian Shrike"=>"Lanius isabellinus",\n
+"Long-Tailed Shrike"=>"Lanius schach",\n
+"Lesser Grey Shrike"=>"Lanius minor",\n
+"Southern Grey Shrike"=>"Lanius meridionalis",\n
+"Masked Shrike"=>"Lanius nubicus",\n
+"Spotted Nutcracker"=>"Nucifraga caryocatactes",\n
+"Daurian Jackdaw"=>"Corvus dauuricus",\n
+"Purple-Backed Starling"=>"Sturnus sturninus",\n
+"Red-Fronted Serin"=>"Serinus pusillus",\n
+"Arctic Redpoll"=>"Carduelis hornemanni",\n
+"Scottish Crossbill"=>"Loxia scotica",\n
+"Parrot Crossbill"=>"Loxia pytyopsittacus",\n
+"Black-faced Bunting"=>"Emberiza spodocephala",\n
+"Pink-footed Goose"=>"Anser brachyrhynchus",\n
+"Black-winged Kite"=>"Elanus caeruleus",\n
+"European Bee-eater"=>"Merops apiaster",\n
+"Sabine`s Gull"=>"Larus sabini",\n
+"Sooty Shearwater"=>"Puffinus griseus",\n
+"Lesser Canada Goose"=>"Branta hutchinsii",\n
+"Ring-necked Duck"=>"Aythya collaris",\n
+"Greater Flamingo"=>"Phoenicopterus roseus",\n
+"Iberian Chiffchaff"=>"Phylloscopus ibericus",\n
+"Ashy-headed Wagtail"=>"Motacilla cinereocapilla",\n
+"Stilt Sandpiper"=>"Calidris himantopus",\n
+"Siberian Stonechat"=>"Saxicola maurus",\n
+"Greater Yellowlegs"=>"Tringa melanoleuca",\n
+"Forster`s Tern"=>"Sterna forsteri",\n
+"Dusky Warbler"=>"Phylloscopus fuscatus",\n
+"Cirl Bunting"=>"Emberiza cirlus",\n
+"Olive-backed Pipit"=>"Anthus hodgsoni",\n
+"Sociable Lapwing"=>"Vanellus gregarius",\n
+"Spotted Sandpiper"=>"Actitis macularius",\n
+"Baird`s Sandpiper"=>"Calidris bairdii",\n
+"Rustic Bunting"=>"Emberiza rustica",\n
+"Yellow-browed Bunting"=>"Emberiza chrysophrys",\n
+"Great Shearwater"=>"Puffinus gravis",\n
+"Bonelli`s Eagle"=>"Aquila fasciata",\n
+"Calandra Lark"=>"Melanocorypha calandra",\n
+"Sardinian Warbler"=>"Sylvia melanocephala",\n
+"Ross\'s Gull"=>"Larus roseus",\n
+"Yellow-Breasted Bunting"=>"Emberiza aureola",\n
+"Pine Bunting"=>"Emberiza leucocephalos",\n
+"Black Guillemot"=>"Cepphus grylle",\n
+"Pied-billed Grebe"=>"Podilymbus podiceps",\n
+"Soft-plumaged Petrel"=>"Pterodroma mollis",\n
+"Bulwer\'s Petrel"=>"Bulweria bulwerii",\n
+"White-Faced Storm-Petrel"=>"Pelagodroma marina",\n
+"Pallas’s Fish Eagle"=>"Haliaeetus leucoryphus",\n
+"Sandhill Crane"=>"Grus canadensis",\n
+"Macqueen’s Bustard"=>"Chlamydotis macqueenii",\n
+"White-tailed Lapwing"=>"Vanellus leucurus",\n
+"Great Knot"=>"Calidris tenuirostris",\n
+"Semipalmated Sandpiper"=>"Calidris pusilla",\n
+"Red-necked Stint"=>"Calidris ruficollis",\n
+"Slender-billed Curlew"=>"Numenius tenuirostris",\n
+"Bridled Tern"=>"Onychoprion anaethetus",\n
+"Pallas’s Sandgrouse"=>"Syrrhaptes paradoxus",\n
+"European Scops Owl"=>"Otus scops",\n
+"Northern Hawk Owl"=>"Surnia ulula",\n
+"White-Throated Needletail"=>"Hirundapus caudacutus",\n
+"Belted Kingfisher"=>"Ceryle alcyon",\n
+"Blue-cheeked Bee-eater"=>"Merops persicus",\n
+"Black-headed Wagtail"=>"Motacilla feldegg",\n
+"Northern Mockingbird"=>"Mimus polyglottos",\n
+"Alpine Accentor"=>"Prunella collaris",\n
+"Red-flanked Bluetail"=>"Tarsiger cyanurus",\n
+"Isabelline Wheatear"=>"Oenanthe isabellina",\n
+"Pied Wheatear"=>"Oenanthe pleschanka",\n
+"Eastern Black-eared Wheatear"=>"Oenanthe melanoleuca",\n
+"Desert Wheatear"=>"Oenanthe deserti",\n
+"White`s Thrush"=>"Zoothera aurea",\n
+"Siberian Thrush"=>"Zoothera sibirica",\n
+"Eyebrowed Thrush"=>"Turdus obscurus",\n
+"Dusky Thrush"=>"Turdus eunomus",\n
+"Black-throated Thrush"=>"Turdus atrogularis",\n
+"Pallas`s Grasshopper Warbler"=>"Locustella certhiola",\n
+"Spectacled Warbler"=>"Sylvia conspicillata",\n
+"Two-barred Warbler"=>"Phylloscopus plumbeitarsus",\n
+"Eastern Bonelli’s Warbler"=>"Phylloscopus orientalis",\n
+"Collared Flycatcher"=>"Ficedula albicollis",\n
+"Wallcreeper"=>"Tichodroma muraria",\n
+"Turkestan Shrike"=>"Lanius phoenicuroides",\n
+"Steppe Grey Shrike"=>"Lanius pallidirostris",\n
+"Spanish Sparrow"=>"Passer hispaniolensis",\n
+"Red-eyed Vireo"=>"Vireo olivaceus",\n
+"Myrtle Warbler"=>"Dendroica coronata",\n
+"White-crowned Sparrow"=>"Zonotrichia leucophrys",\n
+"White-throated Sparrow"=>"Zonotrichia albicollis",\n
+"Cretzschmar`s Bunting"=>"Emberiza caesia",\n
+"Chestnut Bunting"=>"Emberiza rutila",\n
+"Red-headed Bunting"=>"Emberiza bruniceps",\n
+"Black-headed Bunting"=>"Emberiza melanocephala",\n
+"Indigo Bunting"=>"Passerina cyanea",\n
+"Balearic Woodchat Shrike"=>"Lanius senator badius",\n
+"Demoiselle Crane"=>"Grus virgo",\n
+"Chough"=>"Pyrrhocorax pyrrhocorax",\n
+"Red-Billed Chough"=>"Pyrrhocorax graculus",\n
+"Elegant Tern"=>"Sterna elegans",\n
+"Chukar"=>"Alectoris chukar",\n
+"Yellow-Billed Cuckoo"=>"Coccyzus americanus",\n
+"American Sandwich Tern"=>"Sterna sandvicensis acuflavida",\n
+"Olive-Tree Warbler"=>"Hippolais olivetorum",\n
+"Eastern Olivaceous Warbler"=>"Acrocephalus pallidus",\n
+"Indian Cormorant"=>"Phalacrocorax fuscicollis",\n
+"Spur-Winged Lapwing"=>"Vanellus spinosus",\n
+"Yelkouan Shearwater"=>"Puffinus yelkouan",\n
+"Trumpeter Finch"=>"Bucanetes githagineus",\n
+"Red Grouse"=>"Lagopus scoticus",\n
+"Rock Ptarmigan"=>"Lagopus mutus",\n
+"Long-Tailed Cormorant"=>"Phalacrocorax africanus",\n
+"Double-crested Cormorant"=>"Phalacrocorax auritus",\n
+"Magnificent Frigatebird"=>"Fregata magnificens",\n
+"Naumann\'s Thrush"=>"Turdus naumanni",\n
+"Oriental Pratincole"=>"Glareola maldivarum",\n
+"Bufflehead"=>"Bucephala albeola",\n
+"Snowfinch"=>"Montifrigilla nivalis",\n
+"Ural owl"=>"Strix uralensis",\n
+"Spanish Wagtail"=>"Motacilla iberiae",\n
+"Song Sparrow"=>"Melospiza melodia",\n
+"Rock Bunting"=>"Emberiza cia",\n
+"Siberian Rubythroat"=>"Luscinia calliope",\n
+"Pallid Swift"=>"Apus pallidus",\n
+"Eurasian Pygmy Owl"=>"Glaucidium passerinum",\n
+"Madeira Little Shearwater"=>"Puffinus baroli",\n
+"House Finch"=>"Carpodacus mexicanus",\n
+"Green Heron"=>"Butorides virescens",\n
+"Solitary Sandpiper"=>"Tringa solitaria",\n
+"Heuglin\'s Gull"=>"Larus heuglini"\n
+);\n
+\n
+function array_to_json( $array ){\n
+\n
+    if( !is_array( $array ) ){\n
+        return false;\n
+    }\n
+\n
+    $associative = count( array_diff( array_keys($array), array_keys( array_keys( $array )) ));\n
+    if( $associative ){\n
+\n
+        $construct = array();\n
+        foreach( $array as $key => $value ){\n
+\n
+            // We first copy each key/value pair into a staging array,\n
+            // formatting each key and value properly as we go.\n
+\n
+            // Format the key:\n
+            if( is_numeric($key) ){\n
+                $key = "key_$key";\n
+            }\n
+            $key = "\\"".addslashes($key)."\\"";\n
+\n
+            // Format the value:\n
+            if( is_array( $value )){\n
+                $value = array_to_json( $value );\n
+            } else if( !is_numeric( $value ) || is_string( $value ) ){\n
+                $value = "\\"".addslashes($value)."\\"";\n
+            }\n
+\n
+            // Add to staging array:\n
+            $construct[] = "$key: $value";\n
+        }\n
+\n
+        // Then we collapse the staging array into the JSON form:\n
+        $result = "{ " . implode( ", ", $construct ) . " }";\n
+\n
+    } else { // If the array is a vector (not associative):\n
+\n
+        $construct = array();\n
+        foreach( $array as $value ){\n
+\n
+            // Format the value:\n
+            if( is_array( $value )){\n
+                $value = array_to_json( $value );\n
+            } else if( !is_numeric( $value ) || is_string( $value ) ){\n
+                $value = "\'".addslashes($value)."\'";\n
+            }\n
+\n
+            // Add to staging array:\n
+            $construct[] = $value;\n
+        }\n
+\n
+        // Then we collapse the staging array into the JSON form:\n
+        $result = "[ " . implode( ", ", $construct ) . " ]";\n
+    }\n
+\n
+    return $result;\n
+}\n
+\n
+$result = array();\n
+foreach ($items as $key=>$value) {\n
+\tif (strpos(strtolower($key), $q) !== false) {\n
+\t\tarray_push($result, array("id"=>$value, "label"=>$key, "value" => strip_tags($key)));\n
+\t}\n
+\tif (count($result) > 11)\n
+\t\tbreak;\n
+}\n
+echo array_to_json($result);\n
+\n
+?>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>search.php</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

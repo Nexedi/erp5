@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>An application in requested state is an application we want another service/person to complete/view it. So applications in requested state are waiting for review from the new assigned service/person.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -31,9 +31,8 @@
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
+                <string>allocate</string>
                 <string>allocate_action</string>
-                <string>reply</string>
-                <string>reply_action</string>
               </tuple>
             </value>
         </item>
@@ -63,6 +62,7 @@
                     <key> <string>Access contents information</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
@@ -76,35 +76,33 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
-                        <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Delete objects</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignor</string>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <tuple>
-                        <string>Assignor</string>
-                        <string>Associate</string>
-                        <string>Manager</string>
-                      </tuple>
+                      <tuple/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>Set own password</string> </key>
+                    <value>
+                      <tuple/>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>
+                        <string>Agent</string>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>

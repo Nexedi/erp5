@@ -57,6 +57,8 @@
   Use to contribute file to ERP5.\n
 """\n
 from Products.ERP5Type.Message import translateString\n
+from ZTUtils import make_query\n
+\n
 MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
 portal_contributions = portal.portal_contributions\n
@@ -66,75 +68,91 @@ if synchronous_metadata_discovery is None:\n
 \n
 if redirect_to_document is None:\n
   redirect_to_document = portal.portal_preferences.isPreferredRedirectToDocument(False)\n
-\n
+if user_login is None:\n
+  # get current authenticated user\n
+  user_login = str(portal.portal_membership.getAuthenticatedMember())\n
+  \n
 document_kw = {}\n
+document_kw[\'user_login\'] = user_login\n
 if use_context_for_container:\n
   document_kw[\'container_path\'] = context.getRelativeUrl()\n
 if portal_type not in MARKER:\n
   document_kw[\'portal_type\'] = portal_type\n
 if classification not in MARKER:\n
   document_kw[\'classification\'] = classification\n
+if follow_up_list:\n
+  document_kw[\'follow_up_list\'] = follow_up_list\n
 \n
+document_kw.update({\'discover_metadata\': not synchronous_metadata_discovery})\n
 if url is not None:\n
   # we contribute and URL, this happens entirely asynchronous\n
-  document = portal_contributions.newContentFromURL(url = url, \n
+  document = portal_contributions.newContentFromURL(url = url, \\\n
+                                                    repeat = max_repeat, \\\n
+                                                    batch_mode = batch_mode, \\\n
                                                     **document_kw)\n
-  message = translateString("URL contributed successfully.")\n
+  if document is None:\n
+    # portal contributions could not upload it\n
+    if cancel_url is not None:\n
+      # we can assume we can redirect\n
+      redirect_url= \'%s?%s\' %(cancel_url, \n
+                            make_query(dict(portal_status_message=translateString("Wrong or not accessible URL address."))))\n
+      return context.REQUEST.RESPONSE.redirect(redirect_url)\n
+  file_name=document.getId()\n
 else:\n
   # contribute file\n
   file_name = getattr(file, \'filename\', None)\n
-  is_existing_document_updated = False\n
   document_kw.update({\'file\': file,\n
-                      \'file_name\': file_name,\n
-                      \'discover_metadata\': not synchronous_metadata_discovery})\n
+                      \'file_name\': file_name,})\n
   document = portal_contributions.newContent(**document_kw)\n
-  if synchronous_metadata_discovery:\n
-    # we need to do all synchronously, in other case portal_contributions will do\n
-    # this in an activity\n
-    if document.isSupportBaseDataConversion():\n
-      document.processFile()\n
-    merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(\n
-                                 file_name=file_name)\n
-    is_existing_document_updated = (merged_document!=document)\n
-    document = merged_document\n
-  # introspect document and find editable properties\n
-  # then use kw and try to get values in two available modes: the\n
-  # script coulbe be called: from ERP5 From or directly from Python script\n
-  document_edit_kw = {}\n
-  property_id_list = document.propertyIds()\n
-  for key in property_id_list:\n
-    value = kw.get(key, kw.get(\'field_your_%s\' %key, kw.get(\'field_my_%s\' %key, None)))\n
-    if value not in MARKER:\n
-      document_edit_kw[key] = value\n
-  if attach_document_to_context:\n
-    # attach document to current context using follow_up\n
-    follow_up_list = document.getFollowUpValueList()\n
-    if context not in follow_up_list:\n
-      # attach to context only if not already attached\n
-      follow_up_list.append(context)\n
-      document.setFollowUpValueList([x.getRelativeUrl() for x in follow_up_list])\n
-  # edit document   \n
-  if document_edit_kw is not {}:\n
-    document.edit(**document_edit_kw)\n
-  document_portal_type = document.getTranslatedPortalType()\n
-  if not is_existing_document_updated:\n
-    message = translateString(\'${portal_type} created successfully.\',\n
-                mapping=dict(portal_type=document_portal_type))\n
-  else:\n
-    message = translateString(\'${portal_type} updated successfully.\',\n
-                mapping=dict(portal_type=document_portal_type))\n
+\n
+is_existing_document_updated = False\n
+if synchronous_metadata_discovery:\n
+  # we need to do all synchronously, in other case portal_contributions will do\n
+  # this in an activity\n
+  if document.isSupportBaseDataConversion():\n
+    document.processFile()\n
+  merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(\n
+                               file_name=file_name,\n
+                               user_login=user_login)\n
+  is_existing_document_updated = (merged_document!=document)\n
+  document = merged_document\n
+# introspect document and find editable properties\n
+# then use kw and try to get values in two available modes: the\n
+# script coulbe be called: from ERP5 From or directly from Python script\n
+document_edit_kw = {}\n
+property_id_list = document.propertyIds()\n
+for key in property_id_list:\n
+  value = kw.get(key, kw.get(\'field_your_%s\' %key, kw.get(\'field_my_%s\' %key, None)))\n
+  if value not in MARKER:\n
+    document_edit_kw[key] = value\n
+if attach_document_to_context:\n
+  # attach document to current context using follow_up\n
+  follow_up_list = document.getFollowUpValueList()\n
+  if context not in follow_up_list:\n
+    # attach to context only if not already attached\n
+    follow_up_list.append(context)\n
+    document.setFollowUpValueList([x.getRelativeUrl() for x in follow_up_list])\n
+# edit document   \n
+if document_edit_kw is not {}:\n
+  document.edit(**document_edit_kw)\n
+document_portal_type = document.getTranslatedPortalType()\n
+if not is_existing_document_updated:\n
+  message = translateString(\'${portal_type} created successfully.\',\n
+              mapping=dict(portal_type=document_portal_type))\n
+else:\n
+  message = translateString(\'${portal_type} updated successfully.\',\n
+              mapping=dict(portal_type=document_portal_type))\n
 \n
 if redirect_to_document or redirect_url is not None:\n
   # this is an UI mode where script should handle HTTP redirects and is likely used\n
   # by ERP5 form\n
   if redirect_to_document and document is not None:\n
     # explicitly required to view ingested document\n
-    context.REQUEST.set(\'portal_status_message\', message)\n
-    context.REQUEST.set(\'editable_mode\', editable_mode)\n
-    return document.view()\n
+    return document.Base_redirect(\'view\',\n
+                      keep_items={\'portal_status_message\': message,\n
+                                  \'editable_mode\': editable_mode})\n
   elif redirect_url is not None:\n
     # redirect URL has been supplied by caller\n
-    from ZTUtils import make_query\n
     redirect_url= \'%s?%s\' %(redirect_url, \n
                             make_query(dict(portal_status_message=message)))\n
     return context.REQUEST.RESPONSE.redirect(redirect_url)\n
@@ -151,7 +169,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, editable_mode = 1, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, cancel_url=None, batch_mode=False, max_repeat=0, editable_mode = 1, follow_up_list=None, user_login=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -171,7 +189,7 @@ return document\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>10</int> </value>
+                        <value> <int>15</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -186,10 +204,17 @@ return document\n
                             <string>attach_document_to_context</string>
                             <string>use_context_for_container</string>
                             <string>redirect_url</string>
+                            <string>cancel_url</string>
+                            <string>batch_mode</string>
+                            <string>max_repeat</string>
                             <string>editable_mode</string>
+                            <string>follow_up_list</string>
+                            <string>user_login</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
                             <string>None</string>
                             <string>MARKER</string>
                             <string>_getattr_</string>
@@ -197,13 +222,14 @@ return document\n
                             <string>portal</string>
                             <string>portal_contributions</string>
                             <string>False</string>
+                            <string>str</string>
                             <string>document_kw</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                             <string>document</string>
-                            <string>message</string>
-                            <string>getattr</string>
+                            <string>dict</string>
                             <string>file_name</string>
+                            <string>getattr</string>
                             <string>is_existing_document_updated</string>
                             <string>merged_document</string>
                             <string>document_edit_kw</string>
@@ -211,14 +237,11 @@ return document\n
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>value</string>
-                            <string>follow_up_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>x</string>
                             <string>document_portal_type</string>
-                            <string>dict</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
@@ -240,7 +263,12 @@ return document\n
                 <int>0</int>
                 <int>0</int>
                 <none/>
+                <none/>
+                <int>0</int>
+                <int>0</int>
                 <int>1</int>
+                <none/>
+                <none/>
               </tuple>
             </value>
         </item>

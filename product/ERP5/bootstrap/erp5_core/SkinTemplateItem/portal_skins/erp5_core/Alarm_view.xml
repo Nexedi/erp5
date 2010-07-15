@@ -99,6 +99,7 @@
                         <string>my_active_sense_method_id</string>
                         <string>my_sense_method_id</string>
                         <string>my_solve_method_id</string>
+                        <string>my_configuration_form_id</string>
                         <string>my_enabled</string>
                         <string>my_alarm_date</string>
                       </list>

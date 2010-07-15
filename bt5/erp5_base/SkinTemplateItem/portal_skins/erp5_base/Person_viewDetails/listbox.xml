@@ -13,14 +13,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
-                <string>sort</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>sort</string>
+                <string>sort_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -104,7 +104,7 @@
                           <string>Organisation</string>
                         </tuple>
                         <tuple>
-                          <string>role_title</string>
+                          <string>role_translated_title</string>
                           <string>Role</string>
                         </tuple>
                         <tuple>
@@ -197,18 +197,6 @@
                           <string>Organisation</string>
                         </tuple>
                         <tuple>
-                          <string>role_title</string>
-                          <string>Role</string>
-                        </tuple>
-                        <tuple>
-                          <string>grade_title</string>
-                          <string>Grade</string>
-                        </tuple>
-                        <tuple>
-                          <string>function</string>
-                          <string>Function</string>
-                        </tuple>
-                        <tuple>
                           <string>start_date</string>
                           <string>Career Start Date</string>
                         </tuple>
@@ -251,14 +239,6 @@
                           <string>Organisation</string>
                         </tuple>
                         <tuple>
-                          <string>role_title</string>
-                          <string>Role</string>
-                        </tuple>
-                        <tuple>
-                          <string>grade_title</string>
-                          <string>Grade</string>
-                        </tuple>
-                        <tuple>
                           <string>function</string>
                           <string>Function</string>
                         </tuple>
@@ -271,7 +251,7 @@
                           <string>Career End Date</string>
                         </tuple>
                         <tuple>
-                          <string>translated_validatoin_state_title</string>
+                          <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
                       </list>

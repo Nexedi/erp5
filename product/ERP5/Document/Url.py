@@ -55,8 +55,6 @@ class UrlMixIn:
     url_string = self.getUrlString()
     if not url_string:
       return None
-    if urllib.splittype(url_string)[0]:
-      return url_string
     protocol = self.getUrlProtocol()
     if not protocol:
       # A quick fix for all objects which did not
@@ -66,11 +64,16 @@ class UrlMixIn:
         protocol = default_protocol_dict[ptype]
       else:
         protocol = 'http'
+
     if protocol in no_host_protocol_list or url_string.startswith('//'):
       return '%s:%s' % (protocol, url_string)
+
+    if url_string.startswith(protocol):
+      return url_string
+
     return '%s://%s' % (protocol, url_string)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromURL')
   def fromURL(self, url):
     """
     Analyses a URL and splits it into two parts. URLs

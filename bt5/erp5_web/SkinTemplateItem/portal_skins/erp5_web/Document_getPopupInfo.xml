@@ -106,9 +106,15 @@ try:\n
 except AttributeError:\n
   pass\n
 \n
+try:\n
+  doc_info[\'reference\'] = context.getReference() or \'\'\n
+except AttributeError:\n
+  pass\n
+\n
 # add web sections document belongs too\n
 if website is None:\n
-  website = context.getWebSiteValue()  \n
+  website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
+\n
 sections = []\n
 for websection in website.getWebSectionValueList(context):\n
   sections.append({\'title\': websection.getCompactTranslatedTitle(),\n

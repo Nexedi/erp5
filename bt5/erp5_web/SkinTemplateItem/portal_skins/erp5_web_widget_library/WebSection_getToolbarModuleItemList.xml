@@ -57,10 +57,7 @@
 \n
 # by default we use following modules in toolbar.\n
 if module_id_list is None:\n
-  module_id_list = [\'image_module\',\n
-                    \'document_module\',\n
-                    \'web_page_module\',\n
-                   ]\n
+  module_id_list = context.WebSection_getDefaultToolbarModuleItemList()\n
 \n
 portal = context.getPortalObject()\n
 user = portal.portal_membership.getAuthenticatedMember().getUserName()\n

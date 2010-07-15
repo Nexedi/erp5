@@ -92,13 +92,14 @@ class SyncCode(Persistent):
   text_type_list = ('text','string')
   list_type_list = list_types
   none_type = 'None'
+  boolean_type = 'boolean'
   force_conflict_list = ('layout_and_schema','ModificationDate')
   binary_type_list = ('image','file','document','pickle')
   date_type_list = ('date',)
   dict_type_list = ('dict',)
   int_type_list = ('int',)
   pickle_type_list = ('object',)
-  data_type_list = ('data',)
+  data_type_list = ('data', 'base_data',)
   xml_object_tag = 'object'
   #history_tag = 'workflow_history'
   history_tag = 'workflow_action'
@@ -111,12 +112,19 @@ class SyncCode(Persistent):
   ADDABLE_PROPERTY = local_role_list + (history_tag,) + local_permission_list
   NOT_EDITABLE_PROPERTY = ('id','object','uid','xupdate:attribute') \
                           + XUPDATE_ELEMENT + ADDABLE_PROPERTY
-  sub_object_exp = re.compile("/object\[@id='.*'\]/")
-  object_exp = re.compile("/object\[@id='.*'\]")
+
   attribute_type_exp = re.compile("^.*attribute::type$")
-  sub_sub_object_exp = re.compile("/object\[@id='.*'\]/object\[@id='.*'\]/")
   history_exp = re.compile("/%s\[@id='.*'\]" % history_tag)
   bad_history_exp = re.compile("/%s\[@id='.*'\]/" % history_tag)
+  extract_id_from_xpath = re.compile(
+                              "(?P<object_block>(?P<property>[^/]+)\[@"\
+                              "(?P<id_of_id>id|gid)='(?P<object_id>[^']+)'\])")
+
+  # Those regular expression are deprecated and keept
+  # only for backward compatibility
+  object_exp = re.compile("/object\[@id='.*'\]")
+  sub_object_exp = re.compile("/object\[@id='.*'\]/")
+  sub_sub_object_exp = re.compile("/object\[@id='.*'\]/object\[@id='.*'\]/")
 
   #media types :
 

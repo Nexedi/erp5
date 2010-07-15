@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<ul class="UIAPIPlugin-toc">\n
+<li><a href="#overview">Overview</a></li>\n
+<li><a href="#options">Arguments</a></li>\n
+</ul>\n
+<div class="UIAPIPlugin">\n
+  <h1>jQuery UI switchClass</h1>\n
+  <div id="overview">\n
+    <h2 class="top-header">Overview</h2>\n
+    <div id="overview-main">\n
+        <div class="editsection" style="float:right;margin-left:5px;">[<a href="http://docs.jquery.com/action/edit/UI/Effects/switchClass?section=1" title="Edit section: switchClass( remove, add, [duration] )">edit</a>]</div><a name="switchClass.28_remove.2C_add.2C_.5Bduration.5D_.29"></a><h3>switchClass( remove, add, <span class="optional">[</span>duration<span class="optional">]</span> )</h3>\n
+<p>Switches from the class defined in the first argument to the class defined as second argument, using an optional transition.</p>\n
+    </div>\n
+    <div id="overview-dependencies">\n
+        <h3>Dependencies</h3>\n
+        <ul>\n
+<li>Effects Core</li>\n
+</ul>\n
+    </div>\n
+    <div id="overview-example">\n
+        <h3>Example</h3>\n
+        <div id="overview-example" class="example">\n
+<ul><li><a href="#demo"><span>Demo</span></a></li><li><a href="#source"><span>View Source</span></a></li></ul>\n
+<p><div id="demo" class="tabs-container" rel="170">\n
+Switch the class \'highlight\' to \'blue\' when a paragraph is clicked with a one second transition.<br />\n
+</p>\n
+<pre>$(&quot;p&quot;).<a href="http://docs.jquery.com/Events/click" title="Events/click">click</a>(function () {\n
+      $(this).<strong class="selflink">switchClass</strong>(&quot;highlight&quot;, &quot;blue&quot;, 1000);\n
+    });\n
+</pre>\n
+<p></div><div id="source" class="tabs-container">\n
+</p>\n
+<pre>&lt;!DOCTYPE html&gt;\n
+&lt;html&gt;\n
+&lt;head&gt;\n
+  &lt;link href=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script src=&quot;http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js&quot;&gt;&lt;/script&gt;\n
+  &lt;script src=&quot;http://ui.jquery.com/latest/ui/effects.core.js&quot;&gt;&lt;/script&gt;\n
+&lt;style type=&quot;text/css&quot;&gt;\n
+  p { margin: 4px; font-size:16px; font-weight:bolder; \n
+      cursor:pointer; }\n
+  .blue { background: blue; }\n
+  .highlight { background:yellow; }\n
+&lt;/style&gt;\n
+  &lt;script&gt;\n
+  $(document).ready(function() {\n
+    $(&quot;p&quot;).<a href="http://docs.jquery.com/Events/click" title="Events/click">click</a>(function () {\n
+      $(this).<strong class="selflink">switchClass</strong>(&quot;highlight&quot;, &quot;blue&quot;, 1000);\n
+    });\n
+  });\n
+  &lt;/script&gt;\n
+&lt;/head&gt;\n
+&lt;body style="font-size:62.5%;"&gt;\n
+  \n
+&lt;p class=&quot;highlight&quot;&gt;Click to switch&lt;/p&gt;\n
+&lt;p class=&quot;highlight&quot;&gt;to blue&lt;/p&gt;\n
+&lt;p class=&quot;highlight&quot;&gt;on these&lt;/p&gt;\n
+&lt;p class=&quot;highlight&quot;&gt;paragraphs&lt;/p&gt;\n
+\n
+&lt;/body&gt;\n
+&lt;/html&gt;\n
+</pre>\n
+<p></div>\n
+</p><p></div>\n
+    </div>\n
+  </div>\n
+  <div id="options">\n
+    <h2 class="top-header">Arguments</h2>\n
+    <ul class="options-list">\n
+      \n
+<li class="option" id="option-remove">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-remove">remove</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>The CSS class that will be removed.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-add">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-add">add</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String</dd>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>The CSS class that will be added.</p>\n
+  </div>\n
+</li>\n
+\n
+\n
+<li class="option" id="option-duration">\n
+  <div class="option-header">\n
+    <h3 class="option-name"><a href="#option-duration">duration</a></h3>\n
+    <dl>\n
+      <dt class="option-type-label">Type:</dt>\n
+        <dd class="option-type">String, Number</dd>\n
+      \n
+      <dt class="option-optional-label">Optional</dt>\n
+      \n
+    </dl>\n
+  </div>\n
+  <div class="option-description">\n
+    <p>A string representing one of the three predefined speeds ("slow", "normal", or "fast") or the number of milliseconds to run the animation (e.g. 1000).</p>\n
+  </div>\n
+</li>\n
+\n
+    </ul>\n
+  </div>\n
+</div>\n
+\n
+</p><!-- \n
+Pre-expand include size: 5818 bytes\n
+Post-expand include size: 7682 bytes\n
+Template argument size: 4812 bytes\n
+Maximum: 2097152 bytes\n
+-->\n
+\n
+<!-- Saved in parser cache with key jqdocs_docs:pcache:idhash:2609-1!1!0!!en!2 and timestamp 20100519143320 -->\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>switchClass.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -51,7 +51,6 @@ Order Builder | view_profile
 Order Movement Group | view
 Order Tool | view
 Organisation Module | view
-Organisation | create_new_file
 Organisation | details
 Organisation | document_view
 Organisation | financial_view
@@ -62,7 +61,6 @@ Parent Delivery Property Movement Group | view
 Parent Explanation Movement Group | view
 Person Module | view
 Person | assignment
-Person | create_new_file
 Person | details
 Person | document_view
 Person | financial_view
@@ -83,6 +81,18 @@ Root Applied Rule Causality Movement Group | view
 Rounding Model | predicate_view
 Rounding Model | view
 Rounding Tool | view
+Solver Decision | configuration
+Solver Decision | view
+Solver Process Tool | view
+Solver Process | view
+Solver Tool | view
+Solver Type | action_view
+Solver Type | predicate_view
+Solver Type | role_view
+Solver Type | solver_view
+Solver Type | translation_view
+Solver Type | update_local_roles
+Solver Type | view
 Split Movement Group | view
 Tax Line Delivery Movement Group | view
 Telephone | change_function

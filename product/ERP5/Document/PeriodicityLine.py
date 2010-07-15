@@ -91,15 +91,14 @@ class PeriodicityLine(Path, PeriodicityLineMixin):
     expiration_date = self.getExpirationDate()
     result = []
 
-    if effective_date is not None and from_date < effective_date:
-      from_date = effective_date
     if expiration_date is not None and to_date > expiration_date:
       to_date = expiration_date
 
     next_start_date = self.getNextPeriodicalDate(from_date)
     while next_start_date <= to_date:
-      result.append((next_start_date,
-                     self.getPeriodicityTermStopDate(next_start_date)))
+      if next_start_date >= effective_date:
+        result.append((next_start_date,
+                       self.getPeriodicityTermStopDate(next_start_date)))
       
       new_next_start_date = self.getNextPeriodicalDate(next_start_date)
       if new_next_start_date==next_start_date:

@@ -226,10 +226,12 @@
 <script type="text/javascript"\n
   tal:define="size python:len(line_list);\n
               start_frame python:here.renderer.getLineStart();\n
-              end_frame python:start_frame+size;"\n
+              end_frame python:start_frame+size;\n
+              format python: real_context.portal_preferences.getPreference(\'preferred_image_format\', \'png\')"\n
   tal:content="string:var START_FRAME=${start_frame};\n
                       var END_FRAME=${end_frame};\n
                       var SELECTION_NAME=\'${selection_name}\';\n
+                      var FORMAT=\'${format}\';\n
   ">\n
 </script>\n
 \n
@@ -247,15 +249,10 @@ function makeThumnailNode(parent_node, frame, src){\n
 }\n
 \n
 function makeThumbnailNodes(start, end){\n
-  function iter(n, req){\n
-    if(n>start){\n
-      makeThumnailNode(parent_node, n-1, req.responseText);\n
-    }\n
-    if(n>=end){return;}\n
-    var d = doSimpleXMLHttpRequest("PDF_getThumbnailUrl", {frame:n});\n
-    d.addCallback(iter, n+1);\n
-  }\n
-  iter(start);\n
+  forEach(MochiKit.Iter.range(start,end), \n
+    function(frame_number){\n
+      makeThumnailNode(parent_node, frame_number, "index_html?frame="+frame_number+"&display=thumbnail&format="+FORMAT);\n
+    });\n
 }\n
 \n
 makeThumbnailNodes(START_FRAME, END_FRAME);\n

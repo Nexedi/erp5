@@ -140,6 +140,12 @@ class TestFloatField(ERP5TypeTestCase):
                            format='0.0000',
                            type='float'),
                       self.field.render_dict(0.12345))
+    # this also work when using , as decimal separator
+    self.field.values['input_style'] = '-1.234,5'
+    self.assertEquals(dict(query=0.12345,
+                           format='0.0000',
+                           type='float'),
+                      self.field.render_dict(0.12345))
   
   def test_render_string_value(self):
     self.field.values['precision'] = 2

@@ -194,7 +194,8 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The text format used by default</string> </value>
+                    <value> <string>The text format used by default\n
+(Deprecated use content_type instead)</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Sortable - Handle empty lists</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.sortable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#sortable1, #sortable2, #sortable3 { list-style-type: none; margin: 0; padding: 0; float: left; margin-right: 10px; background: #eee; padding: 5px; width: 143px;}\n
+\t#sortable1 li, #sortable2 li, #sortable3 li { margin: 5px; padding: 5px; font-size: 1.2em; width: 120px; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("ul.droptrue").sortable({\n
+\t\t\tconnectWith: \'ul\'\n
+\t\t});\n
+\n
+\t\t$("ul.dropfalse").sortable({\n
+\t\t\tconnectWith: \'ul\',\n
+\t\t\tdropOnEmpty: false\n
+\t\t});\n
+\n
+\t\t$("#sortable1, #sortable2, #sortable3").disableSelection();\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\n
+<ul id="sortable1" class=\'droptrue\'>\n
+\t<li class="ui-state-default">Can be dropped..</li>\n
+\t<li class="ui-state-default">..on an empty list</li>\n
+\t<li class="ui-state-default">Item 3</li>\n
+\t<li class="ui-state-default">Item 4</li>\n
+\t<li class="ui-state-default">Item 5</li>\n
+</ul>\n
+\n
+<ul id="sortable2" class=\'dropfalse\'>\n
+\t<li class="ui-state-highlight">Cannot be dropped..</li>\n
+\t<li class="ui-state-highlight">..on an empty list</li>\n
+\t<li class="ui-state-highlight">Item 3</li>\n
+\t<li class="ui-state-highlight">Item 4</li>\n
+\t<li class="ui-state-highlight">Item 5</li>\n
+</ul>\n
+\n
+<ul id="sortable3" class=\'droptrue\'>\n
+</ul>\n
+\n
+<br clear="both" />\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+\tPrevent all items in a list from being dropped into a separate, empty list\n
+\tusing the <code>dropOnEmpty</code> option set to <code>false</code>.  By default,\n
+\tsortable items can be dropped on empty lists.\n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>empty-lists.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

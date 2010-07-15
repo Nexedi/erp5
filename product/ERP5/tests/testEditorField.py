@@ -196,7 +196,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create an event
     event = self.event_module.newContent(portal_type='Note')
     text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
-    event.setTextFormat('text/html')
+    event.setContentType('text/html')
     event.setTextContent(text_content)
    
     # Set FCKEditor as preferred editor and make sure it is taken into account
@@ -226,7 +226,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create an event
     event = self.event_module.newContent(portal_type='Note')
     text_content = """Hé Hé\nHo Ho\nHi Hi"""
-    event.setTextFormat('text/plain')
+    event.setContentType('text/plain')
     event.setTextContent(text_content)
    
     # Set FCKEditor as preferred editor and make sure text_area is used since
@@ -257,7 +257,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create an event
     event = self.event_module.newContent(portal_type='Note')
     text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
-    event.setTextFormat('text/html')
+    event.setContentType('text/html')
     event.setTextContent(text_content)
    
     # Set TextArea as preferred editor and make sure it is taken into account
@@ -288,7 +288,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create an event
     event = self.event_module.newContent(portal_type='Note')
     text_content = """Hé Hé\nHo Ho\nHi Hi"""
-    event.setTextFormat('text/plain')
+    event.setContentType('text/plain')
     event.setTextContent(text_content)
    
     # Set TextArea as preferred editor and make sure it is taken into account
@@ -316,7 +316,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create a web page
     page = self.web_page_module.newContent(portal_type='Web Page')
     text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
-    page.setTextFormat('text/html')
+    page.setContentType('text/html')
     page.setTextContent(text_content)
 
     # Set FCKEditor as preferred editor and make sure it is taken into account
@@ -338,7 +338,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create a web page
     page = self.web_page_module.newContent(portal_type='Web Page')
     text_content = """Hé Hé\nHo Ho\nHi Hi"""
-    page.setTextFormat('text/plain')
+    page.setContentType('text/plain')
     page.setTextContent(text_content)
 
     # Set FCKEditor as preferred editor and make sure it is taken into account
@@ -360,7 +360,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create a web page
     page = self.web_page_module.newContent(portal_type='Web Page')
     text_content = """<p>Hé Hé\nHo Ho\nHi Hi</p>"""
-    page.setTextFormat('text/html')
+    page.setContentType('text/html')
     page.setTextContent(text_content)
 
     # Set TextArea as preferred editor and make sure it is taken into account
@@ -382,7 +382,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Create a web page
     page = self.web_page_module.newContent(portal_type='Web Page')
     text_content = """Hé Hé\nHo Ho\nHi Hi"""
-    page.setTextFormat('text/plain')
+    page.setContentType('text/plain')
     page.setTextContent(text_content)
 
     # Set TextArea as preferred editor and make sure it is taken into account

@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string>Base_editConfiguration</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -74,7 +74,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_delivery_solver</string>
+                        <string>my_configuration</string>
                       </list>
                     </value>
                 </item>

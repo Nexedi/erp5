@@ -899,25 +899,31 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     """
     if date is None:
       date = DateTime().Date()
-    return self.checkbook_module.newContent(id = id,
-                                            portal_type = 'Checkbook',
-                                            destination_value = vault,
-                                            destination_payment_value = bank_account,
-                                            reference_range_min = min,
-                                            reference_range_max = max,
-                                            start_date = date)
+    return self.checkbook_module.newContent(
+        id=id,
+        portal_type='Checkbook',
+        destination_value=vault,
+        destination_payment_value=bank_account,
+        reference_range_min=min,
+        reference_range_max=max,
+        start_date=date,
+    )
 
-  def createCheckbookModel(self, id, check_model, reference=None):
+  def createCheckbookModel(self, id, check_model, reference=None,
+          unique_per_account=True):
     """
     Create a checkbook for the given bank account
     with 3 variations
     """
-    model =  self.checkbook_model_module.newContent(id = id,
-                                            portal_type = 'Checkbook Model',
-                                            title='Generic',
-                                            account_number_enabled=True,
-                                            reference=reference,
-                                            composition=check_model.getRelativeUrl())
+    model =  self.checkbook_model_module.newContent(
+        id=id,
+        portal_type='Checkbook Model',
+        title='Generic',
+        account_number_enabled=True,
+        reference=reference,
+        composition=check_model.getRelativeUrl(),
+        unique_per_account=unique_per_account,
+    )
     model.newContent(id='variant_1', portal_type='Checkbook Model Check Amount Variation',
                      quantity=50, title='50')
     model.newContent(id='variant_2', portal_type='Checkbook Model Check Amount Variation',
@@ -927,16 +933,18 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     return model
 
 
-  def createCheckModel(self, id, reference='CCOP'):
+  def createCheckModel(self, id, reference='CCOP', unique_per_account=True):
     """
     Create a checkbook for the given bank account
     """
-    return self.checkbook_model_module.newContent(id = id,
-                                            portal_type = 'Check Model',
-                                            title = 'Check',
-                                            reference = reference,
-                                            account_number_enabled=True,
-                                            )
+    return self.checkbook_model_module.newContent(
+        id=id,
+        portal_type='Check Model',
+        title='Check',
+        reference=reference,
+        account_number_enabled=True,
+        unique_per_account=unique_per_account,
+    )
 
   def createCheckAndCheckbookModel(self):
     """
@@ -945,11 +953,31 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     self.check_model = self.createCheckModel(id='check_model')
     self.check_model_1 = self.check_model
     self.check_model_2 = self.createCheckModel(id='check_model_2', reference='CCCO')
+    self.check_model_1_2 = self.createCheckModel(
+        id='check_model_1_2',
+        reference='CCOP',
+        unique_per_account=False,
+    )
+    self.check_model_2_2 = self.createCheckModel(
+        id='check_model_2_2',
+        reference='CCCO',
+        unique_per_account=False,
+    )
     self.checkbook_model = self.createCheckbookModel(
            id='checkbook_model', check_model=self.check_model)
     self.checkbook_model_1 = self.checkbook_model
     self.checkbook_model_2 = self.createCheckbookModel(
            id='checkbook_model_2', check_model=self.check_model_2)
+    self.checkbook_model_1_2 = self.createCheckbookModel(
+           id='checkbook_model_1_2',
+           check_model=self.check_model_1_2,
+           unique_per_account=False,
+    )
+    self.checkbook_model_2_2 = self.createCheckbookModel(
+           id='checkbook_model_2_2',
+           check_model=self.check_model_2_2,
+           unique_per_account=False,
+    )
 
   def createCheck(self, id, reference, checkbook, bank_account=None,
                         resource_value=None, destination_value=None):

@@ -63,6 +63,10 @@ extra_kw = dict()\n
 if payment:\n
   extra_kw[\'payment\'] = payment\n
 \n
+if group_by:\n
+  extra_kw[\'group_by\'] = group_by\n
+  extra_kw[\'ignore_group_by\'] = True\n
+\n
 account_title_cache = dict()\n
 def getAccountId(node_relative_url):\n
   if node_relative_url not in account_title_cache:\n
@@ -71,6 +75,7 @@ def getAccountId(node_relative_url):\n
   return account_title_cache[node_relative_url]\n
 \n
 \n
+# FIXME: this can be passed as node category to getMovementHistoryList\n
 account_in_gap_root_cache = dict()\n
 def isAccountInGapRoot(node_relative_url):\n
   if node_relative_url not in account_in_gap_root_cache:\n
@@ -131,23 +136,37 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
     else:\n
       specific_reference = transaction.getDestinationReference()\n
     displayed_transaction[transaction.getUid()] = 1\n
+    transaction_reference = transaction.getReference()\n
     title = mvt.hasTitle() and mvt.getTitle() or transaction.getTitle()\n
     date = brain.date\n
   else:\n
     specific_reference = \'\'\n
+    transaction_reference = \'\'\n
     title = mvt.hasTitle() and mvt.getTitle() or \'\'\n
     date = None\n
 \n
-  line_list.append( Object(uid=\'new_\',\n
-                           title=title,\n
-                           portal_type=transaction.getTranslatedPortalType(),\n
-                           specific_reference=specific_reference,\n
-                           mirror_section_title=mirror_section_title,\n
-                           node_title=getAccountId(brain.node_relative_url),\n
-                           date=date,\n
-                           debit=debit,\n
-                           credit=credit))\n
- \n
+  line = Object(uid=\'new_\',\n
+                title=title,\n
+                portal_type=transaction.getTranslatedPortalType(),\n
+                specific_reference=specific_reference,\n
+                parent_reference=transaction_reference,\n
+                mirror_section_title=mirror_section_title,\n
+                node_title=getAccountId(brain.node_relative_url),\n
+                date=date,\n
+                debit=debit,\n
+                credit=credit,)\n
+  analytic_info = dict()\n
+  for analytic_column, analytic_column_title in analytic_column_list:\n
+    if analytic_column == \'project\':\n
+      analytic_info[\'project\'] = brain.Movement_getProjectTitle()\n
+    elif analytic_column == \'function\':\n
+      analytic_info[\'function\'] = brain.Movement_getFunctionTitle()\n
+    else:\n
+      analytic_info[analytic_column] = mvt.getProperty(analytic_column)\n
+\n
+  line.update(analytic_info)\n
+  line_list.append(line)\n
+\n
 request.set(\n
       \'AccountingTransactionModule_getJournalSectionLineList.total_debit\',\n
        total_debit)\n
@@ -166,7 +185,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, gap_root=None, **kw</string> </value>
+            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, gap_root=None, group_by=None, analytic_column_list=[], **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -186,7 +205,7 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>9</int> </value>
+                        <value> <int>11</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -201,6 +220,8 @@ return line_list\n
                             <string>payment_mode</string>
                             <string>payment</string>
                             <string>gap_root</string>
+                            <string>group_by</string>
+                            <string>analytic_column_list</string>
                             <string>kw</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
@@ -213,6 +234,7 @@ return line_list\n
                             <string>dict</string>
                             <string>extra_kw</string>
                             <string>_write_</string>
+                            <string>True</string>
                             <string>account_title_cache</string>
                             <string>getAccountId</string>
                             <string>account_in_gap_root_cache</string>
@@ -232,9 +254,14 @@ return line_list\n
                             <string>is_source</string>
                             <string>mirror_section_title</string>
                             <string>specific_reference</string>
+                            <string>transaction_reference</string>
                             <string>title</string>
                             <string>date</string>
                             <string>None</string>
+                            <string>line</string>
+                            <string>analytic_info</string>
+                            <string>analytic_column</string>
+                            <string>analytic_column_title</string>
                           </tuple>
                         </value>
                     </item>
@@ -250,6 +277,8 @@ return line_list\n
                 <none/>
                 <none/>
                 <none/>
+                <none/>
+                <list/>
               </tuple>
             </value>
         </item>

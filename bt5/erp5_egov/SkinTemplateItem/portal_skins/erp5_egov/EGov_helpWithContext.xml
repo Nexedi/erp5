@@ -71,16 +71,16 @@ id = context.getId()\n
 \n
 web_page_name = []\n
 web_page_name.append(portal_type)\n
-if getattr(context, \'getValidationStateTitle\', None) and context.getValidationStateTitle():\n
-  web_page_name.append(context.getValidationStateTitle())\n
+if getattr(context, \'getValidationState\', None) and context.getValidationState():\n
+  web_page_name.append(context.getValidationState())\n
 \n
 if form_id:\n
   web_page_name.append(form_id)\n
 \n
 web_site_id = context.getWebSiteValue().getId()\n
-if web_site_id == \'dgid\':\n
+if web_site_id == \'egovernment\':\n
   web_page_name.append(\'Agent\')\n
-if web_site_id == \'egov_portal\':\n
+if web_site_id == \'ecitizen\':\n
   web_page_name.append(\'Citizen\')\n
 \n
 return \'-\'.join(web_page_name)\n

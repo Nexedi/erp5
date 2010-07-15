@@ -419,6 +419,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Put properties on delivery
       self._setUpdated(delivery, 'delivery')
       if property_dict:
+        property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
         delivery.edit(**property_dict)
 
       # Then, create delivery line
@@ -492,7 +493,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Put properties on delivery line
       self._setUpdated(delivery_line, 'line')
       if property_dict:
-        delivery_line.edit(**property_dict)
+        property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
+        delivery_line.edit(force_update=1, **property_dict)
 
       if movement_group_node.getCurrentMovementGroup().isBranch():
         for grouped_node in movement_group_node.getGroupList():

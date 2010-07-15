@@ -60,84 +60,72 @@
 """\n
 from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Log import log\n
-result_list = []\n
-trade_document_line_list = context.contentValues(portal_type=line_portal_type)\n
-if trade_document_line_list!=[]:\n
-  trade_document_line_id_list = [x.getId() for x in trade_document_line_list]\n
+\n
+# Retrieve line and cell portal type\n
+line_portal_type_list = [x for x in context.getTypeInfo().getTypeAllowedContentTypeList() \\\n
+                         if x in context.getPortalMovementTypeList()]\n
+line_portal_type = line_portal_type_list[0]\n
+cell_portal_type_list = [x for x in context.portal_types[line_portal_type].getTypeAllowedContentTypeList() \\\n
+                         if x in context.getPortalMovementTypeList()]\n
+cell_portal_type = cell_portal_type_list[0]\n
+\n
+per_resource_line_dict = {}\n
+\n
 for line in listbox:\n
- # for each line in listbox if line has a reference or title defined, search \n
- # for the product whose reference/title has been entered\n
- if line.has_key(\'listbox_key\') and (line[\'title\'] not in (\'\', None) \\\n
-                                     or line[\'reference\'] not in ("", None)):\n
-   line_id = line[\'listbox_key\']\n
-   product = context.portal_catalog.getResultValue(\n
-                           portal_type=[\'Product\',\'Service\'],\n
-                                    title=line[\'title\'],\n
-                                    reference=line[\'reference\'])\n
-   # for each document line already added,\n
-   # if the line\'s id is the same as the document line, update it\n
-   for trade_document_line in trade_document_line_list:\n
-     if trade_document_line.getId()==line_id:\n
-       trade_document_line.edit(start_date=context.getStartDate(),\n
-               stop_date=context.getStopDate(),\n
-               resource_title=product.getTitle(),\n
-               price_currency = context.getPriceCurrency(),\n
-               quantity = line["quantity"],\n
-               quantity_unit = product.getQuantityUnit(),)\n
-       trade_document_line.setResourceValue(product)\n
-       if line["variation_category_list"]!=\'\':\n
-        trade_document_line.setVariationCategoryList([\'variation/%s\'%line["variation_category_list"]])\n
+  # Only create line if user has selected a resource\n
+  if line.has_key(\'listbox_key\') and (line.get(\'resource_relative_url\', None) not in ("", None) \\\n
+                                      or line.get(\'source\', None) not in ("", None)):\n
+    line_id = line[\'listbox_key\']\n
+\n
+    if line.get(\'resource_relative_url\', None) not in ("", None):\n
+      product = context.getPortalObject().restrictedTraverse(line["resource_relative_url"])\n
+\n
+    if line.get(\'source\', None) not in ("", None):\n
+      source_document = context.getPortalObject().restrictedTraverse(line[\'source\'])\n
+      product = source_document.getResourceValue()\n
+    else:\n
+      source_document = None\n
+\n
+    # update original line/cell if given\n
+    if source_document is not None:\n
+      source_document.edit(quantity=line["quantity"],\n
+                           price=line["price"])\n
+    else:\n
+      # if there was no document line already defined\n
+      # for the document, add a new document line\n
+\n
+      # We check if havn\'t already create a line for the same resource\n
+      key = "%s" %(product.getRelativeUrl(),)\n
+      trade_document_line = per_resource_line_dict.get(key, None)\n
+      if trade_document_line is None:\n
+        trade_document_line= context.newContent(portal_type=line_portal_type,\n
+                                                resource_value=product,\n
+                                                reference=product.getReference(),\n
+                                                title=product.getTitle(),\n
+                                                )\n
+      per_resource_line_dict[key] = trade_document_line\n
+      if len(line["variation_category_list"]):\n
+        trade_document_line.setVariationCategoryList(trade_document_line.getVariationCategoryList()+line["variation_category_list"])\n
         base_id = \'movement\'\n
         cell_key_list = list(trade_document_line.getCellKeyList(base_id=base_id))\n
         cell_key_list.sort()\n
-        price = line[\'total_price\']/line[\'quantity\']\n
-        quantity = line[\'quantity\']\n
         for cell_key in cell_key_list:\n
-          cell = trade_document_line.newCell(base_id=base_id, \\\n
-                                portal_type=cell_portal_type, *cell_key)\n
-          cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
-                price=price, quantity=quantity,\n
-                predicate_category_list=cell_key,\n
-                variation_category_list=cell_key)\n
-        price += 1\n
-        quantity += 1\n
-       result_list.append(trade_document_line)\n
-   else:\n
-     # if there was no document line already defined\n
-     # for the document, add a new document line\n
-     if len(trade_document_line_list)==0 or line_id not in trade_document_line_id_list:\n
-      trade_document_line= context.newContent(\n
-                 portal_type=line_portal_type,)\n
-      trade_document_line.setResourceValue(product)\n
-      \n
-      trade_document_line.edit(\n
-               start_date=context.getStartDate(),\n
-               stop_date=context.getStopDate(),\n
-               resource_title=product.getTitle(),\n
-               price_currency = context.getPriceCurrency(),\n
-               quantity = line["quantity"],\n
-               )\n
-     if line["variation_category_list"]!=\'\':\n
-      trade_document_line.setVariationCategoryList([\'variation/%s\'%line["variation_category_list"]])\n
-      base_id = \'movement\'\n
-      cell_key_list = list(trade_document_line.getCellKeyList(base_id=base_id))\n
-      cell_key_list.sort()\n
-      price = line[\'total_price\']/line[\'quantity\']\n
-      quantity = line[\'quantity\']\n
-      for cell_key in cell_key_list:\n
-        cell = trade_document_line.newCell(base_id=base_id, \\\n
-                                portal_type=cell_portal_type, *cell_key)\n
-        cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
-                price=price, quantity=quantity,\n
-                predicate_category_list=cell_key,\n
-                variation_category_list=cell_key)\n
-        price += 1\n
-        quantity += 1\n
-     result_list.append(trade_document_line)\n
+          if cell_key == line["variation_category_list"]:\n
+            cell = trade_document_line.newCell(base_id=base_id, \\\n
+                                               portal_type=cell_portal_type, *cell_key)\n
+            cell.edit(mapped_value_property_list=[\'price\',\'quantity\'],\n
+                      price=line[\'price\'], quantity=line[\'quantity\'],\n
+                      quantity_unit = line["quantity_unit"],\n
+                      predicate_category_list=cell_key,\n
+                      variation_category_list=cell_key)\n
+      else:\n
+        trade_document_line.edit(quantity = line["quantity"],\n
+                                 price = line["price"],\n
+                                 quantity_unit=line[\'quantity_unit\']\n
+                                 )\n
 \n
 \n
-#return to the feature module\n
-return context.Base_redirect(form_id, keep_items=dict(\n
+return context.Base_redirect(kw[\'form_id\'], keep_items=dict(\n
         portal_status_message=translateString(\'%s Created.\' %(line_portal_type,))))\n
 </string> </value>
         </item>
@@ -149,7 +137,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>line_portal_type, cell_portal_type, listbox=[], form_id=\'view\',**kw</string> </value>
+            <value> <string>listbox, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -169,46 +157,45 @@ return context.Base_redirect(form_id, keep_items=dict(\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>line_portal_type</string>
-                            <string>cell_portal_type</string>
                             <string>listbox</string>
-                            <string>form_id</string>
                             <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>Products.ERP5Type.Log</string>
                             <string>log</string>
-                            <string>result_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>trade_document_line_list</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
                             <string>x</string>
-                            <string>trade_document_line_id_list</string>
-                            <string>line</string>
+                            <string>line_portal_type_list</string>
                             <string>_getitem_</string>
+                            <string>line_portal_type</string>
+                            <string>cell_portal_type_list</string>
+                            <string>cell_portal_type</string>
+                            <string>per_resource_line_dict</string>
+                            <string>line</string>
                             <string>None</string>
                             <string>line_id</string>
                             <string>product</string>
+                            <string>source_document</string>
+                            <string>key</string>
                             <string>trade_document_line</string>
+                            <string>_write_</string>
+                            <string>len</string>
                             <string>base_id</string>
                             <string>list</string>
                             <string>cell_key_list</string>
-                            <string>price</string>
-                            <string>quantity</string>
                             <string>cell_key</string>
                             <string>_apply_</string>
                             <string>cell</string>
-                            <string>_inplacevar_</string>
-                            <string>len</string>
                             <string>dict</string>
                           </tuple>
                         </value>
@@ -221,10 +208,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <list/>
-                <string>view</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

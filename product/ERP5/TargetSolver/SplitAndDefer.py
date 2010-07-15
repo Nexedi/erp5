@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 from CopyToTarget import CopyToTarget
 from Acquisition import aq_base
 
@@ -51,34 +52,6 @@ class SplitAndDefer(CopyToTarget):
     new_movement_quantity = delivery_quantity * simulation_movement.getDeliveryRatio()
     applied_rule = simulation_movement.getParentValue()
     rule = applied_rule.getSpecialiseValue()
-    expandable_property_list = []
-
-    if getattr(rule, 'getExpandablePropertyList', None) is not None:
-      expandable_property_list = rule.getExpandablePropertyList()
-    if len(expandable_property_list) == 0:
-      # hardcoded default for compatibility
-      expandable_property_list = (
-        'base_application_list',
-        'base_contribution_list',
-        'description',
-        'destination',
-        'destination_account',
-        'destination_function',
-        'destination_section',
-        'efficiency',
-        'price',
-        'price_currency',
-        'quantity_unit',
-        'resource',
-        'source',
-        'source_account',
-        'source_function',
-        'source_section',
-        'start_date',
-        'stop_date',
-        'variation_category_list',
-        'variation_property_dict',
-        )
 
     if movement_quantity > new_movement_quantity:
       split_index = 0
@@ -87,22 +60,16 @@ class SplitAndDefer(CopyToTarget):
         split_index += 1
         new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       # Adopt different dates for deferred movements
-      movement_dict = {}
+      movement_dict = _getPropertyAndCategoryList(simulation_movement)
       # new properties
       movement_dict.update(
         portal_type="Simulation Movement",
         id=new_id,
         quantity=movement_quantity - new_movement_quantity,
         activate_kw=self.activate_kw,
-        # 'order' category is deprecated. it is kept for compatibility.
-        order=simulation_movement.getOrder(),
+        delivery=None,
         **self.additional_parameters
       )
-
-      for prop in expandable_property_list:
-        if prop not in movement_dict: # XXX: better way to filter out
-          movement_dict.update(**{
-            prop: simulation_movement.getProperty(prop)})
       new_movement = applied_rule.newContent(**movement_dict)
       start_date = getattr(self, 'start_date', None)
       if start_date is not None:

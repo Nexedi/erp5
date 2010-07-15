@@ -37,6 +37,11 @@ class ICachedConvertable(Interface):
   interface can be cached efficiently and querried.
   """
 
+  def generateCacheId(**kw):
+    """Return string to identify Document in cache pool with
+    all arguments used to convert the document
+    """
+
   def hasConversion(**kw):
     """
     Return True if the conversion is already cache, False else.
@@ -89,4 +94,10 @@ class ICachedConvertable(Interface):
     otherwise, raises an KeyError exception.
 
     **kw -- conversion parameters
+    """
+
+  def updateContentMd5():
+    """
+    Udpate MD5 hash of non converted data in order
+    to check that returned cached result was computed from same origin.
     """

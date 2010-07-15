@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Slider - Colorpicker</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.slider.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#red, #green, #blue {\n
+\t\tfloat: left;\n
+\t\tclear: left;\n
+\t\twidth: 300px;\n
+\t\tmargin: 15px;\n
+\t}\n
+\t#swatch {\n
+\t\twidth: 120px;\n
+\t\theight: 100px;\n
+\t\tmargin-top: 18px;\n
+\t\tmargin-left: 350px;\n
+\t\tbackground-image: none;\n
+\t}\n
+\t#red .ui-slider-range { background: #ef2929; }\n
+\t#red .ui-slider-handle { border-color: #ef2929; }\n
+\t#green .ui-slider-range { background: #8ae234; }\n
+\t#green .ui-slider-handle { border-color: #8ae234; }\n
+\t#blue .ui-slider-range { background: #729fcf; }\n
+\t#blue .ui-slider-handle { border-color: #729fcf; }\n
+\t#demo-frame > div.demo { padding: 10px !important; };\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\tfunction hexFromRGB (r, g, b) {\n
+\t\tvar hex = [\n
+\t\t\tr.toString(16),\n
+\t\t\tg.toString(16),\n
+\t\t\tb.toString(16)\n
+\t\t];\n
+\t\t$.each(hex, function (nr, val) {\n
+\t\t\tif (val.length == 1) {\n
+\t\t\t\thex[nr] = \'0\' + val;\n
+\t\t\t}\n
+\t\t});\n
+\t\treturn hex.join(\'\').toUpperCase();\n
+\t}\n
+\tfunction refreshSwatch() {\n
+\t\tvar red = $("#red").slider("value")\n
+\t\t\t,green = $("#green").slider("value")\n
+\t\t\t,blue = $("#blue").slider("value")\n
+\t\t\t,hex = hexFromRGB(red, green, blue);\n
+\t\t$("#swatch").css("background-color", "#" + hex);\n
+\t}\n
+\t$(function() {\n
+\t\t$("#red, #green, #blue").slider({\n
+\t\t\torientation: \'horizontal\',\n
+\t\t\trange: "min",\n
+\t\t\tmax: 255,\n
+\t\t\tvalue: 127,\n
+\t\t\tslide: refreshSwatch,\n
+\t\t\tchange: refreshSwatch\n
+\t\t});\n
+\t\t$("#red").slider("value", 255);\n
+\t\t$("#green").slider("value", 140);\n
+\t\t$("#blue").slider("value", 60);\n
+\t});\n
+\t</script>\n
+</head>\n
+<body class="ui-widget-content" style="border:0;">\n
+\n
+<div class="demo">\n
+\n
+<p class="ui-state-default ui-corner-all ui-helper-clearfix" style="padding:4px;">\n
+<span class="ui-icon ui-icon-pencil" style="float:left; margin:-2px 5px 0 0;"></span>\n
+Simple Colorpicker\n
+</p>\n
+\n
+<div id="red"></div>\n
+<div id="green"></div>\n
+<div id="blue"></div>\n
+\n
+<div id="swatch" class="ui-widget-content ui-corner-all"></div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description" style="clear:left;">\n
+\n
+<p>Combine three sliders to create a simple RGB colorpicker.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>colorpicker.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

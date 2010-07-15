@@ -90,6 +90,7 @@
                     <key> <string>footer</string> </key>
                     <value>
                       <list>
+                        <string>toolbar</string>
                         <string>footer_widget</string>
                       </list>
                     </value>
@@ -123,6 +124,8 @@
                     <value>
                       <list>
                         <string>left_menu_widget</string>
+                        <string>listbox_action_widget</string>
+                        <string>search_text_listbox</string>
                       </list>
                     </value>
                 </item>

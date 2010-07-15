@@ -53,16 +53,23 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>declaration_module = context.portal_url.getPortalObject().getDefaultModule(\'declaration_tva_module\')\n
+            <value> <string>portal_type_list = context.EGov_getAllowedFormTypeList()\n
 \n
 validation_state_list=[\'archived\',]\n
 \n
 # get user name\n
 user_name = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
-return declaration_module.searchFolder(portal_type=\'Declaration TVA\', \n
-                                       owner=user_name, \n
-                                       validation_state=validation_state_list)\n
+if not kw.has_key(\'portal_type\'):\n
+  kw[\'portal_type\'] = portal_type_list\n
+if not kw.has_key(\'sort_on\'): \n
+  kw[\'sort_on\']=[(\'modification_date\', \'descending\')]\n
+\n
+kw[\'validation_state\'] = validation_state_list\n
+\n
+result = context.portal_catalog(owner=user_name,\n
+                                **kw)\n
+return result\n
 </string> </value>
         </item>
         <item>
@@ -111,9 +118,12 @@ return declaration_module.searchFolder(portal_type=\'Declaration TVA\', \n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>declaration_module</string>
+                            <string>portal_type_list</string>
                             <string>validation_state_list</string>
                             <string>user_name</string>
+                            <string>_write_</string>
+                            <string>_apply_</string>
+                            <string>result</string>
                           </tuple>
                         </value>
                     </item>

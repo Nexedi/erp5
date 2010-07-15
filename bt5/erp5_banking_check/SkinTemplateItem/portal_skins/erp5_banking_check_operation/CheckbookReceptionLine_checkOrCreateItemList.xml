@@ -129,11 +129,11 @@ def assertReferenceMatchListEmpty(match_list, destination_payment_uid):\n
                       mapping={\'reference_list\': matched_reference_list})\n
     raise ValidationFailed, (message,)\n
 \n
-def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_uid):\n
+def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_uid, unique_per_account):\n
   """\n
     Check each given reference not to already exist.\n
   """\n
-  if destination_payment_uid is None:\n
+  if destination_payment_uid is None or not unique_per_account:\n
     match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, default_resource_uid=model_uid, simulation_state=\'!=deleted\')\n
   else:\n
     match_list = portal.portal_catalog(portal_type=\'Check\', reference=reference_list, destination_payment_uid=destination_payment_uid, default_resource_uid=model_uid,\n
@@ -148,11 +148,11 @@ def checkReferenceListUniqueness(reference_list, model_uid, destination_payment_
       raise ValidationFailed, (message,)\n
     encountered_check_identifiers_dict[tag] = None\n
 \n
-def checkReferenceUniqueness(reference, model_uid, destination_payment_uid):\n
+def checkReferenceUniqueness(reference, model_uid, destination_payment_uid, unique_per_account):\n
   """\n
     Check the given reference not to already exist.\n
   """\n
-  checkReferenceListUniqueness([reference, ], model_uid, destination_payment_uid)\n
+  checkReferenceListUniqueness([reference, ], model_uid, destination_payment_uid, unique_per_account=unique_per_account)\n
 \n
 start_date = checkbook_reception.getStartDate()\n
 destination = checkbook_reception.getDestination()\n
@@ -206,6 +206,7 @@ else:\n
   destination_payment_value = None\n
   destination_payment_uid = None\n
 \n
+unique_per_account = resource.isUniquePerAccount()\n
 aggregate_list = []\n
 for i in xrange(quantity):\n
   if create == 1:\n
@@ -220,7 +221,7 @@ for i in xrange(quantity):\n
     reference_list = [int_to_reference(x, reference_range_min) for x in range(reference_to_int(reference_range_min), last_reference_value + 1)]\n
     reference_range_max = int_to_reference(last_reference_value, reference_range_min)\n
     if check == 1:\n
-      checkReferenceListUniqueness(reference_list, model_uid, destination_payment_uid)\n
+      checkReferenceListUniqueness(reference_list, model_uid, destination_payment_uid, unique_per_account)\n
     if create == 1:\n
       item.setReferenceRangeMax(reference_range_max)\n
       item.setReferenceRangeMin(reference_range_min)\n
@@ -245,7 +246,7 @@ for i in xrange(quantity):\n
   else:\n
     last_reference_value = reference_to_int(reference_range_min)\n
     if check == 1:\n
-      checkReferenceUniqueness(reference_range_min, model_uid, destination_payment_uid)\n
+      checkReferenceUniqueness(reference_range_min, model_uid, destination_payment_uid, unique_per_account)\n
     if create == 1:\n
       item.setReference(reference_range_min)\n
       item.setResource(model)\n
@@ -367,6 +368,7 @@ return encountered_check_identifiers_dict\n
                             <string>ValueError</string>
                             <string>destination_payment_uid</string>
                             <string>destination_trade</string>
+                            <string>unique_per_account</string>
                             <string>aggregate_list</string>
                             <string>_getiter_</string>
                             <string>xrange</string>

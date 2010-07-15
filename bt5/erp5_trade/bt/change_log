@@ -1,6 +1,52 @@
 2010-06-22 JPS
 * Business Path now split into Business Link and Trade Model Path
 
+2010-06-21 yo
+* Specify the inventory group to the portal type Inventory.
+
+2010-06-08 kazuhiko
+* 'Validate Inventory Action' should be allowed for Assignor.
+
+2010-06-03 yo
+* Add details tabs into Returned Sale Packing List and Returned Purchase Packing List for consistency.
+
+2010-06-01 kazuhiko
+* Use the same dependencies for Delivery_updateApplideRule to make it possible to merge activities.
+
+2010-05-24 kazuhiko
+* Improve activity dependencies for Delivery_updateAppliedRule, eg. delivery.activate(tag='(path)_updateAppliedRule', after_tag='(path)_expand').Delivery_updateAppliedRule(activate_kw={'tag':'(path)_expand'})
+
+2010-05-24 yusei
+* Update Movement_getUseItemList. Add an empty select option to the result.
+
+2010-05-21 yusei
+* Display preferred base amounts in base contribution list and base application list.
+
+2010-05-21 yusei
+* Change base amount preference. Only one preferred list on trade is enough.
+* Revert previous changes. On movements, display uses defined on the corresponding resource only.
+
+2010-05-21 yusei
+* Display preferred uses if preference is set.
+
+2010-05-21 yusei
+* Add two system preference properties for base amount category.
+
+2010-05-21 yo
+* Add a new action Reset Prices into Sale Order, Sale Packing List, Purchase Order, and Purchase Packing List.
+
+2010-05-18 yo
+* Change the default of rounding to False, as it is currently very slow to apply rounding models. So those who want to use this feature should enable it explicitly.
+
+2010-05-18 yo
+* Have Base_getSpecialisedAggregatedAmountList to pass the parameter rounding to getAggregatedAmountList. It defaults to True, as this method is used for UI, and rounding should be applied in the UI in most cases.
+
+2010-05-17 yo
+* Inventory Line and Inventory Cell are not invoice movements.
+
+2010-05-10 tatuya
+* Fix the groups of the Internal Order Module portal type. Add module group into it.
+
 2010-05-06 nicolas.dumazet
 * Add Internal Order, Internal Order Line and Internal Order Cell portal types
 

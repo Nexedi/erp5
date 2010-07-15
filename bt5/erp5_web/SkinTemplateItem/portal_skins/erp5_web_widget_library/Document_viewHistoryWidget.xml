@@ -39,7 +39,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<div class="related_docs">\n
+<div class="history-widget">\n
   <table id="#workflow_history" tal:define="history here/Base_getWorkflowEventInfoList">\n
     <tr tal:repeat="event history">\n
       <td tal:content="python: here.Base_FormatDate(event.time)"/>\n

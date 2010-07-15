@@ -55,15 +55,20 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+portal = context.getPortalObject()\n
+user = str(portal.portal_membership.getAuthenticatedMember())\n
+preferred_forum_quote_original_message= portal.ERP5Site_getUserPreferredForumSettingsDict(user)[\'preferred_forum_quote_original_message\']\n
+\n
 if discussion_post_uid is not None:\n
   # set title & text_content\n
   discussion_post = getattr(context, discussion_post_uid)\n
-  author_dict = discussion_post.DiscussionPost_getAuthorDict()\n
   title = \'Re: %s\' %discussion_post.getTitle()\n
-  text_content = \'<blockquote>From: %s<br/>%s</blockquote>\' %(author_dict[\'author_title\'],\n
-                                                             discussion_post.getTextContent())\n
   context.REQUEST.set(\'discussion_post_title\', title)\n
-  context.REQUEST.set(\'discussion_post_text_content\', text_content)\n
+  if preferred_forum_quote_original_message:\n
+    author_dict = discussion_post.DiscussionPost_getAuthorDict()\n
+    text_content = \'<blockquote>From: %s<br/>%s</blockquote>\' %(author_dict[\'author_title\'],\n
+                                                               discussion_post.getTextContent())\n
+    context.REQUEST.set(\'discussion_post_text_content\', text_content)\n
 \n
 return context.DiscussionThread_viewCreateNewDiscussionPostDialog()\n
 
@@ -105,14 +110,18 @@ return context.DiscussionThread_viewCreateNewDiscussionPostDialog()\n
                         <value>
                           <tuple>
                             <string>discussion_post_uid</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>str</string>
+                            <string>user</string>
+                            <string>_getitem_</string>
+                            <string>preferred_forum_quote_original_message</string>
                             <string>None</string>
                             <string>getattr</string>
-                            <string>context</string>
                             <string>discussion_post</string>
-                            <string>_getattr_</string>
-                            <string>author_dict</string>
                             <string>title</string>
-                            <string>_getitem_</string>
+                            <string>author_dict</string>
                             <string>text_content</string>
                           </tuple>
                         </value>

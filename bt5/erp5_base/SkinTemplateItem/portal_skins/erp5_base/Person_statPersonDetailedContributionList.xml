@@ -61,7 +61,6 @@ stat_line = request.get(\'stat_line\', None)\n
 return stat_line\n
 \n
 \n
-\n
 # XXX example of another way to get the stat line but this is slower\n
 from Products.ERP5Type.Log import log\n
 from Products.PythonScripts.standard import Object\n
@@ -98,8 +97,9 @@ elif from_date is not None:\n
 elif to_date is not None:\n
   params = {"creation_date":to_date}\n
   query = Query(range="ngt", **params)\n
-select_expression_list = \'DATE_FORMAT(creation_date, "%s") as date\' %sql_format\n
-group_by_list = \'DATE_FORMAT(creation_date, "%s")\' %sql_format\n
+select_expression = {\'date\' : \'DATE_FORMAT(creation_date, "%s")\'%sql_format}\n
+group_by = [\'DATE_FORMAT(creation_date, "%s")\' % sql_format,]\n
+\n
 # count number of object created by the user for each type of document\n
 result_list = context.portal_catalog.countResults(select_expression=select_expression_list,\n
                                                   portal_type=portal_type_list,limit=None,\n
@@ -191,6 +191,8 @@ return [obj,]\n
                             <string>params</string>
                             <string>query</string>
                             <string>_apply_</string>
+                            <string>select_expression</string>
+                            <string>group_by</string>
                             <string>select_expression_list</string>
                             <string>group_by_list</string>
                             <string>result_list</string>

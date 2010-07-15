@@ -13,11 +13,11 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>columns</string>
                 <string>description</string>
                 <string>portal_type</string>
-                <string>columns</string>
                 <string>proxy_listbox_ids</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -140,6 +140,18 @@
                     <key> <string>proxy_listbox_ids</string> </key>
                     <value>
                       <list>
+                        <tuple>
+                          <string>Base_viewRelatedObjectListBase/listbox</string>
+                          <string>All</string>
+                        </tuple>
+                        <tuple>
+                          <string>ERP5Site_viewSupplierNodeList/listbox</string>
+                          <string>Suppliers</string>
+                        </tuple>
+                        <tuple>
+                          <string>ERP5Site_viewClientNodeList/listbox</string>
+                          <string>Clients</string>
+                        </tuple>
                         <tuple>
                           <string>OrganisationModule_viewOrganisationList/listbox</string>
                           <string>Organisations</string>

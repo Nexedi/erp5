@@ -3757,6 +3757,39 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLQueue')
+
+  def test_124_checkConflictErrorAndNoRemainingActivities(self):
+    """
+    When an activity creates several activities, make sure that all newly
+    created activities are not commited if there is ZODB Conflict error
+    """
+    from Products.CMFActivity.Activity import SQLQueue
+    old_MAX_MESSAGE_LIST_SIZE = SQLQueue.MAX_MESSAGE_LIST_SIZE
+    SQLQueue.MAX_MESSAGE_LIST_SIZE = 1
+    try:
+      activity_tool = self.getPortal().portal_activities
+      def doSomething(self):
+        self.serialize()
+        self.activate(activity='SQLQueue').getId()
+        self.activate(activity='SQLQueue').getTitle()
+        conn = self._p_jar
+        tid = self._p_serial
+        oid = self._p_oid
+        try:
+          conn.db().invalidate({oid: tid})
+        except TypeError:
+          conn.db().invalidate(tid, {oid: tid})
+        
+      activity_tool.__class__.doSomething = doSomething
+      activity_tool.activate(activity='SQLQueue').doSomething()
+      get_transaction().commit()
+      activity_tool.distribute()
+      activity_tool.tic()
+      message_list = activity_tool.getMessageList()
+      self.assertEquals(['doSomething'],[x.method_id for x in message_list])
+      activity_tool.manageClearActivities(keep=0)
+    finally:
+      SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
   
 def test_suite():
   suite = unittest.TestSuite()

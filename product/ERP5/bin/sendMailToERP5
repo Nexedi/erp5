@@ -1,0 +1,179 @@
+#!/usr/bin/python
+import os, subprocess, sys, textwrap, traceback, urllib, urlparse
+
+# Example of configuration of postfix to deliver to ERP5:
+# - Add the following lines to master.cf:
+#   erp5      unix  -       n       n       -       -       pipe
+#     flags=FR user=erp5 argv=/path_to/sendMailToERP5 --ingestion_map=...
+#                                                     recipient=${recipient}
+# - Tell smtpd service to use the new filter, by adding:
+#   -o content_filter=erp5:
+
+class HTTPError(IOError):
+
+  def __init__(self, errcode, errmsg, result):
+    self.__dict__.update(errcode=errcode, errmsg=errmsg, result=result)
+
+  def __str__(self):
+    return '%s %s' % (self.errcode, self.errmsg)
+
+
+class urlopen(urllib.FancyURLopener, object):
+  """Open a network object denoted by a URL for reading
+
+  Raise a HTTPError exception if HTTP error code is not 200.
+  """
+  def __new__(cls, *args, **kw):
+    self = object.__new__(cls)
+    self.__init__()
+    return self.open(*args, **kw)
+
+  def http_error(self, url, fp, errcode, errmsg, headers, data=None):
+    raise HTTPError(errcode, errmsg,
+      self.http_error_default(url, fp, errcode, errmsg, headers))
+
+
+class Message(object):
+
+  def __init__(self, *args):
+    for arg in args:
+      k, v = arg.split('=', 1)
+      if not k.islower():
+        raise ValueError
+      old = getattr(self, k, None)
+      if old is not None:
+        if type(old) is list:
+          old.append(v)
+          continue
+        v = [old, v]
+      setattr(self, k, v)
+    recipient_list = self.__dict__.pop('recipient', [])
+    if isinstance(recipient_list, basestring):
+      recipient_list = [recipient_list]
+    self.recipient_list = recipient_list
+
+  def __call__(self, portal=None, **kw):
+    if portal == 'UNAVAILABLE':
+      print 'Message rejected'
+      sys.exit(os.EX_UNAVAILABLE)
+    if portal is not None:
+      scheme, netloc, path, query, fragment = urlparse.urlsplit(portal)
+      if query or fragment:
+        raise ValueError
+      user, host = urllib.splituser(netloc)
+      if user is None:
+        password = None
+      else:
+        user, password = urllib.splitpasswd(user)
+      user = kw.pop('user', user)
+      if user is not None:
+        password = kw.pop('password', password)
+        if password is not None:
+          user = '%s:%s' % (user, password)
+        host = '%s@%s' % (user, host)
+      url = urlparse.urlunsplit((scheme, host, path.rstrip('/'), '', '')) + \
+        '/portal_contributions/newContent'
+      kw['data'] = sys.stdin.read()
+      try:
+        result = urlopen(url, urllib.urlencode(kw))
+      except HTTPError, e:
+        if e.errcode >= 300:
+          raise
+        result = e.result
+      result.read() # ERP5 does not return useful information
+      print 'Message ingested'
+    else:
+      print 'Message dropped'
+    # Now, we could reinject the message to postfix for local delivery,
+    # using /usr/sbin/sendmail, depending on a 'sendmail' option. However,
+    # we would get duplicate mails if either ERP5 or sendmail fail.
+    # It is better to do this from the ERP5 instance itself, by activity.
+
+
+class SimpleIngestionMap(object):
+  """Simple implementation of ingestion map, using a Python file as database
+
+  This class maps recipients to parameters for portal_contributions/newContent
+  """
+  def __init__(self, ingestion_map_filename):
+    fd = file(ingestion_map_filename)
+    g = {}
+    try:
+      exec fd in g
+    finally:
+      fd.close()
+    self._map = g['ingestion_map']
+
+  def __call__(self, message, **kw):
+    for recipient in message.recipient_list:
+      recipient = self._map.get(recipient)
+      if recipient:
+        kw.update(recipient)
+        break
+    return message(**kw)
+
+
+def getOptionParser():
+  from optparse import IndentedHelpFormatter, OptionGroup, OptionParser
+  class Formatter(IndentedHelpFormatter):
+    """Subclass IndentedHelpFormatter to preserve line breaks in description"""
+    def format_description(self, description):
+      return ''.join(IndentedHelpFormatter.format_description(self, x)
+                     for x in description.split('\n'))
+  parser = OptionParser(usage="%prog [options] [<key>=<value>]...",
+                        formatter=Formatter(), description="""Positional \
+arguments defines variables that are used by ingestion maps to determine \
+options to send to ERP5. Currently, only 'recipient' key is used.
+This tool can be used directly to deliver mails from postfix to ERP5, \
+by using it as a filter (cf document of /etc/postfix/master.cf).""")
+  _ = parser.add_option
+  _("--portal", help="URL of ERP5 instance to connect to (special value"
+                     " 'UNAVAILABLE' means the mail is returned to the sender)")
+  _("--user", help="use this user to connect to ERP5")
+  _("--password", help="use this password to connect to ERP5")
+  _("--file_name", help="ERP5 requires a file name to guess content type")
+  _("--container_path", help="define where to contribute the content"
+                             " (by default, it is guessed by ERP5)")
+  #_("--portal_type", default="Mail Message")
+  group = OptionGroup(parser, "Ingestion map", """Above options can be \
+overridden according to recipients, using a Python module as ingestion map \
+database. The module must define an 'ingestion_map' variable implementing \
+'get(recipient) -> option_dict'. Example:
+  ingestion_map = {
+    'foo@bar.com': dict(user='foo', password='12345'),
+    'patches@prj1.org': dict(file_name='prj1.patch'),
+    'spam@example.invalid': dict(portal=None), # drop
+  }""")
+  group.add_option("--ingestion_map", help="get options from this file,"
+                                           " according to recipients")
+  parser.add_option_group(group)
+  _ = group.add_option
+  parser.set_defaults(file_name="unnamed.eml")
+  return parser
+
+
+def main():
+  parser = getOptionParser()
+  options, args = parser.parse_args()
+  message = Message(*args)
+  default = {}
+  for option in parser.option_list:
+    dest = option.dest
+    if dest not in (None, 'ingestion_map'):
+      value = getattr(options, dest)
+      if value is not None:
+        default[dest] = value
+  if options.ingestion_map:
+    SimpleIngestionMap(options.ingestion_map)(message, **default)
+  else:
+    message(**default)
+
+
+if __name__ == '__main__':
+  try:
+    main()
+  except SystemExit:
+    raise
+  except:
+    traceback.print_exc()
+    sys.exit(os.EX_TEMPFAIL)

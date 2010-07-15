@@ -93,6 +93,9 @@ class TradeModelLine(MappedValue, XMLMatrix, Amount, AmountGeneratorMixin):
     if result:
       return result
     return ('base_contribution', 'trade_phase', )
+                                     'portal_roundings').getRoundingProxy
+      movement_list = [rounding_proxy(movement, context=self)
+        'use': self.getUse(),
 
   #
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -101,3 +104,14 @@ class TradeModelLine(MappedValue, XMLMatrix, Amount, AmountGeneratorMixin):
     """
     """
     return self._baseGetPrice()
+
+  def _isMatchedMovement(self, movement, base_application_list, tmp_movement):
+    return (
+      set(base_application_list).intersection(
+      set(movement.getBaseContributionList())) and
+      (len(movement.getVariationCategoryList()) == 0 or
+       len(tmp_movement.getVariationCategoryList()) == 0 or
+       set(movement.getVariationCategoryList()).intersection(
+      set(tmp_movement.getVariationCategoryList()))
+       )
+      )

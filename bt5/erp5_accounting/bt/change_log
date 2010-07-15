@@ -1,3 +1,21 @@
+2010-07-12 yusei
+* Update Node_statAccountingBalance and accept "at_date", "from_date", "to_date" parameters.
+
+2010-05-28 lucas
+* Added quantity into Expandable Properties of the default_accounting_transaction_rule object.
+
+2010-05-28 yo
+* Keep remaining in the same view after adding a new Accounting Transaction Line.
+
+2010-05-24 kazuhiko
+* Call Delivery_updateAppliedRule with activity in accounting_workflow/scripts/buildTradeModelLineList.
+
+2010-05-24 Jérome
+* Allow to select multiple accounts root in General Ledger and Trial Balance
+
+2010-05-24 kazuhiko
+* Improve activity dependencies for Delivery_updateAppliedRule, eg. delivery.activate(tag='(path)_updateAppliedRule', after_tag='(path)_expand').Delivery_updateAppliedRule(activate_kw={'tag':'(path)_expand'})
+
 2010-05-05 Jérome
 * Add an action to add create an initial balance transaction, from an accounting period.
 

@@ -67,8 +67,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyValue</td>\n
-  <td>field_my_lines_list</td>\n
+  <td>assertEval</td>\n
+  <td>this.browserbot.findElement(\'field_my_lines_list\').value</td>\n
   <td>javascript{"\\na\\nb\\n"}</td>\n
 </tr>\n
 </body>\n

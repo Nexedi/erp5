@@ -85,6 +85,7 @@
                     <value>
                       <list>
                         <string>listbox_creation_date</string>
+                        <string>listbox_application_requester</string>
                       </list>
                     </value>
                 </item>

@@ -62,8 +62,8 @@
 #   - Implement validation of matrix fields\n
 #   - Implement validation of list fields\n
 #\n
+from Products.ERP5Type.Message import translateString\n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
-from ZTUtils import make_query\n
 \n
 request=context.REQUEST\n
 \n
@@ -95,35 +95,14 @@ except FormValidationError, validation_errors:\n
   field_errors = form.ErrorFields(validation_errors)\n
   request.set(\'field_errors\', field_errors)\n
   return form(request)\n
-else:\n
-  # for web mode, we should use \'view\' instead of passed form_id\n
-  # after \'Save & View\'.\n
-  if context.REQUEST.get(\'is_web_mode\', False) and \\\n
-      not editable_mode:\n
-    form_id = \'view\'\n
 \n
-  if not selection_index:\n
-    redirect_url = \'%s/%s?%s\' % (\n
-      context.absolute_url(),\n
-      form_id,\n
-      make_query({\'ignore_layout\':ignore_layout,\n
-                  \'editable_mode\':editable_mode,\n
-                  \'portal_status_message\':\'Data Updated.\',\n
-                  })\n
-      )\n
-  else:\n
-    redirect_url = \'%s/%s?%s\' % (\n
-      context.absolute_url(),\n
-      form_id,\n
-      make_query({\'selection_index\':selection_index,\n
-                  \'selection_name\':selection_name,\n
-                  \'ignore_layout\':ignore_layout,\n
-                  \'editable_mode\':editable_mode,\n
-                  \'portal_status_message\':\'Data Updated.\',\n
-                  })\n
-      )\n
+# for web mode, we should use \'view\' instead of passed form_id\n
+# after \'Save & View\'.\n
+if request.get(\'is_web_mode\', False) and not editable_mode:\n
+  form_id = \'view\'\n
 \n
-request[ \'RESPONSE\' ].redirect( redirect_url )\n
+return context.Base_redirect(form_id,\n
+  keep_items=dict(portal_status_message=translateString(\'Data Updated.\')))\n
 
 
 ]]></string> </value>
@@ -136,7 +115,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_index=0, selection_name=\'\', ignore_layout=0, editable_mode=1</string> </value>
+            <value> <string>form_id=\'view\', selection_index=0, selection_name=\'\', ignore_layout=0, editable_mode=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -167,11 +146,11 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>selection_name</string>
                             <string>ignore_layout</string>
                             <string>editable_mode</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
                             <string>Products.Formulator.Errors</string>
                             <string>ValidationError</string>
                             <string>FormValidationError</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
@@ -189,7 +168,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>validation_errors</string>
                             <string>field_errors</string>
                             <string>False</string>
-                            <string>redirect_url</string>
+                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>
@@ -202,6 +181,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <string>view</string>
                 <int>0</int>
                 <string></string>
                 <int>0</int>

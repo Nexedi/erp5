@@ -59,7 +59,7 @@
               portal_type  here/getPortalType">\n
 <ul>\n
   <!-- Edit button menu -->\n
-  <li class="toolboxSection">\n
+  <li class="toolboxSection" id="edit-document-toolbox">\n
     <h3 class="menu_title" i18n:translate="" i18n:domain="ui">Edit</h3>\n
     <div class="menu">\n
       <ul tal:define="edit_link_list python: here.Base_getAdminToolboxEditShortcutList()">\n
@@ -85,7 +85,7 @@
 \n
        XXX - the location of context_box_render is hardcoded.\n
   -->\n
-  <li class="toolboxSection">\n
+  <li class="toolboxSection" id="action-document-toolbox">\n
     <h3 class="menu_title"><tal:block tal:content="portal_type"/> Actions</h3>\n
     <div class="menu">\n
       <label i18n:translate="" i18n:domain="ui">Add</label>\n
@@ -103,15 +103,6 @@
           </button>\n
         </li>\n
         </tal:block>\n
-        <li tal:repeat="action actions/object_add | nothing">\n
-          <button class="menu-link" \n
-                  tal:attributes="title string:Add ${action/name};\n
-                                  name python:\'Base_doAction:method\';\n
-                                  value string:object ${action/url}"\n
-                  i18n:translate="" i18n:domain="ui">\n
-            Add <tal:block tal:content="action/name" i18n:name="portal_type" i18n:translate="" />\n
-          </button>\n
-        </li>\n
         <tal:block tal:define="document_template_list here/getDocumentTemplateList | nothing"\n
                    tal:condition="document_template_list">\n
         <li tal:repeat="document_template document_template_list">\n
@@ -172,7 +163,7 @@
        XXX - This is not so good to create new content in a section\n
              Behaviour should be to create content in section / site\n
   -->\n
-  <li class="toolboxSection"\n
+  <li class="toolboxSection" id="clone-document-toolbox"\n
        tal:condition="python:here.isDocument">\n
     <h3 class="menu_title">\n
       <span id="create_new_document_title"></span>\n
@@ -295,7 +286,7 @@
   <!-- Module panel.\n
        Some modules that should be useful for web management will be listed.\n
   -->\n
-  <li class="toolboxSection">\n
+  <li class="toolboxSection" id="select-module-toolbox">\n
     <h3 class="menu_title" i18n:translate="" i18n:domain="ui">Module</h3>\n
     <div class="menu">\n
       <ul>\n
@@ -312,7 +303,8 @@
   </li>\n
   <script type="text/javascript" src="erp5_web_toolbar.js" tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
 </ul>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

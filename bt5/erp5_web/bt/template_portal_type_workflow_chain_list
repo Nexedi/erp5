@@ -1,7 +1,9 @@
 Base Category | category_publication_workflow
 Category | category_publication_workflow
-Web Page | cached_convertible_interaction_workflow
+Web Page | document_conversion_interaction_workflow
+Web Page | document_security_interaction_workflow
 Web Page | edit_workflow
+Web Page | processing_status_workflow
 Web Page | publication_workflow
 Web Section | category_publication_workflow
 Web Section | edit_workflow

@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="File" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts78681256.09</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_km.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// Browser gadget toggle section\n
+function toggleSection(section_id, image_id){\n
+  section_obj = MochiKit.DOM.getElement(section_id);\n
+  image_obj = MochiKit.DOM.getElement(image_id);\n
+  if(section_obj.style.display==\'none\'){\n
+    section_obj.style.display=\'block\';\n
+    image_obj.src=\'images/tree_open.png\';}\n
+  else{\n
+    section_obj.style.display=\'none\';\n
+    image_obj.src=\'images/tree_closed.png\';}\n
+  } \n
+\n
+// Pop up window for KM\n
+function delayedDocumentDetailsPopupWindowLoad(dom_element, url){\n
+  dom_id = dom_element.id;\n
+  if (dom_element.style.display==\'block\'){\n
+    d = MochiKit.Async.doSimpleXMLHttpRequest(url);\n
+    d.addCallback(handleServerSuccess);\n
+   }};\n
+\n
+function handleServerSuccess(res){\n
+  dom_element.innerHTML = res.responseText;};\n
+\n
+function toggleDocumentDetailsPopupWindow(dom_id, show, url){\n
+  dom_element = getElement(dom_id);\n
+  remote_url = url;\n
+  if (show==true){\n
+    dom_element.style.display=\'block\';\n
+    setTimeout(\'delayedDocumentDetailsPopupWindowLoad(dom_element, remote_url);\', 500)\n
+    }\n
+  else{\n
+    dom_element.style.display=\'none\';\n
+    }\n
+}\n
+\n
+// Toggle any element\n
+function toggleElement(tag_name, class_name){\n
+  dom_element = MochiKit.DOM.getFirstElementByTagAndClassName(tag_name, class_name);\n
+  MochiKit.Visual.toggle(dom_element);\n
+}\n
+\n
+function toggleHiddenFormatDialogSelection(){\n
+  toggleElement(\'div\', \'download-document-format-list-menu-hidden\');\n
+  MochiKit.DOM.removeElement(MochiKit.DOM.getFirstElementByTagAndClassName(\'li\', \'toggle-hidden-format-dialog-selection-link\'));\n
+}\n
+\n
+MochiKit.DOM.addLoadEvent(setScreenClass);\n
+connect(window, "onresize", setScreenClass);\n
+\n
+function setScreenClass(){\n
+  var fmt = document.documentElement.clientWidth;\n
+  var cls = (fmt<=800)?\'screen_small\':(fmt>800)?\'screen_wide\':\'screen_small\';\n
+  document.body.className=cls;\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1787</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

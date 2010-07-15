@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #          Jean-Paul Smets <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -42,5 +43,10 @@ class Data:
       'description' : 'A string which represents the mime type of the data',
       'type'        : 'string',
       'default'     : 'application/unknown',
+      'mode'        : 'w' },
+    { 'id'          : 'size',
+      'description' : 'Size in bytes of the data',
+      'type'        : 'int',
+      'default'     : 0,
       'mode'        : 'w' },
    )

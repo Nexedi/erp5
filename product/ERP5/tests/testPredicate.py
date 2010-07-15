@@ -553,6 +553,42 @@ class TestPredicates(TestPredicateMixIn):
       )
     self.assert_(test(predicate_with_membership_values.searchResults))
 
+  def test_searchResultsWithParameters(self):
+    """
+    Check that we can restrict filter used by predicate passing parameters to
+    searchResults.
+    """
+    # create one person and one organisation
+    person_module = self.portal.getDefaultModule('Person')
+    fabien = person_module.newContent(title='Fabien')
+    organisation_module = self.portal.getDefaultModule('Organisation')
+    nexedi = organisation_module.newContent(title='Nexedi')
+
+    predicate = self.createPredicate(criterion_property_list=['portal_type'])
+    predicate.setCriterion('portal_type', ['Person', 'Organisation'])
+    transaction.commit()
+    self.tic()
+
+    # check that if we define the same filter than on predicate we get same result
+    self.assertEquals(len(predicate.searchResults()), 2)
+    self.assertSameSet(set([x.getObject() for x in predicate.searchResults(portal_type=['Person',
+    'Organisation'])]), set([fabien, nexedi]))
+
+    # check that it's possible to filter results
+    self.assertEquals([x.getObject() for x in \
+      predicate.searchResults(portal_type='Person')], [fabien])
+    self.assertEquals([x.getObject() for x in \
+        predicate.searchResults(portal_type='Organisation')], [nexedi])
+
+    # check that if the filter define more properties, we cannot have more than
+    # the one defined on the predicate
+    currency_module = self.portal.getDefaultModule('Currency')
+    euro = currency_module.newContent(title='euro')
+
+    self.assertSameSet(set([x.getObject() for x in predicate.searchResults(portal_type=['Person',
+    'Organisation'])]), set([fabien, nexedi]))
+
+
 # TODO :
 #  multi membership category
 #  asPredicate scripts

@@ -41,7 +41,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
 
-from Acquisition import aq_base, aq_self
+from Acquisition import aq_base, aq_self, aq_inner
 import Acquisition
 from zLOG import LOG, WARNING
 from ZODB.POSException import ConflictError
@@ -389,6 +389,14 @@ class ListBoxWidget(Widget.Widget):
                                  required=0)
     property_names.append('report_root_list')
 
+    display_style_list = fields.ListTextAreaField('display_style_list',
+                                title="Display style",
+                                description=(
+        "A list of styles which change the listbox rendering."),
+                                default=[],
+                                required=0)
+    property_names.append('display_style_list')
+
     list_action = fields.StringField('list_action',
                                  title='List Action',
                                  description=('The id of the object action'
@@ -477,6 +485,7 @@ class ListBoxRenderer:
     self.field = field
     self.request = REQUEST
     self.render_prefix = render_prefix
+    self.displayed_column_id_list = None
 
   def getPhysicalPath(self):
     """
@@ -915,6 +924,15 @@ class ListBoxRenderer:
 
   getReportRootList = lazyMethod(getReportRootList)
 
+  def getDisplayStyleList(self):
+    """Return the list of avaible display style. Make sure that the 
+    titles are in unicode"""
+    display_style_list = self.field.get_value('display_style_list')
+    return [(str(c[0]), unicode(c[1], self.getEncoding())) for c in \
+                                                      display_style_list]
+
+  getDisplayStyleList = lazyMethod(getDisplayStyleList)
+
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
     """
@@ -1030,13 +1048,46 @@ class ListBoxRenderer:
     return set(self.getCheckedUidList())
 
   getCheckedUidSet = lazyMethod(getCheckedUidSet)
+  
+  def setDisplayedColumnIdList(self, displayed_column_id_list):
+    """Set the column to be displayed.
+       Impact the result of getSelectedColumnList.
+       Parameter : 
+       displayed_column_id_list : List of id. Exemple : ('id', 'title')
+    """
+    self.displayed_column_id_list = displayed_column_id_list
+
+  def getDisplayedColumnIdList(self):
+    """Return the list of displayed column id
+    """
+    return self.displayed_column_id_list
 
   def getSelectedColumnList(self):
     """Return the list of selected columns.
     """
-    return self.getSelectionTool().getSelectionColumns(self.getSelectionName(),
+    column_list = []
+
+    #Parameter allow to select column temporary
+    if self.getDisplayedColumnIdList() != None:
+      available_column = self.getAllColumnList()
+
+      #Create a dict to make a easy search
+      available_column_dict = dict()
+      for id,title in available_column:
+        available_column_dict[id] = (id,title)
+
+      #We check columns are present
+      for id in self.getDisplayedColumnIdList():
+        if available_column_dict.has_key(id):
+          column_list.append(available_column_dict[id])
+        else:
+          raise AttributeError, "Column %s is not avaible" % id
+
+    else:
+      column_list = self.getSelectionTool().getSelectionColumns(self.getSelectionName(),
                                                        columns = self.getColumnList(),
                                                        REQUEST = self.request)
+    return column_list
 
   getSelectedColumnList = lazyMethod(getSelectedColumnList)
 
@@ -1156,16 +1207,22 @@ class ListBoxRenderer:
     """
     form = self.getForm()
     editable_field_id = '%s_%s' % (self.getUnprefixedId(), alias)
-    if form.has_field(editable_field_id, include_disabled=1):
-      return form.get_field(editable_field_id, include_disabled=1)
-
-    # if we are rendering a proxy field, also look for editable fields from the
-    # template field's form.
-    if self.field.has_value('form_id'):
-      form = getattr(self.field, self.field.get_value('form_id'), None)
-      if form and form.has_field(editable_field_id, include_disabled=1):
+    field = self.field
+    while form is not None:
+      #Search the editable field in the form
+      if form.has_field(editable_field_id, include_disabled=1):
         return form.get_field(editable_field_id, include_disabled=1)
-
+      elif field.meta_type == 'ProxyField':
+        # if we are rendering a proxy field, also look for editable 
+        # fields from the template field's form.
+        field = field.getTemplateField()
+        if field is None:
+          form = None
+        else:
+          form = aq_inner(field).aq_parent
+      else:
+        form = None
+    
     return None
 
   def getListMethod(self):
@@ -2329,13 +2386,13 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           error_message = u''
           display_value = original_value
 
+        # We need a way to pass the current line object (ie. brain) to the
+        # field which is being displayed. Since the render_view API did not
+        # permit this, we use the 'cell' value to pass the line object.
+        request.set('cell', brain)
         enabled = editable_field.get_value('enabled', REQUEST=request)
         editable = editable_field.get_value('editable', REQUEST=request)
         if enabled:
-          # We need a way to pass the current line object (ie. brain) to the
-          # field which is being displayed. Since the render_view API did not
-          # permit this, we use the 'cell' value to pass the line object.
-          request.set('cell', brain)
           # Field is editable only if listbox lists it in editable columns AND
           # if listbox_field is editable
           cell_html = editable_field.render(
@@ -2452,9 +2509,11 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       return aq_base(getattr(self.getContext(), method_id)).__of__(context)
     # Try to get a page template from acquisition context then portal object
     # and fallback on default page template.
-    return getattr(self.getContext(), 'ListBox_asHTML',
-           getattr(context.getPortalObject(), 'ListBox_asHTML', context.asHTML)
-           ).__of__(context)
+    page_template = getattr(self.getContext(), 'ListBox_asHTML', None)
+    if page_template is None:
+        portal_object = context.getPortalObject()
+        page_template = getattr(portal_object, 'ListBox_asHTML', context.asHTML)
+    return page_template.__of__(context)
 
   def render(self, **kw):
     """Render the data in HTML.

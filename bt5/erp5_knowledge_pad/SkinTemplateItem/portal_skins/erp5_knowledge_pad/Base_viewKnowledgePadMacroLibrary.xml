@@ -72,9 +72,9 @@
       %(cancel_url, \n
         active_knowledge_pad.getRelativeUrl(), mode);"\n
      title="Add gadgets"\n
-     i18n:translate="" \n
      i18n:domain="ui"\n
-     id="add-gadgets"> Add gadgets</a>\n
+     i18n:attributes="title"\n
+     id="add-gadgets"><span i18n:translate="">Add gadgets</span></a>\n
 </tal:block>\n
 \n
 <tal:block metal:define-macro="stick">\n
@@ -89,16 +89,16 @@
        \'WebSection_stickKnowledgePad?knowledge_pad_url=%s&cancel_url=%s\'\n
        %(active_knowledge_pad.getRelativeUrl(), cancel_url)"\n
        i18n:translate="" \n
-       i18n:domain="ui">Stick it\n
-    </a>\n
+       i18n:domain="ui"\n
+       id="stick-gadgets"><span>Stick it</span></a>\n
 \n
     <a tal:condition="is_customized_pad"\n
        tal:attributes="href python:\n
        \'WebSection_unStickKnowledgePad?knowledge_pad_url=%s&cancel_url=%s\'\n
        %(active_knowledge_pad.getRelativeUrl(), cancel_url)"\n
        i18n:translate="" \n
-       i18n:domain="ui">Unstick it\n
-    </a>\n
+       i18n:domain="ui"\n
+       id="unstick-gadgets"><span>Unstick it</span></a>\n
   </tal:block>\n
 </tal:block>\n
 \n
@@ -124,7 +124,8 @@
                 %(context.getPortalObject().getId(),\n
                   mode)" \n
               i18n:translate="" \n
-              i18n:domain="ui">Add</button>\n
+              i18n:domain="ui"\n
+              id="add_new_tab_dialog_add_button">Add</button>\n
       <button type="button"\n
               tal:condition="python: mode==\'web_front\'"\n
               tal:attributes="onclick python: \n
@@ -135,7 +136,8 @@
                    context.getRelativeUrl(),\n
                    mode)" \n
               i18n:translate="" \n
-              i18n:domain="ui">Add</button>\n
+              i18n:domain="ui"\n
+              id="add_new_tab_dialog_add_button">Add</button>\n
   </div>\n
 \n
   <div id="rename_tab_dialog" \n
@@ -156,6 +158,7 @@
         <button type="button"\n
                 i18n:translate="" \n
                 i18n:domain="ui"\n
+                id="rename_tab_dialog_rename_button"\n
                 tal:attributes="onclick python: \'renameKnowledgePadToServer(\n
                 \\\'rename_tab_dialog\\\',\n
                 \\\'active_knowledge_pad_title\\\',\n
@@ -175,19 +178,19 @@
 \n
    <table id="navigation_table">\n
       <tr>\n
-        <td style="width: 17.5%;">\n
+        <td id="tab-switcher-container">\n
           <div class="tab"\n
               id="tabs_switcher"\n
               tal:attributes="class python: test(is_tabs_visible,\n
                                                  \'border_bottom1px\',\n
                                                   \'border_bottom0px\');">\n
-            <span i18n:translate="" i18n:domain="ui"\n
-                  tal:condition="not: is_tabs_visible">Show tabs</span>\n
-            <span i18n:translate="" i18n:domain="ui" \n
-                  tal:condition="is_tabs_visible">Hide tabs</span>\n
-        </div>\n
-      </td>\n
-        <td>\n
+            <span i18n:translate="" i18n:domain="ui" id="tab_switcher_hidden"\n
+                  tal:attributes="style python: test(is_tabs_visible, \'display:none\', None)">Show tabs</span>\n
+            <span i18n:translate="" i18n:domain="ui" id="tab_switcher_visible"\n
+                  tal:attributes="style python: test(is_tabs_visible, None, \'display:none\')">Hide tabs</span>\n
+          </div>\n
+        </td>\n
+        <td id="tab-list-container">\n
           <div id="tabs"\n
               tal:attributes="style python: \n
                                     \'display: %s\' %test(is_tabs_visible, \'block\', \'none\')">\n
@@ -203,39 +206,38 @@
                         class="tab tab_selected">\n
                         <span id="active_knowledge_pad_title" \n
                               tal:content="knowledge_pad/title"/>\n
-                        <img src="icon_edit.gif" \n
-                            title="Settings"\n
-                            i18n:attributes="title"\n
-                            i18n:domain="ui"\n
-                            class="clickable_image"\n
-                            onclick="toggleElement(\'rename_tab_dialog\');" \n
-                            alt="edit"/>\n
 \n
-                        <img src="icon_remove.gif" \n
-                            title="Remove"\n
-                            i18n:attributes="title"\n
-                            i18n:domain="ui"\n
-                            class="clickable_image"\n
-                            tal:condition="python: mode==\'erp5_front\'"\n
-                            tal:attributes="onclick python: \'removeKnowledgePadFromServer(\n
-                            \\\'%s\\\', \\\'%s\\\',\\\'/%s\\\')\' \n
-                             %(active_knowledge_pad.getRelativeUrl(), \n
+                        <span title="Settings"\n
+                              i18n:attributes="title"\n
+                              i18n:domain="ui"\n
+                              class="clickable_image rename_tab_dialog_image"\n
+                              onclick="toggleElement(\'rename_tab_dialog\');" \n
+                              alt="edit"></span>\n
+\n
+                        <span title="Remove"\n
+                              i18n:attributes="title"\n
+                              i18n:domain="ui"\n
+                              class="clickable_image remove_tab_dialog_image"\n
+                              tal:condition="python: mode==\'erp5_front\'"\n
+                              tal:attributes="onclick python: \'removeKnowledgePadFromServer(\n
+                              \\\'%s\\\', \\\'%s\\\',\\\'/%s\\\')\' \n
+                              %(active_knowledge_pad.getRelativeUrl(), \n
                                mode,\n
                                context.getId())" \n
-                            alt="remove"/>\n
-                        <img src="icon_remove.gif" \n
-                             title="Remove"\n
-                             i18n:attributes="title"\n
-                             i18n:domain="ui"\n
-                             class="clickable_image"\n
-                             tal:condition="python: mode!=\'erp5_front\'"\n
-                             tal:attributes="onclick python: \'removeKnowledgePadFromServer(\n
-                             \\\'%s\\\', \\\'%s\\\',\\\'/%s/%s\\\')\' \n
-                             %(active_knowledge_pad.getRelativeUrl(), \n
+                            alt="remove"></span>\n
+                        <span title="Remove"\n
+                              i18n:attributes="title"\n
+                              i18n:domain="ui"\n
+                              class="clickable_image remove_tab_dialog_image"\n
+                              tal:condition="python: mode!=\'erp5_front\'"\n
+                              tal:attributes="onclick python: \'removeKnowledgePadFromServer(\n
+                              \\\'%s\\\', \\\'%s\\\',\\\'/%s/%s\\\')\' \n
+                              %(active_knowledge_pad.getRelativeUrl(), \n
                                mode,\n
                                context.getPortalObject().getId(),\n
                                context.getRelativeUrl())" \n
-                             alt="remove"/>\n
+                               alt="remove"></span>\n
+\n
                     </li>\n
 \n
                     <li tal:condition="not: is_active"\n
@@ -266,7 +268,7 @@
             </div>\n
           </td>\n
     \n
-          <td>\n
+          <td id="add-new-gadget-container">\n
             <div id="add_new_gadget_link"\n
                  tal:attributes="class python: test(is_tabs_visible,\n
                                                     \'border_bottom1px\',\n

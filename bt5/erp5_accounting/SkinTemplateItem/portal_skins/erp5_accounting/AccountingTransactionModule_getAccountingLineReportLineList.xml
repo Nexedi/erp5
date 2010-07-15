@@ -74,8 +74,12 @@ if checked_uid_list:\n
   getObject = portal.portal_catalog.getObject\n
   delivery_list = [getObject(uid) for uid in checked_uid_list]\n
 else:\n
-  delivery_list = \\\n
-    portal_selections.callSelectionFor(selection_name, context=context)\n
+  params = portal_selections.getSelectionParamsFor(selection_name)\n
+  params[\'limit\'] = None # XXX potentially very big report\n
+  delivery_list = portal_selections.callSelectionFor(\n
+                                        selection_name,\n
+                                        context=context,\n
+                                        params=params)\n
 \n
 \n
 account_reference_cache = dict()\n
@@ -168,11 +172,11 @@ for delivery in delivery_list:\n
         project_title=getTitle(movement.getSourceProjectValue()),\n
         product_line=movement.getProductLineTranslatedTitle(),\n
         date=movement.getStartDate(),\n
-        debit=movement.getSourceInventoriatedTotalAssetDebit(),\n
-        credit=movement.getSourceInventoriatedTotalAssetCredit(),\n
+        debit_price=movement.getSourceInventoriatedTotalAssetDebit(),\n
+        credit_price=movement.getSourceInventoriatedTotalAssetCredit(),\n
         currency=getAccountingCurrencyReference(movement.getSourceSection()),\n
-        debit_quantity=movement.getSourceDebit(),\n
-        credit_quantity=movement.getSourceCredit(),\n
+        debit=movement.getSourceDebit(),\n
+        credit=movement.getSourceCredit(),\n
         resource=movement.getResourceReference(),\n
         quantity_precision=movement.getQuantityPrecisionFromResource(movement.getResource()),\n
         translated_portal_type=movement.getTranslatedPortalType(),\n
@@ -212,11 +216,11 @@ for delivery in delivery_list:\n
         project_title=getTitle(movement.getDestinationProjectValue()),\n
         product_line=movement.getProductLineTranslatedTitle(),\n
         date=movement.getStopDate(),\n
-        debit=movement.getDestinationInventoriatedTotalAssetDebit(),\n
-        credit=movement.getDestinationInventoriatedTotalAssetCredit(),\n
+        debit_price=movement.getDestinationInventoriatedTotalAssetDebit(),\n
+        credit_price=movement.getDestinationInventoriatedTotalAssetCredit(),\n
         currency=getAccountingCurrencyReference(movement.getDestinationSection()),\n
-        debit_quantity=movement.getDestinationDebit(),\n
-        credit_quantity=movement.getDestinationCredit(),\n
+        debit=movement.getDestinationDebit(),\n
+        credit=movement.getDestinationCredit(),\n
         resource=movement.getResourceReference(),\n
         quantity_precision=movement.getQuantityPrecisionFromResource(movement.getResource()),\n
         translated_portal_type=movement.getTranslatedPortalType(),\n
@@ -280,6 +284,9 @@ return line_list\n
                             <string>_getiter_</string>
                             <string>uid</string>
                             <string>delivery_list</string>
+                            <string>params</string>
+                            <string>None</string>
+                            <string>_write_</string>
                             <string>dict</string>
                             <string>account_reference_cache</string>
                             <string>getAccountReference</string>
@@ -296,7 +303,6 @@ return line_list\n
                             <string>node_title</string>
                             <string>node_account_type_title</string>
                             <string>node_financial_section_title</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

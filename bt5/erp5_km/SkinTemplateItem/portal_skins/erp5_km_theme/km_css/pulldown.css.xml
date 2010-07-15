@@ -105,7 +105,7 @@
   display:block;\n
   position:absolute;\n
   top:0;\n
-  padding-top:44px;\n
+  padding-top:30px;\n
   left:0;\n
   width:205px;\n
   opacity: <tal:block tal:replace="menu_opacity">0.80</tal:block>;\n

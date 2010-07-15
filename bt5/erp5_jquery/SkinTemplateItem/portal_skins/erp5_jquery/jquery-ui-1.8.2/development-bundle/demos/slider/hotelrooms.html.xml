@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Slider - Range with fixed minimum</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.slider.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t\t#demo-frame > div.demo { padding: 10px !important; };\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\tvar select = $("#minbeds");\n
+\t\tvar slider = $(\'<div id="slider"></div>\').insertAfter(select).slider({\n
+\t\t\tmin: 1,\n
+\t\t\tmax: 6,\n
+\t\t\trange: "min",\n
+\t\t\tvalue: select[0].selectedIndex + 1,\n
+\t\t\tslide: function(event, ui) {\n
+\t\t\t\tselect[0].selectedIndex = ui.value - 1;\n
+\t\t\t}\n
+\t\t});\n
+\t\t$("#minbeds").click(function() {\n
+\t\t\tslider.slider("value", this.selectedIndex + 1);\n
+\t\t});\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<form id="reservation">\n
+\t<label for="minbeds">Minimum number of beds</label>\n
+\t<select name="minbeds" id="minbeds">\n
+\t\t<option>1</option>\n
+\t\t<option>2</option>\n
+\t\t<option>3</option>\n
+\t\t<option>4</option>\n
+\t\t<option>5</option>\n
+\t\t<option>6</option>\n
+\t</select>\n
+</form>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>How to bind a slider to an existing select element. The select stays visible to display the change. When the select is changed, the slider is updated, too.</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>hotelrooms.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

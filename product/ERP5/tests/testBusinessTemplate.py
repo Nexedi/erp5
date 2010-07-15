@@ -43,6 +43,7 @@ from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
+from Products.ERP5Type.Tool.TypesTool import TypeProvider
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 import shutil
@@ -50,11 +51,17 @@ import os
 import gc
 import random
 import string
+import tempfile
+import glob
 
 from MethodObject import Method
 from Persistence import Persistent
 
 WORKFLOW_TYPE = 'erp5_workflow' 
+
+class DummyTypeProvider(TypeProvider):
+  id = 'dummy_type_provider'
+
 
 class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   """
@@ -72,7 +79,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   quiet = 1
 
   def getBusinessTemplateList(self):
-    return ('erp5_csv_style', 'erp5_pdf_style')
+    return ('erp5_base',
+            'erp5_csv_style',
+            'erp5_pdf_style',
+            )
 
   def getTitle(self):
     return "Business Template"
@@ -691,6 +701,22 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         selection.append('erp5_geek')
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
 
+  def stepCreateAnotherSkinFolder(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create another skin folder
+    """
+    ps = self.getSkinsTool()
+    ps.manage_addProduct['OFSP'].manage_addFolder('erp5_nerd')
+    skin_folder = ps._getOb('erp5_nerd', None)
+    self.failUnless(skin_folder is not None)
+    sequence.edit(another_skin_folder_id=skin_folder.getId())
+    # add skin in layers
+    for skin_name, selection in ps.getSkinPaths():
+      selection = selection.split(',')
+      if 'erp5_nerd' not in selection:
+        selection.append('erp5_nerd')
+      ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
+
   def stepCreateStaticSkinFolder(self, sequence=None, sequence_list=None, **kw):
     """
     Create a skin folder not managed by the bt5
@@ -752,6 +778,31 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         id_list.append(field.getId())
       group_dict[group] = id_list
     sequence.edit(form_id=form_id, group_dict=group_dict)
+
+  def stepCreateNewFormIntoErp5Nerd(self, sequence=None, sequence_list=None):
+    """Create a new ERP5 Form in a skin folder."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_nerd', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = 'Geek_view'
+    addERP5Form = skin_folder.manage_addProduct['ERP5Form'].addERP5Form
+    addERP5Form(form_id, 'View')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    self.assertEquals(sorted(form.get_groups(include_empty=1)),
+                      sorted(['left', 'right', 'center', 'bottom', 'hidden']))
+    addField = form.manage_addProduct['Formulator'].manage_addField
+    addField('my_title', 'Title', 'StringField')
+    field = form.get_field('my_title')
+    self.assertEquals(form.get_fields_in_group('left'), [field])
+    group_dict = {}
+    for group in form.get_groups(include_empty=1):
+      id_list = []
+      for field in form.get_fields_in_group(group):
+        id_list.append(field.getId())
+      group_dict[group] = id_list
+    sequence.edit(another_form_id=form_id)
+
 
   def stepRemoveForm(self, sequence=None, sequence_list=None):
     """Remove an ERP5 Form."""
@@ -828,6 +879,25 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertEquals('First Form Title', form.title)
 
+  def stepCheckFormIsRemoved(self, sequence=None, sequence_list=None):
+    """Check the form is exist in erp5_geek."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_geek', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertEquals(form, None)
+
+  def stepCheckFormIsNotRemovedFromErp5Nerd(self, sequence=None, sequence_list=None):
+    """Check the form is not exist in erp5_nerd."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_nerd', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+
+
   def stepRemoveFormField(self, sequence=None, sequence_list=None):
     """Remove a field from an ERP5 Form."""
     ps = self.getSkinsTool()
@@ -858,6 +928,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       for field in form.get_fields_in_group(group):
         id_list.append(field.getId())
       self.assertEquals(group_dict[group], id_list)
+
+  def stepCheckFieldTitleIsNotRemovedFromErp5Nerd(self, sequence=None, sequence_list=None):
+    """Check that field title is not removed form erp5_nerd."""
+    ps = self.getSkinsTool()
+    skin_folder = ps._getOb('erp5_nerd', None)
+    self.assertNotEquals(skin_folder, None)
+    form_id = sequence.get('form_id')
+    form = skin_folder._getOb(form_id, None)
+    self.assertNotEquals(form, None)
+    title_field =form._getOb('my_title', None)
+    self.assertNotEquals(title_field, None)
 
   def stepCreateNewObjectInSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
     """
@@ -891,6 +972,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         selection.remove(skin_id)
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
 
+
+  def stepRemoveFileFromSkinFolder(self, sequence=None, sequence_list=None, **kw):
+    """
+    Remove file from Skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    # TODO 
+
   def stepCheckSkinFolderExists(self, sequence=None,sequence_list=None, **kw):
     """
     Check presence of skin folder
@@ -918,6 +1009,21 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skin_id = sequence.get('skin_folder_id', '')
     self.failIfEqual(skin_id, '')
     bt.edit(template_skin_id_list=[skin_id])
+
+  def stepAddAnotherSkinFolderToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+    """
+    Add skin folder to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    skin_id = sequence.get('another_skin_folder_id', '')
+    self.failIfEqual(skin_id, '')
+    current_skin_id_list = bt.getTemplateSkinIdList()
+    template_skin_id_list = []
+    template_skin_id_list.extend(current_skin_id_list)
+    template_skin_id_list.append(skin_id)
+    bt.edit(template_skin_id_list=template_skin_id_list)
+
 
   def stepAddRegistredSelectionToBusinessTemplate(self, sequence=None, 
                                                   sequence_list=None, **kw):
@@ -2637,6 +2743,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                      and m.kw.get('uid') is not None ]
     self.assertEquals(len(message_list), 0)
 
+  def stepCheckFolderReindexActivityPresence(self, sequence=None, sequence_list=None, **kw):
+    """
+    Check if we have activity for Folder_reindexAll.
+    """
+    message_list = [ m for m in self.portal.portal_activities.getMessageList()
+                     if m.method_id == 'Folder_reindexAll']
+    self.assertNotEquals(len(message_list), 0)
+
+
   def stepCheckPathNotUnindexAfterBuild(self, sequence=None, sequence_list=None, **kw):
     """
     Check that after a build, not unindex has been done
@@ -3071,6 +3186,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
                        InstallWithoutForceBusinessTemplate \
+                       CheckFolderReindexActivityPresence \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -3854,7 +3970,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNotInstalledInstallationState \
                        CheckPreinstallReturnSomething \
                        CheckCatalogPreinstallReturnCatalogMethod \
+		       Tic \
                        InstallWithoutForceBusinessTemplate \
+		       CheckFolderReindexActivityPresence \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -5201,6 +5319,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        InstallWithoutForceBusinessTemplate \
+		       CheckFolderReindexActivityPresence \
                        Tic \
                        \
                        CheckFormGroups \
@@ -5214,7 +5333,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
+		       Tic \
                        InstallWithoutForceBusinessTemplate \
+		       CheckFolderReindexActivityPresence \
                        Tic \
                        \
                        CheckFormGroups \
@@ -5264,9 +5385,94 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_34_RemoveForm(self, quiet=quiet, run=run_all_test):
+    """
+    - Add a form into the skin folders of erp5_geek and erp5_nerd
+    - Remove the form from erp5_geek
+    - Check that the form is removed from erp5_geek
+    - Check that the form is not removed from erp5_nerd
+    - Check that the title field is not removed from erp5_nerd
+    """
+    if not run: return
+    if not quiet:
+      message = 'Test Upgrade Form'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateSkinFolder \
+                       CreateAnotherSkinFolder \
+                       CreateNewFormIntoErp5Nerd \
+                       CreateNewForm \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       AddAnotherSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFormGroups \
+                       \
+                       RemoveForm \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddSkinFolderToBusinessTemplate \
+                       AddAnotherSkinFolderToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       \
+                       CreateNewForm \
+                       \
+                       CheckFieldTitleIsNotRemovedFromErp5Nerd \
+                       \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckFormIsRemoved \
+                       CheckFormIsNotRemovedFromErp5Nerd \
+                       CheckFieldTitleIsNotRemovedFromErp5Nerd \
+                       CheckTrashBin \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
   def test_getInstalledBusinessTemplate(self):
     self.assertNotEquals(None, self.getPortal()\
         .portal_templates.getInstalledBusinessTemplate('erp5_core'))
+
+  def test_getInstalledBusinessTemplateList(self):
+    templates_tool = self.getPortal().portal_templates
+    bt5_list =  templates_tool.getInstalledBusinessTemplateList()
+    another_bt_list = [ i for i in templates_tool.contentValues() \
+                       if i.getInstallationState() == 'installed']
+    self.assertEquals(len(bt5_list), len(another_bt_list))
+    for bt in bt5_list:
+      self.failUnless(bt in another_bt_list)
+
+    self.assertEquals(bt5_list, 
+                      templates_tool._getInstalledBusinessTemplateList())
+
+  def test_getInstalledBusinessTemplateTitleList(self):
+    templates_tool = self.getPortal().portal_templates
+    bt5_list =  templates_tool.getInstalledBusinessTemplateTitleList()
+    another_bt_list = [ i.getTitle() for i in templates_tool.contentValues() \
+                       if i.getInstallationState() == 'installed']
+    bt5_list.sort()
+    another_bt_list.sort()
+    self.assertEquals(bt5_list, another_bt_list)
+    for bt in bt5_list:
+      self.failUnless(bt in another_bt_list)
+
+    new_list = templates_tool._getInstalledBusinessTemplateList(only_title=1)
+    new_list.sort()
+    self.assertEquals(bt5_list, new_list)
 
   def test_CompareVersions(self):
     """Tests compare version on template tool. """
@@ -5323,6 +5529,81 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(test_web.getPortalType(), 'Business Template')
     self.assertEquals(test_web.getTitle(), 'test_web')
     self.assertTrue(test_web.getRevision())
+
+  def test_updateBusinessTemplateFromUrl_simple(self):
+    """
+     Test updateBusinessTemplateFromUrl method
+    """
+    template_tool = self.portal.portal_templates
+    old_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
+    template_tool.updateBusinessTemplateFromUrl(url)
+    new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+
+    self.assertNotEquals(old_bt, new_bt)
+    self.assertEquals('erp5_csv_style', new_bt.getTitle())
+    old_bt = new_bt
+    template_tool.updateBusinessTemplateFromUrl(url, id="new_erp5_csv_style")
+    new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+    self.assertNotEquals(old_bt, new_bt)
+    self.assertEquals('erp5_csv_style', new_bt.getTitle())
+    self.assertEquals('new_erp5_csv_style', new_bt.getId())
+
+  def test_updateBusinessTemplateFromUrl_keep_list(self):
+    """
+     Test updateBusinessTemplateFromUrl method
+    """
+    template_tool = self.portal.portal_templates
+    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
+    # don't install test_file
+    keep_original_list = ( 'portal_skins/erp5_test/test_file', )
+    template_tool.updateBusinessTemplateFromUrl(url, 
+                                   keep_original_list=keep_original_list)
+    bt = template_tool.getInstalledBusinessTemplate('test_core')
+    self.assertNotEquals(None, bt)
+    erp5_test = getattr(self.portal.portal_skins, 'erp5_test', None)
+    self.assertNotEquals(None, erp5_test)
+    test_file = getattr(erp5_test, 'test_file', None)
+    self.assertEquals(None, test_file)
+
+  def test_updateBusinessTemplateFromUrl_after_before_script(self):
+    """
+     Test updateBusinessTemplateFromUrl method
+    """
+    from Products.ERP5Type.tests.utils import createZODBPythonScript
+    portal = self.getPortal()
+    
+    createZODBPythonScript(portal.portal_skins.custom,
+                                   'BT_dummyA',
+                                   'scripts_params=None',
+                                   '# Script body\n'
+                                   'return context.setDescription("MODIFIED")') 
+
+    createZODBPythonScript(portal.portal_skins.custom,
+                                   'BT_dummyB',
+                                   'scripts_params=None',
+                                   '# Script body\n'
+                                   'return context.setChangeLog("MODIFIED")')
+
+    createZODBPythonScript(portal.portal_skins.custom,
+                                   'BT_dummyC',
+                                   'scripts_params=None',
+                                   '# Script body\n'
+                                   'return context.getPortalObject().setTitle("MODIFIED")')
+
+    template_tool = self.portal.portal_templates
+    url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_html_style'
+    # don't install test_file
+    before_triggered_bt5_id_list = ['BT_dummyA', 'BT_dummyB']
+    after_triggered_bt5_id_list = ['BT_dummyC']
+    template_tool.updateBusinessTemplateFromUrl(url,
+                                   before_triggered_bt5_id_list=before_triggered_bt5_id_list, 
+                                   after_triggered_bt5_id_list=after_triggered_bt5_id_list)
+    bt = template_tool.getInstalledBusinessTemplate('test_html_style')
+    self.assertNotEquals(None, bt)
+    self.assertEquals(bt.getDescription(), 'MODIFIED')
+    self.assertEquals(bt.getChangeLog(), 'MODIFIED')
+    self.assertEquals(portal.getTitle(), 'MODIFIED')
 
   def stepCreateCustomWorkflow(self, sequence=None, sequence_list=None, **kw):
     """
@@ -6342,6 +6623,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       portal._setObject('another_file', File('another_file'))
       transaction.commit()
       self.tic()
+      # logged errors could keep a reference to a traceback having a reference
+      # to 'another_file' object
+      del self.logged[:]
       # check its class has not yet been overriden
       self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
       for i in xrange(6):
@@ -6378,6 +6662,358 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse(getattr(portal.some_file, 'isClassOverriden', False))
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
 
+  def test_getBusinessTemplateUrl(self):
+    """ Test if this method can find which repository is the business
+        template
+    """
+    # How to define an existing and use INSTANCE_HOME_REPOSITORY?
+    url_list = [ 'https://svn.erp5.org/repos/public/erp5/trunk/bt5',
+                 'http://www.erp5.org/dists/snapshot/bt5',
+                 'http://www.erp5.org/dists/release/5.4.5/bt5', 
+                 "INSTANCE_HOME_REPOSITORY", 
+                 'file:///opt/does/not/exist']
+    
+    exist_bt5 = 'erp5_base'
+    not_exist_bt5 = "erp5_not_exist"
+    template_tool = self.portal.portal_templates
+    getBusinessTemplateUrl = template_tool.getBusinessTemplateUrl
+
+    # Test Exists
+    self.assertEquals(getBusinessTemplateUrl(url_list, exist_bt5), 
+                  'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_base')
+    self.assertEquals(getBusinessTemplateUrl(url_list[1:], exist_bt5),
+                      'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
+    self.assertEquals(getBusinessTemplateUrl(url_list[2:], exist_bt5),
+                      'http://www.erp5.org/dists/release/5.4.5/bt5/erp5_base.bt5')
+    INSTANCE_HOME = getConfiguration().instancehome
+    local_bt = None
+    if os.path.exists(INSTANCE_HOME + "/bt5/erp5_base"):
+      local_bt = 'file://' + INSTANCE_HOME + "/bt5/erp5_base"
+    self.assertEquals(getBusinessTemplateUrl(url_list[3:], exist_bt5), local_bt)
+    self.assertEquals(getBusinessTemplateUrl(url_list[4:], exist_bt5), None)
+
+    # Test Not exists
+    self.assertEquals(getBusinessTemplateUrl(url_list, not_exist_bt5), None)
+    self.assertEquals(getBusinessTemplateUrl(url_list[1:], not_exist_bt5), None)
+    self.assertEquals(getBusinessTemplateUrl(url_list[2:], not_exist_bt5), None)
+    self.assertEquals(getBusinessTemplateUrl(url_list[3:], not_exist_bt5), None)
+    self.assertEquals(getBusinessTemplateUrl(url_list[4:], not_exist_bt5), None)
+
+  def test_type_provider(self):
+    self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+    type_provider = self.portal.dummy_type_provider
+    types_tool = self.portal.portal_types
+
+    registered_type_provider_list = types_tool.type_provider_list
+    # register this type provider
+    types_tool.type_provider_list = (
+        'dummy_type_provider',) + registered_type_provider_list
+
+    dummy_type = type_provider.newContent(
+                             portal_type='Base Type',
+                             id='Dummy Type',
+                             type_factory_method_id='addFolder',
+                             type_property_sheet_list=('Reference',),
+                             type_base_category_list=('source',),
+                             type_allowed_content_type_list=('Dummy Type',),
+                             type_hidden_content_type_list=('Dummy Type',) )
+
+    dummy_type.newContent(portal_type='Action Information',
+                          reference='view',
+                          title='View', )
+
+    dummy_type.newContent(portal_type='Role Information',
+                          title='Dummy Role Definition',
+                          role_name_list=('Assignee', ))
+
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type.copy()
+    props = {}
+    for id, wf_ids in cbt.items():
+      props['chain_%s' % id] = ','.join(wf_ids)
+    props['chain_Dummy Type'] = 'edit_workflow'
+    pw.manage_changeWorkflows('', props=props)
+    self.assertEquals(('edit_workflow', ), pw.getChainFor('Dummy Type'))
+
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',
+                          template_tool_id_list=('dummy_type_provider', ),
+                          template_portal_type_id_list=('Dummy Type',),
+                          template_portal_type_role_list=('Dummy Type', ),
+                          template_portal_type_workflow_chain_list=(
+                             'Dummy Type | edit_workflow',),
+                          template_portal_type_allowed_content_type_list=(
+                             'Dummy Type | Dummy Type',),
+                          template_portal_type_hidden_content_type_list=(
+                             'Dummy Type | Dummy Type',),
+                          template_portal_type_property_sheet_list=(
+                             'Dummy Type | Reference',),
+                          template_portal_type_base_category_list=(
+                             'Dummy Type | source',),
+                          template_action_path_list=(
+                             'Dummy Type | view',),)
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      # portal type template item are exported in their physical location
+      for template_item in ('PortalTypeTemplateItem',
+                            'ActionTemplateItem',):
+        self.assertEquals(['dummy_type_provider'],
+            [os.path.basename(f) for f in
+              glob.glob('%s/%s/*' % (export_dir, template_item))])
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # uninstall the workflow chain 
+    pw._chains_by_type = cbt
+    # unregister type provider
+    types_tool.type_provider_list = registered_type_provider_list
+    # uninstall the type provider (this will also uninstall the contained types)
+    self.portal.manage_delObjects(['dummy_type_provider'])
+    self.stepTic()
+    
+    new_bt.install()
+
+    type_provider = self.portal._getOb('dummy_type_provider', None)
+    self.assertNotEqual(None, type_provider)
+
+    # This type provider, will be automatically registered on types tool during
+    # business template installation, because it contains type information
+    self.assertTrue('dummy_type_provider' in types_tool.type_provider_list)
+    # The type is reinstalled
+    self.assertTrue('Dummy Type' in type_provider.objectIds())
+    # is available from types tool
+    self.assertTrue('Dummy Type' in [ti.getId() for
+                    ti in types_tool.listTypeInfo()])
+    
+    dummy_type = types_tool.getTypeInfo('Dummy Type')
+    self.assertNotEquals(None, dummy_type)
+    # all the configuration from the type is still here
+    self.assertEquals(['Reference'], dummy_type.getTypePropertySheetList())
+    self.assertEquals(['source'], dummy_type.getTypeBaseCategoryList())
+    self.assertEquals(['Dummy Type'], dummy_type.getTypeAllowedContentTypeList())
+    self.assertEquals(['Dummy Type'], dummy_type.getTypeHiddenContentTypeList())
+
+    action_list = dummy_type.contentValues(portal_type='Action Information')
+    self.assertEquals(['View'], [action.getTitle() for action in action_list])
+    self.assertEquals(['view'], [action.getReference() for action in action_list])
+    
+    role_list = dummy_type.contentValues(portal_type='Role Information')
+    self.assertEquals(['Dummy Role Definition'],
+                      [role.getTitle() for role in role_list])
+    
+    self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
+    
+    # and our type can be used
+    instance = self.portal.newContent(portal_type='Dummy Type',
+                                      id='test_document')
+    instance.setSourceReference('OK')
+    self.assertEquals('OK', instance.getSourceReference())
+
+    new_bt.uninstall()
+    self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
+    self.assertEquals(None, types_tool.getTypeInfo('Dummy Type'))
+    self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
+
+  def test_type_provider_2(self):
+    self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+    type_provider = self.portal.dummy_type_provider
+    types_tool = self.portal.portal_types
+
+    registered_type_provider_list = types_tool.type_provider_list
+    # register this type provider
+    types_tool.type_provider_list = (
+        'dummy_type_provider',) + registered_type_provider_list
+
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',
+                          template_tool_id_list=('dummy_type_provider', ),)
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # unregister type provider
+    types_tool.type_provider_list = registered_type_provider_list
+    # uninstall the type provider (this will also uninstall the contained types)
+    self.portal.manage_delObjects(['dummy_type_provider'])
+    self.stepTic()
+
+    new_bt.install()
+
+    type_provider = self.portal._getOb('dummy_type_provider', None)
+    self.assertNotEqual(None, type_provider)
+
+    # This type provider, will be automatically registered on types tool during
+    # business template installation, because it contains type information
+    self.assertTrue('dummy_type_provider' in types_tool.type_provider_list)
+
+    # Create a business template that has the same title but does not
+    # contain type_provider.
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',)
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    new_bt.install(force=0, object_to_update={'dummy_type_provider':'remove'})
+    self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
+    self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
+
+  def test_global_action(self):
+    # Tests that global actions are properly exported and reimported
+    self.portal.portal_actions.addAction(
+          id='test_global_action',
+          name='Test Global Action',
+          action='',
+          condition='',
+          permission='',
+          category='object_view')
+    action_idx = len(self.portal.portal_actions._actions)
+    
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',
+                          template_action_path_list=(
+                             'portal_actions | test_global_action',),)
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      # actions are exported in portal_types/ and then the id of the container
+      # tool
+      self.assertEquals(['portal_actions'],
+            [os.path.basename(f) for f in
+              glob.glob('%s/ActionTemplateItem/portal_types/*' % (export_dir, ))])
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    
+    # manually uninstall the action
+    self.portal.portal_actions.deleteActions(selections=[action_idx])
+    self.stepTic()
+
+    # install the business template and make sure the action is properly
+    # installed
+    new_bt.install()
+    self.stepTic()
+    self.assertNotEquals(None,
+        self.portal.portal_actions.getActionInfo('object_view/test_global_action'))
+
+  def test_indexation_of_updated_path_item(self):
+    """Tests indexation on updated paths item.
+    They should keep their uid and still be available to catalog
+    This test is similar to test_40_BusinessTemplateUidOfCategoriesUnchanged,
+    but it also checks the object is available to catalog.
+    """
+    self.portal.newContent(
+            id='exported_path',
+            title='Exported',
+            portal_type='Folder')
+    self.stepTic()
+
+    uid = self.portal.exported_path.getUid()
+
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title='test_bt',
+                          template_path_list=(
+                            'exported_path',))
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file:/%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+    
+    # modify the document
+    self.portal.exported_path.setTitle('Modified')
+    self.stepTic()
+
+    # install the business template
+    new_bt.install()
+
+    # after installation, the exported document is replaced with the one from
+    # the business template
+    self.assertEquals('Exported', self.portal.exported_path.getTitle())
+    # but its uid did not change
+    self.assertEquals(uid, self.portal.exported_path.getUid())
+    # and it is still in the catalog
+    self.stepTic()
+    self.assertEquals(self.portal.exported_path,
+        self.portal.portal_catalog.getResultValue(uid=uid))
+
+  def test_build_and_export_bt5_into_same_transaction(self):
+    """
+      Copy, build and export a business template into the same transaction.
+
+      Make sure all objects can be exported, when build() and export() are
+      into the same transaction. 
+
+      NOTES: 
+       - it works for some business templates. (e.g. erp5_base)
+       - the object which does not have ._p_jar property is always an 
+         ActionTemplateItem.
+    """
+    portal = self.getPortalObject()
+    template_tool = portal.portal_templates
+    # Try with erp5_base, which contais ActionTemplateItem and works.
+    bt5obj = template_tool.getInstalledBusinessTemplate('erp5_base')
+    template_copy = template_tool.manage_copyObjects(ids=(bt5obj.getId(),))
+    new_id_list = template_tool.manage_pasteObjects(template_copy)
+
+    new_bt5_id = new_id_list[0]['new_id']
+    new_bt5_obj = getattr(template_tool, new_bt5_id, None)
+    new_bt5_obj.edit()
+    new_bt5_obj.build()
+    template_tool.export(new_bt5_obj)
+
+    # Use erp5_barcode because it contains ActionTemplateItem, which seems to
+    # cause problems to be export. Maybe create a test bt5 with all items could
+    # be more appropriated.
+    bt5obj = template_tool.getInstalledBusinessTemplate('erp5_core')
+    # it is required to copy and paste to be able to export it
+    template_copy = template_tool.manage_copyObjects(ids=(bt5obj.getId(),))
+    new_id_list = template_tool.manage_pasteObjects(template_copy)
+
+    new_bt5_id = new_id_list[0]['new_id']
+    new_bt5_obj = getattr(template_tool, new_bt5_id, None)
+    new_bt5_obj.edit()
+    new_bt5_obj.build()
+    template_tool.export(new_bt5_obj)
 
 def test_suite():
   suite = unittest.TestSuite()

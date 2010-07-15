@@ -95,7 +95,7 @@
                              dummy python: request.set(\'dialog_mode\', dialog_mode);\n
                              dummy python: request.set(\'list_mode\', list_mode);\n
                              aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
-                                               [\'right\', \'bottom\', \'menu\', \'path\', \'splash\', \'headline\', \'footer\']);\n
+                                               [\'right\', \'bottom\', \'menu\', \'path\', \'splash\', \'headline\', \'footer\',]);\n
                              aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
                              right_area python:aggregate.get(\'right\', []);\n
                              menu_area python:aggregate.get(\'menu\', []);\n
@@ -110,18 +110,20 @@
                                                      layout_form.id == \'erp5_km_minimal_front_layout\';\n
                              global header_title python:\'%s | %s\' % (here.getTranslatedTitleOrId(), website.getTranslatedTitleOrId());\n
                              global css_list_template python:[\n
+                                    \'%s/erp5_web_toolbar.css\' % portal_path,\n
+                                    \'%s/erp5_knowledge_box.css\' % portal_path,\n
+                                    \'%s/erp5_knowledge_box_web.css\' % portal_path,\n
                                     \'%s/km_css/layout.css\' % portal_path,\n
                                     \'%s/km_css/splash.css\' % portal_path,\n
                                     \'%s/km_css/color.css\' % portal_path,\n
                                     \'%s/km_css/pulldown.css\' % portal_path,\n
                                     \'%s/km_css/type.css\' % portal_path,\n
-                                    \'%s/km_css/erp5_km_common.css\' % portal_path,\n
-                                    \'%s/km_css/erp5_knowledge_box.css\' % portal_path,\n
-                                    \'%s/km_css/erp5_knowledge_box_web.css\' % portal_path,\n
+                                    \'%s/km_css/gadget.css\' % portal_path,\n
+                                    \'%s/km_css/listbox.css\' % portal_path,\n
+                                    \'%s/km_custom.css\' % portal_path,\n
 ];\n
                              global js_list python:[\n
-                                   \'%s/erp5_km_utils.js\' % portal_path,\n
-                                   \'%s/km_js/switch.js\' % portal_path,\n
+                                   \'%s/km_js/erp5_km.js\' % portal_path,\n
 ]">\n
         <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
           <tal:block metal:fill-slot="layout">\n
@@ -157,7 +159,6 @@
                 <!--index here//-->\n
 \n
                 <div id="menu" tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
-                  <!-- Top Bar: navigation and search -->\n
                   <tal:block tal:condition="python: layout_form is not None">\n
                     <tal:block tal:repeat="aggregate python: [(\'menu\', menu_area)]">\n
                         <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
@@ -181,6 +182,12 @@
                       <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
                   </tal:block>\n
                 </tal:block>\n
+                <!-- Web toolbar -->\n
+\n
+                  <tal:block tal:repeat="aggregate python: [(\'toolbox\', splash_area)]">\n
+                      <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+                  </tal:block>\n
+\n
                 <div id="content_back_km">\n
                   <!-- Headline Box -->\n
                   <!-- Layout form rendering -->\n
@@ -224,12 +231,15 @@
                 <!-- Top Bar: navigation and search -->\n
                 <!-- Layout form rendering -->\n
               </div>\n
+\n
             </div>\n
+\n
                 <tal:block tal:condition="python: layout_form is not None">\n
                   <tal:block tal:repeat="aggregate python: [(\'footer\', footer_area)]">\n
                       <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
                   </tal:block>\n
                 </tal:block>\n
+\n
           </tal:block>\n
         </tal:block>\n
       </tal:block>\n

@@ -10,3 +10,4 @@ from category_access_provider import ICategoryAccessProvider
 from value_access_provider import IValueAccessProvider
 from constraint import IConstraint
 from role_provider import ILocalRoleAssignor, ILocalRoleGenerator
+from types_tool import ITypesTool, ITypeProvider

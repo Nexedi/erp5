@@ -236,6 +236,14 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     else:
       return default
 
+  def _getBaseUnitPrice(self, context):
+    # Override Amount._getBaseUnitPrice to use Movement's
+    # getPriceCalculationOperandDict instead of Resource's.
+    operand_dict = context.getPriceCalculationOperandDict(context=context)
+    if operand_dict is not None:
+      base_unit_price = operand_dict.get('base_unit_price', None)
+      return base_unit_price
+
   security.declareProtected(Permissions.AccessContentsInformation, 
           'getPriceCalculationOperandDict')
   def getPriceCalculationOperandDict(self, default=None, context=None, **kw):
@@ -388,9 +396,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
     result = self.getSourceInventoriatedTotalAssetPrice()
     if result is not None :
-      if result > 0 and not self.isCancellationAmount():
-        return result
-      if result < 0 and self.isCancellationAmount():
+      if (result > 0) ^ bool(self.isCancellationAmount()):
         return result
     return 0.0
 
@@ -402,9 +408,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
     result = self.getSourceInventoriatedTotalAssetPrice()
     if result is not None :
-      if result < 0 and not self.isCancellationAmount():
-        return -result
-      if result > 0 and self.isCancellationAmount():
+      if (result < 0) ^ bool(self.isCancellationAmount()):
         return -result
     return 0.0
 
@@ -436,9 +440,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
     result = self.getDestinationInventoriatedTotalAssetPrice()
     if result is not None :
-      if result > 0 and not self.isCancellationAmount():
-        return result
-      if result < 0 and self.isCancellationAmount():
+      if (result > 0) ^ bool(self.isCancellationAmount()):
         return result
     return 0.0
 
@@ -450,9 +452,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
     result = self.getDestinationInventoriatedTotalAssetPrice()
     if result is not None :
-      if result < 0 and not self.isCancellationAmount():
-        return -result
-      if result > 0 and self.isCancellationAmount():
+      if (result < 0) ^ bool(self.isCancellationAmount()):
         return -result
     return 0.0
 
@@ -769,9 +769,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if (quantity < 0 and not self.isCancellationAmount()):
-      return - quantity
-    elif quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return - quantity
     return 0.0
 
@@ -786,8 +784,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0 and not self.isCancellationAmount() \
-      or quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return 0.0
     return quantity
 
@@ -869,8 +866,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0 and not self.isCancellationAmount() \
-      or quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return 0.0
     return quantity
 
@@ -889,9 +885,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if (quantity < 0 and not self.isCancellationAmount()):
-      return - quantity
-    elif quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return - quantity
     return 0.0
   
@@ -910,8 +904,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if quantity < 0 and not self.isCancellationAmount() \
-      or quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return 0.0
     return quantity
 
@@ -930,9 +923,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
       quantity = float(quantity)
     except TypeError:
       quantity = 0.0
-    if (quantity < 0 and not self.isCancellationAmount()):
-      return - quantity
-    elif quantity > 0 and self.isCancellationAmount():
+    if (quantity < 0) ^ bool(self.isCancellationAmount()):
       return - quantity
     return 0.0
   

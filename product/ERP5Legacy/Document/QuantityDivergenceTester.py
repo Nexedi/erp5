@@ -152,3 +152,15 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
                                        rounding=rounding_option))
     else:
       return x==y
+
+  def getTestedProperty(self, default=None):
+    """
+    Return a tested property.
+    """
+    return self._baseGetTestedProperty() or 'quantity'
+
+  def getTestedPropertyList(self, default=None):
+    """
+    Return a list of tested properties.
+    """
+    return self._baseGetTestedPropertyList() or ['quantity',]

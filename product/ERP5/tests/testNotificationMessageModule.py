@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -120,6 +121,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                            '''return dict(a="b")''')
     doc = module.newContent(portal_type='Notification Message',
                             title='Test ${a}',
+                            content_type='text/plain',
                             text_content='substitution text: ${a}',
                             text_content_substitution_mapping_method_id=
                             'NotificationMessage_getDummySubstitionMapping')
@@ -142,6 +144,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     doc = module.newContent(portal_type='Notification Message',
                             title='Test ${a}',
                             text_content='substitution text: ${a}',
+                            content_type='text/plain',
                             text_content_substitution_mapping_method_id=
                             'NotificationMessage_getDummySubstitionMapping')
 
@@ -159,7 +162,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                            '**kw',
                            '''return dict(a="b")''')
     doc = module.newContent(portal_type='Notification Message',
-                            text_format='text/html',
+                            content_type='text/html',
                             text_content='substitution text: <em>${a}</em>',
                             text_content_substitution_mapping_method_id=
                             'NotificationMessage_getDummySubstitionMapping')
@@ -178,6 +181,7 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                            '''return dict(a="b")''')
     doc = module.newContent(portal_type='Notification Message',
                             title='${b}',
+                            content_type='text/plain',
                             text_content='substitution text: ${b}',
                             text_content_substitution_mapping_method_id=
                             'NotificationMessage_getDummySubstitionMapping')

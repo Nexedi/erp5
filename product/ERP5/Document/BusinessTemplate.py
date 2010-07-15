@@ -31,8 +31,8 @@ import fnmatch, gc, imp, os, re, shutil, sys
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
-from Acquisition import Implicit, aq_base
-from AccessControl import ClassSecurityInfo
+from Acquisition import Implicit, aq_base, aq_inner, aq_parent
+from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod, _aq_reset
@@ -106,6 +106,7 @@ catalog_method_filter_list = ('_filter_expression_archive',
                               '_filter_type_archive',)
 
 INSTALLED_BT_FOR_DIFF = 'installed_bt_for_diff'
+_MARKER = []
 
 def _getCatalog(acquisition_context):
   """
@@ -218,6 +219,13 @@ def registerSkinFolder(skin_tool, skin_folder):
   if isinstance(skin_selection_list, basestring):
     skin_selection_list = skin_selection_list.split()
 
+  def skin_sort_key(skin_folder_id):
+    obj = skin_tool._getOb(skin_folder_id, None)
+    if obj is None:
+      return 0, skin_folder_id
+    return -obj.getProperty('business_template_skin_layer_priority',
+      obj.meta_type == 'Filesystem Directory View' and -1 or 0), skin_folder_id
+
   for skin_name in skin_selection_list:
 
     if (skin_name not in skin_tool.getSkinSelections()) and \
@@ -231,9 +239,8 @@ def registerSkinFolder(skin_tool, skin_folder):
     if (skin_folder_id not in selection_list):
       selection_list.insert(0, skin_folder_id)
     if reorder_skin_selection:
-      selection_list.sort(
-        key=lambda x: x in skin_tool.objectIds() and skin_tool[x].getProperty(
-        'business_template_skin_layer_priority', skin_tool[x].meta_type == 'Filesystem Directory View' and -1 or 0) or 0, reverse=True)
+      # Sort by skin priority and ID
+      selection_list.sort(key=skin_sort_key)
     if (skin_name in skin_layer_list):
       skin_tool.manage_skinLayers(skinpath=selection_list,
                                   skinname=skin_name, add_skin=1)
@@ -606,6 +613,84 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     return self.__class__.__name__[:-12]
 
+  def restrictedResolveValue(self, context=None, path=None, default=_MARKER):
+    """
+      Get the value with checking the security.
+      This method does not acquire the parent.
+    """
+    def restrictedGetItem(container, key, default):
+      validate = getSecurityManager().validate
+      try:
+        value = container[key]
+      except KeyError:
+        if default is not _MARKER:
+          return default
+        return None
+      if value is not None:
+        try:
+          if not validate(container, container, key, value):
+            raise Unauthorized('unauthorized access to element %s' % key)
+        except Unauthorized:
+          # if user can't access object try to return default passed
+          if default is not _MARKER:
+            return default
+          raise
+      return value
+    return self._resolveValue(context, path, default, getItem=restrictedGetItem)
+
+  def unrestrictedResolveValue(self, context=None, path=None, default=_MARKER):
+    """
+      Get the value without checking the security.
+      This method does not acquire the parent.
+    """
+    def unrestrictedGetItem(container, key, default):
+      try:
+        return container[key]
+      except KeyError:
+        if default is not _MARKER:
+          return default
+        else:
+          return None
+    return self._resolveValue(context, path, default, getItem=unrestrictedGetItem)
+
+  def _resolveValue(self, context, path, default=_MARKER, getItem=None):
+    """
+    Resolve the value without acquire the parent.
+    """
+    if isinstance(path, basestring):
+      stack = path.split('/')
+    else:
+      stack = list(path)
+    stack.reverse()
+    value = None
+    if stack:
+      portal = aq_inner(self.getPortalObject())
+      # It can be passed with the context, so at first, searching from the context.
+      if context is None:
+        container = portal
+      else:
+        container = context
+      key = stack.pop()
+      value = getItem(container, key, default)
+
+      # resolve the value from top to down
+      while value is not None and stack:
+        key = stack.pop()
+        value = getItem(value, key, default)
+    else:
+      # When relative_url is empty, returns the context
+      return context
+
+    if value is None:
+      LOG('BusinessTemplate', WARNING,
+          'Could not access object %s' % path)
+      if default is not _MARKER:
+        return default
+      else:
+        raise KeyError
+    return value
+
+
 class ObjectTemplateItem(BaseTemplateItem):
   """
     This class is used for generic objects and as a subclass.
@@ -854,11 +939,12 @@ class ObjectTemplateItem(BaseTemplateItem):
     """
     pass
 
-  def onNewObject(self):
+  def onNewObject(self, obj):
     """
       Installation hook.
       Called when installation process determined that object to install is
       new on current site (it's not replacing an existing object).
+      `obj` parameter is the newly created object in its acquisition context.
       Can be overridden by subclasses.
     """
     pass
@@ -925,7 +1011,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           container_path = path_list[:-1]
           object_id = path_list[-1]
           try:
-            container = portal.unrestrictedTraverse(container_path)
+            container = self.unrestrictedResolveValue(portal, container_path)
           except KeyError:
             # parent object can be set to nothing, in this case just go on
             container_url = '/'.join(container_path)
@@ -947,9 +1033,10 @@ class ObjectTemplateItem(BaseTemplateItem):
           saved_uid_dict = {}
           subobjects_dict = {}
           portal_type_dict = {}
-          # Object already exists
           old_obj = container._getOb(object_id, None)
+          object_existed = old_obj is not None
           if old_obj is not None:
+            # Object already exists
             recurse(saveHook, old_obj)
             if getattr(aq_base(old_obj), 'groups', None) is not None:
               # we must keep original order groups
@@ -969,8 +1056,7 @@ class ObjectTemplateItem(BaseTemplateItem):
               portal_type_dict['workflow_chain'] = \
                 getChainByType(context)[1].get('chain_' + object_id, '')
             container.manage_delObjects([object_id])
-          else:
-            self.onNewObject()
+
           # install object
           obj = self._objects[path]
           if getattr(obj, 'meta_type', None) == 'Script (Python)':
@@ -997,6 +1083,11 @@ class ObjectTemplateItem(BaseTemplateItem):
             LOG("BT, install", 0, object_id)
             raise
           obj = container._getOb(object_id)
+
+          if not object_existed:
+            # A new object was added, call the hook
+            self.onNewObject(obj)
+
           # mark a business template installation so in 'PortalType_afterClone' scripts
           # we can implement logical for reseting or not attributes (i.e reference).
           self.REQUEST.set('is_business_template_installation', 1)
@@ -1149,7 +1240,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
           if action in ('remove', 'save_and_remove'):
-            document = portal.restrictedTraverse(recursive_path, None)
+            document = self.restrictedResolveValue(portal, recursive_path, None)
             if document is None:
               # It happens if the parent of target path is removed before
               continue
@@ -1199,7 +1290,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       container_path = relative_url.split('/')[0:-1]
       object_id = relative_url.split('/')[-1]
       try:
-        container = portal.unrestrictedTraverse(container_path)
+        container = self.unrestrictedResolveValue(portal, container_path)
         object = container._getOb(object_id) # We force access to the object to be sure
                                         # that appropriate exception is thrown
                                         # in case object is already backup and/or removed
@@ -1257,7 +1348,7 @@ class PathTemplateItem(ObjectTemplateItem):
         try:
           container_path = relative_url.split('/')[0:-1]
           object_id = relative_url.split('/')[-1]
-          container = portal.unrestrictedTraverse(container_path)
+          container = self.unrestrictedResolveValue(portal, container_path)
           if trash and trashbin is not None:
             self.portal_trash.backupObject(trashbin, container_path,
                                            object_id, save=1,
@@ -1329,6 +1420,49 @@ class ToolTemplateItem(PathTemplateItem):
     """Fake as if a trashbin is not available."""
     return PathTemplateItem._backupObject(self, action, None, container_path,
                                           object_id, **kw)
+
+  def install(self, context, trashbin, **kw):
+    """ When we install a tool that is a type provider not
+    registered on types tool, register it into the type provider.
+    """
+    PathTemplateItem.install(self, context, trashbin, **kw)
+    portal = context.getPortalObject()
+    types_tool = portal.portal_types
+    for type_container_id, obj in self._objects.iteritems():
+      if interfaces.ITypeProvider.providedBy(obj) and \
+          type_container_id not in types_tool.type_provider_list:
+        types_tool.type_provider_list = tuple(types_tool.type_provider_list) + \
+                                        (type_container_id,)
+
+  def uninstall(self, context, **kw):
+    """ When we uninstall a tool, unregister it from the type provider. """
+    portal = context.getPortalObject()
+    types_tool = portal.portal_types
+    object_path = kw.get('object_path', None)
+    if object_path is not None:
+      object_keys = [object_path]
+    else:
+      object_keys = self._path_archive.keys()
+    for tool_id in object_keys:
+      types_tool.type_provider_list = tuple([ \
+        x for x in types_tool.type_provider_list \
+        if x != tool_id])
+    PathTemplateItem.uninstall(self, context, **kw)
+
+  def remove(self, context, **kw):
+    """ When we remove a tool, unregister it from the type provider. """
+    portal = context.getPortalObject()
+    types_tool = portal.portal_types
+    remove_dict = kw.get('remove_object_dict', {})
+    keys = self._objects.keys()
+    for tool_id in keys:
+      if remove_dict.has_key(tool_id):
+        action = remove_dict[tool_id]
+        if 'remove' in action:
+          types_tool.type_provider_list = tuple([ \
+            x for x in types_tool.type_provider_list \
+            if x != tool_id])
+    PathTemplateItem.remove(self, context, **kw)
 
 class PreferenceTemplateItem(PathTemplateItem):
   """
@@ -1414,7 +1548,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
   def beforeInstall(self):
     self._installed_new_category = False
 
-  def onNewObject(self):
+  def onNewObject(self, obj):
     self._installed_new_category = True
 
   def afterInstall(self):
@@ -1701,7 +1835,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
           container_path = path.split('/')[:-1]
           object_id = path.split('/')[-1]
           try:
-            container = portal.unrestrictedTraverse(container_path)
+            container = self.unrestrictedResolveValue(portal, container_path)
           except KeyError:
             # parent object can be set to nothing, in this case just go on
             container_url = '/'.join(container_path)
@@ -1753,6 +1887,10 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse(relative_url)
+      # normalize relative_url, not all type informations are stored in
+      # "portal_types"
+      relative_url = '%s/%s' % (obj.getPhysicalPath()[-2:])
+
       obj = obj._getCopy(context)
       # obj is in ghost state and an attribute must be accessed
       # so that obj.__dict__ does not return an empty dict
@@ -1886,9 +2024,8 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
     # each portal type
     (default_chain, chain_dict) = getChainByType(context)
     # First convert all workflow_ids into list.
-    for key in chain_dict:
-      chain_dict.update({key: chain_dict[key].\
-                                          split(self._chain_string_separator)})
+    for key, value in chain_dict.iteritems():
+      chain_dict[key] = value.split(self._chain_string_separator)
     # Set the default chain to the empty string is probably the
     # best solution, by default it is 'default_workflow', which is
     # not very usefull
@@ -1938,16 +2075,15 @@ class PortalTypeWorkflowChainTemplateItem(BaseTemplateItem):
                                   (wf_id, portal_type)
             chain_dict[chain_key] = self._objects[path]
         else:
-          if portal_type not in context.portal_types.objectIds():
+          if context.portal_types.getTypeInfo(portal_type) is None:
             raise ValueError('Cannot chain workflow %r to non existing '
                            'portal type %r' % (self._chain_string_separator\
                                                      .join(self._objects[path])
                                                , portal_type))
           chain_dict[chain_key] = self._objects[path]
     # convert workflow list into string only at the end.
-    for key in chain_dict:
-      chain_dict.update({key: self._chain_string_separator.\
-                                                        join(chain_dict[key])})
+    for key, value in chain_dict.iteritems():
+      chain_dict[key] =  self._chain_string_separator.join(value)
     context.portal_workflow.manage_changeWorkflows(default_chain,
                                                    props=chain_dict)
 
@@ -2043,16 +2179,15 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
     types_tool = getToolByName(self.getPortalObject(), 'portal_types')
-    types_list = list(types_tool.objectIds())
     for key in self._archive.keys():
       try:
         portal_type, allowed_type = key.split(' | ')
       except ValueError:
         raise ValueError('Invalid item %r in %s' % (key, self.name))
+      ob = types_tool.getTypeInfo(portal_type)
       # check properties corresponds to what is defined in site
-      if not portal_type in types_list:
+      if ob is None:
         raise ValueError, "Portal Type %s not found in site" %(portal_type,)
-      ob = types_tool._getOb(portal_type)
       prop_value = getattr(ob, self.class_property, ())
       if not allowed_type in prop_value and not self.is_bt_for_diff:
         raise ValueError, "%s %s not found in portal type %s" % (
@@ -2151,15 +2286,14 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           action = update_dict[key]
           if action == 'nothing':
             continue
-        try:
-          portal_id = key.split('/')[-1]
-          portal_type = types_tool._getOb(portal_id)
-        except (AttributeError, KeyError):
+        portal_id = key.split('/')[-1]
+        type_information = types_tool.getTypeInfo(portal_id)
+        if type_information is None:
           raise AttributeError, "Portal type '%s' not found while " \
               "installing %s" % (portal_id, self.getTitle())
         property_list = self._objects.get(key, [])
         old_property_list = old_objects.get(key, ())
-        object_property_list = getattr(portal_type, self.class_property, ())
+        object_property_list = getattr(type_information, self.class_property, ())
         # merge differences between portal types properties
         # for example:
         # * current value : [A,B,C]
@@ -2169,7 +2303,7 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
         for id in object_property_list:
           if id not in property_list and id not in old_property_list:
             property_list.append(id)
-        setattr(portal_type, self.class_property, tuple(property_list))
+        setattr(type_information, self.class_property, tuple(property_list))
 
   def uninstall(self, context, **kw):
     object_path = kw.get('object_path', None)
@@ -2180,19 +2314,19 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
     else:
       object_key_list = self._objects.keys()
     for key in object_key_list:
-      try:
-        portal_id = key.split('/')[-1]
-        portal_type = types_tool._getOb(portal_id)
-      except (AttributeError,  KeyError):
-        LOG("portal types not found : ", 100, portal_id)
+      portal_id = key.split('/')[-1]
+      type_information = types_tool.getTypeInfo(portal_id)
+      if type_information is None:
+        LOG("BusinessTemplate", WARNING,
+            "Portal type %r not found while uninstalling" % (portal_id,))
         continue
       property_list = self._objects[key]
-      original_property_list = list(getattr(portal_type,
+      original_property_list = list(getattr(type_information,
                                     self.class_property, ()))
       for id in property_list:
         if id in original_property_list:
           original_property_list.remove(id)
-      setattr(portal_type, self.class_property, tuple(original_property_list))
+      setattr(type_information, self.class_property, tuple(original_property_list))
 
 
 class PortalTypeHiddenContentTypeTemplateItem(PortalTypeAllowedContentTypeTemplateItem):
@@ -2588,7 +2722,7 @@ class ActionTemplateItem(ObjectTemplateItem):
     Gets action copy from action provider given the action id or reference
     """
     # Several tools still use CMF actions
-    if obj.getParentId() == 'portal_types':
+    if interfaces.ITypeProvider.providedBy(obj.getParentValue()):
       return self._getPortalTypeActionCopy(obj, value)
     else:
       return self._getPortalToolActionCopy(obj, context, value)
@@ -2600,6 +2734,12 @@ class ActionTemplateItem(ObjectTemplateItem):
       url, value = id.split(' | ')
       url = posixpath.split(url)
       obj = p.unrestrictedTraverse(url)
+      # normalize url
+      url = p.portal_url.getRelativeContentPath(obj)
+      if len(url) == 1:
+        # global actions are stored under 'portal_types', mostly for
+        # compatibility
+        url = 'portal_types', url[0]
       action = self._getActionCopy(obj, context, value)
       if action is None:
         if self.is_bt_for_diff:
@@ -2625,7 +2765,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           path, id = id.rsplit('/', 1)
           container = p.unrestrictedTraverse(path)
 
-          if container.getParentId() == 'portal_types':
+          if interfaces.ITypeProvider.providedBy(aq_parent(aq_inner(container))):
             # XXX future BT should use 'reference' instead of 'id'
             reference = getattr(obj, 'reference', None) or obj.id
             portal_type_dict.setdefault(path, {})[reference] = obj
@@ -2742,7 +2882,7 @@ class ActionTemplateItem(ObjectTemplateItem):
         obj = p.unrestrictedTraverse(relative_url, None)
         # Several tools still use CMF actions
         if obj is not None:
-          is_new_action = obj.getParentId() == 'portal_types'
+          is_new_action = interfaces.ITypeProvider.providedBy(obj.getParentValue())
           key = is_new_action and 'reference' or 'id'
       else:
         relative_url, key, value = self._splitPath(id)
@@ -2753,8 +2893,8 @@ class ActionTemplateItem(ObjectTemplateItem):
           if getattr(action_list[index], key, None) == value:
             obj.deleteActions(selections=(index,))
             break
-      LOG('BusinessTemplate', 100,
-          'unable to uninstall action at %s, ignoring' % relative_url )
+      LOG('BusinessTemplate', WARNING,
+          'Unable to uninstall action at %s, ignoring' % relative_url )
     BaseTemplateItem.uninstall(self, context, **kw)
 
 class PortalTypeRolesTemplateItem(BaseTemplateItem):
@@ -2768,6 +2908,8 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
     for relative_url in self._archive.keys():
       obj = p.unrestrictedTraverse("portal_types/%s" %
           relative_url.split('/', 1)[1])
+      # normalize url
+      relative_url = '%s/%s' % (obj.getPhysicalPath()[-2:])
       self._objects[relative_url] = type_role_list = []
       for role in obj.getRoleInformationList():
         type_role_dict = {}
@@ -2880,6 +3022,9 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           type_roles_list = self._objects[roles_path] or []
           for role_property_dict in type_roles_list:
             obj._importRole(role_property_dict)
+        else:
+          raise AttributeError("Path '%r' not found while "
+                               "installing roles" % (path, ))
 
   def uninstall(self, context, **kw):
     p = context.getPortalObject()
@@ -5173,7 +5318,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       return modified_object_list
 
     def _install(self, force=1, object_to_update=None, update_translation=0,
-                 update_catalog=0, **kw):
+                 update_catalog=_MARKER, **kw):
       """
         Install a new Business Template, if force, all will be upgraded or installed
         otherwise depends of dict object_to_update
@@ -5183,15 +5328,18 @@ Business Template is a set of definitions, such as skins, portal types and categ
       else:
         object_to_update = {}
 
-      installed_bt = self.portal_templates.getInstalledBusinessTemplate(
+      site = self.getPortalObject()
+      installed_bt = site.portal_templates.getInstalledBusinessTemplate(
                                                            self.getTitle())
       # When reinstalling, installation state should not change to replaced
       if installed_bt not in [None, self]:
         if installed_bt.getTemplateFormatVersion() == 0:
           force = 1
-        installed_bt.replace(self)
+        if site.portal_workflow.isTransitionPossible(
+            installed_bt, 'replace'):
+          installed_bt.replace(self)
 
-      trash_tool = getToolByName(self, 'portal_trash', None)
+      trash_tool = getToolByName(site, 'portal_trash', None)
       if trash_tool is None and self.getTemplateFormatVersion() == 1:
         raise AttributeError, 'Trash Tool is not installed'
 
@@ -5202,7 +5350,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if not force:
         self.checkDependencies()
 
-      site = self.getPortalObject()
       from Products.ERP5.ERP5Site import ERP5Generator
       generator_class = getattr(site, '_generator_class', ERP5Generator)
       gen = generator_class()
@@ -5241,8 +5388,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                trashbin=trashbin, installed_bt=installed_bt)
 
       # update catalog if necessary
-      if force and self.isCatalogUpdatable():
+      if update_catalog is _MARKER and force and self.isCatalogUpdatable():
+        # override update_catalog parameter only if value
+        # is not explicitely passed.
         update_catalog = 1
+      elif update_catalog is _MARKER:
+        update_catalog = 0
       if update_catalog:
         catalog = _getCatalogValue(self)
         if (catalog is None) or (not site.isIndexable):

@@ -29,129 +29,16 @@
 
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5SyncML.SyncCode import SyncCode
-from ERP5Diff import ERP5Diff
-import re
-from lxml import etree
-parser = etree.XMLParser(remove_blank_text=True)
 
 # Declarative security
 security = ClassSecurityInfo()
 
 class ERP5DocumentConduit(ERP5Conduit):
   """
-  ERP5DocumentConduit provides two methods who permit to have the GID
-  The Gid is composed by the title : "Reference-Version-Language"
-  this class is made for unit test
+  ERP5DocumentConduit specialise generic Conduit
+  to produce adhoc GID.
+  The GID is composed by the concatenation of "reference-version-language"
   """
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'applyXupdate')
-  def applyXupdate(self, object=None, xupdate=None, conduit=None, force=0,
-                   simulate=0, reset=0, **kw):
-    """
-    Parse the xupdate and then it will call the conduit
-    """
-    conflict_list = []
-    if isinstance(xupdate, (str, unicode)):
-      xupdate = etree.XML(xupdate, parser=parser)
-    xupdate = self.manageDataModification(xml_xupdate=xupdate,\
-                   previous_xml=kw['previous_xml'], object=object,
-                   simulate=simulate, reset=reset)
-    for subnode in xupdate:
-      sub_xupdate = self.getSubObjectXupdate(subnode)
-      if subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
-        conflict_list += conduit.addNode(xml=sub_xupdate, object=object,
-                                         force=force, simulate=simulate,
-                                         reset=reset, **kw)['conflict_list']
-      elif subnode.xpath('name()') in self.XUPDATE_DEL:
-        conflict_list += conduit.deleteNode(xml=sub_xupdate, object=object,
-                                            force=force, simulate=simulate,
-                                            reset=reset, **kw)
-      elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
-        conflict_list += conduit.updateNode(xml=sub_xupdate, object=object,
-                                            force=force, simulate=simulate,
-                                            reset=reset, **kw)
-
-    return conflict_list
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'manageDataModification')
-  def manageDataModification(self, xml_xupdate, previous_xml, object,
-      simulate=None, reset=None):
-    data_change = {}
-    if previous_xml is not None:
-      previous_xml = etree.XML(previous_xml, parser)
-    else:
-      previous_xml = etree.XML(object.asXML(), parser)
-    from copy import deepcopy
-    xml_previous = deepcopy(previous_xml)
-    #retrieve new data
-    node_to_remove_list = []
-    for subnode in xml_xupdate:
-      sub_xupdate = self.getSubObjectXupdate(subnode)
-      attribute = sub_xupdate.attrib.get('select', None)
-      if 'block_data' in attribute:
-        #retrieve path for the element and use on previous_xml
-        prop_list = attribute.split('/')
-        prop_id = prop_list[1]
-        path_prop_id = '//' + prop_id
-        if prop_id not in data_change:
-          data_change[prop_id] =  xml_previous.xpath(path_prop_id)[0]
-        xml = data_change[prop_id]
-        request = prop_list[-1]
-        if getattr(ERP5Diff, '__version__', 0.0) <= 0.2:
-          #Old ERP5Diff, xpath position start from 0, so add +1 to be compliant
-          request = re.sub('(\d+)', lambda match:str(int(match.group(0))+1), request)
-        if subnode.xpath('name()') in self.XUPDATE_DEL:
-          node_to_remove_list.extend(xml.xpath(request))
-          xml_xupdate.remove(subnode)
-        elif subnode.xpath('name()') in self.XUPDATE_UPDATE:
-          #retrieve element in previous_xml
-          element = xml.xpath(request)[0]
-          element.text = subnode.text
-          xml_xupdate.remove(subnode)
-      elif subnode.xpath('name()') in self.XUPDATE_INSERT_OR_ADD:
-        if self.getSubObjectDepth(subnode[0]) == 0:
-          #check element have not sub object
-          attribute = subnode.attrib.get('select', None)
-          if 'block_data' in attribute:
-            prop_id = attribute.split('/')[2]
-            if prop_id in self.data_type_tag_list:
-              path_prop_id = '//' + prop_id
-              if prop_id not in data_change:
-                data_change[prop_id] = xml_previous.xpath(path_prop_id)[0]
-              xml = data_change[prop_id]
-              for element in self.getXupdateElementList(subnode):
-                name_element = element.attrib.get('name', None)
-                if name_element:
-                  attrib_dict = {}
-                  for sub_element in element:
-                    if sub_element.xpath('name()') in 'xupdate:attribute':
-                      attrib_dict[sub_element.attrib.get('name')] = sub_element.text
-                  block = etree.SubElement(xml, name_element)
-                  block.attrib.update(attrib_dict)
-                  if len(element):
-                    block.text = element[-1].tail
-              xml_xupdate.remove(subnode)
-
-    #Remove nodes at the end to avoid changing position of elements
-    [node.getparent().remove(node) for node in node_to_remove_list]
-    #apply modification
-    if len(data_change):
-      args = {}
-      for key, node in data_change.iteritems():
-        node.text = None
-        data = self.convertXmlValue(node)
-        args[key] = data
-        args = self.getFormatedArgs(args=args)
-        #XXX manage conflict
-        if args != {} and (not simulate or reset):
-          self.editDocument(object=object, **args)
-          # It is sometimes required to do something after an edit
-          if getattr(object, 'manage_afterEdit', None) is not None:
-            object.manage_afterEdit()
-
-    return xml_xupdate
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -160,11 +47,6 @@ class ERP5DocumentConduit(ERP5Conduit):
     return the Gid generate with the reference, object, language of the object
     """
     return "%s-%s-%s" %\
-      (object.getReference(), object.getVersion(), object.getLanguage())
+             (object.getReference(), object.getVersion(), object.getLanguage())
 
-#  def getGidFromXML(self, xml):
-#    """
-#    return the Gid composed of FirstName and LastName generate with a peace of
-#    xml
-#    """
-#    #to be defined
+

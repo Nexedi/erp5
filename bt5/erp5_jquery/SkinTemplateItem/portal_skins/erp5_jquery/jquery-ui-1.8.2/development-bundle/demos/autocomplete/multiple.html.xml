@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Autocomplete multiple demo</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.position.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.autocomplete.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\tvar availableTags = ["c++", "java", "php", "coldfusion", "javascript", "asp", "ruby", "python", "c", "scala", "groovy", "haskell", "perl"];\n
+\t\tfunction split(val) {\n
+\t\t\treturn val.split(/,\\s*/);\n
+\t\t}\n
+\t\tfunction extractLast(term) {\n
+\t\t\treturn split(term).pop();\n
+\t\t}\n
+\t\t\n
+\t\t$("#tags").autocomplete({\n
+\t\t\tminLength: 0,\n
+\t\t\tsource: function(request, response) {\n
+\t\t\t\t// delegate back to autocomplete, but extract the last term\n
+\t\t\t\tresponse($.ui.autocomplete.filter(availableTags, extractLast(request.term)));\n
+\t\t\t},\n
+\t\t\tfocus: function() {\n
+\t\t\t\t// prevent value inserted on focus\n
+\t\t\t\treturn false;\n
+\t\t\t},\n
+\t\t\tselect: function(event, ui) {\n
+\t\t\t\tvar terms = split( this.value );\n
+\t\t\t\t// remove the current input\n
+\t\t\t\tterms.pop();\n
+\t\t\t\t// add the selected item\n
+\t\t\t\tterms.push( ui.item.value );\n
+\t\t\t\t// add placeholder to get the comma-and-space at the end\n
+\t\t\t\tterms.push("");\n
+\t\t\t\tthis.value = terms.join(", ");\n
+\t\t\t\treturn false;\n
+\t\t\t}\n
+\t\t});\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+\n
+<div class="demo">\n
+\n
+<div class="ui-widget">\n
+\t<label for="tags">Tag programming languages: </label>\n
+\t<input id="tags" size="50" />\n
+</div>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+<p>\n
+Usage: Type something, eg. "j" to see suggestions for tagging with programming languages. Select a value, then continue typing to add more.\n
+</p>\n
+<p>\n
+This is an example showing how to use the source-option along with some events to enable autocompleting multiple values into a single field.\n
+</p>\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>multiple.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

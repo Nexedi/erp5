@@ -687,7 +687,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
                                           self.web_section_knowledge_pad,  
                                           km_assigned_member_gadget)
     self.changeSkin('KM') 
-    self.failUnless('No result !' in 
+    self.failUnless('No result' in 
           self.publish(self.base_url_pattern 
             %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),  
               gadget_view_form_id, 

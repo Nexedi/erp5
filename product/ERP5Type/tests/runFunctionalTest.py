@@ -9,7 +9,6 @@ from time import sleep
 import urllib2
 from subprocess import Popen, PIPE
 from sendMail import sendMail
-import pysvn
 import atexit
 
 __doc__ = """%(program)s: Zelenium functional test runner for the ERP5 Project
@@ -80,12 +79,14 @@ class FunctionalTestRunner:
     program = os.path.basename(sys.argv[0])
     print >>stream, __doc__ % {"program": program}
 
-  def parseArgs(self):
+  def parseArgs(self, arguments=None):
+    if arguments is None:
+      arguments = sys.argv[1:]
     try:
-      opts, args = getopt.getopt(sys.argv[1:],
+      opts, args = getopt.getopt(arguments,
             "hsd", ["help", "stdout", "debug",
-                   "email_to_address=", "host=", "port=", 
-                   "portal_name=", "run_only=", "user=", 
+                   "email_to_address=", "host=", "port=",
+                   "portal_name=", "run_only=", "user=",
                    "password=", "alarms=",
                    "email_subject=", "smtp_host=", "xvfb_display="] )
     except getopt.GetoptError, msg:
@@ -128,7 +129,16 @@ class FunctionalTestRunner:
     self.portal_url = "http://%s:%d/%s" % (self.host, self.port, self.portal_name)
   
   def openUrl(self, url):
-    f = urllib2.urlopen(url)
+    # Send Accept-Charset headers to activate the UnicodeConflictResolver
+    # (imitating firefox 3.5.9 here)
+    headers = { 'Accept-Charset' : 'ISO-8859-1,utf-8;q=0.7,*;q=0.7' }
+    request = urllib2.Request(url, headers=headers)
+    # Try to use long timeout, this is needed when there is many
+    # activities runing
+    try:
+      f = urllib2.urlopen(request, timeout=3600)
+    except TypeError:
+      f = urllib2.urlopen(request)
     file_content = f.read()
     f.close()
     return file_content
@@ -165,7 +175,7 @@ class FunctionalTestRunner:
     os.system('%s/bin/zopectl stop' % self.instance_home)
   
   def runXvfb(self, xvfb_display):
-    pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb', 
+    pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb',
                      '-fbdir' , '%s' % self.xvfb_fbdir  ,
                      ':%s' % xvfb_display)
     display = os.environ.get('DISPLAY')
@@ -247,7 +257,8 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
   
     if self.run_only:
       url_string = url_string.replace('/portal_tests/', '/portal_tests/%s/' % self.run_only, 1)
-    pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox", "-profile", self.profile_dir,
+    pid = os.spawnlp(os.P_NOWAIT, "firefox", "firefox",
+        "-no-remote", "-profile", self.profile_dir,
         url_string)
     os.environ['MOZ_NO_REMOTE'] = '0'
     print 'firefox : %d' % pid
@@ -265,10 +276,18 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     return status
   
   def setPreference(self):
-    urllib2.urlopen('%s/BTZuite_setPreference?__ac_name='
-                    '%s&__ac_password=%s&working_copy_list=%s' %
-                    (self.portal_url, self.user, self.password, bt5_dir_list))
+    conversion_server_hostname = os.environ.get('conversion_server_hostname',
+                                                'localhost')
+    conversion_server_port = os.environ.get('conversion_server_port', '8008')
+    urllib2.urlopen('%s/Zuite_setPreference?__ac_name='
+                    '%s&__ac_password=%s&working_copy_list=%s'
+                    '&conversion_server_hostname=%s'
+                    '&conversion_server_port=%s'%
+                    (self.portal_url, self.user, self.password,
+                      bt5_dir_list, conversion_server_hostname,
+                      conversion_server_port))
   
+
   def unsubscribeFromTimerService(self):
     urllib2.urlopen('%s/portal_activities/?unsubscribe:method='
                     '&__ac_name=%s&__ac_password=%s' %
@@ -278,10 +297,13 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     self.setPreference()
     self.unsubscribeFromTimerService()
 
+  def getSvnRevision(self):
+    """Get svn revision used."""
+    import pysvn
+    return pysvn.Client().info(os.path.dirname(__file__)).revision.number
+
   def sendResult(self):
-    result_uri = urllib2.urlopen('%s/portal_tests/TestTool_getResults' % self.portal_url).readline()
-    print result_uri
-    file_content = self.openUrl(result_uri)
+    file_content = self.openUrl('%s/portal_tests/TestTool_getResults' % self.portal_url)
     passes_re = re.compile('<th[^>]*>Tests passed</th>\n\s*<td[^>]*>([^<]*)')
     failures_re = re.compile('<th[^>]*>Tests failed</th>\n\s*<td[^>]*>([^<]*)')
     image_re = re.compile('<img[^>]*?>')
@@ -293,9 +315,7 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     failures = failures_re.search(file_content).group(1)
     error_titles = [re.compile('\s+').sub(' ', x).strip()
                     for x in error_title_re.findall(file_content)]
-    # get SVN revision used
-    os.chdir('%s/Products/ERP5' % self.instance_home)
-    revision = pysvn.Client().info('.').revision.number
+    revision = self.getSvnRevision()
   
     subject = "%s r%s: Functional Tests, %s Passes, %s Failures" \
                 % (self.email_subject, revision, passes, failures)

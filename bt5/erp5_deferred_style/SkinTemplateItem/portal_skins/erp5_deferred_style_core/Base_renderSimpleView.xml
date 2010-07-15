@@ -64,9 +64,9 @@ if skin_name and skin_name != \'None\': # make_query serializes None as \'None\'
 \n
 report_data = getattr(context, deferred_style_dialog_method)(**params)\n
 \n
-attachment_name = [x[len(\'filename=\'):] for x in (request.RESPONSE.getHeader(\n
+attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
                         \'content-disposition\') or \'\').split(\';\')\n
-                      if x.startswith(\'filename=\')][0]\n
+                      if x.startswith(\' filename=\')][0]\n
 if attachment_name.startswith(\'"\'):\n
   attachment_name = attachment_name[1:]\n
 if attachment_name.endswith(\'"\'):\n

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.ui.base.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>@import url("jquery.ui.core.css");\n
+@import url("jquery.ui.resizable.css");\n
+@import url("jquery.ui.selectable.css");\n
+@import url("jquery.ui.accordion.css");\n
+@import url("jquery.ui.autocomplete.css");\n
+@import url("jquery.ui.button.css");\n
+@import url("jquery.ui.dialog.css");\n
+@import url("jquery.ui.slider.css");\n
+@import url("jquery.ui.tabs.css");\n
+@import url("jquery.ui.datepicker.css");\n
+@import url("jquery.ui.progressbar.css");</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

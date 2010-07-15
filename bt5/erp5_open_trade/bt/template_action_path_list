@@ -10,6 +10,9 @@ Open Internal Order | reference_generate
 Open Internal Order | view
 Open Internal Order | view_stock
 Open Order Rule | view
+Open Purchase Order Line | price_view
+Open Purchase Order Line | quantity_view
+Open Purchase Order Line | view
 Open Purchase Order Module | view
 Open Purchase Order | apply_trade_condition
 Open Purchase Order | detailed_report

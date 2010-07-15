@@ -92,8 +92,9 @@ portal_type = parsed_search_string.get(\'portal_type\', None)\n
 if portal_type is None or not len(portal_type):\n
   query_kw[\'portal_type\'] = portal.getPortalDocumentTypeList()\n
 else:\n
-  # safe to add passed portal_type\n
-  query_kw[\'portal_type\'] = portal_type\n
+  # safe to add passed portal_type, \n
+  # as multiple values exists split them by \',\'\n
+  query_kw[\'portal_type\'] = portal_type.split(\',\')\n
 \n
 # ZSQLCatalog wants table.key to avoid ambiguity\n
 parsed_searchabletext = parsed_search_string.get(\'searchabletext\', None)\n

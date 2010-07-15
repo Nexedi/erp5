@@ -21,7 +21,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The site this document has been assigned to during processing</string> </value>
+            <value> <string>the site this document has been assigned to during processing</string> </value>
         </item>
         <item>
             <key> <string>for_catalog</string> </key>

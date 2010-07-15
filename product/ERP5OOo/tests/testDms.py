@@ -54,6 +54,7 @@ import ZPublisher.HTTPRequest
 import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5OOo.OOoUtils import OOoBuilder
@@ -62,18 +63,16 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from Products.ERP5.PropertySheet.HtmlStylePreference import HtmlStylePreference
-from Products.ERP5Form.Document.Preference import Priority
+from Products.ERP5Form.PreferenceTool import Priority
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 import os
 from threading import Thread
 import httplib
+import urllib
+from PIL import Image
+from AccessControl import Unauthorized
 
 QUIET = 0
-RUN_ALL_TEST = 1
-
-# Define the conversion server host
-conversion_server_host = ('127.0.0.1', 8008)
 
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
@@ -122,8 +121,9 @@ class TestDocumentMixin(ERP5TypeTestCase):
 
   def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(conversion_server_host[0])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_server_host[1])
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
@@ -160,6 +160,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
       - clear document module
     """
     transaction.abort()
+    self.clearRestrictedSecurityHelperScript()
     activity_tool = self.portal.portal_activities
     activity_status = set(m.processing_node < -1
                           for m in activity_tool.getMessageList())
@@ -169,10 +170,21 @@ class TestDocumentMixin(ERP5TypeTestCase):
       assert not activity_status
     self.clearDocumentModule()
 
+  conversion_format_permission_script_id_list = [
+      'Document_checkConversionFormatPermission',
+      'PDF_checkConversionFormatPermission']
+  def clearRestrictedSecurityHelperScript(self):
+    for script_id in self.conversion_format_permission_script_id_list:
+      custom = self.getPortal().portal_skins.custom
+      if script_id in custom.objectIds():
+        custom.manage_delObjects(ids=[script_id])
+        transaction.commit()
+
   def clearDocumentModule(self):
     """
       Remove everything after each run
     """
+    transaction.abort()
     doc_module = self.getDocumentModule()
     doc_module.manage_delObjects(list(doc_module.objectIds()))
     transaction.commit()
@@ -219,11 +231,10 @@ class TestDocument(TestDocumentMixin):
 
   ## tests
 
-  def test_01_HasEverything(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_HasEverything(self):
     """
       Standard test to make sure we have everything we need - all the tools etc
     """
-    if not run: return
     printAndLog('\nTest Has Everything ')
     self.assertNotEqual(self.getCategoryTool(), None)
     self.assertNotEqual(self.getSimulationTool(), None)
@@ -232,11 +243,10 @@ class TestDocument(TestDocumentMixin):
     self.assertNotEqual(self.getCatalogTool(), None)
     self.assertNotEqual(self.getWorkflowTool(), None)
 
-  def test_02_RevisionSystem(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_02_RevisionSystem(self):
     """
       Test revision mechanism
     """
-    if not run: return
     printAndLog('\nTest Revision System')
     # create a test document
     # revision should be 1
@@ -250,7 +260,6 @@ class TestDocument(TestDocumentMixin):
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
-    document.immediateReindexObject()
     transaction.commit()
     self.tic()
     document_url = document.getRelativeUrl()
@@ -271,11 +280,10 @@ class TestDocument(TestDocumentMixin):
     self.assertEqual(getTestDocument().getRevision(), '4')
     self.assertEqual(getTestDocument().getRevisionList(), ['1', '2', '3', '4'])
 
-  def test_03_Versioning(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_03_Versioning(self):
     """
       Test versioning
     """
-    if not run: return
     printAndLog('\nTest Versioning System')
     # create a document 1, set coordinates (reference=TEST, version=002, language=en)
     # create a document 2, set coordinates (reference=TEST, version=002, language=en)
@@ -308,11 +316,10 @@ class TestDocument(TestDocumentMixin):
     version_list = [br.getRelativeUrl() for br in docs[2].getVersionValueList()]
     self.failUnless(version_list == [docs[3].getRelativeUrl(), docs[2].getRelativeUrl(), docs[1].getRelativeUrl()])
 
-  def test_04_VersioningWithLanguage(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_04_VersioningWithLanguage(self):
     """
       Test versioning with multi-language support
     """
-    if not run: return
     printAndLog('\nTest Versioning With Language')
     # create empty test documents, set their coordinates as follows:
     # (1) TEST, 002, en
@@ -365,13 +372,12 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.failUnless(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
 
-  def test_06_testExplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_06_testExplicitRelations(self):
     """
       Test explicit relations.
       Explicit relations are just like any other relation, so no need to test them here
       except for similarity cloud which we test.
     """
-    if not run: return
 
     printAndLog('\nTest Explicit Relations')
     # create test documents:
@@ -467,12 +473,11 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document8, document13],
                        document6.getSimilarCloudValueList())
 
-  def test_07_testImplicitRelations(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_07_testImplicitRelations(self):
     """
       Test implicit (wiki-like) relations.
     """
     # XXX this test should be extended to check more elaborate language selection
-    if not run: return
 
     def sqlresult_to_document_list(result):
       return [i.getObject() for i in result]
@@ -577,7 +582,7 @@ class TestDocument(TestDocumentMixin):
     # test get_size on temporary OOoDocument
     from Products.ERP5Type.Document import newTempOOoDocument
     doc = newTempOOoDocument(self.portal, 'tmp')
-    doc.edit(base_data='OOo')
+    doc.edit(data='OOo')
     self.assertEquals(len('OOo'), doc.get_size())
 
   def testOOoDocument_hasData(self):
@@ -611,7 +616,7 @@ class TestDocument(TestDocumentMixin):
     response = self.publish('%s/Base_download' % doc.getPath(),
                             basic='member_user1:secret')
     self.assertEquals(makeFileUpload('import_data_list.ods').read(),
-                      response.body)
+                      response.getBody())
     self.assertEquals('application/vnd.oasis.opendocument.spreadsheet',
                       response.headers['content-type'])
     self.assertEquals('attachment; filename="import_data_list.ods"',
@@ -635,11 +640,12 @@ class TestDocument(TestDocumentMixin):
     user = uf.getUserById('member_user2').__of__(uf)
     newSecurityManager(None, user)
 
-    response = self.publish('%s/Document_convert?format=pdf' % doc.getPath(),
+    response = self.publish('%s?format=pdf' % doc.getPath(),
                             basic='member_user2:secret')
-    self.assertEquals('application/pdf', response.headers['content-type'])
+    self.assertEquals('application/pdf', response.getHeader('content-type'))
     self.assertEquals('attachment; filename="import.file.with.dot.in.filename.pdf"',
-                      response.headers['content-disposition'])
+                      response.getHeader('content-disposition'))
+    self.assertEquals(response.getBody(), str(doc.convert('pdf')[1]))
 
     # test Print icon works on OOoDocument
     response = self.publish('%s/OOoDocument_print' % doc.getPath())
@@ -671,12 +677,11 @@ class TestDocument(TestDocumentMixin):
         self.portal.Base_getConversionFormatItemList(base_content_type=
                   'application/vnd.oasis.opendocument.text'))
 
-  def test_06_ProcessingStateOfAClonedDocument(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_06_ProcessingStateOfAClonedDocument(self):
     """
     Check that the processing state of a cloned document
     is not draft
     """
-    if not run: return
     printAndLog('\nProcessing State of a Cloned Document')
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
@@ -713,12 +718,11 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEquals('converted', new_document.getExternalProcessingState())
 
-  def test_07_EmbeddedDocumentOfAClonedDocument(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_07_EmbeddedDocumentOfAClonedDocument(self):
     """
     Check the validation state of embedded document when its container is
     cloned
     """
-    if not run: return
     printAndLog('\nValidation State of a Cloned Document')
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
@@ -745,11 +749,10 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEquals('embedded', new_sub_document.getValidationState())
 
-  def test_08_EmbeddedDocumentState(self,quiet=QUIET,run=RUN_ALL_TEST):
+  def test_08_EmbeddedDocumentState(self):
     """
     Check the validation state of an embedded document
     """
-    if not run: return
     printAndLog('\nValidation State of an Embedded Document')
     filename = 'EmbeddedImage-en-002.odt'
     file = makeFileUpload(filename)
@@ -765,11 +768,10 @@ class TestDocument(TestDocumentMixin):
 #     image = image_list[0]
 #     self.assertEquals('embedded', image.getValidationState())
 
-  def test_09_SearchableText(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_09_SearchableText(self):
     """
     Check DMS SearchableText capabilities.
     """
-    if not run: return
     portal = self.portal
 
     # Create a document.
@@ -802,21 +804,21 @@ class TestDocument(TestDocumentMixin):
                             reference = 'organisation-1',
                             title='Super nova organisation')
     self.stepTic()
-    
+
     def getAdvancedSearchTextResultList(searchable_text, portal_type=None):
       kw = {'SearchableText': searchable_text}
       if portal_type is not None:
         kw['portal_type'] = portal_type
       return [x.getObject() for x in portal.portal_catalog(**kw)]
-    
+
     # full text search
     self.assertSameSet([document_1], \
       getAdvancedSearchTextResultList('ScriptableKey'))
     self.assertEqual(len(getAdvancedSearchTextResultList('RelatedKey')), 0)
     self.assertSameSet([document_1, document_2], \
-      getAdvancedSearchTextResultList('make'))    
+      getAdvancedSearchTextResultList('make'))
     self.assertSameSet([web_page, person], \
-      getAdvancedSearchTextResultList("Great"))
+      getAdvancedSearchTextResultList("Great", ('Person', 'Web Page')))
     # full text search with whole title of a document
     self.assertSameSet([document_3], \
       getAdvancedSearchTextResultList(document_3.getTitle()))
@@ -842,7 +844,8 @@ class TestDocument(TestDocumentMixin):
 
     # full text search with portal_type passed outside searchable_text
     self.assertSameSet([web_page, person],
-                       getAdvancedSearchTextResultList('Great'))
+                       getAdvancedSearchTextResultList('Great',
+                          ('Person', 'Web Page')))
     self.assertSameSet([web_page], \
                        getAdvancedSearchTextResultList('Great', web_page.getPortalType()))
     self.assertSameSet([person], \
@@ -872,11 +875,10 @@ class TestDocument(TestDocumentMixin):
                                          web_page.getLanguage(),
                                          web_page.getVersion())))
 
-  def test_10_SearchString(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_10_SearchString(self):
     """
     Test search string search generation and parsing.
     """
-    if not run: return
 
     portal = self.portal
     assemble = portal.Base_assembleSearchString
@@ -1028,12 +1030,27 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals(kw['newest'], parsed_string['newest'])
     self.assertEquals('boolean', parsed_string['mode'])
 
-  def test_11_SearchStringSearchCapability(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-    Test search string search search capabilities.
-    """
-    if not run: return
+    # search with multiple portal_type
+    kw = {'search_portal_type': 'Document,Presentation,Web Page',
+           'searchabletext_any': 'erp5'}
+    search_string = assemble(**kw)
+    parsed_string = parse(search_string)
+    self.assertEquals('erp5 type:"Document,Presentation,Web Page"', \
+                      search_string)
+    self.assertSameSet(['searchabletext', 'portal_type'], \
+                        parsed_string.keys())
+    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
 
+    # parse with multiple portal_type containing spaces in one portal_type
+    search_string = "type:Drawing,File,Web Page"
+    parsed_string = parse(search_string)
+    self.assertEquals(parsed_string['portal_type'], 'Drawing,File,Web Page')
+
+
+  def test_11_SearchStringSearchCapability(self):
+    """
+    Test search string search capabilities.
+    """
     portal = self.portal
     assemble = portal.Base_assembleSearchString
     search = portal.Base_getAdvancedSearchResultList
@@ -1197,6 +1214,11 @@ class TestDocument(TestDocumentMixin):
     kw = {'searchabletext_any': 'owner',
           'contributor_title': '%Contributor%'}
     self.assertSameSet([document_4], getAdvancedSearchStringResultList(**kw))
+
+    # multiple portal_type specified
+    kw = {'search_portal_type': 'File,Presentation'}
+    self.assertSameSet([document_1, document_2, document_3, document_4], getAdvancedSearchStringResultList(**kw))
+
     # XXX: search limited to a certain date range
     # XXX: search mode
 
@@ -1216,9 +1238,10 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('PDF', document.getPortalType())
+
     content_type, image_data = document.convert(format='png',
-                                           frame=0,
-                                           display='thumbnail')
+                                                frame=0,
+                                                display='thumbnail')
     # it's a valid PNG
     self.assertEquals('PNG', image_data[1:4])
 
@@ -1249,12 +1272,35 @@ class TestDocument(TestDocumentMixin):
     document.edit(file=upload_file)
     self.assertEquals('application/pdf', document.getContentType())
 
+  def test_Document_getStandardFileName(self):
+    upload_file = makeFileUpload('metadata.pdf')
+    document = self.portal.document_module.newContent(portal_type='PDF')
+    # Here we use edit instead of setFile,
+    # because only edit method set filename as source_reference.
+    document.edit(file=upload_file)
+    self.assertEquals(document.getStandardFileName(), 'metadata.pdf')
+    self.assertEquals(document.getStandardFileName(format='png'),
+                      'metadata.png')
+    document.setVersion('001')
+    document.setLanguage('en')
+    self.assertEquals(document.getStandardFileName(), 'metadata-001-en.pdf')
+    self.assertEquals(document.getStandardFileName(format='png'),
+                      'metadata-001-en.png')
+    # check when format contains multiple '.'
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    document = self.portal.document_module.newContent(portal_type='Presentation')
+    # Here we use edit instead of setFile,
+    # because only edit method set filename as source_reference.
+    document.edit(file=upload_file)
+    self.assertEquals(document.getStandardFileName(), 'TEST-en-003.odp')
+    self.assertEquals('TEST-en-003.odg', document.getStandardFileName(format='odp.odg'))
+
+
   def test_CMYKImageTextContent(self):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('Image', document.getPortalType())
-    self.assertEquals('ERP5 is a free software.\n',
-                      document.SearchableText())
+    self.assertEquals('ERP5 is a free software.\n', document.asText())
 
   def test_Base_showFoundText(self):
     # Create document with good content
@@ -1335,9 +1381,17 @@ class TestDocument(TestDocumentMixin):
     document_list = person.getFollowUpRelatedValueList()
     self.assertEquals(1, len(document_list))
     document = document_list[0]
-    self.assertEquals('empty', document.getExternalProcessingState())
     self.assertEquals('File', document.getPortalType())
     self.assertEquals(contributed_document, document)
+
+  def test_Base_createNewFile_forced_type(self):
+    """Test contributing while forcing the portal type.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     portal_type='PDF',
+                                     file=makeFileUpload('TEST-en-002.odt'))
+    self.assertEquals('PDF', contributed_document.getPortalType())
 
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
@@ -1464,6 +1518,8 @@ class TestDocument(TestDocumentMixin):
 
     html_content = """<html>
       <head>
+        <meta http-equiv="refresh" content="5;url=http://example.com/"/>
+        <meta http-equiv="Set-Cookie" content=""/>
         <title>My dirty title</title>
         <style type="text/css">
           a {color: #FFAA44;}
@@ -1475,13 +1531,18 @@ class TestDocument(TestDocumentMixin):
           <h1>My splendid title</h1>
         </div>
         <script type="text/javascript" src="http://example.com/something.js"/>
+        <script type="text/javascript">
+          alert("da");
+        </script>
+        <a href="javascript:DosomethingNasty()">Link</a>
+        <a onClick="javascript:DosomethingNasty()">Another Link</a>
+        <p>éàèù</p>
       </body>
     </html>
     """.decode('utf-8').encode('iso-8859-1')
     web_page.edit(text_content=html_content)
 
     # Check that outputed stripped html is safe
-
     safe_html = web_page.asStrippedHTML()
     self.assertTrue('My splendid title' in safe_html)
     self.assertTrue('script' not in safe_html, safe_html)
@@ -1490,6 +1551,12 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue('<head>' not in safe_html)
     self.assertTrue('<style' not in safe_html)
     self.assertTrue('#FFAA44' not in safe_html)
+    self.assertTrue('5;url=http://example.com/' not in safe_html)
+    self.assertTrue('Set-Cookie' not in safe_html)
+    self.assertTrue('javascript' not in safe_html)
+    self.assertTrue('alert("da");' not in safe_html)
+    self.assertTrue('javascript:DosomethingNasty()' not in safe_html)
+    self.assertTrue('onClick' not in safe_html)
 
     # Check that outputed entire html is safe
     entire_html = web_page.asEntireHTML()
@@ -1502,6 +1569,10 @@ class TestDocument(TestDocumentMixin):
     self.assertTrue('<style' in entire_html)
     self.assertTrue('#FFAA44' in entire_html)
     self.assertTrue('charset=utf-8' in entire_html)
+    self.assertTrue('javascript' not in entire_html)
+    self.assertTrue('alert("da");' not in entire_html)
+    self.assertTrue('javascript:DosomethingNasty()' not in entire_html)
+    self.assertTrue('onClick' not in entire_html)
 
     # now check converted value is stored in cache
     format = 'html'
@@ -1579,6 +1650,14 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     transaction.commit()
     self.tic()
 
+    preference_tool = getToolByName(self.portal, 'portal_preferences')
+    image_size = preference_tool.getPreferredThumbnailImageHeight(),\
+                              preference_tool.getPreferredThumbnailImageWidth()
+    convert_kw = {'format': 'png',
+                  'quality': 75,
+                  'display': 'thumbnail',
+                  'resolution': None}
+
     class ThreadWrappedConverter(Thread):
       """Use this class to run different convertion
       inside distinct Thread.
@@ -1594,13 +1673,15 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
       def run(self):
         for frame in self.frame_list:
           # Use publish method to dispatch conversion among
-          # all available Zserver threads.
-          response = self.publish_method('%s/index_html?format=png'\
-                              '&display=thumbnail&quality:int=75&resolution='\
-                              '&frame=%s' % (self.document_path, frame),
-                                                               self.credential)
-          assert response.getHeader('content-type') == 'image/png'
-          assert response.getStatus() ==  httplib.OK
+          # all available ZServer threads.
+          convert_kw['frame'] = frame
+          response = self.publish_method(self.document_path,
+                                         basic=self.credential,
+                                         extra=convert_kw.copy())
+
+          assert response.getHeader('content-type') == 'image/png', \
+                                             response.getHeader('content-type')
+          assert response.getStatus() == httplib.OK
         transaction.commit()
 
     # assume there is no password
@@ -1623,18 +1704,15 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     transaction.commit()
     self.tic()
 
-    preference_tool = getToolByName(self.portal, 'portal_preferences')
-    image_size = preference_tool.getPreferredThumbnailImageHeight(),\
-                              preference_tool.getPreferredThumbnailImageWidth()
     convert_kw = {'format': 'png',
-                  'display': 'thumbnail',
                   'quality': 75,
                   'image_size': image_size,
-                  'resolution': ''}
+                  'resolution': None}
+
     result_list = []
     for i in xrange(pages_number):
       # all conversions should succeeded and stored in cache storage
-      convert_kw['frame'] = str(i)
+      convert_kw['frame'] = i
       if not document.hasConversion(**convert_kw):
         result_list.append(i)
     self.assertEquals(result_list, [])
@@ -1671,6 +1749,259 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
     web_page.edit()
     self.assertFalse(web_page.hasConversion(format='txt'))
 
+  def test_TextDocument_conversion_to_base_format(self):
+    """Check that any files is converted into utf-8
+    """
+    web_page_portal_type = 'Web Page'
+    module = self.portal.getDefaultModule(web_page_portal_type)
+    upload_file = makeFileUpload('TEST-text-iso8859-1.txt')
+    web_page = module.newContent(portal_type=web_page_portal_type,
+                                 file=upload_file)
+
+    text_content = web_page.getTextContent()
+    my_utf_eight_token = 'ùééàçèîà'
+    text_content = text_content.replace('\n', '\n%s\n' % my_utf_eight_token)
+    web_page.edit(text_content=text_content)
+    self.assertTrue(my_utf_eight_token in web_page.asStrippedHTML())
+    self.assertTrue(isinstance(web_page.asEntireHTML().decode('utf-8'), unicode))
+
+  def test_PDFDocument_asTextConversion(self):
+    """Test a PDF document with embedded images
+    To force usage of Ocropus portal_transform chain
+    """
+    portal_type = 'PDF'
+    module = self.portal.getDefaultModule(portal_type)
+    upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
+    document = module.newContent(portal_type=portal_type, file=upload_file)
+    self.assertEquals(document.asText(), 'ERP5 is a free software.\n')
+
+  def createRestrictedSecurityHelperScript(self):
+    script_content_list = ['format=None, **kw', """
+if not format:
+  return 0
+return 1
+"""]
+    for script_id in self.conversion_format_permission_script_id_list:
+      createZODBPythonScript(self.getPortal().portal_skins.custom,
+      script_id, *script_content_list)
+      transaction.commit()
+
+  def _test_document_conversion_to_base_format_no_original_format_access(self,
+      portal_type, file_name):
+    module = self.portal.getDefaultModule(portal_type)
+    upload_file = makeFileUpload(file_name)
+    document = module.newContent(portal_type=portal_type,
+                                 file=upload_file)
+
+    transaction.commit()
+    self.tic()
+
+    self.createRestrictedSecurityHelperScript()
+
+    from AccessControl import Unauthorized
+    # check that it is not possible to access document in original format
+    self.assertRaises(Unauthorized, document.convert, format=None)
+    # check that it is possible to convert document to text format
+    dummy = document.convert(format='text')
+
+  def test_WebPage_conversion_to_base_format_no_original_format_access(self):
+    """Checks Document.TextDocument"""
+    self._test_document_conversion_to_base_format_no_original_format_access(
+      'Web Page',
+      'TEST-text-iso8859-1.txt'
+    )
+
+  def test_PDF_conversion_to_base_format_no_original_format_access(self):
+    """Checks Document.PDFDocument"""
+    self._test_document_conversion_to_base_format_no_original_format_access(
+      'PDF',
+      'TEST-en-002.pdf'
+    )
+
+  def test_Text_conversion_to_base_format_no_original_format_access(self):
+    """Checks Document.OOoDocument"""
+    self._test_document_conversion_to_base_format_no_original_format_access(
+      'Text',
+      'TEST-en-002.odt'
+    )
+
+  def test_Image_conversion_to_base_format_no_original_format_access(self):
+    """Checks Document.Image"""
+    self._test_document_conversion_to_base_format_no_original_format_access(
+      'Image',
+      'TEST-en-002.png'
+    )
+
+  def test_getExtensibleContent(self):
+    """
+      Test extensible content of some DMS types. As this is possible only on URL traversal use publish.
+    """
+    # Create document with good content
+    document = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    document.edit(file=upload_file)
+    self.stepTic()
+    self.assertEquals('converted', document.getExternalProcessingState())
+    for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
+      response = self.publish('%s/%s' %(document.getPath(), object_url),
+                              basic='ERP5TypeTestCase:')
+      self.assertTrue('Status: 200 OK' in response.getOutput())
+      # OOod produced HTML navigation, test it
+      self.assertTrue('First page' in response.getBody())
+      self.assertTrue('Back' in response.getBody())
+      self.assertTrue('Continue' in response.getBody())
+      self.assertTrue('Last page' in response.getBody())
+
+  def test_contributeLink(self):
+    """
+      Test contributing a link.
+    """
+    portal = self.portal
+    kw = {'url':portal.absolute_url()}
+    web_page_1 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_1.getRevision()=='2')
+    
+    web_page_2 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_1==web_page_2)
+    self.assertTrue(web_page_2.getRevision()=='3')
+
+    web_page_3 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_2==web_page_3)
+    self.assertTrue(web_page_3.getRevision()=='4')
+
+    # test in synchronous mode
+    kw['synchronous_metadata_discovery']=True
+    web_page_4 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_3==web_page_4)
+    self.assertTrue(web_page_4.getRevision()=='5')
+
+    web_page_5 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_4==web_page_5)
+    self.assertTrue(web_page_5.getRevision()=='6')
+
+    web_page_6 = portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(web_page_5==web_page_6)
+    self.assertTrue(web_page_6.getRevision()=='7')
+
+    # test contribute link is a safe html (duplicates parts of test_safeHTML_conversion)
+    web_page_6_entire_html = web_page_6.asEntireHTML()
+    self.assertTrue('<script' not in web_page_6_entire_html)
+    self.assertTrue('<javascript' not in web_page_6_entire_html)
+
+  def test_getTargetFormatItemList(self):
+    """
+     Test getting target conversion format item list.
+     Note: this tests assumes the default formats do exists for some content types.
+     as this is a matter of respective oinfiguration of mimetypes_registry & portal_transforms
+     only the basic minium of transorm to formats is tested.
+    """
+    portal_type = 'PDF'
+    module = self.portal.getDefaultModule(portal_type)
+
+    upload_file = makeFileUpload('TEST.Large.Document.pdf')
+    pdf = module.newContent(portal_type=portal_type, file=upload_file)
+    
+    self.assertTrue('html' in pdf.getTargetFormatList())
+    self.assertTrue('png' in pdf.getTargetFormatList())
+    self.assertTrue('txt' in pdf.getTargetFormatList())
+
+    web_page=self.portal.web_page_module.newContent(portal_type='Web Page',
+                                                    content_type='text/html')
+    self.assertTrue('odt' in web_page.getTargetFormatList())
+    self.assertTrue('txt' in web_page.getTargetFormatList())
+
+    image=self.portal.image_module.newContent(portal_type='Image',
+                                                    content_type='image/png')
+    self.assertTrue('txt' in image.getTargetFormatList())
+
+  def test_convertToImageOnTraversal(self):
+    """
+    Test converting to image all Document portal types on traversal i.e.:
+     - image_module/1?quality=100&display=xlarge&format=jpeg
+     - document_module/1?quality=100&display=large&format=jpeg
+     - etc ...
+    """
+    # Create OOo document
+    ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    ooo_document.edit(file=upload_file)
+
+    pdf_document = self.portal.document_module.newContent(portal_type='PDF')
+    upload_file = makeFileUpload('TEST-en-002.pdf')
+    pdf_document.edit(file=upload_file)
+
+    image_document = self.portal.image_module.newContent(portal_type='Image')
+    upload_file = makeFileUpload('TEST-en-002.png')
+    image_document.edit(file=upload_file)
+    self.stepTic()
+
+    def getPreferences(image_display):
+      preference_tool = self.portal.getPortalObject().portal_preferences
+      height_preference = 'preferred_%s_image_height' % (image_display,)
+      width_preference = 'preferred_%s_image_width' % (image_display,)
+      height = int(preference_tool.getPreference(height_preference))
+      width = int(preference_tool.getPreference(width_preference))
+      return (width, height)
+
+    def getURLSize(uri, **kw):
+      # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
+      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+      format=kw.get('format', 'jpeg')
+      infile = urllib.urlopen(url)
+      # save as file with proper incl. format filename (for some reasons PIL uses this info)
+      filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
+      f = open(filename, "w")
+      f.write(infile.read())
+      f.close()
+      infile.close()
+      image = Image.open(filename)
+      image_size = image.size
+      os.remove(filename)
+      return image_size
+
+    ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
+    pdf_document_url = '%s/%s' %(self.portal.absolute_url(), pdf_document.getRelativeUrl())
+    image_document_url = '%s/%s' %(self.portal.absolute_url(), image_document.getRelativeUrl())
+    for display in ('nano', 'micro', 'thumbnail', 'xsmall', 'small', 'medium', 'large', 'xlarge',):
+      max_tollerance_px = 1
+      preffered_size_for_display = getPreferences(display)
+      for format in ('png', 'jpeg', 'gif',):
+        convert_kw = {'display':display, \
+                      'format':format, \
+                      'quality':100}
+        # Note: due to some image interpolations it's possssible that we have a difference of max_tollerance_px 
+        # so allow some tollerance which is produced by respective portal_transform command
+
+        # any OOo based portal type
+        ooo_document_image_size = getURLSize(ooo_document_url, **convert_kw)
+        self.assertTrue(max(preffered_size_for_display) - max(ooo_document_image_size) <= max_tollerance_px)
+
+        # PDF
+        pdf_document_image_size = getURLSize(pdf_document_url, **convert_kw)
+        self.assertTrue(max(preffered_size_for_display) - max(pdf_document_image_size) <= max_tollerance_px)
+
+        # Image
+        image_document_image_size = getURLSize(image_document_url, **convert_kw)
+        self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
+
+  def test_checkConversionFormatPermission(self):
+    """
+     Test various use cases when conversion can be not allowed
+    """
+    portal_type = 'PDF'
+    module = self.portal.getDefaultModule(portal_type)
+    upload_file = makeFileUpload('TEST.Large.Document.pdf')
+    pdf = module.newContent(portal_type=portal_type, file=upload_file)
+
+    # if PDF size is larger than A4 format system should deny conversion
+    self.assertRaises(Unauthorized, pdf.convert, format='jpeg')
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
@@ -1684,11 +2015,10 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
 
-  def test_ShowPreviewAfterSubmitted(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_ShowPreviewAfterSubmitted(self):
     """
     Make sure that uploader can preview document after submitted.
     """
-    if not run: return
     filename = 'REF-en-001.odt'
     upload_file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=upload_file)
@@ -1780,9 +2110,8 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     #Now lets check that when we try to view an image as thumbnail, 
     #the sizes of that image are the ones defined in user preference
     image_portal_type = 'Image'
-    image_list = image = self.portal.getDefaultModule(image_portal_type)\
-         .contentValues()
-    image = image[0]
+    image_module = self.portal.getDefaultModule(image_portal_type)
+    image = image_module.newContent(portal_type=image_portal_type)
     self.assertEqual('thumbnail',
        image.Image_view._getOb("image_view", None).get_value('image_display'))
     self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),

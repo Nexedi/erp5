@@ -187,7 +187,7 @@ def colorize(text):
   html = html.replace(os.linesep, os.linesep+"<br/>")
   return html
 
-class SubversionTool(BaseTool, UniqueObject, Folder):
+class SubversionTool(BaseTool):
   """The SubversionTool provides a Subversion interface to ERP5.
   """
   id = 'portal_subversion'

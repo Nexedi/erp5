@@ -41,8 +41,6 @@ from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from zLOG import LOG
 import os
 
-# Define the conversion server host
-conversion_server_host = ('127.0.0.1', 8008)
 
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
@@ -78,29 +76,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
   def getTitle(self):
     return "OOo Conversion Cache"
 
-  def beforeTearDown(self):
-    """
-      Do some stuff after each test:
-      - clear document module
-    """
-    self.clearDocumentModule()
-
-  def clearCache(self):
-    self.portal.portal_caches.clearAllCache()
-
   ## tests
-
-  def test_01_HasEverything(self):
-    """
-      Standard test to make sure we have everything we need - all the tools etc
-    """
-    print '\nTest Has Everything '
-    self.assertNotEqual(self.getCategoryTool(), None)
-    self.assertNotEqual(self.getSimulationTool(), None)
-    self.assertNotEqual(self.getTypeTool(), None)
-    self.assertNotEqual(self.getSQLConnection(), None)
-    self.assertNotEqual(self.getCatalogTool(), None)
-    self.assertNotEqual(self.getWorkflowTool(), None)
 
   def test_01_PersistentCacheConversion(self):
     """
@@ -129,9 +105,10 @@ class TestDocumentConversionCache(TestDocumentMixin):
     #Test Cache is cleared
     for format in format_list:
       self.assertFalse(document.hasConversion(format=format), 'Cache Storage failed for %s' % (format))
-      self.assertEqual(document.getConversionSize(format=format), 0)
+      self.assertEquals(document.getConversionSize(format=format), 0)
     document.edit(title='Bar')
     transaction.commit()
+    self.tic()
     #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
@@ -168,6 +145,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       self.assertEqual(document.getConversionSize(format=format), 0)
     document.edit(title='Bar')
     transaction.commit()
+    self.tic()
     #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
@@ -198,6 +176,8 @@ class TestDocumentConversionCache(TestDocumentMixin):
     document2.convert(format=format)
     self.assertNotEqual(document1.getConversion(format=format),
                         document2.getConversion(format=format))
+    transaction.commit()
+    self.tic()
 
   def test_04_PersistentCacheConversionWithFlare(self):
     """
@@ -236,6 +216,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
       self.assertEqual(document.getConversionSize(format=format), 0)
     document.edit(title='Bar')
     transaction.commit()
+    self.tic()
     #Test Conversion Cache after editing
     for format in format_list:
       document.convert(format=format)
@@ -258,19 +239,22 @@ class TestDocumentConversionCache(TestDocumentMixin):
     kw = {'format': 'html'}
     #Generate one conversion
     document.convert(**kw)
-    cache_id = '%s%s' % (document._getCacheKey(),
-                                                document.generateCacheId(**kw))
+    cache_id = document._getCacheKey(**kw)
     cache_factory = document._getCacheFactory()
     for cache_plugin in cache_factory.getCachePluginList():
       cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
-      md5sum, mime, data = cache_entry.getValue()
+      data_dict = cache_entry.getValue()
       #get data from cache
-      self.assertTrue(md5sum)
-      self.assertTrue(mime)
-      self.assertTrue(data)
+      self.assertTrue(data_dict['content_md5'])
+      self.assertTrue(data_dict['conversion_md5'])
+      self.assertTrue(data_dict['mime'])
+      self.assertTrue(data_dict['data'])
+      self.assertTrue(data_dict['date'])
+      self.assertTrue(data_dict['size'])
       #Change md5 manualy
-      cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE,
-                               ('Anything which is not md5', mime, data), 0, 0)
+      data_dict['content_md5'] = 'Anything which is not md5'
+      cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE, data_dict, 100, 0)
+    transaction.commit()
     self.assertRaises(KeyError, document.getConversion, format='html')
 
   def test_06_check_md5_is_updated(self):
@@ -291,6 +275,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
     file2 = makeFileUpload(filename2)
     document.edit(file=file2)
     self.assertNotEqual(md5sum, document.getContentMd5())
+    self.tic()
 
   def test_07_check_cache_key_is_escaped(self):
     """
@@ -330,7 +315,7 @@ class TestDocumentConversionCache(TestDocumentMixin):
                     'Presentation': 'TEST-en-002.sxi',
                     'Web Page': 'TEST-en-002.html',
                     'Image': 'TEST-en-002.gif',
-                    #'File': 'TEST-en-002.rtf',
+                    'File': 'TEST-en-002.rtf',
                     'PDF': 'TEST-en-002.pdf'}
     #Check that all portal_types are handled by test
     self.assertEqual(len(portal_type_list), len([pt for pt in portal_type_list if pt in data_mapping]))

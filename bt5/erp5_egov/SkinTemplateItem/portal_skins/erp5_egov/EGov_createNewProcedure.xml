@@ -53,24 +53,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request=context.REQUEST\n
+            <value> <string>translateString = context.Base_translateString\n
+\n
+request=context.REQUEST\n
 \n
 if context.portal_membership.isAnonymousUser() and not captcha_ok:\n
   absolute_url = context.absolute_url()\n
-  new_url = \'captcha/CheckCaptcha\'\n
+  new_url = \'captcha/CheckCaptcha/view?portal_type=%s\' % new_application_procedure\n
   redirect_url = "%s/%s" % (absolute_url, new_url)\n
 else:\n
   portal_type = new_application_procedure\n
-  module = context.getDefaultModule(portal_type=portal_type)\n
-  # Create a new procedure\n
-  new_procedure = module.newContent(portal_type=portal_type)\n
+  if portal_type is not None and portal_type != \'\':\n
+    module = context.getDefaultModule(portal_type=portal_type)\n
+    # Create a new procedure\n
+    new_procedure = module.newContent(portal_type=portal_type)\n
+    absolute_url = context.absolute_url()\n
+    module_id = module.getId()\n
+    new_object_id = new_procedure.getId()\n
+    redirect_url = "%s/%s/%s/%s" % (absolute_url, module_id, new_object_id, \'view\')\n
+  else:\n
+    message = translateString("You must choose a procedure")\n
 \n
-  absolute_url = context.absolute_url()\n
-  module_id = module.getId()\n
-  new_object_id = new_procedure.getId()\n
-\n
-  redirect_url = "%s/%s/%s/%s" % (absolute_url, module_id, new_object_id, \'view\')\n
-\n
+    redirect_url = "%s?portal_status_message=%s" % (context.absolute_url(), message)\n
+    \n
 result = request[\'RESPONSE\'].redirect(redirect_url) \n
 return result\n
 </string> </value>
@@ -84,6 +89,12 @@ return result\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>new_application_procedure, captcha_ok=False</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -113,15 +124,18 @@ return result\n
                             <string>captcha_ok</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>translateString</string>
                             <string>request</string>
                             <string>absolute_url</string>
                             <string>new_url</string>
                             <string>redirect_url</string>
                             <string>portal_type</string>
+                            <string>None</string>
                             <string>module</string>
                             <string>new_procedure</string>
                             <string>module_id</string>
                             <string>new_object_id</string>
+                            <string>message</string>
                             <string>_getitem_</string>
                             <string>result</string>
                           </tuple>

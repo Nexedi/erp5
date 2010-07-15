@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Add (if not present) gadgets to current knowledge pad.\n
+"""\n
+\n
+all_pads = [x for x in context.ERP5Site_getKnowledgePadListForUser(mode, default_pad_group)]\n
+if mode.startswith(\'web\'):\n
+  active_pad, all_pads = context.WebSite_getActiveKnowledgePadForUser(all_pads, default_pad_group)\n
+else:\n
+  active_pad, all_pads = context.ERP5Site_getActiveKnowledgePadForUser(all_pads)\n
+\n
+active_pad = active_pad.getObject()\n
+gadget_list = active_pad.contentValues(filter={\'portal_type\': \'Knowledge Box\'})\n
+contained_gadgets = [x.getSpecialiseValue().getRelativeUrl() \\\n
+                       for x in gadget_list if x.getValidationState() in (\'visible\', \'invisible\',)]\n
+if gadget_relative_url not in contained_gadgets:\n
+  # add only if not there\n
+  knowledge_box = active_pad.newContent(portal_type=\'Knowledge Box\')\n
+  knowledge_box.setSpecialiseValue(gadget_relative_url)\n
+  knowledge_box.visible()\n
+else:\n
+  # reuse gadget\n
+  knowledge_box = [x for x in gadget_list if x.getSpecialiseValue().getRelativeUrl()==gadget_relative_url][0]\n
+\n
+context.REQUEST.set(\'portal_status_message\', knowledge_box.getRelativeUrl())\n
+return context.view()\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>gadget_relative_url, mode=\'erp5_front\', default_pad_group=None</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>3</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>gadget_relative_url</string>
+                            <string>mode</string>
+                            <string>default_pad_group</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>x</string>
+                            <string>all_pads</string>
+                            <string>active_pad</string>
+                            <string>gadget_list</string>
+                            <string>contained_gadgets</string>
+                            <string>knowledge_box</string>
+                            <string>_getitem_</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string>erp5_front</string>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_AddGadgetToActivePad</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

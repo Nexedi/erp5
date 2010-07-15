@@ -941,30 +941,30 @@ class Catalog(Folder,
 
     return catalog_schema_dict[table]
 
+  @caching_instance_method(id='SQLCatalog.getColumnIds',
+                           cache_factory='erp5_content_long')
+  def _getColumnIds(self):
+    keys = set()
+    add_key = keys.add
+    for table in self.getCatalogSearchTableIds():
+      field_list = self._getCatalogSchema(table=table)
+      for field in field_list:
+        add_key(field)
+        add_key('%s.%s' % (table, field))  # Is this inconsistent ?
+    for related in self.getSQLCatalogRelatedKeyList():
+      related_tuple = related.split('|')
+      add_key(related_tuple[0].strip())
+    for scriptable in self.getSQLCatalogScriptableKeyList():
+      scriptable_tuple = scriptable.split('|')
+      add_key(scriptable_tuple[0].strip())
+    return sorted(keys)
+
   def getColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
     Field Ids
     """
-    def _getColumnIds():
-      keys = {}
-      for table in self.getCatalogSearchTableIds():
-        field_list = self._getCatalogSchema(table=table)
-        for field in field_list:
-          keys[field] = None
-          keys['%s.%s' % (table, field)] = None  # Is this inconsistent ?
-      for related in self.getSQLCatalogRelatedKeyList():
-        related_tuple = related.split('|')
-        related_key = related_tuple[0].strip()
-        keys[related_key] = None
-      for scriptable in self.getSQLCatalogScriptableKeyList():
-        scriptable_tuple = scriptable.split('|')
-        scriptable = scriptable_tuple[0].strip()
-        keys[scriptable] = None
-      keys = keys.keys()
-      keys.sort()
-      return keys
-    return CachingMethod(_getColumnIds, id='SQLCatalog.getColumnIds', cache_factory='erp5_content_long')()[:]
+    return self._getColumnIds()[:]
 
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
@@ -1815,35 +1815,40 @@ class Catalog(Folder,
     """
     return self.sql_catalog_scriptable_keys
 
+  @caching_instance_method(id='SQLCatalog.getTableIndex',
+                           cache_factory='erp5_content_long')
+  def _getTableIndex(self, table):
+    table_index = {}
+    method = getattr(self, self.sql_catalog_index, '')
+    if method in ('', None):
+      return {}
+    index = list(method(table=table))
+    for line in index:
+      if table_index.has_key(line.KEY_NAME):
+        table_index[line.KEY_NAME].append(line.COLUMN_NAME)
+      else:
+        table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
+    return table_index
+
   def getTableIndex(self, table):
     """
     Return a map between index and column for a given table
     """
-    def _getTableIndex(table):
-      table_index = {}
-      method = getattr(self, self.sql_catalog_index, '')
-      if method in ('', None):
-        return {}
-      index = list(method(table=table))
-      for line in index:
-        if table_index.has_key(line.KEY_NAME):
-          table_index[line.KEY_NAME].append(line.COLUMN_NAME)
-        else:
-          table_index[line.KEY_NAME] = [line.COLUMN_NAME,]
-      return table_index
-    return CachingMethod(_getTableIndex, id='SQLCatalog.getTableIndex', \
-                         cache_factory='erp5_content_long')(table=table).copy()
+    return self._getTableIndex(table).copy()
 
   @profiler_decorator
   def isValidColumn(self, column_id):
     """
       Tells wether given name is or not an existing column.
 
-      Warning: This includes "virtual" columns, such as related keys.
+      Warning: This includes "virtual" columns, such as related keys and
+      scriptable keys.
     """
-    result = column_id in self.getColumnMap()
+    result = self.getScriptableKeyScript(column_id) is not None
     if not result:
-      result = self.getRelatedKeyDefinition(column_id) is not None
+      result = column_id in self.getColumnMap()
+      if not result:
+        result = self.getRelatedKeyDefinition(column_id) is not None
     return result
 
   @profiler_decorator
@@ -2008,7 +2013,12 @@ class Catalog(Folder,
 
       Expected node API is described in interfaces/abstract_syntax_node.py .
     """
-    search_key, related_key_definition = self.getColumnSearchKey(key)
+    script = self.getScriptableKeyScript(key)
+    if script is None:
+      search_key, related_key_definition = self.getColumnSearchKey(key)
+    else:
+      search_key = SearchKeyWrapperForScriptableKey(key, script)
+      related_key_definition = None
     if search_key is None:
       # Unknown, skip loudly
       LOG('SQLCatalog', WARNING, 'Unknown column %r, skipped.' % (key, ))
@@ -2456,6 +2466,20 @@ class Catalog(Folder,
         return None
     return None
 
+  def setFilterExpression(self, method_name, expression):
+    """ Set the Expression for a certain method name. This allow set 
+        expressions by scripts.
+    """
+    if withCMF:
+      if getattr(aq_base(self), 'filter_dict', None) is None:
+        self.filter_dict = PersistentMapping()
+        return None
+      self.filter_dict[method_name]['expression'] = expression
+      if expression:
+        self.filter_dict[method_name]['expression_instance'] = Expression(expression)
+      else:
+        self.filter_dict[method_name]['expression_instance'] = None
+
   def isPortalTypeSelected(self, method_name, portal_type):
     """ Returns true if the portal type is selected for this method.
       XXX deprecated
@@ -2484,6 +2508,25 @@ class Catalog(Folder,
       except KeyError:
         return []
     return []
+
+  def getFilterDict(self):
+    """
+      Utility Method.
+      Filter Dict is a dictionary and used at Python Scripts, 
+      This method returns a filter dict as a dictionary.
+    """
+    if withCMF:
+      if getattr(aq_base(self), 'filter_dict', None) is None:
+        self.filter_dict = PersistentMapping()
+        return None
+      filter_dict = {}
+      for key in self.filter_dict:
+        # Filter is also a Persistence dict.
+        filter_dict[key] = {}
+        for sub_key in self.filter_dict[key]:
+           filter_dict[key][sub_key] = self.filter_dict[key][sub_key]
+      return filter_dict
+    return None
 
   def getFilterableMethodList(self):
     """
@@ -2569,6 +2612,33 @@ def getSearchKeyInstance(search_key_class_name, column):
   except KeyError:
     result = instance_dict[column] = search_key_class(column)
   return result
+
+class SearchKeyWrapperForScriptableKey(SearchKey.SearchKey.SearchKey):
+  """
+    This SearchKey is a simple wrapper around a ScriptableKey, so such script
+    can be used in place of a regular SearchKey.
+  """
+  default_comparison_operator = None
+  get_operator_from_value = False
+
+  def __init__(self, column, script):
+    self.script = script
+    super(SearchKeyWrapperForScriptableKey, self).__init__(column)
+
+  def buildQuery(self, search_value, group=None, logical_operator=None,
+                 comparison_operator=None):
+    # XXX: It would be better to extend ScriptableKey API to support other
+    # parameters.
+    if group is not None:
+      raise ValueError, 'ScriptableKey cannot be used inside a group ' \
+        '(%r given).' % (group, )
+    if logical_operator is not None:
+      raise ValueError, 'ScriptableKey ignores logical operators ' \
+        '(%r given).' % (logical_operator, )
+    if comparison_operator != '':
+      raise ValueError, 'ScriptableKey ignores comparison operators ' \
+        '(%r given).' % (comparison_operator, )
+    return self.script(search_value)
 
 from Operator import operator_dict
 def getComparisonOperatorInstance(operator):

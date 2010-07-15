@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
@@ -49,7 +50,7 @@ class TestOoodResponse(ERP5TypeTestCase):
     newSecurityManager(None, user)
 
   def getBusinessTemplateList(self):
-    return ()
+    return ('erp5_base',)
 
   def afterSetUp(self):
     self.login()
@@ -77,7 +78,7 @@ class TestOoodResponse(ERP5TypeTestCase):
     ERP5Site_viewNothingAsOdt(batch_mode=0)
     self.assertEqual('application/vnd.oasis.opendocument.text',
         request.RESPONSE.getHeader('content-type').split(';')[0])
-    self.assertEqual('inline;filename="ERP5Site_viewNothingAsOdt.odt"',
+    self.assertEqual('attachment; filename="ERP5Site_viewNothingAsOdt.odt"',
         request.RESPONSE.getHeader('content-disposition'))
 
   def test_01b_noExcEmptyFormatNoBatchMode(self):
@@ -87,7 +88,7 @@ class TestOoodResponse(ERP5TypeTestCase):
     ERP5Site_viewNothingAsOdt(format='', batch_mode=0)
     self.assertEqual('application/vnd.oasis.opendocument.text',
         request.RESPONSE.getHeader('content-type').split(';')[0])
-    self.assertEqual('inline;filename="ERP5Site_viewNothingAsOdt.odt"',
+    self.assertEqual('attachment; filename="ERP5Site_viewNothingAsOdt.odt"',
         request.RESPONSE.getHeader('content-disposition'))
     
   def test_02_noExcNoFormatBatchMode(self):

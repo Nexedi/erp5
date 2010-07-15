@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<!DOCTYPE html>\n
+<html lang="en">\n
+<head>\n
+\t<meta charset="UTF-8" />\n
+\t<title>jQuery UI Sortable - Include / exclude items</title>\n
+\t<link type="text/css" href="../../themes/base/jquery.ui.all.css" rel="stylesheet" />\n
+\t<script type="text/javascript" src="../../jquery-1.4.2.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.core.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.widget.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.mouse.js"></script>\n
+\t<script type="text/javascript" src="../../ui/jquery.ui.sortable.js"></script>\n
+\t<link type="text/css" href="../demos.css" rel="stylesheet" />\n
+\t<style type="text/css">\n
+\t#sortable1, #sortable2 { list-style-type: none; margin: 0; padding: 0; zoom: 1; }\n
+\t#sortable1 li, #sortable2 li { margin: 0 5px 5px 5px; padding: 3px; width: 90%; }\n
+\t</style>\n
+\t<script type="text/javascript">\n
+\t$(function() {\n
+\t\t$("#sortable1").sortable({\n
+\t\t\titems: \'li:not(.ui-state-disabled)\'\n
+\t\t});\n
+\n
+\t\t$("#sortable2").sortable({\n
+\t\t\tcancel: \'.ui-state-disabled\'\n
+\t\t});\n
+\n
+\t\t$("#sortable1 li, #sortable2 li").disableSelection();\t\t\n
+\t});\n
+\t</script>\n
+</head>\n
+<body>\n
+<div class="demo">\n
+\n
+<h3 class="docs">Specify which items are sortable:</h3>\n
+\n
+<ul id="sortable1">\n
+\t<li class="ui-state-default">Item 1</li>\n
+\t<li class="ui-state-default ui-state-disabled">(I\'m not sortable or a drop target)</li>\n
+\t<li class="ui-state-default ui-state-disabled">(I\'m not sortable or a drop target)</li>\n
+\t<li class="ui-state-default">Item 4</li>\n
+</ul>\n
+\n
+<h3 class="docs">Cancel sorting (but keep as drop targets):</h3>\n
+\n
+<ul id="sortable2">\n
+\t<li class="ui-state-default">Item 1</li>\n
+\t<li class="ui-state-default ui-state-disabled">(I\'m not sortable)</li>\n
+\t<li class="ui-state-default ui-state-disabled">(I\'m not sortable)</li>\n
+\t<li class="ui-state-default">Item 4</li>\n
+</ul>\n
+\n
+</div><!-- End demo -->\n
+\n
+<div class="demo-description">\n
+\n
+<p>\n
+\tSpecify which items are eligible to sort by passing a jQuery selector into\n
+\tthe <code>items</code> option. Items excluded from this option are not\n
+\tsortable, nor are they valid targets for sortable items.\n
+</p>\n
+\n
+<p>\n
+\tTo only prevent sorting on certain items, pass a jQuery selector into the\n
+\t<code>cancel</code> option. Cancelled items remain valid sort targets for\n
+\tothers.\n
+</p>\n
+\n
+</div><!-- End demo-description -->\n
+\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>items.html</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

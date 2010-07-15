@@ -54,6 +54,15 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
                               if x in property_list]
     else:
       target_property_list = self.getTestedPropertyList()
+    if document == document.getDeliveryValue():
+      # XXX what is the expected behaviour of this movement group in
+      # delivery level?
+      pass
+    else:
+      movement = document.getDeliveryRelatedValue()
+      if movement is None:
+        return False, {}
+      document = self._getParentDelivery(movement)
     for prop in target_property_list:
       if property_dict['_%s' % prop] != self._getProperty(document, prop):
         return False, {}
@@ -62,8 +71,7 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
   def _getParentDelivery(self, movement):
     # try to find local payment conditions from the upper level delivery
     rule = movement.getParentValue()
-    movement = rule.getParentValue()
-    delivery = movement.getDeliveryValue()
+    delivery = None
     while delivery is None and not(rule.isRootAppliedRule()):
       rule = movement.getParentValue()
       movement = rule.getParentValue()
@@ -71,6 +79,8 @@ class ParentDeliveryPropertyMovementGroup(PropertyMovementGroup):
     return delivery
 
   def _getProperty(self, document, property_id):
+    if document is None:
+      return None
     # XXX here we don't use Base.getProperty() but try to call accessor
     # directly to make acquired property
     # (eg. payment_condition_efficiency) working.

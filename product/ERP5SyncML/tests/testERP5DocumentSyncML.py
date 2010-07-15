@@ -30,8 +30,9 @@
 import os
 import unittest
 from Testing import ZopeTestCase
-from runUnitTest import tests_home
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.runUnitTest import tests_home
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
+                                                       _getConversionServerDict
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5DocumentConduit import ERP5DocumentConduit
 from Products.ERP5SyncML.SyncCode import SyncCode
@@ -42,7 +43,6 @@ from ERP5Diff import ERP5Diff
 from lxml import etree
 from Products.ERP5Type.tests.utils import FileUpload
 
-ooodoc_coordinates = ('127.0.0.1', 8008)
 test_files = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-\
 (?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
@@ -53,8 +53,8 @@ def makeFileUpload(name):
   path = os.path.join(test_files, name)
   return FileUpload(path, name)
 
-class TestERP5DocumentSyncMLMixin:
-  
+class TestERP5DocumentSyncMLMixin(ERP5TypeTestCase):
+
   nb_objects = 10
   #for objects
   ids = range(1, nb_objects+1)
@@ -112,15 +112,18 @@ class TestERP5DocumentSyncMLMixin:
   nb_publication = 1
   #default edit_workflow
   workflow_id = 'processing_status_workflow'
-  
+
 
   def getBusinessTemplateList(self):
     """
       Return the list of business templates.
     """
-    return ('erp5_base', 'erp5_ingestion',\
-    'erp5_ingestion_mysql_innodb_catalog', 'erp5_web',\
-    'erp5_dms')
+    return ('erp5_base',
+            'erp5_ingestion',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_web',
+            'erp5_dms',
+            )
 
 
   def afterSetUp(self):
@@ -132,7 +135,7 @@ class TestERP5DocumentSyncMLMixin:
     self.setSystemPreferences()
     transaction.commit()
     self.tic()
-  
+
   def beforeTearDown(self):
     """
       Do some stuff after each test:
@@ -144,8 +147,9 @@ class TestERP5DocumentSyncMLMixin:
 
   def setSystemPreferences(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress(ooodoc_coordinates[0])
-    default_pref.setPreferredOoodocServerPortNumber(ooodoc_coordinates[1])
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     default_pref.setPreferredDocumentFileNameRegularExpression(FILE_NAME_REGULAR_EXPRESSION)
     default_pref.setPreferredDocumentReferenceRegularExpression(REFERENCE_REGULAR_EXPRESSION)
     if default_pref.getPreferenceState() == 'disabled':
@@ -200,7 +204,7 @@ class TestERP5DocumentSyncMLMixin:
       self.portal.portal_types.constructContent(type_name = 'Document Module',
                                              container = self.portal,
                                              id = 'document_client1')
-        
+
     if one_way:
       if not hasattr(self.portal, 'document_client_from_server'):
         self.portal.portal_types.constructContent(type_name = 'Document Module',
@@ -214,7 +218,7 @@ class TestERP5DocumentSyncMLMixin:
       self.portal._delObject(id='document_client1')
     transaction.commit()
     self.tic()
- 
+
   def clearPublicationsAndSubscriptions(self):
     portal_sync = self.getSynchronizationTool()
     for pub in portal_sync.getPublicationList():
@@ -250,7 +254,7 @@ class TestERP5DocumentSyncMLMixin:
     uf._doAddUser('syncml', '', ['Manager'], [])
     user = uf.getUserById('daniele').__of__(uf)
     newSecurityManager(None, user)
- 
+
   def resetSignaturePublicationAndSubscription(self):
     portal_sync = self.getSynchronizationTool()
     publication = portal_sync.getPublication(self.pub_id)
@@ -284,7 +288,7 @@ class TestERP5DocumentSyncMLMixin:
     nb_document = len(document_server.objectValues())
     self.assertEqual(nb_document, len(self.ids))
     return nb_document
-   
+
   def documentServer(self, quiet=0, one_way=False):
     """
     create document in document_server
@@ -505,7 +509,7 @@ class TestERP5DocumentSyncMLMixin:
       doc_c = document_client1._getOb(str(id))
       self.assertXMLViewIsEqual(self.sub_id1, doc_s, doc_c)
 
-  
+
   def checkFirstSynchronizationWithMultiDocument(self, nb_document=0):
     portal_sync = self.getSynchronizationTool()
     subscription1 = portal_sync.getSubscription(self.sub_id1)
@@ -528,8 +532,8 @@ class TestERP5DocumentSyncMLMixin:
                        size_filename=self.size_filename_odt)
     self.checkXMLsSynchronized() 
 
-  def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,\
-                           force=0):
+  def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,
+                                                                  force=False):
     """
       Check the equality between two xml objects with gid as id
     """
@@ -540,34 +544,34 @@ class TestERP5DocumentSyncMLMixin:
     gid_sub = publication.getGidFromObject(object_sub)
     self.assertEqual(gid_pub, gid_sub)
     conduit = ERP5DocumentConduit()
-    xml_pub = conduit.getXMLFromObjectWithGid(object=object_pub, gid=gid_pub,\
-              xml_mapping=publication.getXMLMapping())
+    xml_pub = conduit.getXMLFromObjectWithGid(object=object_pub, gid=gid_pub,
+                                       xml_mapping=publication.getXMLMapping())
     #if One Way From Server there is not xml_mapping for subscription
-    xml_sub = conduit.getXMLFromObjectWithGid(object=object_sub, gid=gid_sub,\
-              xml_mapping=subscription.getXMLMapping(force))
+    xml_sub = conduit.getXMLFromObjectWithGid(object=object_sub, gid=gid_sub,
+                                 xml_mapping=subscription.getXMLMapping(force))
     erp5diff = ERP5Diff()
     erp5diff.compare(xml_pub, xml_sub)
-    result = erp5diff.outputString()
-    result = etree.XML(result)
-    if len(result) != 0 :
-      for update in result:
-        #XXX edit workflow is not replaced, so discard workflow checking
-        if update.get('select').find('workflow') != -1 or\
-           update.find('block_data') != -1:
-          continue
-        else :
-          self.fail('diff between pub:\n%s \n => \n%s' %\
-              (xml_pub, etree.tostring(result, pretty_print=True)))
-  
-  
-class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
-  
+    result =  etree.XML(erp5diff.outputString())
+    identity = True
+    for update in result:
+      #XXX edit workflow is not replaced, so discard workflow checking
+      if 'workflow' not in update.get('select', ''):
+        identity = False
+        break
+    if not identity:
+      self.fail('diff between %s and %s \nxupdate:\n%s' %\
+                                                  (object_pub.getRelativeUrl(),
+                                                   object_sub.getRelativeUrl(),
+                                    etree.tostring(result, pretty_print=True)))
+
+
+class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
+
   def getTitle(self):
     """
     """
-    return "ERP5 SyncML"
+    return "ERP5 Document SyncML"
 
-     
   def setupPublicationAndSubscriptionIdGenerator(self, quiet=0):
     portal_sync = self.getSynchronizationTool()
     sub1 = portal_sync.getSubscription(self.sub_id1)
@@ -634,7 +638,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     self.assertEqual(nb_message1, self.nb_message_first_synchronization)
     self.checkSynchronizationStateIsSynchronized()
     self.checkFirstSynchronization(nb_document=nb_document)
-  
+
   def test_03_UpdateSimpleData(self, quiet=0):
     if not quiet:
       ZopeTestCase._print('\nTest Update Simple Data ')
@@ -685,9 +689,10 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     self.tic()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
-    document_s = document_server._getOb(self.id1)
-    self.assertEqual(document_s.getDescription(), self.description2)
+    document_c = document_client1._getOb(self.id1)
+    self.assertEqual(document_c.getDescription(), self.description2)
     self.assertEqual(document_s.getShortTitle(), self.short_title1)
+    self.assertEqual(document_s.getBaseData(), document_c.getBaseData())
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c)
 
   def test_04_DeleteObject(self, quiet=0):
@@ -785,7 +790,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     doc_s.edit(**kw)
     file = makeFileUpload(self.filename_odt)
     doc_s.edit(file=file)
-    #doc_s.convertToBaseFormat()
     # Side client modification gid of a odt document
     id_odt = str(self.ids[self.id_max_text+1])
     doc_c = document_client1._getOb(id_odt)
@@ -793,7 +797,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     doc_c.edit(**kw)
     file = makeFileUpload(self.filename_text)
     doc_c.edit(file=file)
-    #doc_c.convertToBaseFormat()
     transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
@@ -907,10 +910,11 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     self.tic()
     self.synchronize(self.sub_id1)
     conflict_list = portal_sync.getConflictList()
-    self.assertEqual(len(conflict_list), 6)
+    self.assertEqual(len(conflict_list), 9)
     self.assertEqual(sorted([x.getKeyword() for x in conflict_list]),
-                     ['content_md5', 'content_type', 'description',
-                      'short_title', 'source_reference', 'title'])
+                     ['base_data', 'content_md5', 'content_type',
+                      'data', 'description', 'short_title', 'size',
+                      'source_reference', 'title'])
     # check if we have the state conflict on all clients
     self.checkSynchronizationStateIsConflict()
     # we will take :
@@ -919,16 +923,16 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     for conflict in conflict_list : 
       subscriber = conflict.getSubscriber()
       property = conflict.getPropertyId()
-      resolve = 0
+      resolved = False
       if property == 'description':
-        if subscriber.getSubscriptionUrl()==self.publication_url:
-          resolve = 1
+        if subscriber.getSubscriptionUrl() == self.publication_url:
+          resolved = True
           conflict.applySubscriberValue()
       if property == 'short_title':
-        if subscriber.getSubscriptionUrl()==self.subscription_url['two_way']:
-          resolve = 1
+        if subscriber.getSubscriptionUrl() == self.subscription_url['two_way']:
+          resolved = True
           conflict.applySubscriberValue()
-      if not resolve:
+      if not resolved:
         conflict.applyPublisherValue()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
@@ -976,7 +980,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     With http synchronization, when a message is not well
     received, then we send message again, we want to
     be sure that is such case we don't do stupid things
-    
+
     If we want to make this test more intersting, it is
     better to split messages
     """
@@ -1079,7 +1083,7 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin, ERP5TypeTestCase):
     self.assertEqual(document_s.getSourceReference(), self.filename_text)
     self.assertEquals(self.size_filename_text, document_s.get_size())
     self.assertEquals(document_s.getShortTitle(), self.short_title2) 
-    
+
     #reset for refresh sync
     #after synchronize, the client object retrieve value of server
     self.resetSignaturePublicationAndSubscription()

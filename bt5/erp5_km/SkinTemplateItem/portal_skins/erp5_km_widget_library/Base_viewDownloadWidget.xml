@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays download widget of a document.\n
+ \n
+  -->\n
+</tal:block>\n
+\n
+<div class="download-document-format-list-container"\n
+     tal:define="target_format_item_list python: here.getTargetFormatItemList();\n
+                 document_url here/absolute_url;\n
+                 list_index python: 5">\n
+ <span i18n:domain="erp5_ui" \n
+       i18n:translate=""\n
+       onClick="javascript:toggleElement(\'div\', \'download-document-format-list-menu\');"> Download</span>\n
+  <div class="download-document-format-list-menu" style="opacity: 0.999999; display: none;">\n
+    <ul>\n
+      <li class="separator">\n
+        <a tal:attributes="href document_url"\n
+           i18n:domain="erp5_ui" \n
+           i18n:translate=""\n
+           title="Download in original format">Original</a>\n
+      </li>\n
+      <li tal:repeat="target_format_item python: target_format_item_list[:list_index]">\n
+        <a tal:attributes="href python: \'%s?format=%s\' %(document_url, target_format_item[1]);\n
+                           title python: \'Download in %s format\' %target_format_item[0];"\n
+           tal:content="python: target_format_item[0]"/>\n
+      </li>\n
+      <!-- Show more than list_index in initially hidden div -->\n
+      <tal:block tal:condition="python: len(target_format_item_list)>list_index">\n
+        <div class="download-document-format-list-menu-hidden" style="opacity: 0.999999; display: none;">\n
+          <li tal:repeat="target_format_item python: target_format_item_list[list_index:]">\n
+            <a tal:attributes="href python: \'%s?format=%s\' %(document_url, target_format_item[1]);\n
+                               title python: \'Download in %s format\' %target_format_item[0];"\n
+               tal:content="python: target_format_item[0]"/>\n
+          </li>\n
+        </div>\n
+        <li class="toggle-hidden-format-dialog-selection-link">\n
+          <span onClick="javascript:toggleHiddenFormatDialogSelection();"\n
+                i18n:domain="erp5_ui" \n
+                i18n:translate=""\n
+                title="Show more download formats"> More... </span>\n
+        </li>\n
+      </tal:block>\n
+    </ul>\n
+  </div>\n
+\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_viewDownloadWidget</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

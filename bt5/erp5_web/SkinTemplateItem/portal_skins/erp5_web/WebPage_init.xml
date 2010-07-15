@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setTextFormat(\'text/html\')\n
+            <value> <string>context.setContentType(\'text/html\')\n
 </string> </value>
         </item>
         <item>

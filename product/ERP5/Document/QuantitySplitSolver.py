@@ -63,17 +63,23 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                            )
 
   # ISolver Implementation
-  def solve(self):
+  def solve(self, activate_kw=None):
     """
-    """    
-    for delivery_line in self.getDeliveryValueList(): 
-      decision_quantity = delivery_line.getQuantity()
-      simulation_movement_list = delivery_line.getDeliveryRelatedValueList()
-      configuration_dict = self.getConfigurationPropertyDict()
-      delivery_solver = self.portal_solvers.newDeliverySolver(
-        configuration_dict['delivery_solver'], simulation_movement_list)
+    """
+    configuration_dict = self.getConfigurationPropertyDict()
+    delivery_dict = {}
+    for simulation_movement in self.getDeliveryValueList():
+      delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
+                               []).append(simulation_movement)
+    for movement, simulation_movement_list in delivery_dict.iteritems():
+      decision_quantity = movement.getQuantity()
+      delivery_solver = self.getParentValue().newContent(
+        portal_type=configuration_dict['delivery_solver'],
+        temp_object=True)
+      delivery_solver.setDeliveryValueList(simulation_movement_list)
       # Update the quantity using delivery solver algorithm
-      split_list = delivery_solver.setTotalQuantity(decision_quantity)
+      split_list = delivery_solver.setTotalQuantity(decision_quantity,
+                                                    activate_kw=activate_kw)
       # Create split movements
       for (simulation_movement, split_quantity) in split_list:
         split_index = 0
@@ -88,7 +94,10 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                    'id':new_id,
                    'delivery':None,
                    'quantity':split_quantity})
-        new_movement = applied_rule.newContent(**kw)
+        new_movement = applied_rule.newContent(activate_kw=activate_kw, **kw)
+        if activate_kw is not None:
+          new_movement.setDefaultActivateParameters(
+            activate_kw=activate_kw, **activate_kw)
         start_date = configuration_dict.get('start_date', None)
         if start_date is not None:
           new_movement.recordProperty('start_date')
@@ -97,6 +106,11 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         if stop_date is not None:
           new_movement.recordProperty('stop_date')
           new_movement.setStopDate(stop_date)
+        # XXX we need to call expand on both simulation_movement and new_movement here?
+        # simulation_movement.expand(activate_kw=activate_kw)
+        # new_movement.expand(activate_kw=activate_kw)
 
     # Finish solving
-    self.succeed()
+    if self.getPortalObject().portal_workflow.isTransitionPossible(
+      self, 'succeed'):
+      self.succeed()

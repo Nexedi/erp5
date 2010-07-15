@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block metal:define-macro="master">\n
+    <tal:block\n
+              tal:define="object_uid           here/getUid | nothing;\n
+              object_path          here/getPath | nothing;\n
+              form                 nocall: form | nothing;\n
+              form_id              form/id | template/title_or_id | nothing;\n
+              portal               here/getPortalObject;\n
+              form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
+              local_parameter_list local_parameter_list | python: {};\n
+              dummy                python: local_parameter_list.update({\'object_uid\': object_uid, \'object_path\': object_path, \'form_id\': form_id});\n
+              title                python: \'%s - %s\' % (portal.Base_translateString(template.title_or_id()), here.getTitle());\n
+              ">\n
+      <tal:block metal:use-macro="here/main_template/macros/master">\n
+        <tal:block metal:fill-slot="context_bar">\n
+          <tal:block metal:use-macro="here/context_box_render/macros/master" />\n
+        </tal:block>\n
+        <tal:block metal:fill-slot="main">\n
+          <script type="text/javascript"\n
+            tal:condition="portal/portal_preferences/getPreferredHtmlStyleUnsavedFormWarning"\n
+            tal:define="message python:context.Base_translateString(\'You have unsaved changes\').replace(\'\\\'\', \'\\\\\\\'\')"\n
+            tal:content="string:installUnsavedChangesWarning(\'$message\')">\n
+          </script>\n
+          <div class="document"\n
+               tal:define="actions actions/object_view | python: [];\n
+                           current_action  python: context.EGov_getDefaultCurrentAction(actions,current_action);">\n
+            <div class="actions"\n
+                 tal:condition="python: (not is_web_mode or editable_mode) and len(actions)">\n
+              <button tal:condition="python: not is_web_mode and form_action"\n
+                      type="submit" class="save" title="Save"\n
+                      tal:attributes="name string:${form_action}:method;\n
+                      onClick string:javascript:clickSaveButton(\'${form_action}\');"\n
+                      i18n:attributes="title" i18n:domain="ui">\n
+                <span class="image"></span>\n
+                <span class="description" i18n:translate="" i18n:domain="ui">Save</span>\n
+              </button>\n
+              <ul>\n
+                <li tal:repeat="action actions"\n
+                    tal:attributes="class python: action == current_action and \'selected\' or \'not_selected\'">\n
+                  <a tal:attributes="href python: \'%s%s%s\' % (action[\'url\'], \'?\' in action[\'url\'] and \'&amp;\' or \'?\', http_parameters)"\n
+                    ><span i18n:translate="" i18n:domain="ui" tal:content="action/name">action_name</span></a>\n
+                </li>\n
+              </ul>\n
+            </div>\n
+            <div tal:attributes="class python: editable_mode and \'content editable\' or \'content\'">\n
+              <tal:block metal:define-slot="main" />\n
+              <div class="bottom_actions"\n
+                   tal:condition="python: is_web_mode and editable_mode and len(actions) and form_action">\n
+                <input type="hidden" name="form_action" value=""\n
+                       tal:attributes="value form_action" />\n
+                <input type="hidden" name="edit_document_url" value=""\n
+                       tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), form_id)" />\n
+                <input type="hidden" name="view_document_url" value=""\n
+                       tal:attributes="value python:\'%s/%s\' % (here.absolute_url(), \'view\')" />\n
+              </div>\n
+            </div>\n
+          </div>\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>view_main</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

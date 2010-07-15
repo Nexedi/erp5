@@ -218,52 +218,51 @@ def getSearchDialog(self, REQUEST=None):
                       listbox.widget, listbox, request).getSearchColumnIdSet()
 
   for column_id, column_title in column_list:
-    if column_id in search_list:
-      # is it a base category ?
-      short_column_id = column_id
-      # strip the usuale default_ and _title that are on standard fields.
-      if short_column_id.endswith('_title'):
-        short_column_id = short_column_id[:-6]
-      if short_column_id.startswith('default_'):
-        short_column_id = short_column_id[8:]
-      if short_column_id in base_category_list:
-        # is this base category empty ? then it might be used to relate documents,
-        # in that case, simply provide a text input
-        if not len(category_tool[short_column_id]):
+    # is it a base category ?
+    short_column_id = column_id
+    # strip the usuale default_ and _title that are on standard fields.
+    if short_column_id.endswith('_translated_title'):
+      short_column_id = short_column_id[:-len('_translated_title')]
+    if short_column_id.endswith('_title'):
+      short_column_id = short_column_id[:-len('_title')]
+    if short_column_id.startswith('default_'):
+      short_column_id = short_column_id[len('default_'):]
+    if short_column_id in base_category_list:
+      # is this base category empty ? then it might be used to relate documents,
+      # in that case, simply provide a text input
+      if not len(category_tool[short_column_id]):
+        default_search_key = 'ExactMatch'
+        if column_id in sql_catalog_keyword_search_keys:
+          default_search_key = 'Keyword'
+        addKeywordSearchStringField(column_id, column_title,
+                                    default_search_key=default_search_key)
+      else:
+        addListField(short_column_id, column_title)
+        continue
+
+
+    if column_id in catalog_schema:
+      if column_id.endswith('state') or column_id.endswith('state_title'):
+        # this is a workflow state, it will be handled later
+        continue
+      elif 'date' in column_id:
+        # is it date ? -> provide exact + range
+        # TODO: do we need an API in catalog for this ?
+        addDateTimeField(column_id, column_title)
+
+      elif 'quantity' in column_id or 'price' in column_id:
+        # is it float ? -> provide exact + range
+        # TODO: do we need an API in catalog for this ?
+        addFloatField(column_id, column_title)
+      else:
+        if column_id in sql_catalog_full_text_search_keys:
+          addFullTextStringField(column_id, column_title)
+        else:
           default_search_key = 'ExactMatch'
           if column_id in sql_catalog_keyword_search_keys:
             default_search_key = 'Keyword'
           addKeywordSearchStringField(column_id, column_title,
-                                      default_search_key=default_search_key)
-        else:
-          addListField(short_column_id, column_title)
-        continue
-
-
-      if column_id in catalog_schema:
-        if column_id.endswith('state') or column_id.endswith('state_title'):
-          # this is a workflow state, it will be handled later
-          continue
-        elif 'date' in column_id:
-          # is it date ? -> provide exact + range
-          # TODO: do we need an API in catalog for this ?
-          addDateTimeField(column_id, column_title)
-
-        elif 'quantity' in column_id or 'price' in column_id:
-          # is it float ? -> provide exact + range
-          # TODO: do we need an API in catalog for this ?
-          addFloatField(column_id, column_title)
-        else:
-          if column_id in sql_catalog_full_text_search_keys:
-            addFullTextStringField(column_id, column_title)
-          else:
-            default_search_key = 'ExactMatch'
-            if column_id in sql_catalog_keyword_search_keys:
-              default_search_key = 'Keyword'
-            addKeywordSearchStringField(column_id, column_title,
-                            default_search_key=default_search_key)
-
-  # TODO always add SearchableText ?
+                          default_search_key=default_search_key)
 
   allowed_content_types = self.getTypeInfo().getTypeAllowedContentTypeList()
   # remember which workflow we already displayed
@@ -325,6 +324,8 @@ def getSearchDialog(self, REQUEST=None):
             ['title', 'items', 'default'])
 
 
+  addFullTextStringField('SearchableText', 'Full Text Search')
+
   # Order fields
   default_group = temp_form.group_list[0]
   field_list = temp_form.get_fields()
@@ -332,7 +333,8 @@ def getSearchDialog(self, REQUEST=None):
     field_id = field.getId()
     if field_id.endswith('search_key') or field_id.endswith('_usage_'):
       temp_form.move_field_group([field_id], default_group, 'right')
-    elif field.get_value('field_id') == 'your_category_list':
+    elif field.get_value('field_id') == 'your_category_list' \
+        or field_id == 'your_SearchableText':
       temp_form.move_field_group([field_id], default_group, 'center')
 
   if REQUEST is not None:

@@ -94,12 +94,6 @@ class DeliveryRule(Rule):
     """
     return 0
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getSolverList')
-  def getSolverList(self, applied_rule):
-    """
-      Returns a list Divergence solvers
-    """
-
   # Deliverability / orderability
   def isOrderable(self, movement):
     return 1

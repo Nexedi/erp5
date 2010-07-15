@@ -1,3 +1,6 @@
+2010-05-24 kazuhiko
+* Improve activity dependencies for Delivery_updateAppliedRule, eg. delivery.activate(tag='(path)_updateAppliedRule', after_tag='(path)_expand').Delivery_updateAppliedRule(activate_kw={'tag':'(path)_expand'})
+
 2010-04-09 kazuhiko
 * Make it possible to sort/search on Project Module view.
 * Allow Assignor to update validated Projects.

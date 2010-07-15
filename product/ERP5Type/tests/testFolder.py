@@ -30,6 +30,7 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
+import transaction
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
@@ -55,18 +56,19 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
         Executed before each test_*.
       """
       self.login()
-      self.folder = self.getPortal().newContent(id='TestFolder',
+      self.folder = self.portal.newContent(id='TestFolder',
                                                 portal_type='Folder')
-      self.other_folder = self.getPortal().newContent(
+      self.other_folder = self.portal.newContent(
                     id='OtherTestFolder', portal_type='Folder')
 
     def beforeTearDown(self):
       """
         Executed after each test_*.
       """
-      self.getPortal().manage_delObjects(ids=[self.folder.getId(),
+      self.portal.manage_delObjects(ids=[self.folder.getId(),
                                           self.other_folder.getId()])
       clearCache()
+      transaction.commit()
 
     def newContent(self):
       """
@@ -74,27 +76,19 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       """
       return self.folder.newContent(portal_type='Folder')
     
-    def test_01_folderType(self, quiet=0, run=1):
+    def test_01_folderType(self):
       """
         Test if the present Folder class is the ERP5 version of Folder, not
         CMF's.
       """
-      if not run : return
-      if not quiet:
-        message = 'Test folderType value'
-        LOG('Testing... ', 0, message)
       self.assertTrue(isinstance(self.getTypesTool()['Folder'],
                       ERP5TypeInformation))
 
-    def test_02_defaultGenerateNewId(self, quiet=0, run=1):
+    def test_02_defaultGenerateNewId(self):
       """
         Test the default Id generation method.
         Ids are incremented at content creation and start at 1.
       """
-      if not run : return
-      if not quiet:
-        message = 'Test default generateNewId'
-        LOG('Testing... ', 0, message)
       # No id generator defined
       self.assertEquals(self.folder.getIdGenerator(), '')
       self.assertEquals(len(self.folder), 0)
@@ -103,14 +97,10 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       obj = self.newContent()
       self.assertEquals(obj.getId(), '2')
     
-    def test_03_customGenerateNewId(self, quiet=0, run=1):
+    def test_03_customGenerateNewId(self):
       """
         Test that id_generator property is honored.
       """
-      if not run : return
-      if not quiet:
-        message = 'Test custom generateNewId'
-        LOG('Testing... ', 0, message)
       id_generator_script_name = 'testIdGenerator'
       id_generator_id_list = ['first_id', 'second_id']
       createZODBPythonScript(self.getPortal().portal_skins.erp5_core,
@@ -172,6 +162,95 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       self.assertRaises(Unauthorized, guarded_getattr, self.folder, 'edit')
       # Reset to original permissions
       self.folder.manage_permission('Modify portal content', original_permission_list[0]['roles'], original_permission_list[0]['acquire'])
+
+    def _createUpgradeObjectClassPythonScript(self):
+      """Create a simple python script """
+      createZODBPythonScript(self.getPortal().portal_skins.custom,
+                     "test_upgradeObject", 'x',
+                     'return [1]')
+      return self.getPortal().portal_skins.custom.test_upgradeObject
+      
+
+    def test_upgradeObjectClass(self):
+      """ Test if it changes Object Class """
+      type_list = ['Folder', 'Category' ]
+      self._setAllowedContentTypesForFolderType(type_list)
+      obj = self.folder.newContent(portal_type="Category")
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      test_script = self._createUpgradeObjectClassPythonScript()
+      result = self.folder.upgradeObjectClass(test_script, from_class, 
+                                              to_class, test_script)
+      transaction.commit()
+      self.assertEquals(self.folder[obj.getId()].__class__, to_class)
+      self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
+      self.assertEquals([1], result)
+
+    def test_upgradeObjectClassOnlyTest(self):
+      """ Test if it DOES NOT change Object Class, only test it. """
+      type_list = ['Folder', 'Category' ]
+      self._setAllowedContentTypesForFolderType(type_list)
+      obj = self.folder.newContent(portal_type="Category")
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      test_script = self._createUpgradeObjectClassPythonScript()
+      result = self.folder.upgradeObjectClass(test_script, from_class,
+                                       to_class, test_script, test_only=1)
+      transaction.commit()
+      self.assertNotEquals(self.folder[obj.getId()].__class__, to_class)
+      self.assertEquals(self.folder[obj.getId()].__class__, from_class)
+      self.assertEquals([1], result)
+
+    def test_upgradeObjectClassHierarchicaly(self):
+      """ Test if migrate sub objects Hierarchicaly """
+      type_list = ['Folder', 'Category', 'Base Category']
+      self._setAllowedContentTypesForFolderType(type_list)
+      subfolder = self.newContent()
+      obj = subfolder.newContent(portal_type="Category")
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      test_script = self._createUpgradeObjectClassPythonScript()
+      result = self.folder.upgradeObjectClass(test_script, from_class,
+                                              to_class, test_script)
+      transaction.commit()
+      self.assertEquals(subfolder[obj.getId()].__class__, to_class)
+      self.assertNotEquals(subfolder[obj.getId()].__class__, from_class)
+      self.assertEquals([1], result)
+
+    def test_upgradeObjectClassWithSubObject(self):
+      """ Test If upgrade preseve subobjects """
+      type_list = ['Folder', 'Category', 'Base Category']
+      self._setAllowedContentTypesForFolderType(type_list)
+      subobject = self.folder.newContent(portal_type="Category")
+      obj = subobject.newContent(portal_type="Category")
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      test_script = self._createUpgradeObjectClassPythonScript()
+      result = self.folder.upgradeObjectClass(test_script, from_class,
+                                              to_class, test_script)
+      transaction.commit()
+      self.assertEquals(self.folder[subobject.getId()].__class__, to_class)
+      self.assertNotEquals(self.folder[subobject.getId()].__class__, from_class)
+      self.assertEquals(self.folder[subobject.getId()][obj.getId()].__class__, to_class)
+      self.assertNotEquals(self.folder[subobject.getId()][obj.getId()].__class__, from_class)
+      self.assertEquals([1, 1], result)
+
+    def test_upgradeObjectClassWithStrings(self):
+      """ Test if it changes Object Class """
+      type_list = ['Folder', 'Category' ]
+      self._setAllowedContentTypesForFolderType(type_list)
+      obj = self.folder.newContent(portal_type="Category")
+      from_class_as_string = 'Products.ERP5Type.Document.Category.Category'
+      to_class_as_string = 'Products.ERP5Type.Document.Folder.Folder'
+      from_class = obj.__class__
+      to_class = self.folder.__class__
+      test_script = self._createUpgradeObjectClassPythonScript()
+      result = self.folder.upgradeObjectClass(test_script, from_class_as_string,
+                                              to_class_as_string, test_script)
+      transaction.commit()
+      self.assertEquals(self.folder[obj.getId()].__class__, to_class)
+      self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
+      self.assertEquals([1], result)
 
 def test_suite():
   suite = unittest.TestSuite()

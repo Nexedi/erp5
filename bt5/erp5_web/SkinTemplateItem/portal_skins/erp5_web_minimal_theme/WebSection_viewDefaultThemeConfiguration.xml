@@ -107,6 +107,7 @@
                         <string>my_layout_widget_legend_background</string>
                         <string>my_layout_widget_legend_color</string>
                         <string>my_layout_widget_border_color</string>
+                        <string>my_layout_max_breadcrumb_length</string>
                       </list>
                     </value>
                 </item>

@@ -209,6 +209,17 @@ def _del_user_defined_language(self, language_code):
     self.user_defined_languages = tuple(user_defined_languages)
     self._p_changed = True
 
+# Override add_language so that languages are always sorted.
+# Otherwise, selected languages can be nearly random.
+def add_language(self, language):
+    """
+    Adds a new language.
+    """
+    if language not in self._languages:
+        new_language_list = tuple(self._languages) + (language,)
+        new_language_list = tuple(sorted(new_language_list))
+        self._languages = new_language_list
+
 from Products.Localizer import LanguageManager
 LanguageManager.LanguageManager.get_languages_mapping = get_languages_mapping
 LanguageManager.LanguageManager.get_language_name = get_language_name
@@ -217,6 +228,7 @@ LanguageManager.LanguageManager.get_user_defined_language_name = get_user_define
 LanguageManager.LanguageManager.get_user_defined_languages = get_user_defined_languages
 LanguageManager.LanguageManager._add_user_defined_language = _add_user_defined_language
 LanguageManager.LanguageManager._del_user_defined_language = _del_user_defined_language
+LanguageManager.LanguageManager.add_language = add_language
 LanguageManager.InitializeClass(LanguageManager.LanguageManager)
 
 #

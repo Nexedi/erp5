@@ -1,3 +1,14 @@
+2010-06-08 Kazuhiko
+* Add portal_type column in translation table and use it in several related keys to avoid unexpected verbose results of translated state search.
+
+2010-06-08 yusei
+* Add predicate category related keys.
+* Update predicate category indexing method to support "no-left-join" version of predicate search.
+* Use erp5_core revision 1601 or higher.
+
+2010-05-24 tatuya
+* Add parent_specialise_reference related key to select simulation movements by the applied rule reference.
+
 2010-03-15 yusei
 * Add grand_grand_grand_grand_grand_parent related key.
 

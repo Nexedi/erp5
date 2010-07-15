@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 #
 # Copyright (c) 2007-2008 Nexedi SA and Contributors. All Rights Reserved.
@@ -72,13 +73,22 @@ class TestBug(ERP5TypeTestCase):
       Initialize the ERP5 site.
     """
     self.login()
+    self.setDefaultSitePreference()
     self.datetime = DateTime() 
-    self.portal = self.getPortal()
     self.workflow_tool = self.portal.portal_workflow
     # Use a dummy mailhost to not send mail notification to the guy how run unit test
     if 'MailHost' in self.portal.objectIds():
       self.portal.manage_delObjects(['MailHost'])
       self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+
+  def setDefaultSitePreference(self):
+    default_preference = self.portal.portal_preferences.default_site_preference
+    default_preference.setPreferredTextFormat('text/plain')
+    default_preference.getPreferredTextEditor('text_area')
+    if self.portal.portal_workflow.isTransitionPossible(default_preference,
+                                                                     'enable'):
+      default_preference.enable()
+    return default_preference
 
   ##################################
   ##  Usefull methods
