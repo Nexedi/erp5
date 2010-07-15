@@ -86,7 +86,11 @@ SELECT\n
 FROM\n
     movement\n
   , catalog\n
-  , category as delivery\n
+  , LEFT JOIN category as delivery\n
+    ON (\n
+      catalog.uid = delivery.uid\n
+      AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
+    )\n
   , category as causality\n
 <dtml-in prefix="table" expr="from_table_list">\n
   <dtml-if expr="table_key not in (\'catalog\', \'movement\')">\n
@@ -95,9 +99,7 @@ FROM\n
 </dtml-in>\n
 \n
 WHERE\n
-  catalog.uid = delivery.uid\n
-  AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
-  AND delivery.category_uid is NULL\n
+  delivery.category_uid is NULL\n
 \n
   AND catalog.uid = causality.uid\n
   AND <dtml-sqltest "portal_categories.causality.getUid()" column="causality.base_category_uid" type="int">\n
@@ -106,8 +108,7 @@ WHERE\n
   AND catalog.uid = movement.uid\n
   AND movement.resource_uid is not NULL\n
 \n
-  <dtml-if where_expression>AND <dtml-var where_expression></dtml-if>\n
-
+  <dtml-if where_expression>AND <dtml-var where_expression></dtml-if>
 
 ]]></string> </value>
         </item>
@@ -156,7 +157,11 @@ SELECT\n
 FROM\n
     movement\n
   , catalog\n
-  , category as delivery\n
+  , LEFT JOIN category as delivery\n
+    ON (\n
+      catalog.uid = delivery.uid\n
+      AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
+    )\n
   , category as causality\n
 <dtml-in prefix="table" expr="from_table_list">\n
   <dtml-if expr="table_key not in (\'catalog\', \'movement\')">\n
@@ -165,9 +170,7 @@ FROM\n
 </dtml-in>\n
 \n
 WHERE\n
-  catalog.uid = delivery.uid\n
-  AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
-  AND delivery.category_uid is NULL\n
+  delivery.category_uid is NULL\n
 \n
   AND catalog.uid = causality.uid\n
   AND <dtml-sqltest "portal_categories.causality.getUid()" column="causality.base_category_uid" type="int">\n
@@ -176,8 +179,7 @@ WHERE\n
   AND catalog.uid = movement.uid\n
   AND movement.resource_uid is not NULL\n
 \n
-  <dtml-if where_expression>AND <dtml-var where_expression></dtml-if>\n
-
+  <dtml-if where_expression>AND <dtml-var where_expression></dtml-if>
 
 ]]></string> </value>
                     </item>
