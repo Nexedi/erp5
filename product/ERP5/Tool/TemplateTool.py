@@ -578,6 +578,9 @@ class TemplateTool (BaseTool):
       ##           with special key?
       # bt5_path_list.append(self.absolute_url() + '/asRepository/')
       bt5_path_list.append(os.path.join(site_configuration.instancehome, 'bt5'))
+      # add locally saved Business Templates, not perfect, but helps some
+      # people doing strict TTW development
+      bt5_paht_list.append(site_configuration.clienthome)
       test_cmd_args += ['--bt5_path', ','.join(bt5_path_list)]
       test_cmd_args += test_list
       # prepare message - intentionally without any additional formatting, as
