@@ -705,7 +705,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     # descend in the tree to find self:
     tree_node = path_tree
     for path_id in self.getPhysicalPath():
-      tree_node = tree_node.setdefault(path_id, treeNode())
+      tree_node = tree_node.get(path_id, treeNode())
 
     # explore subobjects of self
     for descendant, path in descendantGenerator(self,
