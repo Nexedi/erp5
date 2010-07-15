@@ -560,11 +560,16 @@ class TemplateTool (BaseTool):
         outfile =  StringIO()
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type', 'text/plain')
+      current_sys_path = sys.path
+      # add path with tests
+      current_sys_path.append(os.path.join(site_configuration.instancehome, 'tests'))
+
       test_cmd_args = [sys.executable, getUnitTestFile()]
       test_cmd_args += ['--erp5_sql_connection_string', sql_connection_string]
       # pass currently used product path to test runner
       test_cmd_args += ['--products_path', ','.join(
         site_configuration.products)]
+      test_cmd_args += ['--sys_path', ','.join(current_sys_path)]
       test_cmd_args += test_list
       # prepare message - intentionally without any additional formatting, as
       # only developer will read it, and they will have to understand issues in
