@@ -581,3 +581,280 @@ class BusinessPath(Path, Predicate):
         else:
           return successor_expected_date
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'filterBuildableMovementList')
+  def filterBuildableMovementList(self, non_delivered_movement_list):
+    """
+    Given a list of non delivered movements that all have "self" as
+    a causality value, return the ones that are buildables
+
+    This is computed efficiently: movements are first separated into
+    distinct closures, and then filtering is made on each closure.
+    """
+    predecessor_state = self.getPredecessorValue()
+    if predecessor_state is None:
+      # first Path in Process, all movements can be built
+      return non_delivered_movement_list
+
+    predecessor_to_state_dict = {}
+    for pred in predecessor_state.getSuccessorRelatedValueList():
+      predecessor_to_state_dict[pred] = frozenset(pred.getCompletedStateList())
+
+    root_dict = {}
+    # classify movements according to Root Applied Rules so we can look at
+    # them closure per closure
+    for movement in non_delivered_movement_list:
+      root_dict.setdefault(movement.getRootAppliedRule(), []).append(movement)
+
+    result = []
+    # for each root applied rule, get buildable Movements
+    for root_rule, movement_list in root_dict.iteritems():
+      result.extend(self._filterBuildableInSameClosure(movement_list,
+                                          predecessor_to_state_dict))
+    return result
+
+
+
+  def _filterBuildableInSameClosure(self, movement_list, predecessor_to_state_dict):
+    """
+    Return the buildable movements in movement_list.
+
+    It is about finding in the tree the movements that have causalities in
+    predecessor_to_state_dict keys.
+
+    Three main steps to find those movements, executed in least expensive
+    to most expensive order, hoping that step n allows us to return early
+    without having to execute n+1:
+      - look at ancestors of movement_list
+      - query catalog for descendants of movement_list, hoping that
+        it would be recent enough to list them all
+      - manually walk descendants of movement_list in ZODB
+    """
+    buildable_list = []
+
+    # track relations within movement_list if any
+    # movement->(set of descendants in movement_list)
+    descendant_dict = {}
+
+    # contains a movement -> (dict of predecessors that we still havent met)
+    # only contains the movements that have not proved to be unbuildable until
+    # now.
+    movement_looking_for_dict = {}
+
+    def isBuiltAndCompleted(simulation, path):
+      return simulation.getCausalityValue() is not None and \
+          simulation.getSimulationState() in predecessor_to_state_dict[path]
+
+    ### Step 1:
+    ## Explore ancestors
+    #
+
+    for movement in movement_list:
+      # set of predecessors
+      looking_for = set(predecessor_to_state_dict)
+      current = movement.getParentValue()
+
+      maybeBuildable = True
+
+      # visit all parents until Root Applied Rule
+      while looking_for and maybeBuildable:
+        portal_type = current.getPortalType()
+        if portal_type == "Simulation Movement":
+          # exploring ancestors is a great way to initialize
+          # descendant_dict, while we're at it.
+          if current in movement_looking_for_dict:
+            descendant_dict.setdefault(current, set()).add(movement)
+
+          path = current.getCausalityValue()
+          if path in looking_for:
+            looking_for.remove(path)
+            if not isBuiltAndCompleted(current, path):
+              maybeBuildable = False
+
+        elif portal_type != "Applied Rule":
+          break
+        # XXX or maybe directly go up by two levels?
+        current = current.getParentValue()
+
+      if maybeBuildable:
+        if not looking_for:
+          buildable_list.append(movement)
+        else:
+          movement_looking_for_dict[movement] = looking_for
+
+    # Maybe we're lucky, and we've found all predecessors of all
+    # movements.
+    # We can thus return the buildable ones and we're done.
+    if not movement_looking_for_dict:
+      return buildable_list
+
+    def updateDescendantDictAndReturnSmallestAncestorSet():
+      """
+      Remove from descendant_dict the movements that are not
+      buildable.
+
+      Returns the smallest set of ancestors A that satisfies:
+        - A <= movement_looking_for_dict.keys()
+        - descendants(A) = descendants(movement_looking_for_dict.keys())
+      (a.k.a. for any ai, aj in A, ai is not a descendant or an ancestor
+       of aj)
+      """
+      movement_to_query = set(movement_looking_for_dict)
+
+      if descendant_dict:
+        # remove movements that have been eliminated
+        for k, v in descendant_dict.items():
+          if k not in movement_looking_for_dict:
+            del descendant_dict[k]
+          else:
+            v.intersection_update(movement_looking_for_dict)
+
+            movement_to_query.difference_update(v)
+      return movement_to_query
+
+    movement_to_query = updateDescendantDictAndReturnSmallestAncestorSet()
+
+    ### Step 2:
+    ## Try catalog to find descendant movements, knowing
+    # that it can be incomplete
+
+    class treeNode(dict):
+      """
+      Used to cache accesses to ZODB objects.
+      The idea is to put in visited_movement_dict the objects we've already
+      loaded from ZODB to avoid loading them again.
+
+      - self represents a single ZODB container c
+      - self.visited_movement_dict contains an id->(ZODB obj) cache for
+        subobjects of c
+      - self[id] contains the treeNode representing c[id]
+      """
+      def __init__(self):
+        dict.__init__(self)
+        self.visited_movement_dict = dict()
+
+    path_tree = treeNode()
+
+    def updateTree(simulation_movement, path):
+      """
+      Mark simulation_movement as visited in the Tree
+
+      Returns the list of movements in movement_looking_for_dict that
+      are ancestors of simulation_movement
+      """
+      traversed = []
+
+      tree_node = path_tree
+      movement_path = simulation_movement.getPhysicalPath()
+      simulation_movement_id = movement_path[-1]
+      # find container
+      for path_id in movement_path[:-1]:
+        # mark traversed movements that are in movement_looking_for_dict
+        mvmt, ignored = tree_node.visited_movement_dict.get(path_id, (None, None))
+        if mvmt is not None and mvmt in movement_looking_for_dict:
+          traversed.append(mvmt)
+
+        tree_node = tree_node.setdefault(path_id, treeNode())
+
+      # and mark the object as visited
+      tree_node.visited_movement_dict[simulation_movement_id] = (simulation_movement, path)
+      return traversed
+
+    # initialization
+    for movement in movement_looking_for_dict:
+      updateTree(movement, None)
+
+    portal_catalog = self.getPortalObject().portal_catalog
+    catalog_simulation_movement_list = portal_catalog(
+      portal_type='Simulation Movement',
+      causality_uid=[p.getUid() for p in predecessor_to_state_dict],
+      path=['%s/%%' % m.getPath() for m in movement_to_query])
+
+    unbuildable = set()
+    for movement in catalog_simulation_movement_list:
+      path = movement.getCausalityValue()
+      traversed = updateTree(movement, path)
+      if not isBuiltAndCompleted(movement, path):
+        unbuildable.update(traversed)
+
+    if len(unbuildable) == len(movement_looking_for_dict):
+      # the sets are equals
+      return buildable_list
+
+    for m in unbuildable:
+      del movement_looking_for_dict[m]
+
+    ### Step 3:
+    ## We had no luck, we have to explore descendant movements in ZODB
+    #
+
+    def findInTree(movement):
+      # descend in the tree to find self:
+      tree_node = path_tree
+      for path_id in movement.getPhysicalPath():
+        tree_node = tree_node.get(path_id, treeNode())
+      return tree_node
+
+    def descendantGenerator(document, tree_node, path_set_to_check):
+      """
+      generator yielding Simulation Movement descendants of document.
+      It does _not_ explore the whole subtree if iteration is stopped.
+
+      It uses the tree we built previously to avoid loading again ZODB
+      objects that we already loaded during catalog querying
+
+      path_set_to_check contains a set of Business Paths that we are
+      interested in. A branch is only explored if this set is not
+      empty; a movement is only yielded if its causality value is in this set
+      """
+      object_id_list = document.objectIds()
+      for id in object_id_list:
+        if id not in tree_node.visited_movement_dict:
+          # we had not visited it in step #2
+          subdocument = document._getOb(id)
+          if subdocument.getPortalType() == "Simulation Movement":
+            path = subdocument.getCausalityValue()
+            t = (subdocument, path)
+            tree_node.visited_movement_dict[id] = t
+            if path in path_set_to_check:
+              yield t
+          else:
+            # it must be an Applied Rule
+            subtree = tree_node.get(id, treeNode())
+            for d in descendantGenerator(subdocument,
+                                         subtree,
+                                         path_set_to_check):
+              yield d
+
+      for id, t in tree_node.visited_movement_dict.iteritems():
+        subdocument, path = t
+        if path is None:
+          # happens for movement in movement_list
+          continue
+        to_check = path_set_to_check
+        # do we need to change/copy the set?
+        if path in to_check:
+          if len(to_check) == 1:
+            # no more paths to check in this branch
+            continue
+          to_check = to_check.copy()
+          to_check.remove(path)
+        subtree = tree_node.get(id, treeNode())
+        for d in descendantGenerator(subdocument, subtree, to_check):
+          yield d
+
+
+    for movement in updateDescendantDictAndReturnSmallestAncestorSet():
+      tree_node = findInTree(movement)
+      remaining_path_set = movement_looking_for_dict[movement]
+      # find descendants
+      for descendant, path in descendantGenerator(self,
+                                                  tree_node,
+                                                  remaining_path_set):
+        if not isBuiltAndCompleted(descendant, path):
+          break
+      else:
+        buildable_list.append(movement)
+        buildable_list.extend(descendant_dict.get(movement, []))
+
+    return buildable_list
