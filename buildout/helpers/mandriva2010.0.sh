@@ -26,7 +26,6 @@ libSDL_gfx-devel
 libSDL_image-devel
 libboost-devel
 libbzip2-devel
-libgc-devel
 libgdbm-devel
 libglib2-devel
 libgomp-devel
