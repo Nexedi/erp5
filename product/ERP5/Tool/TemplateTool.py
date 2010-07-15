@@ -552,6 +552,7 @@ class TemplateTool (BaseTool):
       # XXX: should check if the unit test file is configured in the BT
       site_configuration = getConfiguration()
       from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
+      import Products.ERP5
       if RESPONSE is not None:
         outfile = RESPONSE
       elif REQUEST is not None:
@@ -570,6 +571,14 @@ class TemplateTool (BaseTool):
       test_cmd_args += ['--products_path', ','.join(
         site_configuration.products)]
       test_cmd_args += ['--sys_path', ','.join(current_sys_path)]
+      # to find erp5_core, erp5_xhtml_style and similar
+      bt5_path_list = [os.path.join(os.path.split(Products.ERP5.__file__)[0],
+        'bootstrap')]
+      ## XXX-TODO: requires that asRepository works without security, maybe
+      ##           with special key?
+      # bt5_path_list.append(self.absolute_url() + '/asRepository/')
+      bt5_path_list.append(os.path.join(site_configuration.instancehome, 'bt5'))
+      test_cmd_args += ['--bt5_path', ','.join(bt5_path_list)]
       test_cmd_args += test_list
       # prepare message - intentionally without any additional formatting, as
       # only developer will read it, and they will have to understand issues in
