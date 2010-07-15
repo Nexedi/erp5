@@ -563,13 +563,18 @@ class TemplateTool (BaseTool):
         RESPONSE.setHeader('Content-type', 'text/plain')
       current_sys_path = sys.path
       # add path with tests
-      current_sys_path.append(os.path.join(site_configuration.instancehome, 'tests'))
+      current_sys_path.append(os.path.join(site_configuration.instancehome,
+        'tests'))
 
       test_cmd_args = [sys.executable, getUnitTestFile()]
       test_cmd_args += ['--erp5_sql_connection_string', sql_connection_string]
       # pass currently used product path to test runner
-      test_cmd_args += ['--products_path', ','.join(
-        site_configuration.products)]
+      products_path_list = site_configuration.products
+      # add products from Zope, as some sites are not providing it
+      zope_products_path = os.path.join(site_configuration.softwarehome, 'Products')
+      if zope_products_path not in products_path_list:
+        products_path_list.append(zope_products_path)
+      test_cmd_args += ['--products_path', ','.join(products_path_list)]
       test_cmd_args += ['--sys_path', ','.join(current_sys_path)]
       # to find erp5_core, erp5_xhtml_style and similar
       bt5_path_list = [os.path.join(os.path.split(Products.ERP5.__file__)[0],
