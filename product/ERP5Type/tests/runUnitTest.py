@@ -116,6 +116,8 @@ Options:
                              If used with --activity_node=, this can be a
                              comma-separated list of addresses.
 
+  --products_path=path,path  Comma-separated list of products paths locations
+                             which shall be used in test environment.
 When no unit test is specified, only activities are processed.
 """
 
@@ -392,6 +394,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
   # On Zope 2.12, import_products() is called by ERP5TestCase before it is
   # patched by the layer.setUp() call.
   import OFS.Application
+  if os.environ.get('products_path'):
+    OFS.Application.Products.__path__ = os.environ.get('products_path').split(',')
   import_products = OFS.Application.import_products
   from Testing import ZopeTestCase # Zope 2.8: this will import custom_zodb.py
   OFS.Application.import_products = import_products
@@ -613,6 +617,7 @@ def main():
         "zeo_client=",
         "zeo_server=",
         "zserver=",
+        "products_path=",
         ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -702,6 +707,8 @@ def main():
       os.environ["zeo_server"] = arg
     elif opt == "--zserver":
       os.environ["zserver"] = arg
+    elif opt == "--products_path":
+      os.environ["products_path"] = arg
   
   initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
 
