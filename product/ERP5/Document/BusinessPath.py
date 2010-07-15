@@ -582,6 +582,32 @@ class BusinessPath(Path, Predicate):
           return successor_expected_date
 
   security.declareProtected(Permissions.AccessContentsInformation,
+      'getBuildableMovementList')
+  def getBuildableMovementList(self, **sql_kw):
+    """
+    Query catalog to find a list of movements related to this Business Path.
+
+    Filter the results to return only Buildable Movements
+
+    To specialize your builder, you can pass along SQL keywords
+    in sql_kw, for instance:
+      search_kw = {}
+      search_kw['movement.quantity'] = {'query':0, 'range':'neq'}
+      search_kw['movement.price'] = {'query':0, 'range':'neq'}
+      sql_kw = portal_catalog.buildSQLQuery(**search_kw)
+    """
+    all_movement_list = self.BusinessPath_zSelectMovement(
+                          business_path_uid=self.getUid(),
+                          **sql_kw)
+
+    # select method should return only non-delivered movements, but
+    # maybe movements have been built in the meantime & catalog wasnt updated?
+    non_delivered_movement_list = filter(lambda x:x.getDeliveryValue() is None,
+                                         all_movement_list)
+
+    return self.filterBuildableMovementList(non_delivered_movement_list)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
       'filterBuildableMovementList')
   def filterBuildableMovementList(self, non_delivered_movement_list):
     """
