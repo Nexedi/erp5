@@ -18,16 +18,19 @@
  </portal_type>
  <portal_type id="Delivery Root Simulation Rule">
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Delivery Rule">
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Delivery Simulation Rule">
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
@@ -63,11 +66,13 @@
  </portal_type>
  <portal_type id="Order Root Simulation Rule">
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Order Rule">
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>

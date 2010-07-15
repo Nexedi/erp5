@@ -8,6 +8,7 @@ Accounting Transaction Module | Payment Transaction
 Accounting Transaction Module | Purchase Invoice Transaction
 Accounting Transaction Module | Sale Invoice Transaction
 Accounting Transaction Root Simulation Rule | Category Divergence Tester
+Accounting Transaction Root Simulation Rule | Composed Divergence Tester
 Accounting Transaction Root Simulation Rule | Property Divergence Tester
 Accounting Transaction Root Simulation Rule | Quantity Divergence Tester
 Accounting Transaction | Accounting Transaction Line
@@ -16,18 +17,22 @@ Accounting Transaction | Image
 Balance Transaction | Balance Transaction Line
 Internal Invoice Transaction | Internal Invoice Transaction Line
 Invoice Root Simulation Rule | Category Divergence Tester
+Invoice Root Simulation Rule | Composed Divergence Tester
 Invoice Root Simulation Rule | Property Divergence Tester
 Invoice Root Simulation Rule | Quantity Divergence Tester
 Invoice Rule | Category Divergence Tester
+Invoice Rule | Composed Divergence Tester
 Invoice Rule | Property Divergence Tester
 Invoice Rule | Quantity Divergence Tester
 Organisation | Accounting Period
 Organisation | Cash Register
 Payment Rule | Category Divergence Tester
+Payment Rule | Composed Divergence Tester
 Payment Rule | Property Divergence Tester
 Payment Rule | Quantity Divergence Tester
 Payment Simulation Rule | Accounting Rule Cell
 Payment Simulation Rule | Category Divergence Tester
+Payment Simulation Rule | Composed Divergence Tester
 Payment Simulation Rule | Mapped Property
 Payment Simulation Rule | Predicate
 Payment Simulation Rule | Property Divergence Tester
