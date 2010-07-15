@@ -115,9 +115,10 @@ Options:
                              Make ZServer listen on given host:port
                              If used with --activity_node=, this can be a
                              comma-separated list of addresses.
-
   --products_path=path,path  Comma-separated list of products paths locations
                              which shall be used in test environment.
+  --sys_path=path,path       Comma-separated list of paths which will be used to
+                             extend sys.path
 When no unit test is specified, only activities are processed.
 """
 
@@ -618,6 +619,7 @@ def main():
         "zeo_server=",
         "zserver=",
         "products_path=",
+        "sys_path="
         ])
   except getopt.GetoptError, msg:
     usage(sys.stderr, msg)
@@ -709,6 +711,8 @@ def main():
       os.environ["zserver"] = arg
     elif opt == "--products_path":
       os.environ["products_path"] = arg
+    elif opt == "--sys_path":
+      sys.path.extend(arg.split(','))
   
   initializeInstanceHome(tests_framework_home, real_instance_home, instance_home)
 
