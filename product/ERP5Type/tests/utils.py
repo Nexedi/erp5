@@ -68,6 +68,7 @@ class DummyMailHost(MailHost):
     self._previous_message = self._last_message
     self._last_message = (mfrom, mto, messageText)
     self._message_list.append(self._last_message)
+
   def _decodeMessage(self, messageText):
     """ Decode message"""
     message_text = messageText
@@ -76,11 +77,17 @@ class DummyMailHost(MailHost):
                   and not part.is_multipart():
         message_text = part.get_payload(decode=1)
     return message_text
+
   def getMessageList(self, decode=True):
     """ Return message list"""
     if decode:
       return [ (m[0], m[1], self._decodeMessage(m[2])) for m in self._message_list]
     return self._message_list
+
+  def getLastLog(self):
+    """ Return last message """
+    return self._last_message
+
 
 class DummyTranslationService:
   """A dummy translation service where you can access translated msgids and
