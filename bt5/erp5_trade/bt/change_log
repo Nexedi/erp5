@@ -1,3 +1,6 @@
+2010-07-15 yusei
+* Add source_carrier, source_referral, source_function, destination_carrier, destination_referral, destination_function to copied category list of trade condition.
+
 2010-06-21 yo
 * Specify the inventory group to the portal type Inventory.
 
