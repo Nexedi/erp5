@@ -73,9 +73,3 @@ class PaymentCondition(TradeModelLine):
       return method
     method = self._getTypeBasedMethod('calculateMovement')
     return method
-
-  def _isMatchedMovement(self, movement, base_application_list, tmp_movement):
-    """Override the original implementation and allow payment condition to
-    match to any movements
-    """
-    return True
