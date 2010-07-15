@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_arg</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="Args" module="Shared.DC.ZRDB.Aqueduct"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_data</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>business_path_uid</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>from_table_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>where_expression</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>_keys</string> </key>
+                        <value>
+                          <list>
+                            <string>from_table_list</string>
+                            <string>where_expression</string>
+                            <string>business_path_uid</string>
+                          </list>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>arguments_src</string> </key>
+            <value> <string>from_table_list\r\n
+where_expression\r\n
+business_path_uid</string> </value>
+        </item>
+        <item>
+            <key> <string>connection_id</string> </key>
+            <value> <string>erp5_sql_connection</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessPath_zSelectBuildableMovementList</string> </value>
+        </item>
+        <item>
+            <key> <string>src</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  catalog.uid,\n
+  catalog.path,\n
+  catalog.relative_url,\n
+  catalog.id\n
+\n
+FROM\n
+    movement\n
+  , catalog\n
+  , category as delivery\n
+  , category as causality\n
+<dtml-in prefix="table" expr="from_table_list">\n
+  <dtml-if expr="table_key not in (\'catalog\', \'movement\')">\n
+  , <dtml-var table_item> AS <dtml-var table_key>\n
+  </dtml-if>\n
+</dtml-in>\n
+\n
+WHERE\n
+  catalog.uid = delivery.uid\n
+  AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
+  AND delivery.category_uid is NULL\n
+\n
+  AND catalog.uid = causality.uid\n
+  AND <dtml-sqltest "portal_categories.causality.getUid()" column="causality.base_category_uid" type="int">\n
+  AND <dtml-sqltest business_path_uid column="causality.category_uid" type="int">\n
+\n
+  AND catalog.uid = movement.uid\n
+  AND movement.resource_uid is not NULL\n
+\n
+  <dtml-if where_expression>AND <dtml-var where_expression></dtml-if>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>template</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="__newobj__" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="SQL" module="Shared.DC.ZRDB.DA"/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>__name__</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+<string>
+
+]]></string> </value>
+                    </item>
+                    <item>
+                        <key> <string>_vars</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>globals</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                    <item>
+                        <key> <string>raw</string> </key>
+                        <value> <string encoding="cdata"><![CDATA[
+
+SELECT\n
+  catalog.uid,\n
+  catalog.path,\n
+  catalog.relative_url,\n
+  catalog.id\n
+\n
+FROM\n
+    movement\n
+  , catalog\n
+  , category as delivery\n
+  , category as causality\n
+<dtml-in prefix="table" expr="from_table_list">\n
+  <dtml-if expr="table_key not in (\'catalog\', \'movement\')">\n
+  , <dtml-var table_item> AS <dtml-var table_key>\n
+  </dtml-if>\n
+</dtml-in>\n
+\n
+WHERE\n
+  catalog.uid = delivery.uid\n
+  AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
+  AND delivery.category_uid is NULL\n
+\n
+  AND catalog.uid = causality.uid\n
+  AND <dtml-sqltest "portal_categories.causality.getUid()" column="causality.base_category_uid" type="int">\n
+  AND <dtml-sqltest business_path_uid column="causality.category_uid" type="int">\n
+\n
+  AND catalog.uid = movement.uid\n
+  AND movement.resource_uid is not NULL\n
+\n
+  <dtml-if where_expression>AND <dtml-var where_expression></dtml-if>\n
+
+
+]]></string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
