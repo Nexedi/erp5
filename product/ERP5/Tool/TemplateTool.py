@@ -562,6 +562,15 @@ class TemplateTool (BaseTool):
       test_cmd_args = [sys.executable, getUnitTestFile()]
       test_cmd_args += ['--erp5_sql_connection_string', sql_connection_string]
       test_cmd_args += test_list
+      # prepare message - intentionally without any additional formatting, as
+      # only developer will read it, and they will have to understand issues in
+      # case of test failures
+      invoke_command_message = 'Running tests using command: %r'% test_cmd_args
+      # as it is like using external interface, log what is send there
+      LOG('TemplateTool.runUnitTestList', INFO, invoke_command_message)
+      # inform developer how test are invoked
+      outfile.write(invoke_command_message + '\n')
+      outfile.flush()
       process = subprocess.Popen(test_cmd_args,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT)
