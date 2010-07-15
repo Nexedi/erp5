@@ -66,7 +66,11 @@ if not preferred_predicate_category_list:\n
   return category_parent_uid_item_list\n
 \n
 # category_parent_uid_item_list structure is (category_uid, base_category_uid, category_strict_membership)\n
-category_parent_uid_item_dict = dict([(item[1], item) for item in category_parent_uid_item_list])\n
+category_parent_uid_item_dict = {}\n
+for category_uid, base_category_uid, category_strict_membership in category_parent_uid_item_list:\n
+  if not base_category_uid in category_parent_uid_item_dict:\n
+    category_parent_uid_item_dict[base_category_uid] = []\n
+  category_parent_uid_item_dict[base_category_uid].append([category_uid, base_category_uid, category_strict_membership])\n
 \n
 for base_category_id in preferred_predicate_category_list:\n
   base_category = getattr(context, base_category_id, None)\n
@@ -76,9 +80,12 @@ for base_category_id in preferred_predicate_category_list:\n
 \n
   if not base_category_uid in category_parent_uid_item_dict and base_category_id in enabled_base_category_list:\n
     # Add an empty record only if document does not have the category value and the category is enabled on the document.\n
-    category_parent_uid_item_dict[base_category_uid] = [0, base_category_uid, 1]\n
+    category_parent_uid_item_dict[base_category_uid] = [[0, base_category_uid, 1]]\n
 \n
-return category_parent_uid_item_dict.values()\n
+uid_item_list_list = category_parent_uid_item_dict.values()\n
+if uid_item_list_list:\n
+  return reduce(lambda a,b:a+b, uid_item_list_list)\n
+return ()\n
 </string> </value>
         </item>
         <item>
@@ -122,19 +129,19 @@ return category_parent_uid_item_dict.values()\n
                             <string>context</string>
                             <string>preferred_predicate_category_list</string>
                             <string>category_parent_uid_item_list</string>
-                            <string>dict</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>item</string>
-                            <string>_getitem_</string>
                             <string>category_parent_uid_item_dict</string>
+                            <string>_getiter_</string>
+                            <string>category_uid</string>
+                            <string>base_category_uid</string>
+                            <string>category_strict_membership</string>
+                            <string>_write_</string>
+                            <string>_getitem_</string>
                             <string>base_category_id</string>
                             <string>getattr</string>
                             <string>None</string>
                             <string>base_category</string>
-                            <string>base_category_uid</string>
-                            <string>_write_</string>
+                            <string>uid_item_list_list</string>
+                            <string>reduce</string>
                           </tuple>
                         </value>
                     </item>
