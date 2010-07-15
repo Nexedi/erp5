@@ -5,6 +5,11 @@
  <portal_type id="Bank Account">
   <item>Agent</item>
  </portal_type>
+ <portal_type id="Composed Divergence Tester">
+  <item>Category Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
  <portal_type id="Currency">
   <item>Currency Exchange Line</item>
  </portal_type>

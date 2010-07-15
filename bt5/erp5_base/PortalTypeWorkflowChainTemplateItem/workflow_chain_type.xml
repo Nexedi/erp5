@@ -28,6 +28,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Composed Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Credit Card</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>

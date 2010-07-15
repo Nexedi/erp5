@@ -7,6 +7,7 @@ Bank Account | validation_workflow
 Career | career_workflow
 Category Divergence Tester | edit_workflow
 Chat Address | edit_workflow
+Composed Divergence Tester | edit_workflow
 Credit Card | edit_workflow
 Credit Card | validation_workflow
 Currency Exchange Line | currency_exchange_line_interaction_workflow

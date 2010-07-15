@@ -1,5 +1,8 @@
 Agent | Agent Privilege
 Bank Account | Agent
+Composed Divergence Tester | Category Divergence Tester
+Composed Divergence Tester | Property Divergence Tester
+Composed Divergence Tester | Quantity Divergence Tester
 Currency Exchange Line | Currency Exchange Cell
 Currency Module | Currency
 Currency | Currency Exchange Line
