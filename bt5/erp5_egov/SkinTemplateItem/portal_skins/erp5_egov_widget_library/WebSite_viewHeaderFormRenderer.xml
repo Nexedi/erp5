@@ -56,7 +56,7 @@
           tal:attributes="href python: context.getPrintFormUrl()" i18n:translate="" i18n:domain="ui">Print</a>\n
       </tal:block>\n
       <!--<a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" i18n:translate="" i18n:domain="ui">Help</a>-->\n
-      <a class="preferences" tal:condition="python: context.EGov_checkUserIsAPersonOrOrganisation()==True" href="PreferenceTool_viewChangePasswordDialog" \n
+      <a class="preferences" tal:condition="python: context.EGov_checkUserIsAPersonOrOrganisation()==True" href="EGov_viewChangePasswordForm" \n
         i18n:translate="" i18n:domain="ui">Change Password</a>\n
       <a class="help" href="EGov_helpWithContext"  tal:attributes="href python:\'help/\' + here.EGov_helpWithContext()" onclick="window.open(this.href, \'egov_help\',\'width=800,height=500,menubar=yes,toolbar=yes,scrollbars=yes,resizable=yes\'); return false;" i18n:translate="" i18n:domain="ui">Help</a>\n
       <a class="logout" href="WebSite_logout" i18n:translate="" i18n:domain="ui">Logout</a> \n
