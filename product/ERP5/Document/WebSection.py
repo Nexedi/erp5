@@ -30,8 +30,8 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Domain import Domain
-from Products.ERP5.Document.Document import PermanentURLMixIn
-from Acquisition import aq_base, aq_inner
+from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixIn as PermanentURLMixIn
+from Acquisition import aq_base, aq_inner 
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized
 from OFS.Traversable import NotFound
