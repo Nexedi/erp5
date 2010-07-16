@@ -100,5 +100,19 @@ class BaseType:
         , 'label':      'Groups'
         , 'select_variable':'getAvailableGroupList'
          },
+        # searchable text method id list used by ZSQLCatalog
+        { 'id':         'searchable_text_property_id'
+        , 'type':       'lines'
+        , 'mode':       'w'
+        , 'label':      'Searchable text property ids'
+        # default known to exists everythere properties
+        , 'default':     ['title', 'description', 'id', 'reference', 'short_title']
+         },
+        { 'id':         'searchable_text_method_id'
+        , 'type':       'lines'
+        , 'mode':       'w'
+        , 'label':      'Searchable text method Ids'
+        , 'default':     []
+         },
     )
 

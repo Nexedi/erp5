@@ -3196,12 +3196,28 @@ class Base( CopyContainer,
   ### Content accessor methods
   security.declareProtected(Permissions.View, 'getSearchableText')
   def getSearchableText(self, md=None):
-      """\
-      Used by the catalog for basic full text indexing
-      We should try to do some kind of file conversion here
       """
-      searchable_text = "%s %s %s" %  (self.getTitle(), self.getDescription(),
-                                    self.getId())
+      Used by the catalog for basic full text indexing.
+      """
+      searchable_text_list = []
+      portal_type = self.portal_types.getTypeInfo(self)
+      searchable_text_method_id_list = []
+      # generated from properties methods and add explicitly defined method_ids as well 
+      for searchable_text_property_id in portal_type.getSearchableTextPropertyIdList():
+        method_id = convertToUpperCase(searchable_text_property_id)
+        searchable_text_method_id_list.extend(['get%s' %method_id])
+      searchable_text_method_id_list.extend(portal_type.getSearchableTextMethodIdList())
+      for method_id in searchable_text_method_id_list:
+        # XXX: how to exclude exclude acquisition (not working)
+        #if getattr(aq_base(self), method_id, None) is not None:
+        #  method = getattr(self, method_id, None)
+        # should we do it as ZSQLCatalog should care for calling this method on proper context?
+        method = getattr(self, method_id, None)
+        if method is not None:
+          method_value = method()
+          if method_value is not None:
+            searchable_text_list.append(method_value)
+      searchable_text = ' '.join(searchable_text_list)
       return searchable_text
 
   # Compatibility with CMF Catalog / CPS sites
