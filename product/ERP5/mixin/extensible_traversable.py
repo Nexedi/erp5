@@ -39,13 +39,14 @@ from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders, _ViewEmulator
 from OFS.Image import File as OFSFile
 from warnings import warn
+import sys
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 
 
 # XXX: these duplicate ones in ERP5.Document
 _MARKER = []
 EMBEDDED_FORMAT = '_embedded'
 class ConversionError(Exception):pass
-class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 
 class BaseExtensibleTraversableMixIn(ExtensibleTraversableMixIn):
