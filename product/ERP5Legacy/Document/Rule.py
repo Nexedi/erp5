@@ -408,14 +408,17 @@ class Rule(Predicate, XMLObject):
       if p_matched_list != []:
         # Check the quantity
         m_quantity = 0.0
+        real_quantity = 0.0
         for movement in p_matched_list:
+          quantity = movement.getQuantity()
           if movement.isPropertyRecorded('quantity'):
             m_quantity += movement.getRecordedProperty('quantity')
           else:
-            m_quantity += movement.getQuantity()
+            m_quantity += quantity
+          real_quantity += quantity
         if m_quantity != prevision.get('quantity'):
           # special case - quantity
-          q_diff = prevision.get('quantity') - m_quantity
+          q_diff = prevision.get('quantity') - real_quantity
           # try to find a movement that can be edited
           for movement in p_matched_list:
             if movement in (mutable_movement_list \
