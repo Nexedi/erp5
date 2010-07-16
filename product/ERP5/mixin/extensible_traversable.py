@@ -201,7 +201,7 @@ class OOoDocumentExtensibleTraversableMixIn(BaseExtensibleTraversableMixIn):
       mime, data = self.getConversion(format=EMBEDDED_FORMAT, file_name=name)
       document = OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     except (NotConvertedError, ConversionError, KeyError):
-      document = DocumentExtensibleTraversableMixIn._getExtensibleContent(self, request, name)
+      document = DocumentExtensibleTraversableMixIn.getExtensibleContent(self, request, name)
     # restore original security context if there's a logged in user
     if user is not None:
       setSecurityManager(old_manager)
