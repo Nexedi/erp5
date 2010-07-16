@@ -337,53 +337,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
                     , PropertySheet.Snapshot
                     )
 
-  searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
-                              'version', 'short_title', 'subject',
-                              'source_reference', 'source_project_title')
-
-
-  security.declareProtected(Permissions.View, 'getSearchableText')
-  def getSearchableText(self, md=None):
-    """
-      Used by the catalog for basic full text indexing.
-      Uses searchable_property_list attribute to put together various properties
-      of the document into one searchable text string.
-
-      XXX-JPS - This method is nice. It should probably be moved to Base class
-      searchable_property_list could become a standard class attribute.
-
-      TODO (future): Make this property a per portal type property.
-    """
-    def getPropertyListOrValue(property):
-      """
-        we try to get a list, else we get value and convert to list
-      """
-      method = getattr(self, property, None)
-      if method is not None:
-        if callable(method):
-          val = method()
-          if isinstance(val, (list, tuple)):
-            return list(val)
-          return [str(val)]
-      val = self.getPropertyList(property)
-      if val is None:
-        val = self.getProperty(property)
-        if val is not None and val != '':
-          val = [str(val)]
-        else:
-          val = []
-      else:
-        val = [str(v) for v in list(val) if v is not None]
-      return val
-
-    searchable_text = reduce(add, map(lambda x: getPropertyListOrValue(x),
-                                                self.searchable_property_list))
-    searchable_text = ' '.join(searchable_text)
-    return searchable_text
-
-  # Compatibility with CMF Catalog
-  SearchableText = getSearchableText
-
   index_html = DownloadableMixin.index_html
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isExternalDocument')
