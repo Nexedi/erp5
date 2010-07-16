@@ -668,7 +668,7 @@ class BusinessPath(Path, Predicate):
     movement_looking_for_dict = {}
 
     def isBuiltAndCompleted(simulation, path):
-      return simulation.getCausalityValue() is not None and \
+      return simulation.getDeliveryValue() is not None and \
           simulation.getSimulationState() in predecessor_to_state_dict[path]
 
     ### Step 1:
