@@ -59,7 +59,7 @@ from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.downloadable import DownloadableMixin
 from Products.ERP5.mixin.document import DocumentMixin
-from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixIn
+from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
 from Products.ERP5.mixin.crawable import CrawableMixin
 
 _MARKER = []
@@ -131,7 +131,7 @@ class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
-class Document(DocumentExtensibleTraversableMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
+class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedConvertableMixin,
                SnapshotMixin, CrawableMixin, TextConvertableMixin,
                DownloadableMixin, DocumentMixin):
   """Document is an abstract class with all methods related to document

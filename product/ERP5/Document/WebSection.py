@@ -30,7 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Domain import Domain
-from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixIn as PermanentURLMixIn
+from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
 from Acquisition import aq_base, aq_inner 
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from AccessControl import Unauthorized
@@ -42,7 +42,7 @@ from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 WEBSECTION_KEY = 'web_section_value'
 MARKER = []
 
-class WebSection(Domain, PermanentURLMixIn):
+class WebSection(Domain, DocumentExtensibleTraversableMixin):
     """
       A Web Section is a Domain with an extended API intended to
       support the creation of Web front ends to
@@ -115,14 +115,14 @@ class WebSection(Domain, PermanentURLMixIn):
 
       document = None
       try:
-        document = PermanentURLMixIn.__bobo_traverse__(self, request, name)
+        document = DocumentExtensibleTraversableMixin.__bobo_traverse__(self, request, name)
       except NotFound:
         not_found_page_ref = self.getLayoutProperty('layout_not_found_page_reference')
         if not_found_page_ref:
-          document = PermanentURLMixIn.getDocumentValue(self, name=not_found_page_ref)
+          document = DocumentExtensibleTraversableMixin.getDocumentValue(self, name=not_found_page_ref)
         if document is None:
           # if no document found, fallback on default page template
-          document = PermanentURLMixIn.__bobo_traverse__(self, request,
+          document = DocumentExtensibleTraversableMixin.__bobo_traverse__(self, request,
             '404.error.page')
       return document
 
