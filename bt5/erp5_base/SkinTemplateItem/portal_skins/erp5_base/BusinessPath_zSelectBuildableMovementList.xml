@@ -36,6 +36,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>predecessor_uid_list</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>where_expression</string> </key>
                                 <value>
                                   <dictionary/>
@@ -51,6 +57,7 @@
                             <string>from_table_list</string>
                             <string>where_expression</string>
                             <string>business_path_uid</string>
+                            <string>predecessor_uid_list</string>
                           </list>
                         </value>
                     </item>
@@ -63,7 +70,8 @@
             <key> <string>arguments_src</string> </key>
             <value> <string>from_table_list\r\n
 where_expression\r\n
-business_path_uid</string> </value>
+business_path_uid\r\n
+predecessor_uid_list</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -85,18 +93,45 @@ SELECT\n
 \n
 FROM\n
     movement\n
+  , category as causality\n
   , catalog\n
-  , LEFT JOIN category as delivery\n
-    ON (\n
+  LEFT JOIN category as delivery ON (\n
       catalog.uid = delivery.uid\n
       AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
-    )\n
-  , category as causality\n
+  )\n
+<dtml-if from_table_list>\n
 <dtml-in prefix="table" expr="from_table_list">\n
   <dtml-if expr="table_key not in (\'catalog\', \'movement\')">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
+</dtml-if>\n
+  LEFT JOIN (\n
+        /*\n
+           predecessor movements that are not delivered\n
+           (to be used to discard related movements)\n
+         */\n
+        select\n
+          SUBSTRING_INDEX(catalog.path, "/", <dtml-sqlvar "len(portal_simulation.getPhysicalPath()) + 1" type="int">) as root_applied_rule_path\n
+        from\n
+          movement\n
+          , category as causality\n
+          , catalog\n
+          LEFT JOIN category as delivery ON (\n
+              catalog.uid = delivery.uid\n
+              AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
+          )\n
+        WHERE\n
+          delivery.category_uid is NULL\n
+\n
+          AND catalog.uid = movement.uid\n
+          AND movement.resource_uid is not NULL\n
+\n
+          AND catalog.uid = causality.uid\n
+          AND <dtml-sqltest "portal_categories.causality.getUid()" column="causality.base_category_uid" type="int">\n
+          AND <dtml-sqltest predecessor_uid_list column="causality.category_uid" multiple type="int">\n
+       ) AS non_delivered_predecessor ON\n
+    root_applied_rule_path = SUBSTRING_INDEX(catalog.path, "/", <dtml-sqlvar "len(portal_simulation.getPhysicalPath()) + 1" type="int">)\n
 \n
 WHERE\n
   delivery.category_uid is NULL\n
@@ -108,7 +143,10 @@ WHERE\n
   AND catalog.uid = movement.uid\n
   AND movement.resource_uid is not NULL\n
 \n
-  <dtml-if where_expression>AND <dtml-var where_expression></dtml-if>
+  AND root_applied_rule_path is NULL\n
+\n
+  <dtml-if where_expression>AND <dtml-var where_expression> </dtml-if>\n
+
 
 ]]></string> </value>
         </item>
@@ -156,18 +194,45 @@ SELECT\n
 \n
 FROM\n
     movement\n
+  , category as causality\n
   , catalog\n
-  , LEFT JOIN category as delivery\n
-    ON (\n
+  LEFT JOIN category as delivery ON (\n
       catalog.uid = delivery.uid\n
       AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
-    )\n
-  , category as causality\n
+  )\n
+<dtml-if from_table_list>\n
 <dtml-in prefix="table" expr="from_table_list">\n
   <dtml-if expr="table_key not in (\'catalog\', \'movement\')">\n
   , <dtml-var table_item> AS <dtml-var table_key>\n
   </dtml-if>\n
 </dtml-in>\n
+</dtml-if>\n
+  LEFT JOIN (\n
+        /*\n
+           predecessor movements that are not delivered\n
+           (to be used to discard related movements)\n
+         */\n
+        select\n
+          SUBSTRING_INDEX(catalog.path, "/", <dtml-sqlvar "len(portal_simulation.getPhysicalPath()) + 1" type="int">) as root_applied_rule_path\n
+        from\n
+          movement\n
+          , category as causality\n
+          , catalog\n
+          LEFT JOIN category as delivery ON (\n
+              catalog.uid = delivery.uid\n
+              AND <dtml-sqltest "portal_categories.delivery.getUid()" column="delivery.base_category_uid" type="int">\n
+          )\n
+        WHERE\n
+          delivery.category_uid is NULL\n
+\n
+          AND catalog.uid = movement.uid\n
+          AND movement.resource_uid is not NULL\n
+\n
+          AND catalog.uid = causality.uid\n
+          AND <dtml-sqltest "portal_categories.causality.getUid()" column="causality.base_category_uid" type="int">\n
+          AND <dtml-sqltest predecessor_uid_list column="causality.category_uid" multiple type="int">\n
+       ) AS non_delivered_predecessor ON\n
+    root_applied_rule_path = SUBSTRING_INDEX(catalog.path, "/", <dtml-sqlvar "len(portal_simulation.getPhysicalPath()) + 1" type="int">)\n
 \n
 WHERE\n
   delivery.category_uid is NULL\n
@@ -179,7 +244,10 @@ WHERE\n
   AND catalog.uid = movement.uid\n
   AND movement.resource_uid is not NULL\n
 \n
-  <dtml-if where_expression>AND <dtml-var where_expression></dtml-if>
+  AND root_applied_rule_path is NULL\n
+\n
+  <dtml-if where_expression>AND <dtml-var where_expression> </dtml-if>\n
+
 
 ]]></string> </value>
                     </item>
