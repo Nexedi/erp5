@@ -577,8 +577,7 @@ class TemplateTool (BaseTool):
       test_cmd_args += ['--products_path', ','.join(products_path_list)]
       test_cmd_args += ['--sys_path', ','.join(current_sys_path)]
       # to find erp5_core, erp5_xhtml_style and similar
-      bt5_path_list = [os.path.join(os.path.split(Products.ERP5.__file__)[0],
-        'bootstrap')]
+      bt5_path_list = []
       ## XXX-TODO: requires that asRepository works without security, maybe
       ##           with special key?
       # bt5_path_list.append(self.absolute_url() + '/asRepository/')
