@@ -1,3 +1,6 @@
+2010-07-16 yusei
+* Revert my previous change and remove added parameters.
+
 2010-07-12 yusei
 * Update Node_statAccountingBalance and accept "at_date", "from_date", "to_date" parameters.
 

@@ -92,15 +92,6 @@ if kw.get(\'node_category\'):\n
 if kw.get(\'mirror_section_category\'):\n
   params[\'mirror_section_category\'] = kw[\'mirror_section_category\']\n
 \n
-if kw.get(\'at_date\'):\n
-  params[\'at_date\'] = kw[\'at_date\'].latestTime()\n
-\n
-if kw.get(\'from_date\'):\n
-  params[\'from_date\'] = kw[\'from_date\']\n
-\n
-if kw.get(\'to_date\'):\n
-  params[\'to_date\'] = kw[\'to_date\']\n
-\n
 ###\n
 # Get the \'where_expression\' parameter\n
 # XXX can be removed ?\n
