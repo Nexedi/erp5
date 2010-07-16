@@ -129,30 +129,6 @@ class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
-class DocumentProxyMixin:
-  """
-  Provides access to documents referenced by the follow_up field
-  """
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  security.declareProtected(Permissions.AccessContentsInformation,'index_html')
-  def index_html(self, REQUEST, *args, **kw):
-    """ Only a proxy method """
-    return self.getProxiedDocument().index_html(REQUEST, *args, **kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getProxiedDocument' )
-  def getProxiedDocument(self):
-    """
-    Try to retrieve the original document
-    """
-    proxied_document = self.getDocumentProxyValue()
-    if proxied_document is None:
-      raise DocumentProxyError("Unable to find a proxied document")
-    return proxied_document
-
 class UpdateMixIn:
   """
     Provides an API to compute a date index based on the update
@@ -205,7 +181,6 @@ class UpdateMixIn:
     method = self._getTypeBasedMethod('isUpdatable',
         fallback_script_id = 'Document_isUpdatable')
     return method()
-
 
 class Document(DocumentExtensibleTraversableMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
                SnapshotMixin, UpdateMixIn, TextConvertableMixin,

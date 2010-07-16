@@ -35,11 +35,10 @@ from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.TextDocument import TextDocument
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import ConversionError, \
-  DocumentProxyMixin, DocumentProxyError
+from Products.ERP5.Document.Document import ConversionError
+from Products.ERP5.mixin.document_proxy import DocumentProxyMixin, DocumentProxyError
 from Products.ERP5.Tool.NotificationTool import buildEmailMessage
 from MethodObject import Method
-
 from zLOG import LOG, INFO
 
 try:
