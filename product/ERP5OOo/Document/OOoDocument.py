@@ -54,7 +54,7 @@ from zLOG import LOG, ERROR
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
-from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixIn
+from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixin
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -91,7 +91,7 @@ class TimeoutTransport(SafeTransport):
     return SafeTransport.make_connection(self, h)
 
 
-class OOoDocument(OOoDocumentExtensibleTraversableMixIn, BaseConvertableFileMixin, File,
+class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
                                                TextConvertableMixin, Document):
   """
     A file document able to convert OOo compatible files to
