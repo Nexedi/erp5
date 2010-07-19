@@ -112,11 +112,12 @@ class transactional_cache_decorator:
   def __call__(self, method):
     def wrapper(wrapped_self):
       transactional_cache = getTransactionalVariable(None)
+      cache_id = self.cache_id
       try:
-        return transactional_cache[self.cache_id]
+        result = transactional_cache[cache_id]
       except KeyError:
-        result = transactional_cache[self.cache_id] = method(wrapped_self)
-        return result
+        result = transactional_cache[cache_id] = method(wrapped_self)
+      return result
     return wrapper
 
 try:
