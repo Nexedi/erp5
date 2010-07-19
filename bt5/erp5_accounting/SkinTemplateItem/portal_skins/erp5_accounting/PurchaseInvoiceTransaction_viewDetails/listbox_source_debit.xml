@@ -80,7 +80,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox_source_credit</string> </value>
+                    <value> <string>listbox_source_debit</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
