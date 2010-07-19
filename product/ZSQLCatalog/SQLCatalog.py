@@ -814,10 +814,6 @@ class Catalog(Folder,
       # Add a dummy item so that SQLCatalog will not use existing uids again.
       self.insertMaxUid()
 
-    # Remove the cache of catalog schema.
-    if hasattr(self, '_v_catalog_schema_dict') :
-      del self._v_catalog_schema_dict
-
     self._clearSecurityCache()
 
   def insertMaxUid(self):
@@ -909,28 +905,19 @@ class Catalog(Folder,
     return self.sql_search_result_keys
 
   def _getCatalogSchema(self, table=None):
-    # XXX: Using a volatile as a cache makes it impossible to flush
-    # consistently on all connections containing the volatile. Another
-    # caching scheme must be used here.
-    catalog_schema_dict = getattr(aq_base(self), '_v_catalog_schema_dict', {})
-
-    if table not in catalog_schema_dict:
-      result_list = []
-      try:
-        method_name = self.sql_catalog_schema
-        method = getattr(self, method_name)
-        search_result = method(table=table)
-        for c in search_result:
-          result_list.append(c.Field)
-      except ConflictError:
-        raise
-      except:
-        LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s' % method_name, error=sys.exc_info())
-        pass
-      catalog_schema_dict[table] = tuple(result_list)
-      self._v_catalog_schema_dict= catalog_schema_dict
-
-    return catalog_schema_dict[table]
+    result_list = []
+    try:
+      method_name = self.sql_catalog_schema
+      method = getattr(self, method_name)
+      search_result = method(table=table)
+      for c in search_result:
+        result_list.append(c.Field)
+    except ConflictError:
+      raise
+    except:
+      LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s' % method_name, error=sys.exc_info())
+      pass
+    return tuple(result_list)
 
   @caching_instance_method(id='SQLCatalog.getColumnIds',
                            cache_factory='erp5_content_long')
