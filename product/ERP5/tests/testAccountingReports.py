@@ -3776,7 +3776,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
           'node_title', 'mirror_section_title', 'debit', 'credit'])
     
     self.checkLineProperties(data_line_list[0],
-                             project=None,
+                             project='',
                              function=None,
                              product_line_translated_title=None,
                              node_title='41',
