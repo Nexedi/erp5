@@ -84,20 +84,11 @@ except ImportError:
 
 try:
   from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, \
-       disableReadOnlyTransactionCache, CachingMethod, \
-       caching_instance_method
+       disableReadOnlyTransactionCache, caching_instance_method
 except ImportError:
-  LOG('SQLCatalog', WARNING, 'Count not import CachingMethod, expect slowness.')
+  LOG('SQLCatalog', WARNING, 'Count not import caching_instance_method, expect slowness.')
   def doNothing(context):
     pass
-  class CachingMethod:
-    """
-      Dummy CachingMethod class.
-    """
-    def __init__(self, callable, **kw):
-      self.function = callable
-    def __call__(self, *opts, **kw):
-      return self.function(*opts, **kw)
   def caching_instance_method(*args, **kw):
     return lambda method: method
   enableReadOnlyTransactionCache = doNothing
