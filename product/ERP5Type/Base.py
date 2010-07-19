@@ -3201,8 +3201,8 @@ class Base( CopyContainer,
       """
       searchable_text_list = []
       portal_type = self.portal_types.getTypeInfo(self)
-      if portal_type is None and self.isTempDocument():
-        # if it's a temp object we have no portal_type definition
+      if portal_type is None:
+        # it can be a temp object or a tool (i.e. Activity Tool) for which we have no portal_type definition
         # so use definition of 'Base Type' for searchable methods & properties
         portal_type = self.portal_types.getTypeInfo('Base Type')
       searchable_text_method_id_list = []
