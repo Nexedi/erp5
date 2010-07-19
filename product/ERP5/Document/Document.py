@@ -82,48 +82,6 @@ DEFAULT_QUALITY = 75
 
 DEFAULT_CONTENT_TYPE = 'text/html'
 
-
-class SnapshotMixin:
-  """
-    This class provides a generic API to store in the ZODB
-    PDF snapshots of objects and documents with the
-    goal to keep a facsimile copy of documents as they
-    were at a given date.
-  """
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'createSnapshot')
-  def createSnapshot(self):
-    """
-      Create a snapshot (PDF). This is the normal way to modifiy
-      snapshot_data. Once a snapshot is taken, a new snapshot
-      can not be taken.
-
-      NOTE: use getSnapshotData and hasSnapshotData accessors
-      to access a snapshot.
-
-      NOTE2: implementation of createSnapshot should probably
-      be delegated to a types base method since this it
-      is configuration dependent.
-    """
-    if self.hasSnapshotData():
-      raise ConversionError('This document already has a snapshot.')
-    self._setSnapshotData(self.convert(format='pdf'))
-
-  security.declareProtected(Permissions.ManagePortal, 'deleteSnapshot')
-  def deleteSnapshot(self):
-    """
-      Deletes the snapshot - in theory this should never be done.
-      It is there for programmers and system administrators.
-    """
-    try:
-      del(self.snapshot_data)
-    except AttributeError:
-      pass
-
 class ConversionError(Exception):pass
 
 class DocumentProxyError(Exception):pass
@@ -132,8 +90,7 @@ class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
 class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedConvertableMixin,
-               SnapshotMixin, CrawableMixin, TextConvertableMixin,
-               DownloadableMixin, DocumentMixin):
+               CrawableMixin, TextConvertableMixin, DownloadableMixin, DocumentMixin):
   """Document is an abstract class with all methods related to document
   management in ERP5. This includes searchable text, explicit relations,
   implicit relations, metadata, versions, languages, etc.
@@ -334,7 +291,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
-                    , PropertySheet.Snapshot
                     )
 
   index_html = DownloadableMixin.index_html

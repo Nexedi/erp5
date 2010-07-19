@@ -145,7 +145,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Document
-                    , PropertySheet.Snapshot
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
