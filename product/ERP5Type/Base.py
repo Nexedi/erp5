@@ -3201,6 +3201,10 @@ class Base( CopyContainer,
       """
       searchable_text_list = []
       portal_type = self.portal_types.getTypeInfo(self)
+      if portal_type is None and self.isTempDocument():
+        # if it's a temp object we have no portal_type definition
+        # so use definition of 'Base Type' for searchable methods & properties
+        portal_type = self.portal_types.getTypeInfo('Base Type')
       searchable_text_method_id_list = []
       # generated from properties methods and add explicitly defined method_ids as well 
       for searchable_text_property_id in portal_type.getSearchableTextPropertyIdList():
