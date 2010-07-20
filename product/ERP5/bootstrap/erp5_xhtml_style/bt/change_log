@@ -1,3 +1,6 @@
+2010-07-20 yo
+* Make it easier to override CSS and JavaScript. Now, you can tweak CSS and JavaScript by overriding ERP5Site_getCssRelativeUrlList and ERP5Site_getJavaScriptRelativeUrlList, respectively.
+
 2010-06-10 kazuhiko
 * Typing Enter key in listbox search fields invokes Base_doSelect instead of the page's form action.
 
