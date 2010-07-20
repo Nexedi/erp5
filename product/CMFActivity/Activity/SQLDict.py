@@ -27,7 +27,7 @@
 ##############################################################################
 
 from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
-from Queue import VALID, INVALID_PATH, abortTransactionSynchronously
+from Queue import VALID, INVALID_PATH
 from RAMDict import RAMDict
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
@@ -40,10 +40,7 @@ from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
 from zExceptions import ExceptionFormatter
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
+import transaction
 
 from zLOG import LOG, TRACE, WARNING, ERROR, INFO, PANIC
 
@@ -334,7 +331,7 @@ class SQLDict(RAMDict, SQLBase):
       # version - to ZODB connector.
       # So all connectors must be committed now that we have selected
       # everything needed from MySQL to get a fresh view of ZODB objects.
-      get_transaction().commit()
+      transaction.commit()
       tv = getTransactionalVariable(None)
       tv['activity_runtime_environment'] = activity_runtime_environment
       # Try to invoke
@@ -343,7 +340,7 @@ class SQLDict(RAMDict, SQLBase):
       except:
         LOG('SQLDict', WARNING, 'Exception raised when invoking messages (uid, path, method_id) %r' % ([(m.uid, m.object_path, m.method_id) for m in message_list], ), error=sys.exc_info())
         try:
-          abortTransactionSynchronously()
+          transaction.abort()
         except:
           # Unfortunately, database adapters may raise an exception against abort.
           LOG('SQLDict', PANIC,
@@ -360,18 +357,18 @@ class SQLDict(RAMDict, SQLBase):
           LOG('SQLDict', TRACE, 'Freed messages %r' % (to_free_uid_list))
       # Abort if something failed.
       if [m for m in message_list if m.getExecutionState() == MESSAGE_NOT_EXECUTED]:
-        endTransaction = abortTransactionSynchronously
+        endTransaction = transaction.abort
       else:
-        endTransaction = get_transaction().commit
+        endTransaction = transaction.commit
       try:
         endTransaction()
       except:
         LOG('SQLDict', WARNING, 'Failed to end transaction for messages (uid, path, method_id) %r' % ([(m.uid, m.object_path, m.method_id) for m in message_list], ), error=sys.exc_info())
-        if endTransaction == abortTransactionSynchronously:
+        if endTransaction == transaction.abort:
           LOG('SQLDict', PANIC, 'Failed to abort executed messages. Some objects may be modified accidentally.')
         else:
           try:
-            abortTransactionSynchronously()
+            transaction.abort()
           except:
             LOG('SQLDict', PANIC, 'Failed to abort executed messages which also failed to commit. Some objects may be modified accidentally.')
             raise
@@ -385,7 +382,7 @@ class SQLDict(RAMDict, SQLBase):
         else:
           LOG('SQLDict', TRACE, 'Freed messages %r' % (message_list, ))
       self.finalizeMessageExecution(activity_tool, message_list, uid_to_duplicate_uid_list_dict)
-    get_transaction().commit()
+    transaction.commit()
     return not message_list
 
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
@@ -505,7 +502,7 @@ class SQLDict(RAMDict, SQLBase):
                                  offset=offset, count=READ_MESSAGE_LIMIT)
         if not result:
           return
-        get_transaction().commit()
+        transaction.commit()
 
         validation_text_dict = {'none': 1}
         message_dict = {}

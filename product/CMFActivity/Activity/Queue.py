@@ -33,10 +33,7 @@ from ZODB.POSException import ConflictError
 import sha
 from cStringIO import StringIO
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
+import transaction
 
 # Error values for message validation
 EXCEPTION      = -1
@@ -47,36 +44,6 @@ INVALID_ORDER  = 2
 # Time global parameters
 MAX_PROCESSING_TIME = 900 # in seconds
 VALIDATION_ERROR_DELAY = 30 # in seconds
-
-def abortTransactionSynchronously():
-  """Abort a transaction in a synchronous manner.
-  
-  Manual invocation of transaction abort does not synchronize
-  connections with databases, thus invalidations are not cleared out.
-  This may cause an infinite loop, because a read conflict error happens
-  again and again on the same object.
-
-  So, in this method, collect (potential) Connection objects used
-  for current transaction, and invoke the sync method on every Connection
-  object, then abort the transaction. In most cases, aborting the
-  transaction is redundant, because sync should call abort implicitly.
-  But if no connection is present, it is still required to call abort
-  explicitly, and it does not cause any harm to call abort more than once.
-
-  XXX this is really a hack. This touches the internal code of Transaction.
-  """
-  try:
-    import transaction
-    # Zope 2.8 and later. sync is automatic.
-    transaction.abort()
-  except ImportError:
-    # Zope 2.7 and earlier.
-    t = get_transaction()
-    jar_list = t._get_jars(t._objects, 0)
-    for jar in jar_list:
-      if getattr(jar, 'sync', None) is not None:
-        jar.sync()
-    t.abort()
 
 class Queue:
   """
@@ -228,7 +195,7 @@ class Queue:
     cached_result = validation_text_dict.get(message.order_validation_text)
     if cached_result is None:
       message_list = message.getDependentMessageList(self, activity_tool)
-      get_transaction().commit() # Release locks.
+      transaction.commit() # Release locks.
       if message_list:
         # The result is not empty, so this message is not executable.
         validation_text_dict[message.order_validation_text] = 0
