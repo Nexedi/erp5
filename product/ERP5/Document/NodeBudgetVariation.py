@@ -132,6 +132,8 @@ class NodeBudgetVariation(BudgetVariation):
     if not base_category:
       return dict()
     budget_line = budget_cell.getParentValue()
+    portal = self.getPortalObject()
+    portal_categories = portal.portal_categories
     for criterion_category in budget_cell.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
         continue
@@ -149,7 +151,7 @@ class NodeBudgetVariation(BudgetVariation):
               other_uid_list.append(node.getUid())
           return {axis: NegatedQuery(Query(**{axis: other_uid_list}))}
         return {axis:
-                  self.getPortalObject().unrestrictedTraverse(node_url).getUid()}
+                portal_categories.getCategoryValue(node_url, base_category=criterion_base_category).getUid()}
 
     return dict()
 
