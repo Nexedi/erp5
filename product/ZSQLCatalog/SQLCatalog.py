@@ -129,7 +129,7 @@ else:
 
 
 UID_BUFFER_SIZE = 300
-OBJECT_LIST_SIZE = 300
+OBJECT_LIST_SIZE = 300 # XXX 300 is arbitrary value of catalog object list
 MAX_PATH_LEN = 255
 RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit',
                      'format', 'search_mode', 'operator', 'selection_domain', 'selection_report',
@@ -1257,7 +1257,6 @@ class Catalog(Folder,
     the object list, because calling _catalogObjectList with too many
     objects at a time bloats the process's memory consumption, due to
     caching."""
-    # XXX 300 is arbitrary.
     for i in xrange(0, len(object_list), OBJECT_LIST_SIZE):
       self._catalogObjectList(object_list[i:i + OBJECT_LIST_SIZE],
                               method_id_list=method_id_list,
