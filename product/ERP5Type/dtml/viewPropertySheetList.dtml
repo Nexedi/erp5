@@ -22,7 +22,7 @@
       <div class="list-item"><dtml-var sequence-item></div>
     </td>   
     <td>
-      <div class="list-item"><a href="manage_editPropertySheetForm?class_id=<dtml-var sequence-item>">edit</a>&nbsp;
+      <div class="list-item"><a href="manage_editPropertySheetForm?class_id=<dtml-var sequence-item>">edit</a>&nbsp;<a href="importPropertySheet?class_id=<dtml-var sequence-item>">reload</a>
       </div>
     </td>   
   </tr>    
