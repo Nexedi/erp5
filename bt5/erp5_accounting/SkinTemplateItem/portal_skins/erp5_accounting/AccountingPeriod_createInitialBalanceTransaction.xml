@@ -57,7 +57,7 @@
 \n
 section = context\n
 while section.getPortalType() != \'Organisation\':\n
-  section = context.getParentValue()\n
+  section = section.getParentValue()\n
 \n
 context.accounting_module.newContent(\n
          portal_type=\'Balance Transaction\',\n
