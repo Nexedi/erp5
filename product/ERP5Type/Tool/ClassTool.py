@@ -383,6 +383,29 @@ if allowClassTool():
           LOG('_clearCache', 0, str(name))
           database[name].manage_minimize()
 
+      def _changeEditingPreferences(self, REQUEST, height=None, width=None,
+                                    dtpref_cols="100%", dtpref_rows="20"):
+        """Change editing preferences."""
+        dr = {"Taller":5, "Shorter":-5}.get(height, 0)
+        dc = {"Wider":5, "Narrower":-5}.get(width, 0)
+        if isinstance(height, int): dtpref_rows = height
+        if isinstance(width, int) or \
+           isinstance(width, str) and width.endswith('%'):
+            dtpref_cols = width
+        rows = str(max(1, int(dtpref_rows) + dr))
+        cols = str(dtpref_cols)
+        if cols.endswith('%'):
+           cols = str(min(100, max(25, int(cols[:-1]) + dc))) + '%'
+        else:
+           cols = str(max(35, int(cols) + dc))
+        e = (DateTime("GMT") + 365).rfc822()
+        setCookie = REQUEST["RESPONSE"].setCookie
+        setCookie("dtpref_rows", rows, path='/', expires=e)
+        setCookie("dtpref_cols", cols, path='/', expires=e)
+        REQUEST.other.update({"dtpref_cols":cols, "dtpref_rows":rows})
+
+
+
       security.declareProtected( Permissions.ManagePortal, 'getLocalPropertySheetList' )
       def getLocalPropertySheetList(self):
         """
@@ -495,7 +518,14 @@ class %s(XMLObject):
           Updates a Document with a new text
         """
         previous_text = readLocalDocument(class_id)
-        self.writeLocalDocument(class_id, text, create=0)
+        try:
+          self.writeLocalDocument(class_id, text, create=0)
+        except SyntaxError, msg:
+          if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&errors=%s' % (self.absolute_url(), class_id, msg))
+            return
+          else:
+            return msg
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&manage_tabs_message=Document+Saved' % (self.absolute_url(), class_id))
 
@@ -515,6 +545,31 @@ class %s(XMLObject):
 
         if REQUEST is not None and class_path is None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&manage_tabs_message=Document+Reloaded+Successfully' % (self.absolute_url(), class_id))
+
+      security.declareProtected( Permissions.ManageExtensions, 'editAndImportDocument' )
+      def editAndImportDocument(self, class_id, text, REQUEST=None):
+        """
+        Edit & Import a document class
+        """
+        errors = self.editDocument(class_id, text)
+        if errors is not None:
+          if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&errors=%s' % (self.absolute_url(), class_id, errors))
+            return
+          else:
+            return errors
+
+        self.importDocument(class_id)
+        if REQUEST is not None:
+          REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&manage_tabs_message=Document+Save+And+Reloaded+Successfully' % (self.absolute_url(), class_id))
+
+      def changeDocumentEditingPreferences(self, REQUEST, class_id, height=None, width=None,
+                                           dtpref_cols="100%", dtpref_rows="20"):
+        """Change editing preferences for documents."""
+        self._changeEditingPreferences(REQUEST, height=height, width=width,
+                                       dtpref_cols=dtpref_cols, dtpref_rows=dtpref_rows)
+        REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s' % (self.absolute_url(),
+                                                                              class_id))
 
 
       security.declareProtected( Permissions.ManagePortal, 'getPropertySheetText' )
@@ -601,6 +656,14 @@ class %s:
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&manage_tabs_message=PropertySheet+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
+      def changePropertySheetEditingPreferences(self, REQUEST, class_id, height=None, width=None,
+                                            dtpref_cols="100%", dtpref_rows="20"):
+        """Change editing preferences for property sheet."""
+        self._changeEditingPreferences(REQUEST, height=height, width=width,
+                                       dtpref_cols=dtpref_cols, dtpref_rows=dtpref_rows)
+        REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s' % (self.absolute_url(),
+                                                                               class_id))
+
       security.declareProtected( Permissions.ManagePortal, 'getExtensionText' )
       def getExtensionText(self, class_id):
         """
@@ -657,6 +720,15 @@ def myExtensionMethod(self, param=None):
         self.writeLocalExtension(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s&manage_tabs_message=Extension+Saved' % (self.absolute_url(), class_id))
+
+      def changeExtensionEditingPreferences(self, REQUEST, class_id, height=None, width=None,
+                                            dtpref_cols="100%", dtpref_rows="20"):
+        """Change editing preferences for extensions."""
+        self._changeEditingPreferences(REQUEST, height=height, width=width,
+                                       dtpref_cols=dtpref_cols, dtpref_rows=dtpref_rows)
+        REQUEST.RESPONSE.redirect('%s/manage_editExtensionForm?class_id=%s' % (self.absolute_url(),
+                                                                               class_id))
+
 
       security.declareProtected( Permissions.ManagePortal, 'getTestText' )
       def getTestText(self, class_id):
@@ -747,6 +819,15 @@ class Test(ERP5TypeTestCase):
         self.writeLocalTest(class_id, text, create=0)
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s&manage_tabs_message=Test+Saved' % (self.absolute_url(), class_id))
+
+      def changeTestEditingPreferences(self, REQUEST, class_id, height=None, width=None,
+                                            dtpref_cols="100%", dtpref_rows="20"):
+        """Change editing preferences for test."""
+        self._changeEditingPreferences(REQUEST, height=height, width=width,
+                                       dtpref_cols=dtpref_cols, dtpref_rows=dtpref_rows)
+        REQUEST.RESPONSE.redirect('%s/manage_editTestForm?class_id=%s' % (self.absolute_url(),
+                                                                               class_id))
+
 
       security.declareProtected( Permissions.ManagePortal, 'getConstraintText' )
       def getConstraintText(self, class_id):
@@ -841,6 +922,15 @@ class %s(Constraint):
         _aq_reset()
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&manage_tabs_message=Constraint+Reloaded+Successfully' % (self.absolute_url(), class_id))
+
+
+      def changeConstraintEditingPreferences(self, REQUEST, class_id, height=None, width=None,
+                                            dtpref_cols="100%", dtpref_rows="20"):
+        """Change editing preferences for constraint."""
+        self._changeEditingPreferences(REQUEST, height=height, width=width,
+                                       dtpref_cols=dtpref_cols, dtpref_rows=dtpref_rows)
+        REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s' % (self.absolute_url(),
+                                                                                class_id))
 
       security.declareProtected( Permissions.ManageExtensions, 'generateProduct' )
       def generateProduct(self, product_id,
