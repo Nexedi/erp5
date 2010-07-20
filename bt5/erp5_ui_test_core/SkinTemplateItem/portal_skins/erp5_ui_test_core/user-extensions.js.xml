@@ -11,7 +11,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts33693326.63</string> </value>
+            <value> <string>ts79620529.1</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -76,7 +76,10 @@ Selenium.prototype.assertPortalStatusMessage = function(text) {\n
 \n
 \n
 Selenium.prototype.doType = function(locator, newText) {\n
-    netscape.security.PrivilegeManager.enablePrivilege("UniversalFileRead");\n
+    if (typeof(netscape) != "undefined") {\n
+      // on firefox, we enable privilege to upload file in javascript.\n
+      netscape.security.PrivilegeManager.enablePrivilege("UniversalFileRead");\n
+    }\n
     var element = this.page().findElement(locator);\n
     this.page().replaceText(element, newText);\n
 };\n
@@ -98,7 +101,7 @@ Selenium.prototype.getAbsoluteLocation = function() {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2156</int> </value>
+            <value> <int>2278</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
