@@ -765,27 +765,6 @@ class TestIngestion(ERP5TypeTestCase):
     """
     printAndLog('stepExportImage not implemented')
 
-  def stepCheckHasSnapshot(self, sequence=None, sequence_list=None, **kw):
-    document = self.getDocument('one')
-    self.failUnless(document.hasSnapshotData())
-
-  def stepCheckHasNoSnapshot(self, sequence=None, sequence_list=None, **kw):
-    document = self.getDocument('one')
-    self.failIf(document.hasSnapshotData())
-
-  def stepCreateSnapshot(self, sequence=None, sequence_list=None, **kw):
-    document = self.getDocument('one')
-    document.createSnapshot()
-
-  def stepTryRecreateSnapshot(self, sequence=None, sequence_list=None, **kw):
-    document = self.getDocument('one')
-    # XXX this always fails, don't know why
-    #self.assertRaises(ConversionError, document.createSnapshot)
-
-  def stepDeleteSnapshot(self, sequence=None, sequence_list=None, **kw):
-    document = self.getDocument('one')
-    document.deleteSnapshot()
-
   def stepCleanUp(self, sequence=None, sequence_list=None, **kw):
     """
         Clean up DMS system from old content.
@@ -1213,32 +1192,6 @@ class TestIngestion(ERP5TypeTestCase):
     step_list = [ 'stepCleanUp'
                  ,'stepCreateImageDocument'
                  ,'stepExportImage'
-                ]
-    self.playSequence(step_list, quiet)
-
-
-  def test_07_SnapshotGeneration(self, quiet=QUIET, run=RUN_ALL_TEST):
-    """
-      Generate snapshot, make sure it is there, 
-      try to generate it again, remove and 
-      generate once more
-    """
-    if not run: return
-    if not quiet: printAndLog('test_07_SnapshotGeneration')
-    step_list = [ 'stepCleanUp'
-                 ,'stepCreateTextDocument'
-                 ,'stepUploadFromViewForm'
-                 ,'stepCheckConvertingState'
-                 ,'stepTic'
-                 ,'stepCheckConvertedState'
-                 ,'stepCheckHasNoSnapshot'
-                 ,'stepCreateSnapshot'
-                 ,'stepTryRecreateSnapshot'
-                 ,'stepCheckHasSnapshot'
-                 ,'stepDeleteSnapshot'
-                 ,'stepCheckHasNoSnapshot'
-                 ,'stepCreateSnapshot'
-                 ,'stepTic'
                 ]
     self.playSequence(step_list, quiet)
 
