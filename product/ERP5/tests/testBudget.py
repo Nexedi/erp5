@@ -363,7 +363,17 @@ class TestBudget(ERP5TypeTestCase):
       {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getEngagedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): 102.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
+        budget_line.getAvailableBudgetDict())
       
+    # we can view the forms without error
+    budget_line.BudgetLine_viewEngagedBudget()
+    budget_line.BudgetLine_viewConsumedBudget()
+    budget_line.BudgetLine_viewAvailableBudget()
+
   def test_all_other_and_strict_consumption(self):
     # tests consumptions, by using "all other" virtual node on a node budget
     # variation, and strict membership on category budget variation
@@ -476,6 +486,11 @@ class TestBudget(ERP5TypeTestCase):
       {('source/%s' % budget_line.getRelativeUrl(), 'account_type/asset'): -100.0,
        ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
         budget_line.getEngagedBudgetDict())
+
+    self.assertEquals(
+      {('source/%s' % budget_line.getRelativeUrl(), 'account_type/asset'): 102.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
+        budget_line.getAvailableBudgetDict())
       
 
   def test_consumption_movement_category(self):
@@ -611,6 +626,15 @@ class TestBudget(ERP5TypeTestCase):
 ##       ('source/account_module/goods_purchase', 'product_line/1'): 100.0 
        },
         budget_line.getEngagedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'product_line/1/1.2'): 100.0,
+       ('source/account_module/goods_purchase', 'product_line/1/1.1'): -98.0,
+       # summary line is automatically added (TODO)
+##       ('source/account_module/goods_purchase', 'product_line/1'): 98.0 
+       ('source/account_module/goods_purchase', 'product_line/1'): 2.0 
+       },
+        budget_line.getAvailableBudgetDict())
 
 
     # Other TODOs:

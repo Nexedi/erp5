@@ -83,6 +83,25 @@ class BudgetLine(Predicate, XMLMatrix, Variated):
                   self.getPortalTransitInventoryStateList())
     return self._getBudgetDict(**kw)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAvailableBudgetDict')
+  def getAvailableBudgetDict(self, **kw):
+    """Returns all the engagements in a dict where the keys are the cells, and
+    the value is the engaged budget.
+    """
+    budget_dict =  dict([(k, v * -1) for (k,v) in
+                         self.getEngagedBudgetDict(**kw).items()])
+    
+    cell_key_list = self.getCellKeyList()
+    for cell_key in cell_key_list:
+      cell_key = tuple(cell_key)
+      cell = self.getCell(*cell_key)
+      if cell is not None:
+        engaged = budget_dict.get(cell_key, 0)
+        budget_dict[cell_key] = cell.getCurrentBalance() + engaged
+
+    return budget_dict
+
   def _getBudgetDict(self, **kw):
     """Use getCurrentInventoryList to compute all budget cell consumptions at
     once, and returns them in a dict.
