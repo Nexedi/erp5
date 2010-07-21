@@ -77,8 +77,8 @@ VALID_IMAGE_FORMAT_LIST = ('jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm', 'tiff')
 DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
                             'large', 'large', 'xlarge',)
-
-DEFAULT_QUALITY = 75
+# default image quality
+DEFAULT_IMAGE_QUALITY = 75
 
 DEFAULT_CONTENT_TYPE = 'text/html'
 

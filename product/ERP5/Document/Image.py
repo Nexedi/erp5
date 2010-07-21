@@ -44,7 +44,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, ConversionError,\
-                     VALID_TEXT_FORMAT_LIST, DEFAULT_DISPLAY_ID_LIST, DEFAULT_QUALITY, _MARKER
+                     VALID_TEXT_FORMAT_LIST, DEFAULT_DISPLAY_ID_LIST, DEFAULT_IMAGE_QUALITY, _MARKER
 from os.path import splitext
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
@@ -185,7 +185,7 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   security.declareProtected(Permissions.View, 'tag')
   def tag(self, display=None, height=None, width=None, cookie=0,
-                alt=None, css_class=None, format=None, quality=DEFAULT_QUALITY,
+                alt=None, css_class=None, format=None, quality=None,
                 resolution=None, frame=None, **kw):
     """Return HTML img tag."""
     self._upradeImage()
@@ -193,7 +193,8 @@ class Image(TextConvertableMixin, File, OFSImage):
     # Get cookie if display is not specified.
     if display is None:
       display = self.REQUEST.cookies.get('display', None)
-
+    if quality is None:
+      quality = self.getDefaultImageQuality(format)
     # display may be set from a cookie.
     image_size = self.getSizeFromImageDisplay(display)
     convert_kw = dict(format=format, quality=quality, resolution=resolution,
@@ -268,10 +269,12 @@ class Image(TextConvertableMixin, File, OFSImage):
     return links
 
   security.declareProtected(Permissions.AccessContentsInformation, 'displayMap')
-  def displayMap(self, exclude=None, format=None, quality=DEFAULT_QUALITY,\
+  def displayMap(self, exclude=None, format=None, quality=None,\
                                                               resolution=None):
     """Return list of displays with size info."""
     displays = []
+    if quality is None:
+      quality = self.getDefaultImageQuality(format)
     for id in self.displayIds(exclude):
       if self._isGenerated(id, format=format, quality=quality,\
                                                         resolution=resolution):
@@ -331,7 +334,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     image_size = self.getSizeFromImageDisplay(kw.get('display'))
     # store all keys usefull to convert or resize an image
     # 'display' parameter can be discarded
-    convert_kw = {'quality': kw.get('quality', DEFAULT_QUALITY),
+    convert_kw = {'quality': kw.get('quality', self.getDefaultImageQuality(format)),
                   'resolution': kw.get('resolution'),
                   'frame': kw.get('frame'),
                   'image_size': image_size,
@@ -406,15 +409,17 @@ class Image(TextConvertableMixin, File, OFSImage):
     """Return raw photo data for given display."""
     width, height = self._getAspectRatioSize(*image_size)
     if ((width, height) == image_size or (width, height) == (0, 0))\
-       and quality == DEFAULT_QUALITY and resolution is None and frame is None\
+       and quality == self.getDefaultImageQuality(format) and resolution is None and frame is None\
        and not format:
       # No resizing, no conversion, return raw image
       return self.getData()
     return self._resize(quality, width, height, format, resolution, frame)
 
-  def _makeDisplayPhoto(self, format=None, quality=DEFAULT_QUALITY,
+  def _makeDisplayPhoto(self, format=None, quality=None,
                                  resolution=None, frame=None, image_size=None):
     """Create given display."""
+    if quality is None:
+      quality = self.getDefaultImageQuality(format)
     width, height = image_size
     base, ext = splitext(self.id)
     id = '%s_%s_%s.%s'% (base, width, height, ext,)
@@ -470,3 +475,11 @@ class Image(TextConvertableMixin, File, OFSImage):
     """
     File.PUT(self, REQUEST, RESPONSE)
     self._update_image_info()
+
+  def getDefaultImageQuality(self, format=None):
+    """
+    Get default image quality for a format.
+    """
+    preference_tool = self.getPortalObject().portal_preferences
+    quality = preference_tool.getPreference('preferred_image_quality', DEFAULT_IMAGE_QUALITY)
+    return quality
