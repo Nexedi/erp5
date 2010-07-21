@@ -1900,6 +1900,8 @@ return 1
     Test converting to image all Document portal types on traversal i.e.:
      - image_module/1?quality=100&display=xlarge&format=jpeg
      - document_module/1?quality=100&display=large&format=jpeg
+     - document_module/1?quality=10&display=large&format=jpeg
+     - document_module/1?display=large&format=jpeg
      - etc ...
     """
     # Create OOo document
@@ -1924,7 +1926,7 @@ return 1
       width = int(preference_tool.getPreference(width_preference))
       return (width, height)
 
-    def getURLSize(uri, **kw):
+    def getURLSizeList(uri, **kw):
       # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
       url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
       format=kw.get('format', 'jpeg')
@@ -1932,13 +1934,15 @@ return 1
       # save as file with proper incl. format filename (for some reasons PIL uses this info)
       filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
       f = open(filename, "w")
-      f.write(infile.read())
+      image_data = infile.read()
+      f.write(image_data)
       f.close()
       infile.close()
+      file_size = len(image_data)
       image = Image.open(filename)
       image_size = image.size
       os.remove(filename)
-      return image_size
+      return image_size, file_size
 
     ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
     pdf_document_url = '%s/%s' %(self.portal.absolute_url(), pdf_document.getRelativeUrl())
@@ -1954,16 +1958,35 @@ return 1
         # so allow some tollerance which is produced by respective portal_transform command
 
         # any OOo based portal type
-        ooo_document_image_size = getURLSize(ooo_document_url, **convert_kw)
+        ooo_document_image_size, ooo_document_file_size = getURLSizeList(ooo_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(ooo_document_image_size) <= max_tollerance_px)
 
         # PDF
-        pdf_document_image_size = getURLSize(pdf_document_url, **convert_kw)
+        pdf_document_image_size, pdf_document_file_size = getURLSizeList(pdf_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(pdf_document_image_size) <= max_tollerance_px)
 
         # Image
-        image_document_image_size = getURLSize(image_document_url, **convert_kw)
+        image_document_image_size, image_document_file_size = getURLSizeList(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
+
+    # test changing image quality will decrease its file size
+    for url in (image_document_url, pdf_document_url, ooo_document_url):
+      convert_kw = {'display':'xlarge', \
+                    'format':'jpeg', \
+                    'quality':100}
+      image_document_image_size_100p,image_document_file_size_100p = getURLSizeList(url, **convert_kw)
+      # decrease in quality should decrease its file size
+      convert_kw['quality'] = 5.0
+      image_document_image_size_5p,image_document_file_size_5p = getURLSizeList(url, **convert_kw)
+      # removing quality should enable defaults settings which should be reasonable between 5% and 100%
+      del convert_kw['quality']
+      image_document_image_size_no_quality,image_document_file_size_no_quality = getURLSizeList(url, **convert_kw)
+      # check file sizes
+      self.assertTrue(image_document_file_size_100p > image_document_file_size_no_quality and \
+                      image_document_file_size_no_quality > image_document_file_size_5p)
+      # no matter of quality image sizes whould be the same
+      self.assertTrue(image_document_image_size_100p==image_document_image_size_5p and \
+                        image_document_image_size_5p==image_document_image_size_no_quality)
 
   def test_checkConversionFormatPermission(self):
     """

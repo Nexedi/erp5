@@ -45,8 +45,9 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import Document,\
-VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
+from Products.ERP5.Document.Document import Document, \
+       VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
+from Products.ERP5.Document.Image import getDefaultImageQuality
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5Type.Utils import fill_args_from_request
 from zLOG import LOG, ERROR
@@ -92,7 +93,7 @@ class TimeoutTransport(SafeTransport):
 
 
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
-                                               TextConvertableMixin, Document):
+                  TextConvertableMixin, Document):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -281,7 +282,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
-  def _convert(self, format, display=None, **kw):
+  def _convert(self, format, display=None, quality=_MARKER, **kw):
     """Convert the document to the given format.
 
     If a conversion is already stored for this format, it is returned
@@ -340,6 +341,9 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
+    if quality is _MARKER:
+      # we need to determine quality before image conversion happens due to cache
+      quality = getDefaultImageQuality(self.getPortalObject(), format)
     # Return converted file
     if requires_pdf_first:
       # We should use original_format whenever we wish to
@@ -348,7 +352,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       if display is None:
         has_format = self.hasConversion(format=original_format)
       else:
-        has_format = self.hasConversion(format=original_format, display=display)
+        has_format = self.hasConversion(format=original_format, display=display, quality=quality)
     elif display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
       has_format = self.hasConversion(format=original_format)
     else:
@@ -386,20 +390,20 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                        file_name=self.getId(),
                                        temp_object=1)
         temp_image._setData(data)
-        # we care for first page only
-        mime, data = temp_image.convert(original_format, display=display, frame=0, **kw)
+        # we care for first page only but as well for image quality
+        mime, data = temp_image.convert(original_format, display=display, frame=0, quality=quality, **kw)
         # store conversion
         if display is None:
           self.setConversion(data, mime, format=original_format)
         else:
-          self.setConversion(data, mime, format=original_format, display=display)
+          self.setConversion(data, mime, format=original_format, display=display, quality=quality)
 
     if requires_pdf_first:
       format = original_format
     if display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
       return self.getConversion(format=original_format)
     else:
-      return self.getConversion(format=original_format, display=display)
+      return self.getConversion(format=original_format, display=display, quality=quality)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
