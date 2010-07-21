@@ -13,6 +13,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>cell_getter_method</string>
                 <string>editable_attributes</string>
                 <string>global_attributes</string>
               </list>
@@ -75,6 +76,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>cell_getter_method</string> </key>
+                    <value> <string>BudgetLine_getAvailableBudgetCell</string> </value>
+                </item>
                 <item>
                     <key> <string>editable_attributes</string> </key>
                     <value>
