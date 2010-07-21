@@ -226,4 +226,10 @@ class HtmlStylePreference:
       'preference'  : 1,
       'default'     : 'large',
       'mode'        : 'w' },
+    { 'id'          : 'preferred_image_quality',
+      'description' : 'Preferred image quality.',
+      'type'        : 'float',
+      'preference'  : 1,
+      'default'     : 75.0,
+      'mode'        : 'w' },
 )
