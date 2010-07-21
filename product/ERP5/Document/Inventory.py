@@ -154,12 +154,11 @@ class Inventory(Delivery):
 
     for inventory_calculation_dict in default_inventory_calculation_list:
 
-      # build a dict containing all inventory for this node 
+      # build a dict containing all inventory for this node
       # group by resource/variation and then subvariation
       current_inventory_list = \
-          self.getPortalObject().portal_simulation.getInventoryList(        
+          self.getPortalObject().portal_simulation.getCurrentInventoryList(
                   to_date=stop_date,
-                  simulation_state=self.getPortalCurrentInventoryStateList(),
                   connection_id=connection_id,
                   **inventory_calculation_dict['inventory_params']
           )
