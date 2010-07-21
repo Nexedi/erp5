@@ -78,7 +78,14 @@ class CategoryBudgetVariation(BudgetVariation):
     base_category = self.getProperty('variation_base_category')
     if not base_category:
       return dict()
-    for criterion_category in budget_cell.getMembershipCriterionCategoryList():
+
+    context = budget_cell
+    if self.isMemberOf('budget_variation/budget'):
+      context = budget_cell.getParentValue().getParentValue()
+    elif self.isMemberOf('budget_variation/budget_line'):
+      context = budget_cell.getParentValue()
+
+    for criterion_category in context.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
         continue
       criterion_base_category, category_url = criterion_category.split('/', 1)
@@ -94,6 +101,39 @@ class CategoryBudgetVariation(BudgetVariation):
         return {axis: criterion_category}
     return dict()
 
+  def getInventoryListQueryDict(self, budget_line):
+    """Returns the query dict to pass to simulation query for a budget line
+    """
+    axis = self.getInventoryAxis()
+    if not axis:
+      return dict()
+    base_category = self.getProperty('variation_base_category')
+    if not base_category:
+      return dict()
+
+    context = budget_line
+    if self.isMemberOf('budget_variation/budget'):
+      context = budget_line.getParentValue()
+
+    query_dict = dict()
+    if axis == 'movement':
+      axis = 'default_strict_%s_uid' % base_category
+      query_dict['group_by'] = [axis]
+    else:
+      query_dict['group_by_%s' % axis] = True
+      if axis in ('node', 'section', 'payment', 'function', 'project',
+                  'mirror_section', 'mirror_node' ):
+        axis = '%s_uid' % axis
+
+    for category in context.getVariationCategoryList(
+                             base_category_list=(base_category,)):
+      if axis.endswith('_uid'):
+        category = self.getPortalObject().portal_categories\
+                                .getCategoryUid(category)
+      query_dict.setdefault(axis, []).append(category)
+
+    return query_dict
+  
   def getBudgetVariationRangeCategoryList(self, context):
     """Returns the Variation Range Category List that can be applied to this
     budget.

@@ -91,3 +91,74 @@ class BudgetVariation(Predicate):
     """
     return {}
 
+  def getInventoryListQueryDict(self, budget_line):
+    """Returns the query dict to pass to simulation query for a budget line
+    """
+    return {}
+
+  def _getCellKeyFromInventoryListBrain(self, brain, budget_line):
+    """Compute the cell key from an inventory brain.
+    The cell key can be used to retrieve the budget cell in the corresponding
+    budget line using budget_line.getCell
+    """
+    if not self.isMemberOf('budget_variation/budget_cell'):
+      return None
+
+    axis = self.getInventoryAxis()
+    if not axis:
+      return None
+    base_category = self.getProperty('variation_base_category')
+    if not base_category:
+      return None
+
+    movement = brain.getObject()
+    # axis 'movement' is simply a category membership on movements
+    if axis == 'movement':
+      return movement.getDefaultAcquiredCategoryMembership(base_category,
+                                                           base=True)
+
+    # is it a source brain or destination brain ?
+    is_source_brain = True
+    if (brain.node_uid != brain.mirror_node_uid):
+      is_source_brain = (brain.node_uid == movement.getSourceUid())
+    elif (brain.section_uid != brain.mirror_section_uid):
+      is_source_brain = (brain.section_uid == movement.getSourceSectionUid())
+    elif brain.total_quantity:
+      is_source_brain = (brain.total_quantity == movement.getQuantity())
+    else:
+      raise NotImplementedError('Could not guess brain side')
+
+    if axis.endswith('_category') or\
+            axis.endswith('_category_strict_membership'):
+      # if the axis is category, we get the node and then returns the category
+      # from that node
+      if axis.endswith('_category'):
+        axis = axis[:-len('_category')]
+      if axis.endswith('_category_strict_membership'):
+        axis = axis[:-len('_category_strict_membership')]
+      if is_source_brain:
+        if axis == 'node':
+          node = movement.getSourceValue()
+        else:
+          node = movement.getProperty('source_%s_value' % axis)
+      else:
+        if axis == 'node':
+          node = movement.getDestinationValue()
+        else:
+          node = movement.getProperty('destination_%s_value' % axis)
+      if node is not None:
+        return node.getDefaultAcquiredCategoryMembership(base_category,
+                                                         base=True)
+      return None
+
+    # otherwise we just return the node
+    if is_source_brain:
+      if axis == 'node':
+        return '%s/%s' % (base_category, movement.getSource())
+      return '%s/%s' % (base_category,
+                        movement.getProperty('source_%s' % axis))
+    if axis == 'node':
+      return '%s/%s' % (base_category, movement.getDestination())
+    return '%s/%s' % (base_category,
+                      movement.getProperty('destination_%s' % axis))
+
