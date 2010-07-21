@@ -552,18 +552,30 @@ class SimulationTool(BaseTool):
         omit_output=0,
         # group by
         group_by_node=0,
+        group_by_node_category=0,
+        group_by_node_category_strict_membership=0,
         group_by_mirror_node=0,
+        group_by_mirror_node_category=0,
+        group_by_mirror_node_category_strict_membership=0,
         group_by_section=0,
         group_by_section_category=0,
         group_by_section_category_strict_membership=0,
         group_by_mirror_section=0,
+        group_by_mirror_section_category=0,
+        group_by_mirror_section_category_strict_membership=0,
         group_by_payment=0,
+        group_by_payment_category=0,
+        group_by_payment_category_strict_membership=0,
         group_by_sub_variation=0,
         group_by_variation=0,
         group_by_movement=0,
         group_by_resource=0,
         group_by_project=0,
+        group_by_project_category=0,
+        group_by_project_category_strict_membership=0,
         group_by_function=0,
+        group_by_function_category=0,
+        group_by_function_category_strict_membership=0,
         group_by_date=0,
         # sort_on
         sort_on=None,
@@ -768,6 +780,37 @@ class SimulationTool(BaseTool):
       if group_by_section_category_strict_membership:
         related_key_group_by_expression_list.append(
             'section_category_strict_membership_uid')
+      if group_by_mirror_section_category:
+        related_key_group_by_expression_list.append('mirror_section_category_uid')
+      if group_by_mirror_section_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'mirror_section_category_strict_membership_uid')
+      if group_by_node_category:
+        related_key_group_by_expression_list.append('node_category_uid')
+      if group_by_node_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'node_category_strict_membership_uid')
+      if group_by_mirror_node_category:
+        related_key_group_by_expression_list.append('mirror_node_category_uid')
+      if group_by_mirror_node_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'mirror_node_category_strict_membership_uid')
+      if group_by_payment_category:
+        related_key_group_by_expression_list.append('payment_category_uid')
+      if group_by_payment_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'payment_category_strict_membership_uid')
+      if group_by_function_category:
+        related_key_group_by_expression_list.append('function_category_uid')
+      if group_by_function_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'function_category_strict_membership_uid')
+      if group_by_function_category:
+        related_key_group_by_expression_list.append('function_category_uid')
+      if group_by_function_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'function_category_strict_membership_uid')
+
       if related_key_group_by_expression_list:
         new_kw['related_key_group_by'] = related_key_group_by_expression_list
 
