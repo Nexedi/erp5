@@ -54,6 +54,10 @@ from zLOG import LOG, WARNING
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.CMFCore.utils import getToolByName
 
+def getDefaultImageQuality(portal, format=None):
+  preference_tool = portal.portal_preferences
+  return preference_tool.getPreference('preferred_image_quality', DEFAULT_IMAGE_QUALITY)
+
 class Image(TextConvertableMixin, File, OFSImage):
   """
     An Image is a File which contains image data. It supports
@@ -337,6 +341,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     quality = kw.get('quality', _MARKER)
     if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
+    #print "image._convert", kw, quality, self.getRelativeUrl(), self.getPortalType()
     convert_kw = {'quality': quality,
                   'resolution': kw.get('resolution'),
                   'frame': kw.get('frame'),
@@ -483,6 +488,4 @@ class Image(TextConvertableMixin, File, OFSImage):
     """
     Get default image quality for a format.
     """
-    preference_tool = self.getPortalObject().portal_preferences
-    quality = preference_tool.getPreference('preferred_image_quality', DEFAULT_IMAGE_QUALITY)
-    return quality
+    return getDefaultImageQuality(self.getPortalObject(), format)
