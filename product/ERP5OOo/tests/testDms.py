@@ -78,19 +78,6 @@ TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
-
-def printAndLog(msg):
-  """
-  A utility function to print a message
-  to the standard output and to the LOG
-  at the same time
-  """
-  if not QUIET:
-    msg = str(msg)
-    ZopeTestCase._print('\n ' + msg)
-    LOG('Testing... ', 0, msg)
-
-
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_document', name)
 
@@ -235,7 +222,6 @@ class TestDocument(TestDocumentMixin):
     """
       Standard test to make sure we have everything we need - all the tools etc
     """
-    printAndLog('\nTest Has Everything ')
     self.assertNotEqual(self.getCategoryTool(), None)
     self.assertNotEqual(self.getSimulationTool(), None)
     self.assertNotEqual(self.getTypeTool(), None)
@@ -247,7 +233,6 @@ class TestDocument(TestDocumentMixin):
     """
       Test revision mechanism
     """
-    printAndLog('\nTest Revision System')
     # create a test document
     # revision should be 1
     # upload file (can be the same) into it
@@ -284,7 +269,6 @@ class TestDocument(TestDocumentMixin):
     """
       Test versioning
     """
-    printAndLog('\nTest Versioning System')
     # create a document 1, set coordinates (reference=TEST, version=002, language=en)
     # create a document 2, set coordinates (reference=TEST, version=002, language=en)
     # create a document 3, set coordinates (reference=TEST, version=004, language=en)
@@ -320,7 +304,6 @@ class TestDocument(TestDocumentMixin):
     """
       Test versioning with multi-language support
     """
-    printAndLog('\nTest Versioning With Language')
     # create empty test documents, set their coordinates as follows:
     # (1) TEST, 002, en
     # (2) TEST, 002, fr
@@ -378,8 +361,6 @@ class TestDocument(TestDocumentMixin):
       Explicit relations are just like any other relation, so no need to test them here
       except for similarity cloud which we test.
     """
-
-    printAndLog('\nTest Explicit Relations')
     # create test documents:
     # (1) TEST, 002, en
     # (2) TEST, 003, en
@@ -482,7 +463,6 @@ class TestDocument(TestDocumentMixin):
     def sqlresult_to_document_list(result):
       return [i.getObject() for i in result]
 
-    printAndLog('\nTest Implicit Relations')
     # create docs to be referenced:
     # (1) TEST, 002, en
     filename = 'TEST-en-002.odt'
@@ -527,7 +507,6 @@ class TestDocument(TestDocumentMixin):
 
     transaction.commit()
     self.tic()
-    printAndLog('\nTesting Implicit Predecessors')
     # the implicit predecessor will find documents by reference.
     # version and language are not used.
     # the implicit predecessors should be:
@@ -542,7 +521,6 @@ class TestDocument(TestDocumentMixin):
     # clear transactional variable cache
     transaction.commit()
 
-    printAndLog('\nTesting Implicit Successors')
     # the implicit successors should be return document with appropriate
     # language.
 
@@ -682,7 +660,6 @@ class TestDocument(TestDocumentMixin):
     Check that the processing state of a cloned document
     is not draft
     """
-    printAndLog('\nProcessing State of a Cloned Document')
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -723,7 +700,6 @@ class TestDocument(TestDocumentMixin):
     Check the validation state of embedded document when its container is
     cloned
     """
-    printAndLog('\nValidation State of a Cloned Document')
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -753,7 +729,6 @@ class TestDocument(TestDocumentMixin):
     """
     Check the validation state of an embedded document
     """
-    printAndLog('\nValidation State of an Embedded Document')
     filename = 'EmbeddedImage-en-002.odt'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
