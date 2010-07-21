@@ -185,7 +185,7 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   security.declareProtected(Permissions.View, 'tag')
   def tag(self, display=None, height=None, width=None, cookie=0,
-                alt=None, css_class=None, format=None, quality=None,
+                alt=None, css_class=None, format=None, quality=_MARKER,
                 resolution=None, frame=None, **kw):
     """Return HTML img tag."""
     self._upradeImage()
@@ -193,7 +193,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     # Get cookie if display is not specified.
     if display is None:
       display = self.REQUEST.cookies.get('display', None)
-    if quality is None:
+    if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
     # display may be set from a cookie.
     image_size = self.getSizeFromImageDisplay(display)
@@ -269,11 +269,11 @@ class Image(TextConvertableMixin, File, OFSImage):
     return links
 
   security.declareProtected(Permissions.AccessContentsInformation, 'displayMap')
-  def displayMap(self, exclude=None, format=None, quality=None,\
+  def displayMap(self, exclude=None, format=None, quality=_MARKER,\
                                                               resolution=None):
     """Return list of displays with size info."""
     displays = []
-    if quality is None:
+    if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
     for id in self.displayIds(exclude):
       if self._isGenerated(id, format=format, quality=quality,\
@@ -334,7 +334,10 @@ class Image(TextConvertableMixin, File, OFSImage):
     image_size = self.getSizeFromImageDisplay(kw.get('display'))
     # store all keys usefull to convert or resize an image
     # 'display' parameter can be discarded
-    convert_kw = {'quality': kw.get('quality', self.getDefaultImageQuality(format)),
+    quality = kw.get('quality', _MARKER)
+    if quality is _MARKER:
+      quality = self.getDefaultImageQuality(format)
+    convert_kw = {'quality': quality,
                   'resolution': kw.get('resolution'),
                   'frame': kw.get('frame'),
                   'image_size': image_size,
@@ -415,10 +418,10 @@ class Image(TextConvertableMixin, File, OFSImage):
       return self.getData()
     return self._resize(quality, width, height, format, resolution, frame)
 
-  def _makeDisplayPhoto(self, format=None, quality=None,
+  def _makeDisplayPhoto(self, format=None, quality=_MARKER,
                                  resolution=None, frame=None, image_size=None):
     """Create given display."""
-    if quality is None:
+    if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
     width, height = image_size
     base, ext = splitext(self.id)
