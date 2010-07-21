@@ -66,7 +66,7 @@ if at_date:\n
 \n
  # XXX use getBudgetConsumptionMethod ?\n
 if src__:\n
-  return context.portal_simulation.getCurrentInventoryAssetPrice(src__=src__, **kw)\n
+  return \'-- %s\\n%s\' % (kw, context.portal_simulation.getCurrentInventoryAssetPrice(src__=src__, **kw))\n
 return (context.portal_simulation.getCurrentInventoryAssetPrice(**kw) or 0) * context.getParentValue().BudgetLine_getConsumptionSign()\n
 </string> </value>
         </item>
