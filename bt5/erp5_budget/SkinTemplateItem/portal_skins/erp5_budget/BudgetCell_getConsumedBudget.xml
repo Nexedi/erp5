@@ -59,12 +59,6 @@ budget_model = budget.getSpecialiseValue(portal_type=\'Budget Model\')\n
 if budget_model is not None:\n
   kw = budget_model.getInventoryQueryDict(context)\n
 \n
-kw.setdefault(\'from_date\', budget.getStartDateRangeMin())\n
-start_date_range_max = budget.getStartDateRangeMax()\n
-if start_date_range_max:\n
-  start_date_range_max = start_date_range_max.latestTime()\n
-kw.setdefault(\'at_date\', start_date_range_max)\n
-\n
 if from_date:\n
   kw[\'from_date\'] = from_date\n
 if at_date:\n
@@ -120,7 +114,6 @@ return (context.portal_simulation.getCurrentInventoryAssetPrice(**kw) or 0) * co
                             <string>budget</string>
                             <string>budget_model</string>
                             <string>None</string>
-                            <string>start_date_range_max</string>
                             <string>_write_</string>
                             <string>_apply_</string>
                           </tuple>
