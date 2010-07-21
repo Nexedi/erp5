@@ -30,6 +30,7 @@
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
                           setSecurityManager, newSecurityManager
+from AccessControl.PermissionRole import  PermissionRole
 from MethodObject import Method
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from zLOG import LOG, PROBLEM
@@ -109,6 +110,10 @@ def createPreferenceToolAccessorList(portal) :
       for attribute_name in attr_list:
         method = PreferenceMethod(attribute_name, prop.get('default'))
         setattr(PreferenceTool, attribute_name, method)
+      read_permission = prop.get('read_permission')
+      if read_permission:
+        setattr(PreferenceTool, attribute_name + '__roles__',
+            PermissionRole(read_permission))
 
 
 class func_code: pass
