@@ -2117,11 +2117,33 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),
                     user_pref.getPreferredThumbnailImageHeight()),
                      image.getSizeFromImageDisplay('thumbnail'))
+
+class TestDocumentPerformance(TestDocumentMixin):
+
+  def test_01_LargeOOoDocumentToImageConversion(self):
+    """
+      Test large OOoDocument to image conversion
+    """
+    ooo_document = self.portal.document_module.newContent(portal_type='Spreadsheet')
+    upload_file = makeFileUpload('import_big_spreadsheet.ods')
+    ooo_document.edit(file=upload_file)
+    self.stepTic()
+    before = time.time()
+    # converting any OOoDocument -> PDF -> Image
+    # make sure that this can happen in less tan XXX seconds i.e. code doing convert
+    # uses only first PDF frame (not entire PDF) to make an image - i.e.optimized enough to not kill 
+    # entire system performance by doing extensive calculations over entire PDF (see r37102-37103)
+    ooo_document.convert(format='png')
+    after = time.time()
+    req_time = (after - before)
+    # we should have image converted in less than 20s
+    self.assertTrue(req_time < 20.0)
     
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
   suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
+  suite.addTest(unittest.makeSuite(TestDocumentPerformance))
   return suite
 
 
