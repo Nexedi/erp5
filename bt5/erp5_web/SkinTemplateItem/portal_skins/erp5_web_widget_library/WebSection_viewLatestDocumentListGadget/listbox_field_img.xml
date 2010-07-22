@@ -175,7 +175,9 @@
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
@@ -262,7 +264,7 @@
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
-                    <value> <string>PNG</string> </value>
+                    <value> <string>png</string> </value>
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
@@ -310,6 +312,22 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: cell.getIcon()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <tuple>
+        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: cell.getPortalObject().portal_preferences.get(\'preferred_image_format\', \'png\')</string> </value>
         </item>
       </dictionary>
     </pickle>
