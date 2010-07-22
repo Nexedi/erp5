@@ -66,7 +66,7 @@ try:\n
 except KeyError:\n
   engaged_budget_dict = container.REQUEST.other[script.getId()] = context.getEngagedBudgetDict()\n
 \n
-return getFakeBudgetCell(engaged_budget_dict[args])\n
+return getFakeBudgetCell(engaged_budget_dict.get(args))\n
 </string> </value>
         </item>
         <item>
