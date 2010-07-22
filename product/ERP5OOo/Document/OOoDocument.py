@@ -38,15 +38,13 @@ try:
     from OFS.content_types import guess_content_type
 except ImportError:
     from zope.contenttype import guess_content_type
-from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
-    _ViewEmulator
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, \
        VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from Products.ERP5.Document.Image import getDefaultImageQuality
-from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5Type.Utils import fill_args_from_request
 from zLOG import LOG, ERROR
 
