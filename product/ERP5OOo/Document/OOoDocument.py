@@ -30,8 +30,6 @@
 import xmlrpclib, base64, re, zipfile, cStringIO
 from warnings import warn
 from xmlrpclib import Fault
-from xmlrpclib import Transport
-from xmlrpclib import SafeTransport
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
 from OFS.Image import Pdata
@@ -57,40 +55,14 @@ from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixin
 
+# connection plugins
+from Products.ERP5Type.ConnectionPlugin.TimeoutTransport import TimeoutTransport
+
 enc=base64.encodestring
 dec=base64.decodestring
 
 _MARKER = []
 EMBEDDED_FORMAT = '_embedded'
-
-class TimeoutTransport(SafeTransport):
-  """A xmlrpc transport with configurable timeout.
-  """
-  def __init__(self, timeout=None, scheme='http'):
-    self._timeout = timeout
-    self._scheme = scheme
-    # On Python 2.6, .__init__() of Transport and SafeTransport must be called
-    # to set up the ._use_datetime attribute.
-    # sigh... too bad we can't use super() here, as SafeTransport is not
-    # a new-style class (as of Python 2.4 to 2.6)
-    # remove the gettattr below when we drop support for Python 2.4
-    super__init__ = getattr(SafeTransport, '__init__', lambda self: None)
-    super__init__(self)
-
-  def send_content(self, connection, request_body):
-    connection.putheader("Content-Type", "text/xml")
-    connection.putheader("Content-Length", str(len(request_body)))
-    connection.endheaders()
-    if self._timeout:
-      connection._conn.sock.settimeout(self._timeout)
-    if request_body:
-      connection.send(request_body)
-
-  def make_connection(self, h):
-    if self._scheme == 'http':
-      return Transport.make_connection(self, h)
-    return SafeTransport.make_connection(self, h)
-
 
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
                   TextConvertableMixin, Document):
