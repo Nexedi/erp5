@@ -58,9 +58,6 @@
 base_id = \'cell\'\n
 line.updateCellRange(base_id=base_id)\n
 \n
-# TODO: here we should update membership criterion category list on existing cell\n
-# and add an interaction on newCell to initialize this membership\n
-\n
 # also update membership criterion category list on line\n
 if line.getMembershipCriterionBaseCategoryList():\n
   line.setMembershipCriterionCategoryList([])\n
