@@ -202,6 +202,60 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEquals(['group/demo_group'],
         budget_line.getMembershipCriterionCategoryList())
 
+  def test_category_budget_line_and_budget_cell_variation(self):
+    # test that using a variation on budget line level sets membership
+    # criterion on budget line, but not on budget cell
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_line',
+                    inventory_axis='section_category',
+                    variation_base_category='group',)
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='node_category',
+                    variation_base_category='account_type',)
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    specialise_value=budget_model)
+    budget_line = budget.newContent(portal_type='Budget Line')
+
+    self.assertEquals(['group', 'account_type'],
+                      budget_line.getVariationBaseCategoryList())
+    
+    budget_line.edit(variation_category_list=['group/demo_group',
+                                              'account_type/expense'])
+    self.assertEquals(['group'],
+        budget_line.getMembershipCriterionBaseCategoryList())
+    self.assertEquals(['group/demo_group'],
+        budget_line.getMembershipCriterionCategoryList())
+
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+
+             field_matrixbox_quantity_cell_0_0_0="1",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[
+               'account_type/expense'],
+        ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(1, len(budget_line.contentValues()))
+    budget_cell = budget_line.getCell('account_type/expense')
+    self.assertEquals(['account_type'],
+                       budget_cell.getMembershipCriterionBaseCategoryList())
+    self.assertEquals(['account_type/expense'],
+                       budget_cell.getMembershipCriterionCategoryList())
+
 
   def test_category_budget_variation(self):
     budget_model = self.portal.budget_model_module.newContent(
