@@ -35,6 +35,7 @@ from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 
 from Products.ERP5 import _dtmldir
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class SolverProcessTool(BaseTool):
   """ Container for solver processes.
@@ -72,6 +73,7 @@ class SolverProcessTool(BaseTool):
         return True
     return False
 
+  @UnrestrictedMethod
   def newSolverProcess(self, delivery_or_movement=None, temp_object=False):
     """
     Builds a new solver process from the divergence

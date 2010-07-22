@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFActivity.ActiveProcess import ActiveProcess
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class SolverProcess(XMLObject, ActiveProcess):
   """
@@ -76,6 +77,7 @@ class SolverProcess(XMLObject, ActiveProcess):
                            )
 
   # Implementation
+  @UnrestrictedMethod
   def buildTargetSolverList(self):
     """
       Builds target solvers from solver decisions
