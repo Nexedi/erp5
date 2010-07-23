@@ -423,13 +423,12 @@ class SimulationTool(BaseTool):
         ctool = getToolByName(self, 'portal_catalog')
         sql_kw = sql_kw.copy()
         new_kw = new_kw.copy()
-        # Some columns cannot be found automatically, prepend table name to
-        # avoid ambiguities.
 
         # Group-by expression  (eg. group_by=['node_uid'])
         group_by = new_kw.pop('group_by', [])
 
         # group by from stock table (eg. group_by_node=True)
+        # prepend table name to avoid ambiguities.
         column_group_by = new_kw.pop('column_group_by', [])
         if column_group_by:
           group_by.extend(['%s.%s' % (table, x) for x in column_group_by])
@@ -449,6 +448,14 @@ class SimulationTool(BaseTool):
 
         if group_by:
           new_kw['group_by'] = group_by
+
+        # select expression
+        select_dict = new_kw.get('select_dict', dict())
+        related_key_select_expression_list = new_kw.pop(
+                'related_key_select_expression_list', [])
+        if related_key_select_expression_list:
+          select_dict[x] = '%s_%s' % (table, x)
+        new_kw['select_dict'] = select_dict
 
         # Column values
         column_value_dict = new_kw.pop('column_value_dict', {})
@@ -745,6 +752,18 @@ class SimulationTool(BaseTool):
                       ['catalog.uid=%s' % uid for uid in uid_list])
 
       # build the group by expression
+      # if we group by a criterion, we also add this criterion to the select
+      # expression, unless it is already selected in Resource_zGetInventoryList
+      # the caller can also pass select_dict or select_list. select_expression,
+      # which is deprecated in ZSQLCatalog is not supported here.
+      select_dict = kw.get('select_dict', {})
+      # we support select_list, if passed
+      select_list = kw.get('select_list', [])
+      for select_key in kw.get('select_list', []):
+        select_dict[select_key] = None
+      new_kw['select_dict'] = select_dict
+      related_key_select_expression_list = []
+
       column_group_by_expression_list = []
       related_key_group_by_expression_list = []
       if group_by_node:
@@ -777,42 +796,65 @@ class SimulationTool(BaseTool):
 
       if group_by_section_category:
         related_key_group_by_expression_list.append('section_category_uid')
+        related_key_select_expression_list.append('stock_section_category_uid')
       if group_by_section_category_strict_membership:
         related_key_group_by_expression_list.append(
             'section_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'section_category_strict_membership_uid')
       if group_by_mirror_section_category:
         related_key_group_by_expression_list.append('mirror_section_category_uid')
+        related_key_select_expression_list.append('mirror_section_category_uid')
       if group_by_mirror_section_category_strict_membership:
         related_key_group_by_expression_list.append(
             'mirror_section_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'mirror_section_category_strict_membership_uid')
       if group_by_node_category:
         related_key_group_by_expression_list.append('node_category_uid')
+        related_key_select_expression_list.append('node_category_uid')
       if group_by_node_category_strict_membership:
         related_key_group_by_expression_list.append(
+            'node_category_strict_membership_uid')
+        related_key_select_expression_list.append(
             'node_category_strict_membership_uid')
       if group_by_mirror_node_category:
         related_key_group_by_expression_list.append('mirror_node_category_uid')
       if group_by_mirror_node_category_strict_membership:
         related_key_group_by_expression_list.append(
             'mirror_node_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'mirror_node_category_strict_membership_uid')
       if group_by_payment_category:
         related_key_group_by_expression_list.append('payment_category_uid')
+        related_key_select_expression_list.append('payment_category_uid')
       if group_by_payment_category_strict_membership:
         related_key_group_by_expression_list.append(
             'payment_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'payment_category_strict_membership_uid')
       if group_by_function_category:
         related_key_group_by_expression_list.append('function_category_uid')
+        related_key_select_expression_list.append('function_category_uid')
       if group_by_function_category_strict_membership:
         related_key_group_by_expression_list.append(
             'function_category_strict_membership_uid')
-      if group_by_function_category:
-        related_key_group_by_expression_list.append('function_category_uid')
-      if group_by_function_category_strict_membership:
-        related_key_group_by_expression_list.append(
+        related_key_select_expression_list.append(
             'function_category_strict_membership_uid')
+      if group_by_project_category:
+        related_key_group_by_expression_list.append('project_category_uid')
+        related_key_select_expression_list.append('project_category_uid')
+      if group_by_project_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'project_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'project_category_strict_membership_uid')
 
       if related_key_group_by_expression_list:
         new_kw['related_key_group_by'] = related_key_group_by_expression_list
+      if related_key_select_expression_list:
+        new_kw['related_key_select_expression_list'] =\
+                related_key_select_expression_list
 
       return sql_kw, new_kw
 

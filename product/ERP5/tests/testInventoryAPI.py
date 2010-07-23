@@ -798,6 +798,28 @@ class TestInventoryList(InventoryAPITestCase):
                                       group_by_section_category=1)
     self.assertEquals(1, len(inventory_list))
     self.assertEquals(3+2, inventory_list[0].inventory)
+    # section category is exported in the brain
+    self.assertTrue(hasattr(inventory_list[0], 'section_category_uid'))
+    self.assertEquals(self.portal.portal_categories.group.level1.getUid(),
+                      inventory_list[0].section_category_uid)
+
+  def test_GroupBySectionCategoryStrict(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    self.section.setGroup('level1')
+    self.other_section.setGroup('level1')
+    m1 = self._makeMovement(quantity=2)
+    m2 = self._makeMovement(destination_section_value=self.other_section, quantity=3)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      section_category='group/level1',
+                                      group_by_section_category_strict_membership=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(3+2, inventory_list[0].inventory)
+    # section category is exported in the brain
+    self.assertTrue(hasattr(inventory_list[0],
+      'section_category_strict_membership_uid'))
+    self.assertEquals(self.portal.portal_categories.group.level1.getUid(),
+                      inventory_list[0].section_category_strict_membership_uid)
 
   def test_GroupByFunction(self):
     getInventoryList = self.getSimulationTool().getInventoryList
@@ -896,6 +918,21 @@ class TestInventoryList(InventoryAPITestCase):
             if r.getObject().getUse() == 'use1'][0].inventory, 5)
     self.assertEquals([r for r in inventory_list
         if r.getObject().getUse() == 'use2'][0].inventory, 11)
+    
+    # in such case, it's interesting to pass a select expression, to be have on
+    # brain the information of which category is used
+    inventory_list = getInventoryList(node_uid=(self.node.getUid(),
+                                                self.other_node.getUid()),
+                                      group_by=('strict_use_uid', ),
+                                      select_list=['strict_use_uid'])
+    self.assertEquals(2, len(inventory_list))
+    self.assertTrue(hasattr(inventory_list[0], 'strict_use_uid'))
+    use = self.portal.portal_categories.use
+    self.assertEquals([r for r in inventory_list
+      if r.strict_use_uid == use.use1.getUid()][0].inventory, 5)
+    self.assertEquals([r for r in inventory_list
+      if r.strict_use_uid == use.use2.getUid()][0].inventory, 11)
+
     # group_by can also be passed as string
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
                                                 self.other_node.getUid()),
@@ -905,6 +942,23 @@ class TestInventoryList(InventoryAPITestCase):
             if r.getObject().getUse() == 'use1'][0].inventory, 5)
     self.assertEquals([r for r in inventory_list
         if r.getObject().getUse() == 'use2'][0].inventory, 11)
+
+    # if we group by "use_uid" instead of "strict_use_uid", then we'll have
+    # summary lines.
+    inventory_list = getInventoryList(node_uid=(self.node.getUid(),
+                                                self.other_node.getUid()),
+                                      group_by=('use_uid', ),
+                                      select_list=['use_uid'])
+    self.assertEquals(3, len(inventory_list))
+    self.assertTrue(hasattr(inventory_list[0], 'use_uid'))
+    use = self.portal.portal_categories.use
+    self.assertEquals([r for r in inventory_list
+      if r.use_uid == use.use1.getUid()][0].inventory, 5)
+    self.assertEquals([r for r in inventory_list
+      if r.use_uid == use.use2.getUid()][0].inventory, 11)
+    # the summary line
+    self.assertEquals([r for r in inventory_list
+      if r.use_uid == use.getUid()][0].inventory, 11+5)
 
     # the name of a column can also be used, from stock or other tables
     inventory_list = getInventoryList(node_uid=(self.node.getUid(),
