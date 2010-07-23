@@ -11833,8 +11833,8 @@ msgstr "Type d'écriture"
 msgid "Transaction With Grouping Reference"
 msgstr "Écritures lettrées"
 
-msgid "Transaction is not balanced"
-msgstr "L'écriture n'est pas équilibrée"
+msgid "Transaction is not balanced for ${section_title}"
+msgstr "L'écriture n'est pas équilibrée pour ${section_title}"
 
 msgid "Transactions"
 msgstr "Transactions"
@@ -12957,3 +12957,4 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
+
