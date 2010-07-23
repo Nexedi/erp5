@@ -37,9 +37,9 @@ class AccountingTransactionBalance(Constraint):
                        'message_transaction_not_balanced_for_destination' ]
   
   message_transaction_not_balanced_for_source = translateString(
-       'Transaction is not balanced')
+       'Transaction is not balanced for ${section_title}')
   message_transaction_not_balanced_for_destination = translateString(
-       'Transaction is not balanced')
+       'Transaction is not balanced for ${section_title}')
 
   def checkConsistency(self, obj, fixit=0):
     """Implement here the consistency checker
@@ -67,7 +67,8 @@ class AccountingTransactionBalance(Constraint):
           precision = section_currency.getQuantityPrecision()
         if round(total, precision) != 0:
           error_list.append(self._generateError(obj, self._getMessage(
-                'message_transaction_not_balanced_for_source')))
+                'message_transaction_not_balanced_for_source'),
+                mapping=dict(section_title=section.getTranslatedTitle())))
           break
     
     for section, total in destination_sum.items():
@@ -79,7 +80,8 @@ class AccountingTransactionBalance(Constraint):
           precision = section_currency.getQuantityPrecision()
         if round(total, precision) != 0:
           error_list.append(self._generateError(obj, self._getMessage(
-                'message_transaction_not_balanced_for_source')))
+                'message_transaction_not_balanced_for_source'),
+                mapping=dict(section_title=section.getTranslatedTitle())))
           break
 
     return error_list
