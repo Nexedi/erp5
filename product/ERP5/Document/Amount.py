@@ -40,6 +40,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from zLOG import LOG, ERROR
 from warnings import warn
 
+
 class Amount(Base, Variated):
   """
     A mix-in class which provides some utilities
@@ -716,3 +717,24 @@ class Amount(Base, Variated):
 
   def _setLostQuantity(self, value):
     return self._setProfitQuantity(- value)
+
+  ## quantity_unit accessors for backward compatibility:
+  ## (we used to acquire quantity_unit from the resources)
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getQuantityUnitValue')
+  def getQuantityUnitValue(self):
+    result = self.getDefaultValue('quantity_unit')
+    if result is None:
+      resource = self.getResourceValue()
+      if resource is not None:
+        result = resource.getQuantityUnitValue()
+    return result
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getQuantityUnit')
+  def getQuantityUnit(self):
+    value = self.getQuantityUnitValue()
+    if value is not None:
+      return value.getCategoryRelativeUrl()
+    return None
+
