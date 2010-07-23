@@ -212,6 +212,9 @@ class TestTradeReports(ERP5ReportTestCase):
                                               resource=product,
                                               quantity=values["quantity"],
                                               price=values["price"])
+      # use default quantity unit from resource
+      sale_order_line.setQuantityUnit(
+          sale_order_line.getResourceValue().getDefaultQuantityUnit())
       
     self.assertEquals(sale_order.getSimulationState(), 'draft')
     if cancel:
