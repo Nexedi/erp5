@@ -390,6 +390,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>domain_root_list</string> </key>
                     <value>
                       <list/>
@@ -550,6 +556,10 @@
                           <string>title</string>
                           <string>ascending</string>
                         </tuple>
+                        <tuple>
+                          <string>revision</string>
+                          <string>ascending</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -572,6 +582,10 @@
                         <tuple>
                           <string>description</string>
                           <string>Description</string>
+                        </tuple>
+                        <tuple>
+                          <string>revision</string>
+                          <string>Revision</string>
                         </tuple>
                       </list>
                     </value>
