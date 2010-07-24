@@ -1,3 +1,6 @@
+2010-07-24 yo
+* Fix the bug that generates multiple Root Applied Rules partially. Ultimately, we should always use the same script (i.e. Delivery_updateSimulation), otherwise it is too hard to make sure that all callers are serialized.
+
 2010-07-14 yusei
 * Set reference field to Rounding Model view form.
 
