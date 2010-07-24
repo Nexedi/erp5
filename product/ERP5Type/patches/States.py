@@ -22,8 +22,14 @@ _properties_form = DTMLFile('state_properties', _dtmldir)
 def getAvailableTypeList(self):
   """This is a method specific to ERP5. This returns a list of state types, which are used for portal methods.
   """
-  return ('current_inventory', 'transit_inventory','reserved_inventory', 
-          'future_inventory', 'draft_order', 'planned_order', )
+  return (
+          'draft_order',
+          'planned_order',
+          'future_inventory',
+          'reserved_inventory',
+          'transit_inventory',
+          'current_inventory',
+          )
   
 def setProperties(self, title='', transitions=(), REQUEST=None, description='', type_list=()):
     '''
