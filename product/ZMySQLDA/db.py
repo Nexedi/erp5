@@ -410,6 +410,10 @@ class DB(TM):
             self.db.query(query)
         except ProgrammingError, exception:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
+          # XXX sometimes, after a programming error, the database object
+          # gets fully broken and non-functional. So recover it by
+          # recreation.
+          self._forceReconnection()
           if exception[0] == ER.PARSE_ERROR:
             # You have an error in your SQL syntax
             # Replace MySQL brain dead error message with a more meaningful
