@@ -437,10 +437,15 @@ class DB(TM):
           raise exception
         return self.db.store_result()
 
-    def query(self,query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000):
         self._use_TM and self._register()
         desc=None
         result=()
+        # XXX deal with a typical mistake that the user appends
+        # an unnecessary and rather harmful semicolon at the end.
+        # Unfortunately, MySQLdb does not want to be graceful.
+        if query_string[-1] == ';':
+          query_string = query_string[:-1]
         for qs in filter(None, map(strip,split(query_string, '\0'))):
             qtype = upper(split(qs, None, 1)[0])
             if qtype == "SELECT" and max_rows:
