@@ -391,7 +391,7 @@ class LogInterceptor:
         if self.logged is None:
             self.logged = []
         self.logged.append(record)
-        return False
+        return True
 
     def _ignore_log_errors(self, subsystem=''):
 
