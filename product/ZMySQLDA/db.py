@@ -444,7 +444,7 @@ class DB(TM):
         # XXX deal with a typical mistake that the user appends
         # an unnecessary and rather harmful semicolon at the end.
         # Unfortunately, MySQLdb does not want to be graceful.
-        if query_string.endswith(';'):
+        if query_string[-1:] == ';':
           query_string = query_string[:-1]
         for qs in filter(None, map(strip,split(query_string, '\0'))):
             qtype = upper(split(qs, None, 1)[0])
