@@ -139,8 +139,10 @@ for workflow_item in workflow_item_list:\n
         value = \'%s\' % value\n
       elif key == \'actor\':\n
         value = getActorName(value)\n
-      elif same_type(value, \'\') and key in (\'action\', \'state\'):\n
+      elif same_type(value, \'\') and key == \'state\':\n
         value = getTranslationStringWithContext(context, value, key, workflow_id)\n
+      elif same_type(value, \'\') and key == \'action\':\n
+        value = getTranslationStringWithContext(context, value, \'transition\', workflow_id)\n
     if value is marker:\n
       value = \'Does not exist\'\n
     o.setProperty(key, value)\n
