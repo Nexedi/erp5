@@ -165,6 +165,8 @@ class MovementCollectionUpdaterMixin:
     for movement in movement_diff.getUpdatableMovementList():
       kw = movement_diff.getMovementPropertyDict(movement)
       movement.edit(**kw)
+      for property_id in kw.iterkeys():
+        movement.clearRecordedProperty(property_id)
     for movement in movement_diff.getNewMovementList():
       # This case is easy, because it is an applied rule
       kw = movement_diff.getMovementPropertyDict(movement)
