@@ -31,11 +31,10 @@ from Products.ERP5Type.Interactor.Interactor import Interactor
 
 class RecursiveReindexInteractor(Interactor):
   """
-  This interactor invokes reindex on Inventory document when its
-  subdocuments are modified.
+  This interactor invokes reindex of subobjects when parent document is reindexed
   """
   def install(self):
-    from Products.ERP5.Document.TradeCondition import TradeCondition
+    from Products.ERP5Type.Document.TradeCondition import TradeCondition
     self.on(TradeCondition.reindexObject).doAfter(self.recursiveReindexObject)
 
   def recursiveReindexObject(self, method_call_object, *args, **kw):
