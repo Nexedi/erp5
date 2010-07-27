@@ -104,6 +104,9 @@ msgstr ""
 msgid "${ungrouped_line_count} lines ungrouped."
 msgstr "${ungrouped_line_count} lignes délettrées."
 
+msgid "${updated_cell_count} budget cells updated."
+msgstr "${updated_cell_count} cellules mises à jour."
+
 msgid "${year} years old"
 msgstr "Âgé de ${year} ans"
 
@@ -12056,6 +12059,9 @@ msgstr "Établir le lien"
 msgid "Update Repository Information"
 msgstr "Mettre à jour les informations des dépôts"
 
+msgid "Update Summary Budget Cells"
+msgstr "Calculer les cellules totalisatrices"
+
 msgid "Update Tools"
 msgstr "Mettre à jour les outils"
 
@@ -12957,4 +12963,3 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
-
