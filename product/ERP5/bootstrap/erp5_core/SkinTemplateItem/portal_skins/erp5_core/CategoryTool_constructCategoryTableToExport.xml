@@ -55,6 +55,12 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+editable_property_id_list = (\'id\', \'title\', \'short_title\', \'reference\',\n
+                             \'codification\', \'int_index\', \'description\')\n
+\n
+def getHeaderTitle(property_id):\n
+  return \' \'.join([s.capitalize() for s in property_id.split(\'_\')])\n
+\n
 cat_info_list = []\n
 for base_cat_id in context.REQUEST[\'category_list\']:\n
   base_cat = context.portal_categories[base_cat_id]\n
@@ -88,14 +94,15 @@ for cat_info in cat_info_list:\n
     max_cat_depth = cat_info[\'max_cat_depth\']\n
     header_dict[\'path_cell_list\'] = [\'\'] * (max_cat_depth - 1)\n
     header_dict[\'path_cell_list\'][0] = \'Path\'\n
-    header_dict[\'category_property_list\'] = [\' \'.join([s.capitalize() for s in property_id.split(\'_\')]) for property_id in cat_list[0].getPropertyIdList() if property_id != \'uid\']\n
-                                             \n
+    header_dict[\'category_property_list\'] = [getHeaderTitle(property_id)\n
+                                             for property_id in editable_property_id_list]\n
     for cat in cat_list:\n
       row = dict()\n
       row[\'path_cell_list\'] = [\'\'] * (max_cat_depth - 1)\n
       row[\'path_cell_list\'][len(cat.getRelativeUrl().split(\'/\')) - 2] = \'*\'\n
-      row[\'category_property_list\'] = [item[1] for item in cat.getPropertyItemList() if item[0] != \'uid\']\n
-      row_list.append(row) \n
+      row[\'category_property_list\'] = [cat.getProperty(property_id)\n
+                                       for property_id in editable_property_id_list]\n
+      row_list.append(row)\n
   else:\n
     header_dict[\'path_cell_list\'] = [\'Path\']\n
     header_dict[\'category_property_list\'] = []\n
@@ -140,6 +147,8 @@ return result\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>editable_property_id_list</string>
+                            <string>getHeaderTitle</string>
                             <string>cat_info_list</string>
                             <string>_getiter_</string>
                             <string>_getitem_</string>
@@ -165,10 +174,7 @@ return result\n
                             <string>append</string>
                             <string>$append0</string>
                             <string>property_id</string>
-                            <string>$append1</string>
-                            <string>s</string>
                             <string>row</string>
-                            <string>item</string>
                           </tuple>
                         </value>
                     </item>

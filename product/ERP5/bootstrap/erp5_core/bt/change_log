@@ -1,3 +1,6 @@
+2010-07-27 yusuke
+* Exporting category list limits to appropriate properties.
+
 2010-07-15 yusei
 * Fix a bug on CategoryTool_getPreferredPredicateCategoryParentUidItemList to support multimembership category list.
 
