@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Utils import cartesianProduct\n
+from Products.ERP5Type.Message import translateString\n
+\n
+updated_cell_count = 0\n
+\n
+dependant_dimensions_dict = context.BudgetLine_getSummaryDimensionKeyDict()\n
+cell_key_list = context.getCellKeyList()\n
+\n
+def reversed(seq):\n
+  seq = seq[::]\n
+  seq.sort(reverse=True)\n
+  return seq\n
+\n
+# we iterate in reversed order to update the deepest cells first\n
+for cell_key in reversed(cartesianProduct(context.getCellRange())):\n
+  for idx, dimension in enumerate(cell_key):\n
+    if dimension in dependant_dimensions_dict:\n
+      dependant_cell_list = []\n
+      matching_cell_key = list(cell_key)\n
+      for key in dependant_dimensions_dict[dimension]:\n
+        matching_cell_key[idx] = key\n
+        for other_cell_key in cell_key_list:\n
+          if matching_cell_key == other_cell_key:\n
+            cell = context.getCell(*other_cell_key)\n
+            if cell is not None:\n
+              dependant_cell_list.append(cell)\n
+\n
+      if dependant_cell_list:\n
+        cell = context.getCell(*cell_key)\n
+        if cell is None:\n
+          # if summary cell does not exist, we create it.\n
+          cell = context.newCell(*cell_key)\n
+          cell.edit(\n
+            membership_criterion_base_category_list\n
+              =[bc for bc in context.getVariationBaseCategoryList() if bc not\n
+                in context.getMembershipCriterionBaseCategoryList()],\n
+            membership_criterion_category_list=cell_key,\n
+            mapped_value_property_list=(\'quantity\', ))\n
+        cell.setQuantity(sum([dependant_cell.getQuantity() for dependant_cell\n
+                                in dependant_cell_list]))\n
+        updated_cell_count += 1\n
+      break\n
+\n
+return context.Base_redirect(form_id,\n
+     keep_items=dict(portal_status_message=translateString(\n
+      "${updated_cell_count} budget cells updated.",\n
+      mapping=dict(updated_cell_count=updated_cell_count))))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id=\'view\'</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>form_id</string>
+                            <string>Products.ERP5Type.Utils</string>
+                            <string>cartesianProduct</string>
+                            <string>Products.ERP5Type.Message</string>
+                            <string>translateString</string>
+                            <string>updated_cell_count</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>dependant_dimensions_dict</string>
+                            <string>cell_key_list</string>
+                            <string>reversed</string>
+                            <string>_getiter_</string>
+                            <string>cell_key</string>
+                            <string>enumerate</string>
+                            <string>idx</string>
+                            <string>dimension</string>
+                            <string>dependant_cell_list</string>
+                            <string>list</string>
+                            <string>matching_cell_key</string>
+                            <string>_getitem_</string>
+                            <string>key</string>
+                            <string>_write_</string>
+                            <string>other_cell_key</string>
+                            <string>_apply_</string>
+                            <string>cell</string>
+                            <string>None</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>bc</string>
+                            <string>sum</string>
+                            <string>dependant_cell</string>
+                            <string>_inplacevar_</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <string>view</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BudgetLine_setQuantityOnSummaryCellList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
