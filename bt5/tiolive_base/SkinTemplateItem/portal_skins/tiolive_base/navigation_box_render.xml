@@ -43,7 +43,8 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block tal:define="actions python: here.getPortalObject().portal_actions.listFilteredActionsFor(here);\n
-                         context_url here/absolute_url;">\n
+                         context_url here/absolute_url;\n
+                         isAnonymousUser here/portal_membership/isAnonymousUser">\n
 \n
   <div id="top-bar">\n
 \n
@@ -70,7 +71,7 @@
                         i18n:translate="" i18n:domain="ui"></option>\n
               </tal:block>\n
             </tal:block>\n
-            <option tal:condition="python: getattr(here, \'Base_getUserRemoteBusinessConfigurationReferenceList\', None) is not None"\n
+            <option tal:condition="python: getattr(here, \'Base_getUserRemoteBusinessConfigurationReferenceList\', None) is not None and not isAnonymousUser"\n
                       disabled="disabled">-- <tal:block tal:content="string: Your Instances" i18n:translate="" i18n:domain="ui" /> --</option>\n
             <tal:block tal:condition="python: getattr(here, \'Base_getUserRemoteBusinessConfigurationReferenceList\', None) is not None"\n
                        tal:repeat="instance_id python: here.Base_getUserRemoteBusinessConfigurationReferenceList()">\n
@@ -119,7 +120,7 @@
     <div class="second">\n
 \n
 <span id="tiologin"\n
-   tal:condition="here/portal_membership/isAnonymousUser"><a href="#" id="link-login"  \n
+   tal:condition="isAnonymousUser"><a href="#" id="link-login"  \n
      tal:attributes="href string:${context_url}/login_form"\n
      i18n:translate="" i18n:domain="ui">Login</a></span>\n
 \n
