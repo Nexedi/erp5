@@ -132,3 +132,8 @@ class BudgetCell(Predicate, MetaNode, Movement):
               "Did not find engaged budget script for portal type: %r" % \
               self.getPortalType()
 
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getExplanationValue')
+    def getExplanationValue(self, default=None):
+      """Explanation has no meaning for a budget cell"""
+      return default
