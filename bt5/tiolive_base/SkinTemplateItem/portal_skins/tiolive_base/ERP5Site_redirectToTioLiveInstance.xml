@@ -54,8 +54,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-return container.REQUEST.RESPONSE.redirect(\'%s/instance\'\n
-                                            %portal.ERP5Site_getTioLiveSiteRootUrl())\n
+return container.REQUEST.RESPONSE.redirect(\'%s/%s\'\n
+                                            % (portal.ERP5Site_getTioLiveSiteRootUrl(), site_id))\n
 </string> </value>
         </item>
         <item>
@@ -66,7 +66,7 @@ return container.REQUEST.RESPONSE.redirect(\'%s/instance\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>site_id=\'instance\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -86,12 +86,13 @@ return container.REQUEST.RESPONSE.redirect(\'%s/instance\'\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>site_id</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -107,7 +108,9 @@ return container.REQUEST.RESPONSE.redirect(\'%s/instance\'\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>instance</string>
+              </tuple>
             </value>
         </item>
         <item>
