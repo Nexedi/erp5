@@ -116,14 +116,15 @@ class BudgetLine(Predicate, XMLMatrix, Variated):
     query_dict.setdefault('ignore_group_by', True)
 
     sign = self.BudgetLine_getConsumptionSign()
+    cell_key_cache = dict()
     budget_dict = dict()
     for brain in self.getPortalObject().portal_simulation\
                              .getCurrentInventoryList(**query_dict):
+      cell_key = budget_model._getCellKeyFromInventoryListBrain(brain, self,
+                                       cell_key_cache=cell_key_cache)
       # XXX total_quantity or total_price ??
-      previous_value = budget_dict.get(
-          budget_model._getCellKeyFromInventoryListBrain(brain, self), 0)
-      budget_dict[budget_model._getCellKeyFromInventoryListBrain(brain, self)] = \
-                  previous_value + brain.total_price * sign
+      previous_value = budget_dict.get(cell_key, 0)
+      budget_dict[cell_key] = previous_value + brain.total_price * sign
 
     return budget_dict
 

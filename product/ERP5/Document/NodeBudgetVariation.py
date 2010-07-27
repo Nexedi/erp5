@@ -147,8 +147,11 @@ class NodeBudgetVariation(BudgetVariation):
       if criterion_base_category == base_category:
         if axis == 'movement':
           axis = 'default_%s' % base_category
-        # TODO: This is not correct if axis is a category (such as
-        # section_category)
+        if axis == 'movement_strict_membership':
+          axis = 'default_strict_%s' % base_category
+        # TODO: This is not correct if axis is a category such as
+        # section_category, because getInventoryList for now does not support
+        # parameters such as section_category_uid
         axis = '%s_uid' % axis
         if node_url == budget_line.getRelativeUrl():
           # This is the "All Other" virtual node
@@ -181,7 +184,12 @@ class NodeBudgetVariation(BudgetVariation):
     query_dict = dict()
     if axis == 'movement':
       axis = 'default_%s_uid' % base_category
+      query_dict['select_list'] = [axis]
+    if axis == 'movement_strict_membership':
+      axis = 'default_strict_%s_uid' % base_category
+      query_dict['select_list'] = [axis]
     query_dict['group_by_%s' % axis] = True
+
     # TODO: This is not correct if axis is a category (such as
     # section_category)
     axis = '%s_uid' % axis
@@ -191,17 +199,19 @@ class NodeBudgetVariation(BudgetVariation):
       return query_dict
 
     for node_url in context.getVariationCategoryList(
-                                          base_category_list=(base_category,)):
+                          base_category_list=(base_category,)):
       query_dict.setdefault(axis, []).append(
                 portal_categories.getCategoryValue(node_url,
                       base_category=base_category).getUid())
     return query_dict
   
-  def _getCellKeyFromInventoryListBrain(self, brain, budget_line):
-    """Compute key from inventory brain, with support for "all others" virtual node.
+  def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
+                                         cell_key_cache=None):
+    """Compute key from inventory brain, with support for "all others" virtual
+    node.
     """
     key = BudgetVariation._getCellKeyFromInventoryListBrain(
-                                    self, brain, budget_line)
+                   self, brain, budget_line, cell_key_cache=cell_key_cache)
     if self.getProperty('include_virtual_other_node'):
       if key not in [x[1] for x in
           self.getBudgetVariationRangeCategoryList(budget_line)]:

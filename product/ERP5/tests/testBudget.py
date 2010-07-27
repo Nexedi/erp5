@@ -634,11 +634,14 @@ class TestBudget(ERP5TypeTestCase):
              at_date=DateTime(2000, 12, 31).latestTime(),
              node_uid=[self.portal.account_module.goods_purchase.getUid(),
                        self.portal.account_module.fixed_assets.getUid(),],
-             default_strict_product_line_uid=[product_line_1.getUid(),
+             default_product_line_uid=[product_line_1.getUid(),
                                        product_line_1_11.getUid(),
                                        product_line_1_12.getUid(),],
              section_category=['group/demo_group'],
-             group_by=['default_strict_product_line_uid'],
+             group_by=['default_product_line_uid'],
+             # select list is passed, because getInventoryList does not add
+             # group by related keys to select
+             select_list=['default_product_line_uid'],
              group_by_node=True,
              group_by_section_category=True,
              ),
@@ -668,27 +671,122 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEquals(
       {('source/account_module/fixed_assets', 'product_line/1/1.2'): -100.0,
        ('source/account_module/goods_purchase', 'product_line/1/1.1'): 100.0,
-       # summary line is automatically added (TODO)
-##       ('source/account_module/goods_purchase', 'product_line/1'): 100.0
+       # summary lines are automatically added
+       ('source/account_module/fixed_assets', 'product_line/1'): -100.0,
+       ('source/account_module/goods_purchase', 'product_line/1'): 100.0
        },
         budget_line.getConsumedBudgetDict())
 
     self.assertEquals(
       {('source/account_module/fixed_assets', 'product_line/1/1.2'): -100.0,
        ('source/account_module/goods_purchase', 'product_line/1/1.1'): 100.0,
-       # summary line is automatically added (TODO)
-##       ('source/account_module/goods_purchase', 'product_line/1'): 100.0 
+       ('source/account_module/fixed_assets', 'product_line/1'): -100.0,
+       ('source/account_module/goods_purchase', 'product_line/1'): 100.0
        },
         budget_line.getEngagedBudgetDict())
 
     self.assertEquals(
       {('source/account_module/fixed_assets', 'product_line/1/1.2'): 100.0,
        ('source/account_module/goods_purchase', 'product_line/1/1.1'): -98.0,
-       # summary line is automatically added (TODO)
-##       ('source/account_module/goods_purchase', 'product_line/1'): 98.0 
-       ('source/account_module/goods_purchase', 'product_line/1'): 2.0 
+       ('source/account_module/fixed_assets', 'product_line/1'): 100.0,
+       ('source/account_module/goods_purchase', 'product_line/1'): -98,
        },
         budget_line.getAvailableBudgetDict())
+
+  def test_consumption_category_variation_summary(self):
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_cell',
+                    inventory_axis='section_category',
+                    variation_base_category='group',)
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='node',
+                    variation_base_category='source',
+                    aggregate_value_list=(
+                      self.portal.account_module.goods_purchase,
+                      self.portal.account_module.fixed_assets,
+                    ))
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2000, 1, 1),
+                    start_date_range_max=DateTime(2000, 12, 31),
+                    specialise_value=budget_model)
+
+    budget_line = budget.newContent(portal_type='Budget Line',)
+
+    # set the range, this will adjust the matrix
+    budget_line.edit(
+        variation_category_list=(
+          'source/account_module/goods_purchase',
+          'group/demo_group',
+          'group/demo_group/sub1',
+          ))
+    
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+
+             field_matrixbox_quantity_cell_0_0_0="",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[],
+             field_matrixbox_quantity_cell_1_0_0="500",
+             field_matrixbox_membership_criterion_category_list_cell_1_0_0=[
+               'group/demo_group/sub1',
+               'source/account_module/goods_purchase', ],
+        ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(1, len(budget_line.contentValues()))
+
+    self.assertEquals(
+        dict(from_date=DateTime(2000, 1, 1),
+             at_date=DateTime(2000, 12, 31).latestTime(),
+             node_uid=[self.portal.account_module.goods_purchase.getUid(),],
+             section_category=['group/demo_group',
+                               'group/demo_group/sub1'],
+             group_by_node=True,
+             group_by_section_category=True,
+             ),
+        budget_model.getInventoryListQueryDict(budget_line))
+
+
+    atransaction = self.portal.accounting_module.newContent(
+                  portal_type='Accounting Transaction',
+                  resource_value=self.portal.currency_module.euro,
+                  source_section_value=self.portal.organisation_module.my_organisation,
+                  start_date=DateTime(2000, 1, 2))
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.goods_purchase,
+                  source_debit=100)
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.fixed_assets,
+                  source_credit=100)
+    atransaction.stop()
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(
+      {('group/demo_group/sub1', 'source/account_module/goods_purchase'): 100.0,
+       ('group/demo_group', 'source/account_module/goods_purchase'): 100.0,},
+       budget_line.getConsumedBudgetDict())
+
+    self.assertEquals(
+      {('group/demo_group/sub1', 'source/account_module/goods_purchase'): 100.0,
+       ('group/demo_group', 'source/account_module/goods_purchase'): 100.0,},
+       budget_line.getEngagedBudgetDict())
 
 
   def test_budget_consumption_report(self):
@@ -837,9 +935,316 @@ class TestBudget(ERP5TypeTestCase):
       self.fail(''.join(err_list))
 
     
-  # Other TODOs:
+  def test_update_summary_cell_simple(self):
+    # test the action to create or update quantity on summary cells
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_cell',
+                    inventory_axis='movement',
+                    variation_base_category='product_line',)
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='node',
+                    variation_base_category='source',
+                    aggregate_value_list=(
+                      self.portal.account_module.goods_purchase,
+                      self.portal.account_module.fixed_assets,
+                    ))
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=3,
+                    budget_variation='budget_cell',
+                    inventory_axis='section_category',
+                    variation_base_category='group',)
 
-  # section_category & summary
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2000, 1, 1),
+                    start_date_range_max=DateTime(2000, 12, 31),
+                    specialise_value=budget_model)
+
+    budget_line = budget.newContent(portal_type='Budget Line')
+
+    # set the range, this will adjust the matrix
+    budget_line.edit(
+        variation_category_list=(
+          'group/demo_group',
+          'group/demo_group/sub1',
+          'group/demo_group/sub2',
+          'source/account_module/goods_purchase',
+          'source/account_module/fixed_assets',
+          'product_line/1',
+          'product_line/1/1.1',
+          'product_line/1/1.2', ))
+
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+            
+             # group/demo_group
+             field_matrixbox_quantity_cell_0_0_0="",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[],
+             field_matrixbox_quantity_cell_1_0_0="",
+             field_matrixbox_membership_criterion_category_list_cell_1_0_0=[],
+             field_matrixbox_quantity_cell_2_0_0="",
+             field_matrixbox_membership_criterion_category_list_cell_2_0_0=[],
+             field_matrixbox_quantity_cell_0_1_0="",
+             field_matrixbox_membership_criterion_category_list_cell_0_1_0=[],
+             field_matrixbox_quantity_cell_1_1_0="",
+             field_matrixbox_membership_criterion_category_list_cell_1_1_0=[],
+             # This is a summary cell, but we set a manual value.
+             field_matrixbox_quantity_cell_2_1_0="100",
+             field_matrixbox_membership_criterion_category_list_cell_2_1_0=[
+                'product_line/1/1.2',
+                'source/account_module/fixed_assets',
+                'group/demo_group',
+                ],
+
+             # group/demo_group/sub1
+             field_matrixbox_quantity_cell_0_0_1="",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_1=[],
+             field_matrixbox_quantity_cell_1_0_1="1",
+             field_matrixbox_membership_criterion_category_list_cell_1_0_1=[
+                'product_line/1/1.1',
+                'source/account_module/goods_purchase',
+                'group/demo_group/sub1',
+                ],
+             field_matrixbox_quantity_cell_2_0_1="2",
+             field_matrixbox_membership_criterion_category_list_cell_2_0_1=[
+                'product_line/1/1.2',
+                'source/account_module/goods_purchase',
+                'group/demo_group/sub1',
+                ],
+             field_matrixbox_quantity_cell_0_1_1="",
+             field_matrixbox_membership_criterion_category_list_cell_0_1_1=[],
+             field_matrixbox_quantity_cell_1_1_1="3",
+             field_matrixbox_membership_criterion_category_list_cell_1_1_1=[
+                'product_line/1/1.1',
+                'source/account_module/fixed_assets',
+                'group/demo_group/sub1',
+               ],
+             field_matrixbox_quantity_cell_2_1_1="4",
+             field_matrixbox_membership_criterion_category_list_cell_2_1_1=[
+                'product_line/1/1.2',
+                'source/account_module/fixed_assets',
+                'group/demo_group/sub1',
+               ],
+
+             # group/demo_group/sub2
+             field_matrixbox_quantity_cell_0_0_2="",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_2=[],
+             # we only have 1 cell here
+             field_matrixbox_quantity_cell_1_0_2="5",
+             field_matrixbox_membership_criterion_category_list_cell_1_0_2=[
+                  'product_line/1/1.1',
+                  'source/account_module/goods_purchase',
+                  'group/demo_group/sub2',
+                 ],
+             field_matrixbox_quantity_cell_2_0_2="",
+             field_matrixbox_membership_criterion_category_list_cell_2_0_2=[],
+             # we have no cells here
+             field_matrixbox_quantity_cell_0_1_2="",
+             field_matrixbox_membership_criterion_category_list_cell_0_1_2=[],
+             field_matrixbox_quantity_cell_1_1_2="",
+             field_matrixbox_membership_criterion_category_list_cell_1_1_2=[],
+             field_matrixbox_quantity_cell_2_1_2="",
+             field_matrixbox_membership_criterion_category_list_cell_2_1_2=[],
+        ))
+
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(6, len(budget_line.contentValues()))
+
+    budget_line.BudgetLine_setQuantityOnSummaryCellList()
+
+    # summary cells have been created:
+    self.assertEquals(14, len(budget_line.contentValues()))
+
+    # those cells are aggregating
+    self.assertEquals(1+2, budget_line.getCell(
+                              'product_line/1',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group/sub1',).getQuantity())
+    self.assertEquals(4+3, budget_line.getCell(
+                              'product_line/1',
+                              'source/account_module/fixed_assets',
+                              'group/demo_group/sub1',).getQuantity())
+    self.assertEquals(1+5, budget_line.getCell(
+                              'product_line/1/1.1',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group',).getQuantity())
+    self.assertEquals(1+2+5, budget_line.getCell(
+                              'product_line/1',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group',).getQuantity())
+
+    # the cell that we have modified is erased
+    self.assertEquals(4, budget_line.getCell(
+                              'product_line/1/1.2',
+                              'source/account_module/fixed_assets',
+                              'group/demo_group',).getQuantity())
+
+    # test all cells for complete coverage
+    self.assertEquals(6, budget_line.getCell(
+                              'product_line/1/1.1',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group',).getQuantity())
+    self.assertEquals(2, budget_line.getCell(
+                              'product_line/1/1.2',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group',).getQuantity())
+    self.assertEquals(3+4, budget_line.getCell(
+                              'product_line/1',
+                              'source/account_module/fixed_assets',
+                              'group/demo_group',).getQuantity())
+    self.assertEquals(3, budget_line.getCell(
+                              'product_line/1/1.1',
+                              'source/account_module/fixed_assets',
+                              'group/demo_group',).getQuantity())
+    self.assertEquals(4, budget_line.getCell(
+                              'product_line/1/1.2',
+                              'source/account_module/fixed_assets',
+                              'group/demo_group',).getQuantity())
+    self.assertEquals(5, budget_line.getCell(
+                              'product_line/1',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group/sub2',).getQuantity())
+    
+    # change a cell quantity and call again
+    budget_cell = budget_line.getCell(
+        'product_line/1/1.2',
+        'source/account_module/goods_purchase',
+        'group/demo_group/sub1')
+    self.assertNotEquals(None, budget_cell)
+    self.assertEquals(2, budget_cell.getQuantity())
+    budget_cell.setQuantity(6)
+
+    budget_line.BudgetLine_setQuantityOnSummaryCellList()
+    self.assertEquals(14, len(budget_line.contentValues()))
+
+    self.assertEquals(1+6, budget_line.getCell(
+                              'product_line/1',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group/sub1',).getQuantity())
+    self.assertEquals(4+3, budget_line.getCell(
+                              'product_line/1',
+                              'source/account_module/fixed_assets',
+                              'group/demo_group/sub1',).getQuantity())
+    self.assertEquals(1+5, budget_line.getCell(
+                              'product_line/1/1.1',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group',).getQuantity())
+    self.assertEquals(1+6+5, budget_line.getCell(
+                              'product_line/1',
+                              'source/account_module/goods_purchase',
+                              'group/demo_group',).getQuantity())
+
+    
+  def test_update_summary_cell_non_strict_and_second_summary(self):
+    # test the action to create or update quantity on summary cells, variation
+    # which are strict are not updated, and multiple level summary does not
+    # aggregate again intermediate summaries
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_cell',
+                    inventory_axis='movement_strict_membership',
+                    variation_base_category='product_line',)
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='node',
+                    variation_base_category='source',
+                    aggregate_value_list=(
+                      self.portal.account_module.goods_purchase,
+                      self.portal.account_module.fixed_assets,
+                    ))
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=3,
+                    budget_variation='budget_cell',
+                    inventory_axis='node_category',
+                    variation_base_category='account_type',)
+
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2000, 1, 1),
+                    start_date_range_max=DateTime(2000, 12, 31),
+                    specialise_value=budget_model)
+
+    budget_line = budget.newContent(portal_type='Budget Line')
+
+    # set the range, this will adjust the matrix
+    budget_line.edit(
+        variation_category_list=(
+          'account_type/asset',
+          'account_type/asset/cash',
+          'account_type/asset/cash/bank',
+          'source/account_module/goods_purchase',
+          'product_line/1',
+          'product_line/1/1.1', ))
+    
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+             field_matrixbox_quantity_cell_0_0_0="",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[],
+             field_matrixbox_quantity_cell_1_0_0="",
+             field_matrixbox_membership_criterion_category_list_cell_1_0_0=[],
+             field_matrixbox_quantity_cell_0_0_1="",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_1=[],
+             field_matrixbox_quantity_cell_1_0_1="",
+             field_matrixbox_membership_criterion_category_list_cell_1_0_1=[],
+             field_matrixbox_quantity_cell_0_0_2="",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_2=[],
+             field_matrixbox_quantity_cell_1_0_2="1",
+             field_matrixbox_membership_criterion_category_list_cell_1_0_2=[
+                 'product_line/1/1.1',
+                 'source/account_module/goods_purchase',
+                 'account_type/asset/cash/bank',
+               ],
+          ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(1, len(budget_line.contentValues()))
+
+    budget_line.BudgetLine_setQuantityOnSummaryCellList()
+    self.assertEquals(3, len(budget_line.contentValues()))
+
+    budget_cell = budget_line.getCell(
+        'product_line/1/1.1',
+        'source/account_module/goods_purchase',
+        'account_type/asset/cash')
+    self.assertNotEquals(None, budget_cell)
+    self.assertEquals(1, budget_cell.getQuantity())
+
+    budget_cell = budget_line.getCell(
+        'product_line/1/1.1',
+        'source/account_module/goods_purchase',
+        'account_type/asset',)
+    self.assertNotEquals(None, budget_cell)
+    self.assertEquals(1, budget_cell.getQuantity())
+
+
+  # Other TODOs:
 
   # budget level variation and budget cell level variation for same inventory
   # axis

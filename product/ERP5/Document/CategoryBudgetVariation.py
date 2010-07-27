@@ -95,6 +95,8 @@ class CategoryBudgetVariation(BudgetVariation):
         # Different possible inventory axis here
         if axis == 'movement':
           return {'default_%s_uid' % base_category: category_uid}
+        if axis == 'movement_strict_membership':
+          return {'default_strict_%s_uid' % base_category: category_uid}
         if axis in ('node', 'section', 'payment', 'function', 'project',
                     'mirror_section', 'mirror_node' ):
           return {'%s_uid' % axis: category_uid}
@@ -117,8 +119,13 @@ class CategoryBudgetVariation(BudgetVariation):
 
     query_dict = dict()
     if axis == 'movement':
+      axis = 'default_%s_uid' % base_category
+      query_dict['group_by'] = [axis]
+      query_dict['select_list'] = [axis]
+    elif axis == 'movement_strict_membership':
       axis = 'default_strict_%s_uid' % base_category
       query_dict['group_by'] = [axis]
+      query_dict['select_list'] = [axis]
     else:
       query_dict['group_by_%s' % axis] = True
       if axis in ('node', 'section', 'payment', 'function', 'project',
@@ -126,7 +133,7 @@ class CategoryBudgetVariation(BudgetVariation):
         axis = '%s_uid' % axis
 
     for category in context.getVariationCategoryList(
-                             base_category_list=(base_category,)):
+                               base_category_list=(base_category,)):
       if axis.endswith('_uid'):
         category = self.getPortalObject().portal_categories\
                                 .getCategoryUid(category)

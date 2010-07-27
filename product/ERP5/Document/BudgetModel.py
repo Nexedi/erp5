@@ -99,10 +99,16 @@ class BudgetModel(Predicate):
     for budget_variation in sorted(self.contentValues(
               portal_type=self.getPortalBudgetVariationTypeList()),
               key=lambda x:x.getIntIndex()):
-      variation_query_dict = budget_variation.getInventoryListQueryDict(budget_line)
-      # Merge group_by argument. All other arguments should not conflict
+      variation_query_dict = budget_variation.getInventoryListQueryDict(
+                                                      budget_line)
+      # Merge group_by and select_list arguments.
+      # Other arguments should not conflict
       if 'group_by' in query_dict and 'group_by' in variation_query_dict:
         variation_query_dict['group_by'].extend(query_dict['group_by'])
+      if 'select_list' in query_dict \
+          and 'select_list' in variation_query_dict:
+        variation_query_dict['select_list'].extend(
+            query_dict['select_list'])
 
       query_dict.update(variation_query_dict)
  
@@ -114,7 +120,8 @@ class BudgetModel(Predicate):
       query_dict.setdefault('at_date', start_date_range_max.latestTime())
     return query_dict
 
-  def _getCellKeyFromInventoryListBrain(self, brain, budget_line):
+  def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
+                                        cell_key_cache=None):
     """Compute the cell key from an inventory brain, the cell key can be used
     to retrieve the budget cell in the corresponding budget line.
     """
@@ -122,8 +129,8 @@ class BudgetModel(Predicate):
     for budget_variation in sorted(self.contentValues(
               portal_type=self.getPortalBudgetVariationTypeList()),
               key=lambda x:x.getIntIndex()):
-      key = budget_variation._getCellKeyFromInventoryListBrain(brain,
-                                                               budget_line)
+      key = budget_variation._getCellKeyFromInventoryListBrain(
+                  brain, budget_line, cell_key_cache=cell_key_cache)
       if key:
         cell_key += (key,)
     return cell_key

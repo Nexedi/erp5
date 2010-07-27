@@ -96,10 +96,12 @@ class BudgetVariation(Predicate):
     """
     return {}
 
-  def _getCellKeyFromInventoryListBrain(self, brain, budget_line):
+  def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
+                                        cell_key_cache=None):
     """Compute the cell key from an inventory brain.
     The cell key can be used to retrieve the budget cell in the corresponding
     budget line using budget_line.getCell
+    A dictionnary can be passed as "cell_key_cache" to cache catalog lookups
     """
     if not self.isMemberOf('budget_variation/budget_cell'):
       return None
@@ -110,55 +112,30 @@ class BudgetVariation(Predicate):
     base_category = self.getProperty('variation_base_category')
     if not base_category:
       return None
+    
+    getObject = self.getPortalObject().portal_catalog.getObject
+    def getUrlFromUidNoCache(uid):
+      relative_url = getObject(uid).getRelativeUrl()
+      if relative_url.startswith('%s/' % base_category):
+        return relative_url
+      return '%s/%s' % (base_category, relative_url)
 
-    movement = brain.getObject()
-    # axis 'movement' is simply a category membership on movements
-    if axis == 'movement':
-      return movement.getDefaultAcquiredCategoryMembership(base_category,
-                                                           base=True)
-
-    # is it a source brain or destination brain ?
-    is_source_brain = True
-    if (brain.node_uid != brain.mirror_node_uid):
-      is_source_brain = (brain.node_uid == movement.getSourceUid())
-    elif (brain.section_uid != brain.mirror_section_uid):
-      is_source_brain = (brain.section_uid == movement.getSourceSectionUid())
-    elif brain.total_quantity:
-      is_source_brain = (brain.total_quantity == movement.getQuantity())
+    if cell_key_cache is not None:
+      def getUrlFromUidWithCache(uid):
+        try:
+          return cell_key_cache[uid]
+        except KeyError:
+          relative_url = getUrlFromUidNoCache(uid)
+          cell_key_cache[uid] = relative_url
+          return relative_url
+      getUrlFromUid = getUrlFromUidWithCache
     else:
-      raise NotImplementedError('Could not guess brain side')
+      getUrlFromUid = getUrlFromUidNoCache
 
-    if axis.endswith('_category') or\
-            axis.endswith('_category_strict_membership'):
-      # if the axis is category, we get the node and then returns the category
-      # from that node
-      if axis.endswith('_category'):
-        axis = axis[:-len('_category')]
-      if axis.endswith('_category_strict_membership'):
-        axis = axis[:-len('_category_strict_membership')]
-      if is_source_brain:
-        if axis == 'node':
-          node = movement.getSourceValue()
-        else:
-          node = movement.getProperty('source_%s_value' % axis)
-      else:
-        if axis == 'node':
-          node = movement.getDestinationValue()
-        else:
-          node = movement.getProperty('destination_%s_value' % axis)
-      if node is not None:
-        return node.getDefaultAcquiredCategoryMembership(base_category,
-                                                         base=True)
-      return None
-
-    # otherwise we just return the node
-    if is_source_brain:
-      if axis == 'node':
-        return '%s/%s' % (base_category, movement.getSource())
-      return '%s/%s' % (base_category,
-                        movement.getProperty('source_%s' % axis))
-    if axis == 'node':
-      return '%s/%s' % (base_category, movement.getDestination())
-    return '%s/%s' % (base_category,
-                      movement.getProperty('destination_%s' % axis))
+    if axis == 'movement':
+      return getUrlFromUid(getattr(brain, 'default_%s_uid' % base_category))
+    elif axis == 'movement_strict_membership':
+      return getUrlFromUid(getattr(brain,
+                                   'default_strict_%s_uid' % base_category))
+    return getUrlFromUid(getattr(brain, '%s_uid' % axis))
 
