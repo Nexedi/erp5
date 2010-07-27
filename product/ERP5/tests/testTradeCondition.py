@@ -32,8 +32,10 @@ import transaction
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ZSQLCatalog.SQLCatalog import Catalog
+from Products.ERP5Type.tests.utils import SubcontentReindexingWrapper
 
-class TradeConditionTestCase(ERP5TypeTestCase):
+class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):
   """Tests for Trade Conditions and Tax
   """
   def getBusinessTemplateList(self):
@@ -97,6 +99,11 @@ class TradeConditionTestCase(ERP5TypeTestCase):
     self.tic()
 
   def test_subcontent_supply_line_reindexing(self):
+    trade_condition = self.trade_condition_module.newContent(
+                            portal_type=self.trade_condition_type)
+    supply_line = trade_condition.newContent(portal_type=self.supply_line_type)
+    self._testSubContentReindexing(trade_condition, [supply_line])
+    return
     # If trade condition is modified, then supply lines must be reindexed
     another_resource = self.portal.product_module.newContent(portal_type='Product',
                                                              title='Another Resource')
