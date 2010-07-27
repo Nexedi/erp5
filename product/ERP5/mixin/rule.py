@@ -284,14 +284,17 @@ class RuleMixin:
     updatable_compensation_movement = None
     prevision_quantity = prevision_movement.getQuantity()
     decision_quantity = 0.0
+    real_quantity = 0.0
     # First, we update all properties (exc. quantity) which could be divergent
     # and if we can not, we compensate them
     for decision_movement in decision_movement_list:
+      real_movement_quantity = decision_movement.getQuantity()
       if decision_movement.isPropertyRecorded('quantity'):
         decision_movement_quantity = decision_movement.getRecordedProperty('quantity')
       else:
-        decision_movement_quantity = decision_movement.getQuantity()
+        decision_movement_quantity = real_movement_quantity
       decision_quantity += decision_movement_quantity
+      real_quantity += real_movement_quantity
       if self._isProfitAndLossMovement(decision_movement):
         if decision_movement.isFrozen():
           # Record not completed movements
@@ -332,10 +335,11 @@ class RuleMixin:
     # after compensation
     quantity_movement = prevision_movement.asContext(quantity=decision_quantity-compensated_quantity)
     if not _compare(quantity_tester_list, prevision_movement, quantity_movement):
-      missing_quantity = prevision_quantity - decision_quantity + compensated_quantity
+      missing_quantity = prevision_quantity - real_quantity + compensated_quantity
       if updatable_movement is not None:
         # If an updatable movement still exists, we update it
         updatable_movement.setQuantity(updatable_movement.getQuantity() + missing_quantity)
+        updatable_movement.clearRecordedProperty('quantity')
       elif not_completed_movement is not None:
         # It is still possible to add a new movement some movements are not completed
         new_movement = prevision_movement.asContext(quantity=missing_quantity)
@@ -345,6 +349,7 @@ class RuleMixin:
         # but we can still update a profit and loss movement_collection_diff
         updatable_compensation_movement.setQuantity(updatable_compensation_movement.getQuantity()
                                                   + missing_quantity)
+        updatable_compensation_movement.clearRecordedProperty('quantity')
       else:
         # We must create a profit and loss movement
         new_movement = self._newProfitAndLossMovement(prevision_movement)
