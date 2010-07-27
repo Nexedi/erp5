@@ -27,8 +27,11 @@
 #
 ##############################################################################
 
+import sys
 from AccessControl import ClassSecurityInfo
 from AccessControl.ZopeGuards import guarded_getattr
+from ZODB.POSException import ConflictError
+from zLOG import LOG, WARNING
 from Products.Formulator.DummyField import fields
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Errors import FormValidationError, ValidationError
@@ -55,8 +58,7 @@ class MatrixBoxWidget(Widget.Widget):
                      ['cell_base_id', 'cell_portal_type', 'lines', 'columns',
                       'tabs', 'as_cell_range_script_id', 'getter_method',
                       'editable_attributes', 'global_attributes',
-                      'cell_getter_method',
-                      'update_cell_range' ]
+                      'cell_getter_method', 'update_cell_range', 'url_cells' ]
 
     default = fields.TextAreaField('default',
                                    title='Default',
@@ -182,6 +184,14 @@ class MatrixBoxWidget(Widget.Widget):
         "The cell range should be updated upon edit."),
                                   default=0)
 
+    url_cells = fields.ListTextAreaField('url_cells',
+                                 title="URL Cells",
+                                 description=(
+        "An optional list of cells which can provide a custom URL."
+        "If no url cell is used, then no link is displayed."),
+                                 default=[],
+                                 required=0)
+
     def render(self, field, key, value, REQUEST, render_format='html', render_prefix=None):
         """
           This is where most things happen. This method renders a list
@@ -237,6 +247,8 @@ class MatrixBoxWidget(Widget.Widget):
         else:
           cell_getter_method = context.getCell
         editable_attributes = field.get_value('editable_attributes')
+        url_cells = field.get_value('url_cells')
+        url_cell_dict = dict(url_cells)
 
         # This is required when we have no tabs
         if len(tabs) == 0:
@@ -335,7 +347,7 @@ class MatrixBoxWidget(Widget.Widget):
                 list_result_lines = [ str(l[1]) ]
               
               for c in columns:
-                has_error = 0
+                has_error = False
                 column_id = c[0]
                 if (column_id is not None) and \
                    (not isinstance(column_id, (list, tuple))):
@@ -352,8 +364,28 @@ class MatrixBoxWidget(Widget.Widget):
                 REQUEST['cell'] = cell
                 
                 cell_body = ''
-                
+                cell_url = None
+
                 for attribute_id in editable_attribute_ids:
+                  if attribute_id in url_cell_dict:
+                    url_method_id = url_cell_dict[attribute_id]
+                    if url_method_id not in (None, ''):
+                      url_method = getattr(cell, url_method_id, None)
+                      if url_method is not None:
+                        try:
+                          cell_url = url_method(brain=cell,
+                                                cell_index=kw,
+                                                cell_position=((i,j,k) + extra_dimension_position))
+                        except (ConflictError, RuntimeError):
+                          raise
+                        except:
+                          LOG('MatrixBox', WARNING, 'Could not evaluate the url '
+                              'method %r with %r' % (url_method, cell),
+                              error=sys.exc_info())
+                      else:
+                        LOG('MatrixBox', WARNING,
+                            'Could not find the url method %s' % (url_method_id,))
+
                   my_field_id = '%s_%s' % (field.id, attribute_id)
                   if form.has_field(my_field_id):
                     my_field = form.get_field(my_field_id)
@@ -361,7 +393,7 @@ class MatrixBoxWidget(Widget.Widget):
                     if cell is not None:
                       attribute_value = my_field.get_value('default',
                              cell=cell, cell_index=kw, cell_position = ((i,j,k)+extra_dimension_position))
-                      
+                         
                       if render_format=='html':
                         display_value = attribute_value
                         if field_errors:
@@ -372,20 +404,24 @@ class MatrixBoxWidget(Widget.Widget):
                                                     attribute_value)
                         else:
                           display_value = attribute_value
-                        if field_errors.has_key(key):
-                          # Display error message if this cell has an error
-                          has_error = 1
-                          cell_body += '<span class="input">%s</span>%s' % (
-                              my_field.render(value=display_value,
-                                              REQUEST=REQUEST,
-                                              key=key),
-                              translateString(field_errors[key].error_text))
-                        else:
-                          cell_body += '<span class="input">%s</span>' %\
-                                           my_field.render(
-                                              value=display_value,
+                        cell_html = my_field.render(value=display_value,
                                               REQUEST=REQUEST,
                                               key=key)
+                        if cell_url:
+                          # don't make a link if widget is editable
+                          if not my_field.get_value('editable',
+                             cell=cell, cell_index=kw,
+                             cell_position=((i,j,k)+extra_dimension_position)):
+                            cell_html = "<a href='%s'>%s</a>" % (cell_url,
+                                                                 cell_html)
+                        if field_errors.has_key(key):
+                          # Display error message if this cell has an error
+                          has_error = True
+                          cell_body += '<span class="input">%s</span>%s' % (
+                              cell_html, translateString(field_errors[key].error_text))
+                        else:
+                          cell_body += '<span class="input">%s</span>' % (
+                                          cell_html )
                         
                       elif render_format == 'list':
                         if not my_field.get_value('hidden'):
@@ -405,7 +441,7 @@ class MatrixBoxWidget(Widget.Widget):
                           display_value = attribute_value
                         if field_errors.has_key(key):
                           # Display error message if this cell has an error
-                          has_error = 1
+                          has_error = True
                           cell_body += '<span class="input">%s</span>%s' % (
                               my_field.render(value=display_value,
                                               REQUEST=REQUEST,
@@ -421,7 +457,7 @@ class MatrixBoxWidget(Widget.Widget):
                         list_result_lines.append(None)
                         
                 css = td_css
-                if has_error :
+                if has_error:
                   css = 'error'
                 list_body = list_body + \
                       ('<td class=\"%s\">%s</td>' % (css, cell_body))
