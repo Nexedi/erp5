@@ -609,9 +609,9 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     mapping = self.getPropertyMappingValue()
     if mapping is not None:
       # Special case: corrected quantity is difficult to handle,
-      # because, if quantity is negatated in the mapping, other
+      # because, if quantity is inverse in the mapping, other
       # parameters, profit quantity (deprecated) and delivery error,
-      # must be negatated as well.
+      # must be inverse as well.
       if property == 'corrected_quantity':
         mapped_quantity_id = mapping.getMappedPropertyId('quantity')
         quantity = mapping.getMappedProperty(self, 'quantity')
