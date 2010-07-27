@@ -33,25 +33,15 @@ import os
 
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.utils import FileUpload,\
+    SubcontentReindexingWrapper
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.Globals import PersistentMapping
-from Products.ZSQLCatalog.SQLCatalog import Catalog
 
-def catalogObjectListWrapper(self, object_list, method_id_list=None,
-    disable_cache=0, check_uid=1, idxs=None):
-  """Wrapper to mark inside of portal object list of catalogged objects"""
-  import transaction
-  portal = self.getPortalObject()
-  for q in object_list:
-    portal.catalogged_object_path_dict[q.getPath()] = 1
-  transaction.commit()
-
-class TestOrderMixin:
+class TestOrderMixin(SubcontentReindexingWrapper):
 
   default_quantity = 99
   default_price = 555
@@ -79,40 +69,6 @@ class TestOrderMixin:
     uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
     user = uf.getUserById('rc').__of__(uf)
     newSecurityManager(None, user)
-
-  def wrap_catalogObjectList(self):
-    self.original_catalogObjectList = Catalog.catalogObjectList
-    Catalog.catalogObjectList = catalogObjectListWrapper
-
-  def unwrap_catalogObjectList(self):
-    Catalog.catalogObjectList = self.original_catalogObjectList
-
-  def _testSubContentReindexing(self, parent_document, children_document_list):
-    """Helper method which shall be called *before* tic or commit"""
-    self.portal.catalogged_object_path_dict = PersistentMapping()
-    transaction.commit()
-    expected_path_list = [q.getPath() for q in children_document_list +
-        [parent_document]]
-    try:
-      # wrap call to catalogObjectList
-      self.wrap_catalogObjectList()
-      self.stepTic()
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-      # do real assertions
-      self.portal.catalogged_object_path_dict = PersistentMapping()
-      transaction.commit()
-      parent_document.reindexObject()
-      self.stepTic()
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-    finally:
-      # unwrap catalogObjectList
-      self.unwrap_catalogObjectList()
 
   def setUpPreferences(self):
     #create apparel variation preferences
