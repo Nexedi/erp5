@@ -453,8 +453,9 @@ class SimulationTool(BaseTool):
         select_dict = new_kw.get('select_dict', dict())
         related_key_select_expression_list = new_kw.pop(
                 'related_key_select_expression_list', [])
-        if related_key_select_expression_list:
-          select_dict[x] = '%s_%s' % (table, x)
+        for related_key_select in related_key_select_expression_list:
+          select_dict[related_key_select] = '%s_%s' % (table,
+                                                       related_key_select)
         new_kw['select_dict'] = select_dict
 
         # Column values
