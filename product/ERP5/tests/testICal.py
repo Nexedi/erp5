@@ -25,20 +25,6 @@
 #
 ##############################################################################
 
-"""
-  TIMEZONE WARNING
-  The ICal renderer does not take into account time zones, because clients can take care about it
-  for themselves, so we use GMT time.
-  This test assumes the person running the test is in the same time zone as me, which is usually true.
-  It will be fixed some day.
-  
-  I have been investigating this a little, DateTime module caches the timezone
-  very early in the initialisation process, so changing os.environ['TZ'] has
-  no effect. For now, the easiest is to set TZ environ variable to something
-  like 'Europe/France'
-
-"""
-
 import unittest
 
 import transaction
@@ -142,14 +128,14 @@ class TestICal(ERP5TypeTestCase):
     
     # set start date, description and change workflow state - new
     event.receive()
-    event.setStartDate('2007/08/15 10:30')
+    event.setStartDate('2007/08/15 08:30 UTC')
     event.setDescription('Event One description')
     transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
-    self.assertEquals( # if this fail for you, try to set $TZ to Europe/Paris
-        feed_dict['DTSTART'], '20070815T083000Z')
+    # DSTART and DTEND are the date in UTC
+    self.assertEquals(feed_dict['DTSTART'], '20070815T083000Z')
     # if not set end date, it must be same as start date
     self.assertEquals(feed_dict['DTEND'], '20070815T083000Z')
     self.assertEquals(feed_dict['STATUS'], 'TENTATIVE')
@@ -166,7 +152,7 @@ class TestICal(ERP5TypeTestCase):
     
     # set stop date and change workflow state - assigned
     event.assign()
-    event.setStopDate('2007/08/15 15:30')
+    event.setStopDate('2007/08/15 13:30 UTC')
     transaction.commit()
     self.tic()
     
