@@ -362,6 +362,7 @@ class MatrixBoxWidget(Widget.Widget):
                 kwd['base_id'] = cell_base_id
                 cell = cell_getter_method(*kw, **kwd)
                 REQUEST['cell'] = cell
+                REQUEST['cell_index'] = kw
                 
                 cell_body = ''
                 cell_url = None
