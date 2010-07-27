@@ -54,7 +54,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-return container.REQUEST.RESPONSE.redirect(\'%s/chat\' % portal.ERP5Site_getTioLiveSiteRootUrl())\n
+return container.REQUEST.RESPONSE.redirect(\'%s/chat\' % portal.ERP5Site_getTioLiveSiteRootUrl(include_language=0))\n
 </string> </value>
         </item>
         <item>
