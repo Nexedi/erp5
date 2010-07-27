@@ -287,6 +287,7 @@ class MatrixBoxWidget(Widget.Widget):
             extra_dimension_index = '_'+'_'.join(map(str, extra_dimension_position))
           # Create one table per tab
           k = 0
+          kwd = dict(base_id=cell_base_id)
           for tab in tabs:
             tab_id = tab[0]
             if (tab_id is not None) and \
@@ -358,8 +359,6 @@ class MatrixBoxWidget(Widget.Widget):
                   kw = [l[0], c[0]]
                 else:
                   kw = [l[0], c[0]] + tab_id + extra_dimension_category_list
-                kwd = {}
-                kwd['base_id'] = cell_base_id
                 cell = cell_getter_method(*kw, **kwd)
                 REQUEST['cell'] = cell
                 REQUEST['cell_index'] = kw
@@ -415,7 +414,7 @@ class MatrixBoxWidget(Widget.Widget):
                              cell_position=((i,j,k)+extra_dimension_position)):
                             cell_html = "<a href='%s'>%s</a>" % (cell_url,
                                                                  cell_html)
-                        if field_errors.has_key(key):
+                        if key in field_errors:
                           # Display error message if this cell has an error
                           has_error = True
                           cell_body += '<span class="input">%s</span>%s' % (
@@ -440,7 +439,7 @@ class MatrixBoxWidget(Widget.Widget):
                                                     attribute_value)
                         else:
                           display_value = attribute_value
-                        if field_errors.has_key(key):
+                        if key in field_errors:
                           # Display error message if this cell has an error
                           has_error = True
                           cell_body += '<span class="input">%s</span>%s' % (
@@ -566,6 +565,7 @@ class MatrixBoxValidator(Validator.Validator):
             extra_dimension_index = '_'+'_'.join(map(str, extra_dimension_position))
           k = 0
           # Create one table per tab
+          kwd = dict(base_id=cell_base_id)
           for tab_id in tab_ids:
             if (tab_id is not None) and \
                (not isinstance(tab_id, (list, tuple))):
@@ -583,8 +583,6 @@ class MatrixBoxValidator(Validator.Validator):
                 else:
                   kw = [l, c] + tab_id + extra_dimension_category_list
                 kw = tuple(kw)
-                kwd = {}
-                kwd['base_id'] = cell_base_id
                 cell = cell_getter_method(*kw, **kwd)
                 
                 for attribute_id in editable_attribute_ids:
@@ -609,9 +607,8 @@ class MatrixBoxValidator(Validator.Validator):
                           and not my_field.get_value('hidden'):
                         # Only validate modified values from visible fields
                         result.setdefault(kw, {})[attribute_id] = value
-                      else:
-                        if result.has_key(kw):
-                          result[kw][attribute_id] = value
+                      elif kw in result:
+                        result[kw][attribute_id] = value
                 j += 1
               i += 1
             k += 1
