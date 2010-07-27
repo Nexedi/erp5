@@ -13,16 +13,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>cell_getter_method</string>
-                <string>editable_attributes</string>
-                <string>global_attributes</string>
-                <string>url_cells</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>matrixbox</string> </value>
+            <value> <string>listbox_debit_price</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -59,6 +56,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -78,48 +79,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>cell_getter_method</string> </key>
-                    <value> <string>BudgetLine_getAvailableBudgetCell</string> </value>
-                </item>
-                <item>
-                    <key> <string>editable_attributes</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>quantity</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>matrixbox</string> </value>
+                    <value> <string>my_view_mode_money_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BudgetLine_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>global_attributes</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>url_cells</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>getExplanationUrl</string>
-                        </tuple>
-                      </list>
-                    </value>
                 </item>
               </dictionary>
             </value>

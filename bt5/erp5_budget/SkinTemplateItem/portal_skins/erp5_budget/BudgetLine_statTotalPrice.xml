@@ -53,24 +53,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from ZTUtils import make_query\n
+            <value> <string>portal = context.getPortalObject()\n
+params = portal.portal_selections.getSelectionParamsFor(selection_name)\n
+cell_index = params.get(\'cell_index\')\n
+engaged_budget = params.get(\'engaged_budget\')\n
 \n
-def getFakeBudgetCell(amount):\n
-  class FakeBudgetCell:\n
-    def getConsumedBudget(self):\n
-      return amount\n
-    def getExplanationUrl(self, *args, **w):\n
-      return \'%s/BudgetLine_viewConsumedBudgetMovementList?%s\' % (\n
-                   context.absolute_url(),\n
-                   make_query(dict(cell_index=list(cell_index), engaged_budget=False)))\n
-  return FakeBudgetCell()\n
+query_dict = context.BudgetLine_getInventoryQueryDictForCellIndex(\n
+                  cell_index=cell_index,\n
+                  engaged_budget=engaged_budget)\n
 \n
-try:\n
-  consumed_budget_dict = container.REQUEST.other[script.getId()]\n
-except KeyError:\n
-  consumed_budget_dict = container.REQUEST.other[script.getId()] = context.getConsumedBudgetDict()\n
-\n
-return getFakeBudgetCell(consumed_budget_dict.get(cell_index))\n
+return portal.portal_simulation.getInventoryAssetPrice(**query_dict)\n
 </string> </value>
         </item>
         <item>
@@ -81,7 +73,7 @@ return getFakeBudgetCell(consumed_budget_dict.get(cell_index))\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*cell_index, **kw</string> </value>
+            <value> <string>selection_name, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -101,25 +93,22 @@ return getFakeBudgetCell(consumed_budget_dict.get(cell_index))\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>cell_index</string>
+                            <string>selection_name</string>
                             <string>kw</string>
-                            <string>ZTUtils</string>
-                            <string>make_query</string>
-                            <string>getFakeBudgetCell</string>
-                            <string>_getitem_</string>
                             <string>_getattr_</string>
-                            <string>container</string>
-                            <string>script</string>
-                            <string>consumed_budget_dict</string>
-                            <string>KeyError</string>
                             <string>context</string>
-                            <string>_write_</string>
+                            <string>portal</string>
+                            <string>params</string>
+                            <string>cell_index</string>
+                            <string>engaged_budget</string>
+                            <string>query_dict</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -136,7 +125,7 @@ return getFakeBudgetCell(consumed_budget_dict.get(cell_index))\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BudgetLine_getConsumedBudgetCell</string> </value>
+            <value> <string>BudgetLine_statTotalPrice</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
