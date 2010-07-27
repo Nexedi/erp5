@@ -64,9 +64,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -125,22 +123,6 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>cell/getDestinationDebit | nothing</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: \'destination_debit\' in zip(*context.BudgetLine_getEditablePropertyList())[0]</string> </value>
         </item>
       </dictionary>
     </pickle>
