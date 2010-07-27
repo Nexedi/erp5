@@ -49,6 +49,36 @@ class MappedProperty(XMLObject):
                      PropertySheet.CategoryCore,
                      PropertySheet.MappedProperty)
 
+  # XXX do we need to protect this method?
+  def getMappingDict(self, reverse=False):
+    # Use volatile attributes for caching.
+    try:
+      if reverse:
+        return self._v_reverse_mapping_dict
+      else:
+        return self._v_mapping_dict
+    except AttributeError:
+      mapping_dict = {}
+      for line in self.getMappingPropertyList():
+        f, t = [x.strip() for x in line.split('|', 1)]
+        if reverse:
+          if t[:1] == '-':
+            f, t = t[1:], '-' + f
+          else:
+            f, t = t, f
+          mapping_dict[f] = t
+        else:
+          mapping_dict[f] = t
+      if reverse:
+        self._v_reverse_mapping_dict = mapping_dict
+      else:
+        self._v_mapping_dict = mapping_dict
+      return mapping_dict
+
+  # XXX do we need to protect this method?
+  def getMappedPropertyId(self, property, reverse=False):
+    return self.getMappingDict(reverse=reverse).get(property, property)
+
   # Security should be handled by the target document not by the mapped
   # property document.
   security.declarePublic('getMappedProperty')
@@ -58,8 +88,7 @@ class MappedProperty(XMLObject):
       getProperty = document.getPropertyList
     else:
       getProperty = document.getProperty
-    mapping_dict = dict([[x.strip() for x in x.split('|')] \
-                         for x in self.getMappingPropertyList()])
+    mapping_dict = self.getMappingDict()
     mapped_property = mapping_dict.get(property, property)
     if mapped_property.startswith('-'):
       return -1 * getProperty(mapped_property[1:])
@@ -75,15 +104,9 @@ class MappedProperty(XMLObject):
       setProperty = document.setPropertyList
     else:
       setProperty = document.setProperty
-    mapping_dict = {}
-    for x in self.getMappingPropertyList():
-      from_property, to_property = [x.strip() for x in x.split('|')]
-      if to_property.startswith('-'):
-        mapping_dict[to_property[1:]] = '-%s' % from_property
-      else:
-        mapping_dict[to_property] = from_property
+    mapping_dict = self.getMappingDict(reverse=True)
     mapped_property = mapping_dict.get(property, property)
     if mapped_property.startswith('-'):
-      return setProperty(-1 * value)
+      return setProperty(mapped_property, -1 * value)
     else:
-      return setProperty(value)
+      return setProperty(mapped_property, value)
