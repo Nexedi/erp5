@@ -6,3 +6,11 @@ fully stuffed with eggs interpreter.
 
 Generated wrapper behaves like original python binary, accepting all arguments.
 It executes original python with replacing self process.
+
+Known issues
+------------
+
+Because of being another interpreter in chain of invocation of interpreters it
+can suffer of shebang limitations.
+
+http://www.in-ulm.de/~mascheck/various/shebang/
