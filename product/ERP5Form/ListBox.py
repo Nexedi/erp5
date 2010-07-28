@@ -405,6 +405,21 @@ class ListBoxWidget(Widget.Widget):
                                 required=0)
     property_names.append('default_display_style')
 
+    full_text_search_key = fields.StringField('full_text_search_key',
+                                title="Full text search key",
+                                description=("Full text search key used to make query."),
+                                default=None,
+                                required=0)
+    property_names.append('full_text_search_key')
+
+    full_text_search_key_script = fields.StringField('full_text_search_key_script',
+                                title="Full text search key script",
+                                description=("Full text search key script used to make query."),
+                                default=None,
+                                required=0)
+    property_names.append('full_text_search_key_script')
+
+
     list_action = fields.StringField('list_action',
                                  title='List Action',
                                  description=('The id of the object action'
@@ -942,12 +957,22 @@ class ListBoxRenderer:
   getDisplayStyleList = lazyMethod(getDisplayStyleList)
 
   def getDefaultDisplayStyle(self):
-    """Return the list of avaible display style. Make sure that the 
-    titles are in unicode"""
-    default_display_style = self.field.get_value('default_display_style')
-    return default_display_style
+    """Return the default display list style."""
+    return self.field.get_value('default_display_style')
 
   getDefaultDisplayStyle = lazyMethod(getDefaultDisplayStyle)
+
+  def getFullTextSearchKey(self):
+    """Return the full text search key."""
+    return self.field.get_value('full_text_search_key')
+
+  getFullTextSearchKey = lazyMethod(getFullTextSearchKey)
+
+  def getFullTextSearchKeyScript(self):
+    """Return the full text search key."""
+    return self.field.get_value('full_text_search_key_script')
+
+  getFullTextSearchKeyScript = lazyMethod(getFullTextSearchKeyScript)
 
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
@@ -1570,6 +1595,7 @@ class ListBoxRenderer:
     search_column_id_set = self.getSearchColumnIdSet()
     if param_dict is None:
       param_dict = self.getParamDict()
+
     value_list = []
     for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
       if sql in search_column_id_set:
