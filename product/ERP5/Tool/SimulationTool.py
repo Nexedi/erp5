@@ -36,7 +36,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 
 from Products.ERP5 import _dtmldir
 
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 from Products.ERP5.Capacity.GLPK import solve
 try:
@@ -1242,7 +1242,7 @@ class SimulationTool(BaseTool):
             # optimisation when from_date is given), emit a log.
             # This can happen if there are more date parameters than mentioned
             # above.
-            LOG('SimulationTool', 100, 'There is more than one date condition'
+            LOG('SimulationTool', PROBLEM, 'There is more than one date condition'
               ' so optimisation got disabled. The result of this call will be'
               ' correct but it requires investigation as some cases might'
               ' have gone unnoticed and produced wrong results.')
@@ -1420,7 +1420,8 @@ class SimulationTool(BaseTool):
                     elif line_a[key] == line_b[key]:
                       result[key] = line_a[key]
                     elif key not in ('date', 'stock_uid', 'path'):
-                      LOG('InventoryTool.getInventoryList.addLineValues', 0,
+                      LOG('InventoryTool.getInventoryList.addLineValues',
+                          PROBLEM,
                           'mismatch for %s column: %s and %s' % \
                           (key, line_a[key], line_b[key]))
                   return result
