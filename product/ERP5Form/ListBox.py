@@ -397,6 +397,14 @@ class ListBoxWidget(Widget.Widget):
                                 required=0)
     property_names.append('display_style_list')
 
+    default_display_style = fields.StringField('default_display_style',
+                                title="Default display style",
+                                description=(
+        "A default display style for listbox rendering."),
+                                default='table',
+                                required=0)
+    property_names.append('default_display_style')
+
     list_action = fields.StringField('list_action',
                                  title='List Action',
                                  description=('The id of the object action'
@@ -932,6 +940,14 @@ class ListBoxRenderer:
                                                       display_style_list]
 
   getDisplayStyleList = lazyMethod(getDisplayStyleList)
+
+  def getDefaultDisplayStyle(self):
+    """Return the list of avaible display style. Make sure that the 
+    titles are in unicode"""
+    default_display_style = self.field.get_value('default_display_style')
+    return default_display_style
+
+  getDefaultDisplayStyle = lazyMethod(getDefaultDisplayStyle)
 
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
@@ -2426,7 +2442,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           html = u'<a href="%s">%s</a>' % (url, html)
 
       html_list.append((html, original_value, error, editable_field, url))
-
     return html_list
 
 allow_class(ListBoxHTMLRendererLine)
