@@ -377,7 +377,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEqual('packed', packing_list.getContainerState() )
 
   def stepCheckInvoiceNormalMovements(self, sequence=None, **kw):
-    self.logMessage('Assuming, that it is good...')
+    # XXX implement... something, maybe?
+    pass
 
   def stepCheckInvoiceAccountingMovements(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
