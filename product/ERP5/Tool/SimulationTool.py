@@ -797,7 +797,7 @@ class SimulationTool(BaseTool):
 
       if group_by_section_category:
         related_key_group_by_expression_list.append('section_category_uid')
-        related_key_select_expression_list.append('stock_section_category_uid')
+        related_key_select_expression_list.append('section_category_uid')
       if group_by_section_category_strict_membership:
         related_key_group_by_expression_list.append(
             'section_category_strict_membership_uid')
