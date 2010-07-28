@@ -148,8 +148,7 @@
       <span tal:condition="python: here.getTitle() and total_line>0"> - </span>\n
       <!--Show search result -->\n
       <span tal:condition="python: total_line > 0"\n
-        tal:replace="structure python: real_context.Base_translateString(\'Results <em>${start} - ${stop}</em> of <em>${total}</em>.\', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"\n
-      />\n
+        tal:replace="structure python: real_context.Base_translateString(\'Results <em>${start} - ${stop}</em> of <em>${total}</em>.\', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>\n
 \n
       <!-- Set a slot for additional content ? -->\n
     </div>\n
@@ -177,7 +176,7 @@
                 &nbsp;\n
               </th>\n
               <!--Add colum for checkbox-->\n
-              <th tal:condition="python: show_select_column and not is_gadget_mode"\n
+              <th tal:condition="python: show_select_column"\n
                   class="select_cell"\n
                   style="border-width: 0;\n
                         text-align: center; \n
@@ -201,15 +200,16 @@
                         i18n:domain="ui" i18n:attributes="title" />         \n
                   \n
               </th>\n
+              <!-- Column label row -->\n
               <tal:block tal:repeat="value here/getLabelValueList">\n
-              <tal:block tal:define="sql        python: value[0];\n
-                                    title      python: value[1];\n
-                                    sort_order python: value[2]">\n
-              <th tal:condition="sql"\n
-                  tal:attributes="style python: repeat[\'value\'].index==0 and \'border-width: 0 1px 1px 1px\' or \'\'">                 \n
+                <tal:block tal:define="sql        python: value[0];\n
+                                      title      python: value[1];\n
+                                      sort_order python: value[2]">\n
+                <th tal:condition="sql"\n
+                    tal:attributes="style python: repeat[\'value\'].index==0 and \'border-width: 0 1px 1px 1px\' or \'\'">                 \n
 \n
-                  <!-- Button in normal view -->\n
-                  <button tal:define="\n
+                    <!-- Button in normal view -->\n
+                    <button tal:define="\n
                           bt_class python:  sort_order==\'ascending\' and \'sort_button sort_button_asc\' \n
                           or sort_order == \'descending\' and \'sort_button sort_button_desc\' \n
                           or \'sort_button\'"\n
@@ -221,10 +221,10 @@
                                           class bt_class;"\n
                           i18n:domain="ui" i18n:attributes="title">\n
                       <span tal:content="title" i18n:domain="ui" i18n:translate="">ID</span>\n
-                  </button>\n
+                    </button>\n
 \n
-                  <!-- Button in gadget mode -->\n
-                  <button tal:condition="is_gadget_mode" \n
+                    <!-- Button in gadget mode -->\n
+                    <button tal:condition="is_gadget_mode" \n
                           tal:define ="params python: {\'setSelectionQuickSortOrder:method\':field_id+\'.\'+sql};"\n
                           type="button"  \n
                           class="sort_button"\n
@@ -232,12 +232,12 @@
                                             onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);"\n
                           i18n:domain="ui" i18n:attributes="title">\n
                           <span tal:content="title" i18n:domain="ui" i18n:translate="">ID</span>\n
-                  </button>\n
-                </th>\n
-                <!--TODO Why not sql is possible ?-->\n
-                <th tal:condition="not: sql" tal:content="title" \n
-                    i18n:domain="ui" i18n:translate=""/>\n
-              </tal:block>\n
+                    </button>\n
+                  </th>\n
+                  <!--TODO Why not sql is possible ?-->\n
+                  <th tal:condition="not: sql" tal:content="title" \n
+                      i18n:domain="ui" i18n:translate=""/>\n
+                </tal:block>\n
               </tal:block>\n
             </tr>\n
 \n
@@ -271,7 +271,7 @@
               <th class="AnchorColumn" tal:condition="show_anchor_column">\n
                 &nbsp;\n
               </th>\n
-              <th tal:condition="python: show_select_column and not is_gadget_mode"\n
+              <th tal:condition="python: show_select_column"\n
                   class="Data" style="text-align: center; vertical-align: middle">\n
                 <input id="listbox_select" type="image"\n
                       title="Action" alt="Action" name="Base_doSelect:method"\n
@@ -337,7 +337,7 @@
                               \n
                   <!--Select column -->\n
                   <!--TODO Define the CSS class !-->\n
-                  <td tal:condition="python: show_select_column and not is_gadget_mode"\n
+                  <td tal:condition="python: show_select_column"\n
                       class="select_cell" style="text-align: center; vertical-align: middle"\n
                       >\n
                   \n
@@ -440,7 +440,7 @@
       <!--TODO define show_display_selection macro-->\n
       <div tal:condition="python: len(display_style_list) > 0"\n
            class="list-style-selection">\n
-        <span i18n:translate="" i18n:domain="ui">Display :</span>\n
+        <span i18n:translate="" i18n:domain="ui">Display:</span>\n
         <ul>\n
           <li tal:repeat="style display_style_list">\n
             <a tal:attributes="href python: \'%s?list_style=%s\' % (listbox_url, style[0]);\n
