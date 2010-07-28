@@ -733,8 +733,10 @@ class Amount(Base, Variated):
   security.declareProtected(Permissions.AccessContentsInformation,
       'getQuantityUnit')
   def getQuantityUnit(self):
-    value = self.getQuantityUnitValue()
-    if value is not None:
-      return value.getCategoryRelativeUrl()
-    return None
+    result = self._getDefaultCategoryMembership('quantity_unit')
+    if result is None:
+      resource = self.getResourceValue()
+      if resource is not None:
+        result = resource.getQuantityUnit()
+    return result
 
