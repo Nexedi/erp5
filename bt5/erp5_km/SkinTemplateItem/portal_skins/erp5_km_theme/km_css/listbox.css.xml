@@ -218,26 +218,28 @@ div.search_popup{\n
   float:left;\n
 }\n
 \n
-/*Display selection choice*/\n
-.display_selection {\n
+/* List style selection */\n
+div.list-style-selection {\n
   width:auto;\n
   float:left;\n
 }\n
-.display_selection span{\n
+div.list-style-selection span{\n
   font-weight:bold;\n
   padding-left:10px;\n
   vertical-align:-4px;\n
 }\n
-.display_selection ul{\n
+div.list-style-selection ul{\n
   display:inline;\n
   padding-left:0;\n
   margin: 0;\n
   vertical-align: -4px;\n
 }\n
-.display_selection li{\n
+div.list-style-selection li{\n
   display: inline;\n
 }\n
-\n
+div.list-style-selection li a.selected{\n
+  font-weight: bold;\n
+}\n
 /* Search bar */\n
 div.extendedSearchBar {\n
   float:left;\n
