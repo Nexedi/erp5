@@ -5,6 +5,7 @@ Accounting Period | edit_workflow
 Accounting Transaction Line | delivery_movement_causality_interaction_workflow
 Accounting Transaction Line | delivery_movement_simulation_interaction_workflow
 Accounting Transaction Line | edit_workflow
+Accounting Transaction Line | movement_resource_interaction_workflow
 Accounting Transaction Root Simulation Rule | edit_workflow
 Accounting Transaction Root Simulation Rule | rule_validation_workflow
 Accounting Transaction | accounting_workflow
