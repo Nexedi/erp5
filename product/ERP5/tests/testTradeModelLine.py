@@ -2448,13 +2448,16 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       and trade model line can works with appropriate context(delivery or
       movement) only.
     """
+    ## XXX int_index are used in this test to order Trade Model Lines to make
+    # sure that Discount is applied first.
+
     trade_condition = self.createTradeCondition()
     # create a model line and set target level to `delivery`.
     tax = self.createTradeModelLine(trade_condition,
                                     reference='TAX',
                                     base_application_list=['base_amount/tax'],
                                     base_contribution_list=['base_amount/total_tax'])
-    tax.edit(price=0.05, target_level=TARGET_LEVEL_DELIVERY)
+    tax.edit(price=0.05, target_level=TARGET_LEVEL_DELIVERY, int_index=4)
 
     # create an order.
     resource_A = self.createResource('Product', title='A')
@@ -2510,19 +2513,19 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 current_movement.setQuantity(100)
 return current_movement
 """)
-    extra_fee_a.edit(price=1, target_level=TARGET_LEVEL_MOVEMENT,
+    extra_fee_a.edit(price=1, target_level=TARGET_LEVEL_MOVEMENT, int_index=3,
                      calculation_script_id='TradeModelLine_calculateExtraFeeA')
     # Extra fee b has a fixed quantity so that this trade model line is applied
     # to all movements by force.
     extra_fee_b = self.createTradeModelLine(trade_condition,
                                             reference='EXTRA_FEE_B',
                                             base_contribution_list=['base_amount/total'])
-    extra_fee_b.edit(quantity=1, price=1, target_level=TARGET_LEVEL_MOVEMENT)
+    extra_fee_b.edit(quantity=1, price=1, target_level=TARGET_LEVEL_MOVEMENT, int_index=2)
     # for delivery level
     discount = self.createTradeModelLine(trade_condition,
                                          reference='DISCOUNT_B',
                                          base_contribution_list=['base_amount/total'],)
-    discount.edit(quantity=10, price=-1, target_level=TARGET_LEVEL_DELIVERY)
+    discount.edit(quantity=10, price=-1, target_level=TARGET_LEVEL_DELIVERY, int_index=1)
 
     transaction.commit() # flush transactional cache
 
