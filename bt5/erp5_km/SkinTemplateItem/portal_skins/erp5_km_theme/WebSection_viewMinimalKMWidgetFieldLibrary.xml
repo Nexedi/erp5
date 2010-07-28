@@ -125,7 +125,6 @@
                       <list>
                         <string>left_menu_widget</string>
                         <string>listbox_action_widget</string>
-                        <string>search_text_listbox</string>
                       </list>
                     </value>
                 </item>
