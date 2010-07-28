@@ -196,7 +196,7 @@ div.search_popup{\n
 }\n
 \n
 /*Footer block*/\n
-.listbox_footer{\n
+div.listbox-footer{\n
  background-color:#F0EFE9;\n
  float:left;\n
  margin-bottom:0.3em;\n
@@ -207,14 +207,12 @@ div.search_popup{\n
 }\n
 \n
 /* Listbox Footer in gadget mode */\n
-.block .listbox_footer{\n
+.block .listbox-footer{\n
    background-color: transparent;\n
 }\n
 \n
-.listbox_footer_box {\n
-  padding-top:5px;\n
-  padding-bottom:5px;\n
-  width: 50%;\n
+div.listbox-footer-box {\n
+  width: auto;\n
   float:left;\n
 }\n
 \n
@@ -245,16 +243,18 @@ div.listbox-list-style-selection li a.selected{\n
 div.listbox-full-text-search {\n
   float:left;\n
   margin-top:0;\n
-  padding:1em 0 0.5em;\n
+  padding:0em 0.5em;\n
+  width: auto;\n
 }\n
 div.listbox-full-text-search input{\n
-  width: auto;\n
+  width: 130px;\n
 }\n
 div.listbox-full-text-search input.button{\n
  background-image: url(\'./km_img/search_background.png\');\n
  background-color: inherit;\n
  border: 0 none;\n
  color:#FFFFFF;\n
+ width: auto;\n
 }\n
 \n
 div.resultList{\n
@@ -263,16 +263,17 @@ div.resultList{\n
 div.searchResultHeader{\n
   float:left;\n
 }\n
+\n
+\n
 /* Pagination*/\n
-.listbox_pagination {\n
+div.listbox-page-navigation{\n
   width:auto;\n
   margin:auto;\n
-  text-align:right;\n
   padding-right: 0.5em;\n
+  float:right;\n
 }\n
-.listbox_pagination input{\n
-  text-align:center;\n
-  width: 20px;\n
+div.listbox-page-navigation input{\n
+  max-width: 30px;\n
 }\n
 \n
 /* Report tree */\n
