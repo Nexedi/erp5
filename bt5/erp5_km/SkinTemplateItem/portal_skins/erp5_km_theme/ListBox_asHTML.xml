@@ -200,7 +200,7 @@
                         i18n:domain="ui" i18n:attributes="title" />         \n
                   \n
               </th>\n
-              <!-- Column label row -->\n
+              <!-- Label column row -->\n
               <tal:block tal:repeat="value here/getLabelValueList">\n
                 <tal:block tal:define="sql        python: value[0];\n
                                       title      python: value[1];\n
@@ -279,29 +279,30 @@
                                       src string:${portal_url_string}/images/exec16.png"\n
                       i18n:domain="ui" i18n:attributes="title" />\n
                 </th>\n
+                <!-- Real search columns -->\n
                 <th tal:repeat="value here/getSearchValueList">\n
-                <tal:block tal:define="alias        python: value[0];\n
-                                      param        python: value[1];\n
-                                      search_field python: value[2]"\n
-                            tal:condition="alias">\n
-    \n
-                  <tal:block\n
-                        tal:condition="python: search_field is not None"\n
-                        tal:replace="structure python: search_field.render(value=param, key=alias)"/>\n
-                      \n
-                      <input tal:condition="python: not is_gadget_mode and search_field is None" \n
-                            name="id" size="5" value=""\n
-                            type="text" tal:attributes="name alias; value param"/>\n
+                  <tal:block tal:define="alias        python: value[0];\n
+                                         param        python: value[1];\n
+                                         search_field python: value[2]"\n
+                             tal:condition="alias">\n
+                    <!-- Render search field -->\n
+                    <tal:block tal:condition="python: search_field is not None"\n
+                               tal:replace="structure python: search_field.render(value=param, key=alias)"/>\n
 \n
+                    <tal:block tal:condition="python: search_field is None">\n
+                      <input tal:condition="python: not is_gadget_mode" \n
+                             name="id" size="5" value=""\n
+                             type="text" tal:attributes="name alias; value param"/>\n
                       <!-- Search for gadget mode -->\n
-                      <input tal:condition="python: is_gadget_mode and search_field is None" \n
-                            tal:define ="params python: {alias:\'this.value\'};"\n
-                            size="8"\n
-                            type="textarea" \n
-                            tal:attributes=\'value python: selection.getParams().get(alias,"");\n
-                            onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                      <input tal:condition="python: is_gadget_mode" \n
+                             tal:define ="params python: {alias:\'this.value\'};"\n
+                             size="8"\n
+                             type="textarea" \n
+                             tal:attributes=\'value python: selection.getParams().get(alias,"");\n
+                              onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+                    </tal:block>\n
                   </tal:block>\n
-                  </th>\n
+                </th>\n
                 </tr>\n
           </thead>\n
 \n
