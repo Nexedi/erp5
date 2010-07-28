@@ -62,6 +62,7 @@ Base_translateString = container.Base_translateString\n
 portal_type = request[\'portal_type\']\n
 simulation_state = request[\'simulation_state\']\n
 hide_analytic = request[\'hide_analytic\']\n
+project = request.get(\'project\', None)\n
 at_date = request[\'at_date\'].latestTime()\n
 from_date = request.get(\'from_date\') or at_date.earliestTime()\n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
@@ -86,6 +87,13 @@ selection_params = dict(portal_type=portal_type,\n
                         payment_mode=payment_mode,\n
                         gap_root=gap_root,\n
                         payment=payment)\n
+\n
+if project:\n
+  if project == \'None\':\n
+    selection_params[\'project_uid\'] = project\n
+  else:\n
+    selection_params[\'project_uid\'] = \\\n
+       context.getPortalObject().restrictedTraverse(project).getUid()\n
 \n
 analytic_column_list = ()\n
 if hide_analytic:\n
@@ -166,6 +174,8 @@ return [ReportSection(\n
                             <string>portal_type</string>
                             <string>simulation_state</string>
                             <string>hide_analytic</string>
+                            <string>None</string>
+                            <string>project</string>
                             <string>at_date</string>
                             <string>from_date</string>
                             <string>context</string>
@@ -177,8 +187,8 @@ return [ReportSection(\n
                             <string>precision</string>
                             <string>dict</string>
                             <string>selection_params</string>
-                            <string>analytic_column_list</string>
                             <string>_write_</string>
+                            <string>analytic_column_list</string>
                             <string>selection_columns</string>
                             <string>len</string>
                             <string>_inplacevar_</string>
