@@ -208,7 +208,7 @@ class TradeCondition(Path, Transformation):
       ### If all items in final_list has int_index value, then sort it by
       ### int_index to solve undetermined order problem.
       if len([item for item in final_list if not item.getIntIndex()])==0:
-        final_list.sort(lambda a, b:cmp(a.getIntIndex(), b.getIntIndex()))
+        final_list.sort(key=lambda a:a.getIntIndex())
 
       return final_list
 
