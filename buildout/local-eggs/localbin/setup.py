@@ -8,7 +8,10 @@ setup(
     version = version,
     author = "Lukasz Nowak",
     author_email = "luke@nexedi.com",
-    description = "ZC Buildout recipe to invoke full python interpreter",
+    description = "Generates python wrapper around python interpreter",
+    long_description = "Generates python wrapper, which acts like normal "\
+        "python interpreter, but containing full list of additional python "\
+        "paths",
     license = "ZPL 2.1",
     keywords = "python interpreter",
     packages = find_packages(),
