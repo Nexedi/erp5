@@ -1008,6 +1008,54 @@ class TestInventoryList(InventoryAPITestCase):
                                               omit_input=1,
                                               omit_output=1)))
     
+  def test_OmitAssetIncreaseDecrease(self):
+    getInventoryList = self.getSimulationTool().getInventoryList
+    m1 = self._makeMovement(quantity=1, price=1)
+    m2 = self._makeMovement(quantity=-1, price=1)
+    # omit movements that increases the asset
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      omit_asset_increase=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(-1, inventory_list[0].total_price)
+    self.assertEquals(-1, inventory_list[0].total_quantity)
+
+    # omit movements that decrease the asset
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      omit_asset_decrease=1)
+    self.assertEquals(1, len(inventory_list))
+    self.assertEquals(1, inventory_list[0].total_price)
+    self.assertEquals(1, inventory_list[0].total_quantity)
+
+    # omit_asset_increase and omit_asset_decrease return nothing in that case
+    self.assertEquals(0, len(getInventoryList(node_uid=self.node.getUid(),
+                                              omit_asset_increase=1,
+                                              omit_asset_decrease=1)))
+
+    # so far, it works the same as omit_input & omit_output, but if we have
+    # negative prices, we see the interest of such feature
+    m1.setPrice(-1)
+    self.assertEquals(-1, m1.getTotalPrice())
+    m2.setPrice(-1)
+    self.assertEquals(1, m2.getTotalPrice())
+
+    transaction.commit()
+    self.tic()
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      omit_asset_increase=1)
+    self.assertEquals(1, len(inventory_list))
+    # this is m1
+    self.assertEquals(-1, inventory_list[0].total_price)
+    self.assertEquals(1, inventory_list[0].total_quantity)
+
+    inventory_list = getInventoryList(node_uid=self.node.getUid(),
+                                      omit_asset_decrease=1)
+    self.assertEquals(1, len(inventory_list))
+    # this is m2
+    self.assertEquals(1, inventory_list[0].total_price)
+    self.assertEquals(-1, inventory_list[0].total_quantity)
+
+
   def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
     getInventoryList = self.getSimulationTool().getInventoryList
     self._makeMovement(quantity=2, price=1,
@@ -1812,6 +1860,22 @@ class TestMovementHistoryList(InventoryAPITestCase):
                                               omit_input=1,
                                               omit_output=1)))
     
+  def test_OmitAssetIncreaseDecrease(self):
+    getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
+    m1 = self._makeMovement(quantity=1, price=-1)
+    m2 = self._makeMovement(quantity=-1, price=-1)
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              omit_asset_increase=1)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(-1, mvt_history_list[0].total_price)
+    self.assertEquals(1, mvt_history_list[0].total_quantity)
+
+    mvt_history_list = getMovementHistoryList(node_uid=self.node.getUid(),
+                                              omit_asset_decrease=1)
+    self.assertEquals(1, len(mvt_history_list))
+    self.assertEquals(1, mvt_history_list[0].total_price)
+    self.assertEquals(-1, mvt_history_list[0].total_quantity)
+
   def test_OmitInputOmitOutputWithDifferentPaymentSameNodeSameSection(self):
     getMovementHistoryList = self.getSimulationTool().getMovementHistoryList
     self._makeMovement(quantity=2, price=1,

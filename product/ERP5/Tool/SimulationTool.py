@@ -354,8 +354,12 @@ class SimulationTool(BaseTool):
           simulation_dict['simulation_state'] = output_simulation_state
       return simulation_dict
 
-    def _getOmitQuery(self, query_table=None, omit_input=0, omit_output=0, **kw):
-      omit_dict = self._getOmitDict(omit_input=omit_input, omit_output=omit_output)
+    def _getOmitQuery(self, query_table=None, omit_input=0, omit_output=0,
+                      omit_asset_increase=0, omit_asset_decrease=0, **kw):
+      omit_dict = self._getOmitDict(omit_input=omit_input,
+                                    omit_output=omit_output,
+                                    omit_asset_increase=omit_asset_increase,
+                                    omit_asset_decrease=omit_asset_decrease)
       return self._buildOmitQuery(query_table=query_table, omit_dict=omit_dict)
       
     def _buildOmitQuery(self, query_table, omit_dict):
@@ -363,11 +367,16 @@ class SimulationTool(BaseTool):
       Build a specific query in order to take:
       - negatives quantity values if omit_input
       - postives quantity values if omit_output
+      - negatives asset price values if omit_asset_increase
+      - positives asset price values if omit_asset_decrease
       """
       omit_query = None
       omit_input = omit_dict.get('input', False)
       omit_output = omit_dict.get('output', False)
-      if omit_input or omit_output:
+      omit_asset_increase = omit_dict.get('asset_increase', False)
+      omit_asset_decrease = omit_dict.get('asset_decrease', False)
+      if omit_input or omit_output\
+          or omit_asset_increase or omit_asset_decrease:
         # Make sure to check some conditions
         condition_expression = \
           "%(query_table)s.node_uid <> %(query_table)s.mirror_node_uid \
@@ -400,18 +409,57 @@ class SimulationTool(BaseTool):
                             Query(**{'%s.is_cancellation' % query_table: 1}),
                             operator='AND'),
                         operator='OR')
-          if omit_query is None:
-            omit_query = ComplexQuery(quantity_query, condition_expression,
+          output_query = ComplexQuery(quantity_query, condition_expression,
                                       operator='AND')
-          else:
-            output_query = ComplexQuery(quantity_query, condition_expression,
-                                        operator='AND')
+          if omit_query is not None:
             omit_query = ComplexQuery(omit_query, output_query, operator='AND')
+          else:
+            omit_query = output_query
+
+        if omit_asset_increase:
+          asset_price_query = ComplexQuery(
+                        ComplexQuery(
+                            Query(**{'%s.total_price' % query_table: '<0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 0}),
+                            operator='AND'),
+                        ComplexQuery(
+                            Query(**{'%s.total_price' % query_table: '>0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 1}),
+                            operator='AND'),
+                        operator='OR')
+          asset_increase_query = ComplexQuery(asset_price_query, condition_expression,
+                                              operator='AND')
+          if omit_query is not None:
+            omit_query = ComplexQuery(omit_query, asset_increase_query, operator='AND')
+          else:
+            omit_query = asset_increase_query
+
+        if omit_asset_decrease:
+          asset_price_query = ComplexQuery(
+                        ComplexQuery(
+                            Query(**{'%s.total_price' % query_table: '>0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 0}),
+                            operator='AND'),
+                        ComplexQuery(
+                            Query(**{'%s.total_price' % query_table: '<0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 1}),
+                            operator='AND'),
+                        operator='OR')
+          asset_decrease_query = ComplexQuery(asset_price_query, condition_expression,
+                                              operator='AND')
+          if omit_query is not None:
+            omit_query = ComplexQuery(omit_query, asset_decrease_query, operator='AND')
+          else:
+            omit_query = asset_decrease_query
 
       return omit_query
 
-    def _getOmitDict(self, omit_input=False, omit_output=False):
-      return {'input': omit_input, 'output': omit_output}
+    def _getOmitDict(self, omit_input=False, omit_output=False,
+                     omit_asset_increase=False, omit_asset_decrease=False):
+      return { 'input': omit_input,
+               'output': omit_output,
+               'asset_increase': omit_asset_increase,
+               'asset_decrease': omit_asset_decrease, }
 
     def _generateSQLKeywordDict(self, table='stock', **kw):
         sql_kw, new_kw = self._generateKeywordDict(**kw)
@@ -558,6 +606,8 @@ class SimulationTool(BaseTool):
         # omit input and output
         omit_input=0,
         omit_output=0,
+        omit_asset_increase=0,
+        omit_asset_decrease=0,
         # group by
         group_by_node=0,
         group_by_node_category=0,
@@ -714,7 +764,9 @@ class SimulationTool(BaseTool):
                                 strict_simulation_state=strict_simulation_state)
       new_kw['simulation_dict'] = simulation_dict
       omit_dict = self._getOmitDict(omit_input=omit_input,
-                                    omit_output=omit_output)
+                                    omit_output=omit_output,
+                                    omit_asset_increase=omit_asset_increase,
+                                    omit_asset_decrease=omit_asset_decrease)
       new_kw['omit_dict'] = omit_dict
       if reserved_kw is not None:
         if not isinstance(reserved_kw, dict):
@@ -950,9 +1002,13 @@ class SimulationTool(BaseTool):
 
       omit_simulation - doesn't take into account simulation movements
 
-      omit_input     -  doesn't take into account movement with quantity < 0
+      omit_input     -  doesn't take into account movement with quantity > 0
 
-      omit_output    -  doesn't take into account movement with quantity > 0
+      omit_output    -  doesn't take into account movement with quantity < 0
+
+      omit_asset_increase - doesn't take into account movement with asset_price > 0
+
+      omit_asset_decrease - doesn't take into account movement with asset_price < 0
 
       selection_domain, selection_report - see ListBox
 
@@ -1807,6 +1863,7 @@ class SimulationTool(BaseTool):
     def getMovementHistoryList(self, src__=0, ignore_variation=0,
                                standardise=0, omit_simulation=0,
                                omit_input=0, omit_output=0,
+                               omit_asset_increase=0, omit_asset_decrease=0,
                                selection_domain=None, selection_report=None,
                                initial_running_total_quantity=0,
                                initial_running_total_price=0, precision=None,
@@ -1826,6 +1883,8 @@ class SimulationTool(BaseTool):
                          standardise=standardise,
                          omit_simulation=omit_simulation,
                          omit_input=omit_input, omit_output=omit_output,
+                         omit_asset_increase=omit_asset_increase,
+                         omit_asset_decrease=omit_asset_decrease,
                          selection_domain=selection_domain,
                          selection_report=selection_report,
                          initial_running_total_quantity=
