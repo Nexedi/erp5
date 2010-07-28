@@ -238,9 +238,17 @@ class SQLExpression(object):
 
       Returns a rendered "order by" expression. See getOrderByList.
     """
+    result = []
+    append = result.append
     order_by_dict = self._getOrderByDict()
-    return SQL_LIST_SEPARATOR.join(conflictSafeGet(order_by_dict, x, str(x)) \
-                                   for x in self.getOrderByList())
+    for (column, direction, cast) in self.getOrderByList():
+      expression = conflictSafeGet(order_by_dict, column, str(column))
+      if cast not in (None, ''):
+        expression = 'CAST(%s AS %s)' % (expression, cast)
+      if direction is not None:
+        expression = '%s %s' % (expression, direction)
+      append(expression)
+    return SQL_LIST_SEPARATOR.join(result)
 
   @profiler_decorator
   def getWhereExpression(self):
