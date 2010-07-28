@@ -463,6 +463,14 @@
                     <value> <int>0</int> </value>
                 </item>
                 <item>
+                    <key> <string>full_text_search_key</string> </key>
+                    <value> <string>field_your_search_text_listbox</string> </value>
+                </item>
+                <item>
+                    <key> <string>full_text_search_key_script</string> </key>
+                    <value> <string>WebSite_viewQuickSearchResultList</string> </value>
+                </item>
+                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>

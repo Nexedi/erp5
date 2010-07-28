@@ -219,39 +219,44 @@ div.search_popup{\n
 }\n
 \n
 /* List style selection */\n
-div.list-style-selection {\n
+div.listbox-list-style-selection {\n
   width:auto;\n
   float:left;\n
 }\n
-div.list-style-selection span{\n
+div.listbox-list-style-selection span{\n
   font-weight:bold;\n
   padding-left:10px;\n
   vertical-align:-4px;\n
 }\n
-div.list-style-selection ul{\n
+div.listbox-list-style-selection ul{\n
   display:inline;\n
   padding-left:0;\n
   margin: 0;\n
   vertical-align: -4px;\n
 }\n
-div.list-style-selection li{\n
+div.listbox-list-style-selection li{\n
   display: inline;\n
 }\n
-div.list-style-selection li a.selected{\n
+div.listbox-list-style-selection li a.selected{\n
   font-weight: bold;\n
 }\n
-/* Search bar */\n
-div.extendedSearchBar {\n
+\n
+/* Listbox full text search bar */\n
+div.listbox-full-text-search {\n
   float:left;\n
   margin-top:0;\n
   padding:1em 0 0.5em;\n
 }\n
-div.extendedSearchBar input.button{\n
+div.listbox-full-text-search input{\n
+  width: auto;\n
+}\n
+div.listbox-full-text-search input.button{\n
  background-image: url(\'./km_img/search_background.png\');\n
  background-color: inherit;\n
  border: 0 none;\n
  color:#FFFFFF;\n
 }\n
+\n
 div.resultList{\n
   float:left;\n
 }\n

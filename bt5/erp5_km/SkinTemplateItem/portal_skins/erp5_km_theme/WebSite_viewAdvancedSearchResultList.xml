@@ -76,9 +76,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>top_search_text</string>
                         <string>listbox</string>
-                        <string>bottom_search_text</string>
                       </list>
                     </value>
                 </item>

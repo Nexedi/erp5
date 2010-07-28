@@ -67,6 +67,9 @@
                                              selection.getParams().get(\'list_style\', here.getDefaultDisplayStyle()));\n
               dummy python: list_style == \'search\' and here.setDisplayedColumnIdList((\'getIconAsHTML\', \'getSummaryAsHTML\'))\n
                            or list_style == \'thumbnail\' and here.setDisplayedColumnIdList((\'title\', \'thumbnail\'));\n
+              full_text_search_key here/getFullTextSearchKey;\n
+              full_text_search_key_script here/getFullTextSearchKeyScript;\n
+              show_full_text python: full_text_search_key not in (\'\', None) and full_text_search_key_script not in (\'\', None);\n
               line_list here/query;\n
               listbox_max_lines  python: int(here.getMaxLineNumber());\n
               total_line         python: int(here.total_size);\n
@@ -442,7 +445,7 @@
       <!-- Choose display mode -->\n
       <!--TODO define show_display_selection macro-->\n
       <div tal:condition="python: len(display_style_list) > 0"\n
-           class="list-style-selection">\n
+           class="listbox-list-style-selection">\n
         <span i18n:translate="" i18n:domain="ui">Display:</span>\n
         <ul>\n
           <li tal:repeat="style display_style_list">\n
@@ -454,29 +457,32 @@
         </ul>\n
       </div>\n
 \n
-      <!-- Full Text Search -->\n
-      <!--XXX This implementation is not finished.-->\n
-      <tal:comment tal:replace="nothing">\n
-      <div tal:define="your_search_text nothing"\n
-                tal:condition="python: show_full_text" \n
-                class="extendedSearchBar">\n
-        <tal:block tal:condition="python: not is_gadget_mode">\n
+      <!-- Extra Search -->\n
+      <div tal:define="search_text real_context/Base_getSearchText"\n
+           tal:condition="show_full_text" \n
+           class="listbox-full-text-search">\n
+\n
+        <tal:block tal:condition="not: is_gadget_mode">\n
           <!-- Normal mode -->\n
-          <input name="bottom_your_search_text" size="25" value="" type="text"\n
-                onkeypress="submitFormOnEnter(event, this.form,           \'ERP5Site_processAdvancedSearchBottom\');"\n
-                tal:attributes="value your_search_text" />\n
-            <input class="button" i18n:domain="ui" i18n:attributes="value"\n
-                  value="Search" name="ERP5Site_processAdvancedSearchBottom:method" type="submit" />\n
-          </tal:block>\n
-          <tal:block tal:condition="python: is_gadget_mode">\n
-            <!-- Gadget mode -->\n
-              <input tal:define ="params python: {\'ERP5Site_processAdvancedSearchBottom:method\':\'\',\'bottom_your_search_text\':\'this.value\'};"\n
-                      name="bottom_your_search_text" size="25" value="" type="text"\n
-                      tal:attributes=\'value your_search_text;\n
-                                    onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
-          </tal:block>\n
-        </div>    \n
-        </tal:comment>\n
+          <input type="text"\n
+                 tal:attributes="value search_text;\n
+                                 name full_text_search_key;\n
+                                 onkeypress string: submitFormOnEnter(event, this.form, \'${full_text_search_key_script}\');"/>\n
+            <input class="button" \n
+                   i18n:domain="ui" i18n:attributes="value"\n
+                   value="Search"  type="submit" \n
+                   tal:attributes="name string:${full_text_search_key_script}:method"/>\n
+        </tal:block>\n
+        <tal:block tal:condition="is_gadget_mode">\n
+          <!-- Gadget mode -->\n
+          <input tal:define="params python: {\'%s:method\' %full_text_search_key_script:\'\',\'%s\' %full_text_search_key:\'this.value\'};"\n
+                 type="text"\n
+                 tal:attributes=\'value search_text;\n
+                                 name full_text_search_key;\n
+                                 onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+        </tal:block>\n
+      </div>    \n
+\n
         </div>\n
         <div class="listbox_footer_box"\n
             tal:define="need_pagination python: int(here.total_size) > int(here.getMaxLineNumber())"\n
