@@ -73,11 +73,11 @@ if node_category:\n
   # calculated differently. As a result, the summary doesn\'t take from_date\n
   # into account for income accounts.\n
   return [Object(\n
-            debit_price=getInventoryAssetPrice(omit_output=1,\n
+            debit_price=getInventoryAssetPrice(omit_asset_decrease=1,\n
                                node_category=node_category,\n
                                precision=precision,\n
                                **inventory_kw),\n
-            credit_price=-getInventoryAssetPrice(omit_input=1,\n
+            credit_price=-getInventoryAssetPrice(omit_asset_increase=1,\n
                                node_category=node_category,\n
                                precision=precision,\n
                                 **inventory_kw) or 0 ) ]\n
@@ -86,24 +86,24 @@ income_node_category = [\'account_type/income\', \'account_type/expense\']\n
 balance_node_category = [\'account_type/equity\', \'account_type/asset\',\n
                          \'account_type/liability\']\n
 \n
-debit = getInventoryAssetPrice(omit_output=1,\n
+debit = getInventoryAssetPrice(omit_asset_decrease=1,\n
                                from_date=period_start_date,\n
                                node_category=income_node_category,\n
                                precision=precision,\n
                                **inventory_kw)\n
 \n
-credit = - getInventoryAssetPrice(omit_input=1,\n
+credit = - getInventoryAssetPrice(omit_asset_increase=1,\n
                                from_date=period_start_date,\n
                                node_category=income_node_category,\n
                                precision=precision,\n
                                 **inventory_kw) or 0\n
 \n
-debit += getInventoryAssetPrice(omit_output=1,\n
+debit += getInventoryAssetPrice(omit_asset_decrease=1,\n
                                node_category=balance_node_category,\n
                                precision=precision,\n
                                **inventory_kw)\n
 \n
-credit -= getInventoryAssetPrice(omit_input=1,\n
+credit -= getInventoryAssetPrice(omit_asset_increase=1,\n
                                node_category=balance_node_category,\n
                                precision=precision,\n
                                 **inventory_kw) or 0\n

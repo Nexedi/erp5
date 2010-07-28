@@ -57,8 +57,8 @@
 params = portal.ERP5Accounting_getParams(selection_name)\n
 selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
 \n
-params[\'omit_input\'] = omit_input\n
-params[\'omit_output\'] = omit_output\n
+params[\'omit_asset_increase\'] = omit_asset_increase\n
+params[\'omit_asset_decrease\'] = omit_asset_decrease\n
 # For now, we omit simulation to be compatible with other reports.\n
 params[\'omit_simulation\'] = True\n
 \n
@@ -94,7 +94,7 @@ return portal.portal_simulation.getInventoryAssetPrice( **params )\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>brain=None, selection=None, omit_input=0, omit_output=0, selection_name=None, **kw</string> </value>
+            <value> <string>brain=None, selection=None, omit_asset_increase=0, omit_asset_decrease=0, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,8 +122,8 @@ return portal.portal_simulation.getInventoryAssetPrice( **params )\n
                           <tuple>
                             <string>brain</string>
                             <string>selection</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
+                            <string>omit_asset_increase</string>
+                            <string>omit_asset_decrease</string>
                             <string>selection_name</string>
                             <string>kw</string>
                             <string>_getattr_</string>
