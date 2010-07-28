@@ -490,6 +490,45 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     self.failUnless(line_list[-1].isStatLine())
     self.checkLineProperties(line_list[-1], debit=100, credit=100)
 
+  def testJournalProject(self):
+    self.createProjectAndFunctionDataSet()
+    request_form = self.portal.REQUEST.form
+    request_form['at_date'] = DateTime(2006, 2, 2)
+    request_form['section_category'] = 'group/demo_group'
+    request_form['section_category_strict'] = False
+    request_form['portal_type'] = ['Sale Invoice Transaction']
+    request_form['simulation_state'] = ['delivered']
+    request_form['project'] = self.project_1.getRelativeUrl()
+    request_form['hide_analytic'] = True
+    
+    report_section_list = self.getReportSectionList(
+                               self.portal.accounting_module,
+                               'AccountingTransactionModule_viewJournalReport')
+    self.assertEquals(1, len(report_section_list))
+    
+    line_list = self.getListBoxLineList(report_section_list[0])
+    data_line_list = [l for l in line_list if l.isDataLine()]
+    self.assertEquals(2, len(data_line_list))
+    
+    # test columns values
+    line = data_line_list[0]
+    self.assertEquals(line.column_id_list,
+        ['specific_reference', 'date', 'title', 'parent_reference',
+          'node_title', 'mirror_section_title', 'debit', 'credit'])
+    
+    self.checkLineProperties(data_line_list[0],
+                             node_title='41',
+                             mirror_section_title='Client 1',
+                             debit=500,
+                             credit=0)
+    self.checkLineProperties(data_line_list[1],
+                             node_title='7',
+                             debit=0,
+                             credit=500)
+    stat_line = line_list[-1]
+    self.failUnless(line_list[-1].isStatLine())
+    self.checkLineProperties(line_list[-1], debit=500, credit=500)
+
   def createAccountStatementDataSet(self, use_two_bank_accounts=1):
     """Create transactions for Account statement report.
 
