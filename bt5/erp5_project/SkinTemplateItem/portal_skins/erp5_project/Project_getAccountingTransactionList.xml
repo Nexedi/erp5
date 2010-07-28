@@ -56,10 +56,6 @@
             <value> <string>"""Returns Accounting Transactions related to the project.\n
 """\n
 kw[\'project_uid\'] = context.getUid()\n
-kw[\'node_category_strict_membership\'] = [\'account_type/expense\',\n
-                                         \'account_type/income\',\n
-                                         \'account_type/asset/receivable\',\n
-                                         \'account_type/liability/payable\']\n
 return context.Node_getAccountingTransactionList(**kw)\n
 </string> </value>
         </item>
