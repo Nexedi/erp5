@@ -131,6 +131,9 @@ $ echo 'extends = https://svn.erp5.org/repos/public/erp5/trunk/buildout/buildout
 $ wget -qO - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S -
 $ bin/buildout
 
+Note on -S: this switch is overridden by PYTHON_PATH environment variable. In
+doubt, unset it before invoking that command.
+
 After some time everything shall be locally available.
 
 Disclaimer: That way is still in early stage of development.

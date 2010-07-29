@@ -44,6 +44,9 @@ This will download and install the software components needed to run ERP5 on
 Zope 2.12 including Zope 2.12 plus dependencies (including
 Acquisition with _aq_dynamic patch) and CMF 2.2 plus dependencies.
 
+Note on -S: this switch is overridden by PYTHON_PATH environment variable. In
+doubt, unset it before invoking that command.
+
 System dependency check
 -----------------------
 
