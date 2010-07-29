@@ -97,6 +97,7 @@ d = dict(\n
   field_default_display_style = \'\',\n
   field_full_text_search_key = \'\',\n
   field_full_text_search_key_script = \'\',\n
+  field_page_navigation_mode = \'\',\n
   field_list_action = \'list\',\n
   field_enabled = \'checked\',\n
   field_editable = \'\',\n
