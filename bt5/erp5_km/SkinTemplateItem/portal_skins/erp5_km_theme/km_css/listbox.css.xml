@@ -205,6 +205,21 @@ div.listbox-tree-mode-selection input{\n
   width: auto;\n
 }\n
 \n
+.listbox-table-anchor-cell, .listbox-table-select-cell {\n
+  text-align: center; \n
+  vertical-align: middle;\n
+}\n
+\n
+th.listbox-table-report-tree-selection-cell{\n
+  width: 50px; \n
+}\n
+\n
+td.domain-tree-table-cell{\n
+  text-align: left; \n
+  vertical-align: top; \n
+  white-space: nowrap;\n
+}\n
+\n
 /*Footer block*/\n
 div.listbox-footer{\n
  background-color:#F0EFE9;\n
@@ -288,12 +303,12 @@ div.listbox-page-navigation input{\n
 \n
 /* Report tree */\n
 a.tree_closed {\n
-  background:transparent url(\'./km_img/tree_closed.png\') no-repeat scroll left center;\n
+  background:transparent url(\'./images/tree_closed.png\') no-repeat scroll left center;\n
   padding-left:15px;\n
 }\n
 \n
 a.tree_open {\n
-  background:transparent url(\'./km_img/tree_open.png\') no-repeat scroll left center;\n
+  background:transparent url(\'./images/tree_open.png\') no-repeat scroll left center;\n
   padding-left:15px;\n
 }\n
 \n
