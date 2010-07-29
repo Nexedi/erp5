@@ -57,7 +57,7 @@
 \n
 resource = movement.getResourceValue()\n
 if resource is not None:\n
-  movement.setQuantityUnitList(resource.getQuantityUnitList())\n
+  movement.setQuantityUnit(resource.getDefaultQuantityUnit())\n
 </string> </value>
         </item>
         <item>
