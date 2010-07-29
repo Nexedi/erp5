@@ -108,11 +108,11 @@ parts =
 software_home = /home/MYUSER/erp5.buildout
 ^D
 $ ~/erp5.buildout/bin/python2.4 bootstrap/bootstrap.py -c my_instances.cfg
-$ bin/buildout -c my_instances.cfg
+$ python -S bin/buildout -c my_instances.cfg
 $ var/bin/supervisord # it will start supervisor and configured software
 $ $EDITOR my_instances.cfg
 # add "runUnitTest" and "development-site" to parts
-$ bin/buildout -c my_instances.cfg
+$ python -S bin/buildout -c my_instances.cfg
 
 Fully configured development instance will be available in var/development-site.
 
@@ -129,7 +129,7 @@ $ cd software
 $ echo '[buildout]' >> buildout.cfg
 $ echo 'extends = https://svn.erp5.org/repos/public/erp5/trunk/buildout/buildout.cfg' >> buildout.cfg
 $ wget -qO - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S -
-$ bin/buildout
+$ python -S bin/buildout
 
 Note on -S: this switch is overridden by PYTHON_PATH environment variable. In
 doubt, unset it before invoking that command.

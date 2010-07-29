@@ -38,7 +38,7 @@ Run the Zope 2.12 buildout:
 
   $ cd ~/erp5.buildout
   $ python2.6 -S bootstrap/bootstrap.py -v 1.4.3
-  $ bin/buildout -v -c buildout-2.12.cfg
+  $ python2.6 -S bin/buildout -v -c buildout-2.12.cfg
 
 This will download and install the software components needed to run ERP5 on
 Zope 2.12 including Zope 2.12 plus dependencies (including
@@ -54,7 +54,7 @@ Each software component in this buildout might require some system
 dependencies, including development libraries and executables.
 To query what is required for all components, please run:
 
-  $ bin/buildout install show-requirements
+  $ python2.6 -S bin/buildout install show-requirements
 
 Minimal requirements
 --------------------
@@ -120,7 +120,7 @@ parts =
   supervisor-instance
 ^D
 $ ~/erp5.buildout/bin/bootstrap2.6      # 4
-$ bin/buildout -ov                      # 5
+$ python2.6 -S bin/buildout -ov         # 5
 
 Notice how we managed to run buildout in "offline-mode" (-o). The software-home
 configuration (along with the 'extends-cache' in the 'instance-profiles'
@@ -142,7 +142,7 @@ $ $EDITOR buildout.cfg                  # 7
 
 Then run buildout again to finish the configuration
 
-$ bin/buildout -ov                      # 8
+$ python2.6 -S bin/buildout -ov         # 8
 
 Now a fully configured development instance will be available in the directory
 "var/development-instance", so you can do:
