@@ -419,6 +419,12 @@ class ListBoxWidget(Widget.Widget):
                                 required=0)
     property_names.append('full_text_search_key_script')
 
+    page_navigation_mode = fields.StringField('page_navigation_mode',
+                                title="Page navigation mode",
+                                description=("Page navigation mode like 'slider' - controls for 'next' / 'last' & 'previous' / 'first' or 'text' - direct page selections."),
+                                default='slider',
+                                required=0)
+    property_names.append('page_navigation_mode')
 
     list_action = fields.StringField('list_action',
                                  title='List Action',
@@ -969,10 +975,16 @@ class ListBoxRenderer:
   getFullTextSearchKey = lazyMethod(getFullTextSearchKey)
 
   def getFullTextSearchKeyScript(self):
-    """Return the full text search key."""
+    """Return the full text search key script which is responsible for handling full text query."""
     return self.field.get_value('full_text_search_key_script')
 
   getFullTextSearchKeyScript = lazyMethod(getFullTextSearchKeyScript)
+
+  def getPageNavigationMode(self):
+    """Return the list box page navigation mode."""
+    return self.field.get_value('page_navigation_mode')
+
+  getPageNavigationMode = lazyMethod(getPageNavigationMode)
 
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
