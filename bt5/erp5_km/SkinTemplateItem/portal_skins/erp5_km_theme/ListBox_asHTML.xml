@@ -96,8 +96,8 @@
                            global box_id python: \'visual_%s\' %box_relative_url.split(\'/\')[-1];\n
                            global dom_id python: request.get(\'dom_id\',None) or box_id;">\n
       <input tal:condition="python:form_id" \n
-            type="hidden" name="gadget_form_id"\n
-            tal:attributes="value form_id" />\n
+             type="hidden" name="gadget_form_id"\n
+             tal:attributes="value form_id" />\n
     </tal:block>\n
   </tal:block>\n
 \n
@@ -123,11 +123,11 @@
         </select>\n
 \n
         <!-- Domain node contents -->\n
-        <table id="listbox-domain-tree-table" \n
+        <table id="listbox-table-domain-tree" \n
                cellpadding="0"\n
                summary="This table contains the domain tree"\n
-               class="listbox_domain_tree_table"\n
-               tal:attributes="id string:${field_id}-domain-tree-table"\n
+               class="listbox-table-domain-tree"\n
+               tal:attributes="id string:${field_id}-table-domain-tree"\n
                tal:define="report_tree_list python: here.makeReportTreeList(report_path = selected_domain_path, unfolded_list = selection.getDomainList(), is_report_opened = False, sort_on=((\'int_index\', \'ASC\'),));\n
                            total_depth python: max([report_tree.depth for report_tree in report_tree_list] + [-1])">\n
           <tr tal:repeat="report_tree report_tree_list">\n
@@ -135,18 +135,16 @@
               <td width="12" nowrap="nowrap">&nbsp;</td>\n
             </tal:block>\n
             <td colspan="1" \n
-                class="domain-tree-table-cell"\n
+                class="listbox-table-domain-tree-cell"\n
                 tal:attributes="colspan python: total_depth - report_tree.depth + 1">\n
-              <a href="method" class="tree_open"\n
+              <a href="method" class="tree_open selected"\n
                  tal:condition="report_tree/is_open"\n
-                 tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">\n
-                <b tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</b>\n
-              </a>\n
+                 tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}"\n
+                 tal:content="report_tree/obj/getCompactTranslatedTitle"/>\n
               <a href="method" class="tree_closed"\n
                  tal:condition="not: report_tree/is_open"\n
-                 tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}">\n
-                 <tal:block tal:content="report_tree/obj/getCompactTranslatedTitle">Domain</tal:block>\n
-              </a>\n
+                 tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}"\n
+                 tal:content="report_tree/obj/getCompactTranslatedTitle"/>\n
             </td>\n
           </tr>\n
         </table>\n
@@ -220,7 +218,7 @@
                                        title      python: value[1];\n
                                        sort_order python: value[2]">\n
 \n
-                <th tal:condition="sql" class="listbox-table-header-cell">                 \n
+                  <th tal:condition="sql" class="listbox-table-header-cell">                 \n
                     <!-- Button in normal view -->\n
                     <button tal:define="\n
                           bt_class python:  sort_order==\'ascending\' and \'sort_button sort_button_asc\' \n
@@ -272,11 +270,13 @@
                                 index python: selection_index is not None and \'&amp;selection_index=%s\' % selection_index or \'\';\n
                                 is_report_opened python: int(not here.getSelection().isReportOpened());\n
                                 requested_selection_name here/getRequestedSelectionName;\n
-                                url here/getUrl">\n
+                                url here/getUrl;\n
+                                report_depth python: selection.getParams().get(\'report_depth\', request.get(\'report_depth\', 0))">\n
                   <tal:block tal:repeat="i python: range(0, 6)">&nbsp;\n
                     <a href="?selection_name=default&amp;selection_index=0&amp;report_depth:int=0"\n
-                              tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i}"\n
-                              tal:content="i">0</a>\n
+                       tal:attributes="href string:${url}?selection_name=${requested_selection_name}${index}&amp;report_depth:int=${i};\n
+                                       class python: test(i==report_depth, \'selected\', \'\');"\n
+                       tal:content="i"/>\n
                   </tal:block>&nbsp;-&nbsp;\n
                   <a \n
                     href="?selection_name=default&amp;selection_index=0&amp;is_report_opened:int=0"\n
@@ -290,7 +290,7 @@
               <th class="listbox-table-anchor-cell" tal:condition="show_anchor_column">&nbsp;</th>\n
 \n
               <!--Select cell -->\n
-              <th tal:condition="python: show_select_column"\n
+              <th tal:condition="show_select_column"\n
                   class="listbox-table-select-cell">\n
                 <input id="listbox_select" type="image"\n
                       title="Action" alt="Action" name="Base_doSelect:method"\n
@@ -298,11 +298,13 @@
                                       src string:${portal_url_string}/images/exec16.png"\n
                       i18n:domain="ui" i18n:attributes="title" />\n
               </th>\n
-              <!-- Real search columns -->\n
-              <th tal:repeat="value here/getSearchValueList">\n
+\n
+              <!-- Real search columns headers -->\n
+              <th class="listbox-table-filter-cell"\n
+                  tal:repeat="value here/getSearchValueList">\n
                 <tal:block tal:define="alias        python: value[0];\n
-                                         param        python: value[1];\n
-                                         search_field python: value[2]"\n
+                                       param        python: value[1];\n
+                                       search_field python: value[2]"\n
                              tal:condition="alias">\n
                   <!-- Render search field -->\n
                   <tal:block tal:condition="python: search_field is not None"\n
@@ -326,18 +328,20 @@
           </thead>\n
 \n
           <tbody>\n
+\n
             <!-- Render listbox data-->\n
             <tal:block tal:condition="line_list"\n
                        tal:define="checked_uid_set here/getCheckedUidSet">\n
             <tr tal:repeat="line line_list"              \n
                 tal:attributes="\n
-                id string:${field_id}_data_line_${repeat/line/index};\n
-                class python: line.getRowCSSClassName() or test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\');">\n
+                  id string:${field_id}-data-line-${repeat/line/index};\n
+                  class python: line.getRowCSSClassName() or test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\');">\n
               \n
               <tal:block tal:define="render_result line/render">\n
 \n
                   <!--Report tree column -->\n
-                  <td tal:condition="is_report_tree_mode" align="left" valign="middle"                   \n
+                  <td tal:condition="is_report_tree_mode"\n
+                      class="listbox-table-report-tree-selection-cell"                   \n
                       tal:define="section_name python: line.getDomainTitle()">\n
                     <a  tal:condition="section_name"\n
                         tal:define="method_id python: line.isOpen() and \'foldReport\' or \'unfoldReport\'"\n
@@ -408,8 +412,8 @@
               id="listbox_stat_line" class="listbox_stat_line"\n
               tal:attributes="id string:${field_id}_stat_line">\n
               <td tal:condition="is_report_tree_mode" >&nbsp;</td>\n
-              <td class="AnchorColumn" tal:condition="show_anchor_column">&nbsp;</td>\n
-              <td tal:condition="show_select_column">&nbsp;</td>\n
+              <td class="listbox-table-anchor-cell" tal:condition="show_anchor_column">&nbsp;</td>\n
+              <td class="listbox-table-select-cell" tal:condition="show_select_column">&nbsp;</td>\n
               <tal:block tal:repeat="value here/getStatValueList">\n
                 <td align="left"\n
                   tal:define="original_value python: value[0]; processed_value python: value[1]"\n
@@ -424,81 +428,89 @@
 \n
     <div class="listbox-footer">\n
       \n
-      <div class="listbox-footer-box">\n
-        <!-- List mode choice -->\n
-        <div tal:condition="python: not is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"\n
-             class="listbox-tree-mode-selection">\n
+      <!-- List mode choice -->\n
+      <div class="listbox-footer-box listbox-tree-mode-selection"\n
+           tal:condition="python: not is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)">\n
+        <!-- Flat List -->\n
+        <input tal:condition="python: is_domain_tree_supported or is_report_tree_supported"\n
+               type="image" \n
+               class="listbox-tree-flat-list-mode"\n
+               title="Flat List" \n
+               name="setFlatListMode:method"\n
+               value="1" \n
+               alt="Flat List"\n
+               tal:attributes="src string:${portal_url_string}/images/text_block.png;"\n
+               i18n:domain="ui" i18n:attributes="title alt" />\n
 \n
-          <input tal:condition="python: is_domain_tree_supported or is_report_tree_supported"\n
-                 type="image" \n
-                 class="listbox-tree-flat-list-mode"\n
-                 title="Flat List" \n
-                 name="setFlatListMode:method"\n
-                 value="1" \n
-                 alt="Flat List"\n
-                 tal:attributes="src string:${portal_url_string}/images/text_block.png;"\n
-                 i18n:domain="ui" i18n:attributes="title alt" />\n
-          <input tal:condition="python: not is_gadget_mode and is_report_tree_supported"\n
-                 type="image" \n
-                 class="listbox-tree-report-tree-mode"\n
-                 title="Report Tree" \n
-                 name="setReportTreeMode:method"\n
-                 value="1" \n
-                 alt="Report Tree"\n
-                 tal:attributes="src string:${portal_url_string}/images/view_tree.png;"\n
-                 i18n:domain="ui" i18n:attributes="title alt" />\n
-          <input tal:condition="python: not is_gadget_mode and is_domain_tree_supported"\n
-                 type="image" \n
-                 class="listbox-tree-domain-tree-mode"\n
-                 title="Domain Tree" \n
-                 name="setDomainTreeMode:method"\n
-                 value="1" \n
-                 alt="Domain Tree"\n
-                 tal:attributes="src string:${portal_url_string}/images/view_choose.png;"\n
-                 i18n:domain="ui" i18n:attributes="title alt" />\n
-        </div>\n
+        <!-- Report Tree -->\n
+        <input tal:condition="python: not is_gadget_mode and is_report_tree_supported"\n
+               type="image" \n
+               class="listbox-tree-report-tree-mode"\n
+               title="Report Tree" \n
+               name="setReportTreeMode:method"\n
+               value="1" \n
+               alt="Report Tree"\n
+               tal:attributes="src string:${portal_url_string}/images/view_tree.png;"\n
+               i18n:domain="ui" i18n:attributes="title alt" />\n
 \n
-        <!-- List display mode -->\n
-        <div tal:condition="python: len(display_style_list) > 0"\n
-             class="listbox-list-style-selection">\n
-          <span i18n:translate="" i18n:domain="ui">Display:</span>\n
-          <ul>\n
-            <li tal:repeat="style display_style_list">\n
-              <a tal:attributes="href python: \'%s?list_style=%s\' % (listbox_url, style[0]);\n
-                                 class python: test(style[0]==list_style, \'selected\',\'\');"\n
-                 tal:content="python: style[1]"\n
-                 i18n:translate="" i18n:domain="ui"/>\n
-            </li>\n
-          </ul>\n
-        </div>\n
+        <!-- Domain Tree -->\n
+        <input tal:condition="python: not is_gadget_mode and is_domain_tree_supported"\n
+               type="image" \n
+               class="listbox-tree-domain-tree-mode"\n
+               title="Domain Tree" \n
+               name="setDomainTreeMode:method"\n
+               value="1" \n
+               alt="Domain Tree"\n
+               tal:attributes="src string:${portal_url_string}/images/view_choose.png;"\n
+               i18n:domain="ui" i18n:attributes="title alt" />\n
+      </div>\n
+ \n
+      <!-- List display mode -->\n
+      <div class="listbox-footer-box listbox-list-style-selection"\n
+           tal:condition="python: len(display_style_list) > 0">\n
 \n
-        <!-- Full text search -->\n
-        <div tal:define="search_text real_context/Base_getSearchText"\n
-             tal:condition="show_full_text" \n
-             class="listbox-full-text-search">\n
-          <tal:block tal:condition="not: is_gadget_mode">\n
-            <!-- Normal mode -->\n
-            <input type="text"\n
-                   tal:attributes="value search_text;\n
-                                   name full_text_search_key;\n
-                                   onkeypress string: submitFormOnEnter(event, this.form, \'${full_text_search_key_script}\');"/>\n
-              <input class="button" \n
-                     i18n:domain="ui" i18n:attributes="value"\n
-                     value="Search"  type="submit" \n
-                     tal:attributes="name string:${full_text_search_key_script}:method"/>\n
-          </tal:block>\n
-          <tal:block tal:condition="is_gadget_mode">\n
-            <!-- Gadget mode -->\n
-            <input tal:define="params python: {\'%s:method\' %full_text_search_key_script:\'\',\'%s\' %full_text_search_key:\'this.value\'};"\n
-                   type="text"\n
-                   tal:attributes=\'value search_text;\n
-                                   name full_text_search_key;\n
-                                   onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
-          </tal:block>\n
-        </div>    \n
+        <span i18n:translate="" i18n:domain="ui">Display:</span>\n
+        <ul>\n
+          <li tal:repeat="style display_style_list">\n
+            <a tal:attributes="href python: \'%s?list_style=%s\' % (listbox_url, style[0]);\n
+                               class python: test(style[0]==list_style, \'selected\',\'\');"\n
+               tal:content="python: style[1]"\n
+               i18n:translate="" i18n:domain="ui"/>\n
+          </li>\n
+        </ul>\n
+\n
       </div>\n
 \n
-      <!--Page pagination -->\n
+      <!-- Full text search -->\n
+      <div class="listbox-footer-box listbox-full-text-search"\n
+           tal:condition="show_full_text"\n
+           tal:define="search_text real_context/Base_getSearchText">\n
+\n
+        <tal:block tal:condition="not: is_gadget_mode">\n
+          <!-- Normal mode -->\n
+          <input type="text"\n
+                 tal:attributes="value search_text;\n
+                                 name full_text_search_key;\n
+                                 onkeypress string: submitFormOnEnter(event, this.form, \'${full_text_search_key_script}\');"/>\n
+            <input class="button" \n
+                   i18n:domain="ui" i18n:attributes="value"\n
+                   value="Search"  type="submit" \n
+                   tal:attributes="name string:${full_text_search_key_script}:method"/>\n
+        </tal:block>\n
+        <tal:block tal:condition="is_gadget_mode">\n
+          <!-- Gadget mode -->\n
+          <input tal:define="params python: {\'%s:method\' %full_text_search_key_script:\'\',\'%s\' %full_text_search_key:\'this.value\'};"\n
+                 type="text"\n
+                 tal:attributes=\'value search_text;\n
+                                 name full_text_search_key;\n
+                                 onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+        </tal:block>\n
+    \n
+      </div>\n
+\n
+      <!--Page pagination \n
+          XXX: make use of page_navigation_mode to show respective navigation.\n
+      -->\n
       <div class="listbox-footer-box listbox-page-navigation"\n
            tal:condition="need_pagination">\n
         <div class="pageNavigation">\n
