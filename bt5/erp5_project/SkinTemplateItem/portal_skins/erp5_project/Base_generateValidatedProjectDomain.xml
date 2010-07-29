@@ -71,7 +71,7 @@ for category in category_list:\n
   sub_category_list = [category]\n
   while sub_category_list:\n
     sub_category = sub_category_list.pop()\n
-    membership_criterion_category.append(\'source_project/%s\' % sub_category.getRelativeUrl())\n
+    membership_criterion_category.append(\'source_project/%s/\' % sub_category.getRelativeUrl())\n
     sub_category_list.extend(sub_category.contentValues(portal_type=\'Project Line\'))\n
 \n
   domain.edit(title = category.getTitle(),\n

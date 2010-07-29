@@ -69,7 +69,7 @@ params = portal.portal_selections.getSelectionParamsFor(selection_name, request)
 object_path = request.get(\'object_path\')\n
 if object_path is None:\n
   object_path = context.REQUEST.get(\'URL1\').split(\'/\')[-1]\n
-search_path = \'\'.join(["%project_module/", object_path,"%"])\n
+search_path = \'project_module/%s/%%\' % object_path\n
 category_list = []\n
 \n
 year = here.getStartDate().year()\n
