@@ -169,29 +169,39 @@ div.search_popup{\n
 /*********************/\n
 /*   Listbox style   */\n
 /*********************/\n
-.listbox_left {\n
+div.listbox-container{\n
+  width: 100%;\n
+}\n
+\n
+div.listbox-tree {\n
   margin-right: 4px;\n
   width: auto;\n
   float: left;\n
 }\n
 \n
-.listbox_center{\n
-  float: left;\n
+div.listbox-content{\n
+  float: left; \n
+  width: auto; \n
 }\n
-.listbox_head{\n
+\n
+div.listbox-head{\n
   color:#9D968D;\n
   font-weight:bold;\n
   margin-bottom: 10px;\n
 }\n
 \n
+div.listbox-body{\n
+  width:auto;\n
+}\n
+\n
 /* List mode selection*/\n
-.list_mode_selection{\n
+div.listbox-tree-mode-selection{\n
   height: 22px;\n
   width: auto;\n
   float: left;\n
 }\n
 \n
-.list_mode_selection input{\n
+div.listbox-tree-mode-selection input{\n
   width: auto;\n
 }\n
 \n
@@ -287,15 +297,18 @@ a.tree_open {\n
   padding-left:15px;\n
 }\n
 \n
+div.listbox-tree select{\n
+  max-width:120px;\n
+}\n
 /*Table Listbox elements */\n
 .listbox th {\n
   text-align:left;\n
   vertical-align: top;\n
 }\n
-.listbox_search_line, .listbox_label_line{\n
+.listbox-search-line, .listbox-label-line{\n
   background-color: #F0EFE9;\n
 }\n
-.listbox_search_line th{\n
+.listbox-search-line th{\n
   background-color: inherit;\n
 }\n
 \n

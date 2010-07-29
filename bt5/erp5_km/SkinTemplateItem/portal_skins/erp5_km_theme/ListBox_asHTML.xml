@@ -79,7 +79,8 @@
               current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;\n
               listbox_id request/current_form_id | form_id ;\n
               listbox_url string:${context_url}/${listbox_id};\n
-              need_pagination python: total_line > listbox_max_lines;">\n
+              need_pagination python: total_line > listbox_max_lines;\n
+              page_navigation_mode here/getPageNavigationMode;">\n
 \n
   <!-- Define hidden input.  -->\n
   <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
@@ -100,9 +101,9 @@
     </tal:block>\n
   </tal:block>\n
 \n
-<div class="listbox_block">\n
+<div class="listbox-container">\n
 \n
-  <div class="listbox_left">\n
+  <div class="listbox-tree">\n
     <div class="listbox_domain_tree_mode" tal:condition="is_domain_tree_mode">\n
       <div tal:define="selected_domain_path here/getSelectedDomainPath">\n
             <select name="domain_root_url"\n
@@ -141,12 +142,10 @@
           </div>\n
     </div>\n
   </div>\n
-  <tal:comment tal:replace="nothing">\n
-  Minimize the withd in domain tree mode else maximize\n
-  </tal:comment>\n
-  <div class="listbox_center"\n
-       tal:attributes="style python: is_domain_tree_mode and \'width: auto\' or \'width: 100%\'">\n
-    <div class="listbox_head">\n
+\n
+  <div class="listbox-content">\n
+\n
+    <div class="listbox-head">\n
       <span tal:content="here/getTitle"/>\n
       <span tal:condition="python: here.getTitle() and total_line>0"> - </span>\n
       <!--Show search result -->\n
@@ -155,12 +154,12 @@
 \n
       <!-- Set a slot for additional content ? -->\n
     </div>\n
-    <div class="listox_body">\n
+    <div class="listbox-body">\n
       <table class="listbox">      \n
           <thead>\n
             <!--Column title -->\n
-            <tr id="listbox_label_line" class="listbox_label_line"\n
-                tal:attributes="id string:${field_id}_label_line">  \n
+            <tr id="listbox-label-line" class="listbox-label-line"\n
+                tal:attributes="id string:${field_id}-label-line">  \n
               <!--Report tree-->\n
               <th tal:condition="is_report_tree_mode"\n
                 style="width: 50px; text-align: left; vertical-align: middle">\n
@@ -175,9 +174,7 @@
                 </select>\n
               </th>\n
               <!--Anchor Column -->\n
-              <th class="AnchorColumn" tal:condition="show_anchor_column">\n
-                &nbsp;\n
-              </th>\n
+              <th class="AnchorColumn" tal:condition="show_anchor_column">&nbsp;</th>\n
               <!--Add colum for checkbox-->\n
               <th tal:condition="python: show_select_column"\n
                   class="select_cell"\n
@@ -186,20 +183,24 @@
                         vertical-align: middle;\n
                         white-space: nowrap;">\n
             \n
-                <input  id="listbox_check_all" type="image"\n
-                        name="checkAll:method" value="1"\n
-                        alt="Check All" title="Check All"\n
-                        tal:attributes="id string:${field_id}_check_all;\n
-                                        name string:${field_id}_checkAll:method;\n
-                                        src string:${portal_url_string}/images/checkall.png"\n
-                        i18n:domain="ui" i18n:attributes="title" />\n
+                <input id="listbox-check-all"\n
+                       class="listbox-selection-action listbox-check-all"\n
+                       type="image"\n
+                       name="checkAll:method" value="1"\n
+                       alt="Check All" title="Check All"\n
+                       tal:attributes="id string:${field_id}-check-all;\n
+                                       name string:${field_id}_checkAll:method;\n
+                                       src string:${portal_url_string}/images/checkall.png"\n
+                       i18n:domain="ui" i18n:attributes="title" />\n
                 &nbsp;\n
-                <input  id="listbox_uncheck_all"\n
-                        type="image" name="uncheckAll:method" value="1"\n
-                        style="border: 0" alt="Uncheck All" title="Uncheck All"\n
-                        tal:attributes="id string:${field_id}_uncheck_all;\n
-                                        src string:${portal_url_string}/images/decheckall.png;\n
-                                        name string:${field_id}_uncheckAll:method;"\n
+                <input id="listbox-uncheck-all"\n
+                       class="listbox-selection-action listbox-uncheck-all"\n
+                       type="image" \n
+                       name="uncheckAll:method" value="1"\n
+                       alt="Uncheck All" title="Uncheck All"\n
+                       tal:attributes="id string:${field_id}-uncheck-all;\n
+                                       src string:${portal_url_string}/images/decheckall.png;\n
+                                       name string:${field_id}_uncheckAll:method;"\n
                         i18n:domain="ui" i18n:attributes="title" />         \n
                   \n
               </th>\n
@@ -246,8 +247,9 @@
 \n
             <!--Search column input -->\n
             <tr tal:condition="python: show_search_line or is_report_tree_mode"\n
-                id="listbox_search_line" class="listbox_search_line"\n
-                tal:attributes="id python: show_search_line and (\'%s_search_line\' % field_id) or (\'%s_report_depth_line\' % field_id)">\n
+                id="listbox_search_line" \n
+                class="listbox-search-line"\n
+                tal:attributes="id python: show_search_line and (\'%s-search-line\' % field_id) or (\'%s-report-depth-line\' % field_id)">\n
               <!--Report Tree -->\n
               <tal:block tal:condition="is_report_tree_mode">\n
               <th style="width: 50px; text-align: left; vertical-align: middle" colspan="1"\n
@@ -415,30 +417,35 @@
       <div class="listbox-footer-box">\n
         <!-- List mode choice -->\n
         <div tal:condition="python: not is_gadget_mode and (is_domain_tree_supported or is_report_tree_supported)"\n
-             class="list_mode_selection">\n
+             class="listbox-tree-mode-selection">\n
 \n
           <input tal:condition="python: is_domain_tree_supported or is_report_tree_supported"\n
-                 type="image" src="text_block.png" id="listbox_flat_list_mode"\n
-                 class="listbox_flat_list_mode"\n
-                 title="Flat List" name="setFlatListMode:method"\n
-                 value="1" alt="Flat List"\n
-                 tal:attributes="src string:${portal_url_string}/images/text_block.png;\n
-                                 id string:${field_id}_flat_list_mode"\n
-                 i18n:domain="ui" i18n:attributes="title" />\n
-           <input tal:condition="python: not is_gadget_mode and is_report_tree_supported"\n
-                  type="image" src="view_tree.png" id="listbox_report_tree_mode"\n
-                  title="Report Tree" name="setReportTreeMode:method"\n
-                  value="1" alt="Report Tree"\n
-                  tal:attributes="src string:${portal_url_string}/images/view_tree.png;\n
-                                  id string:${field_id}_report_tree_mode"\n
-                  i18n:domain="ui" i18n:attributes="title" />\n
-            <input tal:condition="python: not is_gadget_mode and is_domain_tree_supported"\n
-                   type="image" src="view_choose.png" id="listbox_domain_tree_mode"\n
-                   title="Domain Tree" name="setDomainTreeMode:method"\n
-                   value="1" alt="Domain Tree"\n
-                   tal:attributes="src string:${portal_url_string}/images/view_choose.png;\n
-                                   id string:${field_id}_domain_tree_mode"\n
-                   i18n:domain="ui" i18n:attributes="title" />\n
+                 type="image" \n
+                 class="listbox-tree-flat-list-mode"\n
+                 title="Flat List" \n
+                 name="setFlatListMode:method"\n
+                 value="1" \n
+                 alt="Flat List"\n
+                 tal:attributes="src string:${portal_url_string}/images/text_block.png;"\n
+                 i18n:domain="ui" i18n:attributes="title alt" />\n
+          <input tal:condition="python: not is_gadget_mode and is_report_tree_supported"\n
+                 type="image" \n
+                 class="listbox-tree-report-tree-mode"\n
+                 title="Report Tree" \n
+                 name="setReportTreeMode:method"\n
+                 value="1" \n
+                 alt="Report Tree"\n
+                 tal:attributes="src string:${portal_url_string}/images/view_tree.png;"\n
+                 i18n:domain="ui" i18n:attributes="title alt" />\n
+          <input tal:condition="python: not is_gadget_mode and is_domain_tree_supported"\n
+                 type="image" \n
+                 class="listbox-tree-domain-tree-mode"\n
+                 title="Domain Tree" \n
+                 name="setDomainTreeMode:method"\n
+                 value="1" \n
+                 alt="Domain Tree"\n
+                 tal:attributes="src string:${portal_url_string}/images/view_choose.png;"\n
+                 i18n:domain="ui" i18n:attributes="title alt" />\n
         </div>\n
 \n
         <!-- List display mode -->\n
