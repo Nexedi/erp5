@@ -72,6 +72,8 @@ Internal Invoice Transaction | source_asset
 Internal Invoice Transaction | view
 Invoice Root Simulation Rule | view
 Invoice Rule | view
+Organisation | general_ledger_export
+Organisation | general_ledger_report
 Organisation | grouping_reference_fast_input
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
@@ -93,6 +95,8 @@ Payment Transaction | profile_view_source
 Payment Transaction | related_invoice
 Payment Transaction | source_asset
 Payment Transaction | view
+Person | general_ledger_export
+Person | general_ledger_report
 Person | grouping_reference_fast_input
 Person | jump_to_accounting
 Person | transactions
