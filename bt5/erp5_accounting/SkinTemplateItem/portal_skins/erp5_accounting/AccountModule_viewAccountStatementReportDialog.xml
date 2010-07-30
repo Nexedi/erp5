@@ -78,7 +78,6 @@
                     <value>
                       <list>
                         <string>your_node</string>
-                        <string>your_mirror_section</string>
                         <string>your_payment</string>
                       </list>
                     </value>
@@ -105,6 +104,7 @@
                         <string>your_portal_skin</string>
                         <string>your_format</string>
                         <string>your_deferred_style</string>
+                        <string>your_mirror_section</string>
                       </list>
                     </value>
                 </item>

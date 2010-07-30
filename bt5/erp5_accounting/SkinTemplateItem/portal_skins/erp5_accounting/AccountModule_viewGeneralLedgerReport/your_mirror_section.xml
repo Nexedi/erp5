@@ -143,7 +143,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -167,9 +169,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -232,7 +232,7 @@
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -244,7 +244,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>(tales)</string> </value>
+                    <value> <string>Third Party</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -267,15 +267,18 @@
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/mirror_section | nothing</string> </value>
+            <value> <string>python: here.restrictedTraverse(request.get(\'mirror_section\', \'\')).getTitle()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -283,15 +286,18 @@
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
+        <tuple>
+          <string>Products.Formulator.TALESField</string>
+          <string>TALESMethod</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>string:</string> </value>
+            <value> <string>request/mirror_section | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
