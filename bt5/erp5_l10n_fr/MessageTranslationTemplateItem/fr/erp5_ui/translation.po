@@ -2224,11 +2224,17 @@ msgstr "Compte pour le client"
 msgid "Client Administrator"
 msgstr "Responsable des tâches administratives pour le client"
 
+msgid "Client Bank Account"
+msgstr "Compte en banque chez le client"
+
 msgid "Client Project"
 msgstr "Projet client"
 
 msgid "Client Reference"
 msgstr "Référence client"
+
+msgid "Client Transaction Reference"
+msgstr "N° d'écriture pour le client"
 
 msgid "Client must be defined"
 msgstr "Le client doit être défini"
@@ -3069,9 +3075,6 @@ msgstr "Référence client"
 
 msgid "Customer Size"
 msgstr "Correspondance"
-
-msgid "Customer Transaction Reference"
-msgstr "Référence du client"
 
 msgid "Customer reference"
 msgstr "Réf. client"
@@ -10253,6 +10256,9 @@ msgstr "Compte pour le fournisseur"
 msgid "Supplier Administrator"
 msgstr "Responsable des tâches administratives pour le fournisseur"
 
+msgid "Supplier Bank Account"
+msgstr "Compte en banque chez le fournisseur"
+
 msgid "Supplier Colour"
 msgstr "Coloris Fournisseur"
 
@@ -10267,6 +10273,9 @@ msgstr "Réf Fournisseur"
 
 msgid "Supplier Reference"
 msgstr "Référence fournisseur"
+
+msgid "Supplier Transaction Reference"
+msgstr "N° d'écriture pour le fournisseur"
 
 msgid "Supplier must be defined"
 msgstr "Le fournisseur doit être défini"
@@ -11517,7 +11526,7 @@ msgid "Third Party Region"
 msgstr "Région du tiers"
 
 msgid "Third Party Transaction Reference"
-msgstr "Référence pour le tiers"
+msgstr "N° d'écriture pour le tiers"
 
 msgid "Third party ${third_party_name} is invalid."
 msgstr "Le tiers ${third_party_name} est invalidé."
@@ -12346,14 +12355,8 @@ msgstr "Variantes prises en compte."
 msgid "Vendor"
 msgstr "Vendeur"
 
-msgid "Vendor Account"
-msgstr "Compte fournisseur"
-
-msgid "Vendor Transaction Reference"
-msgstr "Référence du vendeur"
-
 msgid "Vendor of the transaction"
-msgstr "Le vendeur."
+msgstr "Le vendeur"
 
 msgid "Vendor reference of the sale transaction"
 msgstr "La référence de la transaction selon le vendeur."
