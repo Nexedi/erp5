@@ -153,7 +153,6 @@ div.search_popup{\n
   position:relative;\n
 }\n
 \n
-\n
 /*Define all button image*/\n
 <tal:block tal:define="buttons python: [\'cut\',\'copy\',\'paste\',\'delete\',\'print\',\'new\',\'reset\',\'filter\',\'find\',\'sort\',\'config\']">\n
 <tal:block tal:repeat ="button buttons">\n
@@ -167,7 +166,7 @@ div.search_popup{\n
 \n
 \n
 /*********************/\n
-/*   Listbox style   */\n
+/*   Listbox style (XXX: move to erp5.css)   */\n
 /*********************/\n
 div.listbox-container{\n
   width: 100%;\n
@@ -194,7 +193,6 @@ div.listbox-body{\n
   width:auto;\n
 }\n
 \n
-/* List mode selection*/\n
 div.listbox-tree-mode-selection{\n
   height: 22px;\n
   width: auto;\n
@@ -205,18 +203,10 @@ div.listbox-tree-mode-selection input{\n
   width: auto;\n
 }\n
 \n
-\n
 th.listbox-table-report-tree-selection-cell{\n
   width: 50px; \n
 }\n
 \n
-td.listbox-table-domain-tree-cell{\n
-  text-align: left; \n
-  vertical-align: top; \n
-  white-space: nowrap;\n
-}\n
-\n
-/*Footer block*/\n
 div.listbox-footer{\n
  background-color:#F0EFE9;\n
  float:left;\n
@@ -280,14 +270,6 @@ div.listbox-full-text-search input.button{\n
  width: auto;\n
 }\n
 \n
-div.resultList{\n
-  float:left;\n
-}\n
-div.searchResultHeader{\n
-  float:left;\n
-}\n
-\n
-\n
 /* Pagination*/\n
 div.listbox-page-navigation{\n
   width:auto;\n
@@ -300,12 +282,12 @@ div.listbox-page-navigation input{\n
 }\n
 \n
 /* Report tree */\n
-a.tree_closed {\n
+a.tree-closed {\n
   background:transparent url(\'./images/tree_closed.png\') no-repeat scroll left center;\n
   padding-left:15px;\n
 }\n
 \n
-a.tree_open {\n
+a.tree-open {\n
   background:transparent url(\'./images/tree_open.png\') no-repeat scroll left center;\n
   padding-left:15px;\n
 }\n
@@ -313,27 +295,48 @@ a.tree_open {\n
 div.listbox-tree select{\n
   max-width:120px;\n
 }\n
+\n
 /*Table Listbox elements */\n
-.listbox th {\n
+table.listbox{\n
+  border-collapse:collapse;\n
+  width:100%;\n
+}\n
+\n
+table.listbox th,\n
+table.listbox td {\n
   text-align:left;\n
   vertical-align: top;\n
 }\n
+\n
+table.listbox th button{\n
+  border-width:0;\n
+  cursor:pointer;\n
+  float:left;\n
+  font-weight:bold;\n
+  padding:0 6px 0 0;\n
+}\n
+\n
+/* KM specific */\n
+table.listbox th button.sort-button {\n
+  background:transparent url("../km_img/switch.png") no-repeat scroll 100% 50%;\n
+}\n
+table.listbox th button.sort-button:hover{\n
+  color: #FFF;\n
+}\n
+table.listbox th button.sort-button-desc{\n
+  background-image: url(\'./km_img/switch_desc.png\');\n
+}\n
+table.listbox th button.sort-button-asc{\n
+  background-image: url(\'./km_img/switch_asc.png\');\n
+}\n
+\n
+/* KM specific */\n
 .listbox-search-line, .listbox-label-line{\n
   background-color: #F0EFE9;\n
 }\n
+\n
 .listbox-search-line th{\n
   background-color: inherit;\n
-}\n
-\n
-.listbox select {\n
-  max-width: 145px;\n
-}\n
-\n
-button.sort_button_desc{\n
-  background-image: url(\'./km_img/switch_desc.png\');\n
-}\n
-button.sort_button_asc{\n
-  background-image: url(\'./km_img/switch_asc.png\');\n
 }\n
 \n
 /* in search mode listbox may contain top/ bottom quick search inputs */\n
@@ -344,10 +347,10 @@ div.search-text-listbox{\n
   margin-bottom:0.5em;\n
   margin-top:0.5em;\n
 }\n
+\n
 div.search-text-listbox input{\n
   width: auto;\n
-}\n
-
+}
 
 ]]></string> </value>
         </item>

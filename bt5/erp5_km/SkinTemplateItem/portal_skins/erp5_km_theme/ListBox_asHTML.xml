@@ -137,11 +137,11 @@
             <td colspan="1" \n
                 class="listbox-table-domain-tree-cell"\n
                 tal:attributes="colspan python: total_depth - report_tree.depth + 1">\n
-              <a href="method" class="tree_open selected"\n
+              <a href="method" class="tree-open selected"\n
                  tal:condition="report_tree/is_open"\n
                  tal:attributes="href string:foldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}"\n
                  tal:content="report_tree/obj/getCompactTranslatedTitle"/>\n
-              <a href="method" class="tree_closed"\n
+              <a href="method" class="tree-closed"\n
                  tal:condition="not: report_tree/is_open"\n
                  tal:attributes="href string:unfoldDomain?domain_url=${report_tree/domain_url}&form_id=${form_id}&list_selection_name=${selection_name}&domain_depth:int=${report_tree/depth}"\n
                  tal:content="report_tree/obj/getCompactTranslatedTitle"/>\n
@@ -218,32 +218,29 @@
                                        title      python: value[1];\n
                                        sort_order python: value[2]">\n
 \n
-                  <th tal:condition="sql" class="listbox-table-header-cell">                 \n
+                  <th tal:condition="sql" class="listbox-table-header-cell"\n
+                      tal:define="bt_class python:  sort_order==\'ascending\' and \'sort-button sort-button-asc\' \n
+                                  or sort_order == \'descending\' and \'sort-button sort-button-desc\' \n
+                                  or \'sort-button\'">                 \n
                     <!-- Button in normal view -->\n
-                    <button tal:define="\n
-                          bt_class python:  sort_order==\'ascending\' and \'sort_button sort_button_asc\' \n
-                          or sort_order == \'descending\' and \'sort_button sort_button_desc\' \n
-                          or \'sort_button\'"\n
-                          tal:condition="not:is_gadget_mode" \n
-                          type="submit"\n
-                          name="setSelectionQuickSortOrder:method"\n
-                          tal:attributes="title string:${title}; \n
-                                          value string:${field_id}.${sql};\n
-                                          class bt_class;"\n
-                          i18n:domain="ui" i18n:attributes="title">\n
-                      <span tal:content="title" i18n:domain="ui" i18n:translate=""/>\n
-                    </button>\n
+                    <button tal:condition="not:is_gadget_mode" \n
+                            type="submit"\n
+                            name="setSelectionQuickSortOrder:method"\n
+                            tal:content="title"\n
+                            tal:attributes="title string:${title}; \n
+                                            value string:${field_id}.${sql};\n
+                                            class bt_class;"\n
+                            i18n:domain="ui" i18n:attributes="title" />\n
 \n
                     <!-- Button in gadget mode -->\n
                     <button tal:condition="is_gadget_mode" \n
                             tal:define ="params python: {\'setSelectionQuickSortOrder:method\':field_id+\'.\'+sql};"\n
                             type="button"  \n
-                            class="sort_button"\n
+                            tal:content="title"\n
                             tal:attributes="title string:${title}; \n
-                                            onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);"\n
-                            i18n:domain="ui" i18n:attributes="title">\n
-                      <span tal:content="title" i18n:domain="ui" i18n:translate=""/>\n
-                    </button>\n
+                                            onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                                            class bt_class;"\n
+                            i18n:domain="ui" i18n:attributes="title"/>\n
                   </th>\n
 \n
                   <th class="listbox-table-header-cell"\n
@@ -346,7 +343,7 @@
                     <a  tal:condition="section_name"\n
                         tal:define="method_id python: line.isOpen() and \'foldReport\' or \'unfoldReport\'"\n
                         tal:attributes="href string:${method_id}?report_url=${line/getDomainUrl}&amp;form_id=${form_id}&amp;list_selection_name=${selection_name};\n
-                                        class python:test(line.isOpen(), \'tree_open\', \'tree_closed\');\n
+                                        class python:test(line.isOpen(), \'tree-open\', \'tree-closed\');\n
                                         style python:\'white-space: nowrap;; margin-left: %spx\' % (line.getDepth() * 15)"\n
                         tal:content="section_name"/>\n
                   </td>\n
