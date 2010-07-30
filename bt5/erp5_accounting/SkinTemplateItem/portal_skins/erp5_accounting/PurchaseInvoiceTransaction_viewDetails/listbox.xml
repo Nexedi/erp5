@@ -88,7 +88,7 @@
                         </tuple>
                         <tuple>
                           <string>destination</string>
-                          <string>Vendor Account</string>
+                          <string>Supplier Account</string>
                         </tuple>
                         <tuple>
                           <string>destination_debit</string>
