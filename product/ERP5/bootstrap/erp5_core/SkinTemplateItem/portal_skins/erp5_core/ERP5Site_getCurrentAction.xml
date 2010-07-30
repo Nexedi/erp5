@@ -53,20 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-# Return the current action to know which tab we should select\n
-# Christophe Dumez <christophe@nexedi.com>\n
+            <value> <string># Return the current action to know which tab is selected\n
 \n
-for action_list in actions.values():\n
-  for action in action_list:\n
-   if action[\'category\'] in (\'object_view\', \'object_button\') and \\\n
-       current_url == action[\'url\'].split(\'?\')[0]:\n
-     return action\n
-return None\n
-
-
-]]></string> </value>
+for action in actions[\'object_view\']:\n
+  if current_url == action[\'url\'].split(\'?\')[0]:\n
+    return action\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -105,11 +97,9 @@ return None\n
                             <string>current_url</string>
                             <string>actions</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>action_list</string>
-                            <string>action</string>
                             <string>_getitem_</string>
-                            <string>None</string>
+                            <string>action</string>
+                            <string>_getattr_</string>
                           </tuple>
                         </value>
                     </item>
