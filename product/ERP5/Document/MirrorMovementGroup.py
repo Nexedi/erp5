@@ -71,4 +71,4 @@ def _isMirrored(document):
   # reverse or not by just comparing its source_section's id and
   # destination_section's id, whose result should be consistent for each
   # document.
-  return document.getDestinationSectionId() <> document.getSourceSectionId()
+  return document.getDestinationSectionId() > document.getSourceSectionId()
