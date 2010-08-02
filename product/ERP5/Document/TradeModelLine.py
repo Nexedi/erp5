@@ -83,7 +83,8 @@ class TradeModelLine(MappedValue, XMLMatrix, Amount, AmountGeneratorMixin):
     result = self._baseGetMappedValuePropertyList()
     if result:
       return result
-    if self._baseGetQuantity() is not None: # If quantity is defined, then tax works as transformed resource
+    # If quantity is defined, then tax works as transformed resource
+    if self._baseGetQuantity(None) is not None:
       return ('quantity', 'price', 'step')
     # Else tax provides only a ratio on amount
     return ('price', 'efficiency')
