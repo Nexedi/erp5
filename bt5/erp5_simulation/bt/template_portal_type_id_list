@@ -2,7 +2,10 @@ Accept Solver
 Adopt Solver
 Category Membership Divergence Tester
 DateTime Divergence Tester
+FIFO Delivery Solver
 Float Divergence Tester
+LIFO Delivery Solver
+Minimise Price Delivery Solver
 Net Converted Quantity Divergence Tester
 Production Reduction Solver
 Quantity Cancel Solver
