@@ -94,6 +94,14 @@
             <value> <string>Order Root Simulation Rule</string> </value>
         </item>
         <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple>
+                <string>Rule_testFalse</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
             <value> <string>New Default Order Root Simulation Rule</string> </value>
         </item>
