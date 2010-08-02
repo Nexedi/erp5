@@ -26,19 +26,15 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import UniqueObject
-
+from Products.ERP5Type.Tool.BaseTool import BaseTool
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
-from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5 import _dtmldir
 
-from zLOG import LOG
-
-class RuleTool (UniqueObject, Folder):
+class RuleTool(BaseTool):
     """
     The RulesTool implements portal object
     transformation policies.
@@ -76,52 +72,22 @@ class RuleTool (UniqueObject, Folder):
     according to templates. Allows to parametrize modules
     such as payroll.
 
-    Try to mimic: XSL semantics
-
-    Status : OK
-
-    NEW NAME : Rules Tool
-
-    TODO: XXX Please use BaseTool
     """
     id = 'portal_rules'
     meta_type = 'ERP5 Rule Tool'
     portal_type = 'Rule Tool'
-    allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule', 'ERP5 Zero Stock Rule', 'ERP5 Delivery Rule', 'ERP5 Amortisation Rule')
+    allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule',
+                      'ERP5 Zero Stock Rule', 'ERP5 Delivery Rule',
+                      'ERP5 Amortisation Rule')
 
     # Declarative Security
     security = ClassSecurityInfo()
 
-    #
-    #   ZMI methods
-    #
-    manage_options = ( ( { 'label'      : 'Overview'
-                         , 'action'     : 'manage_overview'
-                         }
-                        ,
-                        )
-                     + Folder.manage_options
-                     )
-
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
 
-    # Filter content (ZMI))
-    def __init__(self):
-        return Folder.__init__(self, RuleTool.id)
-
-    # Filter content (ZMI))
-    def filtered_meta_types(self, user=None):
-        # Filters the list of available meta types.
-        all = RuleTool.inheritedAttribute('filtered_meta_types')(self)
-        meta_types = []
-        for meta_type in self.all_meta_types():
-            if meta_type['name'] in self.allowed_types:
-                meta_types.append(meta_type)
-        return meta_types
-
     security.declareProtected(Permissions.AccessContentsInformation,
-        'searchRuleList')
+                              'searchRuleList')
     def searchRuleList(self, movement, tested_base_category_list=None, **kw):
       """
       this method searches for rules, as predicates against movement
