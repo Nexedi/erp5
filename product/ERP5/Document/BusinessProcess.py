@@ -191,7 +191,7 @@ class BusinessProcess(Path, XMLObject):
     reference_date = explanation_cache.getReferenceDate(self, trade_date, reference_date_method_id)
 
     # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)
-    start_date = reference_date + trade_model_path.getPaymentTerm() # XXX-JPS Until better naming
+    start_date = reference_date + trade_model_path.getPaymentTerm(0) # XXX-JPS Until better naming
     if delay_mode == 'min':
       delay = trade_model_path.getMinDelay()
     elif delay_mode == 'max':
