@@ -155,7 +155,17 @@ class Connection(DABase.Connection):
       return self
 
     def sql_quote__(self, v, escapes={}):
-        return self._v_database_connection.string_literal(v)
+        try:
+            connection = self._v_database_connection
+        except AttributeError:
+            # The volatile attribute sometimes disappears.
+            # In this case, re-assign it by calling the connect method.
+            # Note that we don't call sql_quote__ recursively by intention,
+            # because if connect fails to assign the volatile attribute for
+            # any reason, that would generate an infinite loop.
+            self.connect(self.connection_string)
+            connection = self._v_database_connection
+        return connection.string_literal(v)
 
 
 classes=('DA.Connection',)
