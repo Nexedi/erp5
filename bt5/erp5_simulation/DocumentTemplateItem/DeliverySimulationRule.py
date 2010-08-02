@@ -99,8 +99,7 @@ class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
   def _getUpdatePropertyDict(self, input_movement):
     # Override default mixin implementation
     return {'order': None,
-            'delivery': None,
-            'portal_type': RuleMixin.movement_type}
+            'delivery': None,}
 
   def _getInputMovementList(self, movement_list=None, rounding=None):
     return [self._applied_rule.getParentValue(),]
