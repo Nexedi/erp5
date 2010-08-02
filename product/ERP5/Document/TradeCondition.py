@@ -125,12 +125,7 @@ class TradeCondition(MappedValue, AmountGeneratorMixin, VariatedMixin):
                                           'Trade Model Line')
       return context.getAggregatedAmountList(*args, **kw)
 
-      #deprecated # XXX
-      ### If all items in final_list has int_index value, then sort it by
-      ### int_index to solve undetermined order problem.
-      if len([item for item in final_list if not item.getIntIndex()])==0:
-        final_list.sort(lambda a, b:cmp(a.getIntIndex(), b.getIntIndex()))
-
+    #deprecated # XXX
     security.declareProtected(Permissions.AccessContentsInformation,
         'getEffectiveModel')
     def getEffectiveModel(self, start_date=None, stop_date=None):
