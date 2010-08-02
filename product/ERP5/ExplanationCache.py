@@ -34,6 +34,9 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG
 
+_UNDEFINED = []
+_INFINITE_LOOP = []
+
 class ExplanationCache:
   """ExplanationCache provides a central access to 
   all parameters and values which are needed to process 
@@ -170,14 +173,37 @@ class ExplanationCache:
       browse parent and child movement
     """
     kw_tuple = tuple(kw.items()) # We hope that no sorting is needed
-    if kw.get('path', None) is None:
-      kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
-    if kw.get('explanation_uid', None) is None:
-      kw['explanation_uid'] = self.getRootExplanationUidList()
+
+    def getParentSimulationMovementValueList(obj, movement_list):
+      if getattr(obj, "getParentValue", None):
+        parent = obj.getParentValue()
+        if parent is not None:
+          if parent.getPortalType() == "Simulation Movement":
+            movement_list.append(parent)
+          getParentSimulationMovementValueList(parent, movement_list)
+
+    def getChildSimulationMovementValueList(obj, movement_list):
+      child_list = obj.objectValues()
+      for child in child_list:
+        if child.getPortalType() == "Simulation Movement":
+          movement_list.append(child)
+        getChildSimulationMovementValueList(child, movement_list)
+
     if self.simulation_movement_cache.get(kw_tuple, None) is None:
-      self.simulation_movement_cache[kw_tuple] = \
-           self.portal_catalog(portal_type="Simulation Movement",
-                               **kw)
+      if self.explanation.getPortalType() == "Applied Rule":
+        movement_list = []
+        getParentSimulationMovementValueList(self.explanation, movement_list)
+        getChildSimulationMovementValueList(self.explanation, movement_list)
+        self.simulation_movement_cache[kw_tuple] = movement_list
+      else:
+        if kw.get('path', None) is None:
+          kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
+        if kw.get('explanation_uid', None) is None:
+          kw['explanation_uid'] = self.getRootExplanationUidList()
+        self.simulation_movement_cache[kw_tuple] = \
+               self.portal_catalog(portal_type="Simulation Movement",
+                                   **kw)
+        
     return self.simulation_movement_cache[kw_tuple]
 
   def getBusinessLinkValueList(self, **kw):
@@ -275,6 +301,17 @@ class ExplanationCache:
     """Browse parent similation movements until a movement with
     appropriate trade_phase is found.
     """
+    tv = getTransactionalVariable(self)
+    reference_date_key = (trade_phase, reference_date_method_id, delay_mode, business_process.getPhysicalPath())
+    reference_date_key = repr(reference_date_key)
+    if tv.get(reference_date_key, _UNDEFINED) is _UNDEFINED:
+      tv[reference_date_key] =  _INFINITE_LOOP
+    else:
+      result = tv[reference_date_key]
+      if result is _INFINITE_LOOP:
+        raise ValueError('No reference date is defined, probably due to missing Trade Model Path in Business Process')
+      return result
+
     # Find simulation movements with appropriate trade_phase
     movement_list = self.getSimulationMovementValueList(trade_phase=trade_phase)
 
@@ -284,7 +321,8 @@ class ExplanationCache:
       # but we should in reality some way to configure this
       movement = movement_list[0]
       method = getattr(movement, reference_date_method_id)
-      return method()
+      result = tv[reference_date_key] = method()
+      return result
 
     # Case 2: we must recursively find another trade phase
     # to find the value recursively
@@ -307,7 +345,8 @@ class ExplanationCache:
                                            start_date=start_date, stop_date=stop_date,
                                            trade_phase=trade_phase, causality=path)
     method = getattr(movement, reference_date_method_id)
-    return method()
+    result = tv[reference_date_key] = method()
+    return result
 
 def _getExplanationCache(explanation):
   # Return cached value if any
