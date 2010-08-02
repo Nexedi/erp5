@@ -512,6 +512,12 @@ class Catalog(Folder,
       'type': 'multiple selection',
       'select_variable' : 'getPythonMethodIds',
       'mode': 'w' },
+    { 'id': 'sql_catalog_raise_error_on_uid_check',
+      'title': 'Raise error on UID check',
+      'description': 'Boolean used to tell if we raise error when uid check fail',
+      'type': 'boolean',
+      'default' : True,
+      'mode': 'w' },
 
   )
 
@@ -551,6 +557,7 @@ class Catalog(Folder,
   sql_catalog_role_keys = ()
   sql_catalog_local_role_keys = ()
   sql_catalog_table_vote_scripts = ()
+  sql_catalog_raise_error_on_uid_check = True
 
   # These are ZODB variables, so shared by multiple Zope instances.
   # This is set to the last logical time when clearReserved is called.
@@ -1318,9 +1325,13 @@ class Catalog(Folder,
           raise RuntimeError, 'could not set missing uid for %r' % (object,)
       elif check_uid:
         if uid in assigned_uid_dict:
-          raise ValueError('uid of %r is %r and '
-              'is already assigned to %s in catalog !!! This can be fatal.' %
-              (object, uid, assigned_uid_dict[uid]))
+            error_message = 'uid of %r is %r and ' \
+                  'is already assigned to %s in catalog !!! This can be fatal.' % \
+                  (object, uid, assigned_uid_dict[uid])
+            if not self.sql_catalog_raise_error_on_uid_check:
+                LOG("SQLCatalog.catalogObjectList", ERROR, error_message)
+            else:
+                raise ValueError(error_message)
 
         path = object.getPath()
         index = path_uid_dict.get(path)
@@ -1370,10 +1381,15 @@ class Catalog(Folder,
             LOG('SQLCatalog', ERROR,
                 'uid of %r changed from %r to %r as old one is assigned'
                 ' to %s in catalog !!! This can be fatal.' % (
-                  object, uid, object.uid, catalog_path))
-            raise ValueError('uid of %r is %r and '
-                'is already assigned to %s in catalog !!! This can be fatal.' %
-                (object, uid, catalog_path))
+                object, uid, object.uid, catalog_path))
+
+            error_message = 'uid of %r is %r and ' \
+                            'is already assigned to %s in catalog !!! This can be fatal.' \
+                            % (object, uid, catalog_path)
+            if not self.sql_catalog_raise_error_on_uid_check:
+                LOG('SQLCatalog', ERROR, error_message)
+            else:
+                raise ValueError(error_message)
             uid = object.uid
 
         assigned_uid_dict[uid] = object
