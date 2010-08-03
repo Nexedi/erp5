@@ -118,7 +118,7 @@ class asComposedDocument(object):  # XXX-JPS bad name for a class - please follo
               # here we could inherit many "useful" classes dynamically - héhé
               # that would be a "real" abstract composition system
     self._effective_model_list = \
-      orig_self._findEffectiveSpecialiseValueList(portal_type_list)
+      orig_self._findEffectiveSpecialiseValueList(specialise_type_list=portal_type_list)
     return self
 
   def __init__(self, orig_self, portal_type_list=None):
