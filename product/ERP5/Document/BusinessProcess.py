@@ -133,9 +133,8 @@ class BusinessProcess(Path, XMLObject):
     if trade_phase is not None:
       if isinstance(trade_phase, basestring):
         trade_phase = (trade_phase,)
-      trade_phase = set([x.split('trade_phase/', 1)[-1] \
-                        for x in trade_phase])
-    result = []
+      trade_phase = set(x.split('trade_phase/', 1)[-1]
+                        for x in trade_phase)
     if kw.get('portal_type', None) is None:
       kw['portal_type'] = self.getPortalTradeModelPathTypeList()
     if kw.get('sort_on', None) is None:
@@ -152,16 +151,15 @@ class BusinessProcess(Path, XMLObject):
     # First, collect trade model paths which can be applicable to a given context.
     path_list = []
     for path in original_path_list:
-      accept_path = True
-      if trade_phase is not None and not trade_phase.intersection(path.getTradePhaseList()):
-        accept_path = False # Filter our business path which trade phase does not match
-      if accept_path:
+      # Filter our business path which trade phase does not match
+      if trade_phase is None or trade_phase.intersection(path.getTradePhaseList()):
         path_list.append(path)
     LOG('path_list', 0, path_list)
     # Then, filter trade model paths by Predicate API.
     # FIXME: Ideally, we should use the Domain Tool to search business paths,
     # and avoid using the low level Predicate API. But the Domain Tool does
     # support the condition above without scripting?
+    result = []
     for path in path_list:
       if path.test(context):
         result.append(path)
@@ -231,11 +229,10 @@ class BusinessProcess(Path, XMLObject):
     **kw -- same arguments as those passed to searchValues / contentValues
     """
     if trade_phase is not None:
-      if not isinstance(trade_phase, (list, tuple)):
+      if isinstance(trade_phase, basestring):
         trade_phase = set((trade_phase,))
       else:
         trade_phase = set(trade_phase)
-    result = []
     if kw.get('portal_type', None) is None:
       kw['portal_type'] = self.getPortalBusinessLinkTypeList()
     if kw.get('sort_on', None) is None:
@@ -246,15 +243,13 @@ class BusinessProcess(Path, XMLObject):
     # First, collect business links which can be applicable to a given context.
     business_link_list = []
     for business_link in original_business_link_list:
-      accept_link = True
       if predecessor is not None and business_link.getPredecessor() != predecessor:
-        accept_link = False # Filter our business link which predecessor does not match
+        continue # Filter our business link which predecessor does not match
       if successor is not None and business_link.getSuccessor() != successor:
-        accept_link = False # Filter our business link which predecessor does not match
+        continue # Filter our business link which successor does not match
       if trade_phase is not None and not trade_phase.intersection(business_link.getTradePhaseList()):
-        accept_link = False # Filter our business link which trade phase does not match
-      if accept_link:
-        business_link_list.append(business_link)
+        continue # Filter our business link which trade phase does not match
+      business_link_list.append(business_link)
     # Then, filter business links by Predicate API.
     # FIXME: Ideally, we should use the Domain Tool to search business links,
     # and avoid using the low level Predicate API. But the Domain Tool does
@@ -263,6 +258,7 @@ class BusinessProcess(Path, XMLObject):
     if context is None:
       LOG('context is None', 0, repr(business_link_list))
       return business_link_list
+    result = []
     for business_link in business_link_list:
       if business_link.test(context):
         result.append(business_link)
