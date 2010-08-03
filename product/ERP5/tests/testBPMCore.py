@@ -46,6 +46,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   business_process_portal_type = 'Business Process'
   business_link_portal_type = 'Business Link'
+  trade_model_path_portal_type = 'Trade Model Path'
 
   normal_resource_use_category_list = ['normal']
   invoicing_resource_use_category_list = ['discount', 'tax']
@@ -89,6 +90,12 @@ class TestBPMMixin(ERP5TypeTestCase):
     business_link = business_process.newContent(
       portal_type=self.business_link_portal_type, **kw)
     return business_link
+
+  def createTradeModelPath(self, business_process=None, **kw):
+    if business_process is None:
+      business_process = self.createBusinessProcess()
+    return business_process.newContent(
+      portal_type=self.trade_model_path_portal_type, **kw)
 
   def createMovement(self):
     # returns a movement for testing
@@ -195,7 +202,12 @@ class TestBPMMixin(ERP5TypeTestCase):
     itr.validate()
 
   def afterSetUp(self):
-    self.validateRules()
+    rule_tool = self.getRuleTool()
+    for rule in rule_tool.contentValues(
+        portal_type=rule_tool.getPortalRuleTypeList()):
+      if rule.getId().startswith('new_') and \
+         rule.getValidationState() != 'validated':
+        rule.validate()
     self.createCategories()
     self.createInvoiceTransactionRule()
     self.stepTic()

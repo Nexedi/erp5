@@ -37,6 +37,7 @@ from DateTime import DateTime
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
+
 class TestTradeModelLineMixin(TestBPMMixin):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
   # Constants and variables shared by tests
@@ -48,17 +49,18 @@ class TestTradeModelLineMixin(TestBPMMixin):
     return module.newContent(portal_type=portal_type, **kw)
 
   # Steps
-  def stepCreatePriceCurrency(self, sequence=None, **kw):
+  def stepCreatePriceCurrency(self, sequence=None):
     sequence.edit(price_currency = self.createResource('Currency', \
         title='Currency', base_unit_quantity=self.base_unit_quantity))
 
-  def stepCreateBusinessProcess(self, sequence=None, **kw):
+  def stepCreateBusinessProcess(self, sequence=None):
     sequence.edit(business_process=self.createBusinessProcess(
       title=self.id()))
 
-  def stepCreateBusinessLink(self, sequence=None, **kw):
+  def stepCreateBusinessLink(self, sequence):
     business_process = sequence.get('business_process')
     sequence.edit(business_link=self.createBusinessLink(business_process))
+
 
 class TestTradeModelLine(TestTradeModelLineMixin):
   quiet = True
@@ -105,6 +107,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               ModifyBusinessLinkTaxing
               CreateBusinessLink
               ModifyBusinessLinkDiscounting
+              CreateTradeModelPath
               CreateTradeCondition
               SpecialiseTradeConditionWithBusinessProcess
               CreateTradeModelLine
@@ -195,7 +198,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         portal_type='Trade Model Line',
         **kw)
 
-  def stepModifyBusinessLinkDiscounting(self, sequence=None, **kw):
+  def stepModifyBusinessLinkDiscounting(self, sequence):
     category_tool = self.getCategoryTool()
     predecessor = category_tool.trade_state.invoiced
     successor = category_tool.trade_state.taxed
@@ -210,7 +213,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     )
     sequence.edit(business_link=None, business_link_discounting=business_link)
 
-  def stepModifyBusinessLinkTaxing(self, sequence=None, **kw):
+  def stepModifyBusinessLinkTaxing(self, sequence):
     category_tool = self.getCategoryTool()
     predecessor = category_tool.trade_state.invoiced
     successor = category_tool.trade_state.taxed
@@ -224,6 +227,16 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       trade_phase = 'default/tax'
     )
     sequence.edit(business_link=None, business_link_taxing=business_link)
+
+  def stepCreateTradeModelPath(self, sequence):
+    trade_phase = self.getCategoryTool().trade_phase
+    sequence.set('trade_model_path_default', self.createTradeModelPath(
+      sequence.get('business_process'),
+      reference='default_path',
+      int_index=0,
+      trade_phase_value_list=trade_phase.default.getCategoryChildValueList(),
+      trade_date_value=trade_phase.default.order,
+    ))
 
   def stepAcceptDecisionQuantityInvoice(self, sequence=None, **kw):
     invoice = sequence.get('invoice')
@@ -1451,6 +1464,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               ModifyBusinessLinkTaxing
               CreateBusinessLink
               ModifyBusinessLinkDiscounting
+              CreateTradeModelPath
               CreateTradeCondition
               SpecialiseTradeConditionWithBusinessProcess
               CreateTradeModelLine
@@ -1880,6 +1894,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               ModifyBusinessLinkTaxing
               CreateBusinessLink
               ModifyBusinessLinkDiscounting
+              CreateTradeModelPath
               CreateTradeCondition
               SpecialiseTradeConditionWithBusinessProcess
               CreateTradeModelLine
@@ -1941,6 +1956,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
               ModifyBusinessLinkTaxing
               CreateBusinessLink
               ModifyBusinessLinkDiscounting
+              CreateTradeModelPath
               CreateTradeCondition
               SpecialiseTradeConditionWithBusinessProcess
               CreateTradeModelLine
