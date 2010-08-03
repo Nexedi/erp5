@@ -102,6 +102,8 @@ class MovementGeneratorMixin:
     result = []
     folder = self._applied_rule
     # Build a list of movement and business path
+    LOG('_getInputMovementList', 0, repr(self._getInputMovementList(movement_list=movement_list, 
+                                                   rounding=rounding)))
     for input_movement in self._getInputMovementList(movement_list=movement_list, 
                                                      rounding=rounding):
       # Merge movement and business path properties (core implementation)
@@ -109,7 +111,6 @@ class MovementGeneratorMixin:
       business_process = input_movement.asComposedDocument()
       explanation = self._applied_rule # We use applied rule as local explanation
       trade_phase = self._getTradePhaseList(input_movement, business_process) # XXX-JPS not convenient to handle
-                                                                              # XXX-JPS trade phase of movement should be provided by movement
       update_property_dict = self._getUpdatePropertyDict(input_movement)
       result.extend(business_process.getTradePhaseMovementList(explanation, input_movement,
                                                  trade_phase=trade_phase, delay_mode=None,

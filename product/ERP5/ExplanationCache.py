@@ -64,8 +64,8 @@ class ExplanationCache:
     self.union_cache = None   
 
   def _getDeliveryMovementList(self):
-    """Returns self is explanation is a delivery line
-    of the list of explanation delivery lines if explanation
+    """Returns self if explanation is a delivery line
+    or the list of explanation delivery lines if explanation
     is a delivery
     """
     explanation = self.explanation
@@ -92,8 +92,8 @@ class ExplanationCache:
       for simulation_movement in movement.getDeliveryRelatedValueList():
         result.add(simulation_movement.getExplanationUid()) # XXX-JPS use new API later
     # Return result
-    self.explanation_uid_cache = result
-    return tuple(result)
+    self.explanation_uid_cache = tuple(result)
+    return self.explanation_uid_cache
 
   def getSimulationPathPatternList(self):
     """Return the list of root path of simulation tree which are 
@@ -119,6 +119,8 @@ class ExplanationCache:
       simulation_movement_id = simulation_movement.getId()
       insert_movement = True
       for path_id in container_path:
+        LOG('path_dict', 0, repr(path_dict))
+        LOG('local_path_dict', 0, repr(local_path_dict))
         local_path_dict = local_path_dict.setdefault(path_id, {})
         if type(local_path_dict) is not types.DictType:
           # A movement was already inserted
@@ -126,6 +128,7 @@ class ExplanationCache:
           break
       if insert_movement:
         local_path_dict[simulation_movement_id] = simulation_movement
+      LOG('path_dict result', 0, repr(path_dict))
 
     # For each delivery movement
     for movement in self._getDeliveryMovementList():
@@ -137,15 +140,21 @@ class ExplanationCache:
     # assembling path '/erp5/portal_simulation/1/34/23/43%'
     result = []
     def browsePathDict(prefix, local_path_dict):
+      LOG('browsePathDict result in', 0, repr(result))
+      LOG('browsePathDict local_path_dict in', 0, repr(local_path_dict))
       for key, value in local_path_dict.items():
         if type(value) is not types.DictType:
           # We have a real root
-          result.append('%s/%s%' % (prefix, key))
+          result.append('%s/%s' % (prefix, key))
+          result.append('%s/%s/%%' % (prefix, key))
           # XXX-JPS here we must add all parent movements XXX-JPS
         else:
           browsePathDict('%s/%s' % (prefix, key), value) # Recursing with string append is slow XXX-JPS
+      LOG('browsePathDict result out', 0, repr(result))
 
-    browsePathDict('/', path_dict)
+    # path_dict is typically like this:
+    #  {'': {'erp5': {'portal_simulation': {'3': {'4': <SimulationMovement at /erp5/portal_simulation/3/4>}}}}}
+    browsePathDict('', path_dict[''])
     self.explanation_path_pattern_cache = result
     return result
 
@@ -204,6 +213,7 @@ class ExplanationCache:
           kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
         if kw.get('explanation_uid', None) is None:
           kw['explanation_uid'] = self.getRootExplanationUidList()
+        LOG('lookup movements', 0, repr(kw))
         self.simulation_movement_cache[kw_tuple] = \
                self.portal_catalog(portal_type="Simulation Movement",
                                    **kw)
@@ -308,6 +318,7 @@ class ExplanationCache:
     tv = getTransactionalVariable(self)
     reference_date_key = (trade_phase, reference_date_method_id, delay_mode, business_process.getPhysicalPath())
     reference_date_key = repr(reference_date_key)
+    LOG('key', 0, reference_date_key)
     if tv.get(reference_date_key, _UNDEFINED) is _UNDEFINED:
       tv[reference_date_key] =  _INFINITE_LOOP
     else:
@@ -334,6 +345,7 @@ class ExplanationCache:
     # whenever trade model path define time constraints within the same
     # movement generator (ie. transformation with multiple phases)
     path_list = business_process.getTradeModelPathValueList(trade_phase=trade_phase)
+    LOG('path_list', 0, '%s' % trade_phase)
     if not len(path_list):
       raise ValueError('No Trade Model Path defines a reference data.')
 

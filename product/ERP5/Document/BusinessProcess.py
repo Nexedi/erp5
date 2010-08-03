@@ -37,6 +37,7 @@ from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 import zope.interface
 
+from zLOG import LOG
 
 class BusinessProcess(Path, XMLObject):
   """The BusinessProcess class is a container class which is used
@@ -129,18 +130,23 @@ class BusinessProcess(Path, XMLObject):
 
     **kw -- same arguments as those passed to searchValues / contentValues
     """
-    if trade_phase is None:
-      trade_phase = set()
-    elif not isinstance(trade_phase, (list, tuple)):
-      trade_phase = (trade_phase,)
-    trade_phase = set([x.split('trade_phase/', 1)[-1] \
-                       for x in trade_phase])
+    if trade_phase is not None:
+      if not isinstance(trade_phase, (list, tuple)):
+        trade_phase = (trade_phase,)
+      trade_phase = set([x.split('trade_phase/', 1)[-1] \
+                        for x in trade_phase])
     result = []
     if kw.get('portal_type', None) is None:
       kw['portal_type'] = self.getPortalTradeModelPathTypeList()
     if kw.get('sort_on', None) is None:
       kw['sort_on'] = 'int_index'
     original_path_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
+    LOG('self', 0, repr(self))
+    LOG('objectValues', 0, repr(self.objectValues()))
+    LOG('portal_type', 0, repr(kw['portal_type']))
+    LOG('objectValues kw', 0, repr(self.objectValues(**kw)))
+    LOG('trade_phase', 0, trade_phase)
+    LOG('original_path_list', 0, original_path_list)
     # Separate the selection of trade model paths into two steps
     # for easier debugging.
     # First, collect trade model paths which can be applicable to a given context.
@@ -151,6 +157,7 @@ class BusinessProcess(Path, XMLObject):
         accept_path = False # Filter our business path which trade phase does not match
       if accept_path:
         path_list.append(path)
+    LOG('path_list', 0, path_list)
     # Then, filter trade model paths by Predicate API.
     # FIXME: Ideally, we should use the Domain Tool to search business paths,
     # and avoid using the low level Predicate API. But the Domain Tool does
@@ -158,6 +165,7 @@ class BusinessProcess(Path, XMLObject):
     for path in path_list:
       if path.test(context):
         result.append(path)
+    LOG('result', 0, result)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getExpectedTradeModelPathStartAndStopDate')
@@ -189,6 +197,7 @@ class BusinessProcess(Path, XMLObject):
       raise ValueError('a reference date method must be defined on every Trade Model Path')
 
     explanation_cache = _getExplanationCache(explanation)
+    LOG('calling explanation_cache.getReferenceDate', 0, '%s %s %s %s' % (explanation, self, trade_date, reference_date_method_id))
     reference_date = explanation_cache.getReferenceDate(self, trade_date, reference_date_method_id)
 
     # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)    
@@ -221,12 +230,11 @@ class BusinessProcess(Path, XMLObject):
 
     **kw -- same arguments as those passed to searchValues / contentValues
     """
-    if trade_phase is None:
-      trade_phase = set()
-    elif not isinstance(trade_phase, (list, tuple)):
-      trade_phase = set((trade_phase,))
-    else:
-      trade_phase = set(trade_phase)
+    if trade_phase is not None:
+      if not isinstance(trade_phase, (list, tuple)):
+        trade_phase = set((trade_phase,))
+      else:
+        trade_phase = set(trade_phase)
     result = []
     if kw.get('portal_type', None) is None:
       kw['portal_type'] = self.getPortalBusinessLinkTypeList()
@@ -251,6 +259,10 @@ class BusinessProcess(Path, XMLObject):
     # FIXME: Ideally, we should use the Domain Tool to search business links,
     # and avoid using the low level Predicate API. But the Domain Tool does
     # support the condition above without scripting?
+    LOG('business_link_list', 0, repr(business_link_list))
+    if context is None:
+      LOG('context is None', 0, repr(business_link_list))
+      return business_link_list
     for business_link in business_link_list:
       if business_link.test(context):
         result.append(business_link)
@@ -266,6 +278,7 @@ class BusinessProcess(Path, XMLObject):
 
     business_link -- a Business Link document
     """
+    LOG('In isBusinessLinkCompleted', 0, repr(business_link))
     # Return False if Business Link is not completed
     if not business_link.isCompleted(explanation):
       return False
@@ -365,12 +378,14 @@ class BusinessProcess(Path, XMLObject):
     business_link -- a Business Link document
     """
     # If everything is delivered, no need to build
+    LOG('In isBusinessLinkBuildable', 0, repr(business_link))
     if business_link.isDelivered(explanation):
+      LOG('In isBusinessLinkBuildable', 0, 'business link is delivered and thus False')
       return False
     # We must take the closure cause only way to combine business process
     closure_process = _getBusinessLinkClosure(self, explanation, business_link)
     predecessor = business_link.getPredecessor()
-    return closure_process.isTradeStateCompleted(predecessor)
+    return closure_process.isTradeStateCompleted(explanation, predecessor)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkPartiallyBuildable')
   def isBusinessLinkPartiallyBuildable(self, explanation, business_link):
@@ -523,8 +538,10 @@ class BusinessProcess(Path, XMLObject):
 
     trade_state -- a Trade State category
     """
+    LOG('In isTradeStateCompleted', 0, repr(trade_state))
     for business_link in self.getBusinessLinkValueList(successor=trade_state):
       if not self.isBusinessLinkCompleted(explanation, business_link):
+        LOG('A business link is not completed', 0, repr(business_link))
         return False
     return True      
 
@@ -693,6 +710,9 @@ class BusinessProcess(Path, XMLObject):
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
       kw.update(update_property_dict)
       movement._edit(**kw)
+      business_link = self.getBusinessLinkValueList(trade_phase=trade_phase, context=movement)
+      business_link = map(lambda x: x.getRelativeUrl(), business_link)
+      movement._setCausalityList(business_link + movement.getCausalityList())
       result.append(movement)
 
     # result can not be empty
@@ -781,6 +801,7 @@ class BusinessProcess(Path, XMLObject):
 
     # Set causality to trade model path
     property_dict['causality'] = trade_model_path.getRelativeUrl() # XXX-JPS Will not work if we do not use real object
+    #(ie. if we use kind of 'temp')
 
     # Set trade_phase to the trade phase of trade_model_path
     property_dict['trade_phase'] = trade_model_path.getTradePhase()
@@ -826,5 +847,6 @@ class BusinessProcess(Path, XMLObject):
     """
       Build whatever is buildable
     """
+    LOG('In business process build', 0, repr(explanation))
     for business_link in self.getBuildableBusinessLinkValueList(explanation):
-      business_link.build(explanation)
+      business_link.build(explanation=explanation)

@@ -4,7 +4,7 @@
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #                    Yusuke Muraoka <yusuke@nexedi.com>
-#                    Łukasz Nowak <luke@nexedi.com>
+#                    ?ukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -231,13 +231,15 @@ class BusinessLink(Path, Predicate):
                    implicitely defines a simulation subtree and a union 
                    business process.
     """
+    LOG('Entering BusinessLink.isDelivered ',0, repr(explanation))
     for simulation_movement in self._getExplanationRelatedSimulationMovementValueList(
         explanation):
+      LOG('in isDelivered with ',0, repr(simulation_movement))
       if not simulation_movement.getDelivery():
         return False
     return True
 
-  def build(self, explanation):
+  def build(self, explanation=None):
     """Builds all related movements in the simulation using the builders
     defined on the Business Link.
 
@@ -246,11 +248,8 @@ class BusinessLink(Path, Predicate):
                    business process.
     """
     builder_list = self.getDeliveryBuilderValueList()
-    explanation_cache = _getExplanationCache(explanation)
-    for builder in builder_list:
+    for builder in builder_list: # XXX-JPS Do we really need a builder list ? wouldn't predicate be more useful ?
       # Call build on each builder
       # Provide 2 parameters: self and and explanation_cache
-      builder.build(select_method_dict={
-        'business_link': self,
-        'explanation_cache': explanation_cache,
-      })
+      LOG('Invoking Builder', 0, repr((builder, self, explanation)))
+      builder.build(explanation=explanation, business_link=self)
