@@ -314,7 +314,7 @@ class HTTPCacheCheckerTestSuite(object):
             x_varnish_reference_list.append((x_varnish_reference, True, url))
         for header, reference_value in self.header_list.iteritems():
           re_compiled = re.compile(self.generic_header_search_regex % header,
-                                                                  re.MULTILINE)
+                                   re.MULTILINE | re.IGNORECASE)
           match_object = re_compiled.search(fetched_data)
           if match_object is None:
             message = 'header:%r not found for %r' % (header, url)
