@@ -37,6 +37,7 @@ from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 import zope.interface
 
+
 class BusinessProcess(Path, XMLObject):
   """The BusinessProcess class is a container class which is used
   to describe business processes in the area of trade, payroll
@@ -190,14 +191,14 @@ class BusinessProcess(Path, XMLObject):
     explanation_cache = _getExplanationCache(explanation)
     reference_date = explanation_cache.getReferenceDate(self, trade_date, reference_date_method_id)
 
-    # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)
-    start_date = reference_date + trade_model_path.getPaymentTerm(0) # XXX-JPS Until better naming
+    # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)    
+    start_date = reference_date + trade_model_path.getPaymentTerm(0.0) # XXX-JPS Until better naming
     if delay_mode == 'min':
-      delay = trade_model_path.getMinDelay()
+      delay = trade_model_path.getMinDelay(0.0)
     elif delay_mode == 'max':
-      delay = trade_model_path.getMaxDelay()
+      delay = trade_model_path.getMaxDelay(0.0)
     else:
-      delay = (trade_model_path.getMaxDelay() + trade_model_path.getMinDelay()) / 2.0
+      delay = (trade_model_path.getMaxDelay(0.0) + trade_model_path.getMinDelay(0.0)) / 2.0
     stop_date = start_date + delay
         
     return start_date, stop_date
@@ -656,7 +657,8 @@ class BusinessProcess(Path, XMLObject):
     return remaining_trade_phase_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTradePhaseMovementList')
-  def getTradePhaseMovementList(self, explanation, amount, trade_phase=None, delay_mode=None):
+  def getTradePhaseMovementList(self, explanation, amount, trade_phase=None, delay_mode=None,
+                                      update_property_dict=None):
     """Returns a list of movement with appropriate arrow and dates,
     based on the Business Link definitions, provided 'amount' and optional
     trade phases. If no trade_phase is provided, the trade_phase defined
@@ -671,6 +673,8 @@ class BusinessProcess(Path, XMLObject):
 
     delay_mode -- optional value to specify calculation mode ('min', 'max')
                   if no value specified use average delay
+                  
+    update_property_method -- 
     """
     if trade_phase is None:
       trade_phase = amount.getTradePhase()
@@ -682,10 +686,12 @@ class BusinessProcess(Path, XMLObject):
     result = []
     id_index = 0
     base_id = amount.getId()
+    if update_property_dict is None: update_property_dict = {}
     for trade_model_path in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
       movement = newTempMovement(trade_model_path, '%s_%s' % (base_id, id_index))
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
+      kw.update(update_property_dict)
       movement._edit(**kw)
       result.append(movement)
 
@@ -776,6 +782,9 @@ class BusinessProcess(Path, XMLObject):
     # Set causality to trade model path
     property_dict['causality'] = trade_model_path.getRelativeUrl() # XXX-JPS Will not work if we do not use real object
 
+    # Set trade_phase to the trade phase of trade_model_path
+    property_dict['trade_phase'] = trade_model_path.getTradePhase()
+    
     return property_dict 
 
   # IBusinessProcess global API
