@@ -300,7 +300,7 @@ class HTTPCacheCheckerTestSuite(object):
           x_varnish_match_object =\
                         self.x_varnish_header_search_regex.search(fetched_data)
           x_varnish_reference = x_varnish_match_object.group(1)
-          logging.info('x_varnish_reference:%r for url:%r' %\
+          logging.debug('x_varnish_reference:%r for url:%r' %\
                                                     (x_varnish_reference, url))
           hits = x_cache_header_match_object.group(1)
           if hits.isdigit():
@@ -367,7 +367,7 @@ class HTTPCacheCheckerTestSuite(object):
     else:
       report_message = 'No errors'
       signal = 'OK'
-    if self.email_address is not None:
+    if self.email_address:
       import smtplib
       subject = 'HTTP Cache checker results for %s: %s' % (self.root_url,
                                                                         signal)
