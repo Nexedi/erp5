@@ -188,7 +188,7 @@ class ExplanationCache:
         parent = obj.getParentValue()
         if parent is not None:
           if parent.getPortalType() == "Simulation Movement" and \
-               parent.getCausalityValue().getTradePhase(base=1) == trade_phase:
+             parent.getCausalityValue().isMemberOf(trade_phase, strict_membership=1):
             movement_list.append(parent)
           getParentSimulationMovementValueList(parent, movement_list, trade_phase)
 
@@ -196,7 +196,7 @@ class ExplanationCache:
       child_list = obj.objectValues()
       for child in child_list:
         if child.getPortalType() == "Simulation Movement" and \
-               child.getCausalityValue().getTradePhase(base=1) == trade_phase:
+           child.getCausalityValue().isMemberOf(trade_phase, strict_membership=1):
           movement_list.append(child)
         getChildSimulationMovementValueList(child, movement_list, trade_phase)
 
