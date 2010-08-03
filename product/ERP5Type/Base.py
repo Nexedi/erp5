@@ -3382,11 +3382,27 @@ class Base( CopyContainer,
 
   security.declarePublic('isWebMode')
   def isWebMode(self):
+    """
+      return True if we are in web_mode and if editable_mode is NOT set
+    """
     if self.getApplicableLayout() is None:
       return False
     if getattr(self.REQUEST, 'ignore_layout', 0):
       return False
     if getattr(self.REQUEST, 'editable_mode', 0):
+      return False
+    return True
+
+  security.declarePublic('isEditableWebMode')
+  def isEditableWebMode(self):
+    """
+      return True if we are in web_mode and if editable_mode is set
+    """
+    if self.getApplicableLayout() is None:
+      return False
+    if getattr(self.REQUEST, 'ignore_layout', 0):
+      return False
+    if not getattr(self.REQUEST, 'editable_mode', 1):
       return False
     return True
 
