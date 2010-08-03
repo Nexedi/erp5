@@ -163,7 +163,7 @@ class BusinessPath(Path, Predicate):
       Overridden in order to take into account dynamic arrow categories in case if no static
       categories are set on Business Path
     """
-    context = kw.pop('context')
+    context = kw.pop('context', None)
     result = Path._getCategoryMembershipList(self, category, **kw)
     if len(result) > 0:
       return result
