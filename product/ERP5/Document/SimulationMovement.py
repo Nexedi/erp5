@@ -61,7 +61,7 @@ parent_to_movement_simulation_state = {
   'invoiced'         : 'planned',
 }
 
-class SimulationMovement(Movement, PropertyRecordableMixin, ExplainableMixin):
+class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   """
       Simulation movements belong to a simulation workflow which includes
       the following steps
