@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Łukasz Nowak <luke@nexedi.com>
+#                    ?ukasz Nowak <luke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -34,12 +34,15 @@ from Products.ERP5.MovementGroup import MovementGroupNode
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5.ExplanationCache import _getExplanationCache
 from Acquisition import aq_parent, aq_inner
 
 class CollectError(Exception): pass
 class MatrixError(Exception): pass
 class DuplicatedPropertyDictKeysError(Exception): pass
 class SelectMethodError(Exception): pass
+
+from zLOG import LOG
 
 class BPMBuilder(Alarm):
   """Top class for builders.
@@ -83,7 +86,8 @@ class BPMBuilder(Alarm):
 
   security.declareProtected(Permissions.View, 'build')
   def build(self, tag=None, input_movement_list=None,
-            existing_delivery_list=None, select_method_dict=None, **kwargs):
+                  existing_delivery_list=None, select_method_dict=None, 
+                  explanation=None, business_link=None, **kwargs):
     """Builds document according to self configuration mixed with passed parameters
 
     Selecting parameters (like input movement list) might be passed directly
@@ -100,15 +104,27 @@ class BPMBuilder(Alarm):
     self.callBeforeBuildingScript()
     # Select movements
     if input_movement_list is None:
-      if not select_method_dict.has_key('causality_uid'):
+      if explanation is not None:
+        explanation_cache = _getExplanationCache(explanation)
+        path = explanation_cache.getSimulationPathPatternList()
+      else:
+        path = select_method_dict.get('path', None)
+      if business_link is not None:
+        causality_uid = business_link.getUid()
+      else:
+        causality_uid = select_method_dict.get('causality_uid', None)
+      select_method_dict.update(dict(causality_uid=causality_uid, path=path))
+      if select_method_dict.get('causality_uid') is None:
         business_link_value_list = self.getRelatedBusinessLinkValueList()
         if len(business_link_value_list) > 0:
           # use only Business Link related movements
           select_method_dict['causality_uid'] = [q.getUid() for q in business_link_value_list]
       # do search
+      LOG('select_method_dict', 0, repr(select_method_dict))
       input_movement_value_list = self.searchMovementList(
-        delivery_relative_url_list=existing_delivery_list,
+        delivery_relative_url_list=existing_delivery_list, # XXX-JPS what is the purpose of existing_delivery_list
         **select_method_dict)
+      LOG('input_movement_value_list', 0, repr(input_movement_value_list))
     else:
       # movements were passed directly either by url or by value
       if isinstance(input_movement_list[0], str):
