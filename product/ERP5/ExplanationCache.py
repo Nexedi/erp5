@@ -174,28 +174,32 @@ class ExplanationCache:
     """
     kw_tuple = tuple(kw.items()) # We hope that no sorting is needed
 
-    def getParentSimulationMovementValueList(obj, movement_list):
+    def getParentSimulationMovementValueList(obj, movement_list, trade_phase):
       if getattr(obj, "getParentValue", None):
         parent = obj.getParentValue()
         if parent is not None:
-          if parent.getPortalType() == "Simulation Movement":
+          if parent.getPortalType() == "Simulation Movement" and \
+               parent.getCausalityValue().getTradePhase(base=1) == trade_phase:
             movement_list.append(parent)
-          getParentSimulationMovementValueList(parent, movement_list)
+          getParentSimulationMovementValueList(parent, movement_list, trade_phase)
 
-    def getChildSimulationMovementValueList(obj, movement_list):
+    def getChildSimulationMovementValueList(obj, movement_list, trade_phase):
       child_list = obj.objectValues()
       for child in child_list:
-        if child.getPortalType() == "Simulation Movement":
+        if child.getPortalType() == "Simulation Movement" and \
+               child.getCausalityValue().getTradePhase(base=1) == trade_phase:
           movement_list.append(child)
         getChildSimulationMovementValueList(child, movement_list)
 
     if self.simulation_movement_cache.get(kw_tuple, None) is None:
       if self.explanation.getPortalType() == "Applied Rule":
         movement_list = []
-        getParentSimulationMovementValueList(self.explanation, movement_list)
-        getChildSimulationMovementValueList(self.explanation, movement_list)
+        getParentSimulationMovementValueList(self.explanation, movement_list, kw.get('trade_phase', None))
+        getChildSimulationMovementValueList(self.explanation, movement_list, kw.get('trade_phase', None))
         self.simulation_movement_cache[kw_tuple] = movement_list
       else:
+        # XXX-Aurel : the following code seems not working as expected, it returns
+        # all simulation movements from a site
         if kw.get('path', None) is None:
           kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
         if kw.get('explanation_uid', None) is None:
