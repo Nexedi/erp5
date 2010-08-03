@@ -131,7 +131,7 @@ class BusinessProcess(Path, XMLObject):
     **kw -- same arguments as those passed to searchValues / contentValues
     """
     if trade_phase is not None:
-      if not isinstance(trade_phase, (list, tuple)):
+      if isinstance(trade_phase, basestring):
         trade_phase = (trade_phase,)
       trade_phase = set([x.split('trade_phase/', 1)[-1] \
                         for x in trade_phase])
@@ -693,10 +693,10 @@ class BusinessProcess(Path, XMLObject):
                   
     update_property_method -- 
     """
-    if trade_phase is None:
+    if not trade_phase:
       trade_phase = amount.getTradePhase()
-
-    if trade_phase is None: raise ValueError("A trade_phase must be defined on the Amount or provided to getTradePhaseMovementList")
+      if not trade_phase:
+        raise ValueError("A trade_phase must be defined on the Amount or provided to getTradePhaseMovementList")
 
     # Build a list of temp movements
     from Products.ERP5Type.Document import newTempMovement

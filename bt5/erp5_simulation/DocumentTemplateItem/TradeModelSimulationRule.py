@@ -92,19 +92,12 @@ class TradeModelSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predic
 
 class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
 
-  def getGeneratedMovementList(self, movement_list=None, rounding=False):
-    """
-    Generates list of movements
-    XXX-JPS This could become a good default implementation 
-            but I do not understand why input system not used here
-          (I will rewrite this)
-    """
-    result = []
+  def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
     trade_model = simulation_movement.asComposedDocument()
 
     if trade_model is None:
-      return result
+      return
 
     rule = self._applied_rule.getSpecialiseValue()
     for amount in simulation_movement.getAggregatedAmountList(
@@ -112,38 +105,6 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
         amount_generator_type_list=('Purchase Trade Condition',
                                     'Sale Trade Condition',
                                     'Trade Model Line')):
-      # business path specific
-      business_path_list = trade_model.getPathValueList(
-          trade_phase=amount.getTradePhaseList()) # Why a list of trade phases ? XXX-JPS
-      if len(business_path_list) == 0:
-        raise ValueError('Cannot find Business Path')
-
-      if len(business_path_list) != 1:
-        raise NotImplementedError('Only one Business Path is supported')
-
-      business_path = business_path_list[0]
-
-      kw = self._getPropertyAndCategoryList(simulation_movement, business_path,
-                                            rule)
-
-      # rule specific
-      kw['price'] = amount.getPrice() or amount.getEfficiency()
-      kw['resource'] = amount.getProperty('resource_list') # Inconsistent... list and not list XXX-JPS
-      kw['reference'] = amount.getProperty('reference')
-      kw['quantity'] = amount.getProperty('quantity')
-      kw['base_application'] = amount.getProperty(
-          'base_application_list')
-      kw['base_contribution'] = amount.getProperty(
-          'base_contribution_list')
-
-      kw['order'] = None
-      kw['delivery'] = None # Where does this come from ??? XXX-JPS - Why not None ?
-                            # XXX-JPS Way too many properties are copied
-
-      simulation_movement = self._applied_rule.newContent(
-        portal_type=RuleMixin.movement_type,
-        temp_object=True,
-        **kw)
-      result.append(simulation_movement)
-
-    return movement_list
+      yield self._applied_rule.newContent(
+        portal_type=RuleMixin.movement_type, temp_object=True,
+        **dict((k, v) for k, v in amount.__dict__.iteritems() if k[0] != '_'))

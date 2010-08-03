@@ -130,8 +130,10 @@ class MovementGeneratorMixin:
       return movement_trade_phase
     if self._trade_phase_list:
       return self._trade_phase_list
-    if self._rule:
-      return self._rule.getTradePhaseList()
+    if self._rule is not None:
+      trade_phase_list = self._rule.getTradePhaseList()
+      if trade_phase_list:
+        return trade_phase_list
     return business_process.getTradePhaseList()
 
   def _getInputMovementList(self, movement_list=None, rounding=None): #XXX-JPS should it be amount or movement ?
