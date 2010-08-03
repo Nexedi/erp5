@@ -70,17 +70,7 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Internal Order Line</string>
-                <string>Internal Packing List Line</string>
-                <string>Invoice Line</string>
-                <string>Purchase Order Line</string>
-                <string>Purchase Packing List Line</string>
-                <string>Returned Purchase Packing List Line</string>
-                <string>Returned Sale Packing List Line</string>
-                <string>Sale Order Line</string>
-                <string>Sale Packing List Line</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
