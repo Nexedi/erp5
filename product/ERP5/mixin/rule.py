@@ -413,7 +413,14 @@ class RuleMixin:
           kw = {}
           for tester in profit_updating_tester_list:
             if not tester.compare(prevision_movement, decision_movement):
-              kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
+              # Only update those updatable properties which are not recorded
+              kw_candidate = tester.getUpdatablePropertyDict(prevision_movement,
+                                                             decision_movement)
+              accept_candidate = True
+              for property_key in kw_candidate.keys():
+                if decision_movement.isPropertyRecorded(property_key):
+                  del kw_candidate[property_key]
+              kw.update(kw_candidate)
           if kw:
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
       else:
@@ -429,7 +436,14 @@ class RuleMixin:
           kw = {}
           for tester in updating_tester_list:
             if not tester.compare(prevision_movement, decision_movement): 
-              kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
+              # Only update those updatable properties which are not recorded
+              kw_candidate = tester.getUpdatablePropertyDict(prevision_movement,
+                                                             decision_movement)
+              accept_candidate = True
+              for property_key in kw_candidate.keys():
+                if decision_movement.isPropertyRecorded(property_key):
+                  del kw_candidate[property_key]
+              kw.update(kw_candidate)
               # XXX-JPS - there is a risk here that quanity is wrongly updated
           if kw:
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
