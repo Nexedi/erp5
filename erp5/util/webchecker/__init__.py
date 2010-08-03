@@ -379,3 +379,45 @@ class HTTPCacheCheckerTestSuite(object):
       return 'Email sends to %s' % self.email_address
     else:
       return report_message
+
+
+from optparse import OptionParser
+import ConfigParser
+
+def web_checker_utility():
+  usage = "usage: %prog config_path"
+  parser = OptionParser(usage=usage)
+
+  (options, args) = parser.parse_args()
+
+  if len(args) != 1 :
+    print parser.print_help()
+    parser.error('incorrect number of arguments')
+  config_path = args[0]
+
+  config = ConfigParser.RawConfigParser()
+  config.read(config_path)
+  working_directory = config.get('web_checker', 'working_directory')
+  url = config.get('web_checker', 'url')
+  varnishlog_binary_path = config.get('web_checker' , 'varnishlog_binary_path')
+  header_list = {}
+  for header, configuration in config.items('header_list'):
+    if configuration in ('True', 'true', 'yes'):
+      value = True
+    else:
+      value = configuration.splitlines()
+    header_list[header] = value
+  email_address = config.get('web_checker' , 'email_address')
+  smtp_host = config.get('web_checker' , 'smtp_host')
+  debug_level = config.get('web_checker' , 'debug_level')
+  instance = HTTPCacheCheckerTestSuite(url,
+                                      working_directory,
+                                      varnishlog_binary_path,
+                                      header_list,
+                                      email_address,
+                                      smtp_host,
+                                      debug_level)
+
+  print instance.start()
+
+
