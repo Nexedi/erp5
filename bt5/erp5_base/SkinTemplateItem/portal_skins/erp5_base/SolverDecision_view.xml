@@ -108,6 +108,7 @@
                     <value>
                       <list>
                         <string>my_solver</string>
+                        <string>my_comment</string>
                       </list>
                     </value>
                 </item>
