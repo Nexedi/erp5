@@ -58,6 +58,7 @@
 context.setSourceReference(None)\n
 context.setReference(None)\n
 context.setDestinationReference(None)\n
+context.setSolver(None)\n
 </string> </value>
         </item>
         <item>
