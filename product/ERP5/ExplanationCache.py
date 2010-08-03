@@ -189,7 +189,7 @@ class ExplanationCache:
         if child.getPortalType() == "Simulation Movement" and \
                child.getCausalityValue().getTradePhase(base=1) == trade_phase:
           movement_list.append(child)
-        getChildSimulationMovementValueList(child, movement_list)
+        getChildSimulationMovementValueList(child, movement_list, trade_phase)
 
     if self.simulation_movement_cache.get(kw_tuple, None) is None:
       if self.explanation.getPortalType() == "Applied Rule":
