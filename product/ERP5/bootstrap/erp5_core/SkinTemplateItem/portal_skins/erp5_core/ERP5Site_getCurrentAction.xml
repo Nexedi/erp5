@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string># Return the current action to know which tab is selected\n
 \n
-for action in actions[\'object_view\']:\n
+for action in actions.get(\'object_view\', []):\n
   if current_url == action[\'url\'].split(\'?\')[0]:\n
     return action\n
 </string> </value>
@@ -97,9 +97,9 @@ for action in actions[\'object_view\']:\n
                             <string>current_url</string>
                             <string>actions</string>
                             <string>_getiter_</string>
-                            <string>_getitem_</string>
-                            <string>action</string>
                             <string>_getattr_</string>
+                            <string>action</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
