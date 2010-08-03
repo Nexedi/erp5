@@ -1,0 +1,3 @@
+2010-08-03 Nicolas Delaby
+-------------------------
+First release
