@@ -753,7 +753,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
       else:
         result = method()
       if result is not None:
-      if result is not None:
         for key, value in result.iteritems():
           if value not in (None, ''):
             kw[key]=value
