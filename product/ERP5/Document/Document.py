@@ -753,7 +753,10 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
       else:
         result = method()
       if result is not None:
-        kw.update(result)
+      if result is not None:
+        for key, value in result.iteritems():
+          if value not in (None, ''):
+            kw[key]=value
 
     if file_name is not None:
       # filename is often undefined....
