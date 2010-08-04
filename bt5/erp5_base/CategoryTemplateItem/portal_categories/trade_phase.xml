@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>acquisition_portal_type</string> </key>
-            <value> <string>python: []</string> </value>
+            <value> <string>python: portal.getPortalAmountGeneratorLineTypeList()</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
