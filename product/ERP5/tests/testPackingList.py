@@ -640,6 +640,16 @@ class TestPackingListMixin(TestOrderMixin):
     self._solveDeliveryGroupDivergence(packing_list, 'start_date',
                                   simulation_movement_list[-1].getRelativeUrl())
 
+  def stepUnifyStopDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
+    """
+      Solve divergence on stop date using unify
+    """
+    packing_list = sequence.get('packing_list')
+    applied_rule = sequence.get('applied_rule')
+    simulation_movement_list = applied_rule.objectValues()
+    self._solveDeliveryGroupDivergence(packing_list, 'stop_date',
+                                  simulation_movement_list[-1].getRelativeUrl())
+
   def _solveDeliveryGroupDivergence(self, obj, property, target_url):
     kw = {'delivery_group_listbox':
           {property:{'choice':target_url}}}
@@ -1278,11 +1288,11 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepSetContainerFullQuantity \
                       stepTic \
                       stepCheckPackingListIsPacked \
-                      stepModifySimulationLineStartDate \
+                      stepModifySimulationLineStopDate \
                       stepTic \
                       stepCheckPackingListIsDiverged \
                       stepCheckPackingListIsDivergent \
-                      stepUnifyStartDateWithPrevision \
+                      stepUnifyStopDateWithPrevision \
                       stepTic \
                       '
     # XXX Check if there is a new packing list created
