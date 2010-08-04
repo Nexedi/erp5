@@ -84,7 +84,10 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
           movement.setQuantity(total_quantity)
           for simulation_movement in simulation_movement_list:
             quantity = simulation_movement.getQuantity()
-            delivery_ratio = quantity / total_quantity
+            if total_quantity == 0:
+              delivery_ratio = 1.
+            else:
+              delivery_ratio = quantity / total_quantity
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
                                      delivery_error=delivery_error,
