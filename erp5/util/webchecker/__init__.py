@@ -62,7 +62,7 @@ class HTTPCacheCheckerTestSuite(object):
 
   url_search_in_wget_regex = re.compile('^--\d{4}.*--\s+(?P<%s>.*)$' %\
                                                                       URL_CODE)
-  status_search_in_wget_regex = re.compile('^HTTP request sent, awaiting'\
+  status_search_in_wget_regex = re.compile('^HTTP request sent, awaiting '\
                                  'response\.\.\. (?P<%s>\d+).+$' % STATUS_CODE)
   file_save_search_regex = re.compile("^Saving to: `(?P<%s>.*)'" %\
                                                                 FILE_PATH_CODE)
@@ -71,7 +71,7 @@ class HTTPCacheCheckerTestSuite(object):
   x_varnish_header_search_regex = re.compile('X-Varnish:\s(\d+)', re.MULTILINE)
   generic_header_search_regex = '%s:\s(.*)\s$'
 
-  ACCEPTABLE_STATUS_LIST = ('200', '304',)
+  ACCEPTABLE_STATUS_LIST = ('200', '304', '302',)
 
   def __init__(self, root_url, working_directory, varnishlog_binary_path,
                header_list, email_address, smtp_host, debug_level):
@@ -98,7 +98,7 @@ class HTTPCacheCheckerTestSuite(object):
     self.smtp_host = smtp_host
     level = self.LOG_LEVEL_DICT.get(debug_level, logging.INFO)
     logging.basicConfig(filename='erp5_web_checker.log', level=level)
-    self.report_list = []
+    self.report_dict = {}
     self._timeout = 30
 
   def _initFolder(self):
@@ -237,7 +237,9 @@ class HTTPCacheCheckerTestSuite(object):
     stdout, stderr = wget_process.communicate()
     return stdout
 
-  def _parseWgetLogs(self, wget_log_file, discarded_url_list=_MARKER):
+  def _parseWgetLogs(self, wget_log_file, discarded_url_list=_MARKER,
+                     prohibited_file_name_list=None,
+                     prohibited_folder_name_list=None):
     """read wget logs and test Caching configuration
     """
     if discarded_url_list is _MARKER:
@@ -263,12 +265,25 @@ class HTTPCacheCheckerTestSuite(object):
         continue
       if code == self.STATUS_CODE:
         if value not in self.ACCEPTABLE_STATUS_LIST:
-          message = 'Page in error:%r status:%r' % (url, value)
-          if message not in self.report_list:
-            self.report_list.append(message)
+          message = 'Page in error status:%r' % (value)
+          self.report_dict.setdefault(url, []).append(message)
       if code == self.FILE_PATH_CODE:
         # Here we check if Response was cached
         file_path = os.path.sep.join((self.working_directory, value))
+        folder_path , filename = os.path.split(file_path)
+        if prohibited_file_name_list:
+          if '?' in filename:
+            filename = filename.rpartition('?')[0]
+          if filename in prohibited_file_name_list:
+            # Error
+            message = '%r is prohibited as filename' % filename
+            self.report_dict.setdefault(url, []).append(message)
+        if prohibited_folder_name_list:
+          for prohibited_folder_name in prohibited_folder_name_list:
+            if prohibited_folder_name in folder_path.split(os.path.sep):
+              message = '%r is prohibited as folder name' % prohibited_folder_name
+              self.report_dict.setdefault(url, []).append(message)
+              break
         file_object = None
         try:
           file_object = open(file_path, 'r')
@@ -292,8 +307,8 @@ class HTTPCacheCheckerTestSuite(object):
                           self.x_cache_header_search_regex.search(fetched_data)
         if x_cache_header_match_object is None:
           # This RESPONSE is not cached by Varnish
-          message = 'X-Cache header not found for %r' % url
-          self.report_list.append(message)
+          message = 'X-Cache header not found'
+          self.report_dict.setdefault(url, []).append(message)
         else:
           # means X-Cache header is present in reponse
           # Read the X-Varnish header to know if backend has been touched
@@ -317,22 +332,23 @@ class HTTPCacheCheckerTestSuite(object):
                                    re.MULTILINE | re.IGNORECASE)
           match_object = re_compiled.search(fetched_data)
           if match_object is None:
-            message = 'header:%r not found for %r' % (header, url)
-            self.report_list.append(message)
+            message = 'header:%r not found' % (header)
+            self.report_dict.setdefault(url, []).append(message)
           else:
             read_value = match_object.group(1)
             if reference_value is True and not read_value:
-              message = 'value of header:%r not found for %r' % (header, url)
-              self.report_list.append(message)
+              message = 'value of header:%r not found' % (header)
+              self.report_dict.setdefault(url, []).append(message)
             elif isinstance(reference_value, (tuple,list)):
               if read_value not in reference_value:
                 message = 'value of header:%r does not match'\
-                          ' for %r (%r not in %r)' %\
-                                     (header, url, read_value, reference_value)
-                self.report_list.append(message)
+                          ' (%r not in %r)' %\
+                                          (header, read_value, reference_value)
+                self.report_dict.setdefault(url, []).append(message)
     return x_varnish_reference_list, discarded_url_list[:]
 
-  def start(self):
+  def start(self, prohibited_file_name_list=None,
+            prohibited_folder_name_list=None):
     """Run test suite
     return errors
     """
@@ -356,13 +372,25 @@ class HTTPCacheCheckerTestSuite(object):
     wget_log_file = self._runSpider()
     varnishlog_data = self._readVarnishLog(varnishlog_reading_process)
     x_varnish_reference_list, discarded_url_list =\
-                                             self._parseWgetLogs(wget_log_file,
-                                         discarded_url_list=discarded_url_list)
+                           self._parseWgetLogs(wget_log_file,
+                       discarded_url_list=discarded_url_list,
+                       prohibited_file_name_list=prohibited_file_name_list,
+                       prohibited_folder_name_list=prohibited_folder_name_list)
     self._readVarnishLogAndGetIsBackendTouched(varnishlog_data,
                                                       x_varnish_reference_list)
     logging.info('End of second pass\n')
-    if self.report_list:
-      report_message = 'Errors:\n\t%s' % '\n\t'.join(self.report_list)
+    if self.report_dict:
+      report_message_list = ['*Errors*:']
+      for url, message_list in self.report_dict.iteritems():
+        unique_message_list = []
+        for message in message_list:
+          if message not in unique_message_list:
+            unique_message_list.append(message)
+        report_message_list.append('\n')
+        report_message_list.append(url)
+        report_message_list.extend(['\t%s' % message for message\
+                                                       in unique_message_list])
+      report_message = '\n'.join(report_message_list)
       signal = 'PROBLEM'
     else:
       report_message = 'No errors'
@@ -376,7 +404,7 @@ class HTTPCacheCheckerTestSuite(object):
       server = smtplib.SMTP(self.smtp_host)
       server.sendmail(self.email_address, self.email_address, message)
       server.quit()
-      return 'Email sends to %s' % self.email_address
+      return 'Email sended to %s' % self.email_address
     else:
       return report_message
 
@@ -400,6 +428,9 @@ def web_checker_utility():
   working_directory = config.get('web_checker', 'working_directory')
   url = config.get('web_checker', 'url')
   varnishlog_binary_path = config.get('web_checker' , 'varnishlog_binary_path')
+  email_address = config.get('web_checker' , 'email_address')
+  smtp_host = config.get('web_checker' , 'smtp_host')
+  debug_level = config.get('web_checker' , 'debug_level')
   header_list = {}
   for header, configuration in config.items('header_list'):
     if configuration in ('True', 'true', 'yes'):
@@ -407,17 +438,22 @@ def web_checker_utility():
     else:
       value = configuration.splitlines()
     header_list[header] = value
-  email_address = config.get('web_checker' , 'email_address')
-  smtp_host = config.get('web_checker' , 'smtp_host')
-  debug_level = config.get('web_checker' , 'debug_level')
+  if config.has_section('erp5_extension_list'):
+    prohibited_file_name_list = config.get('erp5_extension_list',
+                                      'prohibited_file_name_list').splitlines()
+    prohibited_folder_name_list = config.get('erp5_extension_list',
+                                    'prohibited_folder_name_list').splitlines()
+  else:
+    prohibited_file_name_list = prohibited_folder_name_list = []
   instance = HTTPCacheCheckerTestSuite(url,
-                                      working_directory,
-                                      varnishlog_binary_path,
-                                      header_list,
-                                      email_address,
-                                      smtp_host,
-                                      debug_level)
+                                       working_directory,
+                                       varnishlog_binary_path,
+                                       header_list,
+                                       email_address,
+                                       smtp_host,
+                                       debug_level)
 
-  print instance.start()
+  print instance.start(prohibited_file_name_list=prohibited_file_name_list,
+                       prohibited_folder_name_list=prohibited_folder_name_list)
 
 
