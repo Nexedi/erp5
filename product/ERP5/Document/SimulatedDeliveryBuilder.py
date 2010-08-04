@@ -34,7 +34,7 @@ from Products.ERP5.Document.OrderBuilder import OrderBuilder, \
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
 
-class DeliveryBuilder(OrderBuilder):
+class SimulatedDeliveryBuilder(OrderBuilder):
   """
     Delivery Builder objects allow to gather multiple Simulation Movements
     into a single Delivery.

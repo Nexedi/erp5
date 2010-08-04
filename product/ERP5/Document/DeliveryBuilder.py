@@ -47,7 +47,7 @@ class DuplicatedPropertyDictKeysError(Exception): pass
 class SelectMethodError(Exception): pass
 class SelectMovementError(Exception): pass
 
-class OrderBuilder(XMLObject, Amount, Predicate):
+class DeliveryBuilder(XMLObject, Amount, Predicate):
   """
     Order Builder objects allow to gather multiple Simulation Movements
     into a single Delivery.
