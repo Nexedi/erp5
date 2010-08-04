@@ -1506,6 +1506,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         portal_type=self.packing_list_portal_type,
         source_value=source,
         destination_value=destination,
+        specialise='business_process_module/erp5_default_business_process',
         start_date=DateTime())
     packing_list_line = packing_list.newContent(
         portal_type=self.packing_list_line_portal_type,
