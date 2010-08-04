@@ -1433,6 +1433,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     packing_list = self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                               portal_type=self.packing_list_portal_type,
                               title='Packing List',
+                              specialise='business_process_module/erp5_default_business_process',
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
