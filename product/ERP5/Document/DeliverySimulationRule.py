@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -24,38 +25,81 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+"""
+XXX This file is experimental for new simulation implementation, and
+will replace DeliveryRule.
+"""
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5Legacy.Document.Rule import Rule
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
+from Products.ERP5.mixin.movement_collection_updater import \
+     MovementCollectionUpdaterMixin
 
-class DeliverySimulationRule(Rule):
+class DeliverySimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-  Delivery Simulation Rule expand simulation created by a order root
-  simulation rule or delivery root simulation rule.
-  """
+  Delivery Rule object make sure an Delivery in the simulation
+  is consistent with the real delivery
 
+  WARNING: what to do with movement split ?
+  """
   # CMF Type Definition
   meta_type = 'ERP5 Delivery Simulation Rule'
   portal_type = 'Delivery Simulation Rule'
-  add_permission = Permissions.AddPortalContent
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, force=0, **kw):
-    """
-    Expands the rule:
-    - generate a list of previsions
-    - compare the prevision with existing children
-      - get the list of existing movements (immutable, mutable, deletable)
-      - compute the difference between prevision and existing (add,
-        modify, remove)
-    - add/modify/remove child movements to match prevision
-    """
-    return Rule._expand(self, applied_rule, force=force, **kw)
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IRule,
+                            interfaces.IDivergenceController,
+                            interfaces.IMovementCollectionUpdater,)
 
-  def isDeliverable(self, movement):
-    return movement.getResource() is not None
+  # Default Properties
+  property_sheets = (
+    PropertySheet.Base,
+    PropertySheet.XMLObject,
+    PropertySheet.CategoryCore,
+    PropertySheet.DublinCore,
+    PropertySheet.Task,
+    PropertySheet.Predicate,
+    PropertySheet.Reference,
+    PropertySheet.Version,
+    PropertySheet.Rule
+    )
+
+  def _getMovementGenerator(self, context):
+    """
+    Return the movement generator to use in the expand process
+    """
+    return DeliveryRuleMovementGenerator(applied_rule=context, rule=self)
+
+  def _getMovementGeneratorContext(self, context):
+    """
+    Return the movement generator context to use for expand
+    """
+    return context
+
+  def _getMovementGeneratorMovementList(self, context):
+    """
+    Return the movement lists to provide to the movement generator
+    """
+    return []
+
+  def _isProfitAndLossMovement(self, movement):
+    # For a kind of trade rule, a profit and loss movement lacks source
+    # or destination.
+    return (movement.getSource() is None or movement.getDestination() is None)
+
+class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
+
+  def _getUpdatePropertyDict(self, input_movement):
+    # Override default mixin implementation
+    return {'order': None,
+            'delivery': None,}
+
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    return [self._applied_rule.getParentValue(),]

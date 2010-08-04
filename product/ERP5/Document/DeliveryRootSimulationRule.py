@@ -25,28 +25,113 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+"""
+XXX This file is experimental for new simulation implementation, and
+will replace DeliveryRule.
+"""
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5Legacy.Document.DeliveryRule import DeliveryRule
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
+from Products.ERP5.mixin.movement_collection_updater import \
+     MovementCollectionUpdaterMixin
 
-class DeliveryRootSimulationRule(DeliveryRule):
+class DeliveryRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-  Delivery Root Simulation Rule is a root level rule for Deliveries.
-  """
+  Delivery Rule object make sure an Delivery in the simulation
+  is consistent with the real delivery
 
+  WARNING: what to do with movement split ?
+  """
   # CMF Type Definition
   meta_type = 'ERP5 Delivery Root Simulation Rule'
   portal_type = 'Delivery Root Simulation Rule'
-  add_permission = Permissions.AddPortalContent
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
-                                       business_link, current_property_dict):
-    """Order rule specific update dictionary"""
-    return {
-      'delivery': movement.getRelativeUrl(),
-    }
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IRule,
+                            interfaces.IDivergenceController,
+                            interfaces.IMovementCollectionUpdater,)
+
+  # Default Properties
+  property_sheets = (
+    PropertySheet.Base,
+    PropertySheet.XMLObject,
+    PropertySheet.CategoryCore,
+    PropertySheet.DublinCore,
+    PropertySheet.Task,
+    PropertySheet.Predicate,
+    PropertySheet.Reference,
+    PropertySheet.Version,
+    PropertySheet.Rule
+    )
+
+  def _getMovementGenerator(self, context):
+    """
+    Return the movement generator to use in the expand process
+    """
+    return DeliveryRuleMovementGenerator(applied_rule=context, rule=self)
+
+  def _getMovementGeneratorContext(self, context):
+    """
+    Return the movement generator context to use for expand
+    """
+    return context
+
+  def _getMovementGeneratorMovementList(self, context):
+    """
+    Return the movement lists to provide to the movement generator
+    """
+    return []
+
+  def _isProfitAndLossMovement(self, movement):
+    # For a kind of trade rule, a profit and loss movement lacks source
+    # or destination.
+    return (movement.getSource() is None or movement.getDestination() is None)
+
+class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
+
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    """Input movement list comes from delivery"""
+    delivery = self._applied_rule.getDefaultCausalityValue()
+    if delivery is None:
+      return []
+    else:
+      result = []
+      existing_movement_list = self._applied_rule.objectValues()
+      for movement in delivery.getMovementList(
+        portal_type=delivery.getPortalDeliveryMovementTypeList()):
+        simulation_movement = self._getDeliveryRelatedSimulationMovement(movement)
+        if simulation_movement is None or \
+               simulation_movement in existing_movement_list:
+          result.append(movement)
+      return result
+
+  def _getDeliveryRelatedSimulationMovement(self, delivery_movement):
+    """Helper method to get the delivery related simulation movement.
+    This method is more robust than simply calling getDeliveryRelatedValue
+    which will not work if simulation movements are not indexed.
+    """
+    simulation_movement = delivery_movement.getDeliveryRelatedValue()
+    if simulation_movement is not None:
+      return simulation_movement
+    # simulation movement was not found, maybe simply because it's not indexed
+    # yet. We'll look in the simulation tree and try to find it anyway before
+    # creating another simulation movement.
+    # Try to find the one from trade model rule, which is the most common case
+    # where we may expand again before indexation of simulation movements is
+    # finished.
+    delivery = delivery_movement.getExplanationValue()
+    for movement in delivery.getMovementList():
+      related_simulation_movement = movement.getDeliveryRelatedValue()
+      if related_simulation_movement is not None:
+        for applied_rule in related_simulation_movement.contentValues():
+          for simulation_movement in applied_rule.contentValues():
+            if simulation_movement.getDeliveryValue() == delivery_movement:
+              return simulation_movement
+    return None

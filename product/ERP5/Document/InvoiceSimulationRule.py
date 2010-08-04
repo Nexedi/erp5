@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -21,24 +22,76 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+"""
+XXX This file is experimental for new simulation implementation, and
+will replace InvoicingRule.
+"""
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5Legacy.Document.InvoicingRule import InvoicingRule
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
+from Products.ERP5.mixin.movement_collection_updater import \
+     MovementCollectionUpdaterMixin
 
-class InvoiceSimulationRule(InvoicingRule):
+class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-    Invoice Simulation Rule expand simulation created by a order or delivery rule.
+  Invoicing Rule expand simulation created by a order or delivery rule.
   """
-
   # CMF Type Definition
   meta_type = 'ERP5 Invoice Simulation Rule'
   portal_type = 'Invoice Simulation Rule'
-  add_permission = Permissions.AddPortalContent
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IRule,
+                            interfaces.IDivergenceController,
+                            interfaces.IMovementCollectionUpdater,)
+
+  # Default Properties
+  property_sheets = (
+    PropertySheet.Base,
+    PropertySheet.XMLObject,
+    PropertySheet.CategoryCore,
+    PropertySheet.DublinCore,
+    PropertySheet.Task,
+    PropertySheet.Predicate,
+    PropertySheet.Reference,
+    PropertySheet.Version,
+    PropertySheet.Rule
+    )
+
+  def _getMovementGenerator(self, context):
+    """
+    Return the movement generator to use in the expand process
+    """
+    return InvoicingRuleMovementGenerator(applied_rule=context, rule=self)
+
+  def _getMovementGeneratorContext(self, context):
+    """
+    Return the movement generator context to use for expand
+    """
+    return context
+
+  def _getMovementGeneratorMovementList(self, context, movement_list=None, rounding=None):
+    """
+    Return the movement lists to provide to the movement generator
+    """
+    return []
+
+  def _isProfitAndLossMovement(self, movement):
+    # For a kind of trade rule, a profit and loss movement lacks source
+    # or destination.
+    return (movement.getSource() is None or movement.getDestination() is None)
+
+class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
+
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    return [self._applied_rule.getParentValue(),]

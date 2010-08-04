@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -24,125 +25,118 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+"""
+XXX This file is experimental for new simulation implementation, and
+will replace PaymentRule.
+"""
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5Legacy.Document.Rule import Rule
-from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
+from Products.ERP5.mixin.movement_collection_updater import \
+     MovementCollectionUpdaterMixin
 
-class PaymentSimulationRule(Rule, PredicateMatrix):
+class PaymentSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-  Payment Simulation Rule generates payment simulation movements from
-  accounting / invoice transaction simulation movements.
+  Payment Rule generates payment simulation movement from invoice
+  transaction simulation movements.
   """
-
   # CMF Type Definition
   meta_type = 'ERP5 Payment Simulation Rule'
   portal_type = 'Payment Simulation Rule'
-  add_permission = Permissions.AddPortalContent
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def _generatePrevisionList(self, applied_rule, **kw):
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IRule,
+                            interfaces.IDivergenceController,
+                            interfaces.IMovementCollectionUpdater,)
+
+  # Default Properties
+  property_sheets = (
+    PropertySheet.Base,
+    PropertySheet.XMLObject,
+    PropertySheet.CategoryCore,
+    PropertySheet.DublinCore,
+    PropertySheet.Task,
+    PropertySheet.Predicate,
+    PropertySheet.Reference,
+    PropertySheet.Version,
+    PropertySheet.Rule
+    )
+
+  def _getMovementGenerator(self, context):
     """
-    Generate a list of dictionaries, that contain calculated content of
-    current Simulation Movements in applied rule.
-    based on its context (parent movement, delivery, configuration ...)
-
-    These previsions are returned as dictionaries.
-
-    * source and destination (i.e. account) are provided by rule cells.
-    * start_date, stop_date and quantity are calculated according to
-      payment conditions.
+    Return the movement generator to use in the expand process
     """
-    # Find an input movement and using Payment Conditions.
-    # XXX we also need to support local Payment Conditions, that are not
-    # provided by BPM.
-    movement_and_tuple_list = self._getInputMovementAndPathTupleList(
-        applied_rule)
-    input_movement = movement_and_tuple_list[0][0]
+    return PaymentRuleMovementGenerator(applied_rule=context, rule=self)
 
-    payment_condition_list = []
-
-    # try to find local payment conditions from the upper level delivery
-    rule = applied_rule
-    movement = input_movement
-    delivery = movement.getDeliveryValue()
-    while delivery is None and not(rule.isRootAppliedRule()):
-      rule = movement.getParentValue()
-      movement = rule.getParentValue()
-      delivery = movement.getDeliveryValue()
-    if delivery is not None:
-      payment_condition_list = delivery.getPaymentConditionValueList()
-
-    # try to find payment conditions in specialised trade conditions
-    if len(payment_condition_list) == 0:
-      specialise = input_movement.getSpecialiseValue()
-      if specialise is None and delivery is not None:
-        specialise = delivery.getSpecialiseValue()
-      if specialise is not None:
-        payment_condition_list = specialise.getPaymentConditionValueList()
-
-    # try to use payment conditions in BPM configuration
-    if len(payment_condition_list) == 0:
-      payment_condition_list = [x[1] for x in movement_and_tuple_list if x[1] is not None]
-
-    kw = self._getExpandablePropertyDict(applied_rule, input_movement, None)
-    prevision_list = []
-
-    # Find a matching cell
-    cell = self._getMatchingCell(input_movement)
-
-    if cell is not None : # else, we do nothing
-      for payment_condition in payment_condition_list:
-        aggregated_ammount_list = payment_condition.getAggregatedAmountList(
-            input_movement, movement_list=[input_movement])
-        assert len(aggregated_ammount_list) == 1
-        aggregated_ammount = aggregated_ammount_list[0]
-        start_date = aggregated_ammount.getStartDate()
-        stop_date = aggregated_ammount.getStopDate()
-        quantity = aggregated_ammount.getQuantity()
-        payment_mode = payment_condition.getPaymentMode()
-
-        # one for payable
-        prevision_line = kw.copy()
-        prevision_line.update(
-          start_date=start_date,
-          stop_date=stop_date,
-          source=input_movement.getSource(),
-          destination=input_movement.getDestination(),
-          payment_mode=payment_mode,
-          quantity=-quantity
-          )
-        prevision_list.append(prevision_line)
-        # one for cash, bank etc.
-        payment_rule_cell_line_list = cell.objectValues()
-        assert len(payment_rule_cell_line_list) == 1
-        payment_rule_cell_line = payment_rule_cell_line_list[0]
-        prevision_line = kw.copy()
-        prevision_line.update(
-          start_date=start_date,
-          stop_date=stop_date,
-          source=payment_rule_cell_line.getSource(),
-          destination=payment_rule_cell_line.getDestination(),
-          payment_mode=payment_mode,
-          quantity=quantity
-          )
-        prevision_list.append(prevision_line)
-    return prevision_list
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, **kw):
-    """Expands the current movement downward.
+  def _getMovementGeneratorContext(self, context):
     """
-    return Rule._expand(self, applied_rule, **kw)
-
-  # Matrix related
-  security.declareProtected( Permissions.ModifyPortalContent,
-                              'newCellContent' )
-  def newCellContent(self, id, portal_type='Accounting Rule Cell', **kw):
-    """Overriden to specify default portal type
+    Return the movement generator context to use for expand
     """
-    return self.newContent(id=id, portal_type=portal_type, **kw)
+    return context
+
+  def _getMovementGeneratorMovementList(self, context):
+    """
+    Return the movement lists to provide to the movement generator
+    """
+    return []
+
+  def _isProfitAndLossMovement(self, movement):
+    # For a kind of trade rule, a profit and loss movement lacks source
+    # or destination.
+    return (movement.getSource() is None or movement.getDestination() is None)
+
+class PaymentRuleMovementGenerator(MovementGeneratorMixin):
+  def getGeneratedMovementList(self, movement_list=None, rounding=False):
+    """
+    Input movement list comes from parent.
+
+    XXX This implementation using Business Path, not Payment Condition.
+    """
+    ret = []
+    rule = self._rule
+    for input_movement, business_path in self \
+            ._getInputMovementAndPathTupleList(movement_list=movement_list, rounding=rounding):
+      # Payment Rule does not work with Business Path
+      if business_path is None:
+        continue
+      # Since we need to consider business_path only for bank movement,
+      # not for payable movement, we pass None as business_path here.
+      kw = self._getPropertyAndCategoryList(input_movement, None, rule)
+      kw.update({'order':None, 'delivery':None})
+      quantity = kw.pop('quantity', 0)
+      efficiency = business_path.getEfficiency()
+      if efficiency:
+        quantity *= efficiency
+      start_date = business_path.getExpectedStartDate(input_movement)
+      if start_date is not None:
+        kw.update({'start_date':start_date})
+      stop_date = business_path.getExpectedStopDate(input_movement)
+      if stop_date is not None:
+        kw.update({'stop_date':stop_date})
+      # one for payable
+      simulation_movement = self._applied_rule.newContent(
+        portal_type=RuleMixin.movement_type,
+        temp_object=True,
+        quantity=-quantity,
+        **kw)
+      ret.append(simulation_movement)
+      # one for bank
+      kw.update({'source':business_path.getSource(),
+                 'destination':business_path.getDestination(),})
+      simulation_movement = self._applied_rule.newContent(
+        portal_type=RuleMixin.movement_type,
+        temp_object=True,
+        quantity=quantity,
+        **kw)
+      ret.append(simulation_movement)
+    return ret
+
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    return [self._applied_rule.getParentValue(),]
