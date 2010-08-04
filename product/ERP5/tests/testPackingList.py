@@ -552,16 +552,16 @@ class TestPackingListMixin(TestOrderMixin):
       simulation_movement.getDeliveryValue().edit(quantity=self.default_quantity-1)
       simulation_movement.expand()
 
-  def stepModifySimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
+  def stepModifySimulationLineStopDate(self,sequence=None, sequence_list=None, **kw):
     """
-      Check if simulation movement are disconnected
+    Modify simulation line stop date
     """
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
     resource_list = sequence.get('resource_list')
     for simulation_movement in simulation_movement_list:
-      simulation_movement.recordProperty('start_date')
-      simulation_movement.edit(start_date=self.datetime+15)
+      simulation_movement.recordProperty('stop_date')
+      simulation_movement.edit(stop_date=self.datetime+15)
       simulation_movement.expand()
 
   def stepModifyOneSimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
@@ -620,6 +620,14 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     self._solveDeliveryGroupDivergence(packing_list, 'start_date',
+                                  packing_list.getRelativeUrl())
+
+  def stepUnifyStopDateWithDecision(self,sequence=None, sequence_list=None, **kw):
+    """
+      Solve divergence on stop date using unify
+    """
+    packing_list = sequence.get('packing_list')
+    self._solveDeliveryGroupDivergence(packing_list, 'stop_date',
                                   packing_list.getRelativeUrl())
 
   def stepUnifyStartDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
@@ -1156,7 +1164,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepCreateNotVariatedResource \
                       stepModifySimulationLineQuantityForMergedLine \
                       stepModifyOneSimulationLineResource \
-                      stepModifySimulationLineStartDate \
+                      stepModifySimulationLineStopDate \
                       stepTic \
                       stepCheckPackingListIsDiverged \
                       stepAcceptDecisionQuantity \
@@ -1165,7 +1173,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepAcceptDecisionResource \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepUnifyStartDateWithDecision \
+                      stepUnifyStopDateWithDecision \
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
