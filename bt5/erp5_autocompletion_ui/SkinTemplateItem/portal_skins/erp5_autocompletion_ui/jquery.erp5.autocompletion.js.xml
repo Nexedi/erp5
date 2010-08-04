@@ -94,7 +94,7 @@ $(function() {\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>jquery.erp5.js</string> </value>
+            <value> <string>jquery.erp5.autocompletion.js</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
