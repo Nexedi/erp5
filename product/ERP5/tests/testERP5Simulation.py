@@ -51,9 +51,6 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     for rule in portal_rules.objectValues(portal_type='Order Root Simulation Rule'):
       if rule.getValidationState() == 'validated':
         rule.invalidate()
-    for rule in portal_rules.objectValues(portal_type='Invoice Simulation Rule'):
-      if rule.getValidationState() == 'validated':
-        rule.invalidate()
 
     self.validateNewRules()
     self.setUpBusinessProcess()
