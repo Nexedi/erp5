@@ -29,12 +29,12 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.OrderBuilder import OrderBuilder, \
-        SelectMethodError
+from Products.ERP5.Document.GeneratedDeliveryBuilder import \
+      GeneratedDeliveryBuilder,  SelectMethodError
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
 
-class SimulatedDeliveryBuilder(OrderBuilder):
+class SimulatedDeliveryBuilder(GeneratedDeliveryBuilder):
   """
     Delivery Builder objects allow to gather multiple Simulation Movements
     into a single Delivery.
@@ -104,7 +104,7 @@ class SimulatedDeliveryBuilder(OrderBuilder):
       defines how to query all Simulation Movements which meet certain criteria
       (including the above path path definition).
 
-      First, select movement matching to criteria define on DeliveryBuilder
+      First, select movement matching to criteria define on Delivery Builder
       Then, call script simulation_select_method to restrict movement_list
     """
     movement_list = []
@@ -151,7 +151,7 @@ class SimulatedDeliveryBuilder(OrderBuilder):
       Create the relation between simulation movement
       and delivery movement.
     """
-    OrderBuilder._setDeliveryMovementProperties(
+    GeneratedDeliveryBuilder._setDeliveryMovementProperties(
                             self, delivery_movement,
                             simulation_movement, property_dict,
                             update_existing_movement=update_existing_movement,
@@ -163,7 +163,7 @@ class SimulatedDeliveryBuilder(OrderBuilder):
       # Attributes of delivery_movement must not be modified here.
       # Because we can not change values modified by the user.
       # Delivery will probably diverge now, but this is not the job of
-      # DeliveryBuilder to resolve such problem.
+      # Delivery Builder to resolve such problem.
       # Use Solver instead.
       simulation_movement.edit(delivery_ratio=0)
     else:
@@ -336,8 +336,8 @@ class SimulatedDeliveryBuilder(OrderBuilder):
 
   def _createDelivery(self, delivery_module, movement_list, activate_kw):
     """
-      Refer to the docstring in OrderBuilder.
-      Unlike OrderBuilder, DeliveryBuilder needs to respect
+      Refer to the docstring in GeneratedDeliveryBuilder.
+      Unlike GeneratedDeliveryBuilder, SimulatedDeliveryBuilder needs to respect
       existing relationship.
     """
     try:
@@ -372,8 +372,8 @@ class SimulatedDeliveryBuilder(OrderBuilder):
 
   def _createDeliveryLine(self, delivery, movement_list, activate_kw):
     """
-      Refer to the docstring in OrderBuilder.
-      Unlike OrderBuilder, DeliveryBuilder needs to respect
+      Refer to the docstring in GeneratedDeliveryBuilder.
+      Unlike GeneratedDeliveryBuilder, SimulatedDeliveryBuilder needs to respect
       existing relationship.
     """
     try:
@@ -411,8 +411,8 @@ class SimulatedDeliveryBuilder(OrderBuilder):
   def _createDeliveryCell(self, delivery_line, movement, activate_kw, 
                           base_id, cell_key):
     """
-      Refer to the docstring in OrderBuilder.
-      Unlike OrderBuilder, DeliveryBuilder needs to respect
+      Refer to the docstring in GeneratedDeliveryBuilder.
+      Unlike GeneratedDeliveryBuilder, SimulatedDeliveryBuilder needs to respect
       existing relationship.
     """
     try:
