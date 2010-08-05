@@ -178,7 +178,6 @@ class RuleMixin:
 
     kw -- XXX-JPS probably wrong interface specification
     """
-    portal_types = getToolByName(self, 'portal_types')
     if id is None:
       id = context.generateNewId()
     if getattr(aq_base(context), id, None) is None:
