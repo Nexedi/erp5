@@ -158,6 +158,11 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     # XXX Returning the delivery list is probably not necessary
     return delivery_list
 
+  def getRelatedBusinessLinkValueList(self):
+    return self.getDeliveryBuilderRelatedValueList(
+        portal_type='Business Link') + self.getOrderBuilderRelatedValueList(
+        portal_type='Business Link')
+
   def callBeforeBuildingScript(self):
     """
       Call a script on the module, for example, to remove some
