@@ -509,9 +509,6 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
 
     return divergence_list
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isFrozen')
-
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanation')
   def getExplanation(self):
