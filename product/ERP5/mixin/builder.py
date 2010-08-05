@@ -159,9 +159,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     return delivery_list
 
   def getRelatedBusinessLinkValueList(self):
-    return self.getDeliveryBuilderRelatedValueList(
-        portal_type='Business Link') + self.getOrderBuilderRelatedValueList(
-        portal_type='Business Link')
+    return self.getDeliveryBuilderRelatedValueList(portal_type='Business Link') 
 
   def callBeforeBuildingScript(self):
     """
