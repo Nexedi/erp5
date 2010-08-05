@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="SolverTypeInformation" module="Products.ERP5Type.Document.SolverTypeInformation"/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -30,62 +30,37 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple>
-                <string>conflicting_solver/portal_solvers/Accept Solver</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>configuration_form_id</string> </key>
-            <value> <string>Solver_viewConfigurationFormBox</string> </value>
-        </item>
-        <item>
-            <key> <string>configuration_groupable</string> </key>
             <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>configuration_property_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>content_icon</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>document_icon.gif</string> </value>
         </item>
         <item>
-            <key> <string>contributor_list</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Solver Process</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Trade Model Solver solves a quantity divergence on an delivery line by accepting the decision and updating a simulation movement, and also updates trade model related movements.\n
-It must be used as a solver for quantity divergence on input lines.</string> </value>
+            <value> <string>A Solver Process is a document which stored a collection of solver decisions and provides a persistency area to solvers which are in charge of implementing the decision.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addTradeModelSolver</string> </value>
+            <value> <string>addSolverProcess</string> </value>
+        </item>
+        <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
-              <tuple>
-                <string>target_solver</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Trade Model Solver</string> </value>
+            <value> <string>Solver Process</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -94,38 +69,14 @@ It must be used as a solver for quantity divergence on input lines.</string> </v
             </value>
         </item>
         <item>
-            <key> <string>line_exclusive</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>line_groupable</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
             <key> <string>permission</string> </key>
             <value>
               <none/>
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Solver Type</string> </value>
-        </item>
-        <item>
-            <key> <string>process_exclusive</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>solver_action_title</string> </key>
-            <value> <string>Accept values from Invoice Line and recalculate Trade Model related Invoice Lines</string> </value>
-        </item>
-        <item>
-            <key> <string>tested_property</string> </key>
-            <value>
-              <tuple>
-                <string>quantity</string>
-              </tuple>
-            </value>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

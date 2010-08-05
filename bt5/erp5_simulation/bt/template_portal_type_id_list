@@ -1,13 +1,11 @@
-Accept Solver
-Adopt Solver
 Category Membership Divergence Tester
 DateTime Divergence Tester
 Float Divergence Tester
 Net Converted Quantity Divergence Tester
-Production Reduction Solver
-Quantity Cancel Solver
-Quantity Split Solver
+Solver Decision
+Solver Process
+Solver Process Tool
+Solver Tool
+Solver Type
 String Divergence Tester
-Trade Model Solver
-Unify Solver
 Variation Divergence Tester

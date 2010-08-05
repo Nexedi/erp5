@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="SolverTypeInformation" module="Products.ERP5Type.Document.SolverTypeInformation"/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -29,34 +29,16 @@
             </value>
         </item>
         <item>
-            <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
-        </item>
-        <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
             <key> <string>description</string> </key>
-            <value> <string>The FIFO solver reduces delivered quantity by reducing the quantity of simulation movements from the last order.</string> </value>
+            <value> <string>An abstract Portal Type which is useful to generate Solvers (ex. Target Solvers) and to keep all common properties in a central place. Solver properties include various user interface information, configuration forms, and possibly properties which help to find out incompatible divergence resolution decisions.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addFIFODeliverySolver</string> </value>
-        </item>
-        <item>
-            <key> <string>group_list</string> </key>
-            <value>
-              <tuple>
-                <string>delivery_solver</string>
-              </tuple>
-            </value>
+            <value> <string>addSolverTypeInformation</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>FIFO Delivery Solver</string> </value>
+            <value> <string>Solver Type</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -72,11 +54,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Solver Type</string> </value>
-        </item>
-        <item>
-            <key> <string>solver_action_title</string> </key>
-            <value> <string>First In, First Out</string> </value>
+            <value> <string>Base Type</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="SolverTypeInformation" module="Products.ERP5Type.Document.SolverTypeInformation"/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -33,30 +33,25 @@
             <value> <int>1</int> </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>content_icon</string> </key>
+            <value> <string>document_icon.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Solver Decision</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Minimise Price solver reduces delivered quantity by reducing the quantity of simulation movements from the last order.</string> </value>
+            <value> <string>A Solver Decision defines which delivery movements are solved using which solvers. Solver Dcision will support all property sheets which are supported also by a Target Solver, so that it can hold decision information.\r\n
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addMinimisePriceDeliverySolver</string> </value>
-        </item>
-        <item>
-            <key> <string>group_list</string> </key>
-            <value>
-              <tuple>
-                <string>delivery_solver</string>
-              </tuple>
-            </value>
+            <value> <string>addSolverDecision</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Minimise Price Delivery Solver</string> </value>
+            <value> <string>Solver Decision</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -69,14 +64,6 @@
             <value>
               <none/>
             </value>
-        </item>
-        <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Solver Type</string> </value>
-        </item>
-        <item>
-            <key> <string>solver_action_title</string> </key>
-            <value> <string>Minimise Price</string> </value>
         </item>
       </dictionary>
     </pickle>

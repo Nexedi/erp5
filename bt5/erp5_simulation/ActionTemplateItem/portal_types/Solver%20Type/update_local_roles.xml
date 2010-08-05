@@ -19,13 +19,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_view</string>
+                <string>action_type/object_action</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
+            <value> <string>object_action</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
@@ -43,7 +43,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>view</string> </value>
+            <value> <string>update_local_roles</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>View</string> </value>
+            <value> <string>Update Local Roles</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -83,7 +83,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/TargetSolver_view</string> </value>
+            <value> <string>string:${object_url}/updateRoleMapping</string> </value>
         </item>
       </dictionary>
     </pickle>

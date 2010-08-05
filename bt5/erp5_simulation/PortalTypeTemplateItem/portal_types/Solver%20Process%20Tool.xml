@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="SolverTypeInformation" module="Products.ERP5Type.Document.SolverTypeInformation"/>
+        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -30,33 +30,39 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>content_icon</string> </key>
+            <value> <string>folder_icon.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_meta_type</string> </key>
+            <value> <string>ERP5 Solver Tool</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The LIFO solver reduces delivered quantity by reducing the quantity of simulation movements from the last order.</string> </value>
+            <value> <string>Solver Process Tool contains Solver Processes</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addLIFODeliverySolver</string> </value>
+            <value> <string>addFolder</string> </value>
+        </item>
+        <item>
+            <key> <string>filter_content_types</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>delivery_solver</string>
+                <string>module</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>LIFO Delivery Solver</string> </value>
+            <value> <string>Solver Process Tool</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -71,12 +77,8 @@
             </value>
         </item>
         <item>
-            <key> <string>portal_type</string> </key>
-            <value> <string>Solver Type</string> </value>
-        </item>
-        <item>
-            <key> <string>solver_action_title</string> </key>
-            <value> <string>Last In, First Out</string> </value>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -92,7 +94,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -112,7 +114,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <string>erp5_ui</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

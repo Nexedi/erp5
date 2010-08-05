@@ -40,15 +40,11 @@ Payment Simulation Rule | Float Divergence Tester
 Payment Simulation Rule | Net Converted Quantity Divergence Tester
 Payment Simulation Rule | String Divergence Tester
 Payment Simulation Rule | Variation Divergence Tester
-Solver Process | Accept Solver
-Solver Process | Adopt Solver
-Solver Process | FIFO Delivery Solver
-Solver Process | LIFO Delivery Solver
-Solver Process | Minimise Price Delivery Solver
-Solver Process | Production Reduction Solver
-Solver Process | Quantity Split Solver
-Solver Process | Trade Model Solver
-Solver Process | Unify Solver
+Solver Process Tool | Solver Process
+Solver Process | Solver Decision
+Solver Tool | Solver Type
+Solver Type | Action Information
+Solver Type | Role Information
 Trade Model Simulation Rule | Category Membership Divergence Tester
 Trade Model Simulation Rule | DateTime Divergence Tester
 Trade Model Simulation Rule | Float Divergence Tester

@@ -56,15 +56,17 @@
   <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Solver Process">
-  <item>Accept Solver</item>
-  <item>Adopt Solver</item>
-  <item>FIFO Delivery Solver</item>
-  <item>LIFO Delivery Solver</item>
-  <item>Minimise Price Delivery Solver</item>
-  <item>Production Reduction Solver</item>
-  <item>Quantity Split Solver</item>
-  <item>Trade Model Solver</item>
-  <item>Unify Solver</item>
+  <item>Solver Decision</item>
+ </portal_type>
+ <portal_type id="Solver Process Tool">
+  <item>Solver Process</item>
+ </portal_type>
+ <portal_type id="Solver Tool">
+  <item>Solver Type</item>
+ </portal_type>
+ <portal_type id="Solver Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
  </portal_type>
  <portal_type id="Trade Model Simulation Rule">
   <item>Category Membership Divergence Tester</item>
