@@ -55,6 +55,12 @@
             </value>
         </item>
         <item>
+            <key> <string>content_icon</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>contributor_list</string> </key>
             <value>
               <tuple/>
@@ -62,7 +68,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The Trade Model Solver solves the divergence by accepting the decision and updating a simulation movement, and also updates trade model related movements.</string> </value>
+            <value> <string>The Trade Model Solver solves a quantity divergence on an delivery line by accepting the decision and updating a simulation movement, and also updates trade model related movements.\n
+It must be used as a solver for quantity divergence on input lines.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
