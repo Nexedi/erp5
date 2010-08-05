@@ -1,0 +1,30 @@
+<workflow_chain>
+ <chain>
+  <type>Accept Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Adopt Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Reduction Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Quantity Cancel Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Quantity Split Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Trade Model Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Unify Solver</type>
+  <workflow>solver_workflow</workflow>
+ </chain>
+</workflow_chain>
