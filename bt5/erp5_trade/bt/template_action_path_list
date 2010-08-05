@@ -81,9 +81,7 @@ Purchase Order | view
 Purchase Order | view_stock
 Purchase Order | view_trade_model
 Purchase Order | view_trade_model_line_list
-Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Cell | view
-Purchase Packing List Line | apparel_fabric_item_fast_input
 Purchase Packing List Line | profile_view
 Purchase Packing List Line | quantity_view
 Purchase Packing List Line | view
