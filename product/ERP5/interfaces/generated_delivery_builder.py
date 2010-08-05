@@ -33,7 +33,7 @@ Products.ERP5.interfaces.builder
 from zope.interface import Interface
 
  
-class IDeliveryBuilder(Interface):
+class IGeneratedDeliveryBuilder(Interface):
   """
   """
   
