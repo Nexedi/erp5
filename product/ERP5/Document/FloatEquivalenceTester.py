@@ -85,8 +85,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.
     # Maybe, but beware of default values of quantity when doing so
-    absolute_tolerance_min = self.getProperty('quantity_range_min') or \
-                             self.getProperty('quantity')
+    absolute_tolerance_min = self.getProperty('quantity_range_min')
     if absolute_tolerance_min is not None and \
        delta < absolute_tolerance_min:
       return (
@@ -94,8 +93,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
         'The difference of ${property_name} between decision and prevision is less than ${value}.',
         dict(property_name=tested_property,
              value=absolute_tolerance_min))
-    absolute_tolerance_max = self.getProperty('quantity_range_max') or \
-                             self.getProperty('quantity')
+    absolute_tolerance_max = self.getProperty('quantity_range_max')
     if absolute_tolerance_max is not None and \
        delta > absolute_tolerance_max:
       return (
@@ -142,8 +140,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
       base = prevision_value
 
     if base is not None:
-      relative_tolerance_min = self.getProperty('tolerance_range_min') or \
-                               self.getProperty('tolerance')
+      relative_tolerance_min = self.getProperty('tolerance_range_min')
       if relative_tolerance_min is not None and \
              delta < relative_tolerance_min * base:
         return (
@@ -151,8 +148,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
             'The difference of ${property_name} between decision and prevision is less than ${value} times of the prevision value.',
             dict(property_name=tested_property,
                  value=relative_tolerance_min))
-      relative_tolerance_max = self.getProperty('tolerance_range_max') or \
-                               self.getProperty('tolerance')
+      relative_tolerance_max = self.getProperty('tolerance_range_max')
       if relative_tolerance_max is not None and \
              delta < relative_tolerance_max * base:
         return (
