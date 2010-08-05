@@ -32,12 +32,12 @@ Products.ERP5.interfaces.builder
 
 from zope.interface import Interface
     
-class ISimulatedDeliveryBuilder(Interface):
+class IGeneratedSimulatedDeliveryBuilder(Interface):
   """
   """
   
-  def build(business_link=None, explanation=None,
-            input_movement_list=None, existing_delivery_list=None):
+  def build(input_movement_list=None, existing_delivery_list=None,
+            business_link=None, explanation=None,):
     """
     business_link -- 
 
