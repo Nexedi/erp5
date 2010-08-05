@@ -134,5 +134,8 @@ class PaymentRuleMovementGenerator(MovementGeneratorMixin):
       ret.append(simulation_movement)
     return ret
 
+  def _getUpdatePropertyDict(self, input_movement):
+    return {'delivery': None}
+
   def _getInputMovementList(self, movement_list=None, rounding=None):
     return [self._applied_rule.getParentValue(),]

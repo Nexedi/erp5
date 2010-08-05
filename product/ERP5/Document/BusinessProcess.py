@@ -704,6 +704,11 @@ class BusinessProcess(Path, XMLObject):
       id_index += 1
       movement = newTempMovement(trade_model_path, '%s_%s' % (base_id, id_index))
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
+      try:
+        kw['trade_phase'], = \
+          set(trade_phase).intersection(trade_model_path.getTradePhaseList())
+      except ValueError:
+        pass
       kw.update(update_property_dict)
       movement._edit(**kw)
       business_link = self.getBusinessLinkValueList(trade_phase=trade_phase, context=movement)
@@ -713,6 +718,9 @@ class BusinessProcess(Path, XMLObject):
 
     # result can not be empty
     if not result: raise ValueError("A Business Process can not erase amounts")
+
+    if not explanation.getSpecialiseValue().getSameTotalQuantity():
+      return result
 
     # Sort movement list and make sure the total is equal to total_quantity
     total_quantity = amount.getQuantity()
@@ -799,10 +807,7 @@ class BusinessProcess(Path, XMLObject):
     property_dict['causality'] = trade_model_path.getRelativeUrl() # XXX-JPS Will not work if we do not use real object
     #(ie. if we use kind of 'temp')
 
-    # Set trade_phase to the trade phase of trade_model_path
-    property_dict['trade_phase'] = trade_model_path.getTradePhase()
-    
-    return property_dict 
+    return property_dict
 
   # IBusinessProcess global API
   security.declareProtected(Permissions.AccessContentsInformation, 'isCompleted')

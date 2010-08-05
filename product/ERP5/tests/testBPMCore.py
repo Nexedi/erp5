@@ -76,8 +76,55 @@ class TestBPMMixin(ERP5TypeTestCase):
   def createBusinessProcess(self, **kw):
     module = self.portal.getDefaultModule(
         portal_type=self.business_process_portal_type)
-    return module.newContent(portal_type=self.business_process_portal_type,
-        **kw)
+    business_process =  module.newContent(
+      portal_type=self.business_process_portal_type, **kw)
+    trade_phase = self.getCategoryTool().trade_phase
+    self.createTradeModelPath(business_process,
+      reference='default_path',
+      trade_phase_value_list=[x for x in trade_phase.default.objectValues()
+                              if x.getId() != 'accounting'],
+      trade_date='trade_phase/default/order')
+    kw = dict(business_process=business_process,
+              trade_phase='default/accounting',
+              trade_date='trade_phase/default/order',
+              membership_criterion_base_category='resource_use')
+    self.createTradeModelPath(reference='acounting_tax1',
+      efficiency=-1,
+      source_value=self.receivable_account,
+      destination_value=self.payable_account,
+      membership_criterion_category='resource_use/use/tax',
+      **kw)
+    self.createTradeModelPath(reference='acounting_tax2',
+      efficiency=1,
+      source_value=self.collected_tax_account,
+      destination_value=self.refundable_tax_account,
+      membership_criterion_category='resource_use/use/tax',
+      **kw)
+    self.createTradeModelPath(reference='acounting_discount1',
+      efficiency=-1,
+      source_value=self.receivable_account,
+      destination_value=self.payable_account,
+      membership_criterion_category='resource_use/use/discount',
+      **kw)
+    self.createTradeModelPath(reference='acounting_discount2',
+      efficiency=1,
+      source_value=self.income_account,
+      destination_value=self.expense_account,
+      membership_criterion_category='resource_use/use/discount',
+      **kw)
+    self.createTradeModelPath(reference='acounting_normal1',
+      efficiency=-1,
+      source_value=self.receivable_account,
+      destination_value=self.payable_account,
+      membership_criterion_category='resource_use/use/normal',
+      **kw)
+    self.createTradeModelPath(reference='acounting_normal2',
+      efficiency=1,
+      source_value=self.income_account,
+      destination_value=self.expense_account,
+      membership_criterion_category='resource_use/use/normal',
+      **kw)
+    return business_process
 
   @reindex
   def createBusinessLink(self, business_process=None, **kw):
@@ -103,7 +150,6 @@ class TestBPMMixin(ERP5TypeTestCase):
         portal_type='Applied Rule')
     return applied_rule.newContent(portal_type='Simulation Movement')
 
-  @reindex
   def createAndValidateAccount(self, account_id, account_type):
     account_module = self.portal.account_module
     account = account_module.newContent(portal_type='Account',
@@ -113,7 +159,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     account.validate()
     return account
 
-  def createInvoiceTransactionRule(self):
+  def createAndValidateAccounts(self):
     self.receivable_account = self.createAndValidateAccount('receivable',
         'asset/receivable')
     self.payable_account = self.createAndValidateAccount('payable',
@@ -126,90 +172,17 @@ class TestBPMMixin(ERP5TypeTestCase):
         'refundable_tax',
         'asset/receivable/refundable_vat')
 
-    itr = self.portal.portal_rules.newContent(
-                        portal_type='Invoice Transaction Simulation Rule',
-                        reference='default_invoice_transaction_rule',
-                        id='test_invoice_transaction_simulation_rule',
-                        title='Transaction Simulation Rule',
-                        test_method_id=
-                        'SimulationMovement_testInvoiceTransactionSimulationRule',
-                        version=100)
-    predicate = itr.newContent(portal_type='Predicate',)
-    predicate.edit(
-            string_index='use',
-            title='tax',
-            int_index=1,
-            membership_criterion_base_category='resource_use',
-            membership_criterion_category='resource_use/use/tax')
-    predicate = itr.newContent(portal_type='Predicate',)
-    predicate.edit(
-            string_index='use',
-            title='discount',
-            int_index=2,
-            membership_criterion_base_category='resource_use',
-            membership_criterion_category='resource_use/use/discount')
-    predicate = itr.newContent(portal_type='Predicate',)
-    predicate.edit(
-            string_index='use',
-            title='normal',
-            int_index=3,
-            membership_criterion_base_category='resource_use',
-            membership_criterion_category='resource_use/use/normal')
-    transaction.commit()
-    self.tic()
-    accounting_rule_cell_list = itr.contentValues(
-                            portal_type='Accounting Rule Cell')
-    self.assertEquals(3, len(accounting_rule_cell_list))
-    tax_rule_cell = itr._getOb("movement_0")
-    self.assertEquals(tax_rule_cell.getTitle(), 'tax')
-    tax_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.receivable_account,
-                         destination_value=self.payable_account,
-                         quantity=-1)
-    tax_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.collected_tax_account,
-                         destination_value=self.refundable_tax_account,
-                         quantity=1)
-
-    discount_rule_cell = itr._getOb("movement_1")
-    self.assertEquals(discount_rule_cell.getTitle(), 'discount')
-    discount_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.receivable_account,
-                         destination_value=self.payable_account,
-                         quantity=-1)
-    discount_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.income_account,
-                         destination_value=self.expense_account,
-                         quantity=1)
-
-    normal_rule_cell = itr._getOb("movement_2")
-    self.assertEquals(normal_rule_cell.getTitle(), 'normal')
-    normal_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.receivable_account,
-                         destination_value=self.payable_account,
-                         quantity=-1)
-    normal_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.income_account,
-                         destination_value=self.expense_account,
-                         quantity=1)
-
-    itr.validate()
-
   def afterSetUp(self):
     rule_tool = self.getRuleTool()
     for rule in rule_tool.contentValues(
         portal_type=rule_tool.getPortalRuleTypeList()):
-      if rule.getId().startswith('new_') and \
-         rule.getValidationState() != 'validated':
+      if (rule.getId().startswith('new_') and
+          # XXX disable temporarily broken payment rule
+          rule.getId() != 'new_payment_simulation_rule' and
+          rule.getValidationState() != 'validated'):
         rule.validate()
     self.createCategories()
-    self.createInvoiceTransactionRule()
+    self.createAndValidateAccounts()
     self.stepTic()
 
   def beforeTearDown(self):
@@ -220,9 +193,6 @@ class TestBPMMixin(ERP5TypeTestCase):
     for table in 'message', 'message_queue':
       activity_connection.manage_test(
           'delete from %s where processing_node=-2' % table)
-    # remove not needed rules
-    self.portal.portal_rules.manage_delObjects(
-        ids=['test_invoice_transaction_simulation_rule'])
     self.stepTic()
 
 class TestBPMImplementation(TestBPMMixin):

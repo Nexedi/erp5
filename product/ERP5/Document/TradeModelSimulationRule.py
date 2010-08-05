@@ -89,6 +89,11 @@ class TradeModelSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predic
 
 class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
 
+  def _getUpdatePropertyDict(self, input_movement):
+    return {'delivery': None,
+            # XXX shouldn't we create a tester for price instead ?
+            'price': input_movement.getPrice()}
+
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
     trade_model = simulation_movement.asComposedDocument()

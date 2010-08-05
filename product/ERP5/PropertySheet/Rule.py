@@ -43,6 +43,13 @@ class Rule:
            'default'     : [],
            'multivalued' : 1,
            'mode'        : 'w' },
+        {  'id'          : 'same_total_quantity',
+           'default'     : 'Automatically fix quantities of generated movements'
+                           ' so that total quantity is the same as input'
+                           ' movement',
+           'type'        : 'boolean',
+           'default'     : True,
+           'mode'        : 'w' },
   )
 
   _categories = ('trade_phase', )

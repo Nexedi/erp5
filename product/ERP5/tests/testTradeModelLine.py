@@ -229,6 +229,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     sequence.edit(business_link=None, business_link_taxing=business_link)
 
   def stepCreateTradeModelPath(self, sequence):
+    return
     trade_phase = self.getCategoryTool().trade_phase
     sequence.set('trade_model_path_default', self.createTradeModelPath(
       sequence.get('business_process'),
