@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFActivity.ActiveProcess import ActiveProcess
+from Products.ERP5.interfaces.movement import IMovement
 
 class SolverProcess(XMLObject, ActiveProcess):
   """
@@ -216,11 +217,12 @@ class SolverProcess(XMLObject, ActiveProcess):
     if not isinstance(delivery_or_movement, (tuple, list)):
       delivery_or_movement = [delivery_or_movement]
     movement_list = []
+    isMovement = IMovement.providedBy
     for x in delivery_or_movement:
-      if x.isDelivery():
-        movement_list.extend(x.getMovementList())
-      else:
+      if isMovement(x):
         movement_list.append(x)
+      else:
+        movement_list.extend(x.getMovementList())
 
     # We suppose here that movement_list is a list of
     # delivery movements. Let us group decisions in such way
