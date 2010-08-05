@@ -1,3 +1,5 @@
+portal_rules/default_accounting_transaction_root_simulation_rule
+portal_rules/default_accounting_transaction_root_simulation_rule/**
 portal_rules/default_delivery_root_simulation_rule
 portal_rules/default_delivery_root_simulation_rule/**
 portal_rules/default_delivery_rule
