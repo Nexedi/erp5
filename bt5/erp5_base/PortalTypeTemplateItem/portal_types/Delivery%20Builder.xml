@@ -76,7 +76,7 @@ to Simulation Movements related to a limited set of existing Deliveries.</string
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addDeliveryBuilder</string> </value>
+            <value> <string>addGeneratedDeliveryBuilder</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -94,11 +94,15 @@ to Simulation Movements related to a limited set of existing Deliveries.</string
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
