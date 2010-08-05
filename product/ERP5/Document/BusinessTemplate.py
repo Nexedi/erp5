@@ -681,13 +681,13 @@ class BaseTemplateItem(Implicit, Persistent):
       # When relative_url is empty, returns the context
       return context
 
+    __traceback_info__ = (container, key)
     if value is None:
       LOG('BusinessTemplate', WARNING,
           'Could not access object %s' % path)
       if default is not _MARKER:
         return default
-      else:
-        raise KeyError
+      raise KeyError, key
     return value
 
 
