@@ -1,8 +1,0 @@
-DeliveryRootSimulationRule
-DeliverySimulationRule
-InvoiceRootSimulationRule
-InvoiceSimulationRule
-InvoiceTransactionSimulationRule
-OrderRootSimulationRule
-PaymentSimulationRule
-TradeModelSimulationRule
