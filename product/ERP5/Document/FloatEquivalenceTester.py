@@ -36,10 +36,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
 class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
-  """
-  The purpose of this divergence tester is to check the
-  consistency between delivery movement and simulation movement
-  for some specific properties.
+  """ Compare float values, with support for rounding.
   """
   meta_type = 'ERP5 Float Equivalence Tester'
   portal_type = 'Float Equivalence Tester'
@@ -87,6 +84,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     delta = decision_value - prevision_value
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.
+    # Maybe, but beware of default values of quantity when doing so
     absolute_tolerance_min = self.getProperty('quantity_range_min') or \
                              self.getProperty('quantity')
     if absolute_tolerance_min is not None and \
@@ -107,28 +105,48 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
              value=absolute_tolerance_max))
 
     tolerance_base = self.getProperty('tolerance_base')
-    if tolerance_base == 'currency_precision':
-      try:
-        base = prevision_movement.getSectionValue().getPriceCurrencyValue().getBaseUnitQuantity()
-      except AttributeError:
-        base = None
-    elif tolerance_base == 'quantity':
+    base = None
+    if tolerance_base == 'resource_quantity_precision':
+      # Precision of this movement's resource base unit quantity
+      resource = prevision_movement.getResourceValue()
+      if resource is not None:
+        base = resource.getBaseUnitQuantity()
+    if tolerance_base == 'resource_price_precision':
+      # Precision of this movement's resource base unit price
+      base = prevision_movement.getBaseUnitPrice()
+      # fallback to price currency, like in Amount.getPricePrecision
+      if base is None:
+        currency = prevision_movement.getPriceCurrencyValue()
+        if currency is not None:
+          base = currency.getBaseUnitQuantity()
+    if tolerance_base == 'price_currency_precision':
+      # Precision of this movement's price currency
+      currency = prevision_movement.getPriceCurrencyValue()
+      if currency is not None:
+        base = currency.getBaseUnitQuantity()
+    if tolerance_base == 'source_section_currency_precision':
+      # Precision of this source section's accounting currency
+      section = prevision_movement.getSourceSectionValue()
+      if section is not None:
+        currency = section.getPriceCurrencyValue()
+        if currency is not None:
+          base = currency.getBaseUnitQuantity()
+    if tolerance_base == 'destination_section_currency_precision':
+      # Precision of this destination section's accounting currency
+      section = prevision_movement.getDestinationSectionValue()
+      if section is not None:
+        currency = section.getPriceCurrencyValue()
+        if currency is not None:
+          base = currency.getBaseUnitQuantity()
+    elif tolerance_base == 'tested_property':
       base = prevision_value
-    else:
-      base = None
+
     if base is not None:
       relative_tolerance_min = self.getProperty('tolerance_range_min') or \
                                self.getProperty('tolerance')
       if relative_tolerance_min is not None and \
              delta < relative_tolerance_min * base:
-        if tolerance_base == 'price_currency':
-          return (
-            prevision_value, decision_value,
-            'The difference of ${property_name} between decision and prevision is less than ${value} times of the currency precision.',
-            dict(property_name=tested_property,
-                 value=relative_tolerance_min))
-        else:
-          return (
+        return (
             prevision_value, decision_value,
             'The difference of ${property_name} between decision and prevision is less than ${value} times of the prevision value.',
             dict(property_name=tested_property,
@@ -137,14 +155,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                                self.getProperty('tolerance')
       if relative_tolerance_max is not None and \
              delta < relative_tolerance_max * base:
-        if tolerance_base == 'price_currency':
-          return (
-            prevision_value, decision_value,
-            'The difference of ${property_name} between decision and prevision is less than ${value} times of the currency precision.',
-            dict(property_name=tested_property,
-                 value=relative_tolerance_max))
-        else:
-          return (
+        return (
             prevision_value, decision_value,
             'The difference of ${property_name} between decision and prevision is less than ${value} times of the prevision value.',
             dict(property_name=tested_property,
