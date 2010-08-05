@@ -26,8 +26,6 @@
 #
 ##############################################################################
 """
-XXX This file is experimental for new simulation implementation, and
-will replace InvoiceRule.
 """
 
 import zope.interface
@@ -40,8 +38,6 @@ from Products.ERP5.mixin.movement_collection_updater import \
 
 class InvoiceRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-  InvoiceRule and DeliveryRule seems to be identical. Keep it for
-  compatibility only.
   """
   # CMF Type Definition
   meta_type = 'ERP5 Invoice Root Simulation Rule'

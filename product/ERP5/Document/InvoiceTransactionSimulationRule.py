@@ -25,10 +25,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
-"""
-XXX This file is experimental for new simulation implementation, and
-will replace InvoicingRule.
-"""
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
@@ -40,7 +36,8 @@ from Products.ERP5.mixin.movement_collection_updater import \
 from Products.ERP5.Document.PredicateMatrix import PredicateMatrix
 
 
-class InvoiceTransactionSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate, PredicateMatrix):
+class InvoiceTransactionSimulationRule(RuleMixin,
+    MovementCollectionUpdaterMixin, Predicate, PredicateMatrix):
   """
   Invoice Transaction Rule object generates accounting movements for
   each invoice movement based on category membership and other
