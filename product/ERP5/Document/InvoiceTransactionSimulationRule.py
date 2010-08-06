@@ -111,9 +111,10 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
       resource = invoice.getProperty('resource',
                   invoice.getProperty('price_currency', None))
     if resource is None:
+      portal = input_movement.getPortalObject()
       # search the resource on parents simulation movement's deliveries
       simulation_movement = input_movement
-      portal_simulation = input_movement.getPortalObject().portal_simulation
+      portal_simulation = portal.portal_simulation
       while resource is None and \
                   simulation_movement != portal_simulation :
         delivery = simulation_movement.getDeliveryValue()
@@ -129,7 +130,28 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
             resource = order.getProperty('price_currency', None)
         simulation_movement = simulation_movement\
                                     .getParentValue().getParentValue()
-    return {'delivery': None, 'resource': resource, 'price': 1}
+
+    kw = {'delivery': None, 'resource': resource, 'price': 1}
+
+    if resource is not None:
+      #set asset_price on movement when resource is different from price
+      #currency of the source/destination section
+      for arrow in 'destination', 'source':
+        section = input_movement.getDefaultAcquiredValue(arrow + '_section')
+        if section is not None:
+          currency_url = section.getPriceCurrency()
+          if currency_url not in (None, resource):
+            currency = portal.unrestrictedTraverse(currency_url)
+            exchange_ratio = currency.getPrice(
+              context=input_movement.asContext(
+                categories=('price_currency/' + currency_url,
+                            'resource/' + resource)))
+            if exchange_ratio is not None:
+              kw[arrow + '_total_asset_price'] = round(
+                exchange_ratio * input_movement.getQuantity(),
+                currency.getQuantityPrecision())
+
+    return kw
 
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
@@ -140,103 +162,3 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
     input_movement._setCategoryMembership('trade_phase',
                                           ('default/accounting',))
     return (input_movement,)
-
-  # TODO: add support for assert prices (see old code below)
-
-  def __getGeneratedMovementList(self, movement_list=None, rounding=False):
-    """
-    Input movement list comes from order
-
-    XXX This implementation is very primitive, and does not support BPM,
-    i.e. business paths are not taken into account.
-    """
-    ret = []
-
-    rule = self._rule
-    # input_movement, business_path = rule._getInputMovementAndPathTupleList(
-    #   applied_rule)[0]
-    input_movement = self._applied_rule.getParentValue()
-    parent_movement = self._applied_rule.getParentValue()
-
-    # Find a matching cell
-    cell = rule._getMatchingCell(input_movement)
-
-    if cell is not None:
-      for accounting_rule_cell_line in cell.objectValues():
-        if resource is None :
-          # last resort : get the resource from the rule
-          resource = accounting_rule_cell_line.getResource() \
-              or cell.getResource()
-        # XXX we need business path here?
-        kw = self._getPropertyAndCategoryList(input_movement, None, rule)
-
-        kw.update(
-          delivery=None,
-          source=[accounting_rule_cell_line.getSource()],
-          destination=[accounting_rule_cell_line.getDestination()],
-          quantity=(input_movement.getCorrectedQuantity() *
-            input_movement.getPrice(0.0)) *
-            accounting_rule_cell_line.getQuantity(),
-          resource=[resource],
-          price=1,
-        )
-        if resource is not None:
-          #set asset_price on movement when resource is different from price
-          #currency of the source/destination section
-          destination_exchange_ratio, precision = self \
-              ._getCurrencyRatioAndPrecisionByArrow(
-              rule, 'destination_section', kw)
-          if destination_exchange_ratio is not None:
-            kw.update(destination_total_asset_price=round(
-             (destination_exchange_ratio*
-              parent_movement.getTotalPrice()),precision))
-
-          source_exchange_ratio, precision = self \
-              ._getCurrencyRatioAndPrecisionByArrow(
-              rule, 'source_section', kw)
-          if source_exchange_ratio is not None:
-            kw.update(source_total_asset_price=round(
-             (source_exchange_ratio*
-              parent_movement.getTotalPrice()),precision))
-
-        if accounting_rule_cell_line.hasProperty(
-            'generate_prevision_script_id'):
-          generate_prevision_script_id = \
-                accounting_rule_cell_line.getGeneratePrevisionScriptId()
-          kw.update(getattr(input_movement,
-                            generate_prevision_script_id)(kw))
-        simulation_movement = self._applied_rule.newContent(
-          portal_type=RuleMixin.movement_type,
-          temp_object=True,
-          **kw)
-        ret.append(simulation_movement)
-    return ret
-
-  def _getCurrencyRatioAndPrecisionByArrow(self, rule, arrow, prevision_line):
-    from Products.ERP5Type.Document import newTempSimulationMovement
-    try:
-      prevision_currency = prevision_line['resource'][0]
-    except IndexError:
-      prevision_currency = None
-    exchange_ratio = None
-    precision = None
-    try:
-      section = prevision_line.get(arrow, [])[0]
-    except IndexError:
-      section = None
-    if section is not None:
-      currency_url = rule.restrictedTraverse(section).getProperty(
-          'price_currency', None)
-    else:
-      currency_url = None
-    if currency_url is not None and prevision_currency != currency_url:
-      precision = section.getPriceCurrencyValue() \
-          .getQuantityPrecision()
-      temporary_movement = newTempSimulationMovement(rule.getPortalObject(),
-          '1', **prevision_line)
-      exchange_ratio = rule.restrictedTraverse(currency_url).getPrice(
-          context=temporary_movement.asContext(
-        categories=['price_currency/%s' % currency_url,
-                    'resource/%s' % prevision_currency],
-        start_date=temporary_movement.getStartDate()))
-    return exchange_ratio, precision

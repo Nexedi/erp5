@@ -80,28 +80,36 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
       ('collected_vat', 'receivable_vat', 'refundable_vat', vat_rate),
       )
 
-  def createCategoriesInCategory(self, category, category_id_list):
-    for category_id in category_id_list:
-      child = category
-      for id in category_id.split('/'):
-        try:
-          child = child[id]
-        except KeyError:
-          child = child.newContent(id)
-
+  @UnrestrictedMethod
   def createCategories(self):
     """Create the categories for our test. """
-    category_tool = self.getCategoryTool()
-    _ = self.createCategoriesInCategory
-    _(category_tool.region, [self.default_region])
-    _(category_tool.gap, [self.vat_gap, self.sale_gap, self.customer_gap])
-    _(category_tool.delivery_mode, [self.mail_delivery_mode])
-    _(category_tool.incoterm, [self.cpt_incoterm])
-    _(category_tool.quantity_unit,
-      [self.unit_piece_quantity_unit, self.mass_quantity_unit])
-    _(category_tool.trade_phase, ['default'])
-    _(category_tool.trade_phase.default,
-      ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
+    for cat_string in self.getNeededCategoryList() :
+      base_cat = cat_string.split("/")[0]
+      path = self.getPortal().portal_categories[base_cat]
+      for cat in cat_string.split("/")[1:] :
+        if not cat in path.objectIds() :
+          path = path.newContent(
+                    portal_type='Category',
+                    id=cat,)
+        else:
+          path = path[cat]
+    # check categories have been created
+    for cat_string in self.getNeededCategoryList() :
+      self.assertNotEquals(None,
+                self.getCategoryTool().restrictedTraverse(cat_string),
+                cat_string)
+
+  def getNeededCategoryList(self):
+    """return a list of categories that should be created."""
+    return ('region/%s' % self.default_region,
+            'gap/%s' % self.vat_gap,
+            'gap/%s' % self.sale_gap,
+            'gap/%s' % self.customer_gap,
+	    'delivery_mode/%s' % self.mail_delivery_mode,
+	    'incoterm/%s' % self.cpt_incoterm,
+            'quantity_unit/%s' % self.unit_piece_quantity_unit,
+            'quantity_unit/%s' % self.mass_quantity_unit,
+        )
 
   def _solveDivergence(self, obj, property, decision, group='line'):
     """
@@ -118,20 +126,10 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
       obj,
       'solve_divergence_action',
       **kw)
-
-  def validateRules(self):
-    """Enable all rules except temporarily broken payment rule"""
-    rule_tool = self.getRuleTool()
-    for rule in rule_tool.contentValues(
-        portal_type=rule_tool.getPortalRuleTypeList()):
-      if rule.getId() != 'new_payment_simulation_rule' and \
-         rule.getValidationState() != 'validated':
-        rule.validate()
-
+      
   def afterSetUp(self):
-    ERP5TypeTestCase.login(self)
     self.createCategories()
-    self.createAndValidateAccounts()
+    self.validateRules()
     self.login()
 
   def beforeTearDown(self):
@@ -165,52 +163,70 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
       need to be installed to run the test on.
     """
     return ('erp5_base',
-            'erp5_pdm',
-            'erp5_trade',
+             'erp5_pdm',
+	     'erp5_trade',
             'erp5_accounting',
-            'erp5_accounting_ui_test',
-            'erp5_invoicing',
-            'erp5_simplified_invoicing',
-            'erp5_simulation',
-            'erp5_simulation_test',
+	    'erp5_accounting_ui_test',
+	    'erp5_invoicing',
+            'erp5_simplified_invoicing'
             )
 
-  def createAndValidateAccounts(self):
-    account_module = self.portal.account_module
+  @UnrestrictedMethod
+  def createInvoiceTransactionRule(self, resource=None):
+    """Create a sale invoice transaction rule with only one cell for
+    product_line/apparel and default_region
+    The accounting rule cell will have the provided resource, but this his more
+    or less optional (as long as price currency is set correctly on order)
+    """
+    portal = self.portal
+    account_module = portal.account_module
     for account_id, account_gap, account_type \
                in self.account_definition_list:
       if not account_id in account_module.objectIds():
-        account = account_module.newContent(account_id,
-           gap=account_gap, account_type=account_type)
-        self.portal.portal_workflow.doActionFor(account, 'validate_action')
+        account = account_module.newContent(id=account_id)
+        account.setGap(account_gap)
+        account.setAccountType(account_type)
+        portal.portal_workflow.doActionFor(account, 'validate_action')
 
-  def createBusinessProcess(self, resource=None):
-    self.business_process = business_process = \
-      self.portal.business_process_module.newContent()
-    trade_phase = self.getCategoryTool().trade_phase
-    kw = dict(portal_type='Trade Model Path',
-              trade_date='trade_phase/default/order')
-    business_process.newContent(
-      reference='default_path',
-      trade_phase_value_list=[x for x in trade_phase.default.objectValues()
-                              if x.getId() != 'accounting'],
-      **kw)
-    kw.update(trade_phase='default/accounting',
-              resource_value=resource,
-              membership_criterion_base_category_list=(
-                'destination_region',
-                'product_line'),
-              membership_criterion_category_list=(
-                'destination_region/region/' + self.default_region,
-                'product_line/apparel'))
+    invoice_rule = portal.portal_rules.default_invoice_transaction_simulation_rule
+    if invoice_rule.getValidationState() == 'validated':
+      invoice_rule.invalidate()
+    invoice_rule.deleteContent(list(invoice_rule.objectIds()))
+    transaction.commit()
+    self.tic()
+    region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
+    product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
+    region_predicate.edit(
+      membership_criterion_base_category_list = ['destination_region'],
+      membership_criterion_category_list =
+                  ['destination_region/region/%s' % self.default_region ],
+      int_index = 1,
+      string_index = 'region'
+    )
+    product_line_predicate.edit(
+      membership_criterion_base_category_list = ['product_line'],
+      membership_criterion_category_list =
+                            ['product_line/apparel'],
+      int_index = 1,
+      string_index = 'product'
+    )
+    product_line_predicate.immediateReindexObject()
+    region_predicate.immediateReindexObject()
+
+    invoice_rule.updateMatrix()
+    cell_list = invoice_rule.getCellValueList(base_id='movement')
+    self.assertEquals(len(cell_list),1)
+    cell = cell_list[0]
+
     for line_id, line_source_id, line_destination_id, line_ratio in \
         self.transaction_line_definition_list:
-      business_process.newContent(
-        reference='acounting_' + line_id,
-        efficiency=line_ratio,
-        source='account_module/' + line_source_id,
-        destination='account_module/' + line_destination_id,
-        **kw)
+      line = cell.newContent(id=line_id,
+          portal_type='Accounting Transaction Line', quantity=line_ratio,
+          resource_value=resource,
+          source_value=account_module[line_source_id],
+          destination_value=account_module[line_destination_id])
+
+    invoice_rule.validate()
     transaction.commit()
     self.tic()
 
@@ -247,7 +263,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
-    self.createBusinessProcess(currency)
+    self.createInvoiceTransactionRule(currency)
     transaction.commit()
     self.tic()#execute transactio
     client = self.portal.organisation_module.newContent(
@@ -267,7 +283,6 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                               destination_section_value=client,
                               start_date=DateTime(2008,10, 21),
                               price_currency_value=currency,
-                              specialise_value=self.business_process,
                               title='Order')
     order_line = order.newContent(portal_type='Sale Order Line',
                                   resource_value=resource,
@@ -341,7 +356,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
-    self.createBusinessProcess(currency)
+    self.createInvoiceTransactionRule(currency)
     transaction.commit()
     self.tic()#execute transactio
     client = self.portal.organisation_module.newContent(
@@ -361,7 +376,6 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                               destination_section_value=client,
                               start_date=DateTime(2008,10, 21),
                               price_currency_value=currency,
-                              specialise_value=self.business_process,
                               title='Order')
     order_line = order.newContent(portal_type='Sale Order Line',
                                   resource_value=resource,
@@ -428,7 +442,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
-    self.createBusinessProcess(currency)
+    self.createInvoiceTransactionRule(currency)
     transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
@@ -448,7 +462,6 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                               destination_section_value=client,
                               start_date=DateTime(2008,10, 21),
                               price_currency_value=currency,
-                              specialise_value=self.business_process,
                               title='Order')
     order_line = order.newContent(portal_type='Sale Order Line',
                                   resource_value=resource,
@@ -521,7 +534,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
-    self.createBusinessProcess(currency)
+    self.createInvoiceTransactionRule(currency)
     transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
@@ -541,7 +554,6 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                               destination_section_value=client,
                               start_date=DateTime(2008,10, 21),
                               price_currency_value=currency,
-                              specialise_value=self.business_process,
                               title='Order')
     order_line = order.newContent(portal_type='Sale Order Line',
                                   resource_value=resource,
@@ -624,7 +636,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
-    self.createBusinessProcess(currency)
+    self.createInvoiceTransactionRule(currency)
     transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
@@ -644,7 +656,6 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                               destination_section_value=client,
                               start_date=DateTime(2008,10, 21),
                               price_currency_value=currency,
-                              specialise_value=self.business_process,
                               title='Order')
     order_line = order.newContent(portal_type='Purchase Order Line',
                                   resource_value=resource,
@@ -727,7 +738,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
-    self.createBusinessProcess(currency)
+    self.createInvoiceTransactionRule(currency)
     transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
@@ -749,7 +760,6 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                               price_currency_value=currency,
 			      delivery_mode=self.mail_delivery_mode,
 			      incoterm=self.cpt_incoterm,
-                              specialise_value=self.business_process,
                               title='Order')
     order_line = order.newContent(portal_type='Sale Order Line',
                                   resource_value=resource,
@@ -817,7 +827,6 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                               price_currency_value=currency,
                               delivery_mode=self.mail_delivery_mode,
                               incoterm=self.cpt_incoterm,
-                              specialise_value=self.business_process,
                               title='Order')
     first_order_line = order.newContent(
                         portal_type='Sale Order Line',
