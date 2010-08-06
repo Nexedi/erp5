@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal_type = context.getDeliveryPortalType()\n
+invoice_list = []\n
+\n
+# Gather invoices associated with grand parent movements,\n
+# so that tax movements will be included into the same invoices.\n
+for movement in movement_list:\n
+  applied_rule = movement.getParentValue()\n
+  if applied_rule.isRootAppliedRule():\n
+    # ???\n
+    continue\n
+\n
+  invoice_movement = applied_rule.getParentValue()\n
+  invoice = invoice_movement.getExplanationValue()\n
+  if invoice.getPortalType() != portal_type:\n
+    # ???\n
+    continue\n
+\n
+  if invoice not in invoice_list:\n
+    invoice_list.append(invoice)\n
+\n
+return invoice_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>movement_list=(), **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>1</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>movement_list</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal_type</string>
+                            <string>invoice_list</string>
+                            <string>_getiter_</string>
+                            <string>movement</string>
+                            <string>applied_rule</string>
+                            <string>invoice_movement</string>
+                            <string>invoice</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <tuple/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>DeliveryBuilder_getSimulationPerformanceTestTaxableInvoiceList</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

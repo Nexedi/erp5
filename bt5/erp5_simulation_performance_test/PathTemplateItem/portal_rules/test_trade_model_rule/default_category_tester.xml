@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="CategoryDivergenceTester" module="Products.ERP5Type.Document.CategoryDivergenceTester"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>destination_decision and source_decision are omitted by intention.</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_category_tester</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Category Divergence Tester</string> </value>
+        </item>
+        <item>
+            <key> <string>tested_property</string> </key>
+            <value>
+              <tuple>
+                <string>aggregate | Aggregate</string>
+                <string>base_application | Base Application</string>
+                <string>base_contribution | Base Contribution</string>
+                <string>delivery_mode | Delivery Mode</string>
+                <string>destination_account | Destination Account</string>
+                <string>destination | Destination</string>
+                <string>destination_function | Destination Function</string>
+                <string>destination_payment | Destination Payment</string>
+                <string>destination_project | Destination Project</string>
+                <string>destination_section | Destination Section</string>
+                <string>incoterm | Incoterm</string>
+                <string>price_currency | Price Currency</string>
+                <string>resource | Resource</string>
+                <string>source_account | Source Account</string>
+                <string>source_function | Source Function</string>
+                <string>source_payment | Source Payment</string>
+                <string>source_project | Source Project</string>
+                <string>source_section | Source Section</string>
+                <string>source | Source</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>default_category_tester</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
