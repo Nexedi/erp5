@@ -16,11 +16,11 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>business_template_registered_skin_selections</string> </value>
+                      <value> <string>business_template_skin_layer_priority</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>tokens</string> </value>
+                      <value> <string>float</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -33,12 +33,8 @@
             </value>
         </item>
         <item>
-            <key> <string>business_template_registered_skin_selections</string> </key>
-            <value>
-              <tuple>
-                <string>RSS</string>
-              </tuple>
-            </value>
+            <key> <string>business_template_skin_layer_priority</string> </key>
+            <value> <float>10.0</float> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
