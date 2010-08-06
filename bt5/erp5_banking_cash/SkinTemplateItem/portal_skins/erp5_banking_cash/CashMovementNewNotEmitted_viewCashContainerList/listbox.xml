@@ -464,7 +464,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>cash_movement_new_not_emitted_cash_container_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
