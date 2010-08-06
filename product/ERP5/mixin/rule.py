@@ -120,9 +120,10 @@ class MovementGeneratorMixin:
     return result
 
   def _getUpdatePropertyDict(self, input_movement):
-    # Default implementation bellow can be overriden by subclasses
-    return {'delivery': input_movement.getRelativeUrl(), # XXX-JPS empty is better
-            }
+    # XXX Wouldn't it better to return {} or {'delivery': None} ?
+    #     Below code is mainly for root applied rules.
+    #     Other movement generators usually want to reset delivery.
+    return {'delivery': input_movement.getRelativeUrl()}
 
   def _getTradePhaseList(self, input_movement, business_process): # XXX-JPS WEIRD
     movement_trade_phase = input_movement.getTradePhaseList()
