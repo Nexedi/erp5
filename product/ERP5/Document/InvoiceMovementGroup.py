@@ -46,12 +46,14 @@ class InvoiceMovementGroup(MovementGroup):
 
   def _getInvoiceUid(self, simulation_movement):
     parent_rule = simulation_movement.getParentValue()
+    portal = self.getPortalObject()
+    invoice_movement_types = portal.getPortalInvoiceMovementTypeList()
     while not parent_rule.isRootAppliedRule():
       parent_simulation_movement = parent_rule.getParentValue()
       grand_parent_rule = parent_simulation_movement.getParentValue()
       parent_delivery = parent_simulation_movement.getDeliveryValue()
       if parent_delivery is not None and \
-             parent_delivery.getPortalType() == 'Invoice Line':
+             parent_delivery.getPortalType() in invoice_movement_types:
         return parent_delivery.getExplanationValue().getUid()
       parent_rule = grand_parent_rule
     return None
