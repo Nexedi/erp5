@@ -30,7 +30,7 @@
 import unittest
 import transaction
 
-from Products.ERP5.tests.testERP5SimulationBPMCore import TestBPMMixin
+from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
