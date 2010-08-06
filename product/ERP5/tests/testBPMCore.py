@@ -174,14 +174,7 @@ class TestBPMMixin(ERP5TypeTestCase):
         'asset/receivable/refundable_vat')
 
   def afterSetUp(self):
-    rule_tool = self.getRuleTool()
-    for rule in rule_tool.contentValues(
-        portal_type=rule_tool.getPortalRuleTypeList()):
-      if (rule.getId().startswith('new_') and
-          # XXX disable temporarily broken payment rule
-          rule.getId() != 'new_payment_simulation_rule' and
-          rule.getValidationState() != 'validated'):
-        rule.validate()
+    self.validateRules()
     self.createCategories()
     self.createAndValidateAccounts()
     self.stepTic()

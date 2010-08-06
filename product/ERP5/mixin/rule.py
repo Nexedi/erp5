@@ -126,16 +126,14 @@ class MovementGeneratorMixin:
     return {'delivery': input_movement.getRelativeUrl()}
 
   def _getTradePhaseList(self, input_movement, business_process): # XXX-JPS WEIRD
-    movement_trade_phase = input_movement.getTradePhaseList()
-    if movement_trade_phase:
-      return movement_trade_phase
     if self._trade_phase_list:
       return self._trade_phase_list
     if self._rule is not None:
       trade_phase_list = self._rule.getTradePhaseList()
       if trade_phase_list:
         return trade_phase_list
-    return business_process.getTradePhaseList()
+    return input_movement.getTradePhaseList() or \
+      business_process.getTradePhaseList()
 
   def _getInputMovementList(self, movement_list=None, rounding=None): #XXX-JPS should it be amount or movement ?
     raise NotImplementedError

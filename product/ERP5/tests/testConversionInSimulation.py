@@ -119,15 +119,6 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
       'solve_divergence_action',
       **kw)
 
-  def validateRules(self):
-    """Enable all rules except temporarily broken payment rule"""
-    rule_tool = self.getRuleTool()
-    for rule in rule_tool.contentValues(
-        portal_type=rule_tool.getPortalRuleTypeList()):
-      if rule.getId() != 'new_payment_simulation_rule' and \
-         rule.getValidationState() != 'validated':
-        rule.validate()
-
   def afterSetUp(self):
     ERP5TypeTestCase.login(self)
     self.createCategories()

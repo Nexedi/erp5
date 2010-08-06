@@ -89,53 +89,10 @@ class PaymentSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
     return (movement.getSource() is None or movement.getDestination() is None)
 
 class PaymentRuleMovementGenerator(MovementGeneratorMixin):
-  def getGeneratedMovementList(self, movement_list=None, rounding=False):
-    """
-    Input movement list comes from parent.
-
-    XXX This implementation using Business Path, not Payment Condition.
-    """
-    ret = []
-    rule = self._rule
-    for input_movement, business_path in self \
-            ._getInputMovementAndPathTupleList(movement_list=movement_list, rounding=rounding):
-      # Payment Rule does not work with Business Path
-      if business_path is None:
-        continue
-      # Since we need to consider business_path only for bank movement,
-      # not for payable movement, we pass None as business_path here.
-      kw = self._getPropertyAndCategoryList(input_movement, None, rule)
-      kw.update({'order':None, 'delivery':None})
-      quantity = kw.pop('quantity', 0)
-      efficiency = business_path.getEfficiency()
-      if efficiency:
-        quantity *= efficiency
-      start_date = business_path.getExpectedStartDate(input_movement)
-      if start_date is not None:
-        kw.update({'start_date':start_date})
-      stop_date = business_path.getExpectedStopDate(input_movement)
-      if stop_date is not None:
-        kw.update({'stop_date':stop_date})
-      # one for payable
-      simulation_movement = self._applied_rule.newContent(
-        portal_type=RuleMixin.movement_type,
-        temp_object=True,
-        quantity=-quantity,
-        **kw)
-      ret.append(simulation_movement)
-      # one for bank
-      kw.update({'source':business_path.getSource(),
-                 'destination':business_path.getDestination(),})
-      simulation_movement = self._applied_rule.newContent(
-        portal_type=RuleMixin.movement_type,
-        temp_object=True,
-        quantity=quantity,
-        **kw)
-      ret.append(simulation_movement)
-    return ret
 
   def _getUpdatePropertyDict(self, input_movement):
-    return {'delivery': None}
+    return {'delivery': None,
+            'order': None} # XXX is it useful ?
 
   def _getInputMovementList(self, movement_list=None, rounding=None):
     return [self._applied_rule.getParentValue(),]

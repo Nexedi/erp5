@@ -155,10 +155,6 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
 
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
-    input_movement = simulation_movement.asContext(
-      quantity=simulation_movement.getCorrectedQuantity() *
-               simulation_movement.getPrice(0.0))
-    # XXX trade_phase category should be added to Simulation Movements
-    input_movement._setCategoryMembership('trade_phase',
-                                          ('default/accounting',))
-    return (input_movement,)
+    quantity = simulation_movement.getCorrectedQuantity() * \
+               simulation_movement.getPrice(0.0)
+    return (simulation_movement.asContext(quantity=quantity),)
