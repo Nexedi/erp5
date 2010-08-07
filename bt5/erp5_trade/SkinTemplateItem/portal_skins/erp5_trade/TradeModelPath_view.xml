@@ -104,6 +104,7 @@
                         <string>my_title</string>
                         <string>my_int_index</string>
                         <string>my_reference</string>
+                        <string>my_trade_phase_list</string>
                         <string>my_payment_mode</string>
                         <string>my_delivery_mode</string>
                         <string>my_incoterm</string>
@@ -114,13 +115,15 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_trade_phase_list</string>
-                        <string>my_lead_time</string>
+                        <string>my_payment_term</string>
+                        <string>my_trade_date</string>
+                        <string>my_payment_additional_term</string>
+                        <string>my_payment_end_of_month</string>
                         <string>my_end_of</string>
-                        <string>my_wait_time</string>
+                        <string>my_min_delay</string>
+                        <string>my_max_delay</string>
                         <string>my_efficiency</string>
                         <string>my_quantity</string>
-                        <string>my_trade_phase</string>
                       </list>
                     </value>
                 </item>
