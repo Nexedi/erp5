@@ -1,2 +1,5 @@
+2010-08-07 yo
+* Add back a planned state into test_order_workflow only to expand simulation but not to build packing lists.
+
 2010-08-06 yo
 * Initial creation.

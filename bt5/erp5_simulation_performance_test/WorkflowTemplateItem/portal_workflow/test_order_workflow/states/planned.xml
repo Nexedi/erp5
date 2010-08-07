@@ -11,11 +11,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Default state of the document</string> </value>
+            <value> <string>Order that are planned to be sent to a supplier or planned to be received from a customer. The order is not sure</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>planned</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -25,7 +25,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Planned</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -33,7 +33,6 @@
               <tuple>
                 <string>confirm</string>
                 <string>order</string>
-                <string>plan</string>
               </tuple>
             </value>
         </item>
@@ -41,7 +40,8 @@
             <key> <string>type_list</string> </key>
             <value>
               <tuple>
-                <string>draft_order</string>
+                <string>planned_order</string>
+                <string>future_inventory</string>
               </tuple>
             </value>
         </item>
@@ -69,9 +69,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -82,9 +80,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -95,9 +91,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -108,9 +102,7 @@
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Associate</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -122,9 +114,7 @@
                         <string>Assignor</string>
                         <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Author</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
