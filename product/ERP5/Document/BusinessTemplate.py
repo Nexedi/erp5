@@ -4991,6 +4991,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
     # We want to have:
     #  * path after module, because path can be module content
     #  * path after categories, because path can be categories content
+    #  * path before workflow chain, because path can be a portal type 
+    #         (until chains are set on portal types with categories)
     #  * skin after paths, because we can install a custom connection string as
     #       path and use it with SQLMethods in a skin.
     #    ( and more )
@@ -5007,7 +5009,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_workflow_item',
       '_site_property_item',
       '_portal_type_item',
-      '_portal_type_workflow_chain_item',
+      #'_portal_type_workflow_chain_item',
       '_portal_type_allowed_content_type_item',
       '_portal_type_hidden_content_type_item',
       '_portal_type_property_sheet_item',
@@ -5021,6 +5023,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_action_item',
       '_portal_type_roles_item',
       '_local_roles_item',
+      '_portal_type_workflow_chain_item',
       '_catalog_method_item',
       '_catalog_result_key_item',
       '_catalog_related_key_item',
