@@ -35,6 +35,40 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Predicate import Predicate
 from Acquisition import aq_base
 
+
+# resurrected from old AppliedRule class
+def AppliedRule_getExplanationSpecialiseValue(self, portal_type_list):
+  """Returns first found specialise value of delivery or order
+  In case if self is root Applied Rule uses causality
+  Otherwise uses delivery, than order of parent movements
+  Recurses to parents"""
+  def findSpecialiseValueBySimulation(movement):
+    specialise_value = None
+    if movement.getPortalType() != 'Simulation Movement':
+      return None
+    delivery, order = movement.getDeliveryValue(), movement.getOrderValue()
+
+    if delivery is not None:
+      specialise_value = delivery.getExplanationValue() \
+          .getRootSpecialiseValue(portal_type_list)
+      if specialise_value is not None:
+        return specialise_value
+    # 'order' category is deprecated. it is kept for compatibility.
+    if order is not None:
+      specialise_value = order.getExplanationValue() \
+          .getRootSpecialiseValue(portal_type_list)
+      if specialise_value is not None:
+        return specialise_value
+    return findSpecialiseValueBySimulation(movement.getParentValue() \
+        .getParentValue())
+
+  if self.getRootAppliedRule() == self:
+    return self.getCausalityValue() \
+        .getRootSpecialiseValue(portal_type_list)
+  movement = self.getParentValue()
+  return findSpecialiseValueBySimulation(movement)
+
+
 class Rule(Predicate, XMLObject):
   """
     Rule objects implement the simulation algorithm
@@ -353,7 +387,8 @@ class Rule(Predicate, XMLObject):
   def _getInputMovementAndPathTupleList(self, applied_rule):
     """Returns list of tuples (movement, business_path)"""
     input_movement_list = self._getInputMovementList(applied_rule)
-    business_process = applied_rule.getBusinessProcessValue()
+    business_process = AppliedRule_getExplanationSpecialiseValue(applied_rule,
+      ('Business Process',))
     trade_phase_list = self.getTradePhaseList()
 
     # In non-BPM case, we have no business path.

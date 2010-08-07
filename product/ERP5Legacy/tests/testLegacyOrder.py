@@ -61,7 +61,7 @@ class TestOrderMixin:
     """
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',
-            'erp5_project', 'erp5_administration')
+            'erp5_project', 'erp5_legacy', 'erp5_administration')
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
