@@ -120,6 +120,7 @@
                         <string>my_wait_time</string>
                         <string>my_efficiency</string>
                         <string>my_quantity</string>
+                        <string>my_trade_phase</string>
                       </list>
                     </value>
                 </item>
