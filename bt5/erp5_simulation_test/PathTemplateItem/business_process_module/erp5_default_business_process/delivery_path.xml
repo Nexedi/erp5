@@ -74,6 +74,7 @@
               <tuple>
                 <string>trade_phase/default/delivery</string>
                 <string>trade_date/trade_phase/default/order</string>
+                <string>end_of/day</string>
               </tuple>
             </value>
         </item>
@@ -134,6 +135,18 @@
                 </state>
               </object>
             </value>
+        </item>
+        <item>
+            <key> <string>payment_additional_term</string> </key>
+            <value> <int>10</int> </value>
+        </item>
+        <item>
+            <key> <string>payment_end_of_month</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>payment_term</string> </key>
+            <value> <int>10</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

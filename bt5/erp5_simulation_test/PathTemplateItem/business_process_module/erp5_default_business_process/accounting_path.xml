@@ -54,7 +54,7 @@
               <tuple>
                 <string>incoterm/a</string>
                 <string>trade_date/trade_phase/default/invoicing</string>
-                <string>trade_phase/default/payment</string>
+                <string>trade_phase/default/accounting</string>
               </tuple>
             </value>
         </item>
@@ -79,7 +79,7 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>TMP-PAYMENT</string> </value>
+            <value> <string>TMP-ACCOUNT</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -89,11 +89,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>payment_path</string> </value>
+            <value> <string>accounting_path</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value> <int>5</int> </value>
+            <value> <int>4</int> </value>
         </item>
         <item>
             <key> <string>modification_date</string> </key>
@@ -113,12 +113,16 @@
             </value>
         </item>
         <item>
+            <key> <string>payment_end_of_month</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Trade Model Path</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Payment</string> </value>
+            <value> <string>Accounting</string> </value>
         </item>
       </dictionary>
     </pickle>
