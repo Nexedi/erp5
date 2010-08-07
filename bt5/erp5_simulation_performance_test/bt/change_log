@@ -1,4 +1,7 @@
 2010-08-07 yo
+* Split the category movement group into an updatable one and a non-updatable one, to have some categories to be changeable without making another delivery.
+
+2010-08-07 yo
 * Add back a planned state into test_order_workflow only to expand simulation but not to build packing lists.
 
 2010-08-06 yo
