@@ -52,17 +52,13 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
         <item>
-            <key> <string>categories</string> </key>
+            <key> <string>codification</string> </key>
             <value>
-              <tuple>
-                <string>trade_state/delivered</string>
-                <string>trade_state/accounted</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
@@ -73,15 +69,27 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>accounted</string> </value>
+            <value> <string>invoiced</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
         </item>
         <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Accounted</string> </value>
+            <value> <string>Invoiced</string> </value>
         </item>
       </dictionary>
     </pickle>

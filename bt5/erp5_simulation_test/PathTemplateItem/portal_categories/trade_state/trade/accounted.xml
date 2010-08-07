@@ -52,7 +52,6 @@
                 <string>Assignee</string>
                 <string>Assignor</string>
                 <string>Manager</string>
-                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -60,8 +59,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_state/delivered</string>
-                <string>trade_state/accounted</string>
+                <string>trade_state/trade/accounted</string>
               </tuple>
             </value>
         </item>
