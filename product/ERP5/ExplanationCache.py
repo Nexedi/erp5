@@ -154,7 +154,8 @@ class ExplanationCache:
 
     # path_dict is typically like this:
     #  {'': {'erp5': {'portal_simulation': {'3': {'4': <SimulationMovement at /erp5/portal_simulation/3/4>}}}}}
-    browsePathDict('', path_dict[''])
+    if path_dict:
+      browsePathDict('', path_dict[''])
     self.explanation_path_pattern_cache = result
     return result
 
