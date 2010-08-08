@@ -53,16 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>module = context.getPortalObject().business_process_module\n
-business_path = module.test_bp.shipping\n
-delivery_builder = business_path.getDeliveryBuilderValue()\n
-\n
-# Make sure that multiple builds would not run in parallel.\n
-serialization_tag = \'test_shipping_build\'\n
-tag = \'after_test_shipping_build\'\n
-activate_kw = dict(tag=tag)\n
-delivery_builder.activate(serialization_tag=serialization_tag, after_tag=tag) \\\n
-  .build(activate_kw=activate_kw)\n
+            <value> <string>delivery_builder = context.portal_deliveries.test_sale_packing_list_builder\n
+return delivery_builder.DeliveryBuilder_getSimulationPerformanceTestBuildableMovementList(**kw)\n
 </string> </value>
         </item>
         <item>
@@ -102,13 +94,8 @@ delivery_builder.activate(serialization_tag=serialization_tag, after_tag=tag) \\
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>module</string>
-                            <string>business_path</string>
                             <string>delivery_builder</string>
-                            <string>serialization_tag</string>
-                            <string>tag</string>
-                            <string>dict</string>
-                            <string>activate_kw</string>
+                            <string>_apply_</string>
                           </tuple>
                         </value>
                     </item>
@@ -125,7 +112,7 @@ delivery_builder.activate(serialization_tag=serialization_tag, after_tag=tag) \\
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_activateTestShippingBuild</string> </value>
+            <value> <string>ERP5Site_getTestSalePackingListBuilderMovementList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>

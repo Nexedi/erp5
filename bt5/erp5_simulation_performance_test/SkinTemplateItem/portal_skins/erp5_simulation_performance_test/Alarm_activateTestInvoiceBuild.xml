@@ -57,7 +57,7 @@
 \n
 now = DateTime().timeTime()\n
 module = context.getPortalObject().business_process_module\n
-business_process = module.test_business_process\n
+business_process = module.test_bp\n
 invoice_business_path = business_process.invoice\n
 invoice_builder = invoice_business_path.getDeliveryBuilderValue()\n
 tax_business_path = business_process.tax\n
