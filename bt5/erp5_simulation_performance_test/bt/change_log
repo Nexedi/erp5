@@ -1,3 +1,6 @@
+2010-08-08 yo
+* Add helper scripts to deal with divergence in a legacy way.
+
 2010-08-07 yo
 * Split the category movement group into an updatable one and a non-updatable one, to have some categories to be changeable without making another delivery.
 
