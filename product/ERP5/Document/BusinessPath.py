@@ -596,8 +596,15 @@ class BusinessPath(Path, Predicate):
       search_kw['movement.price'] = {'query':0, 'range':'neq'}
       sql_kw = portal_catalog.buildSQLQuery(**search_kw)
     """
-    all_movement_list = self.BusinessPath_zSelectMovement(
+    predecessor_state = self.getPredecessorValue()
+    if predecessor_state is None:
+      predecessor_uid_list = []
+    else:
+      predecessor_list = predecessor_state.getSuccessorRelatedValueList()
+      predecessor_uid_list = [x.getUid() for x in predecessor_list]
+    all_movement_list = self.BusinessPath_zSelectBuildableMovementList(
                           business_path_uid=self.getUid(),
+                          predecessor_uid_list=predecessor_uid_list,
                           **sql_kw)
 
     # select method should return only non-delivered movements, but
