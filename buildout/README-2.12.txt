@@ -38,7 +38,7 @@ Run the Zope 2.12 buildout:
 
   $ cd ~/erp5.buildout
   $ python2.6 -S bootstrap/bootstrap.py -v 1.4.3
-  $ python2.6 -S bin/buildout -v -c buildout-2.12.cfg
+  $ bin/buildout -v -c buildout-2.12.cfg
 
 This will download and install the software components needed to run ERP5 on
 Zope 2.12 including Zope 2.12 plus dependencies (including
@@ -54,7 +54,7 @@ Each software component in this buildout might require some system
 dependencies, including development libraries and executables.
 To query what is required for all components, please run:
 
-  $ python2.6 -S bin/buildout install show-requirements
+  $ bin/buildout install show-requirements
 
 Minimal requirements
 --------------------
@@ -72,11 +72,6 @@ Post-build check
 ----------------
 
 There isn't yet a post-build check for running ERP5 on Zope 2.12.
-
-When it's ready, you can check if all components are working correctly by
-typing:
-
-  $ make assert
 
 Distribution helpers
 --------------------
@@ -132,7 +127,23 @@ OpenOffice.org document conversion daemon. We need mysql, in particular,
 to be running before configuring an actual ERP5 instance, so we'll start
 supervisor:
 
-$ var/bin/supervisord                   # 6
+$ bin/supervisord                   # 6
+
+Also, we need databases in the mysql server that correspond to both the ERP5
+instance we're going to create, and the testrunner we will want to run:
+
+$ var/bin/mysql -u root
+mysql> create database development_site;
+mysql> grant all privileges on development_site.* to 'development_user'@'localhost' identified by 'development_password';
+mysql> grant all privileges on development_site.* to 'development_user'@'127.0.0.1' identified by 'development_password';
+mysql> create database test212
+mysql> grant all privileges on test212.* to 'test'@'localhost';
+mysql> grant all privileges on test212.* to 'test'@'127.0.0.1';
+
+(there is automated support for creating databases but it's not currently
+working with the Zope 2.12 buildout)
+
+$ var/bin/
 
 Now edit buildout.cfg and add "runUnitTest" (w/o quotes) to 'buildout:parts'.
 The "development-instance" part will be pulled in automatically as a
@@ -142,7 +153,7 @@ $ $EDITOR buildout.cfg                  # 7
 
 Then run buildout again to finish the configuration
 
-$ python2.6 -S bin/buildout -ov         # 8
+$ bin/buildout -ov         # 8
 
 Now a fully configured development instance will be available in the directory
 "var/development-instance", so you can do:
