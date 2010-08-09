@@ -278,7 +278,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
         after_time = time()
         amount_of_time = after_time - before_time
         min_time, max_time = self._getMinMaxTime(target)
-        print "%s took %.4f (%.4f < %.4f < %.4f)" \
+        print "\n%s took %.4f (%.4f < %.4f < %.4f)" \
                 % (target, amount_of_time, min_time, amount_of_time, max_time)
         # Reset the target to make sure that the same target is not
         # measured again.
@@ -286,6 +286,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
         # Set the result.
         result = sequence.get('result', [])
         result.append((target, min_time, amount_of_time, max_time))
+        sequence.edit(result=result)
 
     def stepMeasureCreationOfNewAppliedRules(self, sequence=None,
             sequence_list=None, **kw):
@@ -479,12 +480,13 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
           self.assertAlmostEquals(line.getQuantity(),
                   1.0 * number_of_sale_order_lines)
           simulation_movement_list = line.getDeliveryRelatedValueList()
-          self.assertEquals(len(simulation_movement_list), 1)
-          simulation_movement = simulation_movement_list[0]
-          self.assertEquals(simulation_movement.getPortalType(),
-                  'Simulation Movement')
-          self.assertEquals(simulation_movement.getCausality(),
-                  'business_process_module/test_bp/shipping')
+          self.assertEquals(len(simulation_movement_list),
+                  number_of_sale_order_lines)
+          for simulation_movement in simulation_movement_list:
+            self.assertEquals(simulation_movement.getPortalType(),
+                    'Simulation Movement')
+            self.assertEquals(simulation_movement.getCausality(),
+                    'business_process_module/test_bp/shipping')
 
     def stepCheckBuiltSaleInvoices(self, sequence=None, sequence_list=None,
             **kw):
@@ -744,10 +746,17 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       if measurable:
         result = sequence.get('result')
         if result:
+          print ''
+          failure_list = []
           for target, min_time, real_time, max_time in result:
-            self.assertTrue(min_time < real_time < max_time,
-                    '%s: %.4f < %.4f < %.4f' \
-                            % (target, min_time, real_time, max_time))
+            condition = (min_time < real_time < max_time)
+            print '%s%s: %.4f < %.4f < %.4f' \
+                    % (condition and ' ' or '!',
+                            target, min_time, real_time, max_time)
+            if not condition:
+              failure_list.append(target)
+          self.assertTrue(not failure_list,
+                  'these tests failed: %s' % (', '.join(failure_list)))
 
     def test_01_CheckLogicAndMakeCacheHot(self):
       """Check the correctness of the logic as well as making the cache hot.
@@ -764,9 +773,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       """
       message = 'Check Performance'
       LOG('Testing... ', 0, message)
-      self._checkSimulation(number_of_sale_orders=10,
-              number_of_sale_order_lines=10,
-              number_of_additional_sale_packing_list_lines=10,
+      self._checkSimulation(number_of_sale_orders=5,
+              number_of_sale_order_lines=5,
+              number_of_additional_sale_packing_list_lines=5,
               measurable=True)
 
 def test_suite():
