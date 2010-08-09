@@ -277,7 +277,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       if measurable:
         after_time = time()
         amount_of_time = after_time - before_time
-        min_time, max_time = self._getMinMaxTime()
+        min_time, max_time = self._getMinMaxTime(target)
         print "%s took %.4f (%.4f < %.4f < %.4f)" \
                 % (target, amount_of_time, min_time, amount_of_time, max_time)
         # Reset the target to make sure that the same target is not
