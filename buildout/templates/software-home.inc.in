@@ -8,3 +8,6 @@ software_home = ${buildout:software_home}
 executable = ${software_definition:executable}
 mysql_software = ${software_definition:mysql_software}
 
+[configuration]
+development_site_bt5_path = ${business-templates:paths}
+
