@@ -83,23 +83,32 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
-#     (pystone results: min: < 35373.2 - mean: ~ 35990.7 - max: > 36589.8)
+#     (pystone results: min: < 75757.6 - mean: ~ 77174.4 - max: > 78125)
 # Historical values are here to remember original values on this
 # specific testing environment. We must always try to stay below max
 # historical values.
 
 EXPECTED_MIN_MAX_TIME = {
-  'Creation Of New Applied Rules': (1.0, 1.0),
-  'Expansion of Existing Applied Rules': (1.0, 1.0),
-  'Creation of New Sale Packing Lists': (1.0, 1.0),
-  'Expansion of Converged Changes': (1.0, 1.0),
-  'Expansion of Diverged Changes': (1.0, 1.0),
-  'Adoption of Previsions': (1.0, 1.0),
-  'Acceptance of Decisions': (1.0, 1.0),
+  'Creation Of New Applied Rules': (38.9, 40.9),
+
+  'Expansion of Existing Applied Rules': (23.3, 26.1),
+
+  'Creation of New Sale Packing Lists': (49.2, 50.7),
+
+  'Expansion of Converged Changes': (28.3, 31.1),
+
+  'Expansion of Diverged Changes': (30.9, 32.7),
+
+  'Adoption of Previsions': (24.4, 25.2),
+
+  'Acceptance of Decisions': (18.0, 18.7),
+
   'Creation of New Applied Rules from Partially Simulated Deliveries':
-    (1.0, 1.0),
-  'Creation Of New Sale Invoices': (1.0, 1.0),
-  'Addition of New Invoices Lines': (1.0, 1.0),
+    (60.9, 62.5),
+
+  'Creation Of New Sale Invoices': (122.3, 130.8),
+
+  'Addition of New Invoices Lines': (181.6, 194.1),
 }
 
 class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
