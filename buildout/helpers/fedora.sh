@@ -30,6 +30,10 @@ gdbm-devel
 glib2-devel
 libgomp
 libjpeg-devel
+libtiff-devel
+libsqlite3x-devel
+bzip2-devel
+giflib-devel
 openldap-devel
 ncurses-devel
 neon-devel
