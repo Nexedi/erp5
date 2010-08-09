@@ -6,3 +6,5 @@ develop-eggs-directory = ${buildout:develop-eggs-directory}
 [software_definition]
 software_home = ${buildout:software_home}
 executable = ${software_definition:executable}
+mysql_software = ${software_definition:mysql_software}
+
