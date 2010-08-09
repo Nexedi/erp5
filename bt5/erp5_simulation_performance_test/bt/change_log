@@ -1,4 +1,10 @@
 2010-08-09 yo
+* Forgot to rename the id of the Business Path for tax.
+* Add SaleInvoice_getRuleReference to just return None.
+* Ignore some properties in the divergence testers for tax movements.
+* Add base_application for building tax movements.
+
+2010-08-09 yo
 * Forgot to deal with specialise which is always required for BPM.
 
 2010-08-09 yo
