@@ -1,3 +1,6 @@
+2010-08-09 yo
+* Seemingly, DCWorkflow does not delete possible transitions from states automatically, when transitions are deleted. So it is necessary to set states manually.
+
 2010-08-08 yo
 * Fix a mistake when selecting rules.
 
