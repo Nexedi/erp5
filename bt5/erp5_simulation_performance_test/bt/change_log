@@ -1,4 +1,7 @@
 2010-08-08 yo
+* Fix a mistake when selecting rules.
+
+2010-08-08 yo
 * Update the id of the business process in scripts.
 * Make more scripts for select movement methods, as OrderBuilder does not pass which builder is used.
 
