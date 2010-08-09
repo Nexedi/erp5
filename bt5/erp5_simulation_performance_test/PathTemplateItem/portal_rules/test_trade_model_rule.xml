@@ -148,6 +148,7 @@
                 <string>source_list</string>
                 <string>source_payment_list</string>
                 <string>source_section_list</string>
+                <string>specialise</string>
               </tuple>
             </value>
         </item>
