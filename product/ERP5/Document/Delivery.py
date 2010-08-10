@@ -792,6 +792,15 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
           # once expanded, the applied_rule must be reindexed
           # because some simulation_movement may change even
           # if there are not edited (acquisition)
+          #
+          # XXX yo thinks that this is excessive. First of all, we may
+          # need to reindex simulation movements but not applied rules
+          # here. So we should skip reindexing applied rules.
+          # In addition, the policy is "copy everything required to
+          # simulation movements", so acquisitions should not matter to
+          # indexing. The only exception is the simulation state.
+          # I think, if each simulation movement remembers the previous
+          # state, we can avoid unnecessary reindexing.
           my_applied_rule.recursiveReindexObject(activate_kw=activate_kw)
         else:
           LOG("ERP5", PROBLEM,
