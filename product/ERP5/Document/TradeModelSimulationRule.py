@@ -96,17 +96,15 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
 
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
-    trade_model = simulation_movement.asComposedDocument()
-
-    if trade_model is None:
-      return
-
+    specialise_list = simulation_movement.getSpecialiseList()
     rule = self._applied_rule.getSpecialiseValue()
     for amount in simulation_movement.getAggregatedAmountList(
         # XXX add a 'trade_amount_generator' group type
         amount_generator_type_list=('Purchase Trade Condition',
                                     'Sale Trade Condition',
                                     'Trade Model Line')):
-      yield self._applied_rule.newContent(
+      movement = self._applied_rule.newContent(
         portal_type=RuleMixin.movement_type, temp_object=True,
         **dict((k, v) for k, v in amount.__dict__.iteritems() if k[0] != '_'))
+      movement._setSpecialiseList(specialise_list)
+      yield movement

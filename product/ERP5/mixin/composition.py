@@ -80,15 +80,10 @@ def _getEffectiveModel(self, start_date=None, stop_date=None):
 
 
 # We do have clever caching here, since container_list does not contain objects
-# with no subobject. Example:
-#  If a SO (-> TC1, TC2) has 1 SOL (without specialise) and 1 TML,
-#  "SOL.asComposedDocument()" gives:
-#  1. _effective_model_list equals to
-#     [SOL] + [SO, TC1, TC2] = [SOL, SO, TC1, TC2]
-#  2. first call to objectValues passes container_list = [SO, TC1, TC2]
-#     to  _findPredicateList (SOL being filtered out)
-#  After evaluation of "SOL.asComposedDocument()" and "SO.asComposedDocument()",
-#  _findPredicateList has only 1 entry in its cache.
+# with no subobject.
+# After evaluation of asComposedDocument() on a SO and all its SOL,
+# _findPredicateList's cache has at most 1 entry per specialise value found
+# on SO/SOL.
 @transactional_cached()
 def _findPredicateList(container_list, portal_type=None):
   predicate_list = []
@@ -203,12 +198,10 @@ class CompositionMixin:
           model_set.add(model)
           if 1: #model.test(self): # XXX
             model_list.append(model)
-    try:
-      parent_asComposedDocument = self.getParentValue().asComposedDocument
-    except AttributeError:
-      pass
-    else:
-      model_list += [model for model in parent_asComposedDocument(
+    del model_list[0]
+    parent = self.getParentValue()
+    if hasattr(aq_base(parent), 'asComposedDocument'):
+      model_list += [model for model in parent.asComposedDocument(
                              specialise_type_list)._effective_model_list
                            if model not in model_set]
     return model_list

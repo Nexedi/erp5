@@ -331,22 +331,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       if explanation_value != portal:
         return explanation_value
 
-  def asComposedDocument(self, *args, **kw):
-    # XXX: What delivery should be used to find amount generator lines ?
-    #      With the currently enabled code, entire branches in the simulation
-    #      tree get (temporary) deleted when new delivery lines are being built
-    #      (and don't have yet a specialise value).
-    #      With the commented code, changing the STC on a SIT generated from a
-    #      SPL/SO would have no impact (and would never make the SIT divergent).
-    #return self.getRootSimulationMovement() \
-    #           .getDeliveryValue() \
-    #           .asComposedDocument(*args, **kw)
-    while 1:
-      delivery_value = self.getDeliveryValue()
-      if delivery_value is not None:
-        return delivery_value.asComposedDocument(*args, **kw)
-      self = self.getParentValue().getParentValue()
-
   # Deliverability / orderability
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isOrderable')
