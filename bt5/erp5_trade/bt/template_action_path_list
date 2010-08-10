@@ -80,7 +80,6 @@ Purchase Order | reset_movement_price_list
 Purchase Order | view
 Purchase Order | view_stock
 Purchase Order | view_trade_model
-Purchase Order | view_trade_model_line_list
 Purchase Packing List Cell | view
 Purchase Packing List Line | profile_view
 Purchase Packing List Line | quantity_view
@@ -157,7 +156,6 @@ Sale Order | sale_order_planning
 Sale Order | view
 Sale Order | view_stock
 Sale Order | view_trade_model
-Sale Order | view_trade_model_line_list
 Sale Packing List Cell | view
 Sale Packing List Line | price_view
 Sale Packing List Line | profile_view

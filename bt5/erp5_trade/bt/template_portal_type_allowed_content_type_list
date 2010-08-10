@@ -38,7 +38,6 @@ Purchase Order Line | Purchase Order Line
 Purchase Order Module | Purchase Order
 Purchase Order | Payment Condition
 Purchase Order | Purchase Order Line
-Purchase Order | Trade Model Line
 Purchase Packing List Line | Purchase Packing List Cell
 Purchase Packing List Module | Purchase Packing List
 Purchase Packing List | Payment Condition
@@ -65,7 +64,6 @@ Sale Order Line | Sale Order Line
 Sale Order Module | Sale Order
 Sale Order | Payment Condition
 Sale Order | Sale Order Line
-Sale Order | Trade Model Line
 Sale Packing List Line | Sale Packing List Cell
 Sale Packing List Module | Sale Packing List
 Sale Packing List | Container

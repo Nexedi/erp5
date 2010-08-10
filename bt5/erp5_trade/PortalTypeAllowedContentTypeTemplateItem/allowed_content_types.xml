@@ -77,7 +77,6 @@
  <portal_type id="Purchase Order">
   <item>Payment Condition</item>
   <item>Purchase Order Line</item>
-  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
   <item>Purchase Order Cell</item>
@@ -134,7 +133,6 @@
  <portal_type id="Sale Order">
   <item>Payment Condition</item>
   <item>Sale Order Line</item>
-  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Sale Order Line">
   <item>Sale Order Cell</item>
