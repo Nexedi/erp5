@@ -79,12 +79,17 @@ def _getEffectiveModel(self, start_date=None, stop_date=None):
   return model_list[0].getObject()
 
 
-# XXX-JPS it is very likely that what must be cached is delivery based
-# since most lines do not "specialise" a delivery - clever caching
-# approach is possible, by keeping one cache at the delivery level 
-# and just accessing it from wherever needed. This could minimize number of
-# caches in RAM and at the same time make things fast
-@transactional_cached() 
+# We do have clever caching here, since container_list does not contain objects
+# with no subobject. Example:
+#  If a SO (-> TC1, TC2) has 1 SOL (without specialise) and 1 TML,
+#  "SOL.asComposedDocument()" gives:
+#  1. _effective_model_list equals to
+#     [SOL] + [SO, TC1, TC2] = [SOL, SO, TC1, TC2]
+#  2. first call to objectValues passes container_list = [SO, TC1, TC2]
+#     to  _findPredicateList (SOL being filtered out)
+#  After evaluation of "SOL.asComposedDocument()" and "SO.asComposedDocument()",
+#  _findPredicateList has only 1 entry in its cache.
+@transactional_cached()
 def _findPredicateList(container_list, portal_type=None):
   predicate_list = []
   reference_dict = {}
@@ -102,19 +107,22 @@ def _findPredicateList(container_list, portal_type=None):
   return predicate_list
 
 
-class asComposedDocument(object):  # XXX-JPS bad name for a class - please follow conventions or explain
+class asComposedDocument(object):
   """Return a temporary object which is the composition of all effective models
 
   The returned value is a temporary copy of the given object. The list of all
   effective models (specialise values) is stored in a private attribute.
   Collecting predicates (from effective models) is done lazily. Predicates can
   be accessed through contentValues/objectValues.
+
+  This class should be seen as a function, and it is named accordingly.
+  It is out of CompositionMixin class to avoid excessive indentation.
   """
 
   def __new__(cls, orig_self, portal_type_list=None):
     self = orig_self.asContext(_portal_type_list=portal_type_list) # XXX-JPS orig_self -> original_self - please follow conventions
     base_class = self.__class__
-    self.__class__ = type(base_class.__name__, (cls, base_class, BusinessProcess), {}) # XXX-JPS - cls is abbriviatoin - please follow naming conventoin
+    self.__class__ = type(base_class.__name__, (cls, base_class, BusinessProcess), {})
               # here we could inherit many "useful" classes dynamically - héhé
               # that would be a "real" abstract composition system
     self._effective_model_list = \
@@ -205,4 +213,4 @@ class CompositionMixin:
                            if model not in model_set]
     return model_list
 
-del asComposedDocument # Why ? (hide it ?)
+del asComposedDocument # to be unhidden (and renamed ?) if needed
