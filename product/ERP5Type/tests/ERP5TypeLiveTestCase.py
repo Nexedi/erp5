@@ -29,9 +29,13 @@
 import unittest
 import os
 
+from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
+from Products.ERP5Type.Globals import get_request
 import transaction
+
+from zLOG import LOG, DEBUG, INFO
 
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
@@ -143,8 +147,14 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
             self._setup()
             self.afterSetUp()
         except:
+            self.beforeClear()
             self._clear()
             raise
+
+    def _app(self):
+        '''Returns the app object for a test.'''
+        request = get_request()
+        return request.PARENTS[-1]
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
@@ -155,6 +165,13 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
     def beforeSetUp(self):
       '''Called after setUp() has completed. This is
          far and away the most useful hook.
+      '''
+      pass
+
+    def beforeClear(self):
+      '''Called before _clear(). Subclasses should
+      use it to garbage collect objects which must not remain
+      in the system
       '''
       pass
 
