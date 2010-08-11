@@ -32,7 +32,7 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testLegacyOrder import TestOrderMixin
+from testLegacyRuleOrder import TestOrderMixin
 from DateTime import DateTime
 
 class TestPackingListMixin(TestOrderMixin):
