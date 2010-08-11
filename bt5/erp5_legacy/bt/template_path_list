@@ -30,3 +30,9 @@ portal_rules/default_trade_model_rule
 portal_rules/default_trade_model_rule/**
 portal_rules/default_trade_model_simulation_rule
 portal_rules/default_trade_model_simulation_rule/**
+portal_deliveries/internal_packing_list_builder
+portal_deliveries/internal_packing_list_builder/**
+portal_deliveries/purchase_packing_list_builder
+portal_deliveries/purchase_packing_list_builder/**
+portal_deliveries/sale_packing_list_builder
+portal_deliveries/sale_packing_list_builder/**
