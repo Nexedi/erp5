@@ -769,6 +769,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
 
+    security.declarePrivate('uncatalogObjectList')
+    def uncatalogObjectList(self, message_list):
+      """Uncatalog a list of objects"""
+      for obj, args, kw in message_list:
+        self.unindexObject(*args, **kw)
+      del message_list[:]
+
     security.declarePrivate('unindexObject')
     def unindexObject(self, object=None, path=None, uid=None,sql_catalog_id=None):
         """

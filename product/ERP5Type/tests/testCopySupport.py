@@ -31,6 +31,7 @@ import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 #from AccessControl.SecurityManagement import newSecurityManager
+from Products.CMFActivity.ActivityTool import ActivityTool
 from Products.CMFActivity.Errors import ActivityPendingError
 
 class TestCopySupport(ERP5TypeTestCase):
@@ -100,12 +101,48 @@ class TestCopySupport(ERP5TypeTestCase):
     # Currently, the test passes only because ActivityTool.distribute always
     # iterates on queues in the same order: SQLQueue before SQLDict.
     # If Python returned dictionary values in a different order,
-    # reindex activities fail with the following error:
+    # reindex activities would fail with the following error:
     #   uid of <Products.ERP5Catalog.CatalogTool.IndexableObjectWrapper for
     #   /erp5/person_module/1/old_address> is 599L and is already assigned
     #   to deleted in catalog !!! This can be fatal.
     # This test would also fail if SQLDict was used for 'unindexObject'.
     self.tic()
+
+  def test_03_unindexObjectGrouping(self):
+    person = self.portal.person_module.newContent(portal_type='Person',
+                                                  address_city='Lille',
+                                                  email_text='foo@bar.com')
+    transaction.commit()
+    self.tic()
+    search_catalog = self.portal.portal_catalog.unrestrictedSearchResults
+    uid_list = [person.getUid(),
+                person.default_address.getUid(),
+                person.default_email.getUid()]
+    uid_list.sort()
+    self.assertEqual(len(search_catalog(uid=uid_list)), len(uid_list))
+    self.portal.person_module._delObject(person.getId())
+    del person
+    transaction.commit()
+    self.assertEqual(len(search_catalog(uid=uid_list)), len(uid_list))
+    activity_tool = self.portal.portal_activities
+    self.assertEqual(len(activity_tool.getMessageList()), len(uid_list))
+
+    ActivityTool_invokeGroup = ActivityTool.invokeGroup
+    invokeGroup_list = []
+    def invokeGroup(self, method_id, message_list, activity):
+      invokeGroup_list.extend((method_id,
+                               sorted(m.kw.get('uid') for m in message_list),
+                               activity))
+      return ActivityTool_invokeGroup(self, method_id, message_list, activity)
+    try:
+      ActivityTool.invokeGroup = invokeGroup
+      self.tic()
+    finally:
+      ActivityTool.invokeGroup = ActivityTool_invokeGroup
+    self.assertEqual(invokeGroup_list,
+      ['portal_catalog/uncatalogObjectList', uid_list, 'SQLQueue'])
+    self.assertEqual(len(search_catalog(uid=uid_list)), 0)
+
 
 def test_suite():
   suite = unittest.TestSuite()
