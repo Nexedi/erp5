@@ -759,6 +759,16 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         self.catalog_object(object, url, idxs=idxs, sql_catalog_id=sql_catalog_id,**kw)
 
 
+    def catalogObjectList(self, object_list, *args, **kw):
+        """Catalog a list of objects"""
+        if type(object_list[0]) is tuple:
+          tmp_object_list = [x[0] for x in object_list]
+          super(CatalogTool, self).catalogObjectList(tmp_object_list, **x[2])
+          # keep failed objects in 'object_list'
+          object_list[:] = [x for x in object_list if x[0] in tmp_object_list]
+        else:
+          super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
+
     security.declarePrivate('unindexObject')
     def unindexObject(self, object=None, path=None, uid=None,sql_catalog_id=None):
         """

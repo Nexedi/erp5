@@ -1885,8 +1885,9 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()    
     organisation =  portal.organisation._getOb(self.company_id)
     # Defined a group method
-    def setFoobar(self, object_list, number=1):
-      for obj in object_list:
+    def setFoobar(self, object_list):
+      for obj, args, kw in object_list:
+        number = kw.get('number', 1)
         if getattr(obj,'foobar', None) is not None:
           obj.foobar = obj.foobar + number
         else:
@@ -2009,7 +2010,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     transaction.commit()
     self.tic()
     activity_tool = self.getActivityTool()
-    def modifySQLAndFail(self, object_list, **kw):
+    def modifySQLAndFail(self, object_list):
       # Only create the dummy activity if none is present: we would just
       # generate missleading errors (duplicate uid).
       if activity_tool.countMessage(method_id='dummy_activity') == 0:
@@ -2437,7 +2438,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     transaction.commit()
     self.tic()
     activity_tool = self.getActivityTool()
-    def modifySQL(self, object_list, *arg, **kw):
+    def modifySQL(self, object_list):
       # Only create the dummy activity if none is present: we would just
       # generate missleading errors (duplicate uid).
       if activity_tool.countMessage(method_id='dummy_activity') == 0:

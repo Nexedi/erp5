@@ -1178,10 +1178,9 @@ class ActivityTool (Folder, UniqueObject):
           'invoking group messages: method_id=%s, paths=%s'
           % (method_id, ['/'.join(m.object_path) for m in message_list]))
       # Invoke a group method.
-      object_list = []
       expanded_object_list = []
       new_message_list = []
-      path_dict = {}
+      path_set = set()
       # Filter the list of messages. If an object is not available, mark its
       # message as non-executable. In addition, expand an object if necessary,
       # and make sure that no duplication happens.
@@ -1198,16 +1197,14 @@ class ActivityTool (Folder, UniqueObject):
           m.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=self)
           continue
         try:
-          i = len(new_message_list) # This is an index of this message
-                                    # in new_message_list
           if m.hasExpandMethod():
             subobject_list = m.getObjectList(self)
           else:
             subobject_list = (obj,)
           for subobj in subobject_list:
             path = subobj.getPath()
-            if path not in path_dict:
-              path_dict[path] = i
+            if path not in path_set:
+              path_set.add(path)
               if alternate_method_id is not None \
                  and hasattr(aq_base(subobj), alternate_method_id):
                 # if this object is alternated,
@@ -1218,9 +1215,8 @@ class ActivityTool (Folder, UniqueObject):
                 active_obj = subobj.activate(**activity_kw)
                 getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
               else:
-                expanded_object_list.append(subobj)
-          object_list.append(obj)
-          new_message_list.append(m)
+                expanded_object_list.append((subobj, m.args, m.kw))
+          new_message_list.append((m, obj))
         except:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
 
@@ -1231,32 +1227,33 @@ class ActivityTool (Folder, UniqueObject):
           # NOTE: expanded_object_list must be set to failed objects by the
           #       callee. If it fully succeeds, expanded_object_list must be
           #       empty when returning.
-          result = method(expanded_object_list, **m.kw)
+          result = method(expanded_object_list)
         else:
           result = None
       except:
         # In this case, the group method completely failed.
         exc_info = sys.exc_info()
-        for m in new_message_list:
+        for m, obj in new_message_list:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
-            (method_id, expanded_object_list), error=exc_info)
+            (method_id, [x[0] for x in expanded_object_list]), error=exc_info)
         error_log = getattr(self, 'error_log', None)
         if error_log is not None:
           error_log.raising(exc_info)
       else:
         # Obtain all indices of failed messages.
         # Note that this can be a partial failure.
-        failed_message_set = set(path_dict[obj.getPath()]
-                                 for obj in expanded_object_list)
+        failed_message_set = set(id(x[2]) for x in expanded_object_list)
         # Only for succeeded messages, an activity process is invoked (if any).
-        for i, m in enumerate(new_message_list):
-          if i in failed_message_set:
+        for m, obj in new_message_list:
+          # We use id of kw dict (persistent object) to know if there is a
+          # failed 3-tuple corresponding to Message m.
+          if id(m.kw) in failed_message_set:
             m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
           else:
             try:
-              m.activateResult(self, result, object_list[i])
+              m.activateResult(self, result, obj)
             except:
               m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
             else:
