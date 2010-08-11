@@ -52,6 +52,7 @@ class SQLDict(RAMDict, SQLBase):
     because use of OOBTree.
   """
   sql_table = 'message'
+  merge_duplicate = True
 
   # Transaction commit methods
   def prepareQueueMessageList(self, activity_tool, message_list):

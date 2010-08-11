@@ -1172,7 +1172,7 @@ class ActivityTool (Folder, UniqueObject):
         for held in my_self.REQUEST._held:
           self.REQUEST._hold(held)
 
-    def invokeGroup(self, method_id, message_list):
+    def invokeGroup(self, method_id, message_list, activity, merge_duplicate):
       if self.activity_tracking:
         activity_tracking_logger.info(
           'invoking group messages: method_id=%s, paths=%s'
@@ -1202,20 +1202,22 @@ class ActivityTool (Folder, UniqueObject):
           else:
             subobject_list = (obj,)
           for subobj in subobject_list:
-            path = subobj.getPath()
-            if path not in path_set:
+            if merge_duplicate:
+              path = subobj.getPath()
+              if path in path_set:
+                continue
               path_set.add(path)
-              if alternate_method_id is not None \
-                 and hasattr(aq_base(subobj), alternate_method_id):
-                # if this object is alternated,
-                # generate a new single active object
-                activity_kw = m.activity_kw.copy()
-                activity_kw.pop('group_method_id', None)
-                activity_kw.pop('group_id', None)
-                active_obj = subobj.activate(**activity_kw)
-                getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
-              else:
-                expanded_object_list.append((subobj, m.args, m.kw))
+            if alternate_method_id is not None \
+               and hasattr(aq_base(subobj), alternate_method_id):
+              # if this object is alternated,
+              # generate a new single active object
+              activity_kw = m.activity_kw.copy()
+              activity_kw.pop('group_method_id', None)
+              activity_kw.pop('group_id', None)
+              active_obj = subobj.activate(activity=activity, **activity_kw)
+              getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
+            else:
+              expanded_object_list.append((subobj, m.args, m.kw))
           new_message_list.append((m, obj))
         except:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)

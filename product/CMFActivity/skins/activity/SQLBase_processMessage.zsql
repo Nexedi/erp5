@@ -7,14 +7,14 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>uid</params>
-UPDATE message
+<params>table
+uid</params>
+UPDATE
+  <dtml-var table>
 SET
   processing_date = UTC_TIMESTAMP(),
   processing = 1
 WHERE
-  uid IN (
-<dtml-in uid><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>
-  )
+  <dtml-sqltest uid type="int" multiple>
 <dtml-var sql_delimiter>
 COMMIT

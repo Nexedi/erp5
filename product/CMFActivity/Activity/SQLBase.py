@@ -148,12 +148,15 @@ class SQLBase:
         This number is guaranted not to be exceeded.
         If None (or not given) no limit apply.
     """
-    result = not group_method_id and \
-      activity_tool.SQLDict_selectReservedMessageList(
-        processing_node=processing_node, count=limit)
+    select = activity_tool.SQLBase_selectReservedMessageList
+    result = not group_method_id and select(table=self.sql_table, count=limit,
+                                            processing_node=processing_node)
     if not result:
-      activity_tool.SQLDict_reserveMessageList(count=limit, processing_node=processing_node, to_date=date, group_method_id=group_method_id)
-      result = activity_tool.SQLDict_selectReservedMessageList(processing_node=processing_node, count=limit)
+      activity_tool.SQLBase_reserveMessageList(table=self.sql_table,
+        count=limit, processing_node=processing_node, to_date=date,
+        group_method_id=group_method_id)
+      result = select(table=self.sql_table,
+                      processing_node=processing_node, count=limit)
     return result
 
   def makeMessageListAvailable(self, activity_tool, uid_list):
@@ -161,7 +164,8 @@ class SQLBase:
       Put messages back in processing_node=0 .
     """
     if len(uid_list):
-      activity_tool.SQLDict_makeMessageListAvailable(uid_list=uid_list)
+      activity_tool.SQLBase_makeMessageListAvailable(table=self.sql_table,
+                                                     uid=uid_list)
 
   def getProcessableMessageList(self, activity_tool, processing_node):
     """
@@ -222,7 +226,7 @@ class SQLBase:
         m = self.loadMessage(line.message, uid=uid, line=line)
         message_list.append(m)
         group_method_id = line.group_method_id
-        activity_tool.SQLDict_processMessage(uid=[uid])
+        activity_tool.SQLBase_processMessage(table=self.sql_table, uid=[uid])
         uid_to_duplicate_uid_list_dict.setdefault(uid, []) \
           .extend(getDuplicateMessageUidList(line))
         if group_method_id not in (None, '', '\0'):
@@ -243,22 +247,26 @@ class SQLBase:
               # We read each line once so lines have distinct uids.
               # So what remains to be filtered on are path, method_id and
               # order_validation_text.
-              key = (line.path, line.method_id, line.order_validation_text)
-              original_uid = path_and_method_id_dict.get(key)
-              if original_uid is not None:
-                uid_to_duplicate_uid_list_dict.setdefault(original_uid, []) \
-                .append(line.uid)
-                continue
-              path_and_method_id_dict[key] = line.uid
-              uid_to_duplicate_uid_list_dict.setdefault(line.uid, []) \
-              .extend(getDuplicateMessageUidList(line))
+              try:
+                key = line.path, line.method_id, line.order_validation_text
+              except AttributeError:
+                pass # message_queue does not have 'order_validation_text'
+              else:
+                original_uid = path_and_method_id_dict.get(key)
+                if original_uid is not None:
+                  uid_to_duplicate_uid_list_dict.setdefault(original_uid, []) \
+                  .append(line.uid)
+                  continue
+                path_and_method_id_dict[key] = line.uid
+                uid_to_duplicate_uid_list_dict.setdefault(line.uid, []) \
+                .extend(getDuplicateMessageUidList(line))
               if count < MAX_GROUPED_OBJECTS:
                 m = self.loadMessage(line.message, uid=line.uid, line=line)
                 count += len(m.getObjectList(activity_tool))
                 message_list.append(m)
               else:
                 unreserve_uid_list.append(line.uid)
-            activity_tool.SQLDict_processMessage(
+            activity_tool.SQLBase_processMessage(table=self.sql_table,
               uid=[m.uid for m in message_list])
             # Unreserve extra messages as soon as possible.
             self.makeMessageListAvailable(activity_tool=activity_tool,
@@ -298,7 +306,8 @@ class SQLBase:
         group_method_id = group_method_id.split('\0')[0]
       if group_method_id not in (None, ""):
         method  = activity_tool.invokeGroup
-        args = (group_method_id, message_list)
+        args = (group_method_id, message_list, self.__class__.__name__,
+                self.merge_duplicate)
         activity_runtime_environment = ActivityRuntimeEnvironment(None)
       else:
         method = activity_tool.invoke

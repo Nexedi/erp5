@@ -7,15 +7,14 @@ cache_time:0
 class_name:
 class_file:
 </dtml-comment>
-<params>uid_list</params>
+<params>table
+uid</params>
 UPDATE
-  message
+  <dtml-var table>
 SET
   processing_node=0,
   processing=0
 WHERE
-  uid IN (
-  <dtml-in prefix="uid" expr="uid_list"><dtml-sqlvar uid_item type="int"><dtml-if sequence-end><dtml-else>, </dtml-if></dtml-in>
-  )
+  <dtml-sqltest uid type="int" multiple>
 <dtml-var sql_delimiter>
 COMMIT
