@@ -130,7 +130,7 @@ class SolverTool(TypeProvider):
         application_value = application_value.getParentValue()
     except AttributeError:
       # if missing, it should be in Delivery level ?
-      application_value = movement.getDeliveryValue()
+      application_value = movement.getRootDeliveryValue()
     return [application_value]
 
     # Alternate short Term Implementation Approach
