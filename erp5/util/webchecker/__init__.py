@@ -395,10 +395,9 @@ class HTTPCacheCheckerTestSuite(object):
     else:
       report_message = 'No errors'
       signal = 'OK'
+    subject = '%r:HTTP Cache checker results for %s' % (signal, self.root_url)
     if self.email_address:
       import smtplib
-      subject = 'HTTP Cache checker results for %s: %s' % (self.root_url,
-                                                                        signal)
       message = 'Subject: %s\nFrom: %s\nTo: %s\n\n%s' %\
               (subject, self.email_address, self.email_address, report_message)
       server = smtplib.SMTP(self.smtp_host)
@@ -406,7 +405,7 @@ class HTTPCacheCheckerTestSuite(object):
       server.quit()
       return 'Email sended to %s' % self.email_address
     else:
-      return report_message
+      return subject + '\n' + report_message
 
 
 from optparse import OptionParser
