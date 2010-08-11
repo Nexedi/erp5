@@ -1476,6 +1476,9 @@ msgstr "Cellule budgétaire"
 msgid "Budget Consumption"
 msgstr "Consommation de budget"
 
+msgid "Budget Explanation"
+msgstr "Explication du budget"
+
 msgid "Budget Line"
 msgstr "Ligne Budgétaire"
 
