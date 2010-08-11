@@ -801,7 +801,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
           # indexing. The only exception is the simulation state.
           # I think, if each simulation movement remembers the previous
           # state, we can avoid unnecessary reindexing.
-          my_applied_rule.recursiveReindexObject(activate_kw=activate_kw)
+          my_applied_rule.recursiveReindexSimulationMovement(activate_kw=activate_kw)
         else:
           LOG("ERP5", PROBLEM,
               "Could not expand applied rule %s for delivery %s" %\
@@ -836,8 +836,8 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
           if parent_value not in to_expand_list:
             to_expand_list.append(parent_value)
       for rule in to_expand_list:
-        rule.expand(activate_kw=activate_kw,**kw)
-        rule.recursiveReindexObject(activate_kw=activate_kw)
+        rule.expand(activate_kw=activate_kw, **kw)
+        rule.recursiveReindexSimulationMovement(activate_kw=activate_kw)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootCausalityValueList')
