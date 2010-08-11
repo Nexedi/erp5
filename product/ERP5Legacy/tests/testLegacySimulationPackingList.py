@@ -567,6 +567,7 @@ class TestPackingListMixin(TestOrderMixin):
       simulation_movement.getDeliveryValue().edit(quantity=self.default_quantity-1)
       simulation_movement.expand()
 
+
   def stepModifySimulationLineStopDate(self,sequence=None, sequence_list=None, **kw):
     """
     Modify simulation line stop date
@@ -576,6 +577,18 @@ class TestPackingListMixin(TestOrderMixin):
     resource_list = sequence.get('resource_list')
     for simulation_movement in simulation_movement_list:
       simulation_movement.recordProperty('stop_date')
+      simulation_movement.edit(stop_date=self.datetime+15)
+      simulation_movement.expand()
+
+  def stepModifySimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
+    """
+    Modify simulation line start date
+    """
+    applied_rule = sequence.get('applied_rule')
+    simulation_movement_list = applied_rule.objectValues()
+    resource_list = sequence.get('resource_list')
+    for simulation_movement in simulation_movement_list:
+      simulation_movement.recordProperty('start_date')
       simulation_movement.edit(stop_date=self.datetime+15)
       simulation_movement.expand()
 
