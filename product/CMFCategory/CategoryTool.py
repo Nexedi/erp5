@@ -778,7 +778,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       # Build the ckecked_permission filter
       if checked_permission is not None:
-        checkPermission = self.portal_membership.checkPermission
+        checkPermission = self.getPortalObject().portal_membership.checkPermission
         def permissionFilter(category):
           object = self.unrestrictedTraverse(category) # XXX Why unrestrictedTraverse and not resolveCategory ?
           if object is not None and checkPermission(checked_permission, object):
@@ -872,7 +872,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       """
       if permission is None:
         return category_list
-      checkPermission = self.portal_membership.checkPermission
+      checkPermission = self.getPortalObject().portal_membership.checkPermission
       resolveCategory = self.resolveCategory
       new_category_list = []
       append = new_category_list.append
