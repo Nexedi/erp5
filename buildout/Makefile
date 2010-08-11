@@ -65,12 +65,22 @@ opensuse-rpm-appliance: checkout-rpmgen
 	sudo helpers/opensuse.sh
 	cd rpmgen; make opensuse
 
-fedora-rpm-appliance: checkout-rpmgen
-	sed -i "s,mandriva,fedora,g" rpmgen/buildout.cfg
-	sed -i "s,name = erp5-official-buildout,name = erp5-$(PACKAGE_VERSION),g" rpmgen/profiles/fedora.cfg
-	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/profiles/fedora.cfg
-	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/profiles/fedora.cfg
-	sed -i 's,release = 001,release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/profiles/fedora.cfg
+fedora12-rpm-appliance: checkout-rpmgen
+	sed -i "s,mandriva,fedora12,g" rpmgen/buildout.cfg
+	sed -i "s,name = erp5-official-buildout,name = erp5-$(PACKAGE_VERSION),g" rpmgen/profiles/fedora12.cfg
+	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/profiles/fedora12.cfg
+	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/profiles/fedora12.cfg
+	sed -i 's,release = 001,release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/profiles/fedora12.cfg
+	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt),$(PACKAGE_VERSION),g" rpmgen/Makefile
+	sudo helpers/fedora.sh
+	cd rpmgen; make fedora
+
+fedora13-rpm-appliance: checkout-rpmgen
+	sed -i "s,mandriva,fedora13,g" rpmgen/buildout.cfg
+	sed -i "s,name = erp5-official-buildout,name = erp5-$(PACKAGE_VERSION),g" rpmgen/profiles/fedora13.cfg
+	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/profiles/fedora13.cfg
+	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/profiles/fedora13.cfg
+	sed -i 's,release = 001,release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/profiles/fedora13.cfg
 	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt),$(PACKAGE_VERSION),g" rpmgen/Makefile
 	sudo helpers/fedora.sh
 	cd rpmgen; make fedora
