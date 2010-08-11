@@ -152,6 +152,22 @@ class TestPackingListMixin(TestOrderMixin):
     """
     return 1
 
+  def validateRules(self):
+    """
+    try to validate all rules in rule_tool.
+    """
+    rule_tool = self.getRuleTool()
+    for rule in rule_tool.contentValues(
+        portal_type=rule_tool.getPortalRuleTypeList()):
+      if rule.getValidationState() != 'validated':
+        rule.validate()
+
+    for rule in rule_tool.contentValues(
+        portal_type=rule_tool.getPortalRuleTypeList()):
+      if rule.getValidationState() == 'validated' and rule.getReference() == 'default_accounting_transaction_rule':
+        rule.invalidate()
+
+
   def stepCheckOrderPackingList(self, sequence=None, sequence_list=None, **kw):
     """
       Test if packing list is matching order
