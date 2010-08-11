@@ -32,7 +32,7 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testLegacyRuleOrder import TestOrderMixin
+from testLegacyOrder import TestOrderMixin
 from DateTime import DateTime
 
 class TestPackingListMixin(TestOrderMixin):
@@ -151,22 +151,6 @@ class TestPackingListMixin(TestOrderMixin):
     Return if we should create (1) or not (0) an activity tool.
     """
     return 1
-
-  def validateRules(self):
-    """
-    try to validate all rules in rule_tool.
-    """
-    rule_tool = self.getRuleTool()
-    for rule in rule_tool.contentValues(
-        portal_type=rule_tool.getPortalRuleTypeList()):
-      if rule.getValidationState() != 'validated':
-        rule.validate()
-
-    for rule in rule_tool.contentValues(
-        portal_type=rule_tool.getPortalRuleTypeList()):
-      if rule.getValidationState() == 'validated' and rule.getReference() == 'default_accounting_transaction_rule':
-        rule.invalidate()
-
 
   def stepCheckOrderPackingList(self, sequence=None, sequence_list=None, **kw):
     """

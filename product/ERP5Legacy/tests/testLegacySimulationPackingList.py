@@ -34,7 +34,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Document.BusinessTemplate import getChainByType
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testOrder import TestOrderMixin
+from testLegacyRuleOrder import TestOrderMixin
 from DateTime import DateTime
 from Products.ERP5Type.Globals import PersistentMapping
 
