@@ -300,9 +300,10 @@ class SQLDict(RAMDict, SQLBase):
               message_list.sort(key=sort_message_key)
               deletable_uid_list += [m.uid for m in message_list[1:]]
             message = message_list[0]
-            distributable_uid_set.add(message.uid)
             serialization_tag = message.activity_kw.get('serialization_tag')
-            if serialization_tag is not None:
+            if serialization_tag is None:
+              distributable_uid_set.add(message.uid)
+            else:
               serialization_tag_dict.setdefault(serialization_tag,
                                                 []).append(message)
           # Don't let through if there is the same serialization tag in the
@@ -312,15 +313,15 @@ class SQLDict(RAMDict, SQLBase):
           # does not stop validating together. Because those messages should
           # be processed together at once.
           for message_list in serialization_tag_dict.itervalues():
-            if len(message_list) == 1:
-              continue
             # Sort list of messages to validate the message with highest score
             message_list.sort(key=sort_message_key)
+            distributable_uid_set.add(message_list[0].uid)
             group_method_id = message_list[0].activity_kw.get('group_method_id')
+            if group_method_id is None:
+              continue
             for message in message_list[1:]:
-              if group_method_id is None or \
-                 group_method_id != message.activity_kw.get('group_method_id'):
-                distributable_uid_set.remove(message.uid)
+              if group_method_id == message.activity_kw.get('group_method_id'):
+                distributable_uid_set.add(message.uid)
           if deletable_uid_list:
             activity_tool.SQLBase_delMessage(table=self.sql_table,
                                              uid=deletable_uid_list)

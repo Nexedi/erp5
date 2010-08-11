@@ -3798,7 +3798,49 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       activity_tool.manageClearActivities(keep=0)
     finally:
       SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
-  
+
+  def test_125_CheckDistributeWithSerializationTagAndGroupMethodId(self):
+    activity_tool = self.portal.portal_activities
+    obj1 = activity_tool.newActiveProcess()
+    obj2 = activity_tool.newActiveProcess()
+    transaction.commit()
+    self.tic()
+    group_method_call_list = []
+    def doSomething(self, message_list):
+      group_method_call_list.append(sorted((obj.getPath(), args, kw)
+                                           for obj, args, kw in message_list))
+      del message_list[:]
+    activity_tool.__class__.doSomething = doSomething
+    try:
+      for activity in 'SQLDict', 'SQLQueue':
+        activity_kw = dict(activity=activity, serialization_tag=self.id(),
+                           group_method_id='portal_activities/doSomething')
+        obj1.activate(**activity_kw).dummy(1, x=None)
+        obj2.activate(**activity_kw).dummy(2, y=None)
+        transaction.commit()
+        activity_tool.distribute()
+        activity_tool.tic()
+        self.assertEqual(group_method_call_list.pop(),
+                         sorted([(obj1.getPath(), (1,), dict(x=None)),
+                                 (obj2.getPath(), (2,), dict(y=None))]))
+        self.assertFalse(group_method_call_list)
+        self.assertFalse(activity_tool.getMessageList())
+        obj1.activate(priority=2, **activity_kw).dummy1(1, x=None)
+        obj1.activate(priority=1, **activity_kw).dummy2(2, y=None)
+        message1 = obj1.getPath(), (1,), dict(x=None)
+        message2 = obj1.getPath(), (2,), dict(y=None)
+        transaction.commit()
+        activity_tool.distribute()
+        self.assertEqual(len(activity_tool.getMessageList()), 2)
+        activity_tool.tic()
+        self.assertEqual(group_method_call_list.pop(),
+                         dict(SQLDict=[message2],
+                              SQLQueue=[message1, message2])[activity])
+        self.assertFalse(group_method_call_list)
+        self.assertFalse(activity_tool.getMessageList())
+    finally:
+      del activity_tool.__class__.doSomething
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))

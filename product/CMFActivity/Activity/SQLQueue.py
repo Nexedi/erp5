@@ -255,6 +255,12 @@ class SQLQueue(RAMQueue, SQLBase):
             # Sort list of messages to validate the message with highest score
             message_list.sort(key=sort_message_key)
             distributable_uid_set.add(message_list[0].uid)
+            group_method_id = message_list[0].activity_kw.get('group_method_id')
+            if group_method_id is None:
+              continue
+            for message in message_list[1:]:
+              if group_method_id == message.activity_kw.get('group_method_id'):
+                distributable_uid_set.add(message.uid)
           distributable_count = len(distributable_uid_set)
           if distributable_count:
             activity_tool.SQLBase_assignMessage(table=self.sql_table,
