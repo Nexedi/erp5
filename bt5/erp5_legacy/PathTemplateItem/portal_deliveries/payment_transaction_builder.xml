@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="DeliveryBuilder" module="Products.ERP5.Document.DeliveryBuilder"/>
+        <global name="DeliveryBuilder" module="Products.ERP5Type.Document.DeliveryBuilder"/>
         <tuple/>
       </tuple>
     </pickle>
