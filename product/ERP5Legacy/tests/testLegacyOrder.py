@@ -100,6 +100,19 @@ class TestOrderMixin:
     self.validateRules()
     self.setUpPreferences()
 
+  def validateRules(self):
+    """
+    try to validate all rules in rule_tool.
+    """
+    rule_tool = self.getRuleTool()
+    for rule in rule_tool.contentValues(
+        portal_type=rule_tool.getPortalRuleTypeList()):
+      if rule.getValidationState() != 'validated':
+        rule.validate()
+      # do not use new 'XXX Simulation Rule' in legacy tests.
+      if 'Simulation Rule' in rule.getPortalType():
+        rule.invalidate()
+
   def createCurrency(self):
     currency_module = self.getPortal().currency_module
     if currency_module._getOb('euro', None) is None:
