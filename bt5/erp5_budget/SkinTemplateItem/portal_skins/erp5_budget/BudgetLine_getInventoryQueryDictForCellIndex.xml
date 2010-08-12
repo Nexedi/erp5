@@ -80,6 +80,8 @@ if engaged_budget:\n
                   portal.getPortalCurrentInventoryStateList() +\n
                   portal.getPortalTransitInventoryStateList())\n
 \n
+kw.setdefault(\'simulation_state\', portal.getPortalCurrentInventoryStateList())\n
+\n
 return kw\n
 </string> </value>
         </item>
