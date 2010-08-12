@@ -2,6 +2,5 @@
  <portal_type id="Business Path">
   <item>PaymentCondition</item>
   <item>SupplyPath</item>
-  <item>TradeModelPath</item>
  </portal_type>
 </property_sheet_list>
