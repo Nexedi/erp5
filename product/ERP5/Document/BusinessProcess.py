@@ -711,9 +711,11 @@ class BusinessProcess(Path, XMLObject):
         pass
       kw.update(update_property_dict)
       movement._edit(**kw)
-      business_link = self.getBusinessLinkValueList(trade_phase=trade_phase, context=movement)
-      business_link = map(lambda x: x.getRelativeUrl(), business_link)
-      movement._setCausalityList(business_link + movement.getCausalityList())
+      business_link = self.getBusinessLinkValueList(trade_phase=trade_phase,
+                                                    context=movement)
+      business_link = [x.getRelativeUrl() for x in business_link]
+      movement._setCausalityList(business_link
+        + movement.getCausalityList() + amount.getCausalityList())
       result.append(movement)
 
     # result can not be empty

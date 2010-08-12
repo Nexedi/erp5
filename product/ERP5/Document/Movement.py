@@ -196,6 +196,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
                     , PropertySheet.SimpleItem
                     , PropertySheet.CategoryCore
                     , PropertySheet.Amount
+                    , PropertySheet.Reference
                     , PropertySheet.Task
                     , PropertySheet.Arrow
                     , PropertySheet.Movement

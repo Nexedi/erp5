@@ -220,13 +220,8 @@ class AmountGeneratorMixin:
             property_dict.setdefault('base_application_set',
                                      set()).add(base_application)
             #property_dict['trade_phase_list'] = amount_generator_cell.getTradePhaseList() # Required moved to MappedValue
-            property_dict['reference'] = (amount_generator_cell.getReference()
-                                          or self.getReference()) # XXX
-            property_dict['id'] = amount_generator_cell.getRelativeUrl().replace('/', '_')
-            property_dict['title'] = self.getTitle()
-            property_dict['int_index'] = self.getIntIndex()
-            property_dict['description'] = self.getDescription()
-
+            property_dict.setdefault('causality_value_list',
+                                     []).append(amount_generator_cell)
           # Case 2: the cell defines a temporary calculation line
           if base_contribution_list:
             # Define a key in order to aggregate amounts in cells
@@ -254,6 +249,7 @@ class AmountGeneratorMixin:
             # base_contribution_list MUST be defined
             property_dict['base_contribution_list'] = base_contribution_list
       for property_dict in resource_amount_aggregate.itervalues():
+        causality_value_list = property_dict.pop('causality_value_list')
         base_application_set = property_dict['base_application_set']
         # property_dict should include
         #   resource - VAT service or a Component in MRP
@@ -283,9 +279,19 @@ class AmountGeneratorMixin:
           continue
         # Create an Amount object
         # XXX-JPS Could we use a movement for safety ?
-        amount = newTempAmount(portal, property_dict.pop('id'))
+        amount = newTempAmount(portal,
+          # we only want the id to be unique
+          causality_value_list[0].getRelativeUrl().replace('/', '_'))
         amount._setCategoryList(property_dict.pop('category_list', ()))
-        amount._edit(**property_dict)
+        amount._edit(
+          # XXX If they are several cells, we may have duplicate references.
+          reference=self.getReference(),
+          # XXX Are title, int_index and description useful ??
+          title=self.getTitle(),
+          int_index=self.getIntIndex(),
+          description=self.getDescription(),
+          **property_dict)
+        amount._setValueList('causality', causality_value_list)
         if rounding:
           # We hope here that rounding is sufficient at line level
           amount = getRoundingProxy(amount, context=self)
@@ -357,7 +363,7 @@ class AmountGeneratorMixin:
     result_list = []
     for amount in generated_amount_list:
       key = (amount.getPrice(), amount.getEfficiency(),
-             amount.reference, amount.categories)
+             amount.getReference(), amount.categories)
       aggregated_amount = aggregated_amount_dict.get(key)
       if aggregated_amount is None:
         aggregated_amount_dict[key] = amount

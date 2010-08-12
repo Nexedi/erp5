@@ -67,6 +67,7 @@ class Amount(Base, Variated):
                     , PropertySheet.SimpleItem
                     , PropertySheet.Amount
                     , PropertySheet.Price
+                    , PropertySheet.Reference
                     )
 
   # A few more mix-in methods which should be relocated
