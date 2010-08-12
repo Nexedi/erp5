@@ -1747,6 +1747,21 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self.assertEquals(int_index_result, [line_ccc, line_ddd, line_aaa,
       line_bbb])
 
+  def test_subcontent_reindexing_container_line_cell(self):
+    """Tests, that indexation of Packing List are propagated to subobjects
+    during reindxation, for Container, Container Line and Container Cell"""
+    packing_list = self.portal.getDefaultModule(
+        self.packing_list_portal_type).newContent(
+            portal_type=self.packing_list_portal_type)
+    container = packing_list.newContent(
+        portal_type=self.container_portal_type)
+    container_line = container.newContent(
+        portal_type=self.container_line_portal_type)
+    container_cell = container_line.newContent(
+        portal_type=self.container_cell_portal_type)
+    self._testSubContentReindexing(container, [container_line,
+      container_cell])
+
 class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0
 
@@ -1928,7 +1943,12 @@ class TestPurchasePackingListMixin(TestPackingListMixin):
   stepCheckPackingListIsNotPacked = ignored_step
   stepCheckPackingListIsPacked = ignored_step
   stepCheckNewPackingListIsPacked = ignored_step
+
   def test_subcontent_reindexing_packing_list_container_line_cell(self):
+    """No need to check Containers in Purchase Packing List"""
+    pass
+
+  def test_subcontent_reindexing_container_line_cell(self):
     """No need to check Containers in Purchase Packing List"""
     pass
 
