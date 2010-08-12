@@ -165,7 +165,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return self._getLocalFile(REQUEST, response, 
                                file_path='log/Z2.log', 
-                               compressed=1) 
+                               compressed=compressed) 
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
   def getEventLog(self,  compressed=1, REQUEST=None):
@@ -179,7 +179,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return self._getLocalFile(REQUEST, response,
                                file_path='log/event.log',
-                               compressed=1)
+                               compressed=compressed)
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
   def getDataFs(self,  compressed=1, REQUEST=None):
