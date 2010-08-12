@@ -1,4 +1,8 @@
 <allowed_content_type_list>
+ <portal_type id="Business Process">
+  <item>Business Path</item>
+  <item>Business State</item>
+ </portal_type>
  <portal_type id="Purchase Order">
   <item>Trade Model Line</item>
  </portal_type>
