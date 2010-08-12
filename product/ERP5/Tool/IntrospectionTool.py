@@ -120,7 +120,7 @@ class IntrospectionTool(LogMixin, BaseTool):
   def _getLocalFile(self, REQUEST, RESPONSE, file_path, 
                          tmp_file_path='/tmp/', compressed=1):
     """
-      It should return the local file compacted as tar.gz.
+      It should return the local file compacted or not as tar.gz.
     """
     if file_path.startswith('/'):
       raise IOError, 'The file path must be relative not absolute'
@@ -135,14 +135,19 @@ class IntrospectionTool(LogMixin, BaseTool):
       tmp_file.add(file_path)
       tmp_file.close()
       RESPONSE.setHeader('Content-type', 'application/x-tar')
+      RESPONSE.setHeader('Content-Disposition', \
+                 'attachment;filename="%s.tar.gz"' % file_path.split('/')[-1])
     else:
+      RESPONSE.setHeader('Content-type', 'application/txt')
+      RESPONSE.setHeader('Content-Disposition', \
+                 'attachment;filename="%s.txt"' % file_path.split('/')[-1])
+
       tmp_file_path = file_path
+
 
     f = open(tmp_file_path)
     try:
       RESPONSE.setHeader('Content-Length', os.stat(tmp_file_path).st_size)
-      RESPONSE.setHeader('Content-Disposition', \
-                 'attachment;filename="%s.tar.gz"' % file_path.split('/')[-1])
       for data in f:
         RESPONSE.write(data)
     finally:
@@ -154,7 +159,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     return ''
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
-  def getAccessLog(self,  compressed=1, REQUEST=None):
+  def getAccessLog(self, compressed=1, REQUEST=None):
     """
       Get the Access Log.
     """
@@ -168,9 +173,9 @@ class IntrospectionTool(LogMixin, BaseTool):
                                compressed=compressed) 
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
-  def getEventLog(self,  compressed=1, REQUEST=None):
+  def getEventLog(self, compressed=1, REQUEST=None):
     """
-      Get the Access Log.
+      Get the Event Log.
     """
     if REQUEST is not None:
       response = REQUEST.RESPONSE
@@ -184,7 +189,7 @@ class IntrospectionTool(LogMixin, BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
   def getDataFs(self,  compressed=1, REQUEST=None):
     """
-      Get the Access Log.
+      Get the Data.fs.
     """
     if REQUEST is not None:
       response = REQUEST.RESPONSE
@@ -193,7 +198,7 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return self._getLocalFile(REQUEST, response,
                                file_path='var/Data.fs',
-                               compressed=1)
+                               compressed=compressed)
 
   #
   #   Instance variable definition access
