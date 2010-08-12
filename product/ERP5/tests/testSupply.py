@@ -253,8 +253,22 @@ class TestPurchaseSupply(TestSaleSupply):
   def getTitle(self):
     return "Purchase Supply"
 
+class TestInternalSupply(TestSaleSupply):
+  """
+    Test Internal Supplies usage
+  """
+  run_all_test = 1
+
+  supply_portal_type = 'Internal Supply'
+  supply_line_portal_type = 'Internal Supply Line'
+  supply_cell_portal_type = 'Internal Supply Cell'
+
+  def getTitle(self):
+    return "Internal Supply"
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSaleSupply))
   suite.addTest(unittest.makeSuite(TestPurchaseSupply))
+  suite.addTest(unittest.makeSuite(TestInternalSupply))
   return suite
