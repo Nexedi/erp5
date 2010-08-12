@@ -2813,7 +2813,8 @@ class Base( CopyContainer,
       context.__dict__.update(kw)
       # Make it a temp content
       temp_object = TempBase(self.getId())
-      for k in ('isIndexable', 'reindexObject', 'recursiveReindexObject', 'activate', 'setUid', ):
+      for k in ('isIndexable', 'isTempDocument', 'reindexObject',
+                'recursiveReindexObject', 'activate', 'setUid'):
         setattr(context, k, getattr(temp_object, k))
       # Return result
       return context.__of__(self.aq_parent)
