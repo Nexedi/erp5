@@ -243,22 +243,22 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     applicable_rule_dict = {}
     for rule in portal_rules.searchRuleList(self, sort_on='version',
         sort_order='descending'):
-      ref = rule.getReference()
-      if ref and ref not in applicable_rule_dict:
-        applicable_rule_dict[ref] = rule
+      reference = rule.getReference()
+      if reference:
+        applicable_rule_dict.setdefault(reference, []).append(rule)
 
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
-      if not applied_rule._isTreeDelivered() and not rule.test(self):
-        self._delObject(applied_rule.getId())
+      if rule in applicable_rule_dict.get(rule.getReference(), ()) \
+              or applied_rule._isTreeDelivered():
+        applied_rule_dict[rule.getReference()] = applied_rule
       else:
-        applied_rule_dict[rule.getPortalType()] = applied_rule
+        self._delObject(applied_rule.getId())
 
-    for rule in applicable_rule_dict.itervalues():
-      rule_type = rule.getPortalType()
-      if rule_type not in applied_rule_dict:
-        applied_rule = rule.constructNewAppliedRule(self, **kw)
-        applied_rule_dict[rule_type] = applied_rule
+    for reference, rule_list in applicable_rule_dict.iteritems():
+      if reference not in applied_rule_dict:
+        applied_rule = rule_list[0].constructNewAppliedRule(self, **kw)
+        applied_rule_dict[reference] = applied_rule
 
     self.setCausalityState('expanded')
     # expand
