@@ -120,12 +120,13 @@ class asComposedDocument(object):
     self.__class__ = type(base_class.__name__, (cls, base_class, BusinessProcess), {})
               # here we could inherit many "useful" classes dynamically - héhé
               # that would be a "real" abstract composition system
-    self._effective_model_list = \
-      orig_self._findEffectiveSpecialiseValueList(specialise_type_list=portal_type_list)
+    self._effective_model_list, specialise_value_list = \
+      orig_self._findEffectiveAndInitialModelList(portal_type_list)
+    self._setValueList('specialise', specialise_value_list)
     return self
 
   def __init__(self, orig_self, portal_type_list=None):
-    # __new__ does not call __init__ because returned object
+    # __init__ is not called automatically after __new__ because returned object
     # is wrapped in an acquisition context.
     assert False
 
@@ -181,29 +182,35 @@ class CompositionMixin:
 
     This algorithm uses Breadth First Search.
     """
+    return self._findEffectiveAndInitialModelList(specialise_type_list)[0]
+
+  def _findEffectiveAndInitialModelList(self, specialise_type_list):
     start_date = self.getStartDate()
     stop_date = self.getStopDate()
-    def getEffectiveModel(model):
-      return _getEffectiveModel(model, start_date, stop_date)
-    model_list = [self]
-    model_set = set(model_list)
-    model_index = 0
-    while model_index < len(model_list):
-      model = model_list[model_index]
-      model_index += 1
+    effective_list = [self]
+    effective_set = set()
+    effective_index = 0
+    while effective_index < len(effective_list):
       # we don't use getSpecialiseValueList to avoid acquisition on the parent
-      for model in map(getEffectiveModel, model.getValueList('specialise',
-                                      portal_type=specialise_type_list or ())):
-        if model not in model_set:
-          model_set.add(model)
+      model_list = effective_list[effective_index].getValueList('specialise',
+                                      portal_type=specialise_type_list or ())
+      if effective_set:
+        effective_index += 1
+      else: # first iteration
+        del effective_list[0]
+        specialise_value_list = model_list
+      for model in model_list:
+        model = _getEffectiveModel(model, start_date, stop_date)
+        if model not in effective_set:
+          effective_set.add(model)
           if 1: #model.test(self): # XXX
-            model_list.append(model)
-    del model_list[0]
+            effective_list.append(model)
     parent = self.getParentValue()
     if hasattr(aq_base(parent), 'asComposedDocument'):
-      model_list += [model for model in parent.asComposedDocument(
-                             specialise_type_list)._effective_model_list
-                           if model not in model_set]
-    return model_list
+      parent = parent.asComposedDocument(specialise_type_list)
+      specialise_value_list += parent.getValueList('specialise')
+      effective_list += [model for model in parent._effective_model_list
+                               if model not in effective_set]
+    return effective_list, specialise_value_list
 
 del asComposedDocument # to be unhidden (and renamed ?) if needed
