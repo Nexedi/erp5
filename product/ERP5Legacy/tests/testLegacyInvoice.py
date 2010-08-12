@@ -81,11 +81,6 @@ class TestInvoiceMixin(TestPackingListMixin,
   def getTitle(self):
     return "Invoices"
 
-  def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_apparel',
-            'erp5_project', 'erp5_legacy', 'erp5_administration')
-
   @UnrestrictedMethod
   def createCategories(self):
     """Create the categories for our test. """
