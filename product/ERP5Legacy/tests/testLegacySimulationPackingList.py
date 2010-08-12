@@ -567,19 +567,6 @@ class TestPackingListMixin(TestOrderMixin):
       simulation_movement.getDeliveryValue().edit(quantity=self.default_quantity-1)
       simulation_movement.expand()
 
-
-  def stepModifySimulationLineStopDate(self,sequence=None, sequence_list=None, **kw):
-    """
-    Modify simulation line stop date
-    """
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
-    resource_list = sequence.get('resource_list')
-    for simulation_movement in simulation_movement_list:
-      simulation_movement.recordProperty('stop_date')
-      simulation_movement.edit(stop_date=self.datetime+15)
-      simulation_movement.expand()
-
   def stepModifySimulationLineStartDate(self,sequence=None, sequence_list=None, **kw):
     """
     Modify simulation line start date
@@ -650,14 +637,6 @@ class TestPackingListMixin(TestOrderMixin):
     self._solveDeliveryGroupDivergence(packing_list, 'start_date',
                                   packing_list.getRelativeUrl())
 
-  def stepUnifyStopDateWithDecision(self,sequence=None, sequence_list=None, **kw):
-    """
-      Solve divergence on stop date using unify
-    """
-    packing_list = sequence.get('packing_list')
-    self._solveDeliveryGroupDivergence(packing_list, 'stop_date',
-                                  packing_list.getRelativeUrl())
-
   def stepUnifyStartDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
@@ -666,16 +645,6 @@ class TestPackingListMixin(TestOrderMixin):
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
     self._solveDeliveryGroupDivergence(packing_list, 'start_date',
-                                  simulation_movement_list[-1].getRelativeUrl())
-
-  def stepUnifyStopDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
-    """
-      Solve divergence on stop date using unify
-    """
-    packing_list = sequence.get('packing_list')
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
-    self._solveDeliveryGroupDivergence(packing_list, 'stop_date',
                                   simulation_movement_list[-1].getRelativeUrl())
 
   def _solveDeliveryGroupDivergence(self, obj, property, target_url):
@@ -1202,7 +1171,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepCreateNotVariatedResource \
                       stepModifySimulationLineQuantityForMergedLine \
                       stepModifyOneSimulationLineResource \
-                      stepModifySimulationLineStopDate \
+                      stepModifySimulationLineStartDate \
                       stepTic \
                       stepCheckPackingListIsDiverged \
                       stepAcceptDecisionQuantity \
@@ -1211,7 +1180,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepAcceptDecisionResource \
                       stepTic \
                       stepCheckPackingListIsDiverged \
-                      stepUnifyStopDateWithDecision \
+                      stepUnifyStartDateWithDecision \
                       stepTic \
                       stepCheckPackingListIsNotDivergent \
                       stepCheckPackingListIsSolved \
@@ -1316,11 +1285,11 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepSetContainerFullQuantity \
                       stepTic \
                       stepCheckPackingListIsPacked \
-                      stepModifySimulationLineStopDate \
+                      stepModifySimulationLineStartDate \
                       stepTic \
                       stepCheckPackingListIsDiverged \
                       stepCheckPackingListIsDivergent \
-                      stepUnifyStopDateWithPrevision \
+                      stepUnifyStartDateWithPrevision \
                       stepTic \
                       '
     # XXX Check if there is a new packing list created
