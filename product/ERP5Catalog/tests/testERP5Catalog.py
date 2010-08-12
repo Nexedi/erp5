@@ -4331,9 +4331,12 @@ VALUES
     self.assertTrue(int(person.uid))
     self.assertEqual(person.uid, assignment.getParentUid())
 
+  def test_queriesEndingWithSemicolon(self, quiet=quiet):
+    connector = self.getPortal().erp5_sql_connection
+    result = connector.manage_test('select 1 as foo;')
+    self.assertEquals(1, result[0].foo)
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Catalog))
   return suite
-
