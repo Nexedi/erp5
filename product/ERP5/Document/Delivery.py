@@ -242,12 +242,14 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
       movement_list = []
       add_movement = movement_list.append
       extend_movement = movement_list.extend
-      sub_object_list = self.objectValues(portal_type=movement_portal_type_list)
+      sub_object_list = self.objectValues(\
+          portal_type=movement_portal_type_list, **kw)
       extend_sub_object = sub_object_list.extend
       append_sub_object = sub_object_list.append
       while sub_object_list:
         sub_object = sub_object_list.pop()
-        content_list = sub_object.objectValues(portal_type=movement_portal_type_list)
+        content_list = sub_object.objectValues(\
+            portal_type=movement_portal_type_list, **kw)
         if sub_object.hasCellContent():
           cell_list = sub_object.getCellValueList()
           if len(cell_list) != len(content_list):
