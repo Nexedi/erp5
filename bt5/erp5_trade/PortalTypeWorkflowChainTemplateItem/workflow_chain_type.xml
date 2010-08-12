@@ -113,7 +113,7 @@
  </chain>
  <chain>
   <type>Purchase Trade Condition</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Returned Purchase Packing List</type>
@@ -165,7 +165,7 @@
  </chain>
  <chain>
   <type>Sale Trade Condition</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Trade Model Line</type>
