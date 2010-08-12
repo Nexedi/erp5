@@ -61,6 +61,26 @@ class OrderedPickler(Pickler):
     if not PyStringMap is None:
         dispatch[PyStringMap] = save_dict
 
+
+# ExtensionClass.Base.__getnewargs__ XML simplification
+# BBB: Remove this whole section of code (and its invocation below) once
+# we drop support for Zope 2.8 (i.e. once Base drops __getnewargs__)
+from ExtensionClass import Base
+Base__getnewargs__ = getattr(Base, '__getnewargs__', None)
+if Base__getnewargs__ is None:
+  def maybeSimplifyClass(klass):
+    return klass
+else:
+  def maybeSimplifyClass(klass):
+    if isinstance(klass, tuple):
+      pureclass, newargs = klass
+      if (newargs == () and
+          not isinstance(pureclass, tuple) and
+          getattr(pureclass, '__getnewargs__', None) is Base__getnewargs__):
+        return pureclass
+    return klass
+# END ExtensionClass.Base.__getnewargs__ XML simplification
+
 def reorderPickle(jar, p):
     from ZODB.ExportImport import Ghost, Unpickler, Pickler, StringIO, persistent_id
 
@@ -96,7 +116,9 @@ def reorderPickle(jar, p):
     pickler=OrderedPickler(newp,1)
     pickler.persistent_id=persistent_id
 
-    pickler.dump(unpickler.load())
+    klass = unpickler.load()
+    klass = maybeSimplifyClass(klass)
+    pickler.dump(klass)
     obj = unpickler.load()
     pickler.dump(obj)
     p=newp.getvalue()
