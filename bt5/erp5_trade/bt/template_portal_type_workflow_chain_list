@@ -11,6 +11,7 @@ Container Line | pricing_interaction_workflow
 Container Line | trade_matrix_workflow
 Container | edit_workflow
 Container | pricing_interaction_workflow
+Container | reindex_object_interaction_workflow
 Delivery Cell | delivery_movement_causality_interaction_workflow
 Delivery Cell | delivery_movement_simulation_interaction_workflow
 Delivery Root Simulation Rule | edit_workflow

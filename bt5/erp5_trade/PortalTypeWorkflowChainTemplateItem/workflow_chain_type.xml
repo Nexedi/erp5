@@ -13,7 +13,7 @@
  </chain>
  <chain>
   <type>Container</type>
-  <workflow>edit_workflow, pricing_interaction_workflow</workflow>
+  <workflow>edit_workflow, pricing_interaction_workflow, reindex_object_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Container Cell</type>
