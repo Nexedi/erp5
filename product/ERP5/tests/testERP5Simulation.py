@@ -43,7 +43,7 @@ from Products.ERP5Type.Document.BusinessTemplate import getChainByType
 class TestERP5SimulationMixin(TestInvoiceMixin):
   def getBusinessTemplateList(self):
     return list(TestInvoiceMixin.getBusinessTemplateList(self)) + \
-           ['erp5_administration', 'erp5_simulation',]
+           ['erp5_administration', 'erp5_simulation', 'erp5_simulation_test']
 
   def afterSetUp(self, quiet=1, run=1):
     TestInvoiceMixin.afterSetUp(self)
