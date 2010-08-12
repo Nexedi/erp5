@@ -39,7 +39,8 @@ class TestTaskReporting(ERP5ReportTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_project',)
+    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_project',
+            'erp5_simulation', 'erp5_simulation_test')
 
   @reindex
   def _makeOneTask(self, simulation_state='planned', **kw):

@@ -109,7 +109,8 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     """
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_mrp', 'erp5_apparel',
-            'erp5_dummy_movement', 'erp5_project')
+            'erp5_dummy_movement', 'erp5_project', 'erp5_simulation',
+            'erp5_simulation_test')
 
   def test_01_getAggregatedAmountListSimple(self):
     """

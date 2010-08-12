@@ -74,7 +74,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """Business Templates required for this test.
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel')
+    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel',
+            'erp5_simulation', 'erp5_simulation_test')
 
   def setUpPreferences(self):
     #create apparel variation preferences
