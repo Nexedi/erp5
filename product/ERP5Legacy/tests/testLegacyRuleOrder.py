@@ -75,6 +75,21 @@ class TestOrderMixin:
             'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_apparel',
             'erp5_project', 'erp5_simulation', 'erp5_legacy', 'erp5_administration')
 
+  def validateRules(self):
+    """
+    try to validate all rules in rule_tool.
+    """
+    rule_tool = self.getRuleTool()
+    for rule in rule_tool.contentValues(
+        portal_type=rule_tool.getPortalRuleTypeList()):
+      if rule.getValidationState() != 'validated':
+        rule.validate()
+
+    for rule in rule_tool.contentValues(
+      portal_type=rule_tool.getPortalRuleTypeList()):
+      if rule.getValidationState() == 'validated' and rule.getReference() == 'default_accounting_transaction_rule':
+        rule.invalidate()
+
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
     uf._doAddUser('rc', '', ['Manager', 'Member', 'Assignee'], [])
