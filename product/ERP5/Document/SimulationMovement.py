@@ -245,19 +245,18 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
         sort_order='descending'):
       reference = rule.getReference()
       if reference:
-        applicable_rule_dict.setdefault(reference, []).append(rule)
+        applicable_rule_dict.setdefault(reference, rule)
 
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
-      if rule in applicable_rule_dict.get(rule.getReference(), ()) \
-              or applied_rule._isTreeDelivered():
+      if rule.test(self) or applied_rule._isTreeDelivered():
         applied_rule_dict[rule.getReference()] = applied_rule
       else:
         self._delObject(applied_rule.getId())
 
-    for reference, rule_list in applicable_rule_dict.iteritems():
+    for reference, rule in applicable_rule_dict.iteritems():
       if reference not in applied_rule_dict:
-        applied_rule = rule_list[0].constructNewAppliedRule(self, **kw)
+        applied_rule = rule.constructNewAppliedRule(self, **kw)
         applied_rule_dict[reference] = applied_rule
 
     self.setCausalityState('expanded')
