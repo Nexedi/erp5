@@ -1,3 +1,9 @@
+2010-08-13 Nicolas Delaby
+-------------------------
+small Bug fix.
+Add option to export outpout into file
+This option take precedence over mailing support.
+
 2010-08-04 Nicolas Delaby
 -------------------------
 Bug fix in status_search_in_wget_regex
