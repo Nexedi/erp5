@@ -150,12 +150,13 @@ class PaySheetTransaction(Invoice):
 
   security.declarePrivate('updateAggregatedAmountList')
   def updateAggregatedAmountList(self, *args, **kw):
-    amount_dict = dict(((x.reference, tuple(x.getVariationCategoryList())), x)
+    amount_dict = dict(((x.getReference(),
+                         tuple(x.getVariationCategoryList())), x)
                        for x in self.getAggregatedAmountList(*args, **kw))
     movement_to_delete_list = []
     for movement in self.getMovementList():
       if movement.getBaseApplication():
-        amount = amount_dict.pop((movement.getProperty('reference'),
+        amount = amount_dict.pop((movement.getReference(),
                                   tuple(movement.getVariationCategoryList())),
                                  None)
         if amount is None:
