@@ -86,6 +86,7 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
             "erp5_simplified_invoicing",
             "erp5_apparel", # In order to use items
             "erp5_immobilisation",
+             'erp5_accounting', 
             "erp5_simulation",
             "erp5_simulation_test",
             )

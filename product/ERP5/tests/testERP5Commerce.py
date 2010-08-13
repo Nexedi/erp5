@@ -106,6 +106,7 @@ class TestCommerce(ERP5TypeTestCase):
             'erp5_trade',
             'erp5_pdm',
             'erp5_commerce',
+            'erp5_accounting', 
             'erp5_simulation',
             'erp5_simulation_test',)
 

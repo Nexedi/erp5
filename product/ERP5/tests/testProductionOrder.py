@@ -66,7 +66,7 @@ class TestProductionOrderMixin(TestOrderMixin):
     """
     """
     return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_mrp',
-            'erp5_simulation', 'erp5_simulation_test')
+            'erp5_accounting', 'erp5_simulation', 'erp5_simulation_test')
 
   def setUpPreferences(self):
     portal = self.getPortal()
