@@ -460,6 +460,107 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertEquals(response.getHeader('Cache-Control'),
                         'max-age=%s' % policy[1].getMaxAgeSecs())
 
+  def test_07_TestDocumentViewBehaviour(self):
+    """All Documents shared the same downloading behaviour
+    The rules are.
+      a document is allways returned in its web_site envrironment
+      except if conversion parameters are passed like format, display, ...
+
+    All links to an image must be write with a parameter in its url
+    ../REFERENCE.TO.IMAGE?format=png or ../REFERENCE.TO.IMAGE?display=small
+    """
+    portal = self.getPortal()
+    request = portal.REQUEST
+    request['PARENTS'] = [self.app]
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    web_section = website.newContent(portal_type=web_section_portal_type)
+
+    web_page_reference = 'NXD-WEB-PAGE'
+    content = '<p>initial text</p>'
+    web_page_module = portal.getDefaultModule(portal_type='Web Page')
+    web_page = web_page_module.newContent(portal_type='Web Page',
+                                          reference=web_page_reference,
+                                          text_content=content)
+    web_page.publish()
+
+    document_reference = 'NXD-Presentation'
+    document_module = portal.getDefaultModule(portal_type='Presentation')
+    upload_file = makeFileUpload('P-DMS-Presentation.3.Pages-001-en.odp')
+    document = document_module.newContent(portal_type='Presentation',
+                                          reference=document_reference,
+                                          file=upload_file)
+    document.publish()
+
+    image_reference = 'NXD-IMAGE'
+    image_module = portal.getDefaultModule(portal_type='Image')
+    upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
+    image = image_module.newContent(portal_type='Image',
+                                    file=upload_file,
+                                    reference=image_reference)
+    image.publish()
+    transaction.commit()
+    self.tic()
+    credential = 'ERP5TypeTestCase:'
+    # testing TextDocument
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            web_page_reference, credential)
+    self.assertEquals(response.getHeader('content-type'),
+                                         'text/html; charset=utf-8')
+    self.assertTrue('<form' in response.getBody()) # means the web_page
+                                      # is rendered in web_site context
+
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            web_page_reference + '/view', credential)
+    self.assertEquals(response.getHeader('content-type'),
+                                         'text/html; charset=utf-8')
+    self.assertTrue('<form' in response.getBody()) # means the web_page
+                                      # is rendered in web_site context
+
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            web_page_reference + '?format=pdf', credential)
+    self.assertEquals(response.getHeader('content-type'), 'application/pdf')
+
+    # testing Image
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference, credential)
+    # image is rendered in web_site context
+    self.assertEquals(response.getHeader('content-type'),
+                                         'text/html; charset=utf-8')
+
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference + '?format=png', credential)
+    # image is downloaded because format parameter is passed
+    self.assertEquals(response.getHeader('content-type'), 'image/png')
+
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference + '?display=small', credential)
+    # image is downloaded because display parameter is passed
+    self.assertEquals(response.getHeader('content-type'), 'image/png')
+
+    # image is rendered in web_site context
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference+ '/view', credential)
+    self.assertEquals(response.getHeader('content-type'),
+                                         'text/html; charset=utf-8')
+
+    # testing OOoDocument
+    # Document is downloaded
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            document_reference, credential)
+    self.assertEquals(response.getHeader('content-type'),
+                                         'text/html; charset=utf-8')
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            document_reference + '?format=odp', credential)
+    # document is resturned because format parameter is passed
+    self.assertEquals(response.getHeader('content-type'),
+                      'application/vnd.oasis.opendocument.presentation')
+    # Document is rendered in web_site context
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            document_reference + '/view', credential)
+    self.assertEquals(response.getHeader('content-type'),
+                                         'text/html; charset=utf-8')
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5WebWithDms))
