@@ -75,6 +75,8 @@ class DownloadableMixin:
       # By default allways return view action.
       # for all WevDAV access return raw content.
       return self.view()
+    if format is _MARKER:
+      format = None
     self._checkConversionFormatPermission(format, **kw)
     mime, data = self.convert(format, **kw)
     if not format:
