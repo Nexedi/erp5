@@ -137,12 +137,15 @@ class TestWebDavSupport(ERP5TypeTestCase):
     document_module = self.getDocumentModule()
     document = document_module[filename]
     document_id = '%s-%s' % (document.getUid(), filename,)
+    # This is HTTPServer.zhttp_server not HTTPServer.zwebdav_server
+    # force usage of manage_FTPget like zwebdav_server does
     response = self.publish('%s/%s' % (path, document_id),
                             request_method='GET',
                             stdin=StringIO(),
                             basic=self.authentication)
     self.assertEquals(response.getStatus(), httplib.OK)
-    self.assertEquals(response.getBody(), document.getData())
+    self.assertEquals(response.getBody(), document.getData(),
+          'Error in getting data, get:%r' % response.getHeader('content-type'))
 
   def test_PUT_on_web_page(self):
     """Edit a web_page in webdav
@@ -203,13 +206,16 @@ class TestWebDavSupport(ERP5TypeTestCase):
     document_module = self.getDocumentModule()
     document = document_module[filename]
 
-    response = self.publish(document.getPath(),
+    # This is HTTPServer.zhttp_server not HTTPServer.zwebdav_server
+    # force usage of manage_FTPget like zwebdav_server does
+    response = self.publish(document.getPath()+'/manage_FTPget',
                             request_method='GET',
                             stdin=StringIO(),
                             basic=self.authentication)
 
     self.assertEquals(response.getStatus(), httplib.OK)
-    self.assertEquals(response.getBody(), document.getData())
+    self.assertEquals(response.getBody(), document.getData(),
+             'Error in getting data, get:%r' % response.getHeader('content-type'))
 
   def test_PROPFIND_on_document(self):
     """test Metadata extraction from webdav protocol
