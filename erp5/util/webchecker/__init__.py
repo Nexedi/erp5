@@ -202,7 +202,8 @@ class HTTPCacheCheckerTestSuite(object):
         else:
           title = 'Error Backend not touched'
         message = '%s -> X-Varnish:%r' % (title, x_varnish_reference,)
-        self.report_list.append(message)
+        self.report_dict.setdefault(x_varnish_reference[2],
+                                    []).append(message)
 
   def _parseWgetLine(self, line):
     """return tuple (code, value)
@@ -412,11 +413,12 @@ from optparse import OptionParser
 import ConfigParser
 
 def web_checker_utility():
-  usage = "usage: %prog config_path"
+  usage = "usage: %prog [options] config_path"
   parser = OptionParser(usage=usage)
+  parser.add_option('-o', '--output_file',
+                    dest='output_file')
 
   (options, args) = parser.parse_args()
-
   if len(args) != 1 :
     print parser.print_help()
     parser.error('incorrect number of arguments')
@@ -452,7 +454,13 @@ def web_checker_utility():
                                        smtp_host,
                                        debug_level)
 
-  print instance.start(prohibited_file_name_list=prohibited_file_name_list,
+  result = instance.start(prohibited_file_name_list=prohibited_file_name_list,
                        prohibited_folder_name_list=prohibited_folder_name_list)
+  if options.output_file:
+    file_object = open(options.output_file, 'w')
+    file_object.write(result)
+    file_object.close()
+  else:
+    print result
 
 
