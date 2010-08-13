@@ -73,6 +73,7 @@ import unittest
 from time import time
 import gc
 import subprocess
+import hotshot
 
 import transaction
 from DateTime import DateTime
@@ -89,26 +90,26 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 # historical values.
 
 EXPECTED_MIN_MAX_TIME = {
-  'Creation Of New Applied Rules': (38.9, 40.9),
+  'Creation Of New Applied Rules': (34.8, 36.8),
 
-  'Expansion of Existing Applied Rules': (23.3, 26.1),
+  'Expansion of Existing Applied Rules': (16.9, 19.5),
 
-  'Creation of New Sale Packing Lists': (49.2, 50.7),
+  'Creation of New Sale Packing Lists': (37.4, 38.9),
 
-  'Expansion of Converged Changes': (28.3, 31.1),
+  'Expansion of Converged Changes': (22.0, 24.8),
 
-  'Expansion of Diverged Changes': (30.9, 32.7),
+  'Expansion of Diverged Changes': (24.6, 26.9),
 
-  'Adoption of Previsions': (24.4, 25.2),
+  'Adoption of Previsions': (17.9, 18.7),
 
-  'Acceptance of Decisions': (18.0, 18.7),
+  'Acceptance of Decisions': (14.5, 15.2),
 
   'Creation of New Applied Rules from Partially Simulated Deliveries':
-    (60.9, 62.5),
+    (51.2, 52.8),
 
-  'Creation Of New Sale Invoices': (122.3, 130.8),
+  'Creation Of New Sale Invoices': (90.0, 98.5),
 
-  'Addition of New Invoices Lines': (181.6, 194.1),
+  'Addition of New Invoices Lines': (145.1, 157.6),
 }
 
 class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
@@ -150,8 +151,10 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
           business_process.validate()
 
       subprocess.call('sync')
+      #self.prof = hotshot.Profile('hoge.prof')
 
     def beforeTearDown(self):
+      #self.prof.close()
       transaction.abort()
       portal = self.getPortal()
       for module_id in ('sale_order_module', 'sale_packing_list_module',
@@ -281,7 +284,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       if measurable:
         before_time = time()
 
+      #self.prof.start()
       self.tic()
+      #self.prof.stop()
 
       if measurable:
         after_time = time()
@@ -772,10 +777,12 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       """
       message = 'Check Logic'
       LOG('Testing... ', 0, message)
+      #self.getPortal().portal_activities.manage_enableActivityTracking()
       self._checkSimulation(number_of_sale_orders=1,
               number_of_sale_order_lines=1,
               number_of_additional_sale_packing_list_lines=1,
               measurable=False)
+      #self.getPortal().portal_activities.manage_disableActivityTracking()
 
     def test_02_CheckPerformance(self):
       """Check the performance.
