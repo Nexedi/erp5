@@ -94,7 +94,7 @@ class PasswordTool(BaseTool):
       if REQUEST is not None:
         parameter = urlencode(dict(portal_status_message=msg))
         ret_url = '%s/login_form?%s' % \
-                  (self.getPortalObject().absolute_url(),
+                  (self.absolute_url(),
                   parameter)
         return REQUEST.RESPONSE.redirect( ret_url )
       return msg
@@ -132,7 +132,7 @@ class PasswordTool(BaseTool):
     if REQUEST is not None:
       msg = translateString("An email has been sent to you.")
       parameter = urlencode(dict(portal_status_message=msg))
-      ret_url = '%s/login_form?%s' % (self.getPortalObject().absolute_url(),
+      ret_url = '%s/login_form?%s' % (self.absolute_url(),
                                       parameter)
       return REQUEST.RESPONSE.redirect( ret_url )
 
