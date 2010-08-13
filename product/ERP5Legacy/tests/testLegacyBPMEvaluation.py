@@ -57,7 +57,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
   def getBusinessTemplateList(self):
     return TestBPMMixin.getBusinessTemplateList(self) + ('erp5_bpm',
-        'erp5_administration', 'erp5_simulation',)
+        'erp5_administration', 'erp5_simulation', 'erp5_simulation_test')
 
   def afterSetUp(self):
     TestBPMMixin.afterSetUp(self)
