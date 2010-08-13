@@ -1,3 +1,4 @@
+BusinessProcess
 DeliveryRootSimulationRule
 DeliverySimulationRule
 InvoiceRootSimulationRule
@@ -7,3 +8,5 @@ OrderRootSimulationRule
 PaymentSimulationRule
 RootAppliedRuleCausalityMovementGroup
 TradeModelSimulationRule
+Transformation
+TransformedResource
