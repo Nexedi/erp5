@@ -41,7 +41,7 @@ from DateTime import DateTime
 from Acquisition import aq_parent
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin
+from testLegacySimulationPackingList import TestPackingListMixin
 from testAccountingRules import TestAccountingRulesMixin
 
 class TestInvoiceMixin(TestPackingListMixin,
