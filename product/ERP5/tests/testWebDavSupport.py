@@ -139,7 +139,7 @@ class TestWebDavSupport(ERP5TypeTestCase):
     document_id = '%s-%s' % (document.getUid(), filename,)
     # This is HTTPServer.zhttp_server not HTTPServer.zwebdav_server
     # force usage of manage_FTPget like zwebdav_server does
-    response = self.publish('%s/%s' % (path, document_id),
+    response = self.publish('%s/%s/manage_FTPget' % (path, document_id),
                             request_method='GET',
                             stdin=StringIO(),
                             basic=self.authentication)
