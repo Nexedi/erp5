@@ -6059,13 +6059,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     template_skin_id_list.append('custom')
     bt.edit(template_skin_id_list=template_skin_id_list)
 
-  def stepCheckFakeScriptIsNotDeleted(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckFakeScriptIsDeleted(self, sequence=None, sequence_list=None, **kw):
     """Check that script inside ZODB is deleted by BT reinstallation
     """
     python_script_id = sequence.get('python_script_id')
     skin_folder_id = sequence.get('skin_folder_id')
     folder = self.portal.portal_skins[skin_folder_id]
-    self.assertTrue(python_script_id in folder.objectIds())
+    self.assertTrue(python_script_id not in folder.objectIds())
 
   def test_38_CheckReinstallation(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -6099,7 +6099,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CreateFakeZODBScript \
                        ReinstallBusinessTemplate \
                        Tic \
-                       CheckFakeScriptIsNotDeleted \
+                       CheckFakeScriptIsDeleted \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
