@@ -69,7 +69,8 @@ class EditorWidget(Widget.TextAreaWidget):
                                    required=1,
                                    size=1,
                                    items=[('Standard Text Area', 'text_area'),
-                                          ('FCK Editor', 'fck_editor')])
+                                          ('FCK Editor', 'fck_editor'), 
+                                          ('Bespin Editor', 'bespin')])
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """
@@ -79,6 +80,19 @@ class EditorWidget(Widget.TextAreaWidget):
     text_editor = field.get_value('text_editor')
     if text_editor == 'text_area':
       return Widget.TextAreaWidget.render(self, field, key, value, REQUEST)
+    elif text_editor == 'bespin':
+      # XXX The usage of bespin editor depends of erp5_bespin bt5
+      # installed and still experimental. If erp5_bespin is not installed, it 
+      # render standard an standard editor field.
+      bespin_support = getattr(here, 'bespin_support',None)
+      if bespin_support is None:
+        return Widget.TextAreaWidget.render(self, field, key, value, REQUEST)
+      return bespin_support.pt_render(
+           extra_context= {
+                          'field'      : field,
+                          'inputvalue' : value,
+                          'inputname'  : key
+                        })
     else:
       return here.fckeditor_wysiwyg_support.pt_render(
            extra_context= {
