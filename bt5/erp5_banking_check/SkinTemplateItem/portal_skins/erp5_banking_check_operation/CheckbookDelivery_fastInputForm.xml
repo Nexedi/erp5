@@ -96,6 +96,8 @@
                       <list>
                         <string>your_fast_input_type</string>
                         <string>your_reference</string>
+                        <string>your_title</string>
+                        <string>your_checkbook_model</string>
                       </list>
                     </value>
                 </item>

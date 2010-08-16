@@ -77,6 +77,16 @@ reference = getattr(request, \'your_reference\', None)\n
 if reference is None:\n
   reference = getattr(request, \'field_your_reference\', None)\n
 \n
+# filter by checkbook model\n
+checkbook_model = getattr(request, \'your_checkbook_model\', None)\n
+if checkbook_model is None:\n
+  checkbook_model = getattr(request, \'field_your_checkbook_model\', None)\n
+\n
+# filter by title (check numbers)\n
+title = getattr(request, \'your_title\', None)\n
+if title is None:\n
+  title = getattr(request, \'field_your_title\', None)\n
+\n
 disable_node = 0\n
 at_date = context.getStartDate()\n
 if fast_input_type == \'traveler_check_purchase\':\n
@@ -108,6 +118,8 @@ listbox = context.Delivery_getCheckbookList(\n
                     at_date=at_date,\n
                     node=node,\n
                     reference=reference,\n
+                    title=title,\n
+                    checkbook_model=checkbook_model,\n
                     limit=limit)\n
 context.Base_updateDialogForm(listbox=listbox)\n
 \n
@@ -166,6 +178,8 @@ return context.ListBox_initializeFastInput()\n
                             <string>getattr</string>
                             <string>fast_input_type</string>
                             <string>reference</string>
+                            <string>checkbook_model</string>
+                            <string>title</string>
                             <string>disable_node</string>
                             <string>at_date</string>
                             <string>_write_</string>

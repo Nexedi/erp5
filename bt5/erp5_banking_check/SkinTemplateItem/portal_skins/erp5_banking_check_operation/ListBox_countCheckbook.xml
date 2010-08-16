@@ -76,12 +76,24 @@ reference = getattr(request, \'your_reference\', None)\n
 if reference is None:\n
   reference = getattr(request, \'field_your_reference\', None)\n
 \n
+# filter by checkbook model\n
+checkbook_model = getattr(request, \'your_checkbook_model\', None)\n
+if checkbook_model is None:\n
+  checkbook_model = getattr(request, \'field_your_checkbook_model\', None)\n
+\n
+# filter by title (check numbers)\n
+title = getattr(request, \'your_title\', None)\n
+if title is None:\n
+  title = getattr(request, \'field_your_title\', None)\n
+\n
 nb = context.Delivery_getCheckbookList(\n
                     item_portal_type_list=item_portal_type_list,\n
                     disable_node=disable_node,\n
                     at_date=at_date,\n
                     node=node,\n
                     reference=reference,\n
+                    title=title,\n
+                    checkbook_model=checkbook_model,                    \n
                     count=True)\n
 \n
 return [[nb,],]\n
@@ -134,6 +146,8 @@ return [[nb,],]\n
                             <string>disable_node</string>
                             <string>at_date</string>
                             <string>reference</string>
+                            <string>checkbook_model</string>
+                            <string>title</string>
                             <string>True</string>
                             <string>nb</string>
                           </tuple>

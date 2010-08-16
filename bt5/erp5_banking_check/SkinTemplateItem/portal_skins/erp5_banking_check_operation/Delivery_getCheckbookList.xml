@@ -100,10 +100,21 @@ if listbox is None:\n
         portal_type=(\'Check\', \'Checkbook\')\n
       )]\n
 \n
+    if checkbook_model not in (None, \'\'):\n
+      checkbook_model_uid = context.getPortalObject().restrictedTraverse(checkbook_model).getUid()\n
+      kw[\'resource_uid\'] = checkbook_model_uid\n
+\n
+    search_criterion = \'\'\n
+    if title not in (None, \'\'):\n
+      # FIXME: this doesn\'t work with current catalog and simulation tool\n
+      #        build a SQL statement to bypass this limitation\n
+      #kw[\'item_catalog.title\'] = title\n
+      search_criterion = " AND item_catalog.title LIKE \'%s\'" % title\n
+\n
     current_tracking_list = getCurrentTrackingList(\n
       to_date=at_date,\n
       node=node,\n
-      where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\'",\n
+      where_expression="item_catalog.portal_type=\'Check\' or item_catalog.portal_type=\'Checkbook\' %s" % search_criterion,\n
       **kw)\n
 \n
     if count is True:\n
@@ -168,7 +179,7 @@ return listbox\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,reference=None,limit=None,count=False,**kw</string> </value>
+            <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,reference=None,checkbook_model=None,title=None,limit=None,count=False,**kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -196,7 +207,7 @@ return listbox\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>11</int> </value>
+                        <value> <int>13</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -211,6 +222,8 @@ return listbox\n
                             <string>disable_node</string>
                             <string>at_date</string>
                             <string>reference</string>
+                            <string>checkbook_model</string>
+                            <string>title</string>
                             <string>limit</string>
                             <string>count</string>
                             <string>kw</string>
@@ -231,6 +244,8 @@ return listbox\n
                             <string>$append0</string>
                             <string>x</string>
                             <string>_write_</string>
+                            <string>checkbook_model_uid</string>
+                            <string>search_criterion</string>
                             <string>_apply_</string>
                             <string>current_tracking_list</string>
                             <string>True</string>
@@ -265,6 +280,8 @@ return listbox\n
                 <int>0</int>
                 <none/>
                 <int>0</int>
+                <none/>
+                <none/>
                 <none/>
                 <none/>
                 <none/>
