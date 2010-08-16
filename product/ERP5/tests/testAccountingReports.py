@@ -1905,7 +1905,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
     request_form['show_empty_accounts'] = 1
     request_form['expand_accounts'] = 0
     request_form['per_account_class_summary'] = 0
-    request_form['group_analytic'] = []
 
     report_section_list = self.getReportSectionList(
                                     self.portal.accounting_module,
