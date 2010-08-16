@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>theme.less</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>/* ***** BEGIN LICENSE BLOCK *****\n
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1\n
+ *\n
+ * The contents of this file are subject to the Mozilla Public License Version\n
+ * 1.1 (the "License"); you may not use this file except in compliance with\n
+ * the License. You may obtain a copy of the License at\n
+ * http://www.mozilla.org/MPL/\n
+ *\n
+ * Software distributed under the License is distributed on an "AS IS" basis,\n
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n
+ * for the specific language governing rights and limitations under the\n
+ * License.\n
+ *\n
+ * The Original Code is Bespin.\n
+ *\n
+ * The Initial Developer of the Original Code is\n
+ * Mozilla.\n
+ * Portions created by the Initial Developer are Copyright (C) 2009\n
+ * the Initial Developer. All Rights Reserved.\n
+ *\n
+ * Contributor(s):\n
+ *   Bespin Team (bespin@mozilla.com)\n
+ *\n
+ * Alternatively, the contents of this file may be used under the terms of\n
+ * either the GNU General Public License Version 2 or later (the "GPL"), or\n
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),\n
+ * in which case the provisions of the GPL or the LGPL are applicable instead\n
+ * of those above. If you wish to allow use of your version of this file only\n
+ * under the terms of either the GPL or the LGPL, and not to allow others to\n
+ * use your version of this file under the terms of the MPL, indicate your\n
+ * decision by deleting the provisions above and replace them with the notice\n
+ * and other provisions required by the GPL or the LGPL. If you do not delete\n
+ * the provisions above, a recipient may use your version of this file under\n
+ * the terms of any one of the MPL, the GPL or the LGPL.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+.bespin {\n
+    .container {\n
+        font-family: @container_font;\n
+        font-size: @container_font_size;\n
+\n
+        color: @container_color;\n
+        background: @container_bg;\n
+        line-height: @container_line_height;\n
+\n
+        display: -moz-box;\n
+        -moz-box-orient: vertical;\n
+        display: -webkit-box;\n
+        -webkit-box-orient: vertical;\n
+        width: 100%;\n
+        height: 100%;\n
+        margin: 0;\n
+    }\n
+\n
+    .container .north {\n
+        -moz-box-ordinal-group: 1;\n
+        -webkit-box-ordinal-group: 1;\n
+    }\n
+\n
+    .container .center-container {\n
+        display: -moz-box;\n
+        -moz-box-orient: horizontal;\n
+        -moz-box-ordinal-group: 2;\n
+        -moz-box-flex: 1;\n
+        display: -webkit-box;\n
+        -webkit-box-orient: horizontal;\n
+        -webkit-box-ordinal-group: 2;\n
+        -webkit-box-flex: 1;\n
+    }\n
+\n
+    .container .south {\n
+        -moz-box-ordinal-group: 3;\n
+        -webkit-box-ordinal-group: 3;\n
+    }\n
+\n
+    .container .center-container .west {\n
+        -moz-box-ordinal-group: 1;\n
+        -webkit-box-ordinal-group: 1;\n
+    }\n
+\n
+    .container .center-container .center {\n
+        -moz-box-flex: 1;\n
+        -moz-box-ordinal-group: 2;\n
+        -webkit-box-flex: 1;\n
+        -webkit-box-ordinal-group: 2;\n
+    }\n
+\n
+    .container .center-container .east {\n
+        -moz-box-ordinal-group: 3;\n
+        -webkit-box-ordinal-group: 3;\n
+    }\n
+\n
+    input, textarea {\n
+        display: block;\n
+        border: 0px;\n
+        width: 200px;\n
+        padding: 4px;\n
+        color: @control_color;\n
+        background: @control_bg;\n
+        border: @control_border;\n
+        font-size: 8pt;\n
+        -moz-border-radius: @control_border_radius;\n
+        -webkit-border-radius: @control_border_radius;\n
+        box-shadow:\n
+            rgba(255,255,255,0.3) 0px 0px 2px,\n
+            inset rgba(0,0,0,0.3) 0px 0px 4px;\n
+        -moz-box-shadow:\n
+            rgba(255,255,255,0.3) 0px 0px 2px,\n
+            inset rgba(0,0,0,0.3) 0px 0px 4px;\n
+        -webkit-box-shadow:\n
+            rgba(255,255,255,0.3) 0px 0px 2px,\n
+            inset rgba(0,0,0,0.3) 0px 0px 4px;\n
+    }\n
+\n
+    input:focus, textarea:focus {\n
+        color: @control_active_color;\n
+        border: @control_active_border;\n
+        background: @control_active_bg;\n
+        outline: none;\n
+        box-shadow: opacity(@control_active_inset_color, 0.6) 0px 0px 2px,\n
+            inset opacity(@control_active_inset_color, 0.3) 0px 0px 6px;\n
+        -moz-box-shadow: opacity(@control_active_inset_color, 0.6) 0px 0px 2px,\n
+            inset opacity(@control_active_inset_color, 0.3) 0px 0px 6px;\n
+        -webkit-box-shadow: opacity(@control_active_inset_color, 0.6) 0px 0px 2px,\n
+            inset opacity(@control_active_inset_color, 0.3) 0px 0px 6px;\n
+    }\n
+\n
+    input[type=submit], input[type=button] {\n
+        font-family: @button_font;\n
+        font-size: @button_font_size;\n
+        text-shadow: 1px 1px rgba(0, 0, 0, 0.4);\n
+\n
+        padding: 8px 12px;\n
+        margin-left: 8px;\n
+        color: @button_color;\n
+        background: transparent -moz-linear-gradient(top, @button_bg, @button_bg2);\n
+        background: transparent -webkit-gradient(linear, 50% 0%, 50% 100%, from(@button_bg), to(@button_bg2));\n
+\n
+        border: 1px solid @button_border;\n
+        -moz-border-radius: @control_border_radius;\n
+        -webkit-border-radius: @control_border_radius;\n
+        -moz-box-shadow:\n
+            inset rgba(255, 255, 255, 0.2) 0 1px 0px,\n
+            inset rgba(0, 0, 0, 0.2) 0 -1px 0px,\n
+            rgba(0, 0, 0, 0.1) 0px 1px 2px;\n
+        -webkit-box-shadow:\n
+            inset rgba(255, 255, 255, 0.2) 0 1px 0px,\n
+            inset rgba(0, 0, 0, 0.2) 0 -1px 0px,\n
+            rgba(0, 0, 0, 0.1) 0px 1px 2px;\n
+        box-shadow:\n
+            inset rgba(255, 255, 255, 0.2) 0 1px 0px,\n
+            inset rgba(0, 0, 0, 0.2) 0 -1px 0px,\n
+            rgba(0, 0, 0, 0.1) 0px 1px 2px;\n
+    }\n
+\n
+    .pane {\n
+        font-size: @pane_font_size;\n
+        font-family: @pane_font;\n
+        border-top: 1px solid rgba(255,255,255,0.1);\n
+        border-left: 1px solid rgba(0, 0, 0, 0.1);\n
+        border-right: 1px solid rgba(0, 0, 0, 0.1);\n
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);\n
+        background-color: @pane_bg;\n
+        overflow: visible;\n
+        padding: 15px;\n
+\n
+        color:  @pane_color;\n
+        line-height: @pane_line_height;\n
+\n
+        margin-bottom: 6px;\n
+        margin-top: 6px;\n
+        text-shadow: @pane_text_shadow;\n
+\n
+        -moz-border-radius: @pane_border_radius;\n
+        -webkit-border-radius: @pane_border_radius;\n
+        -moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;\n
+        -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px;\n
+\n
+        a {\n
+            color: @pane_a_color;\n
+        }\n
+\n
+        h1 {\n
+            font-family: @pane_h1_font;\n
+            font-size: @pane_h1_font_size;\n
+            color: @pane_h1_color;\n
+\n
+            letter-spacing: -1.25px;\n
+            line-height: 1.0;\n
+            margin-top: 0px;\n
+            margin-left: 10px;\n
+            margin-bottom: 25px;\n
+            margin-top: 10px;\n
+            text-shadow: @pane_text_shadow;\n
+        }\n
+\n
+        p {\n
+            margin-left: 10px;\n
+        }\n
+    }\n
+\n
+\n
+    .form {\n
+        font-family: @form_font;\n
+        font-size: @form_font_size;\n
+        line-height: @form_line_height;\n
+        color: @form_color;\n
+        text-shadow: @form_text_shadow;\n
+\n
+        fieldset, p {\n
+            color: @form_color;\n
+            margin-bottom: 6px;\n
+            margin-top: 6px;\n
+            text-shadow: form_text_shadow;\n
+        }\n
+    }\n
+\n
+    /*\n
+     * The state classes are a little bit complex, because of the doubble class bug in IE6\n
+     * The state class looks like this:\n
+     *\n
+     * .ui-radio-state[-checked][-disabled][-hover] or .ui-checkbox-state[-checked][-disabled][-hover]\n
+     *\n
+     * Examples:\n
+     *\n
+     * .ui-radio-state-checked (simply checked)\n
+     * .ui-radio-state-checked-hover (checked and hovered/focused)\n
+     * .ui-radio-state-hover (unchecked and hovered/focused)\n
+     *\n
+     * If you don´t have to deal with the doubble class bug of IE6 you can also use the simple ui-checkbox-checked, ui-checkbox-disabled, ui-checkbox-hover state-classnames (or: ui-radio-checked...)\n
+     * and the ui-radio/ui-checkbox role-classnames.\n
+     *\n
+     */\n
+\n
+    span.ui-checkbox,\n
+    span.ui-radio {\n
+        display: block;\n
+        float: left;\n
+        width: 24px;\n
+        height: 24px;\n
+        background: url(images/radio-unselected.png) no-repeat;\n
+    }\n
+\n
+    span.ui-checkbox {\n
+        background: url(images/check-unselected.png) no-repeat;\n
+    }\n
+\n
+    span.ui-helper-hidden {\n
+        display: none;\n
+    }\n
+\n
+    span.ui-checkbox-state-checked,\n
+    span.ui-checkbox-state-checked-hover {\n
+        background: url(images/check-selected.png) no-repeat;\n
+    }\n
+\n
+    span.ui-radio-state-checked,\n
+    span.ui-radio-state-checked-hover {\n
+        background: url(images/radio-selected.png) no-repeat;\n
+    }\n
+\n
+    .ui-helper-hidden-accessible {\n
+        position: absolute;\n
+        left: -999em;\n
+    }\n
+}\n
+\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

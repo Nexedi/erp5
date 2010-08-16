@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="Image" module="OFS.Image"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts81210769.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>check-selected.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAAvBJREFUeNq8lb9rFEEUx9/M7h5nTkEJItaKrWCljWBhYxotPCXEXwFF
+RJSUxotETby7/8BCQSGEIwpiITaxUkG00CagIbamEIxocjF3uzO+92Z2b3b3thHicu/ezuzM5/vm
+1xuhtYbNfIQrsG/36T3oJtFG/pE3Q/0Xl1tfcwIIP6m0mguFBu17AJ4HWgpsgWa9Fm5k+Ed9lTY+
+ikB2I/AVNZdVFHmSCFDkCF8KEaQD34A9AkuGclmKfLwIF2QkppAc4XsYQtBVJLKXRuLbphMUOZTK
+4JW3gVcaAO0hnETQc/Q8Co6JQuefSKJXIBCuOm2INn5BqNahpGACG56XVuAclCsQVHYivIKjwOnx
+8RN7D5T1bIFM3uN6arf0sQkSGaWBXaAHthomPrEABOVBjpYB7BHgSxZiC5z3THnx7TQNAr58aHB9
+actgMouJAPjCgGkd/DQMyLy4bEfnmfrP87chjCCxhXcN5iTYnpSdc994bRcZrCi4a0xrgm7hWQ26
+Ufoc7T9SMxskK2B2DsGkARfB7fPp6U2Ep+sOHJsEgf2EpwsE7G6Jt2UR/H1rHDphOvJD1emknxCi
+zxokQNPodavWF/5mhuCQsoPDdT5v4ASZF4i3ONr8bA02MMJXj26kPlOZ6l07fBbhSE9OuWX0F8Av
+L2ZvpaJ7+cCIkM9GfnS0wfB44XvwohHg3hgavpMDPb+fhw9dcuBg85I2h9z+9RGwDY6PTvEiFtmJ
+Kxl4nPwcRl7AJq44Q1Yv34MObsOsnbrWzMEhk1mF6jMC4Xzkd7SRq3U+SLGdGesPj9sLN8jcCDCf
+c1aktBsbli9cb3AKGG8+LIZHvT7UX2PKzgo81r9XOOVirmXP71bk4lgdlr99t1Ngp5PbqASe9KH+
+P1eY6QrcFX/aAO1VM0xq5Bh14tFxOTJ1kanPtV1bA7G+ysz8lSnEnC5jLt++g69MTnxS9k646N03
+8cKaecdp6YYY+Q8QGKTUOn1l/pdLf7OevwIMAAwmFRODEQ87AAAAAElFTkSuQmCC</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>846</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
