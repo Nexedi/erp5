@@ -1219,7 +1219,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
           if action in ('remove', 'save_and_remove'):
-            document = self.restrictedResolveValue(portal, recursive_path, None)
+            document = self.unrestrictedResolveValue(portal, recursive_path, None)
             if document is None:
               # It happens if the parent of target path is removed before
               continue
