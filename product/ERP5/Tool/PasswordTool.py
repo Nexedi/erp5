@@ -103,7 +103,7 @@ class PasswordTool(BaseTool):
     random_url = self._generateUUID()
     parameter = urlencode(dict(reset_key=random_url))
     url = "%s/portal_password/%s?%s" % (
-                                self.getPortalObject().absolute_url(),
+                                self.absolute_url(),
                                 'PasswordTool_viewResetPassword',
                                 parameter)
     # generate expiration date
