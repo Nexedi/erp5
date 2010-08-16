@@ -55,12 +55,22 @@ mandriva-rpm-appliance: checkout-rpmgen
 	sudo helpers/mandriva2010.0.sh
 	cd rpmgen; make mandriva
 
-opensuse-rpm-appliance: checkout-rpmgen
-	sed -i "s,mandriva,opensuse,g" rpmgen/buildout.cfg
-	sed -i "s,name = erp5-official-buildout,name = erp5-$(PACKAGE_VERSION),g" rpmgen/profiles/opensuse.cfg
-	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/profiles/opensuse.cfg
-	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/profiles/opensuse.cfg
-	sed -i 's,release = 001,release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/profiles/opensuse.cfg
+opensuse11.2-rpm-appliance: checkout-rpmgen
+	sed -i "s,mandriva,opensuse11.2,g" rpmgen/buildout.cfg
+	sed -i "s,name = erp5-official-buildout,name = erp5-$(PACKAGE_VERSION),g" rpmgen/profiles/opensuse11.2.cfg
+	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/profiles/opensuse11.2.cfg
+	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/profiles/opensuse11.2.cfg
+	sed -i 's,release = 001,release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/profiles/opensuse11.2.cfg
+	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt),$(PACKAGE_VERSION),g" rpmgen/Makefile
+	sudo helpers/opensuse.sh
+	cd rpmgen; make opensuse
+
+opensuse11.3-rpm-appliance: checkout-rpmgen
+	sed -i "s,mandriva,opensuse11.3,g" rpmgen/buildout.cfg
+	sed -i "s,name = erp5-official-buildout,name = erp5-$(PACKAGE_VERSION),g" rpmgen/profiles/opensuse11.3.cfg
+	sed -i "s,\$${checkout:location\}\/VERSION.txt,$(PACKAGE_VERSION),g" rpmgen/profiles/opensuse11.3.cfg
+	sed -i "/release \= 001/{x;/^$$/s//0/;y/012/123/;/2/{x;s/release = 001/release = $(PACKAGE_APPLICATION_RELEASE)/;x;};x;}" rpmgen/profiles/opensuse11.3.cfg
+	sed -i 's,release = 001,release = $(PACKAGE_SOFTWARE_RELEASE),1' rpmgen/profiles/opensuse11.3.cfg
 	sed -i "s,\$$(shell cat parts/checkout/VERSION.txt),$(PACKAGE_VERSION),g" rpmgen/Makefile
 	sudo helpers/opensuse.sh
 	cd rpmgen; make opensuse
