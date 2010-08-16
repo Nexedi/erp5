@@ -613,83 +613,62 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     return self.__class__.__name__[:-12]
 
-  def restrictedResolveValue(self, context=None, path=None, default=_MARKER):
+  def restrictedResolveValue(self, context=None, path='', default=_MARKER):
     """
       Get the value with checking the security.
       This method does not acquire the parent.
     """
-    def restrictedGetItem(container, key, default):
-      validate = getSecurityManager().validate
-      try:
-        value = container[key]
-      except KeyError:
-        if default is not _MARKER:
-          return default
-        return None
-      if value is not None:
-        try:
-          if not validate(container, container, key, value):
-            raise Unauthorized('unauthorized access to element %s' % key)
-        except Unauthorized:
-          # if user can't access object try to return default passed
-          if default is not _MARKER:
-            return default
-          raise
-      return value
-    return self._resolveValue(context, path, default, getItem=restrictedGetItem)
+    return self.unrestrictedResolveValue(context, path, default=default,
+                                         restricted=1)
 
-  def unrestrictedResolveValue(self, context=None, path=None, default=_MARKER):
+  def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
+                               restricted=0):
     """
       Get the value without checking the security.
       This method does not acquire the parent.
-    """
-    def unrestrictedGetItem(container, key, default):
-      try:
-        return container[key]
-      except KeyError:
-        if default is not _MARKER:
-          return default
-        else:
-          return None
-    return self._resolveValue(context, path, default, getItem=unrestrictedGetItem)
-
-  def _resolveValue(self, context, path, default=_MARKER, getItem=None):
-    """
-    Resolve the value without acquire the parent.
     """
     if isinstance(path, basestring):
       stack = path.split('/')
     else:
       stack = list(path)
     stack.reverse()
-    value = None
     if stack:
-      portal = aq_inner(self.getPortalObject())
-      # It can be passed with the context, so at first, searching from the context.
       if context is None:
+        portal = aq_inner(self.getPortalObject())
         container = portal
       else:
         container = context
-      key = stack.pop()
-      value = getItem(container, key, default)
 
-      # resolve the value from top to down
-      while value is not None and stack:
+      if restricted:
+        validate = getSecurityManager().validate
+
+      while stack:
         key = stack.pop()
-        value = getItem(value, key, default)
+        try:
+          value = container[key]
+        except KeyError:
+          LOG('BusinessTemplate', WARNING, 
+              'Could not access object %s' % (path,))
+          if default is _MARKER:
+            raise
+          return default
+
+        if restricted:
+          try:
+            if not validate(container, container, key, value):
+              raise Unauthorized('unauthorized access to element %s' % key)
+          except Unauthorized:
+            LOG('BusinessTemplate', WARNING,
+                'access to %s is forbidden' % (path,))
+          if default is _MARKER:
+            raise
+          return default
+
+        container = value
+
+      return value
     else:
-      # When relative_url is empty, returns the context
       return context
-
-    if value is None:
-      LOG('BusinessTemplate', WARNING,
-          'Could not access object %s' % path)
-      if default is not _MARKER:
-        return default
-      else:
-        raise KeyError
-    return value
-
 
 class ObjectTemplateItem(BaseTemplateItem):
   """
