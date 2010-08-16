@@ -69,8 +69,15 @@ class PasswordTool(BaseTool):
     """
     Create a random string and expiration date for request
     """
+    if REQUEST is None:
+      REQUEST = get_request()
+
     if user_login is None:
       user_login = REQUEST["user_login"]
+
+    site_url = self.getPortalObject().absolute_url()
+    if REQUEST and 'came_from' in REQUEST:
+      site_url = REQUEST.came_from
 
     msg = None
     # check user exists, and have an email
@@ -94,8 +101,7 @@ class PasswordTool(BaseTool):
       if REQUEST is not None:
         parameter = urlencode(dict(portal_status_message=msg))
         ret_url = '%s/login_form?%s' % \
-                  (self.absolute_url(),
-                  parameter)
+                  (site_url, parameter)
         return REQUEST.RESPONSE.redirect( ret_url )
       return msg
 
@@ -103,7 +109,7 @@ class PasswordTool(BaseTool):
     random_url = self._generateUUID()
     parameter = urlencode(dict(reset_key=random_url))
     url = "%s/portal_password/%s?%s" % (
-                                self.absolute_url(),
+                                site_url,
                                 'PasswordTool_viewResetPassword',
                                 parameter)
     # generate expiration date
@@ -132,8 +138,7 @@ class PasswordTool(BaseTool):
     if REQUEST is not None:
       msg = translateString("An email has been sent to you.")
       parameter = urlencode(dict(portal_status_message=msg))
-      ret_url = '%s/login_form?%s' % (self.absolute_url(),
-                                      parameter)
+      ret_url = '%s/login_form?%s' % (site_url, parameter)
       return REQUEST.RESPONSE.redirect( ret_url )
 
   def _generateUUID(self, args=""):
@@ -162,8 +167,11 @@ class PasswordTool(BaseTool):
     if REQUEST is None:
       REQUEST = get_request()
     user_login, expiration_date = self._password_request_dict.get(reset_key, (None, None))
+    site_url = self.getPortalObject().absolute_url()
+    if REQUEST and 'came_from' in REQUEST:
+      site_url = REQUEST.came_from
     if reset_key is None or user_login is None:
-      ret_url = '%s/login_form' % self.getPortalObject().absolute_url()
+      ret_url = '%s/login_form' % site_url
       return REQUEST.RESPONSE.redirect( ret_url )
 
     # check date
@@ -171,8 +179,7 @@ class PasswordTool(BaseTool):
     if current_date > expiration_date:
       msg = translateString("Date has expire.")
       parameter = urlencode(dict(portal_status_message=msg))
-      ret_url = '%s/login_form?%s' % (self.getPortalObject().absolute_url(),
-                                      parameter)
+      ret_url = '%s/login_form?%s' % (site_url, parameter)
       return REQUEST.RESPONSE.redirect( ret_url )
 
     # redirect to form as all is ok
@@ -201,6 +208,13 @@ class PasswordTool(BaseTool):
 
     current_date = DateTime()
     msg = None
+    if REQUEST is None:
+      REQUEST = get_request()
+    site_url = self.getPortalObject().absolute_url()
+    if REQUEST and 'came_from' in REQUEST:
+      site_url = REQUEST.came_from
+    if self.getWebSiteValue():
+      site_url = self.getWebSiteValue().absolute_url()
     if register_user_login is None:
       msg = "Key not known. Please ask reset password."
     elif register_user_login != user_login:
@@ -214,8 +228,7 @@ class PasswordTool(BaseTool):
     if msg is not None:
       if REQUEST is not None:
         parameter = urlencode(dict(portal_status_message=msg))
-        ret_url = '%s/login_form?%s' % (self.getPortalObject().absolute_url(),
-                                        parameter)
+        ret_url = '%s/login_form?%s' % (site_url, parameter)
         return REQUEST.RESPONSE.redirect( ret_url )
       else:
         return msg
@@ -229,8 +242,7 @@ class PasswordTool(BaseTool):
     if REQUEST is not None:
       msg = translateString("Password changed.")
       parameter = urlencode(dict(portal_status_message=msg))
-      ret_url = '%s/login_form?%s' % (self.getPortalObject().absolute_url(),
-                                      parameter)
+      ret_url = '%s/login_form?%s' % (site_url, parameter)
       return REQUEST.RESPONSE.redirect( ret_url )
 
 InitializeClass(PasswordTool)
