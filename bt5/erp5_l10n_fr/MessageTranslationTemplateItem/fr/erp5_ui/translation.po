@@ -4752,7 +4752,7 @@ msgid "Financial Information"
 msgstr "Informations financières"
 
 msgid "Financial Section"
-msgstr "Section Financière"
+msgstr "Section financière"
 
 msgid "Find"
 msgstr "Chercher"
