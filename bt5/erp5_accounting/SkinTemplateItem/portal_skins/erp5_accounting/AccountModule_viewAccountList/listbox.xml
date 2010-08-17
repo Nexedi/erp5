@@ -98,7 +98,7 @@
                           <string>GAP</string>
                         </tuple>
                         <tuple>
-                          <string>account_type_title</string>
+                          <string>account_type_translated_title</string>
                           <string>Account Type</string>
                         </tuple>
                         <tuple>
@@ -146,7 +146,7 @@
                           <string>Modification Date</string>
                         </tuple>
                         <tuple>
-                          <string>financial_section_title</string>
+                          <string>financial_section_translated_title</string>
                           <string>Financial Section</string>
                         </tuple>
                         <tuple>
@@ -304,10 +304,6 @@
                         <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>financial_section_title</string>
-                          <string>Financial Section</string>
                         </tuple>
                         <tuple>
                           <string>owner_title</string>
