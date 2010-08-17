@@ -617,6 +617,35 @@ class TemplateTool (BaseTool):
       if hasattr(outfile, 'getvalue'):
         return outfile.getvalue()
 
+    def getDiffFilterScriptList(self):
+      """
+      Return list of scripts usable to filter diff
+      """
+      # XXX-Aurel : this will be removed in a near future when script
+      # will be configurable on the tool
+      return [getattr(self, 'TemplateTool_filterTupleDiff'),]
+
+    def getFilteredDiffAsHTML(self, diff):
+      """
+      Return the diff filtered by python scripts into html format
+      """
+      return self.getFilteredDiff(diff).toHTML()
+
+    def getFilteredDiff(self, diff):
+      """
+      Filter the diff using python scripts
+      """
+      diff_file_object = DiffFile(diff)
+      diff_block_list = diff_file_object.getModifiedBlockList()
+      if len(diff_block_list):
+        for script in self.getDiffFilterScriptList():
+          for block, line_tuple in diff_block_list:
+            if script(line_tuple[0], line_tuple[1]):
+              diff_file_object.children.remove(block)
+      # XXX-Aurel : this method should return a text diff but
+      # DiffFile does not provide yet such feature
+      return diff_file_object
+
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
