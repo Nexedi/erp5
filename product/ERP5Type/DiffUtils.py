@@ -149,7 +149,7 @@ class DiffFile:
   def getModifiedBlockList(self):
     """
     Return a list of modified blocks
-    List contains tuples (old_modified_code, new_modified_code)
+    List contains tuples (block object : (old_modified_code, new_modified_code))
     """
     if self.binary:
       return []
@@ -159,7 +159,8 @@ class DiffFile:
                        if x[0] is not None and x[1] == MODIFIED_DIFF_COLOR]
       new_line_list = [x[0].strip() for x in child.getNewCodeList()
                        if x[0] is not None and x[1] == MODIFIED_DIFF_COLOR]
-      block_list.append((old_line_list, new_line_list))
+      if old_line_list and new_line_list:
+        block_list.append((child,(old_line_list, new_line_list)))
     return block_list
 
 
