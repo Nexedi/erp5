@@ -103,6 +103,9 @@ class DiffFile:
     # Adding header of the table
     if self.binary:
       return '<b>Folder or binary file or just no changes!</b><br/><br/><br/>'
+
+    if not len(self.children):
+      return ''
     
     html_list = []
     html_list.append('''
