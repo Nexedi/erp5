@@ -256,8 +256,8 @@ class ExplanationCache:
     path_list = self.getSimulationPathPatternList()
     path_list = map(lambda x:x[0:-1], path_list) # Remove trailing %
     path_set = set()
-    for simulation_movement in business_link.\
-             _getExplanationRelatedSimulationMovementValueList(self.explanation):
+    for simulation_movement in \
+        self.getBusinessLinkRelatedSimulationMovementValueList(business_link):
       simulation_path = simulation_movement.getPath()
       for path in path_list:
         if simulation_path.startswith(path):

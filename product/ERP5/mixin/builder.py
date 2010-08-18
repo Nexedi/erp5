@@ -112,40 +112,32 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       or to Simulation Movements related to a limited set of existing
     """
     # Parameter initialization
-    if movement_relative_url_list is None:
-      movement_relative_url_list = []
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
-    if movement_list is None:
-      movement_list = []
     # Call a script before building
     self.callBeforeBuildingScript() # XXX-JPS Used ?
     # Select
-    if not len(movement_list):
-      if len(movement_relative_url_list) == 0:
+    if not movement_list:
+      if movement_relative_url_list:
+        movement_list = map(self.restrictedTraverse,
+                            movement_relative_url_list)
+      else:
         if explanation is not None:
           explanation_cache = _getExplanationCache(explanation)
-          path = explanation_cache.getSimulationPathPatternList()
-        else:
-          path = kw.get('path', None)
+          kw['path'] = explanation_cache.getSimulationPathPatternList()
         if business_link is not None:
-          causality_uid = business_link.getUid()
-        else:
-          causality_uid = kw.get('causality_uid', None)
-        kw.update(dict(causality_uid=causality_uid, path=path))
-        if kw.get('causality_uid') is None:
+          kw['causality_uid'] = business_link.getUid()
+        elif kw.get('causality_uid') is None:
           business_link_value_list = self.getRelatedBusinessLinkValueList()
           if len(business_link_value_list) > 0:
             # use only Business Link related movements
             kw['causality_uid'] = [link_value.getUid() for link_value in business_link_value_list]
         movement_list = self.searchMovementList(
-                                        delivery_relative_url_list=delivery_relative_url_list,
-                                        applied_rule_uid=applied_rule_uid,**kw)
-      else:
-        movement_list = [self.restrictedTraverse(relative_url) for relative_url \
-                         in movement_relative_url_list]
-    if not len(movement_list):
-      return []
+          delivery_relative_url_list=delivery_relative_url_list,
+          applied_rule_uid=applied_rule_uid,
+          **kw)
+        if not movement_list:
+          return []
     # Collect
     root_group_node = self.collectMovement(movement_list)
     # Build
