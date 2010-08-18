@@ -76,14 +76,16 @@ class TestBPMMixin(ERP5TypeTestCase):
   @reindex
   def createBusinessProcess(self, **kw):
     module = self.portal.getDefaultModule(
-        portal_type=self.business_process_portal_type)
+        portal_type=self.business_process_portal_type,)
     business_process =  module.newContent(
-      portal_type=self.business_process_portal_type, **kw)
-    trade_phase = self.getCategoryTool().trade_phase
+      portal_type=self.business_process_portal_type,
+      specialise_value=module.erp5_default_business_process)
+    business_process._edit(**kw)
     self.createTradeModelPath(business_process,
       reference='default_path',
-      trade_phase_value_list=[x for x in trade_phase.default.objectValues()
-                              if x.getId() != 'accounting'],
+      trade_phase_value_list=('default/payment',
+                              'default/discount',
+                              'default/tax'),
       trade_date='trade_phase/default/order')
     kw = dict(business_process=business_process,
               trade_phase='default/accounting',
