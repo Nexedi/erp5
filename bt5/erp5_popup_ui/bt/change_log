@@ -1,3 +1,6 @@
+2010-08-18
+* Refactor/simplify in order to extend jQuery with a erp5_popup function that can be re-used in other scripts/projects.
+
 2010-07-01 yo
 * Fix a bug that scripts in every fetched document may be executed. Otherwise, ready callbacks can be executed many times.
 

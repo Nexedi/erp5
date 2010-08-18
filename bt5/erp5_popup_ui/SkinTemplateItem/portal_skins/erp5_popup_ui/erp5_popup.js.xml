@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
-        <tuple/>
-      </tuple>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,151 +63,182 @@ If you want to use this feature, you need to load additional files in global_def
 The first two lines are required for loading jQuery and jQuery UI. The last line is for this file.\n
 */\n
 \n
-jQuery(function() {\n
+$(function() {\n
+  /*\n
+   * generic dialog to display another ERP5 page on top of the page.\n
+   *\n
+   * Parameters:\n
+   * \'dialog\': object to pass as argument to $.ui.dialog on creation.\n
+   *           erp5_dialog has generic defaults, and everything you will\n
+   *           pass will override those defaults.\n
+   * \'load\'  :\n
+   *        - url: url to load in the popup\n
+   *        - params: parameters to give to the ajax call. can be omitted\n
+   *        - method: default $.post, you can change it to $.get\n
+   *\n
+   * Example:\n
+   *   $(\'<div id="jquery_erp5_dialog" />\').appendTo(\'body\').erp5_popup({\n
+   *        dialog: {title: \'It works\', },\n
+   *        load: {url: \'/erp5/some_module/someobject\'},\n
+   *   )};\n
+   */\n
+  $.fn.erp5_popup = function(params) {\n
+    dialog = $(this);\n
+\n
+    var default_dialog_parameters = {\n
+       modal: true,\n
+       width: $(window).width() * 0.8,\n
+       height: $(window).height() * 0.8,\n
+       title: \'ERP5 dialog\',\n
+       close: function() {\n
+         dialog.dialog(\'destroy\');\n
+         dialog.empty();\n
+      },\n
+    }\n
+    // initalize jQuery dialog\n
+    dialog.dialog($.extend({}, default_dialog_parameters, params.dialog));\n
+\n
+    var load = function(url, query, ajax_method) {\n
+      if (!query) query = {};\n
+      if (!ajax_method) ajax_method = $.post;\n
+      //dialog.empty();\n
+\n
+      // Some bogus animations for having the user to feel easier.\n
+      var animate = function() {\n
+        var element = $(\'p.loading\', dialog);\n
+        if (element.length != 0) {\n
+          //element.animate({opacity: 1}, 2000, \'linear\');\n
+          //element.animate({opacity: 0}, 2000, \'linear\', animate);\n
+          element.animate({color: "white"}, 2000, \'linear\');\n
+          element.animate({color: "black"}, 2000, \'linear\', animate);\n
+        }\n
+      };\n
+      $(\'<div class="loading" style="background-color: #AAAAAA; opacity: 0.5; position: absolute; left: 0%; width: 100%; top: 0%; height: 100%; transparent;"><p class="loading" style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p></div>\').appendTo(dialog);\n
+      animate();\n
+\n
+      ajax_method(url, query, function(data, textStatus, XMLHttpRequest) {\n
+        if (textStatus == \'success\' || textStatus == \'notmodified\') {\n
+          // Stop the animations above.\n
+          dialog.empty();\n
+          //$(\'div.loading\', dialog).remove();\n
+\n
+          dialog.html($(\'<div />\').append(data.replace(/<script(.|\\s)*?\\/script>/g, "")).find(\'form\'));\n
+\n
+          // XXX Get rid of unneeded stuff in JavaScript for now.\n
+          $(\'.bars, .breadcrumb, .logged_in_as\', dialog).remove();\n
+          $(\'[id]\', dialog).removeAttr(\'id\');\n
+          // XXX Get rid of unneeded KM stuff in JavaScript for now.\n
+          $(\'.wrapper\', dialog).remove();\n
+\n
+          // Insert the same buttons as at the bottom into near the top.\n
+          $(\'div.bottom_actions\', dialog).clone().insertAfter($(\'div.dialog_box\', dialog)).css(\'margin-bottom\', \'1em\');\n
+\n
+          $(\'input[type="image"], button.sort_button, .dialog_selector > button\', dialog).click(function(event) {\n
+            event.preventDefault();\n
+            var self = $(this);\n
+            var form = $(\'form.main_form\', dialog);\n
+            var params = {};\n
+            params[self.attr(\'name\')] = self.attr(\'value\');\n
+            load(form.attr(\'action\'), $.param(params) + \'&\' + form.serialize());\n
+          });\n
+\n
+          // XXX Remove the hardcoded handler.\n
+          $(\'.dialog_selector > select[onchange]\', dialog).removeAttr(\'onchange\');\n
+          $(\'.dialog_selector > select\', dialog).change(function(event) {\n
+            //event.preventDefault();\n
+            var button = $(\'button\', this.parentNode);\n
+            var form = $(\'form.main_form\', dialog);\n
+            var params = {};\n
+            params[button.attr(\'name\')] = button.attr(\'value\');\n
+            load(form.attr(\'action\'), $.param(params) + \'&\' + form.serialize());\n
+          });\n
+\n
+          // XXX Remove the hardcoded handler.\n
+          $(\'input[type="text"][name="listbox_page_start"][onkeypress]\', dialog).removeAttr(\'onkeypress\');\n
+          $(\'input[type="text"][name="listbox_page_start"]\', dialog).keypress(function(event) {\n
+            if (event.keyCode == \'13\') {\n
+              event.preventDefault();\n
+              var self = $(this);\n
+              self.value = self.attr(\'defaultValue\');\n
+              var form = $(\'form.main_form\', dialog);\n
+              // XXX no other way but hardcoding the method name.\n
+              load(\'listbox_setPage\', form.serialize());\n
+            }\n
+          });\n
+\n
+          $(\'tr.listbox_search_line input[type="text"]\', dialog).removeAttr(\'onkeypress\').keypress(function(event) {\n
+            if (event.keyCode == \'13\') {\n
+              event.preventDefault();\n
+              //var self = $(this);\n
+              //self.value = self.attr(\'defaultValue\');\n
+              var form = $(\'form.main_form\', dialog);\n
+              var first_submit_button = $($(\'input[type="submit"]\', form)[0]);\n
+              var params = {};\n
+              params[first_submit_button.attr(\'name\')] = first_submit_button.attr(\'value\');\n
+              load(form.attr(\'action\'), $.param(params) + \'&\' + form.serialize());\n
+            }\n
+          });\n
+\n
+          $(\'button.dialog_cancel_button\', dialog).click(function(event) {\n
+            event.preventDefault();\n
+            dialog.dialog(\'close\');\n
+          });\n
+\n
+          $(\'button.dialog_update_button\', dialog).click(function(event) {\n
+            event.preventDefault();\n
+            var self = $(this);\n
+            var form = $(\'form.main_form\', dialog);\n
+            var params = {};\n
+            params[self.attr(\'name\')] = self.attr(\'value\');\n
+            load(form.attr(\'action\'), $.param(params) + \'&\' + form.serialize());\n
+          });\n
+        }\n
+      });\n
+    };\n
+    load(params.load.url, params.load.params, params.load.method);\n
+  };\n
+});\n
+\n
+$(function() {\n
   // XXX It is necessary to keep a reference to a dialog, because jQuery / jQuery UI does not keep information\n
   // in elements of DOM unfortunately. This is not a big problem at the moment, because this implementation assumes\n
   // that a dialog is modal.\n
-  var dialog = null;\n
+  // XXX Nicolas: see $.data() for storage in DOM. I dont think that it matters however. $("#jquery_erp5_dialog") should be enough\n
+  var dialog = $(\'<div id="jquery_erp5_dialog" />\').appendTo(\'body\');\n
 \n
-  var load = function(url, query, method_name) {\n
-    //dialog.empty();\n
 \n
-    // Some bogus animations for having the user to feel easier.\n
-    var animate = function() {\n
-      var element = jQuery(\'p.loading\', dialog);\n
-      if (element.length != 0) {\n
-        //element.animate({opacity: 1}, 2000, \'linear\');\n
-        //element.animate({opacity: 0}, 2000, \'linear\', animate);\n
-        element.animate({color: "white"}, 2000, \'linear\');\n
-        element.animate({color: "black"}, 2000, \'linear\', animate);\n
-      }\n
-    };\n
-    jQuery(\'<div class="loading" style="background-color: #AAAAAA; opacity: 0.5; position: absolute; left: 0%; width: 100%; top: 0%; height: 100%; transparent;"><p class="loading" style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p></div>\').appendTo(dialog);\n
-    animate();\n
-\n
-    // define fallback values\n
-    if (method_name == undefined)\n
-      method_name = \'post\';\n
-    if (method_name == \'post\')\n
-      var caller = jQuery.post;\n
-    if (method_name == \'get\')\n
-      var caller = jQuery.get;\n
-    caller(url, query, function(data, textStatus, XMLHttpRequest) {\n
-      if (textStatus == \'success\' || textStatus == \'notmodified\') {\n
-        // Stop the animations above.\n
-        dialog.empty();\n
-        //jQuery(\'div.loading\', dialog).remove();\n
-\n
-        dialog.html(jQuery(\'<div />\').append(data.replace(/<script(.|\\s)*?\\/script>/g, "")).find(\'form\'));\n
-\n
-        // XXX Get rid of unneeded stuff in JavaScript for now.\n
-        jQuery(\'.bars, .breadcrumb, .logged_in_as\', dialog).remove();\n
-        jQuery(\'[id]\', dialog).removeAttr(\'id\');\n
-        // XXX Get rid of unneeded KM stuff in JavaScript for now.\n
-        jQuery(\'.wrapper\', dialog).remove();\n
-\n
-        // Insert the same buttons as at the bottom into near the top.\n
-        jQuery(\'div.bottom_actions\', dialog).clone().insertAfter(jQuery(\'div.dialog_box\', dialog)).css(\'margin-bottom\', \'1em\');\n
-\n
-        jQuery(\'input[type="image"], button.sort_button, .dialog_selector > button\', dialog).click(function(event) {\n
-          event.preventDefault();\n
-          var self = jQuery(this);\n
-          var form = jQuery(\'form.main_form\', dialog);\n
-          var params = {};\n
-          params[self.attr(\'name\')] = self.attr(\'value\');\n
-          load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());\n
-        });\n
-\n
-        // XXX Remove the hardcoded handler.\n
-        jQuery(\'.dialog_selector > select[onchange]\', dialog).removeAttr(\'onchange\');\n
-        jQuery(\'.dialog_selector > select\', dialog).change(function(event) {\n
-          //event.preventDefault();\n
-          var button = jQuery(\'button\', this.parentNode);\n
-          var form = jQuery(\'form.main_form\', dialog);\n
-          var params = {};\n
-          params[button.attr(\'name\')] = button.attr(\'value\');\n
-          load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());          \n
-        });\n
-\n
-        // XXX Remove the hardcoded handler.\n
-        jQuery(\'input[type="text"][name="listbox_page_start"][onkeypress]\', dialog).removeAttr(\'onkeypress\');\n
-        jQuery(\'input[type="text"][name="listbox_page_start"]\', dialog).keypress(function(event) {\n
-          if (event.keyCode == \'13\') {\n
-            event.preventDefault();\n
-            var self = jQuery(this);\n
-            self.value = self.attr(\'defaultValue\');\n
-            var form = jQuery(\'form.main_form\', dialog);\n
-            // XXX no other way but hardcoding the method name.\n
-            load(\'listbox_setPage\', form.serialize()); \n
-          }\n
-        });\n
-\n
-        jQuery(\'tr.listbox_search_line input[type="text"]\', dialog).removeAttr(\'onkeypress\').keypress(function(event) {\n
-          if (event.keyCode == \'13\') {\n
-            event.preventDefault();\n
-            //var self = jQuery(this);\n
-            //self.value = self.attr(\'defaultValue\');\n
-            var form = jQuery(\'form.main_form\', dialog);\n
-            var first_submit_button = jQuery(jQuery(\'input[type="submit"]\', form)[0]);\n
-            var params = {};\n
-            params[first_submit_button.attr(\'name\')] = first_submit_button.attr(\'value\');\n
-            load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());          \n
-          }\n
-        });\n
-\n
-        jQuery(\'button.dialog_cancel_button\', dialog).click(function(event) {\n
-          event.preventDefault();\n
-          dialog.dialog(\'close\');\n
-        });\n
-\n
-        jQuery(\'button.dialog_update_button\', dialog).click(function(event) {\n
-          event.preventDefault();\n
-          var self = jQuery(this);\n
-          var form = jQuery(\'form.main_form\', dialog);\n
-          var params = {};\n
-          params[self.attr(\'name\')] = self.attr(\'value\');\n
-          load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());\n
-        });\n
-      }\n
-    });\n
-  };\n
+  // Those two definitions could be kept in a different file. The jQuery plugin providing an implementation is different than\n
+  // the places where we use this plugin\n
 \n
   // Make the relation update dialogs as pop-ups.\n
-  jQuery(\'input[value="update..."]\').click(function(event) {\n
+  $(\'input[value="update..."]\').click(function(event) {\n
     event.preventDefault();\n
-    var self = jQuery(this);\n
-    // Make sure that the dialog is present, and it is empty.\n
-    if (dialog != null) {\n
-      dialog.empty();\n
-      dialog.dialog(\'destroy\');\n
-    }\n
-    dialog = jQuery(\'<div id="dialog" />\').appendTo(\'body\');\n
-    dialog.dialog({ modal: true,\n
-                    width: jQuery(window).width() * 0.8,\n
-                    height: jQuery(window).height() * 0.8,\n
-                    title: jQuery(\'label\', this.parentNode.parentNode).text()\n
-    });\n
-    var form = jQuery(\'form#main_form\');\n
+\n
+    var self = $(this);\n
+    var form = $(\'form#main_form\');\n
     var params = {};\n
     params[self.attr(\'name\')] = self.attr(\'value\');\n
-    load(form.attr(\'action\'), jQuery.param(params) + \'&\' + form.serialize());\n
+\n
+    dialog.erp5_popup({\n
+        dialog: { title: $(\'label\', this.parentNode.parentNode).text() },\n
+        load: {\n
+            url: form.attr(\'action\'),\n
+            params: $.param(params) + \'&\' + form.serialize(),\n
+        }\n
+    });\n
   });\n
 \n
   // Make the Add gadget dialog work as pop-ups.\n
-  jQuery(\'a[id="add-gadgets"]\').click(function(event) {\n
+  $(\'a[id="add-gadgets"]\').click(function(event) {\n
     event.preventDefault();\n
-    // Make sure that the dialog is present, and it is empty.\n
-    if (dialog != null) {\n
-      dialog.empty();\n
-      dialog.dialog(\'destroy\');\n
-    }\n
-    dialog = jQuery(\'<div id="dialog" />\').appendTo(\'body\');\n
-    dialog.dialog({ modal: true,\n
-                    width: jQuery(window).width() * 0.8,\n
-                    height: jQuery(window).height() * 0.8,\n
-                    title: jQuery(\'label\', this.parentNode.parentNode).text()\n
+\n
+    dialog.erp5_popup({\n
+        dialog: { title: $(\'label\', this.parentNode.parentNode).text() },\n
+        load: {\n
+            url: this.href,\n
+            method: $.get,\n
+        }\n
     });\n
-    load(this.href, query={}, method_name=\'get\');\n
   });\n
 \n
 });\n
