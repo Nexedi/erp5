@@ -1,4 +1,5 @@
 PYTHON=python
+BUILDOUT_OPT=-U -v
 SOFTWARE_BUILD_PATH='/opt/erp5/'`cat VERSION.txt`
 PACKAGE_INSTALL_PATH='opt/erp5/'`cat VERSION.txt`
 ifndef $(PACKAGE_VERSION)
@@ -12,7 +13,7 @@ PACKAGE_APPLICATION_RELEASE=001
 endif
 
 software: bin/buildout
-	bin/buildout
+	bin/buildout $(BUILDOUT_OPT)
 
 bin/buildout:
 	$(PYTHON) -S bootstrap/bootstrap.py
