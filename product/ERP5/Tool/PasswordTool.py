@@ -65,6 +65,31 @@ class PasswordTool(BaseTool):
   def __init__(self):
     self._password_request_dict = PersistentMapping()
 
+
+  security.declareProtected('Manage users', 'getResetPasswordUrl')
+  def getResetPasswordUrl(self, user_login, site_url):
+    # generate expiration date
+    expiration_date = DateTime() + self._expiration_day
+
+    # generate a random string
+    random_url = self._generateUUID()
+    parameter = urlencode(dict(reset_key=random_url))
+    url = "%s/portal_password/%s?%s" % (
+                                site_url,
+                                'PasswordTool_viewResetPassword',
+                                parameter)
+    # XXX before r26093, _password_request_dict was initialized by an OOBTree and
+    # replaced by a dict on each request, so if it's data structure is not up
+    # to date, we update it if needed
+    if not isinstance(self._password_request_dict, PersistentMapping):
+      LOG('ERP5.PasswordTool', INFO, 'Updating password_request_dict to'
+                                     ' PersistentMapping')
+      self._password_request_dict = PersistentMapping()
+
+    # register request
+    self._password_request_dict[random_url] = (user_login, expiration_date)
+    return url
+
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None):
     """
     Create a random string and expiration date for request
@@ -127,13 +152,22 @@ class PasswordTool(BaseTool):
     self._password_request_dict[random_url] = (user_login, expiration_date)
 
     # send mail
-    subject = "[%s] Reset of your password" %(self.getPortalObject().getTitle())
-    message = "\nYou requested to reset your %s account password.\n\n" \
-              "Please copy and paste the following link into your browser: \n%s\n\n" \
-              "Please note that this link will be valid only one time, until %s.\n" \
+    subject = translateString("[${instance_name}] Reset of your password",
+        mapping={'instance_name': self.getPortalObject().getTitle()})
+    subject = subject.translate()
+    message = translateString("\nYou requested to reset your ${instance_name}"\
+              " account password.\n\n" \
+              "Please copy and paste the following link into your browser: \n"\
+              "${reset_password_link}\n\n" \
+              "Please note that this link will be valid only one time, until "\
+              "${expiration_date}.\n" \
               "After this date, or after having used this link, you will have to make " \
               "a new request\n\n" \
-              "Thank you" %(self.getPortalObject().getTitle(), url, expiration_date)
+              "Thank you",
+              mapping={'instance_name':self.getPortalObject().getTitle(),
+                       'reset_password_link':url,
+                       'expiration_date':expiration_date})
+    message = message.translate()
     self.getPortalObject().portal_notifications.sendMessage(sender=None, recipient=[user,], subject=subject, message=message)
     if REQUEST is not None:
       msg = translateString("An email has been sent to you.")
