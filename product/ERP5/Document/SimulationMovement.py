@@ -594,7 +594,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     while True:
       portal_type = current.getPortalType()
       if portal_type == "Simulation Movement":
-        causality_dict[current.getCausality()] = current
+        causality_dict[current.getCausality(portal_type='Business Link')] = \
+          current
       elif portal_type != "Applied Rule":
         break
       # XXX or maybe directly go up by two levels?

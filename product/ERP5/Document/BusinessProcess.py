@@ -713,9 +713,9 @@ class BusinessProcess(Path, XMLObject):
       movement._edit(**kw)
       business_link = self.getBusinessLinkValueList(trade_phase=trade_phase,
                                                     context=movement)
-      business_link = [x.getRelativeUrl() for x in business_link]
-      movement._setCausalityList(business_link
-        + movement.getCausalityList() + amount.getCausalityList())
+      movement._setCausalityList([trade_model_path.getRelativeUrl()]
+        + [x.getRelativeUrl() for x in business_link]
+        + movement.getCausalityList())
       result.append(movement)
 
     # result can not be empty
@@ -804,11 +804,6 @@ class BusinessProcess(Path, XMLObject):
         property_dict['stop_date'] = stop_date
     else:
       raise TypeError("Explanation must be an Applied Rule in expand process") # Nothing to do
-
-    # Set causality to trade model path
-    property_dict['causality'] = trade_model_path.getRelativeUrl() # XXX-JPS Will not work if we do not use real object
-    #(ie. if we use kind of 'temp')
-
     return property_dict
 
   # IBusinessProcess global API

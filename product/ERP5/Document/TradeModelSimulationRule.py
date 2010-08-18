@@ -90,7 +90,8 @@ class TradeModelSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predic
 class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
 
   def _getUpdatePropertyDict(self, input_movement):
-    return {'delivery': None,
+    return {'causality_list': input_movement.getCausalityList(),
+            'delivery': None,
             # XXX shouldn't we create a tester for price instead ?
             'price': input_movement.getPrice()}
 
