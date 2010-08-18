@@ -70,7 +70,6 @@ if modified != \'none\':\n
   for f in tab_Modified:\n
     diff = subversion_tool.diff(f, context)\n
     final_diff = template_tool.getFilteredDiffAsHTML(diff)\n
-    context.log("final_diff = %s" %(final_diff))\n
     if len(final_diff):\n
       print \'<input name="modified" value="%s" type="checkbox" checked="checked" />\'%f\n
       f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)\n
