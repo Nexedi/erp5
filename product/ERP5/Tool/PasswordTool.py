@@ -73,7 +73,8 @@ class PasswordTool(BaseTool):
 
     # generate a random string
     random_url = self._generateUUID()
-    parameter = urlencode(dict(reset_key=random_url))
+    parameter = urlencode(dict(reset_key=random_url,
+                               user_login=user_login))
     url = "%s/portal_password/%s?%s" % (
                                 site_url,
                                 'PasswordTool_viewResetPassword',
