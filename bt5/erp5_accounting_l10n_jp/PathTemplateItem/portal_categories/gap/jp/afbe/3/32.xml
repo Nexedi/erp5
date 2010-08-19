@@ -2,16 +2,23 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Category" module="Products.ERP5Type.Document.Category"/>
-        <tuple/>
-      </tuple>
+      <global name="Category" module="Products.ERP5Type.Document.Category"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>default_reference</string> </key>
-            <value> <string>32</string> </value>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>gap/jp/afbe/3/32</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>effective_date</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -23,11 +30,11 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>新株予約権</string> </value>
+            <value> <string>仕掛品</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>新株予約権</string> </value>
+            <value> <string>仕掛品</string> </value>
         </item>
       </dictionary>
     </pickle>
