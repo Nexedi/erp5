@@ -86,10 +86,10 @@ class TestBPMMixin(ERP5TypeTestCase):
       trade_phase_value_list=('default/payment',
                               'default/discount',
                               'default/tax'),
-      trade_date='trade_phase/default/order')
+      trade_date='trade_phase/default/invoicing')
     kw = dict(business_process=business_process,
               trade_phase='default/accounting',
-              trade_date='trade_phase/default/order',
+              trade_date='trade_phase/default/invoicing',
               membership_criterion_base_category='resource_use')
     self.createTradeModelPath(reference='acounting_tax1',
       efficiency=-1,

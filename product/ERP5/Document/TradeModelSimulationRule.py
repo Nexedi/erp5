@@ -28,6 +28,7 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
@@ -97,15 +98,20 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
 
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
-    specialise_list = simulation_movement.getSpecialiseList()
-    rule = self._applied_rule.getSpecialiseValue()
+    input_movement = aq_base(simulation_movement).__of__(self._applied_rule)
     for amount in simulation_movement.getAggregatedAmountList(
         # XXX add a 'trade_amount_generator' group type
         amount_generator_type_list=('Purchase Trade Condition',
                                     'Sale Trade Condition',
                                     'Trade Model Line')):
-      movement = self._applied_rule.newContent(
-        portal_type=RuleMixin.movement_type, temp_object=True,
-        **dict((k, v) for k, v in amount.__dict__.iteritems() if k[0] != '_'))
-      movement._setSpecialiseList(specialise_list)
+      movement = input_movement.asContext(**dict((k, v)
+          for k, v in amount.__dict__.iteritems()
+          if k[0] != '_' and k != 'categories'))
+      base_category_set = set(amount.getBaseCategoryList())
+      base_category_set.remove('price_currency') # XXX
+      # XXX 'causality' category should be added to Amount
+      base_category_set.add('causality')
+      movement._setCategoryMembership(base_category_set,
+                                      amount.getCategoryList(),
+                                      base=True)
       yield movement

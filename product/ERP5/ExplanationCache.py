@@ -187,7 +187,7 @@ class ExplanationCache:
     def getParentSimulationMovementValueList(obj, movement_list, trade_phase):
       parent = obj.getParentValue()
       while parent.getPortalType() == "Simulation Movement":
-        if parent.getCausalityValue(
+        if parent.getCausalityValue(portal_type="Trade Model Path"
             ).isMemberOf(trade_phase, strict_membership=1):
           movement_list.append(parent)
         parent = parent.getParentValue().getParentValue()
@@ -195,7 +195,7 @@ class ExplanationCache:
     def getChildSimulationMovementValueList(obj, movement_list, trade_phase):
       for child in obj.objectValues():
         if (child.getPortalType() == "Simulation Movement" and
-            child.getCausalityValue(
+            child.getCausalityValue(portal_type="Trade Model Path"
               ).isMemberOf(trade_phase, strict_membership=1)):
           movement_list.append(child)
         getChildSimulationMovementValueList(child, movement_list, trade_phase)
