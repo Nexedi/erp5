@@ -545,6 +545,7 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal, 'runUnitTestList')
     def runUnitTestList(self, test_list=[],
                         sql_connection_string='',
+                        save=False, load=False,
                         repository_list=None,
                         REQUEST=None, RESPONSE=None, **kwd):
       """Runs Unit Tests related to this Business Template
@@ -571,6 +572,10 @@ class TemplateTool (BaseTool):
 
       test_cmd_args = [sys.executable, getUnitTestFile()]
       test_cmd_args += ['--erp5_sql_connection_string', sql_connection_string]
+      if load:
+        test_cmd_args += ['--load']
+      if save:
+        test_cmd_args += ['--save']
       # pass currently used product path to test runner
       products_path_list = site_configuration.products
       # add products from Zope, as some sites are not providing it
