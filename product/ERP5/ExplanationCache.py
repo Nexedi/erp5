@@ -185,27 +185,26 @@ class ExplanationCache:
     kw_tuple = tuple(kw.items()) # We hope that no sorting is needed
 
     def getParentSimulationMovementValueList(obj, movement_list, trade_phase):
-      if getattr(obj, "getParentValue", None):
-        parent = obj.getParentValue()
-        if parent is not None:
-          if parent.getPortalType() == "Simulation Movement" and \
-             parent.getCausalityValue().isMemberOf(trade_phase, strict_membership=1):
-            movement_list.append(parent)
-          getParentSimulationMovementValueList(parent, movement_list, trade_phase)
+      parent = obj.getParentValue()
+      while parent.getPortalType() == "Simulation Movement":
+        if parent.getCausalityValue(
+            ).isMemberOf(trade_phase, strict_membership=1):
+          movement_list.append(parent)
+        parent = parent.getParentValue().getParentValue()
 
     def getChildSimulationMovementValueList(obj, movement_list, trade_phase):
-      child_list = obj.objectValues()
-      for child in child_list:
-        if child.getPortalType() == "Simulation Movement" and \
-           child.getCausalityValue().isMemberOf(trade_phase, strict_membership=1):
+      for child in obj.objectValues():
+        if (child.getPortalType() == "Simulation Movement" and
+            child.getCausalityValue(
+              ).isMemberOf(trade_phase, strict_membership=1)):
           movement_list.append(child)
         getChildSimulationMovementValueList(child, movement_list, trade_phase)
 
-    if self.simulation_movement_cache.get(kw_tuple, None) is None:
+    if kw_tuple not in self.simulation_movement_cache:
       if self.explanation.getPortalType() == "Applied Rule":
         movement_list = []
-        getParentSimulationMovementValueList(self.explanation, movement_list, kw.get('trade_phase', None))
-        getChildSimulationMovementValueList(self.explanation, movement_list, kw.get('trade_phase', None))
+        getParentSimulationMovementValueList(self.explanation, movement_list, kw['trade_phase'])
+        getChildSimulationMovementValueList(self.explanation, movement_list, kw['trade_phase'])
         self.simulation_movement_cache[kw_tuple] = movement_list
       else:
         # XXX-Aurel : the following code seems not working as expected, it returns

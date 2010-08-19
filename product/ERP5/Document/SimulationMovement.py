@@ -588,18 +588,12 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     #
 
     # store a causality -> causality_related_movement_list mapping
-    causality_dict = dict()
-
-    current = self.getParentValue()
-    while True:
-      portal_type = current.getPortalType()
-      if portal_type == "Simulation Movement":
-        causality_dict[current.getCausality(portal_type='Business Link')] = \
-          current
-      elif portal_type != "Applied Rule":
-        break
-      # XXX or maybe directly go up by two levels?
-      current = current.getParentValue()
+    causality_dict = {}
+    current = self.getParentValue().getParentValue()
+    while current.getPortalType() == "Simulation Movement":
+      causality_dict[current.getCausality(portal_type='Business Link')] = \
+        current
+      current = current.getParentValue().getParentValue()
 
     remaining_path_set = set()
     for path in predecessor_path_list:
