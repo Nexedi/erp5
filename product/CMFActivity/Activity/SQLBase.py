@@ -28,7 +28,7 @@
 
 import sys
 import transaction
-from zLOG import LOG, TRACE, INFO, WARNING, ERROR
+from zLOG import LOG, TRACE, INFO, WARNING, ERROR, PANIC
 from ZODB.POSException import ConflictError
 from Products.CMFActivity.ActivityTool import (
   MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED)
