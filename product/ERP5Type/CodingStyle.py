@@ -105,7 +105,7 @@ def checkConsistency(self, fixit=0, source_code=None):
     if prefix not in getSkinPrefixList(self):
       message_list.append(
         ObjectMessage(object_relative_url='/'.join(self.getPhysicalPath())[portal_path_len:],
-                      message='Wrong prefix %s' % prefix))
+                      message='Wrong prefix %s for python script %s' % (prefix, document_id)))
 
   # Make sure source code does not contain legacy callables
   if source_code:
