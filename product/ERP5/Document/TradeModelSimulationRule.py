@@ -104,13 +104,13 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
         amount_generator_type_list=('Purchase Trade Condition',
                                     'Sale Trade Condition',
                                     'Trade Model Line')):
+      # FIXME: Is it the right way to have source/destination and other
+      #        non-Amount properties set on the generated movement ?
       movement = input_movement.asContext(**dict((k, v)
           for k, v in amount.__dict__.iteritems()
           if k[0] != '_' and k != 'categories'))
       base_category_set = set(amount.getBaseCategoryList())
       base_category_set.remove('price_currency') # XXX
-      # XXX 'causality' category should be added to Amount
-      base_category_set.add('causality')
       movement._setCategoryMembership(base_category_set,
                                       amount.getCategoryList(),
                                       base=True)

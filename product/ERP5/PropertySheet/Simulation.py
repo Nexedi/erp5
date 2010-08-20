@@ -69,8 +69,11 @@ class Simulation:
             'mode'        : 'w' },
   )
 
-  _categories = ('order', 'delivery', 'delivery_mode', 'incoterm', 'payment_mode', 'solver', 
-                 'specialise',
-                 'property_mapping',  # XXX-JPS I doubt that this is really required (here)
-                 'causality'          # this is required really
-                 ) 
+  _categories = ('order', 'delivery', 'delivery_mode', 'incoterm',
+                 'payment_mode', 'solver', 'specialise',
+                 # XXX-JPS I doubt that this is really required (here)
+                 'property_mapping',
+                 # used to link to Business Links and Trade Model Paths
+                 # (but this is redundant with Amount property sheet)
+                 'causality',
+                )

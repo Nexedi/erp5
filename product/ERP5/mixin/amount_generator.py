@@ -249,7 +249,6 @@ class AmountGeneratorMixin:
             # base_contribution_list MUST be defined
             property_dict['base_contribution_list'] = base_contribution_list
       for property_dict in resource_amount_aggregate.itervalues():
-        causality_value_list = property_dict.pop('causality_value_list')
         base_application_set = property_dict['base_application_set']
         # property_dict should include
         #   resource - VAT service or a Component in MRP
@@ -281,7 +280,8 @@ class AmountGeneratorMixin:
         # XXX-JPS Could we use a movement for safety ?
         amount = newTempAmount(portal,
           # we only want the id to be unique
-          causality_value_list[0].getRelativeUrl().replace('/', '_'))
+          property_dict['causality_value_list'][0]
+          .getRelativeUrl().replace('/', '_'))
         amount._setCategoryList(property_dict.pop('category_list', ()))
         amount._edit(
           # XXX If they are several cells, we may have duplicate references.
@@ -291,7 +291,6 @@ class AmountGeneratorMixin:
           int_index=self.getIntIndex(),
           description=self.getDescription(),
           **property_dict)
-        amount._setValueList('causality', causality_value_list)
         if rounding:
           # We hope here that rounding is sufficient at line level
           amount = getRoundingProxy(amount, context=self)
