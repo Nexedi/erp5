@@ -113,7 +113,7 @@ def checkConsistency(self, fixit=0, source_code=None):
       if source_code.find(legacy_string) >= 0:
         message_list.append(
           ObjectMessage(object_relative_url='/'.join(self.getPhysicalPath())[portal_path_len:],
-                        message='Source code contains legacy call to %s' % legacy_string))
+                        message='Source code of %s contains legacy call to %s' % (document_id, legacy_string)))
   
   return message_list
 
