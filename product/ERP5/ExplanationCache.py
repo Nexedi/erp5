@@ -28,14 +28,10 @@
 ##############################################################################
 
 import types
-
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-
 from zLOG import LOG
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Cache import transactional_cached
 
-_UNDEFINED = []
-_INFINITE_LOOP = []
 
 class ExplanationCache:
   """ExplanationCache provides a central access to 
@@ -60,8 +56,9 @@ class ExplanationCache:
     self.simulation_movement_cache = {} # Simulation Movement Cache
     self.explanation_uid_cache = []
     self.explanation_path_pattern_cache = []
+    self.reference_date_cache = {}
     self.closure_cache = {}
-    self.union_cache = None   
+    self.union_cache = None
 
   def _getDeliveryMovementList(self):
     """Returns self if explanation is a delivery line
@@ -311,21 +308,21 @@ class ExplanationCache:
     self.union_cache = new_business_process
     return new_business_process
 
-  def getReferenceDate(self, business_process, trade_phase, reference_date_method_id, delay_mode=None):
+  def getReferenceDate(self, business_process, trade_phase,
+                       reference_date_method_id, delay_mode=None):
     """Browse parent similation movements until a movement with
     appropriate trade_phase is found.
     """
-    tv = getTransactionalVariable(self)
-    reference_date_key = (trade_phase, reference_date_method_id, delay_mode, business_process.getPhysicalPath())
-    reference_date_key = repr(reference_date_key)
-    LOG('key', 0, reference_date_key)
-    if tv.get(reference_date_key, _UNDEFINED) is _UNDEFINED:
-      tv[reference_date_key] =  _INFINITE_LOOP
-    else:
-      result = tv[reference_date_key]
-      if result is _INFINITE_LOOP:
+    cache = self.reference_date_cache
+    reference_date_key = (business_process.getPhysicalPath(), trade_phase,
+                          reference_date_method_id, delay_mode)
+    try:
+      result = cache[reference_date_key]
+      if result is self: # use self as marker to detect infinite recursion
         raise ValueError('No reference date is defined, probably due to missing Trade Model Path in Business Process')
       return result
+    except KeyError:
+      cache[reference_date_key] = self
 
     # Find simulation movements with appropriate trade_phase
     movement_list = self.getSimulationMovementValueList(trade_phase=trade_phase)
@@ -336,7 +333,7 @@ class ExplanationCache:
       # but we should in reality some way to configure this
       movement = movement_list[0]
       method = getattr(movement, reference_date_method_id)
-      result = tv[reference_date_key] = method()
+      cache[reference_date_key] = result = method()
       return result
 
     # Case 2: we must recursively find another trade phase
@@ -361,15 +358,10 @@ class ExplanationCache:
                                            start_date=start_date, stop_date=stop_date,
                                            trade_phase=trade_phase, causality=path)
     method = getattr(movement, reference_date_method_id)
-    result = tv[reference_date_key] = method()
+    cache[reference_date_key] = result = method()
     return result
 
-def _getExplanationCache(explanation):
-  # Return cached value if any
-  tv = getTransactionalVariable(explanation)
-  if tv.get('explanation_cache', None) is None:
-    tv['explanation_cache'] =  ExplanationCache(explanation)
-  return tv.get('explanation_cache')
+_getExplanationCache = transactional_cached()(ExplanationCache)
 
 def _getBusinessLinkClosure(business_process, explanation, business_link):
   """Returns a closure Business Process for given 
