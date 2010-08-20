@@ -118,7 +118,7 @@ def checkConsistency(self, fixit=0, source_code=None):
   return message_list
 
 # Add checkConsistency to Python Scripts
-def checkPythonScriptConsistency(self, fixit=0):
+def checkPythonScriptConsistency(self, fixit=0, filter=None, **kw):
   return checkConsistency(self, fixit=fixit, source_code=self.body())
 
 from Products.PythonScripts.PythonScript import PythonScript
@@ -126,7 +126,7 @@ PythonScript.checkConsistency= checkPythonScriptConsistency
 PythonScript.checkConsistency__roles__ = ('Manager',) # A hack to protect the method
 
 # Add checkConsistency to Page Templates
-def checkPageTemplateConsistency(self, fixit=0):
+def checkPageTemplateConsistency(self, fixit=0, filter=None, **kw):
   return checkConsistency(self, fixit=fixit, source_code=self.read())
 
 from Products.PageTemplates.PageTemplate import PageTemplate
