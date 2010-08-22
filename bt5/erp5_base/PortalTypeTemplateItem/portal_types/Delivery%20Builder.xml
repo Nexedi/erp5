@@ -76,7 +76,7 @@ to Simulation Movements related to a limited set of existing Deliveries.</string
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addSimulatededDeliveryBuilder</string> </value>
+            <value> <string>addSimulatedDeliveryBuilder</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
