@@ -1,3 +1,6 @@
+2010-08-23 yusei
+* Allow users to change section on line level. This is sometimes needed. Use case: expense happens at section A, corresponding payment is done at section B. This is journalized in single transaction document.
+
 2010-07-16 yusei
 * Revert my previous change and remove added parameters.
 
