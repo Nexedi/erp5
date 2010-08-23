@@ -328,7 +328,7 @@ for budget in budget_list:\n
           total_level_2_current_budget += total_level_3_current_budget\n
           total_level_2_engaged_budget += total_level_3_engaged_budget\n
           total_level_2_consumed_budget += total_level_3_consumed_budget\n
-          total_level_2_available_budget += total_level_2_available_budget\n
+          total_level_2_available_budget += total_level_3_available_budget\n
 \n
         if len(level_3_line_list) > 1 or level_4_category is None:\n
           consumed_ratio = 0\n
