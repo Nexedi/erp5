@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -248,7 +245,8 @@ div.listbox-list-style-selection li{\n
 }\n
 div.listbox-list-style-selection li a.selected,\n
 .listbox-table-report-tree-selection-cell a.selected,\n
-.listbox-table-domain-tree-cell a.selected{\n
+.listbox-table-domain-tree-cell a.selected,\n
+.listbox-page-navigation-text a.selected{\n
   font-weight: bold;\n
 }\n
 \n
@@ -270,16 +268,59 @@ div.listbox-full-text-search input.button{\n
  width: auto;\n
 }\n
 \n
-/* Pagination*/\n
-div.listbox-page-navigation{\n
+/* Listbox Pagination*/\n
+div.listbox-page-navigation button{\n
+  background-color:transparent;\n
+  border: none;\n
+  cursor: pointer;\n
+}\n
+div.listbox-page-navigation button span.image{\n
+  display:block;\n
+  height:8px;\n
+  width:5px;\n
+  background-repeat:no-repeat;\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_first_page span.image {\n
+  background-image:url("km_img/2leftarrowv.png");\n
+}\n
+div.listbox-page-navigation button.listbox_previous_page span.image {\n
+  background-image:url("km_img/1leftarrowv.png");\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_next_page span.image {\n
+  background-image:url("km_img/1rightarrowv.png");\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_last_page span.image {\n
+  background-image:url("km_img/2rightarrowv.png");\n
+}\n
+\n
+\n
+\n
+div.listbox-page-navigation-slider{\n
   width:auto;\n
   margin:auto;\n
   padding-right: 0.5em;\n
   float:right;\n
 }\n
-div.listbox-page-navigation input{\n
+\n
+div.listbox-page-navigation-slider input{\n
   max-width: 30px;\n
 }\n
+\n
+div.listbox-page-navigation-text{\n
+  width:100%;\n
+  float:left;\n
+  text-align:center;\n
+}\n
+\n
+div.listbox-page-navigation-text a{\n
+  padding-right: 1px;\n
+  color: #9D968D;\n
+  cursor: pointer;\n
+}\n
+\n
 \n
 /* Report tree */\n
 a.tree-closed {\n

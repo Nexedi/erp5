@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -79,8 +76,7 @@
               current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;\n
               listbox_id request/current_form_id | form_id ;\n
               listbox_url string:${context_url}/${listbox_id};\n
-              need_pagination python: total_line > listbox_max_lines;\n
-              page_navigation_mode here/getPageNavigationMode;">\n
+              need_pagination python: total_line > listbox_max_lines;">\n
 \n
   <!-- Define hidden input.  -->\n
   <input type="hidden" name="list_selection_name" value="default" tal:attributes="value selection_name" />\n
@@ -505,15 +501,24 @@
     \n
       </div>\n
 \n
-      <!--Page pagination \n
-          XXX: make use of page_navigation_mode to show respective navigation.\n
-      -->\n
-      <div class="listbox-footer-box listbox-page-navigation"\n
-           tal:condition="need_pagination">\n
-        <div class="pageNavigation">\n
-          <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
+      <!--Page pagination -->\n
+      <tal:block tal:condition="need_pagination"\n
+                   tal:define="page_navigation_mode python: request.get(\'page_navigation_mode\', here.getPageNavigationMode());\n
+                               is_slider_mode python: page_navigation_mode==\'slider\';\n
+                               class python: test(is_slider_mode, \'listbox-page-navigation listbox-page-navigation-slider\',\'listbox-page-navigation listbox-page-navigation-text\');">\n
+\n
+        <div tal:attributes="class class">\n
+            <tal:block tal:condition="is_slider_mode">\n
+                <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
+            </tal:block> \n
+            \n
+            <tal:block tal:condition="not: is_slider_mode">\n
+                <tal:block metal:use-macro="real_context/page_navigation_render/macros/text_navigation" />\n
+            </tal:block> \n
+\n
         </div>\n
-      </div>\n
+      </tal:block>\n
+\n
 \n
     </div>\n
   </div>\n
