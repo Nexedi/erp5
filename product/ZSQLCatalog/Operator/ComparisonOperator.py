@@ -131,6 +131,46 @@ class MatchComparisonOperator(MonovaluedComparisonOperator):
 
 verifyClass(IOperator, MatchComparisonOperator)
 
+class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
+  def __init__(self, operator, mode=''):
+    MonovaluedComparisonOperator.__init__(self, operator, '')
+    self.where_expression_format_string = '%(column)s=%(value_list)s'
+
+  def renderValue(self, value_list):
+    """
+    * quote each query word explicitly to invoke phrase search for
+      n-gram characters.
+    * add ';mode=extended' to invoke extended search
+
+    TODO:
+    * escape double quote in query word
+    * respect existing double quotes in user's input
+    """
+    if isinstance(value_list, (tuple, list)):
+      if len(value_list) > 1:
+        raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
+      value_list = value_list[0]
+    value_list = '"'+'" "'.join(value_list.split())+'";mode=extended'
+    return self._renderValue(value_list)
+
+  @profiler_decorator
+  def asSQLExpression(self, column, value_list, only_group_columns):
+    """
+      This operator can emit a select expression, so it overrides
+      asSQLExpression inseatd of just defining a render method.
+    """
+    match_string = self.where_expression_format_string % {
+      'column': column,
+      'value_list': self.renderValue(value_list)
+    }
+    return SQLExpression(
+      self,
+      where_expression=match_string,
+      can_merge_select_dict=True,
+    )
+
+verifyClass(IOperator, SphinxSEComparisonOperator)
+
 operator_dict = {
   '=': MonovaluedComparisonOperator('='),
   '!=': MonovaluedComparisonOperator('!='),
@@ -143,6 +183,7 @@ operator_dict = {
   'match': MatchComparisonOperator('match'),
   'match_boolean': MatchComparisonOperator('match_boolean', mode=' IN BOOLEAN MODE'),
   'match_expansion': MatchComparisonOperator('match_expansion', mode=' WITH QUERY EXPANSION'),
+  'sphinxse': SphinxSEComparisonOperator('sphinxse'),
   'in': MultivaluedComparisonOperator('in'),
   'is': MonovaluedComparisonOperator('is'),
 }
