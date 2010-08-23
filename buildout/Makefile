@@ -27,7 +27,7 @@ debian-appliance:
 	sed -i "s,__PACKAGE_NAME__,erp5-$(PACKAGE_VERSION),g" debian-erp5-appliance/debian/control
 	sed -i "s,__PACKAGE_VERSION__,$(PACKAGE_VERSION),g" debian-erp5-appliance/debian/changelog
 	sed -i "s,__PACKAGE_RELEASE__,$(PACKAGE_SOFTWARE_RELEASE),g" debian-erp5-appliance/debian/changelog
-	sudo svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout $(SOFTWARE_BUILD_PATH)
+	sudo svn co https://svn.erp5.org/repos/public/erp5/release/5.4.6/ $(SOFTWARE_BUILD_PATH)
 	sudo chown -R `whoami` $(SOFTWARE_BUILD_PATH)
 	sudo $(SOFTWARE_BUILD_PATH)/helpers/debian.lenny.sh
 	cd $(SOFTWARE_BUILD_PATH); $(MAKE) $(MFLAGS)
@@ -41,7 +41,7 @@ debian-appliance:
 	svn co  https://svn.erp5.org/repos/public/spec/debian-tiolive-application/ debian-tiolive-application
 	sed -i "s,__PACKAGE_VERSION__,$(PACKAGE_VERSION),g" debian-tiolive-application/debian/rules
 	sed -i "s,__PACKAGE_VERSION__,$(PACKAGE_VERSION),g" debian-tiolive-application/debian/changelog
-	sed -i "s,__PACKAGE_RELEASE__,$(PACKAGE_SOFTWARE_RELEASE),g" debian-tiolive-application/debian/changelog
+	sed -i "s,__PACKAGE_RELEASE__,$(PACKAGE_APPLICATION_RELEASE),g" debian-tiolive-application/debian/changelog
 	cd debian-tiolive-application; sudo dpkg-buildpackage -b
 
 checkout-rpmgen:
