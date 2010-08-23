@@ -209,7 +209,6 @@ div.listbox-footer{\n
  float:left;\n
  margin-bottom:0.3em;\n
  margin-top:0.3em;\n
- min-height:28px;\n
  padding-left:0.2em;\n
  \n
 }\n
@@ -222,6 +221,7 @@ div.listbox-footer{\n
 div.listbox-footer-box {\n
   width: auto;\n
   float:left;\n
+  min-height:28px;\n
 }\n
 \n
 /* List style selection */\n
