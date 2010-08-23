@@ -755,6 +755,15 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
         template_skin_id_list = template.getTemplateSkinIdList()
         if folder_id in template_skin_id_list:
           folder_id_set.update(set(template_skin_id_list))
+
+          # Find folders which can be surcharged by this skin folder
+          if '_' in folder_id:
+            surcharged_folder_id = 'erp5_%s' % folder_id.split('_')[-1]
+            if (surcharged_folder_id != folder_id) and \
+              (getattr(self.portal_skins, surcharged_folder_id, None) \
+                                                             is not None):
+              folder_id_set.add(surcharged_folder_id)
+
           break
       return list(folder_id_set)
 
