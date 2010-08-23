@@ -61,6 +61,7 @@ selection_columns = (\n
   (\'title\', \'Title\',),\n
   (\'int_index\', \'Int Index\',),\n
   (\'parent_description\', \'Description\',),\n
+  (\'parent_comment\', \'Comment\',),\n
   (\'parent_reference\', \'Invoice Number\',),\n
   (\'specific_reference\', \'Transaction Reference\',),\n
   (\'node_reference\', \'Account Code\',),\n
