@@ -3546,7 +3546,6 @@ class CatalogSearchKeyTemplateItem(BaseTemplateItem):
   key_title = 'Search key'
 
   def build(self, context, **kw):
-    import ipdb; ipdb.set_trace()
     catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
