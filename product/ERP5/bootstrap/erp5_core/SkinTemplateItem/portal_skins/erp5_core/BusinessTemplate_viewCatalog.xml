@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -77,6 +74,7 @@
                         <string>my_template_catalog_method_id_list</string>
                         <string>my_template_catalog_result_table_list</string>
                         <string>my_template_catalog_result_key_list</string>
+                        <string>my_template_catalog_search_key_list</string>
                         <string>my_template_catalog_keyword_key_list</string>
                         <string>my_template_catalog_datetime_key_list</string>
                         <string>my_template_catalog_role_key_list</string>

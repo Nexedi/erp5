@@ -451,6 +451,11 @@ class Catalog(Folder,
       'type'    : 'selection',
       'select_variable' : 'getCatalogMethodIds',
       'mode'    : 'w' },
+    { 'id': 'sql_catalog_search_keys',
+      'title': 'Search Key Mappings',
+      'description': 'A list of Search Key mappings',
+      'type': 'lines',
+      'mode': 'w' },
     { 'id'      : 'sql_catalog_keyword_search_keys',
       'description' : 'Columns which should be considered as full text search',
       'type'    : 'multiple selection',
@@ -544,6 +549,7 @@ class Catalog(Folder,
   sql_catalog_index = ''
   sql_unique_values = ''
   sql_catalog_paths = ''
+  sql_catalog_search_keys = ()
   sql_catalog_keyword_search_keys =  ()
   sql_catalog_datetime_search_keys = ()
   sql_catalog_full_text_search_keys = ()
@@ -2265,6 +2271,12 @@ class Catalog(Folder,
           LOG('SQLCatalog', WARNING, 'Ambiguous configuration: column %r is set to use %r key, but also to use %r key. Former takes precedence.' % (column, result[column], key))
         else:
           result[column] = key
+    for line in self.sql_catalog_search_keys:
+      try:
+        column, key = [x.strip() for x in line.split('|', 2)]
+        result[column] = key
+      except ValueError:
+        LOG('SQLCatalog', WARNING, 'Wrong configuration for sql_catalog_search_keys: %r' % line)
     return result
 
   @profiler_decorator

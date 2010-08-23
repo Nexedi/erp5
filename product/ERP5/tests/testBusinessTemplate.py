@@ -1786,6 +1786,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     related_key = 'fake_id | category/catalog/z_fake_method'
     result_key = 'catalog.title'
     result_table = 'fake_catalog'
+    search_key = 'fake_search_key | FakeSearchKey'
     keyword_key = 'fake_keyword'
     full_text_key = 'fake_full_text'
     request_key = 'fake_request'
@@ -1817,6 +1818,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       sql_search_related_keys.sort()
       catalog.sql_catalog_related_keys = tuple(sql_search_related_keys)
     self.failUnless(related_key in catalog.sql_catalog_related_keys)
+    # search keys
+    if search_key not in catalog.sql_catalog_search_keys:
+      sql_catalog_search_keys = list(catalog.sql_catalog_search_keys)
+      sql_catalog_search_keys.append(search_key)
+      sql_catalog_search_keys.sort()
+      catalog.sql_catalog_search_keys = tuple(sql_catalog_search_keys)
+    self.failUnless(search_key in catalog.sql_catalog_search_keys)
     # keyword keys
     if keyword_key not in catalog.sql_catalog_keyword_search_keys:
       sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
@@ -1875,7 +1883,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(local_role_key in catalog.sql_catalog_local_role_keys)
 
     sequence.edit(related_key=related_key, result_key=result_key,
-                  result_table=result_table,
+                  result_table=result_table, search_key=search_key,
                   keyword_key=keyword_key, full_text_key=full_text_key,
                   request_key=request_key,
                   multivalue_key=multivalue_key, topic_key=topic_key, \
@@ -1951,6 +1959,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(result_key is not None)
     result_table = sequence.get('result_table', None)
     self.failUnless(result_table is not None)
+    search_key = sequence.get('search_key', None)
+    self.failUnless(search_key is not None)
     keyword_key = sequence.get('keyword_key', None)
     self.failUnless(keyword_key is not None)
     full_text_key = sequence.get('full_text_key', None)
@@ -1971,6 +1981,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_catalog_related_key_list=[related_key],
             template_catalog_result_key_list=[result_key],
             template_catalog_result_table_list=[result_table],
+            template_catalog_search_key_list=[search_key],
             template_catalog_keyword_key_list=[keyword_key],
             template_catalog_full_text_key_list=[full_text_key],
             template_catalog_request_key_list=[request_key],
@@ -1991,6 +2002,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(result_key is not None)
     result_table = sequence.get('result_table', None)
     self.failUnless(result_table is not None)
+    search_key = sequence.get('search_key', None)
+    self.failUnless(search_key is not None)
     keyword_key = sequence.get('keyword_key', None)
     self.failUnless(keyword_key is not None)
     full_text_key = sequence.get('full_text_key', None)
@@ -2028,6 +2041,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sql_search_tables.sort()
     catalog.sql_search_tables = tuple(sql_search_tables)
     self.failUnless(result_table not in catalog.sql_search_tables)
+    # search keys
+    sql_catalog_search_keys = list(catalog.sql_catalog_search_keys)
+    sql_catalog_search_keys.remove(search_key)
+    sql_catalog_search_keys.sort()
+    catalog.sql_catalog_search_keys = tuple(sql_catalog_search_keys)
+    self.failUnless(search_key not in catalog.sql_catalog_search_keys)
     # keyword keys
     sql_catalog_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
     sql_catalog_keyword_keys.remove(keyword_key)
@@ -2087,6 +2106,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(result_key is not None)
     result_table = sequence.get('result_table', None)
     self.failUnless(result_table is not None)
+    search_key = sequence.get('search_key', None)
+    self.failUnless(search_key is not None)
     keyword_key = sequence.get('keyword_key', None)
     self.failUnless(keyword_key is not None)
     full_text_key = sequence.get('full_text_key', None)
@@ -2112,6 +2133,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(related_key in catalog.sql_catalog_related_keys)
     # result table
     self.failUnless(result_table in catalog.sql_search_tables)
+    # search key
+    self.failUnless(search_key in catalog.sql_catalog_search_keys)
     # keyword key
     self.failUnless(keyword_key in catalog.sql_catalog_keyword_search_keys)
     # full text key
@@ -2139,6 +2162,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(result_key is not None)
     result_table = sequence.get('result_table', None)
     self.failUnless(result_table is not None)
+    search_key = sequence.get('search_key', None)
+    self.failUnless(search_key is not None)
     keyword_key = sequence.get('keyword_key', None)
     self.failUnless(keyword_key is not None)
     full_text_key = sequence.get('full_text_key', None)
@@ -2164,6 +2189,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(related_key not in catalog.sql_catalog_related_keys)
     # result table
     self.failUnless(result_table not in catalog.sql_search_tables)
+    # search key
+    self.failUnless(search_key not in catalog.sql_catalog_search_keys)
     # keyword key
     self.failUnless(keyword_key not in catalog.sql_catalog_keyword_search_keys)
     # full text key
