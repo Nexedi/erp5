@@ -80,12 +80,15 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
     def getPortalName(self):
       """ Return the default ERP5 site id.
       """
-      return 'erp5' # XXX-JPS For now a hack
+      return self.getPortalObject().getId()
 
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
       """
-      return self.app[self.getPortalName()]
+      # Assumes that portal exists (which has sense) and that there is only one
+      # ERP5 site in Zope (which is always the case)
+      return [q for q in self.app.objectValues() if q.meta_type == 'ERP5 Site'
+          ][0]
 
     getPortalObject = getPortal
 
