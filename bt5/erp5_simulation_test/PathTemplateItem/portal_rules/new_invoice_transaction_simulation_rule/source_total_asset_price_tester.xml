@@ -52,11 +52,21 @@
                 <dictionary>
                   <item>
                       <key> <string>id</string> </key>
-                      <value> <string>quantity</string> </value>
+                      <value> <string>quantity_range_min</string> </value>
                   </item>
                   <item>
                       <key> <string>type</string> </key>
-                      <value> <string>float</string> </value>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>quantity_range_max</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
                   </item>
                 </dictionary>
               </tuple>
@@ -99,8 +109,12 @@
             <value> <string>Float Divergence Tester</string> </value>
         </item>
         <item>
-            <key> <string>quantity</string> </key>
-            <value> <float>0.0</float> </value>
+            <key> <string>quantity_range_max</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>quantity_range_min</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>tested_property</string> </key>
