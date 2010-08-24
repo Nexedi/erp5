@@ -45,6 +45,12 @@
             <value> <string></string> </value>
         </item>
         <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
             <key> <string>encoding</string> </key>
             <value> <string>UTF-8</string> </value>
         </item>
@@ -68,10 +74,7 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list>
-                        <string>columns</string>
-                        <string>lines</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -117,7 +120,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_resetListSetting</string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string>Reset List Setting</string> </value>
         </item>
       </dictionary>
     </pickle>
