@@ -53,7 +53,6 @@ Preference Tool | view
 Preference | html_style_preferences
 Preference | view
 Preference | view_template
-Python Script | repository_history_view
 Python Script | view
 Ram Cache | statistics
 Ram Cache | view
