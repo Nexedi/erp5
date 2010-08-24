@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -58,7 +55,16 @@
 group_id_list_generator = getattr(context, \'ERP5Type_asSecurityGroupId\')\n
 \n
 security_category_dict = {}\n
-for method_id, base_category_list in context.ERP5Type_getSecurityCategoryMapping():\n
+# XXX This is a duplicate of logic present deep inside ERP5GroupManager.getGroupsForPrincipal()\n
+# Please refactor into an accessible method so this code can be removed\n
+def getDefaultSecurityCategoryMapping():\n
+    return ((\n
+              \'ERP5Type_getSecurityCategoryFromAssignment\',\n
+              context.getPortalObject().getPortalAssignmentBaseCategoryList()\n
+            ),)\n
+getSecurityCategoryMapping = getattr(context, \'ERP5Type_getSecurityCategoryMapping\', getDefaultSecurityCategoryMapping)\n
+# XXX end of code duplication\n
+for method_id, base_category_list in getSecurityCategoryMapping():\n
   try:\n
     security_category_dict.setdefault(tuple(base_category_list), []).extend(\n
       getattr(context, method_id)(base_category_list, login, context, \'\'))\n
@@ -126,10 +132,12 @@ return printed\n
                             <string>context</string>
                             <string>group_id_list_generator</string>
                             <string>security_category_dict</string>
+                            <string>getDefaultSecurityCategoryMapping</string>
+                            <string>getSecurityCategoryMapping</string>
                             <string>_getiter_</string>
-                            <string>_getattr_</string>
                             <string>method_id</string>
                             <string>base_category_list</string>
+                            <string>_getattr_</string>
                             <string>tuple</string>
                             <string>category_value_list</string>
                             <string>category_dict</string>
