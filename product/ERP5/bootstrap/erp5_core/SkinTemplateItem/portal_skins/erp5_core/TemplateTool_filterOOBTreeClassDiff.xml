@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.ERP5Type.Document.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">0fINCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>if len(old_line_list) == 1 and len(new_line_list) == 1 and \\\n
+   new_line_list[0] == old_line_list[0].replace("BTrees._OOBTree","BTrees.OOBTree"):\n
+    return True\n
+\n
+return False\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAAcAAAAHAAAAAwAA
+AHNnAAAAdAAAfAAAgwEAZAEAagIAb0EAAXQAAHwBAIMBAGQBAGoCAG8uAAF0AwB8AQBkAgCDAgB0
+BAB0AwB8AABkAgCDAgBkAwCDAgBkBABkBQCDAgBqAgBvCAABdAUAU24BAAF0BgBTZAAAUygGAAAA
+TmkBAAAAaQAAAAB0BwAAAHJlcGxhY2VzDwAAAEJUcmVlcy5fT09CVHJlZXMOAAAAQlRyZWVzLk9P
+QlRyZWUoBwAAAHQDAAAAbGVudA0AAABvbGRfbGluZV9saXN0dA0AAABuZXdfbGluZV9saXN0dAkA
+AABfZ2V0aXRlbV90CQAAAF9nZXRhdHRyX3QEAAAAVHJ1ZXQFAAAARmFsc2UoBwAAAFICAAAAUgMA
+AABSAQAAAFIEAAAAUgUAAABSBgAAAFIHAAAAKAAAAAAoAAAAAHMSAAAARVJQNSBQeXRob24gU2Ny
+aXB0cyMAAABUZW1wbGF0ZVRvb2xfZmlsdGVyT09CVHJlZUNsYXNzRGlmZgEAAABzBgAAACkBLgEI
+AigBAAAAdCMAAABUZW1wbGF0ZVRvb2xfZmlsdGVyT09CVHJlZUNsYXNzRGlmZigBAAAAUggAAAAo
+AAAAACgAAAAAcxIAAABFUlA1IFB5dGhvbiBTY3JpcHRzCAAAADxtb2R1bGU+AQAAAHQAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>old_line_list, new_line_list</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>callable_type/script/diff_filter</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+This script filter this kind of xml changes :\n
+-  <global name="OOBTree" module="BTrees._OOBTree"/>\n
++ <global name="OOBTree" module="BTrees.OOBTree"/>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>old_line_list</string>
+                            <string>new_line_list</string>
+                            <string>len</string>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>True</string>
+                            <string>False</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TemplateTool_filterOOBTreeClassDiff</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Python Script</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
