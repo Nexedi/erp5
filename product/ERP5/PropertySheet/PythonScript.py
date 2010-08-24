@@ -1,13 +1,12 @@
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Yoshinori Okuji <yo@nexedi.com>
+# Copyright (c) 2002-2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -22,29 +21,26 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
-class SubversionPreference:
+class PythonScript:
   """
-    User Preferences for Subversion
+      PythonScript properties for all ERP5 objects
   """
-  
+
   _properties = (
-    { 'id'          : 'preferred_subversion_user_name',
-      'description' : 'The user name for Subversion',
-      'type'        : 'string',
-      'preference'  : 1,
-      'mode'        : 'w' },
-    { 'id'          : 'preferred_subversion_working_copy',
-      'description' : 'The Subversion working copies',
-      'type'        : 'lines',
-      'preference'  : 1,
-      'mode'        : 'w' },
-    { 'id'          : 'preferred_diff_filter_script_id',
-      'description' : 'Scripts to filter what is displayed in diffs ',
-      'type'        : 'lines',
-      'preference'  : 1,
-      'mode'        : 'w' },
+      {   'id'          : 'body',
+          'description' : 'A local property description',
+          'type'        : 'string',
+          'storage_id'  : '_body',
+          'mode'        : '' },
+      {   'id'          : 'parameter_signature',
+          'description' : 'A local property description',
+          'type'        : 'string',
+          'storage_id'  : '_params',
+          'mode'        : '' },
   )
+
+

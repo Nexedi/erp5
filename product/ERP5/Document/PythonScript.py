@@ -1,0 +1,100 @@
+##############################################################################
+#
+# Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Sebastien Robin <seb@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+from AccessControl import ClassSecurityInfo
+
+from Products.ERP5Type import Permissions, PropertySheet
+from App.special_dtml import HTMLFile
+from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.Document.Ticket import Ticket
+from Products.PythonScripts.PythonScript import \
+  PythonScript as ZopePythonScript
+
+# Only needed until skin tool is migrated
+manage_addPythonScriptFormThroughZMI = \
+  HTMLFile("../dtml/addPythonScriptThroughZMI", globals())
+def addPythonScriptThroughZMI(self, id, title="", REQUEST=None):
+    """Add a Python script to a folder.
+    """
+    from Products.ERP5Type.Document import addPythonScript
+    type_info = self.getPortalObject().portal_types.getTypeInfo("Python Script")
+    type_info.constructInstance(
+      container=self,
+      id=id)
+    if REQUEST is not None:
+        try: u = self.DestinationURL()
+        except: u = REQUEST['URL1']
+        REQUEST.RESPONSE.redirect(u+'/manage_main')
+
+class PythonScriptThroughZMI(XMLObject):
+    """
+    Dummy class only used to do construction through zmi of PythonScript
+
+    This class needs to be removed as soon as portal_skins is an ERP5 object
+    """
+    meta_type = 'ERP5 Python Script Through ZMI'
+    portal_type = 'Python Script Through ZMI'
+    add_permission = Permissions.AddPortalContent
+
+    # Declarative security
+    security = ClassSecurityInfo()
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+    constructors =  (manage_addPythonScriptFormThroughZMI, 
+                     addPythonScriptThroughZMI)
+    icon = None
+
+class PythonScript(XMLObject, ZopePythonScript):
+    """ Script python for ERP5
+    """
+
+    meta_type = 'ERP5 Python Script'
+    portal_type = 'Python Script'
+    add_permission = Permissions.AddPortalContent
+
+    # Declarative security
+    security = ClassSecurityInfo()
+    security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+    # Declarative properties
+    property_sheets = ( PropertySheet.Base
+                      , PropertySheet.XMLObject
+                      , PropertySheet.CategoryCore
+                      , PropertySheet.DublinCore
+                      )
+    
+    def _setBody(self, value):
+      """
+      override to call ZopePythonScript methods to initialize code
+      """
+      self.write(value)
+
+    __call__ = ZopePythonScript.__call__
+
+    def edit(self, **kw):
+      XMLObject.edit(self, **kw)

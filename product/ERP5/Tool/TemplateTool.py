@@ -626,9 +626,13 @@ class TemplateTool (BaseTool):
       """
       Return list of scripts usable to filter diff
       """
-      # XXX-Aurel : this will be removed in a near future when script
-      # will be configurable on the tool
-      return [getattr(self, 'TemplateTool_filterTupleDiff'),]
+      # XXX, the or [] should not be there, the preference tool is
+      # inconsistent, the called method should not return None when
+      # nothing is selected
+      script_id_list = self.getPortalObject().portal_preferences\
+        .getPreferredDiffFilterScriptIdList() or []
+          
+      return [getattr(self, x) for x in script_id_list]
 
     def getFilteredDiffAsHTML(self, diff):
       """
