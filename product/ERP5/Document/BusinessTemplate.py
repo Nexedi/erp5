@@ -711,7 +711,6 @@ class ObjectTemplateItem(BaseTemplateItem):
   def build_sub_objects(self, context, id_list, url, **kw):
     # XXX duplicates code from build
     p = context.getPortalObject()
-    sub_list = {}
     for id in id_list:
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
@@ -729,7 +728,6 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.groups = groups
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
-    return sub_list
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
@@ -1370,7 +1368,7 @@ class PathTemplateItem(ObjectTemplateItem):
     keys.sort()
     for path in keys:
       include_subobjects = 0
-      if '**' in path:
+      if path.endswith("**"):
         include_subobjects = 1
       for relative_url in self._resolvePath(p, [], path.split('/')):
         obj = p.unrestrictedTraverse(relative_url)
