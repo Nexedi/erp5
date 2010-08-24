@@ -447,7 +447,7 @@
                value="1" \n
                alt="Flat List"\n
                tal:attributes="src string:${portal_url_string}/images/text_block.png;"\n
-               i18n:domain="ui" i18n:attributes="title alt" />\n
+               i18n:domain="ui" i18n:attributes="title; alt" />\n
 \n
         <!-- Report Tree -->\n
         <input tal:condition="python: not is_gadget_mode and is_report_tree_supported"\n
@@ -458,7 +458,7 @@
                value="1" \n
                alt="Report Tree"\n
                tal:attributes="src string:${portal_url_string}/images/view_tree.png;"\n
-               i18n:domain="ui" i18n:attributes="title alt" />\n
+               i18n:domain="ui" i18n:attributes="title; alt" />\n
 \n
         <!-- Domain Tree -->\n
         <input tal:condition="python: not is_gadget_mode and is_domain_tree_supported"\n
@@ -469,7 +469,7 @@
                value="1" \n
                alt="Domain Tree"\n
                tal:attributes="src string:${portal_url_string}/images/view_choose.png;"\n
-               i18n:domain="ui" i18n:attributes="title alt" />\n
+               i18n:domain="ui" i18n:attributes="title; alt" />\n
       </div>\n
  \n
       <!-- List display mode -->\n
