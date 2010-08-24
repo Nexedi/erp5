@@ -132,14 +132,17 @@ class CategoryBudgetVariation(BudgetVariation):
                   'mirror_section', 'mirror_node' ):
         axis = '%s_uid' % axis
 
+    found = False
     for category in context.getVariationCategoryList(
                                base_category_list=(base_category,)):
       if axis.endswith('_uid'):
         category = self.getPortalObject().portal_categories\
                                 .getCategoryUid(category)
       query_dict.setdefault(axis, []).append(category)
-
-    return query_dict
+      found = True
+    if found:
+      return query_dict
+    return dict()
   
   def getBudgetVariationRangeCategoryList(self, context):
     """Returns the Variation Range Category List that can be applied to this
