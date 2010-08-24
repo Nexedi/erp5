@@ -1,11 +1,12 @@
 <dtml-var manage_page_header>
 
 <dtml-var "manage_form_title(this(), _,
-           form_title='Add ERP5 Formulator Form',
+           form_title='Add ERP5 Python Script',
            )">
 
 <p class="form-help">
-Formulator Forms allow you to create solid web forms more easily.
+ERP5 Python Scripts allows to add to usual python scripts
+some erp5 properties
 </p>
 
 <form action="addPythonScriptThroughZMI" method="POST">

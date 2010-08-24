@@ -37,7 +37,7 @@ from Products.PythonScripts.PythonScript import \
 
 # Only needed until skin tool is migrated
 manage_addPythonScriptFormThroughZMI = \
-  HTMLFile("../dtml/addPythonScriptThroughZMI", globals())
+  HTMLFile("../dtml/addPythonScriptThroughZMIForm", globals())
 def addPythonScriptThroughZMI(self, id, title="", REQUEST=None):
     """Add a Python script to a folder.
     """
@@ -86,6 +86,7 @@ class PythonScript(XMLObject, ZopePythonScript):
                       , PropertySheet.XMLObject
                       , PropertySheet.CategoryCore
                       , PropertySheet.DublinCore
+                      , PropertySheet.PythonScript
                       )
     
     def _setBody(self, value):
@@ -98,3 +99,7 @@ class PythonScript(XMLObject, ZopePythonScript):
 
     def edit(self, **kw):
       XMLObject.edit(self, **kw)
+
+    # We need to take __setstate__ from ZopePythonScript in order to
+    # generate _v_ft attributes which is necessary to run the script
+    __setstate__ = ZopePythonScript.__setstate__

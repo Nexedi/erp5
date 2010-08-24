@@ -43,4 +43,6 @@ class PythonScript:
           'mode'        : '' },
   )
 
+  _categories = ('callable_type',)
+
 
