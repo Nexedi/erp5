@@ -177,7 +177,6 @@ div.listbox-tree {\n
 \n
 div.listbox-content{\n
   float: left; \n
-  width: auto; \n
 }\n
 \n
 div.listbox-head{\n
