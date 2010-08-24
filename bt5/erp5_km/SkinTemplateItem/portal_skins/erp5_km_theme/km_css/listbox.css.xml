@@ -233,6 +233,10 @@ div.listbox-list-style-selection span{\n
   padding-left:10px;\n
   vertical-align:-4px;\n
 }\n
+\n
+div.block div.listbox-list-style-selection span{\n
+  padding-left: 0px;\n
+}\n
 div.listbox-list-style-selection ul{\n
   display:inline;\n
   padding-left:0;\n
@@ -241,7 +245,9 @@ div.listbox-list-style-selection ul{\n
 }\n
 div.listbox-list-style-selection li{\n
   display: inline;\n
+  margin-left: 0.1em;\n
 }\n
+  \n
 div.listbox-list-style-selection li a{\n
   cursor: pointer;\n
 }\n
