@@ -60,8 +60,7 @@
               is_web_mode request/is_web_mode | nothing;\n
               is_dialog_mode request/dialog_mode | nothing;\n
               display_style_list here/getDisplayStyleList;\n
-              list_style python:request.get(\'list_style\', \n
-                                             selection.getParams().get(\'list_style\', here.getDefaultDisplayStyle()));\n
+              list_style here/getListboxDisplayStyle;\n
               dummy python: list_style == \'search\' and here.setDisplayedColumnIdList((\'getIconAsHTML\', \'getSummaryAsHTML\'))\n
                            or list_style == \'thumbnail\' and here.setDisplayedColumnIdList((\'title\', \'thumbnail\'));\n
               full_text_search_key here/getFullTextSearchKey;\n
@@ -480,7 +479,15 @@
 \n
         <ul>\n
           <li tal:repeat="style display_style_list">\n
-            <a tal:content="python: style[1]"\n
+            <a tal:condition="is_gadget_mode"\n
+               tal:content="python: style[1]"\n
+               tal:define="params python: {\'list_style\':style[0]}"\n
+               tal:attributes="class python: test(style[0]==list_style, \'selected\',\'\');\n
+                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id, box, dom_id, params);"\n
+               i18n:translate="" i18n:domain="ui"/>\n
+\n
+            <a tal:condition="not: is_gadget_mode"\n
+               tal:content="python: style[1]"\n
                tal:attributes="href python: \'%s?list_style=%s\' % (form_url, style[0]);\n
                                class python: test(style[0]==list_style, \'selected\',\'\');"\n
                i18n:translate="" i18n:domain="ui"/>\n

@@ -242,6 +242,9 @@ div.listbox-list-style-selection ul{\n
 div.listbox-list-style-selection li{\n
   display: inline;\n
 }\n
+div.listbox-list-style-selection li a{\n
+  cursor: pointer;\n
+}\n
 div.listbox-list-style-selection li a.selected,\n
 .listbox-table-report-tree-selection-cell a.selected,\n
 .listbox-table-domain-tree-cell a.selected,\n
