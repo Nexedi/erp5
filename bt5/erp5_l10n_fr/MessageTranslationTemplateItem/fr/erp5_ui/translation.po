@@ -5943,6 +5943,9 @@ msgstr "Voir les objets dans la corbeille"
 msgid "List Report"
 msgstr "Édition"
 
+msgid "List Setting Reseted."
+msgstr "Configuration de la liste réinitialisée."
+
 msgid "List Trash Bin"
 msgstr "Lister les documents de la corbeille"
 
@@ -8815,6 +8818,9 @@ msgstr "Édition rapide des expressions de besoins"
 msgid "Requirements with Sub-Requirements"
 msgstr "Hiérarchie d'expression de besoins"
 
+msgid "Reset List Setting"
+msgstr "Réinitialiser la configuration de la liste"
+
 msgid "Reset Password"
 msgstr "Réinitialiser le mot de passe"
 
@@ -9394,10 +9400,7 @@ msgid "Services to Validate"
 msgstr "Services à valider"
 
 msgid "Set List Setting"
-msgstr "Définir les colonnes"
-
-msgid "Set List Settting"
-msgstr "Appliquer"
+msgstr "Configurer la liste"
 
 msgid "Set Packing List Ready"
 msgstr "Définir comme prêt à l'envoi"
