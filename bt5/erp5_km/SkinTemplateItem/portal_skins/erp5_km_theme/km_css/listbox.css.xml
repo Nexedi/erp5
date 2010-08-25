@@ -183,7 +183,21 @@ div.listbox-head{\n
   color:#9D968D;\n
   font-weight:bold;\n
   margin-bottom: 10px;\n
+  min-height:20px;\n
 }\n
+div.listbox-head div.listbox-head-title{\n
+  float:left;\n
+  width:auto;\n
+ \n
+}\n
+\n
+div.listbox-head div.listbox-head-results{\n
+  float: right; \n
+  width: auto; \n
+  clear: right;\n
+  text-align:right;\n
+}\n
+\n
 \n
 div.listbox-body{\n
   width:auto;\n
@@ -209,7 +223,6 @@ div.listbox-footer{\n
  margin-bottom:0.3em;\n
  margin-top:0.3em;\n
  padding-left:0.2em;\n
- \n
 }\n
 \n
 /* Listbox Footer in gadget mode */\n

@@ -161,11 +161,15 @@
   <div class="listbox-content">\n
 \n
     <div class="listbox-head">\n
-      <span tal:content="here/getTitle"/>\n
-      <span tal:condition="python: here.getTitle() and total_line>0"> - </span>\n
+      <div class="listbox-head-title" style="">\n
+        <span tal:replace="here/getTitle" />\n
+      </div>\n
+\n
       <!--Show search result -->\n
-      <span tal:condition="python: total_line > 0"\n
-        tal:replace="structure python: real_context.Base_translateString(\'Results <em>${start} - ${stop}</em> of <em>${total}</em>.\', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>\n
+      <div tal:condition="python: total_line > 0" \n
+           class="listbox-head-results">\n
+        <span tal:replace="structure python: real_context.Base_translateString(\'Results <em>${start} - ${stop}</em> of <em>${total}</em>.\', mapping=dict(start=current_page_start, stop=current_page_stop, total=total_line))"/>\n
+      </div>\n
     </div>\n
 \n
     <div class="listbox-body">\n
