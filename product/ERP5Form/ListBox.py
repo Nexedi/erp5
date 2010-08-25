@@ -893,6 +893,7 @@ class ListBoxRenderer:
 
   def getAllColumnList(self):
     """Return the all columns. Make sure that the titles are in unicode.
+       Make sure there is no duplicates.
     """
     all_column_list = list(self.getColumnList())
     all_column_id_set = set([c[0] for c in all_column_list])
@@ -902,6 +903,13 @@ class ListBoxRenderer:
     return all_column_list
 
   getAllColumnList = lazyMethod(getAllColumnList)
+
+  def getRawAllColumnList(self):
+    """ Return the raw content of 'all_columns' listbox attribute 
+    """
+    return self.field.get_value('all_columns')
+
+  getRawAllColumnList = lazyMethod(getRawAllColumnList)
 
   def getStatColumnList(self):
     """Return the stat columns. Fall back to all the columns if empty.
@@ -1115,27 +1123,44 @@ class ListBoxRenderer:
     """
     return self.displayed_column_id_list
 
+  def getListboxDisplayStyle(self):
+    """Return the current listbox display style.
+    """
+    request = self.request
+    selection = self.getSelection()
+    return request.get('list_style', \
+                        selection.getParams().get('list_style', self.getDefaultDisplayStyle()))
+
   def getSelectedColumnList(self):
     """Return the list of selected columns.
     """
     column_list = []
-
-    #Parameter allow to select column temporary
-    if self.getDisplayedColumnIdList() != None:
+    default_listbox_display_style = self.getDefaultDisplayStyle()
+    listbox_display_style = self.getListboxDisplayStyle()
+    dynamic_column_list_override = (self.getDisplayedColumnIdList() != None)
+    list_style_column_change_required = (default_listbox_display_style != listbox_display_style)
+    
+    if dynamic_column_list_override:
+      # dynamically setting columns is supported
       available_column = self.getAllColumnList()
-
       #Create a dict to make a easy search
       available_column_dict = dict()
       for id,title in available_column:
         available_column_dict[id] = (id,title)
 
-      #We check columns are present
+      # We check columns are present
       for id in self.getDisplayedColumnIdList():
         if available_column_dict.has_key(id):
           column_list.append(available_column_dict[id])
         else:
           raise AttributeError, "Column %s is not avaible" % id
-
+    elif list_style_column_change_required and not dynamic_column_list_override:
+      # no dynamically setting of columns happens , still we have different than default
+      # listbox list style so try to get columns from 'More columns'
+      list_style_prefix = "%s_" %listbox_display_style
+      for column in self.getRawAllColumnList():
+        if column[1].startswith(list_style_prefix):
+          column_list.append((column[0],column[1].replace(list_style_prefix, '',)))
     else:
       column_list = self.getSelectionTool().getSelectionColumns(self.getSelectionName(),
                                                        columns = self.getColumnList(),
