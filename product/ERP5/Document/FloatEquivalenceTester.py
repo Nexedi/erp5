@@ -109,7 +109,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
       resource = prevision_movement.getResourceValue()
       if resource is not None:
         base = resource.getBaseUnitQuantity()
-    if tolerance_base == 'resource_price_precision':
+    elif tolerance_base == 'resource_price_precision':
       # Precision of this movement's resource base unit price
       base = prevision_movement.getBaseUnitPrice()
       # fallback to price currency, like in Amount.getPricePrecision
@@ -117,19 +117,19 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
         currency = prevision_movement.getPriceCurrencyValue()
         if currency is not None:
           base = currency.getBaseUnitQuantity()
-    if tolerance_base == 'price_currency_precision':
+    elif tolerance_base == 'price_currency_precision':
       # Precision of this movement's price currency
       currency = prevision_movement.getPriceCurrencyValue()
       if currency is not None:
         base = currency.getBaseUnitQuantity()
-    if tolerance_base == 'source_section_currency_precision':
+    elif tolerance_base == 'source_section_currency_precision':
       # Precision of this source section's accounting currency
       section = prevision_movement.getSourceSectionValue()
       if section is not None:
         currency = section.getPriceCurrencyValue()
         if currency is not None:
           base = currency.getBaseUnitQuantity()
-    if tolerance_base == 'destination_section_currency_precision':
+    elif tolerance_base == 'destination_section_currency_precision':
       # Precision of this destination section's accounting currency
       section = prevision_movement.getDestinationSectionValue()
       if section is not None:
@@ -156,7 +156,6 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
             'The difference of ${property_name} between decision and prevision is less than ${value} times of the prevision value.',
             dict(property_name=tested_property,
                  value=relative_tolerance_max))
-    return None
 
   def _round(self, value):
     from decimal import (Decimal, ROUND_DOWN, ROUND_UP, ROUND_CEILING,
