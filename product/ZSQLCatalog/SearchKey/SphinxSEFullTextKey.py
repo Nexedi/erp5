@@ -48,14 +48,22 @@ class SphinxSEFullTextKey(SearchKey):
       Special Query builder for FullText queries: merge all values having the
       same operator into just one query, to save SQL server from the burden to
       do multiple fulltext lookups when one would suit the purpose.
+
+      Example:
+      'aaa bbb' : '"aaa" | "bbb"'
+      '"aaa bbb"' : '"aaa" | "bbb"' XXX no way to differentiate with the
+                                        above for now
+      '"aaa bbb" ccc' : '"aaa bbb" | "ccc"'
     """
     column = self.getColumn()
     query_list = []
     append = query_list.append
     for comparison_operator, value_list in operator_value_dict.iteritems():
+      if len(value_list) == 1:
+        value_list = value_list[0].split()
       append(SimpleQuery(search_key=self,
                          comparison_operator=comparison_operator,
-                         group=group, **{column: ' '.join(value_list)}))
+                         group=group, **{column:'"%s"' % '" | "'.join(value_list)}))
     return query_list
 
 verifyClass(ISearchKey, SphinxSEFullTextKey)

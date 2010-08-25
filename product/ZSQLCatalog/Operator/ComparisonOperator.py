@@ -138,19 +138,13 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
 
   def renderValue(self, value_list):
     """
-    * quote each query word explicitly to invoke phrase search for
-      n-gram characters.
-    * add ';mode=extended' to invoke extended search
-
-    TODO:
-    * escape double quote in query word
-    * respect existing double quotes in user's input
+    * add ';mode=extended2' to invoke extended search
     """
     if isinstance(value_list, (tuple, list)):
       if len(value_list) > 1:
         raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
       value_list = value_list[0]
-    value_list = '"'+'" "'.join(value_list.split())+'";mode=extended'
+    value_list = '%s;mode=extended2' % value_list
     return self._renderValue(value_list)
 
   @profiler_decorator
