@@ -61,8 +61,6 @@
               is_dialog_mode request/dialog_mode | nothing;\n
               display_style_list here/getDisplayStyleList;\n
               list_style here/getListboxDisplayStyle;\n
-              dummy python: list_style == \'search\' and here.setDisplayedColumnIdList((\'getIconAsHTML\', \'getSummaryAsHTML\'))\n
-                           or list_style == \'thumbnail\' and here.setDisplayedColumnIdList((\'title\', \'thumbnail\'));\n
               full_text_search_key here/getFullTextSearchKey;\n
               full_text_search_key_script here/getFullTextSearchKeyScript;\n
               show_full_text python: full_text_search_key not in (\'\', None) and full_text_search_key_script not in (\'\', None);\n
