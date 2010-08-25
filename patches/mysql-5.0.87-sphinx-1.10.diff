@@ -1,0 +1,6242 @@
+# This patch is based on:
+# http://www.sphinxsearch.com/downloads/sphinx-1.10-beta.tar.gz
+
+diff -uNr orig/CMakeLists.txt new/CMakeLists.txt
+--- orig/CMakeLists.txt	2009-10-16 06:18:32.000000000 +0900
++++ new/CMakeLists.txt	2010-08-12 15:10:52.000000000 +0900
+@@ -70,6 +70,10 @@
+   ADD_DEFINITIONS(-DHAVE_INNOBASE_DB)
+ ENDIF(WITH_INNOBASE_STORAGE_ENGINE)
+ 
++IF(WITH_SPHINX_STORAGE_ENGINE)
++  ADD_DEFINITIONS(-DHAVE_SPHINX_DB)
++ENDIF(WITH_SPHINX_STORAGE_ENGINE)
++
+ SET(localstatedir "C:\\mysql\\data")
+ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/support-files/my-huge.cnf.sh
+                ${CMAKE_SOURCE_DIR}/support-files/my-huge.ini @ONLY)
+diff -uNr orig/config/ac-macros/ha_sphinx.m4 new/config/ac-macros/ha_sphinx.m4
+--- orig/config/ac-macros/ha_sphinx.m4	1970-01-01 09:00:00.000000000 +0900
++++ new/config/ac-macros/ha_sphinx.m4	2010-08-12 15:11:08.000000000 +0900
+@@ -0,0 +1,30 @@
++dnl ---------------------------------------------------------------------------
++dnl Macro: MYSQL_CHECK_EXAMPLEDB
++dnl Sets HAVE_SPHINX_DB if --with-sphinx-storage-engine is used
++dnl ---------------------------------------------------------------------------
++AC_DEFUN([MYSQL_CHECK_SPHINXDB], [
++  AC_ARG_WITH([sphinx-storage-engine],
++              [
++  --with-sphinx-storage-engine
++                          Enable the Sphinx Storage Engine],
++              [sphinxdb="$withval"],
++              [sphinxdb=no])
++  AC_MSG_CHECKING([for example storage engine])
++
++  case "$sphinxdb" in
++    yes )
++      AC_DEFINE([HAVE_SPHINX_DB], [1], [Builds Sphinx Engine])
++      AC_MSG_RESULT([yes])
++      [sphinxdb=yes]
++      ;;
++    * )
++      AC_MSG_RESULT([no])
++      [sphinxdb=no]
++      ;;
++  esac
++
++])
++dnl ---------------------------------------------------------------------------
++dnl END OF MYSQL_CHECK_EXAMPLE SECTION
++dnl ---------------------------------------------------------------------------
++
+diff -uNr orig/configure.in new/configure.in
+--- orig/configure.in	2009-11-16 19:24:12.000000000 +0900
++++ new/configure.in	2010-08-12 15:10:52.000000000 +0900
+@@ -58,6 +58,7 @@
+ sinclude(config/ac-macros/ha_berkeley.m4)
+ sinclude(config/ac-macros/ha_blackhole.m4)
+ sinclude(config/ac-macros/ha_example.m4)
++sinclude(config/ac-macros/ha_sphinx.m4)
+ sinclude(config/ac-macros/ha_federated.m4)
+ sinclude(config/ac-macros/ha_innodb.m4)
+ sinclude(config/ac-macros/ha_ndbcluster.m4)
+@@ -2824,6 +2825,7 @@
+ MYSQL_CHECK_BDB
+ MYSQL_CHECK_INNODB
+ MYSQL_CHECK_EXAMPLEDB
++MYSQL_CHECK_SPHINXDB
+ MYSQL_CHECK_ARCHIVEDB
+ MYSQL_CHECK_CSVDB
+ MYSQL_CHECK_BLACKHOLEDB
+diff -uNr orig/libmysqld/Makefile.am new/libmysqld/Makefile.am
+--- orig/libmysqld/Makefile.am	2009-11-16 19:24:12.000000000 +0900
++++ new/libmysqld/Makefile.am	2010-08-12 15:10:52.000000000 +0900
+@@ -29,6 +29,7 @@
+ 			-I$(top_builddir)/include -I$(top_srcdir)/include \
+ 			-I$(top_builddir)/sql -I$(top_srcdir)/sql \
+ 			-I$(top_srcdir)/sql/examples \
++			-I$(top_srcdir)/sql/sphinx \
+ 			-I$(top_srcdir)/regex \
+ 			$(openssl_includes) @ZLIB_INCLUDES@ \
+ 			@SENNA_INCLUDES@ @MECAB_INCLUDES@
+@@ -40,6 +41,7 @@
+ libmysqlsources =	errmsg.c get_password.c libmysql.c client.c pack.c \
+                         my_time.c
+ sqlexamplessources =	ha_example.cc ha_tina.cc
++sqlsphinxsources =	ha_sphinx.cc
+ 
+ noinst_HEADERS =	embedded_priv.h emb_qcache.h
+ 
+@@ -68,7 +70,7 @@
+ 	parse_file.cc sql_view.cc sql_trigger.cc my_decimal.cc \
+ 	ha_blackhole.cc ha_archive.cc my_user.c
+ 
+-libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources)
++libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources) $(sqlsphinxsources)
+ libmysqld_a_SOURCES=
+ 
+ # automake misses these
+@@ -148,12 +150,16 @@
+ 	    rm -f $$f; \
+ 	    @LN_CP_F@ $(top_srcdir)/sql/examples/$$f $$f; \
+ 	  done; \
++	  for f in $(sqlsphinxsources); do \
++	    rm -f $$f; \
++	    @LN_CP_F@ $(top_srcdir)/sql/sphinx/$$f $$f; \
++	  done; \
+ 	  rm -f client_settings.h; \
+ 	  @LN_CP_F@ $(top_srcdir)/libmysql/client_settings.h client_settings.h
+ 
+ 
+ clean-local:
+-	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) | sed "s;\.lo;.c;g"` \
++	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) $(sqlsphinxsources) | sed "s;\.lo;.c;g"` \
+ 	       $(top_srcdir)/linked_libmysqld_sources; \
+ 	rm -f client_settings.h
+ 
+diff -uNr orig/sql/CMakeLists.txt new/sql/CMakeLists.txt
+--- orig/sql/CMakeLists.txt	2009-10-16 06:20:32.000000000 +0900
++++ new/sql/CMakeLists.txt	2010-08-12 15:10:52.000000000 +0900
+@@ -50,6 +50,7 @@
+                filesort.cc gstream.cc ha_blackhole.cc 
+                ha_archive.cc ha_heap.cc ha_myisam.cc ha_myisammrg.cc
+                ha_innodb.cc ha_federated.cc ha_berkeley.cc
++               sphinx/ha_sphinx.cc
+                handler.cc hash_filo.cc hash_filo.h 
+                hostname.cc init.cc item.cc item_buff.cc item_cmpfunc.cc 
+                item_create.cc item_func.cc item_geofunc.cc item_row.cc 
+diff -uNr orig/sql/handler.cc new/sql/handler.cc
+--- orig/sql/handler.cc	2009-10-16 06:20:33.000000000 +0900
++++ new/sql/handler.cc	2010-08-12 15:10:52.000000000 +0900
+@@ -77,6 +77,15 @@
+   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+   HTON_NO_FLAGS };
+ #endif
++#ifdef HAVE_SPHINX_DB
++#include "sphinx/ha_sphinx.h"
++extern handlerton sphinx_hton;
++#else
++handlerton sphinx_hton = { "SPHINX", SHOW_OPTION_NO, "SPHINX storage engine",
++  DB_TYPE_SPHINX_DB, NULL, 0, 0, NULL, NULL,
++  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
++  HTON_NO_FLAGS };
++#endif
+ #ifdef HAVE_INNOBASE_DB
+ #include "ha_innodb.h"
+ extern handlerton innobase_hton;
+@@ -141,6 +150,7 @@
+   &example_hton,
+   &archive_hton,
+   &tina_hton,
++  &sphinx_hton,
+   &ndbcluster_hton,
+   &federated_hton,
+   &myisammrg_hton,
+@@ -342,6 +352,12 @@
+       return new (alloc) ha_tina(table);
+     return NULL;
+ #endif
++#ifdef HAVE_SPHINX_DB
++  case DB_TYPE_SPHINX_DB:
++    if (have_sphinx_db == SHOW_OPTION_YES)
++      return new (alloc) ha_sphinx(table);
++    return NULL;
++#endif
+ #ifdef HAVE_NDBCLUSTER_DB
+   case DB_TYPE_NDBCLUSTER:
+     if (have_ndbcluster == SHOW_OPTION_YES)
+diff -uNr orig/sql/handler.h new/sql/handler.h
+--- orig/sql/handler.h	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/handler.h	2010-08-12 15:10:52.000000000 +0900
+@@ -186,8 +186,9 @@
+   DB_TYPE_BERKELEY_DB, DB_TYPE_INNODB,
+   DB_TYPE_GEMINI, DB_TYPE_NDBCLUSTER,
+   DB_TYPE_EXAMPLE_DB, DB_TYPE_ARCHIVE_DB, DB_TYPE_CSV_DB,
+-  DB_TYPE_FEDERATED_DB,
++  DB_TYPE_FEDERATED_DB, 
+   DB_TYPE_BLACKHOLE_DB,
++  DB_TYPE_SPHINX_DB,
+   DB_TYPE_DEFAULT // Must be last
+ };
+ 
+diff -uNr orig/sql/Makefile.am new/sql/Makefile.am
+--- orig/sql/Makefile.am	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/Makefile.am	2010-08-12 15:10:52.000000000 +0900
+@@ -68,6 +68,7 @@
+ 			sql_array.h sql_cursor.h \
+ 			examples/ha_example.h ha_archive.h \
+ 			examples/ha_tina.h ha_blackhole.h  \
++			sphinx/ha_sphinx.h \
+ 			ha_federated.h
+ mysqld_SOURCES =	sql_lex.cc sql_handler.cc \
+ 			item.cc item_sum.cc item_buff.cc item_func.cc \
+@@ -105,6 +106,7 @@
+ 			sp_cache.cc parse_file.cc sql_trigger.cc \
+ 			examples/ha_example.cc ha_archive.cc \
+ 			examples/ha_tina.cc ha_blackhole.cc \
++			sphinx/ha_sphinx.cc \
+ 			ha_federated.cc
+ 
+ gen_lex_hash_SOURCES =	gen_lex_hash.cc
+@@ -175,6 +177,10 @@
+ udf_example_la_SOURCES= udf_example.c
+ udf_example_la_LDFLAGS= -module -rpath $(pkglibdir)
+ 
++pkglib_LTLIBRARIES = sphinx/sphinx.la
++sphinx_sphinx_la_SOURCES = sphinx/snippets_udf.cc
++sphinx_sphinx_la_LDFLAGS = -module
++
+ 
+ # Don't update the files from bitkeeper
+ %::SCCS/s.%
+diff -uNr orig/sql/mysqld.cc new/sql/mysqld.cc
+--- orig/sql/mysqld.cc	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/mysqld.cc	2010-08-12 15:10:52.000000000 +0900
+@@ -36,6 +36,10 @@
+ #include <sys/prctl.h>
+ #endif
+ 
++#ifdef HAVE_SPHINX_DB
++#include "sphinx/ha_sphinx.h"
++#endif
++
+ #ifdef HAVE_INNOBASE_DB
+ #define OPT_INNODB_DEFAULT 1
+ #else
+@@ -6802,6 +6806,13 @@
+ #ifdef COMMUNITY_SERVER
+   {"Uptime_since_flush_status",(char*) 0,                       SHOW_FLUSHTIME},
+ #endif
++#ifdef HAVE_SPHINX_DB
++   {"sphinx_total",            (char *)sphinx_showfunc_total,       SHOW_SPHINX_FUNC},
++   {"sphinx_total_found",      (char *)sphinx_showfunc_total_found, SHOW_SPHINX_FUNC},
++   {"sphinx_time",             (char *)sphinx_showfunc_time,        SHOW_SPHINX_FUNC},
++   {"sphinx_word_count",       (char *)sphinx_showfunc_word_count,  SHOW_SPHINX_FUNC},
++   {"sphinx_words",            (char *)sphinx_showfunc_words,       SHOW_SPHINX_FUNC},
++#endif
+   {NullS, NullS, SHOW_LONG}
+ };
+ 
+@@ -7045,6 +7056,11 @@
+ #else
+   have_csv_db= SHOW_OPTION_NO;
+ #endif
++#ifdef HAVE_SPHINX_DB
++  have_sphinx_db= SHOW_OPTION_YES;
++#else
++  have_sphinx_db= SHOW_OPTION_NO;
++#endif
+ #ifdef HAVE_NDBCLUSTER_DB
+   have_ndbcluster=SHOW_OPTION_DISABLED;
+ #else
+@@ -8214,6 +8230,7 @@
+ #undef have_example_db
+ #undef have_archive_db
+ #undef have_csv_db
++#undef have_sphinx_db
+ #undef have_federated_db
+ #undef have_partition_db
+ #undef have_blackhole_db
+@@ -8224,6 +8241,7 @@
+ SHOW_COMP_OPTION have_example_db= SHOW_OPTION_NO;
+ SHOW_COMP_OPTION have_archive_db= SHOW_OPTION_NO;
+ SHOW_COMP_OPTION have_csv_db= SHOW_OPTION_NO;
++SHOW_COMP_OPTION have_sphinx_db= SHOW_OPTION_NO;
+ SHOW_COMP_OPTION have_federated_db= SHOW_OPTION_NO;
+ SHOW_COMP_OPTION have_partition_db= SHOW_OPTION_NO;
+ SHOW_COMP_OPTION have_blackhole_db= SHOW_OPTION_NO;
+diff -uNr orig/sql/mysql_priv.h new/sql/mysql_priv.h
+--- orig/sql/mysql_priv.h	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/mysql_priv.h	2010-08-12 15:10:52.000000000 +0900
+@@ -1467,6 +1467,12 @@
+ #else
+ extern SHOW_COMP_OPTION have_csv_db;
+ #endif
++#ifdef HAVE_SPHINX_DB
++extern handlerton sphinx_hton;
++#define have_sphinx_db sphinx_hton.state
++#else
++extern SHOW_COMP_OPTION have_sphinx_db;
++#endif
+ #ifdef HAVE_FEDERATED_DB
+ extern handlerton federated_hton;
+ #define have_federated_db federated_hton.state
+diff -uNr orig/sql/set_var.cc new/sql/set_var.cc
+--- orig/sql/set_var.cc	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/set_var.cc	2010-08-12 15:10:52.000000000 +0900
+@@ -940,6 +940,7 @@
+   {"have_profiling",          (char*) &have_profiling,	            SHOW_HAVE},
+   {"have_crypt",	      (char*) &have_crypt,		    SHOW_HAVE},
+   {"have_csv",	              (char*) &have_csv_db,	            SHOW_HAVE},
++  {"have_sphinx",             (char*) &have_sphinx_db,              SHOW_HAVE},
+   {"have_dynamic_loading",    (char*) &have_dlopen,	            SHOW_HAVE},
+   {"have_example_engine",     (char*) &have_example_db,	            SHOW_HAVE},
+   {"have_federated_engine",   (char*) &have_federated_db,           SHOW_HAVE},
+diff -uNr orig/sql/sphinx/CMakeLists.txt new/sql/sphinx/CMakeLists.txt
+--- orig/sql/sphinx/CMakeLists.txt	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/CMakeLists.txt	2008-02-15 01:37:44.000000000 +0900
+@@ -0,0 +1,11 @@
++SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSAFEMALLOC -DSAFE_MUTEX")
++SET(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -DSAFEMALLOC -DSAFE_MUTEX")
++ADD_DEFINITIONS(-DMYSQL_SERVER)
++
++INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include
++                    ${CMAKE_SOURCE_DIR}/sql
++                    ${CMAKE_SOURCE_DIR}/extra/yassl/include
++                    ${CMAKE_SOURCE_DIR}/regex)
++
++SET(SPHINX_SOURCES ha_sphinx.cc)
++ADD_LIBRARY(sphinx ha_sphinx.cc)
+diff -uNr orig/sql/sphinx/gen_data.php new/sql/sphinx/gen_data.php
+--- orig/sql/sphinx/gen_data.php	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/gen_data.php	2006-06-07 16:28:43.000000000 +0900
+@@ -0,0 +1,37 @@
++<?php
++
++$file_name= $argv[1];
++
++//echo $file_name;
++
++$cont= file_get_contents($file_name);
++
++$words= explode(" ", $cont);
++
++//echo "words: ".(count($words))."\n";
++
++$cw = count($words);
++
++echo "REPLACE INTO test.documents ( id, group_id, date_added, title, content ) VALUES\n";
++
++
++for ($i=1; $i<=100000; $i++)
++{
++  $count_words= mt_rand(10,30);
++  $pred = "";
++  for ($j=0; $j<$count_words; $j++)
++  {
++    $pred .= chop($words[mt_rand(1, $cw-1)])." ";
++  }
++  $count_words= mt_rand(3,5);
++  $tit = "";
++  for ($j=0; $j<$count_words; $j++)
++  {
++    $tit .= chop($words[mt_rand(1, $cw-1)])." ";
++  }
++  echo "($i,".mt_rand(1,20).",NOW(),'".addslashes($tit)."','".addslashes($pred)."'),\n";
++}       
++  echo "(0,1,now(),'end','eND');\n";
++  
++
++?>
+diff -uNr orig/sql/sphinx/ha_sphinx.cc new/sql/sphinx/ha_sphinx.cc
+--- orig/sql/sphinx/ha_sphinx.cc	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/ha_sphinx.cc	2010-07-08 20:05:08.000000000 +0900
+@@ -0,0 +1,3363 @@
++//
++// $Id: ha_sphinx.cc 2391 2010-07-08 11:05:08Z tomat $
++//
++
++//
++// Copyright (c) 2001-2010, Andrew Aksyonoff
++// Copyright (c) 2008-2010, Sphinx Technologies Inc
++// All rights reserved
++//
++// This program is free software; you can redistribute it and/or modify
++// it under the terms of the GNU General Public License. You should have
++// received a copy of the GPL license along with this program; if you
++// did not, you can find it at http://www.gnu.org/
++//
++
++#ifdef USE_PRAGMA_IMPLEMENTATION
++#pragma implementation // gcc: Class implementation
++#endif
++
++#if _MSC_VER>=1400
++#define _CRT_SECURE_NO_DEPRECATE 1
++#define _CRT_NONSTDC_NO_DEPRECATE 1
++#endif
++
++#include <mysql_version.h>
++
++#if MYSQL_VERSION_ID>50100
++#include "mysql_priv.h"
++#include <mysql/plugin.h>
++#else
++#include "../mysql_priv.h"
++#endif
++
++#include <mysys_err.h>
++#include <my_sys.h>
++#include <mysql.h> // include client for INSERT table (sort of redoing federated..)
++
++#ifndef __WIN__
++	// UNIX-specific
++	#include <my_net.h>
++	#include <netdb.h>
++	#include <sys/un.h>
++
++	#define	RECV_FLAGS	MSG_WAITALL
++
++	#define sphSockClose(_sock)	::close(_sock)
++#else
++	// Windows-specific
++	#include <io.h>
++	#define strcasecmp	stricmp
++	#define snprintf	_snprintf
++
++	#define	RECV_FLAGS	0
++
++	#define sphSockClose(_sock)	::closesocket(_sock)
++#endif
++
++#include <ctype.h>
++#include "ha_sphinx.h"
++
++#ifndef MSG_WAITALL
++#define MSG_WAITALL 0
++#endif
++
++#if _MSC_VER>=1400
++#pragma warning(push,4)
++#endif
++
++/////////////////////////////////////////////////////////////////////////////
++
++/// there might be issues with min() on different platforms (eg. Gentoo, they say)
++#define Min(a,b) ((a)<(b)?(a):(b))
++
++/// unaligned RAM accesses are forbidden on SPARC
++#if defined(sparc) || defined(__sparc__)
++#define UNALIGNED_RAM_ACCESS 0
++#else
++#define UNALIGNED_RAM_ACCESS 1
++#endif
++
++
++#if UNALIGNED_RAM_ACCESS
++
++/// pass-through wrapper
++template < typename T > inline T sphUnalignedRead ( const T & tRef )
++{
++	return tRef;
++}
++
++/// pass-through wrapper
++template < typename T > void sphUnalignedWrite ( void * pPtr, const T & tVal )
++{
++	*(T*)pPtr = tVal;
++}
++
++#else
++
++/// unaligned read wrapper for some architectures (eg. SPARC)
++template < typename T >
++inline T sphUnalignedRead ( const T & tRef )
++{
++	T uTmp;
++	byte * pSrc = (byte *) &tRef;
++	byte * pDst = (byte *) &uTmp;
++	for ( int i=0; i<(int)sizeof(T); i++ )
++		*pDst++ = *pSrc++;
++	return uTmp;
++}
++
++/// unaligned write wrapper for some architectures (eg. SPARC)
++template < typename T >
++void sphUnalignedWrite ( void * pPtr, const T & tVal )
++{
++	byte * pDst = (byte *) pPtr;
++	byte * pSrc = (byte *) &tVal;
++	for ( int i=0; i<(int)sizeof(T); i++ )
++		*pDst++ = *pSrc++;
++}
++
++#endif
++
++/////////////////////////////////////////////////////////////////////////////
++
++// FIXME! make this all dynamic
++#define SPHINXSE_MAX_FILTERS		32
++
++#define SPHINXAPI_DEFAULT_HOST		"127.0.0.1"
++#define SPHINXAPI_DEFAULT_PORT		9312
++#define SPHINXAPI_DEFAULT_INDEX		"*"
++
++#define SPHINXQL_DEFAULT_PORT		9306
++
++#define SPHINXSE_SYSTEM_COLUMNS		3
++
++#define SPHINXSE_MAX_ALLOC			(16*1024*1024)
++#define SPHINXSE_MAX_KEYWORDSTATS	4096
++
++#define SPHINXSE_VERSION			"0.9.9 ($Revision: 2391 $)"
++
++// FIXME? the following is cut-n-paste from sphinx.h and searchd.cpp
++// cut-n-paste is somewhat simpler that adding dependencies however..
++
++enum
++{
++	SPHINX_SEARCHD_PROTO	= 1,
++	SEARCHD_COMMAND_SEARCH	= 0,
++	VER_COMMAND_SEARCH		= 0x116,
++};
++
++/// search query sorting orders
++enum ESphSortOrder
++{
++	SPH_SORT_RELEVANCE		= 0,	///< sort by document relevance desc, then by date
++	SPH_SORT_ATTR_DESC		= 1,	///< sort by document date desc, then by relevance desc
++	SPH_SORT_ATTR_ASC		= 2,	///< sort by document date asc, then by relevance desc
++	SPH_SORT_TIME_SEGMENTS	= 3,	///< sort by time segments (hour/day/week/etc) desc, then by relevance desc
++	SPH_SORT_EXTENDED		= 4,	///< sort by SQL-like expression (eg. "@relevance DESC, price ASC, @id DESC")
++	SPH_SORT_EXPR			= 5,	///< sort by expression
++
++	SPH_SORT_TOTAL
++};
++
++/// search query matching mode
++enum ESphMatchMode
++{
++	SPH_MATCH_ALL = 0,			///< match all query words
++	SPH_MATCH_ANY,				///< match any query word
++	SPH_MATCH_PHRASE,			///< match this exact phrase
++	SPH_MATCH_BOOLEAN,			///< match this boolean query
++	SPH_MATCH_EXTENDED,			///< match this extended query
++	SPH_MATCH_FULLSCAN,			///< match all document IDs w/o fulltext query, apply filters
++	SPH_MATCH_EXTENDED2,		///< extended engine V2
++
++	SPH_MATCH_TOTAL
++};
++
++/// search query relevance ranking mode
++enum ESphRankMode
++{
++	SPH_RANK_PROXIMITY_BM25		= 0,	///< default mode, phrase proximity major factor and BM25 minor one
++	SPH_RANK_BM25				= 1,	///< statistical mode, BM25 ranking only (faster but worse quality)
++	SPH_RANK_NONE				= 2,	///< no ranking, all matches get a weight of 1
++	SPH_RANK_WORDCOUNT			= 3,	///< simple word-count weighting, rank is a weighted sum of per-field keyword occurence counts
++	SPH_RANK_PROXIMITY			= 4,	///< phrase proximity
++	SPH_RANK_MATCHANY			= 5,	///< emulate old match-any weighting
++	SPH_RANK_FIELDMASK			= 6,	///< sets bits where there were matches
++
++	SPH_RANK_TOTAL,
++	SPH_RANK_DEFAULT			= SPH_RANK_PROXIMITY_BM25
++};
++
++/// search query grouping mode
++enum ESphGroupBy
++{
++	SPH_GROUPBY_DAY		= 0,	///< group by day
++	SPH_GROUPBY_WEEK	= 1,	///< group by week
++	SPH_GROUPBY_MONTH	= 2,	///< group by month
++	SPH_GROUPBY_YEAR	= 3,	///< group by year
++	SPH_GROUPBY_ATTR	= 4		///< group by attribute value
++};
++
++/// known attribute types
++enum
++{
++	SPH_ATTR_NONE		= 0,			///< not an attribute at all
++	SPH_ATTR_INTEGER	= 1,			///< this attr is just an integer
++	SPH_ATTR_TIMESTAMP	= 2,			///< this attr is a timestamp
++	SPH_ATTR_ORDINAL	= 3,			///< this attr is an ordinal string number (integer at search time, specially handled at indexing time)
++	SPH_ATTR_BOOL		= 4,			///< this attr is a boolean bit field
++	SPH_ATTR_FLOAT		= 5,
++	SPH_ATTR_BIGINT		= 6,
++
++	SPH_ATTR_MULTI		= 0x40000000UL	///< this attr has multiple values (0 or more)
++};
++
++/// known answers
++enum
++{
++	SEARCHD_OK		= 0,	///< general success, command-specific reply follows
++	SEARCHD_ERROR	= 1,	///< general failure, error message follows
++	SEARCHD_RETRY	= 2,	///< temporary failure, error message follows, client should retry later
++	SEARCHD_WARNING	= 3		///< general success, warning message and command-specific reply follow
++};
++
++//////////////////////////////////////////////////////////////////////////////
++
++#define SPHINX_DEBUG_OUTPUT		0
++#define SPHINX_DEBUG_CALLS		0
++
++#include <stdarg.h>
++
++#if SPHINX_DEBUG_OUTPUT
++inline void SPH_DEBUG ( const char * format, ... )
++{
++	va_list ap;
++	va_start ( ap, format );
++	fprintf ( stderr, "SphinxSE: " );
++	vfprintf ( stderr, format, ap );
++	fprintf ( stderr, "\n" );
++	va_end ( ap );
++}
++#else
++inline void SPH_DEBUG ( const char *, ... ) {}
++#endif
++
++#if SPHINX_DEBUG_CALLS
++
++#define SPH_ENTER_FUNC() { SPH_DEBUG ( "enter %s", __FUNCTION__ ); }
++#define SPH_ENTER_METHOD() { SPH_DEBUG ( "enter %s(this=%08x)", __FUNCTION__, this ); }
++#define SPH_RET(_arg) { SPH_DEBUG ( "leave %s", __FUNCTION__ ); return _arg; }
++#define SPH_VOID_RET() { SPH_DEBUG ( "leave %s", __FUNCTION__ ); return; }
++
++#else
++
++#define SPH_ENTER_FUNC()
++#define SPH_ENTER_METHOD()
++#define SPH_RET(_arg) { return(_arg); }
++#define SPH_VOID_RET() { return; }
++
++#endif
++
++
++#define SafeDelete(_arg)		{ if ( _arg ) delete ( _arg );		(_arg) = NULL; }
++#define SafeDeleteArray(_arg)	{ if ( _arg ) delete [] ( _arg );	(_arg) = NULL; }
++
++//////////////////////////////////////////////////////////////////////////////
++
++/// per-table structure that will be shared among all open Sphinx SE handlers
++struct CSphSEShare
++{
++	pthread_mutex_t	m_tMutex;
++	THR_LOCK		m_tLock;
++
++	char *			m_sTable;
++	char *			m_sScheme;		///< our connection string
++	char *			m_sHost;		///< points into m_sScheme buffer, DO NOT FREE EXPLICITLY
++	char *			m_sSocket;		///< points into m_sScheme buffer, DO NOT FREE EXPLICITLY
++	char *			m_sIndex;		///< points into m_sScheme buffer, DO NOT FREE EXPLICITLY
++	ushort			m_iPort;
++	bool			m_bSphinxQL;	///< is this read-only SphinxAPI table, or write-only SphinxQL table?
++	uint			m_iTableNameLen;
++	uint			m_iUseCount;
++	CHARSET_INFO *	m_pTableQueryCharset;
++
++	int					m_iTableFields;
++	char **				m_sTableField;
++	enum_field_types *	m_eTableFieldType;
++
++	CSphSEShare ()
++		: m_sTable ( NULL )
++		, m_sScheme ( NULL )
++		, m_sHost ( NULL )
++		, m_sSocket ( NULL )
++		, m_sIndex ( NULL )
++		, m_iPort ( 0 )
++		, m_bSphinxQL ( false )
++		, m_iTableNameLen ( 0 )
++		, m_iUseCount ( 1 )
++		, m_pTableQueryCharset ( NULL )
++
++		, m_iTableFields ( 0 )
++		, m_sTableField ( NULL )
++		, m_eTableFieldType ( NULL )
++	{
++		thr_lock_init ( &m_tLock );
++		pthread_mutex_init ( &m_tMutex, MY_MUTEX_INIT_FAST );
++	}
++
++	~CSphSEShare ()
++	{
++		pthread_mutex_destroy ( &m_tMutex );
++		thr_lock_delete ( &m_tLock );
++
++		SafeDeleteArray ( m_sTable );
++		SafeDeleteArray ( m_sScheme );
++		ResetTable ();
++	}
++
++	void ResetTable ()
++	{
++		for ( int i=0; i<m_iTableFields; i++ )
++			SafeDeleteArray ( m_sTableField[i] );
++		SafeDeleteArray ( m_sTableField );
++		SafeDeleteArray ( m_eTableFieldType );
++	}
++};
++
++/// schema attribute
++struct CSphSEAttr
++{
++	char *			m_sName;		///< attribute name (received from Sphinx)
++	uint32			m_uType;		///< attribute type (received from Sphinx)
++	int				m_iField;		///< field index in current table (-1 if none)
++
++	CSphSEAttr()
++		: m_sName ( NULL )
++		, m_uType ( SPH_ATTR_NONE )
++		, m_iField ( -1 )
++	{}
++
++	~CSphSEAttr ()
++	{
++		SafeDeleteArray ( m_sName );
++	}
++};
++
++/// word stats
++struct CSphSEWordStats
++{
++	char *			m_sWord;
++	int				m_iDocs;
++	int				m_iHits;
++
++	CSphSEWordStats ()
++		: m_sWord ( NULL )
++		, m_iDocs ( 0 )
++		, m_iHits ( 0 )
++	{}
++
++	~CSphSEWordStats ()
++	{
++		SafeDeleteArray ( m_sWord );
++	}
++};
++
++/// request stats
++struct CSphSEStats
++{
++public:
++	int					m_iMatchesTotal;
++	int					m_iMatchesFound;
++	int					m_iQueryMsec;
++	int					m_iWords;
++	CSphSEWordStats *	m_dWords;
++	bool				m_bLastError;
++	char				m_sLastMessage[1024];
++
++	CSphSEStats()
++		: m_dWords ( NULL )
++	{
++		Reset ();
++	}
++
++	void Reset ()
++	{
++		m_iMatchesTotal = 0;
++		m_iMatchesFound = 0;
++		m_iQueryMsec = 0;
++		m_iWords = 0;
++		SafeDeleteArray ( m_dWords );
++		m_bLastError = false;
++		m_sLastMessage[0] = '\0';
++	}
++
++	~CSphSEStats()
++	{
++		Reset ();
++	}
++};
++
++/// thread local storage
++struct CSphSEThreadData
++{
++	static const int	MAX_QUERY_LEN	= 262144; // 256k should be enough, right?
++
++	bool				m_bStats;
++	CSphSEStats			m_tStats;
++
++	bool				m_bQuery;
++	char				m_sQuery[MAX_QUERY_LEN];
++
++	CHARSET_INFO *		m_pQueryCharset;
++
++	CSphSEThreadData ()
++		: m_bStats ( false )
++		, m_bQuery ( false )
++		, m_pQueryCharset ( NULL )
++	{}
++};
++
++/// filter types
++enum ESphFilter
++{
++	SPH_FILTER_VALUES		= 0,	///< filter by integer values set
++	SPH_FILTER_RANGE		= 1,	///< filter by integer range
++	SPH_FILTER_FLOATRANGE	= 2		///< filter by float range
++};
++
++
++/// search query filter
++struct CSphSEFilter
++{
++public:
++	ESphFilter		m_eType;
++	char *			m_sAttrName;
++	longlong		m_uMinValue;
++	longlong		m_uMaxValue;
++	float			m_fMinValue;
++	float			m_fMaxValue;
++	int				m_iValues;
++	longlong *		m_pValues;
++	int				m_bExclude;
++
++public:
++	CSphSEFilter ()
++		: m_eType ( SPH_FILTER_VALUES )
++		, m_sAttrName ( NULL )
++		, m_uMinValue ( 0 )
++		, m_uMaxValue ( UINT_MAX )
++		, m_fMinValue ( 0.0f )
++		, m_fMaxValue ( 0.0f )
++		, m_iValues ( 0 )
++		, m_pValues ( NULL )
++		, m_bExclude ( 0 )
++	{
++	}
++
++	~CSphSEFilter ()
++	{
++		SafeDeleteArray ( m_pValues );
++	}
++};
++
++
++/// float vs dword conversion
++inline uint32 sphF2DW ( float f )	{ union { float f; uint32 d; } u; u.f = f; return u.d; }
++
++/// dword vs float conversion
++inline float sphDW2F ( uint32 d )	{ union { float f; uint32 d; } u; u.d = d; return u.f; }
++
++
++/// client-side search query
++struct CSphSEQuery
++{
++public:
++	const char *	m_sHost;
++	int				m_iPort;
++
++private:
++	char *			m_sQueryBuffer;
++
++	const char *	m_sIndex;
++	int				m_iOffset;
++	int				m_iLimit;
++
++	bool			m_bQuery;
++	char *			m_sQuery;
++	uint32 *		m_pWeights;
++	int				m_iWeights;
++	ESphMatchMode	m_eMode;
++	ESphRankMode	m_eRanker;
++	ESphSortOrder	m_eSort;
++	char *			m_sSortBy;
++	int				m_iMaxMatches;
++	int				m_iMaxQueryTime;
++	uint32			m_iMinID;
++	uint32			m_iMaxID;
++
++	int				m_iFilters;
++	CSphSEFilter	m_dFilters[SPHINXSE_MAX_FILTERS];
++
++	ESphGroupBy		m_eGroupFunc;
++	char *			m_sGroupBy;
++	char *			m_sGroupSortBy;
++	int				m_iCutoff;
++	int				m_iRetryCount;
++	int				m_iRetryDelay;
++	char *			m_sGroupDistinct;							///< points to query buffer; do NOT delete
++	int				m_iIndexWeights;
++	char *			m_sIndexWeight[SPHINXSE_MAX_FILTERS];		///< points to query buffer; do NOT delete
++	int				m_iIndexWeight[SPHINXSE_MAX_FILTERS];
++	int				m_iFieldWeights;
++	char *			m_sFieldWeight[SPHINXSE_MAX_FILTERS];		///< points to query buffer; do NOT delete
++	int				m_iFieldWeight[SPHINXSE_MAX_FILTERS];
++
++	bool			m_bGeoAnchor;
++	char *			m_sGeoLatAttr;
++	char *			m_sGeoLongAttr;
++	float			m_fGeoLatitude;
++	float			m_fGeoLongitude;
++
++	char *			m_sComment;
++	char *			m_sSelect;
++
++	struct Override_t
++	{
++		union Value_t
++		{
++			uint32		m_uValue;
++			longlong	m_iValue64;
++			float		m_fValue;
++		};
++		char *						m_sName; ///< points to query buffer
++		int							m_iType;
++		Dynamic_array<ulonglong>	m_dIds;
++		Dynamic_array<Value_t>		m_dValues;
++	};
++	Dynamic_array<Override_t *> m_dOverrides;
++
++public:
++	char			m_sParseError[256];
++
++public:
++	CSphSEQuery ( const char * sQuery, int iLength, const char * sIndex );
++	~CSphSEQuery ();
++
++	bool			Parse ();
++	int				BuildRequest ( char ** ppBuffer );
++
++protected:
++	char *			m_pBuf;
++	char *			m_pCur;
++	int				m_iBufLeft;
++	bool			m_bBufOverrun;
++
++	template < typename T > int ParseArray ( T ** ppValues, const char * sValue );
++	bool			ParseField ( char * sField );
++
++	void			SendBytes ( const void * pBytes, int iBytes );
++	void			SendWord ( short int v )		{ v = ntohs(v); SendBytes ( &v, sizeof(v) ); }
++	void			SendInt ( int v )				{ v = ntohl(v); SendBytes ( &v, sizeof(v) ); }
++	void			SendDword ( uint v )			{ v = ntohl(v) ;SendBytes ( &v, sizeof(v) ); }
++	void			SendUint64 ( ulonglong v )		{ SendDword ( (uint)(v>>32) ); SendDword ( (uint)(v&0xFFFFFFFFUL) ); }
++	void			SendString ( const char * v )	{ int iLen = strlen(v); SendDword(iLen); SendBytes ( v, iLen ); }
++	void			SendFloat ( float v )			{ SendDword ( sphF2DW(v) ); }
++};
++
++template int CSphSEQuery::ParseArray<uint32> ( uint32 **, const char * );
++template int CSphSEQuery::ParseArray<longlong> ( longlong **, const char * );
++
++//////////////////////////////////////////////////////////////////////////////
++
++#if MYSQL_VERSION_ID>50100
++
++#if MYSQL_VERSION_ID<50114
++#error Sphinx SE requires MySQL 5.1.14 or higher if compiling for 5.1.x series!
++#endif
++
++static handler *	sphinx_create_handler ( handlerton * hton, TABLE_SHARE * table, MEM_ROOT * mem_root );
++static int			sphinx_init_func ( void * p );
++static int			sphinx_close_connection ( handlerton * hton, THD * thd );
++static int			sphinx_panic ( handlerton * hton, enum ha_panic_function flag );
++static bool			sphinx_show_status ( handlerton * hton, THD * thd, stat_print_fn * stat_print, enum ha_stat_type stat_type );
++
++#else
++
++static bool			sphinx_init_func_for_handlerton ();
++static int			sphinx_close_connection ( THD * thd );
++bool				sphinx_show_status ( THD * thd );
++
++#endif // >50100
++
++//////////////////////////////////////////////////////////////////////////////
++
++static const char	sphinx_hton_name[]		= "SPHINX";
++static const char	sphinx_hton_comment[]	= "Sphinx storage engine " SPHINXSE_VERSION;
++
++#if MYSQL_VERSION_ID<50100
++handlerton sphinx_hton =
++{
++	#ifdef MYSQL_HANDLERTON_INTERFACE_VERSION
++	MYSQL_HANDLERTON_INTERFACE_VERSION,
++	#endif
++	sphinx_hton_name,
++	SHOW_OPTION_YES,
++	sphinx_hton_comment,
++	DB_TYPE_SPHINX_DB,
++	sphinx_init_func_for_handlerton,
++	0,							// slot
++	0,							// savepoint size
++	sphinx_close_connection,	// close_connection
++	NULL,	// savepoint
++	NULL,	// rollback to savepoint
++	NULL,	// release savepoint
++	NULL,	// commit
++	NULL,	// rollback
++	NULL,	// prepare
++	NULL,	// recover
++	NULL,	// commit_by_xid
++	NULL,	// rollback_by_xid
++	NULL,	// create_cursor_read_view
++	NULL,	// set_cursor_read_view
++	NULL,	// close_cursor_read_view
++	HTON_CAN_RECREATE
++};
++#else
++static handlerton * sphinx_hton_ptr = NULL;
++#endif
++
++//////////////////////////////////////////////////////////////////////////////
++
++// variables for Sphinx shared methods
++pthread_mutex_t		sphinx_mutex;		// mutex to init the hash
++static int			sphinx_init = 0;	// flag whether the hash was initialized
++static HASH			sphinx_open_tables;	// hash used to track open tables
++
++//////////////////////////////////////////////////////////////////////////////
++// INITIALIZATION AND SHUTDOWN
++//////////////////////////////////////////////////////////////////////////////
++
++// hashing function
++#if MYSQL_VERSION_ID>=50120
++typedef size_t GetKeyLength_t;
++#else
++typedef uint GetKeyLength_t;
++#endif
++
++static byte * sphinx_get_key ( const byte * pSharePtr, GetKeyLength_t * pLength, my_bool )
++{
++	CSphSEShare * pShare = (CSphSEShare *) pSharePtr;
++	*pLength = (size_t) pShare->m_iTableNameLen;
++	return (byte*) pShare->m_sTable;
++}
++
++#if MYSQL_VERSION_ID<50100
++static int sphinx_init_func ( void * ) // to avoid unused arg warning
++#else
++static int sphinx_init_func ( void * p )
++#endif
++{
++	SPH_ENTER_FUNC();
++	if ( !sphinx_init )
++	{
++		sphinx_init = 1;
++		VOID ( pthread_mutex_init ( &sphinx_mutex, MY_MUTEX_INIT_FAST ) );
++		hash_init ( &sphinx_open_tables, system_charset_info, 32, 0, 0,
++			sphinx_get_key, 0, 0 );
++
++		#if MYSQL_VERSION_ID > 50100
++		handlerton * hton = (handlerton*) p;
++		hton->state = SHOW_OPTION_YES;
++		hton->db_type = DB_TYPE_FIRST_DYNAMIC;
++		hton->create = sphinx_create_handler;
++		hton->close_connection = sphinx_close_connection;
++		hton->show_status = sphinx_show_status;
++		hton->panic = sphinx_panic;
++		hton->flags = HTON_CAN_RECREATE;
++		#endif
++	}
++	SPH_RET(0);
++}
++
++
++#if MYSQL_VERSION_ID<50100
++static bool sphinx_init_func_for_handlerton ()
++{
++	return sphinx_init_func ( &sphinx_hton );
++}
++#endif
++
++
++#if MYSQL_VERSION_ID>50100
++
++static int sphinx_close_connection ( handlerton * hton, THD * thd )
++{
++	// deallocate common handler data
++	SPH_ENTER_FUNC();
++	void ** tmp = thd_ha_data ( thd, hton );
++	CSphSEThreadData * pTls = (CSphSEThreadData*) (*tmp);
++	SafeDelete ( pTls );
++	*tmp = NULL;
++	SPH_RET(0);
++}
++
++
++static int sphinx_done_func ( void * )
++{
++	SPH_ENTER_FUNC();
++
++	int error = 0;
++	if ( sphinx_init )
++	{
++		sphinx_init = 0;
++		if ( sphinx_open_tables.records )
++			error = 1;
++		hash_free ( &sphinx_open_tables );
++		pthread_mutex_destroy ( &sphinx_mutex );
++	}
++
++	SPH_RET(0);
++}
++
++
++static int sphinx_panic ( handlerton * hton, enum ha_panic_function )
++{
++	return sphinx_done_func ( hton );
++}
++
++#else
++
++static int sphinx_close_connection ( THD * thd )
++{
++	// deallocate common handler data
++	SPH_ENTER_FUNC();
++	CSphSEThreadData * pTls = (CSphSEThreadData*) thd->ha_data[sphinx_hton.slot];
++	SafeDelete ( pTls );
++	thd->ha_data[sphinx_hton.slot] = NULL;
++	SPH_RET(0);
++}
++
++#endif // >50100
++
++//////////////////////////////////////////////////////////////////////////////
++// SHOW STATUS
++//////////////////////////////////////////////////////////////////////////////
++
++#if MYSQL_VERSION_ID>50100
++static bool sphinx_show_status ( handlerton * hton, THD * thd, stat_print_fn * stat_print,
++	enum ha_stat_type )
++#else
++bool sphinx_show_status ( THD * thd )
++#endif
++{
++	SPH_ENTER_FUNC();
++
++#if MYSQL_VERSION_ID<50100
++	Protocol * protocol = thd->protocol;
++	List<Item> field_list;
++#endif
++
++	char buf1[IO_SIZE];
++	uint buf1len;
++	char buf2[IO_SIZE];
++	uint buf2len = 0;
++	String words;
++
++	buf1[0] = '\0';
++	buf2[0] = '\0';
++
++
++#if MYSQL_VERSION_ID>50100
++	// 5.1.x style stats
++	CSphSEThreadData * pTls = (CSphSEThreadData*) ( *thd_ha_data ( thd, hton ) );
++
++#define LOC_STATS(_key,_keylen,_val,_vallen) \
++	stat_print ( thd, sphinx_hton_name, strlen(sphinx_hton_name), _key, _keylen, _val, _vallen );
++
++#else
++	// 5.0.x style stats
++	if ( have_sphinx_db!=SHOW_OPTION_YES )
++	{
++		my_message ( ER_NOT_SUPPORTED_YET,
++			"failed to call SHOW SPHINX STATUS: --skip-sphinx was specified",
++			MYF(0) );
++		SPH_RET(TRUE);
++	}
++	CSphSEThreadData * pTls = (CSphSEThreadData*) thd->ha_data[sphinx_hton.slot];
++
++	field_list.push_back ( new Item_empty_string ( "Type", 10 ) );
++	field_list.push_back ( new Item_empty_string ( "Name", FN_REFLEN ) );
++	field_list.push_back ( new Item_empty_string ( "Status", 10 ) );
++	if ( protocol->send_fields ( &field_list, Protocol::SEND_NUM_ROWS | Protocol::SEND_EOF ) )
++		SPH_RET(TRUE);
++
++#define LOC_STATS(_key,_keylen,_val,_vallen) \
++	protocol->prepare_for_resend (); \
++	protocol->store ( "SPHINX", 6, system_charset_info ); \
++	protocol->store ( _key, _keylen, system_charset_info ); \
++	protocol->store ( _val, _vallen, system_charset_info ); \
++	if ( protocol->write() ) \
++		SPH_RET(TRUE);
++
++#endif
++
++
++	// show query stats
++	if ( pTls && pTls->m_bStats )
++	{
++		const CSphSEStats * pStats = &pTls->m_tStats;
++		buf1len = my_snprintf ( buf1, sizeof(buf1),
++			"total: %d, total found: %d, time: %d, words: %d",
++			pStats->m_iMatchesTotal, pStats->m_iMatchesFound, pStats->m_iQueryMsec, pStats->m_iWords );
++
++		LOC_STATS ( "stats", 5, buf1, buf1len );
++
++		if ( pStats->m_iWords )
++		{
++			for ( int i=0; i<pStats->m_iWords; i++ )
++			{
++				CSphSEWordStats & tWord = pStats->m_dWords[i];
++				buf2len = my_snprintf ( buf2, sizeof(buf2), "%s%s:%d:%d ",
++					buf2, tWord.m_sWord, tWord.m_iDocs, tWord.m_iHits );
++			}
++
++			// convert it if we can
++			const char * sWord = buf2;
++			int iWord = buf2len;
++
++			String sBuf3;
++			if ( pTls->m_pQueryCharset )
++			{
++				uint iErrors;
++				sBuf3.copy ( buf2, buf2len, pTls->m_pQueryCharset, system_charset_info, &iErrors );
++				sWord = sBuf3.c_ptr();
++				iWord = sBuf3.length();
++			}
++
++			LOC_STATS ( "words", 5, sWord, iWord );
++		}
++	}
++
++	// show last error or warning (either in addition to stats, or on their own)
++	if ( pTls && pTls->m_tStats.m_sLastMessage && pTls->m_tStats.m_sLastMessage[0] )
++	{
++		const char * sMessageType = pTls->m_tStats.m_bLastError ? "error" : "warning";
++
++		LOC_STATS (
++			sMessageType, strlen ( sMessageType ),
++			pTls->m_tStats.m_sLastMessage, strlen ( pTls->m_tStats.m_sLastMessage ) );
++
++	} else
++	{
++		// well, nothing to show just yet
++#if MYSQL_VERSION_ID < 50100
++		LOC_STATS ( "stats", 5, "no query has been executed yet", sizeof("no query has been executed yet")-1 );
++#endif
++	}
++
++#if MYSQL_VERSION_ID < 50100
++	send_eof(thd);
++#endif
++
++	SPH_RET(FALSE);
++}
++
++//////////////////////////////////////////////////////////////////////////////
++// HELPERS
++//////////////////////////////////////////////////////////////////////////////
++
++static char * sphDup ( const char * sSrc, int iLen=-1 )
++{
++	if ( !sSrc )
++		return NULL;
++
++	if ( iLen<0 )
++		iLen = strlen(sSrc);
++
++	char * sRes = new char [ 1+iLen ];
++	memcpy ( sRes, sSrc, iLen );
++	sRes[iLen] = '\0';
++	return sRes;
++}
++
++
++static void sphLogError ( const char * sFmt, ... )
++{
++	// emit timestamp
++#ifdef __WIN__
++	SYSTEMTIME t;
++	GetLocalTime ( &t );
++
++	fprintf ( stderr, "%02d%02d%02d %2d:%02d:%02d SphinxSE: internal error: ",
++		(int)t.wYear % 100, (int)t.wMonth, (int)t.wDay,
++		(int)t.wHour, (int)t.wMinute, (int)t.wSecond );
++#else
++	// Unix version
++	time_t tStamp;
++	time ( &tStamp );
++
++	struct tm * pParsed;
++#ifdef HAVE_LOCALTIME_R
++	struct tm tParsed;
++	localtime_r ( &tStamp, &tParsed );
++	pParsed = &tParsed;
++#else
++	pParsed = localtime ( &tStamp );
++#endif // HAVE_LOCALTIME_R
++
++	fprintf ( stderr, "%02d%02d%02d %2d:%02d:%02d SphinxSE: internal error: ",
++		pParsed->tm_year % 100, pParsed->tm_mon + 1, pParsed->tm_mday,
++		pParsed->tm_hour, pParsed->tm_min, pParsed->tm_sec);
++#endif // __WIN__
++
++	// emit message
++	va_list ap;
++	va_start ( ap, sFmt );
++	vfprintf ( stderr, sFmt, ap );
++	va_end ( ap );
++
++	// emit newline
++	fprintf ( stderr, "\n" );
++}
++
++
++
++// the following scheme variants are recognized
++//
++// sphinx://host[:port]/index
++// sphinxql://host[:port]/index
++// unix://unix/domain/socket[:index]
++static bool ParseUrl ( CSphSEShare * share, TABLE * table, bool bCreate )
++{
++	SPH_ENTER_FUNC();
++
++	if ( share )
++	{
++		// check incoming stuff
++		if ( !table )
++		{
++			sphLogError ( "table==NULL in ParseUrl()" );
++			return false;
++		}
++		if ( !table->s )
++		{
++			sphLogError ( "(table->s)==NULL in ParseUrl()" );
++			return false;
++		}
++
++		// free old stuff
++		share->ResetTable ();
++
++		// fill new stuff
++		share->m_iTableFields = table->s->fields;
++		if ( share->m_iTableFields )
++		{
++			share->m_sTableField = new char * [ share->m_iTableFields ];
++			share->m_eTableFieldType = new enum_field_types [ share->m_iTableFields ];
++
++			for ( int i=0; i<share->m_iTableFields; i++ )
++			{
++				share->m_sTableField[i] = sphDup ( table->field[i]->field_name );
++				share->m_eTableFieldType[i] = table->field[i]->type();
++			}
++		}
++	}
++
++	// defaults
++	bool bOk = true;
++	bool bQL = false;
++	char * sScheme = NULL;
++	char * sHost = SPHINXAPI_DEFAULT_HOST;
++	char * sIndex = SPHINXAPI_DEFAULT_INDEX;
++	int iPort = SPHINXAPI_DEFAULT_PORT;
++
++	// parse connection string, if any
++	while ( table->s->connect_string.length!=0 )
++	{
++		sScheme = sphDup ( table->s->connect_string.str, table->s->connect_string.length );
++
++		sHost = strstr ( sScheme, "://" );
++		if ( !sHost )
++		{
++			bOk = false;
++			break;
++		}
++		sHost[0] = '\0';
++		sHost += 3;
++
++		/////////////////////////////
++		// sphinxapi via unix socket
++		/////////////////////////////
++
++		if ( !strcmp ( sScheme, "unix" ) )
++		{
++			sHost--; // reuse last slash
++			iPort = 0;
++			if (!( sIndex = strrchr ( sHost, ':' ) ))
++				sIndex = SPHINXAPI_DEFAULT_INDEX;
++			else
++			{
++				*sIndex++ = '\0';
++				if ( !*sIndex )
++					sIndex = SPHINXAPI_DEFAULT_INDEX;
++			}
++			bOk = true;
++			break;
++		}
++
++		/////////////////////
++		// sphinxapi via tcp
++		/////////////////////
++
++		if ( !strcmp ( sScheme, "sphinx" ) )
++		{
++			char * sPort = strchr ( sHost, ':' );
++			if ( sPort )
++			{
++				*sPort++ = '\0';
++				if ( *sPort )
++				{
++					sIndex = strchr ( sPort, '/' );
++					if ( sIndex )
++						*sIndex++ = '\0';
++					else
++						sIndex = SPHINXAPI_DEFAULT_INDEX;
++
++					iPort = atoi(sPort);
++					if ( !iPort )
++						iPort = SPHINXAPI_DEFAULT_PORT;
++				}
++			} else
++			{
++				sIndex = strchr ( sHost, '/' );
++				if ( sIndex )
++					*sIndex++ = '\0';
++				else
++					sIndex = SPHINXAPI_DEFAULT_INDEX;
++			}
++			bOk = true;
++			break;
++		}
++
++		////////////
++		// sphinxql
++		////////////
++
++		if ( !strcmp ( sScheme, "sphinxql" ) )
++		{
++			bQL = true;
++			iPort = SPHINXQL_DEFAULT_PORT;
++
++			// handle port
++			char * sPort = strchr ( sHost, ':' );
++			sIndex = sHost; // starting point for index name search
++
++			if ( sPort )
++			{
++				*sPort++ = '\0';
++				sIndex = sPort;
++
++				iPort = atoi(sPort);
++				if ( !iPort )
++				{
++					bOk = false; // invalid port; can report ER_FOREIGN_DATA_STRING_INVALID
++					break;
++				}
++			}
++
++			// find index
++			sIndex = strchr ( sIndex, '/' );
++			if ( sIndex )
++				*sIndex++ = '\0';
++
++			// final checks
++			// host and index names are required
++			bOk = ( sHost && *sHost && sIndex && *sIndex );
++			break;
++		}
++
++		// unknown case
++		bOk = false;
++		break;
++	}
++
++	if ( !bOk )
++	{
++		my_error ( bCreate ? ER_FOREIGN_DATA_STRING_INVALID_CANT_CREATE : ER_FOREIGN_DATA_STRING_INVALID,
++			MYF(0), table->s->connect_string );
++	} else
++	{
++		if ( share )
++		{
++			SafeDeleteArray ( share->m_sScheme );
++			share->m_sScheme = sScheme;
++			share->m_sHost = sHost;
++			share->m_sIndex = sIndex;
++			share->m_iPort = (ushort)iPort;
++			share->m_bSphinxQL = bQL;
++		}
++	}
++	if ( !bOk && !share )
++		SafeDeleteArray ( sScheme );
++
++	SPH_RET(bOk);
++}
++
++
++// Example of simple lock controls. The "share" it creates is structure we will
++// pass to each sphinx handler. Do you have to have one of these? Well, you have
++// pieces that are used for locking, and they are needed to function.
++static CSphSEShare * get_share ( const char * table_name, TABLE * table )
++{
++	SPH_ENTER_FUNC();
++	pthread_mutex_lock ( &sphinx_mutex );
++
++	CSphSEShare * pShare = NULL;
++	for ( ;; )
++	{
++		// check if we already have this share
++#if MYSQL_VERSION_ID>=50120
++		pShare = (CSphSEShare*) hash_search ( &sphinx_open_tables, (const uchar *) table_name, strlen(table_name) );
++#else
++#ifdef __WIN__
++		pShare = (CSphSEShare*) hash_search ( &sphinx_open_tables, (const byte *) table_name, strlen(table_name) );
++#else
++		pShare = (CSphSEShare*) hash_search ( &sphinx_open_tables, table_name, strlen(table_name) );
++#endif // win
++#endif // pre-5.1.20
++
++		if ( pShare )
++		{
++			pShare->m_iUseCount++;
++			break;
++		}
++
++		// try to allocate new share
++		pShare = new CSphSEShare ();
++		if ( !pShare )
++			break;
++
++		// try to setup it
++		if ( !ParseUrl ( pShare, table, false ) )
++		{
++			SafeDelete ( pShare );
++			break;
++		}
++
++		if ( !pShare->m_bSphinxQL )
++			pShare->m_pTableQueryCharset = table->field[2]->charset();
++
++		// try to hash it
++		pShare->m_iTableNameLen = strlen(table_name);
++		pShare->m_sTable = sphDup ( table_name );
++		if ( my_hash_insert ( &sphinx_open_tables, (const byte *)pShare ) )
++		{
++			SafeDelete ( pShare );
++			break;
++		}
++
++		// all seems fine
++		break;
++	}
++
++	pthread_mutex_unlock ( &sphinx_mutex );
++	SPH_RET(pShare);
++}
++
++
++// Free lock controls. We call this whenever we close a table. If the table had
++// the last reference to the share then we free memory associated with it.
++static int free_share ( CSphSEShare * pShare )
++{
++	SPH_ENTER_FUNC();
++	pthread_mutex_lock ( &sphinx_mutex );
++
++	if ( !--pShare->m_iUseCount )
++	{
++		hash_delete ( &sphinx_open_tables, (byte *)pShare );
++		SafeDelete ( pShare );
++	}
++
++	pthread_mutex_unlock ( &sphinx_mutex );
++	SPH_RET(0);
++}
++
++
++#if MYSQL_VERSION_ID>50100
++static handler * sphinx_create_handler ( handlerton * hton, TABLE_SHARE * table, MEM_ROOT * mem_root )
++{
++	sphinx_hton_ptr = hton;
++	return new ( mem_root ) ha_sphinx ( hton, table );
++}
++#endif
++
++//////////////////////////////////////////////////////////////////////////////
++// CLIENT-SIDE REQUEST STUFF
++//////////////////////////////////////////////////////////////////////////////
++
++CSphSEQuery::CSphSEQuery ( const char * sQuery, int iLength, const char * sIndex )
++	: m_sHost ( "" )
++	, m_iPort ( 0 )
++	, m_sIndex ( sIndex ? sIndex : "*" )
++	, m_iOffset ( 0 )
++	, m_iLimit ( 20 )
++	, m_bQuery ( false )
++	, m_sQuery ( "" )
++	, m_pWeights ( NULL )
++	, m_iWeights ( 0 )
++	, m_eMode ( SPH_MATCH_ALL )
++	, m_eRanker ( SPH_RANK_PROXIMITY_BM25 )
++	, m_eSort ( SPH_SORT_RELEVANCE )
++	, m_sSortBy ( "" )
++	, m_iMaxMatches ( 1000 )
++	, m_iMaxQueryTime ( 0 )
++	, m_iMinID ( 0 )
++	, m_iMaxID ( 0 )
++	, m_iFilters ( 0 )
++	, m_eGroupFunc ( SPH_GROUPBY_DAY )
++	, m_sGroupBy ( "" )
++	, m_sGroupSortBy ( "@group desc" )
++	, m_iCutoff ( 0 )
++	, m_iRetryCount ( 0 )
++	, m_iRetryDelay ( 0 )
++	, m_sGroupDistinct ( "" )
++	, m_iIndexWeights ( 0 )
++	, m_iFieldWeights ( 0 )
++	, m_bGeoAnchor ( false )
++	, m_sGeoLatAttr ( "" )
++	, m_sGeoLongAttr ( "" )
++	, m_fGeoLatitude ( 0.0f )
++	, m_fGeoLongitude ( 0.0f )
++	, m_sComment ( "" )
++	, m_sSelect ( "" )
++
++	, m_pBuf ( NULL )
++	, m_pCur ( NULL )
++	, m_iBufLeft ( 0 )
++	, m_bBufOverrun ( false )
++{
++	m_sQueryBuffer = new char [ iLength+2 ];
++	memcpy ( m_sQueryBuffer, sQuery, iLength );
++	m_sQueryBuffer[iLength] = ';';
++	m_sQueryBuffer[iLength+1] = '\0';
++}
++
++
++CSphSEQuery::~CSphSEQuery ()
++{
++	SPH_ENTER_METHOD();
++	SafeDeleteArray ( m_sQueryBuffer );
++	SafeDeleteArray ( m_pWeights );
++	SafeDeleteArray ( m_pBuf );
++	for ( int i=0; i<m_dOverrides.elements(); i++ )
++		SafeDelete ( m_dOverrides.at(i) );
++	SPH_VOID_RET();
++}
++
++
++template < typename T >
++int CSphSEQuery::ParseArray ( T ** ppValues, const char * sValue )
++{
++	SPH_ENTER_METHOD();
++
++	assert ( ppValues );
++	assert ( !(*ppValues) );
++
++	const char * pValue;
++	bool bPrevDigit = false;
++	int iValues = 0;
++
++	// count the values
++	for ( pValue=sValue; *pValue; pValue++ )
++	{
++		bool bDigit = (*pValue)>='0' && (*pValue)<='9';
++		if ( bDigit && !bPrevDigit )
++			iValues++;
++		bPrevDigit = bDigit;
++	}
++	if ( !iValues )
++		SPH_RET(0);
++
++	// extract the values
++	T * pValues = new T [ iValues ];
++	*ppValues = pValues;
++
++	int iIndex = 0, iSign = 1;
++	T uValue = 0;
++
++	bPrevDigit = false;
++	for ( pValue=sValue ;; pValue++ )
++	{
++		bool bDigit = (*pValue)>='0' && (*pValue)<='9';
++
++		if ( bDigit )
++		{
++			if ( !bPrevDigit )
++				uValue = 0;
++			uValue = uValue*10 + ( (*pValue)-'0' );
++		} else if ( bPrevDigit )
++		{
++			assert ( iIndex<iValues );
++			pValues [ iIndex++ ] = uValue * iSign;
++			iSign = 1;
++		} else if ( *pValue=='-' )
++			iSign = -1;
++
++		bPrevDigit = bDigit;
++		if ( !*pValue )
++			break;
++	}
++
++	SPH_RET ( iValues );
++}
++
++
++static char * chop ( char * s )
++{
++	while ( *s && isspace(*s) )
++		s++;
++
++	char * p = s + strlen(s);
++	while ( p>s && isspace ( p[-1] ) )
++		p--;
++	*p = '\0';
++
++	return s;
++}
++
++
++static bool myisattr ( char c )
++{
++	return
++		( c>='0' && c<='9' ) ||
++		( c>='a' && c<='z' ) ||
++		( c>='A' && c<='Z' ) ||
++		c=='_';
++}
++
++
++bool CSphSEQuery::ParseField ( char * sField )
++{
++	SPH_ENTER_METHOD();
++
++	// look for option name/value separator
++	char * sValue = strchr ( sField, '=' );
++	if ( !sValue || sValue==sField || sValue[-1]=='\\' )
++	{
++		// by default let's assume it's just query
++		if ( sField[0] )
++		{
++			if ( m_bQuery )
++			{
++				snprintf ( m_sParseError, sizeof(m_sParseError), "search query already specified; '%s' is redundant", sField );
++				SPH_RET(false);
++			} else
++			{
++				m_sQuery = sField;
++				m_bQuery = true;
++
++				// unescape
++				char *s = sField, *d = sField;
++				while ( *s )
++				{
++					if ( *s!='\\' ) *d++ = *s;
++					s++;
++				}
++				*d = '\0';
++			}
++		}
++		SPH_RET(true);
++	}
++
++	// split
++	*sValue++ = '\0';
++	sValue = chop ( sValue );
++	int iValue = atoi ( sValue );
++
++	// handle options
++	char * sName = chop ( sField );
++
++	if ( !strcmp ( sName, "query" ) )			m_sQuery = sValue;
++	else if ( !strcmp ( sName, "host" ) )		m_sHost = sValue;
++	else if ( !strcmp ( sName, "port" ) )		m_iPort = iValue;
++	else if ( !strcmp ( sName, "index" ) )		m_sIndex = sValue;
++	else if ( !strcmp ( sName, "offset" ) )		m_iOffset = iValue;
++	else if ( !strcmp ( sName, "limit" ) )		m_iLimit = iValue;
++	else if ( !strcmp ( sName, "weights" ) )	m_iWeights = ParseArray<uint32> ( &m_pWeights, sValue );
++	else if ( !strcmp ( sName, "minid" ) )		m_iMinID = iValue;
++	else if ( !strcmp ( sName, "maxid" ) )		m_iMaxID = iValue;
++	else if ( !strcmp ( sName, "maxmatches" ) )	m_iMaxMatches = iValue;
++	else if ( !strcmp ( sName, "maxquerytime" ) )	m_iMaxQueryTime = iValue;
++	else if ( !strcmp ( sName, "groupsort" ) )	m_sGroupSortBy = sValue;
++	else if ( !strcmp ( sName, "distinct" ) )	m_sGroupDistinct = sValue;
++	else if ( !strcmp ( sName, "cutoff" ) )		m_iCutoff = iValue;
++	else if ( !strcmp ( sName, "comment" ) )	m_sComment = sValue;
++	else if ( !strcmp ( sName, "select" ) )		m_sSelect = sValue;
++
++	else if ( !strcmp ( sName, "mode" ) )
++	{
++		m_eMode = SPH_MATCH_ALL;
++		if ( !strcmp ( sValue, "any" ) )			m_eMode = SPH_MATCH_ANY;
++		else if ( !strcmp ( sValue, "phrase" ) )	m_eMode = SPH_MATCH_PHRASE;
++		else if ( !strcmp ( sValue, "boolean" ) )	m_eMode = SPH_MATCH_BOOLEAN;
++		else if ( !strcmp ( sValue, "ext" ) )		m_eMode = SPH_MATCH_EXTENDED;
++		else if ( !strcmp ( sValue, "extended" ) )	m_eMode = SPH_MATCH_EXTENDED;
++		else if ( !strcmp ( sValue, "ext2" ) )		m_eMode = SPH_MATCH_EXTENDED2;
++		else if ( !strcmp ( sValue, "extended2" ) )	m_eMode = SPH_MATCH_EXTENDED2;
++		else if ( !strcmp ( sValue, "all" ) )		m_eMode = SPH_MATCH_ALL;
++		else if ( !strcmp ( sValue, "fullscan" ) )	m_eMode = SPH_MATCH_FULLSCAN;
++		else
++		{
++			snprintf ( m_sParseError, sizeof(m_sParseError), "unknown matching mode '%s'", sValue );
++			SPH_RET(false);
++		}
++	} else if ( !strcmp ( sName, "ranker" ) )
++	{
++		m_eRanker = SPH_RANK_PROXIMITY_BM25;
++		if ( !strcmp ( sValue, "proximity_bm25" ) )	m_eRanker = SPH_RANK_PROXIMITY_BM25;
++		else if ( !strcmp ( sValue, "bm25" ) )		m_eRanker = SPH_RANK_BM25;
++		else if ( !strcmp ( sValue, "none" ) )		m_eRanker = SPH_RANK_NONE;
++		else if ( !strcmp ( sValue, "wordcount" ) )	m_eRanker = SPH_RANK_WORDCOUNT;
++		else if ( !strcmp ( sValue, "proximity" ) )	m_eRanker = SPH_RANK_PROXIMITY;
++		else if ( !strcmp ( sValue, "matchany" ) )	m_eRanker = SPH_RANK_MATCHANY;
++		else if ( !strcmp ( sValue, "fieldmask" ) )	m_eRanker = SPH_RANK_FIELDMASK;
++		else
++		{
++			snprintf ( m_sParseError, sizeof(m_sParseError), "unknown ranking mode '%s'", sValue );
++			SPH_RET(false);
++		}
++	} else if ( !strcmp ( sName, "sort" ) )
++	{
++		static const struct
++		{
++			const char *	m_sName;
++			ESphSortOrder	m_eSort;
++		} dSortModes[] =
++		{
++			{ "relevance",		SPH_SORT_RELEVANCE },
++			{ "attr_desc:",		SPH_SORT_ATTR_DESC },
++			{ "attr_asc:",		SPH_SORT_ATTR_ASC },
++			{ "time_segments:",	SPH_SORT_TIME_SEGMENTS },
++			{ "extended:",		SPH_SORT_EXTENDED },
++			{ "expr:",			SPH_SORT_EXPR }
++		};
++
++		int i;
++		const int nModes = sizeof(dSortModes)/sizeof(dSortModes[0]);
++		for ( i=0; i<nModes; i++ )
++			if ( !strncmp ( sValue, dSortModes[i].m_sName, strlen ( dSortModes[i].m_sName ) ) )
++		{
++			m_eSort = dSortModes[i].m_eSort;
++			m_sSortBy = sValue + strlen ( dSortModes[i].m_sName );
++			break;
++		}
++		if ( i==nModes )
++		{
++			snprintf ( m_sParseError, sizeof(m_sParseError), "unknown sorting mode '%s'", sValue );
++			SPH_RET(false);
++		}
++
++	} else if ( !strcmp ( sName, "groupby" ) )
++	{
++		static const struct
++		{
++			const char *	m_sName;
++			ESphGroupBy		m_eFunc;
++		} dGroupModes[] =
++		{
++			{ "day:",	SPH_GROUPBY_DAY },
++			{ "week:",	SPH_GROUPBY_WEEK },
++			{ "month:",	SPH_GROUPBY_MONTH },
++			{ "year:",	SPH_GROUPBY_YEAR },
++			{ "attr:",	SPH_GROUPBY_ATTR },
++		};
++
++		int i;
++		const int nModes = sizeof(dGroupModes)/sizeof(dGroupModes[0]);
++		for ( i=0; i<nModes; i++ )
++			if ( !strncmp ( sValue, dGroupModes[i].m_sName, strlen ( dGroupModes[i].m_sName ) ) )
++		{
++			m_eGroupFunc = dGroupModes[i].m_eFunc;
++			m_sGroupBy = sValue + strlen ( dGroupModes[i].m_sName );
++			break;
++		}
++		if ( i==nModes )
++		{
++			snprintf ( m_sParseError, sizeof(m_sParseError), "unknown groupby mode '%s'", sValue );
++			SPH_RET(false);
++		}
++
++	} else if ( m_iFilters<SPHINXSE_MAX_FILTERS &&
++		( !strcmp ( sName, "range" ) || !strcmp ( sName, "!range" ) || !strcmp ( sName, "floatrange" ) || !strcmp ( sName, "!floatrange" ) ) )
++	{
++		for ( ;; )
++		{
++			char * p = sName;
++			CSphSEFilter & tFilter = m_dFilters [ m_iFilters ];
++			tFilter.m_bExclude = ( *p=='!' ); if ( tFilter.m_bExclude ) p++;
++			tFilter.m_eType = ( *p=='f' ) ? SPH_FILTER_FLOATRANGE : SPH_FILTER_RANGE;
++
++			if (!( p = strchr ( sValue, ',' ) ))
++				break;
++			*p++ = '\0';
++
++			tFilter.m_sAttrName = chop ( sValue );
++			sValue = p;
++
++			if (!( p = strchr ( sValue, ',' ) ))
++				break;
++			*p++ = '\0';
++
++			if ( tFilter.m_eType==SPH_FILTER_RANGE )
++			{
++				tFilter.m_uMinValue = strtoll ( sValue, NULL, 0 );
++				tFilter.m_uMaxValue = strtoll ( p, NULL, 0 );
++			} else
++			{
++				tFilter.m_fMinValue = (float)atof(sValue);
++				tFilter.m_fMaxValue = (float)atof(p);
++			}
++
++			// all ok
++			m_iFilters++;
++			break;
++		}
++
++	} else if ( m_iFilters<SPHINXSE_MAX_FILTERS &&
++		( !strcmp ( sName, "filter" ) || !strcmp ( sName, "!filter" ) ) )
++	{
++		for ( ;; )
++		{
++			CSphSEFilter & tFilter = m_dFilters [ m_iFilters ];
++			tFilter.m_eType = SPH_FILTER_VALUES;
++			tFilter.m_bExclude = ( strcmp ( sName, "!filter" )==0 );
++
++			// get the attr name
++			while ( (*sValue) && !myisattr(*sValue) )
++				sValue++;
++			if ( !*sValue )
++				break;
++
++			tFilter.m_sAttrName = sValue;
++			while ( (*sValue) && myisattr(*sValue) )
++				sValue++;
++			if ( !*sValue )
++				break;
++			*sValue++ = '\0';
++
++			// get the values
++			tFilter.m_iValues = ParseArray<longlong> ( &tFilter.m_pValues, sValue );
++			if ( !tFilter.m_iValues )
++			{
++				assert ( !tFilter.m_pValues );
++				break;
++			}
++
++			// all ok
++			m_iFilters++;
++			break;
++		}
++
++	} else if ( !strcmp ( sName, "indexweights" ) || !strcmp ( sName, "fieldweights" ) )
++	{
++		bool bIndex = !strcmp ( sName, "indexweights" );
++		int * pCount = bIndex ? &m_iIndexWeights : &m_iFieldWeights;
++		char ** pNames = bIndex ? &m_sIndexWeight[0] : &m_sFieldWeight[0];
++		int * pWeights = bIndex ? &m_iIndexWeight[0] : &m_iFieldWeight[0];
++
++		*pCount = 0;
++
++		char * p = sValue;
++		while ( *p && *pCount<SPHINXSE_MAX_FILTERS )
++		{
++			// extract attr name
++			if ( !myisattr(*p) )
++			{
++				snprintf ( m_sParseError, sizeof(m_sParseError), "%s: index name expected near '%s'", sName, p );
++				SPH_RET(false);
++			}
++
++			pNames[*pCount] = p;
++			while ( myisattr(*p) ) p++;
++
++			if ( *p!=',' )
++			{
++				snprintf ( m_sParseError, sizeof(m_sParseError), "%s: comma expected near '%s'", sName, p );
++				SPH_RET(false);
++			}
++			*p++ = '\0';
++
++			// extract attr value
++			char * sVal = p;
++			while ( isdigit(*p) ) p++;
++			if ( p==sVal )
++			{
++				snprintf ( m_sParseError, sizeof(m_sParseError), "%s: integer weight expected near '%s'", sName, sVal );
++				SPH_RET(false);
++			}
++			pWeights[*pCount] = atoi(sVal);
++			(*pCount)++;
++
++			if ( !*p )
++				break;
++			if ( *p!=',' )
++			{
++				snprintf ( m_sParseError, sizeof(m_sParseError), "%s: comma expected near '%s'", sName, p );
++				SPH_RET(false);
++			}
++			p++;
++		}
++
++	} else if ( !strcmp ( sName, "geoanchor" ) )
++	{
++		m_bGeoAnchor = false;
++		for ( ;; )
++		{
++			char * sLat = sValue;
++			char * p = sValue;
++
++			if (!( p = strchr ( p, ',' ) )) break; *p++ = '\0';
++			char * sLong = p;
++
++			if (!( p = strchr ( p, ',' ) )) break; *p++ = '\0';
++			char * sLatVal = p;
++
++			if (!( p = strchr ( p, ',' ) )) break; *p++ = '\0';
++			char * sLongVal = p;
++
++			m_sGeoLatAttr = chop(sLat);
++			m_sGeoLongAttr = chop(sLong);
++			m_fGeoLatitude = (float)atof ( sLatVal );
++			m_fGeoLongitude = (float)atof ( sLongVal );
++			m_bGeoAnchor = true;
++			break;
++		}
++		if ( !m_bGeoAnchor )
++		{
++			snprintf ( m_sParseError, sizeof(m_sParseError), "geoanchor: parse error, not enough comma-separated arguments" );
++			SPH_RET(false);
++		}
++	} else if ( !strcmp ( sName, "override" ) ) // name,type,id:value,id:value,...
++	{
++		char * sName = NULL;
++		int iType = 0;
++		CSphSEQuery::Override_t * pOverride = NULL;
++
++		// get name and type
++		char * sRest = sValue;
++		for ( ;; )
++		{
++			sName = sRest;
++			if ( !*sName )
++				break;
++			if (!( sRest = strchr ( sRest, ',' ) ))
++				break;
++			*sRest++ = '\0';
++			char * sType = sRest;
++			if (!( sRest = strchr ( sRest, ',' ) ))
++				break;
++
++			static const struct
++			{
++				const char *	m_sName;
++				int				m_iType;
++			}
++			dAttrTypes[] =
++			{
++				{ "int",		SPH_ATTR_INTEGER },
++				{ "timestamp",	SPH_ATTR_TIMESTAMP },
++				{ "bool",		SPH_ATTR_BOOL },
++				{ "float",		SPH_ATTR_FLOAT },
++				{ "bigint",		SPH_ATTR_BIGINT }
++			};
++			for ( int i=0; i<sizeof(dAttrTypes)/sizeof(*dAttrTypes); i++ )
++				if ( !strncmp ( sType, dAttrTypes[i].m_sName, sRest - sType ) )
++			{
++				iType = dAttrTypes[i].m_iType;
++				break;
++			}
++			break;
++		}
++
++		// fail
++		if ( !sName || !*sName || !iType )
++		{
++			snprintf ( m_sParseError, sizeof(m_sParseError), "override: malformed query" );
++			SPH_RET(false);
++		}
++
++		// grab id:value pairs
++		sRest++;
++		while ( sRest )
++		{
++			char * sId = sRest;
++			if (!( sRest = strchr ( sRest, ':' ) )) break; *sRest++ = '\0';
++			if (!( sRest - sId )) break;
++
++			char * sValue = sRest;
++			if ( ( sRest = strchr ( sRest, ',' ) )!=NULL )
++				*sRest++ = '\0';
++			if ( !*sValue )
++				break;
++
++			if ( !pOverride )
++			{
++				pOverride = new CSphSEQuery::Override_t;
++				pOverride->m_sName = chop(sName);
++				pOverride->m_iType = iType;
++				m_dOverrides.append ( pOverride );
++			}
++
++			ulonglong uId = strtoull ( sId, NULL, 10 );
++			CSphSEQuery::Override_t::Value_t tValue;
++			if ( iType==SPH_ATTR_FLOAT )
++				tValue.m_fValue = (float)atof(sValue);
++			else if ( iType==SPH_ATTR_BIGINT )
++				tValue.m_iValue64 = strtoll ( sValue, NULL, 10 );
++			else
++				tValue.m_uValue = (uint32)strtoul ( sValue, NULL, 10 );
++
++			pOverride->m_dIds.append ( uId );
++			pOverride->m_dValues.append ( tValue );
++		}
++
++		if ( !pOverride )
++		{
++			snprintf ( m_sParseError, sizeof(m_sParseError), "override: id:value mapping expected" );
++			SPH_RET(false);
++		}
++		SPH_RET(true);
++	} else
++	{
++		snprintf ( m_sParseError, sizeof(m_sParseError), "unknown parameter '%s'", sName );
++		SPH_RET(false);
++	}
++
++	// !COMMIT handle syntax errors
++
++	SPH_RET(true);
++}
++
++
++bool CSphSEQuery::Parse ()
++{
++	SPH_ENTER_METHOD();
++	SPH_DEBUG ( "query [[ %s ]]", m_sQueryBuffer );
++
++	m_bQuery = false;
++	char * pCur = m_sQueryBuffer;
++	char * pNext = pCur;
++
++	while ( ( pNext = strchr ( pNext, ';' ) )!=NULL )
++	{
++		// handle escaped semicolons
++		if ( pNext>m_sQueryBuffer && pNext[-1]=='\\' && pNext[1]!='\0' )
++		{
++			pNext++;
++			continue;
++		}
++
++		// handle semicolon-separated clauses
++		*pNext++ = '\0';
++		if ( !ParseField ( pCur ) )
++			SPH_RET(false);
++		pCur = pNext;
++	}
++
++	SPH_RET(true);
++}
++
++
++void CSphSEQuery::SendBytes ( const void * pBytes, int iBytes )
++{
++	SPH_ENTER_METHOD();
++	if ( m_iBufLeft<iBytes )
++	{
++		m_bBufOverrun = true;
++		SPH_VOID_RET();
++	}
++
++	memcpy ( m_pCur, pBytes, iBytes );
++
++	m_pCur += iBytes;
++	m_iBufLeft -= iBytes;
++	SPH_VOID_RET();
++}
++
++
++int CSphSEQuery::BuildRequest ( char ** ppBuffer )
++{
++	SPH_ENTER_METHOD();
++
++	// calc request length
++	int iReqSize = 124 + 4*m_iWeights
++		+ strlen ( m_sSortBy )
++		+ strlen ( m_sQuery )
++		+ strlen ( m_sIndex )
++		+ strlen ( m_sGroupBy )
++		+ strlen ( m_sGroupSortBy )
++		+ strlen ( m_sGroupDistinct )
++		+ strlen ( m_sComment )
++		+ strlen ( m_sSelect );
++	for ( int i=0; i<m_iFilters; i++ )
++	{
++		const CSphSEFilter & tFilter = m_dFilters[i];
++		iReqSize += 12 + strlen ( tFilter.m_sAttrName ); // string attr-name; int type; int exclude-flag
++		switch ( tFilter.m_eType )
++		{
++			case SPH_FILTER_VALUES:		iReqSize += 4 + 8*tFilter.m_iValues; break;
++			case SPH_FILTER_RANGE:		iReqSize += 16; break;
++			case SPH_FILTER_FLOATRANGE:	iReqSize += 8; break;
++		}
++	}
++	if ( m_bGeoAnchor ) // 1.14+
++		iReqSize += 16 + strlen ( m_sGeoLatAttr ) + strlen ( m_sGeoLongAttr );
++	for ( int i=0; i<m_iIndexWeights; i++ ) // 1.15+
++		iReqSize += 8 + strlen(m_sIndexWeight[i] );
++	for ( int i=0; i<m_iFieldWeights; i++ ) // 1.18+
++		iReqSize += 8 + strlen(m_sFieldWeight[i] );
++	// overrides
++	iReqSize += 4;
++	for ( int i=0; i<m_dOverrides.elements(); i++ )
++	{
++		CSphSEQuery::Override_t * pOverride = m_dOverrides.at(i);
++		const uint32 uSize = pOverride->m_iType==SPH_ATTR_BIGINT ? 16 : 12; // id64 + value
++		iReqSize += strlen ( pOverride->m_sName ) + 12 + uSize*pOverride->m_dIds.elements();
++	}
++	// select
++	iReqSize += 4;
++
++	m_iBufLeft = 0;
++	SafeDeleteArray ( m_pBuf );
++
++	m_pBuf = new char [ iReqSize ];
++	if ( !m_pBuf )
++		SPH_RET(-1);
++
++	m_pCur = m_pBuf;
++	m_iBufLeft = iReqSize;
++	m_bBufOverrun = false;
++	(*ppBuffer) = m_pBuf;
++
++	// build request
++	SendWord ( SEARCHD_COMMAND_SEARCH ); // command id
++	SendWord ( VER_COMMAND_SEARCH ); // command version
++	SendInt ( iReqSize-8 ); // packet body length
++
++	SendInt ( 1 ); // number of queries
++	SendInt ( m_iOffset );
++	SendInt ( m_iLimit );
++	SendInt ( m_eMode );
++	SendInt ( m_eRanker ); // 1.16+
++	SendInt ( m_eSort );
++	SendString ( m_sSortBy ); // sort attr
++	SendString ( m_sQuery ); // query
++	SendInt ( m_iWeights );
++	for ( int j=0; j<m_iWeights; j++ )
++		SendInt ( m_pWeights[j] ); // weights
++	SendString ( m_sIndex ); // indexes
++	SendInt ( 1 ); // id64 range follows
++	SendUint64 ( m_iMinID ); // id/ts ranges
++	SendUint64 ( m_iMaxID );
++
++	SendInt ( m_iFilters );
++	for ( int j=0; j<m_iFilters; j++ )
++	{
++		const CSphSEFilter & tFilter = m_dFilters[j];
++		SendString ( tFilter.m_sAttrName );
++		SendInt ( tFilter.m_eType );
++
++		switch ( tFilter.m_eType )
++		{
++			case SPH_FILTER_VALUES:
++				SendInt ( tFilter.m_iValues );
++				for ( int k=0; k<tFilter.m_iValues; k++ )
++					SendUint64 ( tFilter.m_pValues[k] );
++				break;
++
++			case SPH_FILTER_RANGE:
++				SendUint64 ( tFilter.m_uMinValue );
++				SendUint64 ( tFilter.m_uMaxValue );
++				break;
++
++			case SPH_FILTER_FLOATRANGE:
++				SendFloat ( tFilter.m_fMinValue );
++				SendFloat ( tFilter.m_fMaxValue );
++				break;
++		}
++
++		SendInt ( tFilter.m_bExclude );
++	}
++
++	SendInt ( m_eGroupFunc );
++	SendString ( m_sGroupBy );
++	SendInt ( m_iMaxMatches );
++	SendString ( m_sGroupSortBy );
++	SendInt ( m_iCutoff ); // 1.9+
++	SendInt ( m_iRetryCount ); // 1.10+
++	SendInt ( m_iRetryDelay );
++	SendString ( m_sGroupDistinct ); // 1.11+
++	SendInt ( m_bGeoAnchor ); // 1.14+
++	if ( m_bGeoAnchor )
++	{
++		SendString ( m_sGeoLatAttr );
++		SendString ( m_sGeoLongAttr );
++		SendFloat ( m_fGeoLatitude );
++		SendFloat ( m_fGeoLongitude );
++	}
++	SendInt ( m_iIndexWeights ); // 1.15+
++	for ( int i=0; i<m_iIndexWeights; i++ )
++	{
++		SendString ( m_sIndexWeight[i] );
++		SendInt ( m_iIndexWeight[i] );
++	}
++	SendInt ( m_iMaxQueryTime ); // 1.17+
++	SendInt ( m_iFieldWeights ); // 1.18+
++	for ( int i=0; i<m_iFieldWeights; i++ )
++	{
++		SendString ( m_sFieldWeight[i] );
++		SendInt ( m_iFieldWeight[i] );
++	}
++	SendString ( m_sComment );
++
++	// overrides
++	SendInt ( m_dOverrides.elements() );
++	for ( int i=0; i<m_dOverrides.elements(); i++ )
++	{
++		CSphSEQuery::Override_t * pOverride = m_dOverrides.at(i);
++		SendString ( pOverride->m_sName );
++		SendDword ( pOverride->m_iType );
++		SendInt ( pOverride->m_dIds.elements() );
++		for ( int j=0; j<pOverride->m_dIds.elements(); j++ )
++		{
++			SendUint64 ( pOverride->m_dIds.at(j) );
++			if ( pOverride->m_iType==SPH_ATTR_FLOAT )
++				SendFloat ( pOverride->m_dValues.at(j).m_fValue );
++			else if ( pOverride->m_iType==SPH_ATTR_BIGINT )
++				SendUint64 ( pOverride->m_dValues.at(j).m_iValue64 );
++			else
++				SendDword ( pOverride->m_dValues.at(j).m_uValue );
++		}
++	}
++
++	// select
++	SendString ( m_sSelect );
++
++	// detect buffer overruns and underruns, and report internal error
++	if ( m_bBufOverrun || m_iBufLeft!=0 || m_pCur-m_pBuf!=iReqSize )
++		SPH_RET(-1);
++
++	// all fine
++	SPH_RET ( iReqSize );
++}
++
++//////////////////////////////////////////////////////////////////////////////
++// SPHINX HANDLER
++//////////////////////////////////////////////////////////////////////////////
++
++static const char * ha_sphinx_exts[] = { NullS };
++
++
++#if MYSQL_VERSION_ID<50100
++ha_sphinx::ha_sphinx ( TABLE_ARG * table )
++	: handler ( &sphinx_hton, table )
++#else
++ha_sphinx::ha_sphinx ( handlerton * hton, TABLE_ARG * table )
++	: handler ( hton, table )
++#endif
++	, m_pShare ( NULL )
++	, m_iMatchesTotal ( 0 )
++	, m_iCurrentPos ( 0 )
++	, m_pCurrentKey ( NULL )
++	, m_iCurrentKeyLen ( 0 )
++	, m_pResponse ( NULL )
++	, m_pResponseEnd ( NULL )
++	, m_pCur ( NULL )
++	, m_bUnpackError ( false )
++	, m_iFields ( 0 )
++	, m_dFields ( NULL )
++	, m_iAttrs ( 0 )
++	, m_dAttrs ( NULL )
++	, m_bId64 ( 0 )
++	, m_dUnboundFields ( NULL )
++{
++	SPH_ENTER_METHOD();
++	if ( current_thd )
++		current_thd->variables.engine_condition_pushdown = true;
++	SPH_VOID_RET();
++}
++
++
++// If frm_error() is called then we will use this to to find out what file extentions
++// exist for the storage engine. This is also used by the default rename_table and
++// delete_table method in handler.cc.
++const char ** ha_sphinx::bas_ext() const
++{
++	return ha_sphinx_exts;
++}
++
++
++// Used for opening tables. The name will be the name of the file.
++// A table is opened when it needs to be opened. For instance
++// when a request comes in for a select on the table (tables are not
++// open and closed for each request, they are cached).
++//
++// Called from handler.cc by handler::ha_open(). The server opens all tables by
++// calling ha_open() which then calls the handler specific open().
++int ha_sphinx::open ( const char * name, int, uint )
++{
++	SPH_ENTER_METHOD();
++	m_pShare = get_share ( name, table );
++	if ( !m_pShare )
++		SPH_RET(1);
++
++	thr_lock_data_init ( &m_pShare->m_tLock, &m_tLock, NULL );
++
++	#if MYSQL_VERSION_ID>50100
++	*thd_ha_data ( table->in_use, ht ) = NULL;
++	#else
++	table->in_use->ha_data [ sphinx_hton.slot ] = NULL;
++	#endif
++
++	SPH_RET(0);
++}
++
++
++int ha_sphinx::Connect ( const char * sHost, ushort uPort )
++{
++	struct sockaddr_in sin;
++#ifndef __WIN__
++	struct sockaddr_un saun;
++#endif
++
++	int iDomain = 0;
++	int iSockaddrSize = 0;
++	struct sockaddr * pSockaddr = NULL;
++
++	in_addr_t ip_addr;
++
++	if ( uPort )
++	{
++		iDomain = AF_INET;
++		iSockaddrSize = sizeof(sin);
++		pSockaddr = (struct sockaddr *) &sin;
++
++		memset ( &sin, 0, sizeof(sin) );
++		sin.sin_family = AF_INET;
++		sin.sin_port = htons(uPort);
++
++		// prepare host address
++		if ( (int)( ip_addr = inet_addr(sHost) )!=(int)INADDR_NONE )
++		{
++			memcpy ( &sin.sin_addr, &ip_addr, sizeof(ip_addr) );
++		} else
++		{
++			int tmp_errno;
++			struct hostent tmp_hostent, *hp;
++			char buff2 [ GETHOSTBYNAME_BUFF_SIZE ];
++
++			hp = my_gethostbyname_r ( sHost, &tmp_hostent,
++				buff2, sizeof(buff2), &tmp_errno );
++			if ( !hp )
++			{
++				my_gethostbyname_r_free();
++
++				char sError[256];
++				my_snprintf ( sError, sizeof(sError), "failed to resolve searchd host (name=%s)", sHost );
++
++				my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), sError );
++				SPH_RET(-1);
++			}
++
++			memcpy ( &sin.sin_addr, hp->h_addr,
++				Min ( sizeof(sin.sin_addr), (size_t)hp->h_length ) );
++			my_gethostbyname_r_free();
++		}
++	} else
++	{
++#ifndef __WIN__
++		iDomain = AF_UNIX;
++		iSockaddrSize = sizeof(saun);
++		pSockaddr = (struct sockaddr *) &saun;
++
++		memset ( &saun, 0, sizeof(saun) );
++		saun.sun_family = AF_UNIX;
++		strncpy ( saun.sun_path, sHost, sizeof(saun.sun_path)-1 );
++#else
++		my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), "UNIX sockets are not supported on Windows" );
++		SPH_RET(-1);
++#endif
++	}
++
++	char sError[512];
++	int iSocket = socket ( iDomain, SOCK_STREAM, 0 );
++
++	if ( iSocket<0 )
++	{
++		my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), "failed to create client socket" );
++		SPH_RET(-1);
++	}
++
++	if ( connect ( iSocket, pSockaddr, iSockaddrSize )<0 )
++	{
++		sphSockClose ( iSocket );
++		my_snprintf ( sError, sizeof(sError), "failed to connect to searchd (host=%s, errno=%d, port=%d)",
++			sHost, errno, (int)uPort );
++		my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), sError );
++		SPH_RET(-1);
++	}
++
++	return iSocket;
++}
++
++
++int ha_sphinx::ConnectAPI ( const char * sQueryHost, int iQueryPort )
++{
++	SPH_ENTER_METHOD();
++
++	const char * sHost = ( sQueryHost && *sQueryHost ) ? sQueryHost : m_pShare->m_sHost;
++	ushort uPort = iQueryPort ? (ushort)iQueryPort : m_pShare->m_iPort;
++
++	int iSocket = Connect ( sHost, uPort );
++	if ( iSocket<0 )
++		SPH_RET ( iSocket );
++
++	char sError[512];
++
++	int version;
++	if ( ::recv ( iSocket, (char *)&version, sizeof(version), 0 )!=sizeof(version) )
++	{
++		sphSockClose ( iSocket );
++		my_snprintf ( sError, sizeof(sError), "failed to receive searchd version (host=%s, port=%d)",
++			sHost, (int)uPort );
++		my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), sError );
++		SPH_RET(-1);
++	}
++
++	uint uClientVersion = htonl ( SPHINX_SEARCHD_PROTO );
++	if ( ::send ( iSocket, (char*)&uClientVersion, sizeof(uClientVersion), 0 )!=sizeof(uClientVersion) )
++	{
++		sphSockClose ( iSocket );
++		my_snprintf ( sError, sizeof(sError), "failed to send client version (host=%s, port=%d)",
++			sHost, (int)uPort );
++		my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), sError );
++		SPH_RET(-1);
++	}
++
++	SPH_RET ( iSocket );
++}
++
++
++// Closes a table. We call the free_share() function to free any resources
++// that we have allocated in the "shared" structure.
++//
++// Called from sql_base.cc, sql_select.cc, and table.cc.
++// In sql_select.cc it is only used to close up temporary tables or during
++// the process where a temporary table is converted over to being a
++// myisam table.
++// For sql_base.cc look at close_data_tables().
++int ha_sphinx::close()
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( free_share ( m_pShare ) );
++}
++
++
++int ha_sphinx::HandleMysqlError ( MYSQL * pConn, int iErrCode )
++{
++	CSphSEThreadData * pTls = GetTls ();
++	if ( pTls )
++	{
++		strncpy ( pTls->m_tStats.m_sLastMessage, mysql_error ( pConn ), sizeof ( pTls->m_tStats.m_sLastMessage ) );
++		pTls->m_tStats.m_bLastError = true;
++	}
++
++	mysql_close ( pConn );
++
++	my_error ( iErrCode, MYF(0), pTls->m_tStats.m_sLastMessage );
++	return -1;
++}
++
++
++int ha_sphinx::write_row ( byte * )
++{
++	SPH_ENTER_METHOD();
++	if ( !m_pShare || !m_pShare->m_bSphinxQL )
++		SPH_RET ( HA_ERR_WRONG_COMMAND );
++
++	// SphinxQL inserts only, pretty much similar to abandoned federated
++	char sQueryBuf[1024];
++	char sValueBuf[1024];
++
++	String sQuery ( sQueryBuf, sizeof(sQueryBuf), &my_charset_bin );
++	String sValue ( sValueBuf, sizeof(sQueryBuf), &my_charset_bin );
++	sQuery.length ( 0 );
++	sValue.length ( 0 );
++
++	sQuery.append ( "INSERT INTO " );
++	sQuery.append ( m_pShare->m_sIndex );
++	sQuery.append ( " (" );
++
++	for ( Field ** ppField = table->field; *ppField; ppField++ )
++	{
++		sQuery.append ( (*ppField)->field_name );
++		if ( ppField[1] )
++			sQuery.append ( ", " );
++	}
++	sQuery.append ( ") VALUES (" );
++
++	for ( Field ** ppField = table->field; *ppField; ppField++ )
++	{
++		if ( (*ppField)->is_null() )
++		{
++			sQuery.append ( "''" );
++
++		} else
++		{
++			if ( (*ppField)->type()==MYSQL_TYPE_TIMESTAMP )
++			{
++				Item_field * pWrap = new Item_field ( *ppField ); // autofreed by query arena, I assume
++				Item_func_unix_timestamp * pConv = new Item_func_unix_timestamp ( pWrap );
++				pConv->quick_fix_field();
++				unsigned int uTs = (unsigned int) pConv->val_int();
++
++				snprintf ( sValueBuf, sizeof(sValueBuf), "'%u'", uTs );
++				sQuery.append ( sValueBuf );
++
++			} else
++			{
++				(*ppField)->val_str ( &sValue );
++				sQuery.append ( "'" );
++				sValue.print ( &sQuery );
++				sQuery.append ( "'" );
++				sValue.length(0);
++			}
++		}
++
++		if ( ppField[1] )
++			sQuery.append ( ", " );
++	}
++	sQuery.append ( ")" );
++
++	// FIXME? pretty inefficient to reconnect every time under high load,
++	// but this was intentionally written for a low load scenario..
++	MYSQL * pConn = mysql_init ( NULL );
++	if ( !pConn )
++		SPH_RET ( ER_OUT_OF_RESOURCES );
++
++	unsigned int uTimeout = 1;
++	mysql_options ( pConn, MYSQL_OPT_CONNECT_TIMEOUT, (const char*)&uTimeout );
++
++	if ( !mysql_real_connect ( pConn, m_pShare->m_sHost, "root", "", "", m_pShare->m_iPort, m_pShare->m_sSocket, 0 ) )
++		SPH_RET ( HandleMysqlError ( pConn, ER_CONNECT_TO_FOREIGN_DATA_SOURCE ) );
++
++	if ( mysql_real_query ( pConn, sQuery.ptr(), sQuery.length() ) )
++		SPH_RET ( HandleMysqlError ( pConn, ER_QUERY_ON_FOREIGN_DATA_SOURCE ) );
++
++	// all ok!
++	mysql_close ( pConn );
++	SPH_RET(0);
++}
++
++
++int ha_sphinx::update_row ( const byte *, byte * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_WRONG_COMMAND );
++}
++
++
++int ha_sphinx::delete_row ( const byte * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_WRONG_COMMAND );
++}
++
++
++// keynr is key (index) number
++// sorted is 1 if result MUST be sorted according to index
++int ha_sphinx::index_init ( uint keynr, bool )
++{
++	SPH_ENTER_METHOD();
++	active_index = keynr;
++	SPH_RET(0);
++}
++
++
++int ha_sphinx::index_end()
++{
++	SPH_ENTER_METHOD();
++	SPH_RET(0);
++}
++
++
++uint32 ha_sphinx::UnpackDword ()
++{
++	if ( m_pCur+sizeof(uint32)>m_pResponseEnd )
++	{
++		m_pCur = m_pResponseEnd;
++		m_bUnpackError = true;
++		return 0;
++	}
++
++	uint32 uRes = ntohl ( sphUnalignedRead ( *(uint32*)m_pCur ) );
++	m_pCur += sizeof(uint32);
++	return uRes;
++}
++
++
++char * ha_sphinx::UnpackString ()
++{
++	uint32 iLen = UnpackDword ();
++	if ( !iLen )
++		return NULL;
++
++	if ( m_pCur+iLen>m_pResponseEnd )
++	{
++		m_pCur = m_pResponseEnd;
++		m_bUnpackError = true;
++		return NULL;
++	}
++
++	char * sRes = new char [ 1+iLen ];
++	memcpy ( sRes, m_pCur, iLen );
++	sRes[iLen] = '\0';
++	m_pCur += iLen;
++	return sRes;
++}
++
++
++static inline const char * FixNull ( const char * s )
++{
++	return s ? s : "(null)";
++}
++
++
++bool ha_sphinx::UnpackSchema ()
++{
++	SPH_ENTER_METHOD();
++
++	// cleanup
++	if ( m_dFields )
++		for ( int i=0; i<(int)m_iFields; i++ )
++			SafeDeleteArray ( m_dFields[i] );
++	SafeDeleteArray ( m_dFields );
++
++	// unpack network packet
++	uint32 uStatus = UnpackDword ();
++	char * sMessage = NULL;
++
++	if ( uStatus!=SEARCHD_OK )
++	{
++		sMessage = UnpackString ();
++		CSphSEThreadData * pTls = GetTls ();
++		if ( pTls )
++		{
++			strncpy ( pTls->m_tStats.m_sLastMessage, sMessage, sizeof(pTls->m_tStats.m_sLastMessage) );
++			pTls->m_tStats.m_bLastError = ( uStatus==SEARCHD_ERROR );
++		}
++
++		if ( uStatus==SEARCHD_ERROR )
++		{
++			char sError[1024];
++			my_snprintf ( sError, sizeof(sError), "searchd error: %s", sMessage );
++			my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), sError );
++			SafeDeleteArray ( sMessage );
++			SPH_RET ( false );
++		}
++	}
++
++	m_iFields = UnpackDword ();
++	m_dFields = new char * [ m_iFields ];
++	if ( !m_dFields )
++	{
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: UnpackSchema() failed (fields alloc error)" );
++		SPH_RET(false);
++	}
++
++	for ( uint32 i=0; i<m_iFields; i++ )
++		m_dFields[i] = UnpackString ();
++
++	SafeDeleteArray ( m_dAttrs );
++	m_iAttrs = UnpackDword ();
++	m_dAttrs = new CSphSEAttr [ m_iAttrs ];
++	if ( !m_dAttrs )
++	{
++		for ( int i=0; i<(int)m_iFields; i++ )
++			SafeDeleteArray ( m_dFields[i] );
++		SafeDeleteArray ( m_dFields );
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: UnpackSchema() failed (attrs alloc error)" );
++		SPH_RET(false);
++	}
++
++	for ( uint32 i=0; i<m_iAttrs; i++ )
++	{
++		m_dAttrs[i].m_sName = UnpackString ();
++		m_dAttrs[i].m_uType = UnpackDword ();
++		if ( m_bUnpackError ) // m_sName may be null
++			break;
++
++		m_dAttrs[i].m_iField = -1;
++		for ( int j=SPHINXSE_SYSTEM_COLUMNS; j<m_pShare->m_iTableFields; j++ )
++		{
++			const char * sTableField = m_pShare->m_sTableField[j];
++			const char * sAttrField = m_dAttrs[i].m_sName;
++			if ( m_dAttrs[i].m_sName[0]=='@' )
++			{
++				const char * sAtPrefix = "_sph_";
++				if ( strncmp ( sTableField, sAtPrefix, strlen(sAtPrefix) ) )
++					continue;
++				sTableField += strlen(sAtPrefix);
++				sAttrField++;
++			}
++
++			if ( !strcasecmp ( sAttrField, sTableField ) )
++			{
++				// we're almost good, but
++				// let's enforce that timestamp columns can only receive timestamp attributes
++				if ( m_pShare->m_eTableFieldType[j]!=MYSQL_TYPE_TIMESTAMP || m_dAttrs[i].m_uType==SPH_ATTR_TIMESTAMP )
++					m_dAttrs[i].m_iField = j;
++				break;
++			}
++		}
++	}
++
++	m_iMatchesTotal = UnpackDword ();
++
++	m_bId64 = UnpackDword ();
++	if ( m_bId64 && m_pShare->m_eTableFieldType[0]!=MYSQL_TYPE_LONGLONG )
++	{
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: 1st column must be bigint to accept 64-bit DOCIDs" );
++		SPH_RET(false);
++	}
++
++	// network packet unpacked; build unbound fields map
++	SafeDeleteArray ( m_dUnboundFields );
++	m_dUnboundFields = new int [ m_pShare->m_iTableFields ];
++
++	for ( int i=0; i<m_pShare->m_iTableFields; i++ )
++	{
++		if ( i<SPHINXSE_SYSTEM_COLUMNS )
++			m_dUnboundFields[i] = SPH_ATTR_NONE;
++
++		else if ( m_pShare->m_eTableFieldType[i]==MYSQL_TYPE_TIMESTAMP )
++			m_dUnboundFields[i] = SPH_ATTR_TIMESTAMP;
++
++		else
++			m_dUnboundFields[i] = SPH_ATTR_INTEGER;
++	}
++
++	for ( uint32 i=0; i<m_iAttrs; i++ )
++		if ( m_dAttrs[i].m_iField>=0 )
++			m_dUnboundFields [ m_dAttrs[i].m_iField ] = SPH_ATTR_NONE;
++
++	if ( m_bUnpackError )
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: UnpackSchema() failed (unpack error)" );
++
++	SPH_RET ( !m_bUnpackError );
++}
++
++
++bool ha_sphinx::UnpackStats ( CSphSEStats * pStats )
++{
++	assert ( pStats );
++
++	char * pCurSave = m_pCur;
++	for ( uint i=0; i<m_iMatchesTotal && m_pCur<m_pResponseEnd-sizeof(uint32); i++ )
++	{
++		m_pCur += m_bId64 ? 12 : 8; // skip id+weight
++		for ( uint32 i=0; i<m_iAttrs && m_pCur<m_pResponseEnd-sizeof(uint32); i++ )
++		{
++			if ( m_dAttrs[i].m_uType & SPH_ATTR_MULTI )
++			{
++				// skip MVA list
++				uint32 uCount = UnpackDword ();
++				m_pCur += uCount*4;
++			} else // skip normal value
++				m_pCur += m_dAttrs[i].m_uType==SPH_ATTR_BIGINT ? 8 : 4;
++		}
++	}
++
++	pStats->m_iMatchesTotal = UnpackDword ();
++	pStats->m_iMatchesFound = UnpackDword ();
++	pStats->m_iQueryMsec = UnpackDword ();
++	pStats->m_iWords = UnpackDword ();
++
++	if ( m_bUnpackError )
++		return false;
++
++	SafeDeleteArray ( pStats->m_dWords );
++	if ( pStats->m_iWords<0 || pStats->m_iWords>=SPHINXSE_MAX_KEYWORDSTATS )
++		return false;
++	pStats->m_dWords = new CSphSEWordStats [ pStats->m_iWords ];
++	if ( !pStats->m_dWords )
++		return false;
++
++	for ( int i=0; i<pStats->m_iWords; i++ )
++	{
++		CSphSEWordStats & tWord = pStats->m_dWords[i];
++		tWord.m_sWord = UnpackString ();
++		tWord.m_iDocs = UnpackDword ();
++		tWord.m_iHits = UnpackDword ();
++	}
++
++	if ( m_bUnpackError )
++		return false;
++
++	m_pCur = pCurSave;
++	return true;
++}
++
++
++/// condition pushdown implementation, to properly intercept WHERE clauses on my columns
++const COND * ha_sphinx::cond_push ( const COND * cond )
++{
++	// catch the simplest case: query_column="some text"
++	for ( ;; )
++	{
++		if ( cond->type()!=COND::FUNC_ITEM )
++			break;
++
++		Item_func * condf = (Item_func *)cond;
++		if ( condf->functype()!=Item_func::EQ_FUNC || condf->argument_count()!=2 )
++			break;
++
++		Item ** args = condf->arguments();
++		if ( args[0]->type()!=COND::FIELD_ITEM || args[1]->type()!=COND::STRING_ITEM )
++			break;
++
++		Item_field * pField = (Item_field *) args[0];
++		if ( pField->field->field_index!=2 ) // FIXME! magic key index
++			break;
++
++		// get my tls
++		CSphSEThreadData * pTls = GetTls ();
++		if ( !pTls )
++			break;
++
++		// copy the query, and let know that we intercepted this condition
++		Item_string * pString = (Item_string *) args[1];
++		pTls->m_bQuery = true;
++		strncpy ( pTls->m_sQuery, pString->str_value.c_ptr(), sizeof(pTls->m_sQuery) );
++		pTls->m_sQuery[sizeof(pTls->m_sQuery)-1] = '\0';
++		pTls->m_pQueryCharset = pString->str_value.charset();
++		return NULL;
++	}
++
++	// don't change anything
++	return cond;
++}
++
++
++/// condition popup
++void ha_sphinx::cond_pop ()
++{
++	CSphSEThreadData * pTls = GetTls ();
++	if ( pTls && pTls->m_bQuery )
++		pTls->m_bQuery = false;
++	return;
++}
++
++
++/// get TLS (maybe allocate it, too)
++CSphSEThreadData * ha_sphinx::GetTls()
++{
++	// where do we store that pointer in today's version?
++	CSphSEThreadData ** ppTls;
++#if MYSQL_VERSION_ID>50100
++	ppTls = (CSphSEThreadData**) thd_ha_data ( table->in_use, ht );
++#else
++	ppTls = (CSphSEThreadData**) &current_thd->ha_data[sphinx_hton.slot];
++#endif // >50100
++
++	// allocate if needed
++	if ( !*ppTls )
++		*ppTls = new CSphSEThreadData ();
++
++	// errors will be handled by caller
++	return *ppTls;
++}
++
++
++// Positions an index cursor to the index specified in the handle. Fetches the
++// row if available. If the key value is null, begin at the first key of the
++// index.
++int ha_sphinx::index_read ( byte * buf, const byte * key, uint key_len, enum ha_rkey_function )
++{
++	SPH_ENTER_METHOD();
++	char sError[256];
++
++	// set new data for thd->ha_data, it is used in show_status
++	CSphSEThreadData * pTls = GetTls();
++	if ( !pTls )
++	{
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: TLS malloc() failed" );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++	pTls->m_tStats.Reset ();
++
++	// parse query
++	if ( pTls->m_bQuery )
++	{
++		// we have a query from condition pushdown
++		m_pCurrentKey = (const byte *) pTls->m_sQuery;
++		m_iCurrentKeyLen = strlen(pTls->m_sQuery);
++	} else
++	{
++		// just use the key (might be truncated)
++		m_pCurrentKey = key+HA_KEY_BLOB_LENGTH;
++		m_iCurrentKeyLen = uint2korr(key); // or maybe key_len?
++		pTls->m_pQueryCharset = m_pShare ? m_pShare->m_pTableQueryCharset : NULL;
++	}
++
++	CSphSEQuery q ( (const char*)m_pCurrentKey, m_iCurrentKeyLen, m_pShare->m_sIndex );
++	if ( !q.Parse () )
++	{
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), q.m_sParseError );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	// do connect
++	int iSocket = ConnectAPI ( q.m_sHost, q.m_iPort );
++	if ( iSocket<0 )
++		SPH_RET ( HA_ERR_END_OF_FILE );
++
++	// my buffer
++	char * pBuffer; // will be free by CSphSEQuery dtor; do NOT free manually
++	int iReqLen = q.BuildRequest ( &pBuffer );
++
++	if ( iReqLen<=0 )
++	{
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: q.BuildRequest() failed" );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	// send request
++	::send ( iSocket, pBuffer, iReqLen, 0 );
++
++	// receive reply
++	char sHeader[8];
++	int iGot = ::recv ( iSocket, sHeader, sizeof(sHeader), RECV_FLAGS );
++	if ( iGot!=sizeof(sHeader) )
++	{
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "failed to receive response header (searchd went away?)" );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	short int uRespStatus = ntohs ( sphUnalignedRead ( *(short int*)( &sHeader[0] ) ) );
++	short int uRespVersion = ntohs ( sphUnalignedRead ( *(short int*)( &sHeader[2] ) ) );
++	uint uRespLength = ntohl ( sphUnalignedRead ( *(uint *)( &sHeader[4] ) ) );
++	SPH_DEBUG ( "got response header (status=%d version=%d length=%d)",
++		uRespStatus, uRespVersion, uRespLength );
++
++	SafeDeleteArray ( m_pResponse );
++	if ( uRespLength<=SPHINXSE_MAX_ALLOC )
++		m_pResponse = new char [ uRespLength+1 ];
++
++	if ( !m_pResponse )
++	{
++		my_snprintf ( sError, sizeof(sError), "bad searchd response length (length=%u)", uRespLength );
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), sError );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	int iRecvLength = 0;
++	while ( iRecvLength<(int)uRespLength )
++	{
++		int iRecv = ::recv ( iSocket, m_pResponse+iRecvLength, uRespLength-iRecvLength, RECV_FLAGS );
++		if ( iRecv<0 )
++			break;
++		iRecvLength += iRecv;
++	}
++
++	::closesocket ( iSocket );
++	iSocket = -1;
++
++	if ( iRecvLength!=(int)uRespLength )
++	{
++		my_snprintf ( sError, sizeof(sError), "net read error (expected=%d, got=%d)", uRespLength, iRecvLength );
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), sError );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	// we'll have a message, at least
++	pTls->m_bStats = true;
++
++	// parse reply
++	m_iCurrentPos = 0;
++	m_pCur = m_pResponse;
++	m_pResponseEnd = m_pResponse + uRespLength;
++	m_bUnpackError = false;
++
++	if ( uRespStatus!=SEARCHD_OK )
++	{
++		char * sMessage = UnpackString ();
++		if ( !sMessage )
++		{
++			my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "no valid response from searchd (status=%d, resplen=%d)",
++				uRespStatus, uRespLength );
++			SPH_RET ( HA_ERR_END_OF_FILE );
++		}
++
++		strncpy ( pTls->m_tStats.m_sLastMessage, sMessage, sizeof(pTls->m_tStats.m_sLastMessage) );
++		SafeDeleteArray ( sMessage );
++
++		if ( uRespStatus!=SEARCHD_WARNING )
++		{
++			my_snprintf ( sError, sizeof(sError), "searchd error: %s", pTls->m_tStats.m_sLastMessage );
++			my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), sError );
++
++			pTls->m_tStats.m_bLastError = true;
++			SPH_RET ( HA_ERR_END_OF_FILE );
++		}
++	}
++
++	if ( !UnpackSchema () )
++		SPH_RET ( HA_ERR_END_OF_FILE );
++
++	if ( !UnpackStats ( &pTls->m_tStats ) )
++	{
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: UnpackStats() failed" );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	SPH_RET ( get_rec ( buf, key, key_len ) );
++}
++
++
++// Positions an index cursor to the index specified in key. Fetches the
++// row if any. This is only used to read whole keys.
++int ha_sphinx::index_read_idx ( byte *, uint, const byte *, uint, enum ha_rkey_function )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_WRONG_COMMAND );
++}
++
++
++// Used to read forward through the index.
++int ha_sphinx::index_next ( byte * buf )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( get_rec ( buf, m_pCurrentKey, m_iCurrentKeyLen ) );
++}
++
++
++int ha_sphinx::index_next_same ( byte * buf, const byte * key, uint keylen )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( get_rec ( buf, key, keylen ) );
++}
++
++
++int ha_sphinx::get_rec ( byte * buf, const byte *, uint )
++{
++	SPH_ENTER_METHOD();
++
++	if ( m_iCurrentPos>=m_iMatchesTotal )
++	{
++		SafeDeleteArray ( m_pResponse );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	#if MYSQL_VERSION_ID>50100
++	my_bitmap_map * org_bitmap = dbug_tmp_use_all_columns ( table, table->write_set );
++	#endif
++	Field ** field = table->field;
++
++	// unpack and return the match
++	longlong uMatchID = UnpackDword ();
++	if ( m_bId64 )
++		uMatchID = ( uMatchID<<32 ) + UnpackDword();
++	uint32 uMatchWeight = UnpackDword ();
++
++	field[0]->store ( uMatchID, 1 );
++	field[1]->store ( uMatchWeight, 1 );
++	field[2]->store ( (const char*)m_pCurrentKey, m_iCurrentKeyLen, &my_charset_bin );
++
++	for ( uint32 i=0; i<m_iAttrs; i++ )
++	{
++		longlong iValue64;
++		uint32 uValue = UnpackDword ();
++		if ( m_dAttrs[i].m_uType==SPH_ATTR_BIGINT )
++			iValue64 = ( (longlong)uValue<<32 ) | UnpackDword();
++		if ( m_dAttrs[i].m_iField<0 )
++		{
++			// skip MVA
++			if ( m_dAttrs[i].m_uType & SPH_ATTR_MULTI )
++				for ( ; uValue>0 && !m_bUnpackError; uValue-- )
++					UnpackDword();
++			continue;
++		}
++
++		Field * af = field [ m_dAttrs[i].m_iField ];
++		switch ( m_dAttrs[i].m_uType )
++		{
++			case SPH_ATTR_INTEGER:
++			case SPH_ATTR_ORDINAL:
++			case SPH_ATTR_BOOL:
++				af->store ( uValue, 1 );
++				break;
++
++			case SPH_ATTR_FLOAT:
++				af->store ( sphDW2F(uValue) );
++				break;
++
++			case SPH_ATTR_TIMESTAMP:
++				if ( af->type()==MYSQL_TYPE_TIMESTAMP )
++					longstore ( af->ptr, uValue ); // because store() does not accept timestamps
++				else
++					af->store ( uValue, 1 );
++				break;
++
++			case SPH_ATTR_BIGINT:
++				af->store ( iValue64, 0 );
++				break;
++
++			case ( SPH_ATTR_MULTI | SPH_ATTR_INTEGER ):
++				if ( uValue<=0 )
++				{
++					// shortcut, empty MVA set
++					af->store ( "", 0, &my_charset_bin );
++
++				} else
++				{
++					// convert MVA set to comma-separated string
++					char sBuf[1024]; // FIXME! magic size
++					char * pCur = sBuf;
++
++					for ( ; uValue>0 && !m_bUnpackError; uValue-- )
++					{
++						uint32 uEntry = UnpackDword ();
++						if ( pCur < sBuf+sizeof(sBuf)-16 ) // 10 chars per 32bit value plus some safety bytes
++						{
++							snprintf ( pCur, sBuf+sizeof(sBuf)-pCur, "%u", uEntry );
++							while ( *pCur ) *pCur++;
++							if ( uValue>1 )
++								*pCur++ = ','; // non-trailing commas
++						}
++					}
++
++					af->store ( sBuf, pCur-sBuf, &my_charset_bin );
++				}
++				break;
++
++			default:
++				my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: unhandled attr type" );
++				SafeDeleteArray ( m_pResponse );
++				SPH_RET ( HA_ERR_END_OF_FILE );
++		}
++	}
++
++	if ( m_bUnpackError )
++	{
++		my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: response unpacker failed" );
++		SafeDeleteArray ( m_pResponse );
++		SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	// zero out unmapped fields
++	for ( int i=SPHINXSE_SYSTEM_COLUMNS; i<(int)table->s->fields; i++ )
++		if ( m_dUnboundFields[i]!=SPH_ATTR_NONE )
++			switch ( m_dUnboundFields[i] )
++	{
++		case SPH_ATTR_INTEGER:		table->field[i]->store ( 0, 1 ); break;
++		case SPH_ATTR_TIMESTAMP:	longstore ( table->field[i]->ptr, 0 ); break;
++		default:
++			my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0),
++				"INTERNAL ERROR: unhandled unbound field type %d", m_dUnboundFields[i] );
++			SafeDeleteArray ( m_pResponse );
++			SPH_RET ( HA_ERR_END_OF_FILE );
++	}
++
++	memset ( buf, 0, table->s->null_bytes );
++	m_iCurrentPos++;
++
++	#if MYSQL_VERSION_ID > 50100
++	dbug_tmp_restore_column_map ( table->write_set, org_bitmap );
++	#endif
++
++	SPH_RET(0);
++}
++
++
++// Used to read backwards through the index.
++int ha_sphinx::index_prev ( byte * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_WRONG_COMMAND );
++}
++
++
++// index_first() asks for the first key in the index.
++//
++// Called from opt_range.cc, opt_sum.cc, sql_handler.cc,
++// and sql_select.cc.
++int ha_sphinx::index_first ( byte * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_END_OF_FILE );
++}
++
++// index_last() asks for the last key in the index.
++//
++// Called from opt_range.cc, opt_sum.cc, sql_handler.cc,
++// and sql_select.cc.
++int ha_sphinx::index_last ( byte * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_WRONG_COMMAND );
++}
++
++
++int ha_sphinx::rnd_init ( bool )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET(0);
++}
++
++
++int ha_sphinx::rnd_end()
++{
++	SPH_ENTER_METHOD();
++	SPH_RET(0);
++}
++
++
++int ha_sphinx::rnd_next ( byte * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_END_OF_FILE );
++}
++
++
++void ha_sphinx::position ( const byte * )
++{
++	SPH_ENTER_METHOD();
++	SPH_VOID_RET();
++}
++
++
++// This is like rnd_next, but you are given a position to use
++// to determine the row. The position will be of the type that you stored in
++// ref. You can use ha_get_ptr(pos,ref_length) to retrieve whatever key
++// or position you saved when position() was called.
++// Called from filesort.cc records.cc sql_insert.cc sql_select.cc sql_update.cc.
++int ha_sphinx::rnd_pos ( byte *, byte * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_WRONG_COMMAND );
++}
++
++
++#if MYSQL_VERSION_ID>=50030
++int ha_sphinx::info ( uint )
++#else
++void ha_sphinx::info ( uint )
++#endif
++{
++	SPH_ENTER_METHOD();
++
++	if ( table->s->keys>0 )
++		table->key_info[0].rec_per_key[0] = 1;
++
++	#if MYSQL_VERSION_ID>50100
++	stats.records = 20;
++	#else
++	records = 20;
++	#endif
++
++#if MYSQL_VERSION_ID>=50030
++	SPH_RET(0);
++#else
++	SPH_VOID_RET();
++#endif
++}
++
++
++int ha_sphinx::reset ()
++{
++	SPH_ENTER_METHOD();
++	CSphSEThreadData * pTls = GetTls ();
++	if ( pTls )
++		pTls->m_bQuery = false;
++	SPH_RET(0);
++}
++
++
++int ha_sphinx::delete_all_rows()
++{
++	SPH_ENTER_METHOD();
++	SPH_RET ( HA_ERR_WRONG_COMMAND );
++}
++
++
++// First you should go read the section "locking functions for mysql" in
++// lock.cc to understand this.
++// This create a lock on the table. If you are implementing a storage engine
++// that can handle transacations look at ha_berkely.cc to see how you will
++// want to go about doing this. Otherwise you should consider calling flock()
++// here.
++//
++// Called from lock.cc by lock_external() and unlock_external(). Also called
++// from sql_table.cc by copy_data_between_tables().
++int ha_sphinx::external_lock ( THD *, int )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET(0);
++}
++
++
++THR_LOCK_DATA ** ha_sphinx::store_lock ( THD *, THR_LOCK_DATA ** to,
++	enum thr_lock_type lock_type )
++{
++	SPH_ENTER_METHOD();
++
++	if ( lock_type!=TL_IGNORE && m_tLock.type==TL_UNLOCK )
++		m_tLock.type = lock_type;
++
++	*to++ = &m_tLock;
++	SPH_RET(to);
++}
++
++
++int ha_sphinx::delete_table ( const char * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET(0);
++}
++
++
++// Renames a table from one name to another from alter table call.
++//
++// If you do not implement this, the default rename_table() is called from
++// handler.cc and it will delete all files with the file extentions returned
++// by bas_ext().
++//
++// Called from sql_table.cc by mysql_rename_table().
++int ha_sphinx::rename_table ( const char *, const char * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET(0);
++}
++
++
++// Given a starting key, and an ending key estimate the number of rows that
++// will exist between the two. end_key may be empty which in case determine
++// if start_key matches any rows.
++//
++// Called from opt_range.cc by check_quick_keys().
++ha_rows ha_sphinx::records_in_range ( uint, key_range *, key_range * )
++{
++	SPH_ENTER_METHOD();
++	SPH_RET(3); // low number to force index usage
++}
++
++
++static inline bool IsIntegerFieldType ( enum_field_types eType )
++{
++	return eType==MYSQL_TYPE_LONG || eType==MYSQL_TYPE_LONGLONG;
++}
++
++
++// create() is called to create a database. The variable name will have the name
++// of the table. When create() is called you do not need to worry about opening
++// the table. Also, the FRM file will have already been created so adjusting
++// create_info will not do you any good. You can overwrite the frm file at this
++// point if you wish to change the table definition, but there are no methods
++// currently provided for doing that.
++//
++// Called from handle.cc by ha_create_table().
++int ha_sphinx::create ( const char * name, TABLE * table, HA_CREATE_INFO * )
++{
++	SPH_ENTER_METHOD();
++	char sError[256];
++
++	CSphSEShare tInfo;
++	if ( !ParseUrl ( &tInfo, table, true ) )
++		SPH_RET(-1);
++
++	// check SphinxAPI table
++	for ( ; !tInfo.m_bSphinxQL; )
++	{
++		// check system fields (count and types)
++		if ( table->s->fields<SPHINXSE_SYSTEM_COLUMNS )
++		{
++			my_snprintf ( sError, sizeof(sError), "%s: there MUST be at least %d columns",
++				name, SPHINXSE_SYSTEM_COLUMNS );
++			break;
++		}
++
++		if ( !IsIntegerFieldType ( table->field[0]->type() ) || !((Field_num *)table->field[0])->unsigned_flag )
++		{
++			my_snprintf ( sError, sizeof(sError), "%s: 1st column (docid) MUST be unsigned integer or bigint", name );
++			break;
++		}
++
++		if ( !IsIntegerFieldType ( table->field[1]->type() ) )
++		{
++			my_snprintf ( sError, sizeof(sError), "%s: 2nd column (weight) MUST be integer or bigint", name );
++			break;
++		}
++
++		enum_field_types f2 = table->field[2]->type();
++		if ( f2!=MYSQL_TYPE_VARCHAR
++			&& f2!=MYSQL_TYPE_BLOB && f2!=MYSQL_TYPE_MEDIUM_BLOB && f2!=MYSQL_TYPE_LONG_BLOB && f2!=MYSQL_TYPE_TINY_BLOB )
++		{
++			my_snprintf ( sError, sizeof(sError), "%s: 3rd column (search query) MUST be varchar or text", name );
++			break;
++		}
++
++		// check attributes
++		int i;
++		for ( i=3; i<(int)table->s->fields; i++ )
++		{
++			enum_field_types eType = table->field[i]->type();
++			if ( eType!=MYSQL_TYPE_TIMESTAMP && !IsIntegerFieldType(eType) && eType!=MYSQL_TYPE_VARCHAR && eType!=MYSQL_TYPE_FLOAT )
++			{
++				my_snprintf ( sError, sizeof(sError), "%s: %dth column (attribute %s) MUST be integer, bigint, timestamp, varchar, or float",
++					name, i+1, table->field[i]->field_name );
++				break;
++			}
++		}
++
++		if ( i!=(int)table->s->fields )
++			break;
++
++		// check index
++		if (
++			table->s->keys!=1 ||
++			table->key_info[0].key_parts!=1 ||
++			strcasecmp ( table->key_info[0].key_part[0].field->field_name, table->field[2]->field_name ) )
++		{
++			my_snprintf ( sError, sizeof(sError), "%s: there must be an index on '%s' column",
++				name, table->field[2]->field_name );
++			break;
++		}
++
++		// all good
++		sError[0] = '\0';
++		break;
++	}
++
++	// check SphinxQL table
++	for ( ; tInfo.m_bSphinxQL; )
++	{
++		sError[0] = '\0';
++		bool bId = false;
++
++		// check column types, and also for presence of an id column
++		for ( int i=0; i<(int)table->s->fields; i++ )
++		{
++			enum_field_types eType = table->field[i]->type();
++			if ( eType!=MYSQL_TYPE_TIMESTAMP && !IsIntegerFieldType(eType) && eType!=MYSQL_TYPE_VARCHAR && eType!=MYSQL_TYPE_FLOAT )
++			{
++				my_snprintf ( sError, sizeof(sError), "%s: column %s is of unsupported type (use int/bigint/timestamp/varchar/float)",
++					name, i+1, table->field[i]->field_name );
++				break;
++			}
++			if ( strcmp ( table->field[i]->field_name, "id" )==0 )
++				bId = true;
++		}
++		if ( sError[0] )
++			break;
++
++		if ( !bId )
++		{
++			my_snprintf ( sError, sizeof(sError), "%s: id column not found", name );
++			break;
++		}
++
++		// all good
++		break;
++	}
++
++	// report and bail
++	if ( sError[0] )
++	{
++		my_error ( ER_CANT_CREATE_TABLE, MYF(0), sError, -1 );
++		SPH_RET(-1);
++	}
++
++	SPH_RET(0);
++}
++
++// show functions
++
++#if MYSQL_VERSION_ID<50100
++#define SHOW_VAR_FUNC_BUFF_SIZE 1024
++#endif
++
++CSphSEStats * sphinx_get_stats ( THD * thd, SHOW_VAR * out )
++{
++#if MYSQL_VERSION_ID>50100
++	if ( sphinx_hton_ptr )
++	{
++		CSphSEThreadData *pTls = (CSphSEThreadData *) *thd_ha_data ( thd, sphinx_hton_ptr );
++
++		if ( pTls && pTls->m_bStats )
++			return &pTls->m_tStats;
++	}
++#else
++	CSphSEThreadData *pTls = (CSphSEThreadData *) thd->ha_data[sphinx_hton.slot];
++	if ( pTls && pTls->m_bStats )
++		return &pTls->m_tStats;
++#endif
++
++	out->type = SHOW_CHAR;
++	out->value = "";
++	return 0;
++}
++
++int sphinx_showfunc_total ( THD * thd, SHOW_VAR * out, char * )
++{
++	CSphSEStats * pStats = sphinx_get_stats ( thd, out );
++	if ( pStats )
++	{
++		out->type = SHOW_INT;
++		out->value = (char *) &pStats->m_iMatchesTotal;
++	}
++	return 0;
++}
++
++int sphinx_showfunc_total_found ( THD * thd, SHOW_VAR * out, char * )
++{
++	CSphSEStats * pStats = sphinx_get_stats ( thd, out );
++	if ( pStats )
++	{
++		out->type = SHOW_INT;
++		out->value = (char *) &pStats->m_iMatchesFound;
++	}
++	return 0;
++}
++
++int sphinx_showfunc_time ( THD * thd, SHOW_VAR * out, char * )
++{
++	CSphSEStats * pStats = sphinx_get_stats ( thd, out );
++	if ( pStats )
++	{
++		out->type = SHOW_INT;
++		out->value = (char *) &pStats->m_iQueryMsec;
++	}
++	return 0;
++}
++
++int sphinx_showfunc_word_count ( THD * thd, SHOW_VAR * out, char * )
++{
++	CSphSEStats * pStats = sphinx_get_stats ( thd, out );
++	if ( pStats )
++	{
++		out->type = SHOW_INT;
++		out->value = (char *) &pStats->m_iWords;
++	}
++	return 0;
++}
++
++int sphinx_showfunc_words ( THD * thd, SHOW_VAR * out, char * sBuffer )
++{
++#if MYSQL_VERSION_ID>50100
++	if ( sphinx_hton_ptr )
++	{
++		CSphSEThreadData * pTls = (CSphSEThreadData *) *thd_ha_data ( thd, sphinx_hton_ptr );
++#else
++	{
++		CSphSEThreadData * pTls = (CSphSEThreadData *) thd->ha_data[sphinx_hton.slot];
++#endif
++		if ( pTls && pTls->m_bStats )
++		{
++			CSphSEStats * pStats = &pTls->m_tStats;
++			if ( pStats && pStats->m_iWords )
++			{
++				uint uBuffLen = 0;
++
++				out->type = SHOW_CHAR;
++				out->value = sBuffer;
++
++				// the following is partially based on code in sphinx_show_status()
++				sBuffer[0] = 0;
++				for ( int i=0; i<pStats->m_iWords; i++ )
++				{
++					CSphSEWordStats & tWord = pStats->m_dWords[i];
++					uBuffLen = my_snprintf ( sBuffer, SHOW_VAR_FUNC_BUFF_SIZE, "%s%s:%d:%d ", sBuffer,
++						tWord.m_sWord, tWord.m_iDocs, tWord.m_iHits );
++				}
++
++				if ( uBuffLen > 0 )
++				{
++					// trim last space
++					sBuffer [ --uBuffLen ] = 0;
++
++					if ( pTls->m_pQueryCharset )
++					{
++						// String::c_ptr() will nul-terminate the buffer.
++						//
++						// NOTE: It's not entirely clear whether this conversion is necessary at all.
++
++						String sConvert;
++						uint iErrors;
++						sConvert.copy ( sBuffer, uBuffLen, pTls->m_pQueryCharset, system_charset_info, &iErrors );
++						memcpy ( sBuffer, sConvert.c_ptr(), sConvert.length() + 1 );
++					}
++				}
++
++				return 0;
++			}
++		}
++	}
++
++	out->type = SHOW_CHAR;
++	out->value = "";
++	return 0;
++}
++
++int sphinx_showfunc_error ( THD * thd, SHOW_VAR * out, char * )
++{
++	CSphSEStats * pStats = sphinx_get_stats ( thd, out );
++	if ( pStats && pStats->m_bLastError )
++	{
++		out->type = SHOW_CHAR;
++		out->value = pStats->m_sLastMessage;
++	}
++	return 0;
++}
++
++#if MYSQL_VERSION_ID>50100
++struct st_mysql_storage_engine sphinx_storage_engine =
++{
++	MYSQL_HANDLERTON_INTERFACE_VERSION
++};
++
++struct st_mysql_show_var sphinx_status_vars[] =
++{
++	{"sphinx_total",		(char *)sphinx_showfunc_total,			SHOW_FUNC},
++	{"sphinx_total_found",	(char *)sphinx_showfunc_total_found,	SHOW_FUNC},
++	{"sphinx_time",			(char *)sphinx_showfunc_time,			SHOW_FUNC},
++	{"sphinx_word_count",	(char *)sphinx_showfunc_word_count,		SHOW_FUNC},
++	{"sphinx_words",		(char *)sphinx_showfunc_words,			SHOW_FUNC},
++	{"sphinx_error",		(char *)sphinx_showfunc_error,			SHOW_FUNC},
++	{0, 0, (enum_mysql_show_type)0}
++};
++
++
++mysql_declare_plugin(sphinx)
++{
++	MYSQL_STORAGE_ENGINE_PLUGIN,
++	&sphinx_storage_engine,
++	sphinx_hton_name,
++	"Sphinx developers",
++	sphinx_hton_comment,
++	PLUGIN_LICENSE_GPL,
++	sphinx_init_func, // Plugin Init
++	sphinx_done_func, // Plugin Deinit
++	0x0001, // 0.1
++	sphinx_status_vars,
++	NULL,
++	NULL
++}
++mysql_declare_plugin_end;
++
++#endif // >50100
++
++//
++// $Id: ha_sphinx.cc 2391 2010-07-08 11:05:08Z tomat $
++//
+diff -uNr orig/sql/sphinx/ha_sphinx.h new/sql/sphinx/ha_sphinx.h
+--- orig/sql/sphinx/ha_sphinx.h	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/ha_sphinx.h	2010-06-30 07:48:24.000000000 +0900
+@@ -0,0 +1,166 @@
++//
++// $Id: ha_sphinx.h 2379 2010-06-29 22:48:24Z shodan $
++//
++
++#ifdef USE_PRAGMA_INTERFACE
++#pragma interface // gcc class implementation
++#endif
++
++
++#if MYSQL_VERSION_ID>50100
++#define TABLE_ARG	st_table_share
++#else
++#define TABLE_ARG	st_table
++#endif
++
++
++#if MYSQL_VERSION_ID>=50120
++typedef uchar byte;
++#endif
++
++
++/// forward decls
++class THD;
++struct CSphReqQuery;
++struct CSphSEShare;
++struct CSphSEAttr;
++struct CSphSEStats;
++struct CSphSEThreadData;
++
++/// Sphinx SE handler class
++class ha_sphinx : public handler
++{
++protected:
++	THR_LOCK_DATA	m_tLock;				///< MySQL lock
++
++	CSphSEShare *	m_pShare;				///< shared lock info
++
++	uint			m_iMatchesTotal;
++	uint			m_iCurrentPos;
++	const byte *	m_pCurrentKey;
++	uint			m_iCurrentKeyLen;
++
++	char *			m_pResponse;			///< searchd response storage
++	char *			m_pResponseEnd;			///< searchd response storage end (points to wilderness!)
++	char *			m_pCur;					///< current position into response
++	bool			m_bUnpackError;			///< any errors while unpacking response
++
++public:
++#if MYSQL_VERSION_ID<50100
++					ha_sphinx ( TABLE_ARG * table_arg );
++#else
++					ha_sphinx ( handlerton * hton, TABLE_ARG * table_arg );
++#endif
++					~ha_sphinx () {}
++
++	const char *	table_type () const		{ return "SPHINX"; }	///< SE name for display purposes
++	const char *	index_type ( uint )		{ return "HASH"; }		///< index type name for display purposes
++	const char **	bas_ext () const;								///< my file extensions
++
++	#if MYSQL_VERSION_ID>50100
++	ulonglong		table_flags () const	{ return HA_CAN_INDEX_BLOBS; }			///< bitmap of implemented flags (see handler.h for more info)
++	#else
++	ulong			table_flags () const	{ return HA_CAN_INDEX_BLOBS; }			///< bitmap of implemented flags (see handler.h for more info)
++	#endif
++
++	ulong			index_flags ( uint, uint, bool ) const	{ return 0; }	///< bitmap of flags that says how SE implements indexes
++	uint			max_supported_record_length () const	{ return HA_MAX_REC_LENGTH; }
++	uint			max_supported_keys () const				{ return 1; }
++	uint			max_supported_key_parts () const		{ return 1; }
++	uint			max_supported_key_length () const		{ return MAX_KEY_LENGTH; }
++	uint			max_supported_key_part_length () const	{ return MAX_KEY_LENGTH; }
++
++	#if MYSQL_VERSION_ID>50100
++	virtual double	scan_time ()	{ return (double)( stats.records+stats.deleted )/20.0 + 10; }	///< called in test_quick_select to determine if indexes should be used
++	#else
++	virtual double	scan_time ()	{ return (double)( records+deleted )/20.0 + 10; }				///< called in test_quick_select to determine if indexes should be used
++	#endif
++
++	virtual double	read_time ( ha_rows rows )	{ return (double)rows/20.0 + 1; }					///< index read time estimate
++
++public:
++	int				open ( const char * name, int mode, uint test_if_locked );
++	int				close ();
++
++	int				write_row ( byte * buf );
++	int				update_row ( const byte * old_data, byte * new_data );
++	int				delete_row ( const byte * buf );
++
++	int				index_init ( uint keynr, bool sorted ); // 5.1.x
++	int				index_init ( uint keynr ) { return index_init ( keynr, false ); } // 5.0.x
++
++	int				index_end (); 
++	int				index_read ( byte * buf, const byte * key, uint key_len, enum ha_rkey_function find_flag );
++	int				index_read_idx ( byte * buf, uint idx, const byte * key, uint key_len, enum ha_rkey_function find_flag );
++	int				index_next ( byte * buf );
++	int				index_next_same ( byte * buf, const byte * key, uint keylen );
++	int				index_prev ( byte * buf );
++	int				index_first ( byte * buf );
++	int				index_last ( byte * buf );
++
++	int				get_rec ( byte * buf, const byte * key, uint keylen );
++
++	int				rnd_init ( bool scan );
++	int				rnd_end ();
++	int				rnd_next ( byte * buf );
++	int				rnd_pos ( byte * buf, byte * pos );
++	void			position ( const byte * record );
++
++#if MYSQL_VERSION_ID>=50030
++	int				info ( uint );
++#else
++	void			info ( uint );
++#endif
++
++	int				reset();
++	int				external_lock ( THD * thd, int lock_type );
++	int				delete_all_rows ();
++	ha_rows			records_in_range ( uint inx, key_range * min_key, key_range * max_key );
++
++	int				delete_table ( const char * from );
++	int				rename_table ( const char * from, const char * to );
++	int				create ( const char * name, TABLE * form, HA_CREATE_INFO * create_info );
++
++	THR_LOCK_DATA **		store_lock ( THD * thd, THR_LOCK_DATA ** to, enum thr_lock_type lock_type );
++
++public:
++	virtual const COND *	cond_push ( const COND *cond );
++	virtual void			cond_pop ();
++
++private:
++	uint32			m_iFields;
++	char **			m_dFields;
++
++	uint32			m_iAttrs;
++	CSphSEAttr *	m_dAttrs;
++	int				m_bId64;
++
++	int *			m_dUnboundFields;
++
++private:
++	int				Connect ( const char * sQueryHost, ushort uPort );
++	int				ConnectAPI ( const char * sQueryHost, int iQueryPort );
++	int				HandleMysqlError ( struct st_mysql * pConn, int iErrCode );
++
++	uint32			UnpackDword ();
++	char *			UnpackString ();
++	bool			UnpackSchema ();
++	bool			UnpackStats ( CSphSEStats * pStats );
++
++	CSphSEThreadData *	GetTls ();
++};
++
++
++#if MYSQL_VERSION_ID < 50100
++bool sphinx_show_status ( THD * thd );
++#endif
++
++int sphinx_showfunc_total_found ( THD *, SHOW_VAR *, char * );
++int sphinx_showfunc_total ( THD *, SHOW_VAR *, char * );
++int sphinx_showfunc_time ( THD *, SHOW_VAR *, char * );
++int sphinx_showfunc_word_count ( THD *, SHOW_VAR *, char * );
++int sphinx_showfunc_words ( THD *, SHOW_VAR *, char * );
++
++//
++// $Id: ha_sphinx.h 2379 2010-06-29 22:48:24Z shodan $
++//
+diff -uNr orig/sql/sphinx/INSTALL new/sql/sphinx/INSTALL
+--- orig/sql/sphinx/INSTALL	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/INSTALL	2010-07-08 01:12:02.000000000 +0900
+@@ -0,0 +1,48 @@
++Building MySQL with SphinxSE
++=============================
++
++Note: BUILD/autorun.sh step on Linux might malfunction with some
++versions of automake; autorun.sh will not fail but the build will.
++automake 1.9.6 is known to work.
++
++
++
++MySQL 5.0.x on Linux
++---------------------
++
++tar zxvf mysql-5.0.91.tar.gz
++cp -R mysqlse mysql-5.0.91/sql/sphinx
++cd mysql-5.0.91
++
++patch -p1 -i sql/sphinx/sphinx.5.0.91.diff
++sh BUILD/autorun.sh
++./configure --with-sphinx-storage-engine
++make
++
++
++
++MySQL 5.1.x on Linux
++---------------------
++
++tar zxvf mysql-5.1.47.tar.gz
++cp -R -p mysqlse mysql-5.1.47/storage/sphinx
++cd mysql-5.1.47
++
++sh BUILD/autorun.sh
++./configure --with-plugins=sphinx
++make
++
++
++
++MySQL 5.0.x on Windows
++-----------------------
++
++tar zxvf mysql-5.0.91.tar.gz
++cp -R mysqlse mysql-5.0.91/sql/sphinx
++cd mysql-5.0.91
++
++patch -p1 -i sql/sphinx/sphinx.5.0.91.diff
++win/configure.js WITH_SPHINX_STORAGE_ENGINE
++win/build-vs8
++
++--eof--
+diff -uNr orig/sql/sphinx/Makefile.am new/sql/sphinx/Makefile.am
+--- orig/sql/sphinx/Makefile.am	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/Makefile.am	2009-02-14 06:26:46.000000000 +0900
+@@ -0,0 +1,59 @@
++# Copyright (C) 2000 MySQL AB & MySQL Finland AB & TCX DataKonsult AB
++# 
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++# 
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++# 
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
++
++#called from the top level Makefile
++
++MYSQLDATAdir =          $(localstatedir)
++MYSQLSHAREdir =         $(pkgdatadir)
++MYSQLBASEdir=           $(prefix)
++MYSQLLIBdir=            $(pkglibdir)
++pkgplugindir =          $(pkglibdir)/plugin
++INCLUDES =              -I$(top_srcdir)/include -I$(top_builddir)/include \
++			-I$(top_srcdir)/regex \
++			-I$(top_srcdir)/sql \
++                        -I$(srcdir)
++SUBDIRS =				../../include ../../mysys ../../strings ../../dbug ../../extra
++WRAPLIBS=
++
++LDADD =
++
++DEFS= @DEFS@ \
++      -D_REENTRANT -D_PTHREADS -DENGINE -DSTORAGE_ENGINE -DMYSQL_SERVER
++
++noinst_HEADERS =	ha_sphinx.h
++
++EXTRA_LTLIBRARIES =	ha_sphinx.la
++pkgplugin_LTLIBRARIES = @plugin_sphinx_shared_target@ sphinx.la
++
++ha_sphinx_la_LDFLAGS =	-module -rpath $(MYSQLLIBdir)
++ha_sphinx_la_CXXFLAGS=	$(AM_CFLAGS) -DMYSQL_DYNAMIC_PLUGIN
++ha_sphinx_la_CFLAGS =	$(AM_CFLAGS) -DMYSQL_DYNAMIC_PLUGIN
++ha_sphinx_la_SOURCES =	ha_sphinx.cc
++
++sphinx_la_LDFLAGS = -module
++sphinx_la_CXXFLAGS = $(AM_CFLAGS) -DMYSQL_DYNAMIC_PLUGIN
++sphinx_la_CFLAGS = $(AM_CFLAGS) -DMYSQL_DYNAMIC_PLUGIN
++sphinx_la_SOURCES = snippets_udf.cc
++
++EXTRA_LIBRARIES =	libsphinx.a
++noinst_LIBRARIES =	@plugin_sphinx_static_target@
++libsphinx_a_CXXFLAGS =	$(AM_CFLAGS)
++libsphinx_a_CFLAGS =	$(AM_CFLAGS)
++libsphinx_a_SOURCES=	ha_sphinx.cc
++
++EXTRA_DIST =		cmakelists.txt
++# Don't update the files from bitkeeper
++%::SCCS/s.%
+diff -uNr orig/sql/sphinx/make-patch.sh new/sql/sphinx/make-patch.sh
+--- orig/sql/sphinx/make-patch.sh	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/make-patch.sh	2008-09-06 03:06:30.000000000 +0900
+@@ -0,0 +1,36 @@
++#!/bin/sh
++
++OUT=$1
++ORIG=$2
++NEW=$3
++
++if [ ! \( "$1" -a "$2" -a "$3" \) ]; then
++	echo "$0 <patch> <original> <new>"
++	exit 1
++fi
++
++FILES='
++/config/ac-macros/ha_sphinx.m4
++/configure.in
++/libmysqld/Makefile.am
++/sql/handler.cc
++/sql/handler.h
++/sql/Makefile.am
++/sql/mysqld.cc
++/sql/mysql_priv.h
++/sql/set_var.cc
++/sql/sql_lex.h
++/sql/sql_parse.cc
++/sql/sql_yacc.yy
++/sql/structs.h
++/sql/sql_show.cc
++'
++
++rm -f $OUT
++if [ -e $OUT ]; then
++	exit 1
++fi
++
++for name in $FILES; do
++	diff -BNru "$ORIG$name" "$NEW$name" >> $OUT
++done
+diff -uNr orig/sql/sphinx/plug.in new/sql/sphinx/plug.in
+--- orig/sql/sphinx/plug.in	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/plug.in	2006-06-07 16:28:43.000000000 +0900
+@@ -0,0 +1,5 @@
++MYSQL_STORAGE_ENGINE(sphinx,,  [Sphinx Storage Engine],
++        [Sphinx Storage Engines], [max,max-no-ndb])
++MYSQL_PLUGIN_DIRECTORY(sphinx, [storage/sphinx])
++MYSQL_PLUGIN_STATIC(sphinx,    [libsphinx.a])
++MYSQL_PLUGIN_DYNAMIC(sphinx,   [ha_sphinx.la])
+diff -uNr orig/sql/sphinx/snippets_udf.cc new/sql/sphinx/snippets_udf.cc
+--- orig/sql/sphinx/snippets_udf.cc	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/snippets_udf.cc	2010-01-05 04:17:57.000000000 +0900
+@@ -0,0 +1,768 @@
++//
++// $Id: snippets_udf.cc 2153 2010-01-04 19:17:57Z shodan $
++//
++
++//
++// Copyright (c) 2001-2010, Andrew Aksyonoff
++// Copyright (c) 2008-2010, Sphinx Technologies Inc
++// All rights reserved
++//
++// This program is free software; you can redistribute it and/or modify
++// it under the terms of the GNU General Public License. You should have
++// received a copy of the GPL license along with this program; if you
++// did not, you can find it at http://www.gnu.org/
++//
++
++#include <stdio.h>
++#include <string.h>
++#include <assert.h>
++
++#include <sys/un.h>
++#include <netdb.h>
++
++#include <mysql_version.h>
++
++#if MYSQL_VERSION_ID>50100
++#include "mysql_priv.h"
++#include <mysql/plugin.h>
++#else
++#include "../mysql_priv.h"
++#endif
++
++#include <mysys_err.h>
++#include <my_sys.h>
++
++#if MYSQL_VERSION_ID>=50120
++typedef uchar byte;
++#endif
++
++/// partially copy-pasted stuff that should be moved elsewhere
++
++#if UNALIGNED_RAM_ACCESS
++
++/// pass-through wrapper
++template < typename T > inline T sphUnalignedRead ( const T & tRef )
++{
++	return tRef;
++}
++
++/// pass-through wrapper
++template < typename T > void sphUnalignedWrite ( void * pPtr, const T & tVal )
++{
++	*(T*)pPtr = tVal;
++}
++
++#else
++
++/// unaligned read wrapper for some architectures (eg. SPARC)
++template < typename T >
++inline T sphUnalignedRead ( const T & tRef )
++{
++	T uTmp;
++	byte * pSrc = (byte *) &tRef;
++	byte * pDst = (byte *) &uTmp;
++	for ( int i=0; i<(int)sizeof(T); i++ )
++		*pDst++ = *pSrc++;
++	return uTmp;
++}
++
++/// unaligned write wrapper for some architectures (eg. SPARC)
++template < typename T >
++void sphUnalignedWrite ( void * pPtr, const T & tVal )
++{
++	byte * pDst = (byte *) pPtr;
++	byte * pSrc = (byte *) &tVal;
++	for ( int i=0; i<(int)sizeof(T); i++ )
++		*pDst++ = *pSrc++;
++}
++
++#endif
++
++#define SPHINXSE_MAX_ALLOC			(16*1024*1024)
++
++#define SafeDelete(_arg)		{ if ( _arg ) delete ( _arg );		(_arg) = NULL; }
++#define SafeDeleteArray(_arg)	{ if ( _arg ) delete [] ( _arg );	(_arg) = NULL; }
++
++#define Min(a,b) ((a)<(b)?(a):(b))
++
++typedef unsigned int DWORD;
++
++inline DWORD sphF2DW ( float f ) { union { float f; uint32 d; } u; u.f = f; return u.d; }
++
++static char * sphDup ( const char * sSrc, int iLen=-1 )
++{
++	if ( !sSrc )
++		return NULL;
++
++	if ( iLen<0 )
++		iLen = strlen(sSrc);
++
++	char * sRes = new char [ 1+iLen ];
++	memcpy ( sRes, sSrc, iLen );
++	sRes[iLen] = '\0';
++	return sRes;
++}
++
++static inline void sphShowErrno ( const char * sCall )
++{
++	char sError[256];
++	snprintf ( sError, sizeof(sError), "%s() failed: [%d] %s", sCall, errno, strerror(errno) );
++	my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), sError );
++}
++
++static const bool sphReportErrors = true;
++
++static bool sphSend ( int iFd, const char * pBuffer, int iSize, bool bReportErrors = false )
++{
++	assert ( pBuffer );
++	assert ( iSize > 0 );
++
++	const int iResult = send ( iFd, pBuffer, iSize, 0 );
++	if ( iResult != iSize )
++	{
++		if ( bReportErrors ) sphShowErrno("send");
++		return false;
++	}
++	return true;
++}
++
++static bool sphRecv ( int iFd, char * pBuffer, int iSize, bool bReportErrors = false )
++{
++	assert ( pBuffer );
++	assert ( iSize > 0 );
++	
++	while ( iSize )
++	{
++		const int iResult = recv ( iFd, pBuffer, iSize, 0 );
++		if ( iResult > 0 )
++		{
++			iSize -= iResult;
++			pBuffer += iSize;
++		}
++		else if ( iResult == 0 )
++		{
++			if ( bReportErrors )
++				my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), "recv() failed: disconnected" );
++			return false;
++		}
++		else
++		{
++			if ( bReportErrors ) sphShowErrno("recv");
++			return false;
++		}
++	}
++	return true;
++}
++
++enum
++{
++	SPHINX_SEARCHD_PROTO		= 1,
++
++	SEARCHD_COMMAND_SEARCH		= 0,
++	SEARCHD_COMMAND_EXCERPT		= 1,
++
++	VER_COMMAND_SEARCH		= 0x116,
++	VER_COMMAND_EXCERPT		= 0x100,
++};
++
++/// known answers
++enum
++{
++	SEARCHD_OK		= 0,	///< general success, command-specific reply follows
++	SEARCHD_ERROR	= 1,	///< general failure, error message follows
++	SEARCHD_RETRY	= 2,	///< temporary failure, error message follows, client should retry later
++	SEARCHD_WARNING	= 3		///< general success, warning message and command-specific reply follow
++};
++
++#define SPHINXSE_DEFAULT_SCHEME		"sphinx"
++#define SPHINXSE_DEFAULT_HOST		"127.0.0.1"
++#define SPHINXSE_DEFAULT_PORT		9312
++#define SPHINXSE_DEFAULT_INDEX		"*"
++
++class CSphBuffer
++{
++private:
++	bool m_bOverrun;
++	int m_iSize;
++	int m_iLeft;
++	char * m_pBuffer;
++	char * m_pCurrent;
++
++public:
++	CSphBuffer ( const int iSize )
++		: m_bOverrun ( false )
++		, m_iSize ( iSize )
++		, m_iLeft ( iSize )
++	{
++		assert ( iSize > 0 );
++		m_pBuffer = new char[iSize];
++		m_pCurrent = m_pBuffer;
++	}
++
++	~CSphBuffer ()
++	{
++		SafeDelete ( m_pBuffer );
++	}
++
++	const char * Ptr() const { return m_pBuffer; }
++
++	bool Finalize()
++	{
++		return !( m_bOverrun || m_iLeft != 0 || m_pCurrent - m_pBuffer != m_iSize );
++	}
++	
++	void SendBytes ( const void * pBytes, int iBytes );
++	
++	void SendWord ( short int v )					{ v = ntohs(v); SendBytes ( &v, sizeof(v) ); }
++	void SendInt ( int v )							{ v = ntohl(v); SendBytes ( &v, sizeof(v) ); }
++	void SendDword ( DWORD v )						{ v = ntohl(v) ;SendBytes ( &v, sizeof(v) ); }
++	void SendUint64 ( ulonglong v )					{ SendDword ( uint(v>>32) ); SendDword ( uint(v&0xFFFFFFFFUL) ); }
++	void SendString ( const char * v )				{ SendString ( v, strlen(v) ); }
++	void SendString ( const char * v, int iLen )	{ SendDword(iLen); SendBytes ( v, iLen ); }
++	void SendFloat ( float v )						{ SendDword ( sphF2DW(v) ); }
++};
++
++void CSphBuffer::SendBytes ( const void * pBytes, int iBytes )
++{
++	if ( m_iLeft < iBytes )
++	{
++		m_bOverrun = true;
++		return;
++	}
++
++	memcpy ( m_pCurrent, pBytes, iBytes );
++
++	m_pCurrent += iBytes;
++	m_iLeft -= iBytes;
++}
++
++struct CSphUrl
++{
++	char * m_sBuffer;
++	char * m_sFormatted;
++	
++	char * m_sScheme;
++	char * m_sHost;
++	char * m_sIndex;
++	
++	int m_iPort;
++	
++	CSphUrl()
++		: m_sBuffer ( NULL )
++		, m_sFormatted ( NULL )
++		, m_sScheme ( SPHINXSE_DEFAULT_SCHEME )
++		, m_sHost ( SPHINXSE_DEFAULT_HOST )
++		, m_sIndex ( SPHINXSE_DEFAULT_INDEX )
++		, m_iPort ( SPHINXSE_DEFAULT_PORT )
++	{}
++	
++	~CSphUrl()
++	{
++		SafeDeleteArray ( m_sFormatted );
++		SafeDeleteArray ( m_sBuffer );
++	}
++	
++	bool Parse ( const char * sUrl, int iLen );
++	int Connect();
++	const char * Format();
++};
++
++const char * CSphUrl::Format()
++{
++	if ( !m_sFormatted )
++	{
++		int iSize = 15 + strlen(m_sHost) + strlen(m_sIndex);
++		m_sFormatted = new char [ iSize ];
++		if ( m_iPort )
++			snprintf ( m_sFormatted, iSize, "inet://%s:%d/%s", m_sHost, m_iPort, m_sIndex );
++		else
++			snprintf ( m_sFormatted, iSize, "unix://%s/%s", m_sHost, m_sIndex );
++	}
++	return m_sFormatted;
++}
++
++// the following scheme variants are recognized
++//
++// inet://host/index
++// inet://host:port/index
++// unix://unix/domain/socket:index
++// unix://unix/domain/socket
++bool CSphUrl::Parse ( const char * sUrl, int iLen )
++{
++	bool bOk = true;
++	while ( iLen )
++	{
++		bOk = false;
++		
++		m_sBuffer = sphDup ( sUrl, iLen );
++		m_sScheme = m_sBuffer;
++		
++		m_sHost = strstr ( m_sBuffer, "://" );
++		if ( !m_sHost )
++			break;
++		m_sHost[0] = '\0';
++		m_sHost += 2;
++		
++		if ( !strcmp ( m_sScheme, "unix" ) )
++		{
++			// unix-domain socket
++			m_iPort = 0;
++			if (!( m_sIndex = strrchr ( m_sHost, ':' ) ))
++				m_sIndex = SPHINXSE_DEFAULT_INDEX;
++			else
++			{
++				*m_sIndex++ = '\0';
++				if ( !*m_sIndex )
++					m_sIndex = SPHINXSE_DEFAULT_INDEX;
++			}
++			bOk = true;
++			break;
++		}
++		if( strcmp ( m_sScheme, "sphinx" ) != 0 && strcmp ( m_sScheme, "inet" ) != 0 )
++			break;
++
++		// inet
++		m_sHost++;
++		char * sPort = strchr ( m_sHost, ':' );
++		if ( sPort )
++		{
++			*sPort++ = '\0';
++			if ( *sPort )
++			{
++				m_sIndex = strchr ( sPort, '/' );
++				if ( m_sIndex )
++					*m_sIndex++ = '\0'; 
++				else
++					m_sIndex = SPHINXSE_DEFAULT_INDEX;
++				
++				m_iPort = atoi(sPort);
++				if ( !m_iPort )
++					m_iPort = SPHINXSE_DEFAULT_PORT;
++			}
++		} else
++		{
++			m_sIndex = strchr ( m_sHost, '/' );
++			if ( m_sIndex )
++				*m_sIndex++ = '\0';
++			else
++				m_sIndex = SPHINXSE_DEFAULT_INDEX;
++		}
++
++		bOk = true;
++		break;
++	}
++	
++	return bOk;
++}
++
++int CSphUrl::Connect()
++{
++	struct sockaddr_in sin;
++#ifndef __WIN__
++	struct sockaddr_un saun;
++#endif
++
++	int iDomain = 0;
++	int iSockaddrSize = 0;
++	struct sockaddr * pSockaddr = NULL;
++
++	in_addr_t ip_addr;
++
++	if ( m_iPort )
++	{
++		iDomain = AF_INET;
++		iSockaddrSize = sizeof(sin);
++		pSockaddr = (struct sockaddr *) &sin;
++
++		memset ( &sin, 0, sizeof(sin) );
++		sin.sin_family = AF_INET;
++		sin.sin_port = htons(m_iPort);
++		
++		// resolve address
++		if ( (int)( ip_addr=inet_addr(m_sHost) ) != (int)INADDR_NONE )
++			memcpy ( &sin.sin_addr, &ip_addr, sizeof(ip_addr) );
++		else
++		{
++			int tmp_errno;
++			struct hostent tmp_hostent, *hp;
++			char buff2 [ GETHOSTBYNAME_BUFF_SIZE ];
++			
++			hp = my_gethostbyname_r ( m_sHost, &tmp_hostent,
++									  buff2, sizeof(buff2), &tmp_errno );
++			if ( !hp )
++			{ 
++				my_gethostbyname_r_free();
++				
++				char sError[256];
++				snprintf ( sError, sizeof(sError), "failed to resolve searchd host (name=%s)", m_sHost );
++				
++				my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), sError );
++				return -1;
++			}
++			
++			memcpy ( &sin.sin_addr, hp->h_addr, Min ( sizeof(sin.sin_addr), (size_t)hp->h_length ) );
++			my_gethostbyname_r_free();
++		}
++	}
++	else
++	{
++#ifndef __WIN__
++		iDomain = AF_UNIX;
++		iSockaddrSize = sizeof(saun);
++		pSockaddr = (struct sockaddr *) &saun;
++
++		memset ( &saun, 0, sizeof(saun) );
++		saun.sun_family = AF_UNIX;
++		strncpy ( saun.sun_path, m_sHost, sizeof(saun.sun_path)-1 );
++#else
++		my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), "Unix-domain sockets are not supported on Windows" );
++		return -1;
++#endif
++	}
++
++	// connect to searchd and exchange versions
++	uint uServerVersion;
++	uint uClientVersion = htonl ( SPHINX_SEARCHD_PROTO );
++	int iSocket = -1;
++	char * pError = NULL;
++	do
++	{
++		iSocket = socket ( iDomain, SOCK_STREAM, 0 );
++		if ( iSocket == -1 )
++		{
++			pError = "Failed to create client socket";
++			break;
++		}
++	
++		if ( connect ( iSocket, pSockaddr, iSockaddrSize ) == -1)
++		{
++			pError = "Failed to connect to searchd";
++			break;
++		}
++
++		if ( !sphRecv ( iSocket, (char *)&uServerVersion, sizeof(uServerVersion) ) )
++		{
++			pError = "Failed to receive searchd version";
++			break;
++		}
++		
++		if ( !sphSend ( iSocket, (char *)&uClientVersion, sizeof(uClientVersion) ) )
++		{
++			pError = "Failed to send client version";
++			break;
++		}
++	}
++	while(0);
++
++	// fixme: compare versions?
++
++	if ( pError )
++	{
++		char sError[1024];
++		snprintf ( sError, sizeof(sError), "%s [%d] %s", Format(), errno, strerror(errno) );
++		my_error ( ER_CONNECT_TO_FOREIGN_DATA_SOURCE, MYF(0), sError );
++
++		if ( iSocket != -1 )
++			close ( iSocket );
++		
++		return -1;
++	}
++
++	return iSocket;
++}
++
++struct CSphResponse
++{
++	char * m_pBuffer;
++	char * m_pBody;
++
++	CSphResponse ()
++		: m_pBuffer ( NULL )
++		, m_pBody ( NULL )
++	{}
++
++	CSphResponse ( DWORD uSize )
++		: m_pBody ( NULL )
++	{
++		m_pBuffer = new char[uSize];
++	}
++
++	~CSphResponse ()
++	{
++		SafeDeleteArray ( m_pBuffer );
++	}
++	
++	static CSphResponse * Read ( int iSocket, int iClientVersion );
++};
++
++CSphResponse *
++CSphResponse::Read ( int iSocket, int iClientVersion )
++{
++	char sHeader[8];
++	if ( !sphRecv ( iSocket, sHeader, sizeof(sHeader) ) )
++		return NULL;
++
++	int iStatus   = ntohs ( sphUnalignedRead ( *(short int *) &sHeader[0] ) );
++	int iVersion  = ntohs ( sphUnalignedRead ( *(short int *) &sHeader[2] ) );
++	DWORD uLength = ntohl ( sphUnalignedRead ( *(DWORD *)     &sHeader[4] ) );
++
++	if ( iVersion < iClientVersion ) // fixme: warn
++		;
++
++	if ( uLength <= SPHINXSE_MAX_ALLOC )
++	{
++		CSphResponse * pResponse = new CSphResponse ( uLength );
++		if ( !sphRecv ( iSocket, pResponse->m_pBuffer, uLength ) )
++		{
++			SafeDelete ( pResponse );
++			return NULL;
++		}
++
++		pResponse->m_pBody = pResponse->m_pBuffer;
++		if ( iStatus != SEARCHD_OK )
++		{
++			DWORD uSize = ntohl ( *(DWORD *)pResponse->m_pBuffer );
++			if ( iStatus == SEARCHD_WARNING )
++				pResponse->m_pBody += uSize; // fixme: report the warning somehow
++			else
++			{
++				char * sMessage = sphDup ( pResponse->m_pBuffer + sizeof(DWORD), uSize );
++				my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), sMessage );
++				SafeDelete ( sMessage );
++				SafeDelete ( pResponse );
++				return NULL;
++			}
++		}
++		return pResponse;
++	}
++	return NULL;
++}
++
++/// udf
++
++extern "C"
++{
++	my_bool sphinx_snippets_init ( UDF_INIT * pUDF, UDF_ARGS * pArgs, char * sMessage );
++	void sphinx_snippets_deinit ( UDF_INIT * pUDF );
++	char * sphinx_snippets ( UDF_INIT * pUDF, UDF_ARGS * pArgs, char * sResult, unsigned long * pLength, char * pIsNull, char * sError );
++};
++
++#define MAX_MESSAGE_LENGTH 255
++#define MAX_RESULT_LENGTH 255
++
++struct CSphSnippets
++{
++	CSphUrl m_tUrl;
++	CSphResponse * m_pResponse;
++
++	int m_iBeforeMatch;
++	int m_iAfterMatch;
++	int m_iChunkSeparator;
++	int m_iLimit;
++	int m_iAround;
++	int m_iFlags;
++
++	CSphSnippets()
++		: m_pResponse(NULL)
++		, m_iBeforeMatch(0)
++		, m_iAfterMatch(0)
++		, m_iChunkSeparator(0)
++		  // defaults
++		, m_iLimit(256)
++		, m_iAround(5)
++		, m_iFlags(1)
++	{
++	}
++
++	~CSphSnippets()
++	{
++		SafeDelete ( m_pResponse );
++	}
++};
++
++#define KEYWORD(NAME) else if ( strncmp ( NAME, pArgs->attributes[i], pArgs->attribute_lengths[i] ) == 0 )
++
++#define CHECK_TYPE(TYPE)											\
++	if ( pArgs->arg_type[i] != TYPE )								\
++	{																\
++		snprintf ( sMessage, MAX_MESSAGE_LENGTH,					\
++				   "%.*s argument must be a string",				\
++				   (int)pArgs->attribute_lengths[i],				\
++				   pArgs->attributes[i] );							\
++		bFail = true;												\
++		break;														\
++	}																\
++	if ( TYPE == STRING_RESULT && !pArgs->args[i] )					\
++	{																\
++		snprintf ( sMessage, MAX_MESSAGE_LENGTH,					\
++				   "%.*s argument must be constant (and not NULL)",	\
++				   (int)pArgs->attribute_lengths[i],				\
++				   pArgs->attributes[i] );							\
++		bFail = true;												\
++		break;														\
++	}
++
++#define STRING CHECK_TYPE(STRING_RESULT)
++#define INT CHECK_TYPE(INT_RESULT); int iValue = *(long long *)pArgs->args[i]
++
++my_bool sphinx_snippets_init ( UDF_INIT * pUDF, UDF_ARGS * pArgs, char * sMessage )
++{
++	if ( pArgs->arg_count < 3 )
++	{
++		strncpy ( sMessage, "insufficient arguments", MAX_MESSAGE_LENGTH );
++		return 1;
++	}
++
++	bool bFail = false;
++	CSphSnippets * pOpts = new CSphSnippets;
++	for ( uint i = 0; i < pArgs->arg_count; i++ )
++	{
++		if ( i < 3 )
++		{
++			if ( pArgs->arg_type[i] != STRING_RESULT )
++			{
++				strncpy ( sMessage, "first three arguments must be of string type", MAX_MESSAGE_LENGTH );
++				bFail = true;
++				break;
++			}
++		}
++		KEYWORD("sphinx")
++		{
++			STRING;
++			if ( !pOpts->m_tUrl.Parse ( pArgs->args[i], pArgs->lengths[i] ) )
++			{
++				strncpy ( sMessage, "failed to parse connection string", MAX_MESSAGE_LENGTH );
++				bFail = true;
++				break;
++			}
++		}
++		KEYWORD("before_match")		{ STRING; pOpts->m_iBeforeMatch = i; }
++		KEYWORD("after_match")		{ STRING; pOpts->m_iAfterMatch = i; }
++		KEYWORD("chunk_separator")	{ STRING; pOpts->m_iChunkSeparator = i; }
++		KEYWORD("limit")			{ INT; pOpts->m_iLimit = iValue; }
++		KEYWORD("around")			{ INT; pOpts->m_iAround = iValue; }
++		KEYWORD("exact_phrase")		{ INT; if ( iValue ) pOpts->m_iFlags |= 2; }
++		KEYWORD("single_passage")	{ INT; if ( iValue ) pOpts->m_iFlags |= 4; }
++		KEYWORD("use_boundaries")	{ INT; if ( iValue ) pOpts->m_iFlags |= 8; }
++		KEYWORD("weight_order")		{ INT; if ( iValue ) pOpts->m_iFlags |= 16; }
++		else
++		{
++			snprintf ( sMessage, MAX_MESSAGE_LENGTH, "unrecognized argument: %.*s",
++					   (int)pArgs->attribute_lengths[i], pArgs->attributes[i] );
++			bFail = true;
++			break;
++		}
++	}
++	
++	if ( bFail )
++	{
++		SafeDelete ( pOpts );
++		return 1;
++	}
++	pUDF->ptr = (char *)pOpts;
++	return 0;
++}
++
++#undef STRING
++#undef INT
++#undef KEYWORD
++#undef CHECK_TYPE
++
++#define ARG(i) pArgs->args[i], pArgs->lengths[i]
++#define ARG_LEN(VAR, LEN) ( VAR ? pArgs->lengths[VAR] : LEN )
++
++#define SEND_STRING(INDEX, DEFAULT)							\
++	if ( INDEX )											\
++		tBuffer.SendString ( ARG(INDEX) );					\
++	else													\
++		tBuffer.SendString ( DEFAULT, sizeof(DEFAULT) - 1 );
++
++
++char * sphinx_snippets ( UDF_INIT * pUDF, UDF_ARGS * pArgs, char * sResult, unsigned long * pLength, char * pIsNull, char * pError )
++{
++	CSphSnippets * pOpts = (CSphSnippets *)pUDF->ptr;
++	assert ( pOpts );
++
++	if ( !pArgs->args[0] || !pArgs->args[1] || !pArgs->args[2] )
++	{
++		*pIsNull = 1;
++		return sResult;
++	}
++
++	const int iSize =
++		8 + // header
++		8 +
++		4 + pArgs->lengths[1] + // index
++		4 + pArgs->lengths[2] + // words
++		4 + ARG_LEN ( pOpts->m_iBeforeMatch, 3 ) +
++		4 + ARG_LEN ( pOpts->m_iAfterMatch, 4 ) +
++		4 + ARG_LEN ( pOpts->m_iChunkSeparator, 5 ) +
++		12 +
++		4 + pArgs->lengths[0]; // document
++
++	CSphBuffer tBuffer(iSize);
++
++	tBuffer.SendWord ( SEARCHD_COMMAND_EXCERPT );
++	tBuffer.SendWord ( VER_COMMAND_EXCERPT );
++	tBuffer.SendDword ( iSize - 8 );
++
++	tBuffer.SendDword ( 0 );
++	tBuffer.SendDword ( pOpts->m_iFlags );
++
++	tBuffer.SendString ( ARG(1) ); // index
++	tBuffer.SendString ( ARG(2) ); // words
++
++	SEND_STRING ( pOpts->m_iBeforeMatch, "<b>" );
++	SEND_STRING ( pOpts->m_iAfterMatch, "</b>" );
++	SEND_STRING ( pOpts->m_iChunkSeparator, " ... " );
++
++	tBuffer.SendInt ( pOpts->m_iLimit );
++	tBuffer.SendInt ( pOpts->m_iAround );
++
++	// single document
++	tBuffer.SendInt ( 1 );
++	tBuffer.SendString ( ARG(0) );
++
++	int iSocket = -1;
++	do
++	{
++		if ( !tBuffer.Finalize() )
++		{
++			my_error ( ER_QUERY_ON_FOREIGN_DATA_SOURCE, MYF(0), "INTERNAL ERROR: failed to build request" );
++			break;
++		}
++		
++		iSocket = pOpts->m_tUrl.Connect();
++		if ( iSocket == -1 ) break;
++		if ( !sphSend ( iSocket, tBuffer.Ptr(), iSize, sphReportErrors ) ) break;
++
++		CSphResponse * pResponse = CSphResponse::Read ( iSocket, 0x100 );
++		if ( !pResponse ) break;
++
++		close ( iSocket );
++		pOpts->m_pResponse = pResponse;
++		*pLength = ntohl( *(DWORD *)pResponse->m_pBody );
++		return pResponse->m_pBody + sizeof(DWORD);
++	}
++	while(0);
++
++	if ( iSocket != -1 )
++		close ( iSocket );
++
++	*pError = 1;
++	return sResult;
++}
++
++#undef SEND_STRING
++#undef ARG_LEN	
++#undef ARG
++
++void sphinx_snippets_deinit ( UDF_INIT * pUDF )
++{
++	CSphSnippets * pOpts = (CSphSnippets *)pUDF->ptr;
++	SafeDelete ( pOpts );
++}
++
++//
++// $Id: snippets_udf.cc 2153 2010-01-04 19:17:57Z shodan $
++//
+diff -uNr orig/sql/sphinx/sphinx.5.0.22.diff new/sql/sphinx/sphinx.5.0.22.diff
+--- orig/sql/sphinx/sphinx.5.0.22.diff	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/sphinx.5.0.22.diff	2006-06-07 16:28:43.000000000 +0900
+@@ -0,0 +1,284 @@
++diff -B -N -r -u mysql-5.0.22/config/ac-macros/ha_sphinx.m4 mysql-5.0.22.sx/config/ac-macros/ha_sphinx.m4
++--- mysql-5.0.22/config/ac-macros/ha_sphinx.m4	1970-01-01 01:00:00.000000000 +0100
+++++ mysql-5.0.22.sx/config/ac-macros/ha_sphinx.m4	2006-06-06 19:49:38.000000000 +0200
++@@ -0,0 +1,30 @@
+++dnl ---------------------------------------------------------------------------
+++dnl Macro: MYSQL_CHECK_EXAMPLEDB
+++dnl Sets HAVE_SPHINX_DB if --with-sphinx-storage-engine is used
+++dnl ---------------------------------------------------------------------------
+++AC_DEFUN([MYSQL_CHECK_SPHINXDB], [
+++  AC_ARG_WITH([sphinx-storage-engine],
+++              [
+++  --with-sphinx-storage-engine
+++                          Enable the Sphinx Storage Engine],
+++              [sphinxdb="$withval"],
+++              [sphinxdb=no])
+++  AC_MSG_CHECKING([for example storage engine])
+++
+++  case "$sphinxdb" in
+++    yes )
+++      AC_DEFINE([HAVE_SPHINX_DB], [1], [Builds Sphinx Engine])
+++      AC_MSG_RESULT([yes])
+++      [sphinxdb=yes]
+++      ;;
+++    * )
+++      AC_MSG_RESULT([no])
+++      [sphinxdb=no]
+++      ;;
+++  esac
+++
+++])
+++dnl ---------------------------------------------------------------------------
+++dnl END OF MYSQL_CHECK_EXAMPLE SECTION
+++dnl ---------------------------------------------------------------------------
+++
++diff -B -N -r -u mysql-5.0.22/configure.in mysql-5.0.22.sx/configure.in
++--- mysql-5.0.22/configure.in	2006-05-25 10:56:45.000000000 +0200
+++++ mysql-5.0.22.sx/configure.in	2006-06-06 19:49:38.000000000 +0200
++@@ -41,6 +41,7 @@
++ sinclude(config/ac-macros/ha_berkeley.m4)
++ sinclude(config/ac-macros/ha_blackhole.m4)
++ sinclude(config/ac-macros/ha_example.m4)
+++sinclude(config/ac-macros/ha_sphinx.m4)
++ sinclude(config/ac-macros/ha_federated.m4)
++ sinclude(config/ac-macros/ha_innodb.m4)
++ sinclude(config/ac-macros/ha_ndbcluster.m4)
++@@ -2450,6 +2451,7 @@
++ MYSQL_CHECK_BDB
++ MYSQL_CHECK_INNODB
++ MYSQL_CHECK_EXAMPLEDB
+++MYSQL_CHECK_SPHINXDB
++ MYSQL_CHECK_ARCHIVEDB
++ MYSQL_CHECK_CSVDB
++ MYSQL_CHECK_BLACKHOLEDB
++diff -B -N -r -u mysql-5.0.22/libmysqld/Makefile.am mysql-5.0.22.sx/libmysqld/Makefile.am
++--- mysql-5.0.22/libmysqld/Makefile.am	2006-05-25 10:56:55.000000000 +0200
+++++ mysql-5.0.22.sx/libmysqld/Makefile.am	2006-06-06 19:49:38.000000000 +0200
++@@ -27,7 +27,7 @@
++ 			-DSHAREDIR="\"$(MYSQLSHAREdir)\""
++ INCLUDES=		@bdb_includes@ \
++ 			-I$(top_builddir)/include -I$(top_srcdir)/include \
++-			-I$(top_srcdir)/sql -I$(top_srcdir)/sql/examples \
+++			-I$(top_srcdir)/sql -I$(top_srcdir)/sql/examples -I$(top_srcdir)/sql/sphinx \
++ 			-I$(top_srcdir)/regex \
++ 			$(openssl_includes) $(yassl_includes) @ZLIB_INCLUDES@
++ 
++@@ -38,6 +38,7 @@
++ libmysqlsources =	errmsg.c get_password.c libmysql.c client.c pack.c \
++                         my_time.c
++ sqlexamplessources =	ha_example.cc ha_tina.cc
+++sqlsphinxsources =	ha_sphinx.cc
++ 
++ noinst_HEADERS =	embedded_priv.h emb_qcache.h
++ 
++@@ -65,7 +66,7 @@
++ 	parse_file.cc sql_view.cc sql_trigger.cc my_decimal.cc \
++ 	ha_blackhole.cc ha_archive.cc my_user.c
++ 
++-libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources)
+++libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources) $(sqlsphinxsources)
++ libmysqld_a_SOURCES=
++ 
++ # automake misses these
++@@ -133,12 +134,16 @@
++ 	    rm -f $$f; \
++ 	    @LN_CP_F@ $(top_srcdir)/sql/examples/$$f $$f; \
++ 	  done; \
+++	  for f in $(sqlsphinxsources); do \
+++	    rm -f $$f; \
+++	    @LN_CP_F@ $(top_srcdir)/sql/sphinx/$$f $$f; \
+++	  done; \
++ 	  rm -f client_settings.h; \
++ 	  @LN_CP_F@ $(top_srcdir)/libmysql/client_settings.h client_settings.h
++ 
++ 
++ clean-local:
++-	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) | sed "s;\.lo;.c;g"` \
+++	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) $(sqlsphinxsources) | sed "s;\.lo;.c;g"` \
++ 	       $(top_srcdir)/linked_libmysqld_sources; \
++ 	rm -f client_settings.h
++ 
++diff -B -N -r -u mysql-5.0.22/sql/handler.cc mysql-5.0.22.sx/sql/handler.cc
++--- mysql-5.0.22/sql/handler.cc	2006-05-25 10:56:42.000000000 +0200
+++++ mysql-5.0.22.sx/sql/handler.cc	2006-06-06 19:49:38.000000000 +0200
++@@ -78,6 +78,15 @@
++   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
++   HTON_NO_FLAGS };
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++extern handlerton sphinx_hton;
+++#else
+++handlerton sphinx_hton = { "SPHINX", SHOW_OPTION_NO, "SPHINX storage engine",
+++  DB_TYPE_SPHINX_DB, NULL, 0, 0, NULL, NULL,
+++  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+++  HTON_NO_FLAGS };
+++#endif
++ #ifdef HAVE_INNOBASE_DB
++ #include "ha_innodb.h"
++ extern handlerton innobase_hton;
++@@ -147,6 +156,7 @@
++   &example_hton,
++   &archive_hton,
++   &tina_hton,
+++  &sphinx_hton,
++   &ndbcluster_hton,
++   &federated_hton,
++   &myisammrg_hton,
++@@ -345,6 +355,12 @@
++       return new (alloc) ha_tina(table);
++     return NULL;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  case DB_TYPE_SPHINX_DB:
+++    if (have_sphinx_db == SHOW_OPTION_YES)
+++      return new (alloc) ha_sphinx(table);
+++    return NULL;
+++#endif
++ #ifdef HAVE_NDBCLUSTER_DB
++   case DB_TYPE_NDBCLUSTER:
++     if (have_ndbcluster == SHOW_OPTION_YES)
++diff -B -N -r -u mysql-5.0.22/sql/handler.h mysql-5.0.22.sx/sql/handler.h
++--- mysql-5.0.22/sql/handler.h	2006-05-25 10:56:55.000000000 +0200
+++++ mysql-5.0.22.sx/sql/handler.h	2006-06-06 19:49:38.000000000 +0200
++@@ -183,8 +183,9 @@
++   DB_TYPE_BERKELEY_DB, DB_TYPE_INNODB,
++   DB_TYPE_GEMINI, DB_TYPE_NDBCLUSTER,
++   DB_TYPE_EXAMPLE_DB, DB_TYPE_ARCHIVE_DB, DB_TYPE_CSV_DB,
++-  DB_TYPE_FEDERATED_DB,
+++  DB_TYPE_FEDERATED_DB, 
++   DB_TYPE_BLACKHOLE_DB,
+++  DB_TYPE_SPHINX_DB,
++   DB_TYPE_DEFAULT // Must be last
++ };
++ 
++diff -B -N -r -u mysql-5.0.22/sql/Makefile.am mysql-5.0.22.sx/sql/Makefile.am
++--- mysql-5.0.22/sql/Makefile.am	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/Makefile.am	2006-06-06 19:49:38.000000000 +0200
++@@ -66,6 +66,7 @@
++ 			sql_array.h sql_cursor.h \
++ 			examples/ha_example.h ha_archive.h \
++ 			examples/ha_tina.h ha_blackhole.h  \
+++			sphinx/ha_sphinx.h \
++ 			ha_federated.h
++ mysqld_SOURCES =	sql_lex.cc sql_handler.cc \
++ 			item.cc item_sum.cc item_buff.cc item_func.cc \
++@@ -102,6 +103,7 @@
++ 			sp_cache.cc parse_file.cc sql_trigger.cc \
++ 			examples/ha_example.cc ha_archive.cc \
++ 			examples/ha_tina.cc ha_blackhole.cc \
+++			sphinx/ha_sphinx.cc \
++ 			ha_federated.cc
++ 
++ gen_lex_hash_SOURCES =	gen_lex_hash.cc
++diff -B -N -r -u mysql-5.0.22/sql/mysqld.cc mysql-5.0.22.sx/sql/mysqld.cc
++--- mysql-5.0.22/sql/mysqld.cc	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/mysqld.cc	2006-06-06 19:49:38.000000000 +0200
++@@ -6420,6 +6420,11 @@
++ #else
++   have_csv_db= SHOW_OPTION_NO;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  have_sphinx_db= SHOW_OPTION_YES;
+++#else
+++  have_sphinx_db= SHOW_OPTION_NO;
+++#endif
++ #ifdef HAVE_NDBCLUSTER_DB
++   have_ndbcluster=SHOW_OPTION_DISABLED;
++ #else
++@@ -7457,6 +7462,7 @@
++ #undef have_example_db
++ #undef have_archive_db
++ #undef have_csv_db
+++#undef have_sphinx_db
++ #undef have_federated_db
++ #undef have_partition_db
++ #undef have_blackhole_db
++@@ -7467,6 +7473,7 @@
++ SHOW_COMP_OPTION have_example_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_archive_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_csv_db= SHOW_OPTION_NO;
+++SHOW_COMP_OPTION have_sphinx_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_federated_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_partition_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_blackhole_db= SHOW_OPTION_NO;
++diff -B -N -r -u mysql-5.0.22/sql/mysql_priv.h mysql-5.0.22.sx/sql/mysql_priv.h
++--- mysql-5.0.22/sql/mysql_priv.h	2006-05-25 10:56:43.000000000 +0200
+++++ mysql-5.0.22.sx/sql/mysql_priv.h	2006-06-06 19:49:38.000000000 +0200
++@@ -1279,6 +1279,12 @@
++ #else
++ extern SHOW_COMP_OPTION have_csv_db;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++extern handlerton sphinx_hton;
+++#define have_sphinx_db sphinx_hton.state
+++#else
+++extern SHOW_COMP_OPTION have_sphinx_db;
+++#endif
++ #ifdef HAVE_FEDERATED_DB
++ extern handlerton federated_hton;
++ #define have_federated_db federated_hton.state
++diff -B -N -r -u mysql-5.0.22/sql/set_var.cc mysql-5.0.22.sx/sql/set_var.cc
++--- mysql-5.0.22/sql/set_var.cc	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/set_var.cc	2006-06-06 19:49:38.000000000 +0200
++@@ -809,6 +809,7 @@
++   {"have_compress",	      (char*) &have_compress,		    SHOW_HAVE},
++   {"have_crypt",	      (char*) &have_crypt,		    SHOW_HAVE},
++   {"have_csv",	              (char*) &have_csv_db,	            SHOW_HAVE},
+++  {"have_sphinx",	      (char*) &have_sphinx_db,	            SHOW_HAVE},
++   {"have_example_engine",     (char*) &have_example_db,	            SHOW_HAVE},
++   {"have_federated_engine",   (char*) &have_federated_db,           SHOW_HAVE},
++   {"have_geometry",           (char*) &have_geometry,               SHOW_HAVE},
++diff -B -N -r -u mysql-5.0.22/sql/sql_lex.h mysql-5.0.22.sx/sql/sql_lex.h
++--- mysql-5.0.22/sql/sql_lex.h	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/sql_lex.h	2006-06-06 19:49:38.000000000 +0200
++@@ -58,6 +58,7 @@
++   SQLCOM_SHOW_DATABASES, SQLCOM_SHOW_TABLES, SQLCOM_SHOW_FIELDS,
++   SQLCOM_SHOW_KEYS, SQLCOM_SHOW_VARIABLES, SQLCOM_SHOW_LOGS, SQLCOM_SHOW_STATUS,
++   SQLCOM_SHOW_INNODB_STATUS, SQLCOM_SHOW_NDBCLUSTER_STATUS, SQLCOM_SHOW_MUTEX_STATUS,
+++  SQLCOM_SHOW_SPHINX_STATUS,
++   SQLCOM_SHOW_PROCESSLIST, SQLCOM_SHOW_MASTER_STAT, SQLCOM_SHOW_SLAVE_STAT,
++   SQLCOM_SHOW_GRANTS, SQLCOM_SHOW_CREATE, SQLCOM_SHOW_CHARSETS,
++   SQLCOM_SHOW_COLLATIONS, SQLCOM_SHOW_CREATE_DB, SQLCOM_SHOW_TABLE_STATUS,
++diff -B -N -r -u mysql-5.0.22/sql/sql_parse.cc mysql-5.0.22.sx/sql/sql_parse.cc
++--- mysql-5.0.22/sql/sql_parse.cc	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/sql_parse.cc	2006-06-06 19:49:38.000000000 +0200
++@@ -25,6 +25,9 @@
++ #ifdef HAVE_INNOBASE_DB
++ #include "ha_innodb.h"
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++#endif
++ 
++ #ifdef HAVE_NDBCLUSTER_DB
++ #include "ha_ndbcluster.h"
++@@ -2722,6 +2725,15 @@
++       break;
++     }
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  case SQLCOM_SHOW_SPHINX_STATUS:
+++    {
+++      if (check_global_access(thd, SUPER_ACL))
+++	goto error;
+++      res = sphinx_show_status(thd);
+++      break;
+++    }
+++#endif
++ #ifdef HAVE_REPLICATION
++   case SQLCOM_LOAD_MASTER_TABLE:
++   {
++diff -B -N -r -u mysql-5.0.22/sql/sql_yacc.yy mysql-5.0.22.sx/sql/sql_yacc.yy
++--- mysql-5.0.22/sql/sql_yacc.yy	2006-05-25 10:56:43.000000000 +0200
+++++ mysql-5.0.22.sx/sql/sql_yacc.yy	2006-06-06 19:49:38.000000000 +0200
++@@ -6584,6 +6584,9 @@
++ 	    case DB_TYPE_INNODB:
++ 	      Lex->sql_command = SQLCOM_SHOW_INNODB_STATUS;
++ 	      break;
+++	    case DB_TYPE_SPHINX_DB:
+++	      Lex->sql_command = SQLCOM_SHOW_SPHINX_STATUS;
+++	      break;
++ 	    default:
++ 	      my_error(ER_NOT_SUPPORTED_YET, MYF(0), "STATUS");
++ 	      YYABORT;
+diff -uNr orig/sql/sphinx/sphinx.5.0.27.diff new/sql/sphinx/sphinx.5.0.27.diff
+--- orig/sql/sphinx/sphinx.5.0.27.diff	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/sphinx.5.0.27.diff	2006-12-15 08:13:25.000000000 +0900
+@@ -0,0 +1,284 @@
++diff -B -N -r -u mysql-5.0.22/config/ac-macros/ha_sphinx.m4 mysql-5.0.22.sx/config/ac-macros/ha_sphinx.m4
++--- mysql-5.0.22/config/ac-macros/ha_sphinx.m4	1970-01-01 01:00:00.000000000 +0100
+++++ mysql-5.0.22.sx/config/ac-macros/ha_sphinx.m4	2006-06-06 19:49:38.000000000 +0200
++@@ -0,0 +1,30 @@
+++dnl ---------------------------------------------------------------------------
+++dnl Macro: MYSQL_CHECK_EXAMPLEDB
+++dnl Sets HAVE_SPHINX_DB if --with-sphinx-storage-engine is used
+++dnl ---------------------------------------------------------------------------
+++AC_DEFUN([MYSQL_CHECK_SPHINXDB], [
+++  AC_ARG_WITH([sphinx-storage-engine],
+++              [
+++  --with-sphinx-storage-engine
+++                          Enable the Sphinx Storage Engine],
+++              [sphinxdb="$withval"],
+++              [sphinxdb=no])
+++  AC_MSG_CHECKING([for example storage engine])
+++
+++  case "$sphinxdb" in
+++    yes )
+++      AC_DEFINE([HAVE_SPHINX_DB], [1], [Builds Sphinx Engine])
+++      AC_MSG_RESULT([yes])
+++      [sphinxdb=yes]
+++      ;;
+++    * )
+++      AC_MSG_RESULT([no])
+++      [sphinxdb=no]
+++      ;;
+++  esac
+++
+++])
+++dnl ---------------------------------------------------------------------------
+++dnl END OF MYSQL_CHECK_EXAMPLE SECTION
+++dnl ---------------------------------------------------------------------------
+++
++diff -B -N -r -u mysql-5.0.22/configure.in mysql-5.0.22.sx/configure.in
++--- mysql-5.0.22/configure.in	2006-05-25 10:56:45.000000000 +0200
+++++ mysql-5.0.22.sx/configure.in	2006-06-06 19:49:38.000000000 +0200
++@@ -41,6 +41,7 @@
++ sinclude(config/ac-macros/ha_berkeley.m4)
++ sinclude(config/ac-macros/ha_blackhole.m4)
++ sinclude(config/ac-macros/ha_example.m4)
+++sinclude(config/ac-macros/ha_sphinx.m4)
++ sinclude(config/ac-macros/ha_federated.m4)
++ sinclude(config/ac-macros/ha_innodb.m4)
++ sinclude(config/ac-macros/ha_ndbcluster.m4)
++@@ -2450,6 +2451,7 @@
++ MYSQL_CHECK_BDB
++ MYSQL_CHECK_INNODB
++ MYSQL_CHECK_EXAMPLEDB
+++MYSQL_CHECK_SPHINXDB
++ MYSQL_CHECK_ARCHIVEDB
++ MYSQL_CHECK_CSVDB
++ MYSQL_CHECK_BLACKHOLEDB
++diff -B -N -r -u mysql-5.0.22/libmysqld/Makefile.am mysql-5.0.22.sx/libmysqld/Makefile.am
++--- mysql-5.0.22/libmysqld/Makefile.am	2006-05-25 10:56:55.000000000 +0200
+++++ mysql-5.0.22.sx/libmysqld/Makefile.am	2006-06-06 19:49:38.000000000 +0200
++@@ -27,7 +27,7 @@
++ 			-DSHAREDIR="\"$(MYSQLSHAREdir)\""
++ INCLUDES=		@bdb_includes@ \
++ 			-I$(top_builddir)/include -I$(top_srcdir)/include \
++-			-I$(top_srcdir)/sql -I$(top_srcdir)/sql/examples \
+++			-I$(top_srcdir)/sql -I$(top_srcdir)/sql/examples -I$(top_srcdir)/sql/sphinx \
++ 			-I$(top_srcdir)/regex \
++ 			$(openssl_includes) $(yassl_includes) @ZLIB_INCLUDES@
++ 
++@@ -38,6 +38,7 @@
++ libmysqlsources =	errmsg.c get_password.c libmysql.c client.c pack.c \
++                         my_time.c
++ sqlexamplessources =	ha_example.cc ha_tina.cc
+++sqlsphinxsources =	ha_sphinx.cc
++ 
++ noinst_HEADERS =	embedded_priv.h emb_qcache.h
++ 
++@@ -65,7 +66,7 @@
++ 	parse_file.cc sql_view.cc sql_trigger.cc my_decimal.cc \
++ 	ha_blackhole.cc ha_archive.cc my_user.c
++ 
++-libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources)
+++libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources) $(sqlsphinxsources)
++ libmysqld_a_SOURCES=
++ 
++ # automake misses these
++@@ -133,12 +134,16 @@
++ 	    rm -f $$f; \
++ 	    @LN_CP_F@ $(top_srcdir)/sql/examples/$$f $$f; \
++ 	  done; \
+++	  for f in $(sqlsphinxsources); do \
+++	    rm -f $$f; \
+++	    @LN_CP_F@ $(top_srcdir)/sql/sphinx/$$f $$f; \
+++	  done; \
++ 	  rm -f client_settings.h; \
++ 	  @LN_CP_F@ $(top_srcdir)/libmysql/client_settings.h client_settings.h
++ 
++ 
++ clean-local:
++-	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) | sed "s;\.lo;.c;g"` \
+++	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) $(sqlsphinxsources) | sed "s;\.lo;.c;g"` \
++ 	       $(top_srcdir)/linked_libmysqld_sources; \
++ 	rm -f client_settings.h
++ 
++diff -B -N -r -u mysql-5.0.22/sql/handler.cc mysql-5.0.22.sx/sql/handler.cc
++--- mysql-5.0.22/sql/handler.cc	2006-05-25 10:56:42.000000000 +0200
+++++ mysql-5.0.22.sx/sql/handler.cc	2006-06-06 19:49:38.000000000 +0200
++@@ -78,6 +78,15 @@
++   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
++   HTON_NO_FLAGS };
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++extern handlerton sphinx_hton;
+++#else
+++handlerton sphinx_hton = { "SPHINX", SHOW_OPTION_NO, "SPHINX storage engine",
+++  DB_TYPE_SPHINX_DB, NULL, 0, 0, NULL, NULL,
+++  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+++  HTON_NO_FLAGS };
+++#endif
++ #ifdef HAVE_INNOBASE_DB
++ #include "ha_innodb.h"
++ extern handlerton innobase_hton;
++@@ -147,6 +156,7 @@
++   &example_hton,
++   &archive_hton,
++   &tina_hton,
+++  &sphinx_hton,
++   &ndbcluster_hton,
++   &federated_hton,
++   &myisammrg_hton,
++@@ -345,6 +355,12 @@
++       return new (alloc) ha_tina(table);
++     return NULL;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  case DB_TYPE_SPHINX_DB:
+++    if (have_sphinx_db == SHOW_OPTION_YES)
+++      return new (alloc) ha_sphinx(table);
+++    return NULL;
+++#endif
++ #ifdef HAVE_NDBCLUSTER_DB
++   case DB_TYPE_NDBCLUSTER:
++     if (have_ndbcluster == SHOW_OPTION_YES)
++diff -B -N -r -u mysql-5.0.22/sql/handler.h mysql-5.0.22.sx/sql/handler.h
++--- mysql-5.0.22/sql/handler.h	2006-05-25 10:56:55.000000000 +0200
+++++ mysql-5.0.22.sx/sql/handler.h	2006-06-06 19:49:38.000000000 +0200
++@@ -183,8 +183,9 @@
++   DB_TYPE_BERKELEY_DB, DB_TYPE_INNODB,
++   DB_TYPE_GEMINI, DB_TYPE_NDBCLUSTER,
++   DB_TYPE_EXAMPLE_DB, DB_TYPE_ARCHIVE_DB, DB_TYPE_CSV_DB,
++-  DB_TYPE_FEDERATED_DB,
+++  DB_TYPE_FEDERATED_DB, 
++   DB_TYPE_BLACKHOLE_DB,
+++  DB_TYPE_SPHINX_DB,
++   DB_TYPE_DEFAULT // Must be last
++ };
++ 
++diff -B -N -r -u mysql-5.0.22/sql/Makefile.am mysql-5.0.22.sx/sql/Makefile.am
++--- mysql-5.0.22/sql/Makefile.am	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/Makefile.am	2006-06-06 19:49:38.000000000 +0200
++@@ -66,6 +66,7 @@
++ 			sql_array.h sql_cursor.h \
++ 			examples/ha_example.h ha_archive.h \
++ 			examples/ha_tina.h ha_blackhole.h  \
+++			sphinx/ha_sphinx.h \
++ 			ha_federated.h
++ mysqld_SOURCES =	sql_lex.cc sql_handler.cc \
++ 			item.cc item_sum.cc item_buff.cc item_func.cc \
++@@ -102,6 +103,7 @@
++ 			sp_cache.cc parse_file.cc sql_trigger.cc \
++ 			examples/ha_example.cc ha_archive.cc \
++ 			examples/ha_tina.cc ha_blackhole.cc \
+++			sphinx/ha_sphinx.cc \
++ 			ha_federated.cc
++ 
++ gen_lex_hash_SOURCES =	gen_lex_hash.cc
++diff -B -N -r -u mysql-5.0.22/sql/mysqld.cc mysql-5.0.22.sx/sql/mysqld.cc
++--- mysql-5.0.22/sql/mysqld.cc	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/mysqld.cc	2006-06-06 19:49:38.000000000 +0200
++@@ -6420,6 +6420,11 @@
++ #else
++   have_csv_db= SHOW_OPTION_NO;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  have_sphinx_db= SHOW_OPTION_YES;
+++#else
+++  have_sphinx_db= SHOW_OPTION_NO;
+++#endif
++ #ifdef HAVE_NDBCLUSTER_DB
++   have_ndbcluster=SHOW_OPTION_DISABLED;
++ #else
++@@ -7457,6 +7462,7 @@
++ #undef have_example_db
++ #undef have_archive_db
++ #undef have_csv_db
+++#undef have_sphinx_db
++ #undef have_federated_db
++ #undef have_partition_db
++ #undef have_blackhole_db
++@@ -7467,6 +7473,7 @@
++ SHOW_COMP_OPTION have_example_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_archive_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_csv_db= SHOW_OPTION_NO;
+++SHOW_COMP_OPTION have_sphinx_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_federated_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_partition_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_blackhole_db= SHOW_OPTION_NO;
++diff -B -N -r -u mysql-5.0.22/sql/mysql_priv.h mysql-5.0.22.sx/sql/mysql_priv.h
++--- mysql-5.0.22/sql/mysql_priv.h	2006-05-25 10:56:43.000000000 +0200
+++++ mysql-5.0.22.sx/sql/mysql_priv.h	2006-06-06 19:49:38.000000000 +0200
++@@ -1279,6 +1279,12 @@
++ #else
++ extern SHOW_COMP_OPTION have_csv_db;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++extern handlerton sphinx_hton;
+++#define have_sphinx_db sphinx_hton.state
+++#else
+++extern SHOW_COMP_OPTION have_sphinx_db;
+++#endif
++ #ifdef HAVE_FEDERATED_DB
++ extern handlerton federated_hton;
++ #define have_federated_db federated_hton.state
++diff -B -N -r -u mysql-5.0.22/sql/set_var.cc mysql-5.0.22.sx/sql/set_var.cc
++--- mysql-5.0.22/sql/set_var.cc	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/set_var.cc	2006-06-06 19:49:38.000000000 +0200
++@@ -864,6 +864,7 @@
++   {"have_compress",	      (char*) &have_compress,		    SHOW_HAVE},
++   {"have_crypt",	      (char*) &have_crypt,		    SHOW_HAVE},
++   {"have_csv",	              (char*) &have_csv_db,	            SHOW_HAVE},
+++  {"have_sphinx",             (char*) &have_sphinx_db,              SHOW_HAVE},
++   {"have_dynamic_loading",    (char*) &have_dlopen,	            SHOW_HAVE},
++   {"have_example_engine",     (char*) &have_example_db,	            SHOW_HAVE},
++   {"have_federated_engine",   (char*) &have_federated_db,           SHOW_HAVE},
++diff -B -N -r -u mysql-5.0.22/sql/sql_lex.h mysql-5.0.22.sx/sql/sql_lex.h
++--- mysql-5.0.22/sql/sql_lex.h	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/sql_lex.h	2006-06-06 19:49:38.000000000 +0200
++@@ -58,6 +58,7 @@
++   SQLCOM_SHOW_DATABASES, SQLCOM_SHOW_TABLES, SQLCOM_SHOW_FIELDS,
++   SQLCOM_SHOW_KEYS, SQLCOM_SHOW_VARIABLES, SQLCOM_SHOW_LOGS, SQLCOM_SHOW_STATUS,
++   SQLCOM_SHOW_INNODB_STATUS, SQLCOM_SHOW_NDBCLUSTER_STATUS, SQLCOM_SHOW_MUTEX_STATUS,
+++  SQLCOM_SHOW_SPHINX_STATUS,
++   SQLCOM_SHOW_PROCESSLIST, SQLCOM_SHOW_MASTER_STAT, SQLCOM_SHOW_SLAVE_STAT,
++   SQLCOM_SHOW_GRANTS, SQLCOM_SHOW_CREATE, SQLCOM_SHOW_CHARSETS,
++   SQLCOM_SHOW_COLLATIONS, SQLCOM_SHOW_CREATE_DB, SQLCOM_SHOW_TABLE_STATUS,
++diff -B -N -r -u mysql-5.0.22/sql/sql_parse.cc mysql-5.0.22.sx/sql/sql_parse.cc
++--- mysql-5.0.22/sql/sql_parse.cc	2006-05-25 10:56:41.000000000 +0200
+++++ mysql-5.0.22.sx/sql/sql_parse.cc	2006-06-06 19:49:38.000000000 +0200
++@@ -25,6 +25,9 @@
++ #ifdef HAVE_INNOBASE_DB
++ #include "ha_innodb.h"
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++#endif
++ 
++ #ifdef HAVE_NDBCLUSTER_DB
++ #include "ha_ndbcluster.h"
++@@ -2722,6 +2725,15 @@
++       break;
++     }
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  case SQLCOM_SHOW_SPHINX_STATUS:
+++    {
+++      if (check_global_access(thd, SUPER_ACL))
+++	goto error;
+++      res = sphinx_show_status(thd);
+++      break;
+++    }
+++#endif
++ #ifdef HAVE_REPLICATION
++   case SQLCOM_LOAD_MASTER_TABLE:
++   {
++diff -B -N -r -u mysql-5.0.22/sql/sql_yacc.yy mysql-5.0.22.sx/sql/sql_yacc.yy
++--- mysql-5.0.22/sql/sql_yacc.yy	2006-05-25 10:56:43.000000000 +0200
+++++ mysql-5.0.22.sx/sql/sql_yacc.yy	2006-06-06 19:49:38.000000000 +0200
++@@ -6584,6 +6584,9 @@
++ 	    case DB_TYPE_INNODB:
++ 	      Lex->sql_command = SQLCOM_SHOW_INNODB_STATUS;
++ 	      break;
+++	    case DB_TYPE_SPHINX_DB:
+++	      Lex->sql_command = SQLCOM_SHOW_SPHINX_STATUS;
+++	      break;
++ 	    default:
++ 	      my_error(ER_NOT_SUPPORTED_YET, MYF(0), "STATUS");
++ 	      YYABORT;
+diff -uNr orig/sql/sphinx/sphinx.5.0.37.diff new/sql/sphinx/sphinx.5.0.37.diff
+--- orig/sql/sphinx/sphinx.5.0.37.diff	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/sphinx.5.0.37.diff	2009-02-14 22:57:42.000000000 +0900
+@@ -0,0 +1,338 @@
++--- mysql-5.0.67/config/ac-macros/ha_sphinx.m4	1970-01-01 10:00:00.000000000 +1000
+++++ mysql-5.0.67-sphinx/config/ac-macros/ha_sphinx.m4	2009-02-14 09:15:48.000000000 +1000
++@@ -0,0 +1,30 @@
+++dnl ---------------------------------------------------------------------------
+++dnl Macro: MYSQL_CHECK_EXAMPLEDB
+++dnl Sets HAVE_SPHINX_DB if --with-sphinx-storage-engine is used
+++dnl ---------------------------------------------------------------------------
+++AC_DEFUN([MYSQL_CHECK_SPHINXDB], [
+++  AC_ARG_WITH([sphinx-storage-engine],
+++              [
+++  --with-sphinx-storage-engine
+++                          Enable the Sphinx Storage Engine],
+++              [sphinxdb="$withval"],
+++              [sphinxdb=no])
+++  AC_MSG_CHECKING([for example storage engine])
+++
+++  case "$sphinxdb" in
+++    yes )
+++      AC_DEFINE([HAVE_SPHINX_DB], [1], [Builds Sphinx Engine])
+++      AC_MSG_RESULT([yes])
+++      [sphinxdb=yes]
+++      ;;
+++    * )
+++      AC_MSG_RESULT([no])
+++      [sphinxdb=no]
+++      ;;
+++  esac
+++
+++])
+++dnl ---------------------------------------------------------------------------
+++dnl END OF MYSQL_CHECK_EXAMPLE SECTION
+++dnl ---------------------------------------------------------------------------
+++
++--- mysql-5.0.67/configure.in	2008-08-04 23:19:07.000000000 +1100
+++++ mysql-5.0.67-sphinx/configure.in	2009-02-14 09:15:48.000000000 +1000
++@@ -58,6 +58,7 @@
++ sinclude(config/ac-macros/ha_berkeley.m4)
++ sinclude(config/ac-macros/ha_blackhole.m4)
++ sinclude(config/ac-macros/ha_example.m4)
+++sinclude(config/ac-macros/ha_sphinx.m4)
++ sinclude(config/ac-macros/ha_federated.m4)
++ sinclude(config/ac-macros/ha_innodb.m4)
++ sinclude(config/ac-macros/ha_ndbcluster.m4)
++@@ -2625,6 +2626,7 @@
++ MYSQL_CHECK_BDB
++ MYSQL_CHECK_INNODB
++ MYSQL_CHECK_EXAMPLEDB
+++MYSQL_CHECK_SPHINXDB
++ MYSQL_CHECK_ARCHIVEDB
++ MYSQL_CHECK_CSVDB
++ MYSQL_CHECK_BLACKHOLEDB
++--- mysql-5.0.67/libmysqld/Makefile.am	2008-08-04 23:19:18.000000000 +1100
+++++ mysql-5.0.67-sphinx/libmysqld/Makefile.am	2009-02-14 09:15:48.000000000 +1000
++@@ -29,6 +29,7 @@
++ 			-I$(top_builddir)/include -I$(top_srcdir)/include \
++ 			-I$(top_builddir)/sql -I$(top_srcdir)/sql \
++ 			-I$(top_srcdir)/sql/examples \
+++			-I$(top_srcdir)/sql/sphinx \
++ 			-I$(top_srcdir)/regex \
++ 			$(openssl_includes) @ZLIB_INCLUDES@
++ 
++@@ -39,6 +40,7 @@
++ libmysqlsources =	errmsg.c get_password.c libmysql.c client.c pack.c \
++                         my_time.c
++ sqlexamplessources =	ha_example.cc ha_tina.cc
+++sqlsphinxsources =	ha_sphinx.cc
++ 
++ noinst_HEADERS =	embedded_priv.h emb_qcache.h
++ 
++@@ -67,7 +69,7 @@
++ 	parse_file.cc sql_view.cc sql_trigger.cc my_decimal.cc \
++ 	ha_blackhole.cc ha_archive.cc my_user.c
++ 
++-libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources)
+++libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources) $(sqlsphinxsources)
++ libmysqld_a_SOURCES=
++ 
++ # automake misses these
++@@ -147,12 +149,16 @@
++ 	    rm -f $$f; \
++ 	    @LN_CP_F@ $(top_srcdir)/sql/examples/$$f $$f; \
++ 	  done; \
+++	  for f in $(sqlsphinxsources); do \
+++	    rm -f $$f; \
+++	    @LN_CP_F@ $(top_srcdir)/sql/sphinx/$$f $$f; \
+++	  done; \
++ 	  rm -f client_settings.h; \
++ 	  @LN_CP_F@ $(top_srcdir)/libmysql/client_settings.h client_settings.h
++ 
++ 
++ clean-local:
++-	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) | sed "s;\.lo;.c;g"` \
+++	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) $(sqlsphinxsources) | sed "s;\.lo;.c;g"` \
++ 	       $(top_srcdir)/linked_libmysqld_sources; \
++ 	rm -f client_settings.h
++ 
++--- mysql-5.0.67/sql/handler.cc	2008-08-04 23:20:04.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/handler.cc	2009-02-14 09:15:48.000000000 +1000
++@@ -77,6 +77,15 @@
++   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
++   HTON_NO_FLAGS };
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++extern handlerton sphinx_hton;
+++#else
+++handlerton sphinx_hton = { "SPHINX", SHOW_OPTION_NO, "SPHINX storage engine",
+++  DB_TYPE_SPHINX_DB, NULL, 0, 0, NULL, NULL,
+++  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+++  HTON_NO_FLAGS };
+++#endif
++ #ifdef HAVE_INNOBASE_DB
++ #include "ha_innodb.h"
++ extern handlerton innobase_hton;
++@@ -141,6 +150,7 @@
++   &example_hton,
++   &archive_hton,
++   &tina_hton,
+++  &sphinx_hton,
++   &ndbcluster_hton,
++   &federated_hton,
++   &myisammrg_hton,
++@@ -341,6 +351,12 @@
++       return new (alloc) ha_tina(table);
++     return NULL;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  case DB_TYPE_SPHINX_DB:
+++    if (have_sphinx_db == SHOW_OPTION_YES)
+++      return new (alloc) ha_sphinx(table);
+++    return NULL;
+++#endif
++ #ifdef HAVE_NDBCLUSTER_DB
++   case DB_TYPE_NDBCLUSTER:
++     if (have_ndbcluster == SHOW_OPTION_YES)
++--- mysql-5.0.67/sql/handler.h	2008-08-04 23:20:04.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/handler.h	2009-02-14 09:15:48.000000000 +1000
++@@ -186,8 +186,9 @@
++   DB_TYPE_BERKELEY_DB, DB_TYPE_INNODB,
++   DB_TYPE_GEMINI, DB_TYPE_NDBCLUSTER,
++   DB_TYPE_EXAMPLE_DB, DB_TYPE_ARCHIVE_DB, DB_TYPE_CSV_DB,
++-  DB_TYPE_FEDERATED_DB,
+++  DB_TYPE_FEDERATED_DB, 
++   DB_TYPE_BLACKHOLE_DB,
+++  DB_TYPE_SPHINX_DB,
++   DB_TYPE_DEFAULT // Must be last
++ };
++ 
++--- mysql-5.0.67/sql/Makefile.am	2008-08-04 23:20:02.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/Makefile.am	2009-02-14 09:23:28.000000000 +1000
++@@ -68,6 +68,7 @@
++ 			sql_array.h sql_cursor.h \
++ 			examples/ha_example.h ha_archive.h \
++ 			examples/ha_tina.h ha_blackhole.h  \
+++			sphinx/ha_sphinx.h \
++ 			ha_federated.h
++ mysqld_SOURCES =	sql_lex.cc sql_handler.cc \
++ 			item.cc item_sum.cc item_buff.cc item_func.cc \
++@@ -105,6 +106,7 @@
++ 			sp_cache.cc parse_file.cc sql_trigger.cc \
++ 			examples/ha_example.cc ha_archive.cc \
++ 			examples/ha_tina.cc ha_blackhole.cc \
+++			sphinx/ha_sphinx.cc \
++ 			ha_federated.cc
++ 
++ gen_lex_hash_SOURCES =	gen_lex_hash.cc
++@@ -174,6 +176,10 @@
++ udf_example_la_SOURCES= udf_example.c
++ udf_example_la_LDFLAGS= -module -rpath $(pkglibdir)
++ 
+++pkglib_LTLIBRARIES = sphinx/sphinx.la
+++sphinx_sphinx_la_SOURCES = sphinx/snippets_udf.cc
+++sphinx_sphinx_la_LDFLAGS = -module
+++
++ 
++ # Don't update the files from bitkeeper
++ %::SCCS/s.%
++--- mysql-5.0.67/sql/mysqld.cc	2008-08-04 23:20:07.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/mysqld.cc	2009-02-14 09:15:48.000000000 +1000
++@@ -36,6 +36,10 @@
++ #include <sys/prctl.h>
++ #endif
++ 
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++#endif
+++
++ #ifdef HAVE_INNOBASE_DB
++ #define OPT_INNODB_DEFAULT 1
++ #else
++@@ -6633,6 +6637,13 @@
++   {"Threads_running",          (char*) &thread_running,         SHOW_INT_CONST},
++   {"Uptime",                   (char*) 0,                       SHOW_STARTTIME},
++   {"Uptime_since_flush_status",(char*) 0,                       SHOW_FLUSHTIME},
+++#ifdef HAVE_SPHINX_DB
+++  {"sphinx_total",			(char *)sphinx_showfunc_total,			SHOW_SPHINX_FUNC},
+++  {"sphinx_total_found",	(char *)sphinx_showfunc_total_found,	SHOW_SPHINX_FUNC},
+++  {"sphinx_time",			(char *)sphinx_showfunc_time,			SHOW_SPHINX_FUNC},
+++  {"sphinx_word_count",		(char *)sphinx_showfunc_word_count,		SHOW_SPHINX_FUNC},
+++  {"sphinx_words",			(char *)sphinx_showfunc_words,			SHOW_SPHINX_FUNC},
+++#endif
++   {NullS, NullS, SHOW_LONG}
++ };
++ 
++@@ -6875,6 +6886,11 @@
++ #else
++   have_csv_db= SHOW_OPTION_NO;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  have_sphinx_db= SHOW_OPTION_YES;
+++#else
+++  have_sphinx_db= SHOW_OPTION_NO;
+++#endif
++ #ifdef HAVE_NDBCLUSTER_DB
++   have_ndbcluster=SHOW_OPTION_DISABLED;
++ #else
++@@ -7983,6 +7999,7 @@
++ #undef have_example_db
++ #undef have_archive_db
++ #undef have_csv_db
+++#undef have_sphinx_db
++ #undef have_federated_db
++ #undef have_partition_db
++ #undef have_blackhole_db
++@@ -7993,6 +8010,7 @@
++ SHOW_COMP_OPTION have_example_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_archive_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_csv_db= SHOW_OPTION_NO;
+++SHOW_COMP_OPTION have_sphinx_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_federated_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_partition_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_blackhole_db= SHOW_OPTION_NO;
++--- mysql-5.0.67/sql/mysql_priv.h	2008-08-04 23:20:07.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/mysql_priv.h	2009-02-14 09:15:48.000000000 +1000
++@@ -1439,6 +1439,12 @@
++ #else
++ extern SHOW_COMP_OPTION have_csv_db;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++extern handlerton sphinx_hton;
+++#define have_sphinx_db sphinx_hton.state
+++#else
+++extern SHOW_COMP_OPTION have_sphinx_db;
+++#endif
++ #ifdef HAVE_FEDERATED_DB
++ extern handlerton federated_hton;
++ #define have_federated_db federated_hton.state
++--- mysql-5.0.67/sql/set_var.cc	2008-08-04 23:20:08.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/set_var.cc	2009-02-14 09:15:48.000000000 +1000
++@@ -888,6 +888,7 @@
++   {"have_compress",	      (char*) &have_compress,		    SHOW_HAVE},
++   {"have_crypt",	      (char*) &have_crypt,		    SHOW_HAVE},
++   {"have_csv",	              (char*) &have_csv_db,	            SHOW_HAVE},
+++  {"have_sphinx",             (char*) &have_sphinx_db,              SHOW_HAVE},
++   {"have_dynamic_loading",    (char*) &have_dlopen,	            SHOW_HAVE},
++   {"have_example_engine",     (char*) &have_example_db,	            SHOW_HAVE},
++   {"have_federated_engine",   (char*) &have_federated_db,           SHOW_HAVE},
++--- mysql-5.0.67/sql/sql_lex.h	2008-08-04 23:20:10.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/sql_lex.h	2009-02-14 09:15:48.000000000 +1000
++@@ -57,6 +57,7 @@
++   SQLCOM_SHOW_DATABASES, SQLCOM_SHOW_TABLES, SQLCOM_SHOW_FIELDS,
++   SQLCOM_SHOW_KEYS, SQLCOM_SHOW_VARIABLES, SQLCOM_SHOW_LOGS, SQLCOM_SHOW_STATUS,
++   SQLCOM_SHOW_INNODB_STATUS, SQLCOM_SHOW_NDBCLUSTER_STATUS, SQLCOM_SHOW_MUTEX_STATUS,
+++  SQLCOM_SHOW_SPHINX_STATUS,
++   SQLCOM_SHOW_PROCESSLIST, SQLCOM_SHOW_MASTER_STAT, SQLCOM_SHOW_SLAVE_STAT,
++   SQLCOM_SHOW_GRANTS, SQLCOM_SHOW_CREATE, SQLCOM_SHOW_CHARSETS,
++   SQLCOM_SHOW_COLLATIONS, SQLCOM_SHOW_CREATE_DB, SQLCOM_SHOW_TABLE_STATUS,
++--- mysql-5.0.67/sql/sql_parse.cc	2008-08-04 23:20:10.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/sql_parse.cc	2009-02-14 09:15:48.000000000 +1000
++@@ -24,6 +24,9 @@
++ #ifdef HAVE_INNOBASE_DB
++ #include "ha_innodb.h"
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++#endif
++ 
++ #ifdef HAVE_NDBCLUSTER_DB
++ #include "ha_ndbcluster.h"
++@@ -3006,6 +3009,15 @@
++       break;
++     }
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  case SQLCOM_SHOW_SPHINX_STATUS:
+++    {
+++      if (check_global_access(thd, SUPER_ACL))
+++	goto error;
+++      res = sphinx_show_status(thd);
+++      break;
+++    }
+++#endif
++ #ifdef HAVE_REPLICATION
++   case SQLCOM_LOAD_MASTER_TABLE:
++   {
++--- mysql-5.0.67/sql/sql_yacc.yy	2008-08-04 23:20:12.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/sql_yacc.yy	2009-02-14 09:15:48.000000000 +1000
++@@ -7393,6 +7393,9 @@
++ 	    case DB_TYPE_INNODB:
++ 	      Lex->sql_command = SQLCOM_SHOW_INNODB_STATUS;
++ 	      break;
+++	    case DB_TYPE_SPHINX_DB:
+++	      Lex->sql_command = SQLCOM_SHOW_SPHINX_STATUS;
+++	      break;
++ 	    default:
++ 	      my_error(ER_NOT_SUPPORTED_YET, MYF(0), "STATUS");
++ 	      MYSQL_YYABORT;
++--- mysql-5.0.67/sql/structs.h	2008-08-04 23:20:12.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/structs.h	2009-02-14 09:15:48.000000000 +1000
++@@ -188,6 +188,9 @@
++   SHOW_SSL_CTX_SESS_TIMEOUTS, SHOW_SSL_CTX_SESS_CACHE_FULL,
++   SHOW_SSL_GET_CIPHER_LIST,
++ #endif /* HAVE_OPENSSL */
+++#ifdef HAVE_SPHINX_DB
+++  SHOW_SPHINX_FUNC,
+++#endif
++   SHOW_NET_COMPRESSION,
++   SHOW_RPL_STATUS, SHOW_SLAVE_RUNNING, SHOW_SLAVE_RETRIED_TRANS,
++   SHOW_KEY_CACHE_LONG, SHOW_KEY_CACHE_CONST_LONG, SHOW_KEY_CACHE_LONGLONG,
++--- mysql-5.0.67/sql/sql_show.cc	2008-08-04 23:20:11.000000000 +1100
+++++ mysql-5.0.67-sphinx/sql/sql_show.cc	2009-02-14 09:15:48.000000000 +1000
++@@ -1473,6 +1473,16 @@
++           value=     (char*) ((sys_var*) value)->value_ptr(thd, value_type,
++                                                            &null_lex_str);
++         }
+++		#ifdef HAVE_SPHINX_DB
+++		else if (show_type == SHOW_SPHINX_FUNC)
+++		{
+++			SHOW_VAR var;
+++			((int (*)(THD *, SHOW_VAR *, char *))value)(thd, &var, buff);
+++
+++			value = var.value;
+++			show_type = var.type;
+++		}
+++		#endif /* HAVE_SPHINX_DB */
++ 
++         pos= end= buff;
++         switch (show_type) {
+diff -uNr orig/sql/sphinx/sphinx.5.0.91.diff new/sql/sphinx/sphinx.5.0.91.diff
+--- orig/sql/sphinx/sphinx.5.0.91.diff	1970-01-01 09:00:00.000000000 +0900
++++ new/sql/sphinx/sphinx.5.0.91.diff	2010-07-07 05:03:30.000000000 +0900
+@@ -0,0 +1,400 @@
++diff -r 319c65835581 CMakeLists.txt
++--- a/CMakeLists.txt	Sun Jun 20 15:15:01 2010 +0400
+++++ b/CMakeLists.txt	Sun Jun 20 15:59:31 2010 +0400
++@@ -70,6 +70,10 @@
++   ADD_DEFINITIONS(-DHAVE_INNOBASE_DB)
++ ENDIF(WITH_INNOBASE_STORAGE_ENGINE)
++ 
+++IF(WITH_SPHINX_STORAGE_ENGINE)
+++  ADD_DEFINITIONS(-DHAVE_SPHINX_DB)
+++ENDIF(WITH_SPHINX_STORAGE_ENGINE)
+++
++ SET(localstatedir "C:\\mysql\\data")
++ CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/support-files/my-huge.cnf.sh
++                ${CMAKE_SOURCE_DIR}/support-files/my-huge.ini @ONLY)
++diff -r 319c65835581 configure.in
++--- a/configure.in	Sun Jun 20 15:15:01 2010 +0400
+++++ b/configure.in	Sun Jun 20 15:59:31 2010 +0400
++@@ -60,6 +60,7 @@
++ sinclude(config/ac-macros/ha_berkeley.m4)
++ sinclude(config/ac-macros/ha_blackhole.m4)
++ sinclude(config/ac-macros/ha_example.m4)
+++sinclude(config/ac-macros/ha_sphinx.m4)
++ sinclude(config/ac-macros/ha_federated.m4)
++ sinclude(config/ac-macros/ha_innodb.m4)
++ sinclude(config/ac-macros/ha_ndbcluster.m4)
++@@ -2696,6 +2697,7 @@
++ MYSQL_CHECK_BDB
++ MYSQL_CHECK_INNODB
++ MYSQL_CHECK_EXAMPLEDB
+++MYSQL_CHECK_SPHINXDB
++ MYSQL_CHECK_ARCHIVEDB
++ MYSQL_CHECK_CSVDB
++ MYSQL_CHECK_BLACKHOLEDB
++diff -r 319c65835581 libmysqld/Makefile.am
++--- a/libmysqld/Makefile.am	Sun Jun 20 15:15:01 2010 +0400
+++++ b/libmysqld/Makefile.am	Sun Jun 20 15:59:31 2010 +0400
++@@ -29,6 +29,7 @@
++ 			-I$(top_builddir)/include -I$(top_srcdir)/include \
++ 			-I$(top_builddir)/sql -I$(top_srcdir)/sql \
++ 			-I$(top_srcdir)/sql/examples \
+++			-I$(top_srcdir)/sql/sphinx \
++ 			-I$(top_srcdir)/regex \
++ 			$(openssl_includes) @ZLIB_INCLUDES@
++ 
++@@ -39,6 +40,7 @@
++ libmysqlsources =	errmsg.c get_password.c libmysql.c client.c pack.c \
++                         my_time.c
++ sqlexamplessources =	ha_example.cc ha_tina.cc
+++sqlsphinxsources =	ha_sphinx.cc
++ 
++ noinst_HEADERS =	embedded_priv.h emb_qcache.h
++ 
++@@ -67,7 +69,7 @@
++ 	parse_file.cc sql_view.cc sql_trigger.cc my_decimal.cc \
++ 	ha_blackhole.cc ha_archive.cc my_user.c
++ 
++-libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources)
+++libmysqld_int_a_SOURCES= $(libmysqld_sources) $(libmysqlsources) $(sqlsources) $(sqlexamplessources) $(sqlsphinxsources)
++ libmysqld_a_SOURCES=
++ 
++ # automake misses these
++@@ -147,12 +149,16 @@
++ 	    rm -f $$f; \
++ 	    @LN_CP_F@ $(top_srcdir)/sql/examples/$$f $$f; \
++ 	  done; \
+++	  for f in $(sqlsphinxsources); do \
+++	    rm -f $$f; \
+++	    @LN_CP_F@ $(top_srcdir)/sql/sphinx/$$f $$f; \
+++	  done; \
++ 	  rm -f client_settings.h; \
++ 	  @LN_CP_F@ $(top_srcdir)/libmysql/client_settings.h client_settings.h
++ 
++ 
++ clean-local:
++-	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) | sed "s;\.lo;.c;g"` \
+++	rm -f `echo $(sqlsources) $(libmysqlsources) $(sqlexamplessources) $(sqlsphinxsources) | sed "s;\.lo;.c;g"` \
++ 	       $(top_srcdir)/linked_libmysqld_sources; \
++ 	rm -f client_settings.h
++ 
++diff -r 319c65835581 sql/CMakeLists.txt
++--- a/sql/CMakeLists.txt	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/CMakeLists.txt	Sun Jun 20 15:59:31 2010 +0400
++@@ -50,6 +50,7 @@
++                filesort.cc gstream.cc ha_blackhole.cc 
++                ha_archive.cc ha_heap.cc ha_myisam.cc ha_myisammrg.cc
++                ha_innodb.cc ha_federated.cc ha_berkeley.cc
+++               sphinx/ha_sphinx.cc
++                handler.cc hash_filo.cc hash_filo.h 
++                hostname.cc init.cc item.cc item_buff.cc item_cmpfunc.cc 
++                item_create.cc item_func.cc item_geofunc.cc item_row.cc 
++diff -r 319c65835581 sql/Makefile.am
++--- a/sql/Makefile.am	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/Makefile.am	Sun Jun 20 15:59:31 2010 +0400
++@@ -68,6 +68,7 @@
++ 			sql_array.h sql_cursor.h \
++ 			examples/ha_example.h ha_archive.h \
++ 			examples/ha_tina.h ha_blackhole.h  \
+++			sphinx/ha_sphinx.h \
++ 			ha_federated.h
++ mysqld_SOURCES =	sql_lex.cc sql_handler.cc \
++ 			item.cc item_sum.cc item_buff.cc item_func.cc \
++@@ -105,6 +106,7 @@
++ 			sp_cache.cc parse_file.cc sql_trigger.cc \
++ 			examples/ha_example.cc ha_archive.cc \
++ 			examples/ha_tina.cc ha_blackhole.cc \
+++			sphinx/ha_sphinx.cc \
++ 			ha_federated.cc
++ 
++ gen_lex_hash_SOURCES =	gen_lex_hash.cc
++@@ -175,6 +177,10 @@
++ udf_example_la_SOURCES= udf_example.c
++ udf_example_la_LDFLAGS= -module -rpath $(pkglibdir)
++ 
+++pkglib_LTLIBRARIES = sphinx/sphinx.la
+++sphinx_sphinx_la_SOURCES = sphinx/snippets_udf.cc
+++sphinx_sphinx_la_LDFLAGS = -module
+++
++ 
++ # Don't update the files from bitkeeper
++ %::SCCS/s.%
++diff -r 319c65835581 sql/handler.cc
++--- a/sql/handler.cc	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/handler.cc	Sun Jun 20 15:59:31 2010 +0400
++@@ -77,6 +77,15 @@
++   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
++   HTON_NO_FLAGS };
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++extern handlerton sphinx_hton;
+++#else
+++handlerton sphinx_hton = { "SPHINX", SHOW_OPTION_NO, "SPHINX storage engine",
+++  DB_TYPE_SPHINX_DB, NULL, 0, 0, NULL, NULL,
+++  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+++  HTON_NO_FLAGS };
+++#endif
++ #ifdef HAVE_INNOBASE_DB
++ #include "ha_innodb.h"
++ extern handlerton innobase_hton;
++@@ -141,6 +150,7 @@
++   &example_hton,
++   &archive_hton,
++   &tina_hton,
+++  &sphinx_hton,
++   &ndbcluster_hton,
++   &federated_hton,
++   &myisammrg_hton,
++@@ -342,6 +352,12 @@
++       return new (alloc) ha_tina(table);
++     return NULL;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  case DB_TYPE_SPHINX_DB:
+++    if (have_sphinx_db == SHOW_OPTION_YES)
+++      return new (alloc) ha_sphinx(table);
+++    return NULL;
+++#endif
++ #ifdef HAVE_NDBCLUSTER_DB
++   case DB_TYPE_NDBCLUSTER:
++     if (have_ndbcluster == SHOW_OPTION_YES)
++diff -r 319c65835581 sql/handler.h
++--- a/sql/handler.h	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/handler.h	Sun Jun 20 15:59:31 2010 +0400
++@@ -186,8 +186,9 @@
++   DB_TYPE_BERKELEY_DB, DB_TYPE_INNODB,
++   DB_TYPE_GEMINI, DB_TYPE_NDBCLUSTER,
++   DB_TYPE_EXAMPLE_DB, DB_TYPE_ARCHIVE_DB, DB_TYPE_CSV_DB,
++-  DB_TYPE_FEDERATED_DB,
+++  DB_TYPE_FEDERATED_DB, 
++   DB_TYPE_BLACKHOLE_DB,
+++  DB_TYPE_SPHINX_DB,
++   DB_TYPE_DEFAULT // Must be last
++ };
++ 
++diff -r 319c65835581 sql/mysql_priv.h
++--- a/sql/mysql_priv.h	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/mysql_priv.h	Sun Jun 20 15:59:31 2010 +0400
++@@ -1462,6 +1462,12 @@
++ #else
++ extern SHOW_COMP_OPTION have_csv_db;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++extern handlerton sphinx_hton;
+++#define have_sphinx_db sphinx_hton.state
+++#else
+++extern SHOW_COMP_OPTION have_sphinx_db;
+++#endif
++ #ifdef HAVE_FEDERATED_DB
++ extern handlerton federated_hton;
++ #define have_federated_db federated_hton.state
++diff -r 319c65835581 sql/mysqld.cc
++--- a/sql/mysqld.cc	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/mysqld.cc	Sun Jun 20 15:59:31 2010 +0400
++@@ -36,6 +36,10 @@
++ #include <sys/prctl.h>
++ #endif
++ 
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++#endif
+++
++ #ifdef HAVE_INNOBASE_DB
++ #define OPT_INNODB_DEFAULT 1
++ #else
++@@ -6721,6 +6725,13 @@
++ #ifdef COMMUNITY_SERVER
++   {"Uptime_since_flush_status",(char*) 0,                       SHOW_FLUSHTIME},
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++   {"sphinx_total",            (char *)sphinx_showfunc_total,       SHOW_SPHINX_FUNC},
+++   {"sphinx_total_found",      (char *)sphinx_showfunc_total_found, SHOW_SPHINX_FUNC},
+++   {"sphinx_time",             (char *)sphinx_showfunc_time,        SHOW_SPHINX_FUNC},
+++   {"sphinx_word_count",       (char *)sphinx_showfunc_word_count,  SHOW_SPHINX_FUNC},
+++   {"sphinx_words",            (char *)sphinx_showfunc_words,       SHOW_SPHINX_FUNC},
+++#endif
++   {NullS, NullS, SHOW_LONG}
++ };
++ 
++@@ -6964,6 +6975,11 @@
++ #else
++   have_csv_db= SHOW_OPTION_NO;
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  have_sphinx_db= SHOW_OPTION_YES;
+++#else
+++  have_sphinx_db= SHOW_OPTION_NO;
+++#endif
++ #ifdef HAVE_NDBCLUSTER_DB
++   have_ndbcluster=SHOW_OPTION_DISABLED;
++ #else
++@@ -8087,6 +8103,7 @@
++ #undef have_example_db
++ #undef have_archive_db
++ #undef have_csv_db
+++#undef have_sphinx_db
++ #undef have_federated_db
++ #undef have_partition_db
++ #undef have_blackhole_db
++@@ -8097,6 +8114,7 @@
++ SHOW_COMP_OPTION have_example_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_archive_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_csv_db= SHOW_OPTION_NO;
+++SHOW_COMP_OPTION have_sphinx_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_federated_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_partition_db= SHOW_OPTION_NO;
++ SHOW_COMP_OPTION have_blackhole_db= SHOW_OPTION_NO;
++diff -r 319c65835581 sql/set_var.cc
++--- a/sql/set_var.cc	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/set_var.cc	Sun Jun 20 15:59:31 2010 +0400
++@@ -913,6 +913,7 @@
++   {"have_profiling",          (char*) &have_profiling,	            SHOW_HAVE},
++   {"have_crypt",	      (char*) &have_crypt,		    SHOW_HAVE},
++   {"have_csv",	              (char*) &have_csv_db,	            SHOW_HAVE},
+++  {"have_sphinx",             (char*) &have_sphinx_db,              SHOW_HAVE},
++   {"have_dynamic_loading",    (char*) &have_dlopen,	            SHOW_HAVE},
++   {"have_example_engine",     (char*) &have_example_db,	            SHOW_HAVE},
++   {"have_federated_engine",   (char*) &have_federated_db,           SHOW_HAVE},
++diff -r 319c65835581 sql/sql_lex.h
++--- a/sql/sql_lex.h	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/sql_lex.h	Sun Jun 20 15:59:31 2010 +0400
++@@ -57,6 +57,7 @@
++   SQLCOM_SHOW_DATABASES, SQLCOM_SHOW_TABLES, SQLCOM_SHOW_FIELDS,
++   SQLCOM_SHOW_KEYS, SQLCOM_SHOW_VARIABLES, SQLCOM_SHOW_LOGS, SQLCOM_SHOW_STATUS,
++   SQLCOM_SHOW_INNODB_STATUS, SQLCOM_SHOW_NDBCLUSTER_STATUS, SQLCOM_SHOW_MUTEX_STATUS,
+++  SQLCOM_SHOW_SPHINX_STATUS,
++   SQLCOM_SHOW_PROCESSLIST, SQLCOM_SHOW_MASTER_STAT, SQLCOM_SHOW_SLAVE_STAT,
++   SQLCOM_SHOW_GRANTS, SQLCOM_SHOW_CREATE, SQLCOM_SHOW_CHARSETS,
++   SQLCOM_SHOW_COLLATIONS, SQLCOM_SHOW_CREATE_DB, SQLCOM_SHOW_TABLE_STATUS,
++diff -r 319c65835581 sql/sql_parse.cc
++--- a/sql/sql_parse.cc	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/sql_parse.cc	Sun Jun 20 15:59:31 2010 +0400
++@@ -24,6 +24,9 @@
++ #ifdef HAVE_INNOBASE_DB
++ #include "ha_innodb.h"
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++#include "sphinx/ha_sphinx.h"
+++#endif
++ 
++ #ifdef HAVE_NDBCLUSTER_DB
++ #include "ha_ndbcluster.h"
++@@ -3166,6 +3169,15 @@
++       break;
++     }
++ #endif
+++#ifdef HAVE_SPHINX_DB
+++  case SQLCOM_SHOW_SPHINX_STATUS:
+++    {
+++      if (check_global_access(thd, SUPER_ACL))
+++	goto error;
+++      res = sphinx_show_status(thd);
+++      break;
+++    }
+++#endif
++ #ifdef HAVE_REPLICATION
++   case SQLCOM_LOAD_MASTER_TABLE:
++   {
++diff -r 319c65835581 sql/sql_show.cc
++--- a/sql/sql_show.cc	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/sql_show.cc	Sun Jun 20 15:59:31 2010 +0400
++@@ -1500,6 +1500,16 @@
++           value= (char*) var->value_ptr(thd, value_type, &null_lex_str);
++           charset= var->charset(thd);
++         }
+++		#ifdef HAVE_SPHINX_DB
+++		else if (show_type == SHOW_SPHINX_FUNC)
+++		{
+++			SHOW_VAR var;
+++			((int (*)(THD *, SHOW_VAR *, char *))value)(thd, &var, buff);
+++
+++			value = var.value;
+++			show_type = var.type;
+++		}
+++		#endif /* HAVE_SPHINX_DB */
++ 
++         pos= end= buff;
++         switch (show_type) {
++diff -r 319c65835581 sql/sql_yacc.yy
++--- a/sql/sql_yacc.yy	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/sql_yacc.yy	Sun Jun 20 15:59:31 2010 +0400
++@@ -8342,6 +8342,9 @@
++ 	    case DB_TYPE_INNODB:
++ 	      Lex->sql_command = SQLCOM_SHOW_INNODB_STATUS;
++ 	      break;
+++	    case DB_TYPE_SPHINX_DB:
+++	      Lex->sql_command = SQLCOM_SHOW_SPHINX_STATUS;
+++	      break;
++ 	    default:
++ 	      my_error(ER_NOT_SUPPORTED_YET, MYF(0), "STATUS");
++ 	      MYSQL_YYABORT;
++diff -r 319c65835581 sql/sql_yacc.cc
++--- a/sql/sql_yacc.cc	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/sql_yacc.cc	Sun Jun 20 15:59:31 2010 +0400
++@@ -27003,6 +27003,9 @@
++ 	    case DB_TYPE_INNODB:
++ 	      Lex->sql_command = SQLCOM_SHOW_INNODB_STATUS;
++ 	      break;
+++	    case DB_TYPE_SPHINX_DB:
+++	      Lex->sql_command = SQLCOM_SHOW_SPHINX_STATUS;
+++	      break;
++ 	    default:
++ 	      my_error(ER_NOT_SUPPORTED_YET, MYF(0), "STATUS");
++ 	      MYSQL_YYABORT;
++diff -r 319c65835581 sql/structs.h
++--- a/sql/structs.h	Sun Jun 20 15:15:01 2010 +0400
+++++ b/sql/structs.h	Sun Jun 20 15:59:31 2010 +0400
++@@ -194,6 +194,9 @@
++   SHOW_SSL_CTX_SESS_TIMEOUTS, SHOW_SSL_CTX_SESS_CACHE_FULL,
++   SHOW_SSL_GET_CIPHER_LIST,
++ #endif /* HAVE_OPENSSL */
+++#ifdef HAVE_SPHINX_DB
+++  SHOW_SPHINX_FUNC,
+++#endif
++   SHOW_NET_COMPRESSION,
++   SHOW_RPL_STATUS, SHOW_SLAVE_RUNNING, SHOW_SLAVE_RETRIED_TRANS,
++   SHOW_KEY_CACHE_LONG, SHOW_KEY_CACHE_CONST_LONG, SHOW_KEY_CACHE_LONGLONG,
++diff -r 319c65835581 win/configure.js
++--- a/win/configure.js	Sun Jun 20 15:15:01 2010 +0400
+++++ b/win/configure.js	Sun Jun 20 15:59:31 2010 +0400
++@@ -45,6 +45,7 @@
++             case "WITH_EXAMPLE_STORAGE_ENGINE":
++             case "WITH_FEDERATED_STORAGE_ENGINE":
++             case "WITH_INNOBASE_STORAGE_ENGINE":
+++            case "WITH_SPHINX_STORAGE_ENGINE":
++             case "__NT__":
++             case "DISABLE_GRANT_OPTIONS":
++             case "EMBED_MANIFESTS":
++--- mysql-5.0.67/config/ac-macros/ha_sphinx.m4	1970-01-01 10:00:00.000000000 +1000
+++++ mysql-5.0.67-sphinx/config/ac-macros/ha_sphinx.m4	2009-02-14 09:15:48.000000000 +1000
++@@ -0,0 +1,30 @@
+++dnl ---------------------------------------------------------------------------
+++dnl Macro: MYSQL_CHECK_EXAMPLEDB
+++dnl Sets HAVE_SPHINX_DB if --with-sphinx-storage-engine is used
+++dnl ---------------------------------------------------------------------------
+++AC_DEFUN([MYSQL_CHECK_SPHINXDB], [
+++  AC_ARG_WITH([sphinx-storage-engine],
+++              [
+++  --with-sphinx-storage-engine
+++                          Enable the Sphinx Storage Engine],
+++              [sphinxdb="$withval"],
+++              [sphinxdb=no])
+++  AC_MSG_CHECKING([for example storage engine])
+++
+++  case "$sphinxdb" in
+++    yes )
+++      AC_DEFINE([HAVE_SPHINX_DB], [1], [Builds Sphinx Engine])
+++      AC_MSG_RESULT([yes])
+++      [sphinxdb=yes]
+++      ;;
+++    * )
+++      AC_MSG_RESULT([no])
+++      [sphinxdb=no]
+++      ;;
+++  esac
+++
+++])
+++dnl ---------------------------------------------------------------------------
+++dnl END OF MYSQL_CHECK_EXAMPLE SECTION
+++dnl ---------------------------------------------------------------------------
+++
+diff -uNr orig/sql/sql_lex.h new/sql/sql_lex.h
+--- orig/sql/sql_lex.h	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/sql_lex.h	2010-08-12 15:10:52.000000000 +0900
+@@ -61,6 +61,7 @@
+   SQLCOM_SHOW_DATABASES, SQLCOM_SHOW_TABLES, SQLCOM_SHOW_FIELDS,
+   SQLCOM_SHOW_KEYS, SQLCOM_SHOW_VARIABLES, SQLCOM_SHOW_LOGS, SQLCOM_SHOW_STATUS,
+   SQLCOM_SHOW_INNODB_STATUS, SQLCOM_SHOW_NDBCLUSTER_STATUS, SQLCOM_SHOW_MUTEX_STATUS,
++  SQLCOM_SHOW_SPHINX_STATUS,
+   SQLCOM_SHOW_PROCESSLIST, SQLCOM_SHOW_MASTER_STAT, SQLCOM_SHOW_SLAVE_STAT,
+   SQLCOM_SHOW_GRANTS, SQLCOM_SHOW_CREATE, SQLCOM_SHOW_CHARSETS,
+   SQLCOM_SHOW_COLLATIONS, SQLCOM_SHOW_CREATE_DB, SQLCOM_SHOW_TABLE_STATUS,
+diff -uNr orig/sql/sql_parse.cc new/sql/sql_parse.cc
+--- orig/sql/sql_parse.cc	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/sql_parse.cc	2010-08-12 15:10:52.000000000 +0900
+@@ -24,6 +24,9 @@
+ #ifdef HAVE_INNOBASE_DB
+ #include "ha_innodb.h"
+ #endif
++#ifdef HAVE_SPHINX_DB
++#include "sphinx/ha_sphinx.h"
++#endif
+ 
+ #ifdef HAVE_NDBCLUSTER_DB
+ #include "ha_ndbcluster.h"
+@@ -3160,6 +3163,15 @@
+     break;
+   }
+ #endif
++#ifdef HAVE_SPHINX_DB
++  case SQLCOM_SHOW_SPHINX_STATUS:
++    {
++      if (check_global_access(thd, SUPER_ACL))
++	goto error;
++      res = sphinx_show_status(thd);
++      break;
++    }
++#endif
+ #ifdef HAVE_REPLICATION
+   case SQLCOM_LOAD_MASTER_TABLE:
+   {
+diff -uNr orig/sql/sql_show.cc new/sql/sql_show.cc
+--- orig/sql/sql_show.cc	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/sql_show.cc	2010-08-12 15:10:52.000000000 +0900
+@@ -1546,6 +1546,16 @@
+           value= (char*) var->value_ptr(thd, value_type, &null_lex_str);
+           charset= var->charset(thd);
+         }
++		#ifdef HAVE_SPHINX_DB
++		else if (show_type == SHOW_SPHINX_FUNC)
++		{
++			SHOW_VAR var;
++			((int (*)(THD *, SHOW_VAR *, char *))value)(thd, &var, buff);
++
++			value = var.value;
++			show_type = var.type;
++		}
++		#endif /* HAVE_SPHINX_DB */
+ 
+         pos= end= buff;
+         switch (show_type) {
+diff -uNr orig/sql/sql_yacc.yy new/sql/sql_yacc.yy
+--- orig/sql/sql_yacc.yy	2009-11-16 19:25:13.000000000 +0900
++++ new/sql/sql_yacc.yy	2010-08-12 15:10:52.000000000 +0900
+@@ -8452,6 +8452,9 @@
+ 	    case DB_TYPE_INNODB:
+ 	      Lex->sql_command = SQLCOM_SHOW_INNODB_STATUS;
+ 	      break;
++	    case DB_TYPE_SPHINX_DB:
++	      Lex->sql_command = SQLCOM_SHOW_SPHINX_STATUS;
++	      break;
+ 	    default:
+ 	      my_error(ER_NOT_SUPPORTED_YET, MYF(0), "STATUS");
+ 	      MYSQL_YYABORT;
+diff -uNr orig/sql/structs.h new/sql/structs.h
+--- orig/sql/structs.h	2009-11-16 19:24:12.000000000 +0900
++++ new/sql/structs.h	2010-08-12 15:11:08.000000000 +0900
+@@ -200,6 +200,9 @@
+   SHOW_SSL_CTX_SESS_TIMEOUTS, SHOW_SSL_CTX_SESS_CACHE_FULL,
+   SHOW_SSL_GET_CIPHER_LIST,
+ #endif /* HAVE_OPENSSL */
++#ifdef HAVE_SPHINX_DB
++  SHOW_SPHINX_FUNC,
++#endif
+   SHOW_NET_COMPRESSION,
+   SHOW_RPL_STATUS, SHOW_SLAVE_RUNNING, SHOW_SLAVE_RETRIED_TRANS,
+   SHOW_KEY_CACHE_LONG, SHOW_KEY_CACHE_CONST_LONG, SHOW_KEY_CACHE_LONGLONG,
+diff -uNr orig/win/configure.js new/win/configure.js
+--- orig/win/configure.js	2009-10-16 06:20:43.000000000 +0900
++++ new/win/configure.js	2010-08-12 15:11:08.000000000 +0900
+@@ -45,6 +45,7 @@
+             case "WITH_EXAMPLE_STORAGE_ENGINE":
+             case "WITH_FEDERATED_STORAGE_ENGINE":
+             case "WITH_INNOBASE_STORAGE_ENGINE":
++            case "WITH_SPHINX_STORAGE_ENGINE":
+             case "__NT__":
+             case "DISABLE_GRANT_OPTIONS":
+             case "EMBED_MANIFESTS":
