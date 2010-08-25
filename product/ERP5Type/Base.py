@@ -3221,8 +3221,11 @@ class Base( CopyContainer,
         if method is not None:
           method_value = method()
           if method_value is not None:
-            searchable_text_list.append(method_value)
-      searchable_text = ' '.join(searchable_text_list)
+            if isinstance(method_value, (list, tuple)):
+              searchable_text_list.extend(method_value)
+            else:
+              searchable_text_list.append(method_value)
+      searchable_text = ' '.join([str(x) for x in searchable_text_list])
       return searchable_text
 
   # Compatibility with CMF Catalog / CPS sites
