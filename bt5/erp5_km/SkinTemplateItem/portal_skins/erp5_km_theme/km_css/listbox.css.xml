@@ -276,7 +276,16 @@ div.listbox-full-text-search input.button{\n
  width: auto;\n
 }\n
 \n
-/* Listbox Pagination*/\n
+/* Listbox Navigation */\n
+div.listbox-page-navigation input.listbox_set_page, \n
+div.listbox-page-navigation button.listbox_next_page, \n
+div.listbox-page-navigation button.listbox_last_page, \n
+div.listbox-page-navigation button.listbox_first_page, \n
+div.listbox-page-navigation button.listbox_previous_page{\n
+  margin: 0em;\n
+  padding: 0em;\n
+}\n
+\n
 div.listbox-page-navigation button{\n
   background-color:transparent;\n
   border: none;\n
