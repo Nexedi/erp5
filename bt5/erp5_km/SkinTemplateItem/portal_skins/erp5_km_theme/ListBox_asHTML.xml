@@ -172,9 +172,7 @@
       <table class="listbox">      \n
         <thead>\n
           <!--Column title -->\n
-          <tr id="listbox-label-line" \n
-              class="listbox-label-line"\n
-              tal:attributes="id string:${field_id}-label-line">  \n
+          <tr class="listbox-label-line">  \n
 \n
             <!--Report tree-->\n
             <th tal:condition="is_report_tree_mode"\n
@@ -261,9 +259,7 @@
 \n
             <!--Search column input -->\n
             <tr tal:condition="python: show_search_line or is_report_tree_mode"\n
-                id="listbox-search-line" \n
-                class="listbox-search-line"\n
-                tal:attributes="id python: show_search_line and (\'%s-search-line\' % field_id) or (\'%s-report-depth-line\' % field_id)">\n
+                class="listbox-search-line">\n
 \n
             <!--Report Tree -->\n
             <tal:block tal:condition="is_report_tree_mode">\n
@@ -322,7 +318,7 @@
                   <input tal:condition="python: is_gadget_mode" \n
                          tal:define ="params python: {alias:\'this.value\'};"\n
                          size="8"\n
-                         type="textarea" \n
+                         type="text" \n
                          tal:attributes=\'value python: selection.getParams().get(alias,"");\n
                                          onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
                 </tal:block>\n
@@ -336,10 +332,9 @@
           <!-- Render listbox data-->\n
           <tal:block tal:condition="line_list"\n
                      tal:define="checked_uid_set here/getCheckedUidSet">\n
-            <tr tal:repeat="line line_list"              \n
-                tal:attributes="\n
-                  id string:${field_id}-data-line-${repeat/line/index};\n
-                  class python: line.getRowCSSClassName() or test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\');">\n
+            <tr tal:repeat="line line_list"  \n
+                tal:attributes="                \n
+                  class python: line.getRowCSSClassName() or \'%s %s\' %(\'%s-data-line-%s\' %(field_id, repeat[\'line\'].index) ,test(repeat[\'line\'].index % 2, \'DataB\', \'DataA\'));">\n
               \n
               <tal:block tal:define="render_result line/render">\n
 \n
