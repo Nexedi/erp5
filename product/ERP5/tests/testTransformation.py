@@ -108,9 +108,8 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_mrp', 'erp5_apparel',
-            'erp5_dummy_movement', 'erp5_project', 'erp5_accounting',
-            'erp5_simulation', 'erp5_simulation_test')
+    return TestTransformationMixin.getBusinessTemplateList(self) + (
+      'erp5_apparel', 'erp5_dummy_movement', 'erp5_project')
 
   def test_01_getAggregatedAmountListSimple(self):
     """

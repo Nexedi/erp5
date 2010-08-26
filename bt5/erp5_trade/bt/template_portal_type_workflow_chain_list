@@ -14,8 +14,6 @@ Delivery Cell | delivery_movement_causality_interaction_workflow
 Delivery Cell | delivery_movement_simulation_interaction_workflow
 Delivery Root Simulation Rule | edit_workflow
 Delivery Root Simulation Rule | rule_validation_workflow
-Delivery Rule | edit_workflow
-Delivery Rule | rule_validation_workflow
 Delivery Simulation Rule | edit_workflow
 Delivery Simulation Rule | rule_validation_workflow
 Internal Order Cell | delivery_movement_causality_interaction_workflow
@@ -55,8 +53,6 @@ Inventory | edit_workflow
 Inventory | inventory_workflow
 Order Root Simulation Rule | edit_workflow
 Order Root Simulation Rule | rule_validation_workflow
-Order Rule | edit_workflow
-Order Rule | rule_validation_workflow
 Payment Condition | edit_workflow
 Purchase Order Cell | delivery_movement_causality_interaction_workflow
 Purchase Order Cell | delivery_movement_simulation_interaction_workflow

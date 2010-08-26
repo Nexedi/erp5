@@ -20,10 +20,6 @@
   <workflow>career_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Divergence Tester</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
   <type>Chat Address</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -70,14 +66,6 @@
  <chain>
   <type>Person</type>
   <workflow>edit_workflow, person_interaction_workflow, user_account_workflow, validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Property Divergence Tester</type>
-  <workflow>edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Quantity Divergence Tester</type>
-  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Query</type>

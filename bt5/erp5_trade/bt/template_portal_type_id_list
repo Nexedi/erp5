@@ -6,7 +6,6 @@ Container Cell
 Container Line
 Delivery Cell
 Delivery Root Simulation Rule
-Delivery Rule
 Delivery Simulation Rule
 First Causality Movement Group
 Internal Order
@@ -22,7 +21,6 @@ Inventory Cell
 Inventory Line
 Inventory Module
 Order Root Simulation Rule
-Order Rule
 Payment Condition
 Purchase Order
 Purchase Order Cell

@@ -71,9 +71,10 @@ class TestOrderMixin:
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_apparel',
-            'erp5_project', 'erp5_simulation', 'erp5_legacy', 'erp5_administration')
+    return ('erp5_base', 'erp5_simulation', 'erp5_simulation_legacy',
+            'erp5_pdm', 'erp5_trade', 'erp5_apparel', 'erp5_project',
+            'erp5_trade_simulation_legacy', 'erp5_project_simulation_legacy',
+            'erp5_administration')
 
   def validateRules(self):
     """

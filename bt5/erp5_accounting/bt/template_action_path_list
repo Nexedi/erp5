@@ -71,12 +71,10 @@ Internal Invoice Transaction | profile_view
 Internal Invoice Transaction | source_asset
 Internal Invoice Transaction | view
 Invoice Root Simulation Rule | view
-Invoice Rule | view
 Organisation | grouping_reference_fast_input
 Organisation | jump_active_accounting_pref
 Organisation | jump_to_accounting
 Organisation | transactions
-Payment Rule | view
 Payment Simulation Rule | divergence
 Payment Simulation Rule | view
 Payment Transaction | add_accounting_transaction_line

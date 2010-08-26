@@ -103,12 +103,11 @@ class TestCommerce(ERP5TypeTestCase):
     """
     return ('erp5_base',
             'erp5_web',
-            'erp5_trade',
             'erp5_pdm',
-            'erp5_commerce',
-            'erp5_accounting', 
             'erp5_simulation',
-            'erp5_simulation_test',)
+            'erp5_trade',
+            'erp5_commerce',
+            'erp5_simulation_test')
 
   def afterSetUp(self):
     uf = self.getPortal().acl_users

@@ -3067,8 +3067,8 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_simulation', 'erp5_simulation_test')
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+            'erp5_accounting', 'erp5_simulation_test')
 
   # XXX
   def playSequence(self, sequence_string, quiet=1) :

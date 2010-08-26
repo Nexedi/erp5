@@ -10,7 +10,6 @@ Bank Account | view
 Base Variant Movement Group | view
 Career | change_function
 Career | view
-Category Divergence Tester | view
 Category Movement Group | view
 Causality Assignment Movement Group | view
 Causality Movement Group | view
@@ -69,9 +68,7 @@ Person | terminate_career
 Person | view
 Preference | base_preference
 Property Assignment Movement Group | view
-Property Divergence Tester | view
 Property Movement Group | view
-Quantity Divergence Tester | view
 Quantity Sign Movement Group | view
 Query Module | view
 Query | view

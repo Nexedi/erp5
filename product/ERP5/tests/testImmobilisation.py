@@ -78,16 +78,15 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
       Return the list of business templates.
 
     """
-    return ( "erp5_base",
-            "erp5_trade",
+    return ("erp5_base",
             "erp5_pdm",# Needed by accounting
+            "erp5_simulation",
+            "erp5_trade",
             "erp5_accounting",
             "erp5_invoicing",
             "erp5_simplified_invoicing",
             "erp5_apparel", # In order to use items
             "erp5_immobilisation",
-             'erp5_accounting', 
-            "erp5_simulation",
             "erp5_simulation_test",
             )
 

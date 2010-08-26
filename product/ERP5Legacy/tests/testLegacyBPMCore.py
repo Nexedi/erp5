@@ -41,9 +41,11 @@ class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests which depend on BPM"""
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-      'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_simulation',
-            'erp5_legacy')
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+            'erp5_accounting', 'erp5_invoicing', 'erp5_simplified_invoicing',
+            'erp5_simulation_legacy', 'erp5_trade_simulation_legacy',
+            'erp5_accounting_simulation_legacy',
+            'erp5_invoicing_simulation_legacy')
 
   business_process_portal_type = 'Business Process'
   business_path_portal_type = 'Business Path'
