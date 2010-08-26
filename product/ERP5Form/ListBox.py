@@ -199,6 +199,14 @@ class ListBoxWidget(Widget.Widget):
                                  required=0)
     property_names.append('all_columns')
 
+    style_columns = fields.ListTextAreaField('style_columns',
+                                 title="List Style Columns",
+                                 description=(
+        "An optional list of list style columns to display."),
+                                 default=[],
+                                 required=0)
+    property_names.append('style_columns')
+
     search_columns = fields.ListTextAreaField('search_columns',
                                  title="Searchable Columns",
                                  description=(
@@ -904,12 +912,12 @@ class ListBoxRenderer:
 
   getAllColumnList = lazyMethod(getAllColumnList)
 
-  def getRawAllColumnList(self):
-    """ Return the raw content of 'all_columns' listbox attribute 
+  def getStyleColumnList(self):
+    """Return the style columns columns.
     """
-    return self.field.get_value('all_columns')
+    return self.field.get_value('style_columns')
 
-  getRawAllColumnList = lazyMethod(getRawAllColumnList)
+  getStyleColumnList = lazyMethod(getStyleColumnList)
 
   def getStatColumnList(self):
     """Return the stat columns. Fall back to all the columns if empty.
@@ -1158,7 +1166,7 @@ class ListBoxRenderer:
       # no dynamically setting of columns happens , still we have different than default
       # listbox list style so try to get columns from 'More columns'
       list_style_prefix = "%s_" %listbox_display_style
-      for column in self.getRawAllColumnList():
+      for column in  self.getStyleColumnList():
         if column[1].startswith(list_style_prefix):
           column_list.append((column[0],column[1].replace(list_style_prefix, '',)))
     else:
