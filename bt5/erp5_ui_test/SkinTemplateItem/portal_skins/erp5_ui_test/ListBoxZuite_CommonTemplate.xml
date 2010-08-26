@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -95,7 +92,7 @@
       <tal:block tal:condition="python: context.TestTool_getSkinName()==\'Mobile\'">\n
         <td tal:content="python: \'id=%s_page_selection\' % (prefix, )"></td>\n
       </tal:block> -->\n
-      <td tal:content="python: \'id=%s_set_page\' % (prefix, )"></td>\n
+      <td tal:content="string: //input[@class=&quot;${prefix}_set_page&quot;]"></td>\n
       <td tal:content="set_page"></td>\n
     </tr>\n
   </tal:block>\n
