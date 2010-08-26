@@ -144,7 +144,7 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
       if len(value_list) > 1:
         raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
       value_list = value_list[0]
-    value_list = '%s;mode=extended2' % value_list
+    value_list = '%s;mode=extended2;limit=1000' % value_list
     return self._renderValue(value_list)
 
   @profiler_decorator
