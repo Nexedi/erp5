@@ -306,24 +306,7 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>thumbnail_Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>thumbnail</string>
-                          <string>thumbnail_Thumbnail</string>
-                        </tuple>
-                        <tuple>
-                          <string>getIconAsHTML</string>
-                          <string>search_Icon</string>
-                        </tuple>
-                        <tuple>
-                          <string>getSummaryAsHTML</string>
-                          <string>search_Summary</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -585,6 +568,29 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>title</string>
+                          <string>thumbnail_Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>thumbnail_Thumbnail</string>
+                        </tuple>
+                        <tuple>
+                          <string>getIconAsHTML</string>
+                          <string>search_Icon</string>
+                        </tuple>
+                        <tuple>
+                          <string>getSummaryAsHTML</string>
+                          <string>search_Summary</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
