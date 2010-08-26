@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -97,18 +94,18 @@
 <tal:block tal:repeat="prefix python:range(3)">\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td tal:content="python: \'id=x%s_listbox_next_page\' % (prefix, )"></td>\n
+  <td tal:content="string: //button[@class=&quot;x${prefix}_listbox_next_page&quot;]"></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td tal:content="python: \'id=x%s_listbox_previous_page\' % (prefix, )"></td>\n
+  <td tal:content="string: //button[@class=&quot;x${prefix}_listbox_previous_page&quot;]"></td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=x0_listbox_next_page</td>\n
+  <td>//button[@class="x0_listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox; \n
@@ -132,12 +129,12 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>type</td>\n
-  <td>id=x1_listbox_set_page</td>\n
+  <td>//input[@class="x1_listbox_set_page"]</td>\n
   <td>5</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>id=x1_listbox_set_page</td>\n
+  <td>//input[@class="x1_listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 </tal:block>\n
@@ -168,7 +165,7 @@
 </tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=x1_listbox_previous_page</td>\n
+  <td>//button[@class="x1_listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -191,7 +188,7 @@
 </tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=x1_listbox_last_page</td>\n
+  <td>//button[@class="x1_listbox_last_page"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -203,7 +200,7 @@
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=x1_listbox_first_page</td>\n
+  <td>//button[@class="x1_listbox_first_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
