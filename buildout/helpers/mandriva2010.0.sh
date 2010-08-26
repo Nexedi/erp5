@@ -48,7 +48,6 @@ patch
 python-devel
 python-setuptools
 rpm
-scons
 subversion
 subversion-devel
 subversion-tools

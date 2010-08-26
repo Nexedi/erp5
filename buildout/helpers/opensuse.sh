@@ -51,7 +51,6 @@ python-setuptools
 python-xml
 readline-devel
 rpm
-scons
 sqlite3-devel
 subversion
 subversion-devel
