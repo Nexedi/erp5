@@ -50,7 +50,8 @@
               title="First Page" name="firstPage:method"\n
               class="listbox_first_page"\n
               tal:attributes="name string:${field_id}_firstPage:method;\n
-                              src string:${portal_url_string}/images/2leftarrowv.png"\n
+                              src string:${portal_url_string}/images/2leftarrowv.png;\n
+                              class string:${field_id}_first_page;"\n
               i18n:domain="ui" i18n:attributes="title">\n
         <span class="image"/>\n
       </button>\n
@@ -58,7 +59,8 @@
               title="Previous Page" name="previousPage:method"\n
               class="listbox_previous_page"\n
               tal:attributes="name string:${field_id}_previousPage:method;\n
-                              src string:${portal_url_string}/images/1leftarrowv.png"\n
+                              src string:${portal_url_string}/images/1leftarrowv.png;\n
+                              class string:${field_id}_previous_page;"\n
               i18n:domain="ui" i18n:attributes="title">\n
         <span class="image"/>\n
       </button>\n
@@ -74,14 +76,16 @@
       <button type="image" src="1rightarrowv.png"\n
               title="Next Page" name="nextPage:method" class="listbox_next_page"\n
               tal:attributes="name string:${field_id}_nextPage:method;\n
-                              src string:${portal_url_string}/images/1rightarrowv.png"\n
+                              src string:${portal_url_string}/images/1rightarrowv.png;\n
+                              class string:${field_id}_next_page;"\n
               i18n:domain="ui" i18n:attributes="title">\n
         <span class="image"/>\n
       </button>\n
       <button type="image" src="2rightarrowv.png"\n
               title="Last Page" name="lastPage:method" class="listbox_last_page"\n
               tal:attributes="name string:${field_id}_lastPage:method;\n
-                              src string:${portal_url_string}/images/2rightarrowv.png"\n
+                              src string:${portal_url_string}/images/2rightarrowv.png;\n
+                              class string:${field_id}_last_page;"\n
               i18n:domain="ui" i18n:attributes="title" >\n
         <span class="image"/>\n
       </button>\n
@@ -102,7 +106,8 @@
                  class = "listbox_first_page"\n
                  tal:attributes="value string:|&lt;;\n
                                  onclick python:\n
-                                 real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                                 real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                                 class string:${field_id}_first_page"\n
                  i18n:domain="ui" i18n:attributes="title">\n
             <span class="image"/>\n
           </button>\n
@@ -112,7 +117,8 @@
                   type="button"\n
                   class="listbox_previous_page"\n
                   tal:attributes="value string:&lt;&lt;;\n
-                                  onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+                                  onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                                  class string:${field_id}_previous_page"\n
                   i18n:domain="ui" i18n:attributes="title">\n
             <span class="image"/>\n
           </button>\n
@@ -128,7 +134,8 @@
               name="nextPage"\n
               type="button"\n
               class="listbox_next_page"\n
-              tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+              tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                              class string:${field_id}_next_page"\n
               i18n:domain="ui" i18n:attributes="title">\n
             <span class="image"/>\n
        </button>\n
@@ -137,7 +144,8 @@
                name="lastPage"\n
                type="button"\n
                class="listbox_last_page"\n
-               tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params)"\n
+               tal:attributes="onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                               class string:${field_id}_last_page"\n
                i18n:domain="ui" i18n:attributes="title">\n
             <span class="image"/>\n
        </button>\n
@@ -150,6 +158,7 @@
     <input class="listbox_set_page" \n
            name="page_start" onblur="this.value=this.defaultValue"\n
            tal:attributes="name string:${field_id}_page_start;\n
+                           class string:${field_id}_set_page;\n
                            value python:here.current_page + 1;\n
                            size python:len(str(here.total_pages));\n
                            onkeypress string:submitFormOnEnter(event, this.form, \'${field_id}_setPage\')" />\n
@@ -163,6 +172,7 @@
            name="page_start" onblur="this.value=this.defaultValue"\n
            tal:define="params python: {field_id+\'_setPage:method\':\'\',field_id+\'_page_start\':\'this.value\',\'list_style\':list_style}"\n
            tal:attributes=\'name string:${field_id}_page_start;\n
+                           class string:${field_id}_set_page;\n
                            value python:here.current_page + 1;\n
                            size python:len(str(here.total_pages));\n
                            onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
