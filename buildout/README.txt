@@ -128,7 +128,7 @@ $ mkdir software
 $ cd software
 $ echo '[buildout]' >> buildout.cfg
 $ echo 'extends = https://svn.erp5.org/repos/public/erp5/trunk/buildout/buildout.cfg' >> buildout.cfg
-$ wget -qO - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S -
+$ wget -qO - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S - -d
 $ python -S bin/buildout
 
 Note on -S: this switch is overridden by PYTHON_PATH environment variable. In
