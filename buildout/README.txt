@@ -45,14 +45,6 @@ Zope, etc.
 Choosing and modifying proper profile allows to control how much software will
 be build in place.
 
-System dependency check
------------------------
-
-As each software component this buildout requires something to be installed.
-To query what is required please use:
-
-bin/buildout install show-requirements
-
 Minimal requirements
 --------------------
 

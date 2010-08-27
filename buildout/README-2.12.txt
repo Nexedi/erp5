@@ -47,15 +47,6 @@ Acquisition with _aq_dynamic patch) and CMF 2.2 plus dependencies.
 Note on -S: this switch is overridden by PYTHON_PATH environment variable. In
 doubt, unset it before invoking that command.
 
-System dependency check
------------------------
-
-Each software component in this buildout might require some system
-dependencies, including development libraries and executables.
-To query what is required for all components, please run:
-
-  $ bin/buildout install show-requirements
-
 Minimal requirements
 --------------------
 
