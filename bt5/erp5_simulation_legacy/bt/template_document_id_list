@@ -7,6 +7,7 @@ InvoiceTransactionSimulationRule
 OrderRootSimulationRule
 PaymentSimulationRule
 RootAppliedRuleCausalityMovementGroup
+SimulationLegacyPatches
 TradeModelSimulationRule
 Transformation
 TransformedResource

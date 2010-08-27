@@ -889,7 +889,7 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
     f.close()
   # load the file, so that an error is raised if file is invalid
   module = imp.load_source(class_id, path)
-  getattr(module, class_id)
+  getattr(module, class_id, 'patch')
 
 def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.
@@ -948,10 +948,6 @@ def importLocalDocument(class_id, document_path = None):
   f = open(path)
   try:
     document_module = imp.load_source(module_path, path, f)
-    document_class = getattr(document_module, class_id)
-    document_constructor = DocumentConstructor(document_class)
-    document_constructor_name = "add%s" % class_id
-    document_constructor.__name__ = document_constructor_name
   except Exception:
     f.close()
     if document_module is not None:
@@ -959,6 +955,19 @@ def importLocalDocument(class_id, document_path = None):
     raise
   else:
     f.close()
+  # Tolerate that Document doesn't define any class, which can be useful if we
+  # only want to monkey patch.
+  # XXX A new 'Patch' folder should be introduced instead. Each module would
+  #     define 2 methods: 'patch' and 'unpatch' (for proper upgrading).
+  try:
+    document_class = getattr(document_module, class_id)
+  except AttributeError:
+    document_module.patch
+    return
+  else:
+    document_constructor = DocumentConstructor(document_class)
+    document_constructor_name = "add%s" % class_id
+    document_constructor.__name__ = document_constructor_name
     setattr(Products.ERP5Type.Document, class_id, document_module)
     setattr(Products.ERP5Type.Document, document_constructor_name,
                                       document_constructor)

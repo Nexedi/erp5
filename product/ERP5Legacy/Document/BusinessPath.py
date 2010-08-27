@@ -33,11 +33,11 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Path import Path
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5.Document.Amount import Amount
 
 import zope.interface
 
-class BusinessPath(Path, Predicate):
+class BusinessPath(Path, Amount):
   """
     The BusinessPath class embeds all information related to
     lead times and parties involved at a given phase of a business

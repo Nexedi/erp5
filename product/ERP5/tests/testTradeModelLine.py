@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2009-2010 Nexedi SA and Contributors. All Rights Reserved.
 #          Łukasz Nowak <luke@nexedi.com>
 #          Fabien Morin <fabien@nexedi.com>
+#          Julien Muchembled <jm@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -27,43 +28,161 @@
 #
 ##############################################################################
 
+from UserDict import UserDict
+import random
 import unittest
 import transaction
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
+from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import simple_decorator
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 
-class TestTradeModelLineMixin(TestBPMMixin):
+def save_result_as(name):
+  @simple_decorator
+  def decorator(function):
+    def wrapper(self, *args, **kw):
+      result = function(self, *args, **kw)
+      self[name] = result
+      return result
+    return wrapper
+  return decorator
+
+
+class TestTradeModelLineMixin(TestBPMMixin, UserDict):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
   # Constants and variables shared by tests
   base_unit_quantity = 0.01
 
-  # Helpers
+  def afterSetUp(self):
+    UserDict.__init__(self)
+    return TestBPMMixin.afterSetUp(self)
+
+  def beforeTearDown(self):
+    UserDict.clear(self)
+    return TestBPMMixin.beforeTearDown(self)
+
+  def clone(self, document):
+    parent = document.getParentValue()
+    clone, = parent.manage_pasteObjects(
+      parent.manage_copyObjects(ids=document.getId()))
+    clone = parent[clone['new_id']]
+    try:
+      self[clone.getPath()] = self[document.getPath()]
+    except KeyError:
+      pass
+    return clone
+
+  @save_result_as('node')
+  def createNode(self, **kw):
+    module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
+    return module.newContent(portal_type=self.node_portal_type, **kw)
+
+  @save_result_as('resource')
   def createResource(self, portal_type, **kw):
     module = self.portal.getDefaultModule(portal_type=portal_type)
     return module.newContent(portal_type=portal_type, **kw)
 
-  # Steps
-  def stepCreatePriceCurrency(self, sequence=None):
-    sequence.edit(price_currency = self.createResource('Currency', \
-        title='Currency', base_unit_quantity=self.base_unit_quantity))
+  @save_result_as('currency')
+  def createCurrency(self):
+    return self.createResource('Currency', title='Currency',
+                               base_unit_quantity=self.base_unit_quantity)
 
-  def stepCreateBusinessProcess(self, sequence=None):
-    sequence.edit(business_process=self.createBusinessProcess(
-      title=self.id()))
+  @save_result_as('business_process')
+  def createBusinessProcess(self, business_link_list=(), **kw):
+    business_process = super(TestTradeModelLineMixin,
+        self).createBusinessProcess(**kw)
+    for business_link in business_link_list:
+      link = self.createBusinessLink(business_process, **business_link)
+      self['business_link/' + link.getTradePhaseId()] = link
+    return business_process
 
-  def stepCreateBusinessLink(self, sequence):
-    business_process = sequence.get('business_process')
-    sequence.edit(business_link=self.createBusinessLink(business_process))
+  @save_result_as('trade_condition')
+  def createTradeCondition(self, specialise_value_list,
+                           trade_model_line_list=(), **kw):
+    module = self.portal.getDefaultModule(
+        portal_type=self.trade_condition_portal_type)
+    if isinstance(specialise_value_list, Base):
+      specialise_value_list = specialise_value_list,
+    trade_condition = module.newContent(
+        portal_type=self.trade_condition_portal_type,
+        title=self.id(),
+        specialise_value_list=specialise_value_list,
+        **kw)
+    for int_index, line_kw in enumerate(trade_model_line_list):
+      kw = dict(int_index=int_index)
+      kw.update(line_kw)
+      self.createTradeModelLine(trade_condition, **kw)
+    return trade_condition
+
+  def createTradeModelLine(self, document, **kw):
+    line = document.newContent(portal_type='Trade Model Line', **kw)
+    reference = line.getReference()
+    if reference:
+      self['trade_model_line/' + reference] =  line
+    return line
+
+  @save_result_as('order')
+  def createOrder(self, specialise_value_list, order_line_list=(), **kw):
+    module = self.portal.getDefaultModule(portal_type=self.order_portal_type)
+    if isinstance(specialise_value_list, Base):
+      specialise_value_list = specialise_value_list,
+    kw.setdefault('start_date', self.order_date)
+    order = module.newContent(
+        portal_type=self.order_portal_type,
+        title=self.id(),
+        specialise_value_list=specialise_value_list,
+        **kw)
+    for arrow in ('source_value', 'source_section_value',
+                  'destination_value', 'destination_section_value'):
+      if order.getProperty(arrow) is None:
+        order._setProperty(arrow, self.createNode())
+    if not order.getPriceCurrency():
+      self['price_currency'] = price_currency = self.createCurrency()
+      order._setPriceCurrencyValue(price_currency)
+    for line_kw in order_line_list:
+      order.newContent(portal_type=self.order_line_portal_type, **line_kw)
+    return order
+
+  def getAggregatedAmountDict(self, amount_generator, **expected_amount_dict):
+    amount_list = amount_generator.getAggregatedAmountList()
+    amount_dict = {}
+    for amount in amount_list:
+      reference = amount.getReference()
+      expected_amount = expected_amount_dict.pop(reference)
+      for k, v in expected_amount.iteritems():
+        if k == 'causality_value_list':
+          self.assertEqual(v, amount.getValueList('causality'))
+        else:
+          self.assertEqual(v, amount.getProperty(k))
+      amount_dict[reference] = amount
+    self.assertEqual({}, expected_amount_dict)
+    return amount_dict
+
+  def getTradeModelSimulationMovementList(self, delivery_line):
+    result_list = []
+    for simulation_movement in delivery_line.getDeliveryRelatedValueList(
+        portal_type='Simulation Movement'):
+      if delivery_line.getPortalType() == self.order_line_portal_type:
+        applied_rule, = [x
+          for x in simulation_movement.objectValues()
+          if x.getSpecialiseReference() == 'default_delivering_rule']
+        simulation_movement, = applied_rule.objectValues()
+      applied_rule, = [x
+        for x in simulation_movement.objectValues()
+        if x.getSpecialiseReference() == 'default_invoicing_rule']
+      simulation_movement, = applied_rule.objectValues()
+      applied_rule, = [x
+        for x in simulation_movement.objectValues()
+        if x.getSpecialiseReference() == 'default_trade_model_rule']
+      result_list.append(applied_rule.objectValues())
+    return result_list
 
 
 class TestTradeModelLine(TestTradeModelLineMixin):
-  quiet = True
 
   # Constants and variables shared by tests
   default_discount_ratio = -0.05 # -5%
@@ -76,1358 +195,528 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   order_date = DateTime()
 
   modified_order_line_price_ratio = 2.0
+  modified_packing_list_line_quantity_ratio = 0.4
   modified_invoice_line_quantity_ratio = modified_order_line_quantity_ratio \
       = 2.5
 
-  COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING = """
-              CreateServiceTax
-              CreateServiceDiscount
-              CreatePriceCurrency
-              CreateProductDiscounted
-              CreateProductTaxed
-              CreateProductDiscountedTaxed
-              CreateSource
-              CreateSourceSection
-              CreateDestination
-              CreateDestinationSection
-              Tic
-  """
+  @save_result_as('product/taxed')
+  def createProductTaxed(self):
+    return self.createResource('Product',
+      title='Product Taxed',
+      base_contribution=['base_amount/tax'],
+      use='normal')
 
-  AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING = """
-              CheckOrderComplexTradeConditionAggregatedAmountList
-              CheckOrderLineTaxedAggregatedAmountList
-              CheckOrderLineDiscountedTaxedAggregatedAmountList
-              CheckOrderLineDiscountedAggregatedAmountList
-  """
+  @save_result_as('product/discounted')
+  def createProductDiscounted(self):
+    return self.createResource('Product',
+      title='Product Discounted',
+      base_contribution=['base_amount/discount'],
+      use='normal')
 
-  AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING = \
-      COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
-              CreateBusinessProcess
-              CreateBusinessLink
-              ModifyBusinessLinkTaxing
-              CreateBusinessLink
-              ModifyBusinessLinkDiscounting
-              CreateTradeModelPath
-              CreateTradeCondition
-              SpecialiseTradeConditionWithBusinessProcess
-              CreateTradeModelLine
-              ModifyTradeModelLineTax
-              CreateTradeModelLine
-              ModifyTradeModelLineDiscount
-              Tic
-              CreateOrder
-              SpecialiseOrderTradeCondition
-              FillOrder
-              Tic
-              CreateOrderLine
-              ModifyOrderLineTaxed
-              CreateOrderLine
-              ModifyOrderLineDiscounted
-              CreateOrderLine
-              ModifyOrderLineDiscountedTaxed
-              Tic
-  """ + AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
+  @save_result_as('product/taxed_discounted')
+  def createProductDiscountedTaxed(self):
+    return self.createResource('Product',
+      title='Product Discounted & Taxed',
+      base_contribution=['base_amount/discount', 'base_amount/tax'],
+      use='normal')
 
-  # reset some values
-  def afterSetUp(self):
-    TestTradeModelLineMixin.afterSetUp(self)
-    self.modified_packing_list_line_quantity_ratio = 0.5
-    custom = self.portal.portal_skins.custom
-    if custom.hasObject('TradeModelLine_getAmountProperty'):
-      custom._delObject('TradeModelLine_getAmountProperty')
+  @save_result_as('service/tax')
+  def createServiceTax(self):
+    return self.createResource('Service', title='Tax', use='tax')
 
-  # Helper methods
-  def _solveDivergence(self, obj, property, decision, group='line'):
-    kw = {'%s_group_listbox' % group:{}}
-    for divergence in obj.getDivergenceList():
-      if divergence.getProperty('tested_property') != property:
-        continue
-      sm_url = divergence.getProperty('simulation_movement').getRelativeUrl()
-      kw['line_group_listbox']['%s&%s' % (sm_url, property)] = {
-        'choice':decision}
-    self.portal.portal_workflow.doActionFor(
-      obj,
-      'solve_divergence_action',
-      **kw)
+  @save_result_as('service/discount')
+  def createServiceDiscount(self):
+    return self.createResource('Service', title='Discount', use='discount')
 
-  def createOrder(self):
-    module = self.portal.getDefaultModule(portal_type=self.order_portal_type)
-    return module.newContent(portal_type=self.order_portal_type,
-        title=self.id())
+  def packPackingList(self, packing_list):
+    if packing_list.getContainerState() == 'packed':
+      return
+    packing_list.manage_delObjects(ids=[q.getId()
+      for q in packing_list.objectValues(portal_type='Container')])
+    transaction.commit()
+    container = packing_list.newContent(portal_type='Container')
+    for movement in packing_list.getMovementList():
+      container.newContent(portal_type='Container Line',
+                           resource=movement.getResource(),
+                           quantity=movement.getQuantity())
+    transaction.commit()
+    self.tic()
+    self.assertEqual('packed', packing_list.getContainerState())
 
-  def getTradeModelSimulationMovementList(self, order_line):
-    result_list = []
-    for line_simulation_movement in order_line.getOrderRelatedValueList(
-        portal_type='Simulation Movement'):
-      invoicing_applied_rule = [x for x in
-          line_simulation_movement.objectValues()
-          if x.getSpecialiseValue().getPortalType() == 'Invoice Simulation Rule'][0]
-      invoicing_movement = invoicing_applied_rule.objectValues()[0]
-      trade_model_rule = [x for x in invoicing_movement.objectValues()
-          if x.getSpecialiseValue().getPortalType() == 'Trade Model Simulation Rule'][0]
-      result_list.append(trade_model_rule.objectValues())
-    return result_list
+  def copyExpectedAmountDict(self, delivery, ratio=1):
+    self[delivery.getPath()] = expected_amount_dict = {}
+    causality = delivery.getCausalityValue()
+    for base_amount, amount_dict in self[causality.getPath()].iteritems():
+      expected_amount_dict[base_amount] = new_amount_dict = {}
+      for line in delivery.getMovementList():
+        line_id = line.getCausalityId()
+        if line_id in amount_dict:
+          new_amount_dict[line.getId()] = ratio * amount_dict[line_id]
 
-  def checkInvoiceTransactionRule(self, trade_model_simulation_movement):
-    invoice_transaction_rule_list = trade_model_simulation_movement\
-        .objectValues()
-    self.assertEquals(1, len(invoice_transaction_rule_list))
-    invoice_transaction_rule = invoice_transaction_rule_list[0]
-    self.assertEqual('Invoice Transaction Simulation Rule',
-        invoice_transaction_rule.getSpecialiseValue().getPortalType())
-
-    invoice_transaction_simulation_movement_list = invoice_transaction_rule \
-        .objectValues()
-
-    self.assertEqual(2, len(invoice_transaction_simulation_movement_list))
-
-    for movement in invoice_transaction_simulation_movement_list:
-      self.assertEqual(abs(movement.getQuantity()),
-          abs(trade_model_simulation_movement.getTotalPrice()))
-
-  def createTradeCondition(self):
-    module = self.portal.getDefaultModule(
-        portal_type=self.trade_condition_portal_type)
-    trade_condition = module.newContent(
-        portal_type=self.trade_condition_portal_type,
-        title=self.id())
-    return trade_condition
-
-  def createTradeModelLine(self, document, **kw):
-    return document.newContent(
-        portal_type='Trade Model Line',
-        **kw)
-
-  def stepModifyBusinessLinkDiscounting(self, sequence):
-    category_tool = self.getCategoryTool()
-    predecessor = category_tool.trade_state.invoiced
-    successor = category_tool.trade_state.taxed
-    business_link = sequence.get('business_link')
-    self.assertNotEqual(None, predecessor)
-    self.assertNotEqual(None, successor)
-
-    business_link.edit(
-      predecessor_value = predecessor,
-      successor_value = successor,
-      trade_phase = 'default/discount'
-    )
-    sequence.edit(business_link=None, business_link_discounting=business_link)
-
-  def stepModifyBusinessLinkTaxing(self, sequence):
-    category_tool = self.getCategoryTool()
-    predecessor = category_tool.trade_state.invoiced
-    successor = category_tool.trade_state.taxed
-    business_link = sequence.get('business_link')
-    self.assertNotEqual(None, predecessor)
-    self.assertNotEqual(None, successor)
-
-    business_link.edit(
-      predecessor_value = predecessor,
-      successor_value = successor,
-      trade_phase = 'default/tax'
-    )
-    sequence.edit(business_link=None, business_link_taxing=business_link)
-
-  def stepCreateTradeModelPath(self, sequence):
-    return
-    trade_phase = self.getCategoryTool().trade_phase
-    sequence.set('trade_model_path_default', self.createTradeModelPath(
-      sequence.get('business_process'),
-      reference='default_path',
-      int_index=0,
-      trade_phase_value_list=trade_phase.default.getCategoryChildValueList(),
-      trade_date_value=trade_phase.default.order,
-    ))
-
-  def stepAcceptDecisionQuantityInvoice(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
+  def acceptDecisionQuantityInvoice(self, invoice):
     solver_process_tool = self.portal.portal_solver_processes
     solver_process = solver_process_tool.newSolverProcess(invoice)
-    for quantity_solver_decision in filter(
-      lambda x:x.getCausalityValue().getTestedProperty()=='quantity',
-      solver_process.contentValues()):
-      # use Trade Model Solver.
-      quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Trade Model Solver'])
+    for quantity_solver_decision in solver_process.contentValues():
+      if quantity_solver_decision.getCausalityValue().getTestedProperty() \
+        == 'quantity':
+        # use Trade Model Solver.
+        quantity_solver_decision.setSolverValue(
+          self.portal.portal_solvers['Trade Model Solver'])
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
-  def stepAdoptPrevisionQuantityInvoice(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    self._solveDivergence(invoice, 'quantity', 'adopt')
+  def processPackingListBuildInvoice(self, packing_list, build=None):
+    self.packPackingList(packing_list)
+    transaction.commit()
+    self.tic()
 
-  def stepCreateSource(self, sequence=None, **kw):
-    module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
-    node = module.newContent(portal_type=self.node_portal_type)
-    sequence.edit(source = node)
+    packing_list.start()
+    transaction.commit()
+    self.tic()
 
-  def stepCreateSourceSection(self, sequence=None, **kw):
-    module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
-    node = module.newContent(portal_type=self.node_portal_type)
-    sequence.edit(source_section = node)
+    invoice, = packing_list.getCausalityRelatedValueList(
+      portal_type=self.invoice_portal_type)
+    self.assertEqual(5, len(invoice))
 
-  def stepCreateDestination(self, sequence=None, **kw):
-    module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
-    node = module.newContent(portal_type=self.node_portal_type)
-    sequence.edit(destination = node)
+    packing_list.stop()
+    packing_list.deliver()
+    transaction.commit()
+    self.tic()
 
-  def stepCreateDestinationSection(self, sequence=None, **kw):
-    module = self.portal.getDefaultModule(portal_type=self.node_portal_type)
-    node = module.newContent(portal_type=self.node_portal_type)
-    sequence.edit(destination_section = node)
+    self['invoice'] = invoice
+    if build == 'invoice':
+      return invoice
 
-  def stepCreateOrder(self, sequence=None, **kw):
-    sequence.edit(order = self.createOrder())
+    self.checkCausalityState(invoice, 'solved')
+    self.checkTradeModelRuleSimulationExpand(packing_list)
 
-  def stepSpecialiseOrderTradeCondition(self, sequence=None, **kw):
-    order = sequence.get('order')
-    trade_condition = sequence.get('trade_condition')
+    invoice.start()
+    transaction.commit()
+    self.tic()
 
-    order.edit(specialise_value = trade_condition)
+    self.checkInvoiceAccountingMovements(invoice)
 
-  def stepSpecialiseInvoiceTradeCondition(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    trade_condition = sequence.get('trade_condition')
+  ###
+  ##  Check methods
+  ##
 
-    invoice.edit(specialise_value = trade_condition)
+  def checkWithoutBPM(self, order):
+    transaction.commit() # clear transactional cache
+    order.getSpecialiseValue()._setSpecialise(None)
+    self.assertRaises(ValueError, order.expand,
+      applied_rule_id=order.getCausalityRelatedId(portal_type='Applied Rule'))
+    transaction.abort()
 
-  def stepPlanOrder(self, sequence=None, **kw):
-    order = sequence.get('order')
-    workflow_tool = getToolByName(self.portal, 'portal_workflow')
-    workflow_tool.doActionFor(order, 'plan_action')
+  def checkModelLineOnDelivery(self, delivery):
+    for portal_type in (self.business_link_portal_type,
+                        self.trade_model_path_portal_type,
+                        'Trade Model Line'):
+      self.assertRaises(ValueError, delivery.newContent,
+                        portal_type=portal_type)
 
-  def stepStartInvoice(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    workflow_tool = getToolByName(self.portal, 'portal_workflow')
-    workflow_tool.doActionFor(invoice, 'start_action')
+  def checkComposition(self, movement, specialise_value_list, type_count_dict):
+    composed = movement.asComposedDocument()
+    self.assertFalse(movement in composed._effective_model_list)
+    self.assertSameSet(composed.getSpecialiseValueList(),
+                       specialise_value_list)
+    count = 0
+    for portal_type, n in type_count_dict.iteritems():
+      count += n
+      self.assertEqual(n, len(composed.objectValues(portal_type=portal_type)))
+    self.assertTrue(count, len(composed.objectValues()))
 
-  def stepStopInvoice(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    workflow_tool = getToolByName(self.portal, 'portal_workflow')
-    workflow_tool.doActionFor(invoice, 'stop_action')
+  def checkAggregatedAmountList(self, order):
+    expected_result_dict = self[order.getPath()]
+    def check(movement, movement_id):
+      kw = {}
+      for reference, result in expected_result_dict.iteritems():
+        total_price = result.get(movement_id)
+        if total_price:
+          model_line = self['trade_model_line/' + reference]
+          kw[reference] = dict(total_price=total_price,
+            causality_value_list=[model_line],
+            base_application_list=model_line.getBaseApplicationList(),
+            base_contribution_list=model_line.getBaseContributionList())
+      self.getAggregatedAmountDict(movement, **kw)
 
-  def stepDeliverInvoice(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    workflow_tool = getToolByName(self.portal, 'portal_workflow')
-    workflow_tool.doActionFor(invoice, 'deliver_action')
+    check(order, None)
+    for line in order.getMovementList():
+      check(line, line.getId())
 
-  def stepStartPackingList(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    workflow_tool = getToolByName(self.portal, 'portal_workflow')
-    workflow_tool.doActionFor(packing_list, 'start_action')
+  def checkTradeModelRuleSimulationExpand(self, delivery):
+    expected_result_dict = self[delivery.getPath()]
+    price_currency = self['price_currency']
 
-  def stepStopPackingList(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    workflow_tool = getToolByName(self.portal, 'portal_workflow')
-    workflow_tool.doActionFor(packing_list, 'stop_action')
+    for line in delivery.getMovementList():
+      simulation_movement_list, = \
+        self.getTradeModelSimulationMovementList(line)
+      result_dict = dict((sm.getResourceValue().getUse(), sm)
+                         for sm in simulation_movement_list)
+      self.assertEqual(len(simulation_movement_list),
+                       len(result_dict))
+      for use in 'discount', 'tax':
+        total_price = expected_result_dict[use].get(line.getId())
+        if total_price:
+          sm = result_dict.pop(use)
+          self.assertEqual(sm.getTotalPrice(), total_price)
+          self.assertEqual(2, len(sm.getCausalityValueList()))
+          self.assertEqual(0, len(sm.getCausalityValueList(
+            portal_type=self.business_link_portal_type)))
+          self.assertEqual(1, len(sm.getCausalityValueList(
+            portal_type=self.trade_model_path_portal_type)))
+          self.assertEqual(1, len(sm.getCausalityValueList(
+            portal_type='Trade Model Line')))
+          self.assertEqual(sm.getBaseApplicationList(),
+                           ['base_amount/' + use])
+          self.assertEqual(sm.getBaseContributionList(),
+                           dict(discount=['base_amount/tax'], tax=[])[use])
+      self.assertEqual({}, result_dict)
 
-  def stepDeliverPackingList(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    workflow_tool = getToolByName(self.portal, 'portal_workflow')
-    workflow_tool.doActionFor(packing_list, 'deliver_action')
+  def checkCausalityState(self, delivery, state):
+    self.assertEqual(state, delivery.getCausalityState(),
+      delivery.getDivergenceList())
 
-  def stepCheckPackingListDiverged(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    self.assertEqual(
-      'diverged',
-      packing_list.getCausalityState()
-    )
+  def checkInvoiceAccountingMovements(self, invoice):
+    # Wouldn't it be better to use 'invoice.getAggregatedAmountList()'
+    # instead of looking at invoice lines ? We wouldn't have to clear
+    # base_contribution_list in test_01a_InvoiceNewTradeConditionOrLineSupport
+    line_dict = {}
+    for line in invoice.getMovementList():
+      if line.getPortalType() == self.invoice_line_portal_type:
+        key = line.getResourceValue().getUse()
+      else:
+        key = ('income_expense', 'payable_receivable', 'vat')[
+          ['income', 'expense',
+           'liability/payable', 'asset/receivable',
+           'liability/payable/collected_vat', 'asset/receivable/refundable_vat',
+          ].index(line.getSourceValue().getAccountType()) // 2]
+      line_dict.setdefault(key, 0)
+      line_dict[key] += line.getTotalPrice()
+    self.assertEqual(6, len(line_dict))
 
-  def stepSplitAndDeferPackingList(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    kw = {'listbox':[
-      {'listbox_key':line.getRelativeUrl(),
-       'choice':'SplitAndDefer'} for line in packing_list.getMovementList() \
-      if line.isDivergent()]}
+    currency_precision = self['price_currency'].getQuantityPrecision()
+    rounded_total_price = round(line_dict['normal'], currency_precision)
+    rounded_tax_price = round(line_dict['tax'], currency_precision)
+    rounded_discount_price = round(line_dict['discount'], currency_precision)
+    self.assertEqual(abs(line_dict['payable_receivable']),
+        rounded_total_price + rounded_tax_price + rounded_discount_price)
+    self.assertEqual(abs(line_dict['vat']),
+        rounded_tax_price)
+    self.assertEquals(abs(line_dict['income_expense']),
+        rounded_total_price + rounded_discount_price)
+
+  ###
+  ##  Test cases
+  ##
+
+  def test_01_OrderWithSimpleTaxedAndDiscountedLines(self, build=None):
+    """Full test case with quite simple linear use case
+
+    Data:
+    - 1 SO: 1 taxed, 1 discounted, 1 taxed&discounted
+    - 1 TC: tax, discount
+    - 1 BP (linked to default BP)
+
+    Checks:
+    - composition
+    - getAggregatedAmountList
+    - expand (before and after modifying quantities on order lines)
+    - build of packing list (+ pack) and invoice
+    """
+    taxed = self.createProductTaxed()
+    discounted = self.createProductDiscounted()
+    taxed_discounted = self.createProductDiscountedTaxed()
+    trade_condition = self.createTradeCondition(
+      self.createBusinessProcess(), (
+      dict(price=self.default_discount_ratio,
+           base_application='base_amount/discount',
+           base_contribution='base_amount/tax',
+           trade_phase='default/discount',
+           resource_value=self.createServiceDiscount(),
+           reference='discount',
+           int_index=10),
+      dict(price=self.default_tax_ratio,
+           base_application='base_amount/tax',
+           trade_phase='default/tax',
+           resource_value=self.createServiceTax(),
+           reference='tax',
+           int_index=20),
+      ))
+    order = self.createOrder(trade_condition, (
+      dict(price=1, quantity=2, id='taxed',
+                                resource_value=taxed),
+      dict(price=3, quantity=4, id='discounted',
+                                resource_value=discounted),
+      dict(price=5, quantity=6, id='taxed_discounted',
+                                resource_value=taxed_discounted),
+      ))
+    discount = {None: (3*4 + 5*6) * self.default_discount_ratio,
+                'discounted': (3*4) * self.default_discount_ratio,
+                'taxed_discounted': (5*6) * self.default_discount_ratio}
+    self[order.getPath()] = dict(
+      discount=discount,
+      tax={None: (1*2 + 5*6 + discount[None]) * self.default_tax_ratio,
+           'taxed': (1*2) * self.default_tax_ratio,
+           'discounted': discount['discounted'] * self.default_tax_ratio,
+           'taxed_discounted': (5*6 + discount['taxed_discounted'])
+                               * self.default_tax_ratio})
+
+    transaction.commit()
+    self.tic()
+
+    if not build:
+      for movement in (order, order['taxed'], order['discounted'],
+                       order['taxed_discounted']):
+        self.checkComposition(movement, [trade_condition], {
+          self.trade_model_path_portal_type: 10,
+          self.business_link_portal_type: 5,
+          "Trade Model Line": 2})
+
+      self.checkAggregatedAmountList(order)
+
+      order.plan()
+      transaction.commit()
+      self.tic()
+
+      self.checkTradeModelRuleSimulationExpand(order)
+
+      self.checkWithoutBPM(order)
+
+      order2 = self.clone(order)
+
+      # Multiply prices by 2 and quantities by 2.5
+      order['taxed'].edit(price=2, quantity=5)
+      order['discounted'].edit(price=6, quantity=10)
+      order['taxed_discounted'].edit(price=10, quantity=15)
+      transaction.commit()
+      self.tic()
+
+      discount = {None: (6*10 + 10*15) * self.default_discount_ratio,
+                  'discounted': (6*10) * self.default_discount_ratio,
+                  'taxed_discounted': (10*15) * self.default_discount_ratio}
+      self[order.getPath()] = dict(
+        discount=discount,
+        tax={None: (2*5 + 10*15 + discount[None]) * self.default_tax_ratio,
+             'taxed': (2*5) * self.default_tax_ratio,
+             'discounted': discount['discounted'] * self.default_tax_ratio,
+             'taxed_discounted': (10*15 + discount['taxed_discounted'])
+                                 * self.default_tax_ratio})
+
+      self.checkTradeModelRuleSimulationExpand(order)
+
+      self.checkAggregatedAmountList(order)
+      order = order2
+
+    order.confirm()
+    transaction.commit()
+    self.tic()
+
+    packing_list, = order.getCausalityRelatedValueList(
+      portal_type=self.packing_list_portal_type)
+    self.copyExpectedAmountDict(packing_list)
+
+    self['packing_list'] = packing_list
+    if build == 'packing_list':
+      return packing_list
+
+    return self.processPackingListBuildInvoice(packing_list, build)
+
+  def test_01a_InvoiceNewTradeConditionOrLineSupport(self):
+    invoice = self.test_01_OrderWithSimpleTaxedAndDiscountedLines('invoice')
+
+    # on invoice, make specialise point to a new TC and check it diverged
+    trade_condition = self['trade_condition']
+    new_trade_condition = self.clone(trade_condition)
+    line_dict = dict((line.getReference(), line)
+                     for line in new_trade_condition.objectValues())
+    line_dict['discount'].edit(reference='discount_2',
+                               price=self.new_discount_ratio)
+    line_dict['tax'].edit(reference='tax_2',
+                          price=self.new_tax_ratio)
+
+    self.assertEqual([trade_condition], invoice.getSpecialiseValueList())
+    invoice.setSpecialiseValue(new_trade_condition)
+    transaction.commit()
+    self.tic()
+    self.checkCausalityState(invoice, 'diverged')
+
+    # revert to reuse invoice
+    invoice.setSpecialiseValue(trade_condition)
+    transaction.commit()
+    self.tic()
+    self.checkCausalityState(invoice, 'solved')
+
+    # check how is supported addition of invoice line to invoice
+    for line in self['order'].getMovementList():
+      line = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                                resource=line.getResource(),
+                                quantity=line.getQuantity(),
+                                price=line.getPrice())
+      # XXX base_contribution_list is automatically copied from the resource
+      #     but Invoice Transaction Trade Model Line Builder will not be called
+      #     again (or if we call it, lines would be built in a new invoice)
+      #     and accounting lines would not match invoice lines.
+      #     So we clear the list to make the test simpler.
+      #     See also 'checkInvoiceAccountingMovements' method.
+      self.assertTrue(line.getBaseContributionList())
+      line._setBaseContributionList(())
+    transaction.commit()
+    self.tic()
+    self.checkCausalityState(invoice, 'solved')
+
+    invoice.start()
+    transaction.commit()
+    self.tic()
+
+    self.checkCausalityState(invoice, 'solved')
+    self.checkInvoiceAccountingMovements(invoice)
+
+    invoice.stop()
+    invoice.deliver()
+    transaction.commit()
+    self.tic()
+
+  def test_01b_InvoiceModifyQuantityAndSolveDivergency(self):
+    invoice = self.test_01_OrderWithSimpleTaxedAndDiscountedLines('invoice')
+
+    for line in invoice.getMovementList():
+      if line.getResourceValue().getUse() == 'normal':
+        line.setQuantity(line.getQuantity() *
+          self.modified_invoice_line_quantity_ratio)
+    transaction.commit()
+    self.tic()
+    self.checkCausalityState(invoice, 'diverged')
+
+    self.acceptDecisionQuantityInvoice(invoice)
+    transaction.commit()
+    self.tic()
+    self.checkCausalityState(invoice, 'solved')
+
+  def test_01c_PackingListSplitBuildInvoiceBuild(self):
+    packing_list = \
+      self.test_01_OrderWithSimpleTaxedAndDiscountedLines('packing_list')
+
+    for line in packing_list.getMovementList():
+        line.setQuantity(line.getQuantity() *
+          self.modified_packing_list_line_quantity_ratio)
+    transaction.commit()
+    self.tic()
+    self.checkCausalityState(packing_list, 'diverged')
+
+    order = self['order']
+    self.checkTradeModelRuleSimulationExpand(order)
+    self.copyExpectedAmountDict(packing_list,
+        self.modified_packing_list_line_quantity_ratio)
+
+    listbox = [{'listbox_key':line.getRelativeUrl(),
+                'choice':'SplitAndDefer'}
+               for line in packing_list.getMovementList()
+               if line.isDivergent()]
+    self.assertEqual(len(order), len(listbox))
     self.portal.portal_workflow.doActionFor(
       packing_list,
       'split_and_defer_action',
       start_date=packing_list.getStartDate() + 15,
       stop_date=packing_list.getStopDate() + 25,
-      **kw)
+      listbox=listbox)
 
-  def stepDecreasePackingListLineListQuantity(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    for movement in packing_list.getMovementList():
-      movement.edit(
-        quantity = movement.getQuantity() * \
-            self.modified_packing_list_line_quantity_ratio
-      )
-
-  def stepPackPackingList(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    if getattr(packing_list,'getContainerState', None) is None:
-      return
-    if packing_list.getContainerState() == 'packed':
-      return
-
-    packing_list.manage_delObjects(ids=[q.getId() for q in
-      packing_list.objectValues(portal_type='Container')])
-    transaction.commit()
-    cntr = packing_list.newContent(portal_type='Container')
-    for movement in packing_list.getMovementList(
-        portal_type=self.portal.getPortalMovementTypeList()):
-      cntr.newContent(
-        portal_type='Container Line',
-        resource = movement.getResource(),
-        quantity = movement.getQuantity())
     transaction.commit()
     self.tic()
-    self.assertEqual('packed', packing_list.getContainerState() )
-
-  def stepCheckInvoiceNormalMovements(self, sequence=None, **kw):
-    self.logMessage('Assuming, that it is good...')
-
-  def stepCheckInvoiceAccountingMovements(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    currency = sequence.get('price_currency')
-    currency_precision = currency.getQuantityPrecision()
-    aggregated_amount_list_list = [
-      (q.getResourceValue().getUse(), q)
-      for q in invoice.getSpecialiseValue().getAggregatedAmountList(invoice)]
-    invoice_line_tax = [q[1] for q in aggregated_amount_list_list
-        if q[0] == 'tax'][0]
-    invoice_line_discount = [q[1] for q in aggregated_amount_list_list
-        if q[0] == 'discount'][0]
-
-    movement_list = invoice.getMovementList(
-        portal_type=invoice.getPortalAccountingMovementTypeList())
-    self.assertEqual(3, len(movement_list))
-    income_expense_line = [q for q in movement_list if
-        q.getSourceValue().getAccountType() in ['income', 'expense']][0]
-    payable_receivable_line = [q for q in movement_list if
-        q.getSourceValue().getAccountType() in ['asset/receivable',
-          'liability/payable']][0]
-    vat_line = [q for q in movement_list if q.getSourceValue() \
-        .getAccountType() in ['liability/payable/collected_vat',
-          'asset/receivable/refundable_vat']][0]
-
-    # here, the net total price of the invoice is all invoices lines that does
-    # not use a tax or a discount as resource.
-    rounded_total_price = round(sum(
-      [movement.getTotalPrice() for movement in invoice.getMovementList()
-        if movement.getResource() not in (invoice_line_tax.getResource(),
-                                   invoice_line_discount.getResource())]),
-        currency_precision)
-
-    rounded_tax_price = round(invoice_line_tax.getTotalPrice(),
-        currency_precision)
-    rounded_discount_price = round(invoice_line_discount.getTotalPrice(),
-        currency_precision)
-
-    self.assertEqual(abs(payable_receivable_line.getTotalPrice()),
-        rounded_total_price + rounded_tax_price + rounded_discount_price)
-
-    self.assertEqual(abs(vat_line.getTotalPrice()),
-        rounded_tax_price)
-
-    self.assertEquals(abs(income_expense_line.getTotalPrice()),
-        rounded_total_price + rounded_discount_price)
-
-  def stepSetTradeConditionOld(self, sequence=None, **kw):
-    trade_condition = sequence.get('trade_condition')
-
-    self.assertNotEqual(None, trade_condition)
-
-    sequence.edit(
-      trade_condition = None,
-      old_trade_condition = trade_condition
-    )
-
-  def stepSetTradeConditionNew(self, sequence=None, **kw):
-    trade_condition = sequence.get('trade_condition')
-
-    self.assertNotEqual(None, trade_condition)
-
-    sequence.edit(
-      trade_condition = None,
-      new_trade_condition = trade_condition
-    )
-
-  def stepGetOldTradeCondition(self, sequence=None, **kw):
-    trade_condition = sequence.get('old_trade_condition')
-
-    self.assertNotEqual(None, trade_condition)
-
-    sequence.edit(
-      trade_condition = trade_condition,
-    )
-
-  def stepGetNewTradeCondition(self, sequence=None, **kw):
-    trade_condition = sequence.get('new_trade_condition')
-
-    self.assertNotEqual(None, trade_condition)
-
-    sequence.edit(
-      trade_condition = trade_condition,
-    )
-
-  def stepAcceptDecisionInvoice(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    invoice.portal_workflow.doActionFor(invoice,'accept_decision_action')
-
-  def stepCheckInvoiceCausalityStateSolved(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    self.assertEqual('solved', invoice.getCausalityState(),
-      invoice.getDivergenceList())
-
-  def stepCheckInvoiceCausalityStateDiverged(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    self.assertEqual('diverged', invoice.getCausalityState())
-
-  def stepGetInvoice(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    invoice_list = packing_list.getCausalityRelatedValueList(
-        portal_type=self.invoice_portal_type)
-    self.assertEqual(1, len(invoice_list)) # XXX 1 HC
-    sequence.edit(invoice = invoice_list[0])
-
-  def stepSetNewPackingListAsPackingList(self, sequence=None, **kw):
-    packing_list = sequence.get('packing_list')
-    new_packing_list = sequence.get('new_packing_list')
-    sequence.edit(
-      packing_list = new_packing_list,
-      new_packing_list = None
-    )
-
-  def stepGetNewPackingList(self, sequence=None, **kw):
-    order = sequence.get('order')
-    packing_list = sequence.get('packing_list')
-    packing_list_list = order.getCausalityRelatedValueList(
-        portal_type=self.packing_list_portal_type)
-    self.assertEqual(2, len(packing_list_list)) # XXX 2 HC
-    new_packing_list = [q for q in packing_list_list if q != packing_list][0]
-    sequence.edit(new_packing_list = new_packing_list)
-
-  def stepGetPackingList(self, sequence=None, **kw):
-    order = sequence.get('order')
-    packing_list_list = order.getCausalityRelatedValueList(
-        portal_type=self.packing_list_portal_type)
-    self.assertEqual(1, len(packing_list_list)) # XXX 1 HC
-    sequence.edit(packing_list = packing_list_list[0])
-
-  def stepConfirmOrder(self, sequence=None, **kw):
-    order = sequence.get('order')
-    workflow_tool = getToolByName(self.portal, 'portal_workflow')
-    workflow_tool.doActionFor(order, 'confirm_action')
-
-  def stepCheckOrderTaxNoSimulation(self, sequence=None, **kw):
-    order_line_taxed = sequence.get('order_line_taxed')
-    for trade_model_simulation_movement_list in \
-        self.getTradeModelSimulationMovementList(order_line_taxed):
-      self.assertEquals(0, len(trade_model_simulation_movement_list))
-
-  # XXX: Merge: stepCheckOrderLineDiscountedSimulation stepCheckOrderLineTaxedSimulation stepCheckOrderLineDiscountedTaxedSimulation
-
-  def stepCheckOrderLineDiscountedTaxedSimulation(self, sequence=None, **kw):
-    order_line = sequence.get('order_line_discounted_taxed')
-    business_link_discounting = sequence.get('business_link_discounting')
-    business_link_taxing = sequence.get('business_link_taxing')
-    price_currency = sequence.get('price_currency')
-
-    service_tax = sequence.get('service_tax')
-    service_discount = sequence.get('service_discount')
-
-    self.assertNotEqual(None, business_link_discounting)
-    self.assertNotEqual(None, business_link_taxing)
-    self.assertNotEqual(None, price_currency)
-
-    for trade_model_simulation_movement_list in \
-        self.getTradeModelSimulationMovementList(order_line):
-
-      self.assertEquals(2, len(trade_model_simulation_movement_list))
-      trade_model_simulation_movement_discount_complex = [q for q in \
-          trade_model_simulation_movement_list \
-          if q.getResourceValue() == service_discount][0]
-
-      trade_model_simulation_movement_tax_complex = [q for q in \
-          trade_model_simulation_movement_list \
-          if q.getResourceValue() == service_tax][0]
-
-      # discount complex
-      self.assertEqual(
-        trade_model_simulation_movement_discount_complex.getParentValue() \
-            .getParentValue().getTotalPrice() * self.default_discount_ratio,
-        trade_model_simulation_movement_discount_complex.getTotalPrice()
-      )
-
-      self.assertEqual(
-        business_link_discounting,
-        trade_model_simulation_movement_discount_complex.getCausalityValue()
-      )
-
-      self.assertEqual(
-        price_currency,
-        trade_model_simulation_movement_discount_complex \
-            .getPriceCurrencyValue()
-      )
-
-      self.assertSameSet(
-        ['base_amount/tax'],
-        trade_model_simulation_movement_discount_complex \
-            .getBaseContributionList()
-      )
-
-      self.assertSameSet(
-        ['base_amount/discount'],
-        trade_model_simulation_movement_discount_complex \
-            .getBaseApplicationList()
-      )
-
-      self.checkInvoiceTransactionRule(
-          trade_model_simulation_movement_discount_complex)
-
-      # TODO:
-      #  * trade_phase ???
-      #  * arrow
-      #  * dates
-
-      # tax complex
-      self.assertEqual(
-        (trade_model_simulation_movement_tax_complex.getParentValue()\
-            .getParentValue().getTotalPrice() + \
-            trade_model_simulation_movement_tax_complex.getParentValue()\
-            .getParentValue().getTotalPrice() * self.default_discount_ratio) \
-            * self.default_tax_ratio,
-        trade_model_simulation_movement_tax_complex.getTotalPrice()
-      )
-
-      self.assertEqual(
-        business_link_taxing,
-        trade_model_simulation_movement_tax_complex.getCausalityValue()
-      )
-
-      self.assertEqual(
-        price_currency,
-        trade_model_simulation_movement_tax_complex.getPriceCurrencyValue()
-      )
-
-      self.assertSameSet(
-        [],
-        trade_model_simulation_movement_tax_complex.getBaseContributionList()
-      )
-
-      self.assertSameSet(
-        ['base_amount/tax'],
-        trade_model_simulation_movement_tax_complex.getBaseApplicationList()
-      )
-
-      self.checkInvoiceTransactionRule(
-        trade_model_simulation_movement_tax_complex)
-      # TODO:
-      #  * trade_phase ???
-      #  * arrow
-      #  * dates
-
-  def stepCheckOrderLineDiscountedSimulation(self, sequence=None, **kw):
-    order_line = sequence.get('order_line_discounted')
-    business_link_discounting = sequence.get('business_link_discounting')
-    business_link_taxing = sequence.get('business_link_taxing')
-    price_currency = sequence.get('price_currency')
-
-    service_tax = sequence.get('service_tax')
-    service_discount = sequence.get('service_discount')
-
-    self.assertNotEqual(None, business_link_discounting)
-    self.assertNotEqual(None, business_link_taxing)
-    self.assertNotEqual(None, price_currency)
-
-    for trade_model_simulation_movement_list in \
-        self.getTradeModelSimulationMovementList(order_line):
-
-      self.assertEquals(2, len(trade_model_simulation_movement_list))
-      trade_model_simulation_movement_discount_only = [q for q in \
-          trade_model_simulation_movement_list \
-          if q.getResourceValue() == service_discount][0]
-
-      trade_model_simulation_movement_tax_only = [q for q in \
-          trade_model_simulation_movement_list \
-          if q.getResourceValue() == service_tax][0]
-
-      # discount only
-      self.assertEqual(
-        trade_model_simulation_movement_discount_only.getParentValue()\
-            .getParentValue().getTotalPrice() * self.default_discount_ratio,
-        trade_model_simulation_movement_discount_only.getTotalPrice()
-      )
-
-      self.assertEqual(
-        business_link_discounting,
-        trade_model_simulation_movement_discount_only.getCausalityValue()
-      )
-
-      self.assertEqual(
-        price_currency,
-        trade_model_simulation_movement_discount_only.getPriceCurrencyValue()
-      )
-
-      self.assertSameSet(
-        ['base_amount/tax'],
-        trade_model_simulation_movement_discount_only \
-            .getBaseContributionList()
-      )
-
-      self.assertSameSet(
-        ['base_amount/discount'],
-        trade_model_simulation_movement_discount_only.getBaseApplicationList()
-      )
-
-      self.checkInvoiceTransactionRule(
-          trade_model_simulation_movement_discount_only)
-      # TODO:
-      #  * trade_phase ???
-      #  * arrow
-      #  * dates
-
-      # tax only
-      # below tax is applied only to discount part
-      self.assertEqual(trade_model_simulation_movement_discount_only. \
-          getTotalPrice() * self.default_tax_ratio,
-          trade_model_simulation_movement_tax_only.getTotalPrice())
-
-      self.assertEqual(
-        business_link_taxing,
-        trade_model_simulation_movement_tax_only.getCausalityValue()
-      )
-
-      self.assertEqual(
-        price_currency,
-        trade_model_simulation_movement_tax_only.getPriceCurrencyValue()
-      )
-
-      self.assertSameSet(
-        [],
-        trade_model_simulation_movement_tax_only.getBaseContributionList()
-      )
-
-      self.assertSameSet(
-        ['base_amount/tax'],
-        trade_model_simulation_movement_tax_only.getBaseApplicationList()
-      )
-
-      self.checkInvoiceTransactionRule(
-          trade_model_simulation_movement_tax_only)
-
-      # TODO:
-      #  * trade_phase ???
-      #  * arrow
-      #  * dates
-
-  def stepCheckOrderLineTaxedSimulation(self, sequence=None, **kw):
-    order_line = sequence.get('order_line_taxed')
-    business_link = sequence.get('business_link_taxing')
-    price_currency = sequence.get('price_currency')
-    self.assertNotEqual(None, business_link)
-    self.assertNotEqual(None, price_currency)
-    for trade_model_simulation_movement_list in \
-        self.getTradeModelSimulationMovementList(order_line):
-      self.assertEquals(1, len(trade_model_simulation_movement_list))
-      trade_model_simulation_movement = \
-          trade_model_simulation_movement_list[0]
-
-      self.assertEqual(
-        trade_model_simulation_movement.getParentValue().getParentValue() \
-            .getTotalPrice() * self.default_tax_ratio,
-        trade_model_simulation_movement.getTotalPrice()
-      )
-
-      self.assertEqual(
-        business_link,
-        trade_model_simulation_movement.getCausalityValue()
-      )
-
-      self.assertEqual(
-        price_currency,
-        trade_model_simulation_movement.getPriceCurrencyValue()
-      )
-
-      self.assertSameSet(
-        [],
-        trade_model_simulation_movement.getBaseContributionList()
-      )
-
-      self.assertSameSet(
-        ['base_amount/tax'],
-        trade_model_simulation_movement.getBaseApplicationList()
-      )
-      self.checkInvoiceTransactionRule(trade_model_simulation_movement)
-
-      # TODO:
-      #  * trade_phase ???
-      #  * arrow
-      #  * dates
-
-  def stepFillOrder(self, sequence=None, **kw):
-    order = sequence.get('order')
-    price_currency = sequence.get('price_currency')
-    source = sequence.get('source')
-    destination = sequence.get('destination')
-    source_section = sequence.get('source_section')
-    destination_section = sequence.get('destination_section')
-    self.assertNotEqual(None, price_currency)
-    self.assertNotEqual(None, source)
-    self.assertNotEqual(None, destination)
-    self.assertNotEqual(None, source_section)
-    self.assertNotEqual(None, destination_section)
-    order.edit(
-        source_value=source,
-        destination_value=destination,
-        source_section_value=source_section,
-        destination_section_value=destination_section,
-        start_date=self.order_date,
-        price_currency_value = price_currency)
-
-  def stepCreateProductTaxed(self, sequence=None, **kw):
-    sequence.edit(product_taxed = self.createResource('Product',
-      title='Product Taxed',
-      base_contribution=['base_amount/tax'],
-      use='normal',
-    ))
-
-  def stepCreateProductDiscounted(self, sequence=None, **kw):
-    sequence.edit(product_discounted = self.createResource('Product',
-      title='Product Discounted',
-      base_contribution=['base_amount/discount'],
-      use='normal',
-    ))
-
-  def stepCreateProductDiscountedTaxed(self, sequence=None, **kw):
-    sequence.edit(product_discounted_taxed = self.createResource('Product',
-      title='Product Discounted & Taxed',
-      base_contribution=['base_amount/discount', 'base_amount/tax'],
-      use='normal',
-    ))
-
-  def stepCreateServiceTax(self, sequence=None, **kw):
-    sequence.edit(service_tax = self.createResource('Service',
-      title='Tax',
-      use='tax',
-    ))
-
-  def stepCreateServiceDiscount(self, sequence=None, **kw):
-    sequence.edit(service_discount = self.createResource('Service',
-      title='Discount',
-      use='discount',
-    ))
-
-  def stepCreateTradeCondition(self, sequence=None, **kw):
-    sequence.edit(trade_condition = self.createTradeCondition())
-
-  def stepCreateInvoiceLine(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    invoice_line = invoice.newContent(portal_type=self.invoice_line_portal_type)
-    sequence.edit(invoice_line = invoice_line)
-
-  def stepCreateOrderLine(self, sequence=None, **kw):
-    order = sequence.get('order')
-    order_line = order.newContent(portal_type=self.order_line_portal_type)
-    sequence.edit(order_line = order_line)
-
-  def stepGetInvoiceLineDiscounted(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    resource = sequence.get('product_discounted')
-    self.assertNotEqual(None, resource)
-    sequence.edit(invoice_line_discounted = [m for m in
-      invoice.getMovementList() if m.getResourceValue() == resource][0])
-
-  def stepGetInvoiceLineDiscountedTaxed(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    resource = sequence.get('product_discounted_taxed')
-    self.assertNotEqual(None, resource)
-    sequence.edit(invoice_line_discounted_taxed = [m for m in
-      invoice.getMovementList() if m.getResourceValue() == resource][0])
-
-  def stepGetInvoiceLineTaxed(self, sequence=None, **kw):
-    invoice = sequence.get('invoice')
-    resource = sequence.get('product_taxed')
-    self.assertNotEqual(None, resource)
-    sequence.edit(invoice_line_taxed = [m for m in
-      invoice.getMovementList() if m.getResourceValue() == resource][0])
-
-  def stepModifyQuantityInvoiceLineTaxed(self, sequence=None, **kw):
-    invoice_line = sequence.get('invoice_line_taxed')
-    invoice_line.edit(
-      quantity=invoice_line.getQuantity() * \
-          self.modified_invoice_line_quantity_ratio,
-    )
-
-  def stepModifyQuantityInvoiceLineDiscounted(self, sequence=None, **kw):
-    invoice_line = sequence.get('invoice_line_discounted')
-    invoice_line.edit(
-      quantity=invoice_line.getQuantity() * \
-          self.modified_invoice_line_quantity_ratio,
-    )
-
-  def stepModifyQuantityInvoiceLineDiscountedTaxed(self, sequence=None, **kw):
-    invoice_line = sequence.get('invoice_line_discounted_taxed')
-    invoice_line.edit(
-      quantity=invoice_line.getQuantity() * \
-          self.modified_invoice_line_quantity_ratio,
-    )
-
-  def stepModifyAgainOrderLineTaxed(self, sequence=None, **kw):
-    order_line = sequence.get('order_line_taxed')
-    order_line.edit(
-      price=order_line.getPrice() * self.modified_order_line_price_ratio,
-      quantity=order_line.getQuantity() * \
-          self.modified_order_line_quantity_ratio,
-    )
-
-  def stepModifyAgainOrderLineDiscounted(self, sequence=None, **kw):
-    order_line = sequence.get('order_line_discounted')
-    order_line.edit(
-      price=order_line.getPrice() * self.modified_order_line_price_ratio,
-      quantity=order_line.getQuantity() * \
-          self.modified_order_line_quantity_ratio,
-    )
-
-  def stepModifyAgainOrderLineDiscountedTaxed(self, sequence=None, **kw):
-    order_line = sequence.get('order_line_discounted_taxed')
-    order_line.edit(
-      price=order_line.getPrice() * self.modified_order_line_price_ratio,
-      quantity=order_line.getQuantity() * \
-          self.modified_order_line_quantity_ratio,
-    )
-
-  def stepModifyOrderLineTaxed(self, sequence=None, **kw):
-    order_line = sequence.get('order_line')
-    resource = sequence.get('product_taxed')
-    self.assertNotEqual(None, resource)
-    order_line.edit(
-      price=1.0,
-      quantity=2.0,
-      resource_value=resource
-    )
-    sequence.edit(
-      order_line = None,
-      order_line_taxed = order_line
-    )
-
-  def stepModifyOrderLineDiscounted(self, sequence=None, **kw):
-    order_line = sequence.get('order_line')
-    resource = sequence.get('product_discounted')
-    self.assertNotEqual(None, resource)
-    order_line.edit(
-      price=3.0,
-      quantity=4.0,
-      resource_value=resource
-    )
-    sequence.edit(
-      order_line = None,
-      order_line_discounted = order_line
-    )
-
-  def stepModifyOrderLineDiscountedTaxed(self, sequence=None, **kw):
-    order_line = sequence.get('order_line')
-    resource = sequence.get('product_discounted_taxed')
-    self.assertNotEqual(None, resource)
-    order_line.edit(
-      price=5.0,
-      quantity=6.0,
-      resource_value=resource
-    )
-    sequence.edit(
-      order_line = None,
-      order_line_discounted_taxed = order_line
-    )
-
-  def stepModifyInvoiceLineTaxed(self, sequence=None, **kw):
-    invoice_line = sequence.get('invoice_line')
-    resource = sequence.get('product_taxed')
-    self.assertNotEqual(None, resource)
-    invoice_line.edit(
-      price=1.0,
-      quantity=2.0,
-      resource_value=resource
-    )
-    sequence.edit(
-      invoice_line = None,
-      invoice_line_taxed = invoice_line
-    )
-
-  def stepModifyInvoiceLineDiscounted(self, sequence=None, **kw):
-    invoice_line = sequence.get('invoice_line')
-    resource = sequence.get('product_discounted')
-    self.assertNotEqual(None, resource)
-    invoice_line.edit(
-      price=3.0,
-      quantity=4.0,
-      resource_value=resource
-    )
-    sequence.edit(
-      invoice_line = None,
-      invoice_line_discounted = invoice_line
-    )
-
-  def stepModifyInvoiceLineDiscountedTaxed(self, sequence=None, **kw):
-    invoice_line = sequence.get('invoice_line')
-    resource = sequence.get('product_discounted_taxed')
-    self.assertNotEqual(None, resource)
-    invoice_line.edit(
-      price=5.0,
-      quantity=6.0,
-      resource_value=resource
-    )
-    sequence.edit(
-      invoice_line = None,
-      invoice_line_discounted_taxed = invoice_line
-    )
-
-  def stepOrderCreateTradeModelLine(self, sequence=None, **kw):
-    order = sequence.get('order')
-    sequence.edit(trade_model_line = self.createTradeModelLine(order))
-
-  def stepCreateTradeModelLine(self, sequence=None, **kw):
-    trade_condition = sequence.get('trade_condition')
-    sequence.edit(
-      trade_model_line = self.createTradeModelLine(trade_condition))
-
-  def stepSpecialiseTradeConditionWithBusinessProcess(self, sequence=None,
-      **kw):
-    business_process = sequence.get('business_process')
-    trade_condition = sequence.get('trade_condition')
-    self.assertNotEqual(None, business_process)
-    trade_condition.setSpecialiseValue(business_process)
-
-  def stepModifyTradeModelLineNewDiscount(self, sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_discount = sequence.get('service_discount')
-
-    trade_model_line.edit(
-      price=self.new_discount_ratio,
-      base_application='base_amount/discount',
-      base_contribution='base_amount/tax',
-      trade_phase='default/discount',
-      resource_value=service_discount,
-      reference='service_discount',
-      int_index=10,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_discount = trade_model_line
-    )
-
-  def stepModifyTradeModelLineDiscount(self, sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_discount = sequence.get('service_discount')
-
-    trade_model_line.edit(
-      price=self.default_discount_ratio,
-      base_application='base_amount/discount',
-      base_contribution='base_amount/tax',
-      trade_phase='default/discount',
-      resource_value=service_discount,
-      reference='discount',
-      int_index=10,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_discount = trade_model_line
-    )
-
-  def stepModifyTradeModelLineTotalDiscount(self, sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_discount = sequence.get('service_discount')
-
-    trade_model_line.edit(
-      price=0.8,
-      base_application='base_amount/total_discount',
-      trade_phase='default/discount',
-      resource_value=service_discount,
-      reference='total_discount',
-      int_index=30,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_discount = trade_model_line
-    )
-
-  def stepModifyTradeModelLineDiscountContributingToTotalDiscount(self,
-      sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_discount = sequence.get('service_discount')
-
-    trade_model_line.edit(
-      price=0.32,
-      base_application='base_amount/discount',
-      base_contribution='base_amount/total_discount',
-      trade_phase='default/discount',
-      resource_value=service_discount,
-      reference='total_dicount_2',
-      int_index=10,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_discount = trade_model_line
-    )
-
-  def stepModifyTradeModelLineNewTax(self, sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_tax = sequence.get('service_tax')
-
-    trade_model_line.edit(
-      price=self.new_tax_ratio,
-      base_application='base_amount/tax',
-      trade_phase='default/tax',
-      resource_value=service_tax,
-      reference='tax_2',
-      int_index=20,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_tax = trade_model_line
-    )
-
-  def stepModifyTradeModelLineTax(self, sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_tax = sequence.get('service_tax')
-
-    trade_model_line.edit(
-      price=self.default_tax_ratio,
-      base_application='base_amount/tax',
-      trade_phase='default/tax',
-      resource_value=service_tax,
-      reference='tax',
-      int_index=20,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_tax = trade_model_line
-    )
-
-  def stepModifyTradeModelLineTotalTax(self, sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_tax = sequence.get('service_tax')
-
-    trade_model_line.edit(
-      price=0.12,
-      base_application='base_amount/total_tax',
-      base_contribution='base_amount/total_discount',
-      trade_phase='default/tax',
-      resource_value=service_tax,
-      reference='tax_3',
-      int_index=20,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_tax = trade_model_line
-    )
-
-  def stepModifyTradeModelLineTaxContributingToTotalTax(self,
-      sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_tax = sequence.get('service_tax')
-
-    trade_model_line.edit(
-      price=0.2,
-      base_application='base_amount/tax',
-      base_contribution='base_amount/total_tax',
-      trade_phase='default/tax',
-      resource_value=service_tax,
-      reference='service_tax',
-      int_index=10,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_tax = trade_model_line
-    )
-
-  def stepModifyTradeModelLineTaxContributingToTotalTax2(self,
-      sequence=None, **kw):
-    trade_model_line = sequence.get('trade_model_line')
-    service_tax = sequence.get('service_tax')
-
-    trade_model_line.edit(
-      price=0.2,
-      base_application='base_amount/tax',
-      base_contribution='base_amount/total_tax',
-      trade_phase='default/tax',
-      resource_value=service_tax,
-      reference='service_tax_2',
-      int_index=10,
-    )
-    sequence.edit(
-      trade_model_line = None,
-      trade_model_line_tax = trade_model_line
-    )
-
-  def stepCheckOrderLineTaxedAggregatedAmountList(self, sequence=None, **kw):
-    order_line = sequence.get('order_line_taxed')
-    trade_condition = sequence.get('trade_condition')
-    trade_model_line_tax = sequence.get('trade_model_line_tax')
-    amount_list = trade_condition.getAggregatedAmountList(order_line)
-
-    self.assertEquals(1, len(amount_list))
-    tax_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/tax']
-    self.assertEquals(1, len(tax_amount_list))
-
-    tax_amount = tax_amount_list[0]
-
-    #self.assertEqual(tax_amount.getReference(),
-    #    trade_model_line_tax.getReference())
-    self.assertSameSet(['base_amount/tax'],
-        tax_amount.getBaseApplicationList())
-    self.assertSameSet([], tax_amount.getBaseContributionList())
-
-    self.assertEqual(order_line.getTotalPrice() * self.default_tax_ratio,
-        tax_amount.getTotalPrice())
-
-  def stepCheckOrderLineDiscountedTaxedAggregatedAmountList(self,
-      sequence=None, **kw):
-    order_line = sequence.get('order_line_discounted_taxed')
-    trade_condition = sequence.get('trade_condition')
-    trade_model_line_discount = sequence.get('trade_model_line_discount')
-    trade_model_line_tax = sequence.get('trade_model_line_tax')
-    amount_list = trade_condition.getAggregatedAmountList(order_line)
-
-    self.assertEquals(2, len(amount_list))
-    tax_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/tax']
-    self.assertEquals(1, len(tax_amount_list))
-    tax_amount = tax_amount_list[0]
-
-    discount_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/discount']
-    self.assertEquals(1, len(discount_amount_list))
-
-    discount_amount = discount_amount_list[0]
-
-    #self.assertEqual(tax_amount.getReference(),
-    #    trade_model_line_tax.getReference())
-    self.assertSameSet(['base_amount/tax'], tax_amount. \
-        getBaseApplicationList())
-    self.assertSameSet([], tax_amount.getBaseContributionList())
-
-    #self.assertEqual(discount_amount.getReference(),
-    #    trade_model_line_discount.getReference())
-    self.assertSameSet(['base_amount/discount'], discount_amount. \
-        getBaseApplicationList())
-    self.assertSameSet(['base_amount/tax'], discount_amount. \
-        getBaseContributionList())
-
-    self.assertEqual(order_line.getTotalPrice() * \
-        self.default_discount_ratio, discount_amount.getTotalPrice())
-
-    self.assertEqual((order_line.getTotalPrice() + discount_amount. \
-        getTotalPrice()) * self.default_tax_ratio,
-        tax_amount.getTotalPrice())
-
-  def stepCheckOrderLineDiscountedAggregatedAmountList(self, sequence=None,
-      **kw):
-    order_line = sequence.get('order_line_discounted')
-    trade_condition = sequence.get('trade_condition')
-    trade_model_line_discount = sequence.get('trade_model_line_discount')
-    amount_list = trade_condition.getAggregatedAmountList(order_line)
-
-    self.assertEquals(2, len(amount_list))
-    tax_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/tax']
-    self.assertEquals(1, len(tax_amount_list))
-    tax_amount = tax_amount_list[0]
-
-    discount_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/discount']
-    self.assertEquals(1, len(discount_amount_list))
-
-    discount_amount = discount_amount_list[0]
-
-    #self.assertEqual(discount_amount.getReference(),
-    #    trade_model_line_discount.getReference())
-    self.assertSameSet(['base_amount/tax'], tax_amount. \
-        getBaseApplicationList())
-    self.assertSameSet([], tax_amount.getBaseContributionList())
-
-    self.assertSameSet(['base_amount/discount'], discount_amount. \
-        getBaseApplicationList())
-    self.assertSameSet(['base_amount/tax'], discount_amount. \
-        getBaseContributionList())
-
-    self.assertEqual(order_line.getTotalPrice() * \
-        self.default_discount_ratio, discount_amount.getTotalPrice())
-
-    # below tax is applied only to discount part
-    self.assertEqual(discount_amount.getTotalPrice() * self.default_tax_ratio,
-        tax_amount.getTotalPrice())
-
-  def stepCheckOrderComplexTradeConditionAggregatedAmountList(self,
-      sequence=None, **kw):
-    trade_condition = sequence.get('trade_condition')
-    order = sequence.get('order')
-    order_line_discounted = sequence.get('order_line_discounted')
-    order_line_discounted_taxed = sequence.get('order_line_discounted_taxed')
-    order_line_taxed = sequence.get('order_line_taxed')
-    trade_model_line_tax = sequence.get('trade_model_line_tax')
-    trade_model_line_discount = sequence.get('trade_model_line_discount')
-
-    amount_list = trade_condition.getAggregatedAmountList(order)
-    self.assertEquals(2, len(amount_list))
-    discount_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/discount']
-    tax_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/tax']
-
-    self.assertEquals(1, len(discount_amount_list))
-    self.assertEquals(1, len(tax_amount_list))
-
-    discount_amount = discount_amount_list[0]
-    tax_amount = tax_amount_list[0]
-
-    #self.assertEqual(discount_amount.getReference(),
-    #    trade_model_line_discount.getReference())
-    self.assertSameSet(['base_amount/discount'], discount_amount. \
-        getBaseApplicationList())
-
-    self.assertSameSet(['base_amount/tax'], discount_amount. \
-        getBaseContributionList())
-
-    self.assertSameSet(['base_amount/tax'], tax_amount. \
-        getBaseApplicationList())
-
-    self.assertSameSet([], tax_amount.getBaseContributionList())
-    #self.assertEqual(tax_amount.getReference(),
-    #    trade_model_line_tax.getReference())
-
-    self.assertEqual(
-      discount_amount.getTotalPrice(),
-      (order_line_discounted.getTotalPrice()
-        + order_line_discounted_taxed.getTotalPrice() )
-      * self.default_discount_ratio
-    )
-
-    self.assertEqual(
-      tax_amount.getTotalPrice(),
-      (order_line_taxed.getTotalPrice()
-        + order_line_discounted_taxed.getTotalPrice()
-        + discount_amount.getTotalPrice()) * self.default_tax_ratio
-    )
-
-  def stepCheckAggregatedAmountListWithComplexBaseContributionBaseApplication(self,
-      sequence=None, **kw):
-    trade_condition = sequence.get('trade_condition')
-    order = sequence.get('order')
-    order_line_discounted = sequence.get('order_line_discounted')
-    order_line_discounted_taxed = sequence.get('order_line_discounted_taxed')
-    order_line_taxed = sequence.get('order_line_taxed')
-
-    amount_list = trade_condition.getAggregatedAmountList(order)
-    self.assertEquals(5, len(amount_list))
-    tax_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/tax']
-    total_tax_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/total_tax']
-    discount_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/discount']
-    total_discount_amount_list = [q for q in amount_list
-        if q.getBaseApplication() == 'base_amount/total_discount']
-
-    self.assertEquals(2, len(tax_amount_list))
-    self.assertEquals(1, len(total_tax_amount_list))
-    self.assertEquals(1, len(discount_amount_list))
-    self.assertEquals(1, len(total_discount_amount_list))
-
-    total_tax_amount = total_tax_amount_list[0]
-    discount_amount = discount_amount_list[0]
-    total_discount_amount = total_discount_amount_list[0]
-
-    self.assertSameSet(['base_amount/total_tax'], total_tax_amount. \
-        getBaseApplicationList())
-    self.assertSameSet(['base_amount/total_discount'], total_tax_amount. \
-        getBaseContributionList())
-
-    self.assertSameSet(['base_amount/discount'], discount_amount. \
-        getBaseApplicationList())
-    self.assertSameSet(['base_amount/total_discount'], discount_amount. \
-        getBaseContributionList())
-
-    self.assertSameSet(['base_amount/total_discount'], total_discount_amount. \
-        getBaseApplicationList())
-    self.assertSameSet([], total_discount_amount.getBaseContributionList())
-
-    for tax_amount in tax_amount_list:
-      self.assertSameSet(['base_amount/tax'], tax_amount. \
-          getBaseApplicationList())
-      self.assertSameSet(['base_amount/total_tax'], tax_amount. \
-          getBaseContributionList())
-
-    for tax_amount in tax_amount_list:
-      self.assertEqual(
-        tax_amount.getTotalPrice(),
-        order_line_taxed.getTotalPrice() * 0.2
-      )
-
-    self.assertEqual(
-      total_tax_amount.getTotalPrice(),
-      (order_line_taxed.getTotalPrice() * 0.2) * 2 * 0.12
-    )
-
-    self.assertEqual(
-      discount_amount.getTotalPrice(),
-      order_line_discounted.getTotalPrice() * 0.32
-    )
-
-    self.assertEqual(
-      total_discount_amount.getTotalPrice(),
-      ((order_line_taxed.getTotalPrice() * 0.2) * 2 * 0.12 + \
-      order_line_discounted.getTotalPrice() * 0.32) * 0.8
-    )
-
-  def assertSameUidSet(self, a, b, msg=None):
-    self.assertEqual(set(x.uid for x in a), set(x.uid for x in b), msg)
-
-  # Tests
-  def test_TradeConditionCircularCompositionIsSafe(self):
-    order = self.createOrder()
-    trade_condition_1 = self.createTradeCondition()
-    trade_condition_2 = self.createTradeCondition()
-
-    order.setSpecialiseValue(trade_condition_1)
-    trade_condition_1.setSpecialiseValue(trade_condition_2)
-    trade_condition_2.setSpecialiseValue(trade_condition_1)
-
-    self.assertEqual(trade_condition_1.findEffectiveSpecialiseValueList(order),
-        [trade_condition_1, trade_condition_2]
-    )
-
-  def test_findEffectiveSpecialiseValueListWithPortalType(self):
-    '''
-      check that findSpecialiseValueList is able to return all the inheritance
-      model tree using Depth-first search with a specific portal_type asked
-
-                                  trade_condition_1
-                                    /           \
-                                   /             \
-                                  /               \
-                       trade_condition_2       trade_condition_3
-                               |
-                               |
-                               |
-                        trade_condition_4
-                               |
-                               |
-                               |
-                        business_process
-                        
-    As only business_process will be a "Business Process" and we search for business process
-    the result must be [business_process]
-    '''
-    order = self.createOrder()
-    trade_condition_1 = self.createTradeCondition()
-    trade_condition_2 = self.createTradeCondition()
-    trade_condition_3 = self.createTradeCondition()
-    trade_condition_4 = self.createTradeCondition()
+    self.checkCausalityState(packing_list, 'solved')
+    new_packing_list, = [x for x in order.getCausalityRelatedValueList(
+                             portal_type=self.packing_list_portal_type)
+                           if x != packing_list]
+    self.copyExpectedAmountDict(new_packing_list,
+        1 - self.modified_packing_list_line_quantity_ratio)
+
+    invoice_count = len(self.portal
+        .accounting_module.objectValues(portal_type=self.invoice_portal_type))
+    self.processPackingListBuildInvoice(packing_list)
+    # XXX With legacy code, only 1 invoice was built after starting the first
+    #     packing list. Now, all invoice lines generated by trade model are
+    #     built immediately, creating a second invoice before starting the
+    #     second packing list, and we end up with 3 invoices. In other words,
+    #     the new simulation splits the second invoice, and I am not sure it's
+    #     correct.
+    expectedFailure(self.assertEqual)(invoice_count + 1, len(self.portal
+        .accounting_module.objectValues(portal_type=self.invoice_portal_type)))
+    self.processPackingListBuildInvoice(new_packing_list)
+
+  def test_02_OrderWithComplexTaxedAndDiscountedLines(self):
+    service_discount = self.createServiceDiscount()
+    service_tax = self.createServiceTax()
     business_process = self.createBusinessProcess()
+    line_list = [
+      dict(price=0.2,
+           base_application='base_amount/tax',
+           base_contribution='base_amount/total_tax',
+           trade_phase='default/tax',
+           resource_value=service_tax,
+           reference='service_tax',
+           int_index=10),
+      dict(price=0.32,
+           base_application='base_amount/discount',
+           base_contribution='base_amount/total_discount',
+           trade_phase='default/discount',
+           resource_value=service_discount,
+           reference='total_dicount_2',
+           int_index=10),
+      dict(price=0.2,
+           base_application='base_amount/tax',
+           base_contribution='base_amount/total_tax',
+           trade_phase='default/tax',
+           resource_value=service_tax,
+           reference='service_tax_2',
+           int_index=10),
+      dict(price=0.12,
+           base_application='base_amount/total_tax',
+           base_contribution='base_amount/total_discount',
+           trade_phase='default/tax',
+           resource_value=service_tax,
+           reference='tax_3',
+           int_index=20),
+      dict(price=0.8,
+           base_application='base_amount/total_discount',
+           trade_phase='default/discount',
+           resource_value=service_discount,
+           reference='total_discount',
+           int_index=30),
+      ]
+    random.shuffle(line_list)
+    trade_condition = self.createTradeCondition(business_process, line_list)
 
-    order.setSpecialiseValue(trade_condition_1)
-    trade_condition_1.setSpecialiseValueList((trade_condition_2,
-      trade_condition_3))
-    trade_condition_2.setSpecialiseValue(trade_condition_4)
-    trade_condition_4.setSpecialiseValue(business_process)
+    taxed = self.createProductTaxed()
+    discounted = self.createProductDiscounted()
+    order = self.createOrder(trade_condition, (
+      dict(price=1, quantity=2, id='taxed',
+                                resource_value=taxed),
+      dict(price=3, quantity=4, id='discounted',
+                                resource_value=discounted),
+      ))
+    discount_price = (3*4) * 0.32
+    tax_price = (1*2) * 0.2
+    total_tax_price = tax_price * 2 * 0.12
+    self[order.getPath()] = dict(
+      service_tax={None: tax_price, 'taxed': tax_price},
+      total_dicount_2={None: discount_price, 'discounted': discount_price},
+      service_tax_2={None: tax_price, 'taxed': tax_price},
+      tax_3={None: total_tax_price, 'taxed': total_tax_price},
+      total_discount={None: (total_tax_price+discount_price) * 0.8,
+                      'taxed': total_tax_price * 0.8,
+                      'discounted': discount_price * 0.8})
 
-    self.assertEqual(trade_condition_1.findEffectiveSpecialiseValueList(order),
-      [trade_condition_1, trade_condition_2, trade_condition_3,
-       trade_condition_4])
-    self.assertEqual(trade_condition_1.findEffectiveSpecialiseValueList(order,
-      portal_type_list = ['Business Process']), [business_process])
+    transaction.commit()
+    self.tic()
+
+    self.checkModelLineOnDelivery(order)
+
+    for movement in order, order['taxed'], order['discounted']:
+      self.checkComposition(movement, [trade_condition], {
+        self.trade_model_path_portal_type: 10,
+        self.business_link_portal_type: 5,
+        "Trade Model Line": 5})
+
+    self.checkAggregatedAmountList(order)
 
   def test_tradeModelLineWithFixedPrice(self):
     """
@@ -1435,597 +724,39 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       to say "discount 10 euros" or "pay more 10 euros" instead of saying "10%
       discount from total"
     """
-    trade_condition = self.createTradeCondition()
-    tax = self.createResource('Service', title='Tax', use='tax')
-    # create a model line with 100 euros
-    A = self.createTradeModelLine(trade_condition, reference='A',
-                                  resource_value=tax, quantity=100, price=1)
-    # add a discount of 10 euros
-    B = self.createTradeModelLine(trade_condition, reference='B',
-                                  resource_value=tax, quantity=10, price=-1)
-    order = self.createOrder()
-    order.setSpecialiseValue(trade_condition)
-    amount_list = order.getGeneratedAmountList()
+    tax = self.createServiceTax()
+    trade_condition = self.createTradeCondition((), (
+      # create a model line with 100 euros
+      dict(reference='A', resource_value=tax, quantity=100, price=1),
+      # add a discount of 10 euros
+      dict(reference='B', resource_value=tax, quantity=10, price=-1)))
+    order = self.createOrder(trade_condition)
+    amount_list = order.getAggregatedAmountList()
     self.assertEqual([-10, 100], sorted(x.getTotalPrice() for x in amount_list))
-
-  def test_getAggregatedAmountList(self, quiet=quiet):
-    """
-      Test for case, when discount contributes to tax, and order has mix of contributing lines
-    """
-    sequence_list = SequenceList()
-    sequence_string = self.AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING
-
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING = \
-      COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
-              CreateBusinessProcess
-              CreateBusinessLink
-              ModifyBusinessLinkTaxing
-              CreateBusinessLink
-              ModifyBusinessLinkDiscounting
-              CreateTradeModelPath
-              CreateTradeCondition
-              SpecialiseTradeConditionWithBusinessProcess
-              CreateTradeModelLine
-              ModifyTradeModelLineTax
-              Tic
-              CreateOrder
-              OrderCreateTradeModelLine
-              ModifyTradeModelLineDiscount
-              SpecialiseOrderTradeCondition
-              FillOrder
-              Tic
-              CreateOrderLine
-              ModifyOrderLineTaxed
-              CreateOrderLine
-              ModifyOrderLineDiscounted
-              CreateOrderLine
-              ModifyOrderLineDiscountedTaxed
-              Tic
-    """ + AGGREGATED_AMOUNT_LIST_CHECK_SEQUENCE_STRING
-
-  def test_getAggregatedAmountListOrderSpecialise(self, quiet=quiet):
-    """
-      Test for case, when discount contributes to tax, and order has mix of contributing lines and order itself defines Trade Model Line
-    """
-    sequence_list = SequenceList()
-    sequence_string = self\
-        .ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING
-
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING = """
-              CheckOrderLineTaxedSimulation
-              CheckOrderLineDiscountedSimulation
-              CheckOrderLineDiscountedTaxedSimulation
-  """
-  TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING = \
-      AGGREGATED_AMOUNT_LIST_COMMON_SEQUENCE_STRING + """
-              Tic
-              PlanOrder
-              Tic
-  """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
-
-  def test_TradeModelRuleSimulationExpand(self, quiet=quiet):
-    """Tests tree of simulations from Trade Model Rule"""
-    sequence_list = SequenceList()
-    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationReexpand(self, quiet=quiet):
-    """Tests tree of simulations from Trade Model Rule with reexpanding"""
-    sequence_list = SequenceList()
-    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
-              ModifyAgainOrderLineTaxed
-              ModifyAgainOrderLineDiscounted
-              ModifyAgainOrderLineDiscountedTaxed
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationReexpandResourceChange(self, quiet=quiet):
-    """Tests tree of simulations from Trade Model Rule with reexpanding when resource changes on model"""
-    sequence_list = SequenceList()
-    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
-              CreateServiceTax
-              CreateServiceDiscount
-              OrderCreateTradeModelLine
-              ModifyTradeModelLineDiscount
-              OrderCreateTradeModelLine
-              ModifyTradeModelLineTax
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING = \
-      ORDER_SPECIALISE_AGGREGATED_AMOUNT_COMMON_SEQUENCE_STRING + """
-              Tic
-              PlanOrder
-              Tic
-  """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
-
-  def test_TradeModelRuleSimulationExpandOrderSpecialise(self, quiet=quiet):
-    sequence_list = SequenceList()
-    sequence_string = self \
-        .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationReexpandOrderSpecialise(self, quiet=quiet):
-    sequence_list = SequenceList()
-    sequence_string = self \
-        .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING+ """
-              ModifyAgainOrderLineTaxed
-              ModifyAgainOrderLineDiscounted
-              ModifyAgainOrderLineDiscountedTaxed
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationWithoutBPM(self, quiet=quiet):
-    """Tests tree of simulations from Trade Model Rule when there is no BPM"""
-    sequence_list = SequenceList()
-    sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
-              CreateTradeCondition
-              CreateTradeModelLine
-              ModifyTradeModelLineTax
-              Tic
-              CreateOrder
-              SpecialiseOrderTradeCondition
-              FillOrder
-              Tic
-              CreateOrderLine
-              ModifyOrderLineTaxed
-              Tic
-              PlanOrder
-              Tic
-              CheckOrderTaxNoSimulation
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationWithoutTradeCondition(self, quiet=quiet):
-    """Tests tree of simulations from Trade Model Rule when there is no Trade Condition"""
-    sequence_list = SequenceList()
-    sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
-              CreateOrder
-              FillOrder
-              Tic
-              CreateOrderLine
-              ModifyOrderLineTaxed
-              Tic
-              PlanOrder
-              Tic
-              CheckOrderTaxNoSimulation
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationBuildInvoice(self, quiet=quiet):
-    sequence_list = SequenceList()
-    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
-    sequence_string += """
-              ConfirmOrder
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetPackingList
-              PackPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              StartPackingList
-              StopPackingList
-              DeliverPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetInvoice
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationBuildInvoiceOrderSpecialise(self, quiet=quiet):
-    sequence_list = SequenceList()
-    sequence_string = self\
-        .TRADE_MODEL_RULE_SIMULATION_ORDER_SPECIALISED_SEQUENCE_STRING
-    sequence_string += """
-              ConfirmOrder
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetPackingList
-              PackPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              StartPackingList
-              StopPackingList
-              DeliverPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetInvoice
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationBuildInvoiceNewTradeCondition(self, quiet=quiet):
-    """Check that after changing trade condition invoice is diverged"""
-    sequence_list = SequenceList()
-    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
-    sequence_string += """
-              ConfirmOrder
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetPackingList
-              PackPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              StartPackingList
-              StopPackingList
-              DeliverPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetInvoice
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-
-              SetTradeConditionOld
-
-              CreateTradeCondition
-              SpecialiseTradeConditionWithBusinessProcess
-              CreateTradeModelLine
-              ModifyTradeModelLineNewTax
-              CreateTradeModelLine
-              ModifyTradeModelLineNewDiscount
-              Tic
-
-              SpecialiseInvoiceTradeCondition
-              Tic
-              CheckInvoiceCausalityStateDiverged
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationBuildInvoiceNewInvoiceLineSupport(self, quiet=quiet):
-    """Check how is supported addition of invoice line to invoice build from order"""
-    sequence_list = SequenceList()
-    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
-    sequence_string += """
-              ConfirmOrder
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetPackingList
-              PackPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              StartPackingList
-              StopPackingList
-              DeliverPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetInvoice
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-
-              CreateInvoiceLine
-              ModifyInvoiceLineDiscounted
-              CreateInvoiceLine
-              ModifyInvoiceLineDiscountedTaxed
-              CreateInvoiceLine
-              ModifyInvoiceLineTaxed
-
-              Tic
-
-              CheckInvoiceCausalityStateSolved
-
-              StartInvoice
-              Tic
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-              CheckInvoiceAccountingMovements
-              StopInvoice
-              DeliverInvoice
-              Tic
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationBuildInvoiceInvoiceLineModifyDivergencyAndSolving(self, quiet=quiet):
-    """Check that after changing invoice line invoice is properly diverged and it is possible to solve"""
-    sequence_list = SequenceList()
-    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
-    sequence_string += """
-              ConfirmOrder
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetPackingList
-              PackPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              StartPackingList
-              StopPackingList
-              DeliverPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetInvoice
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-
-              GetInvoiceLineDiscounted
-              GetInvoiceLineDiscountedTaxed
-              GetInvoiceLineTaxed
-
-              ModifyQuantityInvoiceLineDiscounted
-              ModifyQuantityInvoiceLineDiscountedTaxed
-              ModifyQuantityInvoiceLineTaxed
-              Tic
-              CheckInvoiceCausalityStateDiverged
-              AcceptDecisionQuantityInvoice
-              Tic
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationBuildInvoiceBuildInvoiceTransactionLines(self, quiet=quiet):
-    """Check that having properly configured invoice transaction rule it invoice transaction lines are nicely generated and have proper amounts"""
-    sequence_list = SequenceList()
-    sequence_string = self.TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING
-    sequence_string += """
-              ConfirmOrder
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetPackingList
-              PackPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              StartPackingList
-              StopPackingList
-              DeliverPackingList
-              Tic
-    """ + self.AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetInvoice
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-
-              StartInvoice
-              Tic
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-              CheckInvoiceAccountingMovements
-              StopInvoice
-              DeliverInvoice
-              Tic
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING = \
-      TRADE_MODEL_RULE_SIMULATION_SEQUENCE_STRING + """
-              ConfirmOrder
-              Tic
-    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetPackingList
-              DecreasePackingListLineListQuantity
-              Tic
-    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              CheckPackingListDiverged
-              SplitAndDeferPackingList
-              Tic
-    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetNewPackingList
-              PackPackingList
-              Tic
-    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              StartPackingList
-              StopPackingList
-              DeliverPackingList
-              Tic
-    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetInvoice
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-
-              SetNewPackingListAsPackingList
-              PackPackingList
-              Tic
-              StartPackingList
-    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              StopPackingList
-              DeliverPackingList
-              Tic
-    """ + AGGREGATED_AMOUNT_SIMULATION_CHECK_SEQUENCE_STRING + """
-              GetInvoice
-              CheckInvoiceCausalityStateSolved
-              CheckInvoiceNormalMovements
-    """
-
-  def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuildDifferentRatio(self, quiet=quiet):
-    """Check building invoice after splitting packing list using different ratio"""
-    self.modified_packing_list_line_quantity_ratio = 0.4
-    sequence_list = SequenceList()
-    sequence_list.addSequenceString(
-        self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_TradeModelRuleSimulationPackingListSplitBuildInvoiceBuild(self, quiet=quiet):
-    """Check building invoice after splitting packing list"""
-    sequence_list = SequenceList()
-    sequence_list.addSequenceString(
-        self.PACKING_LIST_SPLIT_INVOICE_BUILD_SEQUENCE_STRING)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_getAggregatedAmountListWithComplexModelLinesCreateInEasyOrder(self, quiet=quiet):
-    """
-    Test the return of getAggregatedAmountList in the case of many model lines
-    depending each others. In this test, lines are created in the order of the
-    dependencies (it means that if a line A depend of a line B, line B is
-    created before A). This is the most easy case.
-
-    Dependency tree :
-    ModelLineTaxContributingToTotalTax : A
-    ModelLineDiscountContributingToTotalDiscount : B
-    ModelLineTaxContributingToTotalTax2 : C
-    ModelLineTotalTax : D
-    ModelLineTotalDiscount : E
-
-                              D       E
-                               \     /
-                                \   /
-                                 \ /
-                                  C      B
-                                   \    /
-                                    \  /
-                                     \/
-                                      A
-    Model line creation order : E, D, C, B, A
-    """
-    sequence_list = SequenceList()
-    sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
-              CreateBusinessProcess
-              CreateBusinessLink
-              ModifyBusinessLinkTaxing
-              CreateBusinessLink
-              ModifyBusinessLinkDiscounting
-              CreateTradeModelPath
-              CreateTradeCondition
-              SpecialiseTradeConditionWithBusinessProcess
-              CreateTradeModelLine
-              ModifyTradeModelLineTotalDiscount
-              CreateTradeModelLine
-              ModifyTradeModelLineTotalTax
-              CreateTradeModelLine
-              ModifyTradeModelLineTaxContributingToTotalTax2
-              CreateTradeModelLine
-              ModifyTradeModelLineDiscountContributingToTotalDiscount
-              CreateTradeModelLine
-              ModifyTradeModelLineTaxContributingToTotalTax
-              Tic
-              CreateOrder
-              SpecialiseOrderTradeCondition
-              FillOrder
-              Tic
-              CreateOrderLine
-              ModifyOrderLineTaxed
-              CreateOrderLine
-              ModifyOrderLineDiscounted
-              Tic
-              CheckAggregatedAmountListWithComplexBaseContributionBaseApplication
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_getAggregatedAmountListWithComplexModelLinesCreateInRandomOrder(self, quiet=quiet):
-    """
-    Test the return of getAggregatedAmountList in the case of many model lines
-    depending each others. In this test, lines are created in a random order,
-    not in the dependencies order (it means that if a line A depend of a 
-    line B, line A can be created before line B). getAggregatedAmountList
-    should be able to handle this case and redo calculation until all
-    dependencies are satisfied
-
-    Dependency tree :
-    ModelLineTaxContributingToTotalTax : A
-    ModelLineDiscountContributingToTotalDiscount : B
-    ModelLineTaxContributingToTotalTax2 : C
-    ModelLineTotalTax : D
-    ModelLineTotalDiscount : E
-
-                              D       E
-                               \     /
-                                \   /
-                                 \ /
-                                  C      B
-                                   \    /
-                                    \  /
-                                     \/
-                                      A
-    Model line creation order : A, C, D, B, E
-    """
-    sequence_list = SequenceList()
-    sequence_string = self.COMMON_DOCUMENTS_CREATION_SEQUENCE_STRING + """
-              CreateBusinessProcess
-              CreateBusinessLink
-              ModifyBusinessLinkTaxing
-              CreateBusinessLink
-              ModifyBusinessLinkDiscounting
-              CreateTradeModelPath
-              CreateTradeCondition
-              SpecialiseTradeConditionWithBusinessProcess
-              CreateTradeModelLine
-              ModifyTradeModelLineTaxContributingToTotalTax
-              CreateTradeModelLine
-              ModifyTradeModelLineTaxContributingToTotalTax2
-              CreateTradeModelLine
-              ModifyTradeModelLineTotalTax
-              CreateTradeModelLine
-              ModifyTradeModelLineDiscountContributingToTotalDiscount
-              CreateTradeModelLine
-              ModifyTradeModelLineTotalDiscount
-              Tic
-              CreateOrder
-              SpecialiseOrderTradeCondition
-              FillOrder
-              Tic
-              CreateOrderLine
-              ModifyOrderLineTaxed
-              CreateOrderLine
-              ModifyOrderLineDiscounted
-              Tic
-              CheckAggregatedAmountListWithComplexBaseContributionBaseApplication
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
 
   def test_BuildTradeModelLineAndAccountingFromOrder(self):
     business_process = self.createBusinessProcess()
-    business_link = self.createBusinessLink(business_process,
-                              trade_phase='default/tax')
 
-    product = self.createResource('Product',
-                              title='Product',
-                              use='normal',
-                              base_contribution='base_amount/tax')
-    tax = self.createResource('Service',
-                              title='Tax',
-                              use='tax')
-    currency = self.createResource('Currency', title='EUR')
-    trade_condition = self.createTradeCondition()
-    trade_condition.setSpecialiseValue(business_process)
-    trade_model_line = self.createTradeModelLine(
-                              trade_condition,
-                              reference='VAT',
-                              price=.15,
-                              resource_value=tax,
-                              trade_phase='default/tax',
-                              base_application='base_amount/tax',)
-    source = self.portal.organisation_module.newContent(
-                              portal_type='Organisation')
-    destination = self.portal.organisation_module.newContent(
-                              portal_type='Organisation')
+    product = self.createProductTaxed()
+    tax = self.createServiceTax()
+    trade_condition = self.createTradeCondition(
+      business_process, (
+      dict(reference='VAT',
+           price=.15,
+           resource_value=tax,
+           trade_phase='default/tax',
+           base_application='base_amount/tax'),
+      ))
+    source = self.createNode()
+    destination = self.createNode()
 
-    order = self.createOrder()
-    order.edit(source_value=source,
-               destination_value=destination,
-               source_section_value=source,
-               destination_section_value=destination,
-               specialise_value=trade_condition,
-               price_currency_value=currency,
-               start_date=self.order_date,
-               stop_date=self.order_date,)
-    order.newContent(
-                portal_type=self.order_line_portal_type,
-                resource_value=product,
-                quantity=10,
-                price=100)
+    order = self.createOrder(trade_condition, (
+      dict(price=100, quantity=10, resource_value=product),
+      ),
+      source_value=source,
+      destination_value=destination,
+      source_section_value=source,
+      destination_section_value=destination)
 
     order.plan()
     order.confirm()
@@ -2084,33 +815,22 @@ class TestTradeModelLine(TestTradeModelLineMixin):
                       self.expense_account)
     self.assertEquals(1000, income_movement.getSourceCredit())
 
-
   def test_BuildTradeModelLineAndAccountingFromInvoice(self):
     business_process = self.createBusinessProcess()
-    business_link = self.createBusinessLink(business_process,
-                              trade_phase='default/tax')
 
-    product = self.createResource('Product',
-                              title='Product',
-                              use='normal',
-                              base_contribution='base_amount/tax')
-    tax = self.createResource('Service',
-                              title='Tax',
-                              use='tax')
+    product = self.createProductTaxed()
+    tax = self.createServiceTax()
     currency = self.createResource('Currency', title='EUR')
-    trade_condition = self.createTradeCondition()
-    trade_condition.setSpecialiseValue(business_process)
-    trade_model_line = self.createTradeModelLine(
-                              trade_condition,
-                              reference='VAT',
-                              price=.15,
-                              resource_value=tax,
-                              trade_phase='default/tax',
-                              base_application='base_amount/tax',)
-    source = self.portal.organisation_module.newContent(
-                              portal_type='Organisation')
-    destination = self.portal.organisation_module.newContent(
-                              portal_type='Organisation')
+    trade_condition = self.createTradeCondition(
+      business_process, (
+      dict(reference='VAT',
+           price=.15,
+           resource_value=tax,
+           trade_phase='default/tax',
+           base_application='base_amount/tax'),
+      ))
+    source = self.createNode()
+    destination = self.createNode()
 
     invoice = self.portal.accounting_module.newContent(
                portal_type=self.invoice_portal_type,
@@ -2177,8 +897,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       and trade model line can works with appropriate context(delivery or
       movement) only.
     """
-    tax = self.createResource('Service', title='Tax', use='tax')
-    trade_condition = self.createTradeCondition()
+    tax = self.createServiceTax()
+    trade_condition = self.createTradeCondition(self.createBusinessProcess())
     # create a model line and set target level to `delivery`.
     # XXX When it is possible to accumulate contributed quantities between
     #     input amounts, the trade condition should be configured as follows:
@@ -2199,8 +919,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     # create an order.
     resource_A = self.createResource('Product', title='A')
     resource_B = self.createResource('Product', title='B')
-    order = self.createOrder()
-    order.setSpecialiseValue(trade_condition)
+    order = self.createOrder(trade_condition)
     base_contribution_list = 'base_amount/tax', 'base_amount/extra_fee'
     order.setBaseContributionList(base_contribution_list)
     kw = {'portal_type': self.order_line_portal_type,
@@ -2274,7 +993,7 @@ if base_application == 'base_amount/extra_fee':
     """
       Test if trade model line works with rounding.
     """
-    trade_condition = self.createTradeCondition()
+    trade_condition = self.createTradeCondition(self.createBusinessProcess())
     # create a model line and set target level to `delivery`
     tax = self.createTradeModelLine(trade_condition,
                                     reference='TAX',
@@ -2294,8 +1013,7 @@ if base_application == 'base_amount/extra_fee':
     # create an order
     resource_A = self.createResource('Product', title='A')
     resource_B = self.createResource('Product', title='B')
-    order = self.createOrder()
-    order.setSpecialiseValue(trade_condition)
+    order = self.createOrder(trade_condition)
     order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
                                     price=3333, quantity=1,
                                     resource_value=resource_A,
@@ -2309,13 +1027,13 @@ if base_application == 'base_amount/extra_fee':
     self.tic()
 
     # check the result without rounding
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=False)
+    amount_list = order.getAggregatedAmountList(rounding=False)
     self.assertEqual(1, len(amount_list))
     self.assertEqual(set([order_line_1, order_line_2]),
                      set(amount_list[0].getCausalityValueList()))
     self.assertEqual((3333+171)*0.05, amount_list[0].getTotalPrice())
     # check the result with rounding
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    amount_list = order.getAggregatedAmountList(rounding=True)
     self.assertEqual(1, len(amount_list))
     self.assertEqual(set([order_line_1, order_line_2]),
                      set(amount_list[0].getCausalityValueList()))
@@ -2332,31 +1050,27 @@ if base_application == 'base_amount/extra_fee':
       return result
 
     # check the result without rounding
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=False)
+    amount_list = order.getAggregatedAmountList(rounding=False)
     self.assertEqual(2, len(amount_list))
     self.assertEqual(3333*0.05+171*0.05, getTotalAmount(amount_list))
     # check the result with rounding
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    amount_list = order.getAggregatedAmountList(rounding=True)
     self.assertEqual(2, len(amount_list))
     self.assertEqual(174, getTotalAmount(amount_list))
 
     # check getAggregatedAmountList result of each movement
     # order line 1
-    amount_list = trade_condition.getAggregatedAmountList(order_line_1,
-                                                          rounding=False)
+    amount_list = order_line_1.getAggregatedAmountList(rounding=False)
     self.assertEqual(1, len(amount_list))
     self.assertEqual(3333*0.05, amount_list[0].getTotalPrice())
-    amount_list = trade_condition.getAggregatedAmountList(order_line_1,
-                                                          rounding=True)
+    amount_list = order_line_1.getAggregatedAmountList(rounding=True)
     self.assertEqual(1, len(amount_list))
     self.assertEqual(166, amount_list[0].getTotalPrice())
     # order line 2
-    amount_list = trade_condition.getAggregatedAmountList(order_line_2,
-                                                          rounding=False)
+    amount_list = order_line_2.getAggregatedAmountList(rounding=False)
     self.assertEqual(1, len(amount_list))
     self.assertEqual(171*0.05, amount_list[0].getTotalPrice())
-    amount_list = trade_condition.getAggregatedAmountList(order_line_2,
-                                                          rounding=True)
+    amount_list = order_line_2.getAggregatedAmountList(rounding=True)
     self.assertEqual(1, len(amount_list))
     self.assertEqual(8, amount_list[0].getTotalPrice())
 
@@ -2372,14 +1086,14 @@ if base_application == 'base_amount/extra_fee':
     self.tic()
 
     # check the result without rounding
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=False)
+    amount_list = order.getAggregatedAmountList(rounding=False)
     self.assertEqual(2, len(amount_list))
     self.assertEqual(3.3333*3333*0.05+171*0.05, getTotalAmount(amount_list))
     # check the result with rounding
     # both quantity and total price will be rounded so that the expression
     # should be "round_up(round_up(3.3333 * 3333) * 0.05) + round_up(round_up
     # (1* 171) * 0.05)"
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    amount_list = order.getAggregatedAmountList(rounding=True)
     self.assertEqual(2, len(amount_list))
     self.assertEqual(565, getTotalAmount(amount_list))
 
@@ -2395,7 +1109,7 @@ if base_application == 'base_amount/extra_fee':
     transaction.commit()
     self.tic()
 
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    amount_list = order.getAggregatedAmountList(rounding=True)
     # The expression should be "round_up(round_up(round_down(3.3333) * 3333)
     # * 0.05) + round_up(round_up(round_down(1) * 171) * 0.05)"
     self.assertEqual(2, len(amount_list))
@@ -2419,11 +1133,11 @@ if base_application == 'base_amount/extra_fee':
     self.tic()
 
     # check the result without rounding
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=False)
+    amount_list = order.getAggregatedAmountList(rounding=False)
     self.assertEqual(2, len(amount_list))
     self.assertEqual(3.3333*3333*0.05+171.1234*0.05, getTotalAmount(amount_list))
     # check the result with rounding
-    amount_list = trade_condition.getAggregatedAmountList(order, rounding=True)
+    amount_list = order.getAggregatedAmountList(rounding=True)
     # The expression should be "round_down(3.3333) * round_up(3333) * 0.05 +
     # round_down(1) * round_up(171.1234) * 0.05"
     self.assertEqual(2, len(amount_list))
@@ -2434,40 +1148,37 @@ if base_application == 'base_amount/extra_fee':
     Make sure that a movement which does not have any base_contribution values
     does not match to any trade model lines.
     """
-    trade_condition = self.createTradeCondition()
-
-    # create a model line
-    tax = self.createTradeModelLine(trade_condition,
-                                    reference='TAX',
-                                    base_application_list=['base_amount/tax'],
-                                    base_contribution_list=['base_amount/total_tax'])
-    tax.edit(price=0.05)
+    trade_condition = self.createTradeCondition(
+      (), (
+      dict(price=0.05,
+           reference='TAX',
+           base_application_list=['base_amount/tax'],
+           base_contribution_list=['base_amount/total_tax']),
+      ))
 
     # create an order
     resource_A = self.createResource('Product', title='A')
-    order = self.createOrder()
-    order.setSpecialiseValue(trade_condition)
-    # create a movement which should be aggregated
-    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
-                                    price=100, quantity=1,
-                                    resource_value=resource_A,
-                                    base_contribution_list=['base_amount/tax'])
-    # create a movement which base contribution is empty and shoud not be
-    # aggregated
-    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
-                                    price=50, quantity=1,
-                                    resource_value=resource_A,
-                                    base_contribution_list=[])
+    order = self.createOrder(
+      trade_condition, (
+      # create a movement which should be aggregated
+      dict(id='1',
+           price=100, quantity=1,
+           resource_value=resource_A,
+           base_contribution_list=['base_amount/tax']),
+      # create a movement which base contribution is empty and shoud not be
+      # aggregated
+      dict(id='2',
+           price=31, quantity=1,
+           resource_value=resource_A,
+           base_contribution_list=[]),
+      ))
 
     transaction.commit()
     self.tic()
 
     # check the result
-    amount_list = trade_condition.getAggregatedAmountList(order)
-    self.assertEqual(1, len(amount_list))
-    self.assertEqual(set([order_line_1]),
-                     set(amount_list[0].getCausalityValueList()))
-    self.assertEqual(100*0.05, amount_list[0].getTotalPrice())
+    amount, = order.getAggregatedAmountList()
+    self.assertEqual(100*0.05, amount.getTotalPrice())
 
 
 class TestTradeModelLineSale(TestTradeModelLine):
@@ -2478,6 +1189,7 @@ class TestTradeModelLineSale(TestTradeModelLine):
   order_line_portal_type = 'Sale Order Line'
   packing_list_portal_type = 'Sale Packing List'
   trade_condition_portal_type = 'Sale Trade Condition'
+
 
 def test_suite():
   suite = unittest.TestSuite()

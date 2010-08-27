@@ -50,3 +50,19 @@ class DeliveryRootSimulationRule(DeliveryRule):
     return {
       'delivery': movement.getRelativeUrl(),
     }
+
+# Fix subclasses (ex: AccountingTransactionRootSimulationRule)
+from Products.ERP5.Document import DeliveryRootSimulationRule as original_module
+original_class = original_module.DeliveryRootSimulationRule
+try:
+  original_module.DeliveryRootSimulationRule = DeliveryRootSimulationRule
+  import gc, os, sys
+  from Products.ERP5Type.Utils import importLocalDocument
+  for bases in gc.get_referrers(original_class):
+    if type(bases) is tuple:
+      for subclass in gc.get_referrers(bases):
+        if getattr(subclass, '__bases__', None) is bases:
+          importLocalDocument(subclass.__name__,
+            os.path.dirname(sys.modules[subclass.__module__].__file__))
+finally:
+  original_module.DeliveryRootSimulationRule = original_class
