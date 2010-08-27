@@ -23,6 +23,7 @@ gcc
 gcc-c++
 gdbm-devel
 giflib-devel
+git
 glib2-devel
 groff
 libSDL-devel
