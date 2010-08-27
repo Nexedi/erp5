@@ -188,7 +188,9 @@ div.listbox-head{\n
 div.listbox-head div.listbox-head-title{\n
   float:left;\n
   width:auto;\n
- \n
+}\n
+div.listbox-head a, div.listbox-head span{\n
+  font-weight: bold;\n
 }\n
 \n
 div.listbox-head div.listbox-head-results{\n
@@ -197,7 +199,6 @@ div.listbox-head div.listbox-head-results{\n
   clear: right;\n
   text-align:right;\n
 }\n
-\n
 \n
 div.listbox-body{\n
   width:auto;\n
