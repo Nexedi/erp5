@@ -847,7 +847,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                       'getSingleCategoryAcquiredMembershipList' )
     def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
-                                         spec=(), filter=None, _acquired_object_set=None, **kw ):
+                                         spec=(), filter=None, acquired_object_dict = None, **kw ):
       cache = getReadOnlyTransactionCache(self)
       if cache is not None:
         key = ('getSingleCategoryAcquiredMembershipList', context.getPhysicalPath(), base_category, base, spec,
@@ -859,7 +859,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
       result = self._getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
                                                              spec=spec, filter=filter,
-                                                             _acquired_object_set=_acquired_object_set,
+                                                             acquired_object_dict = acquired_object_dict,
                                                              **kw)
       if cache is not None:
         cache[key] = result
@@ -892,8 +892,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
     def _getSingleCategoryAcquiredMembershipList(self, context, base_category,
                                          base = 0, spec = (), filter = None,
                                          acquired_portal_type = (),
+                                         acquired_object_dict = None,
                                          checked_permission = None,
-                                         _acquired_object_set=None,
                                          **kw ):
       """
         Returns the acquired membership of the context for a single base category
@@ -911,6 +911,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
         checked_permission        --    a string which defined the permission 
                                         to filter the object on
 
+        acquired_object_dict      --    this is the list of object used by acquisition, so
+                                        we can check if we already have used this object
+
         alt_base_category         --    an alternative base category if the first one fails
 
         acquisition_copy_value    --    if set to 1, the looked up value will be copied
@@ -920,9 +923,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
                             has priority on the looked up value
 
         acquisition_sync_value    --    if set to 1, keep self and looked up value in sync
-
-        _acquired_object_set is a special, internal parameter to deal with
-        recursive calls on the same object.
 
       """
       #LOG("Get Acquired Category ",0,str((base_category, context,)))
@@ -938,20 +938,34 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if isinstance(acquired_portal_type, str):
         acquired_portal_type = [acquired_portal_type]
 
-      if _acquired_object_set is None:
-        _acquired_object_set = set()
+      if acquired_object_dict is None:
+        acquired_object_dict = {} # Initial call may include filter, etc. - do not keep
       else:
-        uid = context.getUid()
-        if spec is ():
-          portal_type_list = ((),)
+        context_base_key = (tuple(context.getPhysicalPath()), base_category)
+        if context_base_key in acquired_object_dict:
+          acquired_object_dict = acquired_object_dict.copy()
+          type_set = acquired_object_dict[context_base_key].copy()
+          if spec is ():
+            if () in type_set:
+              return []
+            else:
+              type_set.add(())
+          else:
+            for pt in spec:
+              if pt in type_set:
+                return []
+              else:
+                type_set.add(pt)
+          acquired_object_dict[context_base_key] = type_set
         else:
-          portal_type_list = spec
-        _acquired_object_set = _acquired_object_set.copy()
-        for portal_type in portal_type_list:
-          key = (uid, base_category, portal_type)
-          if key in _acquired_object_set:
-            return []
-          _acquired_object_set.add(key)
+          type_set = set()
+          if spec is ():
+            type_set.add(())
+          else:
+            for pt in spec:
+              type_set.add(pt)
+          acquired_object_dict = acquired_object_dict.copy()
+          acquired_object_dict[context_base_key] = type_set
 
       result = self.getSingleCategoryMembershipList( context, base_category, base=base,
                             spec=spec, filter=filter, **kw ) # Not acquired because this is the first try
@@ -979,7 +993,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             #acquired_object_dict[my_acquisition_object_path] = 1
             if my_acquisition_object.portal_type in base_category_value.getAcquisitionPortalTypeList():
               new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
-                  base_category, spec=spec, filter=filter, portal_type=portal_type, base=base, _acquired_object_set=_acquired_object_set)
+                  base_category, spec=spec, filter=filter, portal_type=portal_type, base=base, acquired_object_dict=acquired_object_dict)
             else:
               new_result = []
             #if base_category_value.acquisition_mask_value:
@@ -1020,7 +1034,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
             my_acquisition_list = self.getSingleCategoryAcquiredMembershipList(context,
                         my_base_category,
                         portal_type=tuple(acquisition_pt),
-                        _acquired_object_set=_acquired_object_set)
+                        acquired_object_dict=acquired_object_dict)
             my_acquisition_object_list = []
             if my_acquisition_list:
               resolveCategory = self.resolveCategory
@@ -1056,7 +1070,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                     new_result = self.getSingleCategoryAcquiredMembershipList(my_acquisition_object,
                         base_category, spec=spec, filter=filter, portal_type=portal_type, base=base,
                         acquired_portal_type=acquired_portal_type,
-                        _acquired_object_set=_acquired_object_set)
+                        acquired_object_dict=acquired_object_dict)
                   else:
                     #LOG("No recursive call ",0,str((spec, my_acquisition_object.portal_type)))
                     new_result = []
@@ -1095,7 +1109,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           for base_category in fallback_base_category_list:
             # First get the category list
             category_list = getSingleCategoryAcquiredMembershipList( context, base_category, base=1,
-                                 spec=spec, filter=filter, _acquired_object_set=_acquired_object_set, **kw )
+                                 spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw )
             # Then convert it into value
             category_value_list = [resolveCategory(x) for x in category_list]
             # Then build the alternate category
@@ -1125,7 +1139,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
     security.declareProtected( Permissions.AccessContentsInformation,
                                                'getAcquiredCategoryMembershipList' )
     def getAcquiredCategoryMembershipList(self, context, base_category = None, base=1,
-                                          spec=(), filter=None, _acquired_object_set=None, **kw):
+                                          spec=(), filter=None, acquired_object_dict=None, **kw):
       """
         Returns all acquired category values
       """
@@ -1142,7 +1156,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       getSingleCategoryAcquiredMembershipList = self.getSingleCategoryAcquiredMembershipList
       for base_category in base_category_list:
         extend(getSingleCategoryAcquiredMembershipList(context, base_category, base=base,
-                                    spec=spec, filter=filter, _acquired_object_set=_acquired_object_set, **kw ))
+                                    spec=spec, filter=filter, acquired_object_dict=acquired_object_dict, **kw ))
         #LOG('CT.getAcquiredCategoryMembershipList new result',0,result)
       return result
 
