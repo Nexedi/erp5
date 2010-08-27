@@ -51,7 +51,7 @@ def catalogObjectListWrapper(self, object_list, method_id_list=None,
     portal.catalogged_object_path_dict[q.getPath()] = 1
   transaction.commit()
 
-class TestOrderMixin:
+class TestOrderMixin(object):
 
   default_quantity = 99
   default_price = 555
