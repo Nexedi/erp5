@@ -94,18 +94,18 @@
 <tal:block tal:repeat="prefix python:range(3)">\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td tal:content="string: //button[@class=&quot;x${prefix}_listbox_next_page&quot;]"></td>\n
+  <td tal:content="string: //button[@class=&quot;listbox_next_page x${prefix}_listbox_next_page&quot;]"></td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td tal:content="string: //button[@class=&quot;x${prefix}_listbox_previous_page&quot;]"></td>\n
+  <td tal:content="string: //button[@class=&quot;listbox_previous_page x${prefix}_listbox_previous_page&quot;]"></td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@class="x0_listbox_next_page"]</td>\n
+  <td>//button[@class="listbox_next_page x0_listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox; \n
@@ -129,12 +129,12 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@class="x1_listbox_set_page"]</td>\n
+  <td>//input[@class="listbox_set_page x1_listbox_set_page"]</td>\n
   <td>5</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>//input[@class="x1_listbox_set_page"]</td>\n
+  <td>//input[@class="listbox_set_page x1_listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 </tal:block>\n
@@ -165,7 +165,7 @@
 </tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@class="x1_listbox_previous_page"]</td>\n
+  <td>//button[@class="listbox_previous_page x1_listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -188,7 +188,7 @@
 </tal:block>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@class="x1_listbox_last_page"]</td>\n
+  <td>//button[@class="listbox_last_page x1_listbox_last_page"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -200,7 +200,7 @@
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@class="x1_listbox_first_page"]</td>\n
+  <td>//button[@class="listbox_first_page x1_listbox_first_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tal:block tal:define="prefix string:x0_listbox;\n
