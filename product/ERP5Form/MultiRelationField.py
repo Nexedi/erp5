@@ -303,16 +303,35 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
   def render_view(self, field, value, REQUEST=None, render_prefix=None):
     """
     Render read only field.
-
-    XXX Improved rendering required
     """
-    html_string = self.default_widget_rendering_instance.render_view(
-                                                 field, value, REQUEST=REQUEST)
-    if REQUEST is None:
-      REQUEST = get_request()
-    relation_html_string = self.render_relation_link(field, value, REQUEST)
-    if relation_html_string != '':
-      html_string += '&nbsp;&nbsp;%s' % relation_html_string
+    html_string = ''
+    here = REQUEST['here']
+    portal_url = getToolByName(here, 'portal_url')
+    portal_url_string = portal_url()
+    if (value not in ((), [], None, '')) and \
+        field.get_value('allow_jump'):
+      string_list = []
+      base_category = field.get_value('base_category')
+      portal_type = map(lambda x:x[0],field.get_value('portal_type'))
+      kw = {}
+      for k, v in field.get_value('parameter_list') :
+        kw[k] = v
+      accessor_name = 'get%sValueList' % ''.join([part.capitalize() for part in base_category.split('_')])
+      jump_reference_list = getattr(here, accessor_name)(portal_type=portal_type, filter=kw)
+      if len(jump_reference_list):
+        for jump_reference in jump_reference_list:
+          string_list.append('<a href="%s">%s</a>' % \
+                  (jump_reference.absolute_url(),
+                   jump_reference.getTitle()))
+      html_string = '<br />'.join(string_list)
+    else:
+      html_string = self.default_widget_rendering_instance.render_view(field,
+          value, REQUEST=REQUEST)
+      if REQUEST is None:
+        REQUEST = get_request()
+      relation_html_string = self.render_relation_link(field, value, REQUEST)
+      if relation_html_string != '':
+        html_string += '&nbsp;&nbsp;%s' % relation_html_string
     return html_string
 
   def render_wheel(self, field, value, REQUEST, relation_index=0,
