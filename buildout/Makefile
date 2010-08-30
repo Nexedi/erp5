@@ -13,10 +13,10 @@ PACKAGE_APPLICATION_RELEASE=001
 endif
 
 software: bin/buildout
-	$(PYTHON) -SE bin/buildout $(BUILDOUT_OPT)
+	$(PYTHON) -S bin/buildout $(BUILDOUT_OPT)
 
 bin/buildout:
-	$(PYTHON) -SE bootstrap/bootstrap.py -d
+	$(PYTHON) -S bootstrap/bootstrap.py -d
 
 # run make assert to check that all is working
 assert: bin/python2.4

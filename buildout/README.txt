@@ -129,3 +129,23 @@ doubt, unset it before invoking that command.
 After some time everything shall be locally available.
 
 Disclaimer: That way is still in early stage of development.
+
+Troubleshooting
+===============
+
+In various Linux distributions python is heavily patched and user related
+environment variables are set system wide. This affects behaviour of python
+and introduces various problem with running buildout.
+
+In case of such issues consider resetting some python environment variables
+before running buildout:
+
+ * PYTHONPATH
+ * PYTHONSTARTUP
+ * PYTHONDONTWRITEBYTECODE
+
+Example:
+
+$ unset PYTHONPATH PYTHONSTARTUP PYTHONDONTWRITEBYTECODE
+$ make
+$ # other buildout related commands
