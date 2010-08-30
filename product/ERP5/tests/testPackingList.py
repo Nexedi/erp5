@@ -1672,13 +1672,13 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   def stepSetUpAutomaticQuantityAcceptSolver(self, sequence=None, sequence_list=None):
     self._setUpTargetSolver('Automatic Quantity Accept Solver',
                             'AcceptSolver', ('quantity',))
-    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
       solver=('portal_solvers/Automatic Quantity Accept Solver',))
 
   def stepSetUpAutomaticQuantityAdoptSolver(self, sequence=None, sequence_list=None):
     self._setUpTargetSolver('Automatic Quantity Adopt Solver',
                             'AdoptSolver', ('quantity',))
-    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
       solver=('portal_solvers/Automatic Quantity Adopt Solver',))
 
   def stepSetUpMovementSplitSolver(self, sequence=None, sequence_list=None):
