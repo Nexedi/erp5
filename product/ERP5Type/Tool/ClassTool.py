@@ -62,6 +62,7 @@ from Products.ERP5Type.InitGenerator import getProductDocumentPathList
 
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Base import newTempDocumentationHelper
+from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
 
 from Products.ERP5Type import allowClassTool
 from DateTime import DateTime

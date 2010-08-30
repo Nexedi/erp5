@@ -28,6 +28,7 @@
 
 import unittest
 import os
+import sys
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
