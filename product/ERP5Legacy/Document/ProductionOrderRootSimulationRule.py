@@ -46,7 +46,7 @@ class ProductionOrderRootSimulationRule(ProductionOrderRule):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
-      business_link, current_property_dict):
+      business_path, current_property_dict):
     """Order rule specific update dictionary"""
     return {
       'delivery': movement.getRelativeUrl(),

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Lukasz Nowak <luke@nexedi.com>
+#                    Łukasz Nowak <luke@nexedi.com>
 #                    Yusuke Muraoka <yusuke@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional

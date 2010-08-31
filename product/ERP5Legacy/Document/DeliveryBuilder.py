@@ -94,7 +94,7 @@ class DeliveryBuilder(OrderBuilder):
   def callBeforeBuildingScript(self):  # XXX-JPS
     """
       Redefine this method, because it seems nothing interesting can be
-      done before building Delivery. 
+      done before building Delivery.
     """
     pass
 
