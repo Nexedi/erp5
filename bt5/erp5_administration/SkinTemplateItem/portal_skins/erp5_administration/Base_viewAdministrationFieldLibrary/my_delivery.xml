@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -71,6 +71,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -119,7 +123,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(x, \'\') for x in here.getPortalDeliveryMovementTypeList()]</string> </value>
+            <value> <string>python: [(x, \'\') for x in here.getPortalDeliveryMovementTypeList() + here.getPortalOrderMovementTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
