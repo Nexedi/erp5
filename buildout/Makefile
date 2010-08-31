@@ -16,7 +16,7 @@ software: bin/buildout
 	$(PYTHON) -S bin/buildout $(BUILDOUT_OPT)
 
 bin/buildout:
-	$(PYTHON) -S bootstrap/bootstrap.py -d
+	$(PYTHON) -S bootstrap/bootstrap.py -d -v 1.4.4
 
 # run make assert to check that all is working
 assert: bin/python2.4
