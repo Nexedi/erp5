@@ -1468,7 +1468,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     packing_list = self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                               portal_type=self.packing_list_portal_type,
                               title='Packing List',
-                              specialise='business_process_module/erp5_default_business_process',
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1542,7 +1541,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         portal_type=self.packing_list_portal_type,
         source_value=source,
         destination_value=destination,
-        specialise='business_process_module/erp5_default_business_process',
         start_date=DateTime())
     packing_list_line = packing_list.newContent(
         portal_type=self.packing_list_line_portal_type,
