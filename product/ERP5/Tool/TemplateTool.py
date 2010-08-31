@@ -550,7 +550,9 @@ class TemplateTool (BaseTool):
       """
       # XXX: should check for file presence before trying to execute.
       # XXX: should check if the unit test file is configured in the BT
+      site_configuration = getConfiguration()
       from Products.ERP5Type.tests.runUnitTest import getUnitTestFile
+      import Products.ERP5
       if RESPONSE is not None:
         outfile = RESPONSE
       elif REQUEST is not None:
@@ -559,9 +561,42 @@ class TemplateTool (BaseTool):
         outfile =  StringIO()
       if RESPONSE is not None:
         RESPONSE.setHeader('Content-type', 'text/plain')
+      current_sys_path = sys.path
+      # add path with tests
+      current_sys_path.append(os.path.join(site_configuration.instancehome,
+        'tests'))
+
       test_cmd_args = [sys.executable, getUnitTestFile()]
       test_cmd_args += ['--erp5_sql_connection_string', sql_connection_string]
+      # pass currently used product path to test runner
+      products_path_list = site_configuration.products
+      # add products from Zope, as some sites are not providing it
+      zope_products_path = os.path.join(site_configuration.softwarehome, 'Products')
+      if zope_products_path not in products_path_list:
+        products_path_list.append(zope_products_path)
+      test_cmd_args += ['--products_path', ','.join(products_path_list)]
+      test_cmd_args += ['--sys_path', ','.join(current_sys_path)]
+      # to find erp5_core, erp5_xhtml_style and similar
+      bt5_path_list = [os.path.join(os.path.split(Products.ERP5.__file__)[0],
+        'bootstrap')]
+      ## XXX-TODO: requires that asRepository works without security, maybe
+      ##           with special key?
+      # bt5_path_list.append(self.absolute_url() + '/asRepository/')
+      bt5_path_list.append(os.path.join(site_configuration.instancehome, 'bt5'))
+      # add locally saved Business Templates, not perfect, but helps some
+      # people doing strict TTW development
+      bt5_path_list.append(site_configuration.clienthome)
+      test_cmd_args += ['--bt5_path', ','.join(bt5_path_list)]
       test_cmd_args += test_list
+      # prepare message - intentionally without any additional formatting, as
+      # only developer will read it, and they will have to understand issues in
+      # case of test failures
+      invoke_command_message = 'Running tests using command: %r'% test_cmd_args
+      # as it is like using external interface, log what is send there
+      LOG('TemplateTool.runUnitTestList', INFO, invoke_command_message)
+      # inform developer how test are invoked
+      outfile.write(invoke_command_message + '\n')
+      outfile.flush()
       process = subprocess.Popen(test_cmd_args,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.STDOUT)

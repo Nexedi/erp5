@@ -59,6 +59,7 @@ from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.downloadable import DownloadableMixin
 from Products.ERP5.mixin.document import DocumentMixin
+from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixIn
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
@@ -127,129 +128,6 @@ class DocumentProxyError(Exception):pass
 
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
-
-class PermanentURLMixIn(ExtensibleTraversableMixIn):
-  """
-    Provides access to documents through their permanent URL.
-    This class must be inherited by all document classes so
-    that documents displayed outside a Web Site / Web Section
-    can also use the permanent URL principle.
-  """
-
-  # Declarative security
-  security = ClassSecurityInfo()
-
-  def _forceIdentification(self, request):
-    # force identification (usable for extensible content)
-    cache = getReadOnlyTransactionCache(self)
-    if cache is not None:
-      key = ('__bobo_traverse__', self, 'user')
-      try:
-        user = cache[key]
-      except KeyError:
-        user = _MARKER
-    else:
-      user = _MARKER
-    old_user = getSecurityManager().getUser()
-    if user is _MARKER:
-      user = None # By default, do nothing
-      if old_user is None or old_user.getUserName() == 'Anonymous User':
-        user_folder = getattr(self.getPortalObject(), 'acl_users', None)
-        if user_folder is not None:
-          try:
-            if request.get('PUBLISHED', _MARKER) is _MARKER:
-              # request['PUBLISHED'] is required by validate
-              request['PUBLISHED'] = self
-              has_published = False
-            else:
-              has_published = True
-            try:
-              user = user_folder.validate(request)
-            except AttributeError:
-              # This kind of error happens with unrestrictedTraverse,
-              # because the request object is a fake, and it is just
-              # a dict object.
-              user = None
-            if not has_published:
-              try:
-                del request.other['PUBLISHED']
-              except AttributeError:
-                # The same here as above. unrestrictedTraverse provides
-                # just a plain dict, so request.other does not exist.
-                del request['PUBLISHED']
-          except:
-            LOG("ERP5 WARNING",0,
-                "Failed to retrieve user in __bobo_traverse__ of WebSection %s" % self.getPath(),
-                error=sys.exc_info())
-            user = None
-      if user is not None and user.getUserName() == 'Anonymous User':
-        user = None # If the user which is connected is anonymous,
-                    # do not try to change SecurityManager
-      if cache is not None:
-        cache[key] = user
-
-    old_manager = None
-    if user is not None:
-      # We need to perform identification
-      old_manager = getSecurityManager()
-      newSecurityManager(get_request(), user)
-
-    return old_manager, user
-
-  ### Extensible content
-  def _getExtensibleContent(self, request, name):
-    # Permanent URL traversal
-    old_manager, user = self._forceIdentification(request)
-    # Next get the document per name
-    portal = self.getPortalObject()
-    document = self.getDocumentValue(name=name, portal=portal)
-    # restore original security context if there's a logged in user
-    if user is not None:
-      setSecurityManager(old_manager)
-    if document is not None:
-      document = aq_base(document.asContext(id=name, # Hide some properties to permit locating the original
-                                            original_container=document.getParentValue(),
-                                            original_id=document.getId(),
-                                            editable_absolute_url=document.absolute_url()))
-      return document.__of__(self)
-
-    # no document found for current user, still such document may exists
-    # in some cases user (like Anonymous) can not view document according to portal catalog
-    # but we may ask him to login if such a document exists
-    isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
-    if isAuthorizationForced is not None and isAuthorizationForced():
-      if unrestricted_apply(self.getDocumentValue, (name, portal)) is not None:
-        # force user to login as specified in Web Section
-        raise Unauthorized
-
-  security.declareProtected(Permissions.View, 'getDocumentValue')
-  def getDocumentValue(self, name=None, portal=None, **kw):
-    """
-      Return the default document with the given
-      name. The name parameter may represent anything
-      such as a document reference, an identifier,
-      etc.
-
-      If name is not provided, the method defaults
-      to returning the default document by calling
-      getDefaultDocumentValue.
-
-      kw parameters can be useful to filter content
-      (ex. force a given validation state)
-
-      This method must be implemented through a
-      portal type dependent script:
-        WebSection_getDocumentValue
-    """
-    if name is None:
-      return self.getDefaultDocumentValue()
-
-    method = self._getTypeBasedMethod('getDocumentValue',
-              fallback_script_id='WebSection_getDocumentValue')
-
-    document = method(name, portal=portal, **kw)
-    if document is not None:
-      return document.__of__(self)
 
 class DocumentProxyMixin:
   """
@@ -329,7 +207,7 @@ class UpdateMixIn:
     return method()
 
 
-class Document(PermanentURLMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
+class Document(DocumentExtensibleTraversableMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
                SnapshotMixin, UpdateMixIn, TextConvertableMixin,
                DownloadableMixin, DocumentMixin):
   """Document is an abstract class with all methods related to document

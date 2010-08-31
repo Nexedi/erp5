@@ -570,6 +570,9 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if business_link is None or explanation_value is None:
       return True
 
+    ## XXX Code below following line has been moved to BusinessPath (cf r37116)
+    #return len(business_path.filterBuildableMovementList([self])) == 1
+
     predecessor_state = business_link.getPredecessorValue()
     if predecessor_state is None:
       # first one, can be built

@@ -4,6 +4,10 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Composed Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Property Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>

@@ -5,8 +5,10 @@
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Invoice Transaction Rule">
+  <item>Composed Divergence Tester</item>
   <item>Accounting Rule Cell</item>
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Predicate</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
@@ -14,10 +16,12 @@
  <portal_type id="Invoice Transaction Simulation Rule">
   <item>Category Divergence Tester</item>
   <item>Property Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Invoicing Rule">
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
@@ -28,11 +32,13 @@
  </portal_type>
  <portal_type id="Trade Model Rule">
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Trade Model Simulation Rule">
   <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
   <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>

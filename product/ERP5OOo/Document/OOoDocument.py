@@ -45,7 +45,7 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import Document, PermanentURLMixIn,\
+from Products.ERP5.Document.Document import Document,\
 VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
 from AccessControl.SecurityManagement import setSecurityManager
 from Products.ERP5Type.Utils import fill_args_from_request
@@ -54,6 +54,7 @@ from zLOG import LOG, ERROR
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
+from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixIn
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -90,7 +91,7 @@ class TimeoutTransport(SafeTransport):
     return SafeTransport.make_connection(self, h)
 
 
-class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
+class OOoDocument(OOoDocumentExtensibleTraversableMixIn, BaseConvertableFileMixin, File,
                                                TextConvertableMixin, Document):
   """
     A file document able to convert OOo compatible files to
@@ -440,24 +441,6 @@ class OOoDocument(PermanentURLMixIn, BaseConvertableFileMixin, File,
     if must_close:
       zip_file.close()
       archive_file.close()
-
-  def _getExtensibleContent(self, request, name):
-    # Be sure that html conversion is done,
-    # as it is required to extract extensible content
-    old_manager, user = self._forceIdentification(request)
-    web_cache_kw = {'name': name,
-                    'format': EMBEDDED_FORMAT}
-    try:
-      self._convert(format='html')
-      _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
-      mime, data = self.getConversion(format=EMBEDDED_FORMAT, file_name=name)
-      document = OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
-    except (NotConvertedError, ConversionError, KeyError):
-      document = PermanentURLMixIn._getExtensibleContent(self, request, name)
-    # restore original security context if there's a logged in user
-    if user is not None:
-      setSecurityManager(old_manager)
-    return document
 
   security.declarePrivate('_convertToBaseFormat')
   def _convertToBaseFormat(self):
