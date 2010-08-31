@@ -545,9 +545,12 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal, 'runUnitTestList')
     def runUnitTestList(self, test_list=[],
                         sql_connection_string='',
+                        repository_list=None,
                         REQUEST=None, RESPONSE=None, **kwd):
       """Runs Unit Tests related to this Business Template
       """
+      if repository_list is None:
+        repository_list = []
       # XXX: should check for file presence before trying to execute.
       # XXX: should check if the unit test file is configured in the BT
       site_configuration = getConfiguration()
@@ -576,14 +579,13 @@ class TemplateTool (BaseTool):
         products_path_list.append(zope_products_path)
       test_cmd_args += ['--products_path', ','.join(products_path_list)]
       test_cmd_args += ['--sys_path', ','.join(current_sys_path)]
-      # to find erp5_core, erp5_xhtml_style and similar
-      bt5_path_list = [os.path.join(os.path.split(Products.ERP5.__file__)[0],
-        'bootstrap')]
+      bt5_path_list = []
       ## XXX-TODO: requires that asRepository works without security, maybe
       ##           with special key?
       # bt5_path_list.append(self.absolute_url() + '/asRepository/')
-      bt5_path_list.append(os.path.join(site_configuration.instancehome, 'bt5'))
-      # add locally saved Business Templates, not perfect, but helps some
+      # add passed repository list
+      bt5_path_list.extend(repository_list)
+      # adding locally saved Business Templates, not perfect, but helps some
       # people doing strict TTW development
       bt5_path_list.append(site_configuration.clienthome)
       test_cmd_args += ['--bt5_path', ','.join(bt5_path_list)]

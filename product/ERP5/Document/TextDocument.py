@@ -67,7 +67,6 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                       , PropertySheet.DublinCore
                       , PropertySheet.Version
                       , PropertySheet.Document
-                      , PropertySheet.Snapshot
                       , PropertySheet.ExternalDocument
                       , PropertySheet.Url
                       , PropertySheet.TextDocument

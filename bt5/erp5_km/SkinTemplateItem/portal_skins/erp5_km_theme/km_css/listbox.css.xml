@@ -153,7 +153,6 @@ div.search_popup{\n
   position:relative;\n
 }\n
 \n
-\n
 /*Define all button image*/\n
 <tal:block tal:define="buttons python: [\'cut\',\'copy\',\'paste\',\'delete\',\'print\',\'new\',\'reset\',\'filter\',\'find\',\'sort\',\'config\']">\n
 <tal:block tal:repeat ="button buttons">\n
@@ -167,36 +166,48 @@ div.search_popup{\n
 \n
 \n
 /*********************/\n
-/*   Listbox style   */\n
+/*   Listbox style (XXX: move to erp5.css)   */\n
 /*********************/\n
-.listbox_left {\n
+div.listbox-container{\n
+  width: 100%;\n
+}\n
+\n
+div.listbox-tree {\n
   margin-right: 4px;\n
   width: auto;\n
   float: left;\n
 }\n
 \n
-.listbox_center{\n
-  float: left;\n
+div.listbox-content{\n
+  float: left; \n
+  width: auto; \n
 }\n
-.listbox_head{\n
+\n
+div.listbox-head{\n
   color:#9D968D;\n
   font-weight:bold;\n
   margin-bottom: 10px;\n
 }\n
 \n
-/* List mode selection*/\n
-.list_mode_selection{\n
+div.listbox-body{\n
+  width:auto;\n
+}\n
+\n
+div.listbox-tree-mode-selection{\n
   height: 22px;\n
   width: auto;\n
   float: left;\n
 }\n
 \n
-.list_mode_selection input{\n
+div.listbox-tree-mode-selection input{\n
   width: auto;\n
 }\n
 \n
-/*Footer block*/\n
-.listbox_footer{\n
+th.listbox-table-report-tree-selection-cell{\n
+  width: 50px; \n
+}\n
+\n
+div.listbox-footer{\n
  background-color:#F0EFE9;\n
  float:left;\n
  margin-bottom:0.3em;\n
@@ -207,99 +218,125 @@ div.search_popup{\n
 }\n
 \n
 /* Listbox Footer in gadget mode */\n
-.block .listbox_footer{\n
+.block .listbox-footer{\n
    background-color: transparent;\n
 }\n
 \n
-.listbox_footer_box {\n
-  padding-top:5px;\n
-  padding-bottom:5px;\n
-  width: 50%;\n
+div.listbox-footer-box {\n
+  width: auto;\n
   float:left;\n
 }\n
 \n
-/*Display selection choice*/\n
-.display_selection {\n
+/* List style selection */\n
+div.listbox-list-style-selection {\n
   width:auto;\n
   float:left;\n
 }\n
-.display_selection span{\n
+div.listbox-list-style-selection span{\n
   font-weight:bold;\n
   padding-left:10px;\n
   vertical-align:-4px;\n
 }\n
-.display_selection ul{\n
+div.listbox-list-style-selection ul{\n
   display:inline;\n
   padding-left:0;\n
   margin: 0;\n
   vertical-align: -4px;\n
 }\n
-.display_selection li{\n
+div.listbox-list-style-selection li{\n
   display: inline;\n
 }\n
+div.listbox-list-style-selection li a.selected,\n
+.listbox-table-report-tree-selection-cell a.selected,\n
+.listbox-table-domain-tree-cell a.selected{\n
+  font-weight: bold;\n
+}\n
 \n
-/* Search bar */\n
-div.extendedSearchBar {\n
+/* Listbox full text search bar */\n
+div.listbox-full-text-search {\n
   float:left;\n
   margin-top:0;\n
-  padding:1em 0 0.5em;\n
+  padding:0em 0.5em;\n
+  width: auto;\n
 }\n
-div.extendedSearchBar input.button{\n
+div.listbox-full-text-search input{\n
+  width: 130px;\n
+}\n
+div.listbox-full-text-search input.button{\n
  background-image: url(\'./km_img/search_background.png\');\n
  background-color: inherit;\n
  border: 0 none;\n
  color:#FFFFFF;\n
+ width: auto;\n
 }\n
-div.resultList{\n
-  float:left;\n
-}\n
-div.searchResultHeader{\n
-  float:left;\n
-}\n
+\n
 /* Pagination*/\n
-.listbox_pagination {\n
+div.listbox-page-navigation{\n
   width:auto;\n
   margin:auto;\n
-  text-align:right;\n
   padding-right: 0.5em;\n
+  float:right;\n
 }\n
-.listbox_pagination input{\n
-  text-align:center;\n
-  width: 20px;\n
+div.listbox-page-navigation input{\n
+  max-width: 30px;\n
 }\n
 \n
 /* Report tree */\n
-a.tree_closed {\n
-  background:transparent url(\'./km_img/tree_closed.png\') no-repeat scroll left center;\n
+a.tree-closed {\n
+  background:transparent url(\'./images/tree_closed.png\') no-repeat scroll left center;\n
   padding-left:15px;\n
 }\n
 \n
-a.tree_open {\n
-  background:transparent url(\'./km_img/tree_open.png\') no-repeat scroll left center;\n
+a.tree-open {\n
+  background:transparent url(\'./images/tree_open.png\') no-repeat scroll left center;\n
   padding-left:15px;\n
+}\n
+\n
+div.listbox-tree select{\n
+  max-width:120px;\n
 }\n
 \n
 /*Table Listbox elements */\n
-.listbox th {\n
+table.listbox{\n
+  border-collapse:collapse;\n
+  width:100%;\n
+}\n
+\n
+table.listbox th,\n
+table.listbox td {\n
   text-align:left;\n
   vertical-align: top;\n
 }\n
-.listbox_search_line, .listbox_label_line{\n
-  background-color: #F0EFE9;\n
-}\n
-.listbox_search_line th{\n
-  background-color: inherit;\n
+\n
+table.listbox th button{\n
+  border-width:0;\n
+  cursor:pointer;\n
+  float:left;\n
+  font-weight:bold;\n
+  padding:0 6px 0 0;\n
 }\n
 \n
-.listbox select {\n
-  max-width: 145px;\n
+/* KM specific */\n
+table.listbox th button.sort-button {\n
+  background:transparent url("../km_img/switch.png") no-repeat scroll 100% 50%;\n
 }\n
-\n
-button.sort_button_desc{\n
+table.listbox th button.sort-button:hover{\n
+  color: #FFF;\n
+}\n
+table.listbox th button.sort-button-desc{\n
   background-image: url(\'./km_img/switch_desc.png\');\n
 }\n
-button.sort_button_asc{\n
+table.listbox th button.sort-button-asc{\n
   background-image: url(\'./km_img/switch_asc.png\');\n
+}\n
+\n
+/* KM specific */\n
+.listbox-search-line, .listbox-label-line{\n
+  background-color: #F0EFE9;\n
+}\n
+\n
+.listbox-search-line th{\n
+  background-color: inherit;\n
 }\n
 \n
 /* in search mode listbox may contain top/ bottom quick search inputs */\n
@@ -310,10 +347,10 @@ div.search-text-listbox{\n
   margin-bottom:0.5em;\n
   margin-top:0.5em;\n
 }\n
+\n
 div.search-text-listbox input{\n
   width: auto;\n
-}\n
-
+}
 
 ]]></string> </value>
         </item>

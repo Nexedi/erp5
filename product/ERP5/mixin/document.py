@@ -63,6 +63,8 @@ class DocumentMixin:
     """
     transaction_variable = getTransactionalVariable(self.getPortalObject())
     if LOCK_PERMISSION_KEY in transaction_variable:
+      # in convert we want always to check conversion format permission
+      # to bypass such check one should use _convert directly
       del transaction_variable[LOCK_PERMISSION_KEY]
     self._checkConversionFormatPermission(format, lock_checking=True, **kw)
     result = self._convert(format, **kw)

@@ -139,8 +139,7 @@ class PDFDocument(Image):
         if not src_mimetype.endswith('png'):
           continue
         content = '%s' % png_data
-        mime_type = getToolByName(self, 'mimetypes_registry').\
-                                    lookupExtension('name.%s' % 'txt')
+        mime_type = 'text/plain'
         if content is not None:
           portal_transforms = getToolByName(self, 'portal_transforms')
           result = portal_transforms.convertToData(mime_type, content,

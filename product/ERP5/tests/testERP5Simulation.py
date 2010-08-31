@@ -391,6 +391,30 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     self.assertEquals(sorted(packing_list_line.getCausalityList()),
                       sorted(order_line_list))
 
+  def stepCheckSimulationMovementHasRecordedQuantity(self, sequence=None,
+                                                     sequence_list=None):
+    movement_list = sequence.get('packing_list').objectValues(
+      portal_type=self.packing_list_line_portal_type)
+    self._checkRecordedProperty(movement_list, 'quantity', True)
+
+  def stepCheckSimulationMovementHasNoRecordedQuantity(self, sequence=None,
+                                                       sequence_list=None):
+    movement_list = sequence.get('packing_list').objectValues(
+      portal_type=self.packing_list_line_portal_type)
+    self._checkRecordedProperty(movement_list, 'quantity', False)
+
+  def stepCheckSimulationMovementHasRecordedResource(self, sequence=None,
+                                                     sequence_list=None):
+    movement_list = sequence.get('packing_list').objectValues(
+      portal_type=self.packing_list_line_portal_type)
+    self._checkRecordedProperty(movement_list, 'resource', True)
+
+  def stepCheckSimulationMovementHasNoRecordedResource(self, sequence=None,
+                                                       sequence_list=None):
+    movement_list = sequence.get('packing_list').objectValues(
+      portal_type=self.packing_list_line_portal_type)
+    self._checkRecordedProperty(movement_list, 'resource', False)
+
 class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
   run_all_test = 1
   quiet = 0
@@ -559,7 +583,7 @@ for failing_method in [
   # This test does not work as it is because of the different behaviour of
   # Adopt Solver.
   'test_05d_SimulationChangeResourceOnOneSimulationMovementForMergedLine',
-  
+
   # Those tests currently fail because they are making assertions on an applied
   # rule which with the new simulation structure is not the same as in the
   # original test packing list

@@ -40,6 +40,8 @@ import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 from email import message_from_string
 import backportUnittest
+from Products.ERP5Type.Globals import PersistentMapping
+from Products.ZSQLCatalog.SQLCatalog import Catalog
 
 class FileUpload(file):
   """Act as an uploaded file.
@@ -68,6 +70,7 @@ class DummyMailHost(MailHost):
     self._previous_message = self._last_message
     self._last_message = (mfrom, mto, messageText)
     self._message_list.append(self._last_message)
+
   def _decodeMessage(self, messageText):
     """ Decode message"""
     message_text = messageText
@@ -76,11 +79,17 @@ class DummyMailHost(MailHost):
                   and not part.is_multipart():
         message_text = part.get_payload(decode=1)
     return message_text
+
   def getMessageList(self, decode=True):
     """ Return message list"""
     if decode:
       return [ (m[0], m[1], self._decodeMessage(m[2])) for m in self._message_list]
     return self._message_list
+
+  def getLastLog(self):
+    """ Return last message """
+    return self._last_message
+
 
 class DummyTranslationService:
   """A dummy translation service where you can access translated msgids and
@@ -384,7 +393,7 @@ class LogInterceptor:
         if self.logged is None:
             self.logged = []
         self.logged.append(record)
-        return False
+        return True
 
     def _ignore_log_errors(self, subsystem=''):
 
@@ -535,3 +544,51 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
       cell.setMembershipCriterionCategoryList(membership_criterion_category_list)
       cell.edit(predicate_category_list=category_list,
                 variation_category_list=category_list)
+
+def catalogObjectListWrapper(self, object_list, method_id_list=None,
+    disable_cache=0, check_uid=1, idxs=None):
+  """Wrapper to mark inside of portal object list of catalogged objects"""
+  import transaction
+  portal = self.getPortalObject()
+  for q in object_list:
+    portal.catalogged_object_path_dict[q.getPath()] = 1
+  transaction.commit()
+
+class SubcontentReindexingWrapper(object):
+  def wrap_catalogObjectList(self):
+    self.original_catalogObjectList = Catalog.catalogObjectList
+    Catalog.catalogObjectList = catalogObjectListWrapper
+
+  def unwrap_catalogObjectList(self):
+    Catalog.catalogObjectList = self.original_catalogObjectList
+
+  def _testSubContentReindexing(self, parent_document, children_document_list):
+    """Helper method which shall be called *before* tic or commit"""
+    # cleanup existing reindexing
+    transaction.commit()
+    self.tic()
+    parent_document.reindexObject()
+    self.portal.catalogged_object_path_dict = PersistentMapping()
+    transaction.commit()
+    expected_path_list = [q.getPath() for q in children_document_list +
+        [parent_document]]
+    try:
+      # wrap call to catalogObjectList
+      self.wrap_catalogObjectList()
+      self.stepTic()
+      self.assertSameSet(
+        self.portal.catalogged_object_path_dict.keys(),
+        expected_path_list
+      )
+      # do real assertions
+      self.portal.catalogged_object_path_dict = PersistentMapping()
+      transaction.commit()
+      parent_document.reindexObject()
+      self.stepTic()
+      self.assertSameSet(
+        self.portal.catalogged_object_path_dict.keys(),
+        expected_path_list
+      )
+    finally:
+      # unwrap catalogObjectList
+      self.unwrap_catalogObjectList()

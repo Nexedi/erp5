@@ -36,31 +36,95 @@ from Products.ERP5.Variated import Variated
 
 
 class BudgetLine(Predicate, XMLMatrix, Variated):
+  """ A Line of budget, variated in budget cells.
+  """
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Folder
+                    , PropertySheet.Predicate
+                    , PropertySheet.SortIndex
+                    , PropertySheet.Task
+                    , PropertySheet.Arrow
+                    , PropertySheet.Budget
+                    , PropertySheet.Amount
+                    , PropertySheet.VariationRange
+  )
+
+  # CMF Type Definition
+  meta_type='ERP5 Budget Line'
+  portal_type='Budget Line'    
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getConsumedBudgetDict')
+  def getConsumedBudgetDict(self, **kw):
+    """Returns all the consumptions in a dict where the keys are the cells, and
+    the value is the consumed budget.
     """
-    BudgetLine  a line of budget...
+    return self._getBudgetDict(**kw)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getEngagedBudgetDict')
+  def getEngagedBudgetDict(self, **kw):
+    """Returns all the engagements in a dict where the keys are the cells, and
+    the value is the engaged budget.
     """
+    kw.setdefault('explanation_simulation_state',
+                  self.getPortalReservedInventoryStateList() +
+                  self.getPortalCurrentInventoryStateList() +
+                  self.getPortalTransitInventoryStateList())
+    return self._getBudgetDict(**kw)
 
-    # Default Properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Folder
-                      , PropertySheet.Predicate
-                      , PropertySheet.SortIndex
-                      , PropertySheet.Task
-                      , PropertySheet.Arrow
-                      , PropertySheet.Budget
-                      , PropertySheet.Amount
-                      , PropertySheet.VariationRange
-                      , PropertySheet.Assignment
-    )
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getAvailableBudgetDict')
+  def getAvailableBudgetDict(self, **kw):
+    """Returns all the engagements in a dict where the keys are the cells, and
+    the value is the engaged budget.
+    """
+    budget_dict =  dict([(k, v * -1) for (k,v) in
+                         self.getEngagedBudgetDict(**kw).items()])
+    
+    cell_key_list = self.getCellKeyList()
+    for cell_key in cell_key_list:
+      cell_key = tuple(cell_key)
+      cell = self.getCell(*cell_key)
+      if cell is not None:
+        engaged = budget_dict.get(cell_key, 0)
+        budget_dict[cell_key] = cell.getCurrentBalance() + engaged
 
-    # CMF Type Definition
-    meta_type='ERP5 Budget Line'
-    portal_type='Budget Line'    
-    add_permission = Permissions.AddPortalContent
+    return budget_dict
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  def _getBudgetDict(self, **kw):
+    """Use getCurrentInventoryList to compute all budget cell consumptions at
+    once, and returns them in a dict.
+    """
+    budget = self.getParentValue()
+    budget_model = budget.getSpecialiseValue(portal_type='Budget Model')
+    if budget_model is None:
+      return dict()
+
+    query_dict = budget_model.getInventoryListQueryDict(self)
+    query_dict.update(kw)
+    query_dict.setdefault('ignore_group_by', True)
+
+    sign = self.BudgetLine_getConsumptionSign()
+    cell_key_cache = dict()
+    budget_dict = dict()
+    for brain in self.getPortalObject().portal_simulation\
+                             .getCurrentInventoryList(**query_dict):
+      cell_key = budget_model._getCellKeyFromInventoryListBrain(brain, self,
+                                       cell_key_cache=cell_key_cache)
+      # XXX total_quantity or total_price ??
+      previous_value = budget_dict.get(cell_key, 0)
+      budget_dict[cell_key] = previous_value + brain.total_price * sign
+
+    return budget_dict
+

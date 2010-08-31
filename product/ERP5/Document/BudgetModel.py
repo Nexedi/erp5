@@ -75,7 +75,7 @@ class BudgetModel(Predicate):
     return cell_range
 
   def getInventoryQueryDict(self, budget_cell):
-    """Returns the query dict to pass to simulation query
+    """Returns the query dict to pass to simulation query for a budget cell
     """
     query_dict = dict()
     for budget_variation in sorted(self.contentValues(
@@ -83,14 +83,64 @@ class BudgetModel(Predicate):
               key=lambda x:x.getIntIndex()):
       query_dict.update(
           budget_variation.getInventoryQueryDict(budget_cell))
+
+    # include dates from the budget
+    budget = budget_cell.getParentValue().getParentValue()
+    query_dict.setdefault('from_date', budget.getStartDateRangeMin())
+    start_date_range_max = budget.getStartDateRangeMax()
+    if start_date_range_max:
+      query_dict.setdefault('at_date', start_date_range_max.latestTime())
     return query_dict
+
+  def getInventoryListQueryDict(self, budget_line):
+    """Returns the query dict to pass to simulation query for a budget line
+    """
+    query_dict = dict()
+    for budget_variation in sorted(self.contentValues(
+              portal_type=self.getPortalBudgetVariationTypeList()),
+              key=lambda x:x.getIntIndex()):
+      variation_query_dict = budget_variation.getInventoryListQueryDict(
+                                                      budget_line)
+      # Merge group_by and select_list arguments.
+      # Other arguments should not conflict
+      if 'group_by' in query_dict and 'group_by' in variation_query_dict:
+        variation_query_dict['group_by'].extend(query_dict['group_by'])
+      if 'select_list' in query_dict \
+          and 'select_list' in variation_query_dict:
+        variation_query_dict['select_list'].extend(
+            query_dict['select_list'])
+
+      query_dict.update(variation_query_dict)
+ 
+    # include dates from the budget
+    budget = budget_line.getParentValue()
+    query_dict.setdefault('from_date', budget.getStartDateRangeMin())
+    start_date_range_max = budget.getStartDateRangeMax()
+    if start_date_range_max:
+      query_dict.setdefault('at_date', start_date_range_max.latestTime())
+    return query_dict
+
+  def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
+                                        cell_key_cache=None):
+    """Compute the cell key from an inventory brain, the cell key can be used
+    to retrieve the budget cell in the corresponding budget line.
+    """
+    cell_key = ()
+    for budget_variation in sorted(self.contentValues(
+              portal_type=self.getPortalBudgetVariationTypeList()),
+              key=lambda x:x.getIntIndex()):
+      key = budget_variation._getCellKeyFromInventoryListBrain(
+                  brain, budget_line, cell_key_cache=cell_key_cache)
+      if key:
+        cell_key += (key,)
+    return cell_key
     
   def asBudgetPredicate(self):
     " "
     # XXX predicate for line / cell ?
 
-
   def getBudgetConsumptionMethod(self, budget_cell):
+    # XXX this API might disapear
     # XXX return the method, or compute directly ?
     budget_consumption_method = None
     for budget_variation in sorted(self.contentValues(

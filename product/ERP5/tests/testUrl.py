@@ -48,7 +48,6 @@ class TestUrl(ERP5TypeTestCase):
     portal = self.getPortalObject()
     url_crawler = portal.external_source_module.newContent(
                                                   portal_type='URL Crawler')
-    url_crawler = self.url_crawler
 
     url_protocol_list = ['http', 'https']
     

@@ -181,8 +181,14 @@ class TALESValue(StaticValue):
           kw['cell'] = request.cell
         else:
           kw['cell'] = request
+        if 'cell_index' not in kw and\
+            getattr(request, 'cell_index', None) is not None:
+          kw['cell_index'] = request.cell_index
       elif getattr(REQUEST, 'cell', None) is not None:
-          kw['cell'] = REQUEST.cell
+        kw['cell'] = REQUEST.cell
+    if 'cell_index' not in kw and \
+      getattr(REQUEST, 'cell_index', None) is not None:
+        kw['cell_index'] = REQUEST.cell_index
     # on Zope 2.12, only path expressions can access the CONTEXTS name
     # but ERP5 has many python expressions that try to access CONTEXTS, so
     # we try to keep backward compatibility

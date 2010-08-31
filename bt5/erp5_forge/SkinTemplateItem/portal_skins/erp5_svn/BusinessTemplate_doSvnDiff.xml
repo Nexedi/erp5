@@ -55,6 +55,8 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from ZTUtils import make_query\n
+\n
 modified=context.REQUEST["modified"]\n
 added=context.REQUEST["added"]\n
 removed=context.REQUEST["removed"]\n
@@ -67,8 +69,10 @@ tab_Removed=removed.split(\',\')\n
 if modified != \'none\':\n
   for f in tab_Modified:\n
     print \'<input name="modified" value="%s" type="checkbox" checked="checked" />\'%f\n
-    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)    \n
-    print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)\n
+    print "<span style=\'font-weight: bold; color: black;\'>Index: "\\\n
+        "<a href=\'BusinessTemplate_viewSvnShowFile?%s\'>%s</a></span>" %(\n
+         make_query(file=f), f)\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
       print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
@@ -79,8 +83,10 @@ if modified != \'none\':\n
 if added != \'none\':\n
   for f in tab_Added:\n
     print \'<input name="added" value="%s" type="checkbox" checked="checked" />\'%f\n
-    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
-    print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)\n
+    print "<span style=\'font-weight: bold; color: black;\'>Index: "\\\n
+        "<a href=\'BusinessTemplate_viewSvnShowFile?%s\'>%s</a></span>" %(\n
+         make_query(file=f), f)\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
       print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
@@ -90,8 +96,10 @@ if added != \'none\':\n
 if removed != \'none\':\n
   for f in tab_Removed:\n
     print \'<input name="removed" value="%s" type="checkbox" checked="checked" />\'%f\n
-    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context) \n
-    print "<span style=\'font-weight: bold; color: black;\'>Index: <a href=\'BusinessTemplate_viewSvnShowFile?file="+f+"\'>"+f+"</a>"\n
+    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)\n
+    print "<span style=\'font-weight: bold; color: black;\'>Index: "\\\n
+        "<a href=\'BusinessTemplate_viewSvnShowFile?%s\'>%s</a></span>" %(\n
+         make_query(file=f), f)\n
     edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
     if(edit_path != \'#\'):\n
       print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
@@ -140,6 +148,8 @@ return printed\n
                           <tuple>
                             <string>_print_</string>
                             <string>_print</string>
+                            <string>ZTUtils</string>
+                            <string>make_query</string>
                             <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>

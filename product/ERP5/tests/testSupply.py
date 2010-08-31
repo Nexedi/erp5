@@ -97,6 +97,14 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
     supply_line.edit(**kw)
     return supply_line
 
+  @reindex
+  def _makeSupplyCell(self, supply_line, **kw):
+    """Creates a supply cell.
+    """
+    supply_cell = supply_line.newContent(portal_type=self.supply_cell_portal_type)
+    supply_cell.edit(**kw)
+    return supply_cell
+
   def test_01_MovementAndSupplyModification(self, quiet=0, run=run_all_test):
     """
       Check that moving timeframe of supply
@@ -111,27 +119,34 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
                               start_date_range_max='2009/01/31')
 
     supply_line = self._makeSupplyLine(supply)
+    supply_cell = self._makeSupplyCell(supply_line)
     transaction.commit()
     self.tic()
 
-    res = self.domain_tool.searchPredicateList(movement,
-                                      portal_type=self.supply_line_portal_type)
-    
+    res_line = self.domain_tool.searchPredicateList(movement,
+                                                    portal_type=self.supply_line_portal_type)
+    res_cell = self.domain_tool.searchPredicateList(movement,
+                                                    portal_type=self.supply_cell_portal_type)
+
     # ...and predicate shall be found
-    self.assertSameSet(res, [supply_line])
-    
+    self.assertSameSet(res_line, [supply_line])
+    self.assertSameSet(res_cell, [supply_cell])
+
     # timeframe is moved out of movement date...
     supply.edit(start_date_range_min='2009/02/01',
                 start_date_range_max='2009/02/28')
 
     transaction.commit()
     self.tic()
-    
-    res = self.domain_tool.searchPredicateList(movement,
-                                      portal_type=self.supply_line_portal_type)
+
+    res_line = self.domain_tool.searchPredicateList(movement,
+                                                    portal_type=self.supply_line_portal_type)
+    res_cell = self.domain_tool.searchPredicateList(movement,
+                                                    portal_type=self.supply_cell_portal_type)
 
     # ...and predicate shall NOT be found
-    self.assertSameSet(res, [])
+    self.assertSameSet(res_line, [])
+    self.assertSameSet(res_cell, [])
 
     # movement is going back into timeframe...
     movement.edit(start_date='2009/02/15')
@@ -139,11 +154,14 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-    res = self.domain_tool.searchPredicateList(movement,
-                                      portal_type=self.supply_line_portal_type)
+    res_line = self.domain_tool.searchPredicateList(movement,
+                                                    portal_type=self.supply_line_portal_type)
+    res_cell = self.domain_tool.searchPredicateList(movement,
+                                                    portal_type=self.supply_cell_portal_type)
 
     # ...and predicate shall be found
-    self.assertSameSet(res, [supply_line])
+    self.assertSameSet(res_line, [supply_line])
+    self.assertSameSet(res_cell, [supply_cell])
 
   def test_02_checkLineIsReindexedOnSupplyChange(self, quiet=0, run=run_all_test):
     """

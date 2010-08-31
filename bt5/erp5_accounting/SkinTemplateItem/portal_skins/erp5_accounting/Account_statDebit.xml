@@ -57,7 +57,7 @@
 account as a node\n
 """\n
 kw[\'node_uid\'] = context.getUid()\n
-kw[\'omit_output\'] = 1\n
+kw[\'omit_asset_decrease\'] = 1\n
 kw.update(kw[\'selection\'].getParams())\n
 \n
 return context.Node_statAccountingBalance(**kw)\n

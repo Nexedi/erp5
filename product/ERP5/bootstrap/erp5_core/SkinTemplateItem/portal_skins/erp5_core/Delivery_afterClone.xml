@@ -56,6 +56,7 @@
             <value> <string>#Clean some properties\n
 context.setSourceReference(None)\n
 context.setDestinationReference(None)\n
+context.setSolver(None)\n
 </string> </value>
         </item>
         <item>

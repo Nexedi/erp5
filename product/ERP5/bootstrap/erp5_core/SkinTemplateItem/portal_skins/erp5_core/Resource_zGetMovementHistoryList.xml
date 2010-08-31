@@ -76,6 +76,18 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>omit_asset_decrease</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
+                                <key> <string>omit_asset_increase</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>omit_input</string> </key>
                                 <value>
                                   <dictionary/>
@@ -165,6 +177,8 @@
                             <string>omit_simulation</string>
                             <string>omit_input</string>
                             <string>omit_output</string>
+                            <string>omit_asset_increase</string>
+                            <string>omit_asset_decrease</string>
                             <string>section_filtered</string>
                             <string>initial_running_total_quantity</string>
                             <string>initial_running_total_price</string>
@@ -602,6 +616,8 @@ standardize\r\n
 omit_simulation\r\n
 omit_input\r\n
 omit_output\r\n
+omit_asset_increase\r\n
+omit_asset_decrease\r\n
 section_filtered\r\n
 initial_running_total_quantity\r\n
 initial_running_total_price\r\n
@@ -720,6 +736,24 @@ WHERE\n
 <dtml-if omit_output>\n
   AND ( ( stock.is_cancellation AND stock.quantity < 0 )\n
         OR ( not stock.is_cancellation AND stock.quantity > 0 ))\n
+  AND ( stock.node_uid <> stock.mirror_node_uid\n
+        OR stock.section_uid <> stock.mirror_section_uid\n
+        OR stock.mirror_node_uid IS NULL\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
+</dtml-if>\n
+<dtml-if omit_asset_increase>\n
+  AND ( ( stock.is_cancellation AND stock.total_price > 0 )\n
+        OR ( not stock.is_cancellation AND stock.total_price < 0 ))\n
+  AND ( stock.node_uid <> stock.mirror_node_uid\n
+        OR stock.section_uid <> stock.mirror_section_uid\n
+        OR stock.mirror_node_uid IS NULL\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
+</dtml-if>\n
+<dtml-if omit_asset_decrease>\n
+  AND ( ( stock.is_cancellation AND stock.total_price < 0 )\n
+        OR ( not stock.is_cancellation AND stock.total_price > 0 ))\n
   AND ( stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n
@@ -887,6 +921,24 @@ WHERE\n
 <dtml-if omit_output>\n
   AND ( ( stock.is_cancellation AND stock.quantity < 0 )\n
         OR ( not stock.is_cancellation AND stock.quantity > 0 ))\n
+  AND ( stock.node_uid <> stock.mirror_node_uid\n
+        OR stock.section_uid <> stock.mirror_section_uid\n
+        OR stock.mirror_node_uid IS NULL\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
+</dtml-if>\n
+<dtml-if omit_asset_increase>\n
+  AND ( ( stock.is_cancellation AND stock.total_price > 0 )\n
+        OR ( not stock.is_cancellation AND stock.total_price < 0 ))\n
+  AND ( stock.node_uid <> stock.mirror_node_uid\n
+        OR stock.section_uid <> stock.mirror_section_uid\n
+        OR stock.mirror_node_uid IS NULL\n
+        OR stock.mirror_section_uid IS NULL\n
+        OR stock.payment_uid IS NOT NULL )\n
+</dtml-if>\n
+<dtml-if omit_asset_decrease>\n
+  AND ( ( stock.is_cancellation AND stock.total_price < 0 )\n
+        OR ( not stock.is_cancellation AND stock.total_price > 0 ))\n
   AND ( stock.node_uid <> stock.mirror_node_uid\n
         OR stock.section_uid <> stock.mirror_section_uid\n
         OR stock.mirror_node_uid IS NULL\n

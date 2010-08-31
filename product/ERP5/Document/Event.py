@@ -116,7 +116,6 @@ class Event(EmailDocument, Movement, AcknowledgeableMixin):
                     , PropertySheet.CategoryCore
                     , PropertySheet.Document
                     , PropertySheet.DublinCore
-                    , PropertySheet.Snapshot
                     , PropertySheet.Task
                     , PropertySheet.Url
                     , PropertySheet.TextDocument

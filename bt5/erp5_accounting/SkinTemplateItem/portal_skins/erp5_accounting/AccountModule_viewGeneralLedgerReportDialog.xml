@@ -94,6 +94,7 @@
                         <string>your_format</string>
                         <string>your_deferred_style</string>
                         <string>your_landscape</string>
+                        <string>your_mirror_section</string>
                       </list>
                     </value>
                 </item>

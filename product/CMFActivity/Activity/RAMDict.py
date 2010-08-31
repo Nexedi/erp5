@@ -32,10 +32,7 @@ from Queue import Queue, VALID
 
 from zLOG import LOG
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
+import transaction
 
 class RAMDict(Queue):
   """
@@ -88,11 +85,11 @@ class RAMDict(Queue):
         activity_tool.invoke(m)
         if m.getExecutionState() == MESSAGE_EXECUTED:
           del self.getDict(path)[key]
-          get_transaction().commit()
+          transaction.commit()
           return 0
         else:
           # Start a new transaction and keep on to next message
-          get_transaction().commit()
+          transaction.commit()
     return 1
 
   def countMessage(self, activity_tool,path=None,method_id=None,**kw):

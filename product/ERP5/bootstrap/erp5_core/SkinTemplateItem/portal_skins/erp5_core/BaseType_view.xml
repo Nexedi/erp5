@@ -117,6 +117,8 @@
                         <string>my_type_allowed_content_type_list</string>
                         <string>my_type_hidden_content_type_list</string>
                         <string>my_type_group_list</string>
+                        <string>my_searchable_text_property_id_list</string>
+                        <string>my_searchable_text_method_id_list</string>
                       </list>
                     </value>
                 </item>

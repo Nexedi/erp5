@@ -93,6 +93,7 @@
                     <value>
                       <list>
                         <string>your_section_category</string>
+                        <string>your_project</string>
                         <string>your_payment</string>
                         <string>your_payment_mode</string>
                         <string>your_currency</string>

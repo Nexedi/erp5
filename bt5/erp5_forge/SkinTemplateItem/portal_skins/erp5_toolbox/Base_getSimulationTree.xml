@@ -72,8 +72,8 @@ def getByRecurse(obj,rv=[]):\n
 def getFromCatalog(start_path):\n
   return [x.getObject() for x in context.portal_catalog(\n
     portal_type=(\'Applied Rule\',\'Simulation Movement\',),\n
-    path=start_path+\'%%\',\n
-    sort_on=((\'path\',\'ascending\',\'string\'),)\n
+    path=[start_path, start_path+\'/%\'],\n
+    sort_on=((\'path\',\'ascending\',\'char\'),)\n
   )]\n
 \n
 if start_path is None:\n

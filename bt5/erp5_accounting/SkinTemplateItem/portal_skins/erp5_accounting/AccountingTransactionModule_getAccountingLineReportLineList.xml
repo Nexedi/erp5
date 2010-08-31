@@ -59,9 +59,34 @@ request = context.REQUEST\n
 portal = context.getPortalObject()\n
 portal_selections = portal.portal_selections\n
 selection_name = \'accounting_selection\'\n
+selection_params = portal_selections.getSelectionParamsFor(selection_name)\n
 \n
-section_category = \\\n
-  portal_selections.getSelectionParamsFor(selection_name).get(\'section_category\')\n
+section_category = selection_params.get(\'section_category\')\n
+section_category_strict = selection_params.get(\'section_category_strict\')\n
+\n
+def isSource(accounting_transaction):\n
+  if section_category:\n
+    source_section = accounting_transaction.getSourceSectionValue()\n
+    if source_section is None:\n
+      return False\n
+    group = source_section.getGroup(base=True)\n
+    if section_category_strict:\n
+      return group == section_category\n
+    return group.startswith(section_category)\n
+  return accounting_transaction.AccountingTransaction_isSourceView()\n
+\n
+def isDestination(accounting_transaction):\n
+  if section_category:\n
+    destination_section = accounting_transaction.getDestinationSectionValue()\n
+    if destination_section is None:\n
+      return False\n
+    group = destination_section.getGroup(base=True)\n
+    if section_category_strict:\n
+      return group == section_category\n
+    return group.startswith(section_category)\n
+  return accounting_transaction.AccountingTransaction_isDestinationView()\n
+\n
+\n
 if section_category:\n
   currency = portal.Base_getCurrencyForSection(section_category)\n
   request.set(\'currency\', currency)\n
@@ -135,7 +160,8 @@ def getAccountingCurrencyReference(section_relative_url):\n
 portal_type = context.getPortalAccountingMovementTypeList()\n
 for delivery in delivery_list:\n
   delivery = delivery.getObject()\n
-  is_source = delivery.AccountingTransaction_isSourceView()\n
+  is_source = isSource(delivery)\n
+  is_destination = isDestination(delivery)\n
 \n
   for movement in delivery.getMovementList(portal_type=portal_type):\n
 \n
@@ -150,7 +176,7 @@ for delivery in delivery_list:\n
         node_financial_section_title = \\\n
           node.getFinancialSectionTranslatedTitle()\n
 \n
-      line_list.append(Object(\n
+        line_list.append(Object(\n
         title=movement.hasTitle() and movement.getTitle() or\n
                      delivery.getTitle(),\n
         int_index=movement.getIntIndex(),\n
@@ -183,7 +209,7 @@ for delivery in delivery_list:\n
         parent_translated_portal_type=delivery.getTranslatedPortalType(),\n
         translated_simulation_state_title=movement.getTranslatedSimulationStateTitle(),))\n
 \n
-    if delivery.portal_type == \'Internal Invoice Transaction\' or not is_source:\n
+    if is_destination:\n
       node = movement.getDestinationValue(portal_type=\'Account\')\n
       node_title = \'\'\n
       node_account_type_title = \'\'\n
@@ -194,7 +220,7 @@ for delivery in delivery_list:\n
         node_financial_section_title = \\\n
           node.getFinancialSectionTranslatedTitle()\n
 \n
-      line_list.append(Object(\n
+        line_list.append(Object(\n
         title=movement.hasTitle() and movement.getTitle() or\n
                      delivery.getTitle(),\n
         int_index=movement.getIntIndex(),\n
@@ -275,7 +301,11 @@ return line_list\n
                             <string>portal</string>
                             <string>portal_selections</string>
                             <string>selection_name</string>
+                            <string>selection_params</string>
                             <string>section_category</string>
+                            <string>section_category_strict</string>
+                            <string>isSource</string>
+                            <string>isDestination</string>
                             <string>currency</string>
                             <string>checked_uid_list</string>
                             <string>getObject</string>
@@ -298,6 +328,7 @@ return line_list\n
                             <string>portal_type</string>
                             <string>delivery</string>
                             <string>is_source</string>
+                            <string>is_destination</string>
                             <string>movement</string>
                             <string>node</string>
                             <string>node_title</string>

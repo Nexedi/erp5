@@ -227,6 +227,17 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('packing_list')
     self.assertFalse(packing_list.isDivergent())
 
+  def stepChangeOrderLineResource(self, sequence=None,
+                                        sequence_list=None, **kw):
+    """
+    Change the resource of the order.
+    """
+    order = sequence.get('order')
+    resource = sequence.get('resource')
+    for order_line in order.objectValues(
+                             portal_type=self.order_line_portal_type):
+      order_line.edit(resource_value=resource)
+
   def stepChangePackingListLineResource(self, sequence=None,
                                         sequence_list=None, **kw):
     """
@@ -237,6 +248,18 @@ class TestPackingListMixin(TestOrderMixin):
     for packing_list_line in packing_list.objectValues(
                              portal_type=self.packing_list_line_portal_type):
       packing_list_line.edit(resource_value=resource)
+
+  def stepDecreaseOrderLineQuantity(self, sequence=None, sequence_list=None,
+                                    **kw):
+    """
+    Set a decreased quantity on order lines
+    """
+    order = sequence.get('order')
+    quantity = sequence.get('line_quantity', default=self.default_quantity - 1)
+    sequence.edit(line_quantity=quantity)
+    for order_line in order.objectValues(
+        portal_type=self.order_line_portal_type):
+      order_line.edit(quantity=quantity)
 
   def stepDecreasePackingListLineQuantity(self, sequence=None,
       sequence_list=None, **kw):
@@ -963,7 +986,37 @@ class TestPackingListMixin(TestOrderMixin):
     order = sequence.get('order')
     order.setPriceCurrency(currency.getRelativeUrl())
 
+  def _checkRecordedProperty(self, movement_list, property_id, assertion):
+    for movement in movement_list:
+      for simulation_movement in movement.getDeliveryRelatedValueList():
+        if assertion:
+          self.assertTrue(simulation_movement.isPropertyRecorded(property_id))
+        else:
+          self.assertFalse(simulation_movement.isPropertyRecorded(property_id))
 
+  def stepCheckSimulationMovementHasRecordedQuantity(self, sequence=None,
+                                                     sequence_list=None):
+    movement_list = sequence.get('order').objectValues(
+      portal_type=self.order_line_portal_type)
+    self._checkRecordedProperty(movement_list, 'quantity', True)
+
+  def stepCheckSimulationMovementHasNoRecordedQuantity(self, sequence=None,
+                                                       sequence_list=None):
+    movement_list = sequence.get('order').objectValues(
+      portal_type=self.order_line_portal_type)
+    self._checkRecordedProperty(movement_list, 'quantity', False)
+
+  def stepCheckSimulationMovementHasRecordedResource(self, sequence=None,
+                                                     sequence_list=None):
+    movement_list = sequence.get('order').objectValues(
+      portal_type=self.order_line_portal_type)
+    self._checkRecordedProperty(movement_list, 'resource', True)
+
+  def stepCheckSimulationMovementHasNoRecordedResource(self, sequence=None,
+                                                       sequence_list=None):
+    movement_list = sequence.get('order').objectValues(
+      portal_type=self.order_line_portal_type)
+    self._checkRecordedProperty(movement_list, 'resource', False)
 
 class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
@@ -1589,6 +1642,61 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                       stepCheckPackingListLineSourceAccount
                       stepCheckPackingListLineDestinationAccount
                       """
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_18_ChangeQuantityOnPackingListAndOrder(self, quiet=quiet):
+    """
+      Change the quantity on a packing list line, and accept the
+      divergence, then change the quantity on an order line to the same
+      value and check if it does not cause divergence on a packing list
+      line and recorded properties are reset after re-expand.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      stepDecreasePackingListLineQuantity \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionQuantity \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSimulationMovementHasRecordedQuantity \
+                      stepDecreaseOrderLineQuantity \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSimulationMovementHasNoRecordedQuantity \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
+
+  def test_19_ChangeResourceOnPackingListAndOrder(self, quiet=quiet):
+    """
+      Change the resource on a packing list line, and accept the
+      divergence, then change the resource on an order line to the same
+      value and check if it does not cause divergence on a packing list
+      line and recorded properties are reset after re-expand.
+    """
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      stepCreateNotVariatedResource \
+                      stepChangePackingListLineResource \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionResource \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSimulationMovementHasRecordedResource \
+                      stepChangeOrderLineResource \
+                      stepTic \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSimulationMovementHasNoRecordedResource \
+                      '
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self, quiet=quiet)

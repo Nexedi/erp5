@@ -65,6 +65,7 @@
                     <value>
                       <list>
                         <string>your_test_list</string>
+                        <string>your_repository_list</string>
                         <string>your_sql_connection_string</string>
                       </list>
                     </value>

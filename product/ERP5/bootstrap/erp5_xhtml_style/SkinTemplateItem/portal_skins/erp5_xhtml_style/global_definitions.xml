@@ -47,8 +47,9 @@
     <tal:block tal:define="\n
       global portal              here/portal_url/getPortalObject;\n
       global portal_path         portal/absolute_url;\n
-            local_parameter_list  local_parameter_list | python: {};\n
-      global actions          python: here.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(here));\n
+             local_parameter_list  local_parameter_list | python: {};\n
+             action_context    python: portal.restrictedTraverse(request.get(\'object_path\', \'?\'), here);\n
+      global actions          python: here.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(action_context));\n
       global url              here/absolute_url;\n
       global current_form_id  python: local_parameter_list.get(\'dialog_id\', local_parameter_list.get(\'form_id\', \'view\'));\n
            dummy            python: request.set(\'current_form_id\', current_form_id);\n
@@ -58,12 +59,12 @@
            dummy            python: local_parameter_list.update({\'cancel_url\': cancel_url});\n
            dummy       python: request.RESPONSE.setHeader(\'Content-Type\', \'text/html;; charset=utf-8\');\n
            dummy  python: request.set(\'here\', here);\n
-           global css_list  css_list | python: [];\n
-           css_list_template css_list_template | python: [\'%s/erp5.css\' % (portal_path, )];\n
-           dummy     python: css_list.extend(css_list_template);\n
-           global js_list   js_list | python: [\'%s/erp5_xhtml_appearance.js\' % portal_path,];\n
-           global js_list   python:[\'%s/MochiKit/MochiKit.js\' % portal_path,\n
-           \'%s/erp5.js\' % portal_path, ] + js_list;\n
+           global css_list  css_list | python:[];\n
+           dummy       python:css_list.extend([\'%s/%s\' % (portal_path, x) for x in portal.ERP5Site_getCssRelativeUrlList()]);\n
+           css_list_template css_list_template | python:[\'%s/erp5.css\' % (portal_path,)];\n
+           dummy     python:css_list.extend(css_list_template);\n
+           global js_list   js_list | python:[\'%s/erp5_xhtml_appearance.js\' % portal_path];\n
+           global js_list python: [\'%s/%s\' % (portal_path, x) for x in portal.ERP5Site_getJavaScriptRelativeUrlList()] + js_list;\n
            global http_parameter_list  python: portal.ERP5Site_filterParameterList(request.form);\n
            dummy                python: http_parameter_list.update(local_parameter_list);\n
            global http_parameters      python: portal.ERP5Site_renderHTTPParameterList(http_parameter_list);\n

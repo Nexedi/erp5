@@ -119,13 +119,16 @@ if request.get(\'price_currency\'):\n
   target_currency_title = target_currency.getReference()\n
 \n
 \n
-def isVisibleCell(cell):\n
+def isVisibleCell(cell_key):\n
   # can this cell be viewed by this user ?\n
-  for category in cell.getMembershipCriterionCategoryList():\n
+  for category in cell_key:\n
     if category.startswith(\'group/\'):\n
       if not category.startswith(defined_group):\n
         return False\n
   return True\n
+\n
+\n
+\n
 \n
 \n
 # in this report, level 1 is the budget line structure,\n
@@ -135,6 +138,8 @@ def isVisibleCell(cell):\n
 for budget in budget_list:\n
 \n
   if target_currency is not None:\n
+    # FIXME: this target currency support is not supported and have to be\n
+    # rewritten / removed\n
     conversion_ratio = target_currency.getPrice(\n
          context=budget.asContext(\n
                 categories=[\n
@@ -153,7 +158,7 @@ for budget in budget_list:\n
                         resource_title=budget.getResource() and\n
                                  budget.getResourceReference()))\n
 \n
-  # XXX to get the count of lines correct (for the print range)\n
+  # To get the count of lines correct (for the print range)\n
   if target_currency_title:\n
     line_list.append(dict())\n
 \n
@@ -166,7 +171,14 @@ for budget in budget_list:\n
     \n
     level_1_line_list = []\n
 \n
+    consumed_budget_dict = budget_line.getConsumedBudgetDict()\n
+    engaged_budget_dict = budget_line.getEngagedBudgetDict()\n
     budget_line_cell_range = budget_line.BudgetLine_asCellRange()\n
+    budget_line_as_cell_range_matrixbox =\\\n
+          budget_line.BudgetLine_asCellRange(matrixbox=1)\n
+    \n
+    dependant_dimension_dict = budget_line.BudgetLine_getSummaryDimensionKeyDict()\n
+\n
     if len(budget_line_cell_range) == 0:\n
       continue\n
     if len(budget_line_cell_range) == 1:\n
@@ -192,9 +204,8 @@ for budget in budget_list:\n
     cell_style_dict = {budget_line.getResource(base=1): \'Level2\'}\n
     cell_depth_dict = {budget_line.getResource(base=1): 0}\n
 \n
+    # calculate the depth for styling\n
     min_depth = 100\n
-    budget_line_as_cell_range_matrixbox =\\\n
-        budget_line.BudgetLine_asCellRange(matrixbox=1)\n
     for cell_range_list in budget_line_as_cell_range_matrixbox:\n
       for category, title in cell_range_list:\n
         if category in level_2_variation_category_list:\n
@@ -219,12 +230,6 @@ for budget in budget_list:\n
           else:\n
             cell_style_dict[category] = \'Level2\'\n
 \n
-    # We\'ll only sum level 2 budget cells if they are the shallowest in the\n
-    # category tree\n
-    higher_depth = min_depth\n
-    if cell_depth_dict:\n
-      higher_depth = min(cell_depth_dict.values())\n
-\n
     sign = budget_line.BudgetLine_getConsumptionSign()\n
 \n
     for level_2_category in level_2_variation_category_list:\n
@@ -238,7 +243,7 @@ for budget in budget_list:\n
                                 title=cell_name_dict[level_2_category],\n
                                 style=cell_style_dict[level_2_category])]\n
 \n
-      is_higher_level2 = cell_depth_dict[level_2_category] == higher_depth\n
+      is_higher_level2 = level_2_category not in dependant_dimension_dict\n
 \n
       for level_3_category in level_3_variation_category_list:\n
         total_level_3_initial_budget = 0\n
@@ -250,42 +255,58 @@ for budget in budget_list:\n
         level_3_line_list = [dict(is_level_3=True,\n
                                   title=cell_name_dict[level_3_category],)]\n
 \n
+        is_higher_level3 = level_3_category not in dependant_dimension_dict\n
+\n
         for level_4_category in level_4_variation_category_list:\n
           # TODO: maybe fail if only 1 dimension ...\n
           if level_4_category is None:\n
             cell_key = (level_3_category, level_2_category)\n
           else:\n
             cell_key = (level_4_category, level_3_category, level_2_category)\n
- \n
-          cell = budget_line.getCell(*cell_key)\n
-          if cell is None or not isVisibleCell(cell):\n
+          \n
+          if not isVisibleCell(cell_key):\n
             continue\n
 \n
-          initial_budget = cell.getQuantity() * sign\n
+          consumed_budget = consumed_budget_dict.get(cell_key, None)\n
+          engaged_budget = engaged_budget_dict.get(cell_key, None)\n
+          cell = budget_line.getCell(*cell_key)\n
+          if cell is None \\\n
+              and consumed_budget is None \\\n
+              and engaged_budget is None:\n
+            continue\n
+\n
+          if not consumed_budget:\n
+            consumed_budget = 0\n
+          if not engaged_budget:\n
+            engaged_budget = 0\n
+\n
+          initial_budget = None\n
+          if cell is not None:\n
+            initial_budget = cell.getQuantity() * sign\n
 \n
           # XXX don\'t calculate current balance unless we use budget\n
           # transactions\n
           current_budget = initial_budget #cell.getCurrentBalance() * sign\n
 \n
-          engaged_budget = cell.getEngagedBudget()\n
 \n
           # XXX stupid optimisation that may not always be true: \n
           # if there\'s no engaged budget, there\'s no consumed budget\n
           if engaged_budget:\n
-            consumed_budget = cell.getConsumedBudget()\n
             # XXX calculate manually getAvailableBudget, because it calls\n
             # getEngagedBudget again\n
             # available_budget = cell.getAvailableBudget()\n
-            available_budget = current_budget - engaged_budget\n
+            available_budget = (current_budget or 0) - engaged_budget\n
           else:\n
-            consumed_budget = 0\n
             available_budget = current_budget\n
           \n
-          total_level_3_initial_budget += initial_budget\n
-          total_level_3_current_budget += current_budget\n
+          if initial_budget:\n
+            total_level_3_initial_budget += initial_budget\n
+          if current_budget:\n
+            total_level_3_current_budget += current_budget\n
           total_level_3_engaged_budget += engaged_budget\n
           total_level_3_consumed_budget += consumed_budget\n
-          total_level_3_available_budget += available_budget\n
+          if available_budget:\n
+            total_level_3_available_budget += available_budget\n
 \n
           consumed_ratio = 0\n
           if current_budget:\n
@@ -302,11 +323,12 @@ for budget in budget_list:\n
                                           consumed_ratio=consumed_ratio))\n
 \n
 \n
-        total_level_2_initial_budget += total_level_3_initial_budget\n
-        total_level_2_current_budget += total_level_3_current_budget\n
-        total_level_2_engaged_budget += total_level_3_engaged_budget\n
-        total_level_2_consumed_budget += total_level_3_consumed_budget\n
-        total_level_2_available_budget += total_level_2_available_budget\n
+        if is_higher_level3:\n
+          total_level_2_initial_budget += total_level_3_initial_budget\n
+          total_level_2_current_budget += total_level_3_current_budget\n
+          total_level_2_engaged_budget += total_level_3_engaged_budget\n
+          total_level_2_consumed_budget += total_level_3_consumed_budget\n
+          total_level_2_available_budget += total_level_2_available_budget\n
 \n
         if len(level_3_line_list) > 1 or level_4_category is None:\n
           consumed_ratio = 0\n
@@ -451,7 +473,11 @@ return pformat(line_list)\n
                             <string>total_level_1_consumed_budget</string>
                             <string>total_level_1_available_budget</string>
                             <string>level_1_line_list</string>
+                            <string>consumed_budget_dict</string>
+                            <string>engaged_budget_dict</string>
                             <string>budget_line_cell_range</string>
+                            <string>budget_line_as_cell_range_matrixbox</string>
+                            <string>dependant_dimension_dict</string>
                             <string>len</string>
                             <string>level_2_variation_category_list</string>
                             <string>level_3_variation_category_list</string>
@@ -461,12 +487,10 @@ return pformat(line_list)\n
                             <string>cell_style_dict</string>
                             <string>cell_depth_dict</string>
                             <string>min_depth</string>
-                            <string>budget_line_as_cell_range_matrixbox</string>
                             <string>cell_range_list</string>
                             <string>min</string>
                             <string>_write_</string>
                             <string>depth</string>
-                            <string>higher_depth</string>
                             <string>sign</string>
                             <string>level_2_category</string>
                             <string>total_level_2_initial_budget</string>
@@ -483,14 +507,15 @@ return pformat(line_list)\n
                             <string>total_level_3_consumed_budget</string>
                             <string>total_level_3_available_budget</string>
                             <string>level_3_line_list</string>
+                            <string>is_higher_level3</string>
                             <string>level_4_category</string>
                             <string>cell_key</string>
+                            <string>consumed_budget</string>
+                            <string>engaged_budget</string>
                             <string>_apply_</string>
                             <string>cell</string>
                             <string>initial_budget</string>
                             <string>current_budget</string>
-                            <string>engaged_budget</string>
-                            <string>consumed_budget</string>
                             <string>available_budget</string>
                             <string>_inplacevar_</string>
                             <string>consumed_ratio</string>

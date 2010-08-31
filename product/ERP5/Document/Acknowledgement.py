@@ -67,7 +67,6 @@ class Acknowledgement(EmailDocumentProxyMixin, Event):
                     , PropertySheet.CategoryCore
                     , PropertySheet.Document
                     , PropertySheet.DublinCore
-                    , PropertySheet.Snapshot
                     , PropertySheet.Task
                     , PropertySheet.Url
                     , PropertySheet.Arrow

@@ -74,9 +74,11 @@ hide_analytic  = request[\'hide_analytic\']\n
 from_date           = request.get(\'from_date\', None)\n
 mirror_section_category_list = request.get(\'mirror_section_category_list\',\n
                                             None)\n
+mirror_section = request.get(\'mirror_section\', None)\n
+\n
 gap_list = []\n
 for gap in request.get(\'gap_list\', ()):\n
-  # XXX the field should maybe use base=1 on the category...\n
+  # XXX the field should maybe use base=1 on the category, but it is also used in other contexts\n
   gap_list.append(\'gap/%s\' % gap)\n
 \n
 display_categories  = request.get(\'display_categories\', False)\n
@@ -112,6 +114,9 @@ if function:\n
     params[\'function_uid\'] = Query(function_uid=None)\n
   else:\n
     params[\'function_uid\'] = portal.portal_categories.restrictedTraverse(function).getUid()\n
+if mirror_section:\n
+  mirror_section_uid = portal.restrictedTraverse(mirror_section).getUid()\n
+  params[\'mirror_section_uid\'] = mirror_section_uid\n
 \n
 default_selection_params = params.copy()\n
 \n
@@ -234,7 +239,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
-  selection_params[\'mirror_section_uid\'] = None\n
+  selection_params.setdefault(\'mirror_section_uid\', None)\n
   report_section_list.append(\n
               ReportSection(\n
                       path=inventory.node_relative_url,\n
@@ -267,7 +272,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
-  selection_params[\'mirror_section_uid\'] = None\n
+  selection_params.setdefault(\'mirror_section_uid\', None)\n
   report_section_list.append(\n
               ReportSection(\n
                       path=inventory.node_relative_url,\n
@@ -297,7 +302,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'period_start_date\'] = max(from_date, period_start_date)\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = None\n
-  selection_params[\'mirror_section_uid\'] = None\n
+  selection_params.setdefault(\'mirror_section_uid\', None)\n
   report_section_list.append(\n
               ReportSection(\n
                       path=inventory.node_relative_url,\n
@@ -394,7 +399,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = inventory.payment_uid\n
-  selection_params[\'mirror_section_uid\'] = None\n
+  selection_params.setdefault(\'mirror_section_uid\', None)\n
   report_section_list.append(\n
               ReportSection(\n
                       path=inventory.node_relative_url,\n
@@ -427,7 +432,7 @@ for inventory in portal.portal_simulation.getInventoryList(\n
   selection_params[\'at_date\'] = at_date\n
   selection_params[\'node_uid\'] = inventory.node_uid\n
   selection_params[\'payment_uid\'] = inventory.payment_uid\n
-  selection_params[\'mirror_section_uid\'] = None\n
+  selection_params.setdefault(\'mirror_section_uid\', None)\n
   report_section_list.append(\n
               ReportSection(\n
                       path=inventory.node_relative_url,\n
@@ -508,6 +513,7 @@ return report_section_list\n
                             <string>None</string>
                             <string>from_date</string>
                             <string>mirror_section_category_list</string>
+                            <string>mirror_section</string>
                             <string>gap_list</string>
                             <string>_getiter_</string>
                             <string>gap</string>
@@ -523,6 +529,7 @@ return report_section_list\n
                             <string>params</string>
                             <string>project</string>
                             <string>function</string>
+                            <string>mirror_section_uid</string>
                             <string>default_selection_params</string>
                             <string>analytic_column_list</string>
                             <string>account_columns</string>

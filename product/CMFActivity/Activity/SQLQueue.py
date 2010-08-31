@@ -28,7 +28,7 @@
 
 from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
 from RAMQueue import RAMQueue
-from Queue import VALID, INVALID_PATH, abortTransactionSynchronously
+from Queue import VALID, INVALID_PATH
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE
 from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
@@ -40,10 +40,7 @@ from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
 from zExceptions import ExceptionFormatter
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
+import transaction
 
 from zLOG import LOG, WARNING, ERROR, INFO, PANIC, TRACE
 
@@ -214,7 +211,7 @@ class SQLQueue(RAMQueue, SQLBase):
       # version - to ZODB connector.
       # So all connectors must be committed now that we have selected
       # everything needed from MySQL to get a fresh view of ZODB objects.
-      get_transaction().commit()
+      transaction.commit()
       tv = getTransactionalVariable(None)
       for m in message_list:
         tv['activity_runtime_environment'] = ActivityRuntimeEnvironment(m)
@@ -227,15 +224,15 @@ class SQLQueue(RAMQueue, SQLBase):
             # successfull messages to be rolled back. This commit might fail,
             # so it is protected the same way as activity execution by the
             # same "try" block.
-            get_transaction().commit()
+            transaction.commit()
           else:
-            # This message failed, revert.
-            abortTransactionSynchronously()
+            # This message failed, abort.
+            transaction.abort()
         except:
           value = m.uid, m.object_path, m.method_id
           LOG('SQLQueue', WARNING, 'Exception raised when invoking message (uid, path, method_id) %r' % (value, ), error=sys.exc_info())
           try:
-            abortTransactionSynchronously()
+            transaction.abort()
           except:
             # Unfortunately, database adapters may raise an exception against abort.
             LOG('SQLQueue', PANIC, 'abort failed, thus some objects may be modified accidentally')
@@ -266,7 +263,7 @@ class SQLQueue(RAMQueue, SQLBase):
           LOG('SQLQueue', TRACE, 'Freed messages %r' % (to_free_uid_list, ))
       self.finalizeMessageExecution(activity_tool,
                                     message_list[:processed_count])
-    get_transaction().commit()
+    transaction.commit()
     return not message_list
 
 
@@ -396,7 +393,7 @@ class SQLQueue(RAMQueue, SQLBase):
                                  offset=offset, count=READ_MESSAGE_LIMIT)
         if not result:
           return
-        get_transaction().commit()
+        transaction.commit()
 
         validation_text_dict = {'none': 1}
         message_dict = {}

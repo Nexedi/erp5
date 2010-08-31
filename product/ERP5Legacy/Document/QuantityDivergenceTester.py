@@ -66,7 +66,7 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
     delivery = simulation_movement.getDeliveryValue()
 
     d_quantity = delivery.getQuantity()
-    quantity = simulation_movement.getCorrectedQuantity()
+    quantity = simulation_movement.getMappedProperty('corrected_quantity')
 
     extra_parameters = dict()
     if abs(quantity - d_quantity) < 1:
@@ -112,7 +112,7 @@ class QuantityDivergenceTester(PropertyDivergenceTester):
       # A delivery quantity of 0 is an exceptional case that we cannot really
       # handle with the current approach of delivery ratio.
       d_quantity = delivery.getQuantity()
-      quantity = sum([m.getCorrectedQuantity() for m in
+      quantity = sum([m.getMappedProperty('corrected_quantity') for m in
         delivery.getDeliveryRelatedValueList(
           portal_type='Simulation Movement')])
 

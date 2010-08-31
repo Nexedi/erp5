@@ -64,7 +64,7 @@ language = context.Localizer.get_selected_language()\n
 # websites are usually not included in the url. But this\n
 # script is also used in tiolive instances, and from them\n
 # it is impossible to have the configuration of the web site\n
-if language is not None:\n
+if language is not None and include_language:\n
   root_url = "%s/%s" % (root_url, language)\n
   \n
 return root_url\n
@@ -78,7 +78,7 @@ return root_url\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>include_language=1</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -98,12 +98,13 @@ return root_url\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>include_language</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>root_url</string>
@@ -120,7 +121,9 @@ return root_url\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>1</int>
+              </tuple>
             </value>
         </item>
         <item>

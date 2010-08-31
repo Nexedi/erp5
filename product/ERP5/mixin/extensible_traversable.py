@@ -39,16 +39,17 @@ from Products.ERP5Type import Permissions
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders, _ViewEmulator
 from OFS.Image import File as OFSFile
 from warnings import warn
+import sys
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 
 
 # XXX: these duplicate ones in ERP5.Document
 _MARKER = []
 EMBEDDED_FORMAT = '_embedded'
 class ConversionError(Exception):pass
-class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 
-class BaseExtensibleTraversableMixIn(ExtensibleTraversableMixIn):
+class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
   """
   This class provides a generic base mixin implementation of IExtensibleTraversable.
 
@@ -154,7 +155,7 @@ class BaseExtensibleTraversableMixIn(ExtensibleTraversableMixIn):
     if document is not None:
       return document.__of__(self)
 
-class DocumentExtensibleTraversableMixIn(BaseExtensibleTraversableMixIn):
+class DocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
   """
   This class provides a implementation of IExtensibleTraversable for Document classed based documents.
   """
@@ -183,7 +184,7 @@ class DocumentExtensibleTraversableMixIn(BaseExtensibleTraversableMixIn):
         # force user to login as specified in Web Section
         raise Unauthorized
 
-class OOoDocumentExtensibleTraversableMixIn(BaseExtensibleTraversableMixIn):
+class OOoDocumentExtensibleTraversableMixin(BaseExtensibleTraversableMixin):
   """
   This class provides a implementation of IExtensibleTraversable for OOoDocument classed based documents.
   """
@@ -200,7 +201,7 @@ class OOoDocumentExtensibleTraversableMixIn(BaseExtensibleTraversableMixIn):
       mime, data = self.getConversion(format=EMBEDDED_FORMAT, file_name=name)
       document = OFSFile(name, name, data, content_type=mime).__of__(self.aq_parent)
     except (NotConvertedError, ConversionError, KeyError):
-      document = DocumentExtensibleTraversableMixIn._getExtensibleContent(self, request, name)
+      document = DocumentExtensibleTraversableMixin.getExtensibleContent(self, request, name)
     # restore original security context if there's a logged in user
     if user is not None:
       setSecurityManager(old_manager)

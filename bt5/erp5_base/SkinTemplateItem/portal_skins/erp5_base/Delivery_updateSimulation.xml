@@ -61,15 +61,24 @@ tag = delivery_path + \'_updateAppliedRule\'\n
 \n
 priority = 3\n
 \n
+# These parameters are passed to activate for expand and reindexObject,\n
+# so Delivery_updateAppliedRule will wait for the creation and indexing of\n
+# Applied Rules and Simulation Movements by another Delivery_updateAppliedRule.\n
+# This is required for finding an existing Applied Rule by the catalog, and\n
+# avoiding needless conflicts.\n
 activate_kw = { \n
   \'tag\': expand_tag,\n
   \'priority\': priority,\n
 }\n
+\n
+# Serialization is required for avoiding parallel executions of updateAppliedRule\n
+# which may generate multiple Root Applied Rules.\n
 delivery.activate(\n
     after_path_and_method_id=path_and_method_id,\n
     after_tag=expand_tag,\n
     tag=tag,\n
     priority=priority,\n
+    serialization_tag=delivery_path,\n
     ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 </string> </value>
         </item>

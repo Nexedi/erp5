@@ -272,7 +272,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>domain_base_category_list</string> </value>
+                    <value> <string>Membership Criterion Base Category List</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -311,7 +311,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getVariationBaseCategoryList() # XXX add resource ??</string> </value>
+            <value> <string>python: [bc for bc in context.getVariationBaseCategoryList() if bc not in context.getMembershipCriterionBaseCategoryList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

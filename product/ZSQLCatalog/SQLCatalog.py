@@ -84,20 +84,11 @@ except ImportError:
 
 try:
   from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, \
-       disableReadOnlyTransactionCache, CachingMethod, \
-       caching_instance_method
+       disableReadOnlyTransactionCache, caching_instance_method
 except ImportError:
-  LOG('SQLCatalog', WARNING, 'Count not import CachingMethod, expect slowness.')
+  LOG('SQLCatalog', WARNING, 'Count not import caching_instance_method, expect slowness.')
   def doNothing(context):
     pass
-  class CachingMethod:
-    """
-      Dummy CachingMethod class.
-    """
-    def __init__(self, callable, **kw):
-      self.function = callable
-    def __call__(self, *opts, **kw):
-      return self.function(*opts, **kw)
   def caching_instance_method(*args, **kw):
     return lambda method: method
   enableReadOnlyTransactionCache = doNothing
@@ -121,11 +112,12 @@ class transactional_cache_decorator:
   def __call__(self, method):
     def wrapper(wrapped_self):
       transactional_cache = getTransactionalVariable(None)
+      cache_id = self.cache_id
       try:
-        return transactional_cache[self.cache_id]
+        result = transactional_cache[cache_id]
       except KeyError:
-        result = transactional_cache[self.cache_id] = method(wrapped_self)
-        return result
+        result = transactional_cache[cache_id] = method(wrapped_self)
+      return result
     return wrapper
 
 try:
@@ -137,7 +129,7 @@ else:
 
 
 UID_BUFFER_SIZE = 300
-OBJECT_LIST_SIZE = 300
+OBJECT_LIST_SIZE = 300 # XXX 300 is arbitrary value of catalog object list
 MAX_PATH_LEN = 255
 RESERVED_KEY_LIST = ('where_expression', 'sort-on', 'sort_on', 'sort-order', 'sort_order', 'limit',
                      'format', 'search_mode', 'operator', 'selection_domain', 'selection_report',
@@ -520,6 +512,12 @@ class Catalog(Folder,
       'type': 'multiple selection',
       'select_variable' : 'getPythonMethodIds',
       'mode': 'w' },
+    { 'id': 'sql_catalog_raise_error_on_uid_check',
+      'title': 'Raise error on UID check',
+      'description': 'Boolean used to tell if we raise error when uid check fail',
+      'type': 'boolean',
+      'default' : True,
+      'mode': 'w' },
 
   )
 
@@ -559,6 +557,7 @@ class Catalog(Folder,
   sql_catalog_role_keys = ()
   sql_catalog_local_role_keys = ()
   sql_catalog_table_vote_scripts = ()
+  sql_catalog_raise_error_on_uid_check = True
 
   # These are ZODB variables, so shared by multiple Zope instances.
   # This is set to the last logical time when clearReserved is called.
@@ -823,10 +822,6 @@ class Catalog(Folder,
       # Add a dummy item so that SQLCatalog will not use existing uids again.
       self.insertMaxUid()
 
-    # Remove the cache of catalog schema.
-    if hasattr(self, '_v_catalog_schema_dict') :
-      del self._v_catalog_schema_dict
-
     self._clearSecurityCache()
 
   def insertMaxUid(self):
@@ -918,28 +913,19 @@ class Catalog(Folder,
     return self.sql_search_result_keys
 
   def _getCatalogSchema(self, table=None):
-    # XXX: Using a volatile as a cache makes it impossible to flush
-    # consistently on all connections containing the volatile. Another
-    # caching scheme must be used here.
-    catalog_schema_dict = getattr(aq_base(self), '_v_catalog_schema_dict', {})
-
-    if table not in catalog_schema_dict:
-      result_list = []
-      try:
-        method_name = self.sql_catalog_schema
-        method = getattr(self, method_name)
-        search_result = method(table=table)
-        for c in search_result:
-          result_list.append(c.Field)
-      except ConflictError:
-        raise
-      except:
-        LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s' % method_name, error=sys.exc_info())
-        pass
-      catalog_schema_dict[table] = tuple(result_list)
-      self._v_catalog_schema_dict= catalog_schema_dict
-
-    return catalog_schema_dict[table]
+    result_list = []
+    try:
+      method_name = self.sql_catalog_schema
+      method = getattr(self, method_name)
+      search_result = method(table=table)
+      for c in search_result:
+        result_list.append(c.Field)
+    except ConflictError:
+      raise
+    except:
+      LOG('SQLCatalog', WARNING, '_getCatalogSchema failed with the method %s' % method_name, error=sys.exc_info())
+      pass
+    return tuple(result_list)
 
   @caching_instance_method(id='SQLCatalog.getColumnIds',
                            cache_factory='erp5_content_long')
@@ -1278,7 +1264,6 @@ class Catalog(Folder,
     the object list, because calling _catalogObjectList with too many
     objects at a time bloats the process's memory consumption, due to
     caching."""
-    # XXX 300 is arbitrary.
     for i in xrange(0, len(object_list), OBJECT_LIST_SIZE):
       self._catalogObjectList(object_list[i:i + OBJECT_LIST_SIZE],
                               method_id_list=method_id_list,
@@ -1340,9 +1325,13 @@ class Catalog(Folder,
           raise RuntimeError, 'could not set missing uid for %r' % (object,)
       elif check_uid:
         if uid in assigned_uid_dict:
-          raise ValueError('uid of %r is %r and '
-              'is already assigned to %s in catalog !!! This can be fatal.' %
-              (object, uid, assigned_uid_dict[uid]))
+            error_message = 'uid of %r is %r and ' \
+                  'is already assigned to %s in catalog !!! This can be fatal.' % \
+                  (object, uid, assigned_uid_dict[uid])
+            if not self.sql_catalog_raise_error_on_uid_check:
+                LOG("SQLCatalog.catalogObjectList", ERROR, error_message)
+            else:
+                raise ValueError(error_message)
 
         path = object.getPath()
         index = path_uid_dict.get(path)
@@ -1392,10 +1381,15 @@ class Catalog(Folder,
             LOG('SQLCatalog', ERROR,
                 'uid of %r changed from %r to %r as old one is assigned'
                 ' to %s in catalog !!! This can be fatal.' % (
-                  object, uid, object.uid, catalog_path))
-            raise ValueError('uid of %r is %r and '
-                'is already assigned to %s in catalog !!! This can be fatal.' %
-                (object, uid, catalog_path))
+                object, uid, object.uid, catalog_path))
+
+            error_message = 'uid of %r is %r and ' \
+                            'is already assigned to %s in catalog !!! This can be fatal.' \
+                            % (object, uid, catalog_path)
+            if not self.sql_catalog_raise_error_on_uid_check:
+                LOG('SQLCatalog', ERROR, error_message)
+            else:
+                raise ValueError(error_message)
             uid = object.uid
 
         assigned_uid_dict[uid] = object

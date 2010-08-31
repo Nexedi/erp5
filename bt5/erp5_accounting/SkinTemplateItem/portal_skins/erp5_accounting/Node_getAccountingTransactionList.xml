@@ -158,11 +158,11 @@ if from_date or is_pl_account:\n
                                               **get_inventory_kw)\n
 \n
     # then all movement between period_start_date and from_date\n
-    previous_total_debit  = getInventoryAssetPrice(omit_output=True,\n
+    previous_total_debit  = getInventoryAssetPrice(omit_asset_decrease=True,\n
            from_date=period_start_date,\n
            to_date=from_date,\n
            **get_inventory_kw) + max(period_openning_balance, 0)\n
-    previous_total_credit = getInventoryAssetPrice(omit_input=True,\n
+    previous_total_credit = getInventoryAssetPrice(omit_asset_increase=True,\n
            from_date=period_start_date,\n
            to_date=from_date,\n
            **get_inventory_kw) - max(-period_openning_balance, 0)\n

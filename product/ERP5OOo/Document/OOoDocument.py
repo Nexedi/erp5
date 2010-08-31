@@ -30,8 +30,6 @@
 import xmlrpclib, base64, re, zipfile, cStringIO
 from warnings import warn
 from xmlrpclib import Fault
-from xmlrpclib import Transport
-from xmlrpclib import SafeTransport
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
 from OFS.Image import Pdata
@@ -40,21 +38,23 @@ try:
     from OFS.content_types import guess_content_type
 except ImportError:
     from zope.contenttype import guess_content_type
-from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
-    _ViewEmulator
-from Products.ERP5Type import Permissions, PropertySheet, Constraint
+from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5.Document.File import File
-from Products.ERP5.Document.Document import Document,\
-VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
-from AccessControl.SecurityManagement import setSecurityManager
+from Products.ERP5.Document.Document import Document, \
+       VALID_IMAGE_FORMAT_LIST, ConversionError, NotConvertedError
+from Products.ERP5.Document.Image import getDefaultImageQuality
 from Products.ERP5Type.Utils import fill_args_from_request
 from zLOG import LOG, ERROR
 
 # Mixin Import
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
-from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixIn
+from Products.ERP5.mixin.extensible_traversable import OOoDocumentExtensibleTraversableMixin
+
+# connection plugins
+from Products.ERP5Type.ConnectionPlugin.TimeoutTransport import TimeoutTransport
 
 enc=base64.encodestring
 dec=base64.decodestring
@@ -62,37 +62,8 @@ dec=base64.decodestring
 _MARKER = []
 EMBEDDED_FORMAT = '_embedded'
 
-class TimeoutTransport(SafeTransport):
-  """A xmlrpc transport with configurable timeout.
-  """
-  def __init__(self, timeout=None, scheme='http'):
-    self._timeout = timeout
-    self._scheme = scheme
-    # On Python 2.6, .__init__() of Transport and SafeTransport must be called
-    # to set up the ._use_datetime attribute.
-    # sigh... too bad we can't use super() here, as SafeTransport is not
-    # a new-style class (as of Python 2.4 to 2.6)
-    # remove the gettattr below when we drop support for Python 2.4
-    super__init__ = getattr(SafeTransport, '__init__', lambda self: None)
-    super__init__(self)
-
-  def send_content(self, connection, request_body):
-    connection.putheader("Content-Type", "text/xml")
-    connection.putheader("Content-Length", str(len(request_body)))
-    connection.endheaders()
-    if self._timeout:
-      connection._conn.sock.settimeout(self._timeout)
-    if request_body:
-      connection.send(request_body)
-
-  def make_connection(self, h):
-    if self._scheme == 'http':
-      return Transport.make_connection(self, h)
-    return SafeTransport.make_connection(self, h)
-
-
-class OOoDocument(OOoDocumentExtensibleTraversableMixIn, BaseConvertableFileMixin, File,
-                                               TextConvertableMixin, Document):
+class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
+                  TextConvertableMixin, Document):
   """
     A file document able to convert OOo compatible files to
     any OOo supported format, to capture metadata and to
@@ -145,7 +116,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixIn, BaseConvertableFileMixi
                     , PropertySheet.DublinCore
                     , PropertySheet.Version
                     , PropertySheet.Document
-                    , PropertySheet.Snapshot
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
@@ -282,7 +252,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixIn, BaseConvertableFileMixi
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
-  def _convert(self, format, display=None, **kw):
+  def _convert(self, format, display=None, quality=_MARKER, **kw):
     """Convert the document to the given format.
 
     If a conversion is already stored for this format, it is returned
@@ -341,6 +311,9 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixIn, BaseConvertableFileMixi
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
+    if quality is _MARKER:
+      # we need to determine quality before image conversion happens due to cache
+      quality = getDefaultImageQuality(self.getPortalObject(), format)
     # Return converted file
     if requires_pdf_first:
       # We should use original_format whenever we wish to
@@ -349,7 +322,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixIn, BaseConvertableFileMixi
       if display is None:
         has_format = self.hasConversion(format=original_format)
       else:
-        has_format = self.hasConversion(format=original_format, display=display)
+        has_format = self.hasConversion(format=original_format, display=display, quality=quality)
     elif display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
       has_format = self.hasConversion(format=original_format)
     else:
@@ -387,20 +360,20 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixIn, BaseConvertableFileMixi
                                        file_name=self.getId(),
                                        temp_object=1)
         temp_image._setData(data)
-        # we care for first page only
-        mime, data = temp_image.convert(original_format, display=display, frame=0, **kw)
+        # we care for first page only but as well for image quality
+        mime, data = temp_image.convert(original_format, display=display, frame=0, quality=quality, **kw)
         # store conversion
         if display is None:
           self.setConversion(data, mime, format=original_format)
         else:
-          self.setConversion(data, mime, format=original_format, display=display)
+          self.setConversion(data, mime, format=original_format, display=display, quality=quality)
 
     if requires_pdf_first:
       format = original_format
     if display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
       return self.getConversion(format=original_format)
     else:
-      return self.getConversion(format=original_format, display=display)
+      return self.getConversion(format=original_format, display=display, quality=quality)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')

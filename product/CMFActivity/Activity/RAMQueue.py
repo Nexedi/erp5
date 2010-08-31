@@ -29,10 +29,7 @@
 from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_EXECUTED
 from Queue import Queue, VALID
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
+import transaction
 
 class RAMQueue(Queue):
   """
@@ -67,16 +64,16 @@ class RAMQueue(Queue):
     for m in self.getQueue(path):
       if m.validate(self, activity_tool) is not VALID:
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
-        get_transaction().commit() # Start a new transaction
+        transaction.commit() # Start a new transaction
         return 0    # Keep on ticking
       activity_tool.invoke(m)
       if m.getExecutionState() == MESSAGE_EXECUTED:
         self.deleteMessage(activity_tool, m) # Trash messages which are not validated (no error handling)
-        get_transaction().commit() # Start a new transaction
+        transaction.commit() # Start a new transaction
         return 0    # Keep on ticking
       else:
         # Start a new transaction and keep on to next message
-        get_transaction().commit()
+        transaction.commit()
     return 1 # Go to sleep
 
   def countMessage(self, activity_tool,path=None,method_id=None,**kw):

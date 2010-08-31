@@ -33,7 +33,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -77,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/SaleTradeCondition_viewProfile</string> </value>
+            <value> <string>string:${object_url}/SaleInvoiceTransaction_viewProfile</string> </value>
         </item>
       </dictionary>
     </pickle>

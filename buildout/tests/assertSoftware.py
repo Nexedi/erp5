@@ -76,7 +76,6 @@ print sys.version_info[:2]
       xml
       xml.parsers.expat
       zlib
-      zope.testbrowser
       """)
     failed_library_list = []
     for lib in required_library_list:

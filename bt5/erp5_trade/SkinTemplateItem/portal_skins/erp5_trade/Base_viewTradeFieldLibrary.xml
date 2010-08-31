@@ -306,6 +306,7 @@
                         <string>my_view_mode_movement_use</string>
                         <string>my_view_mode_listbox_resource_relative_url</string>
                         <string>my_view_mode_listbox_movement_relative_url</string>
+                        <string>my_view_mode_movement_listbox_price</string>
                       </list>
                     </value>
                 </item>

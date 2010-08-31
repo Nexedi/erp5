@@ -4,6 +4,7 @@ Budget Line | consumed_view
 Budget Line | current_view
 Budget Line | engaged_view
 Budget Line | initial_view
+Budget Line | update_summary_budget_cell
 Budget Model Module | view
 Budget Model | view
 Budget Module | budget_group_consumption_export

@@ -53,7 +53,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
+            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.PythonScripts.standard import Object\n
 request = container.REQUEST\n
 portal = context.getPortalObject()\n
 \n
@@ -66,6 +67,12 @@ if payment:\n
 if group_by:\n
   extra_kw[\'group_by\'] = group_by\n
   extra_kw[\'ignore_group_by\'] = True\n
+\n
+if project_uid:\n
+  if project_uid == \'None\':\n
+    extra_kw[\'project_uid\'] = Query(project_uid=None)\n
+  else:\n
+    extra_kw[\'project_uid\'] = project_uid\n
 \n
 account_title_cache = dict()\n
 def getAccountId(node_relative_url):\n
@@ -185,7 +192,7 @@ return line_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, gap_root=None, group_by=None, analytic_column_list=[], **kw</string> </value>
+            <value> <string>selection, at_date, from_date, portal_type, simulation_state, section_uid, payment_mode=None, payment=None, gap_root=None, group_by=None, analytic_column_list=[], project_uid=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -205,7 +212,7 @@ return line_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>11</int> </value>
+                        <value> <int>12</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -222,7 +229,10 @@ return line_list\n
                             <string>gap_root</string>
                             <string>group_by</string>
                             <string>analytic_column_list</string>
+                            <string>project_uid</string>
                             <string>kw</string>
+                            <string>Products.ZSQLCatalog.SQLCatalog</string>
+                            <string>Query</string>
                             <string>Products.PythonScripts.standard</string>
                             <string>Object</string>
                             <string>_getattr_</string>
@@ -235,6 +245,7 @@ return line_list\n
                             <string>extra_kw</string>
                             <string>_write_</string>
                             <string>True</string>
+                            <string>None</string>
                             <string>account_title_cache</string>
                             <string>getAccountId</string>
                             <string>account_in_gap_root_cache</string>
@@ -257,7 +268,6 @@ return line_list\n
                             <string>transaction_reference</string>
                             <string>title</string>
                             <string>date</string>
-                            <string>None</string>
                             <string>line</string>
                             <string>analytic_info</string>
                             <string>analytic_column</string>
@@ -279,6 +289,7 @@ return line_list\n
                 <none/>
                 <none/>
                 <list/>
+                <none/>
               </tuple>
             </value>
         </item>

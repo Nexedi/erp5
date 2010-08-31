@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test List Action Listbox proxy</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1" tal:define="site_title python:here.getPortalObject().getTitle()">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test List Action Listbox Proxy</td></tr>\n
+</thead><tbody>\n
+<!-- XXX listbox_title is not displayed in mobile mode\n
+     So this test is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_createObjects?num:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_createObjects</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Created Successfully.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/Zuite_waitForActivities</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>Done.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Foo_viewListBoxProxyField</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//input[@id=\'listbox_next_page\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Use the list action to have the listbox in Full Screen -->\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_title</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//input[@id=\'listbox_next_page\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Use still List Action to return previous page -->\n
+\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>id=listbox_title</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//input[@id=\'listbox_next_page\']</td>\n
+  <td></td>\n
+</tr>\n
+</tal:block>\n
+\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testListActionListboxProxy</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -75,10 +75,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>the vendor reference of the sale transaction</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_source_reference</string> </value>
                 </item>
@@ -92,7 +88,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Vendor Transaction Reference</string> </value>
+                    <value> <string>Supplier Transaction Reference</string> </value>
                 </item>
               </dictionary>
             </value>

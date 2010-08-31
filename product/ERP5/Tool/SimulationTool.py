@@ -36,7 +36,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 
 from Products.ERP5 import _dtmldir
 
-from zLOG import LOG
+from zLOG import LOG, PROBLEM
 
 from Products.ERP5.Capacity.GLPK import solve
 try:
@@ -354,8 +354,12 @@ class SimulationTool(BaseTool):
           simulation_dict['simulation_state'] = output_simulation_state
       return simulation_dict
 
-    def _getOmitQuery(self, query_table=None, omit_input=0, omit_output=0, **kw):
-      omit_dict = self._getOmitDict(omit_input=omit_input, omit_output=omit_output)
+    def _getOmitQuery(self, query_table=None, omit_input=0, omit_output=0,
+                      omit_asset_increase=0, omit_asset_decrease=0, **kw):
+      omit_dict = self._getOmitDict(omit_input=omit_input,
+                                    omit_output=omit_output,
+                                    omit_asset_increase=omit_asset_increase,
+                                    omit_asset_decrease=omit_asset_decrease)
       return self._buildOmitQuery(query_table=query_table, omit_dict=omit_dict)
       
     def _buildOmitQuery(self, query_table, omit_dict):
@@ -363,11 +367,16 @@ class SimulationTool(BaseTool):
       Build a specific query in order to take:
       - negatives quantity values if omit_input
       - postives quantity values if omit_output
+      - negatives asset price values if omit_asset_increase
+      - positives asset price values if omit_asset_decrease
       """
       omit_query = None
       omit_input = omit_dict.get('input', False)
       omit_output = omit_dict.get('output', False)
-      if omit_input or omit_output:
+      omit_asset_increase = omit_dict.get('asset_increase', False)
+      omit_asset_decrease = omit_dict.get('asset_decrease', False)
+      if omit_input or omit_output\
+          or omit_asset_increase or omit_asset_decrease:
         # Make sure to check some conditions
         condition_expression = \
           "%(query_table)s.node_uid <> %(query_table)s.mirror_node_uid \
@@ -400,18 +409,57 @@ class SimulationTool(BaseTool):
                             Query(**{'%s.is_cancellation' % query_table: 1}),
                             operator='AND'),
                         operator='OR')
-          if omit_query is None:
-            omit_query = ComplexQuery(quantity_query, condition_expression,
+          output_query = ComplexQuery(quantity_query, condition_expression,
                                       operator='AND')
-          else:
-            output_query = ComplexQuery(quantity_query, condition_expression,
-                                        operator='AND')
+          if omit_query is not None:
             omit_query = ComplexQuery(omit_query, output_query, operator='AND')
+          else:
+            omit_query = output_query
+
+        if omit_asset_increase:
+          asset_price_query = ComplexQuery(
+                        ComplexQuery(
+                            Query(**{'%s.total_price' % query_table: '<0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 0}),
+                            operator='AND'),
+                        ComplexQuery(
+                            Query(**{'%s.total_price' % query_table: '>0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 1}),
+                            operator='AND'),
+                        operator='OR')
+          asset_increase_query = ComplexQuery(asset_price_query, condition_expression,
+                                              operator='AND')
+          if omit_query is not None:
+            omit_query = ComplexQuery(omit_query, asset_increase_query, operator='AND')
+          else:
+            omit_query = asset_increase_query
+
+        if omit_asset_decrease:
+          asset_price_query = ComplexQuery(
+                        ComplexQuery(
+                            Query(**{'%s.total_price' % query_table: '>0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 0}),
+                            operator='AND'),
+                        ComplexQuery(
+                            Query(**{'%s.total_price' % query_table: '<0'}),
+                            Query(**{'%s.is_cancellation' % query_table: 1}),
+                            operator='AND'),
+                        operator='OR')
+          asset_decrease_query = ComplexQuery(asset_price_query, condition_expression,
+                                              operator='AND')
+          if omit_query is not None:
+            omit_query = ComplexQuery(omit_query, asset_decrease_query, operator='AND')
+          else:
+            omit_query = asset_decrease_query
 
       return omit_query
 
-    def _getOmitDict(self, omit_input=False, omit_output=False):
-      return {'input': omit_input, 'output': omit_output}
+    def _getOmitDict(self, omit_input=False, omit_output=False,
+                     omit_asset_increase=False, omit_asset_decrease=False):
+      return { 'input': omit_input,
+               'output': omit_output,
+               'asset_increase': omit_asset_increase,
+               'asset_decrease': omit_asset_decrease, }
 
     def _generateSQLKeywordDict(self, table='stock', **kw):
         sql_kw, new_kw = self._generateKeywordDict(**kw)
@@ -423,13 +471,12 @@ class SimulationTool(BaseTool):
         ctool = getToolByName(self, 'portal_catalog')
         sql_kw = sql_kw.copy()
         new_kw = new_kw.copy()
-        # Some columns cannot be found automatically, prepend table name to
-        # avoid ambiguities.
 
         # Group-by expression  (eg. group_by=['node_uid'])
         group_by = new_kw.pop('group_by', [])
 
         # group by from stock table (eg. group_by_node=True)
+        # prepend table name to avoid ambiguities.
         column_group_by = new_kw.pop('column_group_by', [])
         if column_group_by:
           group_by.extend(['%s.%s' % (table, x) for x in column_group_by])
@@ -449,6 +496,15 @@ class SimulationTool(BaseTool):
 
         if group_by:
           new_kw['group_by'] = group_by
+
+        # select expression
+        select_dict = new_kw.get('select_dict', dict())
+        related_key_select_expression_list = new_kw.pop(
+                'related_key_select_expression_list', [])
+        for related_key_select in related_key_select_expression_list:
+          select_dict[related_key_select] = '%s_%s' % (table,
+                                                       related_key_select)
+        new_kw['select_dict'] = select_dict
 
         # Column values
         column_value_dict = new_kw.pop('column_value_dict', {})
@@ -550,20 +606,34 @@ class SimulationTool(BaseTool):
         # omit input and output
         omit_input=0,
         omit_output=0,
+        omit_asset_increase=0,
+        omit_asset_decrease=0,
         # group by
         group_by_node=0,
+        group_by_node_category=0,
+        group_by_node_category_strict_membership=0,
         group_by_mirror_node=0,
+        group_by_mirror_node_category=0,
+        group_by_mirror_node_category_strict_membership=0,
         group_by_section=0,
         group_by_section_category=0,
         group_by_section_category_strict_membership=0,
         group_by_mirror_section=0,
+        group_by_mirror_section_category=0,
+        group_by_mirror_section_category_strict_membership=0,
         group_by_payment=0,
+        group_by_payment_category=0,
+        group_by_payment_category_strict_membership=0,
         group_by_sub_variation=0,
         group_by_variation=0,
         group_by_movement=0,
         group_by_resource=0,
         group_by_project=0,
+        group_by_project_category=0,
+        group_by_project_category_strict_membership=0,
         group_by_function=0,
+        group_by_function_category=0,
+        group_by_function_category_strict_membership=0,
         group_by_date=0,
         # sort_on
         sort_on=None,
@@ -694,7 +764,9 @@ class SimulationTool(BaseTool):
                                 strict_simulation_state=strict_simulation_state)
       new_kw['simulation_dict'] = simulation_dict
       omit_dict = self._getOmitDict(omit_input=omit_input,
-                                    omit_output=omit_output)
+                                    omit_output=omit_output,
+                                    omit_asset_increase=omit_asset_increase,
+                                    omit_asset_decrease=omit_asset_decrease)
       new_kw['omit_dict'] = omit_dict
       if reserved_kw is not None:
         if not isinstance(reserved_kw, dict):
@@ -733,6 +805,18 @@ class SimulationTool(BaseTool):
                       ['catalog.uid=%s' % uid for uid in uid_list])
 
       # build the group by expression
+      # if we group by a criterion, we also add this criterion to the select
+      # expression, unless it is already selected in Resource_zGetInventoryList
+      # the caller can also pass select_dict or select_list. select_expression,
+      # which is deprecated in ZSQLCatalog is not supported here.
+      select_dict = kw.get('select_dict', {})
+      # we support select_list, if passed
+      select_list = kw.get('select_list', [])
+      for select_key in kw.get('select_list', []):
+        select_dict[select_key] = None
+      new_kw['select_dict'] = select_dict
+      related_key_select_expression_list = []
+
       column_group_by_expression_list = []
       related_key_group_by_expression_list = []
       if group_by_node:
@@ -765,11 +849,65 @@ class SimulationTool(BaseTool):
 
       if group_by_section_category:
         related_key_group_by_expression_list.append('section_category_uid')
+        related_key_select_expression_list.append('section_category_uid')
       if group_by_section_category_strict_membership:
         related_key_group_by_expression_list.append(
             'section_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'section_category_strict_membership_uid')
+      if group_by_mirror_section_category:
+        related_key_group_by_expression_list.append('mirror_section_category_uid')
+        related_key_select_expression_list.append('mirror_section_category_uid')
+      if group_by_mirror_section_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'mirror_section_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'mirror_section_category_strict_membership_uid')
+      if group_by_node_category:
+        related_key_group_by_expression_list.append('node_category_uid')
+        related_key_select_expression_list.append('node_category_uid')
+      if group_by_node_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'node_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'node_category_strict_membership_uid')
+      if group_by_mirror_node_category:
+        related_key_group_by_expression_list.append('mirror_node_category_uid')
+      if group_by_mirror_node_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'mirror_node_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'mirror_node_category_strict_membership_uid')
+      if group_by_payment_category:
+        related_key_group_by_expression_list.append('payment_category_uid')
+        related_key_select_expression_list.append('payment_category_uid')
+      if group_by_payment_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'payment_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'payment_category_strict_membership_uid')
+      if group_by_function_category:
+        related_key_group_by_expression_list.append('function_category_uid')
+        related_key_select_expression_list.append('function_category_uid')
+      if group_by_function_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'function_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'function_category_strict_membership_uid')
+      if group_by_project_category:
+        related_key_group_by_expression_list.append('project_category_uid')
+        related_key_select_expression_list.append('project_category_uid')
+      if group_by_project_category_strict_membership:
+        related_key_group_by_expression_list.append(
+            'project_category_strict_membership_uid')
+        related_key_select_expression_list.append(
+            'project_category_strict_membership_uid')
+
       if related_key_group_by_expression_list:
         new_kw['related_key_group_by'] = related_key_group_by_expression_list
+      if related_key_select_expression_list:
+        new_kw['related_key_select_expression_list'] =\
+                related_key_select_expression_list
 
       return sql_kw, new_kw
 
@@ -864,9 +1002,13 @@ class SimulationTool(BaseTool):
 
       omit_simulation - doesn't take into account simulation movements
 
-      omit_input     -  doesn't take into account movement with quantity < 0
+      omit_input     -  doesn't take into account movement with quantity > 0
 
-      omit_output    -  doesn't take into account movement with quantity > 0
+      omit_output    -  doesn't take into account movement with quantity < 0
+
+      omit_asset_increase - doesn't take into account movement with asset_price > 0
+
+      omit_asset_decrease - doesn't take into account movement with asset_price < 0
 
       selection_domain, selection_report - see ListBox
 
@@ -1156,7 +1298,7 @@ class SimulationTool(BaseTool):
             # optimisation when from_date is given), emit a log.
             # This can happen if there are more date parameters than mentioned
             # above.
-            LOG('SimulationTool', 100, 'There is more than one date condition'
+            LOG('SimulationTool', PROBLEM, 'There is more than one date condition'
               ' so optimisation got disabled. The result of this call will be'
               ' correct but it requires investigation as some cases might'
               ' have gone unnoticed and produced wrong results.')
@@ -1334,7 +1476,8 @@ class SimulationTool(BaseTool):
                     elif line_a[key] == line_b[key]:
                       result[key] = line_a[key]
                     elif key not in ('date', 'stock_uid', 'path'):
-                      LOG('InventoryTool.getInventoryList.addLineValues', 0,
+                      LOG('InventoryTool.getInventoryList.addLineValues',
+                          PROBLEM,
                           'mismatch for %s column: %s and %s' % \
                           (key, line_a[key], line_b[key]))
                   return result
@@ -1720,6 +1863,7 @@ class SimulationTool(BaseTool):
     def getMovementHistoryList(self, src__=0, ignore_variation=0,
                                standardise=0, omit_simulation=0,
                                omit_input=0, omit_output=0,
+                               omit_asset_increase=0, omit_asset_decrease=0,
                                selection_domain=None, selection_report=None,
                                initial_running_total_quantity=0,
                                initial_running_total_price=0, precision=None,
@@ -1739,6 +1883,8 @@ class SimulationTool(BaseTool):
                          standardise=standardise,
                          omit_simulation=omit_simulation,
                          omit_input=omit_input, omit_output=omit_output,
+                         omit_asset_increase=omit_asset_increase,
+                         omit_asset_decrease=omit_asset_decrease,
                          selection_domain=selection_domain,
                          selection_report=selection_report,
                          initial_running_total_quantity=

@@ -141,11 +141,8 @@ class EntireQuery(object):
             LOG('SQLCatalog', 100, 'Order by %r ignored: it could not be mapped to a known column.' % (order_by, ))
             rendered = None
         if rendered is not None:
-          if len(order_by) > 1:
-            if len(order_by) > 2 and order_by[2] not in (None, ''):
-              rendered = 'CAST(%s AS %s)' % (rendered, order_by[2])
-            rendered = '%s %s' % (rendered, order_by[1])
-          append(rendered)
+          append((rendered, ) + tuple(order_by[1:]) + (
+            None, ) * (3 - len(order_by)))
       self.order_by_list = new_order_by_list
       # generate SQLExpression from query
       sql_expression_list = [self.query.asSQLExpression(sql_catalog, column_map, only_group_columns)]

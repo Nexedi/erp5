@@ -57,7 +57,7 @@
 entity as a mirror section\n
 """\n
 kw[\'mirror_section_uid\'] = context.getUid()\n
-kw[\'omit_input\'] = 1\n
+kw[\'omit_asset_increase\'] = 1\n
 kw[\'node_category_strict_membership\'] = [\'account_type/asset/receivable\',\n
                                          \'account_type/liability/payable\']\n
 # here, or 0 is to prevent displaying "- 0"\n

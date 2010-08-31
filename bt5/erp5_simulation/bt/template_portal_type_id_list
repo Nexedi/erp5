@@ -1,6 +1,9 @@
 Category Membership Divergence Tester
 DateTime Divergence Tester
+FIFO Delivery Solver
 Float Divergence Tester
+LIFO Delivery Solver
+Minimise Price Delivery Solver
 Net Converted Quantity Divergence Tester
 Solver Decision
 Solver Process

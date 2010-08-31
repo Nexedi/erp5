@@ -169,8 +169,8 @@ def int_or_long(s):
 class ThreadedDB:
     """
       This class is an interface to DB.
-      Its caracteristic is that an instance of this class interfaces multiple
-      instanes of DB class, each one being bound to a specific thread.
+      Its characteristic is that an instance of this class interfaces multiple
+      instances of DB class, each one being bound to a specific thread.
     """
 
     conv=conversions.copy()
@@ -297,6 +297,10 @@ class ThreadedDB:
     def string_literal(self, *args, **kw):
         return self._access_db(method_id='string_literal', args=args, kw=kw)
 
+    def setSortKey(self, *args, **kw):
+        return self._access_db(method_id='setSortKey', args=args, kw=kw)
+
+
 class DB(TM):
 
     defs={
@@ -406,6 +410,10 @@ class DB(TM):
             self.db.query(query)
         except ProgrammingError, exception:
           LOG('ZMySQLDA', ERROR, 'query failed: %s' % (query,))
+          # XXX sometimes, after a programming error, the database object
+          # gets fully broken and non-functional. So recover it by
+          # recreation.
+          self._forceReconnection()
           if exception[0] == ER.PARSE_ERROR:
             # You have an error in your SQL syntax
             # Replace MySQL brain dead error message with a more meaningful
@@ -429,10 +437,15 @@ class DB(TM):
           raise exception
         return self.db.store_result()
 
-    def query(self,query_string, max_rows=1000):
+    def query(self, query_string, max_rows=1000):
         self._use_TM and self._register()
         desc=None
         result=()
+        # XXX deal with a typical mistake that the user appends
+        # an unnecessary and rather harmful semicolon at the end.
+        # Unfortunately, MySQLdb does not want to be graceful.
+        if query_string[-1:] == ';':
+          query_string = query_string[:-1]
         for qs in filter(None, map(strip,split(query_string, '\0'))):
             qtype = upper(split(qs, None, 1)[0])
             if qtype == "SELECT" and max_rows:

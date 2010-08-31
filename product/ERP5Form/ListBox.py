@@ -397,6 +397,35 @@ class ListBoxWidget(Widget.Widget):
                                 required=0)
     property_names.append('display_style_list')
 
+    default_display_style = fields.StringField('default_display_style',
+                                title="Default display style",
+                                description=(
+        "A default display style for listbox rendering."),
+                                default='table',
+                                required=0)
+    property_names.append('default_display_style')
+
+    full_text_search_key = fields.StringField('full_text_search_key',
+                                title="Full text search key",
+                                description=("Full text search key used to make query."),
+                                default=None,
+                                required=0)
+    property_names.append('full_text_search_key')
+
+    full_text_search_key_script = fields.StringField('full_text_search_key_script',
+                                title="Full text search key script",
+                                description=("Full text search key script used to make query."),
+                                default=None,
+                                required=0)
+    property_names.append('full_text_search_key_script')
+
+    page_navigation_mode = fields.StringField('page_navigation_mode',
+                                title="Page navigation mode",
+                                description=("Page navigation mode like 'slider' - controls for 'next' / 'last' & 'previous' / 'first' or 'text' - direct page selections."),
+                                default='slider',
+                                required=0)
+    property_names.append('page_navigation_mode')
+
     list_action = fields.StringField('list_action',
                                  title='List Action',
                                  description=('The id of the object action'
@@ -932,6 +961,30 @@ class ListBoxRenderer:
                                                       display_style_list]
 
   getDisplayStyleList = lazyMethod(getDisplayStyleList)
+
+  def getDefaultDisplayStyle(self):
+    """Return the default display list style."""
+    return self.field.get_value('default_display_style')
+
+  getDefaultDisplayStyle = lazyMethod(getDefaultDisplayStyle)
+
+  def getFullTextSearchKey(self):
+    """Return the full text search key."""
+    return self.field.get_value('full_text_search_key')
+
+  getFullTextSearchKey = lazyMethod(getFullTextSearchKey)
+
+  def getFullTextSearchKeyScript(self):
+    """Return the full text search key script which is responsible for handling full text query."""
+    return self.field.get_value('full_text_search_key_script')
+
+  getFullTextSearchKeyScript = lazyMethod(getFullTextSearchKeyScript)
+
+  def getPageNavigationMode(self):
+    """Return the list box page navigation mode."""
+    return self.field.get_value('page_navigation_mode')
+
+  getPageNavigationMode = lazyMethod(getPageNavigationMode)
 
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
@@ -1554,6 +1607,7 @@ class ListBoxRenderer:
     search_column_id_set = self.getSearchColumnIdSet()
     if param_dict is None:
       param_dict = self.getParamDict()
+
     value_list = []
     for (sql, title), alias in zip(self.getSelectedColumnList(), self.getColumnAliasList()):
       if sql in search_column_id_set:
@@ -2426,7 +2480,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           html = u'<a href="%s">%s</a>' % (url, html)
 
       html_list.append((html, original_value, error, editable_field, url))
-
     return html_list
 
 allow_class(ListBoxHTMLRendererLine)

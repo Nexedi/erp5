@@ -377,7 +377,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         for uid in listbox_uid:
           try:
             selection_uid_dict[int(uid)] = 1
-          except ValueError:
+          except (ValueError, TypeError):
             selection_uid_dict[uid] = 1
         self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       if REQUEST is not None:
@@ -398,7 +398,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         for uid in listbox_uid:
           try:
             if selection_uid_dict.has_key(int(uid)): del selection_uid_dict[int(uid)]
-          except ValueError:
+          except (ValueError, TypeError):
             if selection_uid_dict.has_key(uid): del selection_uid_dict[uid]
         self.setSelectionCheckedUidsFor(list_selection_name, selection_uid_dict.keys(), REQUEST=REQUEST)
       if REQUEST is not None:
@@ -757,7 +757,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         if form.has_key('page_start'):
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
-          except ValueError:
+          except (ValueError, TypeError):
             list_start = 0
         else:
           list_start = int(form.pop('list_start', 0))
@@ -780,7 +780,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         if form.has_key('page_start'):
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
-          except ValueError:
+          except (ValueError, TypeError):
             list_start = 0
         else:
           list_start = int(form.pop('list_start', 0))
@@ -803,7 +803,7 @@ class SelectionTool( BaseTool, SimpleItem ):
         if form.has_key('page_start'):
           try:
             list_start = (int(form.pop('page_start', 0)) - 1) * lines
-          except ValueError:
+          except (ValueError, TypeError):
             list_start = 0
         else:
           list_start = int(form.pop('list_start', 0))

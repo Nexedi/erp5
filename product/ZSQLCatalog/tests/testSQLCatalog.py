@@ -583,7 +583,23 @@ class TestSQLCatalog(unittest.TestCase):
     # order_by_list on fulltext column, resulting "ORDER BY" must be non-empty.
     sql_expression = self.asSQLExpression({'fulltext': 'foo',
       'order_by_list': [('fulltext', ), ]})
-    self.assertNotEqual(sql_expression.getOrderByExpression(), '')
+    order_by_expression = sql_expression.getOrderByExpression()
+    self.assertNotEqual(order_by_expression, '')
+    # ... and must sort by relevance
+    self.assertTrue('MATCH' in order_by_expression, order_by_expression)
+    # ordering on fulltext column with sort order specified must preserve
+    # sorting by relevance.
+    for direction in ('ASC', 'DESC'):
+      sql_expression = self.asSQLExpression({'fulltext': 'foo',
+        'order_by_list': [('fulltext', direction), ]})
+      order_by_expression = sql_expression.getOrderByExpression()
+      self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
+    # Providing a None cast should work too
+    for direction in ('ASC', 'DESC'):
+      sql_expression = self.asSQLExpression({'fulltext': 'foo',
+        'order_by_list': [('fulltext', direction, None), ]})
+      order_by_expression = sql_expression.getOrderByExpression()
+      self.assertTrue('MATCH' in order_by_expression, (order_by_expression, direction))
 
 ##return catalog(title=Query(title='a', operator='not'))
 #return catalog(title={'query': 'a', 'operator': 'not'})

@@ -76,8 +76,11 @@ class ISQLExpression(Interface):
         The Query instance which called this constructor.
       table_alias_dict (dict, key: string, value: string)
         Table alias dict as returned by ColumnMap.getTableAliasDict() .
-      order_by_list (list of strings)
-        List of result ordering, pre-rendered.
+      order_by_list (list of 3-tuples)
+        Result ordering.
+        - column (rendered)
+        - direction (string or None)
+        - cast (string or None)
       order_by_dict (dict, key: string, value: string)
         Column rendering replacement specific to order_by.
       group_by_list (list of strings)

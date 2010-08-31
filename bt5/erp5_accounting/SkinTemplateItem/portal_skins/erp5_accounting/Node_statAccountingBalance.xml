@@ -92,15 +92,6 @@ if kw.get(\'node_category\'):\n
 if kw.get(\'mirror_section_category\'):\n
   params[\'mirror_section_category\'] = kw[\'mirror_section_category\']\n
 \n
-if kw.get(\'at_date\'):\n
-  params[\'at_date\'] = kw[\'at_date\'].latestTime()\n
-\n
-if kw.get(\'from_date\'):\n
-  params[\'from_date\'] = kw[\'from_date\']\n
-\n
-if kw.get(\'to_date\'):\n
-  params[\'to_date\'] = kw[\'to_date\']\n
-\n
 ###\n
 # Get the \'where_expression\' parameter\n
 # XXX can be removed ?\n
@@ -131,13 +122,13 @@ if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
               selection_domain=getSelectionDomainDictFor(selection_name),\n
               to_date=period_start_date,\n
               **params)\n
-    if omit_output:\n
-      return getInventoryAssetPrice(omit_output=1,\n
+    if omit_asset_decrease:\n
+      return getInventoryAssetPrice(omit_asset_decrease=1,\n
            from_date=period_start_date,\n
            at_date=at_date,\n
            **params) + max(period_openning_balance, 0)\n
-    elif omit_input:\n
-      return getInventoryAssetPrice(omit_input=1,\n
+    elif omit_asset_increase:\n
+      return getInventoryAssetPrice(omit_asset_increase=1,\n
            from_date=period_start_date,\n
            at_date=at_date,\n
            **params) - max(-period_openning_balance, 0)\n
@@ -147,8 +138,8 @@ if params.get(\'period_start_date\', 0) and params.get(\'node_uid\'):\n
            **params) - max(-period_openning_balance, 0)\n
 \n
 return getInventoryAssetPrice(\n
-              omit_input=omit_input,\n
-              omit_output=omit_output,\n
+              omit_asset_increase=omit_asset_increase,\n
+              omit_asset_decrease=omit_asset_decrease,\n
               selection_domain=getSelectionDomainDictFor(selection_name),\n
               **params)\n
 </string> </value>
@@ -161,7 +152,7 @@ return getInventoryAssetPrice(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None, omit_input=0, omit_output=0, selection_name=None, **kw</string> </value>
+            <value> <string>selection=None, omit_asset_increase=0, omit_asset_decrease=0, selection_name=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -196,8 +187,8 @@ return getInventoryAssetPrice(\n
                         <value>
                           <tuple>
                             <string>selection</string>
-                            <string>omit_input</string>
-                            <string>omit_output</string>
+                            <string>omit_asset_increase</string>
+                            <string>omit_asset_decrease</string>
                             <string>selection_name</string>
                             <string>kw</string>
                             <string>Products.ZSQLCatalog.SQLCatalog</string>

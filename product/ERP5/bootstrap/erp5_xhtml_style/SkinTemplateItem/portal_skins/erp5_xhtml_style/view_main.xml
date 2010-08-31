@@ -47,7 +47,7 @@
               tal:define="object_uid           here/getUid | nothing;\n
               object_path          here/getPath | nothing;\n
               form                 nocall: form | nothing;\n
-              form_id              form/id | template/title_or_id | nothing;\n
+              form_id              form/id | template/id | nothing;\n
               portal               here/getPortalObject;\n
               form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
               local_parameter_list local_parameter_list | python: {};\n

@@ -55,7 +55,7 @@
             <key> <string>_body</string> </key>
             <value> <string>module = context\n
 \n
-forbidden_property = [\'uid\', \'id\', \'portal_type\']\n
+forbidden_property = [\'uid\', \'portal_type\']\n
 property_list = []\n
 \n
 for portal_type in module.allowedContentTypes():\n

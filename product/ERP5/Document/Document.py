@@ -59,10 +59,12 @@ from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 from Products.ERP5.mixin.downloadable import DownloadableMixin
 from Products.ERP5.mixin.document import DocumentMixin
-from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixIn
+from Products.ERP5.mixin.extensible_traversable import DocumentExtensibleTraversableMixin
+from Products.ERP5.mixin.crawable import CrawableMixin
 
 _MARKER = []
 VALID_ORDER_KEY_LIST = ('user_login', 'content', 'file_name', 'input')
+
 # these property ids are unchangable
 FIXED_PROPERTY_IDS = ('id', 'uid', 'rid', 'sid')
 
@@ -75,52 +77,10 @@ VALID_IMAGE_FORMAT_LIST = ('jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm', 'tiff')
 DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
                             'large', 'large', 'xlarge',)
-
-DEFAULT_QUALITY = 75
+# default image quality
+DEFAULT_IMAGE_QUALITY = 75
 
 DEFAULT_CONTENT_TYPE = 'text/html'
-
-
-class SnapshotMixin:
-  """
-    This class provides a generic API to store in the ZODB
-    PDF snapshots of objects and documents with the
-    goal to keep a facsimile copy of documents as they
-    were at a given date.
-  """
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'createSnapshot')
-  def createSnapshot(self):
-    """
-      Create a snapshot (PDF). This is the normal way to modifiy
-      snapshot_data. Once a snapshot is taken, a new snapshot
-      can not be taken.
-
-      NOTE: use getSnapshotData and hasSnapshotData accessors
-      to access a snapshot.
-
-      NOTE2: implementation of createSnapshot should probably
-      be delegated to a types base method since this it
-      is configuration dependent.
-    """
-    if self.hasSnapshotData():
-      raise ConversionError('This document already has a snapshot.')
-    self._setSnapshotData(self.convert(format='pdf'))
-
-  security.declareProtected(Permissions.ManagePortal, 'deleteSnapshot')
-  def deleteSnapshot(self):
-    """
-      Deletes the snapshot - in theory this should never be done.
-      It is there for programmers and system administrators.
-    """
-    try:
-      del(self.snapshot_data)
-    except AttributeError:
-      pass
 
 class ConversionError(Exception):pass
 
@@ -129,87 +89,8 @@ class DocumentProxyError(Exception):pass
 class NotConvertedError(Exception):pass
 allow_class(NotConvertedError)
 
-class DocumentProxyMixin:
-  """
-  Provides access to documents referenced by the follow_up field
-  """
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  security.declareProtected(Permissions.AccessContentsInformation,'index_html')
-  def index_html(self, REQUEST, *args, **kw):
-    """ Only a proxy method """
-    return self.getProxiedDocument().index_html(REQUEST, *args, **kw)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getProxiedDocument' )
-  def getProxiedDocument(self):
-    """
-    Try to retrieve the original document
-    """
-    proxied_document = self.getDocumentProxyValue()
-    if proxied_document is None:
-      raise DocumentProxyError("Unable to find a proxied document")
-    return proxied_document
-
-class UpdateMixIn:
-  """
-    Provides an API to compute a date index based on the update
-    frequency of the document.
-  """
-
-  # Declarative security
-  security = ClassSecurityInfo()
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getFrequencyIndex')
-  def getFrequencyIndex(self):
-    """
-      Returns the document update frequency as an integer
-      which is used by alamrs to decide which documents
-      must be updates at which time. The index represents
-      a time slot (ex. all days in a month, all hours in a week).
-    """
-    try:
-      return self.getUpdateFrequencyValue().getIntIndex()
-    except AttributeError:
-      # Catch Attribute error or Key error - XXX not beautiful
-      return 0
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getCreationDateIndex')
-  def getCreationDateIndex(self, at_date = None):
-    """
-    Returns the document Creation Date Index which is the creation
-    date converted into hours modulo the Frequency Index.
-    """
-    frequency_index = self.getFrequencyIndex()
-    if not frequency_index: return -1 # If not update frequency is provided, make sure we never update
-    hour = convertDateToHour(date=self.getCreationDate())
-    creation_date_index = hour % frequency_index
-    # in the case of bisextile year, we substract 24 hours from the creation date,
-    # otherwise updating documents (frequency=yearly update) created the last
-    # 24 hours of bissextile year will be launched once every 4 years.
-    if creation_date_index >= number_of_hours_in_year:
-      creation_date_index = creation_date_index - number_of_hours_in_day
-
-    return creation_date_index
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'isUpdatable')
-  def isUpdatable(self):
-    """
-      This method is used to decide which document can be updated
-      in the crawling process. This can depend for example on
-      workflow states (publication state,
-      validation state) or on roles on the document.
-    """
-    method = self._getTypeBasedMethod('isUpdatable',
-        fallback_script_id = 'Document_isUpdatable')
-    return method()
-
-
-class Document(DocumentExtensibleTraversableMixIn, XMLObject, UrlMixIn, CachedConvertableMixin,
-               SnapshotMixin, UpdateMixIn, TextConvertableMixin,
-               DownloadableMixin, DocumentMixin):
+class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedConvertableMixin,
+               CrawableMixin, TextConvertableMixin, DownloadableMixin, DocumentMixin):
   """Document is an abstract class with all methods related to document
   management in ERP5. This includes searchable text, explicit relations,
   implicit relations, metadata, versions, languages, etc.
@@ -410,55 +291,7 @@ class Document(DocumentExtensibleTraversableMixIn, XMLObject, UrlMixIn, CachedCo
                     , PropertySheet.ExternalDocument
                     , PropertySheet.Url
                     , PropertySheet.Periodicity
-                    , PropertySheet.Snapshot
                     )
-
-  searchable_property_list = ('asText', 'title', 'description', 'id', 'reference',
-                              'version', 'short_title', 'subject',
-                              'source_reference', 'source_project_title')
-
-
-  security.declareProtected(Permissions.View, 'getSearchableText')
-  def getSearchableText(self, md=None):
-    """
-      Used by the catalog for basic full text indexing.
-      Uses searchable_property_list attribute to put together various properties
-      of the document into one searchable text string.
-
-      XXX-JPS - This method is nice. It should probably be moved to Base class
-      searchable_property_list could become a standard class attribute.
-
-      TODO (future): Make this property a per portal type property.
-    """
-    def getPropertyListOrValue(property):
-      """
-        we try to get a list, else we get value and convert to list
-      """
-      method = getattr(self, property, None)
-      if method is not None:
-        if callable(method):
-          val = method()
-          if isinstance(val, (list, tuple)):
-            return list(val)
-          return [str(val)]
-      val = self.getPropertyList(property)
-      if val is None:
-        val = self.getProperty(property)
-        if val is not None and val != '':
-          val = [str(val)]
-        else:
-          val = []
-      else:
-        val = [str(v) for v in list(val) if v is not None]
-      return val
-
-    searchable_text = reduce(add, map(lambda x: getPropertyListOrValue(x),
-                                                self.searchable_property_list))
-    searchable_text = ' '.join(searchable_text)
-    return searchable_text
-
-  # Compatibility with CMF Catalog
-  SearchableText = getSearchableText
 
   index_html = DownloadableMixin.index_html
 
@@ -920,7 +753,9 @@ class Document(DocumentExtensibleTraversableMixIn, XMLObject, UrlMixIn, CachedCo
       else:
         result = method()
       if result is not None:
-        kw.update(result)
+        for key, value in result.iteritems():
+          if value not in (None, ''):
+            kw[key]=value
 
     if file_name is not None:
       # filename is often undefined....

@@ -91,3 +91,51 @@ class BudgetVariation(Predicate):
     """
     return {}
 
+  def getInventoryListQueryDict(self, budget_line):
+    """Returns the query dict to pass to simulation query for a budget line
+    """
+    return {}
+
+  def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
+                                        cell_key_cache=None):
+    """Compute the cell key from an inventory brain.
+    The cell key can be used to retrieve the budget cell in the corresponding
+    budget line using budget_line.getCell
+    A dictionnary can be passed as "cell_key_cache" to cache catalog lookups
+    """
+    if not self.isMemberOf('budget_variation/budget_cell'):
+      return None
+
+    axis = self.getInventoryAxis()
+    if not axis:
+      return None
+    base_category = self.getProperty('variation_base_category')
+    if not base_category:
+      return None
+    
+    getObject = self.getPortalObject().portal_catalog.getObject
+    def getUrlFromUidNoCache(uid):
+      relative_url = getObject(uid).getRelativeUrl()
+      if relative_url.startswith('%s/' % base_category):
+        return relative_url
+      return '%s/%s' % (base_category, relative_url)
+
+    if cell_key_cache is not None:
+      def getUrlFromUidWithCache(uid):
+        try:
+          return cell_key_cache[uid]
+        except KeyError:
+          relative_url = getUrlFromUidNoCache(uid)
+          cell_key_cache[uid] = relative_url
+          return relative_url
+      getUrlFromUid = getUrlFromUidWithCache
+    else:
+      getUrlFromUid = getUrlFromUidNoCache
+
+    if axis == 'movement':
+      return getUrlFromUid(getattr(brain, 'default_%s_uid' % base_category))
+    elif axis == 'movement_strict_membership':
+      return getUrlFromUid(getattr(brain,
+                                   'default_strict_%s_uid' % base_category))
+    return getUrlFromUid(getattr(brain, '%s_uid' % axis))
+

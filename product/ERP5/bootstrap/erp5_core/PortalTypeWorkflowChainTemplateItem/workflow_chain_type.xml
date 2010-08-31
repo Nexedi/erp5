@@ -4,6 +4,10 @@
   <workflow>base_type_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Alarm</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>Base Category</type>
   <workflow>edit_workflow</workflow>
  </chain>

@@ -543,8 +543,21 @@ class Predicate(XMLObject):
           new_membership_criterion_base_category_list.append(base_category)
 
     new_criterion_property_list =  list(self.getCriterionPropertyList())
-    identity_criterion = getattr(self,'_identity_criterion',{})
-    range_criterion = getattr(self,'_range_criterion',{})
+
+    # We need to build new criteria for asContext, and we should not
+    # modify the original, so we always make copies. Since the usage is
+    # temporary, use dicts instead of persistent mappings.
+    identity_criterion = getattr(self, '_identity_criterion', None)
+    if identity_criterion is None:
+      identity_criterion = {}
+    else:
+      identity_criterion = dict(identity_criterion)
+    range_criterion = getattr(self, '_range_criterion', None)
+    if range_criterion is None:
+      range_criterion = {}
+    else:
+      range_criterion = dict(range_criterion)
+
     # Look at local properties and make it criterion properties
     for property in criterion_property_list:
       if property not in self.getCriterionPropertyList() \

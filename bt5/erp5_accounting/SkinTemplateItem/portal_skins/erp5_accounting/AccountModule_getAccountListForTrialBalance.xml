@@ -173,7 +173,7 @@ def getAnalyticTitleFromUid(uid):\n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
                 group_by_node=1,\n
-                omit_output=1,\n
+                omit_asset_decrease=1,\n
                 from_date=from_date,\n
                 at_date=at_date,\n
                 portal_type=accounting_movement_type_list,\n
@@ -187,7 +187,7 @@ for node in getInventoryList(\n
 for node in getInventoryList(\n
                 node_category_strict_membership=account_type_to_group_by_node,\n
                 group_by_node=1,\n
-                omit_input=1,\n
+                omit_asset_increase=1,\n
                 from_date=from_date,\n
                 at_date=at_date,\n
                 portal_type=accounting_movement_type_list,\n
@@ -204,7 +204,7 @@ for node in getInventoryList(\n
                 node_category=profit_and_loss_account_type,\n
                 from_date=max(period_start_date, from_date),\n
                 group_by_node=1,\n
-                omit_output=1,\n
+                omit_asset_decrease=1,\n
                 at_date=at_date,\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
@@ -218,7 +218,7 @@ for node in getInventoryList(\n
                 node_category=profit_and_loss_account_type,\n
                 from_date=max(period_start_date, from_date),\n
                 group_by_node=1,\n
-                omit_input=1,\n
+                omit_asset_increase=1,\n
                 at_date=at_date,\n
                 portal_type=accounting_movement_type_list,\n
                 **inventory_params):\n
@@ -236,7 +236,7 @@ if account_type_to_group_by_mirror_section:\n
                           account_type_to_group_by_mirror_section,\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
-                  omit_output=1,\n
+                  omit_asset_decrease=1,\n
                   from_date=from_date,\n
                   at_date=at_date,\n
                   portal_type=accounting_movement_type_list,\n
@@ -254,7 +254,7 @@ if account_type_to_group_by_mirror_section:\n
                           account_type_to_group_by_mirror_section,\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
-                  omit_input=1,\n
+                  omit_asset_increase=1,\n
                   from_date=from_date,\n
                   at_date=at_date,\n
                   portal_type=accounting_movement_type_list,\n
@@ -275,7 +275,7 @@ if account_type_to_group_by_payment:\n
                           account_type_to_group_by_payment,\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
-                  omit_output=1,\n
+                  omit_asset_decrease=1,\n
                   from_date=from_date,\n
                   at_date=at_date,\n
                   portal_type=accounting_movement_type_list,\n
@@ -293,7 +293,7 @@ if account_type_to_group_by_payment:\n
                           account_type_to_group_by_payment,\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
-                  omit_input=1,\n
+                  omit_asset_increase=1,\n
                   from_date=from_date,\n
                   at_date=at_date,\n
                   portal_type=accounting_movement_type_list,\n
@@ -387,7 +387,7 @@ for node in getInventoryList(\n
                 node_category_strict_membership=\n
                           account_type_to_group_by_node,\n
                 group_by_node=1,\n
-                omit_output=1,\n
+                omit_asset_decrease=1,\n
                 from_date=period_start_date,\n
                 to_date=from_date,\n
                 portal_type=period_movement_type_list,\n
@@ -401,7 +401,7 @@ for node in getInventoryList(\n
                 node_category_strict_membership=\n
                           account_type_to_group_by_node,\n
                 group_by_node=1,\n
-                omit_input=1,\n
+                omit_asset_increase=1,\n
                 from_date=period_start_date,\n
                 to_date=from_date,\n
                 portal_type=period_movement_type_list,\n
@@ -415,7 +415,7 @@ for node in getInventoryList(\n
 ### profit & loss accounts {{{\n
 for node in getInventoryList(\n
                 node_category=profit_and_loss_account_type,\n
-                omit_output=1,\n
+                omit_asset_decrease=1,\n
                 from_date=min(period_start_date,\n
                               initial_balance_date),\n
                 at_date=initial_balance_date,\n
@@ -429,7 +429,7 @@ for node in getInventoryList(\n
 \n
 for node in getInventoryList(\n
                 node_category=profit_and_loss_account_type,\n
-                omit_input=1,\n
+                omit_asset_increase=1,\n
                 from_date=min(period_start_date,\n
                               initial_balance_date),\n
                 at_date=initial_balance_date,\n
@@ -505,7 +505,7 @@ if expand_accounts:\n
                           account_type_to_group_by_mirror_section,\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
-                  omit_output=1,\n
+                  omit_asset_decrease=1,\n
                   from_date=period_start_date,\n
                   to_date=from_date,\n
                   portal_type=period_movement_type_list,\n
@@ -522,7 +522,7 @@ if expand_accounts:\n
                           account_type_to_group_by_mirror_section,\n
                   group_by_mirror_section=1,\n
                   group_by_node=1,\n
-                  omit_input=1,\n
+                  omit_asset_increase=1,\n
                   from_date=period_start_date,\n
                   to_date=from_date,\n
                   portal_type=period_movement_type_list,\n
@@ -587,7 +587,7 @@ if account_type_to_group_by_payment:\n
                           account_type_to_group_by_payment,\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
-                  omit_output=1,\n
+                  omit_asset_decrease=1,\n
                   from_date=period_start_date,\n
                   to_date=from_date,\n
                   portal_type=period_movement_type_list,\n
@@ -605,7 +605,7 @@ if account_type_to_group_by_payment:\n
                           account_type_to_group_by_payment,\n
                   group_by_payment=1,\n
                   group_by_node=1,\n
-                  omit_input=1,\n
+                  omit_asset_increase=1,\n
                   from_date=period_start_date,\n
                   to_date=from_date,\n
                   portal_type=period_movement_type_list,\n

@@ -91,3 +91,25 @@ class ICrawlable(Interface):
     but with a different signature. This is probably inconsistent
     and the interface must be revised. XXX
     """
+
+  def isUpdatable(self):
+    """
+    This method is used to decide if document can be updated 
+    in the crawling process.
+    """
+
+  def getFrequencyIndex():
+    """
+    Returns the document update frequency as an integer
+    which is used by alamrs to decide which documents
+    must be updates at which time. The index represents
+    a time slot (ex. all days in a month, all hours in a week).
+    Note (ivan): not sure about this if needs to be part interface or not
+    """
+
+  def getCreationDateIndex(at_date):
+    """
+    Returns the document Creation Date Index which is the creation
+    date converted into hours modulo the Frequency Index.
+    Note (ivan): not sure about this if needs to be part interface or not
+    """

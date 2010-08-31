@@ -94,11 +94,11 @@
                         </tuple>
                         <tuple>
                           <string>tested_property_list</string>
-                          <string>Tested properties</string>
+                          <string>Tested Properties</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
-                          <string>Portal Type</string>
+                          <string>Type</string>
                         </tuple>
                         <tuple>
                           <string>updating_provider</string>
@@ -154,7 +154,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>divergence_tester_selection</string> </value>
+                    <value> <string>equivalence_tester_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -162,7 +162,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Divergence Testers</string> </value>
+                    <value> <string>Equivalence Testers</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -74,6 +74,15 @@ if not \'priced_quantity\' in mapped_value_property_list:\n
   mapped_value_property_list.append(\'priced_quantity\')\n
   context.setMappedValuePropertyList(mapped_value_property_list)\n
 \n
+# XXX: An hack that the context cell may not have the start_date_range_min/max properties.\n
+# But they don\'t acquire it parent the properties.\n
+# Correctly, the cell must acquire the properties.\n
+if (context.getStartDateRangeMin() == None and\n
+    context.getStartDateRangeMax() == None):\n
+  supply_line = context.getParentValue()\n
+  context = context.asContext(start_date_range_min=supply_line.getStartDateRangeMin(),\n
+                              start_date_range_max=supply_line.getStartDateRangeMax())\n
+\n
 return context.generatePredicate(membership_criterion_base_category_list = base_category_tuple,\n
                                                  criterion_property_list = (\'start_date\',))\n
 </string> </value>
@@ -119,6 +128,8 @@ return context.generatePredicate(membership_criterion_base_category_list = base_
                             <string>base_category_tuple</string>
                             <string>_inplacevar_</string>
                             <string>mapped_value_property_list</string>
+                            <string>None</string>
+                            <string>supply_line</string>
                           </tuple>
                         </value>
                     </item>

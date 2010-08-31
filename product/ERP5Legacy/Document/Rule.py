@@ -173,9 +173,11 @@ class Rule(Predicate, XMLObject):
     for movement_id in delete_list:
       applied_rule._delObject(movement_id)
 
-    # update existing
+    # update existing and clear recorded properties
     for movement, property_dict in modify_dict.items():
       applied_rule[movement].edit(**property_dict)
+      for property_id in property_dict.iterkeys():
+        applied_rule[movement].clearRecordedProperty(property_id)
 
     # add new ones
     for movement_dict in add_list:
@@ -443,14 +445,17 @@ class Rule(Predicate, XMLObject):
       if p_matched_list != []:
         # Check the quantity
         m_quantity = 0.0
+        real_quantity = 0.0
         for movement in p_matched_list:
+          quantity = movement.getQuantity()
           if movement.isPropertyRecorded('quantity'):
             m_quantity += movement.getRecordedProperty('quantity')
           else:
-            m_quantity += movement.getQuantity()
+            m_quantity += quantity
+          real_quantity += quantity
         if m_quantity != prevision.get('quantity'):
           # special case - quantity
-          q_diff = prevision.get('quantity') - m_quantity
+          q_diff = prevision.get('quantity') - real_quantity
           # try to find a movement that can be edited
           for movement in p_matched_list:
             if movement in (mutable_movement_list \

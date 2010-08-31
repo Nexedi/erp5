@@ -168,7 +168,22 @@ class Measure(XMLMatrix):
     Returns the list of rows to insert in the measure table of the catalog.
     Called by Resource.getMeasureRowList.
     """
+    # The only purpose of the defining a default measure explicitly is to
+    # set a specific metric_type for the management unit.
+    # Therefore, the measure mustn't be variated and the described quantity
+    # (quantity * quantity_unit) must match the management unit.
+    # If the conditions aren't met, return an empty list.
+    default = self.isDefaultMeasure()
+
+    resource = self.getResourceValue()
+    resource_uid = resource.getUid()
+
     quantity_unit_value = self.getQuantityUnitValue()
+    if default and quantity_unit_value is None:
+      # for default measure candidates, we do not care if the
+      # quantity is not set: use the resource quantity unit!
+      quantity_unit_value = resource.getQuantityUnitValue()
+
     metric_type = self.getMetricType()
     if quantity_unit_value is None or not metric_type or \
         quantity_unit_value.getParentId() != metric_type.split('/', 1)[0]:
@@ -187,21 +202,12 @@ class Measure(XMLMatrix):
         return None
 
     uid = self.getUid()
-    resource = self.getResourceValue()
-    resource_uid = resource.getUid()
     metric_type_uid = self.getMetricTypeUid()
     quantity = self.getQuantity()
 
     quantity_unit = getQuantity(quantity_unit_value)
     if quantity_unit is None:
       return ()
-
-    # The only purpose of the defining a default measure explicitly is to
-    # set a specific metric_type for the management unit.
-    # Therefore, the measure mustn't be variated and the described quantity
-    # (quantity * quantity_unit) must match the management unit.
-    # If the conditions aren't met, return an empty list.
-    default = self.isDefaultMeasure()
 
     measure_variation_base_category_list = \
       self.getMeasureVariationBaseCategoryList()

@@ -6976,6 +6976,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(self.portal.exported_path,
         self.portal.portal_catalog.getResultValue(uid=uid))
 
+  @expectedFailure
   def test_build_and_export_bt5_into_same_transaction(self):
     """
       Copy, build and export a business template into the same transaction.

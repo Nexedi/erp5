@@ -27,6 +27,10 @@ from Products.ERP5Type.Cache import CachingMethod
 from DateTime import DateTime
 from Products.ERP5Security.ERP5UserManager import ERP5UserManager, SUPER_USER, _AuthenticationFailure
 
+from BTrees.OOBTree import OOBTree
+from zLOG import LOG, INFO, WARNING
+import socket
+from AccessControl.AuthEncoding import pw_validate, pw_encrypt
 
 manage_addERP5RemoteUserManagerForm = PageTemplateFile(
     '../dtml/ERP5Security_addERP5RemoteUserManager', globals(),
@@ -52,7 +56,71 @@ class ERP5RemoteUserManager(ERP5UserManager):
 
     meta_type = 'ERP5 Remote User Manager'
     security = ClassSecurityInfo()
+    remote_authentication_cache = None
 
+    def _doRemoteAuthentication(self, login, password):
+        # Do remote authentication with local ZODB caching
+        # Thanks to this it is possible to login to instance, even
+        # if master authentication server is down
+        #
+        # socket.sslerror and socket.error are assumed as acceptable ones
+        # and invoke authentication against locally available cache of
+        # users
+        #
+        # any other error is assumed as fatal and results in disallowing
+        # authentication and clearing local cache
+        if self.remote_authentication_cache is None:
+            self.remote_authentication_cache = OOBTree()
+        portal = self.getPortalObject()
+        encrypted_password = pw_encrypt(password)
+        callRemoteProxyMethod = portal.portal_wizard.callRemoteProxyMethod
+        erp5_uid = portal.ERP5Site_getExpressInstanceUid()
+        try:
+            # XXX: This mix of passed parameters is based on
+            # WizardTool_authenticateCredentials. As current implementation
+            # shall be bug-to-bug compatible with previous one, kept such
+            # behaviour
+            result = int(callRemoteProxyMethod(
+                       'Base_authenticateCredentialsFromExpressInstance',
+                       use_cache = 0,
+                       ignore_exceptions = 0,
+                       **{'login': login,
+                          'password': password,
+                          'erp5_uid': erp5_uid}))
+        except (socket.sslerror, socket.error):
+            # issue with socket, read from "ZODB cache"
+            LOG('ERP5RemoteUserManager', INFO, 'Socket issue with server, '
+              'used local cache', error=True)
+            stored_encrypted_password = self.remote_authentication_cache.get(
+               login, None)
+            result = int(stored_encrypted_password is not None and pw_validate(
+              stored_encrypted_password, password))
+        except: # XXX: It would be better to do except Exception, but
+                # to-be-bug compatible with WizardTool_authenticateCredentials
+                # is better to catch the same way
+            # any other issue, work like WizardTool_authenticateCredentials
+            # XXX: To be fine tuned
+            LOG('ERP5RemoteUserManager', WARNING, 'Not supported exception '
+              'assuming that authentication failed', error=True)
+            result = 0
+            # clear local cache
+            if login in self.remote_authentication_cache:
+                del self.remote_authentication_cache[login]
+        else:
+            # store in cache if different
+            if result == 1:
+                # successfully logged in
+                stored_encrypted_password = self.remote_authentication_cache\
+                    .get(login, None)
+                if stored_encrypted_password is None or \
+                   not pw_validate(stored_encrypted_password, password):
+                    # not yet in cache or changed on server
+                    self.remote_authentication_cache[login] = encrypted_password
+            else:
+                # wrong login, so clear local cache
+                if login in self.remote_authentication_cache:
+                    del self.remote_authentication_cache[login]
+        return result
 
     #
     #   IAuthenticationPlugin implementation
@@ -99,8 +167,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
                 valid_assignment_list.append(assignment)
 
               # validate to remote ERP5 instance
-              portal = self.getPortalObject() 
-              is_authenticated = int(portal.WizardTool_authenticateCredentials(login , password))
+              is_authenticated = self._doRemoteAuthentication(login, password)
               if is_authenticated:
                 return login, login
             finally:
