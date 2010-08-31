@@ -53,9 +53,18 @@ class Message(object):
     self.recipient_list = recipient_list
 
   def __call__(self, portal=None, **kw):
+    # A filter should not deliver to more than one place, otherwise we can't
+    # avoid duplicate (or lost) mails in case of failure.
+    # So this method must not be modified to allow delivery to several
+    # destinations. Additional deliveries (even if locally), must be done
+    # by the ERP5 instance itself, by activity.
     if portal == 'UNAVAILABLE':
       print 'Message rejected'
       sys.exit(os.EX_UNAVAILABLE)
+    if portal == 'SENDMAIL':
+      print 'Deliver message locally ...'
+      os.execl('/usr/sbin/sendmail', 'sendmail', '-G', '-i',
+               *self.recipient_list)
     if portal is not None:
       scheme, netloc, path, query, fragment = urlparse.urlsplit(portal)
       if query or fragment:
@@ -84,10 +93,6 @@ class Message(object):
       print 'Message ingested'
     else:
       print 'Message dropped'
-    # Now, we could reinject the message to postfix for local delivery,
-    # using /usr/sbin/sendmail, depending on a 'sendmail' option. However,
-    # we would get duplicate mails if either ERP5 or sendmail fail.
-    # It is better to do this from the ERP5 instance itself, by activity.
 
 
 class SimpleIngestionMap(object):
@@ -125,10 +130,11 @@ def getOptionParser():
 arguments defines variables that are used by ingestion maps to determine \
 options to send to ERP5. Currently, only 'recipient' key is used.
 This tool can be used directly to deliver mails from postfix to ERP5, \
-by using it as a filter (cf document of /etc/postfix/master.cf).""")
+by using it as a filter (cf documentation of /etc/postfix/master.cf).""")
   _ = parser.add_option
-  _("--portal", help="URL of ERP5 instance to connect to (special value"
-                     " 'UNAVAILABLE' means the mail is returned to the sender)")
+  _("--portal", help="URL of ERP5 instance to connect to, or one of the"
+                     " following special values: 'UNAVAILABLE' returns the mail"
+                     " to the sender; 'SENDMAIL' injects it back into MTA")
   _("--user", help="use this user to connect to ERP5")
   _("--password", help="use this password to connect to ERP5")
   _("--file_name", help="ERP5 requires a file name to guess content type")
