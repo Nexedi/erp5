@@ -27,8 +27,6 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>start_date | Start Date</string>
-                <string>stop_date | Stop Date</string>
                 <string>price | Price</string>
               </tuple>
             </value>

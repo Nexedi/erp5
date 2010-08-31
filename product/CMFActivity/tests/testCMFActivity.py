@@ -430,7 +430,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
   def TryActiveProcessInsideActivity(self, activity):
     """
     Try two levels with active_process, we create one first
-    activity with an acitive process, then this new activity
+    activity with an active process, then this new activity
     uses another active process
     """
     portal = self.getPortal()
@@ -1872,26 +1872,26 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     getattr(organisation, 'uid')
 
 
-  def test_80_CallWithGroupIdParamater(self, quiet=0, run=run_all_test):
-    """
-    Test that group_id parameter is used to separate execution of the same method
-    """
+  def callWithGroupIdParamater(self, activity, quiet, run):
     if not run: return
     if not quiet:
-      message = '\nTest Activity with group_id parameter'
+      message = '\nTest Activity with group_id parameter (%s)' % activity
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
 
     portal = self.getPortal()    
     organisation =  portal.organisation._getOb(self.company_id)
     # Defined a group method
-    def setFoobar(self, object_list, number=1):
-      for obj in object_list:
+    foobar_list = []
+    def setFoobar(self, object_list):
+      foobar_list.append(len(object_list))
+      for obj, args, kw in object_list:
+        number = kw.get('number', 1)
         if getattr(obj,'foobar', None) is not None:
           obj.foobar = obj.foobar + number
         else:
           obj.foobar = number
-      object_list[:] = []
+      del object_list[:]
     from Products.ERP5Type.Document.Folder import Folder
     Folder.setFoobar = setFoobar    
 
@@ -1904,46 +1904,65 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     # Test group_method_id is working without group_id
     for x in xrange(5):
-      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar").reindexObject(number=1)
+      organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar").reindexObject(number=1)
       transaction.commit()      
 
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),5)
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
-    self.assertEquals(1, organisation.getFoobar())
+    expected = dict(SQLDict=1, SQLQueue=5)[activity]
+    self.assertEquals(expected, organisation.getFoobar())
 
 
     # Test group_method_id is working with one group_id defined
     for x in xrange(5):
-      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
+      organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
       transaction.commit()      
 
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),5)
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
-    self.assertEquals(2, organisation.getFoobar())
+    self.assertEquals(expected * 2, organisation.getFoobar())
+
+    self.assertEquals([expected, expected], foobar_list)
+    del foobar_list[:]
 
     # Test group_method_id is working with many group_id defined
     for x in xrange(5):
-      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
+      organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
       transaction.commit()      
-      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="2").reindexObject(number=3)
+      organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="2").reindexObject(number=3)
       transaction.commit()
-      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
+      organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="1").reindexObject(number=1)
       transaction.commit()
-      organisation.activate(activity='SQLDict', group_method_id="organisation_module/setFoobar", group_id="3").reindexObject(number=5)
+      organisation.activate(activity=activity, group_method_id="organisation_module/setFoobar", group_id="3").reindexObject(number=5)
       transaction.commit()
 
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),20)
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
-    self.assertEquals(11, organisation.getFoobar())
+    self.assertEquals(dict(SQLDict=11, SQLQueue=60)[activity],
+                      organisation.getFoobar())
+    self.assertEquals(dict(SQLDict=[1, 1, 1], SQLQueue=[5, 5, 10])[activity],
+                      sorted(foobar_list))
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list), 0)
-    
+
+  def test_80a_CallWithGroupIdParamaterSQLDict(self, quiet=0, run=run_all_test):
+    """
+    Test that group_id parameter is used to separate execution of the same method
+    """
+    self.callWithGroupIdParamater('SQLDict', quiet=quiet, run=run)
+
+  def test_80b_CallWithGroupIdParamaterSQLQueue(self, quiet=0,
+                                                run=run_all_test):
+    """
+    Test that group_id parameter is used to separate execution of the same method
+    """
+    self.callWithGroupIdParamater('SQLQueue', quiet=quiet, run=run)
 
   def test_81_ActivateKwForWorkflowTransition(self, quiet=0, run=run_all_test):
     """
@@ -2009,7 +2028,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     transaction.commit()
     self.tic()
     activity_tool = self.getActivityTool()
-    def modifySQLAndFail(self, object_list, **kw):
+    def modifySQLAndFail(self, object_list):
       # Only create the dummy activity if none is present: we would just
       # generate missleading errors (duplicate uid).
       if activity_tool.countMessage(method_id='dummy_activity') == 0:
@@ -2437,7 +2456,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     transaction.commit()
     self.tic()
     activity_tool = self.getActivityTool()
-    def modifySQL(self, object_list, *arg, **kw):
+    def modifySQL(self, object_list):
       # Only create the dummy activity if none is present: we would just
       # generate missleading errors (duplicate uid).
       if activity_tool.countMessage(method_id='dummy_activity') == 0:
@@ -3147,7 +3166,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(message_list), 1)
     message = message_list[0]
     portal.organisation_module._delOb(organisation.id)
-    activity_tool.invokeGroup('getTitle', [message])
+    activity_tool.invokeGroup('getTitle', [message], 'SQLDict', True)
     checkMessage(message, KeyError)
     activity_tool.manageCancel(message.object_path, message.method_id)
     # 2: activity method does not exist when activity is executed
@@ -3156,7 +3175,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message_list = activity_tool.getMessageList()
     self.assertEqual(len(message_list), 1)
     message = message_list[0]
-    activity_tool.invokeGroup('this_method_does_not_exist', [message])
+    activity_tool.invokeGroup('this_method_does_not_exist',
+                              [message], 'SQLDict', True)
     checkMessage(message, KeyError)
     activity_tool.manageCancel(message.object_path, message.method_id)
 
@@ -3738,7 +3758,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.TryNotificationSavedOnEventLogWhenSiteErrorLoggerRaises('SQLDict')
 
-  @expectedFailure
   def test_123_userNotificationSavedOnEventLogWhenSiteErrorLoggerRaisesWithSQLQueue(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -3779,7 +3798,49 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       activity_tool.manageClearActivities(keep=0)
     finally:
       SQLQueue.MAX_MESSAGE_LIST_SIZE = old_MAX_MESSAGE_LIST_SIZE
-  
+
+  def test_125_CheckDistributeWithSerializationTagAndGroupMethodId(self):
+    activity_tool = self.portal.portal_activities
+    obj1 = activity_tool.newActiveProcess()
+    obj2 = activity_tool.newActiveProcess()
+    transaction.commit()
+    self.tic()
+    group_method_call_list = []
+    def doSomething(self, message_list):
+      group_method_call_list.append(sorted((obj.getPath(), args, kw)
+                                           for obj, args, kw in message_list))
+      del message_list[:]
+    activity_tool.__class__.doSomething = doSomething
+    try:
+      for activity in 'SQLDict', 'SQLQueue':
+        activity_kw = dict(activity=activity, serialization_tag=self.id(),
+                           group_method_id='portal_activities/doSomething')
+        obj1.activate(**activity_kw).dummy(1, x=None)
+        obj2.activate(**activity_kw).dummy(2, y=None)
+        transaction.commit()
+        activity_tool.distribute()
+        activity_tool.tic()
+        self.assertEqual(group_method_call_list.pop(),
+                         sorted([(obj1.getPath(), (1,), dict(x=None)),
+                                 (obj2.getPath(), (2,), dict(y=None))]))
+        self.assertFalse(group_method_call_list)
+        self.assertFalse(activity_tool.getMessageList())
+        obj1.activate(priority=2, **activity_kw).dummy1(1, x=None)
+        obj1.activate(priority=1, **activity_kw).dummy2(2, y=None)
+        message1 = obj1.getPath(), (1,), dict(x=None)
+        message2 = obj1.getPath(), (2,), dict(y=None)
+        transaction.commit()
+        activity_tool.distribute()
+        self.assertEqual(len(activity_tool.getMessageList()), 2)
+        activity_tool.tic()
+        self.assertEqual(group_method_call_list.pop(),
+                         dict(SQLDict=[message2],
+                              SQLQueue=[message1, message2])[activity])
+        self.assertFalse(group_method_call_list)
+        self.assertFalse(activity_tool.getMessageList())
+    finally:
+      del activity_tool.__class__.doSomething
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))

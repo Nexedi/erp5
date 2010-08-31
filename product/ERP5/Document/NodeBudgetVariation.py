@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.ZopeGuards import guarded_getattr
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.BudgetVariation import BudgetVariation
-from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
+from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery
 from Products.ERP5Type.Message import translateString
 
 
@@ -160,7 +160,10 @@ class NodeBudgetVariation(BudgetVariation):
             if '%s/%s' % (base_category, node.getRelativeUrl()) in\
                                     budget_line.getVariationCategoryList():
               other_uid_list.append(node.getUid())
-          return {axis: NegatedQuery(Query(**{axis: other_uid_list}))}
+          return {axis: ComplexQuery(
+                          NegatedQuery(Query(**{axis: other_uid_list})),
+                          Query(**{axis: None}),
+                          operator="OR")}
         return {axis:
                 portal_categories.getCategoryValue(node_url, base_category=criterion_base_category).getUid()}
 
@@ -197,13 +200,16 @@ class NodeBudgetVariation(BudgetVariation):
     # if we have a virtual "all others" node, we don't set a criterion here.
     if self.getProperty('include_virtual_other_node'):
       return query_dict
-
+    found = False
     for node_url in context.getVariationCategoryList(
                           base_category_list=(base_category,)):
       query_dict.setdefault(axis, []).append(
                 portal_categories.getCategoryValue(node_url,
                       base_category=base_category).getUid())
-    return query_dict
+      found = True
+    if found:
+      return query_dict
+    return dict()
   
   def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
                                          cell_key_cache=None):

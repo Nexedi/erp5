@@ -1,3 +1,6 @@
+2010-08-20 tatuya
+* Add grand_parent_delivery_portal_type, and grand_grand_grand_parent_delivery_portal_type related keys so that we will select the delivery portal type of a simulation movement.
+
 2010-06-08 Kazuhiko
 * Add portal_type column in translation table and use it in several related keys to avoid unexpected verbose results of translated state search.
 

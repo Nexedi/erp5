@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -1330,12 +1327,6 @@ td.pageNavigation{\n
 \n
   width: auto;\n
 \n
-}\n
-\n
-#listbox_set_page, #listbox_next_page, #listbox_last_page, #listbox_first_page, #listbox_previous_page{\n
-  margin: 0em;\n
-  padding: 0em;\n
-  \n
 }\n
 \n
 #wrapper_splash .input img{\n

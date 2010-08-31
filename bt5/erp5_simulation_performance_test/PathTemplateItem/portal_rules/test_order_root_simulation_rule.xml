@@ -122,6 +122,7 @@
                 <string>stop_date</string>
                 <string>variation_category_list</string>
                 <string>variation_property_dict</string>
+                <string>specialise</string>
               </tuple>
             </value>
         </item>

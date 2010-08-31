@@ -30,7 +30,6 @@
                 <string>base_contribution | Base Contribution</string>
                 <string>delivery_mode | Delivery Mode</string>
                 <string>destination_account | Destination Account</string>
-                <string>destination | Destination</string>
                 <string>destination_function | Destination Function</string>
                 <string>destination_payment | Destination Payment</string>
                 <string>destination_project | Destination Project</string>
@@ -43,7 +42,6 @@
                 <string>source_payment | Source Payment</string>
                 <string>source_project | Source Project</string>
                 <string>source_section | Source Section</string>
-                <string>source | Source</string>
               </tuple>
             </value>
         </item>

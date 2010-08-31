@@ -120,6 +120,7 @@ delivery.activate(\n
                             <string>_getattr_</string>
                             <string>_getitem_</string>
                             <string>delivery</string>
+                            <string>delivery_path</string>
                             <string>path_and_method_id</string>
                             <string>expand_tag</string>
                             <string>tag</string>

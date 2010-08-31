@@ -448,8 +448,8 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.tic()
     self.logout()
     ret = self.portal.portal_password.mailPasswordResetRequest(user_login='user')
-    self.assertEquals("User user does not have an email address, please contact"
-        " site administrator directly", str(ret))
+    self.assertTrue("portal_status_message=User+user+does+not+have+an+email+"\
+        "address%2C+please+contact+site+administrator+directly" in str(ret))
 
   def test_acquired_email_on_person(self):
     organisation = self.portal.organisation_module.newContent(
@@ -467,8 +467,8 @@ class TestPasswordTool(ERP5TypeTestCase):
     self._assertUserExists('user', 'password')
     self.logout()
     ret = self.portal.portal_password.mailPasswordResetRequest(user_login='user')
-    self.assertEquals("User user does not have an email address, please contact"
-        " site administrator directly", str(ret))
+    self.assertTrue("portal_status_message=User+user+does+not+have+an+email+"\
+        "address%2C+please+contact+site+administrator+directly" in str(ret))
 
 
 class TestPasswordToolWithCRM(TestPasswordTool):

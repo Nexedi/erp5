@@ -113,6 +113,10 @@ class BudgetVariation(Predicate):
     if not base_category:
       return None
     
+    if not budget_line.getVariationCategoryList(
+                          base_category_list=(base_category,)):
+      return None
+
     getObject = self.getPortalObject().portal_catalog.getObject
     def getUrlFromUidNoCache(uid):
       relative_url = getObject(uid).getRelativeUrl()

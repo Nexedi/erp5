@@ -113,6 +113,7 @@
                 <string>price</string>
                 <string>price_currency</string>
                 <string>efficiency</string>
+                <string>specialise</string>
               </tuple>
             </value>
         </item>

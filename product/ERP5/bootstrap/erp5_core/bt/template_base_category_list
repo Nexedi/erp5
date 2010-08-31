@@ -2,6 +2,7 @@ action_type
 activity
 aggregate
 business_application
+callable_type
 causality
 delivery
 destination

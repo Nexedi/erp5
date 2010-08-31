@@ -32,6 +32,7 @@ import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
+from Products.ERP5Type.tests.utils import SubcontentReindexingWrapper
 from DateTime import DateTime
 
 class TestSupplyMixin:
@@ -58,7 +59,8 @@ class TestSupplyMixin:
     module.manage_delObjects(list(module.objectIds()))
     self.stepTic()
 
-class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
+class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
+    ERP5TypeTestCase):
   """
     Test Supplies usage
   """
@@ -67,6 +69,9 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
   supply_portal_type = 'Sale Supply'
   supply_line_portal_type = 'Sale Supply Line'
   supply_cell_portal_type = 'Sale Supply Cell'
+  generic_supply_line_portal_type = 'Supply Line'
+  generic_supply_cell_portal_type = 'Supply Cell'
+  predicate_portal_type = 'Predicate'
 
   def getTitle(self):
     return "Sale Supply"
@@ -240,6 +245,49 @@ class TestSaleSupply(TestSupplyMixin, ERP5TypeTestCase):
     supply_line.setDestinationReference('my_destination_reference')
     self.assertEquals(supply_line.getDestinationReference(), 'my_destination_reference')
 
+  def test_subcontent_reindexing_supply(self):
+    """Tests, that modification on Supply are propagated to children"""
+    supply = self.portal.getDefaultModule(self.supply_portal_type).newContent(
+                              portal_type=self.supply_portal_type)
+    supply_line = supply.newContent(portal_type=self.supply_line_portal_type)
+    supply_cell = supply_line.newContent(
+        portal_type=self.supply_cell_portal_type)
+    supply_line_predicate = supply_line.newContent(
+        portal_type=self.predicate_portal_type)
+
+    generic_supply_line = supply.newContent(
+        portal_type=self.generic_supply_line_portal_type)
+    generic_supply_cell = generic_supply_line.newContent(
+        portal_type=self.generic_supply_cell_portal_type)
+    generic_supply_predicate = generic_supply_line.newContent(
+        portal_type=self.predicate_portal_type)
+
+    self._testSubContentReindexing(supply, [supply_line, supply_cell,
+      supply_line_predicate, generic_supply_line, generic_supply_cell, generic_supply_predicate])
+
+  def test_subcontent_reindexing_supply_line(self):
+    """Tests, that modification on Supply Line are propagated to children"""
+    supply = self.portal.getDefaultModule(self.supply_portal_type).newContent(
+                              portal_type=self.supply_portal_type)
+    supply_line = supply.newContent(portal_type=self.supply_line_portal_type)
+    supply_cell = supply_line.newContent(
+        portal_type=self.supply_cell_portal_type)
+    supply_line_predicate = supply_line.newContent(
+        portal_type=self.predicate_portal_type)
+
+    generic_supply_line = supply.newContent(
+        portal_type=self.generic_supply_line_portal_type)
+    generic_supply_cell = generic_supply_line.newContent(
+        portal_type=self.generic_supply_cell_portal_type)
+    generic_supply_predicate = generic_supply_line.newContent(
+        portal_type=self.predicate_portal_type)
+
+    self._testSubContentReindexing(supply_line, [supply_cell,
+      supply_line_predicate])
+
+    self._testSubContentReindexing(generic_supply_line, [generic_supply_cell,
+      generic_supply_predicate])
+
 class TestPurchaseSupply(TestSaleSupply):
   """
     Test Purchase Supplies usage
@@ -253,8 +301,22 @@ class TestPurchaseSupply(TestSaleSupply):
   def getTitle(self):
     return "Purchase Supply"
 
+class TestInternalSupply(TestSaleSupply):
+  """
+    Test Internal Supplies usage
+  """
+  run_all_test = 1
+
+  supply_portal_type = 'Internal Supply'
+  supply_line_portal_type = 'Internal Supply Line'
+  supply_cell_portal_type = 'Internal Supply Cell'
+
+  def getTitle(self):
+    return "Internal Supply"
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestSaleSupply))
   suite.addTest(unittest.makeSuite(TestPurchaseSupply))
+  suite.addTest(unittest.makeSuite(TestInternalSupply))
   return suite

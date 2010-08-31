@@ -52,7 +52,9 @@ from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  AcknowledgementTool, SolverTool, SolverProcessTool,\
                  ConversionTool, RoundingTool
 import ERP5Site
+from Document import PythonScript
 object_classes = ( ERP5Site.ERP5Site,
+                   PythonScript.PythonScriptThroughZMI,
                  )
 portal_tools = ( CategoryTool.CategoryTool,
                  SimulationTool.SimulationTool,

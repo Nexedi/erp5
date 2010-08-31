@@ -1172,16 +1172,18 @@ class ActivityTool (Folder, UniqueObject):
         for held in my_self.REQUEST._held:
           self.REQUEST._hold(held)
 
-    def invokeGroup(self, method_id, message_list):
+    def invokeGroup(self, method_id, message_list, activity, merge_duplicate):
       if self.activity_tracking:
-        activity_tracking_logger.info('invoking group messages: method_id=%s, paths=%s' % (method_id, ['/'.join(m.object_path) for m in message_list]))
+        activity_tracking_logger.info(
+          'invoking group messages: method_id=%s, paths=%s'
+          % (method_id, ['/'.join(m.object_path) for m in message_list]))
       # Invoke a group method.
-      object_list = []
       expanded_object_list = []
       new_message_list = []
-      path_dict = {}
-      # Filter the list of messages. If an object is not available, mark its message as non-executable.
-      # In addition, expand an object if necessary, and make sure that no duplication happens.
+      path_set = set()
+      # Filter the list of messages. If an object is not available, mark its
+      # message as non-executable. In addition, expand an object if necessary,
+      # and make sure that no duplication happens.
       for m in message_list:
         # alternate method is used to segregate objects which cannot be grouped.
         alternate_method_id = m.activity_kw.get('alternate_method_id')
@@ -1195,42 +1197,28 @@ class ActivityTool (Folder, UniqueObject):
           m.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=self)
           continue
         try:
-          i = len(new_message_list) # This is an index of this message in new_message_list.
           if m.hasExpandMethod():
-            for subobj in m.getObjectList(self):
-              path = subobj.getPath()
-              if path not in path_dict:
-                path_dict[path] = i
-                if alternate_method_id is not None \
-                   and hasattr(aq_base(subobj), alternate_method_id):
-                  # if this object is alternated, generate a new single active object.
-                  activity_kw = m.activity_kw.copy()
-                  if 'group_method_id' in activity_kw:
-                    del activity_kw['group_method_id']
-                  if 'group_id' in activity_kw:
-                    del activity_kw['group_id']                    
-                  active_obj = subobj.activate(**activity_kw)
-                  getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
-                else:
-                  expanded_object_list.append(subobj)
+            subobject_list = m.getObjectList(self)
           else:
-            path = obj.getPath()
-            if path not in path_dict:
-              path_dict[path] = i
-              if alternate_method_id is not None \
-                  and hasattr(aq_base(obj), alternate_method_id):
-                # if this object is alternated, generate a new single active object.
-                activity_kw = m.activity_kw.copy()
-                if 'group_method_id' in activity_kw:
-                  del activity_kw['group_method_id']
-                if 'group_id' in activity_kw:
-                  del activity_kw['group_id']
-                active_obj = obj.activate(**activity_kw)
-                getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
-              else:
-                expanded_object_list.append(obj)
-          object_list.append(obj)
-          new_message_list.append(m)
+            subobject_list = (obj,)
+          for subobj in subobject_list:
+            if merge_duplicate:
+              path = subobj.getPath()
+              if path in path_set:
+                continue
+              path_set.add(path)
+            if alternate_method_id is not None \
+               and hasattr(aq_base(subobj), alternate_method_id):
+              # if this object is alternated,
+              # generate a new single active object
+              activity_kw = m.activity_kw.copy()
+              activity_kw.pop('group_method_id', None)
+              activity_kw.pop('group_id', None)
+              active_obj = subobj.activate(activity=activity, **activity_kw)
+              getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
+            else:
+              expanded_object_list.append((subobj, m.args, m.kw))
+          new_message_list.append((m, obj))
         except:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
 
@@ -1238,39 +1226,36 @@ class ActivityTool (Folder, UniqueObject):
         if len(expanded_object_list) > 0:
           method = self.unrestrictedTraverse(method_id)
           # FIXME: how to apply security here?
-          # NOTE: expanded_object_list must be set to failed objects by the callee.
-          #       If it fully succeeds, expanded_object_list must be empty when returning.
-          result = method(expanded_object_list, **m.kw)
+          # NOTE: expanded_object_list must be set to failed objects by the
+          #       callee. If it fully succeeds, expanded_object_list must be
+          #       empty when returning.
+          result = method(expanded_object_list)
         else:
           result = None
       except:
         # In this case, the group method completely failed.
         exc_info = sys.exc_info()
-        for m in new_message_list:
-          m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info=exc_info, log=False)
+        for m, obj in new_message_list:
+          m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
-            (method_id, expanded_object_list), error=exc_info)
+            (method_id, [x[0] for x in expanded_object_list]), error=exc_info)
         error_log = getattr(self, 'error_log', None)
         if error_log is not None:
           error_log.raising(exc_info)
       else:
-        # Obtain all indices of failed messages. Note that this can be a partial failure.
-        failed_message_dict = {}
-        for obj in expanded_object_list:
-          path = obj.getPath()
-          i = path_dict[path]
-          failed_message_dict[i] = None
-
+        # Obtain all indices of failed messages.
+        # Note that this can be a partial failure.
+        failed_message_set = set(id(x[2]) for x in expanded_object_list)
         # Only for succeeded messages, an activity process is invoked (if any).
-        for i in xrange(len(object_list)):
-          object = object_list[i]
-          m = new_message_list[i]
-          if i in failed_message_dict:
+        for m, obj in new_message_list:
+          # We use id of kw dict (persistent object) to know if there is a
+          # failed 3-tuple corresponding to Message m.
+          if id(m.kw) in failed_message_set:
             m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
           else:
             try:
-              m.activateResult(self, result, object)
+              m.activateResult(self, result, obj)
             except:
               m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
             else:

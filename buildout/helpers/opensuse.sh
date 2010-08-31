@@ -23,6 +23,7 @@ gcc
 gcc-c++
 gdbm-devel
 giflib-devel
+git
 glib2-devel
 groff
 libSDL-devel
@@ -51,7 +52,6 @@ python-setuptools
 python-xml
 readline-devel
 rpm
-scons
 sqlite3-devel
 subversion
 subversion-devel

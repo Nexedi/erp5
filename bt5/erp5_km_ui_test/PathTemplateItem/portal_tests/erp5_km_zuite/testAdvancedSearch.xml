@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -93,7 +90,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox-data-line-0\']//span[@class=\'search_result_title\']</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']//span[@class=\'search_result_title\']</td>\n
   <td>test_km_web_site_page</td>\n
 </tr>\n
 <tr>\n

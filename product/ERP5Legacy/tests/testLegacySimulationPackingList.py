@@ -1711,6 +1711,59 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     self._testSubContentReindexing(packing_list, [container, container_line,
       container_cell])
 
+  def test_PackingList_getMovementListSorting(self):
+    '''Test that is possible to sort getMovementList result passing it sort_on
+    parameter
+    '''
+    packing_list = self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
+                              portal_type=self.packing_list_portal_type,
+                              title='Packing List')
+    # create some packing list lines
+    line_bbb = packing_list.newContent(
+                            portal_type=self.packing_list_line_portal_type,
+                            reference='bbb',
+                            int_index=1)
+    line_aaa = packing_list.newContent(
+                            portal_type=self.packing_list_line_portal_type,
+                            reference='aaa',
+                            int_index=2)
+    line_ccc = packing_list.newContent(
+                            portal_type=self.packing_list_line_portal_type,
+                            reference='ccc',
+                            int_index=4)
+    line_ddd = packing_list.newContent(
+                            portal_type=self.packing_list_line_portal_type,
+                            reference='ddd',
+                            int_index=3)
+    transaction.commit()
+    self.tic()
+    # check it's possible to sort by reference
+    reference_result = packing_list.getMovementList(sort_on=\
+        [('reference', 'descending')])
+    self.assertEquals(reference_result, [line_aaa, line_bbb, line_ccc,
+      line_ddd])
+
+    # check it's possible to sort by int_index
+    int_index_result = packing_list.getMovementList(sort_on=\
+        [('int_index', 'ascending')])
+    self.assertEquals(int_index_result, [line_ccc, line_ddd, line_aaa,
+      line_bbb])
+
+  def test_subcontent_reindexing_container_line_cell(self):
+    """Tests, that indexation of Packing List are propagated to subobjects
+    during reindxation, for Container, Container Line and Container Cell"""
+    packing_list = self.portal.getDefaultModule(
+        self.packing_list_portal_type).newContent(
+            portal_type=self.packing_list_portal_type)
+    container = packing_list.newContent(
+        portal_type=self.container_portal_type)
+    container_line = container.newContent(
+        portal_type=self.container_line_portal_type)
+    container_cell = container_line.newContent(
+        portal_type=self.container_cell_portal_type)
+    self._testSubContentReindexing(container, [container_line,
+      container_cell])
+
 class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0
 
@@ -1892,7 +1945,12 @@ class TestPurchasePackingListMixin(TestPackingListMixin):
   stepCheckPackingListIsNotPacked = ignored_step
   stepCheckPackingListIsPacked = ignored_step
   stepCheckNewPackingListIsPacked = ignored_step
+
   def test_subcontent_reindexing_packing_list_container_line_cell(self):
+    """No need to check Containers in Purchase Packing List"""
+    pass
+
+  def test_subcontent_reindexing_container_line_cell(self):
     """No need to check Containers in Purchase Packing List"""
     pass
 

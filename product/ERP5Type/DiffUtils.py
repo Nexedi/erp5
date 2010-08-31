@@ -42,6 +42,10 @@ from xml.sax.saxutils import escape
 
 NBSP = '&nbsp;'
 NBSP_TAB = NBSP*8
+NO_DIFF_COLOR = 'white'
+MODIFIED_DIFF_COLOR = 'rgb(253, 228, 6);'#light orange
+DELETED_DIFF_COLOR = 'rgb(253, 117, 74);'#light red
+ADDITION_DIFF_COLOR = 'rgb(83, 253, 74);'#light green
 
 class DiffFile:
   """
@@ -99,6 +103,9 @@ class DiffFile:
     # Adding header of the table
     if self.binary:
       return '<b>Folder or binary file or just no changes!</b><br/><br/><br/>'
+
+    if not len(self.children):
+      return ''
     
     html_list = []
     html_list.append('''
@@ -142,13 +149,31 @@ class DiffFile:
     html_list.append('''</tbody></table><br/>''')
     return '\n'.join(html_list)
 
+  def getModifiedBlockList(self):
+    """
+    Return a list of modified blocks
+    List contains tuples (block object : (old_modified_code, new_modified_code))
+    """
+    if self.binary:
+      return []
+    block_list = []
+    for child in self.children:
+      old_line_list = [x[0].strip() for x in child.getOldCodeList()
+                       if x[0] is not None and x[1] == MODIFIED_DIFF_COLOR]
+      new_line_list = [x[0].strip() for x in child.getNewCodeList()
+                       if x[0] is not None and x[1] == MODIFIED_DIFF_COLOR]
+      if old_line_list and new_line_list:
+        block_list.append((child,(old_line_list, new_line_list)))
+    return block_list
+
+
 class CodeBlock:
   """
    A code block contains several SubCodeBlocks
    Members :
    - old_line : line in old code (before modif)
    - new line : line in new code (after modif)
-  
+
    Methods :
    - getOldCodeList() : return code before modif
    - getNewCodeList() : return code after modif
@@ -212,13 +237,13 @@ class SubCodeBlock:
     self.new_code_length = self._getNewCodeLength()
     # Choosing background color
     if self.modification == 'none':
-      self.color = 'white'
+      self.color = NO_DIFF_COLOR
     elif self.modification == 'change':
-      self.color = 'rgb(253, 228, 6);'#light orange
+      self.color = MODIFIED_DIFF_COLOR
     elif self.modification == 'deletion':
-      self.color = 'rgb(253, 117, 74);'#light red
+      self.color = DELETED_DIFF_COLOR
     else: # addition
-      self.color = 'rgb(83, 253, 74);'#light green
+      self.color = ADDITION_DIFF_COLOR
     
   def _getModif(self):
     """ Return type of modification :

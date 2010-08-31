@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.ERP5Type.Document.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Python_magic</string> </key>
+            <value> <string encoding="base64">0fINCg==</string> </value>
+        </item>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>from Products.ERP5Type.Log import log\n
+log(\'old_line_list\', old_line_list)\n
+log(\'new_line_list\', new_line_list)\n
+log(\'replace\', new_line_list[0] == old_line_list[0].replace("string encoding","unicode encoding"))\n
+if len(old_line_list) == 1 and len(new_line_list) == 1:\n
+  if new_line_list[0] == old_line_list[0].replace("string encoding","unicode encoding") and \\\n
+         old_line_list[0] == \'\074value\076 \074string encoding="cdata"\076\074![CDATA[\':\n
+    return True\n
+\n
+  if new_line_list[0] == old_line_list[0].replace("string","unicode") and \\\n
+     old_line_list[0] == "]]\076\074/string\076 \074/value\076":\n
+    return True\n
+log("return False")\n
+return False\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAAkAAAASAAAAAwAA
+AHM7AQAAZAEAZAIAawAAbAEAfQMAAXwDAGQDAHwAAIMCAAF8AwBkBAB8AQCDAgABfAMAZAUAdAQA
+fAEAZAYAgwIAdAUAdAQAfAAAZAYAgwIAZAUAgwIAZAcAZAgAgwIAagIAgwIAAXQGAHwAAIMBAGQJ
+AGoCAG8QAAF0BgB8AQCDAQBkCQBqAgBvogABdAQAfAEAZAYAgwIAdAUAdAQAfAAAZAYAgwIAZAUA
+gwIAZAcAZAgAgwIAagIAbxMAAXQEAHwAAGQGAIMCAGQKAGoCAG8IAAF0BwBTbgEAAXQEAHwBAGQG
+AIMCAHQFAHQEAHwAAGQGAIMCAGQFAIMCAGQLAGQMAIMCAGoCAG8TAAF0BAB8AABkBgCDAgBkDQBq
+AgBvCAABdAcAU24BAAFuAQABfAMAZA4AgwEAAXQIAFNkAABTKA8AAABOaf////8oAQAAAHMDAAAA
+bG9ndA0AAABvbGRfbGluZV9saXN0dA0AAABuZXdfbGluZV9saXN0dAcAAAByZXBsYWNlaQAAAABz
+DwAAAHN0cmluZyBlbmNvZGluZ3MQAAAAdW5pY29kZSBlbmNvZGluZ2kBAAAAcyoAAAA8dmFsdWU+
+IDxzdHJpbmcgZW5jb2Rpbmc9ImNkYXRhIj48IVtDREFUQVt0BgAAAHN0cmluZ3QHAAAAdW5pY29k
+ZXMVAAAAXV0+PC9zdHJpbmc+IDwvdmFsdWU+cwwAAAByZXR1cm4gRmFsc2UoCQAAAHQVAAAAUHJv
+ZHVjdHMuRVJQNVR5cGUuTG9ndAMAAABsb2dSAAAAAFIBAAAAdAkAAABfZ2V0aXRlbV90CQAAAF9n
+ZXRhdHRyX3QDAAAAbGVudAQAAABUcnVldAUAAABGYWxzZSgJAAAAUgAAAABSAQAAAFIFAAAAUgYA
+AABSBwAAAFIIAAAAUgkAAABSCgAAAFILAAAAKAAAAAAoAAAAAHMSAAAARVJQNSBQeXRob24gU2Ny
+aXB0cyYAAABUZW1wbGF0ZVRvb2xfZmlsdGVyVGVtcGxhdGVVbmljb2RlRGlmZgEAAABzGAAAABAB
+DQENATcBJgE0ARMBCAI0ARMBDAEKASgBAAAAdCYAAABUZW1wbGF0ZVRvb2xfZmlsdGVyVGVtcGxh
+dGVVbmljb2RlRGlmZigBAAAAUgwAAAAoAAAAACgAAAAAcxIAAABFUlA1IFB5dGhvbiBTY3JpcHRz
+CAAAADxtb2R1bGU+AQAAAHQAAAAA</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>old_line_list, new_line_list</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>callable_type/script/diff_filter</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>This script filter this kind of xml changes :\n
+-  \074value\076 \074string encoding="cdata"\076\074![CDATA[\n
++ \074value\076 \074unicode encoding="cdata"\076\074![CDATA[\n
+\n
+AND also\n
+-  ]]\076\074/string\076 \074/value\076\n
++ ]]\076\074/unicode\076 \074/value\076</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>2</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>old_line_list</string>
+                            <string>new_line_list</string>
+                            <string>Products.ERP5Type.Log</string>
+                            <string>log</string>
+                            <string>_getitem_</string>
+                            <string>_getattr_</string>
+                            <string>len</string>
+                            <string>True</string>
+                            <string>False</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TemplateTool_filterTemplateUnicodeDiff</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Python Script</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

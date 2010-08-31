@@ -182,6 +182,7 @@ for delivery in delivery_list:\n
         int_index=movement.getIntIndex(),\n
         string_index=movement.getStringIndex(),\n
         parent_description=delivery.getDescription(),\n
+        parent_comment=delivery.getComment(),\n
         parent_reference=delivery.getReference(),\n
         specific_reference=delivery.getSourceReference(),\n
         node_reference=getAccountReference(node),\n
@@ -226,6 +227,7 @@ for delivery in delivery_list:\n
         int_index=movement.getIntIndex(),\n
         string_index=movement.getStringIndex(),\n
         parent_description=delivery.getDescription(),\n
+        parent_comment=delivery.getComment(),\n
         parent_reference=delivery.getReference(),\n
         specific_reference=delivery.getDestinationReference(),\n
         node_reference=getAccountReference(node),\n

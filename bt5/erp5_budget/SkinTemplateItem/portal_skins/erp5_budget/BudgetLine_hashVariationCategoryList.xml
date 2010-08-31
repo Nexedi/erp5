@@ -61,8 +61,9 @@ sub_field_dict = {}\n
 split_depth = 1\n
 \n
 # build a dict of title to display, based on the titles of corresponding\n
-# budget variations\n
+# budget variations, and a dict of indexes for sorting\n
 base_category_title_dict = dict()\n
+base_category_int_index_dict = dict()\n
 budget_line = container.REQUEST.get(\'here\')\n
 if budget_line is not None:\n
   budget_model =budget_line.getParentValue().getSpecialiseValue()\n
@@ -72,6 +73,9 @@ if budget_line is not None:\n
         base_category_title_dict[\n
           budget_variation.getProperty(\'variation_base_category\')\n
           ] =  budget_variation.getTitle()\n
+      base_category_int_index_dict[\n
+          budget_variation.getProperty(\'variation_base_category\')\n
+          ] =  budget_variation.getIntIndex()\n
 \n
 \n
 resolveCategory = context.getPortalObject().portal_categories.resolveCategory\n
@@ -102,6 +106,10 @@ for item in item_list:\n
     sub_field_dict[item_key][\'value\'] =\\\n
       sub_field_dict[item_key][\'value\'] + [item_value]\n
 \n
+\n
+  sub_field_dict[item_key][\'int_index\'] = base_category_int_index_dict.get(\n
+                                                    base_category, -1)\n
+\n
   if base_category in base_category_title_dict:\n
     sub_field_dict[item_key][\'title\'] = base_category_title_dict[base_category]\n
   else:\n
@@ -111,7 +119,9 @@ for item in item_list:\n
     else:\n
       sub_field_dict[item_key][\'title\'] = base_category\n
   \n
-return sub_field_dict.values()\n
+sub_field_values = sub_field_dict.values()\n
+sub_field_values.sort(key=lambda d:d[\'int_index\'])\n
+return sub_field_values\n
 </string> </value>
         </item>
         <item>
@@ -157,6 +167,7 @@ return sub_field_dict.values()\n
                             <string>split_depth</string>
                             <string>dict</string>
                             <string>base_category_title_dict</string>
+                            <string>base_category_int_index_dict</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>budget_line</string>
@@ -177,6 +188,7 @@ return sub_field_dict.values()\n
                             <string>base_category</string>
                             <string>sub_field_property_dict</string>
                             <string>base_category_value</string>
+                            <string>sub_field_values</string>
                           </tuple>
                         </value>
                     </item>

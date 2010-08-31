@@ -545,6 +545,7 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal, 'runUnitTestList')
     def runUnitTestList(self, test_list=[],
                         sql_connection_string='',
+                        save=False, load=False,
                         repository_list=None,
                         REQUEST=None, RESPONSE=None, **kwd):
       """Runs Unit Tests related to this Business Template
@@ -571,6 +572,10 @@ class TemplateTool (BaseTool):
 
       test_cmd_args = [sys.executable, getUnitTestFile()]
       test_cmd_args += ['--erp5_sql_connection_string', sql_connection_string]
+      if load:
+        test_cmd_args += ['--load']
+      if save:
+        test_cmd_args += ['--save']
       # pass currently used product path to test runner
       products_path_list = site_configuration.products
       # add products from Zope, as some sites are not providing it
@@ -616,6 +621,39 @@ class TemplateTool (BaseTool):
 
       if hasattr(outfile, 'getvalue'):
         return outfile.getvalue()
+
+    def getDiffFilterScriptList(self):
+      """
+      Return list of scripts usable to filter diff
+      """
+      # XXX, the or [] should not be there, the preference tool is
+      # inconsistent, the called method should not return None when
+      # nothing is selected
+      script_id_list = self.getPortalObject().portal_preferences\
+        .getPreferredDiffFilterScriptIdList() or []
+          
+      return [getattr(self, x) for x in script_id_list]
+
+    def getFilteredDiffAsHTML(self, diff):
+      """
+      Return the diff filtered by python scripts into html format
+      """
+      return self.getFilteredDiff(diff).toHTML()
+
+    def getFilteredDiff(self, diff):
+      """
+      Filter the diff using python scripts
+      """
+      diff_file_object = DiffFile(diff)
+      diff_block_list = diff_file_object.getModifiedBlockList()
+      if len(diff_block_list):
+        for script in self.getDiffFilterScriptList():
+          for block, line_tuple in diff_block_list:
+            if script(line_tuple[0], line_tuple[1]):
+              diff_file_object.children.remove(block)
+      # XXX-Aurel : this method should return a text diff but
+      # DiffFile does not provide yet such feature
+      return diff_file_object
 
     def diffObjectAsHTML(self, REQUEST, **kw):
       """

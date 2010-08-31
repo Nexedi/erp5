@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -61,6 +58,9 @@ modified=context.REQUEST["modified"]\n
 added=context.REQUEST["added"]\n
 removed=context.REQUEST["removed"]\n
 \n
+subversion_tool = context.getPortalObject()["portal_subversion"]\n
+template_tool = context.getPortalObject()["portal_templates"]\n
+\n
 print \'<div style="color: black">\'\n
 tab_Modified=modified.split(\',\')\n
 tab_Added=added.split(\',\')\n
@@ -68,26 +68,29 @@ tab_Removed=removed.split(\',\')\n
 \n
 if modified != \'none\':\n
   for f in tab_Modified:\n
-    print \'<input name="modified" value="%s" type="checkbox" checked="checked" />\'%f\n
-    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)\n
-    print "<span style=\'font-weight: bold; color: black;\'>Index: "\\\n
-        "<a href=\'BusinessTemplate_viewSvnShowFile?%s\'>%s</a></span>" %(\n
-         make_query(file=f), f)\n
-    edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
-    if(edit_path != \'#\'):\n
-      print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
-    print \'</span><br/>\'\n
-    print context.getPortalObject()["portal_subversion"].diffHTML(f, context)\n
-    print \'<hr/><br/>\'\n
+    diff = subversion_tool.diff(f, context)\n
+    final_diff = template_tool.getFilteredDiffAsHTML(diff)\n
+    if len(final_diff):\n
+      print \'<input name="modified" value="%s" type="checkbox" checked="checked" />\'%f\n
+      f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)\n
+      print "<span style=\'font-weight: bold; color: black;\'>Index: "\\\n
+          "<a href=\'BusinessTemplate_viewSvnShowFile?%s\'>%s</a></span>" %(\n
+           make_query(file=f), f)\n
+      edit_path = subversion_tool.editPath(context, f)\n
+      if(edit_path != \'#\'):\n
+        print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
+      print final_diff\n
+      print \'</span><br/>\'\n
+      print \'<hr/><br/>\'\n
 \n
 if added != \'none\':\n
   for f in tab_Added:\n
     print \'<input name="added" value="%s" type="checkbox" checked="checked" />\'%f\n
-    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)\n
+    f = subversion_tool.relativeToAbsolute(f, context)\n
     print "<span style=\'font-weight: bold; color: black;\'>Index: "\\\n
         "<a href=\'BusinessTemplate_viewSvnShowFile?%s\'>%s</a></span>" %(\n
          make_query(file=f), f)\n
-    edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
+    edit_path = subversion_tool.editPath(context, f)\n
     if(edit_path != \'#\'):\n
       print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
     print \'</span><br/>\'\n
@@ -96,11 +99,11 @@ if added != \'none\':\n
 if removed != \'none\':\n
   for f in tab_Removed:\n
     print \'<input name="removed" value="%s" type="checkbox" checked="checked" />\'%f\n
-    f = context.getPortalObject()["portal_subversion"].relativeToAbsolute(f, context)\n
+    f = subversion_tool.relativeToAbsolute(f, context)\n
     print "<span style=\'font-weight: bold; color: black;\'>Index: "\\\n
         "<a href=\'BusinessTemplate_viewSvnShowFile?%s\'>%s</a></span>" %(\n
          make_query(file=f), f)\n
-    edit_path = context.getPortalObject()["portal_subversion"].editPath(context, f)\n
+    edit_path = subversion_tool.editPath(context, f)\n
     if(edit_path != \'#\'):\n
       print "<a href=\'"+edit_path+"\'><img src=\'ERP5Subversion_imgs/edit.png\' alt=\'Edit\' style=\'border: 0\' /></a>"\n
     print \'</span><br/>\'\n
@@ -156,11 +159,16 @@ return printed\n
                             <string>modified</string>
                             <string>added</string>
                             <string>removed</string>
+                            <string>subversion_tool</string>
+                            <string>template_tool</string>
                             <string>tab_Modified</string>
                             <string>tab_Added</string>
                             <string>tab_Removed</string>
                             <string>_getiter_</string>
                             <string>f</string>
+                            <string>diff</string>
+                            <string>final_diff</string>
+                            <string>len</string>
                             <string>edit_path</string>
                           </tuple>
                         </value>

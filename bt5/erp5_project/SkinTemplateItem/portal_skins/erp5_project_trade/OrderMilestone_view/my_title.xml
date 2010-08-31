@@ -2,19 +2,14 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>display_width</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -37,15 +32,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -56,15 +51,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -75,22 +70,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>40</int> </value>
-                </item>
-                <item>
-                    <key> <string>extra_context</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_title</string> </value>
+                    <value> <string>my_view_mode_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeSale_FieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -35,10 +32,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -57,10 +50,6 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
@@ -81,18 +70,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_translated_simulation_state_title</string> </value>
+                    <value> <string>my_view_mode_translated_simulation_state_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>SaleOrder_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

@@ -105,7 +105,7 @@ def checkConsistency(self, fixit=0, source_code=None):
     if prefix not in getSkinPrefixList(self):
       message_list.append(
         ObjectMessage(object_relative_url='/'.join(self.getPhysicalPath())[portal_path_len:],
-                      message='Wrong prefix %s' % prefix))
+                      message='Wrong prefix %s for python script %s' % (prefix, document_id)))
 
   # Make sure source code does not contain legacy callables
   if source_code:
@@ -113,12 +113,12 @@ def checkConsistency(self, fixit=0, source_code=None):
       if source_code.find(legacy_string) >= 0:
         message_list.append(
           ObjectMessage(object_relative_url='/'.join(self.getPhysicalPath())[portal_path_len:],
-                        message='Source code contains legacy call to %s' % legacy_string))
+                        message='Source code of %s contains legacy call to %s' % (document_id, legacy_string)))
   
   return message_list
 
 # Add checkConsistency to Python Scripts
-def checkPythonScriptConsistency(self, fixit=0):
+def checkPythonScriptConsistency(self, fixit=0, filter=None, **kw):
   return checkConsistency(self, fixit=fixit, source_code=self.body())
 
 from Products.PythonScripts.PythonScript import PythonScript
@@ -126,7 +126,7 @@ PythonScript.checkConsistency= checkPythonScriptConsistency
 PythonScript.checkConsistency__roles__ = ('Manager',) # A hack to protect the method
 
 # Add checkConsistency to Page Templates
-def checkPageTemplateConsistency(self, fixit=0):
+def checkPageTemplateConsistency(self, fixit=0, filter=None, **kw):
   return checkConsistency(self, fixit=fixit, source_code=self.read())
 
 from Products.PageTemplates.PageTemplate import PageTemplate

@@ -1,3 +1,18 @@
+2010-08-09 yo
+* Forgot to rename the id of the Business Path for tax.
+* Add SaleInvoice_getRuleReference to just return None.
+* Ignore some properties in the divergence testers for tax movements.
+* Add base_application for building tax movements.
+
+2010-08-09 yo
+* Forgot to deal with specialise which is always required for BPM.
+
+2010-08-09 yo
+* Seemingly, DCWorkflow does not delete possible transitions from states automatically, when transitions are deleted. So it is necessary to set states manually.
+
+2010-08-08 yo
+* Fix a mistake when selecting rules.
+
 2010-08-08 yo
 * Update the id of the business process in scripts.
 * Make more scripts for select movement methods, as OrderBuilder does not pass which builder is used.

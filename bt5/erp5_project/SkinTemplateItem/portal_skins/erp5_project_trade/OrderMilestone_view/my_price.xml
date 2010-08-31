@@ -2,19 +2,14 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list>
-                <string>enabled</string>
-              </list>
+              <list/>
             </value>
         </item>
         <item>
@@ -37,15 +32,15 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -55,16 +50,6 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>extra_context</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
@@ -85,76 +70,19 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>alternate_name</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>default</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>editable</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>external_validator</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>extra_context</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_price</string> </value>
+                    <value> <string>my_view_mode_price</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>BaseTradeSale_FieldLibrary</string> </value>
+                    <value> <string>Base_viewTradeFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>hidden</string> </key>
-                    <value> <int>0</int> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Price</string> </value>
+                    <key> <string>target</string> </key>
+                    <value> <string>Click to edit the target</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>not:here/hasLineContent</string> </value>
         </item>
       </dictionary>
     </pickle>

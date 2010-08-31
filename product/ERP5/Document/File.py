@@ -189,8 +189,8 @@ class File(Document, CMFFile):
 
   # DAV Support
   PUT = CMFFile.PUT
-  security.declareProtected('FTP access', 'manage_FTPget', 'manage_FTPstat', 'manage_FTPlist')
-  manage_FTPget = CMFFile.manage_FTPget
+  security.declareProtected(Permissions.FTPAccess, 'manage_FTPstat',
+                                                   'manage_FTPlist')
   manage_FTPlist = CMFFile.manage_FTPlist
   manage_FTPstat = CMFFile.manage_FTPstat
 

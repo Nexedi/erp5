@@ -130,6 +130,7 @@ class TrashTool(BaseTool):
       # export subobjects
       if save:
         obj = backup_object_container._getOb(object_id)
+        object_path = list(obj.getPhysicalPath())
       else:
         object_path = container_path + [object_id]
         obj = self.unrestrictedTraverse(object_path)

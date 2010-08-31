@@ -1,0 +1,39 @@
+<dtml-comment>
+title:
+connection_id:cmf_activity_sql_connection
+max_rows:0
+max_cache:0
+cache_time:0
+class_name:
+class_file:
+</dtml-comment>
+<params>table
+processing_node
+to_date
+count
+group_method_id
+</params>
+UPDATE
+  <dtml-var table>
+SET
+  processing_node=<dtml-sqlvar processing_node type="int">
+WHERE
+  processing_node=0
+  AND date <= <dtml-sqlvar to_date type="datetime">
+  <dtml-if expr="group_method_id is not None">
+    AND group_method_id = <dtml-sqlvar group_method_id type="string">
+  </dtml-if>
+ORDER BY
+<dtml-comment>
+  Explanation of the order by:
+  - priority must be respected (it is a feature)
+  - when multiple nodes simultaneously try to fetch activities, they should not
+    be given the same set of lines as it would cause all minus one to wait for
+    a write lock (and be ultimately aborted), effectively serializing their
+    action (so breaking paralellism).
+    So we must force MySQL to update lines in a random order.
+</dtml-comment>
+  priority, RAND()
+LIMIT <dtml-sqlvar count type="int">
+<dtml-var sql_delimiter>
+COMMIT

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -73,24 +70,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>The supplier of the invoice</string> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_source_section_title</string> </value>
+                    <value> <string>my_view_mode_source_section_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>PurchaseTradeCondition_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewInvoicingFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Supplier</string> </value>
                 </item>
               </dictionary>
             </value>

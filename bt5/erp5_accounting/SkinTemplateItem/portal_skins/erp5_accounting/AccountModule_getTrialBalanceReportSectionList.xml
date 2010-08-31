@@ -101,7 +101,7 @@ if gap_uid_list:\n
                                    default_gap_uid=gap_uid_list)] or -1\n
 \n
 request.set(\'is_accounting_report\', True)\n
-group_analytic = request[\'group_analytic\']\n
+group_analytic = request.get(\'group_analytic\', ())\n
 group_analytic_uid = ()\n
 \n
 extra_columns = ()\n

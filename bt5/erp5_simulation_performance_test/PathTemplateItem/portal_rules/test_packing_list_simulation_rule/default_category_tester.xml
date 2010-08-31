@@ -73,6 +73,7 @@
                 <string>source_payment | Source Payment</string>
                 <string>source_project | Source Project</string>
                 <string>source_section | Source Section</string>
+                <string>specialise | Trade Condition</string>
               </tuple>
             </value>
         </item>

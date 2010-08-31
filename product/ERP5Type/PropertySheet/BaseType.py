@@ -36,6 +36,7 @@ class BaseType:
           'storage_id': 'content_icon', # CMF Compatibility
           'type':       'string',
           'mode':       'w',
+          'default':    '',
          },
         { 'id':         'type_factory_method_id',
           'storage_id': 'factory', # CMF Compatibility

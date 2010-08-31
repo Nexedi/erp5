@@ -367,10 +367,10 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
   def test_10_expandAddsRule(self, quiet=quiet, run=run_all_test):
     """
     test that if a rule didn't match previously, and does now, it should apply
-    if no rule with the same type is already applied.
+    if no rule with the same reference is already applied.
     - test that it happens if no rule is already applied
-    - test that nothing changes if a rule of same type is already applied (no
-      matter what the reference or version is)
+    - test that nothing changes if a rule of same reference is already
+      applied (no matter what the version is)
     """
     if not run: return
 
@@ -438,10 +438,10 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         version='2', test_method_id='invoice_rule_script')
     invoicing_rule_n.validate()
     ## different reference, higher version (but version shouldn't matter here)
-    invoicing_rule_n = self.getRuleTool().newContent(
+    invoicing_rule_2 = self.getRuleTool().newContent(
         portal_type="Invoicing Rule", reference='default_invoicing_rule_2',
         version='2', test_method_id='invoice_rule_script')
-    invoicing_rule_n.validate()
+    invoicing_rule_2.validate()
     transaction.commit()
     self.tic()
     root_applied_rule.expand()
@@ -457,10 +457,13 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
         delivery_rule.getRelativeUrl())
     self.assertEquals(root_applied_rule.objectCount(), 1)
     movement = root_applied_rule.objectValues()[0]
-    self.assertEquals(movement.objectCount(), 1)
-    applied_rule = movement.objectValues()[0]
-    self.assertEquals(applied_rule.getSpecialise(),
+    self.assertEquals(movement.objectCount(), 2)
+    applied_rule_list = sorted(movement.objectValues(),
+                          key=lambda x: x.getSpecialiseValue().getReference())
+    self.assertEquals(applied_rule_list[0].getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
+    self.assertEquals(applied_rule_list[1].getSpecialise(),
+        invoicing_rule_2.getRelativeUrl())
 
 
   def test_11_expandRemovesRule(self, quiet=quiet, run=run_all_test):

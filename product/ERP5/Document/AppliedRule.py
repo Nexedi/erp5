@@ -226,3 +226,56 @@ class AppliedRule(XMLObject, ExplainableMixin):
        Return a list of movements.
       """
       return self.objectValues(portal_type=RuleMixin.movement_type)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+            'getIndexableChildSimulationMovementValueList')
+    def getIndexableChildSimulationMovementValueList(self):
+      return [x for x in self.getIndexableChildValueList() 
+              if x.getPortalType() == 'Simulation Movement']
+
+    security.declarePublic('recursiveImmediateReindexSimulationMovement')
+    def recursiveImmediateReindexSimulationMovement(self, **kw):
+      """
+        Applies immediateReindexObject recursively to Simulation Movements
+      """
+      # Reindex direct children
+      root_indexable = int(getattr(self.getPortalObject(), 'isIndexable', 1))
+      for movement in self.objectValues():
+        if movement.isIndexable and root_indexable:
+          movement.immediateReindexObject(**kw)
+      # Go recursively
+      for movement in self.objectValues():
+        for applied_rule in movement.objectValues():
+          applied_rule.recursiveImmediateReindexSimulationMovement(**kw)
+
+    security.declarePublic('recursiveReindexObject')
+    def recursiveReindexSimulationMovement(self, activate_kw=None, **kw):
+      if self.isIndexable:
+        if activate_kw is None:
+          activate_kw = {}
+
+      reindex_kw = self.getDefaultReindexParameterDict()
+      if reindex_kw is not None:
+        reindex_activate_kw = reindex_kw.pop('activate_kw', None)
+        if reindex_activate_kw is not None:
+          reindex_activate_kw = reindex_activate_kw.copy()
+          if activate_kw is not None:
+            # activate_kw parameter takes precedence
+            reindex_activate_kw.update(activate_kw)
+          activate_kw = reindex_activate_kw
+        kw.update(reindex_kw)
+
+      group_id_list  = []
+      if kw.get("group_id", "") not in ('', None):
+        group_id_list.append(kw.get("group_id", ""))
+      if kw.get("sql_catalog_id", "") not in ('', None):
+        group_id_list.append(kw.get("sql_catalog_id", ""))
+      group_id = ' '.join(group_id_list)
+
+      self.activate(group_method_id='portal_catalog/catalogObjectList',
+                    expand_method_id='getIndexableChildSimulationMovementValueList',
+                    alternate_method_id='alternateReindexObject',
+                    group_id=group_id,
+                    serialization_tag=self.getRootDocumentPath(),
+                    **activate_kw).recursiveImmediateReindexSimulationMovement(**kw)
+

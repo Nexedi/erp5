@@ -613,83 +613,62 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     return self.__class__.__name__[:-12]
 
-  def restrictedResolveValue(self, context=None, path=None, default=_MARKER):
+  def restrictedResolveValue(self, context=None, path='', default=_MARKER):
     """
       Get the value with checking the security.
       This method does not acquire the parent.
     """
-    def restrictedGetItem(container, key, default):
-      validate = getSecurityManager().validate
-      try:
-        value = container[key]
-      except KeyError:
-        if default is not _MARKER:
-          return default
-        return None
-      if value is not None:
-        try:
-          if not validate(container, container, key, value):
-            raise Unauthorized('unauthorized access to element %s' % key)
-        except Unauthorized:
-          # if user can't access object try to return default passed
-          if default is not _MARKER:
-            return default
-          raise
-      return value
-    return self._resolveValue(context, path, default, getItem=restrictedGetItem)
+    return self.unrestrictedResolveValue(context, path, default=default,
+                                         restricted=1)
 
-  def unrestrictedResolveValue(self, context=None, path=None, default=_MARKER):
+  def unrestrictedResolveValue(self, context=None, path='', default=_MARKER,
+                               restricted=0):
     """
       Get the value without checking the security.
       This method does not acquire the parent.
-    """
-    def unrestrictedGetItem(container, key, default):
-      try:
-        return container[key]
-      except KeyError:
-        if default is not _MARKER:
-          return default
-        else:
-          return None
-    return self._resolveValue(context, path, default, getItem=unrestrictedGetItem)
-
-  def _resolveValue(self, context, path, default=_MARKER, getItem=None):
-    """
-    Resolve the value without acquire the parent.
     """
     if isinstance(path, basestring):
       stack = path.split('/')
     else:
       stack = list(path)
     stack.reverse()
-    value = None
     if stack:
-      portal = aq_inner(self.getPortalObject())
-      # It can be passed with the context, so at first, searching from the context.
       if context is None:
+        portal = aq_inner(self.getPortalObject())
         container = portal
       else:
         container = context
-      key = stack.pop()
-      value = getItem(container, key, default)
 
-      # resolve the value from top to down
-      while value is not None and stack:
+      if restricted:
+        validate = getSecurityManager().validate
+
+      while stack:
         key = stack.pop()
-        value = getItem(value, key, default)
+        try:
+          value = container[key]
+        except KeyError:
+          LOG('BusinessTemplate', WARNING, 
+              'Could not access object %s' % (path,))
+          if default is _MARKER:
+            raise
+          return default
+
+        if restricted:
+          try:
+            if not validate(container, container, key, value):
+              raise Unauthorized('unauthorized access to element %s' % key)
+          except Unauthorized:
+            LOG('BusinessTemplate', WARNING,
+                'access to %s is forbidden' % (path,))
+          if default is _MARKER:
+            raise
+          return default
+
+        container = value
+
+      return value
     else:
-      # When relative_url is empty, returns the context
       return context
-
-    __traceback_info__ = (container, key)
-    if value is None:
-      LOG('BusinessTemplate', WARNING,
-          'Could not access object %s' % path)
-      if default is not _MARKER:
-        return default
-      raise KeyError, key
-    return value
-
 
 class ObjectTemplateItem(BaseTemplateItem):
   """
@@ -732,7 +711,6 @@ class ObjectTemplateItem(BaseTemplateItem):
   def build_sub_objects(self, context, id_list, url, **kw):
     # XXX duplicates code from build
     p = context.getPortalObject()
-    sub_list = {}
     for id in id_list:
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
@@ -750,7 +728,6 @@ class ObjectTemplateItem(BaseTemplateItem):
         obj.groups = groups
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
-    return sub_list
 
   def build(self, context, **kw):
     BaseTemplateItem.build(self, context, **kw)
@@ -1240,7 +1217,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
           if action in ('remove', 'save_and_remove'):
-            document = self.restrictedResolveValue(portal, recursive_path, None)
+            document = self.unrestrictedResolveValue(portal, recursive_path, None)
             if document is None:
               # It happens if the parent of target path is removed before
               continue
@@ -1391,7 +1368,7 @@ class PathTemplateItem(ObjectTemplateItem):
     keys.sort()
     for path in keys:
       include_subobjects = 0
-      if '**' in path:
+      if path.endswith("**"):
         include_subobjects = 1
       for relative_url in self._resolvePath(p, [], path.split('/')):
         obj = p.unrestrictedTraverse(relative_url)
@@ -3561,22 +3538,25 @@ class RoleTemplateItem(BaseTemplateItem):
     path = obsolete_key
     bta.addObject(obj=xml_data, name=path)
 
-class CatalogResultKeyTemplateItem(BaseTemplateItem):
+class CatalogSearchKeyTemplateItem(BaseTemplateItem):
+  key_list_attr = 'sql_catalog_search_keys'
+  key_list_title = 'search_key_list'
+  key_title = 'Search key'
 
   def build(self, context, **kw):
     catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
-    sql_search_result_keys = list(catalog.sql_search_result_keys)
+    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
     key_list = []
     for key in self._archive.keys():
-      if key in sql_search_result_keys:
+      if key in catalog_key_list:
         key_list.append(key)
       elif not self.is_bt_for_diff:
-        raise NotFound, 'Result key "%r" not found in catalog' %(key,)
+        raise NotFound, '%s %r not found in catalog' %(self.key_title, key)
     if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'result_key_list'] = key_list
+      self._objects['%s/%s' % (self.__class__.__name__, self.key_list_title)] = key_list
 
   def _importFile(self, file_name, file):
     if not file_name.endswith('.xml'):
@@ -3592,7 +3572,7 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
-    sql_search_result_keys = list(catalog.sql_search_result_keys)
+    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
     if context.getTemplateFormatVersion() == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
@@ -3604,31 +3584,31 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     # XXX same as related key
-    if update_dict.has_key('result_key_list') or force:
+    if update_dict.has_key(self.key_list_title) or force:
       if not force:
-        action = update_dict['result_key_list']
+        action = update_dict[self.key_list_title]
         if action == 'nothing':
           return
       for key in keys:
-        if key not in sql_search_result_keys:
-          sql_search_result_keys.append(key)
-      catalog.sql_search_result_keys = sql_search_result_keys
+        if key not in catalog_key_list:
+          catalog_key_list.append(key)
+      setattr(catalog, self.key_list_attr, catalog_key_list)
 
   def uninstall(self, context, **kw):
     catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
-    sql_search_result_keys = list(catalog.sql_search_result_keys)
+    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
     object_path = kw.get('object_path', None)
     if object_path is not None:
       object_keys = [object_path]
     else:
       object_keys = self._archive.keys()
     for key in object_keys:
-      if key in sql_search_result_keys:
-        sql_search_result_keys.remove(key)
-    catalog.sql_search_result_keys = sql_search_result_keys
+      if key in catalog_key_list:
+        catalog_key_list.remove(key)
+    setattr(catalog, self.key_list_attr, catalog_key_list)
     BaseTemplateItem.uninstall(self, context, **kw)
 
   # Function to generate XML Code Manually
@@ -3650,38 +3630,24 @@ class CatalogResultKeyTemplateItem(BaseTemplateItem):
       xml_data = self.generateXml(path=path)
       bta.addObject(obj=xml_data, name=path, path=None)
 
-class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
+class CatalogResultKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_search_result_keys'
+  key_list_title = 'result_key_list'
+  key_title = 'Result key'
 
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_search_related_keys = list(catalog.sql_catalog_related_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_search_related_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Related key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'related_key_list'] = key_list
+class CatalogRelatedKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_related_keys'
+  key_list_title = 'related_key_list'
+  key_title = 'Related key'
 
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
+  # override this method to support 'key_list' for backward compatibility.
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
     if catalog is None:
       LOG('BusinessTemplate', 0, 'no SQL catalog was available')
       return
 
-    sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
+    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
     if context.getTemplateFormatVersion() == 1:
       if len(self._objects.keys()) == 0: # needed because of pop()
         return
@@ -3693,955 +3659,74 @@ class CatalogRelatedKeyTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     # XXX must a find a better way to manage related key
-    if update_dict.has_key('related_key_list') or update_dict.has_key('key_list') or force:
+    if update_dict.has_key(self.key_list_title) or update_dict.has_key('key_list') or force:
       if not force:
-        if update_dict.has_key('related_key_list'):
-          action = update_dict['related_key_list']
+        if update_dict.has_key(self.key_list_title):
+          action = update_dict[self.key_list_title]
         else: # XXX for backward compatibility
           action = update_dict['key_list']
         if action == 'nothing':
           return
       for key in keys:
-        if key not in sql_catalog_related_keys:
-          sql_catalog_related_keys.append(key)
-      catalog.sql_catalog_related_keys = tuple(sql_catalog_related_keys)
+        if key not in catalog_key_list:
+          catalog_key_list.append(key)
+      setattr(catalog, self.key_list_attr, catalog_key_list)
 
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_related_keys = list(catalog.sql_catalog_related_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_catalog_related_keys:
-        sql_catalog_related_keys.remove(key)
-    catalog.sql_catalog_related_keys = sql_catalog_related_keys
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
-
-class CatalogResultTableTemplateItem(BaseTemplateItem):
-
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_search_result_tables = list(catalog.sql_search_tables)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_search_result_tables:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Result table "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'result_table_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_search_tables = list(catalog.sql_search_tables)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX same as related keys
-    if update_dict.has_key('result_table_list') or force:
-      if not force:
-        action = update_dict['result_table_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_search_tables:
-          sql_search_tables.append(key)
-      catalog.sql_search_tables = tuple(sql_search_tables)
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_search_tables = list(catalog.sql_search_tables)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_search_tables:
-        sql_search_tables.remove(key)
-    catalog.sql_search_tables = sql_search_tables
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
+class CatalogResultTableTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_search_tables'
+  key_list_title = 'result_table_list'
+  key_title = 'Result table'
 
 # keyword
-class CatalogKeywordKeyTemplateItem(BaseTemplateItem):
-
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_keyword_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Keyword key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'keyword_key_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX same as related key
-    if update_dict.has_key('keyword_key_list') or force:
-      if not force:
-        action = update_dict['keyword_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_keyword_keys:
-          sql_keyword_keys.append(key)
-      catalog.sql_catalog_keyword_search_keys = sql_keyword_keys
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_keyword_keys = list(catalog.sql_catalog_keyword_search_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_keyword_keys:
-        sql_keyword_keys.remove(key)
-    catalog.sql_catalog_keyword_search_keys = sql_keyword_keys
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
+class CatalogKeywordKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_keyword_search_keys'
+  key_list_title = 'keyword_key_list'
+  key_title = 'Keyword key'
 
 # datetime
-class CatalogDateTimeKeyTemplateItem(BaseTemplateItem):
+class CatalogDateTimeKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_datetime_search_keys'
+  key_list_title = 'datetime_key_list'
+  key_title = 'DateTime key'
 
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_datetime_keys = list(getattr(catalog, 'sql_catalog_datetime_search_keys', []))
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_datetime_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'DateTime key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'datetime_key_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(context)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_datetime_keys = list(getattr(catalog, 'sql_catalog_datetime_search_keys', []))
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX same as related key
-    if update_dict.has_key('datetime_key_list') or force:
-      if not force:
-        action = update_dict['datetime_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_datetime_keys:
-          sql_datetime_keys.append(key)
-      catalog.sql_catalog_datetime_search_keys = sql_datetime_keys
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(context)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available - uninstall')
-      return
-    sql_datetime_keys = list(getattr(catalog, 'sql_catalog_datetime_search_keys', []))
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_datetime_keys:
-        sql_datetime_keys.remove(key)
-    catalog.sql_catalog_datetime_search_keys = sql_datetime_keys
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)      
-      
 # full text
-class CatalogFullTextKeyTemplateItem(BaseTemplateItem):
-
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_full_text_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Fulltext key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'full_text_key_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX same as related key
-    if update_dict.has_key('full_text_key_list') or force:
-      if not force:
-        action = update_dict['full_text_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_full_text_keys:
-          sql_full_text_keys.append(key)
-      catalog.sql_catalog_full_text_search_keys = sql_full_text_keys
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_full_text_keys = list(catalog.sql_catalog_full_text_search_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_full_text_keys:
-        sql_full_text_keys.remove(key)
-    catalog.sql_catalog_full_text_search_keys = sql_full_text_keys
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
-
+class CatalogFullTextKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_full_text_search_keys'
+  key_list_title = 'full_text_key_list'
+  key_title = 'Fulltext key'
 
 # request
-class CatalogRequestKeyTemplateItem(BaseTemplateItem):
-
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_request_keys = list(catalog.sql_catalog_request_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_request_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Request key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'request_key_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_catalog_request_keys = list(catalog.sql_catalog_request_keys)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX must a find a better way to manage related key
-    if update_dict.has_key('request_key_list') or force:
-      if not force:
-        action = update_dict['request_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_catalog_request_keys:
-          sql_catalog_request_keys.append(key)
-      catalog.sql_catalog_request_keys = tuple(sql_catalog_request_keys)
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_request_keys = list(catalog.sql_catalog_request_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_catalog_request_keys:
-        sql_catalog_request_keys.remove(key)
-    catalog.sql_catalog_request_keys = sql_catalog_request_keys
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
+class CatalogRequestKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_request_keys'
+  key_list_title = 'request_key_list'
+  key_title = 'Request key'
 
 # multivalue
-class CatalogMultivalueKeyTemplateItem(BaseTemplateItem):
-
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_multivalue_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Multivalue key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'multivalue_key_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_catalog_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    if update_dict.has_key('multivalue_key_list') or force:
-      if not force:
-        action = update_dict['multivalue_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_catalog_multivalue_keys:
-          sql_catalog_multivalue_keys.append(key)
-      catalog.sql_catalog_multivalue_keys = tuple(sql_catalog_multivalue_keys)
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_multivalue_keys = list(catalog.sql_catalog_multivalue_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_catalog_multivalue_keys:
-        sql_catalog_multivalue_keys.remove(key)
-    catalog.sql_catalog_multivalue_keys = sql_catalog_multivalue_keys
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
+class CatalogMultivalueKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_multivalue_keys'
+  key_list_title = 'multivalue_key_list'
+  key_title = 'Multivalue key'
 
 # topic
-class CatalogTopicKeyTemplateItem(BaseTemplateItem):
+class CatalogTopicKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_topic_search_keys'
+  key_list_title = 'topic_key_list'
+  key_title = 'Topic key'
 
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_topic_search_keys = list(catalog.sql_catalog_topic_search_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_catalog_topic_search_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Topic key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'topic_key_list'] = key_list
+class CatalogScriptableKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_scriptable_keys'
+  key_list_title = 'scriptable_key_list'
+  key_title = 'Scriptable key'
 
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
+class CatalogRoleKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_role_keys'
+  key_list_title = 'role_key_list'
+  key_title = 'Role key'
 
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_catalog_topic_search_keys = list(catalog.sql_catalog_topic_search_keys)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX same as related key
-    if update_dict.has_key('topic_key_list') or force:
-      if not force:
-        action = update_dict['topic_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_catalog_topic_search_keys:
-          sql_catalog_topic_search_keys.append(key)
-      catalog.sql_catalog_topic_search_keys = sql_catalog_topic_search_keys
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_topic_search_keys = list(catalog.sql_catalog_topic_search_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_catalog_topic_search_keys:
-        sql_catalog_topic_search_keys.remove(key)
-    catalog.sql_catalog_topic_search_keys = sql_catalog_topic_search_keys
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
-
-class CatalogScriptableKeyTemplateItem(BaseTemplateItem):
-
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_scriptable_keys = list(catalog.sql_catalog_scriptable_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_catalog_scriptable_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Scriptable key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'scriptable_key_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_catalog_scriptable_keys = list(catalog.sql_catalog_scriptable_keys)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX must a find a better way to manage scriptable key
-    if update_dict.has_key('scriptable_key_list') or force:
-      if not force:
-        if update_dict.has_key('scriptable_key_list'):
-          action = update_dict['scriptable_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_catalog_scriptable_keys:
-          sql_catalog_scriptable_keys.append(key)
-      catalog.sql_catalog_scriptable_keys = tuple(sql_catalog_scriptable_keys)
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_scriptable_keys = list(catalog.sql_catalog_scriptable_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_catalog_scriptable_keys:
-        sql_catalog_scriptable_keys.remove(key)
-    catalog.sql_catalog_scriptable_keys = tuple(sql_catalog_scriptable_keys)
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
-
-class CatalogRoleKeyTemplateItem(BaseTemplateItem):
-  # XXX Copy/paste from CatalogScriptableKeyTemplateItem
-
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_catalog_role_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'Role key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'role_key_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX must a find a better way to manage scriptable key
-    if update_dict.has_key('role_key_list') or force:
-      if not force:
-        if update_dict.has_key('role_key_list'):
-          action = update_dict['role_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_catalog_role_keys:
-          sql_catalog_role_keys.append(key)
-      catalog.sql_catalog_role_keys = tuple(sql_catalog_role_keys)
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_role_keys = list(catalog.sql_catalog_role_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_catalog_role_keys:
-        sql_catalog_role_keys.remove(key)
-    catalog.sql_catalog_role_keys = tuple(sql_catalog_role_keys)
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
-
-class CatalogLocalRoleKeyTemplateItem(BaseTemplateItem):
-  # XXX Copy/paste from CatalogScriptableKeyTemplateItem
-
-  def build(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
-    key_list = []
-    for key in self._archive.keys():
-      if key in sql_catalog_local_role_keys:
-        key_list.append(key)
-      elif not self.is_bt_for_diff:
-        raise NotFound, 'LocalRole key "%r" not found in catalog' %(key,)
-    if len(key_list) > 0:
-      self._objects[self.__class__.__name__+'/'+'local_role_key_list'] = key_list
-
-  def _importFile(self, file_name, file):
-    if not file_name.endswith('.xml'):
-      LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
-      return
-    xml = parse(file)
-    key_list = [key.text for key in xml.getroot()]
-    self._objects[file_name[:-4]] = key_list
-
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-
-    sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX must a find a better way to manage scriptable key
-    if update_dict.has_key('local_role_key_list') or force:
-      if not force:
-        if update_dict.has_key('local_role_key_list'):
-          action = update_dict['local_role_key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in sql_catalog_local_role_keys:
-          sql_catalog_local_role_keys.append(key)
-      catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
-
-  def uninstall(self, context, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
-    sql_catalog_local_role_keys = list(catalog.sql_catalog_local_role_keys)
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._archive.keys()
-    for key in object_keys:
-      if key in sql_catalog_local_role_keys:
-        sql_catalog_local_role_keys.remove(key)
-    catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
-    BaseTemplateItem.uninstall(self, context, **kw)
-
-  # Function to generate XML Code Manually
-  def generateXml(self, path=None):
-    obj = self._objects[path]
-    xml_data = '<key_list>'
-    obj.sort()
-    for key in obj:
-      xml_data += '\n <key>%s</key>' %(key)
-    xml_data += '\n</key_list>'
-    return xml_data
-
-  def export(self, context, bta, **kw):
-    if len(self._objects.keys()) == 0:
-      return
-    path = os.path.join(bta.path, self.__class__.__name__)
-    bta.addFolder(name=path)
-    for path in self._objects.keys():
-      xml_data = self.generateXml(path=path)
-      bta.addObject(obj=xml_data, name=path, path=None)
+class CatalogLocalRoleKeyTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_local_role_keys'
+  key_list_title = 'local_role_key_list'
+  key_title = 'LocalRole key'
 
 class MessageTranslationTemplateItem(BaseTemplateItem):
 
@@ -4991,8 +4076,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
     # We want to have:
     #  * path after module, because path can be module content
     #  * path after categories, because path can be categories content
-    #  * path before workflow chain, because path can be a portal type 
-    #         (until chains are set on portal types with categories)
     #  * skin after paths, because we can install a custom connection string as
     #       path and use it with SQLMethods in a skin.
     #    ( and more )
@@ -5009,7 +4092,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_workflow_item',
       '_site_property_item',
       '_portal_type_item',
-      #'_portal_type_workflow_chain_item',
+      '_portal_type_workflow_chain_item',
       '_portal_type_allowed_content_type_item',
       '_portal_type_hidden_content_type_item',
       '_portal_type_property_sheet_item',
@@ -5023,11 +4106,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_action_item',
       '_portal_type_roles_item',
       '_local_roles_item',
-      '_portal_type_workflow_chain_item',
       '_catalog_method_item',
       '_catalog_result_key_item',
       '_catalog_related_key_item',
       '_catalog_result_table_item',
+      '_catalog_search_key_item',
       '_catalog_keyword_key_item',
       '_catalog_datetime_key_item',
       '_catalog_full_text_key_item',
@@ -5159,6 +4242,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
                PathTemplateItem(self.getTemplatePathList())
       self._preference_item = \
                PreferenceTemplateItem(self.getTemplatePreferenceList())
+      self._catalog_search_key_item = \
+          CatalogSearchKeyTemplateItem(
+               self.getTemplateCatalogSearchKeyList())
       self._catalog_keyword_key_item = \
           CatalogKeywordKeyTemplateItem(
                self.getTemplateCatalogKeywordKeyList())
@@ -5879,6 +4965,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogResultKey' : '_catalog_result_key_item',
         'CatalogRelatedKey' : '_catalog_related_key_item',
         'CatalogResultTable' : '_catalog_result_table_item',
+        'CatalogSearchKey' : '_catalog_search_key_item',
         'CatalogKeywordKey' : '_catalog_keyword_key_item',
         'CatalogDateTimeKey' : '_catalog_datetime_key_item',
         'CatalogFullTextKey' : '_catalog_full_text_key_item',
@@ -5941,6 +5028,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_result_key_item', 
                      '_catalog_related_key_item',
                      '_catalog_result_table_item',
+                     '_catalog_search_key_item',
                      '_catalog_keyword_key_item',
                      '_catalog_datetime_key_item',
                      '_catalog_full_text_key_item',

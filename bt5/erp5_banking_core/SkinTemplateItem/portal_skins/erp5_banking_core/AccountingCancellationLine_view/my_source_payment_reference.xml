@@ -537,7 +537,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(\'site_uid\',here.Baobab_getUserSiteUid()), (\'validation_state\', \'valid\')]</string> </value>
+            <value> <string>python: [(\'site_uid\',here.Baobab_getUserSiteUid()), (\'validation_state\', \'valid\'), (\'price_currency_uid\', here.getParentValue().getResourceUid())]</string> </value>
         </item>
       </dictionary>
     </pickle>

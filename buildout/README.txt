@@ -45,14 +45,6 @@ Zope, etc.
 Choosing and modifying proper profile allows to control how much software will
 be build in place.
 
-System dependency check
------------------------
-
-As each software component this buildout requires something to be installed.
-To query what is required please use:
-
-bin/buildout install show-requirements
-
 Minimal requirements
 --------------------
 
@@ -128,7 +120,7 @@ $ mkdir software
 $ cd software
 $ echo '[buildout]' >> buildout.cfg
 $ echo 'extends = https://svn.erp5.org/repos/public/erp5/trunk/buildout/buildout.cfg' >> buildout.cfg
-$ wget -qO - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S -
+$ wget -qO - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python -S - -d
 $ python -S bin/buildout
 
 Note on -S: this switch is overridden by PYTHON_PATH environment variable. In
@@ -137,3 +129,23 @@ doubt, unset it before invoking that command.
 After some time everything shall be locally available.
 
 Disclaimer: That way is still in early stage of development.
+
+Troubleshooting
+===============
+
+In various Linux distributions python is heavily patched and user related
+environment variables are set system wide. This affects behaviour of python
+and introduces various problem with running buildout.
+
+In case of such issues consider resetting some python environment variables
+before running buildout:
+
+ * PYTHONPATH
+ * PYTHONSTARTUP
+ * PYTHONDONTWRITEBYTECODE
+
+Example:
+
+$ unset PYTHONPATH PYTHONSTARTUP PYTHONDONTWRITEBYTECODE
+$ make
+$ # other buildout related commands

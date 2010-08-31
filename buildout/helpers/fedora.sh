@@ -1,9 +1,9 @@
 #!/bin/sh
 
 USAGE="""\
-Helper for buildout-base installation of ERP5 on OpenSUSE 11.2
+Helper for buildout-base installation of ERP5 on Fedora 12.
  Usage:
-   opensuse.sh [-h|-l]
+   fedora.sh [-h|-l]
 
    With no options, attempts to install the dependencies required
    to run the buildout.
@@ -19,18 +19,33 @@ cpio
 flex
 gcc
 gcc-c++
+gettext
 groff
+SDL-devel
+SDL_gfx-devel
+SDL_image-devel
+boost-devel
 libzip-devel
 gdbm-devel
 glib2-devel
+libgomp
 libjpeg-devel
+libtiff-devel
+libsqlite3x-devel
+bzip2-devel
+giflib-devel
+openldap-devel
 ncurses-devel
 neon-devel
 openssl-devel
+libpng-devel
 readline-devel
+librsync-devel
 libgsasl-devel
-libxml2-devel
+mingw32-termcap
 libtool
+giflib
+libxml2-devel
 libcom_err-devel
 libxslt-devel
 make
@@ -40,7 +55,9 @@ python-setuptools
 rpm
 subversion
 subversion-devel
+tesseract-devel
 xorg-x11-server-devel
+xorg-x11-server-Xvfb
 zip
 zlib-devel\
 """

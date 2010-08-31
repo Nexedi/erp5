@@ -2443,7 +2443,21 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEquals([], packing_list.getDivergenceList())
     self.assertEquals('solved', packing_list.getCausalityState())
  
-
+  def test_subcontent_reindexing(self):
+    """Tests, that modification on Order are propagated to lines and cells
+    during reindxation"""
+    invoice = self.portal.getDefaultModule(self.invoice_portal_type
+        ).newContent(portal_type=self.invoice_portal_type,
+            created_by_builder=1)
+    self.stepTic()
+    invoice_line = invoice.newContent(
+        portal_type=self.invoice_line_portal_type)
+    invoice_cell = invoice_line.newContent(
+        portal_type=self.invoice_cell_portal_type)
+    transaction_line = invoice.newContent(
+        portal_type=self.invoice_transaction_line_portal_type)
+    self._testSubContentReindexing(invoice, [invoice_line, transaction_line,
+      invoice_cell])
 
 class TestSaleInvoiceMixin(TestInvoiceMixin,
                            ERP5TypeTestCase):
@@ -3477,7 +3491,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       self.tic()
     self.assertEquals('solved', packing_list.getCausalityState())
     self.assertEquals('solved', invoice.getCausalityState())
-  
 
 class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
   """Tests for purchase invoice.

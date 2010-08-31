@@ -37,7 +37,6 @@ make
 patch
 python-setuptools
 rpm
-scons
 subversion
 subversion-tools
 tesseract-ocr-dev

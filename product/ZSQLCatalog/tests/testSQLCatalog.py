@@ -508,8 +508,10 @@ class TestSQLCatalog(unittest.TestCase):
       Fulltext searches must switch automatically to boolean mode if boolean
       operators are found in search value.
     """
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean', fulltext='a+b'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a+b'), operator='and'),
                  {'fulltext': 'a+b'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean', fulltext='a +b'), operator='and'),
+                 {'fulltext': 'a +b'})
     self.catalog(ReferenceQuery(ReferenceQuery( ReferenceQuery(operator='=', uid='foo'),
                 ReferenceQuery(operator='match_boolean', fulltext='+a b'), operator='and'
     ), operator='and'), {'fulltext': '+a b uid:foo'})

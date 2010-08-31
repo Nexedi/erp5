@@ -979,6 +979,10 @@ class ODTStrategy(ODFStrategy):
     """
     field_id = field.id
     reference_xpath = '//*[@form:name = "%s"]' % field_id
+    # if form name space is not in the name space dict of element tree,
+    # it means that there is no form in the tree. Then do nothing and return.
+    if not 'form' in element_tree.nsmap:
+      return
     reference_list = element_tree.xpath(reference_xpath, namespaces=element_tree.nsmap)
     for target_node in reference_list:
       attr_dict = {}

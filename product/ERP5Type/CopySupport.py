@@ -375,14 +375,12 @@ class CopyContainer:
           catalog.beforeUnindexObject(None,path=path,uid=uid)
           # Then start activity in order to remove lines in catalog,
           # sql wich generate locks
-          if path is None:
-            path = self.getPath()
           # - serialization_tag is used in order to prevent unindexation to 
           # happen before/in parallel with reindexations of the same object.
           catalog.activate(activity='SQLQueue',
                            tag='%s' % uid,
-                           serialization_tag=self.getRootDocumentPath()).unindexObject(None, 
-                                           path=path,uid=uid)
+                           group_method_id='portal_catalog/uncatalogObjectList',
+                           serialization_tag=self.getRootDocumentPath()).unindexObject(uid=uid)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'moveObject')
   def moveObject(self, idxs=None):

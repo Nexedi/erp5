@@ -62,6 +62,7 @@ class TestBudget(ERP5TypeTestCase):
             'erp5_invoicing', 'erp5_simplified_invoicing',
             'erp5_accounting_ui_test', 'erp5_budget')
 
+  # creation and basic functionalities
   def test_simple_create_budget_model(self):
     budget_model = self.portal.budget_model_module.newContent(
                             portal_type='Budget Model')
@@ -284,6 +285,7 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEquals('demo_group', budget.getGroup())
     self.assertEquals('Demo Group', budget.getGroupTitle())
 
+  # consumptions
   def test_simple_consumption(self):
     budget_model = self.portal.budget_model_module.newContent(
                             portal_type='Budget Model')
@@ -788,7 +790,182 @@ class TestBudget(ERP5TypeTestCase):
        ('group/demo_group', 'source/account_module/goods_purchase'): 100.0,},
        budget_line.getEngagedBudgetDict())
 
+  def test_consumption_node_budget_variation_not_set(self):
+    # test consumption calculation when a node budget variation is used, but
+    # this variation category is not set
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_cell',
+                    inventory_axis='section_category',
+                    variation_base_category='group',)
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='node',
+                    variation_base_category='source',
+                    aggregate_value_list=(
+                      self.portal.account_module.goods_purchase,
+                      self.portal.account_module.fixed_assets,
+                    ))
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2000, 1, 1),
+                    start_date_range_max=DateTime(2000, 12, 31),
+                    specialise_value=budget_model)
 
+    budget_line = budget.newContent(portal_type='Budget Line',)
+
+    # we don't set 
+    budget_line.edit(
+        variation_category_list=(
+          'group/demo_group/sub1',
+          ))
+    
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+
+             field_matrixbox_quantity_cell_0_0_0="500",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[
+               'group/demo_group/sub1', ],
+        ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(1, len(budget_line.contentValues()))
+
+    self.assertEquals(
+        dict(from_date=DateTime(2000, 1, 1),
+             at_date=DateTime(2000, 12, 31).latestTime(),
+             section_category=['group/demo_group/sub1',],
+             group_by_section_category=True,
+             ),
+        budget_model.getInventoryListQueryDict(budget_line))
+
+
+    atransaction = self.portal.accounting_module.newContent(
+                  portal_type='Accounting Transaction',
+                  resource_value=self.portal.currency_module.euro,
+                  source_section_value=self.portal.organisation_module.my_organisation,
+                  start_date=DateTime(2000, 1, 2))
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.goods_purchase,
+                  source_debit=100)
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.fixed_assets,
+                  source_credit=100)
+    atransaction.stop()
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(
+      {('group/demo_group/sub1', ): 0.0, },
+       budget_line.getConsumedBudgetDict())
+
+    self.assertEquals(
+      {('group/demo_group/sub1', ): 0.0, },
+       budget_line.getEngagedBudgetDict())
+
+  def test_consumption_category_budget_variation_not_set(self):
+    # test consumption calculation when a category budget variation is used, but
+    # this variation category is not set
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_cell',
+                    inventory_axis='section_category',
+                    variation_base_category='group',)
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='node',
+                    variation_base_category='source',
+                    aggregate_value_list=(
+                      self.portal.account_module.goods_purchase,
+                      self.portal.account_module.fixed_assets,
+                    ))
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2000, 1, 1),
+                    start_date_range_max=DateTime(2000, 12, 31),
+                    specialise_value=budget_model)
+
+    budget_line = budget.newContent(portal_type='Budget Line',)
+
+    # we don't set 
+    budget_line.edit(
+        variation_category_list=(
+          'source/account_module/goods_purchase',
+          ))
+    
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+
+             field_matrixbox_quantity_cell_0_0_0="500",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[
+               'source/account_module/goods_purchase', ],
+        ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(1, len(budget_line.contentValues()))
+
+    self.assertEquals(
+        dict(from_date=DateTime(2000, 1, 1),
+             at_date=DateTime(2000, 12, 31).latestTime(),
+             node_uid=[self.portal.account_module.goods_purchase.getUid(),],
+             group_by_node=True,
+             ),
+        budget_model.getInventoryListQueryDict(budget_line))
+
+
+    atransaction = self.portal.accounting_module.newContent(
+                  portal_type='Accounting Transaction',
+                  resource_value=self.portal.currency_module.euro,
+                  source_section_value=self.portal.organisation_module.my_organisation,
+                  start_date=DateTime(2000, 1, 2))
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.goods_purchase,
+                  source_debit=100)
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.fixed_assets,
+                  source_credit=100)
+    atransaction.stop()
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(
+      {('source/account_module/goods_purchase', ): 100.0, },
+       budget_line.getConsumedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/goods_purchase', ): 100.0, },
+       budget_line.getEngagedBudgetDict())
+
+
+  # Report
   def test_budget_consumption_report(self):
     budget_model = self.portal.budget_model_module.newContent(
                             portal_type='Budget Model')
@@ -934,7 +1111,7 @@ class TestBudget(ERP5TypeTestCase):
     if err_list:
       self.fail(''.join(err_list))
 
-    
+  # "update summary cells" feature
   def test_update_summary_cell_simple(self):
     # test the action to create or update quantity on summary cells
     budget_model = self.portal.budget_model_module.newContent(

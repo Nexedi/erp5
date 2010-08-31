@@ -36,7 +36,7 @@ from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
 import re
 
-FULLTEXT_BOOLEAN_DETECTOR = re.compile(r'.*[\+\-<>\(\)\~\*]')
+FULLTEXT_BOOLEAN_DETECTOR = re.compile(r'.*(^|\s)[\+\-<>\(\)\~\*]')
 
 class FullTextKey(SearchKey):
   """

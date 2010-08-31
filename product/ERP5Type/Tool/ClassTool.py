@@ -62,6 +62,7 @@ from Products.ERP5Type.InitGenerator import getProductDocumentPathList
 
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Base import newTempDocumentationHelper
+from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
 
 from Products.ERP5Type import allowClassTool
 from DateTime import DateTime
@@ -1177,6 +1178,19 @@ def initialize( context ):
         self._createTemporaryInstanceHome()
         writeLocalConstraint(class_id, text, create=create,
                              instance_home=self._v_instance_home.getPath())
+
+      security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
+      def runLiveTest(self, test_list=[], run_only=None, debug=None):
+        """
+        Launch live tests
+
+        run_only=STRING      Run only specified test methods delimited with
+                             commas (e.g. testFoo,testBar). This can be regular
+                             expressions.
+        debug=boolean        Invoke debugger on errors / failures.
+        """
+        path = os.path.join(getConfiguration().instancehome, 'tests')
+        return runLiveTest(test_list, run_only=run_only, debug=debug, path=path)
 
 else:
 

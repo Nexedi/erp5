@@ -32,13 +32,15 @@ from Products.ERP5Type.Utils import fill_args_from_request
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
 
+_MARKER = []
+
 class DownloadableMixin:
   security = ClassSecurityInfo()
 
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
   @fill_args_from_request
-  def index_html(self, REQUEST, RESPONSE, format=None, **kw):
+  def index_html(self, REQUEST, RESPONSE, format=_MARKER, **kw):
     """
       We follow here the standard Zope API for files and images
       and extend it to support format conversion. The idea
@@ -64,9 +66,17 @@ class DownloadableMixin:
     from Products.ERP5.Document.Document import VALID_TEXT_FORMAT_LIST,\
                                                         VALID_IMAGE_FORMAT_LIST
     web_cache_kw = kw.copy()
-    web_cache_kw['format'] = format
+    if format is not _MARKER:
+      web_cache_kw['format'] = format
     _setCacheHeaders(_ViewEmulator().__of__(self), web_cache_kw)
 
+    if format is _MARKER and not kw:
+      # conversion parameters is mandatory to download the converted content.
+      # By default allways return view action.
+      # for all WevDAV access return raw content.
+      return self.view()
+    if format is _MARKER:
+      format = None
     self._checkConversionFormatPermission(format, **kw)
     mime, data = self.convert(format, **kw)
     if not format:
@@ -104,3 +114,10 @@ class DownloadableMixin:
     method = self._getTypeBasedMethod('getStandardFileName',
                              fallback_script_id='Document_getStandardFileName')
     return method(format=format)
+
+  def manage_FTPget(self):
+    """Return body for ftp. and WebDAV
+    """
+    # pass format argument to force downloading raw content
+    REQUEST = self.REQUEST
+    return self.index_html(REQUEST, REQUEST.RESPONSE, format=None)

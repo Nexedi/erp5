@@ -110,3 +110,16 @@ def listFilteredActionsFor(self, object=None):
     return filtered_actions
 
 ActionsTool.listFilteredActionsFor = listFilteredActionsFor
+
+
+def reorderActions(self, REQUEST=None):
+  """Reorder actions according to their priorities."""
+  new_actions = self._cloneActions()
+  new_actions.sort(key=lambda x: x.getPriority())
+  self._actions = tuple( new_actions )
+
+  if REQUEST is not None:
+    return self.manage_editActionsForm(REQUEST,
+        manage_tabs_message='Actions reordered.')
+
+ActionsTool.reorderActions = reorderActions

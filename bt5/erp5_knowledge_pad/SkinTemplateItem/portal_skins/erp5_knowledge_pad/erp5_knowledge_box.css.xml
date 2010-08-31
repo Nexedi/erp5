@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts76754204.66</string> </value>
+            <value> <string>ts83177190.58</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -369,14 +366,6 @@ div.block table.listbox button.sort_button{\n
   text-decoration: underline;\n
 }\n
 \n
-\n
-div.block table.listbox thead tr th{\n
-  background-color:#eee;\n
-  color:blue;\n
-  font-weight: normal;\n
-  font-variant:normal;\n
-}\n
-\n
 div.block div.input{\n
   margin-left:0em;\n
 }\n
@@ -588,7 +577,7 @@ div.block div.worklist_list ul li a:hover{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9672</int> </value>
+            <value> <int>9546</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

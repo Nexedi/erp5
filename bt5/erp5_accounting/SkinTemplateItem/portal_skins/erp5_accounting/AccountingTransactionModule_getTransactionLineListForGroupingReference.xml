@@ -77,7 +77,8 @@ for sort_column, sort_order in orig_sort_on:\n
 \n
 extra_query_keys = {}\n
 section_uid = portal.Base_getSectionUidListForSectionCategory(\n
-     portal.portal_preferences.getPreferredAccountingTransactionSectionCategory())\n
+     portal.portal_preferences.getPreferredAccountingTransactionSectionCategory(),\n
+     strict_membership=portal.portal_preferences.getPreferredAccountingSectionCategoryStrict())\n
 \n
 grouping = dialog_selection_params.get(\'grouping\', \'grouping\')\n
 \n

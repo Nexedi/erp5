@@ -246,12 +246,14 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       movement_list = []
       add_movement = movement_list.append
       extend_movement = movement_list.extend
-      sub_object_list = self.objectValues(portal_type=movement_portal_type_list)
+      sub_object_list = self.objectValues(\
+          portal_type=movement_portal_type_list, **kw)
       extend_sub_object = sub_object_list.extend
       append_sub_object = sub_object_list.append
       while sub_object_list:
         sub_object = sub_object_list.pop()
-        content_list = sub_object.objectValues(portal_type=movement_portal_type_list)
+        content_list = sub_object.objectValues(\
+            portal_type=movement_portal_type_list, **kw)
         if sub_object.hasCellContent():
           cell_list = sub_object.getCellValueList()
           if len(cell_list) != len(content_list):
@@ -798,7 +800,16 @@ class Delivery(XMLObject, ImmobilisationDelivery,
           # once expanded, the applied_rule must be reindexed
           # because some simulation_movement may change even
           # if there are not edited (acquisition)
-          my_applied_rule.recursiveReindexObject(activate_kw=activate_kw)
+          #
+          # XXX yo thinks that this is excessive. First of all, we may
+          # need to reindex simulation movements but not applied rules
+          # here. So we should skip reindexing applied rules.
+          # In addition, the policy is "copy everything required to
+          # simulation movements", so acquisitions should not matter to
+          # indexing. The only exception is the simulation state.
+          # I think, if each simulation movement remembers the previous
+          # state, we can avoid unnecessary reindexing.
+          my_applied_rule.recursiveReindexSimulationMovement(activate_kw=activate_kw)
         else:
           LOG("ERP5", PROBLEM,
               "Could not expand applied rule %s for delivery %s" %\
@@ -833,8 +844,8 @@ class Delivery(XMLObject, ImmobilisationDelivery,
           if parent_value not in to_expand_list:
             to_expand_list.append(parent_value)
       for rule in to_expand_list:
-        rule.expand(activate_kw=activate_kw,**kw)
-        rule.recursiveReindexObject(activate_kw=activate_kw)
+        rule.expand(activate_kw=activate_kw, **kw)
+        rule.recursiveReindexSimulationMovement(activate_kw=activate_kw)
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootCausalityValueList')

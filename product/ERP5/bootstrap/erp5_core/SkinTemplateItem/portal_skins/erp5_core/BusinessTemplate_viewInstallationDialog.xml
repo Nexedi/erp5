@@ -90,6 +90,7 @@
                     <value>
                       <list>
                         <string>listbox_choice</string>
+                        <string>listbox_object_state</string>
                       </list>
                     </value>
                 </item>

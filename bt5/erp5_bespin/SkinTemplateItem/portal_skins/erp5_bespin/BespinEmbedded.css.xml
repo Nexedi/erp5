@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>BespinEmbedded.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.bespin-completion-panel {\n
+    font-family: Helvetica, Arial, sans-serif;\n
+    position: absolute;\n
+    cursor: default;\n
+    line-height: normal;\n
+    -moz-user-select: none;\n
+    -webkit-user-select: none;\n
+}\n
+\n
+.bespin-completion-pointer {\n
+    position: absolute;\n
+    z-index: 2;\n
+    height: 21px;\n
+    width: 21px;\n
+}\n
+\n
+.bespin-completion-pointer-up {\n
+    top: 1px;\n
+    border-top: solid #555 1px;\n
+    border-left: solid #555 1px;\n
+    background-image: -moz-linear-gradient(top left, #333333, #333333 50%, transparent 50%, transparent);\n
+    background-image: -webkit-gradient(linear, left top, right bottom, from(#333333), color-stop(0.5, #333333), color-stop(0.5, transparent), to(transparent));\n
+    -moz-transform: rotate(45deg);\n
+    -webkit-transform: rotate(45deg);\n
+}\n
+\n
+.bespin-completion-pointer-down {\n
+    bottom: 1px;\n
+    border-top: solid #000 1px;\n
+    border-left: solid #000 1px;\n
+    background-image: -moz-linear-gradient(top left, #000, #000 50%, transparent 50%, transparent);\n
+    background-image: -webkit-gradient(linear, left top, right bottom, from(#000), color-stop(0.5, #000), color-stop(0.5, transparent), to(transparent));\n
+    -moz-transform: rotate(225deg);\n
+    -webkit-transform: rotate(225deg);\n
+}\n
+\n
+.bespin-completion-bubble-outer {\n
+    position: relative;\n
+    z-index: 1;\n
+    margin: 11px 0px 11px 0px;\n
+    border-top: solid #555 1px;\n
+    -moz-border-radius: 8px;\n
+    -webkit-border-radius: 8px;\n
+}\n
+\n
+.bespin-completion-bubble-inner {\n
+    position: relative;\n
+    z-index: 3;\n
+    padding: 6px;\n
+    background: -moz-linear-gradient(top, #333333, #000000);\n
+    background: -webkit-gradient(linear, center top, center bottom, from(#333333), to(#000000));\n
+    color: #ffffff;\n
+    font-size: 10.5pt;\n
+    -moz-border-radius: 8px;\n
+    -webkit-border-radius: 8px;\n
+    -moz-box-shadow: 0px 6px 16px 2px rgba(0, 0, 0, 0.5);\n
+    -webkit-box-shadow: 0px 6px 16px 2px rgba(0, 0, 0, 0.5);\n
+}\n
+\n
+.bespin-completion-panel ul {\n
+    list-style: none;\n
+    margin: 0px;\n
+    padding: 0px;\n
+}\n
+\n
+.bespin-completion-panel li {\n
+    text-indent: 0px;\n
+    margin: 0px;\n
+    padding: 6px 16px;\n
+}\n
+\n
+.bespin-completion-highlight {\n
+    position: absolute;\n
+    z-index: -1;\n
+    background-image: -moz-linear-gradient(top, #3e59be, #312d80);\n
+    background-image: -webkit-gradient(linear, center top, center bottom, from(#3e59be), to(#312d80));\n
+    border: solid rgba(37, 34, 91, 1.0) 1px;\n
+    -moz-border-radius: 6px;\n
+    -webkit-border-radius: 6px;\n
+}\n
+\n
+.bespin-completion-kind {\n
+    display: block;\n
+    float: left;\n
+    top: 0px;\n
+    left: 0px;\n
+    width: 8px;\n
+    height: 8px;\n
+    padding: 2px;\n
+    margin: 0px 5px 0px 0px;\n
+    font-size: 6.5pt;\n
+    font-weight: bold;\n
+    text-transform: uppercase;\n
+    text-align: center;\n
+    -moz-border-radius: 3px;\n
+    -webkit-border-radius: 3px;\n
+}\n
+\n
+.bespin-completion-kind-m {\n
+    background-color: maroon;\n
+}\n
+\n
+.bespin-completion-kind-f {\n
+    background-color: green;\n
+}\n
+\n
+.bespin-completion-top-row {\n
+    position: relative;\n
+}\n
+\n
+.bespin-completion-second-row {\n
+    margin: 6px 0px 0px 17px;\n
+    display: none;\n
+}\n
+\n
+.bespin-completion-ident {\n
+    font-weight: bold;\n
+}\n
+\n
+.bespin-completion-container {\n
+    color: #a0a0a0;\n
+}\n
+\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

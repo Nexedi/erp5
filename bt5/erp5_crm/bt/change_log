@@ -1,3 +1,6 @@
+2010-08-19 lucas
+* Added Codification Property Sheet on Support Request portal type, to avoid setCodification error during clone.
+
 2009-11-13 romain
 * Apply new field library convention
 

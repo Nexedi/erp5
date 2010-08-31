@@ -133,6 +133,12 @@ class AssertSoftwareRunable(unittest.TestCase):
     self.assertEqual(stderr, '')
     self.assertTrue(stdout.startswith('Server version: Apache'))
 
+  def test_Varnish(self):
+    stdout, stderr = subprocess.Popen(["parts/varnish/sbin/varnishd", "-V"],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    self.assertEqual(stdout, '')
+    self.assertTrue(stderr.startswith('varnishd ('))
+
   def test_Ocropus(self):
     stdout, stderr = subprocess.Popen(["parts/ocropus/bin/ocropus"],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()

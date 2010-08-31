@@ -28,9 +28,11 @@
 
 import unittest
 import os
+import sys
 
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
 from Products.ERP5Type.Globals import get_request
 import transaction
@@ -80,12 +82,17 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
     def getPortalName(self):
       """ Return the default ERP5 site id.
       """
-      return 'erp5' # XXX-JPS For now a hack
+      return self.getPortalObject().getId()
 
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
       """
-      return self.app[self.getPortalName()]
+      # Assumes that portal exists (which has sense) and that there is only one
+      # ERP5 site in Zope (which is always the case)
+      if self.app.meta_type == 'ERP5 Site':
+        return self.app
+      return [q for q in self.app.objectValues() if q.meta_type == 'ERP5 Site'
+          ][0]
 
     getPortalObject = getPortal
 
@@ -431,12 +438,34 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
 
         return ResponseWrapper(response, outstream, path)
 
-def runLiveTest(self, suite):
+def runLiveTest(test_list, **kw):
+  from Products.ERP5Type.tests.runUnitTest import DebugTestResult
   from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
   from Products.ERP5Type.tests import backportUnittest
   from StringIO import StringIO
+  import imp
+  import re
+  # Add path of the TestTemplateItem folder of the instance
+  path = kw.get('path', None)
+  if path is not None and path not in sys.path:
+    sys.path.append(path)
+  # Reload the test class before runing tests
+  for test_name in test_list:
+    (test_file, test_path_name, test_description) = imp.find_module(test_name)
+    imp.load_module(test_name, test_file, test_path_name, test_description)
+
   TestRunner = backportUnittest.TextTestRunner
-  unittest.TestLoader = ERP5TypeTestLoader
+  if kw.get('debug', False):
+    class DebugTextTestRunner(TestRunner):
+      def _makeResult(self):
+        result = super(DebugTextTestRunner, self)._makeResult()
+        return DebugTestResult(result)
+    TestRunner = DebugTextTestRunner
+  run_only = kw.get('run_only', None)
+  if run_only is not None:
+    ERP5TypeTestLoader.filter_test_list = [re.compile(x).search
+                                            for x in run_only.split(',')]
+  suite = ERP5TypeTestLoader().loadTestsFromNames(test_list)
   stream = StringIO()
   output = StringIO()
   output.write("**Running Live Test:\n")

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -180,13 +177,27 @@ div.listbox-tree {\n
 \n
 div.listbox-content{\n
   float: left; \n
-  width: auto; \n
 }\n
 \n
 div.listbox-head{\n
   color:#9D968D;\n
   font-weight:bold;\n
   margin-bottom: 10px;\n
+  min-height:20px;\n
+}\n
+div.listbox-head div.listbox-head-title{\n
+  float:left;\n
+  width:auto;\n
+}\n
+div.listbox-head a, div.listbox-head span{\n
+  font-weight: bold;\n
+}\n
+\n
+div.listbox-head div.listbox-head-results{\n
+  float: right; \n
+  width: auto; \n
+  clear: right;\n
+  text-align:right;\n
 }\n
 \n
 div.listbox-body{\n
@@ -212,9 +223,7 @@ div.listbox-footer{\n
  float:left;\n
  margin-bottom:0.3em;\n
  margin-top:0.3em;\n
- min-height:28px;\n
  padding-left:0.2em;\n
- \n
 }\n
 \n
 /* Listbox Footer in gadget mode */\n
@@ -225,6 +234,7 @@ div.listbox-footer{\n
 div.listbox-footer-box {\n
   width: auto;\n
   float:left;\n
+  min-height:28px;\n
 }\n
 \n
 /* List style selection */\n
@@ -237,6 +247,10 @@ div.listbox-list-style-selection span{\n
   padding-left:10px;\n
   vertical-align:-4px;\n
 }\n
+\n
+div.block div.listbox-list-style-selection span{\n
+  padding-left: 0px;\n
+}\n
 div.listbox-list-style-selection ul{\n
   display:inline;\n
   padding-left:0;\n
@@ -245,10 +259,16 @@ div.listbox-list-style-selection ul{\n
 }\n
 div.listbox-list-style-selection li{\n
   display: inline;\n
+  margin-left: 0.1em;\n
+}\n
+  \n
+div.listbox-list-style-selection li a{\n
+  cursor: pointer;\n
 }\n
 div.listbox-list-style-selection li a.selected,\n
 .listbox-table-report-tree-selection-cell a.selected,\n
-.listbox-table-domain-tree-cell a.selected{\n
+.listbox-table-domain-tree-cell a.selected,\n
+.listbox-page-navigation-text a.selected{\n
   font-weight: bold;\n
 }\n
 \n
@@ -270,16 +290,68 @@ div.listbox-full-text-search input.button{\n
  width: auto;\n
 }\n
 \n
-/* Pagination*/\n
-div.listbox-page-navigation{\n
+/* Listbox Navigation */\n
+div.listbox-page-navigation input.listbox_set_page, \n
+div.listbox-page-navigation button.listbox_next_page, \n
+div.listbox-page-navigation button.listbox_last_page, \n
+div.listbox-page-navigation button.listbox_first_page, \n
+div.listbox-page-navigation button.listbox_previous_page{\n
+  margin: 0em;\n
+  padding: 0em;\n
+}\n
+\n
+div.listbox-page-navigation button{\n
+  background-color:transparent;\n
+  border: none;\n
+  cursor: pointer;\n
+}\n
+div.listbox-page-navigation button span.image{\n
+  display:block;\n
+  height:8px;\n
+  width:5px;\n
+  background-repeat:no-repeat;\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_first_page span.image {\n
+  background-image:url("km_img/2leftarrowv.png");\n
+}\n
+div.listbox-page-navigation button.listbox_previous_page span.image {\n
+  background-image:url("km_img/1leftarrowv.png");\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_next_page span.image {\n
+  background-image:url("km_img/1rightarrowv.png");\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_last_page span.image {\n
+  background-image:url("km_img/2rightarrowv.png");\n
+}\n
+\n
+\n
+\n
+div.listbox-page-navigation-slider{\n
   width:auto;\n
   margin:auto;\n
   padding-right: 0.5em;\n
   float:right;\n
 }\n
-div.listbox-page-navigation input{\n
+\n
+div.listbox-page-navigation-slider input{\n
   max-width: 30px;\n
 }\n
+\n
+div.listbox-page-navigation-text{\n
+  width:100%;\n
+  float:left;\n
+  text-align:center;\n
+}\n
+\n
+div.listbox-page-navigation-text a{\n
+  padding-right: 1px;\n
+  color: #9D968D;\n
+  cursor: pointer;\n
+}\n
+\n
 \n
 /* Report tree */\n
 a.tree-closed {\n

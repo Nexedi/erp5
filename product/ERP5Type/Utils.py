@@ -633,9 +633,15 @@ def importLocalPropertySheet(class_id, path = None):
   f = open(path)
   try:
     module = imp.load_source(class_id, path, f)
-    setattr(PropertySheet, class_id, getattr(module, class_id))
+    klass = None
+    try:
+      klass = getattr(module, class_id)
+    except AttributeError:
+      raise AttributeError("Property Sheet '%s' should contain a class " \
+          "with the same name" % class_id)
+    setattr(PropertySheet, class_id, klass)
     # Register base categories
-    registerBaseCategories(getattr(module, class_id))
+    registerBaseCategories(klass)
   finally:
     f.close()
 

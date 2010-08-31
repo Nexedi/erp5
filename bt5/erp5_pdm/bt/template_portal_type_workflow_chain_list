@@ -1,6 +1,7 @@
 Component | edit_workflow
 Component | validation_workflow
 Internal Supply Line | edit_workflow
+Internal Supply Line | reindex_object_interaction_workflow
 Internal Supply Line | supply_line_interaction_workflow
 Internal Supply | edit_workflow
 Internal Supply | validation_workflow
@@ -9,6 +10,7 @@ Measure | edit_workflow
 Product | edit_workflow
 Product | validation_workflow
 Purchase Supply Line | edit_workflow
+Purchase Supply Line | reindex_object_interaction_workflow
 Purchase Supply Line | supply_line_interaction_workflow
 Purchase Supply | edit_workflow
 Purchase Supply | validation_workflow
@@ -19,12 +21,14 @@ Quantity Unit Conversion Group | conversion_interaction_workflow
 Quantity Unit Conversion Group | edit_workflow
 Quantity Unit Conversion Group | validation_workflow
 Sale Supply Line | edit_workflow
+Sale Supply Line | reindex_object_interaction_workflow
 Sale Supply Line | supply_line_interaction_workflow
 Sale Supply | edit_workflow
 Sale Supply | validation_workflow
 Service | edit_workflow
 Service | validation_workflow
 Supply Line | edit_workflow
+Supply Line | reindex_object_interaction_workflow
 Supply Line | supply_line_interaction_workflow
 Transformation Operation Cell | conversion_interaction_workflow
 Transformation Operation | conversion_interaction_workflow

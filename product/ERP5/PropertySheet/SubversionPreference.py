@@ -42,4 +42,9 @@ class SubversionPreference:
       'type'        : 'lines',
       'preference'  : 1,
       'mode'        : 'w' },
+    { 'id'          : 'preferred_diff_filter_script_id',
+      'description' : 'Scripts to filter what is displayed in diffs ',
+      'type'        : 'lines',
+      'preference'  : 1,
+      'mode'        : 'w' },
   )

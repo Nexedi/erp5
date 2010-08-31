@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -148,7 +145,7 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
@@ -168,17 +165,17 @@
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_previous_page</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_next_page</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_next_page</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -194,7 +191,7 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
@@ -214,22 +211,22 @@
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_previous_page</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_next_page</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 <tr>\n
@@ -245,7 +242,7 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
@@ -255,17 +252,17 @@
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_next_page</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_previous_page</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_previous_page</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -281,7 +278,7 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
@@ -301,22 +298,22 @@
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_previous_page</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_next_page</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 <tr>\n
@@ -331,7 +328,7 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
