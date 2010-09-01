@@ -2588,6 +2588,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type=self.order_portal_type,
                               specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2624,6 +2625,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type=self.order_portal_type,
                               specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2661,6 +2663,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type=self.order_portal_type,
                               specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2699,6 +2702,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type=self.order_portal_type,
                               specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2740,6 +2744,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type=self.order_portal_type,
                               specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2783,6 +2788,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type=self.order_portal_type,
                               specialise=self.business_process,
                               title='Ordàr',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2824,6 +2830,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type=self.order_portal_type,
                               specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2860,7 +2867,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               specialise=self.business_process)
     order_line = order.newContent(portal_type=self.order_line_portal_type)
     inner_order_line = order_line.newContent(
-            portal_type=self.order_line_portal_type)
+            portal_type=self.order_line_portal_type,
+            start_date=self.datetime)
     order_cell = order_line.newContent(
         portal_type=self.order_cell_portal_type)
     self._testSubContentReindexing(order, [order_line, inner_order_line,
