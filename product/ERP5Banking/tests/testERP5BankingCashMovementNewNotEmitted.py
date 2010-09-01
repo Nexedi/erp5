@@ -263,7 +263,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # check the source vault is caisse_1
     self.assertEqual(cell.getBaobabSourceValue(), self.reception_site)
     # check the destination vault is caisse_2
-    #self.assertEqual(cell.getBaobabDestinationValue(), self.destination_site)
+    self.assertEqual(cell.getBaobabDestinationValue(), self.destination_site)
     self.assertEqual(cell.getQuantity(), 100.0)
 
 
