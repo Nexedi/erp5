@@ -22,6 +22,7 @@ gc-devel
 gcc
 gcc-c++
 gdbm-devel
+gettext-runtime
 giflib-devel
 git
 glib2-devel
