@@ -1,0 +1,5 @@
+erp5_mysql_innodb/SQLCatalog_makeFullTextQuery
+erp5_mysql_innodb/z0_drop_sphinxse_index
+erp5_mysql_innodb/z0_uncatalog_sphinxse_index
+erp5_mysql_innodb/z_catalog_sphinxse_index_list
+erp5_mysql_innodb/z_create_sphinxse_index
