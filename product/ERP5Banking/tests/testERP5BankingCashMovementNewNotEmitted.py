@@ -322,8 +322,8 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     """
     Check cash container in item table
     """
-    self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(at_date=self.current_date, node=self.reception.getRelativeUrl())), 2)
-    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(at_date=self.current_date, node=self.reception.getRelativeUrl())), 2)
+    self.assertEqual(len(self.simulation_tool.getCurrentTrackingList(at_date=self.current_date, node=self.destination_site.getRelativeUrl())), 2)
+    self.assertEqual(len(self.simulation_tool.getFutureTrackingList(at_date=self.current_date, node=self.destination_site.getRelativeUrl())), 2)
 
   def test_01_ERP5BankingCashMovementNewNotEmitted(self, quiet=QUIET, run=RUN_ALL_TEST):
     """
