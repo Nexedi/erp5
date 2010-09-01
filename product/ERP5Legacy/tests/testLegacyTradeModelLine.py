@@ -38,6 +38,10 @@ from Products.ERP5.tests.testTradeModelLine import *
 TestTradeModelLine.trade_model_path_portal_type = None
 TestTradeModelLine.business_link_portal_type = None
 
+for name in list(TestTradeModelLine.__dict__):
+  if '_NewSimulation_' in name:
+    delattr(TestTradeModelLine, name)
+
 def createBusinessProcess(self, *args, **kw):
   business_process = super(TestTradeModelLine, self) \
     .createBusinessProcess(*args, **kw)

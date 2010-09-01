@@ -964,11 +964,11 @@ class TestInvoiceMixin(TestPackingListMixin,
                                             sequence_list=None):
     invoice = sequence.get('invoice')
     self._solveDeliveryGroupDivergence(invoice, 'start_date',
-                                       invoice.getRelativeUrl())
+       'Unify Solver', value=invoice.getStartDate())
 
   def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
     invoice = sequence.get('invoice')
-    self._solveDivergence(invoice, 'quantity', 'accept')
+    self._solveDivergence(invoice, 'quantity', 'Accept Solver')
 
   def stepAcceptDecisionInvoice(self, sequence=None, sequence_list=None,
       **kw):
@@ -2313,11 +2313,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
  
 
   def _acceptDivergenceOnInvoice(self, invoice, divergence_list):
-    builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
-    for builder in builder_list:
-      builder.solveDivergence(invoice.getRelativeUrl(),
-                              divergence_to_accept_list=divergence_list)
+    print invoice, divergence_list
+    self._solveDivergence(invoice, 'quantity', 'Accept Solver')
 
   def test_accept_quantity_divergence_on_invoice_with_stopped_packing_list(
                 self, quiet=quiet):
@@ -2373,11 +2370,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEquals('solved', packing_list.getCausalityState())
  
   def _adoptDivergenceOnInvoice(self, invoice, divergence_list):
-    builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
-    for builder in builder_list:
-      builder.solveDivergence(invoice.getRelativeUrl(),
-                              divergence_to_adopt_list=divergence_list)
+    print invoice, divergence_list
+    self._solveDivergence(invoice, 'quantity', 'Adopt Solver')
 
   def test_adopt_quantity_divergence_on_invoice_line_with_stopped_packing_list(
                 self, quiet=quiet):

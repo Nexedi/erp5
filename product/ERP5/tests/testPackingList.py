@@ -294,16 +294,33 @@ class TestPackingListMixin(TestOrderMixin):
       Do the split and defer action
     """
     packing_list = sequence.get('packing_list')
-    kw = {'listbox':[
-      {'listbox_key':line.getRelativeUrl(),
-       'choice':'SplitAndDefer'} for line in packing_list.getMovementList() \
-      if line.isDivergent()]}
-    self.portal.portal_workflow.doActionFor(
-      packing_list,
-      'split_and_defer_action',
-      start_date=self.datetime + 15,
-      stop_date=self.datetime + 25,
-      **kw)
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(packing_list)
+    quantity_solver_decision, = [x for x in solver_process.contentValues()
+      if x.getCausalityValue().getTestedProperty() == 'quantity']
+    # use Quantity Split Solver.
+    quantity_solver_decision.setSolverValue(self.portal.portal_solvers['Quantity Split Solver'])
+    # configure for Quantity Split Solver.
+    kw = {'delivery_solver':'FIFO Delivery Solver',
+          'start_date':self.datetime + 15,
+          'stop_date':self.datetime + 25}
+    quantity_solver_decision.updateConfiguration(**kw)
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
+    # build split deliveries manually. XXX ad-hoc
+    previous_tag = None
+    for delivery_builder in packing_list.getBuilderList():
+      this_builder_tag = '%s_split_%s' % (packing_list.getPath(),
+                                          delivery_builder.getId())
+      after_tag = []
+      if previous_tag:
+        after_tag.append(previous_tag)
+      delivery_builder.activate(
+        after_method_id=('solve',
+                         'immediateReindexObject',
+                         'recursiveImmediateReindexObject',), # XXX too brutal.
+        after_tag=after_tag,
+        ).build(explanation_uid=packing_list.getCausalityValue().getUid())
 
   def stepSplitAndDeferDoNothingPackingList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -627,7 +644,7 @@ class TestPackingListMixin(TestOrderMixin):
       Check if simulation movement are disconnected
     """
     packing_list = sequence.get('new_packing_list')
-    self._solveDivergence(packing_list, 'quantity', 'adopt')
+    self._solveDivergence(packing_list, 'quantity', 'Adopt Solver')
 
   def stepUnifyDestinationWithDecision(self,sequence=None, sequence_list=None, **kw):
     """
@@ -635,7 +652,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     self._solveDeliveryGroupDivergence(packing_list, 'destination',
-                                       packing_list.getRelativeUrl())
+                                       'Accept Solver')
 
   def stepUnifyStartDateWithDecision(self,sequence=None, sequence_list=None, **kw):
     """
@@ -643,15 +660,13 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     self._solveDeliveryGroupDivergence(packing_list, 'start_date',
-                                  packing_list.getRelativeUrl())
+       'Unify Solver', value=packing_list.getStartDate())
 
   def stepUnifyStopDateWithDecision(self,sequence=None, sequence_list=None, **kw):
     """
       Solve divergence on stop date using unify
     """
-    packing_list = sequence.get('packing_list')
-    self._solveDeliveryGroupDivergence(packing_list, 'stop_date',
-                                  packing_list.getRelativeUrl())
+    raise NotImplementedError
 
   def stepUnifyStartDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
     """
@@ -661,58 +676,55 @@ class TestPackingListMixin(TestOrderMixin):
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
     self._solveDeliveryGroupDivergence(packing_list, 'start_date',
-                                  simulation_movement_list[-1].getRelativeUrl())
+      'Unify Solver', value=simulation_movement_list[-1].getStartDate())
 
   def stepUnifyStopDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
     """
       Solve divergence on stop date using unify
     """
-    packing_list = sequence.get('packing_list')
-    applied_rule = sequence.get('applied_rule')
-    simulation_movement_list = applied_rule.objectValues()
-    self._solveDeliveryGroupDivergence(packing_list, 'stop_date',
-                                  simulation_movement_list[-1].getRelativeUrl())
+    raise NotImplementedError
 
-  def _solveDeliveryGroupDivergence(self, obj, property, target_url):
-    kw = {'delivery_group_listbox':
-          {property:{'choice':target_url}}}
-    self.portal.portal_workflow.doActionFor(
-      obj,
-      'solve_divergence_action',
-      **kw)
+  def _solveDeliveryGroupDivergence(self, document, property, solver, **kw):
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(document)
+    for solver_decision in solver_process.contentValues():
+      if solver_decision.getCausalityValue().getTestedProperty() == property:
+        # use Quantity Accept Solver.
+        solver_decision.setSolverValue(self.portal.portal_solvers[solver])
+        # configure for Accept Solver.
+        solver_decision.updateConfiguration(tested_property_list=[property],
+                                            **kw)
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
 
   def stepAcceptDecisionResource(self,sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
-    self._solveDivergence(packing_list, 'resource', 'accept')
+    self._solveDivergence(packing_list, 'resource', 'Accept Solver')
 
   def stepAcceptDecisionQuantity(self,sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
-    self._solveDivergence(packing_list, 'quantity', 'accept')
+    self._solveDivergence(packing_list, 'quantity', 'Accept Solver')
 
   def stepAdoptPrevisionResource(self,sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
-    self._solveDivergence(packing_list, 'resource', 'adopt')
+    self._solveDivergence(packing_list, 'resource', 'Adopt Solver')
 
   def stepAdoptPrevisionQuantity(self,sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
-    self._solveDivergence(packing_list, 'quantity', 'adopt')
+    self._solveDivergence(packing_list, 'quantity', 'Adopt Solver')
 
-  def _solveDivergence(self, obj, property, decision, group='line'):
-    """
-      Solve divergences for a given property by taking decision.
-      FIXME: Only "line" level divergence are supported
-    """
-    kw = {'%s_group_listbox' % group:{}}
-    for divergence in obj.getDivergenceList():
-      if divergence.getProperty('tested_property') != property:
-        continue
-      sm_url = divergence.getProperty('simulation_movement').getRelativeUrl()
-      kw['line_group_listbox']['%s&%s' % (sm_url, property)] = {
-        'choice':decision}
-    self.portal.portal_workflow.doActionFor(
-      obj,
-      'solve_divergence_action',
-      **kw)
+  def _solveDivergence(self, document, property, solver):
+    """Solve divergence by using solver tool"""
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(document)
+    solver_decision, = [x for x in solver_process.contentValues()
+      if x.getCausalityValue().getTestedProperty() == property]
+    # use Quantity Accept Solver.
+    solver_decision.setSolverValue(self.portal.portal_solvers[solver])
+    # configure for Accept Solver.
+    solver_decision.updateConfiguration(tested_property_list=[property])
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
 
   def stepCheckPackingListLineWithNewQuantityPrevision(self,sequence=None, sequence_list=None, **kw):
     """
@@ -734,41 +746,27 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list_line = sequence.get('packing_list_line')
     new_resource = sequence.get('resource')
-    self.assertEquals(packing_list_line.getQuantity(), self.default_quantity)
-    self.assertNotEquals(packing_list_line.getResourceValue(), new_resource)
-    simulation_movement_list = packing_list_line.getDeliveryRelatedValueList()
-    order_line_list = [x.getParentValue().getParentValue().getDelivery() \
-                       for x in simulation_movement_list]
+    self.assertEquals(packing_list_line.getQuantity(), self.default_quantity*2)
+    self.assertEquals(packing_list_line.getResourceValue(), new_resource)
+    simulation_line_list = packing_list_line.getDeliveryRelatedValueList()
+    order_line_list = sum([x.getParentValue().getParentValue().getDeliveryList()
+                           for x in simulation_line_list], [])
     self.assertEquals(sorted(packing_list_line.getCausalityList()),
-                      sorted(order_line_list))
-    new_packing_list_line = packing_list_line.aq_parent[str(int(packing_list_line.getId())+1)]
-    self.assertEquals(new_packing_list_line.getQuantity(), self.default_quantity)
-    self.assertEquals(new_packing_list_line.getResourceValue(), new_resource)
-    simulation_movement_list = new_packing_list_line.getDeliveryRelatedValueList()
-    order_line_list = [x.getParentValue().getParentValue().getDelivery() \
-                       for x in simulation_movement_list]
-    self.assertEquals(sorted(new_packing_list_line.getCausalityList()),
                       sorted(order_line_list))
 
   def stepCheckPackingListLineWithSameResource(self,sequence=None, sequence_list=None, **kw):
     """
       Look if the packing list has new previsions
     """
-    order_line = sequence.get('order_line')
-    packing_list_line = order_line.getCausalityRelatedValue()
-    old_packing_list_line = [x for x in \
-                             sequence.get('packing_list').objectValues() \
-                             if x != packing_list_line][0]
+    old_packing_list_line = sequence.get('packing_list_line')
+    packing_list_line = old_packing_list_line.aq_parent[str(int(old_packing_list_line.getId())-1)]
     resource = sequence.get('resource')
-    self.assertEquals(old_packing_list_line.getQuantity(), 0)
-    self.assertNotEquals(old_packing_list_line.getResourceValue(), resource)
-    self.assertEquals(packing_list_line.getQuantity(), self.default_quantity * 2)
-    self.assertEquals(packing_list_line.getResourceValue(), resource)
-    simulation_movement_list = packing_list_line.getDeliveryRelatedValueList()
-    order_line_list = [x.getParentValue().getParentValue().getDelivery() \
-                       for x in simulation_movement_list]
-    self.assertEquals(sorted(packing_list_line.getCausalityList()),
-                      sorted(order_line_list))
+    for line in sequence.get('packing_list').getMovementList():
+      self.assertEquals(line.getResourceValue(), resource)
+      self.assertEquals(line.getQuantity(), self.default_quantity)
+      self.assertEquals(line.getCausalityList(),
+                        [x.getParentValue().getParentValue().getDelivery()
+                         for x in line.getDeliveryRelatedValueList()])
 
   def stepCheckNewPackingListAfterStartDateAdopt(self,sequence=None, sequence_list=None, **kw):
     """
@@ -996,26 +994,26 @@ class TestPackingListMixin(TestOrderMixin):
 
   def stepCheckSimulationMovementHasRecordedQuantity(self, sequence=None,
                                                      sequence_list=None):
-    movement_list = sequence.get('order').objectValues(
-      portal_type=self.order_line_portal_type)
+    movement_list = sequence.get('packing_list').objectValues(
+      portal_type=self.packing_list_line_portal_type)
     self._checkRecordedProperty(movement_list, 'quantity', True)
 
   def stepCheckSimulationMovementHasNoRecordedQuantity(self, sequence=None,
                                                        sequence_list=None):
-    movement_list = sequence.get('order').objectValues(
-      portal_type=self.order_line_portal_type)
+    movement_list = sequence.get('packing_list').objectValues(
+      portal_type=self.packing_list_line_portal_type)
     self._checkRecordedProperty(movement_list, 'quantity', False)
 
   def stepCheckSimulationMovementHasRecordedResource(self, sequence=None,
                                                      sequence_list=None):
-    movement_list = sequence.get('order').objectValues(
-      portal_type=self.order_line_portal_type)
+    movement_list = sequence.get('packing_list').objectValues(
+      portal_type=self.packing_list_line_portal_type)
     self._checkRecordedProperty(movement_list, 'resource', True)
 
   def stepCheckSimulationMovementHasNoRecordedResource(self, sequence=None,
                                                        sequence_list=None):
-    movement_list = sequence.get('order').objectValues(
-      portal_type=self.order_line_portal_type)
+    movement_list = sequence.get('packing_list').objectValues(
+      portal_type=self.packing_list_line_portal_type)
     self._checkRecordedProperty(movement_list, 'resource', False)
 
 class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
@@ -1179,6 +1177,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
 
     sequence_list.play(self, quiet=quiet)
 
+  # This test does not work as it is because of the different behaviour of
+  # Adopt Solver.
   def test_05d_SimulationChangeResourceOnOneSimulationMovementForMergedLine(self, quiet=quiet, run=run_all_test):
     if not run: return
     sequence_list = SequenceList()
@@ -1245,6 +1245,10 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self, quiet=quiet)
+
+  # The 3 following tests currently fail because they are making assertions on
+  # an applied rule which with the new simulation structure is not the same as
+  # in the original test packing list.
 
   def test_06_SimulationChangeStartDate(self, quiet=quiet, run=run_all_test):
     if not run: return
@@ -1793,7 +1797,7 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     self.added_target_solver_list = []
 
   def beforeTearDown(self, quiet=1, run=1):
-    self.portal.portal_rules.default_delivery_simulation_rule.default_quantity_tester.edit(
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
       solver=())
     solver_process_type_info = self.portal.portal_types['Solver Process']
     solver_process_type_info.setTypeAllowedContentTypeList(self.original_allowed_content_types)

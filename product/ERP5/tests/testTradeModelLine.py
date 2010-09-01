@@ -576,7 +576,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     transaction.commit()
     self.tic()
 
-  def test_01b_InvoiceModifyQuantityAndSolveDivergency(self):
+  def test_01b_NewSimulation_InvoiceModifyQuantityAndSolveDivergency(self):
     invoice = self.test_01_OrderWithSimpleTaxedAndDiscountedLines('invoice')
 
     for line in invoice.getMovementList():
