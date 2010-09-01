@@ -80,10 +80,10 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
 
     # Before the test, we need to input the inventory
 
-    self.vault_source = self.france.caveau.serre.encaisse_des_billets_neufs_non_emis_en_transit_allant_a.spain
-    self.vault_destination = self.spain.caveau.serre.encaisse_des_billets_neufs_non_emis
-    self.reception_site = self.reception = self.vault_source
-    self.destination_site = self.vault_destination
+    self.reception_site = self.france.caveau.serre.encaisse_des_billets_neufs_non_emis_en_transit_allant_a.spain
+    self.destination_site = self.spain.caveau.serre.encaisse_des_billets_neufs_non_emis
+    # Needed by TestERP5BankingMonetaryReceptionMixin
+    self.reception = self.reception_site
     # Create an Organisation that will be used for users assignment
     self.checkUserFolderType()
     self.organisation = self.organisation_module.newContent(id='baobab_org', portal_type='Organisation',
@@ -111,7 +111,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     self.cash_movement = self.cash_movement_module.newContent(
       id='cash_movement_1',
       portal_type='Cash Movement New Not Emitted', 
-      source=self.vault_source.getRelativeUrl(),
+      source=self.reception_site.getRelativeUrl(),
       destination_section_value=self.spain,
       description='test',
       start_date=self.date,
@@ -225,8 +225,8 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     cell = self.valid_line_1.getCell('emission_letter/p', variation, 'cash_status/new_not_emitted')
     self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
     self.assertEqual(cell.getResourceValue(), self.billet_10000)
-    self.assertEqual(cell.getBaobabSourceValue(), self.vault_source)
-    self.assertEqual(cell.getBaobabDestinationValue(), self.vault_destination)
+    self.assertEqual(cell.getBaobabSourceValue(), self.reception_site)
+    self.assertEqual(cell.getBaobabDestinationValue(), self.destination_site)
     self.assertEqual(cell.getQuantity(), 200.0)
 
 
@@ -261,9 +261,9 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # chek the value of the banknote
     self.assertEqual(cell.getPrice(), 10000.0)
     # check the source vault is caisse_1
-    self.assertEqual(cell.getBaobabSourceValue(), self.vault_source)
+    self.assertEqual(cell.getBaobabSourceValue(), self.reception_site)
     # check the destination vault is caisse_2
-    self.assertEqual(cell.getBaobabDestinationValue(), self.vault_destination)
+    #self.assertEqual(cell.getBaobabDestinationValue(), self.destination_site)
     self.assertEqual(cell.getQuantity(), 100.0)
 
 
@@ -298,8 +298,8 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # chek the value of the banknote
     self.assertEqual(cell.getPrice(), 10000.0)
     # check the source vault is caisse_1
-    self.assertEqual(cell.getBaobabSourceValue(), self.vault_source)
-    self.assertEqual(cell.getBaobabDestinationValue(), self.vault_destination)
+    self.assertEqual(cell.getBaobabSourceValue(), self.reception_site)
+    self.assertEqual(cell.getBaobabDestinationValue(), self.destination_site)
     self.assertEqual(cell.getQuantity(), 100.0)
 
 
@@ -308,14 +308,14 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     Check that compution of inventory at vault caisse_2 is right after confirm and before deliver
     """
     # check source
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.reception.getRelativeUrl(),
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.reception_site.getRelativeUrl(),
                                                               resource = self.billet_10000.getRelativeUrl()), 0.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception.getRelativeUrl(),
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.reception_site.getRelativeUrl(),
                                                              resource = self.billet_10000.getRelativeUrl()), 0.0)
     # check destination
-    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.vault_destination.getRelativeUrl(),
+    self.assertEqual(self.simulation_tool.getCurrentInventory(node=self.destination_site.getRelativeUrl(),
                                                               resource = self.billet_10000.getRelativeUrl()), 200.0)
-    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.vault_destination.getRelativeUrl(),
+    self.assertEqual(self.simulation_tool.getFutureInventory(node=self.destination_site.getRelativeUrl(),
                                                              resource = self.billet_10000.getRelativeUrl()), 200.0)
 
   def stepCheckFinalContainerInventory(self, sequence=None, sequence_list=None, **kw):
