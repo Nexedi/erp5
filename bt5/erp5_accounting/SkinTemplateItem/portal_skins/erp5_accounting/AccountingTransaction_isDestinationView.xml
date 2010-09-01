@@ -56,13 +56,17 @@
             <value> <string>destination = context.getDestinationSectionValue()\n
 section_category = context.portal_preferences\\\n
          .getPreferredAccountingTransactionSectionCategory()\n
+section_category_strict = context.portal_preferences\\\n
+         .getPreferredAccountingSectionCategoryStrict()\n
+\n
 \n
 # If the destination is an organisation member of the preferred section category,\n
 # then we\'ll show destination view\n
 if destination is not None and section_category:\n
   if destination.getPortalType() == \'Person\':\n
     return False\n
-  if destination.isMemberOf(section_category):\n
+  if destination.isMemberOf(section_category,\n
+                            strict_membership=section_category_strict):\n
     return True\n
 \n
 # If the source is an organisation member of the preferred section category,\n
@@ -71,7 +75,8 @@ source = context.getSourceSectionValue()\n
 if source is not None and section_category:\n
   if source.getPortalType() == \'Person\':\n
     return True\n
-  if source.isMemberOf(section_category):\n
+  if source.isMemberOf(section_category,\n
+                       strict_membership=section_category_strict):\n
     return False\n
 \n
 # If we reach this point, none of the sections are member of the preferred section\n
@@ -117,6 +122,7 @@ return True\n
                             <string>context</string>
                             <string>destination</string>
                             <string>section_category</string>
+                            <string>section_category_strict</string>
                             <string>None</string>
                             <string>False</string>
                             <string>True</string>
