@@ -1,0 +1,25 @@
+Took originally from OpenSuse spec. Needed on opensuse to avoid "error: array subscript is above array bounds"
+--- memcached-orig/memcached.c
++++ memcached-new/memcached.c	2010/05/06 11:40:56
+@@ -2335,15 +2335,18 @@
+ inline static void process_stats_detail(conn *c, const char *command) {
+     assert(c != NULL);
+ 
+-    if (strcmp(command, "on") == 0) {
++    char on[] = "on";
++    char off[] = "off";
++    char dump[] = "dump";
++    if (strcmp(command, on) == 0) {
+         settings.detail_enabled = 1;
+         out_string(c, "OK");
+     }
+-    else if (strcmp(command, "off") == 0) {
++    else if (strcmp(command, off) == 0) {
+         settings.detail_enabled = 0;
+         out_string(c, "OK");
+     }
+-    else if (strcmp(command, "dump") == 0) {
++    else if (strcmp(command, dump) == 0) {
+         int len;
+         char *stats = stats_prefix_dump(&len);
+         write_and_free(c, stats, len);
