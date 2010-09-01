@@ -211,7 +211,19 @@ try:
     timeout = 60 * 5
     
     def __init__(self, container, **kw):
-      self.client = pysvn.Client()
+      # pysvn.Client() uses the system configuration.
+      # which means that if one sets for example a global
+      #   diff-cmd = /usr/bin/colordiff
+      # in his ~/.subversion/config , this pysvn client
+      # will call colordiff when creating diffs, and will
+      # fail and crash when trying to parse the diff output since it
+      # will contain unexpected color codes.
+      # The workaround is to pass a config directory to pysvn.Client:
+      # if this config directory does not contain a valid config file,
+      # pysvn falls back to the safe default configuration.
+      path_without_config = os.getcwd()
+      self.client = pysvn.Client(path_without_config)
+
       self.client.set_auth_cache(0)
       obj = self.__of__(container)
       self.client.exception_style = 1
