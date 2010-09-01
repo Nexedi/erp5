@@ -651,16 +651,15 @@ class TestPackingListMixin(TestOrderMixin):
       Check if simulation movement are disconnected
     """
     packing_list = sequence.get('packing_list')
-    self._solveDeliveryGroupDivergence(packing_list, 'destination',
-                                       'Accept Solver')
+    self._solveDivergence(packing_list, 'destination', 'Accept Solver')
 
   def stepUnifyStartDateWithDecision(self,sequence=None, sequence_list=None, **kw):
     """
       Check if simulation movement are disconnected
     """
     packing_list = sequence.get('packing_list')
-    self._solveDeliveryGroupDivergence(packing_list, 'start_date',
-       'Unify Solver', value=packing_list.getStartDate())
+    self._solveDivergence(packing_list, 'start_date', 'Unify Solver',
+                          value=packing_list.getStartDate())
 
   def stepUnifyStopDateWithDecision(self,sequence=None, sequence_list=None, **kw):
     """
@@ -675,7 +674,7 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('packing_list')
     applied_rule = sequence.get('applied_rule')
     simulation_movement_list = applied_rule.objectValues()
-    self._solveDeliveryGroupDivergence(packing_list, 'start_date',
+    self._solveDivergence(packing_list, 'start_date',
       'Unify Solver', value=simulation_movement_list[-1].getStartDate())
 
   def stepUnifyStopDateWithPrevision(self,sequence=None, sequence_list=None, **kw):
@@ -683,19 +682,6 @@ class TestPackingListMixin(TestOrderMixin):
       Solve divergence on stop date using unify
     """
     raise NotImplementedError
-
-  def _solveDeliveryGroupDivergence(self, document, property, solver, **kw):
-    solver_process_tool = self.portal.portal_solver_processes
-    solver_process = solver_process_tool.newSolverProcess(document)
-    for solver_decision in solver_process.contentValues():
-      if solver_decision.getCausalityValue().getTestedProperty() == property:
-        # use Quantity Accept Solver.
-        solver_decision.setSolverValue(self.portal.portal_solvers[solver])
-        # configure for Accept Solver.
-        solver_decision.updateConfiguration(tested_property_list=[property],
-                                            **kw)
-    solver_process.buildTargetSolverList()
-    solver_process.solve()
 
   def stepAcceptDecisionResource(self,sequence=None, sequence_list=None, **kw):
     packing_list = sequence.get('packing_list')
@@ -713,7 +699,7 @@ class TestPackingListMixin(TestOrderMixin):
     packing_list = sequence.get('packing_list')
     self._solveDivergence(packing_list, 'quantity', 'Adopt Solver')
 
-  def _solveDivergence(self, document, property, solver):
+  def _solveDivergence(self, document, property, solver, **kw):
     """Solve divergence by using solver tool"""
     solver_process_tool = self.portal.portal_solver_processes
     solver_process = solver_process_tool.newSolverProcess(document)
@@ -722,7 +708,7 @@ class TestPackingListMixin(TestOrderMixin):
     # use Quantity Accept Solver.
     solver_decision.setSolverValue(self.portal.portal_solvers[solver])
     # configure for Accept Solver.
-    solver_decision.updateConfiguration(tested_property_list=[property])
+    solver_decision.updateConfiguration(tested_property_list=[property], **kw)
     solver_process.buildTargetSolverList()
     solver_process.solve()
 
