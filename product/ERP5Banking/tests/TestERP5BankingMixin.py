@@ -57,7 +57,8 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
             'erp5_banking_core',
             'erp5_banking_inventory',
             'erp5_banking_cash',
-            'erp5_banking_check')
+            'erp5_banking_check',
+    )
 
   def enableLightInstall(self):
     """
