@@ -39,7 +39,7 @@ connection_plugin_registry = {}
 
 def registerConnectionPlugin(name, klass, ignore_duplicate=False):
   if not ignore_duplicate:
-    if name not in connection_plugin_registry:
+    if name in connection_plugin_registry:
       raise ValueError('The connection plugin %r has already been registered in the registry %r' % (name, connection_plugin_registry))
   connection_plugin_registry[name] = klass
 
