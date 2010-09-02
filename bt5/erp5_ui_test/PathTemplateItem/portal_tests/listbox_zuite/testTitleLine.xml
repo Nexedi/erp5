@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -57,47 +54,47 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_title</td>\n
-  <td>exact:Foos:</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
+  <td>exact:Foos</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_record_number</td>\n
-  <td>0 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_item_number</td>\n
-  <td> - 0 items selected</td>\n
+  <td>//span[@class="listbox-current-item-number"]</td>\n
+  <td>0</td>\n
 </tr>\n
-<tr>\n
+<!--<tr>\n
   <td>verifyElementNotPresent</td>\n
   <td>id=listbox_page_selection</td>\n
   <td></td>\n
-</tr>\n
+</tr>-->\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_next_page</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_previous_page</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_flat_list_mode</td>\n
+  <td>//input[@class="listbox-tree-flat-list-mode"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_domain_tree_mode</td>\n
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_report_tree_mode</td>\n
+  <td>//input[@class="listbox-tree-report-tree-mode"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -118,17 +115,17 @@
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_flat_list_mode</td>\n
+  <td>//input[@class="listbox-tree-flat-list-mode"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_domain_tree_mode</td>\n
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_report_tree_mode</td>\n
+  <td>//input[@class="listbox-tree-report-tree-mode"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -149,17 +146,17 @@
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_flat_list_mode</td>\n
+  <td>//input[@class="listbox-tree-flat-list-mode"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>id=listbox_domain_tree_mode</td>\n
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_report_tree_mode</td>\n
+  <td>//input[@class="listbox-tree-report-tree-mode"]</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n

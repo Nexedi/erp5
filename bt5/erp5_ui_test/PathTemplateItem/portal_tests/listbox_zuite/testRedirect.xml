@@ -97,7 +97,7 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/button/span</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
@@ -140,8 +140,8 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -150,17 +150,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]//input[@type="text"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
@@ -186,8 +186,8 @@
 <!-- Go to last and verify -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -196,17 +196,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]//input[@type="text"]</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>5</td>\n
 </tr>\n
 <tr>\n
@@ -237,8 +237,8 @@
 <!-- Go to previous and verify -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -247,7 +247,7 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>9</td>\n
 </tr>\n
 <tr>\n
@@ -273,8 +273,8 @@
 <!-- Go to first and verify -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -283,17 +283,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>6</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]//input[@type="text"]</td>\n
   <td>7</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>8</td>\n
 </tr>\n
 <tr>\n
@@ -323,8 +323,8 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -333,17 +333,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[1]//input[@type="text"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[1]//input[@type="text"]</td>\n
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[1]//input[@type="text"]</td>\n
   <td>2</td>\n
 </tr>\n
 \n
@@ -375,7 +375,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_domain_tree_mode</td>\n
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -385,18 +385,18 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a[@class="tree_closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <!-- Click on "+ a" link -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -406,22 +406,22 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_open"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-open"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[2]//a[@class="tree_closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
   <td>a1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[3]//a[@class="tree_closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//a[@class="tree-closed"]</td>\n
   <td>a2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[4]//a[@class="tree_closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//a[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <!-- END of inspired code -->\n
