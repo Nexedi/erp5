@@ -1,2 +1,5 @@
+2010-09-02 Kazuhiko
+* XXX limit indexing full text size up to approx. 8MB, otherwise SphinxQL operations fail for very large texts.
+
 2010-08-19 Kazuhiko
 * initial commit
