@@ -39,6 +39,12 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+<tal:block tal:replace="nothing">\n
+<!--\n
+XXX: PDF pagination should be similar to OOo one (using iframe). This part should also be async ideally\n
+-->\n
+</tal:block>\n
+\n
 <tal:block tal:define="current_thumbnail_index    \n
                  request/frame|\n
                    python:here.PDF_getPageNumberFromSelectionIndex(request.get(\'selection_index\', 0));\n
@@ -46,19 +52,19 @@
                  next_thunmbnail_index python: current_thumbnail_index + 1;\n
                  previous_thunmbnail_index python: current_thumbnail_index - 1;\n
                  parent_doc_url here/absolute_url;\n
-                 base_url string:${parent_doc_url}/PDF_viewHTMLPreviewAsImage?">\n
+                 base_url python: \'%s/%s\' % (parent_doc_url, request.get(\'current_form_id\', \'view\'))">\n
 \n
   <div class="pdf-preview-navigation">\n
     <tal:block tal:condition="python:current_thumbnail_index >= 1">\n
     <a href=""\n
-      tal:attributes="href string:${base_url}selection_index=0">\n
+      tal:attributes="href string:${base_url}?selection_index=0">\n
         <img src="images/2leftarrowb.png" \n
              i18n:attributes="alt"\n
              i18n:domain="ui"\n
              alt="First"/>\n
       </a>\n
     <a href=""\n
-      tal:attributes="href string:${base_url}selection_index=${previous_thunmbnail_index}">\n
+      tal:attributes="href string:${base_url}?selection_index=${previous_thunmbnail_index}">\n
         <img src="images/1leftarrowb.png" \n
              i18n:attributes="alt"\n
              i18n:domain="ui"\n
@@ -78,14 +84,14 @@
     <span tal:content="python:current_thumbnail_index+1"/> / <span tal:content="all_thunmbnails"/>\n
     <tal:block tal:condition="python:all_thunmbnails > next_thunmbnail_index">\n
     <a href=""\n
-      tal:attributes="href string:${base_url}selection_index=${next_thunmbnail_index}">\n
+      tal:attributes="href string:${base_url}?selection_index=${next_thunmbnail_index}">\n
         <img src="images/1rightarrowb.png" \n
              i18n:attributes="alt"\n
              i18n:domain="ui"\n
              alt="Next"/>\n
     </a>\n
     <a href=""\n
-      tal:attributes="href string:${base_url}selection_index=${all_thunmbnails}">\n
+      tal:attributes="href string:${base_url}?selection_index=${all_thunmbnails}">\n
         <img src="images/2rightarrowb.png" \n
              i18n:attributes="alt"\n
              i18n:domain="ui"\n
@@ -103,7 +109,8 @@
               alt="Last"/>\n
     </tal:block>\n
   </div>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>
