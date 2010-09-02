@@ -3585,7 +3585,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # restore originals ones
     portal.setPlacelessDefaultReindexParameters(**original_reindex_parameters)
     person = portal.person_module.newContent(portal_type='Person')
-    # .. now now messages with this tag should apper
+    # .. now no messages with this tag should apper
     self.assertEquals(0, portal.portal_activities.countMessageWithTag(tag))    
 
   def TryNotificationSavedOnEventLogWhenNotifyUserRaises(self, activity):
