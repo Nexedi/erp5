@@ -60,7 +60,7 @@
                  global row_keys python: [\'None\'];\n
                  global stats python: [\' \',\'count\',\'sum\',\'max\',\'min\',\'avg\'];\n
                  all_columns python: default_columns + [x for x in listbox.get_value(\'all_columns\') if x not in default_columns]">\n
-            <tbody id="configure_list_table">\n
+            <tbody class="configure_list_table">\n
             <tal:block tal:repeat="item columns">\n
               <tr tal:define="global row_index python:row_index+1;\n
                   dummy python:row_keys.append(item[0])"\n
