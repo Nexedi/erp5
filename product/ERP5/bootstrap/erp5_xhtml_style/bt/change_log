@@ -1,3 +1,6 @@
+2010-09-02 ivan
+* Make universal Listbox_asHTML rendering which uses heavily CSS.
+
 2010-07-20 yo
 * Make it easier to override CSS and JavaScript. Now, you can tweak CSS and JavaScript by overriding ERP5Site_getCssRelativeUrlList and ERP5Site_getJavaScriptRelativeUrlList, respectively.
 

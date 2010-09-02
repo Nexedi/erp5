@@ -1,0 +1,769 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_listbox.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>main_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>context_bar_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>navigation_bar_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>font_family</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>font_size</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>font_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>dialog_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>dialog_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>link_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>link_hover_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>button_description_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>document_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>document_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_label_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_odd_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_even_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>tooltip_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>tooltip_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>tooltip_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_hover_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>listbox_stat_background_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>alternate_font_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>group_border_color</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>alternate_font_color</string> </key>
+            <value> <string>#596dab</string> </value>
+        </item>
+        <item>
+            <key> <string>background_color</string> </key>
+            <value> <string>#DAE6F6</string> </value>
+        </item>
+        <item>
+            <key> <string>button_description_color</string> </key>
+            <value> <string>#000</string> </value>
+        </item>
+        <item>
+            <key> <string>context_bar_background_color</string> </key>
+            <value> <string>#BDD0F0</string> </value>
+        </item>
+        <item>
+            <key> <string>dialog_background_color</string> </key>
+            <value> <string>#BDD0F0</string> </value>
+        </item>
+        <item>
+            <key> <string>dialog_border_color</string> </key>
+            <value> <string>#3D5474</string> </value>
+        </item>
+        <item>
+            <key> <string>document_background_color</string> </key>
+            <value> <string>#E3EAFA</string> </value>
+        </item>
+        <item>
+            <key> <string>document_border_color</string> </key>
+            <value> <string>#3D6474</string> </value>
+        </item>
+        <item>
+            <key> <string>font_color</string> </key>
+            <value> <string>#001730</string> </value>
+        </item>
+        <item>
+            <key> <string>font_family</string> </key>
+            <value> <string>Arial, Helvetica, sans-serif</string> </value>
+        </item>
+        <item>
+            <key> <string>font_size</string> </key>
+            <value> <string>12px</string> </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>group_border_color</string> </key>
+            <value> <string>#97B0D1</string> </value>
+        </item>
+        <item>
+            <key> <string>link_color</string> </key>
+            <value> <string>#002e3f</string> </value>
+        </item>
+        <item>
+            <key> <string>link_hover_color</string> </key>
+            <value> <string>#3D6474</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_even_background_color</string> </key>
+            <value> <string>#DAE6F6</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_hover_background_color</string> </key>
+            <value> <string>#BDD0F0</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_label_background_color</string> </key>
+            <value> <string>#C1DAEB</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_odd_background_color</string> </key>
+            <value> <string>#FFF</string> </value>
+        </item>
+        <item>
+            <key> <string>listbox_stat_background_color</string> </key>
+            <value> <string>#C1DAEB</string> </value>
+        </item>
+        <item>
+            <key> <string>main_border_color</string> </key>
+            <value> <string>#97B0D1</string> </value>
+        </item>
+        <item>
+            <key> <string>navigation_bar_background_color</string> </key>
+            <value> <string>#97B0D1</string> </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.\n
+                   Ivan Tyagov <ivan@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
+\n
+/* \n
+============================================\n
+Listbox experiment  - IVAN\n
+*/\n
+\n
+/* Search popup fix*/\n
+div.search_popup{\n
+  left:200px;\n
+  position:absolute;\n
+  top:-120px;\n
+  width:250px;\n
+}\n
+\n
+div.listbox-container{\n
+  width: 100%;\n
+  height: auto;\n
+  float:left;\n
+  margin-bottom:5px;\n
+\n
+}\n
+div.listbox-body{\n
+  float:left;\n
+  width: 100%;\n
+}\n
+\n
+div.listbox-tree{\n
+  margin-right: 8px;\n
+  width: auto;\n
+  float: left;\n
+}\n
+\n
+\n
+div.listbox-content{\n
+  float:left;\n
+  width:100%;\n
+}\n
+\n
+div.maximal-width{\n
+  width:100%;\n
+}\n
+\n
+div.float-right{\n
+  float:right;\n
+}\n
+\n
+div.auto-width{\n
+  width:auto;\n
+}\n
+\n
+\n
+div.listbox-head{\n
+  color:#9D968D;\n
+  margin-left:-1px;\n
+}\n
+\n
+div.listbox-head-spacer{\n
+  background:transparent url("images/tab_left_selected.png") no-repeat scroll left top;\n
+  height:36px;\n
+  width:10px;\n
+  float:left;\n
+}\n
+\n
+div.listbox-head-content{\n
+  border-right:1px solid #3D6474;\n
+  border-top:1px solid #3D6474;\n
+  height:25px;\n
+  margin-left:10px;\n
+  padding-top:10px;\n
+  padding-right: 5px;\n
+  width:auto;\n
+  background-color: #e3eafa;\n
+}\n
+\n
+div.listbox-head div.listbox-head-title{\n
+  float:left;\n
+  width:auto;\n
+}\n
+\n
+div.listbox-head div.listbox-head-navigation{\n
+  float:right;\n
+  width:auto;\n
+}\n
+\n
+div.listbox-head div.listbox-head-results{\n
+  float: right; \n
+  width: auto; \n
+  clear: right;\n
+  text-align:right;\n
+}\n
+\n
+div.listbox-tree-mode-selection{\n
+  height: 22px;\n
+  width: auto;\n
+  float: left;\n
+}\n
+\n
+div.listbox-tree-mode-selection input{\n
+  width: auto;\n
+}\n
+\n
+th.listbox-table-report-tree-selection-cell{\n
+  width: 50px; \n
+}\n
+\n
+/* Listbox header */\n
+div.listbox-header-box{\n
+  width: auto;\n
+  float:left;\n
+  padding-right: 5px;\n
+}\n
+\n
+\n
+/* Listbox Footer */\n
+div.listbox-footer{\n
+  float:left;\n
+  width:100%;\n
+  text-align: center; \n
+  background-color: #BDD0F0;\n
+  margin-left:-1px;\n
+}\n
+\n
+div.listbox-footer-box{\n
+  margin-top:3px;\n
+  margin-bottom:3px;\n
+}\n
+\n
+/* Listbox Footer in gadget mode */\n
+div.block div.listbox-footer{\n
+   background-color: transparent;\n
+}\n
+\n
+div.block div.listbox-head-content{\n
+  font-size: 90%;\n
+}\n
+\n
+div.listbox-title,\n
+div.listbox-number-of-records{\n
+  padding-top: 5px;\n
+}\n
+\n
+/* List style selection */\n
+div.listbox-list-style-selection {\n
+  padding-top:1px;\n
+  padding-left: 5px;\n
+}\n
+\n
+div.listbox-list-style-selection span{\n
+  vertical-align:-4px;\n
+}\n
+\n
+div.block div.listbox-list-style-selection span{\n
+  padding-left: 0px;\n
+}\n
+div.listbox-list-style-selection ul{\n
+  display:inline;\n
+  padding-left:0;\n
+  margin: 0;\n
+  vertical-align: -4px;\n
+}\n
+div.listbox-list-style-selection li{\n
+  display: inline;\n
+  margin-left: 0.1em;\n
+}\n
+  \n
+div.listbox-list-style-selection li a{\n
+  cursor: pointer;\n
+}\n
+div.listbox-list-style-selection li a.selected,\n
+.listbox-table-report-tree-selection-cell a.selected,\n
+.listbox-table-domain-tree-cell a.selected,\n
+.listbox-page-navigation-text a.selected{\n
+  font-weight: bold;\n
+}\n
+\n
+/* Listbox full text search bar */\n
+div.listbox-full-text-search {\n
+}\n
+\n
+div.listbox-full-text-search input{\n
+  width: 250px;\n
+}\n
+\n
+div.listbox-full-text-search input.button{\n
+ background-color: #97B0D1;\n
+ border: 0 none;\n
+ color:#000;\n
+ width: auto;\n
+ padding-left: 10px;\n
+ padding-right: 10px;\n
+ cursor: pointer;\n
+\n
+}\n
+\n
+/* Listbox Navigation */\n
+div.listbox-page-navigation input.listbox_set_page, \n
+div.listbox-page-navigation button.listbox_next_page, \n
+div.listbox-page-navigation button.listbox_last_page, \n
+div.listbox-page-navigation button.listbox_first_page, \n
+div.listbox-page-navigation button.listbox_previous_page{\n
+  margin: 0em;\n
+  padding: 0em;\n
+}\n
+\n
+div.listbox-page-navigation button{\n
+  background-color:transparent;\n
+  border: none;\n
+  cursor: pointer;\n
+}\n
+div.listbox-page-navigation button span.image{\n
+  display:block;\n
+  height:22px;\n
+  width:22px;\n
+  background-repeat:no-repeat;\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_first_page span.image {\n
+  background-image:url("images/2leftarrowv.png");\n
+}\n
+div.listbox-page-navigation button.listbox_previous_page span.image {\n
+  background-image:url("images/1leftarrowv.png");\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_next_page span.image {\n
+  background-image:url("images/1rightarrowv.png");\n
+}\n
+\n
+div.listbox-page-navigation button.listbox_last_page span.image {\n
+  background-image:url("images/2rightarrowv.png");\n
+}\n
+\n
+div.listbox-page-navigation-slider{\n
+  width:auto;\n
+  margin:auto;\n
+  padding-right: 0.5em;\n
+  float:right;\n
+}\n
+\n
+div.listbox-page-navigation-slider input{\n
+  max-width: 30px;\n
+}\n
+\n
+div.listbox-page-navigation-text{\n
+  width:100%;\n
+  float:left;\n
+  text-align:center;\n
+}\n
+\n
+div.listbox-page-navigation-text a{\n
+  padding-right: 1px;\n
+  color: #000;\n
+  cursor: pointer;\n
+}\n
+\n
+/* Report tree */\n
+a.tree-closed {\n
+  background:transparent url(\'./images/tree_closed.png\') no-repeat scroll left center;\n
+  padding-left:15px;\n
+}\n
+\n
+a.tree-open {\n
+  background:transparent url(\'./images/tree_open.png\') no-repeat scroll left center;\n
+  padding-left:15px;\n
+  font-weight: bold;\n
+}\n
+\n
+div.listbox-tree select{\n
+/*   max-width:120px; */\n
+}\n
+\n
+/* Table Listbox elements */\n
+\n
+table.listbox{\n
+  border-collapse:collapse;\n
+  width:100%;\n
+  border-color:#3D6474;\n
+  border-style:solid;\n
+  border-width:0 1px 1px;\n
+  margin-bottom: 0em;\n
+}\n
+\n
+table.listbox th,\n
+table.listbox td {\n
+  text-align:left;\n
+  vertical-align: middle;\n
+  border-color:#3D6474;\n
+  border-style:solid;\n
+  border-width:0 1px;\n
+  padding: 0em;\n
+  padding-left:1px;\n
+  padding-right:1px;\n
+  font-weight: normal;\n
+}\n
+\n
+table.listbox tr.listbox-label-line{\n
+  background-color:#C1DAEB;\n
+  color:#001730;\n
+  border-top: 1px solid #3D6474;\n
+}\n
+\n
+table.listbox tr.listbox-search-line th{\n
+  margin: 0em;\n
+  padding: 0em;\n
+  padding-right:5px;\n
+  padding-left:1px;\n
+}\n
+\n
+/* Select columns */\n
+table.listbox tr.listbox-label-line th.listbox-table-select-cell,\n
+table.listbox tr.listbox-search-line th.listbox-table-select-cell,\n
+table.listbox tr td.listbox-table-select-cell{\n
+  width: 50px; \n
+  text-align: center; \n
+  vertical-align: middle;\n
+  padding:0;\n
+  margin:0;\n
+}\n
+\n
+table.listbox tr.listbox-search-line th.listbox-table-filter-cell input{\n
+  width: 100%;\n
+  vertical-align:middle;\n
+}\n
+table.listbox input{\n
+  float:none;\n
+}\n
+\n
+table.listbox th button{\n
+  border-width:0;\n
+  cursor:pointer;\n
+  float:left;\n
+  padding:0 6px 0 0;\n
+  background: transparent;\n
+}\n
+\n
+table.listbox th button.sort-button {\n
+  text-decoration: underline;\n
+  padding-right: 12px;\n
+}\n
+\n
+table.listbox th button.sort-button:hover{\n
+  color: #FFF;\n
+}\n
+\n
+table.listbox th button.sort-button-desc{\n
+  background: url(\'images/1toparrow.png\') no-repeat scroll 100% 50%;\n
+}\n
+\n
+table.listbox th button.sort-button-asc{\n
+  background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 50%;\n
+}\n
+\n
+\n
+/* in search mode listbox may contain top/ bottom quick search inputs */\n
+div.search-text-listbox{\n
+  text-align: center;\n
+  float:left;\n
+  height:auto; \n
+  margin-bottom:0.5em;\n
+  margin-top:0.5em;\n
+}\n
+\n
+div.search-text-listbox input{\n
+  width: auto;\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ERP5 Listbox CSS</string> </value>
+        </item>
+        <item>
+            <key> <string>tooltip_background_color</string> </key>
+            <value> <string>#FFD</string> </value>
+        </item>
+        <item>
+            <key> <string>tooltip_border_color</string> </key>
+            <value> <string>#000</string> </value>
+        </item>
+        <item>
+            <key> <string>tooltip_color</string> </key>
+            <value> <string>#000</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
