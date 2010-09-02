@@ -252,10 +252,10 @@ class PreferenceTool(BaseTool):
                    if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
       sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
       preference_list = sys_prefs + prefs
-      tv[tv_key] = [x.getRelativeUrl() for x in preference_list]
+      tv[tv_key] = preference_list
     else:
       portal = self.getPortalObject()
-      preference_list = [portal.restrictedTraverse(x) for x in tv[tv_key]]
+      preference_list = tv[tv_key]
     return preference_list
 
   def _getActivePreferenceByPortalType(self, portal_type):
