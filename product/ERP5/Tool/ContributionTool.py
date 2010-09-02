@@ -170,6 +170,8 @@ class ContributionTool(BaseTool):
       file_name = url.split('/')[-1] or url.split('/')[-2]
       file_name = urllib.quote(file_name, safe='')
       file_name = file_name.replace('%', '')
+      # For URLs, we want an id by default equal to the encoded URL
+      if id is None: id = self.encodeURL(url)
       if hasattr(url_file, 'headers'):
         headers = url_file.headers
         if hasattr(headers, 'type'):
