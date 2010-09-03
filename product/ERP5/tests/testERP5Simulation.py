@@ -34,39 +34,26 @@ import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from testPackingList import TestPackingListMixin
-from testInvoice import TestInvoiceMixin
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from Products.ERP5Type.Document.BusinessTemplate import getChainByType
 
-class TestERP5SimulationMixin(TestInvoiceMixin):
 
-  def afterSetUp(self, quiet=1, run=1):
-    TestInvoiceMixin.afterSetUp(self)
-    business_process = self.portal.business_process_module.erp5_default_business_process
-    pay_business_link = business_process['pay']
-    pay_business_link.setSource('account_module/bank')
-    pay_business_link.setDestination('account_module/bank')
-
-class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
+class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
   run_all_test = 1
   quiet = 0
 
   def afterSetUp(self):
-    TestERP5SimulationMixin.afterSetUp(self)
-    new_delivery_rule = self.portal.portal_rules.new_delivery_simulation_rule
-    new_delivery_rule['quantity_tester'].edit(quantity=None,
-                                           quantity_range_max=2,
-                                           quantity_range_min=-1)
+    super(TestERP5Simulation, self).afterSetUp()
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
+      quantity_range_max=2,
+      quantity_range_min=-1)
 
   def beforeTearDown(self):
-    new_delivery_rule = self.portal.portal_rules.new_delivery_simulation_rule
-    new_delivery_rule['quantity_tester'].edit(quantity=0,
-                                           quantity_range_max=None,
-                                           quantity_range_min=None)
+    super(TestERP5Simulation, self).beforeTearDown()
+    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
+      quantity_range_max=None,
+      quantity_range_min=None)
     transaction.commit()
-    TestERP5SimulationMixin.beforeTearDown(self)
+    self.tic()
 
   def _modifyPackingListLineQuantity(self, sequence=None,
       sequence_list=None, delta=0.0):
@@ -209,108 +196,3 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self, quiet=quiet)
-
-class TestAutomaticSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
-  quiet = 0
-
-  def afterSetUp(self, quiet=1, run=1):
-    TestERP5SimulationMixin.afterSetUp(self)
-    solver_process_type_info = self.portal.portal_types['Solver Process']
-    self.original_allowed_content_types = solver_process_type_info.getTypeAllowedContentTypeList()
-    self.added_target_solver_list = []
-
-  def beforeTearDown(self, quiet=1, run=1):
-    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
-      solver=())
-    solver_process_type_info = self.portal.portal_types['Solver Process']
-    solver_process_type_info.setTypeAllowedContentTypeList(self.original_allowed_content_types)
-    self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
-    transaction.commit()
-    self.tic()
-    TestERP5SimulationMixin.beforeTearDown(self)
-
-  @UnrestrictedMethod
-  def _setUpTargetSolver(self, solver_id, solver_class, tested_property_list):
-    solver_tool = self.portal.portal_solvers
-    solver = solver_tool.newContent(
-      portal_type='Solver Type',
-      id=solver_id,
-      tested_property_list=tested_property_list,
-      automatic_solver=1,
-      type_factory_method_id='add%s' % solver_class,
-      type_group_list=('target_solver',),
-    )
-    solver.setCriterion(property='portal_type',
-                        identity=['Simulation Movement',])
-    solver.setCriterionProperty('portal_type')
-    solver_process_type_info = self.portal.portal_types['Solver Process']
-    solver_process_type_info.setTypeAllowedContentTypeList(
-      solver_process_type_info.getTypeAllowedContentTypeList() + \
-      [solver_id]
-    )
-    (default_chain, chain_dict) = getChainByType(self.portal)
-    chain_dict['chain_%s' % solver_id] = 'solver_workflow'
-    self.portal.portal_workflow.manage_changeWorkflows(default_chain,
-                                                       props=chain_dict)
-    self.portal.portal_caches.clearAllCache()
-    self.added_target_solver_list.append(solver_id)
-
-  def stepSetUpAutomaticQuantityAcceptSolver(self, sequence=None, sequence_list=None):
-    self._setUpTargetSolver('Automatic Quantity Accept Solver',
-                            'AcceptSolver', ('quantity',))
-    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
-      solver=('portal_solvers/Automatic Quantity Accept Solver',))
-
-  def stepSetUpAutomaticQuantityAdoptSolver(self, sequence=None, sequence_list=None):
-    self._setUpTargetSolver('Automatic Quantity Adopt Solver',
-                            'AdoptSolver', ('quantity',))
-    self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
-      solver=('portal_solvers/Automatic Quantity Adopt Solver',))
-
-  def test_01_PackingListDecreaseQuantity(self, quiet=quiet):
-    """
-      Change the quantity on an delivery line, then
-      see if the packing list is solved automatically
-      with accept solver.
-    """
-    sequence_list = SequenceList()
-
-    # Test with a simply order without cell
-    sequence_string = '\
-                      stepSetUpAutomaticQuantityAcceptSolver \
-                      ' + self.default_sequence + '\
-                      stepDecreasePackingListLineQuantity \
-                      stepCheckPackingListIsCalculating \
-                      stepTic \
-                      stepCheckPackingListIsSolved \
-                      '
-    sequence_list.addSequenceString(sequence_string)
-
-    sequence_list.play(self, quiet=quiet)
-
-  def test_02_PackingListDecreaseQuantity(self, quiet=quiet):
-    """
-      Change the quantity on an delivery line, then
-      see if the packing list is solved automatically
-      with adopt solver.
-    """
-    sequence_list = SequenceList()
-
-    # Test with a simply order without cell
-    sequence_string = '\
-                      stepSetUpAutomaticQuantityAdoptSolver \
-                      ' + self.default_sequence + '\
-                      stepDecreasePackingListLineQuantity \
-                      stepCheckPackingListIsCalculating \
-                      stepTic \
-                      stepCheckPackingListIsSolved \
-                      '
-    sequence_list.addSequenceString(sequence_string)
-
-    sequence_list.play(self, quiet=quiet)
-
-def test_suite():
-  suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestERP5Simulation))
-  suite.addTest(unittest.makeSuite(TestAutomaticSolvingPackingList))
-  return suite

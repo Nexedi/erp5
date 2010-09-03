@@ -1765,20 +1765,20 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
 
   def afterSetUp(self, quiet=1, run=1):
     TestPackingListMixin.afterSetUp(self)
-    types_tool = self.portal.portal_types
-    solver_process_type_info = types_tool['Solver Process']
-    self.original_allowed_content_types = solver_process_type_info.getTypeAllowedContentTypeList()
+    solver_process_type_info = self.portal.portal_types['Solver Process']
+    self.original_allowed_content_types = \
+      solver_process_type_info.getTypeAllowedContentTypeList()
     self.added_target_solver_list = []
 
   def beforeTearDown(self, quiet=1, run=1):
+    super(TestSolvingPackingList, self).beforeTearDown()
     self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
       solver=())
-    solver_process_type_info = self.portal.portal_types['Solver Process']
-    solver_process_type_info.setTypeAllowedContentTypeList(self.original_allowed_content_types)
+    self.portal.portal_types['Solver Process'].setTypeAllowedContentTypeList(
+      self.original_allowed_content_types)
     self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
     transaction.commit()
     self.tic()
-    super(TestSolvingPackingList, self).beforeTearDown()
 
   @UnrestrictedMethod
   def _setUpTargetSolver(self, solver_id, solver_class, tested_property_list):
@@ -1951,6 +1951,8 @@ class TestPurchasePackingListMixin(TestPackingListMixin):
 class TestPurchasePackingList(TestPurchasePackingListMixin, TestPackingList):
   """Tests for purchase packing list.
   """
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPackingList))
