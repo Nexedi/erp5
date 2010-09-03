@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -134,28 +131,28 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_title</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_data_line_0</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']</td>\n
   <td></td>\n
 </tr>\n
 <tr> \n
   <td>verifyElementPresent</td> \n
-  <td>id=listbox_data_line_1</td> \n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']</td> \n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_data_line_2</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_record_number</td>\n
-  <td>101 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>101</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -175,32 +172,32 @@
 \n
 <tr>\n
   <td>verifyText</td>\n
-  <td>id=listbox_record_number</td>\n
-  <td>101 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>101</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_data_line_0</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']</td>\n
   <td></td>\n
 </tr>\n
 <tr> \n
   <td>verifyElementPresent</td> \n
-  <td>id=listbox_data_line_1</td> \n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']</td> \n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>id=listbox_data_line_2</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]</td>\n
   <td>Object created successfully - Type: Foo</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[1]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[1]</td>\n
   <td>Object created successfully - Type: Foo</td>\n
 </tr>\n
 </tbody></table>\n

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,7 +61,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'Title\']</td>\n
+  <td>//button[@value=\'listbox.title\']</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
@@ -96,7 +93,7 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'Title\']</td>\n
+  <td>//button[@value=\'listbox.title\']</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n

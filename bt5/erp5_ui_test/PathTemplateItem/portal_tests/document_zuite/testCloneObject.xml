@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -161,12 +158,12 @@ another object of the same type. -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>x0_listbox_record_number</td>\n
-  <td>2 records</td> <!-- Creation + paste notification -->\n
+  <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>\n
+  <td>2</td> <!-- Creation + paste notification -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>x0_listbox_data_line_1</td>\n
+  <td>//tr[@class="x0_listbox-data-line-1 DataB"]/td[5]</td>\n
   <td tal:content="string:regexp:Object copied from /.*/foo_module/2$$"/>\n
 </tr>\n
 </body>\n

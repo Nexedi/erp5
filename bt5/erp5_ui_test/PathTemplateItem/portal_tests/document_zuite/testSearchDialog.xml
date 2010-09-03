@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -104,12 +101,12 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>\n
   <td>id_value</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[3]//input</td>\n
   <td>title_value</td>\n
 </tr>\n
 </tal:block>\n
