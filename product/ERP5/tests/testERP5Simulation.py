@@ -35,8 +35,8 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from testPackingList import TestPackingList, TestPackingListMixin
-from testInvoice import TestSaleInvoice, TestInvoiceMixin
+from testPackingList import TestPackingListMixin
+from testInvoice import TestInvoiceMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.Document.BusinessTemplate import getChainByType
 
@@ -48,73 +48,6 @@ class TestERP5SimulationMixin(TestInvoiceMixin):
     pay_business_link = business_process['pay']
     pay_business_link.setSource('account_module/bank')
     pay_business_link.setDestination('account_module/bank')
-
-  @UnrestrictedMethod
-  def createInvoiceTransactionRule(self, resource=None):
-    """Create a sale invoice transaction rule with only one cell for
-    product_line/apparel and default_region
-    The accounting rule cell will have the provided resource, but this his more
-    or less optional (as long as price currency is set correctly on order)
-    """
-    portal = self.portal
-    account_module = portal.account_module
-    for account_id, account_gap, account_type \
-               in self.account_definition_list:
-      if not account_id in account_module.objectIds():
-        account = account_module.newContent(id=account_id)
-        account.setGap(account_gap)
-        account.setAccountType(account_type)
-        portal.portal_workflow.doActionFor(account, 'validate_action')
-    invoice_rule = portal.portal_rules.new_invoice_transaction_simulation_rule
-    if invoice_rule.getValidationState() == 'validated':
-      invoice_rule.invalidate()
-    invoice_rule.deleteContent(list(invoice_rule.contentIds(filter={'portal_type':['Predicate', 'Accounting Rule Cell']})))
-    transaction.commit()
-    self.tic()
-    region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
-    product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
-    region_predicate.edit(
-      membership_criterion_base_category_list = ['destination_region'],
-      membership_criterion_category_list =
-                   ['destination_region/region/%s' % self.default_region ],
-      int_index = 1,
-      string_index = 'region'
-    )
-    product_line_predicate.edit(
-      membership_criterion_base_category_list = ['product_line'],
-      membership_criterion_category_list =
-                            ['product_line/apparel'],
-      int_index = 1,
-      string_index = 'product'
-    )
-    product_line_predicate.immediateReindexObject()
-    region_predicate.immediateReindexObject()
-
-    invoice_rule.updateMatrix()
-    cell_list = invoice_rule.getCellValueList(base_id='movement')
-    self.assertEquals(len(cell_list),1)
-    cell = cell_list[0]
-
-    for line_id, line_source_id, line_destination_id, line_ratio in \
-        self.transaction_line_definition_list:
-      line = cell.newContent(id=line_id,
-          portal_type='Accounting Transaction Line', quantity=line_ratio,
-          resource_value=resource,
-          source_value=account_module[line_source_id],
-          destination_value=account_module[line_destination_id])
-
-    invoice_rule.validate()
-    transaction.commit()
-    self.tic()
-
-  def validateNewRules(self):
-    # create an Order Rule document.
-    portal_rules = self.portal.portal_rules
-    new_order_rule = filter(
-      lambda x:x.title == 'New Default Order Root Simulation Rule',
-      portal_rules.objectValues(portal_type='Order Root Simulation Rule'))[0]
-    if new_order_rule.getValidationState() != 'validated':
-      new_order_rule.validate()
 
 class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
   run_all_test = 1
@@ -277,52 +210,7 @@ class TestERP5Simulation(TestERP5SimulationMixin, ERP5TypeTestCase):
 
     sequence_list.play(self, quiet=quiet)
 
-class TestERP5SimulationInvoice(TestERP5SimulationMixin, TestSaleInvoice):
-  quiet = TestSaleInvoice.quiet
-
-  def test_09_InvoiceChangeStartDateFail(self, quiet=quiet):
-    """
-    Change the start_date of a Invoice Line,
-    check that the invoice is divergent,
-    then accept decision, and check Packing list is *not* divergent,
-    because Unify Solver does not propagage the change to the upper
-    simulation movement.
-    """
-    if not quiet:
-      self.logMessage('Invoice Change Sart Date')
-    sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
-    """
-    stepSetReadyPackingList
-    stepTic
-    stepStartPackingList
-    stepCheckInvoicingRule
-    stepCheckInvoiceTransactionRule
-    stepTic
-    stepCheckInvoiceBuilding
-
-    stepChangeInvoiceStartDate
-    stepCheckInvoiceIsDivergent
-    stepCheckInvoiceIsCalculating
-    stepTic
-    stepCheckInvoiceIsDiverged
-    stepUnifyStartDateWithDecisionInvoice
-    stepTic
-
-    stepCheckInvoiceNotSplitted
-    stepCheckInvoiceIsNotDivergent
-    stepCheckInvoiceIsSolved
-
-    stepCheckPackingListIsNotDivergent
-    stepCheckPackingListIsSolved
-    stepCheckInvoiceTransactionRule
-
-    stepRebuildAndCheckNothingIsCreated
-    stepCheckInvoicesConsistency
-    """
-    self.playSequence(sequence, quiet=quiet)
-
-class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMixin,
-                                      ERP5TypeTestCase):
+class TestAutomaticSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0
 
   def afterSetUp(self, quiet=1, run=1):
@@ -424,7 +312,5 @@ class TestAutomaticSolvingPackingList(TestERP5SimulationMixin, TestPackingListMi
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Simulation))
-  suite.addTest(unittest.makeSuite(TestERP5SimulationPackingList))
-  suite.addTest(unittest.makeSuite(TestERP5SimulationInvoice))
   suite.addTest(unittest.makeSuite(TestAutomaticSolvingPackingList))
   return suite

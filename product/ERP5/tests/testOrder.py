@@ -51,6 +51,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
   order_line_portal_type = 'Sale Order Line'
   order_cell_portal_type = 'Sale Order Cell'
   applied_rule_portal_type = 'Applied Rule'
+  simulation_movement_portal_type = 'Simulation Movement'
   datetime = DateTime()
   packing_list_portal_type = 'Sale Packing List'
   packing_list_line_portal_type = 'Sale Packing List Line'
