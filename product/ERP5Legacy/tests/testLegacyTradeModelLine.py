@@ -30,6 +30,16 @@ import sys
 from Products.ERP5Legacy.tests import testLegacyBPMCore
 sys.modules['Products.ERP5.tests.testBPMCore'] = testLegacyBPMCore
 from Products.ERP5.tests.testTradeModelLine import *
+from Products.ERP5.tests.testTradeModelLinePurchase import *
+from Products.ERP5.tests.testComplexTradeModelLineUseCase import *
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestTradeModelLineSale))
+  suite.addTest(unittest.makeSuite(TestTradeModelLinePurchase))
+  suite.addTest(unittest.makeSuite(TestComplexTradeModelLineUseCaseSale))
+  suite.addTest(unittest.makeSuite(TestComplexTradeModelLineUseCasePurchase))
+  return suite
 
 ###
 ##  TestTradeModelLine
