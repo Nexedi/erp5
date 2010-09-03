@@ -43,6 +43,7 @@ from Acquisition import Implicit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from App.config import getConfiguration
+from App import RefreshFuncs
 from Shared.DC.ZRDB.TM import TM
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -328,6 +329,9 @@ if allowClassTool():
                           ,{ 'label'      : 'Tests'
                           , 'action'     : 'manage_viewTestList'
                           }
+                          ,{ 'label'      : 'Reload Product'
+                          , 'action'     : 'manage_viewProductReload'
+                          }
                           ,{ 'label'      : 'Product Generation'
                           , 'action'     : 'manage_viewProductGeneration'
                           }
@@ -373,6 +377,9 @@ if allowClassTool():
 
       security.declareProtected( Permissions.ManagePortal, 'manage_viewProductGeneration' )
       manage_viewProductGeneration = DTMLFile( 'viewProductGeneration', _dtmldir )
+
+      security.declareProtected( Permissions.ManagePortal, 'manage_viewProductReload' )
+      manage_viewProductReload = DTMLFile( 'viewProductReload', _dtmldir )
 
       def _clearCache(self):
         """
@@ -1191,6 +1198,26 @@ def initialize( context ):
         """
         path = os.path.join(getConfiguration().instancehome, 'tests')
         return runLiveTest(test_list, run_only=run_only, debug=debug, path=path)
+
+      def getProductList(self):
+        """ List all products """
+        return self.Control_Panel.Products.objectIds()
+
+      def reloadProduct(self, product_id, REQUEST=None):
+        """ Reload a given product """
+        product = self.Control_Panel.Products[product_id]
+        if product._readRefreshTxt() is None:
+            raise Unauthorized, 'refresh.txt not found'
+        message = None
+        if RefreshFuncs.performFullRefresh(product._p_jar, product.id):
+            from ZODB import Connection
+            Connection.resetCaches() # Clears cache in future connections.
+            message = 'Product refreshed.'
+        else:
+            message = 'An exception occurred. Check your log'
+
+        if REQUEST is not None:
+          REQUEST.RESPONSE.redirect('%s/manage_viewProductReload?manage_tabs_message=%s' % (self.absolute_url(), message))
 
 else:
 
