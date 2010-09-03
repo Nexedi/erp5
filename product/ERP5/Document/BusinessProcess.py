@@ -718,11 +718,12 @@ class BusinessProcess(Path, XMLObject):
         + movement.getCausalityList())
       result.append(movement)
 
-    # result can not be empty
-    if not result: raise ValueError("A Business Process can not erase amounts")
-
     if not explanation.getSpecialiseValue().getSameTotalQuantity():
       return result
+
+    # result can not be empty
+    if not result:
+      raise ValueError("A Business Process can not erase amounts")
 
     # Sort movement list and make sure the total is equal to total_quantity
     total_quantity = amount.getQuantity()

@@ -83,9 +83,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     business_process._edit(**kw)
     self.createTradeModelPath(business_process,
       reference='default_path',
-      trade_phase_value_list=('default/payment',
-                              'default/discount',
-                              'default/tax'),
+      trade_phase_value_list=('default/discount', 'default/tax'),
       trade_date='trade_phase/default/invoicing')
     kw = dict(business_process=business_process,
               trade_phase='default/accounting',
