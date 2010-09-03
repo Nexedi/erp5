@@ -1,3 +1,6 @@
+2010-09-03 yusei
+* Add Base_getAccountingWorkflowId and Base_getTranslatedAccountingWorkflowStateItemList to make accounting workflow easier to customise.
+
 2010-09-02 yusei
 * Display account title to journal report. Displaying gap id only is not useful at least in Japan.
 

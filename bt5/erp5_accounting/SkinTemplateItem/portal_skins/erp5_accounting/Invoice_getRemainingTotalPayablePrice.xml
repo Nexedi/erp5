@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -85,7 +82,7 @@ portal = context.getPortalObject()\n
 total_payable_price_per_node_section = dict()\n
 \n
 if simulation_state is None:\n
-  state_list = [x[1] for x in context.Base_getTranslatedWorkflowStateItemList(wf_id=\'accounting_workflow\')]\n
+  state_list = [x[1] for x in context.Base_getTranslatedAccountingWorkflowStateItemList()]\n
   simulation_state = [x for x in state_list\n
                       if x not in (\'draft\', \'cancelled\', \'deleted\', \'rejected\')]\n
 \n
