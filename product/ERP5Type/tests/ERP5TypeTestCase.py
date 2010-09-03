@@ -999,19 +999,26 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
       PortalTestCase.tearDown(self)
       setSite() # undo site configuration from self.getPortal()
 
-    def beforeClose(self):
-      PortalTestCase.beforeClose(self)
-      try:
-        portal_activities = self.portal.portal_activities
-        # Drop remaining activities.
-        count = portal_activities.countMessage()
-        portal_activities.manageClearActivities(keep=False)
-        if count:
-          LOG('Products.ERP5Type.tests.ERP5TypeTestCase.beforeClose', DEBUG,
-              'dropped %d left-over activity messages' % (count,))
-        transaction.commit()
-      except AttributeError:
-        pass
+    def beforeTearDown(self):
+      if not int(os.environ.get('erp5_save_data_fs', 0)):
+        # Drop remaining activities if some of them failed.
+        # However, we should not do more activity cleaning, because properly
+        # written unit tests should not leave unprocessed activity messages.
+        # And the user may want to analyse the result of a failed unit test,
+        # so we do nothing in persistent mode (--save).
+        try:
+          portal_activities = self.portal.portal_activities
+        except AttributeError:
+          pass
+        else:
+          for m in self.portal.portal_activities.getMessageList():
+            if m.processing_node < -1:
+              count = portal_activities.countMessage()
+              portal_activities.manageClearActivities(keep=False)
+              transaction.commit()
+              ZopeTestCase._print('\ndropped %d left-over activity messages'
+                                  % count)
+              break
 
     def stepPdb(self, sequence=None, sequence_list=None):
       """Invoke debugger"""
