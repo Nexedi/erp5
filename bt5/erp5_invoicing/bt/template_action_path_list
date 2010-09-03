@@ -3,6 +3,5 @@ Invoice Line | quantity
 Invoice Line | view
 Invoice Line | view_trade_model
 Invoice Simulation Rule | view
-Invoice Transaction Simulation Rule | divergence
 Invoice Transaction Simulation Rule | view
 Trade Model Simulation Rule | view
