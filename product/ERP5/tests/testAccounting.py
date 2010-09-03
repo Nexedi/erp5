@@ -160,22 +160,14 @@ class AccountingTestCase(ERP5TypeTestCase):
     user = uf.getUserById(self.username).__of__(uf)
     newSecurityManager(None, user)
 
-  def setUp(self):
-    """Setup the fixture.
-    """
-    ERP5TypeTestCase.setUp(self)
-    if os.environ.get('erp5_save_data_fs'):
-      return
-    self.portal = self.getPortal()
+  def afterSetUp(self):
     self.account_module = self.portal.account_module
     self.accounting_module = self.portal.accounting_module
     self.organisation_module = self.portal.organisation_module
     self.person_module = self.portal.person_module
     self.currency_module = self.portal.currency_module
-    if not hasattr(self, 'section'):
-      self.section = getattr(self.organisation_module, 'my_organisation', None)
-    if not hasattr(self, 'main_section'):
-      self.main_section = getattr(self.organisation_module, 'main_organisation', None)
+    self.section = getattr(self.organisation_module, 'my_organisation', None)
+    self.main_section = getattr(self.organisation_module, 'main_organisation', None)
     
     # make sure documents are validated
     for module in (self.account_module, self.organisation_module,
@@ -200,14 +192,11 @@ class AccountingTestCase(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-
-  def tearDown(self):
+  def beforeTearDown(self):
     """Remove all documents, except the default ones.
     """
-    if os.environ.get('erp5_save_data_fs'):
-      return
-    self.login('ERP5TypeTestCase')
     transaction.abort()
+    self.login()
     self.accounting_module.manage_delObjects(
                       list(self.accounting_module.objectIds()))
     organisation_list = ('my_organisation', 'main_organisation',
@@ -234,8 +223,6 @@ class AccountingTestCase(ERP5TypeTestCase):
           self.portal.portal_simulation.objectIds()))
     transaction.commit()
     self.tic()
-    ERP5TypeTestCase.tearDown(self)
-
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
@@ -243,8 +230,9 @@ class AccountingTestCase(ERP5TypeTestCase):
     # a dependancy of erp5_accounting_ui_test, because it's used to test
     # standalone accounting and only installs erp5_accounting_ui_test to have
     # some default content created.
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_project', 'erp5_accounting_ui_test', 'erp5_ods_style')
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+            'erp5_accounting', 'erp5_project', 'erp5_accounting_ui_test',
+            'erp5_ods_style')
 
 
 class TestAccounts(AccountingTestCase):
@@ -290,6 +278,7 @@ class TestTransactionValidation(AccountingTestCase):
   2006, and an open one for 2007.
   """
   def afterSetUp(self):
+    super(TestTransactionValidation, self).afterSetUp()
     self.organisation_module = self.portal.organisation_module
     self.main_section = self.organisation_module.main_organisation
 
@@ -3095,10 +3084,9 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
   def getTitle(self):
     return "Accounting"
-  
+
   def afterSetUp(self):
     """Prepare the test."""
-    self.portal = self.getPortal()
     self.workflow_tool = self.portal.portal_workflow
     self.organisation_module = self.portal.organisation_module
     self.account_module = self.portal.account_module
@@ -3115,7 +3103,6 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
          preferred_accounting_transaction_section_category='group/vendor',
          priority=Priority.USER )
     self.workflow_tool.doActionFor(self.pref, 'enable_action')
-
 
   def beforeTearDown(self):
     """Cleanup for next test.
