@@ -140,10 +140,12 @@ class Rule(Predicate, XMLObject):
       applied_rule._delObject(movement_id)
 
     # update existing and clear recorded properties
-    for movement, property_dict in modify_dict.items():
-      applied_rule[movement].edit(**property_dict)
+    for movement_id, property_dict in modify_dict.iteritems():
+      movement = applied_rule[movement_id]
+      movement.edit(**property_dict)
+      clearRecordedProperty = movement.clearRecordedProperty
       for property_id in property_dict.iterkeys():
-        applied_rule[movement].clearRecordedProperty(property_id)
+        clearRecordedProperty(property_id)
 
     # add new ones
     for movement_dict in add_list:
