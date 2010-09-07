@@ -716,19 +716,32 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
     Return a list of movement groups sorted by collect order group and index.
     """
-    category_index_dict = {}
-    for i in self.getPortalObject().portal_categories.collect_order_group.contentValues():
-      category_index_dict[i.getId()] = i.getIntIndex()
-
-    def sort_movement_group(a, b):
-        return cmp(category_index_dict.get(a.getCollectOrderGroup()),
-                   category_index_dict.get(b.getCollectOrderGroup())) or \
-               cmp(a.getIntIndex(), b.getIntIndex())
+    portal = self.getPortalObject()
     if portal_type is None:
-      portal_type = self.getPortalMovementGroupTypeList()
-    movement_group_list = [x for x in self.contentValues(filter={'portal_type': portal_type}) \
-                           if collect_order_group is None or collect_order_group == x.getCollectOrderGroup()]
-    return sorted(movement_group_list, sort_movement_group)
+      portal_type = portal.getPortalMovementGroupTypeList()
+
+    if collect_order_group is None:
+      category_index_dict = {}
+      for i in portal.portal_categories.collect_order_group.contentValues():
+        category_index_dict[i.getId()] = i.getIntIndex()
+
+      def getMovementGroupKey(movement_group):
+        return (category_index_dict.get(movement_group.getCollectOrderGroup()),
+                movement_group.getIntIndex())
+
+      filter_dict = dict(portal_type=portal_type)
+      movement_group_list = self.contentValues(filter=filter_dict)
+    else:
+      def getMovementGroupKey(movement_group):
+        return movement_group.getIntIndex()
+
+      filter_dict = dict(portal_type=portal_type)
+      movement_group_list = []
+      for movement_group in self.contentValues(filter=filter_dict):
+        if movement_group.getCollectOrderGroup() == collect_order_group:
+          movement_group_list.append(movement_group)
+
+    return sorted(movement_group_list, key=getMovementGroupKey)
 
   # XXX category name is hardcoded.
   def getDeliveryMovementGroupList(self, **kw):
