@@ -2569,7 +2569,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepRebuildAndCheckNothingIsCreated
         stepCheckInvoicesConsistency
         stepCheckInvoiceLineHasReferenceAndIntIndex
-        Pdb
       """)
     sequence_list.play(self, quiet=quiet)
 
