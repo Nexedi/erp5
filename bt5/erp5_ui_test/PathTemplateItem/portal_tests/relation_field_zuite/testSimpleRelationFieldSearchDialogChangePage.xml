@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -104,7 +101,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="listbox_next_page"]</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -122,7 +119,7 @@
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="listbox_next_page"]</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -140,7 +137,7 @@
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@id="listbox_previous_page"]</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -153,17 +150,17 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>type</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//input[@id="listbox_set_page"]</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
@@ -174,17 +171,17 @@
 \n
 <tr>\n
   <td>type</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>//input[@id="listbox_set_page"]</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>3</td>\n
 </tr>\n
 </tal:block>\n
@@ -225,7 +222,7 @@
 \n
 <tr>\n
   <td>click</td>\n
-  <td>//*[@id=\'listbox_data_line_0\']//input[@type="checkbox"]</td>\n
+  <td>//*[@class=\'listbox-data-line-0 DataA\']//input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
