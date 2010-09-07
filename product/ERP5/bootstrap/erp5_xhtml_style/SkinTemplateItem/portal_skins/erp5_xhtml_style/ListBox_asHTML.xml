@@ -382,6 +382,23 @@
           </tr>\n
         </thead>\n
 \n
+        <!-- Stats -->\n
+        <tfoot tal:condition="python:here.showStat() and not hide_rows_on_no_search_criterion">\n
+            \n
+          <tr class="listbox_stat_line"\n
+              tal:attributes="class string:${field_id}_stat_line">\n
+            <td tal:condition="is_report_tree_mode" >&nbsp;</td>\n
+            <td class="listbox-table-anchor-cell" tal:condition="show_anchor_column">&nbsp;</td>\n
+            <td class="listbox-table-select-cell" tal:condition="show_select_column">&nbsp;</td>\n
+            <tal:block tal:repeat="value here/getStatValueList">\n
+            <td align="left"\n
+               tal:define="original_value python: value[0]; processed_value python: value[1]"\n
+               tal:attributes="align python: isinstance(original_value, (float, int, long)) and \'right\' or \'left\'"\n
+               tal:content="structure processed_value" />\n
+            </tal:block>\n
+          </tr>\n
+        </tfoot>\n
+\n
         <tbody>\n
 \n
           <!-- Render listbox data-->\n
@@ -459,22 +476,6 @@
               </td>\n
             </tr>\n
           </tbody>\n
-\n
-          <tfoot tal:condition="python:here.showStat() and not hide_rows_on_no_search_criterion">\n
-            <!-- Stats -->\n
-            <tr class="listbox_stat_line"\n
-                tal:attributes="class string:${field_id}_stat_line">\n
-              <td tal:condition="is_report_tree_mode" >&nbsp;</td>\n
-              <td class="listbox-table-anchor-cell" tal:condition="show_anchor_column">&nbsp;</td>\n
-              <td class="listbox-table-select-cell" tal:condition="show_select_column">&nbsp;</td>\n
-              <tal:block tal:repeat="value here/getStatValueList">\n
-                <td align="left"\n
-                  tal:define="original_value python: value[0]; processed_value python: value[1]"\n
-                  tal:attributes="align python: isinstance(original_value, (float, int, long)) and \'right\' or \'left\'"\n
-                  tal:content="structure processed_value" />\n
-              </tal:block>\n
-            </tr>\n
-          </tfoot>\n
 \n
       </table>\n
     </div>\n
