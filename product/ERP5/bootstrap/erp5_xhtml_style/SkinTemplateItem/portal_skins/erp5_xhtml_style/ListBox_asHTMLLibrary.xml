@@ -152,16 +152,19 @@
 \n
 <!-- Listbox title -->\n
 <div class="listbox-title"\n
-     metal:define-macro="listbox_title">\n
+     metal:define-macro="listbox_title"\n
+     tal:define="class string:${field_id}_title;">\n
 \n
   <a tal:condition="show_list_action_link"\n
-     tal:attributes="class string:${field_id}_title; \n
-                    href here/getListActionUrl">\n
+     tal:attributes="class class; \n
+                     href here/getListActionUrl">\n
     <span i18n:translate="" \n
           i18n:domain="ui" tal:content="here/getTitle" /></a>\n
   <tal:block tal:condition="not: show_list_action_link">\n
     <span i18n:translate="" \n
-          i18n:domain="ui" tal:content="here/getTitle" />\n
+          i18n:domain="ui"\n
+          tal:attributes="class class"\n
+          tal:content="here/getTitle" />\n
   </tal:block>\n
   <tal:block tal:condition="not: is_web_mode">:</tal:block>\n
 \n
