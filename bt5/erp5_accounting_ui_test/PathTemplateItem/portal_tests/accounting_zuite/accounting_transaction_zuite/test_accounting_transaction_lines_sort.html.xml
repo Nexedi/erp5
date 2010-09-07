@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -102,54 +99,54 @@ Test Simple view of an Accounting Transaction\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>9 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>9</td>\n
 </tr>\n
 \n
 <!-- store the index of each line -->\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/input</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]/input</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[4]/input</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[4]/input</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_4\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-4 DataA\']/td[4]/input</td>\n
   <td>5</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_5\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-5 DataB\']/td[4]/input</td>\n
   <td>6</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_6\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-6 DataA\']/td[4]/input</td>\n
   <td>7</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_7\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-7 DataB\']/td[4]/input</td>\n
   <td>8</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_data_line_8\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-8 DataA\']/td[4]/input</td>\n
   <td>9</td>\n
 </tr>\n
 <tr>\n
@@ -183,59 +180,59 @@ other lines\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/input</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]/input</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[4]/input</td>\n
   <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[4]/input</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_4\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-4 DataA\']/td[4]/input</td>\n
   <td>5</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_5\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-5 DataB\']/td[4]/input</td>\n
   <td>6</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_6\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-6 DataA\']/td[4]/input</td>\n
   <td>7</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_7\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-7 DataB\']/td[4]/input</td>\n
   <td>8</td>\n
 </tr>\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_8\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-8 DataA\']/td[4]/input</td>\n
   <td>9</td>\n
 </tr>\n
 <!-- our new lines, at the end -->\n
 <tr>\n
   <td>assertFloatValue</td>\n
-  <td>//tr[@id=\'listbox_data_line_9\']/td[4]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-9 DataB\']/td[4]/input</td>\n
   <td>0</td>\n
 </tr>\n
 \n
