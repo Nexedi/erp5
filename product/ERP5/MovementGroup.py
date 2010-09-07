@@ -36,6 +36,10 @@ class FakeMovementError(Exception) : pass
 class MovementGroupError(Exception) : pass
 
 class MovementGroupNode:
+  # XXX last_line_movement_group is a wrong name. Actually, it is
+  # the last delivery movement group. This parameter is used to
+  # pick up a branching point of making separate lines when
+  # a separate method requests separating movements.
   def __init__(self, movement_group_list=None, movement_list=None,
                last_line_movement_group=None,
                separate_method_name_list=[], movement_group=None):
