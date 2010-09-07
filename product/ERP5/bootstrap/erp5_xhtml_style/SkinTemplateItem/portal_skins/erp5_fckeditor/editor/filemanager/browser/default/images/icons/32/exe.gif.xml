@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Image" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="Image" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749309.11</string> </value>
+            <value> <string>ts83858910.05</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -41,7 +38,7 @@ LKfMauSKpSq7TW0HnP2SvbozmqjmDQIBdvsNj29FADK9breq8mF8MXhUcCQLSYeKi4yNjhYJADs=</st
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>170</long> </value>
+            <value> <int>170</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

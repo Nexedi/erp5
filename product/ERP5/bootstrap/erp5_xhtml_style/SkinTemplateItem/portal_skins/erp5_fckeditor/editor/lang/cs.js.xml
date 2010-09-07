@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts60538662.53</string> </value>
+            <value> <string>ts83858910.11</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -31,7 +28,7 @@
 
 ﻿/*\r\n
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
- * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben\r\n
  *\r\n
  * == BEGIN LICENSE ==\r\n
  *\r\n
@@ -563,10 +560,10 @@ DlgDivAdvancedTab\t: "Rozšířené",\r\n
 DlgDivStyle\t\t: "Styl",\r\n
 DlgDivInlineStyle\t: "Vložený styl",\r\n
 \r\n
-ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
-ScaytTitleOptions\t: "Options",\t//MISSING\r\n
-ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
-ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
+ScaytTitle\t\t\t: "SCAYT",\r\n
+ScaytTitleOptions\t: "Nastavení",\r\n
+ScaytTitleLangs\t\t: "Jazyky",\r\n
+ScaytTitleAbout\t\t: "O aplikaci"\r\n
 };\r\n
 
 
@@ -578,7 +575,7 @@ ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19308</int> </value>
+            <value> <int>19273</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
