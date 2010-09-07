@@ -460,11 +460,10 @@
             </tr>\n
           </tbody>\n
 \n
-          <tfoot>\n
+          <tfoot tal:condition="python:here.showStat() and not hide_rows_on_no_search_criterion">\n
             <!-- Stats -->\n
-            <tr tal:condition="python:here.showStat() and not hide_rows_on_no_search_criterion" \n
-              id="listbox_stat_line" class="listbox_stat_line"\n
-              tal:attributes="id string:${field_id}_stat_line">\n
+            <tr class="listbox_stat_line"\n
+                tal:attributes="class string:${field_id}_stat_line">\n
               <td tal:condition="is_report_tree_mode" >&nbsp;</td>\n
               <td class="listbox-table-anchor-cell" tal:condition="show_anchor_column">&nbsp;</td>\n
               <td class="listbox-table-select-cell" tal:condition="show_select_column">&nbsp;</td>\n
