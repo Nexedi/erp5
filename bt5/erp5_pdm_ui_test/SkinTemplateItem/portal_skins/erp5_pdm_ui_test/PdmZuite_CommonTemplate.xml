@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -108,7 +105,7 @@
     </tr>\n
     <tr>\n
       <td>clickAndWait</td>\n
-      <td>id=listbox_domain_tree_mode</td>\n
+      <td>//input[@class="listbox-tree-domain-tree-mode"]</td>\n
       <td></td>\n
     </tr>\n
   </tal:block>\n
