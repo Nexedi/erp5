@@ -340,6 +340,11 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery_select_method = getattr(self, delivery_select_method_id)
         for brain in delivery_select_method(movement_list=movement_list):
           delivery_to_update_list.append(brain.getObject())
+
+      # Make sure that the portal type is good.
+      delivery_portal_type = self.getDeliveryPortalType()
+      delivery_to_update_list = [x for x in delivery_to_update_list \
+              if x.getPortalType() == delivery_portal_type]
     else:
       delivery_to_update_list = []
     # We do not want to update the same object more than twice in one
@@ -404,8 +409,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # a new one
       delivery_to_update_list = [
         x for x in delivery_to_update_list \
-        if x.getPortalType() == self.getDeliveryPortalType() and \
-        not self._isUpdated(x, 'delivery')]
+        if not self._isUpdated(x, 'delivery')]
       delivery, property_dict = self._findUpdatableObject(
         delivery_to_update_list, movement_group_node_list,
         divergence_list)
