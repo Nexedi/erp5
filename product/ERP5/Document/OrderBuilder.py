@@ -121,7 +121,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                         delivery_relative_url_list=delivery_relative_url_list,
                                         applied_rule_uid=applied_rule_uid,**kw)
       else:
-        movement_list = [self.restrictedTraverse(relative_url) for relative_url \
+        restrictedTraverse = self.getPortalObject().restrictedTraverse
+        movement_list = [restrictedTraverse(relative_url) for relative_url \
                          in movement_relative_url_list]
     if not movement_list:
       return []
@@ -131,7 +132,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     delivery_list = self.buildDeliveryList(
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
-                       movement_list=movement_list,**kw)
+                       movement_list=movement_list, **kw)
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     # XXX Returning the delivery list is probably not necessary
