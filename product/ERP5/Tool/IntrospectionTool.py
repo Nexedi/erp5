@@ -42,6 +42,7 @@ from App.config import getConfiguration
 from AccessControl import Unauthorized
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import tarfile
+from cgi import escape
 
 _MARKER = []
 
@@ -229,7 +230,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     Tail the Event Log.
     """
-    return self._tailFile('log/event.log', 50)
+    return escape(self._tailFile('log/event.log', 50))
 
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
