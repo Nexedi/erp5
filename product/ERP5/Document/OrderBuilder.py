@@ -150,7 +150,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
     delivery_module_before_building_script_id = \
         self.getDeliveryModuleBeforeBuildingScriptId()
-    if delivery_module_before_building_script_id not in ["", None]:
+    if delivery_module_before_building_script_id:
       delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
