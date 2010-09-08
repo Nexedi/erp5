@@ -407,9 +407,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     else:
       # Test if we can update a existing delivery, or if we need to create
       # a new one
-      delivery_to_update_list = [
-        x for x in delivery_to_update_list \
-        if not self._isUpdated(x, 'delivery')]
       delivery, property_dict = self._findUpdatableObject(
         delivery_to_update_list, movement_group_node_list,
         divergence_list)
@@ -423,8 +420,12 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery = self._createDelivery(delivery_module,
                                         movement_group_node.getMovementList(),
                                         activate_kw)
+      else:
+        # The same delivery should not be updated more than once.
+        # Note that it is important to use a destructive method here.
+        delivery_to_update_list.remove(delivery)
+
       # Put properties on delivery
-      self._setUpdated(delivery, 'delivery')
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
         delivery.edit(**property_dict)
