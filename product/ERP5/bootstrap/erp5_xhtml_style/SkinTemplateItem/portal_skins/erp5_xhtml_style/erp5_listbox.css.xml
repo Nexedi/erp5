@@ -402,7 +402,7 @@ div.listbox-body{\n
 \n
 div.listbox-tree{\n
   margin-right: 8px;\n
-  width: auto;\n
+  max-width: 10%;\n
   float: left;\n
 }\n
 \n
@@ -420,8 +420,18 @@ div.float-right{\n
   float:right;\n
 }\n
 \n
-div.auto-width{\n
-  width:auto;\n
+div.listbox-content-fixed-width{\n
+   width:90%;\n
+}\n
+\n
+table.listbox td.listbox-table-no-result-row{\n
+  border: 1px solid #3D6474;\n
+  text-align:center;\n
+}\n
+\n
+table.listbox tr.listbox_stat_line{\n
+  border-top: 1px solid #3D6474;\n
+\n
 }\n
 \n
 \n

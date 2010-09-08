@@ -165,7 +165,7 @@
   </div>\n
 \n
   <div class="listbox-content"  \n
-       tal:attributes="class python: test(not is_domain_tree_mode, \'listbox-content maximal-width\', \'listbox-content auto-width\')">\n
+       tal:attributes="class python: test(not is_domain_tree_mode, \'listbox-content maximal-width\', \'listbox-content listbox-content-fixed-width\')">\n
 \n
     <div class="listbox-head">\n
 \n
@@ -469,8 +469,9 @@
             \n
             <!-- No results. -->\n
             <tr tal:condition="python: total_line == 0 and not hide_rows_on_no_search_criterion">\n
-              <td tal:attributes="colspan python: len(here.getSearchValueList()) + 1">\n
-                <span class="listbox_no_result" i18n:translate="" i18n:domain="ui">\n
+              <td tal:attributes="colspan python: len(here.getSearchValueList()) + 1"\n
+                  class="listbox-table-no-result-row">\n
+                <span i18n:translate="" i18n:domain="ui">\n
                   No result.\n
                 </span>\n
               </td>\n
