@@ -72,10 +72,9 @@ if project_uid:\n
     extra_kw[\'project_uid\'] = project_uid\n
 \n
 account_title_cache = dict()\n
-def getAccountGapIdAndTitle(node_relative_url):\n
+def getAccountId(node_relative_url):\n
   if node_relative_url not in account_title_cache:\n
-    account = portal.restrictedTraverse(node_relative_url)\n
-    title = \'%s %s\' % (account.Account_getGapId(gap_root=gap_root), account.getTitle())\n
+    title = portal.restrictedTraverse(node_relative_url).Account_getGapId(gap_root=gap_root)\n
     account_title_cache[node_relative_url] = title\n
   return account_title_cache[node_relative_url]\n
 \n
@@ -156,7 +155,7 @@ for brain in portal.portal_simulation.getMovementHistoryList(\n
                 specific_reference=specific_reference,\n
                 parent_reference=transaction_reference,\n
                 mirror_section_title=mirror_section_title,\n
-                node_title=getAccountGapIdAndTitle(brain.node_relative_url),\n
+                node_title=getAccountId(brain.node_relative_url),\n
                 date=date,\n
                 debit=debit,\n
                 credit=credit,)\n
@@ -245,7 +244,7 @@ return line_list\n
                             <string>True</string>
                             <string>None</string>
                             <string>account_title_cache</string>
-                            <string>getAccountGapIdAndTitle</string>
+                            <string>getAccountId</string>
                             <string>account_in_gap_root_cache</string>
                             <string>isAccountInGapRoot</string>
                             <string>displayed_transaction</string>
