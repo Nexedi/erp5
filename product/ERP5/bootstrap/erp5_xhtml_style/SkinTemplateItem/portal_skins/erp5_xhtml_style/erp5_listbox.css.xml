@@ -380,12 +380,6 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
 \n
-\n
-/* \n
-============================================\n
-Listbox experiment  - IVAN\n
-*/\n
-\n
 /* Search popup fix*/\n
 div.search_popup{\n
   left:200px;\n
@@ -708,8 +702,8 @@ table.listbox tr.DataB {\n
   background-color: <dtml-var listbox_even_background_color>;\n
 }\n
 \n
-.listbox tr.DataA:hover,\n
-.listbox tr.DataB:hover,\n
+table.listbox tr.DataA:hover,\n
+table.listbox tr.DataB:hover,\n
 table.listbox.table tr.tbody:hover{\n
   color: inherit;\n
   background-color: <dtml-var listbox_hover_background_color>;\n
@@ -719,6 +713,7 @@ table.listbox tr.listbox-search-line th.listbox-table-filter-cell input{\n
   width: 100%;\n
   vertical-align:middle;\n
 }\n
+\n
 table.listbox input{\n
   float:none;\n
 }\n
@@ -748,8 +743,7 @@ table.listbox th button.sort-button-asc{\n
   background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 50%;\n
 }\n
 \n
-\n
-/* in search mode listbox may contain top/ bottom quick search inputs */\n
+/* in search mode listbox may contain top/bottom quick search inputs */\n
 div.search-text-listbox{\n
   text-align: center;\n
   float:left;\n
