@@ -180,7 +180,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             date=DateTime(2006, 2, 2),
                             title='First One',
                             parent_reference='1',
-                            node_title='41 Receivable',
+                            node_title='41',
                             mirror_section_title='Client 1',
                             debit=119.60,
                             credit=0)
@@ -191,7 +191,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             date=None,
                             title='',
                             parent_reference='',
-                            node_title='4457 Collected VAT 10%',
+                            node_title='4457',
                             mirror_section_title='Client 1',
                             debit=0,
                             credit=19.60)
@@ -200,7 +200,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             date=None,
                             title='',
                             parent_reference='',
-                            node_title='7 Goods Sales',
+                            node_title='7',
                             mirror_section_title='Client 1',
                             debit=0,
                             credit=100)
@@ -211,7 +211,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             date=DateTime(2006, 2, 2, 1, 1),
                             title='Second One',
                             parent_reference='2',
-                            node_title='41 Receivable',
+                            node_title='41',
                             mirror_section_title='Client 2',
                             debit=239.20,
                             credit=0)
@@ -220,7 +220,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             date=None,
                             title='',
                             parent_reference='',
-                            node_title='4457 Collected VAT 10%',
+                            node_title='4457',
                             mirror_section_title='Client 2',
                             debit=0,
                             credit=39.20)
@@ -229,7 +229,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             date=None,
                             title='',
                             parent_reference='',
-                            node_title='7 Goods Sales',
+                            node_title='7',
                             mirror_section_title='Client 2',
                             debit=0,
                             credit=200)
@@ -242,7 +242,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                               # be tested with this framework
                             title='Third One',
                             parent_reference='3',
-                            node_title='41 Receivable',
+                            node_title='41',
                             mirror_section_title='John Smith',
                             debit=358.80,
                             credit=0)
@@ -251,7 +251,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             date=None,
                             title='',
                             parent_reference='',
-                            node_title='4457 Collected VAT 10%',
+                            node_title='4457',
                             mirror_section_title='John Smith',
                             debit=0,
                             credit=58.80)
@@ -262,7 +262,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             # this report
                             title='Line Title',
                             parent_reference='',
-                            node_title='7 Goods Sales',
+                            node_title='7',
                             mirror_section_title='John Smith',
                             debit=0,
                             credit=300)
@@ -353,7 +353,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference=first.getSourceReference(),
                             date=DateTime(2006, 2, 2),
                             title='First One',
-                            node_title='41 Receivable',
+                            node_title='41',
                             debit=119.60,
                             credit=0)
     # some values are only present when we display the first line of the
@@ -362,14 +362,14 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference='',
                             date=None,
                             title='',
-                            node_title='4457 Collected VAT 10%',
+                            node_title='4457',
                             debit=0,
                             credit=19.60)
     self.checkLineProperties(data_line_list[2],
                             specific_reference='',
                             date=None,
                             title='',
-                            node_title='7 Goods Sales',
+                            node_title='7',
                             debit=0,
                             credit=100)
     # second transaction
@@ -377,7 +377,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference=second.getDestinationReference(),
                             date=DateTime(2006, 2, 2, 1, 1),
                             title='Second One',
-                            node_title='41 Receivable',
+                            node_title='41',
                             debit=119.60,
                             credit=0)
     # some values are only present when we display the first line of the
@@ -386,14 +386,14 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference='',
                             date=None,
                             title='',
-                            node_title='4457 Collected VAT 10%',
+                            node_title='4457',
                             debit=0,
                             credit=19.60)
     self.checkLineProperties(data_line_list[5],
                             specific_reference='',
                             date=None,
                             title='',
-                            node_title='7 Goods Sales',
+                            node_title='7',
                             debit=0,
                             credit=100)
     
@@ -473,7 +473,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference=transaction.getSourceReference(),
                             date=DateTime(2006, 2, 2),
                             title='Good One',
-                            node_title='41 Receivable',
+                            node_title='41',
                             mirror_section_title='Client 1',
                             debit=100,
                             credit=0)
@@ -481,7 +481,7 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                             specific_reference='',
                             date=None,
                             title='',
-                            node_title='5 Bank',
+                            node_title='5',
                             mirror_section_title='Client 1',
                             debit=0,
                             credit=100)
