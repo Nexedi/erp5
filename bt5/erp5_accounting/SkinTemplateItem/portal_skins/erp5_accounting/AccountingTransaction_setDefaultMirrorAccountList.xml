@@ -64,7 +64,7 @@ for movement in context.contentValues(portal_type=portal.getPortalAccountingMove
     has_destination = True\n
   # Interested in movements which lack one side only.\n
   if (source_account is not None) ^ (destination_account is not None):\n
-    movement_data_list((movement, source_account, destination_account))\n
+    movement_data_list.append((movement, source_account, destination_account))\n
 \n
 # If both are true, mirror accounting is used.\n
 if has_source and has_destination:\n

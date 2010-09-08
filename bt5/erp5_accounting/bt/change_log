@@ -1,4 +1,7 @@
 2010-09-08 yo
+* Forgot to add .append. Sorry.
+
+2010-09-08 yo
 * Auto-fill mirror accounts, if necessary, before running the accounting transaction constraint.
 
 2010-09-08 yusei
