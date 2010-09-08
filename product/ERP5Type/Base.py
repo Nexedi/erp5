@@ -39,7 +39,7 @@ from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
-from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
+from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain, aq_parent
 import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
@@ -549,7 +549,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
     # Mark as generated
     prop_holder = PropertyHolder()
     # Recurse to parent object
-    parent_object = self.aq_inner.aq_parent
+    parent_object = aq_parent(aq_inner(self))
     parent_klass = parent_object.__class__
     parent_type = parent_object.portal_type
     if getattr(parent_klass, 'isRADContent', 0) and \
@@ -922,7 +922,7 @@ class Base( CopyContainer,
       # Iterate until an ERP5 Site is obtained.
       portal = self.getPortalObject()
       while portal.portal_type != 'ERP5 Site':
-        portal = portal.aq_parent.aq_inner.getPortalObject()
+        portal = aq_inner(aq_parent(portal)).getPortalObject()
 
       # Generate portal_type methods
       if aq_key not in Base.aq_portal_type:
@@ -1702,7 +1702,7 @@ class Base( CopyContainer,
         changes id of an object by calling the Zope machine
     """
     tryMethodCallWithTemporaryPermission(self, 'Copy or Move',
-        self.aq_inner.aq_parent.manage_renameObject, (self.id, id), {}, CopyError)
+        aq_parent(aq_inner(self)).manage_renameObject, (self.id, id), {}, CopyError)
     # Do not flush any more, because it generates locks
 
   security.declareProtected( Permissions.ModifyPortalContent,
@@ -1812,7 +1812,7 @@ class Base( CopyContainer,
       for the implementation of the ZSQLCatalog based listing
       of objects.
     """
-    return self.aq_inner.aq_parent.getUid()
+    return aq_parent(aq_inner(self)).getUid()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentTitleOrId' )
@@ -1820,7 +1820,7 @@ class Base( CopyContainer,
     """
       Returns the title or the id of the parent
     """
-    return self.aq_inner.aq_parent.getTitleOrId()
+    return aq_parent(aq_inner(self)).getTitleOrId()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentRelativeUrl' )
@@ -1828,7 +1828,7 @@ class Base( CopyContainer,
     """
       Returns the title or the id of the parent
     """
-    return self.aq_inner.aq_parent.getRelativeUrl()
+    return aq_parent(aq_inner(self)).getRelativeUrl()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentId' )
@@ -1836,7 +1836,7 @@ class Base( CopyContainer,
     """
       Returns the id of the parent
     """
-    return self.aq_inner.aq_parent.getId()
+    return aq_parent(aq_inner(self)).getId()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentTitle' )
@@ -1844,7 +1844,7 @@ class Base( CopyContainer,
     """
       Returns the title or of the parent
     """
-    return self.aq_inner.aq_parent.getTitle()
+    return aq_parent(aq_inner(self)).getTitle()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentValue' )
@@ -1852,7 +1852,7 @@ class Base( CopyContainer,
     """
       Returns the parent of the current object.
     """
-    return self.aq_inner.aq_parent
+    return aq_parent(aq_inner(self))
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getParent' )
   def getParent(self):
@@ -1938,7 +1938,7 @@ class Base( CopyContainer,
     """
       Returns the portal object
     """
-    return self.aq_inner.aq_parent.getPortalObject()
+    return aq_parent(aq_inner(self)).getPortalObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowIds')
   def getWorkflowIds(self):
@@ -2817,7 +2817,7 @@ class Base( CopyContainer,
                 'recursiveReindexObject', 'activate', 'setUid'):
         setattr(context, k, getattr(temp_object, k))
       # Return result
-      return context.__of__(self.aq_parent)
+      return context.__of__(aq_parent(self))
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
 
