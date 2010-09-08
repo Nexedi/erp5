@@ -107,24 +107,23 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       or to Simulation Movements related to a limited set of existing
     """
     # Parameter initialization
-    if movement_relative_url_list is None:
-      movement_relative_url_list = []
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
-    if movement_list is None:
-      movement_list = []
     # Call a script before building
     self.callBeforeBuildingScript()
     # Select
-    if not len(movement_list):
-      if len(movement_relative_url_list) == 0:
+    if not movement_list:
+      # XXX this code below has a problem of inconsistency in that
+      # searchMovementList is unrestricted while passing a list of
+      # movements is restricted.
+      if not movement_relative_url_list:
         movement_list = self.searchMovementList(
                                         delivery_relative_url_list=delivery_relative_url_list,
                                         applied_rule_uid=applied_rule_uid,**kw)
       else:
         movement_list = [self.restrictedTraverse(relative_url) for relative_url \
                          in movement_relative_url_list]
-    if not len(movement_list):
+    if not movement_list:
       return []
     # Collect
     root_group_node = self.collectMovement(movement_list)
