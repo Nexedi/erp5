@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -67,7 +64,7 @@ Accounting Transaction Module Search Columns\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
@@ -78,22 +75,22 @@ Accounting Transaction Module Search Columns\n
 <!-- list filtered with 1 item-->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 \n
 <!-- check amounts for lines -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
@@ -101,14 +98,14 @@ Accounting Transaction Module Search Columns\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>2200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>2200.00</td>\n
 </tr>\n
@@ -144,7 +141,7 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>\n
   <td>%Client%</td>\n
 </tr>\n
 <tr>\n
@@ -155,13 +152,13 @@ as title is a search key -->\n
 <!-- list filtered with 2 items -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>2 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[3]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a\n
 </td>\n
   <td>Client 1</td>\n
 </tr>\n
@@ -169,21 +166,21 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[3]/a\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/a\n
 </td>\n
   <td>Client 2</td>\n
 </tr>\n
@@ -191,14 +188,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[9]/a\n
 </td>\n
   <td>3300.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[10]/a\n
 </td>\n
   <td>3300.0</td>\n
 </tr>\n
@@ -206,14 +203,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>5500.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>5500.00</td>\n
 </tr>\n
@@ -227,7 +224,7 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[3]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[3]/input</td>\n
   <td>Client%</td>\n
 </tr>\n
 <tr>\n
@@ -238,13 +235,13 @@ as title is a search key -->\n
 <!-- list filtered with 2 items -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>2 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[3]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a\n
 </td>\n
   <td>Client 1</td>\n
 </tr>\n
@@ -252,21 +249,21 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[3]/a\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/a\n
 </td>\n
   <td>Client 2</td>\n
 </tr>\n
@@ -275,14 +272,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[9]/a\n
 </td>\n
   <td>3300.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[10]/a\n
 </td>\n
   <td>3300.0</td>\n
 </tr>\n
@@ -290,14 +287,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>5500.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>5500.00</td>\n
 </tr>\n
@@ -311,7 +308,7 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[3]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[3]/input</td>\n
   <td>Supplier</td>\n
 </tr>\n
 <tr>\n
@@ -321,13 +318,13 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[3]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a\n
 </td>\n
   <td>Supplier</td>\n
 </tr>\n
@@ -335,14 +332,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a\n
 </td>\n
   <td>7700.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>7700.0</td>\n
 </tr>\n
@@ -350,14 +347,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>7700.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>7700.00</td>\n
 </tr>\n
@@ -392,7 +389,7 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[4]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[4]/input</td>\n
   <td>Accounting Transaction</td>\n
 </tr>\n
 <tr>\n
@@ -402,13 +399,13 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[2]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a\n
 </td>\n
   <td>Accounts opening</td>\n
 </tr>\n
@@ -416,14 +413,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a\n
 </td>\n
   <td>20000.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>20000.0</td>\n
 </tr>\n
@@ -431,14 +428,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n
@@ -453,7 +450,7 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>\n
   <td>2005/01/02</td>\n
 </tr>\n
 <tr>\n
@@ -463,13 +460,13 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[2]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a\n
 </td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
@@ -477,14 +474,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>2200.0</td>\n
 </tr>\n
@@ -492,14 +489,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>2200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>2200.00</td>\n
 </tr>\n
@@ -507,7 +504,7 @@ as title is a search key -->\n
 <!-- unset search parameters, to make sure it\'s not kept -->\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -517,8 +514,8 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 \n
 \n
@@ -530,7 +527,7 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>\n
   <td>&lt;= 2005/01/01</td>\n
 </tr>\n
 <tr>\n
@@ -540,13 +537,13 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[2]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a\n
 </td>\n
   <td>Accounts opening</td>\n
 </tr>\n
@@ -554,14 +551,14 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a\n
 </td>\n
   <td>20000.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]/a\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]/a\n
 </td>\n
   <td>20000.0</td>\n
 </tr>\n
@@ -569,21 +566,21 @@ as title is a search key -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>20000.00</td>\n
 </tr>\n
 <!-- unset search parameters, to make sure it\'s not kept -->\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -593,8 +590,8 @@ as title is a search key -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 \n
 <!-- }}} --> \n

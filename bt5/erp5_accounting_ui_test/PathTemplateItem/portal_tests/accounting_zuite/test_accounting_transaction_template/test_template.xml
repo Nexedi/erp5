@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -110,22 +107,22 @@ Test Accounting Transaction Template\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[3]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/select</td>\n
   <td>label=1 - Equity</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[3]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/select</td>\n
   <td>label=2 - Fixed Assets</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[3]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[3]/select</td>\n
   <td>label=40 - Payable</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id="listbox_data_line_3"]/td[3]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[3]/select</td>\n
   <td>label=41 - Receivable</td>\n
 </tr>\n
 <tr>\n
@@ -204,22 +201,22 @@ Test Accounting Transaction Template\n
 </tr>\n
 <tr>\n
   <td>verifySelected</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[3]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/select</td>\n
   <td>label=1 - Equity</td>\n
 </tr>\n
 <tr>\n
   <td>verifySelected</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[3]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[3]/select</td>\n
   <td>label=2 - Fixed Assets</td>\n
 </tr>\n
 <tr>\n
   <td>verifySelected</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[3]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[3]/select</td>\n
   <td>label=40 - Payable</td>\n
 </tr>\n
 <tr>\n
   <td>verifySelected</td>\n
-  <td>//tr[@id="listbox_data_line_3"]/td[3]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[3]/select</td>\n
   <td>label=41 - Receivable</td>\n
 </tr>\n
 \n
@@ -258,17 +255,17 @@ Test Accounting Transaction Template\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>listbox_title</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>listbox_check_all</td>\n
+  <td>//input[@class="listbox-check-all"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -288,8 +285,8 @@ Test Accounting Transaction Template\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>0 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>0</td>\n
 </tr>\n
 \n
 <tr>\n

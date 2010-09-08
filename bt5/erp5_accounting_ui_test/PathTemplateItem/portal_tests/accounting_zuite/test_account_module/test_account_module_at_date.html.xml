@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -96,30 +93,30 @@ Test display of Account Module, with at_date parameter\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
 <!-- check transaction count {{{ -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_4\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox-data-line-4 DataA\']/td[5]</td>\n
   <td>28</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_6\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox-data-line-6 DataA\']/td[5]</td>\n
   <td>24</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_7\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox-data-line-7 DataB\']/td[5]</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_9\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox-data-line-9 DataB\']/td[5]</td>\n
   <td>24</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -127,22 +124,22 @@ Test display of Account Module, with at_date parameter\n
 <!-- {{{ Debit -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_4\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox-data-line-4 DataA\']/td[6]</td>\n
   <td>257400</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_6\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox-data-line-6 DataA\']/td[6]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_7\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox-data-line-7 DataB\']/td[6]</td>\n
   <td>9900</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_9\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox-data-line-9 DataB\']/td[6]</td>\n
   <td>0</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -150,22 +147,22 @@ Test display of Account Module, with at_date parameter\n
 <!-- {{{ Credit -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_4\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox-data-line-4 DataA\']/td[7]</td>\n
   <td>9900.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_6\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox-data-line-6 DataA\']/td[7]</td>\n
   <td>23400</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_7\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox-data-line-7 DataB\']/td[7]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_9\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox-data-line-9 DataB\']/td[7]</td>\n
   <td>234000</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -173,22 +170,22 @@ Test display of Account Module, with at_date parameter\n
 <!-- {{{ Debit Balance -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_4\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox-data-line-4 DataA\']/td[8]</td>\n
   <td>247500.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_6\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox-data-line-6 DataA\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_7\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox-data-line-7 DataB\']/td[8]</td>\n
   <td>9900</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_9\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox-data-line-9 DataB\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -196,22 +193,22 @@ Test display of Account Module, with at_date parameter\n
 <!-- {{{ Credit Balance -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_4\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox-data-line-4 DataA\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_6\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox-data-line-6 DataA\']/td[9]</td>\n
   <td>23400</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_7\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox-data-line-7 DataB\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_9\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox-data-line-9 DataB\']/td[9]</td>\n
   <td>234000</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -219,43 +216,43 @@ Test display of Account Module, with at_date parameter\n
 <!-- Check Stat columns {{{ -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
   <td>80</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[6]</td>\n
   <td>267300</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[7]</td>\n
   <td>267300</td>\n
 </tr>\n
 <!-- XXX Currently no stat for Debit Balance and Credit Balance -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n

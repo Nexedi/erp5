@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -98,7 +95,7 @@ Test Transactions related to an Organisation, with stop date\n
 <tr>\n
   <td>type</td>\n
   <!-- title -->\n
-  <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>\n
   <td>Client 1</td>\n
 </tr>\n
 <tr>\n
@@ -118,8 +115,8 @@ Test Transactions related to an Organisation, with stop date\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>12 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>12</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -128,24 +125,24 @@ Test Transactions related to an Organisation, with stop date\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
   <td>72600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
   <td>1100.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
   <td>71500.0</td>\n
 </tr>\n
 <!-- the last line of running total column shows the same value that the total\n
 balance. -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_11\']/td[13]</td>\n
+  <td>//tr[@class=\'listbox-data-line-11 DataB\']/td[13]</td>\n
   <td>71500.0</td>\n
 </tr>\n
 <!-- }}} -->\n

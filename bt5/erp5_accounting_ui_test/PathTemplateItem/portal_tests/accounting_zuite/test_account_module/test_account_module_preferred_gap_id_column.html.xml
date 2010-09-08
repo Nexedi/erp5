@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,15 +63,15 @@ Test `preferred_gap_id` column of Account Module\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
 <!-- Filter on preferred_gap_id {{{ -->\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>\n
   <td>4</td>\n
 </tr>\n
 <tr>\n
@@ -84,41 +81,41 @@ Test `preferred_gap_id` column of Account Module\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 \n
 <!-- make sure we are sorted by preferred_gap_id ASC -->\n
 <tr>\n
   <!-- sort by title, to reset any sort on preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'Account Name\']</td>\n
+  <td>//button[@value=\'listbox.title\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <!-- sort by preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'GAP Number\']</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>40</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]/a</td>\n
   <td>41</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]/a</td>\n
   <td>4456</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]/a</td>\n
   <td>4457</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -127,27 +124,27 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <!-- sort by preferred_gap_id -->\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'GAP Number\']</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>4457</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]/a</td>\n
   <td>4456</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]/a</td>\n
   <td>41</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]/a</td>\n
   <td>40</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -155,7 +152,7 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <!-- make sure we end up sorting in ASCENDING-->\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'GAP Number\']</td>\n
+  <td>//button[@value=\'listbox.preferred_gap_id\']</td>\n
   <td></td>\n
 </tr>\n
 \n

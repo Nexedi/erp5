@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -93,12 +90,12 @@ Grouping from account transaction view\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[1]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[1]/input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -137,7 +134,7 @@ Grouping from account transaction view\n
 <!-- select one more -->\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[1]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[1]/input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -250,24 +247,24 @@ Grouping from account transaction view\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>2 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a/text()</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/a/text()</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 \n
 <!-- now try to ungroup with only one, it will ungroup all related lines -->\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[1]/input</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[1]/input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -340,27 +337,27 @@ Grouping from account transaction view\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//span[@id=\'listbox_record_number\']</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a/text()</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]/a/text()</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]/a/text()</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[2]/a/text()</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]/a/text()</td>\n
   <td></td>\n
 </tr>\n
 \n
