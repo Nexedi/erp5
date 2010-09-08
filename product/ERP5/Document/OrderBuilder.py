@@ -430,13 +430,18 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
         delivery.edit(**property_dict)
 
-      # Then, create delivery line
+      # Then, create delivery lines
+      delivery_line_portal_type = self.getDeliveryLinePortalType()
+      delivery_line_to_update_list = []
+      for line in delivery.contentValues(portal_type=delivery_line_portal_type):
+        delivery_line_to_update_list.append(line)
       for grouped_node in movement_group_node.getGroupList():
         self._processDeliveryLineGroup(
                                 delivery,
                                 grouped_node,
                                 self.getDeliveryLineMovementGroupList()[1:],
                                 divergence_list=divergence_list,
+                                delivery_line_to_update_list=delivery_line_to_update_list,
                                 activate_kw=activate_kw,
                                 force_update=force_update)
       delivery_list.append(delivery)
@@ -458,6 +463,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
   def _processDeliveryLineGroup(self, delivery, movement_group_node,
                                 collect_order_list, movement_group_node_list=None,
                                 divergence_list=None,
+                                delivery_line_to_update_list=None,
                                 activate_kw=None, force_update=0, **kw):
     """
       Build delivery line from a list of movement on a delivery
@@ -466,6 +472,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       movement_group_node_list = []
     if divergence_list is None:
       divergence_list = []
+    if delivery_line_to_update_list is None:
+      delivery_line_to_update_list = []
     # do not use 'append' or '+=' because they are destructive.
     movement_group_node_list = movement_group_node_list + [movement_group_node]
 
@@ -478,19 +486,18 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           collect_order_list[1:],
           movement_group_node_list=movement_group_node_list,
           divergence_list=divergence_list,
+          delivery_line_to_update_list=delivery_line_to_update_list,
           activate_kw=activate_kw,
           force_update=force_update)
     else:
       # Test if we can update an existing line, or if we need to create a new
       # one
-      delivery_line_to_update_list = [x for x in delivery.contentValues(
-        portal_type=self.getDeliveryLinePortalType()) if \
-                                      not self._isUpdated(x, 'line')]
       delivery_line, property_dict = self._findUpdatableObject(
         delivery_line_to_update_list, movement_group_node_list,
         divergence_list)
       if delivery_line is not None:
         update_existing_line = 1
+        delivery_line_to_update_list.remove(delivery_line)
       else:
         # Create delivery line
         update_existing_line = 0
@@ -499,12 +506,15 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                 movement_group_node.getMovementList(),
                 activate_kw)
       # Put properties on delivery line
-      self._setUpdated(delivery_line, 'line')
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
         delivery_line.edit(force_update=1, **property_dict)
 
       if movement_group_node.getCurrentMovementGroup().isBranch():
+        delivery_line_portal_type = self.getDeliveryLinePortalType()
+        nested_delivery_line_to_update_list = []
+        for line in delivery_line.contentValues(portal_type=delivery_line_portal_type):
+          nested_delivery_line_to_update_list.append(line)
         for grouped_node in movement_group_node.getGroupList():
           self._processDeliveryLineGroup(
             delivery_line,
@@ -512,6 +522,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
             collect_order_list[1:],
             movement_group_node_list=movement_group_node_list,
             divergence_list=divergence_list,
+            delivery_line_to_update_list=nested_delivery_line_to_update_list,
             activate_kw=activate_kw,
             force_update=force_update)
         return
