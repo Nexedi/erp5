@@ -283,9 +283,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                            divergence_list):
     instance = None
     property_dict = {}
-    if not len(instance_list):
+    if not instance_list:
       for movement_group_node in movement_group_node_list:
-        for k,v in movement_group_node.getGroupEditDict().iteritems():
+        for k, v in movement_group_node.getGroupEditDict().iteritems():
           if k in property_dict:
             raise DuplicatedPropertyDictKeysError(k)
           else:
@@ -297,8 +297,12 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         current = movement_group_node_list[-1].getMovementList()[0].getDeliveryValue()
         portal = self.getPortalObject()
         while current != portal:
-          if current in instance_list:
-            instance_list.sort(key=lambda x: x != current and 1 or 0)
+          try:
+            instance_list.remove(current)
+          except ValueError:
+            pass
+          else:
+            instance_list.insert(0, current)
             break
           current = current.getParentValue()
       except AttributeError:
@@ -306,7 +310,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       for instance_to_update in instance_list:
         result, property_dict = self._test(
           instance_to_update, movement_group_node_list, divergence_list)
-        if result == True:
+        if result:
           instance = instance_to_update
           break
     return instance, property_dict
