@@ -287,21 +287,23 @@
                     <button tal:condition="not:is_gadget_mode"\n
                             type="submit"\n
                             name="setSelectionQuickSortOrder:method"\n
-                            tal:content="title"\n
                             tal:attributes="title title;\n
                                             value listbox_field_id;\n
                                             class bt_class;"\n
-                            i18n:domain="ui" i18n:attributes="title"/>\n
+                            i18n:domain="ui" i18n:attributes="title">\n
+                      <span i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
+                    </button>\n
 \n
                     <!-- Button in gadget mode -->\n
                     <button tal:condition="is_gadget_mode" \n
                               tal:define ="params python: {\'setSelectionQuickSortOrder:method\':listbox_field_id};"\n
                               type="button"  \n
-                              tal:content="title"\n
                               tal:attributes="title title; \n
                                               onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
                                               class bt_class;"\n
-                              i18n:domain="ui" i18n:attributes="title"/>\n
+                              i18n:domain="ui" i18n:attributes="title">\n
+                      <span i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
+                    </button>\n
   \n
                     <!-- Icon showing sort order -->\n
                     <img src="images/transparent-image.gif"\n
