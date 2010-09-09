@@ -32,7 +32,6 @@ import transaction
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing import ZopeTestCase
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -51,8 +50,8 @@ def printAndLog(msg):
   ZopeTestCase._print('\n ' + msg)
   LOG('Testing... ', 0, msg)
 
-class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
-  
+class TestConversionInSimulation(AccountingTestCase):
+
   username = 'username'
   default_region = "europe/west/france"
   vat_gap = 'fr/pcg/4/44/445/4457/44571'
@@ -120,7 +119,8 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
       **kw)
 
   def afterSetUp(self):
-    ERP5TypeTestCase.login(self)
+    super(TestConversionInSimulation, self).afterSetUp()
+    super(TestConversionInSimulation, self).login()
     self.createCategories()
     self.createAndValidateAccounts()
     self.login()
@@ -140,7 +140,8 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                   portal_type='Currency Exchange Line')])
     transaction.commit()
     self.tic()
- 
+    super(TestConversionInSimulation, self).beforeTearDown()
+
   def login(self,name=username, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Assignee', 'Assignor',
@@ -788,6 +789,7 @@ class TestConversionInSimulation(AccountingTestCase,ERP5TypeTestCase):
                                 portal_type='Currency',
                                 title='euro')
     currency.setBaseUnitQuantity(0.01)
+    self.createBusinessProcess(currency)
     transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(

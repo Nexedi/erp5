@@ -110,8 +110,8 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
       invoice = invoice_line.getExplanationValue()
       resource = invoice.getProperty('resource',
                   invoice.getProperty('price_currency', None))
+    portal = input_movement.getPortalObject()
     if resource is None:
-      portal = input_movement.getPortalObject()
       # search the resource on parents simulation movement's deliveries
       simulation_movement = input_movement
       portal_simulation = portal.portal_simulation
