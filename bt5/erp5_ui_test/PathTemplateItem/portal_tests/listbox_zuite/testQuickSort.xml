@@ -122,8 +122,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -132,8 +132,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -141,11 +141,11 @@
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
+<tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/button</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/button</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>\n
@@ -179,12 +179,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -192,21 +192,21 @@
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
+<tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>//tr[@class="listbox-label-line"]/td[4]/img</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>\n
@@ -240,12 +240,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -253,21 +253,21 @@
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
+<tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/img</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>\n
@@ -299,11 +299,11 @@
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
@@ -311,12 +311,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -324,11 +324,11 @@
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
+<tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/img</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>\n
@@ -360,11 +360,11 @@
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.id\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+<tr>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.title\']</td>\n
@@ -372,12 +372,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[3]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -385,11 +385,11 @@
     <td>//button[@name=\'setSelectionQuickSortOrder:method\' and @value=\'listbox.quantity\']</td>\n
   <td></td>\n
 </tr>\n
-<!--<tr>\n
+<tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/img</td>\n
   <td></td>\n
-</tr>-->\n
+</tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>\n

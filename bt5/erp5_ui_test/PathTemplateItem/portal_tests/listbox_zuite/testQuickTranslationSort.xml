@@ -138,12 +138,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/td[2]/button[@alt="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/td[2]/img[@alt="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -174,12 +174,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -205,12 +205,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -285,12 +285,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -321,12 +321,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -352,12 +352,12 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
