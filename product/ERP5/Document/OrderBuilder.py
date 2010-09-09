@@ -405,7 +405,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_to_update_list = []
     delivery_list = []
 
-    if len(collect_order_list):
+    if collect_order_list:
       # Get sorted movement for each delivery
       for grouped_node in movement_group_node.getGroupList():
         new_delivery_list = self._processDeliveryGroup(
@@ -428,7 +428,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
 
       # if all deliveries are rejected in case of update, we update the
       # first one.
-      if force_update and delivery is None and len(delivery_to_update_list):
+      if force_update and delivery is None and delivery_to_update_list:
         delivery = delivery_to_update_list[0]
 
       if delivery is None:
@@ -492,7 +492,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # do not use 'append' or '+=' because they are destructive.
     movement_group_node_list = movement_group_node_list + [movement_group_node]
 
-    if len(collect_order_list) and not movement_group_node.getCurrentMovementGroup().isBranch():
+    if collect_order_list and not movement_group_node.getCurrentMovementGroup().isBranch():
       # Get sorted movement for each delivery line
       for grouped_node in movement_group_node.getGroupList():
         self._processDeliveryLineGroup(
@@ -556,7 +556,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       grouped_node_list = movement_group_node.getGroupList()
       # If no group is defined for cell, we need to continue, in order to
       # save the quantity value
-      if len(grouped_node_list):
+      if grouped_node_list:
         for grouped_node in grouped_node_list:
           self._processDeliveryCellGroup(
                                     delivery_line,
@@ -604,7 +604,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     # do not use 'append' or '+=' because they are destructive.
     movement_group_node_list = movement_group_node_list + [movement_group_node]
 
-    if len(collect_order_list):
+    if collect_order_list:
       # Get sorted movement for each delivery line
       for grouped_node in movement_group_node.getGroupList():
         self._processDeliveryCellGroup(
@@ -633,7 +633,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         # because matrix range can be empty even if line variation category
         # list is not empty
         property_dict = {}
-        if len(delivery_line.getCellKeyList(base_id=base_id)) == 0:
+        if not delivery_line.getCellKeyList(base_id=base_id):
           # update line
           if update_existing_line == 1:
             if self._isUpdated(delivery_line, 'cell'):
@@ -710,7 +710,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
       Call script on each delivery built.
     """
-    if not len(delivery_list):
+    if not delivery_list:
       return
     # Parameter initialization
     if movement_list is None:
@@ -719,7 +719,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                               self.getDeliveryAfterGenerationScriptId()
     related_simulation_movement_path_list = \
                               [x.getPath() for x in movement_list]
-    if delivery_after_generation_script_id not in ["", None]:
+    if delivery_after_generation_script_id:
       for delivery in delivery_list:
         script = getattr(delivery, delivery_after_generation_script_id)
         # BBB: Only Python Scripts were used in the past, and they might not
