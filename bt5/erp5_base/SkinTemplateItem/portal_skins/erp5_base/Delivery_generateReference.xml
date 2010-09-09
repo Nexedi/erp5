@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -64,7 +61,7 @@ id_group = \'-\'.join((parent_type, object_type))\n
 \n
 new_id = context.generateNewId(id_group=id_group, default=1)\n
 \n
-reference = "%s %s" % (context.Base_translateString(prefix), new_id)\n
+reference = "%s-%s" % (context.Base_translateString(prefix), new_id)\n
 \n
 context.setReference(reference)\n
 </string> </value>
