@@ -61,9 +61,10 @@ class TestSelectionTool(ERP5TypeTestCase):
                       self.portal_selections.getSelectionNameList())
     self.assertEquals(['test_selection'],
                       self.portal_selections.getSelectionNames())
-    self.assert_(self.portal_selections._getPersistentContainer('manager')
-                 is not None)
+    self.assert_(self.portal_selections._getContainer() is not None)
     self.assert_(getattr(self.portal_selections, 'selection_data', None)
+                 is not None)
+    self.assert_(getattr(self.portal_selections, '_v_selection_container', None)
                  is not None)
 
   def testGetSelectionFor(self):
@@ -374,8 +375,8 @@ class TestSelectionToolMemcachedStorage(TestSelectionTool):
                       self.portal_selections.getSelectionNameList())
     self.assertEquals([],
                       self.portal_selections.getSelectionNames())
-    self.assert_(self.portal_selections._getMemcachedContainer() is not None)
-    self.assert_(getattr(self.portal_selections, '_v_selection_data', None)
+    self.assert_(self.portal_selections._getContainer() is not None)
+    self.assert_(getattr(self.portal_selections, '_v_selection_container', None)
                  is not None)
 
   @skip('To be decided if implementation is required')
