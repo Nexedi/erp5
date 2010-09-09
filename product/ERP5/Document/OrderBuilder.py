@@ -258,7 +258,22 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                    [DateMovementGroup,PathMovementGroup,...]
     """
     movement_group_list = self.getMovementGroupList()
-    last_line_movement_group = self.getDeliveryMovementGroupList()[-1]
+
+    # Need to find the last branch movement group for separate methods.
+    last_line_movement_group = None
+    previous_collect_order_group = None
+    for movement_group in movement_group_list:
+      collect_order_group = movement_group.getCollectOrderGroup()
+      if collect_order_group == 'line':
+        if previous_collect_order_group == 'delivery' \
+                or movement_group.isBranch():
+          last_line_movement_group = movement_group
+      elif collect_order_group == 'cell':
+        break
+      previous_collect_order_group = collect_order_group
+    if last_line_movement_group is None:
+      raise CollectError('No branch movement group found at %r' % (self,))
+
     separate_method_name_list = self.getDeliveryCellSeparateOrderList([])
     root_group_node = MovementGroupNode(
       separate_method_name_list=separate_method_name_list,
