@@ -366,9 +366,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
               if x.getPortalType() == delivery_portal_type]
     else:
       delivery_to_update_list = []
-    # We do not want to update the same object more than twice in one
-    # _deliveryGroupProcessing().
-    self._resetUpdated()
+
     delivery_list = self._processDeliveryGroup(
                           delivery_module,
                           movement_group_node,
@@ -807,21 +805,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       else:
         obj = aq_parent(aq_inner(obj))
     return obj
-
-  def _isUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
-    return level in tv['builder_processed_list'].get(obj, [])
-
-  def _setUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
-    if tv.get('builder_processed_list', None) is None:
-      self._resetUpdated()
-    tv['builder_processed_list'][obj] = \
-       tv['builder_processed_list'].get(obj, []) + [level]
-
-  def _resetUpdated(self):
-    tv = getTransactionalVariable(self)
-    tv['builder_processed_list'] = {}
 
   # for backward compatibilities.
   _deliveryGroupProcessing = _processDeliveryGroup
