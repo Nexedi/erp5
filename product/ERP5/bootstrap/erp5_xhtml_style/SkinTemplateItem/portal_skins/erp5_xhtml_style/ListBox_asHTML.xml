@@ -304,9 +304,11 @@
                               i18n:domain="ui" i18n:attributes="title"/>\n
   \n
                     <!-- Icon showing sort order -->\n
-                    <img tal:attributes="title bt_title;\n
+                    <img src="images/transparent-image.gif"\n
+                         tal:attributes="alt   bt_title;\n
+                                         title   bt_title;\n
                                          class bt_class;"\n
-                         i18n:domain="ui" i18n:attributes="title" />\n
+                         i18n:domain="ui" i18n:attributes="title;alt" />\n
                     \n
                   </th>\n
 \n

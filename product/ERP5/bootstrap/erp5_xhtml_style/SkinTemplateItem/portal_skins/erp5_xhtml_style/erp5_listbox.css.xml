@@ -751,14 +751,20 @@ table.listbox th button.sort-button-desc{\n
   background: none;\n
 }\n
 \n
+table.listbox th img.sort-button-desc,\n
+table.listbox th img.sort-button-asc{\n
+  width: 13px;\n
+  height: 13px;\n
+  margin:0;\n
+  padding:0;\n
+}\n
+\n
 table.listbox th img.sort-button-desc{\n
   background: url(\'images/1toparrow.png\') no-repeat scroll 100% 100%;\n
-  padding-left:12px;\n
 }\n
 \n
 table.listbox th img.sort-button-asc{\n
   background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 100%;\n
-  padding-left:12px;\n
 }\n
 \n
 /* in search mode listbox may contain top/bottom quick search inputs */\n
