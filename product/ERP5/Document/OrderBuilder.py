@@ -96,6 +96,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                     , PropertySheet.DeliveryBuilder
                     )
 
+  # XXX it would be better to make the base id configurable at
+  # each builder.
+  matrix_base_id = 'movement'
+
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
             delivery_relative_url_list=None, movement_list=None, **kw):
@@ -554,6 +558,13 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # If no group is defined for cell, we need to continue, in order to
       # save the quantity value
       if grouped_node_list:
+        base_id = self.matrix_base_id
+        getCell = delivery_line.getCell
+        delivery_movement_to_update_list = []
+        for cell_key in delivery_line.getCellKeyList(base_id=base_id):
+          cell = getCell(base_id=base_id, *cell_key)
+          if cell is not None:
+            delivery_movement_to_update_list.append(cell)
         for grouped_node in grouped_node_list:
           self._processDeliveryCellGroup(
                                     delivery_line,
@@ -561,6 +572,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                     self.getDeliveryCellMovementGroupList()[1:],
                                     update_existing_line=update_existing_line,
                                     divergence_list=divergence_list,
+                                    delivery_movement_to_update_list=delivery_movement_to_update_list,
                                     activate_kw=activate_kw,
                                     force_update=force_update)
       else:
@@ -570,6 +582,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                   [],
                                   update_existing_line=update_existing_line,
                                   divergence_list=divergence_list,
+                                  delivery_movement_to_update_list=[delivery_line],
                                   activate_kw=activate_kw,
                                   force_update=force_update)
 
@@ -589,6 +602,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                 collect_order_list, movement_group_node_list=None,
                                 update_existing_line=0,
                                 divergence_list=None,
+                                delivery_movement_to_update_list=None,
                                 activate_kw=None, force_update=0):
     """
       Build delivery cell from a list of movement on a delivery line
@@ -596,6 +610,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
     if movement_group_node_list is None:
       movement_group_node_list = []
+    if delivery_movement_to_update_list is None:
+      delivery_movement_to_update_list = []
     if divergence_list is None:
       divergence_list = []
     # do not use 'append' or '+=' because they are destructive.
@@ -611,6 +627,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           movement_group_node_list=movement_group_node_list,
           update_existing_line=update_existing_line,
           divergence_list=divergence_list,
+          delivery_movement_to_update_list=delivery_movement_to_update_list,
           activate_kw=activate_kw,
           force_update=force_update)
     else:
@@ -619,8 +636,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         raise CollectError, "DeliveryBuilder: %s unable to distinct those\
               movements: %s" % (self.getId(), str(movement_list))
       else:
-        # XXX Hardcoded value
-        base_id = 'movement'
+        base_id = self.matrix_base_id
         object_to_update = None
         # We need to initialize the cell
         update_existing_movement = 0
@@ -632,53 +648,46 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         property_dict = {}
         if not delivery_line.getCellKeyList(base_id=base_id):
           # update line
-          if update_existing_line == 1:
-            if self._isUpdated(delivery_line, 'cell'):
-              object_to_update_list = []
-            else:
-              object_to_update_list = [delivery_line]
-          else:
-            object_to_update_list = []
-          object_to_update, property_dict = self._findUpdatableObject(
-            object_to_update_list, movement_group_node_list,
+          dummy, property_dict = self._findUpdatableObject(
+            delivery_movement_to_update_list, movement_group_node_list,
             divergence_list)
-          if object_to_update is not None:
-            update_existing_movement = 1
+          if delivery_movement_to_update_list:
+            if update_existing_line:
+              update_existing_movement = 1
+            del delivery_movement_to_update_list[:]
           else:
-            object_to_update = delivery_line
+            # XXX probably an exception should be raised here.
+            pass
+          object_to_update = delivery_line
         else:
-          object_to_update_list = [
-            delivery_line.getCell(base_id=base_id, *cell_key) for cell_key in \
-            delivery_line.getCellKeyList(base_id=base_id) \
-            if delivery_line.hasCell(base_id=base_id, *cell_key)]
           object_to_update, property_dict = self._findUpdatableObject(
-            object_to_update_list, movement_group_node_list,
+            delivery_movement_to_update_list, movement_group_node_list,
             divergence_list)
           if object_to_update is not None:
             # We update a existing cell
             # delivery_ratio of new related movement to this cell
             # must be updated to 0.
             update_existing_movement = 1
-
-        if object_to_update is None:
-          # create a new cell
-          cell_key = movement.getVariationCategoryList(
-              omit_optional_variation=1)
-          if not delivery_line.hasCell(base_id=base_id, *cell_key):
-            cell = self._createDeliveryCell(delivery_line, movement,
-                                            activate_kw, base_id, cell_key)
-            vcl = movement.getVariationCategoryList()
-            cell._edit(category_list=vcl,
-                       # XXX hardcoded value
-                       mapped_value_property_list=('quantity', 'price'),
-                       membership_criterion_category_list=vcl,
-                       membership_criterion_base_category_list=movement.\
-                                             getVariationBaseCategoryList())
+            delivery_movement_to_update_list.remove(object_to_update)
           else:
-            raise MatrixError, 'Cell: %s already exists on %s' % \
-                  (str(cell_key), str(delivery_line))
-          object_to_update = cell
-        self._setUpdated(object_to_update, 'cell')
+            # create a new cell
+            cell_key = movement.getVariationCategoryList(
+                    omit_optional_variation=1)
+            if not delivery_line.hasCell(base_id=base_id, *cell_key):
+              cell = self._createDeliveryCell(delivery_line, movement,
+                                              activate_kw, base_id, cell_key)
+              vcl = movement.getVariationCategoryList()
+              cell._edit(category_list=vcl,
+                         # XXX hardcoded value
+                         mapped_value_property_list=('quantity', 'price'),
+                         membership_criterion_category_list=vcl,
+                         membership_criterion_base_category_list=movement.\
+                                               getVariationBaseCategoryList())
+            else:
+              raise MatrixError, 'Cell: %s already exists on %s' % \
+                    (str(cell_key), str(delivery_line))
+            object_to_update = cell
+
         self._setDeliveryMovementProperties(
                             object_to_update, movement, property_dict,
                             update_existing_movement=update_existing_movement,
