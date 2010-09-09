@@ -267,7 +267,7 @@ class ListBoxWidget(Widget.Widget):
                                  description=('The name of the selection to '
                                               'store selection parameters'),
                                  default='',
-                                 required=1)
+                                 required=0)
     property_names.append('selection_name')
 
     meta_types = fields.ListTextAreaField('meta_types',
@@ -2425,13 +2425,16 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 error = sys.exc_info())
         else:
           try:
-            url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;ignore_layout:int=%s&amp;reset:int=1' % (
+            url = '%s/view?ignore_layout:int=%s&amp;reset:int=1' % (
                       # brain.absolute_url() is slow because it invokes
                       # _aq_dynamic() every time to get brain.REQUEST,
                       # so we call request.physicalPathToURL() directly
                       # instead of brain.absolute_url().
                       request.physicalPathToURL(brain.getPath()),
-                      self.index, selection_name, ignore_layout)
+                      ignore_layout)
+            if selection_name:
+              url += '&amp;selection_index=%s&amp;selection_name=%s' % (
+                self.index, selection_name)
           except AttributeError:
             pass
 

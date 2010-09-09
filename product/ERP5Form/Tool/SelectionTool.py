@@ -251,6 +251,8 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       if isinstance(selection_name, (tuple, list)):
         selection_name = selection_name[0]
+      if not selection_name:
+        return None
       selection = self._getSelectionFromContainer(selection_name)
       if selection is not None:
         return selection.__of__(self)
@@ -263,6 +265,8 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
         Sets the selection instance for a given selection_name
       """
+      if not selection_name:
+        return
       if selection_object != None:
         # Set the name so that this selection itself can get its own name.
         selection_object.edit(name=selection_name)
