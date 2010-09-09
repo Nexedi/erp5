@@ -272,7 +272,6 @@ class DeliveryBuilder(OrderBuilder):
     portal = self.getPortalObject()
     delivery_module = getattr(portal, self.getDeliveryModule())
     delivery_to_update_list = [delivery]
-    self._resetUpdated()
     delivery_list = self._processDeliveryGroup(
       delivery_module,
       root_group_node,
