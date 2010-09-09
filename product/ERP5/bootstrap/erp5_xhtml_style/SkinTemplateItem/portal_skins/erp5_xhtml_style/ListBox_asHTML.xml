@@ -281,26 +281,33 @@
                                                     or \'sort-button\';\n
                                   bt_title python: sort_order==\'ascending\' and \'Ascending Display\'\n
                                                    or sort_order==\'descending\' and \'Descending Display\'\n
-                                                   or \'Sort\';">                 \n
+                                                   or \'Sort\';\n
+                                  listbox_field_id string:${field_id}.${sql};">                 \n
                     <!-- Button in normal view -->\n
-                    <button tal:condition="not:is_gadget_mode" \n
+                    <button tal:condition="not:is_gadget_mode"\n
                             type="submit"\n
                             name="setSelectionQuickSortOrder:method"\n
                             tal:content="title"\n
-                            tal:attributes="title bt_title;\n
-                                            value string:${field_id}.${sql};\n
+                            tal:attributes="title title;\n
+                                            value listbox_field_id;\n
                                             class bt_class;"\n
-                            i18n:domain="ui" i18n:attributes="title" />\n
+                            i18n:domain="ui" i18n:attributes="title"/>\n
 \n
                     <!-- Button in gadget mode -->\n
                     <button tal:condition="is_gadget_mode" \n
-                            tal:define ="params python: {\'setSelectionQuickSortOrder:method\':field_id+\'.\'+sql};"\n
-                            type="button"  \n
-                            tal:content="title"\n
-                            tal:attributes="title bt_title; \n
-                                            onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
-                                            class bt_class;"\n
-                            i18n:domain="ui" i18n:attributes="title"/>\n
+                              tal:define ="params python: {\'setSelectionQuickSortOrder:method\':listbox_field_id};"\n
+                              type="button"  \n
+                              tal:content="title"\n
+                              tal:attributes="title title; \n
+                                              onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                                              class bt_class;"\n
+                              i18n:domain="ui" i18n:attributes="title"/>\n
+  \n
+                    <!-- Icon showing sort order -->\n
+                    <img tal:attributes="title bt_title;\n
+                                         class bt_class;"\n
+                         i18n:domain="ui" i18n:attributes="title" />\n
+                    \n
                   </th>\n
 \n
                   <th class="listbox-table-header-cell"\n

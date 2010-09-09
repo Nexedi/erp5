@@ -738,19 +738,27 @@ table.listbox th button{\n
 \n
 table.listbox th button.sort-button {\n
   text-decoration: underline;\n
-  padding-right: 12px;\n
+  padding: 0px;\n
 }\n
 \n
 table.listbox th button.sort-button:hover{\n
   color: #FFF;\n
 }\n
 \n
+/* in ERP5 mode no need to have a switch for not clicked sort button */\n
+table.listbox th button.sort-button-asc,\n
 table.listbox th button.sort-button-desc{\n
-  background: url(\'images/1toparrow.png\') no-repeat scroll 100% 50%;\n
+  background: none;\n
 }\n
 \n
-table.listbox th button.sort-button-asc{\n
-  background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 50%;\n
+table.listbox th img.sort-button-desc{\n
+  background: url(\'images/1toparrow.png\') no-repeat scroll 100% 100%;\n
+  padding-left:12px;\n
+}\n
+\n
+table.listbox th img.sort-button-asc{\n
+  background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 100%;\n
+  padding-left:12px;\n
 }\n
 \n
 /* in search mode listbox may contain top/bottom quick search inputs */\n
