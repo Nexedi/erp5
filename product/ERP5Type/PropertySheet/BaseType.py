@@ -44,6 +44,21 @@ class BaseType:
           'mode':       'w',
           'label':      'Product factory method'
          },
+        { 'id':         'type_class'
+        , 'type':       'string'
+        , 'mode':       'w'
+        , 'label':      'Document class the Portal Type inherits from'
+         },
+        { 'id':         'type_mixin_list'
+        , 'type':       'lines'
+        , 'mode':       'w'
+        , 'label':      'List of Mixins that are attached to the Portal Type'
+         },
+        { 'id':         'type_interface_list'
+        , 'type':       'lines'
+        , 'mode':       'w'
+        , 'label':      'List of Interfaces that the Portal Type implements'
+         },
         { 'id':         'type_add_permission',
           'storage_id': 'permission', # CMF Compatibility
           'type':       'string',
