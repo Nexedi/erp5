@@ -300,6 +300,14 @@ class OrderBuilder(XMLObject, Amount, Predicate):
 
   def _findUpdatableObject(self, instance_list, movement_group_node_list,
                            divergence_list):
+    # FIXME this code may generate inconsistent results, because
+    # MovementGroupNode.test can return anything else but the
+    # property dict. So it would be better to use the test method
+    # in all cases. It is, however, not so easy to do, because
+    # Movement Group classes might not be prepared for receiving
+    # None instead of a real document object. So it would be safer
+    # to pass a temp object, but generating a temp object is not 
+    # very fast.
     instance = None
     property_dict = {}
     if not instance_list:
@@ -396,6 +404,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
       Build delivery from a list of movement
     """
+    # FIXME make sure that activate_kw is used for all active objects
+    # generated from this method and methods called from this method.
     if movement_group_node_list is None:
       movement_group_node_list = []
     if divergence_list is None:
@@ -576,6 +586,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       else:
         self._processDeliveryCellGroup(
                                   delivery_line,
+                                  # FIXME passing current movement group node
+                                  # has bad side effect, so the logic must
+                                  # be corrected.
                                   movement_group_node,
                                   [],
                                   update_existing_line=update_existing_line,
@@ -793,6 +806,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
   def getDeliveryCellMovementGroupList(self, **kw):
     return self.getMovementGroupList(collect_order_group='cell')
 
+  # XXX this method is not used in OrderBuilder but in DeliveryBuilder.
+  # So it should perhaps be moved to DeliveryBuilder.
   def _searchUpByPortalType(self, obj, portal_type):
     limit_portal_type = self.getPortalObject().getPortalType()
     while obj is not None:
