@@ -43,6 +43,8 @@ from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 import md5
 import string, re
+from time import time
+from random import random
 from urlparse import urlsplit, urlunsplit
 from zLOG import LOG, INFO
 from Acquisition import aq_base
@@ -139,14 +141,19 @@ class SelectionTool( BaseTool, SimpleItem ):
       return storage_item_list
 
     security.declareProtected( ERP5Permissions.ManagePortal, 'setStorage')
-    def setStorage(self, value, RESPONSE=None):
+    def setStorage(self, storage, anonymous_storage=None, RESPONSE=None):
       """
         Set the storage of Selection Tool.
       """
-      if value in [item[1] for item in self.getStorageItemList()]:
-        self.storage = value
+      if storage in [item[1] for item in self.getStorageItemList()]:
+        self.storage = storage
       else:
-        raise ValueError, 'Given storage type (%s) is now supported.' % (value,)
+        raise ValueError, 'Given storage type (%s) is now supported.' % (storage,)
+      anonymous_storage = anonymous_storage or None
+      if anonymous_storage in [item[1] for item in self.getStorageItemList()] + [None]:
+        self.anonymous_storage = anonymous_storage
+      else:
+        raise ValueError, 'Given storage type (%s) is now supported.' % (anonymous_storage,)
       if RESPONSE is not None:
         RESPONSE.redirect('%s/manage_configure' % (self.absolute_url()))
 
@@ -166,6 +173,12 @@ class SelectionTool( BaseTool, SimpleItem ):
           else:
             storage = 'selection_data'
       return storage
+
+    security.declareProtected( ERP5Permissions.ManagePortal, 'getAnonymousStorage')
+    def getAnonymousStorage(self, default=None):
+      """return the selected storage
+      """
+      return getattr(aq_base(self), 'anonymous_storage', default)
 
     def _redirectToOriginalForm(self, REQUEST=None, form_id=None, dialog_id=None,
                                 query_string=None,
@@ -267,6 +280,9 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       if not selection_name:
         return
+      if self._isAnonymous():
+        self.REQUEST.response.setCookie('anonymous_uid',
+                                        self.REQUEST.get('anonymous_uid'))
       if selection_object != None:
         # Set the name so that this selection itself can get its own name.
         selection_object.edit(name=selection_name)
@@ -1365,9 +1381,19 @@ class SelectionTool( BaseTool, SimpleItem ):
       return SelectionTool.inheritedAttribute('_aq_dynamic')(self, name)
 
     def _getUserId(self):
-      return self.portal_membership.getAuthenticatedMember().getUserName()
-      # XXX It would be good to add somthing here
-      # So that 2 anonymous users do not share the same selection
+      tv = getTransactionalVariable(self)
+      user_id = tv.get('_user_id', None)
+      if user_id is not None:
+        return user_id
+      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+      if user_id == 'Anonymous User' and self.getAnonymousStorage() is not None:
+        anonymous_uid = self.REQUEST.get('anonymous_uid', None)
+        if anonymous_uid is None:
+          anonymous_uid = md5.new('%s.%s' % (time(), random())).hexdigest()
+          self.REQUEST['anonymous_uid'] = anonymous_uid
+        user_id = 'Anonymous:%s' % anonymous_uid
+      tv['_user_id'] = user_id
+      return user_id
 
     def getTemporarySelectionDict(self):
       """ Temporary selections are used in push/pop nested scope,
@@ -1432,9 +1458,16 @@ class SelectionTool( BaseTool, SimpleItem ):
       return list(set(self._getContainer().getSelectionNameList(user_id) + \
                       self.getTemporarySelectionDict().keys()))
 
+    def _isAnonymous(self):
+      return self.portal_membership.isAnonymousUser()
+
     def _getContainer(self):
-      container_id = '_v_selection_container'
-      storage = self.getStorage()
+      if self._isAnonymous():
+        container_id = '_v_anonymous_selection_container'
+        storage = self.getAnonymousStorage()
+      else:
+        container_id = '_v_selection_container'
+        storage = self.getStorage()
       container = getattr(aq_base(self), container_id, None)
       if container is None:
         if storage.startswith('portal_memcached/'):

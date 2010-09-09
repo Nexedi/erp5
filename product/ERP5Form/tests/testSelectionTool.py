@@ -246,6 +246,7 @@ class TestSelectionPersistence(unittest.TestCase):
     # find the current user name
     SelectionTool._getUserId_saved = SelectionTool._getUserId
     SelectionTool._getUserId = lambda self: 'user'
+    SelectionTool._isAnonymous = lambda self: 0
 
     self.db = ZODButil.makeDB()
     self.cnx = self.db.open()
