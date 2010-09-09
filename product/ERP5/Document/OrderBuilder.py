@@ -543,13 +543,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         return
 
       # Update variation category list on line
-      variation_category_dict = dict([(variation_category, True) for
-                                      variation_category in
-                                      delivery_line.getVariationCategoryList()])
+      variation_category_set = set(delivery_line.getVariationCategoryList())
       for movement in movement_group_node.getMovementList():
-        for category in movement.getVariationCategoryList():
-          variation_category_dict[category] = True
-      variation_category_list = sorted(variation_category_dict.keys())
+        variation_category_set.update(movement.getVariationCategoryList())
+      variation_category_list = sorted(variation_category_set)
       delivery_line.setVariationCategoryList(variation_category_list)
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
