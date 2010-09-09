@@ -238,7 +238,10 @@ table.listbox th button.sort-button-asc{\n
 \n
 table.listbox th img.sort-button-desc,\n
 table.listbox th img.sort-button-asc{\n
-  padding-left: 6px;\n
+  width: 5px;\n
+  height: 10px;\n
+  padding: 0;\n
+  margin: 0;\n
 }\n
 table.listbox th img.sort-button-desc{\n
   background: url(\'./km_img/switch_asc.png\') no-repeat scroll 100% 50%;\n
