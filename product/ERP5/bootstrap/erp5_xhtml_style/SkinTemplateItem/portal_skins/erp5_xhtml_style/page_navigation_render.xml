@@ -46,7 +46,7 @@
   <tal:block metal:define-macro="first_previous_page_navigation">\n
 \n
     <tal:block tal:condition="python: here.current_page > 0">\n
-      <button type="image" src="2leftarrowv.png"\n
+      <button type="submit" src="2leftarrowv.png"\n
               title="First Page" name="firstPage:method"\n
               class="listbox_first_page"\n
               tal:attributes="name string:${field_id}_firstPage:method;\n
@@ -55,7 +55,7 @@
               i18n:domain="ui" i18n:attributes="title">\n
         <span class="image"/>\n
       </button>\n
-      <button type="image" src="1leftarrowv.png"\n
+      <button type="submit" src="1leftarrowv.png"\n
               title="Previous Page" name="previousPage:method"\n
               class="listbox_previous_page"\n
               tal:attributes="name string:${field_id}_previousPage:method;\n
@@ -73,7 +73,7 @@
   <tal:block metal:define-macro="next_last_page_navigation">\n
 \n
     <tal:block tal:condition="python: here.current_page < here.total_pages - 1">\n
-      <button type="image" src="1rightarrowv.png"\n
+      <button type="submit" src="1rightarrowv.png"\n
               title="Next Page" name="nextPage:method" class="listbox_next_page"\n
               tal:attributes="name string:${field_id}_nextPage:method;\n
                               src string:${portal_url_string}/images/1rightarrowv.png;\n
@@ -81,7 +81,7 @@
               i18n:domain="ui" i18n:attributes="title">\n
         <span class="image"/>\n
       </button>\n
-      <button type="image" src="2rightarrowv.png"\n
+      <button type="submit" src="2rightarrowv.png"\n
               title="Last Page" name="lastPage:method" class="listbox_last_page"\n
               tal:attributes="name string:${field_id}_lastPage:method;\n
                               src string:${portal_url_string}/images/2rightarrowv.png;\n
