@@ -1011,16 +1011,17 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
         # so we do nothing in persistent mode (--save).
         try:
           portal_activities = self.portal.portal_activities
-        except AttributeError:
+          message_list = portal_activities.getMessageList()
+        except StandardError: # AttributeError, TransactionFailedError ...
           pass
         else:
-          for m in portal_activities.getMessageList():
+          for m in message_list:
             if m.processing_node < -1:
               transaction.abort()
               count = portal_activities.countMessage()
               portal_activities.manageClearActivities(keep=False)
               transaction.commit()
-              ZopeTestCase._print('\ndropped %d left-over activity messages'
+              ZopeTestCase._print(' (dropped %d left-over activity messages) '
                                   % count)
               break
       PortalTestCase.tearDown(self)
