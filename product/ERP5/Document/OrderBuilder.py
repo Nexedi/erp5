@@ -407,8 +407,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
       Build delivery from a list of movement
     """
-    # FIXME make sure that activate_kw is used for all active objects
-    # generated from this method and methods called from this method.
     if movement_group_node_list is None:
       movement_group_node_list = []
     if divergence_list is None:
@@ -458,7 +456,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Put properties on delivery
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
-        delivery.edit(**property_dict)
+        delivery.edit(activate_kw=activate_kw, **property_dict)
 
       # Then, create delivery lines
       delivery_line_portal_type = self.getDeliveryLinePortalType()
@@ -539,7 +537,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Put properties on delivery line
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
-        delivery_line.edit(force_update=1, **property_dict)
+        delivery_line.edit(force_update=1, activate_kw=activate_kw, 
+                **property_dict)
 
       if movement_group_node.getCurrentMovementGroup().isBranch():
         delivery_line_portal_type = self.getDeliveryLinePortalType()
@@ -563,7 +562,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       for movement in movement_group_node.getMovementList():
         variation_category_set.update(movement.getVariationCategoryList())
       variation_category_list = sorted(variation_category_set)
-      delivery_line.setVariationCategoryList(variation_category_list)
+      delivery_line.edit(variation_category_list=variation_category_list,
+              activate_kw=activate_kw)
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
       grouped_node_list = movement_group_node.getGroupList()
@@ -690,6 +690,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
               cell = self._createDeliveryCell(delivery_line, movement,
                                               activate_kw, base_id, cell_key)
               vcl = movement.getVariationCategoryList()
+              # _createDeliveryCell calls reindexObject, so no need to use
+              # edit here.
               cell._edit(category_list=vcl,
                          # XXX hardcoded value
                          mapped_value_property_list=('quantity', 'price'),
@@ -722,7 +724,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         property_dict['quantity'] = simulation_movement.getQuantity()
       property_dict['price'] = simulation_movement.getPrice()
       # Update properties on object (quantity, price...)
-      delivery_movement._edit(force_update=1, **property_dict)
+      delivery_movement.edit(force_update=1, activate_kw=activate_kw,
+              **property_dict)
 
   @UnrestrictedMethod
   def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
