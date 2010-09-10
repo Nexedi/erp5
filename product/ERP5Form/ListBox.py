@@ -59,6 +59,8 @@ try:
 except NameError:
   from sets import Set as set
 
+DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
+
 class MethodWrapper:
   def __init__(self, context, method_name):
     self.context = context
@@ -409,7 +411,7 @@ class ListBoxWidget(Widget.Widget):
                                 title="Default display style",
                                 description=(
         "A default display style for listbox rendering."),
-                                default='table',
+                                default=DEFAULT_LISTBOX_DISPLAY_STYLE,
                                 required=0)
     property_names.append('default_display_style')
 
@@ -1146,8 +1148,7 @@ class ListBoxRenderer:
     default_listbox_display_style = self.getDefaultDisplayStyle()
     listbox_display_style = self.getListboxDisplayStyle()
     dynamic_column_list_override = (self.getDisplayedColumnIdList() != None)
-    list_style_column_change_required = (default_listbox_display_style != listbox_display_style)
-    
+    list_style_column_change_required = listbox_display_style not in ('', DEFAULT_LISTBOX_DISPLAY_STYLE,)
     if dynamic_column_list_override:
       # dynamically setting columns is supported
       available_column = self.getAllColumnList()
