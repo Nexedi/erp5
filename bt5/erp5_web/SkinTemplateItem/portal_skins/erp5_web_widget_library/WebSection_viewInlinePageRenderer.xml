@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,9 +65,9 @@ def getInlinePage(reference, language):\n
  return None\n
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
-web_site_path = context.getWebSectionValue().getPhysicalPath()\n
+web_site_url = context.getWebSectionValue().absolute_url()\n
 getInlinePage = CachingMethod(getInlinePage, \n
-                 id=(\'WebSection_getInlinePageRenderer\', web_site_path))\n
+                 id=(\'WebSection_getInlinePageRenderer\', web_site_url))\n
 language = context.Localizer.get_selected_language()\n
 return getInlinePage(reference, language)\n
 </string> </value>
@@ -115,7 +112,7 @@ return getInlinePage(reference, language)\n
                             <string>CachingMethod</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>web_site_path</string>
+                            <string>web_site_url</string>
                             <string>language</string>
                           </tuple>
                         </value>
