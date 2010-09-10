@@ -52,6 +52,9 @@
   <item>Preference</item>
   <item>System Preference</item>
  </portal_type>
+ <portal_type id="Property Sheet Tool">
+  <item>Property Sheet</item>
+ </portal_type>
  <portal_type id="Simulation Movement">
   <item>Applied Rule</item>
  </portal_type>
