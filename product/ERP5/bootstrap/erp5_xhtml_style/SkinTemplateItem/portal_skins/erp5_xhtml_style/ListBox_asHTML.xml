@@ -73,7 +73,7 @@
               current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;\n
               form_url string:${context_url}/${form_id};\n
               need_pagination python: total_line > listbox_max_lines;\n
-              show_list_style_selection python: len(display_style_list) > 0;\n
+              show_list_style_selection python: len(display_style_list) > 1;\n
               show_listbox_tree_mode_selection python: not is_gadget_mode and \n
                                                        (is_domain_tree_supported or is_report_tree_supported);\n
               show_list_action_link python: here.field.get_value(\'list_action\');\n
