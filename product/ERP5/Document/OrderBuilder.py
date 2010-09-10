@@ -413,8 +413,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       movement_group_node_list = []
     if divergence_list is None:
       divergence_list = []
-    # do not use 'append' or '+=' because they are destructive.
-    movement_group_node_list = movement_group_node_list + [movement_group_node]
     # Parameter initialization
     if delivery_to_update_list is None:
       delivery_to_update_list = []
@@ -423,15 +421,17 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     if collect_order_list:
       # Get sorted movement for each delivery
       for grouped_node in movement_group_node.getGroupList():
+        # do not use 'append' or '+=' because they are destructive.
+        new_movement_group_node_list = movement_group_node_list + [grouped_node]
         new_delivery_list = self._processDeliveryGroup(
-                              delivery_module,
-                              grouped_node,
-                              collect_order_list[1:],
-                              movement_group_node_list=movement_group_node_list,
-                              delivery_to_update_list=delivery_to_update_list,
-                              divergence_list=divergence_list,
-                              activate_kw=activate_kw,
-                              force_update=force_update)
+                delivery_module,
+                grouped_node,
+                collect_order_list[1:],
+                movement_group_node_list=new_movement_group_node_list,
+                delivery_to_update_list=delivery_to_update_list,
+                divergence_list=divergence_list,
+                activate_kw=activate_kw,
+                force_update=force_update)
         delivery_list.extend(new_delivery_list)
         force_update = 0
     else:
@@ -470,6 +470,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                 delivery,
                                 grouped_node,
                                 self.getDeliveryLineMovementGroupList()[1:],
+                                movement_group_node_list=[grouped_node],
                                 divergence_list=divergence_list,
                                 delivery_line_to_update_list=delivery_line_to_update_list,
                                 activate_kw=activate_kw,
@@ -504,17 +505,17 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       divergence_list = []
     if delivery_line_to_update_list is None:
       delivery_line_to_update_list = []
-    # do not use 'append' or '+=' because they are destructive.
-    movement_group_node_list = movement_group_node_list + [movement_group_node]
 
     if collect_order_list and not movement_group_node.getCurrentMovementGroup().isBranch():
       # Get sorted movement for each delivery line
       for grouped_node in movement_group_node.getGroupList():
+        # do not use 'append' or '+=' because they are destructive.
+        new_movement_group_node_list = movement_group_node_list + [grouped_node]
         self._processDeliveryLineGroup(
           delivery,
           grouped_node,
           collect_order_list[1:],
-          movement_group_node_list=movement_group_node_list,
+          movement_group_node_list=new_movement_group_node_list,
           divergence_list=divergence_list,
           delivery_line_to_update_list=delivery_line_to_update_list,
           activate_kw=activate_kw,
@@ -550,7 +551,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
             delivery_line,
             grouped_node,
             collect_order_list[1:],
-            movement_group_node_list=movement_group_node_list,
+            movement_group_node_list=[grouped_node],
             divergence_list=divergence_list,
             delivery_line_to_update_list=nested_delivery_line_to_update_list,
             activate_kw=activate_kw,
@@ -581,6 +582,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                     delivery_line,
                                     grouped_node,
                                     self.getDeliveryCellMovementGroupList()[1:],
+                                    movement_group_node_list=[grouped_node],
                                     update_existing_line=update_existing_line,
                                     divergence_list=divergence_list,
                                     delivery_movement_to_update_list=delivery_movement_to_update_list,
@@ -589,11 +591,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       else:
         self._processDeliveryCellGroup(
                                   delivery_line,
-                                  # FIXME passing current movement group node
-                                  # has bad side effect, so the logic must
-                                  # be corrected.
                                   movement_group_node,
                                   [],
+                                  movement_group_node_list=[],
                                   update_existing_line=update_existing_line,
                                   divergence_list=divergence_list,
                                   delivery_movement_to_update_list=[delivery_line],
@@ -628,17 +628,16 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       delivery_movement_to_update_list = []
     if divergence_list is None:
       divergence_list = []
-    # do not use 'append' or '+=' because they are destructive.
-    movement_group_node_list = movement_group_node_list + [movement_group_node]
 
     if collect_order_list:
       # Get sorted movement for each delivery line
       for grouped_node in movement_group_node.getGroupList():
+        new_movement_group_node_list = movement_group_node_list + [grouped_node]
         self._processDeliveryCellGroup(
           delivery_line,
           grouped_node,
           collect_order_list[1:],
-          movement_group_node_list=movement_group_node_list,
+          movement_group_node_list=new_movement_group_node_list,
           update_existing_line=update_existing_line,
           divergence_list=divergence_list,
           delivery_movement_to_update_list=delivery_movement_to_update_list,
