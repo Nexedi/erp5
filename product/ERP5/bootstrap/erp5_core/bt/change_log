@@ -1,3 +1,7 @@
+2010-09-10 nicolas delaby
+* Declare new mimetype text/csv
+* Accept text/csv as input mimetype for csv_to_text portal_transform chain.
+
 2010-09-10 nicolas.dumazet
 * Property Sheet portal type and view
 
