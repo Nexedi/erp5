@@ -115,7 +115,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>10</td>\n
+  <td>10 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -166,7 +166,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -205,7 +205,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>9</td>\n
+  <td>9 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

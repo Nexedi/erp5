@@ -134,7 +134,7 @@
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 \n
 </tbody></table>\n

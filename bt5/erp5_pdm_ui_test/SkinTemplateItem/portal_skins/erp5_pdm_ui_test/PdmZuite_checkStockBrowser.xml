@@ -51,7 +51,7 @@
     <tr>\n
       <td>verifyText</td>\n
       <td>//span[@class="listbox-current-page-total-number"]</td>\n
-      <td tal:content="python: \'%s\' % movement_count">number of record(s)</td>\n
+      <td tal:content="python: \'%s records\' % movement_count">number of record(s)</td>\n
     </tr>\n
     <tal:block tal:condition="python: movement_count != 0">\n
 \n
@@ -80,7 +80,7 @@
         <tr>\n
           <td>verifyText</td>\n
           <td>//span[@class="listbox-current-page-total-number"]</td>\n
-          <td tal:content="python: \'%s\' % int(abs(inventory_tuple[0]))">number of movement(s)</td>\n
+          <td tal:content="python: \'%s records\' % int(abs(inventory_tuple[0]))">number of movement(s)</td>\n
         </tr>\n
         <!-- Go back to inventory view -->\n
         <tr>\n

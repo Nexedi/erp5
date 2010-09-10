@@ -145,7 +145,7 @@ will be shown\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 <!-- the title of the listbox is the title of the relation field -->\n
