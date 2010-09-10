@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -82,7 +79,10 @@ def getRandomDocumentTextExcerpt(document_text):\n
 \n
 if document_text is None:\n
   try:\n
-    document_text = context.getSearchableText()\n
+    # if SearchableText is joinned as it is, we use it for better performance.\n
+    document_text = getattr(context, \'SearchableText\', None)\n
+    if not isinstance(document_text, (str, unicode)):\n
+      document_text = context.getSearchableText()\n
   except NotConvertedError:\n
     return context.Base_translateString("This document is not converted yet.")\n
 \n
@@ -161,11 +161,14 @@ else:\n
                             <string>is_gadget_mode</string>
                             <string>getRandomDocumentTextExcerpt</string>
                             <string>None</string>
+                            <string>getattr</string>
+                            <string>isinstance</string>
+                            <string>str</string>
+                            <string>unicode</string>
                             <string>search_string</string>
                             <string>search_argument_list</string>
                             <string>found_text_fragments</string>
                             <string>map</string>
-                            <string>str</string>
                             <string>result</string>
                             <string>unicode_result</string>
                           </tuple>
