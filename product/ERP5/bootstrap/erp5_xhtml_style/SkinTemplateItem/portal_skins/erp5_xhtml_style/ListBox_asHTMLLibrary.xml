@@ -128,18 +128,23 @@
 <div class="listbox-number-of-records"\n
      metal:define-macro="listbox_number_of_records">\n
 \n
-  <span class="listbox-current-page-start-number"\n
-        tal:content="current_page_start"/> - \n
-  <span class="listbox-current-page-stop-number"\n
-        tal:content="current_page_stop"/> \n
-  <span i18n:translate="" i18n:domain="ui">of</span>\n
+  <!-- listbox start - stop number -->\n
+  <tal:block tal:condition="python: total_line > 0">\n
+    <span class="listbox-current-page-start-number"\n
+          tal:content="current_page_start"/> - \n
+    <span class="listbox-current-page-stop-number"\n
+          tal:content="current_page_stop"/> \n
+    <span i18n:translate="" i18n:domain="ui">of</span>\n
+  </tal:block>\n
 \n
+  <!-- listbox total rows number -->\n
   <span class="listbox-current-page-total-number"\n
         tal:attributes="class python: test(is_default_listbox_field, \'listbox-current-page-total-number\', \'listbox-current-page-total-number %s-current-page-total-number\' %field_id)"\n
         i18n:translate="" i18n:domain="ui">\n
     <tal:block tal:replace="total_line" i18n:name="number">0</tal:block> records\n
   </span>\n
-  \n
+\n
+  <!-- listbox selected rows number -->\n
   <span class="listbox-current-item-number"\n
         tal:condition="show_select_column"\n
         tal:attributes="class string:${field_id}-current-item-number"\n
