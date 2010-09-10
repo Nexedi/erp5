@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
-        <tuple/>
-      </tuple>
+      <global name="ListBox" module="Products.ERP5Form.ListBox"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -416,6 +413,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_portal_type</string>
                           <string>Event Type</string>
                         </tuple>
@@ -453,6 +454,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
@@ -461,6 +466,12 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -500,6 +511,14 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>full_text_search_key</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>full_text_search_key_script</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>global_attributes</string> </key>
                     <value>
                       <list/>
@@ -532,6 +551,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_mode</string> </key>
+                    <value> <string>slider</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
@@ -568,6 +591,10 @@
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>translated_portal_type</string>
@@ -652,6 +679,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string>Events</string> </value>
                 </item>
@@ -675,10 +708,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -691,10 +721,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -707,10 +734,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -723,10 +747,7 @@
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -739,10 +760,7 @@
   </record>
   <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,8 +50,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Set preferred text format\n
-context.edit(content_type=context.portal_preferences.getPreferredTextFormat())\n
+            <value> <string># XXX Reference will be probably generated with dedicated tool\n
+# in near future\n
+\n
+portal = context.getPortalObject()\n
+portal_type = context.getPortalType()\n
+type_definition = portal.portal_types[portal_type]\n
+\n
+short_portal_type = type_definition.getShortTitle()\n
+if not short_portal_type:\n
+  short_portal_type = \'\'.join([s for s in portal_type if s.isupper()])\n
+\n
+id_group = (\'reference\', short_portal_type)\n
+default = 1\n
+new_id = context.generateNewId(id_group=id_group, default=default)\n
+reference = \'%s-%s\' % (short_portal_type, new_id)\n
+\n
+# Set preferred text format and reference\n
+context.edit(content_type=context.portal_preferences.getPreferredTextFormat(),\n
+             reference=reference)\n
 </string> </value>
         </item>
         <item>
@@ -66,6 +80,12 @@ context.edit(content_type=context.portal_preferences.getPreferredTextFormat())\n
         <item>
             <key> <string>_params</string> </key>
             <value> <string>*args, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -95,6 +115,19 @@ context.edit(content_type=context.portal_preferences.getPreferredTextFormat())\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
+                            <string>portal_type</string>
+                            <string>_getitem_</string>
+                            <string>type_definition</string>
+                            <string>short_portal_type</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>s</string>
+                            <string>id_group</string>
+                            <string>default</string>
+                            <string>new_id</string>
+                            <string>reference</string>
                           </tuple>
                         </value>
                     </item>
