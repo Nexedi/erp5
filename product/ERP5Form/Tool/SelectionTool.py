@@ -280,9 +280,10 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       if not selection_name:
         return
-      if self._isAnonymous():
-        self.REQUEST.response.setCookie('anonymous_uid',
-                                        self.REQUEST.get('anonymous_uid'))
+      anonymous_uid = REQUEST and REQUEST.get('anonymous_uid', None)
+      if anonymous_uid is not None:
+        self.REQUEST.response.setCookie('anonymous_uid', anonymous_uid,
+                                        path='/')
       if selection_object != None:
         # Set the name so that this selection itself can get its own name.
         selection_object.edit(name=selection_name)
@@ -1464,7 +1465,7 @@ class SelectionTool( BaseTool, SimpleItem ):
     def _getContainer(self):
       if self._isAnonymous():
         container_id = '_v_anonymous_selection_container'
-        storage = self.getAnonymousStorage()
+        storage = self.getAnonymousStorage() or self.getStorage()
       else:
         container_id = '_v_selection_container'
         storage = self.getStorage()
