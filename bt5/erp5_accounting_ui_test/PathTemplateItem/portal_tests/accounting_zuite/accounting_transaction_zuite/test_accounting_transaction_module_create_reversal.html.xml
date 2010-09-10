@@ -79,7 +79,7 @@ Test for Creating reversal of multiple transactions\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -125,7 +125,7 @@ Test for Creating reversal of multiple transactions\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>8</td>\n
+  <td>8 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n

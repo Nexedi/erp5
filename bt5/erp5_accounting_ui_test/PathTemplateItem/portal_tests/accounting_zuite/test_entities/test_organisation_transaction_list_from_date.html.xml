@@ -122,7 +122,7 @@ Test Transactions related to an Organisation, with start date\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>45</td>\n
+  <td>45 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n

@@ -74,7 +74,7 @@ Test Transactions related to an account\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 <!-- dumped listbox {{{2 -->\n

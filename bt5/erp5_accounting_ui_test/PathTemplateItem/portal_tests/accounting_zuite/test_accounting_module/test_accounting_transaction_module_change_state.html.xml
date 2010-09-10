@@ -74,7 +74,7 @@ Test changing state in accounting module (with custom search)\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <!-- Change state -->\n
@@ -86,7 +86,7 @@ Test changing state in accounting module (with custom search)\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -120,7 +120,7 @@ Test changing state in accounting module (with custom search)\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -173,7 +173,7 @@ Test changing state in accounting module (with custom search)\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n

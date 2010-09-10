@@ -78,7 +78,7 @@ section or destination section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>5</td>\n
+  <td>5 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -93,7 +93,7 @@ section or destination section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <!-- check amounts for lines -->\n
 <tr>\n
@@ -134,7 +134,7 @@ section or destination section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>5</td>\n
+  <td>5 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -149,7 +149,7 @@ section or destination section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>0</td>\n
+  <td>0 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -169,7 +169,7 @@ We have a purchase with `Supplier` Organisation\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>5</td>\n
+  <td>5 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -184,7 +184,7 @@ We have a purchase with `Supplier` Organisation\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <!-- check amounts for lines -->\n
 <tr>\n

@@ -64,7 +64,7 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>48</td>\n
+  <td>48 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -228,7 +228,7 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>48</td>\n
+  <td>48 records</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -245,7 +245,7 @@ Test Accounting module listbox multi pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>24</td>\n
+  <td>24 records</td>\n
 </tr>\n
 \n
 <tr>\n
