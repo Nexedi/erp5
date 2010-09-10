@@ -126,27 +126,26 @@
 \n
 <!-- Number of listbox records -->\n
 <div class="listbox-number-of-records"\n
-     metal:define-macro="listbox_number_of_records"\n
-     tal:define="is_default_listbox_field python: field_id==\'listbox\';">\n
+     metal:define-macro="listbox_number_of_records">\n
 \n
   <span class="listbox-current-page-start-number"\n
         tal:content="current_page_start"/> - \n
   <span class="listbox-current-page-stop-number"\n
         tal:content="current_page_stop"/> \n
   <span i18n:translate="" i18n:domain="ui">of</span>\n
+\n
   <span class="listbox-current-page-total-number"\n
-        tal:content="total_line"\n
-        tal:attributes="class python: test(is_default_listbox_field, \'listbox-current-page-total-number\', \'listbox-current-page-total-number %s-current-page-total-number\' %field_id)" />\n
-  <span i18n:translate="" i18n:domain="ui">records</span> \n
+        tal:attributes="class python: test(is_default_listbox_field, \'listbox-current-page-total-number\', \'listbox-current-page-total-number %s-current-page-total-number\' %field_id)"\n
+        i18n:translate="" i18n:domain="ui">\n
+    <tal:block tal:replace="total_line" i18n:name="number">0</tal:block> records\n
+  </span>\n
   \n
-  <tal:block tal:condition="show_select_column">  - \n
-    <span class="listbox-current-item-number"\n
-          tal:attributes="class string:${field_id}-current-item-number"\n
-          i18n:translate="" i18n:domain="ui">\n
-      <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block>\n
-    </span>\n
-    <span i18n:translate="" i18n:domain="ui">items selected</span>\n
-  </tal:block>\n
+  <span class="listbox-current-item-number"\n
+        tal:condition="show_select_column"\n
+        tal:attributes="class string:${field_id}-current-item-number"\n
+        i18n:translate="" i18n:domain="ui">\n
+    - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> items selected\n
+  </span>\n
 \n
 </div>\n
 \n

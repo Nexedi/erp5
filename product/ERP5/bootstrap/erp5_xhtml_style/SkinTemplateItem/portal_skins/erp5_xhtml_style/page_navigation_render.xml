@@ -201,8 +201,7 @@
   <tal:block metal:define-macro="text_navigation"\n
                    tal:define="offset python: 7;\n
                                all_page_index_list python: range(1, here.total_pages + 1);\n
-                               page_index_list python: all_page_index_list[max(current_page-offset, 1)-1: min(current_page+offset, len(all_page_index_list))];\n
-                               is_default_listbox_field python: field_id==\'listbox\';">\n
+                               page_index_list python: all_page_index_list[max(current_page-offset, 1)-1: min(current_page+offset, len(all_page_index_list))];">\n
 \n
     <!-- Non gadget mode -->\n
     <tal:block tal:condition="not: is_gadget_mode">\n
@@ -227,8 +226,7 @@
   </tal:block>\n
 \n
   <!-- Slider navigation with input  (i.e. first, previous, next, last links)-->\n
-  <tal:block metal:define-macro="page_navigation"\n
-             tal:define="is_default_listbox_field python: field_id==\'listbox\';">\n
+  <tal:block metal:define-macro="page_navigation">\n
     <tal:block tal:condition="python: here.total_pages > 1">\n
 \n
       <!-- Non gadget mode -->\n
