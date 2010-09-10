@@ -50,10 +50,10 @@ class SphinxSEFullTextKey(SearchKey):
       do multiple fulltext lookups when one would suit the purpose.
 
       Example:
-      'aaa bbb' : '"aaa" | "bbb"'
-      '"aaa bbb"' : '"aaa" | "bbb"' XXX no way to differentiate with the
+      'aaa bbb' : '"aaa" "bbb"'
+      '"aaa bbb"' : '"aaa" "bbb"' XXX no way to differentiate with the
                                         above for now
-      '"aaa bbb" ccc' : '"aaa bbb" | "ccc"'
+      '"aaa bbb" ccc' : '"aaa bbb" "ccc"'
     """
     column = self.getColumn()
     query_list = []
@@ -63,7 +63,7 @@ class SphinxSEFullTextKey(SearchKey):
         value_list = value_list[0].split()
       append(SimpleQuery(search_key=self,
                          comparison_operator=comparison_operator,
-                         group=group, **{column:'"%s"' % '" | "'.join(value_list)}))
+                         group=group, **{column:'"%s"' % '" "'.join(value_list)}))
     return query_list
 
 verifyClass(ISearchKey, SphinxSEFullTextKey)
