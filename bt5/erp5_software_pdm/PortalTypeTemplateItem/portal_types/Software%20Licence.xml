@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -78,15 +75,23 @@
             <key> <string>product</string> </key>
             <value> <string>ERP5Type</string> </value>
         </item>
+        <item>
+            <key> <string>searchable_text_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>title</string>
+                <string>description</string>
+                <string>short_title</string>
+                <string>subject_list</string>
+              </tuple>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -103,10 +108,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>

@@ -43,19 +43,3 @@ class SoftwareLicence(TextDocument, Item):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-    def getSearchableText(self):
-        """Text for full text search"""
-        text_list = []
-        for prop in ( self.getTitle(),
-                      self.getDescription(),
-                      self.getShortTitle(),
-                      ):
-            if prop:
-                text_list.append(str(prop))
-        for subject in self.getSubjectList():
-            text_list.append(str(subject))
-
-        return ' '.join(text_list)
-
-    SearchableText = getSearchableText
