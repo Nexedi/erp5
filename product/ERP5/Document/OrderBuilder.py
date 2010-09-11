@@ -301,8 +301,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       new_property_dict.update(tmp_property_dict)
     return result, new_property_dict
 
-  def _findUpdatableObject(self, instance_list, movement_group_node_list,
-                           divergence_list):
+  def _findUpdatableObject(self, instance_list, current_movement_group_node,
+          movement_group_node_list, divergence_list):
     # FIXME this code may generate inconsistent results, because
     # MovementGroupNode.test can return anything else but the
     # property dict. So it would be better to use the test method
@@ -322,21 +322,16 @@ class OrderBuilder(XMLObject, Amount, Predicate):
             property_dict[k] = v
     else:
       # we want to check the original delivery first.
-      # so sort instance_list by that current is exists or not.
-      try:
-        current = movement_group_node_list[-1].getMovementList()[0].getDeliveryValue()
-        portal = self.getPortalObject()
-        while current != portal:
-          try:
-            instance_list.remove(current)
-          except ValueError:
-            pass
-          else:
-            instance_list.insert(0, current)
-            break
-          current = current.getParentValue()
-      except AttributeError:
-        pass
+      movement = current_movement_group_node.getMovementList()[0]
+      delivery_movement = movement.getDeliveryValue()
+      if delivery_movement is not None:
+        delivery = delivery_movement.getRootDeliveryValue()
+        try:
+          instance_list.remove(delivery)
+        except ValueError:
+          pass
+        else:
+          instance_list.insert(0, delivery)
       for instance_to_update in instance_list:
         result, property_dict = self._test(
           instance_to_update, movement_group_node_list, divergence_list)
@@ -436,7 +431,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Test if we can update a existing delivery, or if we need to create
       # a new one
       delivery, property_dict = self._findUpdatableObject(
-        delivery_to_update_list, movement_group_node_list,
+        delivery_to_update_list, movement_group_node, movement_group_node_list,
         divergence_list)
 
       # if all deliveries are rejected in case of update, we update the
@@ -522,8 +517,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Test if we can update an existing line, or if we need to create a new
       # one
       delivery_line, property_dict = self._findUpdatableObject(
-        delivery_line_to_update_list, movement_group_node_list,
-        divergence_list)
+        delivery_line_to_update_list, movement_group_node,
+        movement_group_node_list, divergence_list)
       if delivery_line is not None:
         update_existing_line = 1
         delivery_line_to_update_list.remove(delivery_line)
@@ -662,8 +657,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         if not delivery_line.getCellKeyList(base_id=base_id):
           # update line
           dummy, property_dict = self._findUpdatableObject(
-            delivery_movement_to_update_list, movement_group_node_list,
-            divergence_list)
+            delivery_movement_to_update_list, movement_group_node,
+            movement_group_node_list, divergence_list)
           if delivery_movement_to_update_list:
             if update_existing_line:
               update_existing_movement = 1
@@ -674,8 +669,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           object_to_update = delivery_line
         else:
           object_to_update, property_dict = self._findUpdatableObject(
-            delivery_movement_to_update_list, movement_group_node_list,
-            divergence_list)
+            delivery_movement_to_update_list, movement_group_node,
+            movement_group_node_list, divergence_list)
           if object_to_update is not None:
             # We update a existing cell
             # delivery_ratio of new related movement to this cell
