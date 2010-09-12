@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -117,21 +114,22 @@ if synchronous_metadata_discovery:\n
   is_existing_document_updated = (merged_document!=document)\n
   document = merged_document\n
 # introspect document and find editable properties\n
-# then use kw and try to get values in two available modes: the\n
+# then use form or kw and try to get values in two available modes: the\n
 # script coulbe be called: from ERP5 From or directly from Python script\n
 document_edit_kw = {}\n
 property_id_list = document.propertyIds()\n
+form = context.REQUEST.form\n
 for key in property_id_list:\n
-  value = kw.get(key, kw.get(\'field_your_%s\' %key, kw.get(\'field_my_%s\' %key, None)))\n
+  value = form.get(key, kw.get(key, None))\n
   if value not in MARKER:\n
     document_edit_kw[key] = value\n
 if attach_document_to_context:\n
   # attach document to current context using follow_up\n
-  follow_up_list = document.getFollowUpValueList()\n
-  if context not in follow_up_list:\n
+  follow_up_list = document.getFollowUpList()\n
+  if context.getRelativeUrl() not in follow_up_list:\n
     # attach to context only if not already attached\n
     follow_up_list.append(context)\n
-    document.setFollowUpValueList([x.getRelativeUrl() for x in follow_up_list])\n
+    document.setFollowUpList(follow_up_list)\n
 # edit document   \n
 if document_edit_kw is not {}:\n
   document.edit(**document_edit_kw)\n
@@ -234,12 +232,10 @@ return document\n
                             <string>merged_document</string>
                             <string>document_edit_kw</string>
                             <string>property_id_list</string>
+                            <string>form</string>
                             <string>_getiter_</string>
                             <string>key</string>
                             <string>value</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
                             <string>document_portal_type</string>
                             <string>message</string>
                           </tuple>
