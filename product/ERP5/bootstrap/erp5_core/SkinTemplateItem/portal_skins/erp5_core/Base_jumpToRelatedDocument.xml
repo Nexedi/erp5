@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,7 +68,7 @@ if len(jump_reference_list)==1:\n
   jump_reference = jump_reference_list[0]\n
   return jump_reference.Base_redirect(\'view\')\n
 else:\n
-  selection_uid_list = map(lambda x:x.getUid(),jump_reference_list)\n
+  selection_uid_list = map(lambda x:x.getUid(),jump_reference_list) or None\n
   kw = {\'uid\': selection_uid_list}\n
   # We need to reset the selection. Indeed, some sort columns done in another \n
   # jump could be meaningless for this particular jump. The consequence could \n
@@ -146,8 +143,8 @@ else:\n
                             <string>len</string>
                             <string>_getitem_</string>
                             <string>jump_reference</string>
-                            <string>selection_uid_list</string>
                             <string>None</string>
+                            <string>selection_uid_list</string>
                           </tuple>
                         </value>
                     </item>
