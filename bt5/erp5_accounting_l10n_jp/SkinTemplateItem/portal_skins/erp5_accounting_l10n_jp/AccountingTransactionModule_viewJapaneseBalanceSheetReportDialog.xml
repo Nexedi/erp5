@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -38,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>AccountModule_viewJapaneseBalanceSheetReport</string> </value>
+            <value> <string>AccountingTransactionModule_viewJapaneseBalanceSheetReport</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -111,7 +108,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>AccountModule_viewJapaneseBalanceSheetReportDialog</string> </value>
+            <value> <string>AccountingTransactionModule_viewJapaneseBalanceSheetReportDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

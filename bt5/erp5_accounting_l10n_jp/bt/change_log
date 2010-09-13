@@ -1,3 +1,7 @@
+2010-09-13 yusei
+* Fix printout format of B/S report and make its scripts simple.
+* Implement P/L report.
+
 2010-09-04 yusei
 * Implement Japanese B/S report. (Although Japanese GAP is not good enough)
 
