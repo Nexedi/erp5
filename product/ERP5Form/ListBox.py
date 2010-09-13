@@ -415,19 +415,19 @@ class ListBoxWidget(Widget.Widget):
                                 required=0)
     property_names.append('default_display_style')
 
-    full_text_search_key = fields.StringField('full_text_search_key',
-                                title="Full text search key",
-                                description=("Full text search key used to make query."),
+    global_search_column = fields.StringField('global_search_column',
+                                title="Global search column",
+                                description=("Global search column make query."),
                                 default=None,
                                 required=0)
-    property_names.append('full_text_search_key')
+    property_names.append('global_search_column')
 
-    full_text_search_key_script = fields.StringField('full_text_search_key_script',
-                                title="Full text search key script",
-                                description=("Full text search key script used to make query."),
+    global_search_column_script = fields.StringField('global_search_column_script',
+                                title="Global search column script",
+                                description=("Global search column script used to make query."),
                                 default=None,
                                 required=0)
-    property_names.append('full_text_search_key_script')
+    property_names.append('global_search_column_script')
 
     page_navigation_mode = fields.StringField('page_navigation_mode',
                                 title="Page navigation mode",
@@ -986,17 +986,17 @@ class ListBoxRenderer:
 
   getDefaultDisplayStyle = lazyMethod(getDefaultDisplayStyle)
 
-  def getFullTextSearchKey(self):
+  def getGlobalSearchColumn(self):
     """Return the full text search key."""
-    return self.field.get_value('full_text_search_key')
+    return self.field.get_value('global_search_column')
 
-  getFullTextSearchKey = lazyMethod(getFullTextSearchKey)
+  getGlobalSearchColumn = lazyMethod(getGlobalSearchColumn)
 
-  def getFullTextSearchKeyScript(self):
+  def getGlobalSearchColumnScript(self):
     """Return the full text search key script which is responsible for handling full text query."""
-    return self.field.get_value('full_text_search_key_script')
+    return self.field.get_value('global_search_column_script')
 
-  getFullTextSearchKeyScript = lazyMethod(getFullTextSearchKeyScript)
+  getGlobalSearchColumnScript = lazyMethod(getGlobalSearchColumnScript)
 
   def getPageNavigationMode(self):
     """Return the list box page navigation mode."""
