@@ -6048,7 +6048,7 @@
                 <item>
                     <key> <string>comma-separated-values</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAjg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAEQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6072,7 +6072,7 @@
                 <item>
                     <key> <string>enriched</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAjk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAjg=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6090,7 +6090,7 @@
                 <item>
                     <key> <string>htmlh</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAjo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAjk=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6114,7 +6114,7 @@
                 <item>
                     <key> <string>plain-pre</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAjs=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAjo=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6126,7 +6126,7 @@
                 <item>
                     <key> <string>rdf</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAjw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAjs=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6138,7 +6138,7 @@
                 <item>
                     <key> <string>rfc822-headers</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAj0=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAjw=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6150,7 +6150,7 @@
                 <item>
                     <key> <string>rss</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAj4=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAj0=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6162,13 +6162,13 @@
                 <item>
                     <key> <string>sgml</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAj8=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAj4=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>spreadsheet</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAj8=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6210,19 +6210,19 @@
                 <item>
                     <key> <string>wiki</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkA=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-adasrc</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkE=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-authors</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6252,19 +6252,19 @@
                 <item>
                     <key> <string>x-comma-separated-values</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAEQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-copying</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-credits</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6276,7 +6276,7 @@
                 <item>
                     <key> <string>x-csharp</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6286,15 +6286,21 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>x-csv</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAEQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>x-dcl</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-dsl</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkc=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6306,37 +6312,37 @@
                 <item>
                     <key> <string>x-dtd</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAko=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkg=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-emacs-lisp</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAks=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-fortran</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAkw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAko=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-gettext-translation</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAk0=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAks=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-gettext-translation-template</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAk4=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAkw=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-gtkrc</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAk8=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAk0=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6348,19 +6354,19 @@
                 <item>
                     <key> <string>x-html-safe</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAk4=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-idl</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAk8=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-install</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlA=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6372,7 +6378,7 @@
                 <item>
                     <key> <string>x-ksysv-log</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlE=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6384,13 +6390,13 @@
                 <item>
                     <key> <string>x-log</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-makefile</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6402,7 +6408,7 @@
                 <item>
                     <key> <string>x-objcsrc</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6414,7 +6420,7 @@
                 <item>
                     <key> <string>x-patch</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlU=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6444,7 +6450,7 @@
                 <item>
                     <key> <string>x-readme</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlY=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6456,7 +6462,7 @@
                 <item>
                     <key> <string>x-scheme</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlc=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6480,13 +6486,13 @@
                 <item>
                     <key> <string>x-speech</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlg=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-sql</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAls=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlk=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6504,37 +6510,37 @@
                 <item>
                     <key> <string>x-texinfo</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAlw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlo=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-troff-me</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAl0=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAls=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-troff-mm</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAl4=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAlw=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-troff-ms</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAl8=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAl0=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-uil</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmA=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAl4=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-uri</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmE=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAl8=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6552,19 +6558,19 @@
                 <item>
                     <key> <string>x-xmi</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmA=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-xslfo</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmE=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>xmcd</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6616,7 +6622,7 @@
                 <item>
                     <key> <string>isivideo</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmU=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6640,7 +6646,7 @@
                 <item>
                     <key> <string>vivo</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmY=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6652,25 +6658,25 @@
                 <item>
                     <key> <string>wavelet</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmc=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmU=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-anim</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmg=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmY=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-avi</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmk=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmc=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-flic</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmo=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmg=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -6724,13 +6730,13 @@
                 <item>
                     <key> <string>x-nsv</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAms=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmk=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>x-real-video</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAmw=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAmo=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -9055,7 +9061,7 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>csv</string> </value>
+            <value> <string>text/comma-separated-values</string> </value>
         </item>
         <item>
             <key> <string>binary</string> </key>
@@ -9083,13 +9089,16 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>csv</string> </value>
+            <value> <string>text/comma-separated-values</string> </value>
         </item>
         <item>
             <key> <string>mimetypes</string> </key>
             <value>
               <list>
+                <string>text/comma-separated-values</string>
+                <string>text/x-comma-separated-values</string>
                 <string>text/csv</string>
+                <string>text/x-csv</string>
               </list>
             </value>
         </item>
@@ -21026,7 +21035,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAms=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAmk=</string> </persistent>
           </tuple>
           <unicode>*.PAR2</unicode>
           <tuple>
@@ -21139,7 +21148,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkI=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkE=</string> </persistent>
           </tuple>
           <unicode>*.ads</unicode>
           <tuple>
@@ -21150,7 +21159,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkI=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkE=</string> </persistent>
           </tuple>
           <unicode>*.afm</unicode>
           <tuple>
@@ -21238,7 +21247,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmg=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAmY=</string> </persistent>
           </tuple>
           <unicode>*.arj</unicode>
           <tuple>
@@ -21659,7 +21668,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkc=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkU=</string> </persistent>
           </tuple>
           <unicode>*.csh</unicode>
           <tuple>
@@ -21794,7 +21803,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkg=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkY=</string> </persistent>
           </tuple>
           <unicode>*.dcm</unicode>
           <tuple>
@@ -21860,7 +21869,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlc=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlU=</string> </persistent>
           </tuple>
           <unicode>*.djv</unicode>
           <tuple>
@@ -21904,7 +21913,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkk=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkc=</string> </persistent>
           </tuple>
           <unicode>*.dtd</unicode>
           <tuple>
@@ -21915,7 +21924,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAko=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkg=</string> </persistent>
           </tuple>
           <unicode>*.dvi</unicode>
           <tuple>
@@ -21984,7 +21993,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAks=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkk=</string> </persistent>
           </tuple>
           <unicode>*.eps</unicode>
           <tuple>
@@ -22072,7 +22081,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkw=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAko=</string> </persistent>
           </tuple>
           <unicode>*.f9[05]</unicode>
           <tuple>
@@ -22083,7 +22092,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkw=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAko=</string> </persistent>
           </tuple>
           <unicode>*.fig</unicode>
           <tuple>
@@ -22127,7 +22136,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmo=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAmg=</string> </persistent>
           </tuple>
           <unicode>*.fli</unicode>
           <tuple>
@@ -22138,7 +22147,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmo=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAmg=</string> </persistent>
           </tuple>
           <unicode>*.flw</unicode>
           <tuple>
@@ -22160,7 +22169,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmM=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAmE=</string> </persistent>
           </tuple>
           <unicode>*.for</unicode>
           <tuple>
@@ -22171,7 +22180,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkw=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAko=</string> </persistent>
           </tuple>
           <unicode>*.g3</unicode>
           <tuple>
@@ -22540,7 +22549,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlE=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAk8=</string> </persistent>
           </tuple>
           <unicode>*.ief</unicode>
           <tuple>
@@ -22942,7 +22951,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlQ=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlI=</string> </persistent>
           </tuple>
           <unicode>*.ltx</unicode>
           <tuple>
@@ -23030,7 +23039,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlY=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlQ=</string> </persistent>
           </tuple>
           <unicode>*.m15</unicode>
           <tuple>
@@ -23107,7 +23116,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAl0=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAls=</string> </persistent>
           </tuple>
           <unicode>*.mgp</unicode>
           <tuple>
@@ -23187,7 +23196,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAl4=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlw=</string> </persistent>
           </tuple>
           <unicode>*.mml</unicode>
           <tuple>
@@ -23341,7 +23350,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAl8=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAl0=</string> </persistent>
           </tuple>
           <unicode>*.msod</unicode>
           <tuple>
@@ -23443,7 +23452,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAms=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAmk=</string> </persistent>
           </tuple>
           <unicode>*.o</unicode>
           <tuple>
@@ -23743,7 +23752,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlc=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlU=</string> </persistent>
           </tuple>
           <unicode>*.pbm</unicode>
           <tuple>
@@ -24054,7 +24063,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAk0=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAks=</string> </persistent>
           </tuple>
           <unicode>*.pot</unicode>
           <tuple>
@@ -24335,7 +24344,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAjw=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAjs=</string> </persistent>
           </tuple>
           <unicode>*.rej</unicode>
           <tuple>
@@ -24423,7 +24432,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAj4=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAj0=</string> </persistent>
           </tuple>
           <unicode>*.rtf</unicode>
           <tuple>
@@ -24478,7 +24487,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlk=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlc=</string> </persistent>
           </tuple>
           <unicode>*.sda</unicode>
           <tuple>
@@ -24591,7 +24600,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAj8=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAj4=</string> </persistent>
           </tuple>
           <unicode>*.sgml</unicode>
           <tuple>
@@ -24602,7 +24611,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAj8=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAj4=</string> </persistent>
           </tuple>
           <unicode>*.sh</unicode>
           <tuple>
@@ -24690,7 +24699,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkA=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAj8=</string> </persistent>
           </tuple>
           <unicode>*.smd</unicode>
           <tuple>
@@ -24800,7 +24809,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAls=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlk=</string> </persistent>
           </tuple>
           <unicode>*.src</unicode>
           <tuple>
@@ -25023,7 +25032,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkA=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAj8=</string> </persistent>
           </tuple>
           <unicode>*.t</unicode>
           <tuple>
@@ -25147,7 +25156,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlw=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlo=</string> </persistent>
           </tuple>
           <unicode>*.texinfo</unicode>
           <tuple>
@@ -25158,7 +25167,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlw=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlo=</string> </persistent>
           </tuple>
           <unicode>*.tga</unicode>
           <tuple>
@@ -25337,7 +25346,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmA=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAl4=</string> </persistent>
           </tuple>
           <unicode>*.ult</unicode>
           <tuple>
@@ -25370,7 +25379,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmE=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAl8=</string> </persistent>
           </tuple>
           <unicode>*.url</unicode>
           <tuple>
@@ -25381,7 +25390,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmE=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAl8=</string> </persistent>
           </tuple>
           <unicode>*.ustar</unicode>
           <tuple>
@@ -25849,7 +25858,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmI=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAmA=</string> </persistent>
           </tuple>
           <unicode>*.xml</unicode>
           <tuple>
@@ -25893,7 +25902,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAmM=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAmE=</string> </persistent>
           </tuple>
           <unicode>*.xslt</unicode>
           <tuple>
@@ -26006,7 +26015,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAk8=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAk0=</string> </persistent>
           </tuple>
           <unicode>AUTHORS</unicode>
           <tuple>
@@ -26017,7 +26026,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkM=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkI=</string> </persistent>
           </tuple>
           <unicode>COPYING</unicode>
           <tuple>
@@ -26028,7 +26037,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkU=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkM=</string> </persistent>
           </tuple>
           <unicode>CREDITS</unicode>
           <tuple>
@@ -26039,7 +26048,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAkY=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAkQ=</string> </persistent>
           </tuple>
           <unicode>INSTALL</unicode>
           <tuple>
@@ -26050,7 +26059,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlI=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlA=</string> </persistent>
           </tuple>
           <unicode>README*</unicode>
           <tuple>
@@ -26061,7 +26070,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlg=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlY=</string> </persistent>
           </tuple>
           <unicode>RMAIL</unicode>
           <tuple>
@@ -26083,7 +26092,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlU=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlM=</string> </persistent>
           </tuple>
           <unicode>core</unicode>
           <tuple>
@@ -26116,7 +26125,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAk8=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAk0=</string> </persistent>
           </tuple>
           <unicode>makefile*</unicode>
           <tuple>
@@ -26127,7 +26136,7 @@
                 <int>0</int>
               </tuple>
             </object>
-            <persistent> <string encoding="base64">AAAAAAAAAlU=</string> </persistent>
+            <persistent> <string encoding="base64">AAAAAAAAAlM=</string> </persistent>
           </tuple>
         </tuple>
       </tuple>
@@ -34778,47 +34787,6 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>text/comma-separated-values</string> </value>
-        </item>
-        <item>
-            <key> <string>binary</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>extensions</string> </key>
-            <value>
-              <tuple>
-                <string>csv</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
-            <key> <string>icon_path</string> </key>
-            <value> <string>text.png</string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>text/comma-separated-values</string> </value>
-        </item>
-        <item>
-            <key> <string>mimetypes</string> </key>
-            <value>
-              <tuple>
-                <string>text/comma-separated-values</string>
-              </tuple>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="569" aka="AAAAAAAAAjk=">
-    <pickle>
-      <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>__name__</string> </key>
             <value> <string>enriched text document</string> </value>
         </item>
         <item>
@@ -34850,7 +34818,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="570" aka="AAAAAAAAAjo=">
+  <record id="569" aka="AAAAAAAAAjk=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -34889,7 +34857,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="571" aka="AAAAAAAAAjs=">
+  <record id="570" aka="AAAAAAAAAjo=">
     <pickle>
       <global name="text_pre_plain" module="Products.MimetypesRegistry.mime_types.mtr_mimetypes"/>
     </pickle>
@@ -34902,7 +34870,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="572" aka="AAAAAAAAAjw=">
+  <record id="571" aka="AAAAAAAAAjs=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -34943,7 +34911,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="573" aka="AAAAAAAAAj0=">
+  <record id="572" aka="AAAAAAAAAjw=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -34982,7 +34950,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="574" aka="AAAAAAAAAj4=">
+  <record id="573" aka="AAAAAAAAAj0=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35023,7 +34991,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="575" aka="AAAAAAAAAj8=">
+  <record id="574" aka="AAAAAAAAAj4=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35065,7 +35033,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="576" aka="AAAAAAAAAkA=">
+  <record id="575" aka="AAAAAAAAAj8=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35107,7 +35075,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="577" aka="AAAAAAAAAkE=">
+  <record id="576" aka="AAAAAAAAAkA=">
     <pickle>
       <global name="text_wiki" module="Products.MimetypesRegistry.mime_types.mtr_mimetypes"/>
     </pickle>
@@ -35120,7 +35088,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="578" aka="AAAAAAAAAkI=">
+  <record id="577" aka="AAAAAAAAAkE=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35162,7 +35130,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="579" aka="AAAAAAAAAkM=">
+  <record id="578" aka="AAAAAAAAAkI=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35203,48 +35171,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="580" aka="AAAAAAAAAkQ=">
-    <pickle>
-      <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>__name__</string> </key>
-            <value> <string>text document (with comma-separated values)</string> </value>
-        </item>
-        <item>
-            <key> <string>binary</string> </key>
-            <value> <int>0</int> </value>
-        </item>
-        <item>
-            <key> <string>globs</string> </key>
-            <value>
-              <list>
-                <unicode>*.csv</unicode>
-              </list>
-            </value>
-        </item>
-        <item>
-            <key> <string>icon_path</string> </key>
-            <value> <string>text.png</string> </value>
-        </item>
-        <item>
-            <key> <string>id</string> </key>
-            <value> <string>text document (with comma-separated values)</string> </value>
-        </item>
-        <item>
-            <key> <string>mimetypes</string> </key>
-            <value>
-              <tuple>
-                <string>text/x-comma-separated-values</string>
-              </tuple>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="581" aka="AAAAAAAAAkU=">
+  <record id="579" aka="AAAAAAAAAkM=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35285,7 +35212,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="582" aka="AAAAAAAAAkY=">
+  <record id="580" aka="AAAAAAAAAkQ=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35326,7 +35253,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="583" aka="AAAAAAAAAkc=">
+  <record id="581" aka="AAAAAAAAAkU=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35367,7 +35294,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="584" aka="AAAAAAAAAkg=">
+  <record id="582" aka="AAAAAAAAAkY=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35408,7 +35335,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="585" aka="AAAAAAAAAkk=">
+  <record id="583" aka="AAAAAAAAAkc=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35449,7 +35376,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="586" aka="AAAAAAAAAko=">
+  <record id="584" aka="AAAAAAAAAkg=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35490,7 +35417,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="587" aka="AAAAAAAAAks=">
+  <record id="585" aka="AAAAAAAAAkk=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35531,7 +35458,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="588" aka="AAAAAAAAAkw=">
+  <record id="586" aka="AAAAAAAAAko=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35574,7 +35501,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="589" aka="AAAAAAAAAk0=">
+  <record id="587" aka="AAAAAAAAAks=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35615,7 +35542,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="590" aka="AAAAAAAAAk4=">
+  <record id="588" aka="AAAAAAAAAkw=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35654,7 +35581,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="591" aka="AAAAAAAAAk8=">
+  <record id="589" aka="AAAAAAAAAk0=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35696,7 +35623,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="592" aka="AAAAAAAAAlA=">
+  <record id="590" aka="AAAAAAAAAk4=">
     <pickle>
       <global name="text_html_safe" module="Products.MimetypesRegistry.mime_types.mtr_mimetypes"/>
     </pickle>
@@ -35709,7 +35636,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="593" aka="AAAAAAAAAlE=">
+  <record id="591" aka="AAAAAAAAAk8=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35750,7 +35677,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="594" aka="AAAAAAAAAlI=">
+  <record id="592" aka="AAAAAAAAAlA=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35791,7 +35718,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="595" aka="AAAAAAAAAlM=">
+  <record id="593" aka="AAAAAAAAAlE=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35830,7 +35757,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="596" aka="AAAAAAAAAlQ=">
+  <record id="594" aka="AAAAAAAAAlI=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35871,7 +35798,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="597" aka="AAAAAAAAAlU=">
+  <record id="595" aka="AAAAAAAAAlM=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35913,7 +35840,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="598" aka="AAAAAAAAAlY=">
+  <record id="596" aka="AAAAAAAAAlQ=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35954,7 +35881,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="599" aka="AAAAAAAAAlc=">
+  <record id="597" aka="AAAAAAAAAlU=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -35996,7 +35923,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="600" aka="AAAAAAAAAlg=">
+  <record id="598" aka="AAAAAAAAAlY=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36037,7 +35964,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="601" aka="AAAAAAAAAlk=">
+  <record id="599" aka="AAAAAAAAAlc=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36078,7 +36005,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="602" aka="AAAAAAAAAlo=">
+  <record id="600" aka="AAAAAAAAAlg=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36117,7 +36044,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="603" aka="AAAAAAAAAls=">
+  <record id="601" aka="AAAAAAAAAlk=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36158,7 +36085,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="604" aka="AAAAAAAAAlw=">
+  <record id="602" aka="AAAAAAAAAlo=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36200,7 +36127,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="605" aka="AAAAAAAAAl0=">
+  <record id="603" aka="AAAAAAAAAls=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36241,7 +36168,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="606" aka="AAAAAAAAAl4=">
+  <record id="604" aka="AAAAAAAAAlw=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36282,7 +36209,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="607" aka="AAAAAAAAAl8=">
+  <record id="605" aka="AAAAAAAAAl0=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36323,7 +36250,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="608" aka="AAAAAAAAAmA=">
+  <record id="606" aka="AAAAAAAAAl4=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36364,7 +36291,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="609" aka="AAAAAAAAAmE=">
+  <record id="607" aka="AAAAAAAAAl8=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36406,7 +36333,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="610" aka="AAAAAAAAAmI=">
+  <record id="608" aka="AAAAAAAAAmA=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36447,7 +36374,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="611" aka="AAAAAAAAAmM=">
+  <record id="609" aka="AAAAAAAAAmE=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36489,7 +36416,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="612" aka="AAAAAAAAAmQ=">
+  <record id="610" aka="AAAAAAAAAmI=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36528,7 +36455,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="613" aka="AAAAAAAAAmU=">
+  <record id="611" aka="AAAAAAAAAmM=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36567,7 +36494,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="614" aka="AAAAAAAAAmY=">
+  <record id="612" aka="AAAAAAAAAmQ=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36606,7 +36533,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="615" aka="AAAAAAAAAmc=">
+  <record id="613" aka="AAAAAAAAAmU=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36645,7 +36572,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="616" aka="AAAAAAAAAmg=">
+  <record id="614" aka="AAAAAAAAAmY=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36686,7 +36613,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="617" aka="AAAAAAAAAmk=">
+  <record id="615" aka="AAAAAAAAAmc=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36725,7 +36652,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="618" aka="AAAAAAAAAmo=">
+  <record id="616" aka="AAAAAAAAAmg=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36767,7 +36694,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="619" aka="AAAAAAAAAms=">
+  <record id="617" aka="AAAAAAAAAmk=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
@@ -36809,7 +36736,7 @@
       </dictionary>
     </pickle>
   </record>
-  <record id="620" aka="AAAAAAAAAmw=">
+  <record id="618" aka="AAAAAAAAAmo=">
     <pickle>
       <global name="MimeTypeItem" module="Products.MimetypesRegistry.MimeTypeItem"/>
     </pickle>
