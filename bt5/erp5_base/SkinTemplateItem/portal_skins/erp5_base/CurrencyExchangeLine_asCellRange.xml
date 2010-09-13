@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,9 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency_exchange_type_list = [x[0] for x in context.portal_categories.currency_exchange_type.getCategoryChildItemList(base=1)[1:]]\n
+            <value> <string>currency_exchange_type_list = context.portal_categories.currency_exchange_type.getCategoryChildRelativeUrlList(base=True)\n
 resource_list = [\'resource/%s\' % context.getParentValue().getRelativeUrl()]\n
-price_currency_list = [\'price_currency/%s\' % context.getPriceCurrency()]\n
+price_currency_list = [context.getPriceCurrency(base=True)]\n
 \n
 return (currency_exchange_type_list, resource_list, price_currency_list)\n
 </string> </value>
@@ -96,13 +93,9 @@ return (currency_exchange_type_list, resource_list, price_currency_list)\n
                           <tuple>
                             <string>argv</string>
                             <string>kw</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_getitem_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>x</string>
+                            <string>True</string>
                             <string>currency_exchange_type_list</string>
                             <string>resource_list</string>
                             <string>price_currency_list</string>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,11 +59,11 @@ kwd = {\'base_id\': base_id}\n
 context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
 cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
 resource_list = [\'resource/%s\' % context.getParentValue().getRelativeUrl()]\n
-price_currency_list = [\'price_currency/%s\' % context.getPriceCurrency()]\n
-membership_list = resource_list+price_currency_list\n
+price_currency_list = [context.getPriceCurrency(base=True)]\n
+membership_list = resource_list + price_currency_list\n
 context.setMembershipCriterionBaseCategoryList([x.split(\'/\')[0] for x in membership_list])\n
 context.setMembershipCriterionCategoryList(membership_list)\n
-context.setResource(context.getParentValue().getRelativeUrl())\n
+context.setResourceValue(context.getParentValue())\n
 context.setMappedValuePropertyList((\'base_price\',\'discount\'))\n
 if cell_range_key_list != [[None, None]] :\n
   i = 0\n
@@ -127,6 +124,7 @@ if cell_range_key_list != [[None, None]] :\n
                             <string>_getattr_</string>
                             <string>cell_range_key_list</string>
                             <string>resource_list</string>
+                            <string>True</string>
                             <string>price_currency_list</string>
                             <string>membership_list</string>
                             <string>append</string>
