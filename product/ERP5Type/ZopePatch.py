@@ -64,6 +64,7 @@ from Products.ERP5Type.patches import DemoStorage
 # BACK: Forward Compatibility with Zope 2.12 or CMF 2.2. Remove when we've
 # dropped support for older versions.
 from Products.ERP5Type.patches import TransactionAddBeforeCommitHook
+from Products.ERP5Type.patches import ZopePageTemplate
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
