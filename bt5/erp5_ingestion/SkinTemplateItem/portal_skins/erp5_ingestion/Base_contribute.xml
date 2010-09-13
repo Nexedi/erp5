@@ -59,6 +59,7 @@ from ZTUtils import make_query\n
 MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
 portal_contributions = portal.portal_contributions\n
+context_url = context.getRelativeUrl()\n
 \n
 if synchronous_metadata_discovery is None:\n
   synchronous_metadata_discovery = portal.portal_preferences.isPreferredSynchronousMetadataDiscovery(False)\n
@@ -72,7 +73,7 @@ if user_login is None:\n
 document_kw = {}\n
 document_kw[\'user_login\'] = user_login\n
 if use_context_for_container:\n
-  document_kw[\'container_path\'] = context.getRelativeUrl()\n
+  document_kw[\'container_path\'] = context_url\n
 if portal_type not in MARKER:\n
   document_kw[\'portal_type\'] = portal_type\n
 if classification not in MARKER:\n
@@ -126,9 +127,9 @@ for key in property_id_list:\n
 if attach_document_to_context:\n
   # attach document to current context using follow_up\n
   follow_up_list = document.getFollowUpList()\n
-  if context.getRelativeUrl() not in follow_up_list:\n
+  if context_url not in follow_up_list:\n
     # attach to context only if not already attached\n
-    follow_up_list.append(context)\n
+    follow_up_list.append(context_url)\n
     document.setFollowUpList(follow_up_list)\n
 # edit document   \n
 if document_edit_kw is not {}:\n
@@ -219,6 +220,7 @@ return document\n
                             <string>context</string>
                             <string>portal</string>
                             <string>portal_contributions</string>
+                            <string>context_url</string>
                             <string>False</string>
                             <string>str</string>
                             <string>document_kw</string>
