@@ -48,6 +48,7 @@ libzip-devel
 make
 ncurses-devel
 patch
+pcre-devel
 python-devel
 python-setuptools
 python-xml
