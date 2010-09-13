@@ -226,7 +226,7 @@
 \n
     <div class="listbox-body">\n
       <table class="listbox"\n
-             tal:attributes="class python: \'%s listbox-%s\' %(field_id, list_style)">      \n
+             tal:attributes="class python: \'listbox %s %s-%s\' %(field_id, field_id, list_style)">      \n
         <thead>\n
           <!--Column title -->\n
           <tr class="listbox-label-line">  \n
