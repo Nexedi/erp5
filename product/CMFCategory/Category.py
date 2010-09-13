@@ -353,7 +353,8 @@ class Category(Folder):
     # List names recursively
     security.declareProtected(Permissions.AccessContentsInformation,
                                                     'getCategoryChildRelativeUrlList')
-    def getCategoryChildRelativeUrlList(self, base='', recursive=1, checked_permission=None):
+    def getCategoryChildRelativeUrlList(self, base='', recursive=1,
+                                        checked_permission=None, **kw):
       """
           List the path of this category and all its subcategories.
 
@@ -368,7 +369,8 @@ class Category(Folder):
         base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
       url_list = []
       for value in self.getCategoryChildValueList(recursive=recursive,
-                                                  checked_permission=checked_permission):
+                                                  checked_permission=checked_permission,
+                                                  **kw):
         url_list.append(base + value.getRelativeUrl())
       return url_list
 
