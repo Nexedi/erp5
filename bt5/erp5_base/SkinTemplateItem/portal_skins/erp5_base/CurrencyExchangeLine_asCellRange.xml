@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency_exchange_type_list = context.portal_categories.currency_exchange_type.getCategoryChildRelativeUrlList(base=True)\n
+            <value> <string>currency_exchange_type_list = context.portal_categories.currency_exchange_type.getCategoryChildRelativeUrlList(base=True, local_sort_id=(\'int_index\', \'title\'))\n
 resource_list = [\'resource/%s\' % context.getParentValue().getRelativeUrl()]\n
 price_currency_list = [context.getPriceCurrency(base=True)]\n
 \n
