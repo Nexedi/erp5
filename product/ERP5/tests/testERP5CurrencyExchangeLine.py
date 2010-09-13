@@ -107,10 +107,9 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       Create a currency exchange line for a currency and then
       convert destination price using that currency exchange line
     """
-    portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(
+    new_currency = self.portal.currency_module.newContent(
                           portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
@@ -147,7 +146,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
                            destination_credit=500)))
     invoice.AccountingTransaction_convertDestinationPrice(form_id='view')
     line_list = invoice.contentValues(
-           portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       self.assertEquals(line.getDestinationTotalAssetPrice(),
              round(655.957*line.getQuantity()))
@@ -159,10 +158,9 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       and verify that only the one that matches the criteria will
       be selected for the conversion
     """
-    portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(
+    new_currency = self.portal.currency_module.newContent(
                    portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
@@ -215,7 +213,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     invoice.AccountingTransaction_convertDestinationPrice(
                          form_id='view')
     line_list = invoice.contentValues(
-           portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       self.assertEquals(line.getDestinationTotalAssetPrice(),
                    round(655.957*line.getQuantity()))
@@ -226,10 +224,9 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       convert
       source price using that currency exchange line
     """
-    portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(portal_type='Currency')
+    new_currency = self.portal.currency_module.newContent(portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
@@ -265,7 +262,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     invoice.AccountingTransaction_convertSourcePrice(
                    form_id='view')
     line_list = invoice.contentValues(
-           portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       if line.getSourceValue() == self.account_module.goods_purchase:
         self.assertEquals(line.getSourceInventoriatedTotalAssetDebit(),
@@ -281,10 +278,9 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       Test that the conversion is not done when there is no currency 
       exchange line defined for the date of the transaction
     """
-    portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(
+    new_currency = self.portal.currency_module.newContent(
                 portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
@@ -307,7 +303,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     invoice.AccountingTransaction_convertDestinationPrice(
                         form_id='view')
     line_list = invoice.contentValues(
-           portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       self.assertEquals(line.getDestinationTotalAssetPrice(),None)
 
@@ -320,10 +316,9 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       falls into the validity period of the currency exchange line,the
       conversion is done
     """
-    portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(
+    new_currency = self.portal.currency_module.newContent(
     portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
@@ -361,7 +356,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     transaction1.AccountingTransaction_convertDestinationPrice(
                               form_id='view')
     line_list = transaction1.contentValues(
-           portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       self.assertEquals(line.getDestinationTotalAssetPrice(),None)
     transaction2 = self._makeOne(
@@ -376,7 +371,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     transaction2.AccountingTransaction_convertDestinationPrice(
                   form_id='view')
     line_list = transaction2.contentValues(
-           portal_type=portal.getPortalAccountingMovementTypeList())
+        portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
       if line.getDestinationValue() == self.account_module.goods_purchase:
         self.assertEquals(line.getDestinationInventoriatedTotalAssetDebit(),
@@ -393,10 +388,9 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       Create a currency exchange line with no reference currency
       and verify that the CEL won't apply for the currency
     """
-    portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(
+    new_currency = self.portal.currency_module.newContent(
                portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
@@ -434,7 +428,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     invoice.AccountingTransaction_convertDestinationPrice(
                            form_id='view')
     line_list = invoice.contentValues(
-           portal_type=portal.getPortalAccountingMovementTypeList())
+           portal_type=self.portal.getPortalAccountingMovementTypeList())
     for line in line_list:
         self.assertEquals(line.getDestinationTotalAssetPrice(),
                  None)
@@ -445,10 +439,9 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       Create two currency exchange lines with no base and 
       verify that only one of the CEL will apply for the currency
     """
-    portal = self.getPortal()
     self.organisation_module = self.portal.organisation_module
     self.organisation1 = self.organisation_module.my_organisation
-    new_currency = portal.currency_module.newContent(
+    new_currency = self.portal.currency_module.newContent(
                 portal_type='Currency')
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
@@ -500,7 +493,7 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
     invoice.AccountingTransaction_convertDestinationPrice(
                            form_id='view')
     line_list = invoice.contentValues(
-           portal_type=portal.getPortalAccountingMovementTypeList())
+        portal_type=self.portal.getPortalAccountingMovementTypeList())
 
     for line in line_list:
       if line.getDestinationValue() == self.account_module.goods_purchase:
