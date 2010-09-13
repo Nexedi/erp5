@@ -3704,6 +3704,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>x-csv</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAEQ=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>x-cue</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAYU=</string> </persistent>
@@ -9099,6 +9105,7 @@
                 <string>text/x-comma-separated-values</string>
                 <string>text/csv</string>
                 <string>text/x-csv</string>
+                <string>application/x-csv</string>
               </list>
             </value>
         </item>
@@ -21692,7 +21699,7 @@
             </object>
             <persistent> <string encoding="base64">AAAAAAAAAEM=</string> </persistent>
           </tuple>
-          <unicode>*.csv</unicode>
+          <string>*.csv</string>
           <tuple>
             <object>
               <klass> <reference id="335.1"/> </klass>
