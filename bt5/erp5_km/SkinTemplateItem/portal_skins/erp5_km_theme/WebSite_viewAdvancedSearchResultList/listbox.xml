@@ -374,7 +374,7 @@
                 </item>
                 <item>
                     <key> <string>default_display_style</string> </key>
-                    <value> <string>table</string> </value>
+                    <value> <string>search</string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -466,11 +466,11 @@
                 </item>
                 <item>
                     <key> <string>global_search_column</string> </key>
-                    <value> <string>field_your_search_text_listbox</string> </value>
+                    <value> <string>SearchableText</string> </value>
                 </item>
                 <item>
                     <key> <string>global_search_column_script</string> </key>
-                    <value> <string>WebSite_viewQuickSearchResultList</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
