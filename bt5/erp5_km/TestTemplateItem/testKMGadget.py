@@ -701,7 +701,7 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     assignment =  person.newContent(portal_type = 'Assignment')
     self.stepTic()
     self.changeSkin('KM')
-    self.failUnless('<em>1 - 1</em> of <em>1</em>' in 
+    self.failUnless('1 records' in 
             self.publish(self.base_url_pattern 
               %(self.web_section_url+'/%s' %assigned_members_subsection.getId(),  
                 gadget_view_form_id, 
