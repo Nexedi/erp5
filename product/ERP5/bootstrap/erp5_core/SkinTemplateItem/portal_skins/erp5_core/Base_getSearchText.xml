@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,9 +56,10 @@
 request = context.REQUEST\n
 # get search words from listbox selection\n
 argument_names = (\'advanced_search_text\', \n
-                  \'your_search_text\',\n
+                  #\'your_search_text\',\n
                   \'title\',\n
                   \'reference\',\n
+                  \'SearchableText\',\n
                   \'searchabletext\', \n
                   \'searchabletext_any\',\n
                   \'searchabletext_all\', \n
