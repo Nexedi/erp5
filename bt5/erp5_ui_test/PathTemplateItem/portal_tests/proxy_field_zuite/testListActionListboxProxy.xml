@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -92,7 +89,7 @@
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//input[@id=\'listbox_next_page\']</td>\n
+  <td>//button[@class=\'listbox_next_page\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -100,12 +97,12 @@
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_title</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//input[@id=\'listbox_next_page\']</td>\n
+  <td>//button[@class=\'listbox_next_page\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -113,12 +110,12 @@
 \n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_title</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//input[@id=\'listbox_next_page\']</td>\n
+  <td>//button[@class=\'listbox_next_page\']</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n

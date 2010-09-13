@@ -1,3 +1,9 @@
+2010-09-04 yusei
+* Implement Japanese B/S report. (Although Japanese GAP is not good enough)
+
+2010-09-03 yusei
+* Add Japanese profit and loss report to accounting module.
+
 2010-08-19 yusei
 * Remove old afbe and rename afbe2 to afbe.
 

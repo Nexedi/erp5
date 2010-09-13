@@ -5,7 +5,6 @@ Document Module | contribute_file
 Document Module | document_search
 Document Module | view
 Document Module | webdav
-Drawing | convert
 Drawing | create_snapshot
 Drawing | download
 Drawing | download_ooo
@@ -62,7 +61,6 @@ PDF | local_permission
 PDF | related_document
 PDF | view
 PDF | web_view
-Presentation | convert
 Presentation | create_snapshot
 Presentation | download
 Presentation | download_ooo
@@ -84,7 +82,6 @@ Presentation | web_view
 RSS Feed | crawl
 RSS Feed | crawled_content
 RSS Feed | view
-Spreadsheet | convert
 Spreadsheet | create_snapshot
 Spreadsheet | download
 Spreadsheet | download_ooo

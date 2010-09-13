@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -88,27 +85,27 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
   <td>Accounts opening</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]</td>\n
   <td>First Purchase Invoice</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -126,27 +123,27 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
   <td>First Purchase Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]</td>\n
   <td>Accounts opening</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -160,17 +157,17 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
   <td>Accounts opening</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
   <td>First Purchase Invoice</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -184,17 +181,17 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_2\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-2 DataA\']/td[2]</td>\n
   <td>First Purchase Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_3\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-3 DataB\']/td[2]</td>\n
   <td>Accounts opening</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -208,8 +205,8 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <!-- no error -->\n
 <!-- }}} -->\n
@@ -223,8 +220,8 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <!-- no error -->\n
 <!-- }}} -->\n
@@ -244,17 +241,17 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>2 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -268,17 +265,17 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>2 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -301,8 +298,8 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <!-- no error -->\n
 <!-- }}} -->\n
@@ -316,8 +313,8 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <!-- no error -->\n
 <!-- }}} -->\n
@@ -331,8 +328,8 @@ Test sort for Accounting module main listbox, without section\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n

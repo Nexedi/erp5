@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -56,18 +53,18 @@
 <tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>id=listbox_title</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_title</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>id=listbox_title</td>\n
-  <td>exact:Contents:</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
+  <td>exact:Contents</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -87,18 +84,18 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>id=listbox_title</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_title</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>id=listbox_title</td>\n
-  <td>exact:Foos:</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
+  <td>exact:Foos</td>\n
 </tr>\n
 </tal:block>\n
 </tbody></table>\n

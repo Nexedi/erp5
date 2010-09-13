@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -92,32 +89,32 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/img</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
@@ -125,17 +122,17 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>\n
   <td>2</td>\n
 </tr>\n
 </tal:block>\n
@@ -159,7 +156,7 @@
 \n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>id=listbox_data_line_3</td>\n
+  <td>//tr[@class="listbox-data-line-3 DataB"]</td>\n
   <td></td>\n
 </tr>\n
 <!-- Go to the sort dialog -->\n
@@ -194,42 +191,42 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/button[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/button[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/button[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/button</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
@@ -237,17 +234,17 @@
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[2]</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[2]</td>\n
   <td>9</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_1"]/td[2]</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td[2]</td>\n
   <td>8</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id="listbox_data_line_2"]/td[2]</td>\n
+  <td>//tr[@class="listbox-data-line-2 DataA"]/td[2]</td>\n
   <td>7</td>\n
 </tr>\n
 </tal:block>\n

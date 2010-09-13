@@ -129,18 +129,20 @@ class TestCopySupport(ERP5TypeTestCase):
 
     ActivityTool_invokeGroup = ActivityTool.invokeGroup
     invokeGroup_list = []
-    def invokeGroup(self, method_id, message_list, activity):
+    def invokeGroup(self, method_id, message_list, activity, merge_duplicate):
       invokeGroup_list.extend((method_id,
                                sorted(m.kw.get('uid') for m in message_list),
-                               activity))
-      return ActivityTool_invokeGroup(self, method_id, message_list, activity)
+                               activity,
+                               merge_duplicate))
+      return ActivityTool_invokeGroup(self, method_id, message_list,
+                                      activity, merge_duplicate)
     try:
       ActivityTool.invokeGroup = invokeGroup
       self.tic()
     finally:
       ActivityTool.invokeGroup = ActivityTool_invokeGroup
     self.assertEqual(invokeGroup_list,
-      ['portal_catalog/uncatalogObjectList', uid_list, 'SQLQueue'])
+      ['portal_catalog/uncatalogObjectList', uid_list, 'SQLQueue', False])
     self.assertEqual(len(search_catalog(uid=uid_list)), 0)
 
 

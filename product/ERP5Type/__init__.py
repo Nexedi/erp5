@@ -66,7 +66,7 @@ def allowClassTool():
 def initialize( context ):
   # Import Product Components
   from Tool import (ClassTool, CacheTool, MemcachedTool, SessionTool,
-                    TypesTool, WebServiceTool)
+                    TypesTool, WebServiceTool, PropertySheetTool)
   import Document
   import Base, XMLObject
   from ERP5Type import ERP5TypeInformation
@@ -81,6 +81,7 @@ def initialize( context ):
                    SessionTool.SessionTool,
                    TypesTool.TypesTool,
                    WebServiceTool.WebServiceTool,
+                   PropertySheetTool.PropertySheetTool
                   )
   # Do initialization step
   initializeProduct(context, this_module, globals(),
@@ -127,6 +128,7 @@ def initialize( context ):
   if DISPLAY_BOOT_PROCESS: 
     LOG('ERP5Type.__init__', INFO, 'installInteractorClassRegistry')
   installInteractorClassRegistry()
+
 
 from AccessControl.SecurityInfo import allow_module
 from AccessControl.SecurityInfo import ModuleSecurityInfo

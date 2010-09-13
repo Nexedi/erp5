@@ -57,7 +57,7 @@ zip
 zlib1-devel\
 """
 if [ x"$1" == x ]; then
-  urpmi $PACKAGE_LIST
+  urpmi --no-suggests $PACKAGE_LIST
 elif [ "$1" = "-l" ]; then
   echo "$PACKAGE_LIST"
 elif [ "$1" = "-h" ]; then

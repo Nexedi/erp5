@@ -95,7 +95,7 @@
                 <string>reference</string>
                 <string>version</string>
                 <string>short_title</string>
-                <string>subject</string>
+                <string>subject_list</string>
                 <string>source_reference</string>
                 <string>source_project_title</string>
               </tuple>

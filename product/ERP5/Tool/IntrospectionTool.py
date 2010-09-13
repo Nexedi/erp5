@@ -42,6 +42,7 @@ from App.config import getConfiguration
 from AccessControl import Unauthorized
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import tarfile
+from cgi import escape
 
 _MARKER = []
 
@@ -172,7 +173,7 @@ class IntrospectionTool(LogMixin, BaseTool):
                                file_path='log/Z2.log', 
                                compressed=compressed) 
 
-  security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
+  security.declareProtected(Permissions.ManagePortal, 'getEventLog')
   def getEventLog(self, compressed=1, REQUEST=None):
     """
       Get the Event Log.
@@ -185,6 +186,52 @@ class IntrospectionTool(LogMixin, BaseTool):
     return self._getLocalFile(REQUEST, response,
                                file_path='log/event.log',
                                compressed=compressed)
+
+
+  def _tailFile(self, file_name, line_number=10):
+    """
+    Do a 'tail -f -n line_number filename'
+    """
+    log_file = os.path.join(getConfiguration().instancehome, file_name)
+    if not os.path.exists(log_file):
+      raise IOError, 'The file: %s does not exist.' % log_file
+
+    char_per_line=75
+
+    tailed_file = open(log_file,'r')
+    while 1:
+      try:
+        tailed_file.seek(-1 * char_per_line * line_number, 2)
+      except IOError:
+        tailed_file.seek(0)
+      if tailed_file.tell() == 0:
+        at_start = 1
+      else:
+        at_start = 0
+
+      lines = tailed_file.read().split("\n")
+      if (len(lines) > (line_number + 1)) or at_start:
+        break
+      # The lines are bigger than we thought
+      char_per_line = char_per_line * 1.3 # Inc for retry
+
+    tailed_file.close()
+
+    if len(lines) > line_number:
+      start = len(lines) - line_number - 1
+    else:
+      start = 0
+
+    return "\n".join(lines[start:len(lines)])
+
+
+  security.declareProtected(Permissions.ManagePortal, 'tailEventLog')
+  def tailEventLog(self):
+    """
+    Tail the Event Log.
+    """
+    return escape(self._tailFile('log/event.log', 50))
+
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
   def getDataFs(self,  compressed=1, REQUEST=None):

@@ -2720,6 +2720,12 @@ class ListBoxValidator(Validator.Validator):
         editable_columns = field.get_value('editable_columns')
         column_ids = [x[0] for x in columns]
         editable_column_ids = [x[0] for x in editable_columns]
+        editable_field_dict = dict()
+        for sql in editable_column_ids:
+          alias = sql.replace('.', '_')
+          editable_field_dict[alias] = ListBoxRenderer(
+                                          field=field).getEditableField(alias)
+          
         selection_name = field.get_value('selection_name')
         #LOG('ListBoxValidator', 0, 'field = %s, selection_name = %s' % (repr(field), repr(selection_name)))
         params = here.portal_selections.getSelectionParamsFor(
@@ -2770,14 +2776,13 @@ class ListBoxValidator(Validator.Validator):
                 property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
               else:
                 property_id = alias
-              my_field_id = '%s_%s' % (field.id, alias)
-              if form.has_field( my_field_id ):
-                my_field = form.get_field(my_field_id)
-                error_result_key = '%s_%s' % (my_field.id, o.uid)
+              editable_field = editable_field_dict.get(alias)
+              if editable_field is not None:
+                error_result_key = '%s_%s' % (editable_field.id, o.uid)
                 key = 'field_' + error_result_key
                 REQUEST.set('cell', o)
                 try:
-                  value = my_field._validate_helper(key, REQUEST) # We need cell
+                  value = editable_field._validate_helper(key, REQUEST) # We need cell
                   # Here we set the property
                   listbox[uid[4:]][sql] = value
                 except ValidationError, err:
@@ -2811,15 +2816,15 @@ class ListBoxValidator(Validator.Validator):
                 property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
               else:
                 property_id = alias
-              my_field_id = '%s_%s' % (field.id, alias)
-              if form.has_field( my_field_id ):
-                my_field = form.get_field(my_field_id)
+              editable_field = editable_field_dict.get(alias)
+              if editable_field is not None:
                 REQUEST.set('cell', o)
-                if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
-                  error_result_key = '%s_%s' % (my_field.id, o.uid)
+                if editable_field.get_value('editable', REQUEST=REQUEST) \
+                                              and field.need_validate(REQUEST):
+                  error_result_key = '%s_%s' % (editable_field.id, o.uid)
                   key = 'field_' + error_result_key
                   try:
-                    value = my_field._validate_helper(key, REQUEST) # We need cell
+                    value = editable_field._validate_helper(key, REQUEST) # We need cell
                     result[uid[4:]][sql] = value
                   except ValidationError, err:
                     #LOG("ListBox ValidationError",0,str(err))
@@ -2861,21 +2866,20 @@ class ListBoxValidator(Validator.Validator):
                   property_id = '.'.join(sql.split('.')[1:]) # Only take trailing part
                 else:
                   property_id = alias
-                my_field_id = '%s_%s' % (field.id, alias)
-                if form.has_field( my_field_id ):
-                  my_field = form.get_field(my_field_id)
+                editable_field = editable_field_dict.get(alias)
+                if editable_field is not None:
                   REQUEST.set('cell', o) # We need cell
-                  if my_field.get_value('editable', REQUEST=REQUEST) and field.need_validate(REQUEST):
-                    error_result_key = '%s_%s' % (my_field.id, o.uid)
+                  if editable_field.get_value('editable', REQUEST=REQUEST) \
+                                              and field.need_validate(REQUEST):
+                    error_result_key = '%s_%s' % (editable_field.id, o.uid)
                     key = 'field_' + error_result_key
                     try:
-                      value = my_field._validate_helper(key, REQUEST) # We need cell
+                      value = editable_field._validate_helper(key, REQUEST)
                       error_result[error_result_key] = value
                       if not result.has_key(o.getUrl()):
                         result[o.getUrl()] = {}
                       result[o.getUrl()][sql] = value
                     except ValidationError, err:
-                      #LOG("ListBox ValidationError",0,str(err))
                       err.field_id = error_result_key
                       errors.append(err)
                     except KeyError:

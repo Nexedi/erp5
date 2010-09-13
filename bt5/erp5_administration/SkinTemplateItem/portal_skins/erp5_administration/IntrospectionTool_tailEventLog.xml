@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html>\n
+  <head>\n
+    <script type="text/javascript">\n
+      var request;\n
+      var url;\n
+      function init(my_url){\n
+      url = my_url;\n
+      try {\n
+        request = new XMLHttpRequest();\n
+      } catch (trymicrosoft) {\n
+        try {\n
+          request = new ActiveXObject("Msxml2.XMLHTTP");\n
+        } catch (othermicrosoft) {\n
+          try {\n
+            request = new ActiveXObject("Microsoft.XMLHTTP");\n
+          } catch (failed) {\n
+            request = null;\n
+            } \n
+          }\n
+        }\n
+      if (request == null)\n
+        alert("Error creating request object!");\n
+   \n
+      request = createRequest();\n
+      }\n
+\n
+      function getLog(timer) {\n
+      request.open("GET", url, true);\n
+      request.onreadystatechange = updatePage;\n
+      request.send(null);\n
+      startTail(timer);\n
+      }\n
+\n
+      function startTail(timer, url) {\n
+        if (timer == "stop") {\n
+          stopTail();\n
+        } else {\n
+          t= setTimeout("getLog()",4000);\n
+        }\n
+      }\n
+\n
+      function stopTail() {\n
+        clearTimeout(t);\n
+        var pause = "The log viewer has been paused. To begin viewing logs again, click the Start Viewer button.";\n
+        logDiv = document.getElementById("log");\n
+        var newNode=document.createTextNode(pause);\n
+        logDiv.replaceChild(newNode,logDiv.childNodes[0]);\n
+      }\n
+\n
+      function updatePage() {\n
+        if (request.readyState == 4) {\n
+          if (request.status == 200) {\n
+            var currentLogValue = request.responseText.split("\\n");\n
+            eval(currentLogValue);\n
+            logDiv = document.getElementById("log");\n
+            var logLine = \' \';\n
+            for (i=0; i < currentLogValue.length - 1; i++) {\n
+              logLine += currentLogValue[i] + \'<br/>\\n\';\n
+            }\n
+            logDiv.innerHTML=logLine;\n
+          } else\n
+            alert("Error! Request status is " + request.status);\n
+        }\n
+      }\n
+    </script>\n
+   </head>\n
+  <span tal:define="global tailer python:context.getPortalObject().portal_introspections.absolute_url()+\'/tailEventLog\'">\n
+  <body tal:attributes="onload string:init(\'$tailer\')">\n
+      <button tal:attributes="onclick string:getLog(\'start\')">Start Log</button>\n
+      <button onclick="stopTail();">Stop Log</button>\n
+    <div id="log" style="border:solid 1px #dddddd; margin-left:25px; font-size:9px;\n
+                         padding-left:5px; padding-right:10px; padding-top:10px; padding-bottom:20px;\n
+                         margin-top:10px; margin-bottom:10px; width:90%; text-align:left;">\n
+      This is the Event Log Viewer. To begin viewing the log live in this window, click Start Viewer. To stop the window refreshes, click Pause Viewer.\n
+    </div>\n
+  </body>\n
+  </span>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>IntrospectionTool_tailEventLog</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,15 +63,15 @@ Test search columns of Account Module\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>10 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>10</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
 <!-- Filter on preferred_gap_id {{{ -->\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
@@ -84,92 +81,92 @@ Test search columns of Account Module\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 \n
 <!-- column values -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Equity</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
   <td>Validated</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[6]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[6]/a</td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[7]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]/a</td>\n
   <td>20000.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[8]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[8]/a</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[9]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a</td>\n
   <td>20000.0</td>\n
 </tr>\n
 \n
 <!-- stat -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[6]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[7]</td>\n
   <td>20000.00</td>\n
 </tr>\n
 <!-- XXX Currently no stat for Debit Balance and Credit Balance -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -182,7 +179,7 @@ Test search columns of Account Module\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[3]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[3]/input</td>\n
   <td>Equity</td>\n
 </tr>\n
 <tr>\n
@@ -192,92 +189,92 @@ Test search columns of Account Module\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 \n
 <!-- column values -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Equity</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
   <td>Validated</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[6]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[6]/a</td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[7]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]/a</td>\n
   <td>20000.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[8]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[8]/a</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[9]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[9]/a</td>\n
   <td>20000.0</td>\n
 </tr>\n
 \n
 <!-- stat -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[2]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[5]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[6]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[6]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[7]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[7]</td>\n
   <td>20000.00</td>\n
 </tr>\n
 <!-- XXX Currently no stat for Debit Balance and Credit Balance -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[8]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
   <td></td>\n
 </tr>\n
 <!-- }}} -->\n

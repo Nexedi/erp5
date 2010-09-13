@@ -1,3 +1,18 @@
+2010-09-08 yo
+* Forgot to add .append. Sorry.
+
+2010-09-08 yo
+* Auto-fill mirror accounts, if necessary, before running the accounting transaction constraint.
+
+2010-09-08 yusei
+Revert my change on AccountingTransactionModule_getJournalSectionLineList at 2010-09-02.
+
+2010-09-03 yusei
+* Add Base_getAccountingWorkflowId and Base_getTranslatedAccountingWorkflowStateItemList to make accounting workflow easier to customise.
+
+2010-09-02 yusei
+* Display account title to journal report. Displaying gap id only is not useful at least in Japan.
+
 2010-08-23 yusei
 * Allow users to change section on line level. This is sometimes needed. Use case: expense happens at section A, corresponding payment is done at section B. This is journalized in single transaction document.
 

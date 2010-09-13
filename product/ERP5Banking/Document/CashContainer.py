@@ -29,9 +29,9 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Container import Container
+from Products.ERP5Banking.BaobabMixin import BaobabMixin
 
-
-class CashContainer(Container):
+class CashContainer(BaobabMixin, Container):
   """
     A Cash DeliveryLine object allows to implement lines
       in Cash Deliveries (packing list, Check payment, Cash Movement, etc.).
@@ -64,22 +64,3 @@ class CashContainer(Container):
                     , PropertySheet.Reference
                     )
 
-  security.declareProtected(Permissions.View, 'getBaobabSource')
-  def getBaobabSource(self):
-    """
-      Returns a calculated source
-    """
-    script = self._getTypeBasedMethod('getBaobabSource')
-    if script is not None:
-      return script(self)      
-    return self.getSource()
-
-  security.declareProtected(Permissions.View, 'getBaobabDestination')
-  def getBaobabDestination(self):
-    """
-      Returns a calculated destination
-    """
-    script = self._getTypeBasedMethod('getBaobabDestination')
-    if script is not None:
-      return script(self)
-    return self.getDestination()

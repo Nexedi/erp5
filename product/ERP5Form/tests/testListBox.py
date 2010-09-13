@@ -43,6 +43,7 @@ from StringIO import StringIO
 from Products.ERP5Form.Selection import Selection
 from Products.ERP5Form.Form import ERP5Form
 from Products.Formulator.TALESField import TALESMethod
+from Products.ERP5Form.ListBox import ListBoxHTMLRenderer
 
 
 class DummyFieldStorage:
@@ -558,6 +559,46 @@ return []
     self.assertEquals([('proxy_value', 'Proxy')],
                       title_line.getColumnItemList())
 
+  def test_ListStyleColumnsSelections(self):
+    """
+      Test list style columns selections.
+    """
+    def getListBoxRenderer(listbox):
+      return ListBoxHTMLRenderer(self, listbox, request)
+
+    portal = self.getPortal()
+    portal.ListBoxZuite_reset()
+    listbox = portal.FooModule_viewFooList.listbox
+    listbox.ListBox_setPropertyList(
+      field_style_columns=['title | thumbnail_Title',
+                           'thumbnail | thumbnail_Thumbnail',
+                           'getIconAsHTML | search_Icon',
+                           'getSummaryAsHTML | search_Summary',
+                           'B | rss_title',
+                           'C | rss_description'],)
+    request = get_request()
+
+    # explicitly setting (dynamically) renderer columns list
+    renderer = getListBoxRenderer(listbox)
+    renderer.setDisplayedColumnIdList(['title', 'id'])
+    self.assertSameSet([('title', u'Title'), ('id', u'ID')],
+                       renderer.getSelectedColumnList())
+
+    # default(no list_style)
+    self.assertEqual(getListBoxRenderer(listbox).getDefaultDisplayStyle(), getListBoxRenderer(listbox).getListboxDisplayStyle())
+    self.assertSameSet([('id', u'ID'), ('title', u'Title'), ('getQuantity', u'Quantity')],
+                         getListBoxRenderer(listbox).getSelectedColumnList())
+
+    request.set('list_style', 'search')
+    self.assertEqual('search', getListBoxRenderer(listbox).getListboxDisplayStyle())
+    self.assertSameSet([('getIconAsHTML', 'Icon'), ('getSummaryAsHTML', 'Summary')],
+                         getListBoxRenderer(listbox).getSelectedColumnList())
+
+    request.set('list_style', 'thumbnail')
+    self.assertEqual('thumbnail', getListBoxRenderer(listbox).getListboxDisplayStyle())
+    self.assertSameSet([('title', 'Title'), ('thumbnail', 'Thumbnail')],
+                         getListBoxRenderer(listbox).getSelectedColumnList())
+  
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -66,7 +63,7 @@ Test changing state in accounting module (with custom search)\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[5]/input</td>\n
   <td>2005/01/01</td>\n
 </tr>\n
 <tr>\n
@@ -76,8 +73,8 @@ Test changing state in accounting module (with custom search)\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 \n
 <!-- Change state -->\n
@@ -88,28 +85,28 @@ Test changing state in accounting module (with custom search)\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[1]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/a</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>Accounting Transaction</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Posted to General Ledger</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/select</td>\n
   <td>label=Cancel Transaction</td>\n
 </tr>\n
 \n
@@ -122,8 +119,8 @@ Test changing state in accounting module (with custom search)\n
 \n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -165,7 +162,7 @@ Test changing state in accounting module (with custom search)\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//tr[@id=\'listbox_search_line\']/td[5]/span/input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[5]/input</td>\n
   <td>2005/01/01</td>\n
 </tr>\n
 <tr>\n
@@ -175,12 +172,12 @@ Test changing state in accounting module (with custom search)\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[8]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[8]/a</td>\n
   <td>Cancelled</td>\n
 </tr>\n
 \n

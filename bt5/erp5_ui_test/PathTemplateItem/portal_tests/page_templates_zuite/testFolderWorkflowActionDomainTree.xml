@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -98,8 +95,8 @@
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>3 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>3</td>\n
 </tr>\n
 \n
 <!-- Select elements by the domain tree -->\n
@@ -110,7 +107,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>id=listbox_domain_tree_mode</td>\n
+  <td>//input[@class="listbox-tree-domain-tree-mode"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -120,20 +117,20 @@
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>3 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>3</td>\n
 </tr>\n
 \n
 <!-- Click on the \'a\' domain tree -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//table[@id="listbox_domain_tree_table"]//tr[1]//a[@class="tree_closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>2 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
 </tr>\n
 \n
 <!-- Change Stat of this element list -->\n
@@ -146,33 +143,33 @@
 <!-- we have a listbox with 1 line for 2 Draft Foos -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <!-- It\'s the number of element which will be validate -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[1]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/a</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]/a</td>\n
   <td>Foo</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]/a</td>\n
   <td>Draft</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]/a</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]/a</td>\n
   <td>Foo Workflow</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[5]/select</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]/select</td>\n
   <td>label=Validate Action</td>\n
 </tr>\n
 \n
@@ -194,34 +191,34 @@ Note that if a document cannot be processed, it\'s not shown in this list\n
 <!-- List of element which will validate -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>2 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <!-- This listbox is a proxy to the module listbox, so it has the same title\n
 and the same columns. -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_title</td>\n
-  <td>exact:Foos:</td>\n
+  <td>//a[@class="listbox_title"]</td>\n
+  <td>exact:Foos</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
   <td>Title 2</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
   <td>Validate Action</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[2]</td>\n
   <td>Title 3</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_data_line_1\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox-data-line-1 DataB\']/td[4]</td>\n
   <td>Validate Action</td>\n
 </tr>\n
 <tr>\n

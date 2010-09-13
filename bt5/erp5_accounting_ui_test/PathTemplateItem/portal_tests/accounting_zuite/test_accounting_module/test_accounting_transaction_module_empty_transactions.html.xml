@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,21 +65,21 @@ Accounting Transaction Module Displays empty Transactions\n
 <!-- 4 item by default -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>4 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>4</td>\n
 </tr>\n
 <!-- check amounts for stats -->\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
@@ -134,63 +131,63 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>5 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>5</td>\n
 </tr>\n
 <!-- column properties -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[3]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[3]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[4]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[4]\n
   </td>\n
   <td>Accounting Transaction</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[5]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[5]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[6]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[6]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[7]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[7]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[8]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[8]\n
   </td>\n
   <td>Draft</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]\n
   </td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]\n
   </td>\n
   <td>0.0</td>\n
 </tr>\n
@@ -199,14 +196,14 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
@@ -242,12 +239,12 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>link=Accounting Transaction Lines:</td>\n
+  <td>link=Accounting Transaction Lines</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>listbox_check_all</td>\n
+  <td>//input[@class="listbox-check-all"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -257,8 +254,8 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>2 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>2</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -273,8 +270,8 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>0 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>0</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -302,63 +299,63 @@ Accounting Transaction Module Displays empty Transactions\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>6 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>6</td>\n
 </tr>\n
 <!-- column properties line 0 -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[3]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[3]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[4]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[4]\n
   </td>\n
   <td>Accounting Transaction</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[5]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[5]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[6]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[6]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[7]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[7]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[8]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[8]\n
   </td>\n
   <td>Draft</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[9]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[9]\n
   </td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_0\']/td[10]\n
+//tr[@class=\'listbox-data-line-0 DataA\']/td[10]\n
   </td>\n
   <td>0.0</td>\n
 </tr>\n
@@ -366,56 +363,56 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[3]\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[3]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[4]\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[4]\n
   </td>\n
   <td>Accounting Transaction</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[5]\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[5]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[6]\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[6]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[7]\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[7]\n
   </td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[8]\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[8]\n
   </td>\n
   <td>Draft</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[9]\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[9]\n
   </td>\n
   <td>0.0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_data_line_1\']/td[10]\n
+//tr[@class=\'listbox-data-line-1 DataB\']/td[10]\n
   </td>\n
   <td>0.0</td>\n
 </tr>\n
@@ -424,14 +421,14 @@ Accounting Transaction Module Displays empty Transactions\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[9]\n
+//tr[@class=\'listbox_stat_line\']/td[9]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
   <td>\n
-//tr[@id=\'listbox_stat_line\']/td[10]\n
+//tr[@class=\'listbox_stat_line\']/td[10]\n
 </td>\n
   <td>33200.00</td>\n
 </tr>\n

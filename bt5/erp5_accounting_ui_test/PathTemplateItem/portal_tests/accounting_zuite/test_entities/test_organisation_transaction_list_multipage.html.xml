@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -67,7 +64,7 @@ Test Transactions related to an Organisation, with multiple pages and date range
 <tr>\n
   <td>type</td>\n
   <!-- title -->\n
-  <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>\n
+  <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>\n
   <td>Client 1</td>\n
 </tr>\n
 <tr>\n
@@ -87,23 +84,23 @@ Test Transactions related to an Organisation, with multiple pages and date range
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>56 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>56</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
   <td>446600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
   <td>446600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
   <td>0.0</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -111,96 +108,96 @@ Test Transactions related to an Organisation, with multiple pages and date range
 <!-- {{{ check second page -->\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>keyPressAndWait</td>\n
-  <td>id=listbox_set_page</td>\n
+  <td>//input[@class="listbox_set_page"]</td>\n
   <td>\\13</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>56 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>56</td>\n
 </tr>\n
 <!-- check first line -->\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[1]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[2]</td>\n
   <td>My Organisation</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[3]</td>\n
   <td>2005/01/16</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[4]</td>\n
   <td>Sale Invoice Transaction</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[5]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[5]</td>\n
   <td>41</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[8]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[8]</td>\n
   <td>Posted to General Ledger</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[9]</td>\n
   <td>17600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[10]</td>\n
   <td>0</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[11]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[11]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[12]</td>\n
   <td>17600.00</td>\n
 </tr>\n
 <!-- this is the same as the last net_balance from the previous page -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[13]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[13]</td>\n
   <td>133100.00</td>\n
 </tr>\n
 \n
 <!-- Stats should not change -->\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[9]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[9]</td>\n
   <td>446600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[10]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[10]</td>\n
   <td>446600.00</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
   <td>0.0</td>\n
 </tr>\n
 <!-- }}} -->\n

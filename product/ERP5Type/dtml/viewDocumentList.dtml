@@ -19,7 +19,11 @@
   <tr class="row-hilite">
   </dtml-if>
     <td>
-      <div class="list-item"><dtml-var sequence-item></div>
+      <div class="list-item"><dtml-var sequence-item>
+        <dtml-if expr="hasattr(this(), 'externalEditLink_')">
+          <dtml-var expr="externalEditLink_(this()['Document'][_['sequence-item']])">
+        </dtml-if>
+      </div>
     </td>   
     <td>
       <div class="list-item"><a href="manage_editDocumentForm?class_id=<dtml-var sequence-item>">edit</a>&nbsp;<a href="importDocument?class_id=<dtml-var sequence-item>">reload</a>

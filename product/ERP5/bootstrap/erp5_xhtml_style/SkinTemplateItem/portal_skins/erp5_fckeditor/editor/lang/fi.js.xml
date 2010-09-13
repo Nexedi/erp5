@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts60538662.55</string> </value>
+            <value> <string>ts83858910.13</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -31,7 +28,7 @@
 
 ﻿/*\r\n
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
- * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben\r\n
  *\r\n
  * == BEGIN LICENSE ==\r\n
  *\r\n
@@ -75,7 +72,7 @@ RemoveFormat\t\t: "Poista muotoilu",\r\n
 InsertLinkLbl\t\t: "Linkki",\r\n
 InsertLink\t\t\t: "Lisää linkki/muokkaa linkkiä",\r\n
 RemoveLink\t\t\t: "Poista linkki",\r\n
-VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+VisitLink\t\t\t: "Avaa linkki",\r\n
 Anchor\t\t\t\t: "Lisää ankkuri/muokkaa ankkuria",\r\n
 AnchorDelete\t\t: "Poista ankkuri",\r\n
 InsertImageLbl\t\t: "Kuva",\r\n
@@ -104,9 +101,9 @@ BlockJustify\t\t: "Tasaa molemmat reunat",\r\n
 DecreaseIndent\t\t: "Pienennä sisennystä",\r\n
 IncreaseIndent\t\t: "Suurenna sisennystä",\r\n
 Blockquote\t\t\t: "Lainaus",\r\n
-CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
-EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
-DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+CreateDiv\t\t\t: "Lisää Div",\r\n
+EditDiv\t\t\t\t: "Muokkaa Div:ä",\r\n
+DeleteDiv\t\t\t: "Poista Div",\r\n
 Undo\t\t\t\t: "Kumoa",\r\n
 Redo\t\t\t\t: "Toista",\r\n
 NumberedListLbl\t\t: "Numerointi",\r\n
@@ -192,7 +189,7 @@ UnknownToolbarSet\t: "Työkalukokonaisuus \\"%1\\" ei ole olemassa",\r\n
 NoActiveX\t\t\t: "Selaimesi turvallisuusasetukset voivat rajoittaa joitain editorin ominaisuuksia. Sinun pitää ottaa käyttöön asetuksista \\"Suorita ActiveX komponentit ja -plugin-laajennukset\\". Saatat kohdata virheitä ja huomata puuttuvia ominaisuuksia.",\r\n
 BrowseServerBlocked : "Resurssiselainta ei voitu avata. Varmista, että ponnahdusikkunoiden estäjät eivät ole päällä.",\r\n
 DialogBlocked\t\t: "Apuikkunaa ei voitu avaata. Varmista, että ponnahdusikkunoiden estäjät eivät ole päällä.",\r\n
-VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+VisitLinkBlocked\t: "IUutta ikkunaa ei voitu avata. Varmista, että ponnahdusikkunoiden estäjät eivät ole päällä.",\r\n
 \r\n
 // Dialogs\r\n
 DlgBtnOK\t\t\t: "OK",\r\n
@@ -339,11 +336,11 @@ DlgTableCellSpace\t: "Solujen väli",\r\n
 DlgTableCellPad\t\t: "Solujen sisennys",\r\n
 DlgTableCaption\t\t: "Otsikko",\r\n
 DlgTableSummary\t\t: "Yhteenveto",\r\n
-DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
-DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
-DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
-DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
-DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+DlgTableHeaders\t\t: "Ylätunnisteet",\r\n
+DlgTableHeadersNone\t\t: "Ei ylätunnisteita",\r\n
+DlgTableHeadersColumn\t: "Ensimmäinen sarake",\r\n
+DlgTableHeadersRow\t\t: "Ensimmäinen rivi",\r\n
+DlgTableHeadersBoth\t\t: "Molemmat",\r\n
 \r\n
 // Table Cell Dialog\r\n
 DlgCellTitle\t\t: "Solun ominaisuudet",\r\n
@@ -366,9 +363,9 @@ DlgCellVerAlignTop\t: "Ylös",\r\n
 DlgCellVerAlignMiddle\t: "Keskelle",\r\n
 DlgCellVerAlignBottom\t: "Alas",\r\n
 DlgCellVerAlignBaseline\t: "Tekstin alas",\r\n
-DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
-DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
-DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellType\t\t: "Solun tyyppi",\r\n
+DlgCellTypeData\t\t: "Sisältö",\r\n
+DlgCellTypeHeader\t: "Ylätunniste",\r\n
 DlgCellRowSpan\t\t: "Rivin jatkuvuus",\r\n
 DlgCellCollSpan\t\t: "Sarakkeen jatkuvuus",\r\n
 DlgCellBackColor\t: "Taustaväri",\r\n
@@ -558,10 +555,10 @@ DlgAboutVersion\t\t: "versio",\r\n
 DlgAboutInfo\t\t: "Lisää tietoa osoitteesta",\r\n
 \r\n
 // Div Dialog\r\n
-DlgDivGeneralTab\t: "General",\t//MISSING\r\n
+DlgDivGeneralTab\t: "Edistynyt",\r\n
 DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
-DlgDivStyle\t\t: "Style",\t//MISSING\r\n
-DlgDivInlineStyle\t: "Inline Style",\t//MISSING\r\n
+DlgDivStyle\t\t: "Tyyli",\r\n
+DlgDivInlineStyle\t: "Rivin sisäinen tyyli",\r\n
 \r\n
 ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
 ScaytTitleOptions\t: "Options",\t//MISSING\r\n
@@ -578,7 +575,7 @@ ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18847</int> </value>
+            <value> <int>18745</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

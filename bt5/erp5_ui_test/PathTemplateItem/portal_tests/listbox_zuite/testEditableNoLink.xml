@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -107,13 +104,13 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_data_line_0"]/td[1]/a/input</td>\n
+  <td>//tr[@class="listbox-data-line-0 DataA"]/td[1]/a/input</td>\n
   <td></td>\n
   <td>Make sure an no a tag is present in ListBox</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//*[@id="listbox_data_line_0"]//input</td>\n
+  <td>//*[@class="listbox-data-line-0 DataA"]//input</td>\n
   <td></td>\n
   <td>Make sure there is an input tag in line 1 col 1</td>\n
 </tr>\n

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,7 +50,33 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return []\n
+            <value> <string>root = context.portal_categories.gap.jp.afbe\n
+\n
+return [\n
+  (depth,\n
+   root.restrictedTraverse(path))\n
+  for depth, path in (\n
+######################\n
+# 株主資本\n
+######################\n
+(2, \'1/10\'), # 資本金\n
+             # 新株式申込証拠金\n
+             # 資本準備金\n
+             # その他の資本余剰金\n
+             # 利益準備金\n
+             # 繰越利益余剰金\n
+             # 自己株式\n
+\n
+             # xxx準備金 (GAPに該当なし、必要だと思われる)\n
+             # xxx積立金 (GAPに該当なし、必要だと思われる)\n
+\n
+(2, \'1/11\'), # その他有価証券評価差額金\n
+             # 繰越ヘッジ損失\n
+             # 土地再評価差額金\n
+(2, \'1/12\'), # 新株予約権\n
+(2, \'1/13\'), # 小数株主持分\n
+\n
+  )]\n
 </string> </value>
         </item>
         <item>
@@ -61,6 +84,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -85,7 +112,16 @@
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>root</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>depth</string>
+                            <string>path</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>

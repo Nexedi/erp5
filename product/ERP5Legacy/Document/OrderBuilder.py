@@ -110,25 +110,25 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       or to Simulation Movements related to a limited set of existing
     """
     # Parameter initialization
-    if movement_relative_url_list is None:
-      movement_relative_url_list = []
     if delivery_relative_url_list is None:
       delivery_relative_url_list = []
-    if movement_list is None:
-      movement_list = []
     # Call a script before building
     self.callBeforeBuildingScript() # XXX-JPS Used ?
     # Select
-    if not len(movement_list):
-      if len(movement_relative_url_list) == 0:
+    if not movement_list:
+      # XXX this code below has a problem of inconsistency in that
+      # searchMovementList is unrestricted while passing a list of
+      # movements is restricted.
+      if not movement_relative_url_list:
         movement_list = self.searchMovementList(
                                         delivery_relative_url_list=delivery_relative_url_list,
                                         applied_rule_uid=applied_rule_uid,**kw)
       else:
-        movement_list = [self.restrictedTraverse(relative_url) for relative_url \
+        restrictedTraverse = self.getPortalObject().restrictedTraverse
+        movement_list = [restrictedTraverse(relative_url) for relative_url \
                          in movement_relative_url_list]
     LOG('movement_list', 0, repr(movement_list))
-    if not len(movement_list):
+    if not movement_list:
       return []
     # Collect
     root_group_node = self.collectMovement(movement_list)
@@ -136,7 +136,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     delivery_list = self.buildDeliveryList(
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
-                       movement_list=movement_list,**kw)
+                       movement_list=movement_list, **kw)
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     # XXX Returning the delivery list is probably not necessary
@@ -154,7 +154,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
     delivery_module_before_building_script_id = \
         self.getDeliveryModuleBeforeBuildingScriptId()
-    if delivery_module_before_building_script_id not in ["", None]:
+    if delivery_module_before_building_script_id:
       delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
@@ -287,9 +287,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                            divergence_list):
     instance = None
     property_dict = {}
-    if not len(instance_list):
+    if not instance_list:
       for movement_group_node in movement_group_node_list:
-        for k,v in movement_group_node.getGroupEditDict().iteritems():
+        for k, v in movement_group_node.getGroupEditDict().iteritems():
           if k in property_dict:
             raise DuplicatedPropertyDictKeysError(k)
           else:
@@ -301,8 +301,12 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         current = movement_group_node_list[-1].getMovementList()[0].getDeliveryValue()
         portal = self.getPortalObject()
         while current != portal:
-          if current in instance_list:
-            instance_list.sort(key=lambda x: x != current and 1 or 0)
+          try:
+            instance_list.remove(current)
+          except ValueError:
+            pass
+          else:
+            instance_list.insert(0, current)
             break
           current = current.getParentValue()
       except AttributeError:
@@ -310,7 +314,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       for instance_to_update in instance_list:
         result, property_dict = self._test(
           instance_to_update, movement_group_node_list, divergence_list)
-        if result == True:
+        if result:
           instance = instance_to_update
           break
     return instance, property_dict
@@ -331,16 +335,20 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     portal = self.getPortalObject()
     delivery_module = getattr(portal, self.getDeliveryModule())
     if update:
-      delivery_to_update_list = [portal.restrictedTraverse(relative_url) for \
+      unrestrictedTraverse = portal.unrestrictedTraverse
+      delivery_to_update_list = [unrestrictedTraverse(relative_url) for \
                                  relative_url in delivery_relative_url_list]
       # Deliveries we are trying to update
       delivery_select_method_id = self.getDeliverySelectMethodId()
-      if delivery_select_method_id not in ["", None]:
-        to_update_delivery_sql_list = getattr(self, delivery_select_method_id) \
-                                      (movement_list=movement_list)
-        delivery_to_update_list.extend([sql_delivery.getObject() \
-                                        for sql_delivery \
-                                        in to_update_delivery_sql_list])
+      if delivery_select_method_id:
+        delivery_select_method = getattr(self, delivery_select_method_id)
+        for brain in delivery_select_method(movement_list=movement_list):
+          delivery_to_update_list.append(brain.getObject())
+
+      # Make sure that the portal type is good.
+      delivery_portal_type = self.getDeliveryPortalType()
+      delivery_to_update_list = [x for x in delivery_to_update_list \
+              if x.getPortalType() == delivery_portal_type]
     else:
       delivery_to_update_list = []
     # We do not want to update the same object more than twice in one
@@ -403,10 +411,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     else:
       # Test if we can update a existing delivery, or if we need to create
       # a new one
-      delivery_to_update_list = [
-        x for x in delivery_to_update_list \
-        if x.getPortalType() == self.getDeliveryPortalType() and \
-        not self._isUpdated(x, 'delivery')]
       delivery, property_dict = self._findUpdatableObject(
         delivery_to_update_list, movement_group_node_list,
         divergence_list)
@@ -420,19 +424,28 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         delivery = self._createDelivery(delivery_module,
                                         movement_group_node.getMovementList(),
                                         activate_kw)
+      else:
+        # The same delivery should not be updated more than once.
+        # Note that it is important to use a destructive method here.
+        delivery_to_update_list.remove(delivery)
+
       # Put properties on delivery
-      self._setUpdated(delivery, 'delivery')
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
         delivery.edit(**property_dict)
 
-      # Then, create delivery line
+      # Then, create delivery lines
+      delivery_line_portal_type = self.getDeliveryLinePortalType()
+      delivery_line_to_update_list = []
+      for line in delivery.contentValues(portal_type=delivery_line_portal_type):
+        delivery_line_to_update_list.append(line)
       for grouped_node in movement_group_node.getGroupList():
         self._processDeliveryLineGroup(
                                 delivery,
                                 grouped_node,
                                 self.getDeliveryLineMovementGroupList()[1:],
                                 divergence_list=divergence_list,
+                                delivery_line_to_update_list=delivery_line_to_update_list,
                                 activate_kw=activate_kw,
                                 force_update=force_update)
       delivery_list.append(delivery)
@@ -454,6 +467,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
   def _processDeliveryLineGroup(self, delivery, movement_group_node,
                                 collect_order_list, movement_group_node_list=None,
                                 divergence_list=None,
+                                delivery_line_to_update_list=None,
                                 activate_kw=None, force_update=0, **kw):
     """
       Build delivery line from a list of movement on a delivery
@@ -462,6 +476,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       movement_group_node_list = []
     if divergence_list is None:
       divergence_list = []
+    if delivery_line_to_update_list is None:
+      delivery_line_to_update_list = []
     # do not use 'append' or '+=' because they are destructive.
     movement_group_node_list = movement_group_node_list + [movement_group_node]
 
@@ -474,19 +490,18 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           collect_order_list[1:],
           movement_group_node_list=movement_group_node_list,
           divergence_list=divergence_list,
+          delivery_line_to_update_list=delivery_line_to_update_list,
           activate_kw=activate_kw,
           force_update=force_update)
     else:
       # Test if we can update an existing line, or if we need to create a new
       # one
-      delivery_line_to_update_list = [x for x in delivery.contentValues(
-        portal_type=self.getDeliveryLinePortalType()) if \
-                                      not self._isUpdated(x, 'line')]
       delivery_line, property_dict = self._findUpdatableObject(
         delivery_line_to_update_list, movement_group_node_list,
         divergence_list)
       if delivery_line is not None:
         update_existing_line = 1
+        delivery_line_to_update_list.remove(delivery_line)
       else:
         # Create delivery line
         update_existing_line = 0
@@ -495,12 +510,15 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                 movement_group_node.getMovementList(),
                 activate_kw)
       # Put properties on delivery line
-      self._setUpdated(delivery_line, 'line')
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
         delivery_line.edit(force_update=1, **property_dict)
 
       if movement_group_node.getCurrentMovementGroup().isBranch():
+        delivery_line_portal_type = self.getDeliveryLinePortalType()
+        nested_delivery_line_to_update_list = []
+        for line in delivery_line.contentValues(portal_type=delivery_line_portal_type):
+          nested_delivery_line_to_update_list.append(line)
         for grouped_node in movement_group_node.getGroupList():
           self._processDeliveryLineGroup(
             delivery_line,
@@ -508,6 +526,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
             collect_order_list[1:],
             movement_group_node_list=movement_group_node_list,
             divergence_list=divergence_list,
+            delivery_line_to_update_list=nested_delivery_line_to_update_list,
             activate_kw=activate_kw,
             force_update=force_update)
         return
@@ -720,19 +739,32 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
     Return a list of movement groups sorted by collect order group and index.
     """
-    category_index_dict = {}
-    for i in self.getPortalObject().portal_categories.collect_order_group.contentValues():
-      category_index_dict[i.getId()] = i.getIntIndex()
-
-    def sort_movement_group(a, b):
-        return cmp(category_index_dict.get(a.getCollectOrderGroup()),
-                   category_index_dict.get(b.getCollectOrderGroup())) or \
-               cmp(a.getIntIndex(), b.getIntIndex())
+    portal = self.getPortalObject()
     if portal_type is None:
-      portal_type = self.getPortalMovementGroupTypeList()
-    movement_group_list = [x for x in self.contentValues(filter={'portal_type': portal_type}) \
-                           if collect_order_group is None or collect_order_group == x.getCollectOrderGroup()]
-    return sorted(movement_group_list, sort_movement_group)
+      portal_type = portal.getPortalMovementGroupTypeList()
+
+    if collect_order_group is None:
+      category_index_dict = {}
+      for i in portal.portal_categories.collect_order_group.contentValues():
+        category_index_dict[i.getId()] = i.getIntIndex()
+
+      def getMovementGroupKey(movement_group):
+        return (category_index_dict.get(movement_group.getCollectOrderGroup()),
+                movement_group.getIntIndex())
+
+      filter_dict = dict(portal_type=portal_type)
+      movement_group_list = self.contentValues(filter=filter_dict)
+    else:
+      def getMovementGroupKey(movement_group):
+        return movement_group.getIntIndex()
+
+      filter_dict = dict(portal_type=portal_type)
+      movement_group_list = []
+      for movement_group in self.contentValues(filter=filter_dict):
+        if movement_group.getCollectOrderGroup() == collect_order_group:
+          movement_group_list.append(movement_group)
+
+    return sorted(movement_group_list, key=getMovementGroupKey)
 
   # XXX category name is hardcoded.
   def getDeliveryMovementGroupList(self, **kw):

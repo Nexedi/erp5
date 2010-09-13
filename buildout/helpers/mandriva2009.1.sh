@@ -39,7 +39,7 @@ libreadline-devel
 librsync-devel
 libsasl2-devel
 libtermcap-devel
-libtiff3-devel
+libtiff-devel
 libtool
 libungif-devel
 libxml2-devel
@@ -58,7 +58,7 @@ zip
 zlib1-devel\
 """
 if [ x"$1" == x ]; then
-  urpmi $PACKAGE_LIST
+  urpmi --no-suggests $PACKAGE_LIST
 elif [ "$1" = "-l" ]; then
   echo "$PACKAGE_LIST"
 elif [ "$1" = "-h" ]; then

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749328.98</string> </value>
+            <value> <string>ts83858910.18</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -31,7 +28,7 @@
 
 ﻿/*\r\n
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
- * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben\r\n
  *\r\n
  * == BEGIN LICENSE ==\r\n
  *\r\n
@@ -149,7 +146,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>3108</long> </value>
+            <value> <int>3108</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

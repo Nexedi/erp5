@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PropertySheetTool" module="Products.ERP5Type.Tool.PropertySheetTool"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>portal_property_sheets</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Property Sheet Tool</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

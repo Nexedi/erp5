@@ -41,6 +41,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
 
 _marker = object()
@@ -225,29 +226,37 @@ class PreferenceTool(BaseTool):
     """ return the most appropriate preferences objects,
         sorted so that the first in the list should be applied first
     """
-    prefs = []
-    # XXX will also cause problems with Manager (too long)
-    # XXX For manager, create a manager specific preference
-    #                  or better solution
-    user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
-    user_is_manager = 'Manager' in user.getRolesInContext(self)
-    for pref in self.searchFolder(portal_type='Preference', sql_catalog_id=sql_catalog_id):
-      pref = pref.getObject()
-      if pref is not None and pref.getProperty('preference_state',
-                                'broken') in ('enabled', 'global'):
-        # XXX quick workaround so that manager only see user preference
-        # they actually own.
-        if user_is_manager and pref.getPriority() == Priority.USER :
-          if pref.getOwnerTuple()[1] == user.getId():
+    tv = getTransactionalVariable(self)
+    tv_key = 'PreferenceTool._getSortedPreferenceList/%s' % sql_catalog_id
+    if tv.get(tv_key, None) is None:
+      prefs = []
+      # XXX will also cause problems with Manager (too long)
+      # XXX For manager, create a manager specific preference
+      #                  or better solution
+      user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
+      user_is_manager = 'Manager' in user.getRolesInContext(self)
+      for pref in self.searchFolder(portal_type='Preference', sql_catalog_id=sql_catalog_id):
+        pref = pref.getObject()
+        if pref is not None and pref.getProperty('preference_state',
+                                  'broken') in ('enabled', 'global'):
+          # XXX quick workaround so that manager only see user preference
+          # they actually own.
+          if user_is_manager and pref.getPriority() == Priority.USER :
+            if pref.getOwnerTuple()[1] == user.getId():
+              prefs.append(pref)
+          else :
             prefs.append(pref)
-        else :
-          prefs.append(pref)
-    prefs.sort(key=lambda x: x.getPriority(), reverse=True)
-    # add system preferences before user preferences
-    sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', sql_catalog_id=sql_catalog_id) \
-                 if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
-    sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
-    return sys_prefs + prefs
+      prefs.sort(key=lambda x: x.getPriority(), reverse=True)
+      # add system preferences before user preferences
+      sys_prefs = [x.getObject() for x in self.searchFolder(portal_type='System Preference', sql_catalog_id=sql_catalog_id) \
+                   if x.getObject().getProperty('preference_state', 'broken') in ('enabled', 'global')]
+      sys_prefs.sort(key=lambda x: x.getPriority(), reverse=True)
+      preference_list = sys_prefs + prefs
+      tv[tv_key] = preference_list
+    else:
+      portal = self.getPortalObject()
+      preference_list = tv[tv_key]
+    return preference_list
 
   def _getActivePreferenceByPortalType(self, portal_type):
     enabled_prefs = self._getSortedPreferenceList()

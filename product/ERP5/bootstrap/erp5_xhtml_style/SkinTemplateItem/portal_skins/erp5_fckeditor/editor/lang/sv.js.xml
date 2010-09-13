@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts60538662.6</string> </value>
+            <value> <string>ts83858910.15</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -31,7 +28,7 @@
 
 ﻿/*\r\n
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net\r\n
- * Copyright (C) 2003-2009 Frederico Caldeira Knabben\r\n
+ * Copyright (C) 2003-2010 Frederico Caldeira Knabben\r\n
  *\r\n
  * == BEGIN LICENSE ==\r\n
  *\r\n
@@ -75,7 +72,7 @@ RemoveFormat\t\t: "Radera formatering",\r\n
 InsertLinkLbl\t\t: "Länk",\r\n
 InsertLink\t\t\t: "Infoga/Redigera länk",\r\n
 RemoveLink\t\t\t: "Radera länk",\r\n
-VisitLink\t\t\t: "Open Link",\t//MISSING\r\n
+VisitLink\t\t\t: "Öppna länk",\r\n
 Anchor\t\t\t\t: "Infoga/Redigera ankarlänk",\r\n
 AnchorDelete\t\t: "Radera ankarlänk",\r\n
 InsertImageLbl\t\t: "Bild",\r\n
@@ -104,9 +101,9 @@ BlockJustify\t\t: "Justera till marginaler",\r\n
 DecreaseIndent\t\t: "Minska indrag",\r\n
 IncreaseIndent\t\t: "Öka indrag",\r\n
 Blockquote\t\t\t: "Blockquote",\t//MISSING\r\n
-CreateDiv\t\t\t: "Create Div Container",\t//MISSING\r\n
-EditDiv\t\t\t\t: "Edit Div Container",\t//MISSING\r\n
-DeleteDiv\t\t\t: "Remove Div Container",\t//MISSING\r\n
+CreateDiv\t\t\t: "Skapa Div behållare",\r\n
+EditDiv\t\t\t\t: "Redigera Div behållare",\r\n
+DeleteDiv\t\t\t: "Radera Div behållare",\r\n
 Undo\t\t\t\t: "Ångra",\r\n
 Redo\t\t\t\t: "Gör om",\r\n
 NumberedListLbl\t\t: "Numrerad lista",\r\n
@@ -140,7 +137,7 @@ SelectionField\t: "Flervalslista",\r\n
 ImageButton\t\t: "Bildknapp",\r\n
 \r\n
 FitWindow\t\t: "Anpassa till fönstrets storlek",\r\n
-ShowBlocks\t\t: "Show Blocks",\t//MISSING\r\n
+ShowBlocks\t\t: "Visa block",\r\n
 \r\n
 // Context Menu\r\n
 EditLink\t\t\t: "Redigera länk",\r\n
@@ -192,7 +189,7 @@ UnknownToolbarSet\t: "Verktygsfält \\"%1\\" finns ej",\r\n
 NoActiveX\t\t\t: "Din webläsares säkerhetsinställningar kan begränsa funktionaliteten. Du bör aktivera \\"Kör ActiveX kontroller och plug-ins\\". Fel och avsaknad av funktioner kan annars uppstå.",\r\n
 BrowseServerBlocked : "Kunde Ej öppna resursfönstret. Var god och avaktivera alla popup-blockerare.",\r\n
 DialogBlocked\t\t: "Kunde Ej öppna dialogfönstret. Var god och avaktivera alla popup-blockerare.",\r\n
-VisitLinkBlocked\t: "It was not possible to open a new window. Make sure all popup blockers are disabled.",\t//MISSING\r\n
+VisitLinkBlocked\t: "Kunde Ej öppna nytt fönster. Var god och avaktivera alla popup-blockerare.",\r\n
 \r\n
 // Dialogs\r\n
 DlgBtnOK\t\t\t: "OK",\r\n
@@ -219,7 +216,7 @@ DlgGenClass\t\t\t: "Stylesheet class",\r\n
 DlgGenTitle\t\t\t: "Titel",\r\n
 DlgGenContType\t\t: "Innehållstyp",\r\n
 DlgGenLinkCharset\t: "Teckenuppställning",\r\n
-DlgGenStyle\t\t\t: "Style",\r\n
+DlgGenStyle\t\t\t: "Stil",\r\n
 \r\n
 // Image Dialog\r\n
 DlgImgTitle\t\t\t: "Bildegenskaper",\r\n
@@ -337,13 +334,13 @@ DlgTableWidthPc\t\t: "procent",\r\n
 DlgTableHeight\t\t: "Höjd",\r\n
 DlgTableCellSpace\t: "Cellavstånd",\r\n
 DlgTableCellPad\t\t: "Cellutfyllnad",\r\n
-DlgTableCaption\t\t: "Rubrik",\r\n
+DlgTableCaption\t\t: "Titel",\r\n
 DlgTableSummary\t\t: "Sammanfattning",\r\n
-DlgTableHeaders\t\t: "Headers",\t//MISSING\r\n
-DlgTableHeadersNone\t\t: "None",\t//MISSING\r\n
-DlgTableHeadersColumn\t: "First column",\t//MISSING\r\n
-DlgTableHeadersRow\t\t: "First Row",\t//MISSING\r\n
-DlgTableHeadersBoth\t\t: "Both",\t//MISSING\r\n
+DlgTableHeaders\t\t: "Rubrikrad",\r\n
+DlgTableHeadersNone\t\t: "Ingen",\r\n
+DlgTableHeadersColumn\t: "Första kolumnen",\r\n
+DlgTableHeadersRow\t\t: "Första raden",\r\n
+DlgTableHeadersBoth\t\t: "Båda",\r\n
 \r\n
 // Table Cell Dialog\r\n
 DlgCellTitle\t\t: "Cellegenskaper",\r\n
@@ -366,9 +363,9 @@ DlgCellVerAlignTop\t: "Topp",\r\n
 DlgCellVerAlignMiddle\t: "Mitten",\r\n
 DlgCellVerAlignBottom\t: "Nederkant",\r\n
 DlgCellVerAlignBaseline\t: "Underst",\r\n
-DlgCellType\t\t: "Cell Type",\t//MISSING\r\n
-DlgCellTypeData\t\t: "Data",\t//MISSING\r\n
-DlgCellTypeHeader\t: "Header",\t//MISSING\r\n
+DlgCellType\t\t: "Cell Typ",\r\n
+DlgCellTypeData\t\t: "Data",\r\n
+DlgCellTypeHeader\t: "Titel",\r\n
 DlgCellRowSpan\t\t: "Radomfång",\r\n
 DlgCellCollSpan\t\t: "Kolumnomfång",\r\n
 DlgCellBackColor\t: "Bakgrundsfärg",\r\n
@@ -554,19 +551,19 @@ DlgTemplatesReplace\t: "Ersätt aktuellt innehåll",\r\n
 DlgAboutAboutTab\t: "Om",\r\n
 DlgAboutBrowserInfoTab\t: "Webläsare",\r\n
 DlgAboutLicenseTab\t: "Licens",\r\n
-DlgAboutVersion\t\t: "version",\r\n
+DlgAboutVersion\t\t: "Version",\r\n
 DlgAboutInfo\t\t: "För mer information se",\r\n
 \r\n
 // Div Dialog\r\n
-DlgDivGeneralTab\t: "General",\t//MISSING\r\n
-DlgDivAdvancedTab\t: "Advanced",\t//MISSING\r\n
-DlgDivStyle\t\t: "Style",\t//MISSING\r\n
-DlgDivInlineStyle\t: "Inline Style",\t//MISSING\r\n
+DlgDivGeneralTab\t: "Allmänt",\r\n
+DlgDivAdvancedTab\t: "Avancerat",\r\n
+DlgDivStyle\t\t: "Stil",\r\n
+DlgDivInlineStyle\t: "Inbäddad stil",\r\n
 \r\n
-ScaytTitle\t\t\t: "SCAYT",\t//MISSING\r\n
-ScaytTitleOptions\t: "Options",\t//MISSING\r\n
-ScaytTitleLangs\t\t: "Languages",\t//MISSING\r\n
-ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
+ScaytTitle\t\t\t: "SCAYT",\r\n
+ScaytTitleOptions\t: "Alternativ",\r\n
+ScaytTitleLangs\t\t: "Språk",\r\n
+ScaytTitleAbout\t\t: "Om"\r\n
 };\r\n
 
 
@@ -578,7 +575,7 @@ ScaytTitleAbout\t\t: "About"\t//MISSING\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18569</int> </value>
+            <value> <int>18357</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

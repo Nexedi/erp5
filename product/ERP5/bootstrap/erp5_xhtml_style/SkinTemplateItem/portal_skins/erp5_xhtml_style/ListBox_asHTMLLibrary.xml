@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<div class="listbox-tree-mode-selection"\n
+     metal:define-macro="listbox_tree_mode_selection">\n
+\n
+  <!-- Flat List -->\n
+  <input tal:condition="python: is_domain_tree_supported or is_report_tree_supported"\n
+         type="image" \n
+         class="listbox-tree-flat-list-mode"\n
+         title="Flat List" \n
+         name="setFlatListMode:method"\n
+         value="1" \n
+         alt="Flat List"\n
+         tal:attributes="src string:${portal_url_string}/images/text_block.png;"\n
+         i18n:domain="ui" i18n:attributes="title; alt" />\n
+\n
+  <!-- Report Tree -->\n
+  <input tal:condition="python: not is_gadget_mode and is_report_tree_supported"\n
+         type="image" \n
+         class="listbox-tree-report-tree-mode"\n
+         title="Report Tree" \n
+         name="setReportTreeMode:method"\n
+         value="1" \n
+         alt="Report Tree"\n
+         tal:attributes="src string:${portal_url_string}/images/view_tree.png;"\n
+         i18n:domain="ui" i18n:attributes="title; alt" />\n
+\n
+  <!-- Domain Tree -->\n
+  <input tal:condition="python: not is_gadget_mode and is_domain_tree_supported"\n
+         type="image" \n
+         class="listbox-tree-domain-tree-mode"\n
+         title="Domain Tree" \n
+         name="setDomainTreeMode:method"\n
+         value="1" \n
+         alt="Domain Tree"\n
+         tal:attributes="src string:${portal_url_string}/images/view_choose.png;"\n
+         i18n:domain="ui" i18n:attributes="title; alt" />\n
+\n
+</div>\n
+\n
+<div class="listbox-list-style-selection"\n
+     metal:define-macro="listbox_display_style_selection">\n
+\n
+  <span i18n:translate="" i18n:domain="ui">Display:</span>\n
+\n
+  <ul>\n
+    <li tal:repeat="style display_style_list">\n
+      <a tal:condition="is_gadget_mode"\n
+         tal:content="python: style[1]"\n
+         tal:define="params python: {\'list_style\':style[0]}"\n
+         tal:attributes="class python: test(style[0]==list_style, \'selected\',\'\');\n
+                         onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id, box, dom_id, params);"\n
+         i18n:translate="" i18n:domain="ui"/>\n
+\n
+      <a tal:condition="not: is_gadget_mode"\n
+         tal:content="python: style[1]"\n
+         tal:attributes="href python: \'%s?list_style=%s\' % (form_url, style[0]);\n
+                         class python: test(style[0]==list_style, \'selected\',\'\');"\n
+         i18n:translate="" i18n:domain="ui"/>\n
+    </li>\n
+  </ul>\n
+</div>\n
+\n
+\n
+<div class=" listbox-full-text-search"\n
+     metal:define-macro="listbox_full_text_search"\n
+     tal:define="search_text real_context/Base_getSearchText">\n
+\n
+  <tal:block tal:condition="not: is_gadget_mode">\n
+    <!-- Normal mode -->\n
+    <input type="text"\n
+           tal:attributes="value search_text;\n
+                           name full_text_search_key;\n
+                           onkeypress string: submitFormOnEnter(event, this.form, \'${full_text_search_key_script}\');"/>\n
+    <input class="button" \n
+           i18n:domain="ui" i18n:attributes="value"\n
+           value="Search"  type="submit" \n
+           tal:attributes="name string:${full_text_search_key_script}:method"/>\n
+  </tal:block>\n
+  <tal:block tal:condition="is_gadget_mode">\n
+    <!-- Gadget mode -->\n
+    <input tal:define="params python: {\'%s:method\' %full_text_search_key_script:\'\',\'%s\' %full_text_search_key:\'this.value\'};"\n
+           type="text"\n
+           tal:attributes=\'value search_text;\n
+                           name full_text_search_key;\n
+                           onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
+  </tal:block>\n
+\n
+</div>\n
+\n
+<!-- Number of listbox records -->\n
+<div class="listbox-number-of-records"\n
+     metal:define-macro="listbox_number_of_records"\n
+     tal:define="is_default_listbox_field python: field_id==\'listbox\';">\n
+\n
+  <span class="listbox-current-page-start-number"\n
+        tal:content="current_page_start"/> - \n
+  <span class="listbox-current-page-stop-number"\n
+        tal:content="current_page_stop"/> \n
+  <span i18n:translate="" i18n:domain="ui">of</span>\n
+  <span class="listbox-current-page-total-number"\n
+        tal:content="total_line"\n
+        tal:attributes="class python: test(is_default_listbox_field, \'listbox-current-page-total-number\', \'listbox-current-page-total-number %s-current-page-total-number\' %field_id)" />\n
+  <span i18n:translate="" i18n:domain="ui">records</span> - \n
+\n
+  <span class="listbox-current-item-number"\n
+        tal:attributes="class string:${field_id}-current-item-number"\n
+        tal:condition="show_select_column"\n
+        i18n:translate="" i18n:domain="ui">\n
+    <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block>\n
+  </span>\n
+  <span i18n:translate="" i18n:domain="ui">items selected</span>\n
+\n
+\n
+</div>\n
+\n
+<!-- Listbox title -->\n
+<div class="listbox-title"\n
+     metal:define-macro="listbox_title"\n
+     tal:define="class string:${field_id}_title;">\n
+\n
+  <a tal:condition="show_list_action_link"\n
+     tal:attributes="class class; \n
+                     href here/getListActionUrl">\n
+    <span i18n:translate="" \n
+          i18n:domain="ui" tal:content="here/getTitle" /></a>\n
+  <tal:block tal:condition="not: show_list_action_link">\n
+    <span i18n:translate="" \n
+          i18n:domain="ui"\n
+          tal:attributes="class class"\n
+          tal:content="here/getTitle" />\n
+  </tal:block>\n
+  <tal:block tal:condition="not: is_web_mode">:</tal:block>\n
+\n
+</div>\n
+\n
+<!-- Listbox navigation -->\n
+<div metal:define-macro="listbox_navigation"\n
+     tal:define="class python: test(is_slider_mode, \'listbox-page-navigation listbox-page-navigation-slider\',\'listbox-page-navigation listbox-page-navigation-text\');"\n
+     tal:attributes="class class">\n
+\n
+    <tal:block tal:condition="is_slider_mode">\n
+      <tal:block metal:use-macro="real_context/page_navigation_render/macros/page_navigation" />\n
+    </tal:block> \n
+     \n
+    <tal:block tal:condition="not: is_slider_mode">\n
+      <tal:block metal:use-macro="real_context/page_navigation_render/macros/text_navigation" />\n
+    </tal:block> \n
+\n
+\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ListBox_asHTMLLibrary</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -115,8 +112,8 @@ workflow history. -->\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>x0_listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number x1_listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 \n
 </tbody></table>\n

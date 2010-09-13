@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,7 +65,7 @@ organisation and no bogus parameters are kept in the selection.\n
 <tr>\n
   <td>type</td>\n
   <!-- title -->\n
-  <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>  \n
+  <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>  \n
   <td>Client 1</td>\n
 </tr>\n
 <tr>\n
@@ -88,17 +85,17 @@ organisation and no bogus parameters are kept in the selection.\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[1]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]</td>\n
   <td>Client 1 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
   <td>2200</td>\n
 </tr>\n
 <!-- }}} -->\n
@@ -117,7 +114,7 @@ organisation and no bogus parameters are kept in the selection.\n
 <tr>\n
   <td>type</td>\n
   <!-- title -->\n
-  <td>//tr[@id=\'listbox_search_line\']/td[2]/span/input</td>  \n
+  <td>//tr[@class=\'listbox-search-line\']/th[2]/input</td>  \n
   <td>Client 2</td>\n
 </tr>\n
 <tr>\n
@@ -137,17 +134,17 @@ organisation and no bogus parameters are kept in the selection.\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>listbox_record_number</td>\n
-  <td>1 records</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//tr[@id=\'listbox_data_line_0\']/td[1]</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]</td>\n
   <td>Client 2 Sale Invoice</td>\n
 </tr>\n
 <tr>\n
   <td>verifyFloat</td>\n
-  <td>//tr[@id=\'listbox_stat_line\']/td[12]</td>\n
+  <td>//tr[@class=\'listbox_stat_line\']/td[12]</td>\n
   <td>3300</td>\n
 </tr>\n
 <!-- }}} -->\n

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -58,44 +55,44 @@
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//*[@id="listbox_search_line"]</td>\n
+  <td>//*[@class="listbox-search-line"]</td>\n
   <td></td>\n
 </tr>\n
 \n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyEditable</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyEditable</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[3]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[3]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[4]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[4]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[4]</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[4]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[5]</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[5]</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
@@ -156,43 +153,43 @@
 </tal:block>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//*[@id="listbox_search_line"]</td>\n
+  <td>//*[@class="listbox-search-line"]</td>\n
   <td></td>\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
   <td>verifyEditable</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[1]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[1]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[1]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[1]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyEditable</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[2]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[2]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[3]</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[3]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[3]//input</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[3]//input</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//tr[@id="listbox_search_line"]/td[4]</td>\n
+  <td>//tr[@class="listbox-search-line"]/th[4]</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n
@@ -250,7 +247,7 @@
 </tr>\n
 <tr>\n
   <td>verifyElementNotPresent</td>\n
-  <td>//*[@id="listbox_search_line"]</td>\n
+  <td>//*[@class="listbox-search-line"]</td>\n
   <td></td>\n
 </tr>\n
 \n

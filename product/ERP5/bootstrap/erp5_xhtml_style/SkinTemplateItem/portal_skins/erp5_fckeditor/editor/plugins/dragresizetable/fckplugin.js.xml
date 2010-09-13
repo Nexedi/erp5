@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts45749406.45</string> </value>
+            <value> <string>ts83858910.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -568,7 +565,7 @@ FCK.Events.AttachEvent( "OnAfterSetHTML", FCKDragTableHandler.Reset ) ;\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>18298</long> </value>
+            <value> <int>18298</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

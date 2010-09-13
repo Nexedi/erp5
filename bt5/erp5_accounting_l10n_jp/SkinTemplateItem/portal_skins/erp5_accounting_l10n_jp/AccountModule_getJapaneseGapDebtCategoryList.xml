@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,7 +50,47 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return []\n
+            <value> <string>root = context.portal_categories.gap.jp.afbe\n
+\n
+return [\n
+  (depth,\n
+   root.restrictedTraverse(path))\n
+  for depth, path in (\n
+######################\n
+# 流動負債\n
+######################\n
+(2, \'4/40\'),     # 支払手形\n
+                 # 買掛金\n
+                 # 短期借入金\n
+                 # 未払金\n
+                 # 未払費用\n
+                 # 前受金\n
+                 # 預り金\n
+                 # 前受収益\n
+                 # 仮受金 \n
+\n
+(2, \'4/46/461\'), # 未払配当金\n
+\n
+                 # コマーシャルペーパー(該当GAPなし)\n
+                 # 1年内返済予定の長期借入金、社債等(該当GAPなし)\n
+\n
+(2, \'4/44/443/4431\'),                 # 未払法人税等\n
+(2, \'4/44/441/4412/44121\'),           # 未払消費税等\n
+(2, \'4/44/441/4411/44112\'),           # 仮受消費税等\n
+(2, \'4/42/422\'),                      # 賞与引当金\n
+\n
+                 # 繰延税金負債(流動) (該当GAPなし、流動負債にもこれが必要)\n
+\n
+######################\n
+# 固定負債\n
+######################\n
+(2, \'5/50/505\'),          # 社債 (GAP上では財務(資産っぽい)の中にあるけど正しいのか？)\n
+(2, \'2/27/272\'),          # 長期借入金 (GAP上では固定資産の中にあるけど正しいのか？)\n
+(2, \'4/42/423\'),          # 退職給付引当金 (GAP上では流動資産の中にあるけど正しいのか?)\n
+(2, \'2/20/207/2072\'),     # 負ののれん\n
+(2, \'2/20/208/2082\'),     # 繰延税金負債(固定) (GAP上では固定資産の中にあるけど正しいのか?)\n
+\n
+  )]\n
 </string> </value>
         </item>
         <item>
@@ -61,6 +98,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -85,7 +126,16 @@
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
-                          <tuple/>
+                          <tuple>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>root</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>depth</string>
+                            <string>path</string>
+                          </tuple>
                         </value>
                     </item>
                   </dictionary>

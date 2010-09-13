@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -67,6 +64,9 @@ transaction = state_change[\'object\']\n
 # XXX manually default start date to stop date\n
 if not transaction.getStartDate() and transaction.getStopDate():\n
   transaction.setStartDate(transaction.getStopDate())\n
+\n
+# XXX auto-fill mirror accounts, if necessary.\n
+transaction.AccountingTransaction_setDefaultMirrorAccountList()\n
 \n
 # Check constraints\n
 transaction.Base_checkConsistency()\n

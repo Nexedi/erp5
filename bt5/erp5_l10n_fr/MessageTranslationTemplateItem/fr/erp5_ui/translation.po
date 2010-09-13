@@ -7462,10 +7462,10 @@ msgid "Post Query [transition in query_workflow]"
 msgstr "Poser une question"
 
 msgid "Post Transaction Action [transition in accounting_workflow]"
-msgstr "Passer l'écriture au brouillard"
+msgstr "Valider le brouillard"
 
 msgid "Post Transaction [transition in accounting_workflow]"
-msgstr "Passer l'écriture au brouillard"
+msgstr "Valider le brouillard"
 
 msgid "Post Transaction to General Ledger"
 msgstr "Valider le brouillard"
