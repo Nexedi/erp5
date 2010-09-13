@@ -362,8 +362,10 @@ class Category(Folder):
 
           recursive - if set to 1, list recursively
       """
-      if base == 0 or base is None: base = '' # Make sure we get a meaningful base
-      if base == 1: base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
+      if not base:
+        base = '' # Make sure we get a meaningful base
+      if base:
+        base = self.getBaseCategoryId() + '/' # Make sure we get a meaningful base
       url_list = []
       for value in self.getCategoryChildValueList(recursive=recursive,
                                                   checked_permission=checked_permission):
