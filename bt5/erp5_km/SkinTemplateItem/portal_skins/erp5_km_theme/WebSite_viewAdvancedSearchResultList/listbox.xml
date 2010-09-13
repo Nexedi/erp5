@@ -582,16 +582,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>thumbnail_Title</string>
-                        </tuple>
-                        <tuple>
                           <string>thumbnail</string>
                           <string>thumbnail_Thumbnail</string>
-                        </tuple>
-                        <tuple>
-                          <string>getIconAsHTML</string>
-                          <string>search_Icon</string>
                         </tuple>
                         <tuple>
                           <string>getSummaryAsHTML</string>
