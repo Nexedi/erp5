@@ -61,9 +61,9 @@
               is_dialog_mode request/dialog_mode | nothing;\n
               display_style_list here/getDisplayStyleList;\n
               list_style here/getListboxDisplayStyle;\n
-              full_text_search_key here/getFullTextSearchKey;\n
-              full_text_search_key_script here/getFullTextSearchKeyScript;\n
-              show_full_text python: full_text_search_key not in (\'\', None) and full_text_search_key_script not in (\'\', None);\n
+              global_search_column here/getGlobalSearchColumn;\n
+              global_search_column_script here/getGlobalSearchColumnScript;\n
+              show_global_search python: global_search_column not in (\'\', None) and global_search_column_script not in (\'\', None);\n
               line_list here/query;\n
               listbox_max_lines  python: int(here.getMaxLineNumber());\n
               total_line         python: int(here.total_size);\n
@@ -80,7 +80,7 @@
               page_navigation_mode python: request.get(\'page_navigation_mode\', here.getPageNavigationMode());\n
               is_slider_mode python: page_navigation_mode in (\'\', \'slider\');\n
               is_default_listbox_field python: field_id==\'listbox\';">\n
- \n
+\n
   <!-- Define hidden input.  -->\n
   <input type="hidden" \n
          name="list_selection_name" \n
@@ -508,8 +508,8 @@
 \n
       <!-- Full text search -->\n
       <div class="listbox-footer-box"\n
-           tal:condition="show_full_text">\n
-        <tal:block metal:use-macro="container/ListBox_asHTMLLibrary/macros/listbox_full_text_search"/>\n
+           tal:condition="show_global_search">\n
+        <tal:block metal:use-macro="container/ListBox_asHTMLLibrary/macros/listbox_global_search"/>\n
       </div>\n
 \n
       <!--Page navigation in web mode floating in right (slider) or whole width (text) -->\n

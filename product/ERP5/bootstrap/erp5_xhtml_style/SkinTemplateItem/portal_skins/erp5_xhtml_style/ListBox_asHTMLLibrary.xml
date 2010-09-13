@@ -99,26 +99,26 @@
 \n
 \n
 <div class=" listbox-full-text-search"\n
-     metal:define-macro="listbox_full_text_search"\n
+     metal:define-macro="listbox_global_search"\n
      tal:define="search_text real_context/Base_getSearchText">\n
 \n
   <tal:block tal:condition="not: is_gadget_mode">\n
     <!-- Normal mode -->\n
     <input type="text"\n
            tal:attributes="value search_text;\n
-                           name full_text_search_key;\n
-                           onkeypress string: submitFormOnEnter(event, this.form, \'${full_text_search_key_script}\');"/>\n
+                           name global_search_column;\n
+                           onkeypress string: submitFormOnEnter(event, this.form, \'${global_search_column_script}\');"/>\n
     <input class="button" \n
            i18n:domain="ui" i18n:attributes="value"\n
            value="Search"  type="submit" \n
-           tal:attributes="name string:${full_text_search_key_script}:method"/>\n
+           tal:attributes="name string:${global_search_column_script}:method"/>\n
   </tal:block>\n
   <tal:block tal:condition="is_gadget_mode">\n
     <!-- Gadget mode -->\n
-    <input tal:define="params python: {\'%s:method\' %full_text_search_key_script:\'\',\'%s\' %full_text_search_key:\'this.value\'};"\n
+    <input tal:define="params python: {\'%s:method\' %global_search_column_script:\'\',\'%s\' %global_search_column:\'this.value\'};"\n
            type="text"\n
            tal:attributes=\'value search_text;\n
-                           name full_text_search_key;\n
+                           name global_search_column;\n
                            onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
   </tal:block>\n
 \n
