@@ -62,8 +62,8 @@
               display_style_list here/getDisplayStyleList;\n
               list_style here/getListboxDisplayStyle;\n
               global_search_column here/getGlobalSearchColumn;\n
-              global_search_column_script here/getGlobalSearchColumnScript;\n
-              show_global_search python: global_search_column not in (\'\', None) and global_search_column_script not in (\'\', None);\n
+              global_search_column_script python: here.getGlobalSearchColumnScript() or \'Base_doSelect\';\n
+              show_global_search python: global_search_column not in (\'\', None);\n
               line_list here/query;\n
               listbox_max_lines  python: int(here.getMaxLineNumber());\n
               total_line         python: int(here.total_size);\n
@@ -380,7 +380,9 @@
                 <tal:block tal:condition="python: search_field is None">\n
                   <input tal:condition="python: not is_gadget_mode" \n
                          name="id" size="5" value=""\n
-                         type="text" tal:attributes="name alias; value param"/>\n
+                         type="text" \n
+                         tal:attributes="name alias; value param"\n
+                         onkeypress="submitFormOnEnter(event, this.form, \'Base_doSelect\');"/>\n
                   <!-- Search for gadget mode -->\n
                   <input tal:condition="python: is_gadget_mode" \n
                          tal:define ="params python: {alias:\'this.value\'};"\n
