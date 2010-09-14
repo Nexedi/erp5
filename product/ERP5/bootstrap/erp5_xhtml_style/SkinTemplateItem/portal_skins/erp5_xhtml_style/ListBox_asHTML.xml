@@ -368,6 +368,7 @@
 \n
             <!-- Real search columns headers -->\n
             <th class="listbox-table-filter-cell"\n
+                tal:condition="show_search_line"\n
                 tal:repeat="value here/getSearchValueList">\n
               <tal:block tal:define="alias        python: value[0];\n
                                      param        python: value[1];\n
