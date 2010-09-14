@@ -62,7 +62,7 @@
               display_style_list here/getDisplayStyleList;\n
               list_style here/getListboxDisplayStyle;\n
               global_search_column here/getGlobalSearchColumn;\n
-              global_search_column_script python: here.getGlobalSearchColumnScript() or \'Base_doSelect\';\n
+              global_search_column_script string:Base_doSelect;\n
               show_global_search python: global_search_column not in (\'\', None);\n
               line_list here/query;\n
               listbox_max_lines  python: int(here.getMaxLineNumber());\n
