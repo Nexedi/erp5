@@ -6634,7 +6634,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     portal = self.portal
     BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
     marker_list = []
-    def removeProperties(self, obj):
+    def removeProperties(self, obj, export):
       # Check it works if the object is modified during download.
       obj.int_index = marker_list.pop()
       return obj
