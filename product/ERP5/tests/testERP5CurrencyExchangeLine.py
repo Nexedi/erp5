@@ -135,8 +135,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getTitle(),
-                'Euro to Francs CFA')
     self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
                           'Francs CFA')
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
@@ -186,8 +184,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getTitle(), 
-                      'Euro to Francs CFA')
     self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
                                          'Francs CFA')
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
@@ -251,8 +247,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getTitle(),
-                   'Euro to Francs CFA')
     self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
                             'Francs CFA')
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
@@ -344,8 +338,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,6))
     x_curr_ex_line.setStopDate(DateTime(2008,9,7))
-    self.assertEquals(x_curr_ex_line.getTitle(),
-              'Euro to Francs CFA')
     self.assertEquals(x_curr_ex_line.getPriceCurrencyTitle(),
                'Francs CFA')
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
@@ -415,8 +407,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,9,8))
     x_curr_ex_line.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(x_curr_ex_line.getTitle(),
-                     'Euro to Francs CFA')
     self.assertEquals(x_curr_ex_line.getPriceCurrency(),None)
     self.assertEquals(x_curr_ex_line.getBasePrice(),655.957)
     x_curr_ex_line.validate()
@@ -468,7 +458,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     euro_line1.setBasePrice(655.957)
     euro_line1.setStartDate(DateTime(2008,9,8))
     euro_line1.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(euro_line1.getTitle(), 'Euro to Francs CFA')
     self.assertEquals(euro_line1.getPriceCurrencyTitle(),
                             'Francs CFA')
     self.assertEquals(euro_line1.getBasePrice(),655.957)
@@ -481,7 +470,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     euro_line2.setTitle('Euro to Francs CFA')
     euro_line2.setStartDate(DateTime(2008,9,8))
     euro_line2.setStopDate(DateTime(2008,9,10))
-    self.assertEquals(euro_line2.getTitle(), 'Euro to Francs CFA')
     self.assertEquals(euro_line2.getPriceCurrencyTitle(),
                             'Francs CFA')
     self.assertEquals(euro_line2.getBasePrice(),None)
