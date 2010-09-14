@@ -330,9 +330,11 @@ class ContributionTool(BaseTool):
       property_dict['portal_type'] = (property_dict['portal_type'],)
     else:
       # we have to find candidates by file extenstion
-      if file_name.rfind('.')!= -1:
-        ext = file_name.split('.')[-1]
-        property_dict['portal_type'] = self.ContributionTool_getCandidateTypeListByExtension(ext)
+      basename, extension = os.path.splitext(file_name)
+      if extension:
+        extension = extension.lstrip('.') # remove first dot
+        property_dict['portal_type'] =\
+               self.ContributionTool_getCandidateTypeListByExtension(extension)
     return property_dict
 
   # WebDAV virtual folder support
