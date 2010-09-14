@@ -2340,7 +2340,10 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     ignore_layout = int(request.get('ignore_layout', \
                         not request.get('is_web_mode', False) and 1 or 0))
     ui_domain = 'erp5_ui'
-
+    # We need a way to pass the current line object (ie. brain) to the
+    # field which is being displayed. Since the render_view API did not
+    # permit this, we use the 'cell' value to pass the line object.
+    request.set('cell', brain)
     html_list = []
 
     # Generate page selection methods based on the Listbox id
@@ -2464,10 +2467,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           error_message = u''
           display_value = original_value
 
-        # We need a way to pass the current line object (ie. brain) to the
-        # field which is being displayed. Since the render_view API did not
-        # permit this, we use the 'cell' value to pass the line object.
-        request.set('cell', brain)
         enabled = editable_field.get_value('enabled', REQUEST=request)
         editable = editable_field.get_value('editable', REQUEST=request)
         if enabled:
