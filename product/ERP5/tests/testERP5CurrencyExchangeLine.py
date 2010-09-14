@@ -33,12 +33,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 
+class CurrencyExchangeTestCase(AccountingTestCase, ERP5TypeTestCase):
 
-class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
-  """
-  Test Currency exchange lines.
-  """
   username = 'username'
+
   def beforeTearDown(self):
     transaction.abort()
     # clear modules if necessary
@@ -51,7 +49,13 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       if currency is not None:
         currency.manage_delObjects([x.getId() for x in
                 currency.objectValues(
-                  portal_type='Currency Exchange Line')])
+                 portal_type='Currency Exchange Line')])
+
+    currency_exchange_type = \
+      self.portal.portal_categories.currency_exchange_type
+    currency_exchange_type.manage_delObjects(
+                list(currency_exchange_type.objectIds()))
+
     transaction.commit()
     self.tic()
  
@@ -75,6 +79,11 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
             'erp5_accounting_ui_test'
             )
 
+
+class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
+  """
+  Test Currency exchange lines.
+  """
   def test_CreateCurrencies(self):
     """
       Create currencies to be used for transactions
@@ -505,8 +514,103 @@ class TestCurrencyExchangeLine(AccountingTestCase, ERP5TypeTestCase):
       else:
         self.fail('line not found')
   
+class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
+  def afterSetUp(self):
+    currency_exchange_type = \
+      self.portal.portal_categories.currency_exchange_type
+    currency_exchange_type.newContent(
+          portal_type='Category',
+          id='type_a',
+          title='Type A',
+          int_index=1)
+    currency_exchange_type.newContent(
+          portal_type='Category',
+          id='type_b',
+          title='Type B',
+          int_index=2)
+    
+  def test_CreateCurrencyExchangeCell(self):
+    euro = self.currency_module.euro
+    usd = self.currency_module.usd
+    euro_to_usd = euro.newContent(portal_type='Currency Exchange Line')
+    self.assertEquals(0, len(euro_to_usd.contentValues()))
+    # when we set the target currency, currency exchange cells will be added
+    euro_to_usd.setPriceCurrencyValue(usd)
+    self.assertEquals(2, len(euro_to_usd.contentValues()))
+
+    # cell range is like this:
+    self.assertEquals([
+      ['currency_exchange_type/type_a', 'currency_exchange_type/type_b'],
+      ['resource/%s' % euro.getRelativeUrl()],
+      ['price_currency/%s' % usd.getRelativeUrl()],
+      ], euro_to_usd.getCellRange(base_id='path'))
+    
+    type_a_cell = euro_to_usd.getCell(
+      'currency_exchange_type/type_a',
+      'resource/%s' % euro.getRelativeUrl(),
+      'price_currency/%s' % usd.getRelativeUrl(),
+      base_id='path')
+    self.assertNotEquals(None, type_a_cell)
+    self.assertEquals('Currency Exchange Cell', type_a_cell.getPortalTypeName())
+
+    # int index have been copied, so that listbox in CurrencyExchangeLine_view
+    # displays currency exchange line in same order than int indexes on
+    # currency_exchange_type categories.
+    self.assertEquals(1, type_a_cell.getIntIndex())
+ 
+    self.assertTrue('currency_exchange_type/type_a' in
+        type_a_cell.getCategoryList())
+    
+    type_a_cell_predicate = type_a_cell.asPredicate()
+    self.assertEquals(sorted(('price_currency',
+                              'resource',
+                              'currency_exchange_type')),
+      sorted(type_a_cell_predicate.getMembershipCriterionBaseCategoryList()))
+
+    self.assertEquals(sorted(('price_currency/currency_module/usd',
+                              'resource/currency_module/euro',
+                              'currency_exchange_type/type_a')),
+          sorted(type_a_cell_predicate.getMembershipCriterionCategoryList()))
+
+
+  def test_ConvertUsingCurrencyExchangeCell(self):
+    euro = self.currency_module.euro
+    usd = self.currency_module.usd
+    euro_to_usd = euro.newContent(portal_type='Currency Exchange Line')
+    euro_to_usd.setPriceCurrencyValue(usd)
+    euro_to_usd.validate()
+  
+    type_a_cell = euro_to_usd.getCell(
+      'currency_exchange_type/type_a',
+      'resource/%s' % euro.getRelativeUrl(),
+      'price_currency/%s' % usd.getRelativeUrl(),
+      base_id='path')
+    type_a_cell.setBasePrice(0.98)
+
+    type_b_cell = euro_to_usd.getCell(
+      'currency_exchange_type/type_b',
+      'resource/%s' % euro.getRelativeUrl(),
+      'price_currency/%s' % usd.getRelativeUrl(),
+      base_id='path')
+    type_b_cell.setBasePrice(1.24)
+
+    transaction.commit()
+    self.tic()
+
+    # we need a base for asContext, we use the currency, but in real code you
+    # might want to use a more meaningful context.
+    context = euro.asContext(
+                    categories=['resource/%s' % euro.getRelativeUrl(),
+                                'price_currency/%s' % usd.getRelativeUrl(),
+                                'currency_exchange_type/type_a'])
+
+    exchange_ratio = euro.getPrice(context=context,
+                                   portal_type='Currency Exchange Cell')
+    self.assertEquals(0.98, exchange_ratio)
+
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCurrencyExchangeLine))
+  suite.addTest(unittest.makeSuite(TestCurrencyExchangeCell))
   return suite
