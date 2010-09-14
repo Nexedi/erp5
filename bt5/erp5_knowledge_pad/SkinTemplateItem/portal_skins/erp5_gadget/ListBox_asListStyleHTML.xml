@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -80,7 +77,8 @@
                        value_dict python: {\'field_title\':None, \'field_date\': None, \'field_content\':None,\'field_img\':None,\'field_link\':None,\'field_others_links\':None,\'field_md5\':None,\'field_sender\':None};\n
                        html_dict python: {\'field_title\':None, \'field_date\': None, \'field_content\':None,\'field_img\':None,\'field_link\':None,\'field_others_links\':None,\'field_md5\':None,\'field_sender\':None};\n
                        dummy python: context.REQUEST.RESPONSE.setHeader(\'Content-Type\', \n
-                                                                        \'text/html;; charset=utf-8\');"\n
+                                                                        \'text/html;; charset=utf-8\');\n
+                       is_default_listbox_field python: field_id==\'listbox\';"\n
            metal:define-macro="main">\n
 \n
   <!-- ListBox starts here -->\n
