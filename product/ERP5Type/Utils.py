@@ -1310,9 +1310,8 @@ def createExpressionContext(object, portal=None):
   return ec
 
 def getExistingBaseCategoryList(portal, base_cat_list):
-  cache = getReadOnlyTransactionCache(portal)
+  cache = getReadOnlyTransactionCache()
   if cache is None:
-    from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
     cache = getTransactionalVariable()
   category_tool = portal.portal_categories
   new_base_cat_list = []

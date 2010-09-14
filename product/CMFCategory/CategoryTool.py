@@ -209,7 +209,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         Returns a Category object from a given category url
         and optionnal base category id
       """
-      cache = getReadOnlyTransactionCache(self)
+      cache = getReadOnlyTransactionCache()
       if cache is not None:
         key = ('getCategoryValue', relative_url, base_category)
         try:
@@ -848,7 +848,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
                                       'getSingleCategoryAcquiredMembershipList' )
     def getSingleCategoryAcquiredMembershipList(self, context, base_category, base=0,
                                          spec=(), filter=None, acquired_object_dict = None, **kw ):
-      cache = getReadOnlyTransactionCache(self)
+      cache = getReadOnlyTransactionCache()
       if cache is not None:
         key = ('getSingleCategoryAcquiredMembershipList', context.getPhysicalPath(), base_category, base, spec,
                filter, str(kw))
@@ -1627,7 +1627,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
         if not isinstance(relative_url, str):
           # Handle parent base category is a special way
           return relative_url
-        cache = getReadOnlyTransactionCache(self)
+        cache = getReadOnlyTransactionCache()
         if cache is not None:
           cache_key = ('resolveCategory', relative_url)
           try:

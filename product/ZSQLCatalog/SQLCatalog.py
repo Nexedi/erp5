@@ -1407,7 +1407,7 @@ class Catalog(Folder,
 
     try:
       if not disable_cache:
-        enableReadOnlyTransactionCache(self)
+        enableReadOnlyTransactionCache()
 
       filter_dict = self.filter_dict
       catalogged_object_list_cache = {}
@@ -1531,7 +1531,7 @@ class Catalog(Folder,
           raise
     finally:
       if not disable_cache:
-        disableReadOnlyTransactionCache(self)
+        disableReadOnlyTransactionCache()
 
   if psyco is not None:
     psyco.bind(_catalogObjectList)

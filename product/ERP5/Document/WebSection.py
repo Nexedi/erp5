@@ -232,7 +232,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         portal type dependent script:
           WebSection_getDefaultDocumentValue
       """
-      cache = getReadOnlyTransactionCache(self)
+      cache = getReadOnlyTransactionCache()
       if cache is not None:
         key = ('getDefaultDocumentValue', self)
         try:
@@ -264,7 +264,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         portal type dependent script:
           WebSection_getDocumentValueList
       """
-      cache = getReadOnlyTransactionCache(self)
+      cache = getReadOnlyTransactionCache()
       if cache is not None:
         key = ('getDocumentValueList', self) + tuple(kw.items())
         try:
@@ -296,7 +296,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         portal type dependent script:
           WebSection_getPermanentURL
       """
-      cache = getReadOnlyTransactionCache(self)
+      cache = getReadOnlyTransactionCache()
       if cache is not None:
         key = ('getPermanentURL', self, document.getPath())
         try:
@@ -325,7 +325,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
       """
       if document is None:
         document = self
-      cache = getReadOnlyTransactionCache(self)
+      cache = getReadOnlyTransactionCache()
       if cache is not None:
         key = ('getBreadcrumbItemList', self, document.getPath())
         try:
@@ -370,7 +370,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         portal type dependent script:
           WebSection_getSiteMapTree
       """
-      cache = getReadOnlyTransactionCache(self)
+      cache = getReadOnlyTransactionCache()
       if cache is not None:
         key = ('getSiteMapTree', self) + tuple(kw.items())
         try:

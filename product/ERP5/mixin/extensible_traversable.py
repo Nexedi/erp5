@@ -71,7 +71,7 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
 
   def _forceIdentification(self, request):
     # force identification (usable for extensible content)
-    cache = getReadOnlyTransactionCache(self)
+    cache = getReadOnlyTransactionCache()
     if cache is not None:
       key = ('__bobo_traverse__', self, 'user')
       try:
