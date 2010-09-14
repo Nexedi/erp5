@@ -422,13 +422,6 @@ class ListBoxWidget(Widget.Widget):
                                 required=0)
     property_names.append('global_search_column')
 
-    global_search_column_script = fields.StringField('global_search_column_script',
-                                title="Global search column script",
-                                description=("Global search column script used to make query."),
-                                default=None,
-                                required=0)
-    property_names.append('global_search_column_script')
-
     page_navigation_mode = fields.StringField('page_navigation_mode',
                                 title="Page navigation mode",
                                 description=("Page navigation mode like 'slider' - controls for 'next' / 'last' & 'previous' / 'first' or 'text' - direct page selections."),
@@ -991,12 +984,6 @@ class ListBoxRenderer:
     return self.field.get_value('global_search_column')
 
   getGlobalSearchColumn = lazyMethod(getGlobalSearchColumn)
-
-  def getGlobalSearchColumnScript(self):
-    """Return the full text search key script which is responsible for handling full text query."""
-    return self.field.get_value('global_search_column_script')
-
-  getGlobalSearchColumnScript = lazyMethod(getGlobalSearchColumnScript)
 
   def getPageNavigationMode(self):
     """Return the list box page navigation mode."""
