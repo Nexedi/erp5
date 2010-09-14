@@ -582,11 +582,13 @@ class BaseTemplateItem(Implicit, Persistent):
     Remove unneeded properties for export
     """
     meta_type = getattr(aq_base(obj), 'meta_type', None)
+    if meta_type == 'Script (Python)':
+      meta_type = 'ERP5 Python Script'
 
     attr_list = [ '_dav_writelocks', '_filepath', '_owner', 'uid',
                   'workflow_history', '__ac_local_roles__' ]
     attr_list += {
-        'Script (Python)': ('_lazy_compilation', 'Python_magic'),
+        'ERP5 Python Script': ('_lazy_compilation', 'Python_magic'),
       }.get(meta_type, ())
 
     for attr in attr_list:
@@ -596,7 +598,7 @@ class BaseTemplateItem(Implicit, Persistent):
     if meta_type == 'ERP5 PDF Form':
       if not obj.getProperty('business_template_include_content', 1):
         obj.deletePdfContent()
-    elif meta_type == 'Script (Python)':
+    elif meta_type == 'ERP5 Python Script':
       obj._code = None
     elif  interfaces.IIdGenerator.providedBy(obj):
       for dict_name in ('last_max_id_dict', 'last_id_dict'):
@@ -1036,7 +1038,8 @@ class ObjectTemplateItem(BaseTemplateItem):
 
           # install object
           obj = self._objects[path]
-          if getattr(obj, 'meta_type', None) == 'Script (Python)':
+          if getattr(obj, 'meta_type', None) in ('Script (Python)',
+                                                 'ERP5 Python Script'):
             if getattr(obj, '_code') is None:
               obj._compile()
           if getattr(aq_base(obj), 'groups', None) is not None:
@@ -1825,7 +1828,8 @@ class WorkflowTemplateItem(ObjectTemplateItem):
             self._backupObject(action, trashbin, container_path, object_id, keep_subobjects=1)
             container.manage_delObjects([object_id])
           obj = self._objects[path]
-          if getattr(obj, 'meta_type', None) == 'Script (Python)':
+          if getattr(obj, 'meta_type', None) in ('Script (Python)',
+                                                 'ERP5 Python Script'):
             if getattr(obj, '_code') is None:
               obj._compile()
           obj = obj._getCopy(container)
