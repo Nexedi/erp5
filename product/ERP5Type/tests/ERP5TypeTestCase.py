@@ -1230,6 +1230,24 @@ class ZEOServerTestCase(ERP5TypeTestCase):
     self.zeo_server.close_server()
 
 
+class lazy_func_prop(object):
+  """Descriptor to delay the compilations of Python Scripts
+     until some of their attributes are accessed.
+  """
+  default_dict = {}
+  def __init__(self, name, default):
+    self.name = name
+    self.default_dict[name] = default
+  def __get__(self, instance, owner):
+    if self.name not in instance.__dict__:
+      instance.__dict__.update(self.default_dict)
+      instance._orig_compile()
+    return instance.__dict__[self.name]
+  def __set__(self, instance, value):
+    instance.__dict__[self.name] = value
+  def __delete__(self, instance):
+    del instance.__dict__[self.name]
+
 @onsetup
 def optimize():
   '''Significantly reduces portal creation time.'''
@@ -1241,25 +1259,43 @@ def optimize():
 
   # Delay the compilations of Python Scripts until they are really executed.
   from Products.PythonScripts.PythonScript import PythonScript
-  PythonScript_compile = PythonScript._compile
+  # In the future, Python Scripts will be exported without those 2 attributes:
+  PythonScript.func_code = lazy_func_prop('func_code', None)
+  PythonScript.func_defaults = lazy_func_prop('func_defaults', None)
+
+  PythonScript._orig_compile = PythonScript._compile
   def _compile(self):
-    self._lazy_compilation = 1
+    # mark the script as being not compiled
+    for name in lazy_func_prop.default_dict:
+      self.__dict__.pop(name, None)
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    if getattr(self, '_lazy_compilation', 0):
-      self._lazy_compilation = 0
-      PythonScript_compile(self)
+    self.func_code # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent
   def _makeFunction(self, dummy=0): # CMFCore.FSPythonScript uses dummy arg.
     self.ZCacheable_invalidate()
-    PythonScript_compile(self)
+    self.__dict__.update(lazy_func_prop.default_dict)
+    self._orig_compile()
     if not (aq_parent(self) is None or hasattr(self, '_filepath')):
       # It needs a _filepath, and has an acquisition wrapper.
       self._filepath = self.get_filepath()
   PythonScript._makeFunction = _makeFunction
+
+  # XXX Previous implementation of this 'optimize' function requires that
+  #     Python Scripts always contain up-to-date data for 'func_code' and
+  #     'func_defaults' properties, so make sure we always export them.
+  #     This compatibility code is not required for normal ERP5 instances
+  #     because scripts are compiled at BT installation.
+  from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
+  BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
+  def removeProperties(self, obj, export):
+    if export and isinstance(obj, PythonScript):
+      obj.func_code # trigger compilation if needed
+    return BaseTemplateItem_removeProperties(self, obj, export)
+  BaseTemplateItem.removeProperties = removeProperties
 
   # Do not reindex portal types sub objects by default
   # We will probably disable reindexing for other types later

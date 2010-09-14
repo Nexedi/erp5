@@ -577,7 +577,7 @@ class BaseTemplateItem(Implicit, Persistent):
   def importFile(self, bta, **kw):
     bta.importFiles(item=self)
 
-  def removeProperties(self, obj):
+  def removeProperties(self, obj, export):
     """
     Remove unneeded properties for export
     """
@@ -587,7 +587,8 @@ class BaseTemplateItem(Implicit, Persistent):
 
     attr_list = [ '_dav_writelocks', '_filepath', '_owner', 'uid',
                   'workflow_history', '__ac_local_roles__' ]
-    attr_list += {
+    if export:
+      attr_list += {
         'ERP5 Python Script': ('_lazy_compilation', 'Python_magic'),
       }.get(meta_type, ())
 
@@ -599,7 +600,13 @@ class BaseTemplateItem(Implicit, Persistent):
       if not obj.getProperty('business_template_include_content', 1):
         obj.deletePdfContent()
     elif meta_type == 'ERP5 Python Script':
-      obj._code = None
+      if export:
+        # XXX forward compatibility: set to None instead of deleting '_code'
+        #     so that old BT code can import recent BT
+        obj._code = None
+      else:
+        # save result of automatic compilation
+        obj._p_changed = 1
     elif  interfaces.IIdGenerator.providedBy(obj):
       for dict_name in ('last_max_id_dict', 'last_id_dict'):
         if getattr(obj, dict_name, None) is not None:
@@ -717,7 +724,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      obj = self.removeProperties(obj)
+      obj = self.removeProperties(obj, 1)
       id_list = obj.objectIds() # FIXME duplicated variable name
       if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
         # we must keep groups because they are deleted along with subobjects
@@ -744,7 +751,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       except AttributeError:
         raise AttributeError, "Could not find object '%s' during business template processing." % relative_url
       _recursiveRemoveUid(obj)
-      obj = self.removeProperties(obj)
+      obj = self.removeProperties(obj, 1)
       id_list = obj.objectIds()
       if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
         # we must keep groups because they are deleted along with subobjects
@@ -836,7 +843,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       # FIXME: Why not use the importXML function directly? Are there any BT5s
       # with actual .zexp files on the wild?
       obj = connection.importFile(file_obj, customImporters=customImporters)
-    self.removeProperties(obj)
+    self.removeProperties(obj, 0)
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_item, **kw):
@@ -847,7 +854,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       for path in self._objects:
         if installed_item._objects.has_key(path):
           upgrade_list.append((path,
-            self.removeProperties(installed_item._objects[path])))
+            self.removeProperties(installed_item._objects[path], 0)))
         else: # new object
           modified_object_list[path] = 'New', type_name
       # update _p_jar property of objects cleaned by removeProperties
@@ -1038,10 +1045,6 @@ class ObjectTemplateItem(BaseTemplateItem):
 
           # install object
           obj = self._objects[path]
-          if getattr(obj, 'meta_type', None) in ('Script (Python)',
-                                                 'ERP5 Python Script'):
-            if getattr(obj, '_code') is None:
-              obj._compile()
           if getattr(aq_base(obj), 'groups', None) is not None:
             # we must keep original order groups
             # because they change when we add subobjects
@@ -1379,7 +1382,7 @@ class PathTemplateItem(ObjectTemplateItem):
         obj = obj.__of__(context)
         _recursiveRemoveUid(obj)
         id_list = obj.objectIds()
-        obj = self.removeProperties(obj)
+        obj = self.removeProperties(obj, 1)
         if hasattr(aq_base(obj), 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)
@@ -1496,7 +1499,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      obj = self.removeProperties(obj)
+      obj = self.removeProperties(obj, 1)
       id_list = obj.objectIds()
       if id_list:
         self.build_sub_objects(context, id_list, relative_url)
@@ -1512,7 +1515,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
       _recursiveRemoveUid(obj)
-      obj = self.removeProperties(obj)
+      obj = self.removeProperties(obj, 1)
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
@@ -1828,10 +1831,6 @@ class WorkflowTemplateItem(ObjectTemplateItem):
             self._backupObject(action, trashbin, container_path, object_id, keep_subobjects=1)
             container.manage_delObjects([object_id])
           obj = self._objects[path]
-          if getattr(obj, 'meta_type', None) in ('Script (Python)',
-                                                 'ERP5 Python Script'):
-            if getattr(obj, '_code') is None:
-              obj._compile()
           obj = obj._getCopy(container)
           container._setObject(object_id, obj)
           obj = container._getOb(object_id)
@@ -2634,7 +2633,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         obj=obj.aq_parent
         connection=obj._p_jar
       obj = connection.importFile(file, customImporters=customImporters)
-      self.removeProperties(obj)
+      self.removeProperties(obj, 0)
       self._objects[file_name[:-4]] = obj
     else:
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
@@ -2727,7 +2726,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           continue
         raise NotFound('Action %r not found' % id)
       key = posixpath.join(url[-2], url[-1], value)
-      self._objects[key] = self.removeProperties(action)
+      self._objects[key] = self.removeProperties(action, 1)
       self._objects[key].wl_clearLocks()
 
   def install(self, context, trashbin, **kw):
@@ -5060,8 +5059,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         f1 = StringIO() # for XML export of New Object
         f2 = StringIO() # For XML export of Installed Object
         # Remove unneeded properties
-        new_object = new_item.removeProperties(new_object)
-        installed_object = installed_item.removeProperties(installed_object)
+        new_object = new_item.removeProperties(new_object, 1)
+        installed_object = installed_item.removeProperties(installed_object, 1)
         # XML Export in memory
         OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
         OFS.XMLExportImport.exportXML(installed_object._p_jar, 
