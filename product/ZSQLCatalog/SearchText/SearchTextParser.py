@@ -65,25 +65,33 @@ def getAdvancedSearchTextParser():
     parser_pool.parser = parser
     return parser
 
+def safeParsingDecorator(func):
+  """
+  Wrapper hiding parsing errors and returning None when they occur.
+  This is used to fallback to plain value when value was erroneously detected
+  as being valid SearchableText (detector is not perfect for speed sake).
+  """
+  def wrapper(*args, **kw):
+    try:
+      result = func(*args, **kw)
+    except (KeyboardInterrupt, SystemExit):
+      raise
+    except:
+      result = None
+    return result
+  wrapper.__name__ = func.__name__
+  return wrapper
+
 @profiler_decorator
 def isAdvancedSearchText(input, is_column):
   return getAdvancedSearchTextDetector()(input, is_column)
 
 @profiler_decorator
-def _parse(input, is_column, *args, **kw):
+@safeParsingDecorator
+def parse(input, is_column, *args, **kw):
   if isAdvancedSearchText(input, is_column):
     result = getAdvancedSearchTextParser()(input, is_column, *args, **kw)
   else:
-    result = None
-  return result
-
-@profiler_decorator
-def parse(*args, **kw):
-  try:
-    result = _parse(*args, **kw)
-  except (KeyboardInterrupt, SystemExit):
-    raise
-  except:
     result = None
   return result
 
