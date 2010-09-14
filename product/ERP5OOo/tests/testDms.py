@@ -725,9 +725,9 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEquals('embedded', new_sub_document.getValidationState())
 
-  def test_08_EmbeddedDocumentState(self):
-    """
-    Check the validation state of an embedded document
+  def test_08_NoImagesCreatedDuringHTMLConversion(self):
+    """Converting an ODT to html no longer creates Images embedded in the
+    document.
     """
     filename = 'EmbeddedImage-en-002.odt'
     file = makeFileUpload(filename)
@@ -740,8 +740,6 @@ class TestDocument(TestDocumentMixin):
     document.convert(format='html')
     image_list = document.contentValues(portal_type='Image')
     self.assertEquals(0, len(image_list))
-#     image = image_list[0]
-#     self.assertEquals('embedded', image.getValidationState())
 
   def test_09_SearchableText(self):
     """
