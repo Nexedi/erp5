@@ -58,7 +58,7 @@
   which can be used a follow up to a CRM event.\n
 """\n
 type_list = context.getPortalTicketTypeList() + context.getPortalProjectTypeList()\n
-node_list = context.portal_catalog(portal_type=type_list, simulation_state=[\'draft\', \'open\'])\n
+node_list = context.portal_catalog(portal_type=type_list, simulation_state=[\'draft\', \'open\', \'validated\', \'contacted\'])\n
 return map(lambda x:(x.getTitle(), x.getRelativeUrl()), node_list)\n
 </string> </value>
         </item>
