@@ -1315,12 +1315,19 @@ class TestCRMMailSend(BaseTestCRM):
       workflow add a test for clone
     """
     portal_type = "Mail Message"
-    event = self.portal.event_module.newContent(portal_type=portal_type)
+    title = "Title of the event"
+    content = "This is the content of the event"
+    event = self.portal.event_module.newContent(portal_type=portal_type,
+                                                title=title,
+                                                text_content=content,)
     event.setData("This is the context of the event...")
+
     self.stepTic()
     new_event = event.Base_createCloneDocument(batch_mode=1)
     self.failIf(new_event.hasFile())
     self.assertEquals(new_event.getData(), "")
+    self.assertEquals(new_event.getTitle(), title)
+    self.assertEquals(new_event.getTextContent(), content)
 
 
 def test_suite():
