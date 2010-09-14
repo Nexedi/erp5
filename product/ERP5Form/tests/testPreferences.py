@@ -104,6 +104,8 @@ class TestPreferences(PropertySheetTestCase):
     """
     self.failUnless('Preference' in [x.getId() for x in
            self.getPortal().portal_preferences.allowedContentTypes()])
+    self.failUnless('System Preference' in [x.getId() for x in
+           self.getPortal().portal_preferences.allowedContentTypes()])
 
   def test_EnablePreferences(self):
     """ tests preference workflow """
@@ -119,6 +121,7 @@ class TestPreferences(PropertySheetTestCase):
 
     person1.portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
+    transaction.commit()
     self.assertEquals(person1.getPreferenceState(), 'enabled')
 
     self.assertEqual( person1, self.getPreferenceTool().getActivePreference())
@@ -146,6 +149,7 @@ class TestPreferences(PropertySheetTestCase):
 
     portal_workflow.doActionFor(
        person2, 'enable_action', wf_id='preference_workflow')
+    transaction.commit()
     self.assertEqual(person2, self.getPreferenceTool().getActivePreference())
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
@@ -214,6 +218,7 @@ class TestPreferences(PropertySheetTestCase):
     # disable person -> group is selected
     self.getWorkflowTool().doActionFor(person1,
             'disable_action', wf_id='preference_workflow')
+    transaction.commit()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))

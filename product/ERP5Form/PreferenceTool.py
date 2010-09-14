@@ -227,13 +227,14 @@ class PreferenceTool(BaseTool):
         sorted so that the first in the list should be applied first
     """
     tv = getTransactionalVariable(self)
-    tv_key = 'PreferenceTool._getSortedPreferenceList/%s' % sql_catalog_id
+    user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
+    tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user,
+                                                                sql_catalog_id)
     if tv.get(tv_key, None) is None:
       prefs = []
       # XXX will also cause problems with Manager (too long)
       # XXX For manager, create a manager specific preference
       #                  or better solution
-      user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
       user_is_manager = 'Manager' in user.getRolesInContext(self)
       for pref in self.searchFolder(portal_type='Preference', sql_catalog_id=sql_catalog_id):
         pref = pref.getObject()
@@ -254,7 +255,6 @@ class PreferenceTool(BaseTool):
       preference_list = sys_prefs + prefs
       tv[tv_key] = preference_list
     else:
-      portal = self.getPortalObject()
       preference_list = tv[tv_key]
     return preference_list
 
