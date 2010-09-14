@@ -379,7 +379,8 @@ class SafeHTML:
                                           remove_comments=True)
                 repaired_html_tree = etree.HTML(orig, parser=lparser)
                 html_string = tostring(repaired_html_tree,
-                                       include_meta_content_type=True)
+                                       include_meta_content_type=True,
+                                       method='xml')
                 # avoid breaking now.
                 # continue into the loop with repaired html
             else:
