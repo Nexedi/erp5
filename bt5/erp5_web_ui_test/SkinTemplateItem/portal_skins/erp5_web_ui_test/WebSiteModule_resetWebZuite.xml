@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -94,6 +91,9 @@ if not len(person.objectValues(portal_type=\'Assignment\')):\n
 if person.getValidationState() != \'validated\':\n
   person.validate()\n
 \n
+# Create region category\n
+if not portal.portal_categories.region.has_key(\'test_web_region\'):\n
+  portal.portal_categories.region.newContent(id=\'test_web_region\', portal_type=\'Category\', title=\'test_web_region\')\n
 return \'Reset Successfully.\'\n
 </string> </value>
         </item>
