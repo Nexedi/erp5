@@ -50,49 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-Search for all predicates that corresponds to this particular context\n
-and returns the base price of the resource\n
-This script derives form getPriceCalculationOperandDict and is invoked by getPrice.\n
+            <value> <string>currency_exchange_line = context.getParentValue()\n
+currency = currency_exchange_line.getParentValue()\n
 \n
-  movement -- transaction line\n
-\n
-  **kw -- dictionary containing all information of the transaction\n
-\n
-"""\n
-\n
-def sort_by_date(a, b):\n
-  if a.getStartDateRangeMin() > b.getStartDateRangeMin() :\n
-    return -1\n
-  return 1\n
-\n
-#If getPrice is directly called on a resource, call directly\n
-#Resource_getPriceCalculationOperandDict on the resource\n
-if movement is None:\n
-  return context.Resource_getPriceCalculationOperandDict(**kw)\n
-else:\n
-  # sort_method can already exist in kw.\n
-  kw[\'sort_method\'] = sort_by_date\n
-  if validation_state is None:\n
-    validation_state=\'validated\'\n
-  kw.setdefault(\'portal_type\', \'Currency Exchange Line\')\n
-  predicate_list = context.portal_domains.searchPredicateList(\n
-      context=movement,\n
-      validation_state=validation_state,\n
-      test=1,\n
-      **kw)\n
-\n
-  # For each predicate(i.e: Currency Exchange Line) found, get the exchange rate\n
-  # with the reference currency\n
-  for predicate in predicate_list:\n
-    operand_dict = predicate.Resource_getPriceCalculationOperandDict(movement=predicate, **kw)\n
-    if operand_dict is not None:\n
-      return operand_dict\n
-
-
-]]></string> </value>
+return context.asContext(_range_criterion=dict(start_date=(currency_exchange_line.getStartDate(),\n
+                                                           currency_exchange_line.getStopDate())),\n
+                         membership_criterion_base_category=[\'price_currency\', \'resource\', \'currency_exchange_type\'],\n
+                         membership_criterion_category=[\'resource/%s\' % currency.getRelativeUrl(),\n
+                                                        currency_exchange_line.getPriceCurrency(base=True),\n
+                                                        context.getCurrencyExchangeType(base=True)])\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -102,7 +69,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>default=None, movement=None, REQUEST=None, validation_state=None, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -122,27 +89,18 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>default</string>
-                            <string>movement</string>
-                            <string>REQUEST</string>
-                            <string>validation_state</string>
-                            <string>kw</string>
-                            <string>sort_by_date</string>
-                            <string>None</string>
-                            <string>_apply_</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>_write_</string>
-                            <string>predicate_list</string>
-                            <string>_getiter_</string>
-                            <string>predicate</string>
-                            <string>operand_dict</string>
+                            <string>currency_exchange_line</string>
+                            <string>currency</string>
+                            <string>dict</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
@@ -154,17 +112,12 @@ else:\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Currency_getPriceCalculationOperandDict</string> </value>
+            <value> <string>CurrencyExchangeCell_asPredicate</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
