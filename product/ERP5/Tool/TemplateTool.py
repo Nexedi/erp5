@@ -107,13 +107,14 @@ class TemplateTool (BaseTool):
     security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
     manage_overview = DTMLFile( 'explainTemplateTool', _dtmldir )
 
-    def getInstalledBusinessTemplate(self, title, **kw):
+    def getInstalledBusinessTemplate(self, title, strict=False, **kw):
       """
         Return an installed version of business template of a certain title.
 
         It not "installed" business template is found, look at replaced ones.
         This is mostly usefull if we are looking for the installed business
-        template in a transaction replacing an existing business template
+        template in a transaction replacing an existing business template.
+        If strict is true, we do not take care of "replaced" business templates.
       """
       # This can be slow if, say, 10000 business templates are present.
       # However, that unlikely happens, and using a Z SQL Method has a
@@ -126,7 +127,7 @@ class TemplateTool (BaseTool):
           installation_state = bt.getInstallationState()
           if installation_state == 'installed':
             return bt
-          elif installation_state == 'replaced':
+          elif strict is False and installation_state == 'replaced':
             replaced_list_append((bt.getId(), bt.getRevision()))
       # still there means that we might search for a replaced bt
       if len(replaced_list):
@@ -1004,7 +1005,7 @@ class TemplateTool (BaseTool):
         # Next, select only updated business templates.
         for repository, property_dict in template_item_dict.values():
           installed_bt = \
-              self.getInstalledBusinessTemplate(property_dict['title'])
+              self.getInstalledBusinessTemplate(property_dict['title'], strict=True)
           if installed_bt is not None:
             diff_version = self.compareVersions(installed_bt.getVersion(),
                                                 property_dict['version'])
