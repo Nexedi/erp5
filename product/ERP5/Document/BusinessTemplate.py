@@ -28,6 +28,7 @@
 ##############################################################################
 
 import fnmatch, gc, imp, os, re, shutil, sys
+from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
@@ -195,6 +196,9 @@ def fixZSQLMethod(portal, method):
           'connection_id for Z SQL Method %s is invalid, using %s' % (
                     method.getId(), sql_connection_list[0]))
       method.connection_id = sql_connection_list[0]
+  # recompile the method
+  method._arg = Aqueduct.parse(method.arguments_src)
+  method.template = method.template_class(method.src)
 
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
@@ -589,7 +593,9 @@ class BaseTemplateItem(Implicit, Persistent):
                   'workflow_history', '__ac_local_roles__' ]
     if export:
       attr_list += {
-        'ERP5 Python Script': ('_lazy_compilation', 'Python_magic'),
+        'ERP5 Python Script': (#'func_code', 'func_defaults', '_code',
+                               '_lazy_compilation', 'Python_magic'),
+        #'Z SQL Method': ('_arg', 'template',),
       }.get(meta_type, ())
 
     for attr in attr_list:
