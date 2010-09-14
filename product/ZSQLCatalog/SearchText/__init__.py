@@ -1,2 +1,2 @@
-from SearchTextParser import parse, isAdvancedSearchText
+from SearchTextParser import parse, isAdvancedSearchText, FullText_parse
 

@@ -526,6 +526,15 @@ class TestSQLCatalog(unittest.TestCase):
           fulltext=MatchList(['+a b', 'b +a'])),
       operator='and'), operator='and'), {'fulltext': '+a b uid:foo'})
 
+  def test_FullTextQuoting(self):
+    # Quotes must be kept
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match',
+      fulltext='"a"'), operator='and'),
+      {'fulltext': '"a"'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match',
+      fulltext='"foo" bar "baz"'), operator='and'),
+      {'fulltext': '"foo" bar "baz"'})
+
   def test_DefaultKeyTextRendering(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'), operator='and'),
                  {'default': 'a% b'})

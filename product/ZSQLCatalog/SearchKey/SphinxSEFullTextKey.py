@@ -27,7 +27,7 @@
 
 from SearchKey import SearchKey
 from Products.ZSQLCatalog.Query.SimpleQuery import SimpleQuery
-from Products.ZSQLCatalog.SearchText import parse
+from Products.ZSQLCatalog.SearchText import FullText_parse
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
@@ -40,7 +40,10 @@ class SphinxSEFullTextKey(SearchKey):
   get_operator_from_value = False
 
   def parseSearchText(self, value, is_column):
-    return parse(value, is_column)
+    return FullText_parse(value, is_column)
+
+  def _renderValueAsSearchText(self, value, operator):
+    return operator.asSearchText(value)
 
   @profiler_decorator
   def _buildQuery(self, operator_value_dict, logical_operator, parsed, group):
