@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,8 +50,14 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>content_information = context.getContentInformation()\n
+            <value> <string>"""\n
+  THis script returns a suitable slide list of PDF thumbnails\n
+  for current form selection.\n
+  It\'s to be used in a listbox.\n
+"""\n
+from Products.ERP5Type.Document import newTempBase\n
 \n
+content_information = context.getContentInformation()\n
 page_number = int(content_information.get(\'Pages\', 0))\n
 limit = kw.get(\'limit\', (0, 0))\n
 list_start = int(kw.get(\'list_start\', 0))\n
@@ -66,7 +69,10 @@ page_list = range(page_number)\n
 \n
 result = []\n
 for i in page_list[list_start:list_end]:\n
-  result.append(context)\n
+  x = {\'title\': \'%s\' %i, \n
+       \'frame\':\'%s\' %i} # frame is used by listbox render field\n
+  temp_object = newTempBase(context, x[\'title\'], **x)\n
+  result.append(temp_object)\n
 return result\n
 </string> </value>
         </item>
@@ -105,6 +111,8 @@ return result\n
                         <value>
                           <tuple>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Document</string>
+                            <string>newTempBase</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>content_information</string>
@@ -121,6 +129,9 @@ return result\n
                             <string>result</string>
                             <string>_getiter_</string>
                             <string>i</string>
+                            <string>x</string>
+                            <string>_apply_</string>
+                            <string>temp_object</string>
                           </tuple>
                         </value>
                     </item>
