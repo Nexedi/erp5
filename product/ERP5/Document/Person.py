@@ -198,7 +198,7 @@ class Person(EncryptedPasswordMixin, XMLObject):
         parent_value.serialize()
         # Prevent to set the same reference on 2 different persons during the
         # same transaction
-        transactional_variable = getTransactionalVariable(None)
+        transactional_variable = getTransactionalVariable()
         if tag in transactional_variable:
           raise RuntimeError, 'user id %s already exist' % (value,)
         else:
