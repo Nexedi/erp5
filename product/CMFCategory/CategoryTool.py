@@ -634,9 +634,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       elif isinstance(category_list, (list, tuple)):
         pass
       else:
-        raise TypeError, ('Category must be of string, tuple of string '
-                          'or list of string type. %s %s' %
-                          (base_category_list, category_list))
+        __traceback_info__ = (base_category_list, category_list)
+        raise TypeError('Category must be of string, tuple of string '
+                        'or list of string type.')
 
       if isinstance(base_category_list, str):
         base_category_list = (base_category_list, )
