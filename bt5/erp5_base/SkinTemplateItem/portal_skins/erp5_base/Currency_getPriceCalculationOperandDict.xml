@@ -88,7 +88,7 @@ else:\n
   # with the reference currency\n
   for predicate in predicate_list:\n
     operand_dict = predicate.Resource_getPriceCalculationOperandDict(movement=predicate, **kw)\n
-    if operand_dict is not None:\n
+    if operand_dict is not None and operand_dict.get(\'price\'):\n
       return operand_dict\n
 
 
