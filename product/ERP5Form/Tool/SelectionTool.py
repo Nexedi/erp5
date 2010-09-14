@@ -1382,7 +1382,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       return SelectionTool.inheritedAttribute('_aq_dynamic')(self, name)
 
     def _getUserId(self):
-      tv = getTransactionalVariable(self)
+      tv = getTransactionalVariable()
       user_id = tv.get('_user_id', None)
       if user_id is not None:
         return user_id
@@ -1400,7 +1400,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       """ Temporary selections are used in push/pop nested scope,
       to prevent from editting for stored selection in the scope.
       Typically, it is used for ReportSection."""
-      tv = getTransactionalVariable(self)
+      tv = getTransactionalVariable()
       return tv.setdefault('_temporary_selection_dict', {})
 
     def pushSelection(self, selection_name):

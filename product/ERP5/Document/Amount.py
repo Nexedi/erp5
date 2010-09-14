@@ -421,7 +421,7 @@ class Amount(Base, Variated):
     # Stop any recursive call to this method. This happens when a Path
     # does not have base unit price locally, so it looks it up, and
     # each path of a predicate list does the same again.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = '_getBaseUnitPrice'
     if key in tv:
       return

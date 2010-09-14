@@ -157,7 +157,7 @@ class CachedConvertableMixin:
     cache_duration = cache_factory.cache_duration
     # The purpose of this transaction cache is to help calls
     # to the same cache value in the same transaction.
-    tv = getTransactionalVariable(None)
+    tv = getTransactionalVariable()
     tv[cache_id] = stored_data_dict
     for cache_plugin in cache_factory.getCachePluginList():
       cache_plugin.set(cache_id, DEFAULT_CACHE_SCOPE,
@@ -172,7 +172,7 @@ class CachedConvertableMixin:
       return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
     # The purpose of this cache is to help calls to the same cache value
     # in the same transaction.
-    tv = getTransactionalVariable(None)
+    tv = getTransactionalVariable()
     try:
       return tv[cache_id]
     except KeyError:

@@ -231,7 +231,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
     """
     portal_rules = getToolByName(self.getPortalObject(), 'portal_rules')
 
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
     cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
 
@@ -520,7 +520,7 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
 
     see AppliedRule._isTreeDelivered
     """
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
     cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
 

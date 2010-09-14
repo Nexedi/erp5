@@ -55,7 +55,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
     def test_01_DictInterface(self):
       """Check if a transaction variable behaves in the same way as a dict.  """
    
-      tv = getTransactionalVariable(self.portal)
+      tv = getTransactionalVariable()
       self.failIfEqual(tv, None)
 
       # Test frequently used dict methods. This does not cover everything,
@@ -82,7 +82,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       """Check if a transaction variable does not persist over multiple
       transactions.
       """
-      tv = getTransactionalVariable(self.portal)
+      tv = getTransactionalVariable()
       self.failIfEqual(tv, None)
 
       tv.clear()
@@ -104,7 +104,7 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       """Check if a transaction variable does not disappear within the same
       transaction.
       """
-      tv = getTransactionalVariable(self.portal)
+      tv = getTransactionalVariable()
       self.failIfEqual(tv, None)
 
       tv.clear()

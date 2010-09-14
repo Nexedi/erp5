@@ -226,7 +226,7 @@ class PreferenceTool(BaseTool):
     """ return the most appropriate preferences objects,
         sorted so that the first in the list should be applied first
     """
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     user = getToolByName(self, 'portal_membership').getAuthenticatedMember()
     tv_key = 'PreferenceTool._getSortedPreferenceList/%s/%s' % (user,
                                                                 sql_catalog_id)

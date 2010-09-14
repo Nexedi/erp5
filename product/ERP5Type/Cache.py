@@ -299,7 +299,7 @@ def transactional_cached(key_method=lambda *args: args):
   def decorator(function):
     key = repr(function)
     def wrapper(*args, **kw):
-      cache = getTransactionalVariable(None).setdefault(key, {})
+      cache = getTransactionalVariable().setdefault(key, {})
       subkey = key_method(*args, **kw)
       try:
         return cache[subkey]

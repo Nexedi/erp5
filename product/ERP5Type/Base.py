@@ -178,7 +178,7 @@ class WorkflowMethod(Method):
     # Build a list of transitions which may need to be invoked
     instance_path = instance.getPhysicalPath()
     portal_type = instance.portal_type
-    transactional_variable = getTransactionalVariable(instance)
+    transactional_variable = getTransactionalVariable()
     invoke_once_item_list = self._invoke_once.get(portal_type, {}).items()
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
@@ -1086,7 +1086,7 @@ class Base( CopyContainer,
       going to edit the related object
     """
     # Push context to prevent loop
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key,
@@ -1265,7 +1265,7 @@ class Base( CopyContainer,
 
     """
     # Push context to prevent loop
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
@@ -3110,7 +3110,7 @@ class Base( CopyContainer,
     # use a transactional variable to cache results within the same
     # transaction
     portal_type = self.getPortalType()
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     type_base_cache = tv.setdefault('Base.type_based_cache', {})
 
     cache_key = (portal_type, method_id)
@@ -3811,7 +3811,7 @@ class Base( CopyContainer,
   def setDefaultReindexParameters(self, **kw):
     # This method sets the default keyword parameters to reindex. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = ('default_reindex_parameter', id(aq_base(self)))
     tv[key] = kw
 
@@ -3820,7 +3820,7 @@ class Base( CopyContainer,
   def getDefaultReindexParameterDict(self, inherit_placeless=True):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     if inherit_placeless:
       placeless = tv.get(('default_reindex_parameter', ))
       if placeless is not None:

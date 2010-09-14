@@ -55,6 +55,7 @@ Example::
     toto = tv['toto'] = getToto()
 """
 
+import warnings
 from UserDict import IterableUserDict
 from Shared.DC.ZRDB.TM import TM
 from threading import local
@@ -83,8 +84,13 @@ class TransactionalVariable(TM, IterableUserDict):
 
 transactional_variable_pool = local()
 
-def getTransactionalVariable(context):
+_MARKER = object()
+def getTransactionalVariable(context=_MARKER):
   """Return a transactional variable."""
+  if context is not _MARKER:
+    warnings.warn("Passing a parameter to getTransactionalVariable() is"
+                  " deprecated and will not be tolerated in the future",
+                  DeprecationWarning)
   try:
     return transactional_variable_pool.instance
   except AttributeError:

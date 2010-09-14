@@ -1243,7 +1243,7 @@ def createExpressionContext(object, portal=None):
   """
     Return a context used for evaluating a TALES expression.
   """
-  tv = getTransactionalVariable(None)
+  tv = getTransactionalVariable()
   cache_key = ('createExpressionContext', id(object))
   try:
     return tv[cache_key]
@@ -1313,7 +1313,7 @@ def getExistingBaseCategoryList(portal, base_cat_list):
   cache = getReadOnlyTransactionCache(portal)
   if cache is None:
     from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-    cache = getTransactionalVariable(portal)
+    cache = getTransactionalVariable()
   category_tool = portal.portal_categories
   new_base_cat_list = []
   for base_cat in base_cat_list:

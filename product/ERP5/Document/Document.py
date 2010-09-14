@@ -357,7 +357,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
       NOTE: passing a group_by parameter may be useful at a
       later stage of the implementation.
     """
-    tv = getTransactionalVariable(self) # XXX Performance improvement required
+    tv = getTransactionalVariable() # XXX Performance improvement required
     cache_key = ('getImplicitSuccessorValueList', self.getPhysicalPath())
     try:
       return tv[cache_key]
