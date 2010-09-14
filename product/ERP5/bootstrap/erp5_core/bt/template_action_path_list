@@ -55,6 +55,7 @@ Preference | view
 Preference | view_template
 Property Sheet Tool | view
 Property Sheet | view
+Python Script | repository_history_view
 Python Script | view
 Ram Cache | statistics
 Ram Cache | view
