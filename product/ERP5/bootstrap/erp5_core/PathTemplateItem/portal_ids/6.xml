@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQLNonContinuousIncreasingIdGenerator" module="Products.ERP5Type.Document.SQLNonContinuousIncreasingIdGenerator"/>
-        <tuple/>
-      </tuple>
+      <global name="SQLNonContinuousIncreasingIdGenerator" module="Products.ERP5Type.Document.SQLNonContinuousIncreasingIdGenerator"/>
     </pickle>
     <pickle>
       <dictionary>

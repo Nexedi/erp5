@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Preference" module="Products.ERP5Type.Document.Preference"/>
-        <tuple/>
-      </tuple>
+      <global name="Preference" module="Products.ERP5Type.Document.Preference"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -382,25 +379,13 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.Length</string>
-          <string>Length</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Length" module="BTrees.Length"/>
     </pickle>
     <pickle> <int>0</int> </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -408,13 +393,7 @@ It\'s the lowest priority one; ie. managers can create higher priority preferenc
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>BTrees.OOBTree</string>
-          <string>OOBTree</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="OOBTree" module="BTrees._OOBTree"/>
     </pickle>
     <pickle>
       <none/>
