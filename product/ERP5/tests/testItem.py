@@ -34,7 +34,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testInvoice import TestSaleInvoiceMixin
+from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 
 class TestItemMixin(TestSaleInvoiceMixin):
   item_portal_type = 'Item'
