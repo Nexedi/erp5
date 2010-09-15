@@ -2616,6 +2616,12 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       selection.edit(method_path = method_path, list_url = list_url)
       self.getSelectionTool().setSelectionFor(self.getSelectionName(), selection, REQUEST = self.request)
 
+    # do pass current form and respective field through request
+    request = self.request
+    field_id = self.getId()
+    form = self.getForm()
+    request.set('form_id', form.getId())
+    request.set('field_id', field_id)
     pt = self.getPageTemplate()
     return pt()
 

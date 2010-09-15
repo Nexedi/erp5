@@ -622,6 +622,20 @@ return []
     self.assertSameSet([('id', u'ID'), ('title', u'Title'), ('getQuantity', u'Quantity')],
                          getListBoxRenderer(listbox).getSelectedColumnList())
   
+  def test_ListboxRequestParameterPropagandation(self):
+    """
+      Test that rendering a listbox field will set respective form & field_id of current form
+      in REQUEST for further usage by used by litsbox's columns methods.
+    """
+    portal = self.getPortal()
+    request = get_request()
+    portal.ListBoxZuite_reset()
+    form = portal.FooModule_viewFooList
+    self.assertEqual(None, request.get('form_id'))
+    form.render()
+    self.assertEqual(form.getId(), request.get('form_id'))
+    self.assertEqual(form.listbox.getId(), request.get('field_id'))
+
 
 def test_suite():
   suite = unittest.TestSuite()
