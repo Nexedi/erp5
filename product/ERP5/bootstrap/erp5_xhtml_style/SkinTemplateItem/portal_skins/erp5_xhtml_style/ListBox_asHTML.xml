@@ -101,6 +101,11 @@
          name="form_id" \n
          tal:attributes="value form_id" \n
          tal:replace="nothing"/>\n
+  <input tal:condition="field_id" \n
+         type="hidden" \n
+         name="field_id" \n
+         tal:attributes="value field_id" \n
+         tal:replace="nothing"/>\n
 \n
   <tal:block tal:condition="is_gadget_mode">\n
     <tal:block tal:define="global box_relative_url python: request.get(\'box_relative_url\', \'\');\n

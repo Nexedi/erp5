@@ -102,7 +102,6 @@
      metal:define-macro="listbox_global_search"\n
      tal:define="search_text python: request.get(global_search_column, \n
                                        selection.params.get(global_search_column));">\n
-\n
   <tal:block tal:condition="not: is_gadget_mode">\n
     <!-- Normal mode -->\n
     <input type="text"\n
