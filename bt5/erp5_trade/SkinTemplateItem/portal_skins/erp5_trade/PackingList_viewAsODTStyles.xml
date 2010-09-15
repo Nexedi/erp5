@@ -120,7 +120,7 @@ AAA=</string> </value>
     </style:style>\n
     <style:style style:name="List" style:family="paragraph" style:parent-style-name="Text_20_body" style:class="list"/>\n
     <style:style style:name="Header" style:family="paragraph" style:parent-style-name="Standard" style:next-style-name="Text_20_body" style:class="extra" style:master-page-name="">\n
-      <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" fo:text-align="start" style:justify-single-word="false" style:register-true="true" style:page-number="auto" fo:background-color="transparent" style:shadow="none" fo:keep-with-next="always" style:vertical-align="auto">\n
+      <style:paragraph-properties fo:margin-left="0.049cm" fo:margin-top="0cm" fo:margin-bottom="0cm" fo:text-align="start" style:justify-single-word="false" style:register-true="true" style:page-number="auto" fo:background-color="transparent" style:shadow="none" fo:keep-with-next="always" style:vertical-align="auto">\n
         <style:tab-stops/>\n
         <style:background-image/>\n
       </style:paragraph-properties>\n
