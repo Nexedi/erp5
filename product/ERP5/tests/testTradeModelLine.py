@@ -271,6 +271,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.tic()
 
     packing_list.start()
+    packing_list.stop()
     transaction.commit()
     self.tic()
 
@@ -278,7 +279,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       portal_type=self.invoice_portal_type)
     self.assertEqual(5, len(invoice))
 
-    packing_list.stop()
     packing_list.deliver()
     transaction.commit()
     self.tic()
