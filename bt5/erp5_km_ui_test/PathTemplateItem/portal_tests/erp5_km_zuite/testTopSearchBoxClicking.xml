@@ -85,7 +85,7 @@
 <!-- Test listbox sub search -->\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_your_search_text_listbox</td>\n
+  <td>SearchableText</td>\n
   <td>Pouet</td>\n
 </tr>\n
 <tr>\n
@@ -95,12 +95,12 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_your_search_text_listbox</td>\n
+  <td>SearchableText</td>\n
   <td>Pouet_NO_EXISTS</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@name=\'WebSite_viewQuickSearchResultList:method\']</td>\n
+  <td>//input[@name=\'Base_doSelect:method\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -110,22 +110,17 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>field_your_search_text_listbox</td>\n
-  <td>Pouet_NO_EXISTS</td>\n
-</tr>\n
-<tr>\n
-  <td>verifyValue</td>\n
-  <td>field_your_search_text</td>\n
+  <td>SearchableText</td>\n
   <td>Pouet_NO_EXISTS</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>field_your_search_text_listbox</td>\n
+  <td>SearchableText</td>\n
   <td>Pouet</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//input[@name=\'WebSite_viewQuickSearchResultList:method\']</td>\n
+  <td>//input[@name=\'Base_doSelect:method\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
