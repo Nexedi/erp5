@@ -48,6 +48,7 @@ content_constructors = ()
 # Finish installation
 def initialize( context ):
   initializeProduct(context, this_module, globals(),
+                         document_classes = document_classes,
                          object_classes = object_classes,
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
