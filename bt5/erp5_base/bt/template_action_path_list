@@ -31,10 +31,12 @@ Email | view
 Fax | change_function
 Fax | view
 File | download
+File | update_content_from_url
 File | view
 Image | change_function
 Image | download
 Image | fullsize_view
+Image | update_content_from_url
 Image | view
 Invoice Movement Group | view
 Link | view
