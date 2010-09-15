@@ -53,19 +53,26 @@
             <value> <string>"""\n
   Get search text from REQUEST or selection.\n
 """\n
+\n
 request = context.REQUEST\n
-# get search words from listbox selection\n
-argument_names = (\'advanced_search_text\', \n
-                  #\'your_search_text\',\n
-                  \'title\',\n
-                  \'reference\',\n
-                  \'SearchableText\',\n
-                  \'searchabletext\', \n
-                  \'searchabletext_any\',\n
-                  \'searchabletext_all\', \n
-                  \'searchabletext_phrase\',)\n
+if not argument_name_list:\n
+  form_id = request.get(\'form_id\', None)\n
+  field_id = request.get(\'field_id\', None)\n
+  if form_id is not None and field_id is not None:\n
+    # get values from current ERP5 form listbox being rendered\n
+    form = getattr(context, form_id)\n
+    field = getattr(form, field_id)\n
+    global_search_column = field.get_value(\'global_search_column\')\n
+    argument_name_list = (global_search_column,)\n
+  else:\n
+    # get search words from listbox selection using hard coded default fields\n
+    argument_name_list = (\'advanced_search_text\', \'title\', \'reference\', \\\n
+                          \'SearchableText\', \'searchabletext\', \\\n
+                          \'searchabletext_any\', \'searchabletext_all\', \\\n
+                          \'searchabletext_phrase\',)\n
+\n
 if selection is None:\n
-  selection_name = context.REQUEST.get("selection_name", None)\n
+  selection_name = request.get("selection_name", None)\n
   if selection_name is not None:\n
     selection = context.portal_selections.getSelectionFor(selection_name)\n
 \n
@@ -73,7 +80,7 @@ params = {}\n
 if selection is not None:\n
   params = selection.getParams()\n
 \n
-params = [request.get(name, params.get(name, \'\')) for name in argument_names]\n
+params = [request.get(name, params.get(name, \'\')) for name in argument_name_list]\n
 # flatten value if it is list\n
 params = [(hasattr(param, \'sort\') and \' \'.join(param) or param) for param in params]\n
 search_string = \' \'.join(params).strip()\n
@@ -89,7 +96,7 @@ return search_string\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>selection=None</string> </value>
+            <value> <string>selection=None, argument_name_list=[]</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -109,18 +116,24 @@ return search_string\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>selection</string>
+                            <string>argument_name_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>
-                            <string>argument_names</string>
                             <string>None</string>
+                            <string>form_id</string>
+                            <string>field_id</string>
+                            <string>getattr</string>
+                            <string>form</string>
+                            <string>field</string>
+                            <string>global_search_column</string>
                             <string>selection_name</string>
                             <string>params</string>
                             <string>append</string>
@@ -143,6 +156,7 @@ return search_string\n
             <value>
               <tuple>
                 <none/>
+                <list/>
               </tuple>
             </value>
         </item>
