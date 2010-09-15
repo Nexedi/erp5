@@ -49,6 +49,7 @@ from ZODB.POSException import ConflictError
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from warnings import warn
 
 import md5
 import cgi
@@ -984,6 +985,15 @@ class ListBoxRenderer:
     return self.field.get_value('global_search_column')
 
   getGlobalSearchColumn = lazyMethod(getGlobalSearchColumn)
+
+  # backwards compatability
+  def getGlobalSearchColumnScript(self):
+    warn("getGlobalSearchColumnScript() is deprecated. Do not use it!", \
+         DeprecationWarning,
+         stacklevel=2)
+    return 'Base_doSelect'
+  getFullTextSearchKey=getGlobalSearchColumn
+  getFullTextSearchKeyScript=getGlobalSearchColumnScript
 
   def getPageNavigationMode(self):
     """Return the list box page navigation mode."""
