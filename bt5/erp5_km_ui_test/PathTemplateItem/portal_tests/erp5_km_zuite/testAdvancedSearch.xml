@@ -108,6 +108,102 @@
   <td>Summary</td>\n
   <td></td>\n
 </tr>\n
+<!-- More complex cases with all search criterions filled in -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Search</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_searchabletext_any</td>\n
+  <td>erp5</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_searchabletext_all</td>\n
+  <td>with_this_word</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_searchabletext_phrase</td>\n
+  <td>with_this_exact_phrase</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_searchabletext_without</td>\n
+  <td>without_this_word</td>\n
+</tr>\n
+<tr>\n
+  <td>addSelection</td>\n
+  <td>field_my_search_portal_type</td>\n
+  <td>label=Drawing</td>\n
+</tr>\n
+<tr>\n
+  <td>addSelection</td>\n
+  <td>field_my_search_portal_type</td>\n
+  <td>label=File</td>\n
+</tr>\n
+<tr>\n
+  <td>addSelection</td>\n
+  <td>field_my_search_portal_type</td>\n
+  <td>label=Image</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_reference</td>\n
+  <td>with_this_reference</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_version</td>\n
+  <td>with_this_version</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_your_language</td>\n
+  <td>label=en</td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>field_your_mine</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>field_your_newest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>field_my_created_within</td>\n
+  <td>label=One week</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_contributor_title</td>\n
+  <td>contributor</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Search Results</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Summary</td>\n
+  <td></td>\n
+</tr>\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
