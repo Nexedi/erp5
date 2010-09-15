@@ -638,6 +638,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     #     second packing list, and we end up with 3 invoices. In other words,
     #     the new simulation splits the second invoice, and I am not sure it's
     #     correct.
+    #     The difference between old and new simulation is that when the first
+    #     invoice is confirmed, the old code does not expand the simulation
+    #     tree completely and SaleInvoice_selectTradeModelMovementList can't
+    #     find any simulation movements related to the second packing list.
     expectedFailure(self.assertEqual)(invoice_count + 1, len(self.portal
         .accounting_module.objectValues(portal_type=self.invoice_portal_type)))
     self.processPackingListBuildInvoice(new_packing_list)

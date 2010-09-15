@@ -212,11 +212,6 @@ class TestBPMMixin(ERP5TypeTestCase):
   def beforeTearDown(self):
     # abort any transaction
     transaction.abort()
-    # put non finished activities into ignored state
-    activity_connection = self.portal.cmf_activity_sql_connection
-    for table in 'message', 'message_queue':
-      activity_connection.manage_test(
-          'delete from %s where processing_node=-2' % table)
     # remove not needed rules
     self.portal.portal_rules.manage_delObjects(
         ids=['test_invoice_transaction_simulation_rule'])
