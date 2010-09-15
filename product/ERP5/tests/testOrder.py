@@ -2854,6 +2854,36 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self._testSubContentReindexing(order, [order_line, inner_order_line,
       order_cell])
 
+  def test_sale_order_view_parent_domain(self):
+    # test that arent domain can be used by non manager users
+    uf = self.portal.acl_users
+    uf._doAddUser(self.id(), '', ['Author', 'Member', 'Assignee'], [])
+    user = uf.getUserById(self.id()).__of__(uf)
+
+    newSecurityManager(None, user)
+    sale_order = self.portal.sale_order_module.newContent(
+                              portal_type='Sale Order')
+    sale_order.newContent(portal_type='Sale Order Line')
+    
+    selection_name = 'sale_order_line_selection'
+    self.assertEquals(selection_name,
+        sale_order.SaleOrder_view.listbox.get_value('selection_name'))
+    
+    # activate report tree
+    self.portal.portal_selections.setListboxDisplayMode(
+        self.portal.REQUEST, 'ReportTreeMode', selection_name)
+    self.portal.portal_selections.setSelectionParamsFor(
+        selection_name=selection_name,
+        params=dict(report_path="parent_domain",
+                    report_opened=1,
+                    report_tree_mode=1))
+
+    html = sale_order.view()
+    # report tree is used, and we had no error
+    self.assertTrue('listbox-table-report-tree-selection-cell' in html)
+    self.assertTrue('Object Tree' in html)
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestOrder))
