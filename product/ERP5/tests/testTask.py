@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -696,7 +697,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
 
     self.assertEqual(
       task.getReference(),
-      'T %s'%(task.getId(),)
+      'T-%s'%(task.getId(),)
     )
 
     cb_data = task_module.manage_copyObjects(ids=[task.getId()])
@@ -706,7 +707,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
 
     self.assertEqual(
       new_task.getReference(),
-      'T %s'%(new_task.getId(),)
+      'T-%s'%(new_task.getId(),)
     )
 
   def test_07_taskConstraints(self):
