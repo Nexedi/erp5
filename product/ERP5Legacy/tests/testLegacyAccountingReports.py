@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+#          Julien Muchembled <jm@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# guarantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -17,7 +17,7 @@
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
@@ -26,27 +26,7 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5Legacy.Document.DeliveryRule import DeliveryRule
-
-class DeliveryRootSimulationRule(DeliveryRule):
-  """
-  Delivery Root Simulation Rule is a root level rule for Deliveries.
-  """
-
-  # CMF Type Definition
-  meta_type = 'ERP5 Delivery Root Simulation Rule'
-  portal_type = 'Delivery Root Simulation Rule'
-  add_permission = Permissions.AddPortalContent
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
-                                       business_link, current_property_dict):
-    """Order rule specific update dictionary"""
-    return {
-      'delivery': movement.getRelativeUrl(),
-    }
+import sys
+from Products.ERP5Legacy.tests import testLegacyAccounting
+sys.modules['Products.ERP5.tests.testAccounting'] = testLegacyAccounting
+from Products.ERP5.tests.testAccountingReports import *

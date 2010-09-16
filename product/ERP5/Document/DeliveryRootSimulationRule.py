@@ -92,6 +92,9 @@ class DeliveryRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Pred
 
 class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
 
+  def _getPortalDeliveryMovementTypeList(self):
+    return self._rule.getPortalObject().getPortalDeliveryMovementTypeList()
+
   def _getInputMovementList(self, movement_list=None, rounding=None):
     """Input movement list comes from delivery"""
     delivery = self._applied_rule.getDefaultCausalityValue()
@@ -101,7 +104,7 @@ class DeliveryRuleMovementGenerator(MovementGeneratorMixin):
       result = []
       existing_movement_list = self._applied_rule.objectValues()
       for movement in delivery.getMovementList(
-        portal_type=delivery.getPortalDeliveryMovementTypeList()):
+        portal_type=self._getPortalDeliveryMovementTypeList()):
         simulation_movement = self._getDeliveryRelatedSimulationMovement(movement)
         if simulation_movement is None or \
                simulation_movement in existing_movement_list:
