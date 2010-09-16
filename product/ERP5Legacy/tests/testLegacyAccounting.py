@@ -25,20 +25,13 @@
 #
 ##############################################################################
 
-from Products.ERP5.tests.testAccounting import *
+# It has been decided to have fully duplicated tests in ERP5Legacy, rather that
+# monkey-patching everywhere.
+# But waiting that we really start fixing testAccounting for new simulation,
+# this file can be a virtual copy of testAccounting.py
 
-def Legacy_getBusinessTemplateList(cls):
-  getBusinessTemplateList = cls.getBusinessTemplateList
-  def Legacy_getBusinessTemplateList(self):
-    bt_list = []
-    for bt in getBusinessTemplateList(self):
-      bt_list.append(bt)
-      if bt == 'erp5_simulation':
-        bt_list.append(bt +  '_legacy')
-      elif bt in ('erp5_accounting', 'erp5_trade', 'erp5_project'):
-        bt_list.append(bt +  '_simulation_legacy')
-    return tuple(bt_list)
-  cls.getBusinessTemplateList = Legacy_getBusinessTemplateList
+from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
+from Products.ERP5.tests.testAccounting import *
 
 Legacy_getBusinessTemplateList(AccountingTestCase)
 Legacy_getBusinessTemplateList(TestAccountingWithSequences)

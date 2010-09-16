@@ -34,4 +34,8 @@
 import sys
 from Products.ERP5Legacy.tests import testLegacySimulationInvoice
 sys.modules['Products.ERP5.tests.testInvoice'] = testLegacySimulationInvoice
+
+from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
 from Products.ERP5.tests.testItem import *
+
+Legacy_getBusinessTemplateList(TestItemScripts)
