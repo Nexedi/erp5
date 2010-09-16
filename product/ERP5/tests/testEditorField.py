@@ -105,6 +105,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.getDefaultSitePreference()._clearCache()
     else:
       self.getDefaultSitePreference().enable()
+    # commit transaction, are preferences are in transaction cache
+    transaction.commit()
 
     # Make sure preferred editor was set on preference
     self.assertEquals(self.getDefaultSitePreference().getPreferredTextEditor(), preferred_editor)
