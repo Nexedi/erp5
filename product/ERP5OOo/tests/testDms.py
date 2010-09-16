@@ -899,7 +899,7 @@ class TestDocument(TestDocumentMixin):
     kw['search_portal_type'] = 'Document'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w portal_type:Document', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document)', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type'], \
                         parsed_string.keys())
@@ -909,7 +909,7 @@ class TestDocument(TestDocumentMixin):
     kw['reference'] = 'Nxd-test'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w portal_type:Document reference:Nxd-test', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference'], \
                         parsed_string.keys())
@@ -920,7 +920,7 @@ class TestDocument(TestDocumentMixin):
     kw['version'] = '001'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w portal_type:Document reference:Nxd-test version:001', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', 'version'], \
                         parsed_string.keys())
@@ -932,7 +932,7 @@ class TestDocument(TestDocumentMixin):
     kw['language'] = 'en'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w portal_type:Document reference:Nxd-test version:001 language:en', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language'], \
@@ -946,7 +946,7 @@ class TestDocument(TestDocumentMixin):
     kw['contributor_title'] = 'John'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w portal_type:Document reference:Nxd-test version:001 language:en contributor_title:John', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title'], \
@@ -960,7 +960,7 @@ class TestDocument(TestDocumentMixin):
     kw['mine'] = 'yes'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w portal_type:Document reference:Nxd-test version:001 language:en contributor_title:John mine:yes', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine'], \
@@ -975,7 +975,7 @@ class TestDocument(TestDocumentMixin):
     kw['newest'] = 'yes'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w portal_type:Document reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest'], \
@@ -991,7 +991,7 @@ class TestDocument(TestDocumentMixin):
     kw['search_mode'] = 'in_boolean_mode'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w portal_type:Document reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes mode:boolean', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes mode:boolean', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest', 'mode'], \
@@ -1009,14 +1009,14 @@ class TestDocument(TestDocumentMixin):
            'searchabletext_any': 'erp5'}
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('erp5 portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page"', \
+    self.assertEquals('erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")', \
                       search_string)
     self.assertSameSet(['searchabletext', 'portal_type'], \
                         parsed_string.keys())
     #self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
 
     # parse with multiple portal_type containing spaces in one portal_type
-    search_string = 'erp5 portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page"'
+    search_string = 'erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")'
     parsed_string = parse(search_string)
     self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','Web Page'])
 
