@@ -401,7 +401,7 @@ div.listbox-body{\n
 }\n
 \n
 div.listbox-tree{\n
-  margin-right: 8px;\n
+  margin-right: 0.1%;\n
   max-width: 10%;\n
   float: left;\n
 }\n
@@ -421,7 +421,7 @@ div.float-right{\n
 }\n
 \n
 div.listbox-content-fixed-width{\n
-   width:90%;\n
+   width:89%;\n
 }\n
 \n
 table.listbox td.listbox-table-no-result-row{\n
