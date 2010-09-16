@@ -52,6 +52,12 @@ def profile_if_environ(environment_var_name):
       # No profiling, return identity decorator
       return lambda self, method: method
 
+# Disable patching of activity tool, 
+# Tic doesn't need help as TimserService is running
+from Products.ERP5Type.tests import ProcessingNodeTestCase as\
+                                    ProcessingNodeTestCaseModule
+ProcessingNodeTestCaseModule.patchActivityTool = lambda: None
+
 class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
     """ERP5TypeLiveTestCase is the default class for *all* tests
     in ERP5. It is designed with the idea in mind that tests should
