@@ -108,7 +108,11 @@ if portal_type_list:\n
     if \' \' in portal_type:\n
       portal_type = \'"%s"\' %portal_type\n
     portal_type_string_list.append(\'portal_type:%s\' %portal_type)\n
-  search_string += \' %s (%s)\' %(logical_operator, \' OR \'.join(portal_type_string_list))\n
+  portal_type_string = \'(%s)\' %\' OR \'.join(portal_type_string_list)\n
+  if search_string not in MARKER:\n
+    search_string += \' %s %s\' %(logical_operator, portal_type_string)\n
+  else:\n
+    search_string += portal_type_string\n
 \n
 # search by reference\n
 reference = kw.get(\'reference\', request.get(\'reference\', None))\n
@@ -214,6 +218,7 @@ return search_string\n
                             <string>str</string>
                             <string>portal_type_string_list</string>
                             <string>portal_type</string>
+                            <string>portal_type_string</string>
                             <string>reference</string>
                             <string>version</string>
                             <string>language</string>
