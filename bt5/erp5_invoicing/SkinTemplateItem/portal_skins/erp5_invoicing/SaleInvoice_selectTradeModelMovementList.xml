@@ -56,7 +56,7 @@
             <value> <string>kw[\'parent_specialise_portal_type\']  = [\'Trade Model Rule\', \'Trade Model Simulation Rule\']\n
 kw[\'explanation_portal_type\']        = [\'Sale Order\', \'Sale Packing List\', \'Sale Invoice Transaction\', \'Sale Invoice\']\n
 kw[\'portal_type\']                    = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\', \'delivered\', \'planned\', \'confirmed\']\n
+kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\', \'delivered\', \'confirmed\']\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
 \n
