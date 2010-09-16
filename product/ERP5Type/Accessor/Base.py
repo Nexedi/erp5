@@ -36,6 +36,7 @@ from zLOG import LOG
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.PsycoWrapper import psyco
 from AccessControl.ImplPython import rolesForPermissionOn
+from AccessControl.PermissionRole import PermissionRole
 
 # Creation of default constructor
 class func_code: pass
@@ -117,6 +118,8 @@ class Setter(Method):
             # security on the class for generated methods.
             class_role = getattr(im_self.__class__, name, im_self)
             if class_role is not im_self:
+                if isinstance(class_role, PermissionRole):
+                    return class_role.__of__(im_self)
                 return class_role
             return rolesForPermissionOn(None, im_self, ('Manager',),
                                         '_Modify_portal_content_Permission')
@@ -199,6 +202,8 @@ class Getter(Method):
         if roles is None:
             class_role = getattr(im_self.__class__, name, im_self)
             if class_role is not im_self:
+                if isinstance(class_role, PermissionRole):
+                    return class_role.__of__(im_self)
                 return class_role
             return rolesForPermissionOn(None, im_self, ('Manager',),
                                         '_Access_contents_information_Permission')
