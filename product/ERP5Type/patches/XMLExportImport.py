@@ -117,7 +117,7 @@ def reorderPickle(jar, p):
     pickler.persistent_id=persistent_id
 
     klass = unpickler.load()
-    #klass = maybeSimplifyClass(klass)
+    klass = maybeSimplifyClass(klass)
     pickler.dump(klass)
     obj = unpickler.load()
     pickler.dump(obj)
