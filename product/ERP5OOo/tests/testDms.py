@@ -65,6 +65,7 @@ from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
 import httplib
@@ -1999,6 +2000,30 @@ return 1
 
     # if PDF size is larger than A4 format system should deny conversion
     self.assertRaises(Unauthorized, pdf.convert, format='jpeg')
+
+  def test_getSearchText(self):
+    """
+     Test extracting search text script.
+    """
+    request = get_request()
+    portal = self.portal
+
+    # test direct passing argument_name_list
+    request.set('MySearchableText', 'MySearchableText_value')
+    self.assertEqual(request.get('MySearchableText'),
+                     portal.Base_getSearchText(argument_name_list=['MySearchableText']))
+
+    # simulate script being called in a listbox
+    # to simulate this we set 'global_search_column' a listbox
+    form = portal.DocumentModule_viewDocumentList
+    listbox = form.listbox
+    listbox.manage_edit_surcharged_xmlrpc(dict(
+            global_search_column='advanced_search_text'))
+    # render listbox
+    listbox.render()
+    request.set('advanced_search_text', 'advanced_search_text_value')
+    self.assertEqual(request.get('advanced_search_text'),
+                     portal.Base_getSearchText())
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
