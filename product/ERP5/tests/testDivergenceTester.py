@@ -27,10 +27,10 @@
 ##############################################################################
 
 import unittest
-
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testPackingList import TestPackingListMixin
+from Products.ERP5.tests.testPackingList import TestPackingListMixin
 
 class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   """
@@ -38,20 +38,26 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   """
   run_all_test = 1
   quiet = 0
-  rule_id = 'default_delivery_simulation_rule'
 
   def getTitle(self):
     return "Divergence Tester"
 
-  def stepRemoveDivergenceTesters(self, sequence=None, 
-                                  sequence_list=None, **kw):
+  def getRule(self):
+    rule_reference = 'default_delivering_rule'
+    return self.portal.portal_rules.searchFolder(reference=rule_reference,
+          validation_state="validated", sort_on='version',
+          sort_order='descending')[0].getObject()
+
+  def afterSetUp(self):
     """
     Remove all divergence testers from order_rule.
     """
-    rule = getattr(self.getPortal().portal_rules, self.rule_id)
+    rule = self.getRule()
     tester_list = rule.contentValues(
              portal_type=rule.getPortalDivergenceTesterTypeList())
     rule.deleteContent([x.getId() for x in tester_list])
+    transaction.commit()
+    self.tic()
 
   def bootstrapSite(self):
     """
@@ -62,7 +68,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     sequence_list = SequenceList()
     # Create a clean packing list
     sequence_string = ' \
-          stepRemoveDivergenceTesters \
           stepCreateOrganisation1 \
           stepCreateOrganisation2 \
           stepCreateOrganisation3 \
@@ -88,6 +93,8 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     This has to be called only once.
     """
     self.validateRules()
+    transaction.commit()
+    self.tic(verbose=1)
     self.bootstrapSite()
 
   def stepGetPackingList(self, sequence=None, sequence_list=None, **kw):
@@ -100,7 +107,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sql_result[0].getObject()
     # XXX Hardcoded id
     movement=packing_list['1']
-    rule = getattr(self.getPortal().portal_rules, self.rule_id)
+    rule = self.getRule()
     sequence.edit(
         packing_list=packing_list,
         movement=movement,
@@ -157,8 +164,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
           stepCheckPackingListIsDivergent \
           stepSetPreviousQuantity \
           stepCheckPackingListIsNotDivergent \
-          Tic \
-          stepRemoveDivergenceTesters \
           Tic \
     '
     sequence_list.addSequenceString(sequence_string)
@@ -217,8 +222,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
           stepSetPreviousSource \
           stepCheckPackingListIsNotDivergent \
           Tic \
-          stepRemoveDivergenceTesters \
-          Tic \
     '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
@@ -276,8 +279,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
           stepSetPreviousStartDate \
           stepCheckPackingListIsNotDivergent \
           Tic \
-          stepRemoveDivergenceTesters \
-          Tic \
     '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
@@ -326,8 +327,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
           stepCheckPackingListIsDivergent \
           stepSetPreviousAggregate \
           stepCheckPackingListIsNotDivergent \
-          Tic \
-          stepRemoveDivergenceTesters \
           Tic \
     '
     sequence_list.addSequenceString(sequence_string)
