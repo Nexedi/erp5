@@ -123,6 +123,10 @@ class TestInvoiceMixin(TestPackingListMixin):
 
   def beforeTearDown(self):
     transaction.abort()
+    processing_node_list = [m.processing_node
+      for m in self.portal.portal_activities.getMessageList()]
+    if processing_node_list and min(processing_node_list) >= -1:
+      self.portal.pdb()
     super(TestInvoiceMixin, self).beforeTearDown()
     for folder in (self.portal.accounting_module,
                    self.portal.organisation_module,
