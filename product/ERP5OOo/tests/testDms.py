@@ -1021,9 +1021,9 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','Web Page'])
 
 
-  def test_11_SearchStringSearchCapability(self):
+  def test_11_Base_getAdvancedSearchResultList(self):
     """
-    Test search string search capabilities.
+    Test search string search capabilities using Base_getAdvancedSearchResultList script.
     """
     portal = self.portal
     assemble = portal.Base_assembleSearchString
