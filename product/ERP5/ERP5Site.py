@@ -340,6 +340,13 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     return join(self.getPhysicalPath(),'/')
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRelativeUrl')
+  def getRelativeUrl(self):
+    """
+      Returns the url of an object relative to the portal site.
+    """
+    return self.getPortalObject().portal_url.getRelativeUrl(self)
+
   # Old name - for compatibility
   security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
   getPath = getUrl
