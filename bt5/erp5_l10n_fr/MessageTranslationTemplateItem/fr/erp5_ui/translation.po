@@ -291,6 +291,9 @@ msgstr "Accepter la traduction (action)"
 msgid "Accept Translation [transition in document_publication_workflow]"
 msgstr "Accepter la traduction"
 
+msgid "Accepted"
+msgstr "Accepté"
+
 msgid "Access ${portal_type} Details"
 msgstr "${portal_type}: voir les détails."
 
@@ -2756,6 +2759,51 @@ msgstr "Date de création"
 
 msgid "Creation date"
 msgstr "Date de Création"
+
+msgid "Credential Question"
+msgstr "Question secrète"
+
+msgid "Credential Recoveries"
+msgstr "Récupérations de compte utilisateur"
+
+msgid "Credential Recoveries to Approve"
+msgstr "Récupérations de compte utilisateur à approuver"
+
+msgid "Credential Recoveries to Submit"
+msgstr "Récupérations de compte utilisateur à soumettre"
+
+msgid "Credential Recovery"
+msgstr "Récupération de compte utilisateur"
+
+msgid "Credential Request"
+msgstr "Demande de compte utilisateur"
+
+msgid "Credential Request Created."
+msgstr "Demande de compte utilisateur créée."
+
+msgid "Credential Requests"
+msgstr "Demandes de comptes utilisateur"
+
+msgid "Credential Requests to Approve"
+msgstr "Demandes de comptes utilisateur à approuver"
+
+msgid "Credential Requests to Submit"
+msgstr "Demandes de comptes utilisateur à soumettre"
+
+msgid "Credential Update"
+msgstr "Mise à jour de compte utilisateur"
+
+msgid "Credential Update Created."
+msgstr "Mise à jour du compte utilisateur créée."
+
+msgid "Credential Updates"
+msgstr "Mises à jour de comptes utilisateur"
+
+msgid "Credential Updates to Approve"
+msgstr "Mises à jour de comptes utilisateur à approver"
+
+msgid "Credential Updates to Submit"
+msgstr "Mises à jour de comptes utilisateur à soumettre"
 
 msgid "Credit"
 msgstr "Crédit"
@@ -9209,6 +9257,12 @@ msgstr "Numéro de Sécurité Sociale"
 msgid "Social form"
 msgstr "Forme de la Société"
 
+msgid "Software Licence"
+msgstr "Licence"
+
+msgid "Software Licences"
+msgstr "Licences"
+
 msgid "Sold"
 msgstr "Vente conclue"
 
@@ -11309,6 +11363,9 @@ msgstr "Mettre à jour les champs à partir du glossaire anglais"
 
 msgid "Update File Metadata [transition in processing_status_workflow]"
 msgstr "Mettre à jour les méta données"
+
+msgid "Update My Credentials"
+msgstr "Mettre à jour mon compte utilisateur"
 
 msgid "Update Quantity from Container"
 msgstr "Mettre à jour la quantité depuis le container"
