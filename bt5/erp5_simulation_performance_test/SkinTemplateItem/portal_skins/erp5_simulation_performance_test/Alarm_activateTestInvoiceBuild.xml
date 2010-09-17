@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,28 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-\n
-now = DateTime().timeTime()\n
-module = context.getPortalObject().business_process_module\n
+            <value> <string>module = context.getPortalObject().business_process_module\n
 business_process = module.test_bp\n
 invoice_business_path = business_process.invoice\n
-invoice_builder = invoice_business_path.getDeliveryBuilderValue()\n
+invoice_business_path.BusinessPath_build()\n
 tax_business_path = business_process.tax\n
-tax_builder = tax_business_path.getDeliveryBuilderValue()\n
-\n
-# Make sure that multiple builds would not run in parallel.\n
-invoice_serialization_tag = \'test_invoice_build\'\n
-invoice_tag = \'%s%f\' % (invoice_serialization_tag, now)\n
-after_invoice_tag = \'after_test_invoice_build\'\n
-invoice_builder.activate(serialization_tag=invoice_serialization_tag,\n
-    tag=invoice_tag, after_tag=after_invoice_tag) \\\n
-  .build(activate_kw=dict(tag=after_invoice_tag))\n
-\n
-# We do not need to serialize this one, because the tax builder may not create\n
-# any new delivery.\n
-# XXX the after_invoice_tag is global, so this build may wait too long.\n
-tax_builder.activate(after_tag=(invoice_tag, after_invoice_tag)).build()\n
+tax_business_path.BusinessPath_build()\n
 </string> </value>
         </item>
         <item>
@@ -112,20 +93,12 @@ tax_builder.activate(after_tag=(invoice_tag, after_invoice_tag)).build()\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>DateTime</string>
                             <string>_getattr_</string>
-                            <string>now</string>
                             <string>context</string>
                             <string>module</string>
                             <string>business_process</string>
                             <string>invoice_business_path</string>
-                            <string>invoice_builder</string>
                             <string>tax_business_path</string>
-                            <string>tax_builder</string>
-                            <string>invoice_serialization_tag</string>
-                            <string>invoice_tag</string>
-                            <string>after_invoice_tag</string>
-                            <string>dict</string>
                           </tuple>
                         </value>
                     </item>

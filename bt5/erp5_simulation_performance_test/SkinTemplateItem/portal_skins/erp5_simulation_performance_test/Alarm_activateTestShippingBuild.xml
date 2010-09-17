@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -55,14 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>module = context.getPortalObject().business_process_module\n
 business_path = module.test_bp.shipping\n
-delivery_builder = business_path.getDeliveryBuilderValue()\n
-\n
-# Make sure that multiple builds would not run in parallel.\n
-serialization_tag = \'test_shipping_build\'\n
-tag = \'after_test_shipping_build\'\n
-activate_kw = dict(tag=tag)\n
-delivery_builder.activate(serialization_tag=serialization_tag, after_tag=tag) \\\n
-  .build(activate_kw=activate_kw)\n
+business_path.BusinessPath_build()\n
 </string> </value>
         </item>
         <item>
@@ -104,11 +94,6 @@ delivery_builder.activate(serialization_tag=serialization_tag, after_tag=tag) \\
                             <string>context</string>
                             <string>module</string>
                             <string>business_path</string>
-                            <string>delivery_builder</string>
-                            <string>serialization_tag</string>
-                            <string>tag</string>
-                            <string>dict</string>
-                            <string>activate_kw</string>
                           </tuple>
                         </value>
                     </item>

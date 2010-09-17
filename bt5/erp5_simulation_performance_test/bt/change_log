@@ -1,3 +1,6 @@
+2010-09-17 yo
+* Use BusinessPath_build as the common way of invoking builders.
+
 2010-08-09 yo
 * Forgot to rename the id of the Business Path for tax.
 * Add SaleInvoice_getRuleReference to just return None.
