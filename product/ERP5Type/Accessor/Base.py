@@ -109,23 +109,16 @@ class Setter(Method):
       def rolesForPermissionOn(ob):
         im_self = ob.im_self
         name = '%s__roles__' % ob.__name__
-        # we explictly call _aq_dynamic to prevent acquiering the attribute
+        # Lookup on the class, as getRoles gives priority to ob.__roles__
+        # over class.ob__roles__, this way we have an opportunity to define
+        # security on the class for generated methods.
+        # We explictly call _aq_dynamic to prevent acquiering the attribute
         # from container
-        roles = im_self._aq_dynamic(name)
+        roles = getattr(im_self.__class__, name, im_self._aq_dynamic(name))
         if roles is None:
-            # lookup on the class, as getRoles gives priority to ob.__roles__
-            # over class.ob__roles__, this way we have an opportunity to define
-            # security on the class for generated methods.
-            class_role = getattr(im_self.__class__, name, im_self)
-            if class_role is not im_self:
-                if isinstance(class_role, PermissionRole):
-                    return class_role.__of__(im_self)
-                return class_role
-            return rolesForPermissionOn(None, im_self, ('Manager',),
-                                        '_Modify_portal_content_Permission')
-        else:
-            # wrap explicitly, because we used _aq_dynamic
-            return roles.__of__(im_self)
+          return rolesForPermissionOn(None, im_self, ('Manager',),
+                                      '_Modify_portal_content_Permission')
+        return roles.__of__(im_self)
 
 
 from Products.CMFCore.Expression import Expression
@@ -198,18 +191,11 @@ class Getter(Method):
         name = '%s__roles__' % ob.__name__
         # we explictly call _aq_dynamic to prevent acquiering the attribute
         # from container
-        roles = im_self._aq_dynamic(name)
+        roles = getattr(im_self.__class__, name, im_self._aq_dynamic(name))
         if roles is None:
-            class_role = getattr(im_self.__class__, name, im_self)
-            if class_role is not im_self:
-                if isinstance(class_role, PermissionRole):
-                    return class_role.__of__(im_self)
-                return class_role
-            return rolesForPermissionOn(None, im_self, ('Manager',),
-                                        '_Access_contents_information_Permission')
-        else:
-            # wrap explicitly, because we used _aq_dynamic
-            return roles.__of__(im_self)
+          return rolesForPermissionOn(None, im_self, ('Manager',),
+                                      '_Access_contents_information_Permission')
+        return roles.__of__(im_self)
 
 
 class Tester(Method):
