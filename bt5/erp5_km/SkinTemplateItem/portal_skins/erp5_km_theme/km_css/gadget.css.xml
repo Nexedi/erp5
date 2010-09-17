@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts78677337.18</string> </value>
+            <value> <string>ts84711123.89</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -388,6 +385,42 @@ div.relations-gadget ul{\n
   margin-left:0.5em;\n
 }\n
 \n
+/* Latest content  needs no listbox headers*/\n
+div.gadget-latest-documents div.listbox-head,\n
+div.gadget-latest-documents table.listbox thead{\n
+  display: none;\n
+}\n
+\n
+/* My Documents gadget needs no listbox headers*/\n
+div.gadget-my-documents div.listbox-head,\n
+div.gadget-my-documents table.listbox thead{\n
+  display: none;\n
+}\n
+\n
+/* Some gadgets share same Document_getSummaryAsHTML */\n
+div.document-gadget-quick-preview div.teaser{\n
+  cursor: pointer;\n
+}\n
+\n
+div.document-gadget-quick-preview span.document-title,\n
+div.document-gadget-quick-preview span.modification-date{\n
+  font-size:0.8em;\n
+}\n
+\n
+div.document-gadget-quick-preview span.document-title{\n
+  color:#969696;\n
+}\n
+\n
+div.document-gadget-quick-preview span.modification-date{\n
+  color: #C0C0C0;\n
+}\n
+\n
+div.document-gadget-quick-preview a.document-link{\n
+  color:#000;\n
+  font-weight:bold;\n
+}\n
+\n
+\n
 /* Gadget admin toolbox (deprecated)*/\n
 .gadget .adminToolbox > label{\n
 \n
@@ -504,7 +537,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8205</int> </value>
+            <value> <int>9025</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

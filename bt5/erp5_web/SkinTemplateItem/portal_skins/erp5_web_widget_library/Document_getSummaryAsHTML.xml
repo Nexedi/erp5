@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block \n
+  tal:define="document_url here/absolute_url;\n
+              thumbnail_url here/Base_getThumbnailAbsoluteUrl;\n
+              display string:thumbnail;\n
+              icon here/getIcon;\n
+              title here/getTitle;\n
+              modification_date python: here.getModificationDate();\n
+              format python: here.getObject().portal_preferences.getPreference(\'preferred_image_format\', \'png\');\n
+              description python: here.getDescription();\n
+              box_relative_url python: request.get(\'box_relative_url\', \'\');\n
+              dom_id python: (\'%s-%s\' %(box_relative_url, here.getRelativeUrl()))">\n
+  <div class="document-gadget-quick-preview">\n
+  <div class="teaser"\n
+       tal:attributes="onclick string:toggle(\'${dom_id}\');">\n
+    <img alt="Icon" class="icon"\n
+         tal:attributes="src icon" />\n
+\n
+    <span alt="Link" class="document-title"\n
+          tal:content="title"/>\n
+\n
+    <span class="modification-date"\n
+          tal:content="modification_date"/>\n
+\n
+  </div>\n
+\n
+  <!-- Hidden thumbnail & description -->\n
+  <div class="body" style="display:none;"\n
+       tal:attributes="id dom_id">\n
+    <a target="_blank" \n
+       tal:attributes="href string:${document_url}/view">\n
+      <img alt="Thumbnail" class="document-thumbnail"\n
+         tal:condition="python: thumbnail_url is not None"\n
+         tal:attributes="src string:${thumbnail_url}/index_html?display=${display}&format=${format}"/>\n
+      <br/>\n
+      <span class="description"\n
+            tal:content="description"/>\n
+    </a>\n
+    <br/>\n
+    <a target="_blank" \n
+       class="document-link"\n
+       alt="Original Document"\n
+       i18n:translate="" i18n:domain="ui" i18n:attributes="alt"\n
+       tal:attributes="href string:${document_url}/view">Show original item</a>\n
+  </div>\n
+  </div>\n
+  \n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Document_getSummaryAsHTML</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
