@@ -2643,6 +2643,12 @@ msgstr "Créer une page web par défaut"
 msgid "Create Document"
 msgstr "Créer un document"
 
+msgid "Create Follow Up Ticket"
+msgstr "Créer un ticket de suivi"
+
+msgid "Create Follow Up Ticket Action"
+msgstr "Créer un ticket de suivi (action)"
+
 msgid "Create Initial Balance Transaction"
 msgstr "Créer la première écriture d'ouverture"
 
@@ -3026,6 +3032,12 @@ msgstr "Mouvements débits"
 
 msgid "December"
 msgstr "Décembre"
+
+msgid "Declare as Received"
+msgstr "Déclarer reçu"
+
+msgid "Declare as Received Action"
+msgstr "Déclarer reçu (action)"
 
 msgid "Declares a packing list as packed, ready for shipment"
 msgstr "La livraison de vente est prête à être expédiée."
@@ -4752,6 +4764,12 @@ msgstr "Une description générale du document qui pourra être lue par les util
 
 msgid "General description which may be printed out on official documents and read by suppliers and clients."
 msgstr "Description générale pouvant être imprimée sur des documents officiels destinés aux clients ou aux fournisseurs."
+
+msgid "Generate"
+msgstr "Émettre"
+
+msgid "Generate Action"
+msgstr "Émettre (action)"
 
 msgid "Generate POT File"
 msgstr "Générer un fichier POT"
@@ -7222,6 +7240,12 @@ msgstr "La police de classification préférée utilisée pour créer de nouveau
 
 msgid "Prefix"
 msgstr "Préfixe"
+
+msgid "Prepare Response"
+msgstr "Préparer une réponse"
+
+msgid "Prepare Response Action"
+msgstr "Préparer une réponse (action)"
 
 msgid "Presentation"
 msgstr "Présentation"
