@@ -52,7 +52,8 @@ from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 from Products.ERP5Type.Globals import DTMLFile
 
 from Products.Formulator.TALESField import TALESMethod
-from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, DefaultValue, EditableValue
+from Products.ERP5Form.Form import StaticValue, TALESValue, OverrideValue, \
+        DefaultValue, EditableValue, DefaultCheckBoxValue
 from Products.ERP5Form.Form import copyMethod, isCacheable
 
 from Products.CMFCore.Skinnable import SKINDATA
@@ -682,6 +683,9 @@ class ProxyField(ZMIField):
     cacheable = isCacheable(value)
 
     if id == 'default' and field_id.startswith('my_'):
+      # XXX far from object-oriented programming
+      if template_field.meta_type == 'CheckBoxField':
+        return DefaultCheckBoxValue(field_id, value), cacheable
       return DefaultValue(field_id, value), cacheable
 
     # For the 'editable' value, we try to get a default value
