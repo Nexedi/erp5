@@ -114,7 +114,9 @@ class Setter(Method):
         # security on the class for generated methods.
         # We explictly call _aq_dynamic to prevent acquiering the attribute
         # from container
-        roles = getattr(im_self.__class__, name, im_self._aq_dynamic(name))
+        roles = getattr(im_self.__class__, name, im_self)
+        if roles is im_self:
+          roles = im_self._aq_dynamic(name)
         if roles is None:
           return rolesForPermissionOn(None, im_self, ('Manager',),
                                       '_Modify_portal_content_Permission')
@@ -191,7 +193,9 @@ class Getter(Method):
         name = '%s__roles__' % ob.__name__
         # we explictly call _aq_dynamic to prevent acquiering the attribute
         # from container
-        roles = getattr(im_self.__class__, name, im_self._aq_dynamic(name))
+        roles = getattr(im_self.__class__, name, im_self)
+        if roles is im_self:
+          roles = im_self._aq_dynamic(name)
         if roles is None:
           return rolesForPermissionOn(None, im_self, ('Manager',),
                                       '_Access_contents_information_Permission')
