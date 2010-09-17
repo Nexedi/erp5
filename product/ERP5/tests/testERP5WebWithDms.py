@@ -592,9 +592,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue('<img' in html, html)
     
     # find the img src
-    parser = etree.HTMLParser()
-    tree = etree.parse(StringIO(html), parser)
-    img_list = tree.findall('//img')
+    img_list = etree.HTML(html).findall('.//img')
     self.assertEquals(1, len(img_list))
     src = img_list[0].get('src')
 
@@ -619,9 +617,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertTrue('<img' in html, html)
     
     # find the img src
-    parser = etree.HTMLParser()
-    tree = etree.parse(StringIO(html), parser)
-    img_list = tree.findall('//img')
+    img_list = etree.HTML(html).findall('.//img')
     self.assertEquals(1, len(img_list))
     src = img_list[0].get('src')
 
