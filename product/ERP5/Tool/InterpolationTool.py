@@ -34,6 +34,9 @@ from DateTime import DateTime
 
 from zLOG import LOG
 
+from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
+from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
+
 class InterpolationTool (UniqueObject):
     """
     The InterpolationTool centralises interpolation
@@ -71,6 +74,9 @@ class InterpolationTool (UniqueObject):
 
     # Explicite Inheritance
     _listAllowedRolesAndUsers = CMFCoreCatalogTool._listAllowedRolesAndUsers
-    __url = CMFCoreCatalogTool.__url
+
+    # XXX does not work fix me
+    # AttributeError: type object 'CatalogTool' has no attribute '_InterpolationTool__url'
+    #__url = CMFCoreCatalogTool.__url
 
 InitializeClass(InterpolationTool)
