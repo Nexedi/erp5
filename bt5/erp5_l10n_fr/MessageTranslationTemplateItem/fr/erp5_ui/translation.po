@@ -8052,7 +8052,7 @@ msgid "Reinstall Business Template [transition in business_template_installation
 msgstr "Réinstaller le business template"
 
 msgid "Reject"
-msgstr "Rejeter l'offre"
+msgstr "Rejeter"
 
 msgid "Reject Document"
 msgstr "Rejeter"
