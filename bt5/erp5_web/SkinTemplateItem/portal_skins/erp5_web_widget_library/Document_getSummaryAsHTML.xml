@@ -42,7 +42,7 @@
               display string:thumbnail;\n
               icon here/getIcon;\n
               title here/getTitle;\n
-              modification_date python: here.getModificationDate();\n
+              modification_date python: here.Base_FormatDate(here.getModificationDate(),hour_minute=1);\n
               format python: here.getObject().portal_preferences.getPreference(\'preferred_image_format\', \'png\');\n
               description python: here.getDescription();\n
               box_relative_url python: request.get(\'box_relative_url\', \'\');\n
@@ -88,8 +88,20 @@
 ]]></string> </value>
         </item>
         <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Document_getSummaryAsHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
