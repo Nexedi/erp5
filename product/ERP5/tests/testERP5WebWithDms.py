@@ -31,7 +31,6 @@ import unittest
 import os
 import transaction
 from lxml import etree
-from StringIO import StringIO
 
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
