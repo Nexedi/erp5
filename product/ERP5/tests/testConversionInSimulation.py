@@ -197,12 +197,17 @@ class TestConversionInSimulation(AccountingTestCase):
                 'product_line/apparel'))
     for line_id, line_source_id, line_destination_id, line_ratio in \
         self.transaction_line_definition_list:
-      business_process.newContent(
+      trade_model_path = business_process.newContent(
         reference='acounting_' + line_id,
         efficiency=line_ratio,
         source='account_module/' + line_source_id,
         destination='account_module/' + line_destination_id,
         **kw)
+      # A trade model path already exist for root simulation movements
+      # (Accounting Transaction Root Simulation Rule).
+      # The ones we are creating are for Invoice Transaction Simulation Rule.
+      trade_model_path._setCriterionPropertyList(('portal_type',))
+      trade_model_path.setCriterion('portal_type', 'Simulation Movement')
     transaction.commit()
     self.tic()
 

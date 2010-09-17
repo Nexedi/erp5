@@ -116,6 +116,7 @@ class AccountingTestCase(ERP5TypeTestCase):
   """
   
   username = 'username'
+  business_process = 'business_process_module/erp5_default_business_process'
 
   @reindex
   def _makeOne(self, portal_type='Accounting Transaction', lines=None,
@@ -139,6 +140,8 @@ class AccountingTestCase(ERP5TypeTestCase):
         kw.setdefault('source_section_value', self.section)
     tr = self.accounting_module.newContent(portal_type=portal_type,
                          created_by_builder=created_by_builder, **kw)
+    if self.business_process and not tr.getSpecialise():
+      tr._setSpecialise(self.business_process)
     if lines:
       for line in lines:
         line.setdefault('portal_type', transaction_to_line_mapping[portal_type])

@@ -398,12 +398,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     rounded_total_price = round(line_dict['normal'], currency_precision)
     rounded_tax_price = round(line_dict['tax'], currency_precision)
     rounded_discount_price = round(line_dict['discount'], currency_precision)
-    self.assertEqual(abs(line_dict['payable_receivable']),
-        rounded_total_price + rounded_tax_price + rounded_discount_price)
-    self.assertEqual(abs(line_dict['vat']),
-        rounded_tax_price)
-    self.assertEquals(abs(line_dict['income_expense']),
-        rounded_total_price + rounded_discount_price)
+    self.assertEqual(str(abs(line_dict['payable_receivable'])),
+        str(rounded_total_price + rounded_tax_price + rounded_discount_price))
+    self.assertEqual(str(abs(line_dict['vat'])),
+        str(rounded_tax_price))
+    self.assertEquals(str(abs(line_dict['income_expense'])),
+        str(rounded_total_price + rounded_discount_price))
 
   ###
   ##  Test cases
@@ -468,7 +468,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       for movement in (order, order['taxed'], order['discounted'],
                        order['taxed_discounted']):
         self.checkComposition(movement, [trade_condition], {
-          self.trade_model_path_portal_type: 10,
+          self.trade_model_path_portal_type: 11,
           self.business_link_portal_type: 5,
           "Trade Model Line": 2})
 
@@ -719,7 +719,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     for movement in order, order['taxed'], order['discounted']:
       self.checkComposition(movement, [trade_condition], {
-        self.trade_model_path_portal_type: 10,
+        self.trade_model_path_portal_type: 11,
         self.business_link_portal_type: 5,
         "Trade Model Line": 5})
 

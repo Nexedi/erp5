@@ -3,6 +3,8 @@ business_process_module/erp5_default_business_process/**
 portal_categories/trade_phase/default
 portal_categories/trade_phase/default/**
 portal_categories/trade_state/**
+portal_rules/new_accounting_transaction_root_simulation_rule
+portal_rules/new_accounting_transaction_root_simulation_rule/**
 portal_rules/new_delivery_root_simulation_rule
 portal_rules/new_delivery_root_simulation_rule/**
 portal_rules/new_delivery_simulation_rule

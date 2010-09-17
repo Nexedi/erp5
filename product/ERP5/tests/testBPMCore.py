@@ -85,10 +85,15 @@ class TestBPMMixin(ERP5TypeTestCase):
       reference='default_path',
       trade_phase_value_list=('default/discount', 'default/tax'),
       trade_date='trade_phase/default/invoicing')
+    # A trade model path already exist for root simulation movements
+    # (Accounting Transaction Root Simulation Rule).
+    # The ones we are creating are for Invoice Transaction Simulation Rule
+    # so we add a test on the portal type of the input movement.
     kw = dict(business_process=business_process,
               trade_phase='default/accounting',
               trade_date='trade_phase/default/invoicing',
-              membership_criterion_base_category='resource_use')
+              membership_criterion_base_category='resource_use',
+              criterion_property_dict={'portal_type': 'Simulation Movement'})
     self.createTradeModelPath(reference='acounting_tax1',
       efficiency=-1,
       source_value=self.receivable_account,
@@ -139,11 +144,17 @@ class TestBPMMixin(ERP5TypeTestCase):
       portal_type=self.business_link_portal_type, **kw)
     return business_link
 
-  def createTradeModelPath(self, business_process=None, **kw):
+  def createTradeModelPath(self, business_process=None,
+                           criterion_property_dict={}, **kw):
     if business_process is None:
       business_process = self.createBusinessProcess()
-    return business_process.newContent(
+    trade_model_path = business_process.newContent(
       portal_type=self.trade_model_path_portal_type, **kw)
+    if criterion_property_dict:
+      trade_model_path._setCriterionPropertyList(tuple(criterion_property_dict))
+      for property, identity in criterion_property_dict.iteritems():
+        trade_model_path.setCriterion(property, identity)
+    return trade_model_path
 
   def createMovement(self):
     # returns a movement for testing

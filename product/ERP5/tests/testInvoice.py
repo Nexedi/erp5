@@ -174,12 +174,17 @@ class TestInvoiceMixin(TestPackingListMixin):
           portal.portal_workflow.doActionFor(account, 'validate_action')
       for line_id, line_source_id, line_destination_id, line_ratio in \
           self.transaction_line_definition_list:
-        business_process.newContent(
+        trade_model_path = business_process.newContent(
           reference='accounting_' + line_id,
           efficiency=line_ratio,
           source_value=account_module[line_source_id],
           destination_value=account_module[line_destination_id],
           **kw)
+        # A trade model path already exist for root simulation movements
+        # (Accounting Transaction Root Simulation Rule).
+        # The ones we are creating are for Invoice Transaction Simulation Rule.
+        trade_model_path._setCriterionPropertyList(('portal_type',))
+        trade_model_path.setCriterion('portal_type', 'Simulation Movement')
     self.business_process = business_process.getRelativeUrl()
 
   def stepCreateEntities(self, sequence, **kw) :

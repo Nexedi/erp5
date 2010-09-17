@@ -7,6 +7,12 @@ Accounting Transaction Module | Balance Transaction
 Accounting Transaction Module | Payment Transaction
 Accounting Transaction Module | Purchase Invoice Transaction
 Accounting Transaction Module | Sale Invoice Transaction
+Accounting Transaction Root Simulation Rule | Category Membership Divergence Tester
+Accounting Transaction Root Simulation Rule | DateTime Divergence Tester
+Accounting Transaction Root Simulation Rule | Float Divergence Tester
+Accounting Transaction Root Simulation Rule | Net Converted Quantity Divergence Tester
+Accounting Transaction Root Simulation Rule | String Divergence Tester
+Accounting Transaction Root Simulation Rule | Variation Divergence Tester
 Accounting Transaction | Accounting Transaction Line
 Accounting Transaction | File
 Accounting Transaction | Image

@@ -33,5 +33,6 @@
 from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
 from Products.ERP5.tests.testAccounting import *
 
+AccountingTestCase.business_process = None
 Legacy_getBusinessTemplateList(AccountingTestCase)
 Legacy_getBusinessTemplateList(TestAccountingWithSequences)
