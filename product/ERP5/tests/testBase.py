@@ -664,14 +664,11 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                                    sequence_list=None, **kw):
     """
     Check the portal type of the object_instance.
-    Check that the portal type does not exist.
     """
     object_instance = sequence.get('object_instance')
     object_instance.getPortalType()
     self.assertEquals(self.temp_class,
                       object_instance.getPortalType())
-    self.assertFalse(self.temp_class in \
-                       object_instance.portal_types.listContentTypes())
 
   def stepSetObjectDefinedProperty(self, sequence=None, 
                                       sequence_list=None, **kw):
