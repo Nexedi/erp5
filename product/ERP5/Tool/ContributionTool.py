@@ -142,7 +142,7 @@ class ContributionTool(BaseTool):
     document = None
 
     # Try to find the file_name
-    mime_type = None
+    content_type = None
     if not url:
       # check if file was provided
       file = kw.get('file', None)
@@ -220,7 +220,7 @@ class ContributionTool(BaseTool):
     # Check if same file is already exists. if it exists, then update it.
     #
     if portal_type is None:
-      portal_type = self._guessPortalType(file_name, mime_type, data)
+      portal_type = self._guessPortalType(file_name, content_type, data)
       property_dict = self.getMatchedFileNamePatternDict(file_name)
       reference = property_dict.get('reference', None)
       version  = property_dict.get('version', None)
