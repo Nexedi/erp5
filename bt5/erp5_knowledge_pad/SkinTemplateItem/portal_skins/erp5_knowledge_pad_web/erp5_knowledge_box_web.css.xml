@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts84964100.38</string> </value>
+            <value> <string>ts84987105.64</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -144,17 +144,6 @@ h3.handle span.handle {\n
   cursor: default;\n
 }\n
 \n
-/* admin toolbox gadget fix */\n
-div.block div.adminToolbox li{\n
-  list-style-type:none;\n
-}\n
-\n
-/* h3 tags containing spans get affected by gadget box title */\n
-div.block div.adminToolbox h3 span{\n
-  display:inline;\n
-  float:none;\n
-}\n
-\n
 /* add space between fieldsets for gadgtes */\n
 div.block fieldset > div {\n
   margin-bottom: 0.3em;\n
@@ -172,7 +161,7 @@ div.block fieldset label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1965</int> </value>
+            <value> <int>1741</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
