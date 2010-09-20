@@ -46,14 +46,14 @@
               format python: here.getObject().portal_preferences.getPreference(\'preferred_image_format\', \'png\');\n
               description python: here.getDescription();\n
               box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-              dom_id python: (\'%s-%s\' %(box_relative_url, here.getRelativeUrl()))">\n
+              dom_id python: (\'%s-%s\' %(box_relative_url, here.getRelativeUrl())).replace(\'/\',\'_\')">\n
   <div class="document-gadget-quick-preview">\n
   <div class="teaser"\n
        tal:attributes="onclick string:toggle(\'${dom_id}\');">\n
     <img alt="Icon" class="icon"\n
          tal:attributes="src icon" />\n
 \n
-    <span alt="Link" class="document-title"\n
+    <span class="document-title"\n
           tal:content="title"/>\n
 \n
     <span class="modification-date"\n
@@ -76,8 +76,8 @@
     <br/>\n
     <a target="_blank" \n
        class="document-link"\n
-       alt="Original Document"\n
-       i18n:translate="" i18n:domain="ui" i18n:attributes="alt"\n
+       title="Original Document"\n
+       i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
        tal:attributes="href string:${document_url}/view">Show original item</a>\n
   </div>\n
   </div>\n

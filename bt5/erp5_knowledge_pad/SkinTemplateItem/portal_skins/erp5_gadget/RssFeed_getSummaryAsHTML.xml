@@ -45,13 +45,13 @@
               link here/field_link;\n
               md5  here/field_md5;\n
               box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-              dom_id python: (\'%s-%s\' %(box_relative_url, md5))">\n
+              dom_id python: (\'%s-%s\' %(box_relative_url.replace(\'/\',\'_\'), md5))">\n
   <div class="document-gadget-quick-preview">\n
 \n
     <div class="teaser"\n
          tal:attributes="onclick string:toggle(\'${dom_id}\');">\n
 \n
-      <span alt="Link" class="document-title"\n
+      <span class="document-title"\n
             tal:content="title"/> - \n
 \n
       <span class="modification-date"\n
@@ -71,8 +71,8 @@
       <br/>\n
       <a target="_blank" \n
          class="document-link"\n
-         alt="Original Document"\n
-         i18n:translate="" i18n:domain="ui" i18n:attributes="alt"\n
+         title="Original Document"\n
+         i18n:translate="" i18n:domain="ui" i18n:attributes="title"\n
          tal:attributes="href link">Show original item</a>\n
     </div>\n
   </div>\n
