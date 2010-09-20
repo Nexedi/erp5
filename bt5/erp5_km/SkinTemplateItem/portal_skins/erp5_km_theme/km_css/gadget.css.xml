@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts84711123.89</string> </value>
+            <value> <string>ts84970562.3</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -165,7 +165,7 @@ div.border_bottom0px{\n
 \n
 #navigation_table a:hover, \n
 #navigation_table #tabs_switcher:hover,\n
-#navigation_table #tabs ul #add_new_tab_dialog_link:hover{color: #000; }\n
+#navigation_table #tabs ul #add_new_tab_dialog_link:hover{color: #FFF; }\n
 \n
 /* EOF Gadget Navigation Table */\n
 \n
@@ -213,7 +213,7 @@ div.edit-form {\n
   padding-bottom: 0.5em;\n
   border: solid black;\n
   border-width: 0 1px 1px 1px;\n
-  background-color: #BDD0F0;\n
+  background-color: transparent;\n
   overflow: auto;\n
 }\n
 \n
@@ -537,7 +537,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9025</int> </value>
+            <value> <int>9029</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
