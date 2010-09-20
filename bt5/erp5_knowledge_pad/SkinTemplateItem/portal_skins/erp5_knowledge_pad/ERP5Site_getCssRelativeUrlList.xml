@@ -59,7 +59,6 @@
 #\n
 # BBB: For the history, erp5.css is included by css_list_template.\n
 #      So this script has nothing to do in reality.\n
-\n
 css_list = (\'erp5_knowledge_box.css\',)\n
 return css_list\n
 </string> </value>
