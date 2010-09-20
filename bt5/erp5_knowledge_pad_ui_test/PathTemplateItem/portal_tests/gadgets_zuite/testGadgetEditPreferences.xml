@@ -1,0 +1,252 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Express Access Tab</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Gadget edit preferences</td></tr>\n
+</thead><tbody>\n
+\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/init">init</span>\n
+\n
+<!--<tr>\n
+  <td>store</td>\n
+  <td tal:content="python: here.portal_preferences.getPreferredWitchToolServerRoot()"></td>\n
+  <td>remote_nexedi_erp5_instance_id</td>\n
+</tr>\n
+<tr>\n
+  <td>store</td>\n
+  <td>${base_url}/portal_wizard/proxy/${remote_nexedi_erp5_instance_id}/web_site_module/yuna_kb</td>\n
+  <td>km_base_url</td>\n
+</tr>\n
+<tr>\n
+  <td>store</td>\n
+  <td>erp5_site_selected_tab=express_support_tab</td>\n
+  <td>base_jump</td>\n
+</tr>-->\n
+<!-- Set longer timeout. -->\n
+<tr>\n
+  <td>setTimeout</td>\n
+  <td>180000</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!--<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/login_as_express_user"> Switch to Express User</span>-->\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
+\n
+<!-- Add to pad few gadgets -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/google_calendar</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeText</td>\n
+  <td>transition_message</td>\n
+  <td>calendar_box_url</td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${calendar_box_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeText</td>\n
+  <td>transition_message</td>\n
+  <td>calendar_box_id</td>\n
+</tr>\n
+\n
+<!-- Clock -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_AddGadgetToActivePad?gadget_relative_url=portal_gadgets/clock</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeText</td>\n
+  <td>transition_message</td>\n
+  <td>clock_box_url</td>\n
+</tr>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_getGadgetIdByRelativeUrl?knowledge_box_url=${clock_box_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeText</td>\n
+  <td>transition_message</td>\n
+  <td>clock_box_id</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@id=\'${clock_box_id}\']/h3/span/a[2]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>gadget_preference_${clock_box_id}_field_my_preferred_header_title</td>\n
+  <td>Clock XXXXX</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@type=\'submit\' and @onclick=&quot;submitSynchronousGadgetPreferenceForm(\'gadget_preference_${clock_box_id}_field\',\'${clock_box_url}\')&quot;]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Preference updated.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Clock XXXXX</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@id=\'${calendar_box_id}\']/h3/span/a[2]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>\n
+  <td>Calendar YYYYY</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@type=\'submit\' and @onclick=&quot;submitSynchronousGadgetPreferenceForm(\'gadget_preference_${calendar_box_id}_field\',\'${calendar_box_url}\')&quot;]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Preference updated.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Calendar YYYYY</td>\n
+  <td></td>\n
+</tr>\n
+\n
+\n
+\n
+<!-- Test deleting a gadget -->\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@id=\'${calendar_box_id}\']/h3/span/a[1]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertConfirmation</td>\n
+  <td>Are you sure you want to remove this gadget from your personalized page?</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyTextNotPresent</td>\n
+  <td>Calendar YYYYY</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!--<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/login_as_functional_test_user"> Switch to Functional Test User</span>\n
+\n
+<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/restore_test_environment">restore</span>-->\n
+\n
+</tbody></table>\n
+</body>\n
+</html>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testGadgetEditPreferences</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
