@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block \n
+  tal:define="title here/field_title;\n
+              date here/field_date;\n
+              description here/field_content;\n
+              image here/field_img;\n
+              other_links here/field_others_links;\n
+              link here/field_link;\n
+              md5  here/field_md5;\n
+              box_relative_url python: request.get(\'box_relative_url\', \'\');\n
+              dom_id python: (\'%s-%s\' %(box_relative_url, md5))">\n
+  <div class="document-gadget-quick-preview">\n
+\n
+    <div class="teaser"\n
+         tal:attributes="onclick string:toggle(\'${dom_id}\');">\n
+\n
+      <span alt="Link" class="document-title"\n
+            tal:content="title"/> - \n
+\n
+      <span class="modification-date"\n
+            tal:content="date"/>\n
+\n
+    </div>\n
+\n
+    <!-- Hidden thumbnail & description -->\n
+    <div class="body" style="display:none;"\n
+         tal:attributes="id dom_id">\n
+      <div class="document-thumbnail"\n
+           tal:condition="python: image not in ((), None,)"\n
+           tal:content="structure image"/>\n
+      <br/>\n
+      <div class="rss-description"\n
+            tal:content="structure description"/>\n
+      <br/>\n
+      <a target="_blank" \n
+         class="document-link"\n
+         alt="Original Document"\n
+         i18n:translate="" i18n:domain="ui" i18n:attributes="alt"\n
+         tal:attributes="href link">Show original item</a>\n
+    </div>\n
+  </div>\n
+  \n
+</tal:block>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>RssFeed_getSummaryAsHTML</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

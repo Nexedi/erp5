@@ -2,16 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ImageField" module="Products.ERP5Form.ImageField"/>
-        <tuple/>
-      </tuple>
+      <global name="ImageField" module="Products.ERP5Form.ImageField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_field_img</string> </value>
+            <value> <string>logo</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -218,7 +215,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>left</string> </value>
+                    <value> <string>left gadget-rss-reader-logo</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -300,16 +297,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (lambda x: (len(x) and x[0]) or None)(cell.field_img)</string> </value>
+            <value> <string>python: request.get(\'rss_logo\',\'\')</string> </value>
         </item>
       </dictionary>
     </pickle>
