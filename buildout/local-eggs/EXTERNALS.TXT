@@ -1,7 +1,0 @@
-# svn propset svn:externals -F ./EXTERNALS.TXT .
-# BEWARE: This folder is in process of removal.
-# BEWARE: Any addition might be removed without further notice.
-# To play with eggs use mr.developer and publish eggs in proper places
-
-Acquisition svn://svn.zope.org/repos/main/Acquisition/branches/erp5-aq_dynamic
-Products.DCWorkflow svn://svn.zope.org/repos/main/Sandbox/lra/branches/restore-WorkflowMethod-Products.DCWorkflow
