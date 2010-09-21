@@ -148,12 +148,38 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-stop-number"]</td>\n
-  <td>2</td>\n
+  <td>10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2 records</td>\n
+  <td>16 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//img[@title=\'Thumbnail\']</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Check PDF thumbnail preview navigation-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-start-number"]</td>\n
+  <td>11</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-stop-number"]</td>\n
+  <td>16</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>16 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -162,12 +188,39 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-start-number"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-stop-number"]</td>\n
+  <td>10</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>16 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
   <td>//img[@title=\'Thumbnail\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Go to PDF default big preview -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td/a/img[@title=\'Thumbnail\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>1 / 2</td>\n
+  <td>2 / 16</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -204,7 +257,7 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>2 / 2</td>\n
+  <td>3 / 16</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -214,11 +267,29 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>1 / 2</td>\n
+  <td>1 / 16</td>\n
   <td></td>\n
 </tr>\n
-\n
-\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'Last\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>16 / 16</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'First\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>1 / 16</td>\n
+  <td></td>\n
+</tr>\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
