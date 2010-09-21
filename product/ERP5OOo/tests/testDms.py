@@ -779,10 +779,12 @@ class TestDocument(TestDocumentMixin):
                             title='Super nova organisation')
     self.stepTic()
 
-    def getAdvancedSearchTextResultList(searchable_text, portal_type=None):
+    def getAdvancedSearchTextResultList(searchable_text, portal_type=None,src__=0):
       kw = {'SearchableText': searchable_text}
       if portal_type is not None:
         kw['portal_type'] = portal_type
+      if src__==1:
+        print portal.portal_catalog(src__=src__,**kw)
       return [x.getObject() for x in portal.portal_catalog(**kw)]
 
     # full text search
@@ -1231,11 +1233,36 @@ class TestDocument(TestDocumentMixin):
   def test_PDF_content_information_extra_metadata(self):
     # Extra metadata, such as those stored by pdftk update_info are also
     # available in document.getContentInformation()
-    upload_file = makeFileUpload('metadata.pdf')
+    upload_file = makeFileUpload('metadata.pdf', as_name='REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.stepTic()
     self.assertEquals('PDF', document.getPortalType())
     content_information = document.getContentInformation()
-    self.assertEquals('the value', content_information['NonStandardMetadata'])
+    #self.assertEquals('the value', content_information['NonStandardMetadata'])
+    self.assertEquals('1', content_information['Pages'])
+    self.assertEquals('REF', document.getReference())
+
+    # contribute file which will be merged to current document in synchronous mode
+    # and check content_type recalculated 
+    upload_file = makeFileUpload('Forty-Two.Pages-en-001.pdf', as_name='REF-en-001.pdf')
+    contributed_document = self.portal.Base_contribute(file=upload_file, \
+                                                       synchronous_metadata_discovery=True)
+    self.stepTic()
+    content_information = contributed_document.getContentInformation()
+    
+    # we should have same data, respectively same PDF pages
+    self.assertEqual(contributed_document.getSize(), document.getSize())
+    self.assertEqual(contributed_document.getContentInformation()['Pages'], \
+                     document.getContentInformation()['Pages'])
+    self.assertEqual('42', \
+                     document.getContentInformation()['Pages'])
+
+    # upload with another file and check content_type recalculated
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document.setFile(upload_file)
+    self.stepTic()
+    content_information = document.getContentInformation()
+    self.assertEquals('1', content_information['Pages'])    
 
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -2024,6 +2051,7 @@ return 1
     request.set('advanced_search_text', 'advanced_search_text_value')
     self.assertEqual(request.get('advanced_search_text'),
                      portal.Base_getSearchText())
+
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
