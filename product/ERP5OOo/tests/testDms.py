@@ -70,7 +70,6 @@ import os
 from threading import Thread
 import httplib
 import urllib
-from PIL import Image
 from AccessControl import Unauthorized
 
 QUIET = 0
@@ -1967,8 +1966,16 @@ return 1
       f.close()
       infile.close()
       file_size = len(image_data)
-      image = Image.open(filename)
-      image_size = image.size
+      try:
+        from PIL import Image
+        image = Image.open(filename)
+        image_size = image.size
+      except ImportError:
+        from subprocess import Popen, PIPE
+        identify_output = Popen(['identify', filename],
+                                stdout=PIPE).communicate()[0]
+        image_size = tuple(map(lambda x:int(x),
+                               identify_output.split()[2].split('x')))
       os.remove(filename)
       return image_size, file_size
 
