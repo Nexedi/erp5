@@ -119,6 +119,7 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_knowledge_pad_ui_test'
       'erp5_km',
       'erp5_ui_test',
+      'erp5_dms_ui_test',
 
       'erp5_trade_proxy_field_legacy', # it is necessary until all bt are well
                                        # reviewed. Many bt like erp5_project are
