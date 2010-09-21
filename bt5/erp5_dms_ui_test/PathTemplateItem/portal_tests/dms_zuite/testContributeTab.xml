@@ -1,0 +1,423 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Express Access Tab</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Contribute Tab</td></tr>\n
+</thead><tbody>\n
+\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+\n
+<!-- Contribute ODP document -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Project")</td>\n
+  <td>60000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>file</td>\n
+  <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive-001-en.odp\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_contribute:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_reference</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>TioLive, ERP5, Freedom</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive-001-en.odp</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Presentation</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Converted</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeLocation</td>\n
+  <td>document_location</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
+\n
+<!-- \n
+  Contributing it one more time should update existing document by reference, version, language \n
+-->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Project")</td>\n
+  <td>60000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>file</td>\n
+  <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive-001-en.odp\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_contribute:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertLocation</td>\n
+  <td>${document_location}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Presentation updated successfully</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_reference</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>TioLive, ERP5, Freedom</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive-001-en.odp</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Presentation</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Converted</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Contribute PDF -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Project")</td>\n
+  <td>60000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>file</td>\n
+  <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.PDF-001-en.pdf\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_contribute:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_reference</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.PDF</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>TioLive, ERP5, Freedom</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>PDF</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Contribute Image -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Project")</td>\n
+  <td>60000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>file</td>\n
+  <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.Logo-001-en.png\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_contribute:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_reference</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.Logo</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.Logo-001-en</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Image Thumbnail</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Contribute Spreadsheet -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Project")</td>\n
+  <td>60000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>file</td>\n
+  <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_contribute:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_reference</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.Spreadsheet</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>TioLive Spreadsheet</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.Spreadsheet-001-en.ods</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Spreadsheet</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Converted</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Contribute Drawing -->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/view?erp5_site_selected_tab=contribution_tab</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>waitForCondition</td>\n
+  <td>selenium.isTextPresent("Project")</td>\n
+  <td>60000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>file</td>\n
+  <td tal:content="python: here.Zuite_getFilenameLocation(\'tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>Base_contribute:method</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_reference</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.Drawing</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>TioLive Drawing</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.Drawing-001-en.odg</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Drawing</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Converted</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testContributeTab</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
