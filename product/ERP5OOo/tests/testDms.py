@@ -1238,7 +1238,7 @@ class TestDocument(TestDocumentMixin):
     self.stepTic()
     self.assertEquals('PDF', document.getPortalType())
     content_information = document.getContentInformation()
-    #self.assertEquals('the value', content_information['NonStandardMetadata'])
+    self.assertEquals('the value', content_information['NonStandardMetadata'])
     self.assertEquals('1', content_information['Pages'])
     self.assertEquals('REF', document.getReference())
 
