@@ -40,6 +40,7 @@ from Products.CMFCore.utils import getToolByName, _setCacheHeaders, _ViewEmulato
 from OFS.Image import File as OFSFile
 from warnings import warn
 import sys
+from base64 import decodestring
 from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 
 
@@ -84,8 +85,9 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
     if user is _MARKER:
       user = None # By default, do nothing
       if old_user is None or old_user.getUserName() == 'Anonymous User':
-        user_folder = getattr(self.getPortalObject(), 'acl_users', None)
-        if user_folder is not None:
+        portal_membership = getToolByName(self.getPortalObject(),
+                                          'portal_membership')
+        if portal_membership is not None:
           try:
             if request.get('PUBLISHED', _MARKER) is _MARKER:
               # request['PUBLISHED'] is required by validate
@@ -94,7 +96,14 @@ class BaseExtensibleTraversableMixin(ExtensibleTraversableMixIn):
             else:
               has_published = True
             try:
-              user = user_folder.validate(request)
+              auth = request._auth
+              # this logic is copied from identify() in
+              # AccessControl.User.BasicUserFolder.
+              if auth and auth.lower().startswith('basic '):
+                name = decodestring(auth.split(' ')[-1]).split(':', 1)[0]
+                user = portal_membership._huntUser(name, self)
+              else:
+                user = None
             except AttributeError:
               # This kind of error happens with unrestrictedTraverse,
               # because the request object is a fake, and it is just
