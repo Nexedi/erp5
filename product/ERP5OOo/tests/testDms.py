@@ -1838,6 +1838,11 @@ return 1
     """
       Test extensible content of some DMS types. As this is possible only on URL traversal use publish.
     """
+    # Create a root level zope user
+    root_user_folder = self.getPortalObject().aq_parent.acl_users
+    if not root_user_folder.getUser('zope_user'):
+      root_user_folder._doAddUser('zope_user', '', ['Manager',], [])
+      transaction.commit()
     # Create document with good content
     document = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = makeFileUpload('TEST-en-003.odp')
@@ -1845,14 +1850,15 @@ return 1
     self.stepTic()
     self.assertEquals('converted', document.getExternalProcessingState())
     for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
-      response = self.publish('%s/%s' %(document.getPath(), object_url),
-                              basic='ERP5TypeTestCase:')
-      self.assertTrue('Status: 200 OK' in response.getOutput())
-      # OOod produced HTML navigation, test it
-      self.assertTrue('First page' in response.getBody())
-      self.assertTrue('Back' in response.getBody())
-      self.assertTrue('Continue' in response.getBody())
-      self.assertTrue('Last page' in response.getBody())
+      for credential in ['ERP5TypeTestCase:', 'zope_user:']:
+        response = self.publish('%s/%s' %(document.getPath(), object_url),
+                                basic=credential)
+        self.assertTrue('Status: 200 OK' in response.getOutput())
+        # OOod produced HTML navigation, test it
+        self.assertTrue('First page' in response.getBody())
+        self.assertTrue('Back' in response.getBody())
+        self.assertTrue('Continue' in response.getBody())
+        self.assertTrue('Last page' in response.getBody())
 
   def test_contributeLink(self):
     """
