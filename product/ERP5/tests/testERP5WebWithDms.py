@@ -569,6 +569,8 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     portal = self.portal
     request = portal.REQUEST
     request['PARENTS'] = [self.app]
+    self.getPortalObject().aq_parent.acl_users._doAddUser(
+      'zope_user', '', ['Manager',], [])
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
     web_section = website.newContent(portal_type=web_section_portal_type)
@@ -581,26 +583,27 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                           file=upload_file)
     transaction.commit()
     self.tic()
-    credential = 'ERP5TypeTestCase:'
+    credential_list = ['ERP5TypeTestCase:', 'zope_user:']
 
-    # first, preview the draft in its physical location (in document module)
-    response = self.publish('%s/asEntireHTML' % document.absolute_url_path(),
-                            credential)
-    self.assertEquals(response.getHeader('content-type'), 'text/html')
-    html = response.getBody()
-    self.assertTrue('<img' in html, html)
-    
-    # find the img src
-    img_list = etree.HTML(html).findall('.//img')
-    self.assertEquals(1, len(img_list))
-    src = img_list[0].get('src')
+    for credential in credential_list:
+      # first, preview the draft in its physical location (in document module)
+      response = self.publish('%s/asEntireHTML' % document.absolute_url_path(),
+                              credential)
+      self.assertEquals(response.getHeader('content-type'), 'text/html')
+      html = response.getBody()
+      self.assertTrue('<img' in html, html)
 
-    # and make another query for this img
-    response = self.publish('%s/%s' % ( document.absolute_url_path(), src),
-                            credential)
-    self.assertEquals(response.getHeader('content-type'), 'image/png')
-    png = response.getBody()
-    self.assertTrue(png.startswith('\x89PNG'))
+      # find the img src
+      img_list = etree.HTML(html).findall('.//img')
+      self.assertEquals(1, len(img_list))
+      src = img_list[0].get('src')
+
+      # and make another query for this img
+      response = self.publish('%s/%s' % ( document.absolute_url_path(), src),
+                              credential)
+      self.assertEquals(response.getHeader('content-type'), 'image/png')
+      png = response.getBody()
+      self.assertTrue(png.startswith('\x89PNG'))
 
     # then publish the document and access it anonymously by reference through
     # the web site
