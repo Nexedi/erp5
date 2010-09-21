@@ -405,7 +405,8 @@ class PDFTypeInformation(ERP5TypeInformation):
   def renderFormImage(self, REQUEST, RESPONSE, page):
     """
     """
-    return self.getERP5FormImage(page).index_html(REQUEST, RESPONSE)
+    return self.getERP5FormImage(page).index_html(REQUEST, RESPONSE,
+                                                  format='jpg')
 
   security.declareProtected(Permissions.View, 'renderFormCSS')
   def renderFormCSS(self):
