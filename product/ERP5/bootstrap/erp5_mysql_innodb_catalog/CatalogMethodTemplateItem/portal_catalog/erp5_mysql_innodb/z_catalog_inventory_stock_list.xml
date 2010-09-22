@@ -147,6 +147,12 @@
                                 </value>
                             </item>
                             <item>
+                                <key> <string>isMovement</string> </key>
+                                <value>
+                                  <dictionary/>
+                                </value>
+                            </item>
+                            <item>
                                 <key> <string>uid</string> </key>
                                 <value>
                                   <dictionary/>
@@ -166,6 +172,7 @@
                             <string>getDestinationUid</string>
                             <string>getSourceSectionUid</string>
                             <string>getDestinationSectionUid</string>
+                            <string>isMovement</string>
                             <string>getSourcePaymentUid</string>
                             <string>getDestinationPaymentUid</string>
                             <string>getSourceFunctionUid</string>
@@ -198,6 +205,7 @@ getSourceUid\r\n
 getDestinationUid\r\n
 getSourceSectionUid\r\n
 getDestinationSectionUid\r\n
+isMovement\r\n
 getSourcePaymentUid\r\n
 getDestinationPaymentUid\r\n
 getSourceFunctionUid\r\n
@@ -237,7 +245,7 @@ WHERE\n
 \n
 <dtml-let row_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isAccountable[loop_item] and getResourceUid[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
       <dtml-if "getDestinationUid[loop_item]">\n
         <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
         <dtml-call expr="row_list.append([\n
@@ -365,7 +373,7 @@ WHERE\n
 \n
 <dtml-let row_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isAccountable[loop_item] and getResourceUid[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
       <dtml-if "getDestinationUid[loop_item]">\n
         <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
         <dtml-call expr="row_list.append([\n
