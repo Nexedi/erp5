@@ -2778,6 +2778,9 @@ msgstr "Récupérations de compte utilisateur à approuver"
 msgid "Credential Recoveries to Submit"
 msgstr "Récupérations de compte utilisateur à soumettre"
 
+msgid "Credential Recoveries to Close"
+msgstr "Récupérations de compte utilisateur à clôturer"
+
 msgid "Credential Recovery"
 msgstr "Récupération de compte utilisateur"
 
@@ -2796,6 +2799,9 @@ msgstr "Demandes de comptes utilisateur à approuver"
 msgid "Credential Requests to Submit"
 msgstr "Demandes de comptes utilisateur à soumettre"
 
+msgid "Credential Requests to Close"
+msgstr "Demandes de comptes utilisateur à clôturer"
+
 msgid "Credential Update"
 msgstr "Mise à jour de compte utilisateur"
 
@@ -2810,6 +2816,9 @@ msgstr "Mises à jour de comptes utilisateur à approver"
 
 msgid "Credential Updates to Submit"
 msgstr "Mises à jour de comptes utilisateur à soumettre"
+
+msgid "Credential Updates to Close"
+msgstr "Mises à jour de comptes utilisateur à clôturer"
 
 msgid "Credit"
 msgstr "Crédit"
