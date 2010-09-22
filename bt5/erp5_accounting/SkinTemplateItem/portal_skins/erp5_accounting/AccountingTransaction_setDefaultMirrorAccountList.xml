@@ -66,8 +66,9 @@ for movement in context.contentValues(portal_type=portal.getPortalAccountingMove
   if (source_account is not None) ^ (destination_account is not None):\n
     movement_data_list.append((movement, source_account, destination_account))\n
 \n
-# If both are true, mirror accounting is used.\n
-if has_source and has_destination:\n
+# If both are true or we have an internal invoice, mirror accounting is used\n
+if (has_source and has_destination) or\\\n
+     context.getPortalType() == \'Internal Invoice Transaction\':\n
   for movement, source_account, destination_account in movement_data_list:\n
     if source_account is None:\n
       account = destination_account\n
