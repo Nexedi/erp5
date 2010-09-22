@@ -589,17 +589,17 @@ class BaseTemplateItem(Implicit, Persistent):
     if meta_type == 'Script (Python)':
       meta_type = 'ERP5 Python Script'
 
-    attr_list = [ '_dav_writelocks', '_filepath', '_owner', 'uid',
-                  'workflow_history', '__ac_local_roles__' ]
+    attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'uid',
+                    'workflow_history', '__ac_local_roles__'))
     if export:
-      attr_list += {
+      attr_set.update({
         'ERP5 Python Script': (#'func_code', 'func_defaults', '_code',
                                '_lazy_compilation', 'Python_magic'),
         #'Z SQL Method': ('_arg', 'template',),
-      }.get(meta_type, ())
+      }.get(meta_type, ()))
 
-    for attr in attr_list:
-      if attr in obj.__dict__:
+    for attr in obj.__dict__.keys():
+      if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
 
     if meta_type == 'ERP5 PDF Form':

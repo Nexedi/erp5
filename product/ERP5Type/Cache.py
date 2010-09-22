@@ -29,9 +29,13 @@
 
 import string
 from time import time
-from AccessControl.SecurityInfo import allow_class
+from AccessControl import allow_class, ClassSecurityInfo
+from Acquisition import aq_base
+from BTrees.Length import Length
 from CachePlugins.BaseCache import CachedMethodError
+from persistent import Persistent
 from zLOG import LOG, WARNING
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable, _MARKER
 from Products.ERP5Type.Utils import simple_decorator
 from warnings import warn
@@ -54,6 +58,50 @@ def initializePortalCachingProperties(self):
     # we mark the cache as ready after initialization, because initialization
     # itself will cause cache misses that we want to ignore
     is_cache_ready = 1
+
+
+class Cookie(Persistent):
+
+  value = 0
+
+  def __getstate__(self):
+    return self.value
+
+  def __setstate__(self, value):
+    self.value = value
+
+  def _p_resolveConflict(self, old_state, saved_state, new_state):
+    return 1 + max(saved_state, new_state)
+
+  def _p_independent(self):
+    return 1
+
+
+class CacheCookieMixin:
+  """Provides methods managing (ZODB) persistent keys to access caches
+  """
+  security = ClassSecurityInfo()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getCacheCookie')
+  def getCacheCookie(self, cache_name='default'):
+    """Get key of valid cache for this object"""
+    cache_name = '_cache_cookie_' + cache_name
+    try:
+      return self.__dict__[cache_name].value
+    except KeyError:
+      self.__dict__[cache_name] = Cookie()
+      return Cookie.value
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'newCacheCookie')
+  def newCacheCookie(self, cache_name):
+    """Invalidate cache for this object"""
+    cache_name = '_cache_cookie_' + cache_name
+    try:
+      self.__dict__[cache_name].value += 1
+    except KeyError:
+      self.__dict__[cache_name] = Cookie()
+
 
 class CacheFactory:
   """ CacheFactory is a RAM based object which contains different cache plugin
@@ -157,9 +205,20 @@ class CachingMethod:
   ## cache factories will be initialized for every ERP5 site
   factories = {}
 
+  def _default_cache_id_generator(method_id, *args, **kw):
+    """ Generate proper cache id based on *args and **kw  """
+    ## generate cache id out of arguments passed.
+    ## depending on arguments we may have different
+    ## cache_id for same method_id
+    return str((method_id, args, kw))
+
+  @staticmethod
+  def erasable_cache_id_generator(method_id, obj, *args, **kw):
+    return str((method_id, obj.getCacheCookie(method_id), args, kw))
+
   def __init__(self, callable_object, id, cache_duration=180,
                cache_factory=DEFAULT_CACHE_FACTORY,
-               cache_id_generator=None):
+               cache_id_generator=_default_cache_id_generator):
     """Wrap a callable object in a caching method.
 
     callable_object must be callable.
@@ -177,7 +236,7 @@ class CachingMethod:
     self.callable_object = callable_object
     self.cache_duration = cache_duration
     self.cache_factory = cache_factory
-    self.cache_id_generator = cache_id_generator
+    self.generateCacheId = cache_id_generator
 
   def __call__(self, *args, **kwd):
     """Call the method or return cached value using appropriate cache plugin """
@@ -219,16 +278,6 @@ class CachingMethod:
     cache_factory = CachingMethod.factories[cache_factory]
     for cp in cache_factory.getCachePluginList():
       cp.delete(cache_id, scope)
-
-  def generateCacheId(self, method_id, *args, **kwd):
-    """ Generate proper cache id based on *args and **kwd  """
-    ## generate cache id out of arguments passed.
-    ## depending on arguments we may have different
-    ## cache_id for same method_id
-    cache_id_generator = self.cache_id_generator
-    if cache_id_generator is not None:
-      return cache_id_generator(method_id, *args, **kwd)
-    return str((method_id, args, kwd))
 
 allow_class(CachingMethod)
 
@@ -274,16 +323,16 @@ def generateCacheIdWithoutFirstArg(method_id, *args, **kwd):
 def caching_instance_method(*args, **kw):
   kw.setdefault('cache_id_generator', generateCacheIdWithoutFirstArg)
   @simple_decorator
-  def wrapped(method):
+  def decorator(function):
     # The speed of returned function must be fast
     # so we instanciate CachingMethod now.
-    caching_method = CachingMethod(method, *args, **kw)
+    caching_method = CachingMethod(function, *args, **kw)
     # Here, we can't return caching_method directly because an instanciated
     # class with a __call__ method does not behave exactly like a simple
     # function: if the decorator is used to create a method, the instance on
     # which the method is called would not be passed as first parameter.
     return lambda *args, **kw: caching_method(*args, **kw)
-  return wrapped
+  return decorator
 
 def transactional_cached(key_method=lambda *args: args):
   @simple_decorator
