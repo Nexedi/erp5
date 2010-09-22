@@ -1,3 +1,6 @@
+2010-09-18 nicolas.dumazet
+* add Amount, Movement and portal types to be able to create temporary objects with portal types as classes
+
 2010-09-10 nicolas delaby
 * Declare new mimetype text/csv
 * Accept text/csv as input mimetype for csv_to_text portal_transform chain.
