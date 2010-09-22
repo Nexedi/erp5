@@ -325,7 +325,7 @@ msgid "Account Statement"
 msgstr "Extrait de compte"
 
 msgid "Account Type"
-msgstr "Type de Compte"
+msgstr "Type de compte"
 
 msgid "Account Type must be set"
 msgstr "Le type de compte doit être défini"
@@ -5924,7 +5924,7 @@ msgid "Mirror"
 msgstr "Miroir"
 
 msgid "Mirror Account"
-msgstr "Compte Miroir"
+msgstr "Compte miroir"
 
 msgid "Miss Container [transition in packing_list_container_workflow]"
 msgstr "Déclarer le container comme manquant"
@@ -6017,7 +6017,7 @@ msgid "Motive"
 msgstr "Motif"
 
 msgid "Movement Date"
-msgstr "Date "
+msgstr "Date"
 
 msgid "Movements"
 msgstr "Mouvements"
