@@ -358,15 +358,14 @@ class Variated(Base):
                             'getVariationRangeCategoryList')
   def getVariationRangeCategoryList(self, base_category_list=(), base=1,
                                     root=1, current_category=None,
-                                    omit_individual_variation=0):
+                                    omit_individual_variation=0, **kw):
     """
       Returns the range of acceptable categories
     """
     vrcil = self.getVariationRangeCategoryItemList(
-                          base_category_list=base_category_list,
-                          base=base, root=root, 
-                          current_category=current_category,
-                          omit_individual_variation=omit_individual_variation)
+        base_category_list=base_category_list, base=base, root=root,
+        current_category=current_category,
+        omit_individual_variation=omit_individual_variation, **kw)
     # display is on left
     return [x[1] for x in vrcil]
 
