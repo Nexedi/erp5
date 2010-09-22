@@ -1,3 +1,6 @@
+2010-09-22 kazuhiko
+* use Web Section's url in WebSection_getPermanentURL script, if it is called against a document.
+
 2010-03-05 fabien
 * fix caches id bug. Now caches should works much better.
 
