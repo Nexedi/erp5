@@ -237,7 +237,10 @@ class ERP5TypeInformation(XMLObject,
       'alarm', 'rule',
       # ERP5 UBM (5 Classes)
       'resource', 'node', 'item',
-      'path', # movement is generated from all *_movement group above
+      'path', # movement is generated from all *_movement group above.
+      # Documents need to have portal types associated to them
+      # just to be able to spawn temporary objects with the same behavior
+      'abstract',
       # Trade
       'discount', 'payment_condition', 'payment_node',
       'supply', 'supply_path', 'inventory_movement', 'tax_movement',
