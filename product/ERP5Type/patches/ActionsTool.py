@@ -48,6 +48,10 @@ def migrateNonProviders(portal_actions):
       txn.note(msg)
       portal_actions._actions += provider._actions
       del provider._actions
+    if (getattr(provider, 'listActionInfos', None) is None and
+        getattr(provider, '_listActionInfos', None) is None and
+        getattr(provider, 'getActionListFor', None) is None and
+        not(IActionProvider_providedBy(provider))):
       action_providers.remove(provider_name)
   portal_actions.action_providers = tuple(action_providers)
   
