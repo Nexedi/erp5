@@ -304,6 +304,7 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
         except KeyError:
           pass
 
+      document = document.getObject().__of__(self)
       result = document._getTypeBasedMethod('getPermanentURL',
                      fallback_script_id='WebSection_getPermanentURL')(document,
                          view=view)
