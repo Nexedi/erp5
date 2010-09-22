@@ -36,10 +36,12 @@ class PropertyGroupingMovementGroup(MovementGroup):
   portal_type = 'Property Grouping Movement Group'
 
   def test(self, document, property_dict, **kw):
-    # We always separate the movements from the exsiting document, because we 
-    # did not assign the properties into the document thanks to this movement group.
+    # We did not assign the properties into the document thanks to this movement group.
     # Therefore their is no way to compare the properties between the document
     # and the movements. In other words, they are always different.
+    # So, we only check the update_always flag on the movement group setting here.
+    if self.isUpdateAlways():
+      return True, {}
     return False, {}
 
   def _separate(self, movement_list):
