@@ -1,3 +1,6 @@
+2010-09-22 tatuya
+* Add a movement group to group movements without assignment, by contrast with the assignment movement group.
+
 2010-09-17 yo
 * Add an utility script BusinessPath_build which can be used to unify the way of invoking global builds.
 

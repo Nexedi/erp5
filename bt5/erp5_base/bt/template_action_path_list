@@ -74,6 +74,7 @@ Person | view
 Preference | base_preference
 Property Assignment Movement Group | view
 Property Divergence Tester | view
+Property Grouping Movement Group | view
 Property Movement Group | view
 Quantity Divergence Tester | view
 Quantity Sign Movement Group | view
