@@ -51,7 +51,7 @@ from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.DateUtils import addToDate
-from testOrder import TestOrderMixin
+from Products.ERP5.tests.testOrder import TestOrderMixin
 
 from Products.ERP5Form.Selection import DomainSelection
 
@@ -262,6 +262,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     packing_list = packing_list_module.newContent(
                               portal_type=self.packing_list_portal_type)
     packing_list.edit(
+                      specialise=self.business_process,
                       source_section_value = mirror_section,
                       source_value = mirror_node,
                       destination_section_value = section,
@@ -539,7 +540,9 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     
     for data in data_list:
       # Create Packing List
-      packing_list = packing_list_module.newContent(portal_type=self.packing_list_portal_type)
+      packing_list = packing_list_module.newContent(
+          portal_type=self.packing_list_portal_type,
+          specialise=self.business_process)
       packing_list_list.append(packing_list)
       # Add properties
       property_list = [x for x in data.items() if x[0] not in ('lines','start_date')]
