@@ -218,6 +218,16 @@ class RuleMixin:
     for movement in applied_rule.getMovementList():
       movement.expand(**kw)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self, movement):
+    """Tells wether generated movement needs to be accounted or not.
+
+    Only account movements which are not associated to a delivery;
+    Whenever delivery is there, delivery has priority
+    """
+    return movement.getDeliveryValue() is None
+
   # Implementation of IDivergenceController # XXX-JPS move to IDivergenceController only mixin for 
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isDivergent')

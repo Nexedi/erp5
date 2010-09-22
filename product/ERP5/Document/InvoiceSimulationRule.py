@@ -64,6 +64,17 @@ class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
     PropertySheet.Rule
     )
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self, movement):
+    """
+    Tells whether generated movement needs to be accounted or not.
+
+    Invoice movement are never accountable, so simulation movement for
+    invoice movements should not be accountable either.
+    """
+    return False
+
   def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process

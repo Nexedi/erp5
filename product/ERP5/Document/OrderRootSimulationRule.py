@@ -67,6 +67,16 @@ class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predica
     PropertySheet.Rule
     )
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self, movement):
+    """Tells wether generated movement needs to be accounted or not.
+
+    Order movement are never accountable, so simulation movement for
+    order movements should not be accountable either.
+    """
+    return False
+
   def _getMovementGenerator(self, context):
     """
     Return the movement generator to use in the expand process
