@@ -49,7 +49,6 @@
 </thead><tbody>\n
 \n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
-\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/portal_contributions/view</td>\n

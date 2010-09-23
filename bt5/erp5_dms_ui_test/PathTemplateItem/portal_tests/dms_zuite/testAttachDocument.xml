@@ -51,7 +51,18 @@
 </thead><tbody>\n
 \n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
-\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/person_module/Zuite_setupDMS</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Done</td>\n
+  <td></td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/person_module/view?reset:int=1</td>\n
