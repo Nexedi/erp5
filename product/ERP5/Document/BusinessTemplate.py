@@ -598,6 +598,11 @@ class BaseTemplateItem(Implicit, Persistent):
         #'Z SQL Method': ('_arg', 'template',),
       }.get(meta_type, ()))
 
+      if interfaces.IIdGenerator.providedBy(obj):
+        for dict_name in ('last_max_id_dict', 'last_id_dict'):
+          if getattr(obj, dict_name, None) is not None:
+            delattr(obj, dict_name)
+
     for attr in obj.__dict__.keys():
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
@@ -613,10 +618,6 @@ class BaseTemplateItem(Implicit, Persistent):
       else:
         # save result of automatic compilation
         obj._p_changed = 1
-    elif interfaces.IIdGenerator.providedBy(obj):
-      for dict_name in ('last_max_id_dict', 'last_id_dict'):
-        if getattr(obj, dict_name, None) is not None:
-          delattr(obj, dict_name)
     return obj
 
   def getTemplateTypeName(self):
