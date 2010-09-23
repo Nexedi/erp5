@@ -74,7 +74,8 @@ if dms_preference_id not in portal_preferences.objectIds():\n
                     id = dms_preference_id,\n
                     portal_type = \'Preference\',\n
                     priority = 1,\n
-                    preferred_html_style_access_tab=1)\n
+                    preferred_html_style_access_tab=1,\n
+                    preferred_listbox_list_mode_line_count=10)\n
   dms_preference.enable()\n
 \n
 # Publish all knowledge pad gadgets\n
