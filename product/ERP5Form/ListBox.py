@@ -2426,16 +2426,21 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 error = sys.exc_info())
         else:
           try:
-            url = '%s/view?ignore_layout:int=%s&amp;reset:int=1' % (
+            url = '%s/view' % (
                       # brain.absolute_url() is slow because it invokes
                       # _aq_dynamic() every time to get brain.REQUEST,
                       # so we call request.physicalPathToURL() directly
                       # instead of brain.absolute_url().
-                      request.physicalPathToURL(brain.getPath()),
-                      ignore_layout)
+                      request.physicalPathToURL(brain.getPath()),)
+            params = []
+            if ignore_layout:
+              params.append('ignore_layout:int=1')
             if selection_name:
-              url += '&amp;selection_index=%s&amp;selection_name=%s' % (
-                self.index, selection_name)
+              params.extend(('selection_name=%s' % selection_name,
+                             'selection_index=%s' % self.index,
+                             'reset:int=1'))
+            if params:
+              url = '%s?%s' % (url, '&amp;'.join(params))
           except AttributeError:
             pass
 
