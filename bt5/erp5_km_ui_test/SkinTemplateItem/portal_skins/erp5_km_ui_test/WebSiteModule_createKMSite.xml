@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,42 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   Initialize a KM site.\n
 """\n
 portal = context.getPortalObject()\n
-"""\n
-if site_id not in context.objectIds():\n
-  km_website = context.newContent(id = site_id, \\\n
-                                  title = title, \n
-                                  portal_type = \'Web Site\')\n
-  km_website.edit(skin_selection_name = \'KM\',\n
-                  container_layout = \'erp5_km_minimal_layout\',\n
-                  content_layout = \'erp5_km_minimal_content_layout\',\n
-                  custom_render_method_id = \'WebSite_viewKnowledgePad\',\n
-                  layout_configuration_form_id = \'WebSection_viewKMMinimalThemeConfiguration\',\n
-                  static_language_selection = True,\n
-                  visible = True,\n
-                  site_map_section_parent = True,\n
-                  default_available_language = \'en\')\n
-"""\n
 \n
-km_preference_id = \'km_site_test\'\n
-portal_preferences = context.portal_preferences\n
-if km_preference_id not in portal_preferences.objectIds():\n
-  km_preference = portal_preferences.newContent(\n
-                    id = km_preference_id,\n
-                    portal_type = \'System Preference\',\n
-                    priority = 1,\n
-                    preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
-                    preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
-                    preferred_synchronous_metadata_discovery = True,\n
-                    preferred_redirect_to_document = True,\n
-                    preferred_ooodoc_server_address = context.Zuite_getConversionServerDict()["oood_hostname"],\n
-                    preferred_ooodoc_server_port_number = context.Zuite_getConversionServerDict()["oood_port"])\n
-  km_preference.enable()\n
+# setup DMS settings\n
+portal.Zuite_setupDMS()\n
 \n
 # publish the test web page so we can use it in tests for setting default WEb Section page\n
 for reference in (\'minimal_km_footer\', \'km.web.site.test.page\',):\n
@@ -100,9 +68,7 @@ for reference in (\'minimal_km_footer\', \'km.web.site.test.page\',):\n
 portal.portal_caches.clearAllCache()\n
 \n
 return "Created Successfully."\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -151,11 +117,6 @@ return "Created Successfully."\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
-                            <string>km_preference_id</string>
-                            <string>portal_preferences</string>
-                            <string>True</string>
-                            <string>_getitem_</string>
-                            <string>km_preference</string>
                             <string>_getiter_</string>
                             <string>reference</string>
                             <string>km_page</string>

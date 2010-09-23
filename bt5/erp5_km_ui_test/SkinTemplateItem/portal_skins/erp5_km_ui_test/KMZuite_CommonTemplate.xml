@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -74,19 +71,6 @@
 \n
 <tal:block metal:define-macro="deleteKMWebSite">\n
     <!-- delete the web_site XXX: not used anymore as no need to delete site -->\n
-    <!--\n
-    <tr>\n
-      <td>open</td>\n
-      <td>${base_url}/web_site_module/WebSiteModule_deleteKMSite?site_id=km_test_web_site</td>\n
-      <td></td>\n
-      <td>Delete KM site</td>\n
-    </tr>\n
-    <tr>\n
-      <td>assertTextPresent</td>\n
-      <td>Deleted Successfully.</td>\n
-      <td></td>\n
-    </tr>\n
-    -->\n
 </tal:block>\n
 \n
 \n
