@@ -585,20 +585,20 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     Remove unneeded properties for export
     """
-    meta_type = getattr(aq_base(obj), 'meta_type', None)
-    if meta_type == 'Script (Python)':
-      meta_type = 'ERP5 Python Script'
+    klass = obj.__class__
+    classname = klass.__name__
 
     attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'uid',
                     'workflow_history', '__ac_local_roles__'))
     if export:
-      attr_set.update({
-        'ERP5 Python Script': (#'func_code', 'func_defaults', '_code',
-                               '_lazy_compilation', 'Python_magic'),
-        #'Z SQL Method': ('_arg', 'template',),
-      }.get(meta_type, ()))
-
-      if interfaces.IIdGenerator.providedBy(obj):
+      # PythonScript covers both Zope Python scripts
+      # and ERP5 Python Scripts
+      if classname == 'PythonScript':
+        attr_set.update((#'func_code', 'func_defaults', '_code',
+                         '_lazy_compilation', 'Python_magic'))
+      #elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods':
+      #  attr_set.update(('_arg', 'template'))
+      elif interfaces.IIdGenerator.providedBy(obj):
         for dict_name in ('last_max_id_dict', 'last_id_dict'):
           if getattr(obj, dict_name, None) is not None:
             delattr(obj, dict_name)
@@ -607,10 +607,10 @@ class BaseTemplateItem(Implicit, Persistent):
       if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
 
-    if meta_type == 'ERP5 PDF Form':
+    if classname == 'PDFForm':
       if not obj.getProperty('business_template_include_content', 1):
         obj.deletePdfContent()
-    elif meta_type == 'ERP5 Python Script':
+    elif classname == 'PythonScript':
       if export:
         # XXX forward compatibility: set to None instead of deleting '_code'
         #     so that old BT code can import recent BT
