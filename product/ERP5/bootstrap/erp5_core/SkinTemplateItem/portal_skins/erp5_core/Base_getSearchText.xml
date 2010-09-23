@@ -53,11 +53,11 @@
             <value> <string>"""\n
   Get search text from REQUEST or selection.\n
 """\n
-\n
 request = context.REQUEST\n
+\n
 if not argument_name_list:\n
-  form_id = request.get(\'form_id\', None)\n
-  field_id = request.get(\'field_id\', None)\n
+  form_id = request.get(\'listbox_form_id\', None)\n
+  field_id = request.get(\'listbox_field_id\', None)\n
   if form_id is not None and field_id is not None:\n
     # get values from current ERP5 form listbox being rendered\n
     form = getattr(context, form_id)\n
