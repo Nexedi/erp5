@@ -599,9 +599,7 @@ class BaseTemplateItem(Implicit, Persistent):
       #elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods':
       #  attr_set.update(('_arg', 'template'))
       elif interfaces.IIdGenerator.providedBy(obj):
-        for dict_name in ('last_max_id_dict', 'last_id_dict'):
-          if getattr(obj, dict_name, None) is not None:
-            delattr(obj, dict_name)
+        attr_set.update(('last_max_id_dict', 'last_id_dict'))
 
     for attr in obj.__dict__.keys():
       if attr in attr_set or attr.startswith('_cache_cookie_'):
