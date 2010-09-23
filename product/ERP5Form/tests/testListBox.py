@@ -631,10 +631,10 @@ return []
     request = get_request()
     portal.ListBoxZuite_reset()
     form = portal.FooModule_viewFooList
-    self.assertEqual(None, request.get('form_id'))
+    self.assertEqual(None, request.get('listbox_form_id'))
     form.render()
-    self.assertEqual(form.getId(), request.get('form_id'))
-    self.assertEqual(form.listbox.getId(), request.get('field_id'))
+    self.assertEqual(form.getId(), request.get('listbox_form_id'))
+    self.assertEqual(form.listbox.getId(), request.get('listbox_field_id'))
 
 
 def test_suite():
