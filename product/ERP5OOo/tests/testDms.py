@@ -2201,7 +2201,7 @@ class TestDocumentPerformance(TestDocumentMixin):
     after = time.time()
     req_time = (after - before)
     # we should have image converted in less than 20s
-    self.assertTrue(req_time < 20.0)
+    self.assertTrue(req_time < 30.0)
     
 def test_suite():
   suite = unittest.TestSuite()
