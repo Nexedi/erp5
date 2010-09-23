@@ -613,10 +613,10 @@ class BaseTemplateItem(Implicit, Persistent):
       else:
         # save result of automatic compilation
         obj._p_changed = 1
-    elif  interfaces.IIdGenerator.providedBy(obj):
+    elif interfaces.IIdGenerator.providedBy(obj):
       for dict_name in ('last_max_id_dict', 'last_id_dict'):
         if getattr(obj, dict_name, None) is not None:
-          setattr(obj, dict_name, None)
+          delattr(obj, dict_name)
     return obj
 
   def getTemplateTypeName(self):
