@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts84981811.49</string> </value>
+            <value> <string>ts85230314.89</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -428,6 +428,13 @@ div.gadget-rss-reader table.listbox td.listbox-table-no-result-row{\n
   display: none;\n
 }\n
 \n
+/* Other versions gadget needs no listbox headers */\n
+div.gadget-other-versions  div.listbox-head-content\n
+{\n
+  display: none;\n
+}\n
+\n
+\n
 /* Gadget admin toolbox (deprecated)*/\n
 .gadget .adminToolbox > label{\n
 \n
@@ -544,7 +551,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9377</int> </value>
+            <value> <int>9505</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
