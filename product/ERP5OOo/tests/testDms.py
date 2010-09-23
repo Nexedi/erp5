@@ -2065,6 +2065,49 @@ return 1
     self.assertEqual(request.get('advanced_search_text'),
                      portal.Base_getSearchText())
 
+  def test_Document_getOtherVersionDocumentList(self):
+    """
+      Test getting list of other documents which have the same reference.
+    """
+    request = get_request()
+    portal = self.portal
+
+    kw={'reference': 'one_that_will_never_change',
+        'language': 'en',
+         'version': '001'}
+    document1 = portal.document_module.newContent(portal_type="Presentation", **kw)
+    self.stepTic()
+    self.assertEquals(0, len(document1.Document_getOtherVersionDocumentList()))
+
+    kw['version'] == '002'
+    document2 = portal.document_module.newContent(portal_type="Spreadsheet", **kw)
+    self.stepTic()
+
+    web_page1 = portal.web_page_module.newContent(portal_type="Web Page", \
+                                                  **{'reference': 'embedded',
+                                                     'version': '001'})
+    web_page2 = portal.web_page_module.newContent(portal_type="Web Page", \
+                                                 **{'reference': 'embedded',
+                                                    'version': '002'})
+    self.stepTic()
+
+    # both documents should be in other's document version list
+    self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList()], \
+                        [document2])
+    self.assertSameSet([x.getObject() for x in document2.Document_getOtherVersionDocumentList()], \
+                        [document1])
+    
+    # limit by portal type works
+    self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList(**{'portal_type':'Presentation'})], \
+                        [])
+
+    # current_web_document mode (i.e. embedded Web Page in Web Section) can override current context
+    request.set('current_web_document', web_page1)
+    self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList()], \
+                        [web_page2])
+    request.set('current_web_document', web_page2)
+    self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList()], \
+                        [web_page1])
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
