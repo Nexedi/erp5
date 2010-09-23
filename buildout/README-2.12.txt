@@ -153,9 +153,9 @@ Now a fully configured development instance will be available in the directory
 
 And see an ERP5 instance running on "http://localhost:18080/". The port '18080'
 refers to the 'development-instance:http-address' setting in
-'instance-profiles/development-2.12.cfg'. The file 
-'instance-profiles/zope-2.12.cfg' provides the "Manager" credentials you should
-use (usually zope:zope), in the 'zope-instance-template:user' variable.
+'profiles/development-2.12.cfg'. The file 'instance-profiles/zope-2.12.cfg'
+provides the "Manager" credentials you should use (usually zope:zope), in
+the 'zope-instance-template:user' variable.
 
 You should also be able to run ERP5 unit tests like so:
 
