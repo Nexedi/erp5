@@ -58,11 +58,3 @@ def getSite():
   return portal
 hooks.getSite = getSite
 
-from Products.CMFActivity.ActivityTool import ActivityTool
-ActivityTool_process_timer = ActivityTool.process_timer
-def process_timer(self, *args, **kw):
-  portal = self.getPortalObject()
-  hooks.setSite(portal)
-  return ActivityTool_process_timer(self, *args, **kw)
-ActivityTool.process_timer = process_timer
-

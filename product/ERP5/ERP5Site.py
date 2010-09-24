@@ -37,7 +37,6 @@ from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
-from Products.ERP5Type.patches.getSite import getSite as load_this_patch_now
 from zope.site.hooks import setSite
 
 from zLOG import LOG, INFO
