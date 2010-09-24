@@ -49,12 +49,12 @@ class BaseType:
         , 'mode':       'w'
         , 'label':      'Document class the Portal Type inherits from'
          },
-        { 'id':         'type_mixin_list'
+        { 'id':         'type_mixin'
         , 'type':       'lines'
         , 'mode':       'w'
         , 'label':      'List of Mixins that are attached to the Portal Type'
          },
-        { 'id':         'type_interface_list'
+        { 'id':         'type_interface'
         , 'type':       'lines'
         , 'mode':       'w'
         , 'label':      'List of Interfaces that the Portal Type implements'
