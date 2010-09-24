@@ -667,7 +667,7 @@ table.listbox{\n
 table.listbox th,\n
 table.listbox td {\n
   text-align:left;\n
-  vertical-align: middle;\n
+  vertical-align: top;\n
   border-color:#3D6474;\n
   border-style:solid;\n
   border-width:0 1px;\n
