@@ -71,8 +71,7 @@
                     <key> <string>gadget</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
-                        <string>listbox_date</string>
+                        <string>admin_toolbox</string>
                       </list>
                     </value>
                 </item>
@@ -81,7 +80,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_viewHistoryGadget</string> </value>
+            <value> <string>Base_viewToolboxGadget</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -89,7 +88,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Document_viewHistoryGadget</string> </value>
+            <value> <string>Document_viewProfileRenderer</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -105,7 +104,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Document History</string> </value>
+            <value> <string>Admin Toolbox</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

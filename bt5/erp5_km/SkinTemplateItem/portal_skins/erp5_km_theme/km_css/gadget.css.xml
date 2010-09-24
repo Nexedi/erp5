@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts85230314.89</string> </value>
+            <value> <string>ts85309775.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -203,6 +203,10 @@ div.edit-form fieldset{\n
   border: none;\n
 }\n
 \n
+div.edit-form label{\n
+  display: block;\n
+}\n
+\n
 div.edit-form button{\n
   margin-top: 0.5em;\n
 }\n
@@ -316,11 +320,6 @@ div.gadget-website-browser ul.second_level{\n
 div.gadget-website-browser ul.first_level {\n
   padding-bottom: 0.5em;\n
 }\n
-/*\n
-div.gadget-website-browser .section-link{\n
-  font-size: 115%;\n
-}\n
-*/\n
 \n
 div.gadget-website-browser ul.second_level{\n
   padding-left: 0.7em;\n
@@ -428,48 +427,17 @@ div.gadget-rss-reader table.listbox td.listbox-table-no-result-row{\n
   display: none;\n
 }\n
 \n
-/* Other versions gadget needs no listbox headers */\n
+/* "Other versions" gadget needs no listbox headers */\n
 div.gadget-other-versions  div.listbox-head-content\n
 {\n
   display: none;\n
 }\n
 \n
-\n
-/* Gadget admin toolbox (deprecated)*/\n
-.gadget .adminToolbox > label{\n
-\n
-  display:none;\n
-\n
+/* "history" gadget needs no listbox headers */\n
+div.gadget-history  div.listbox-head-content\n
+{\n
+  display: none;\n
 }\n
-\n
-.gadget .adminToolbox .inner select{\n
-\n
-  width: 100%;\n
-\n
-}\n
-\n
-div.adminToolbox button[type="submit"] {\n
-\n
-display:none;\n
-\n
-}\n
-\n
-div.adminToolbox fieldset {\n
-  display:block;\n
-}\n
-\n
-div.adminToolbox fieldset .clone-button{\n
-  text-align: center;\n
-}\n
-\n
-div.adminToolbox fieldset {\n
-  display:block;\n
-}\n
-\n
-div.adminToolbox fieldset .clone-button{\n
-  text-align: center;\n
-}\n
-\n
 \n
 div.block {\n
   margin-bottom: 5px;\n
@@ -525,22 +493,6 @@ div.wait_block p{\n
 div.portal-column-undraggable .handle{\n
   cursor: default;\n
 }\n
-\n
-/* admin toolbox gadget fix */\n
-div.block div.adminToolbox li{\n
-  list-style-type:none;\n
-}\n
-\n
-/* h3 tags containing spans get affected by gadget box title */\n
-div.block div.adminToolbox h3 span{\n
-  display:inline ;\n
-  float:none ;\n
-}\n
-\n
-\n
-div.block div.adminToolbox .inner label{\n
-  color: #9D968D;\n
-}\n
 
 
 ]]></string> </value>
@@ -551,7 +503,7 @@ div.block div.adminToolbox .inner label{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>9505</int> </value>
+            <value> <int>8868</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
