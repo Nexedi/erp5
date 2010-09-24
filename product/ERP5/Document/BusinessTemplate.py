@@ -35,6 +35,7 @@ from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.CMFCore.utils import getToolByName
+from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod, _aq_reset
 from Products.ERP5Type.Utils import readLocalDocument, \
@@ -585,6 +586,7 @@ class BaseTemplateItem(Implicit, Persistent):
     """
     Remove unneeded properties for export
     """
+    obj._p_activate()
     klass = obj.__class__
     classname = klass.__name__
 
@@ -593,7 +595,10 @@ class BaseTemplateItem(Implicit, Persistent):
     if export:
       # PythonScript covers both Zope Python scripts
       # and ERP5 Python Scripts
-      if classname == 'PythonScript':
+      if isinstance(obj, PythonScript):
+        # XXX forward compatibility: set to None instead of deleting '_code'
+        #     so that old BT code can import recent BT
+        obj._code = None
         attr_set.update((#'func_code', 'func_defaults', '_code',
                          '_lazy_compilation', 'Python_magic'))
       #elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods':
@@ -608,14 +613,6 @@ class BaseTemplateItem(Implicit, Persistent):
     if classname == 'PDFForm':
       if not obj.getProperty('business_template_include_content', 1):
         obj.deletePdfContent()
-    elif classname == 'PythonScript':
-      if export:
-        # XXX forward compatibility: set to None instead of deleting '_code'
-        #     so that old BT code can import recent BT
-        obj._code = None
-      else:
-        # save result of automatic compilation
-        obj._p_changed = 1
     return obj
 
   def getTemplateTypeName(self):
@@ -848,7 +845,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       # FIXME: Why not use the importXML function directly? Are there any BT5s
       # with actual .zexp files on the wild?
       obj = connection.importFile(file_obj, customImporters=customImporters)
-    self.removeProperties(obj, 0)
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_item, **kw):
@@ -858,8 +854,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       type_name = self.__class__.__name__.split('TemplateItem')[-2]
       for path in self._objects:
         if installed_item._objects.has_key(path):
-          upgrade_list.append((path,
-            self.removeProperties(installed_item._objects[path], 0)))
+          upgrade_list.append((path, installed_item._objects[path]))
         else: # new object
           modified_object_list[path] = 'New', type_name
       # update _p_jar property of objects cleaned by removeProperties
@@ -1050,6 +1045,10 @@ class ObjectTemplateItem(BaseTemplateItem):
 
           # install object
           obj = self._objects[path]
+          # XXX Following code make Python Scripts compile twice, because
+          #     _getCopy returns a copy without the result of the compilation.
+          #     A solution could be to add a specific _getCopy method to
+          #     Python Scripts.
           if getattr(aq_base(obj), 'groups', None) is not None:
             # we must keep original order groups
             # because they change when we add subobjects
@@ -1065,6 +1064,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                 'Cleaning corrupted BTreeFolder2 object at %r.' % (path,))
             obj._initBTrees()
           obj = obj._getCopy(container)
+          self.removeProperties(obj, 0)
           try:
             container._setObject(object_id, obj)
           except AttributeError:
@@ -1837,6 +1837,7 @@ class WorkflowTemplateItem(ObjectTemplateItem):
             container.manage_delObjects([object_id])
           obj = self._objects[path]
           obj = obj._getCopy(container)
+          self.removeProperties(obj, 0)
           container._setObject(object_id, obj)
           obj = container._getOb(object_id)
           obj.manage_afterClone(obj)
@@ -1877,9 +1878,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       relative_url = '%s/%s' % (obj.getPhysicalPath()[-2:])
 
       obj = obj._getCopy(context)
-      # obj is in ghost state and an attribute must be accessed
-      # so that obj.__dict__ does not return an empty dict
-      obj.meta_type
+      obj._p_activate()
       for attr in obj.__dict__.keys():
         if attr == '_property_domain_dict':
           continue
