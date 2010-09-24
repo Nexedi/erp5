@@ -55,18 +55,7 @@
 \n
 <tr>\n
   <td>openAndWait</td>\n
-  <td>${base_url}/web_site_module/km_test_web_site</td>\n
-  <td></td>\n
-</tr>\n
-\n
-<tr>\n
-  <td>click</td>\n
-  <td>//li[@id=\'select-module-toolbox\']/h3</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>Base_doModule:method</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site/document_module/view?reset:int=1</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
