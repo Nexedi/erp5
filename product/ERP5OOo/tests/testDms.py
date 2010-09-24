@@ -2109,6 +2109,28 @@ return 1
     self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList()], \
                         [web_page1])
 
+
+  def test_Base_getWorkflowEventInfoList(self):
+    """
+      Test getting history of an object.
+    """
+    portal = self.portal
+    document = portal.document_module.newContent(portal_type="Presentation")
+    document.edit(title='New')
+    document.publish()
+    document.reject()
+    document.share()
+    logged_in_user = str(self.portal.portal_membership.getAuthenticatedMember())
+    event_list = document.Base_getWorkflowEventInfoList()
+    event_list.reverse()
+    # all actions by logged in user
+    for event in event_list:
+      self.assertEquals(event.actor, logged_in_user)
+    self.assertEquals(event_list[0].action, 'Edit')
+    self.assertEquals(event_list[-1].action, 'Share Document')
+    self.assertEquals(event_list[-2].action, 'Reject Document')
+    self.assertEquals(event_list[-3].action, 'Publish Document')
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
