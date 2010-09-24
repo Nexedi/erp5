@@ -36,6 +36,7 @@ from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from zope.site.hooks import setSite
 
 from zLOG import LOG, INFO
 from string import join
@@ -351,6 +352,14 @@ class ERP5Site(FolderMixIn, CMFSite):
   security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
   getPath = getUrl
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'objectValues')
+  def objectValues(self, *args, **kw):
+    # When stepping in an ERP5Site from outside,
+    # (e.g. left hand tree frame in {zope root}/manage )
+    # we need to set up the site to load portal types inside each site
+    setSite(self)
+    return super(FolderMixIn, self).objectValues(*args, **kw)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
   def searchFolder(self, **kw):
     """
@@ -359,6 +368,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     if not kw.has_key('parent_uid'):
       kw['parent_uid'] = self.uid
+    setSite(self)
     return self.portal_catalog.searchResults(**kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'countFolder')
@@ -369,6 +379,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     if not kw.has_key('parent_uid'):
       kw['parent_uid'] = self.uid
+    setSite(self)
     return self.portal_catalog.countResults(**kw)
 
   # Proxy methods for security reasons
@@ -1465,6 +1476,23 @@ class ERP5Generator(PortalGenerator):
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
+
+    setSite(p)
+
+    try:
+      sm = p.getSiteManager()
+    except:
+      # Zope 2.8, ot site manager, no DefaultTraversable, dont care
+      pass
+    else:
+      import zope
+      # XXX hackish, required to setUpERP5Core while in tests,
+      # could probably be better
+      # (for some reason calling setSite here does not allow
+      # the newly created site to find the global DefaultTraversable
+      # object)
+      sm.registerAdapter(zope.traversing.adapters.DefaultTraversable,
+                         required=(zope.interface.Interface,))
 
     erp5_sql_deferred_connection_string = erp5_sql_connection_string
     p._setProperty('erp5_catalog_storage',

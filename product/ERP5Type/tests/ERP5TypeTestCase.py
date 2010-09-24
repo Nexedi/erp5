@@ -46,13 +46,6 @@ def get_request():
 Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
 
-try:
-  from zope.site.hooks import setSite
-except ImportError:
-  # BACK: Zope 2.8. setSite is somewhere else, and we can't use it anyway
-  # since ERP5Site is not yet an ISite. Remove once we drop support for 2.8
-  def setSite(site=None):
-    pass
 
 try:
   import itools.zope
@@ -916,6 +909,8 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
               # Release locks
               transaction.commit()
             self.portal = portal
+
+            setSite(portal)
 
             # Make sure skins are correctly set-up (it's not implicitly set up
             # by Acquisition on Zope 2.12 as it is on 2.8)
