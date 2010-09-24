@@ -144,7 +144,7 @@ def _recursiveRemoveUid(obj):
   This is used to prevent unindexing real objects when we delete subobjects on
   a copy of this object.
   """
-  if hasattr(aq_base(obj), 'uid'):
+  if getattr(aq_base(obj), 'uid', _MARKER) is not _MARKER:
     obj.uid = None
   for subobj in obj.objectValues():
     _recursiveRemoveUid(subobj)
