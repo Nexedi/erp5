@@ -31,7 +31,7 @@ import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Type.Document.BusinessTemplate import getChainByType
+from Products.ERP5.Document.BusinessTemplate import getChainByType
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testOrder import TestOrderMixin

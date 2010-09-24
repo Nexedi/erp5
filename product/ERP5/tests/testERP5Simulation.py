@@ -38,7 +38,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from testPackingList import TestPackingList, TestPackingListMixin
 from testInvoice import TestSaleInvoice, TestInvoiceMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from Products.ERP5Type.Document.BusinessTemplate import getChainByType
+from Products.ERP5.Document.BusinessTemplate import getChainByType
 
 class TestERP5SimulationMixin(TestInvoiceMixin):
   def getBusinessTemplateList(self):
