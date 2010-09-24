@@ -4852,42 +4852,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Create temporary modules/classes for classes defined by this BT.
       # This is required if the BT contains instances of one of these classes.
-      orig_module_dict = {}
-      instance_oid_list = []
+      module_id_list = []
       for template_id in self.getTemplateDocumentIdList():
-          module_id = 'Products.ERP5Type.Document.' + template_id
-          orig_module_dict[module_id] = sys.modules.get(module_id)
-          # Always redefine the module, so that 'instance_oid_list' contains
-          # the full list of oid to remove from pickle cache.
+        module_id = 'Products.ERP5Type.Document.' + template_id
+        if module_id not in sys.modules:
+          module_id_list.append(module_id)
           sys.modules[module_id] = module = imp.new_module(module_id)
-          module.SimpleItem = SimpleItem.SimpleItem
-          module.instance_oid_list = instance_oid_list
-          exec """class %s(SimpleItem):
-            def __setstate__(self, state):
-              instance_oid_list.append(self._p_oid)
-              return SimpleItem.__setstate__(self, state)""" % template_id \
-            in module.__dict__
+          setattr(module, template_id, type(template_id,
+            (SimpleItem.SimpleItem,), {'__module__': module_id}))
 
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
 
-      if instance_oid_list:
-        # If a temporary class was used, we must force all instances using it
-        # to be reloaded (i.e. unpickle) on next access (at installation).
-        # Doing a savepoint will pickle them to a temporary storage so that all
-        # references to it can be freed.
-        transaction.savepoint(optimistic=True)
-        self._p_jar.cacheMinimize()
-        gc.collect()
-
       # Remove temporary modules created above to allow import of real modules
       # (during the installation).
-      # Restore original module if any, in case the new one is not installed.
-      for module_id, module in orig_module_dict.iteritems():
-        if module is None:
-          del sys.modules[module_id]
-        else:
-          sys.modules[module_id] = module
+      for module_id in module_id_list:
+        del sys.modules[module_id]
 
     def getItemsList(self):
       """Return list of items in business template

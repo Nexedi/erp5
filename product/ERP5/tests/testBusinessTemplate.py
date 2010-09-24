@@ -6630,12 +6630,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.play(self, quiet=quiet)
 
   def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
+    # This test does too much since we don't modify objects anymore during
+    # download. Objects are cleaned up during installation, which does not
+    # require any specific action about garbage collection or pickle cache.
     from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
     portal = self.portal
     BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
     marker_list = []
     def removeProperties(self, obj, export):
-      # Check it works if the object is modified during download.
+      # Check it works if the object is modified during install.
       obj.int_index = marker_list.pop()
       return obj
     SimpleItem_getCopy = SimpleItem._getCopy
@@ -6655,15 +6658,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       del self.logged[:]
       # check its class has not yet been overriden
       self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
-      for i in xrange(6):
+      for i in (0, 1):
         marker_list.append(i)
         gc.disable()
         bt = template_tool.download(bt_path)
-        assert not marker_list
-        if i in (2, 4, 5):
+        assert marker_list
+        if i:
           transaction.commit()
           self.tic()
         bt.install(force=1)
+        assert not marker_list
         gc.enable()
         self.assertEqual(portal.some_file.int_index, i)
         transaction.commit()
