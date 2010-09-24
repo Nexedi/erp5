@@ -83,16 +83,7 @@
   <td>//ul[@class="breadcrumb"]//li[3]/a@href</td>\n
   <td>file_url</td>\n
 </tr>\n
-<tr>\n
-  <td>openAndWait</td>\n
-  <td>${base_url}/Zuite_waitForActivities</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Done.</td>\n
-  <td></td>\n
-</tr>\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${file_url}?editable_mode:int=1</td>\n
