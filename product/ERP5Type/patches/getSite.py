@@ -7,6 +7,12 @@ try:
 except ImportError:
   # backwards compatibility for Zope < 2.12
   import imp, sys
+  import zope
+  try:
+    site = zope.site
+  except:
+    sys.modules['zope.site'] = zope.site = imp.new_module('zope.site')
+
   sys.modules[module_name] = hooks = imp.new_module(module_name)
   def setSite(foo=None):
     pass
