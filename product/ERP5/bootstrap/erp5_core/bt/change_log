@@ -1,3 +1,7 @@
+2010-09-24 arnaud.fontaine
+* Add Portal Types and views for web-based Property Sheets.
+* Add elementary_type to portal_categories to represent Property Sheets types.
+
 2010-09-18 nicolas.dumazet
 * add Amount, Movement and portal types to be able to create temporary objects with portal types as classes
 

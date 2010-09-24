@@ -74,9 +74,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -110,7 +108,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PropertySheet_view</string> </value>
+            <value> <string>CategoryProperty_view</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -118,7 +116,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>PropertySheet_view</string> </value>
+            <value> <string>CategoryPropertySheetItem_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -134,7 +132,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Property Sheet</string> </value>
+            <value> <string>Category Property</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

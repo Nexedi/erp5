@@ -10,14 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
+                <string>description</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_multivalued</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,23 +73,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>Determines if the property is multivalued</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_checkbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -101,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Property Sheet Items</string> </value>
+                    <value> <string>Multivalued</string> </value>
                 </item>
               </dictionary>
             </value>

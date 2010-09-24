@@ -10,14 +10,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>columns</string>
+                <string>description</string>
                 <string>title</string>
+                <string>view_separator</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>my_content_acquired_property_id_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,23 +74,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>title</string>
-                          <string>Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <key> <string>description</string> </key>
+                    <value> <string>Properties to be synchronized with the current object</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_lines_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -101,7 +91,15 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Property Sheet Items</string> </value>
+                    <value> <string>Content Acquired Property ID</string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<br />
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>

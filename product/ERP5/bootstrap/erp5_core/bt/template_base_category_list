@@ -15,6 +15,7 @@ destination_payment_region
 destination_project
 destination_section
 destination_trade
+elementary_type
 mapping
 order
 origin

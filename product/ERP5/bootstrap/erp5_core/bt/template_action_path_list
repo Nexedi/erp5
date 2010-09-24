@@ -1,3 +1,4 @@
+Acquired Property | view
 Action Information | view
 Alarm Tool | alarm_report
 Alarm Tool | view
@@ -31,6 +32,7 @@ Cache Factory | statistics
 Cache Factory | view
 Cache Tool | statistics
 Cache Tool | view
+Category Property | view
 Category Tool | export_category_list
 Category Tool | fast_input
 Category Tool | view
@@ -43,6 +45,7 @@ Document | view
 Domain Generator | view
 Domain Tool | view
 Domain | view
+Dynamic Category Property | view
 Folder | view
 Id Tool | view
 Memcached Plugin | view
@@ -64,6 +67,7 @@ Rule Tool | view
 SQL Non Continuous Increasing Id Generator | view
 Simulation Movement | view
 Simulation Tool | view
+Standard Property | view
 System Preference | view
 Template Tool | detailed_diff
 Template Tool | diff
