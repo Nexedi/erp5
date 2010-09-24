@@ -1,4 +1,7 @@
 2010-09-24 arnaud.fontaine
+* Add action "Configure Property Sheets".
+
+2010-09-24 arnaud.fontaine
 * Add Portal Types and views for web-based Property Sheets.
 * Add elementary_type to portal_categories to represent Property Sheets types.
 
