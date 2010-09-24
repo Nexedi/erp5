@@ -221,6 +221,7 @@ failed_portal_installation = {}
 # this is a mapping 'list of business template -> boolean
 setup_done = {}
 
+from zope.site.hooks import setSite
 
 def _getConnectionStringDict():
   """Returns the connection strings used for this test.
