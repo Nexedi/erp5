@@ -3374,6 +3374,7 @@ class DocumentTemplateItem(BaseTemplateItem):
             # Then we need to flush from all caches, not only the one from this
             # connection
             self.getPortalObject()._p_jar.db().cacheMinimize()
+            gc.collect()
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       for id in self._archive.keys():
