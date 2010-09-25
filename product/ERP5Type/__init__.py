@@ -33,6 +33,13 @@
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
+# This is used to register all Document classes used in ERP5
+# items are class names, values are class paths, e.g.:
+#   'Person' -> 'Products.ERP5.Document.Person.Person'
+document_class_registry = {}
+# similarly for mixins
+mixin_class_registry = {}
+
 # Switch(es) for ongoing development which require single code base
 
 # Update ERP5 Globals

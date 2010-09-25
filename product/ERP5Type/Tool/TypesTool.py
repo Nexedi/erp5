@@ -161,6 +161,22 @@ class TypesTool(TypeProvider):
         return None
     return getattr(self, portal_type, None)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentTypeList')
+  def getDocumentTypeList(self):
+    """
+    Return a list of Document types that can be used as Base classes
+    """
+    from Products.ERP5Type import document_class_registry
+    return sorted(document_class_registry)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMixinTypeList')
+  def getMixinTypeList(self):
+    """
+    Return a list of classes names that can be used as Mixins
+    """
+    from Products.ERP5Type import mixin_class_registry
+    return sorted(mixin_class_registry)
+
   security.declareProtected(Permissions.AddPortalContent, 'listDefaultTypeInformation')
   def listDefaultTypeInformation(self):
       # FIXME: This method is only used by manage_addTypeInformation below, and
