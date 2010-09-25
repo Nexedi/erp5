@@ -60,7 +60,7 @@ def initializePortalCachingProperties(self):
     is_cache_ready = 1
 
 
-class Cookie(Persistent):
+class ZODBCookie(Persistent):
 
   value = 0
 
@@ -90,8 +90,8 @@ class CacheCookieMixin:
     try:
       return self.__dict__[cache_name].value
     except KeyError:
-      self.__dict__[cache_name] = Cookie()
-      return Cookie.value
+      self.__dict__[cache_name] = ZODBCookie()
+      return ZODBCookie.value
 
   security.declareProtected(Permissions.ModifyPortalContent, 'newCacheCookie')
   def newCacheCookie(self, cache_name):
@@ -100,7 +100,7 @@ class CacheCookieMixin:
     try:
       self.__dict__[cache_name].value += 1
     except KeyError:
-      self.__dict__[cache_name] = Cookie()
+      self.__dict__[cache_name] = ZODBCookie()
 
 
 class CacheFactory:
