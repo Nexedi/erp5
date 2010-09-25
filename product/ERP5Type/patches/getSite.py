@@ -1,9 +1,9 @@
-from zLOG import LOG
+from Products.ERP5Type import Globals
 module_name = 'zope.site.hooks'
-native_setsite = False
 try:
   hooks = __import__(module_name, {}, {}, module_name)
-  native = True
+  _getSite = hooks.getSite
+  _setSite = hooks.setSite
 except ImportError:
   # backwards compatibility for Zope < 2.12
   import imp, sys
@@ -12,49 +12,29 @@ except ImportError:
     site = zope.site
   except:
     sys.modules['zope.site'] = zope.site = imp.new_module('zope.site')
-
   sys.modules[module_name] = hooks = imp.new_module(module_name)
-  def setSite(foo=None):
-    pass
-  hooks.setSite = setSite
-  def getSite(foo=None):
+
+  def _getSite():
     return None
-  hooks.getSite = getSite
+  def _setSite(site=None):
+    request = Globals.get_request()
+    if site is not None and site not in request.get('PARENTS', ()):
+      request['PARENTS'] = [site]
 
 # patch getSite so that it works everywhere
-from Products.ERP5Type.Globals import get_request
-
-oldgetsite = hooks.getSite
 def getSite():
-  try:
-    x = oldgetsite()
-    # this should be enough for Zope 2.12
-    if x is not None:
-      return x
-  except:
-    if native_setsite:
-      # this should not happen on 2.12, log it
-      import traceback; traceback.print_stack()
-      LOG('getSite() cant retrieve the site', 100,
-          'setSite() should have been called earlier on')
-    pass
-  # and Zope 2.8 needs to use the request
-  parents = get_request()['PARENTS']
-
-  portal = None
-  for item in parents:
-    if item.meta_type == 'ERP5 Site':
-      portal = item
-      break
-
-  if portal is None:
-    # not perfect?
-    try:
-      portal = parents[-1].getPortalObject()
-    except:
-      import traceback; traceback.print_stack()
-      raise AttributeError("getSite() cant retrieve the site.")
-
-  return portal
+  site = _getSite()
+  if site is None:
+    parents = Globals.get_request()['PARENTS']
+    for site in parents[::-1]:
+      if getattr(site, 'getPortalObject', None) is not None:
+        break
+    else:
+      raise AttributeError("getSite() can't retrieve the site")
+  return site
 hooks.getSite = getSite
 
+def setSite(site=None):
+  _setSite(site)
+  # TODO: check if caches related to portal types as classes must be invalidated
+hooks.setSite = setSite
