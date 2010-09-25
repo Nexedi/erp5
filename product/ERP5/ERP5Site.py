@@ -353,6 +353,12 @@ class ERP5Site(FolderMixIn, CMFSite):
   security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
   getPath = getUrl
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'opaqueValues')
+  def opaqueValues(self, *args, **kw):
+    # XXX nonsense of inheriting from CMFSite that calls __before_traversal__
+    # and tries to load subobjects of the portal too early
+    return []
+
   security.declareProtected(Permissions.AccessContentsInformation, 'objectValues')
   def objectValues(self, *args, **kw):
     # When stepping in an ERP5Site from outside,
