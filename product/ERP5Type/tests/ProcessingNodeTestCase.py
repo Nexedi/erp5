@@ -131,6 +131,8 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
 
   def tic(self, verbose=0):
     """Execute pending activities"""
+    # Some tests like testDeferredStyle require that we use self.getPortal()
+    # instead of self.portal in order to setup current skin.
     portal_activities = self.getPortal().portal_activities
     if 1:
       if verbose:
