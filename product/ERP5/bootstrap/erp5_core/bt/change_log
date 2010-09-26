@@ -1,3 +1,6 @@
+2010-09-26 nicolas.dumazet
+* Reload portal type classes generated from Base Type objects if a Type Definition object is modified.
+
 2010-09-24 arnaud.fontaine
 * Add action "Configure Property Sheets".
 
