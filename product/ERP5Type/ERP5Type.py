@@ -415,6 +415,21 @@ class ERP5TypeInformation(XMLObject,
       return list(self.property_sheet_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeClass')
+    def getTypeClass(self):
+      """Getter for type_class"""
+      base = self._baseGetTypeClass()
+      if base is None:
+        # backwards compatibility: if the object has no
+        # new-style type class, use the oldstyle factory attribute
+        init_script = self.getTypeFactoryMethodId()
+        if init_script and init_script.startswith('add'):
+          base = init_script[3:]
+          # and of course migrate the property
+          self.setTypeClass(base)
+      return base
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypeBaseCategoryList')
     def getTypeBaseCategoryList(self):
       """Getter for 'type_base_category' property"""
