@@ -212,6 +212,13 @@ class TypesTool(TypeProvider):
       return res
 
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'resetDynamicDocuments')
+  def resetDynamicDocuments(self):
+    """Resets all dynamic documents: force reloading erp.* classes"""
+    from Products.ERP5Type.Dynamic.portaltypeclass import resetDynamicDocuments
+    resetDynamicDocuments(self)
+
   security.declareProtected(Permissions.AddPortalContent,
                             'manage_addTypeInformation')
   def manage_addTypeInformation(self, add_meta_type, id=None,
