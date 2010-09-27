@@ -2478,19 +2478,17 @@ class TestPropertySheet:
 
     def test_AddPermission(self):
       # test "Add permission" on ERP5 Type Information
-      self.portal.portal_types.manage_addTypeInformation(
-            add_meta_type='ERP5 Type Information',
-            id='Test Add Permission Document',
-            typeinfo_name='ERP5Type: Document (ERP5 Document)')
+      object_portal_type = 'Test Add Permission Document'
+      self.portal.portal_types.newContent(id=object_portal_type,
+          portal_type='Base Type')
 
-      type_info = self.portal.portal_types.getTypeInfo(
-                        'Test Add Permission Document')
+      type_info = self.portal.portal_types.getTypeInfo(object_portal_type)
       
       # allow this type info in Person Module
       container_type_info = self.getTypesTool().getTypeInfo('Person Module')
       container_type_info._setTypeAllowedContentTypeList(
         container_type_info.getTypeAllowedContentTypeList()
-        + ['Test Add Permission Document'])
+        + [object_portal_type])
 
       # by default this is empty, which implictly means "Add portal content",
       # the default permission
@@ -2501,22 +2499,22 @@ class TestPropertySheet:
       self.assertTrue(getSecurityManager().getUser().has_permission(
                       'Add portal content', container))
       self.assertTrue(type_info in container.allowedContentTypes())
-      container.newContent(portal_type='Test Add Permission Document')
+      container.newContent(portal_type=object_portal_type)
 
       container.manage_permission('Add portal content', [], 0)
       self.assertFalse(type_info in container.allowedContentTypes())
       self.assertRaises(Unauthorized, container.newContent,
-                        portal_type='Test Add Permission Document')
+                        portal_type=object_portal_type)
       
       type_info.permission = 'Manage portal'
       container.manage_permission('Manage portal', [], 0)
       self.assertFalse(type_info in container.allowedContentTypes())
       self.assertRaises(Unauthorized, container.newContent,
-                        portal_type='Test Add Permission Document')
+                        portal_type=object_portal_type)
 
       container.manage_permission('Manage portal', ['Anonymous'], 0)
       self.assertTrue(type_info in container.allowedContentTypes())
-      doc = container.newContent(portal_type='Test Add Permission Document')
+      doc = container.newContent(portal_type=object_portal_type)
 
       # we can also clone such documents only with the permission registered on
       # the type information
