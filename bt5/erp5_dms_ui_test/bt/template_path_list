@@ -1,2 +1,4 @@
+portal_categories/classification
+portal_categories/classification/**
 portal_tests/dms_zuite
 portal_tests/dms_zuite/**
