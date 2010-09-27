@@ -1287,6 +1287,7 @@ class TestPropertySheet:
       obj = self.getPersonModule().newContent(portal_type='Person')
       obj.setTitle('obj title')
       copy = obj.asContext()
+      self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
       copy.setTitle('copy title')
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
@@ -1296,6 +1297,7 @@ class TestPropertySheet:
       obj = self.getPersonModule().newContent(portal_type='Person', id='obj')
       obj.setTitle('obj title')
       copy = obj.asContext(title='copy title')
+      self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
     
@@ -1312,11 +1314,23 @@ class TestPropertySheet:
 #       new_copy = obj.asContext(gender=gender.getCategoryRelativeUrl())
 #       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       new_copy = obj.asContext()
+      self.assertTrue(new_copy.isTempObject(), 
+              '%r is not a temp object' % (new_copy,))
       new_copy.edit(gender=gender.getCategoryRelativeUrl())
       transaction.commit()
       self.tic()
       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       self.assertEquals(None, obj.getGender())
+
+      # Make sure that we can do the same for a tool.
+      category_tool = self.getCategoryTool()
+      original_title = category_tool.getTitle()
+      copy_title = 'copy of %s' % (original_title,)
+      copy_of_category_tool = category_tool.asContext(title=copy_title)
+      self.assertTrue(copy_of_category_tool.isTempObject(),
+              '%r is not a temp object' % (copy_of_category_tool,))
+      self.assertEquals(category_tool.getTitle(), original_title)
+      self.assertEquals(copy_of_category_tool.getTitle(), copy_title)
 
     def test_21_ActionCondition(self):
       """Tests action conditions
