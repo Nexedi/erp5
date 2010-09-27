@@ -173,7 +173,7 @@ form.manage_addField(\n
 \n
 \n
 # Then add the portal_type corresponding to the new object\n
-object_portal_type_value = portal_types.newContent(id=object_portal_type_id, portal_type=\'Base Type\', factory_method_id=\'addXMLObject\')\n
+object_portal_type_value = portal_types.newContent(id=object_portal_type_id, portal_type=\'Base Type\', type_factory_method_id=\'addXMLObject\')\n
 \n
 # Chain to edit_workflow\n
 portal.portal_workflow.setChainForPortalTypes([object_portal_type_id],\n
