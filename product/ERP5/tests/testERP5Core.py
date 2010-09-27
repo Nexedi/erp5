@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
+# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
 # All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
 #
@@ -46,7 +46,7 @@ try:
                                 setGlobalTranslationService
   def unregister_translation_domain_fallback():
     """dummy function to keep the beforeTearDown() code neat"""
- 
+
 except ImportError:
   # Zope 2.12, simulate setting the globalTranslationService with
   # zope.i18n utilities
@@ -55,20 +55,20 @@ except ImportError:
   import Acquisition
 
   global_translation_service = None
-  
+
   from zope.i18n.interfaces import ITranslationDomain, \
                                    IFallbackTranslationDomainFactory
   class DummyTranslationDomainFallback(object):
     zope.interface.implements(ITranslationDomain)
     zope.interface.classProvides(IFallbackTranslationDomainFactory)
-    
+
     def __init__(self, domain):
       self.domain = domain
-    
+
     def translate(self, msgid, mapping=None, *args, **kw):
       return global_translation_service.translate(self.domain, msgid, mapping,
                                                   *args, **kw)
-  
+
   def setGlobalTranslationService(translation_service):
     global global_translation_service
     global_translation_service = translation_service
@@ -76,7 +76,7 @@ except ImportError:
                                   provides=IFallbackTranslationDomainFactory)
     # disable translation for the 'ui' domain so it can use the fallback above.
     # Save it on a portal attribute since we don't have access to the test
-    # class 
+    # class
     sm = zope.component.getSiteManager()
     portal = Acquisition.aq_parent(sm)
     ui_domain = sm.getUtility(ITranslationDomain, name='ui')
@@ -155,8 +155,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     object_title='UnitTest'
     module_id='unittest_module'
     module_title='UnitTests'
-    
-    
+
+
     skins_tool = self.portal.portal_skins
     types_tool = self.portal.portal_types
     self.failIf(self.portal._getOb(module_id, None) is not None)
@@ -177,14 +177,14 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertNotEqual(types_tool.getTypeInfo(object_portal_type), None)
     self.assertTrue(module_portal_type
                       in self.portal.getPortalModuleTypeList())
-    
+
     skin_folder = skins_tool._getOb(portal_skins_folder, None)
     self.assertNotEqual(skin_folder, None)
     self.assert_('UnitTest_view' in skin_folder.objectIds())
     view_form = skin_folder.UnitTest_view
     self.assertEquals('form_view', view_form.pt)
     self.assertEquals('Base_edit', view_form.action)
-    
+
     self.assert_('UnitTestModule_viewUnitTestList' in skin_folder.objectIds())
     list_form = skin_folder.UnitTestModule_viewUnitTestList
     self.assertEquals('form_list', list_form.pt)
@@ -216,7 +216,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                        for action in actions
                        if action['visible']]
     msg = ("Actions do not match. Expected:\n%s\n\nGot:\n%s\n" %
-           (pprint.pformat(expected), pprint.pformat(got))) 
+           (pprint.pformat(expected), pprint.pformat(got)))
     self.assertEquals(expected, got, msg)
 
   def test_manager_actions_on_portal(self):
@@ -284,7 +284,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     response = self.publish('%s/view' % self.portal_id, self.auth)
     self.assertEquals(HTTP_OK, response.getStatus())
-    
+
   def test_login_form(self):
     """Test anonymous user are redirected to login_form
     """
@@ -302,7 +302,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       response = self.publish('%s/%s/view' % (self.portal_id, tool), self.auth)
       self.assertEquals(HTTP_OK, response.getStatus(),
                         "%s: %s" % (tool, response.getStatus()))
- 
+
   def test_allowed_content_types_translated(self):
     """Tests allowed content types from the action menu are translated"""
     translation_service = DummyTranslationService()
@@ -344,7 +344,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     test getDefaultModule method
     """
-    if not run: 
+    if not run:
       return
     portal_id = self.getPortal().getId()
     object_portal_type = ' '.join([part.capitalize() for part \
@@ -354,7 +354,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     object_title=object_portal_type
     module_id="%s_module" % portal_id
     module_title='%ss' % object_portal_type
-    
+
     # Create module for testing
     self.failIf(self.portal._getOb(module_id, None) is not None)
     self.assertEqual(self.portal.portal_skins._getOb(portal_skins_folder, None),
