@@ -400,13 +400,12 @@ class ManageModule:
     set portal_type for the module containing objects.
     returns nothing
     """
-    portal_types.manage_addTypeInformation('ERP5 Type Information'
-                , typeinfo_name = 'ERP5Type: ERP5 Folder'
-                , id = module_portal_type)
-    # getting portal_type access to be able to modify attributes
-    module_portal_type_value = portal_types[module_portal_type]
+    module_portal_type_value = portal_types.newContent(
+        id=module_portal_type,
+        portal_type='Base Type')
     # set allowed content type
     module_portal_type_value.edit(
+      type_factory_method_id='addFolder',
       type_allowed_content_type_list=(object_portal_type_id,),
       type_filter_content_type=1)
     # adding usefull actions (in our case the view action)
@@ -426,16 +425,18 @@ class ManageModule:
                           object_names):
     name = ''
     if def_usePropertySheet:
+      # XXX this should get easier with portal type classes
+
       # generating 'typeinfo_name' property for the new portal type.
       # if class exists, then using it, otherwize using default ERP5
       # Document type.
-      name = 'ERP5Type: ERP5 ' + object_portal_type # use with PropertySheet
+      name = 'add' + object_portal_type # use with PropertySheet
     else:
-      name = 'ERP5Type: ERP5 Document'  # use with local properties
-    portal_types.manage_addTypeInformation( 'ERP5 Type Information',
-                                            typeinfo_name = name,
-                                            id = object_portal_type_id)
-    object_portal_type_value = portal_types[object_portal_type_id]
+      name = 'addDocument'  # use with local properties
+    object_portal_type_value = portal_types.newContent(
+        type_factory_method_id=name,
+        id=object_portal_type_id,
+        portal_type='Base Type')
 
     # adding usefull actions (in our case the view action)
     object_portal_type_value.newContent(portal_type='Action Information',
