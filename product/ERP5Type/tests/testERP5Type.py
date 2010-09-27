@@ -2480,6 +2480,7 @@ class TestPropertySheet:
       # test "Add permission" on ERP5 Type Information
       object_portal_type = 'Test Add Permission Document'
       self.portal.portal_types.newContent(id=object_portal_type,
+          type_factory_method_id='addDocument',
           portal_type='Base Type')
 
       type_info = self.portal.portal_types.getTypeInfo(object_portal_type)
