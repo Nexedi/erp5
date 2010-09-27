@@ -476,16 +476,6 @@ class TemplateTool (BaseTool):
           urltype = 'file'
           name = os.path.normpath(url)
 
-      from Products.ERP5Type.Utils import PersistentMigrationMixin
-      # disable dynamic imports of ERP5Type.Document.* documents
-      # into erp5.document new-style classes during import:
-      # reading the XML forces importing the object class, and doing
-      # so will try to access portal_types/<object portal type>, which
-      # will fail since portal types items are not yet imported.
-      # In reality, we can live with old-style objects 'til
-      # install
-      #PersistentMigrationMixin.migrate = 0
-
       if urltype and urltype != 'file':
         if '/portal_templates/asRepository/' in url:
           # In this case, the downloaded BT is already built.
@@ -497,7 +487,6 @@ class TemplateTool (BaseTool):
       else:
         bt = self._download_local(name, id)
 
-      #PersistentMigrationMixin.migrate = 1
       bt.build(no_action=True)
       return bt
 

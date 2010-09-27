@@ -365,7 +365,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     # (e.g. left hand tree frame in {zope root}/manage )
     # we need to set up the site to load portal types inside each site
     setSite(self)
-    return super(FolderMixIn, self).objectValues(*args, **kw)
+    return super(ERP5Site, self).objectValues(*args, **kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
   def searchFolder(self, **kw):
