@@ -168,3 +168,18 @@ class TestIngestion(ERP5TypeLiveTestCase):
     self.assertEquals(document.getSourceReference(), filename)
     self.assertEquals(document.getContentType(), 'text/plain')
     self.assertTrue(document.hasData())
+
+  def test_05_contributeTextFileWithoutFilenameButHTMLContentType(self):
+    """
+      Contribute file with just explicit content-type
+      And check that correct portal_type is used.
+    """
+    script_id = 'ERP5Site_getTextFileWithoutFileNameButHTMLContentType'
+    document = self.contributeFileWithUrl(script_id)
+    transaction.commit()
+    self.tic()
+    self.assertEquals(document.getPortalType(), 'Web Page')
+    self.assertEquals(document.getSourceReference(), script_id)
+    self.assertEquals(document.getContentType(), 'text/html')
+    self.assertTrue(document.hasData())
+
