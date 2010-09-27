@@ -18,7 +18,7 @@ except ImportError:
     return None
   def _setSite(site=None):
     request = Globals.get_request()
-    if site is not None and site not in request.get('PARENTS', ()):
+    if not (None in (site, request) or site in request.get('PARENTS', ())):
       request['PARENTS'] = [site]
 
 # patch getSite so that it works everywhere
@@ -34,7 +34,6 @@ def getSite():
   return site
 hooks.getSite = getSite
 
-last_cookie_value = None
 def setSite(site=None):
   _setSite(site)
   if site is not None:
