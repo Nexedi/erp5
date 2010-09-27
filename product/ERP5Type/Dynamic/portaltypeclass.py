@@ -6,7 +6,7 @@ import sys
 import inspect
 from types import ModuleType
 
-from Products.ERP5Type.patches.getSite import getSite
+from zope.site.hooks import getSite
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 

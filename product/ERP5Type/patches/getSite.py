@@ -1,4 +1,3 @@
-from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
 from Products.ERP5Type import Globals
 module_name = 'zope.site.hooks'
 try:
@@ -38,5 +37,6 @@ hooks.getSite = getSite
 last_cookie_value = None
 def setSite(site=None):
   _setSite(site)
+  from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
   synchronizeDynamicModules(site)
 hooks.setSite = setSite
