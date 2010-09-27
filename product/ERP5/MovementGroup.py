@@ -412,7 +412,10 @@ class FakeMovement:
     """
     total_quantity = 0
     for movement in self.getMovementList():
-      quantity = movement.getMappedProperty('quantity')
+      if getattr(movement, 'getMappedProperty', None) is not None:
+        quantity = movement.getMappedProperty('quantity')
+      else:
+        quantity = movement.getQuantity()
       if quantity != None:
         total_quantity += quantity
     return total_quantity
@@ -423,7 +426,10 @@ class FakeMovement:
     """
     total_price = 0
     for movement in self.getMovementList():
-      quantity = movement.getMappedProperty('quantity')
+      if getattr(movement, 'getMappedProperty', None) is not None:
+        quantity = movement.getMappedProperty('quantity')
+      else:
+        quantity = movement.getQuantity()
       price = movement.getPrice()
       if (quantity is not None) and (price is not None):
         total_price += (quantity * price)
