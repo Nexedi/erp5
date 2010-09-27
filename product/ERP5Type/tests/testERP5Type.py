@@ -1291,6 +1291,7 @@ class TestPropertySheet:
       copy.setTitle('copy title')
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
+      self.assertEquals(obj.getId(), copy.getId())
 
       # asContext method accepts parameters, and edit the copy with those
       # parameters
@@ -1300,6 +1301,7 @@ class TestPropertySheet:
       self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
+      self.assertEquals(obj.getId(), copy.getId())
     
       # acquisition context is the same
       self.assertEquals(self.getPersonModule(), obj.getParentValue())
@@ -1316,6 +1318,7 @@ class TestPropertySheet:
       new_copy = obj.asContext()
       self.assertTrue(new_copy.isTempObject(), 
               '%r is not a temp object' % (new_copy,))
+      self.assertEquals(obj.getId(), new_copy.getId())
       new_copy.edit(gender=gender.getCategoryRelativeUrl())
       transaction.commit()
       self.tic()
@@ -1331,6 +1334,7 @@ class TestPropertySheet:
               '%r is not a temp object' % (copy_of_category_tool,))
       self.assertEquals(category_tool.getTitle(), original_title)
       self.assertEquals(copy_of_category_tool.getTitle(), copy_title)
+      self.assertEquals(category_tool.getId(), copy_of_category_tool.getId())
 
     def test_21_ActionCondition(self):
       """Tests action conditions
