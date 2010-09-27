@@ -9,10 +9,10 @@ from types import ModuleType
 from Products.ERP5Type.patches.getSite import getSite
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
-from Products.ERP5Type.Cache import ZODBCookie
 
 from Products.ERP5Type import document_class_registry, mixin_class_registry
 
+from ExtensionClass import Base as ExtensionBase
 from zLOG import LOG, ERROR, BLATHER
 
 def _import_class(classpath):
@@ -167,17 +167,35 @@ def initializeDynamicModules():
                                                    temp_portal_type_loader)
 
 
-from ExtensionClass import Base as ExtensionBase
-def resetDynamicDocuments(context, slave=False):
+last_sync = 0
+def synchronizeDynamicModules(context, force=False):
   """
   Allow resetting all classes to ghost state, most likely done after
   adding and removing mixins on the fly
 
-  Nodes just trying to catch up with state of classes without wanting
-  to invalidate them globally should set slave=True.
+  Most of the time, this reset is only hypothetic:
+  * with force=False, the reset is only done if another node resetted
+    the classes since the last reset on this node.
+  * with force=True, forcefully reset the classes on the current node
+    and send out an invalidation to other nodes
   """
   LOG("ERP5Type.Dynamic", 0, "Resetting dynamic classes")
   return # XXX disabled for now
+
+  portal = context.getPortalObject()
+
+  global last_sync
+  if force:
+    # hard invalidation to force sync between nodes
+    portal.newCacheCookie('dynamic_classes')
+    last_sync = portal.getCacheCookie('dynamic_classes')
+  else:
+    cookie = portal.getCacheCookie('dynamic_classes')
+    if cookie == last_sync:
+      # up to date, nothing to do
+      return
+    last_sync = cookie
+
   import erp5.portal_type
   for class_name, klass in inspect.getmembers(erp5.portal_type, inspect.isclass):
     ghostbase = getattr(klass, '__ghostbase__', None)
@@ -188,12 +206,3 @@ def resetDynamicDocuments(context, slave=False):
       klass.__bases__ = ghostbase
       type(ExtensionBase).__init__(klass, klass)
 
-
-  if not slave:
-    # hard invalidation to force sync between nodes
-    portal = context.getPortalObject()
-    cookie = getattr(portal, '_dynamic_class_cookie', None)
-    if cookie is not None:
-      cookie.value += 1
-    else:
-      portal._dynamic_class_cookie = ZODBCookie()

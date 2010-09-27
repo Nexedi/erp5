@@ -29,7 +29,7 @@ from Acquisition import aq_base
 from Products.ERP5Type import allowClassTool
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
 from Products.ERP5Type.Log import log as unrestrictedLog
@@ -178,7 +178,7 @@ class ReferCheckerBeforeTraverseHook:
             'request : "%s"' % http_url)
         response.unauthorized()
 
-class ERP5Site(FolderMixIn, CMFSite):
+class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   """
   The *only* function this class should have is to help in the setup
   of a new ERP5.  It should not assist in the functionality at all.

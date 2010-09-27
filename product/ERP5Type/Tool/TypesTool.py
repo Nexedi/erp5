@@ -29,6 +29,7 @@ from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
 from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
+from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
 
 
 class ComposedObjectIds(object):
@@ -244,8 +245,7 @@ class TypesTool(TypeProvider):
                             'resetDynamicDocuments')
   def resetDynamicDocuments(self):
     """Resets all dynamic documents: force reloading erp.* classes"""
-    from Products.ERP5Type.Dynamic.portaltypeclass import resetDynamicDocuments
-    resetDynamicDocuments(self)
+    synchronizeDynamicModules(self, force=True)
 
   security.declareProtected(Permissions.AddPortalContent,
                             'manage_addTypeInformation')

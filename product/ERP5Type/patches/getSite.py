@@ -1,3 +1,4 @@
+from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
 from Products.ERP5Type import Globals
 module_name = 'zope.site.hooks'
 try:
@@ -37,13 +38,5 @@ hooks.getSite = getSite
 last_cookie_value = None
 def setSite(site=None):
   _setSite(site)
-  cookie = getattr(site, '_dynamic_class_cookie', None)
-  if cookie is not None:
-    global last_cookie_value
-    if cookie.value != last_cookie_value:
-      # some other node changed a portal type
-      # reload locally the dynamic classes
-      from Products.ERP5Type.Dynamic.portaltypeclass import resetDynamicDocuments
-      resetDynamicDocuments(site, slave=True)
-      last_cookie_value = cookie.value
+  synchronizeDynamicModules(site)
 hooks.setSite = setSite
