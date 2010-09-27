@@ -180,7 +180,7 @@ class TypesTool(TypeProvider):
     """
     portal_type = None
     if isinstance(context, type):
-      if 'erp5' in context.__module__:
+      if context.__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
         portal_type = context.__name__
       else:
         portal_type = getattr(context, 'portal_type', None)
