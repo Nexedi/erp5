@@ -169,6 +169,34 @@ class TypesTool(TypeProvider):
     from Products.ERP5Type import document_class_registry
     return sorted(document_class_registry)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeClass')
+  def getPortalTypeClass(self, context, temp=False):
+    """
+    Infer a portal type class from the context.
+    Context can be a portal type string, or an object, or a class.
+
+    This is the proper API to retrieve a portal type class, and no one
+    should hack anything anywhere else.
+    """
+    portal_type = None
+    if isinstance(context, type):
+      if 'erp5' in context.__module__:
+        portal_type = context.__name__
+      else:
+        portal_type = getattr(context, 'portal_type', None)
+    elif isinstance(context, str):
+      portal_type = context
+    else:
+      portal_type = getattr(context, 'portal_type', None)
+
+    if portal_type is not None:
+      import erp5
+      if temp:
+        module = erp5.temp_portal_type
+      else:
+        module = erp5.portal_type
+      return getattr(module, portal_type, None)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getMixinTypeList')
   def getMixinTypeList(self):
     """
