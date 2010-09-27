@@ -2792,14 +2792,17 @@ class Base( CopyContainer,
     ex : joe_person = person_module.bob_person.asContext(first_name='Joe')
     """
     if context is None:
-      # Make a copy
-      klass = self.__class__
-      try:
-        context = klass(self.getId())
-      except TypeError:
-        # If __init__ does not take the id argument, the class is probably
-        # a tool, and the id is predifined and immutable.
-        context = klass()
+      pt = self._getTypesTool()
+      type_info = pt.getTypeInfo(self.getPortalType())
+      if type_info is None:
+        raise ValueError('No such content type: %s' % portal_type)
+
+      context = type_info.constructInstance(
+              container=self.getParentValue(),
+              id=self.getId(),
+              temp_object=True,
+              is_indexable=False)
+
       context.__dict__.update(self.__dict__)
       # Copy REQUEST properties to self
       if REQUEST is not None:
@@ -2811,13 +2814,7 @@ class Base( CopyContainer,
             setattr(context, k, REQUEST[k])
       # Define local properties
       context.__dict__.update(kw)
-      # Make it a temp content
-      temp_object = TempBase(self.getId())
-      for k in ('isIndexable', 'isTempDocument', 'reindexObject',
-                'recursiveReindexObject', 'activate', 'setUid'):
-        setattr(context, k, getattr(temp_object, k))
-      # Return result
-      return context.__of__(self.aq_parent)
+      return context
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
 
