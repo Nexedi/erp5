@@ -6,7 +6,6 @@ import sys
 import inspect
 from types import ModuleType
 
-from zope.site.hooks import getSite
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 
@@ -54,6 +53,7 @@ def portal_type_factory(portal_type_name):
     # before creating any Base Type object
     type_class = "BusinessTemplate"
   else:
+    from Products.ERP5.ERP5Site import getSite
     site = getSite()
 
     type_tool = site.portal_types

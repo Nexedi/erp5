@@ -536,6 +536,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
       import transaction
       transaction.commit()
       ZopeTestCase.close(app)
+      del app
 
     if zeo_client_pid_list is None:
       result = suite()

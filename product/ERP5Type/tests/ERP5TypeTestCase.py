@@ -50,6 +50,14 @@ Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
 
 try:
+  from zope.site.hooks import setSite
+except ImportError:
+  # BACK: Zope 2.8. setSite is somewhere else, and we can't use it anyway
+  # since ERP5Site is not yet an ISite. Remove once we drop support for 2.8
+  def setSite(site=None):
+    pass
+
+try:
   import itools.zope
   itools.zope.get_context = get_context
 except ImportError:
@@ -220,8 +228,6 @@ failed_portal_installation = {}
 # have we installed business templates ?
 # this is a mapping 'list of business template -> boolean
 setup_done = {}
-
-from zope.site.hooks import setSite
 
 def _getConnectionStringDict():
   """Returns the connection strings used for this test.

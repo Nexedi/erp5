@@ -67,7 +67,6 @@ except ImportError:
 
 from ZODB.POSException import ConflictError
 from Products.MailHost.MailHost import MailHostError
-from zope.site.hooks import setSite
 
 from zLOG import LOG, INFO, WARNING, ERROR
 from warnings import warn
@@ -877,9 +876,6 @@ class ActivityTool (Folder, UniqueObject):
         acquired = timerservice_lock.acquire(0)
         if not acquired:
           return
-
-        portal = self.getPortalObject()
-        setSite(portal)
 
         # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
         # but on 2.2 it's by traversal, and our site probably wasn't traversed

@@ -46,7 +46,6 @@ import re
 # minimal IP:Port regexp
 NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
 
-from zope.site.hooks import setSite
 try:
   from Products.TimerService import getTimerService
 except ImportError:
@@ -211,10 +210,6 @@ class AlarmTool(BaseTool):
     if not acquired:
       return
     try:
-
-      portal = self.getPortalObject()
-      setSite(portal)
-
       # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
       # but on 2.2 it's by traversal, and our site probably wasn't traversed
       # by the timerserver request, which goes into the Zope Control_Panel

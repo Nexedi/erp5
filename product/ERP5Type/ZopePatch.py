@@ -70,4 +70,3 @@ from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
 from Products.ERP5Type.patches.DCWorkflow import ValidationFailed, ERP5TransitionDefinition
 from Products.ERP5Type.patches.BTreeFolder2 import ERP5BTreeFolder2Base
-from Products.ERP5Type.patches.getSite import getSite

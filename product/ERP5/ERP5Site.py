@@ -15,6 +15,8 @@
   Portal class
 """
 
+import threading
+from weakref import ref as weakref
 from Products.ERP5Type import Globals
 from Products.ERP5Type.Globals import package_home
 
@@ -36,8 +38,7 @@ from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-
-from zope.site.hooks import setSite
+from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
 
 from zLOG import LOG, INFO
 from string import join
@@ -178,6 +179,38 @@ class ReferCheckerBeforeTraverseHook:
             'request : "%s"' % http_url)
         response.unauthorized()
 
+
+class _site(threading.local):
+  """Class for getting and setting the site in the thread global namespace
+  """
+  site = ()
+
+  def __new__(cls):
+    self = threading.local.__new__(cls)
+    return self.__get, self.__set
+
+  def __get(self):
+    """Returns the currently processed site
+
+    XXX The returned site is not wrapped in a request.
+    """
+    app, site_id = self.site[-1]
+    app = app()
+    return CMFSite.__of__(app.__dict__[site_id], app)
+
+  def __set(self, site):
+    app = aq_base(site.aq_parent)
+    self.site = [x for x in self.site if x[0]() is not app]
+    # Use weak references for automatic cleanup. In practice, this is probably
+    # useless, because there is no reason a thread reopen the database.
+    self.site.append((weakref(app, self.__del), site.id))
+
+  def __del(self, app):
+    self.site = [x for x in self.site if x[0] is not app]
+
+getSite, setSite = _site()
+
+
 class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   """
   The *only* function this class should have is to help in the setup
@@ -212,6 +245,17 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       Implemented for consistency
     """
     return self.index_html()
+
+  def __of__(self, parent):
+    self = CMFSite.__of__(self, parent)
+    # Use a transactional variable for performance reason,
+    # since ERP5Site.__of__ is called quite often.
+    tv = getTransactionalVariable()
+    if 'ERP5Site.__of__' not in tv:
+      tv['ERP5Site.__of__'] = None
+      setSite(self)
+      synchronizeDynamicModules(self)
+    return self
 
   def manage_beforeDelete(self, item, container):
     # On Zope 2.8, skin is setup during Acquisition (in the .__of__() method).
@@ -359,14 +403,6 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     # and tries to load subobjects of the portal too early
     return []
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'objectValues')
-  def objectValues(self, *args, **kw):
-    # When stepping in an ERP5Site from outside,
-    # (e.g. left hand tree frame in {zope root}/manage )
-    # we need to set up the site to load portal types inside each site
-    setSite(self)
-    return super(ERP5Site, self).objectValues(*args, **kw)
-
   security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
   def searchFolder(self, **kw):
     """
@@ -375,7 +411,6 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
     if not kw.has_key('parent_uid'):
       kw['parent_uid'] = self.uid
-    setSite(self)
     return self.portal_catalog.searchResults(**kw)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'countFolder')
@@ -386,7 +421,6 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
     if not kw.has_key('parent_uid'):
       kw['parent_uid'] = self.uid
-    setSite(self)
     return self.portal_catalog.countResults(**kw)
 
   # Proxy methods for security reasons
@@ -1483,23 +1517,6 @@ class ERP5Generator(PortalGenerator):
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
-
-    setSite(p)
-
-    try:
-      sm = p.getSiteManager()
-    except:
-      # Zope 2.8, ot site manager, no DefaultTraversable, dont care
-      pass
-    else:
-      import zope
-      # XXX hackish, required to setUpERP5Core while in tests,
-      # could probably be better
-      # (for some reason calling setSite here does not allow
-      # the newly created site to find the global DefaultTraversable
-      # object)
-      sm.registerAdapter(zope.traversing.adapters.DefaultTraversable,
-                         required=(zope.interface.Interface,))
 
     erp5_sql_deferred_connection_string = erp5_sql_connection_string
     p._setProperty('erp5_catalog_storage',
