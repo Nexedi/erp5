@@ -34,7 +34,16 @@ def getSite():
   return site
 hooks.getSite = getSite
 
+last_cookie_value = None
 def setSite(site=None):
   _setSite(site)
-  # TODO: check if caches related to portal types as classes must be invalidated
+  cookie = getattr(site, '_dynamic_class_cookie', None)
+  if cookie is not None:
+    global last_cookie_value
+    if cookie.value != last_cookie_value:
+      # some other node changed a portal type
+      # reload locally the dynamic classes
+      from Products.ERP5Type.Dynamic.portaltypeclass import resetDynamicDocuments
+      resetDynamicDocuments(site, slave=True)
+      last_cookie_value = cookie.value
 hooks.setSite = setSite
