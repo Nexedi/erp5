@@ -195,7 +195,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     # make sure we can use our module
     self.portal.unittest_module.view()
-    self.portal.unittest_module.newContent(id='document', portal_type='UnitTest')
+    self.portal.unittest_module.newContent(id='document', portal_type=object_portal_type)
     self.portal.unittest_module.document.view()
 
     # make sure translation domains are set correctly
