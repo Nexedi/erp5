@@ -179,8 +179,8 @@ def synchronizeDynamicModules(context, force=False):
   * with force=True, forcefully reset the classes on the current node
     and send out an invalidation to other nodes
   """
-  LOG("ERP5Type.Dynamic", 0, "Resetting dynamic classes")
   return # XXX disabled for now
+  LOG("ERP5Type.Dynamic", 0, "Resetting dynamic classes")
 
   portal = context.getPortalObject()
 
