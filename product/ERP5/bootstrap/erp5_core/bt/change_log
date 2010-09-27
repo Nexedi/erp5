@@ -1,4 +1,7 @@
 2010-09-27 nicolas.dumazet
+* do not use manage_addTypeInformation anymore
+
+2010-09-27 nicolas.dumazet
 * correct regular expressions in base_type_interaction_workflow trigger methods
 * add portal type classes-related fields on BaseType_view
 
