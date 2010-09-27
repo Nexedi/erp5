@@ -230,6 +230,8 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                             'id': 'create_module'},
                            {'title': 'Configure Portal Types',
                             'id': 'types_tool'},
+                           {'id': 'property_sheet_tool',
+                            'title': 'Configure Property Sheets'},
                            {'title': 'Undo', 'id': 'undo'}],
                 'object': [],
                 'object_action': [{'id': 'post_query', 'title': 'Post a Query'}],
