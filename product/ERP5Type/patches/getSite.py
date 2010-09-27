@@ -37,6 +37,7 @@ hooks.getSite = getSite
 last_cookie_value = None
 def setSite(site=None):
   _setSite(site)
-  from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
-  synchronizeDynamicModules(site)
+  if site is not None:
+    from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
+    synchronizeDynamicModules(site)
 hooks.setSite = setSite
