@@ -28,6 +28,8 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Accessor import Translation
+from Products.CMFCore.utils import getToolByName
 
 
 class PropertySheetTool(BaseTool):
@@ -39,3 +41,12 @@ class PropertySheetTool(BaseTool):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  security.declarePublic('getTranslationDomainNameList')
+  def getTranslationDomainNameList(self):
+    return (['']+
+            [object_.id
+             for object_ in getToolByName(self, 'Localizer').objectValues()
+             if object_.meta_type=='MessageCatalog']+
+            [Translation.TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
+       	    )
