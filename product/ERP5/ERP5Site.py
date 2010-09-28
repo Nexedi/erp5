@@ -195,8 +195,7 @@ class _site(threading.local):
     XXX The returned site is not wrapped in a request.
     """
     app, site_id = self.site[-1]
-    app = app()
-    return CMFSite.__of__(app.__dict__[site_id], app)
+    return getattr(app(), site_id)
 
   def __set(self, site):
     app = aq_base(site.aq_parent)
