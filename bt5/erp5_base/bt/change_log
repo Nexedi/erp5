@@ -1,4 +1,7 @@
 2010-09-28 tatuya
+* Previous commits(r38692,38707) were not solved the issue that movement_resource_interaction_workflow prevents the delivery buliding. So, revert them.
+
+2010-09-28 tatuya
 * Stop to overwriting a value by movement_resource_interaraction_workflow when the movement is created by a builder.
 
 2010-09-28 yo

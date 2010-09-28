@@ -27,29 +27,25 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>before_commit_script_name</string> </key>
-            <value>
               <list>
                 <string>Movement_copyUseFromResource</string>
               </list>
             </value>
         </item>
         <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>Set a value from the resource except when the movement is created by builders.\r\n
-\r\n
-In the Expression, getOid() returns None when the movement is not persistent as a ZODB object.\r\n
-Using getOid(), we predict that it is created by builders. Also, we check whether the builder intended to set a value or not.\r\n
-When the movement already has a value in the end of the transaction, we use it instead of coping from the resource.</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              <none/>
             </value>
         </item>
         <item>
@@ -87,34 +83,6 @@ When the movement already has a value in the end of the transaction, we use it i
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>2</int> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="Guard" module="Products.DCWorkflow.Guard"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>expr</string> </key>
-            <value>
-              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-            </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Expression" module="Products.CMFCore.Expression"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>text</string> </key>
-            <value> <string>python:not (here.getOid() is None and here.getUse() is not None)</string> </value>
         </item>
       </dictionary>
     </pickle>
