@@ -290,6 +290,9 @@ class TestIngestion(ERP5TypeTestCase):
         self.assertEquals(document.getExternalProcessingState(), 'converted')
         self.assert_('magic' in document.SearchableText())
         self.assert_('magic' in str(document.asText()))
+      else:
+        # check if SearchableText() does not raise any exception
+        document.SearchableText()
 
   def checkDocumentExportList(self, document_id, format, asserted_target_list):
     """
@@ -469,6 +472,13 @@ class TestIngestion(ERP5TypeTestCase):
       This document will be used in most tests.
     """
     self.newEmptyCataloggedDocument('Image', 'six')
+
+  def stepCreateFileDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create an empty File document with ID 'file'
+      This document will be used in most tests.
+    """
+    self.newEmptyCataloggedDocument('File', 'file')
 
   def stepCheckEmptyState(self, sequence=None, sequence_list=None, **kw):
     """
@@ -730,6 +740,13 @@ class TestIngestion(ERP5TypeTestCase):
     """
     format_list = ['jpg', 'gif', 'bmp', 'png']
     self.ingestFormatList('six', format_list, 'Image')
+
+  def stepIngestFileFormats(self, sequence=None, sequence_list=None, **kw):
+    """
+      ingest all supported file formats
+    """
+    format_list = ['txt', 'rss', 'xml',]
+    self.ingestFormatList('file', format_list)
 
   def stepCheckTextDocumentExportList(self, sequence=None, sequence_list=None, **kw):
     self.checkDocumentExportList('one', 'doc', ['pdf', 'doc', 'rtf', 'writer.html', 'txt'])
@@ -1135,6 +1152,14 @@ class TestIngestion(ERP5TypeTestCase):
                 ]
     self.playSequence(step_list, quiet)
 
+  def test_05_FormatIngestionFile(self, quiet=QUIET, run=RUN_ALL_TEST):
+    if not run: return
+    if not quiet: printAndLog('test_05_FormatIngestion')
+    step_list = ['stepCleanUp'
+                 ,'stepCreateFileDocument'
+                 ,'stepIngestFileFormats'
+                ]
+    self.playSequence(step_list, quiet)
 
   # Test generation of files in all possible formats
   # which means check if they have correct lists of available formats for export

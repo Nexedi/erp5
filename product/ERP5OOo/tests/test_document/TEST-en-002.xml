@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/" version="2.0">
+  <channel>
+    <atom:link rel="self" type="application/rss+xml" href="http://example.com/WebSection_viewContentListAsRSS"/>
+    <title>example.com</title>
+    <link>http://example.com</link>
+    <description/>
+    <item>
+      <guid>http://example.com/document_module/2</guid>
+      <link>http://example.com/document_module/2</link>
+      <description/>
+      <pubDate>Mon, 27 Sep 2010 01:00:00 +0200</pubDate>
+      <title>title of document 2</title>
+    </item>
+    <item>
+      <guid>http://example.com/document_module/1</guid>
+      <link>http://example.com/document_module/1</link>
+      <description/>
+      <pubDate>Mon, 27 Sep 2010 00:00:00 +0200</pubDate>
+      <title>title of document 1</title>
+    </item>
+  </channel>
+</rss>
