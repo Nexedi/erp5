@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
-        <tuple/>
-      </tuple>
+      <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -36,6 +33,12 @@
             </value>
         </item>
         <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>call updateAppliedRule after a modification</string> </value>
         </item>
@@ -59,7 +62,7 @@
         </item>
         <item>
             <key> <string>once_per_transaction</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
@@ -86,10 +89,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -104,10 +104,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
