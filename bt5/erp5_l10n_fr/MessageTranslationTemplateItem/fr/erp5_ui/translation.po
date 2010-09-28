@@ -4640,7 +4640,7 @@ msgid "Follow up must be set to acknowledge an Event."
 msgstr "Le suivi doit être renseigné pour prendre en compte un évènement."
 
 msgid "For each account, there will be a breakdown by each analytic checked here."
-msgstr "Le rapport inclura un détail pour chaque axe anlytique sélectionné ici"
+msgstr "Le rapport inclura un détail pour chaque axe analytique sélectionné ici"
 
 msgid "Force"
 msgstr "Forcer"
