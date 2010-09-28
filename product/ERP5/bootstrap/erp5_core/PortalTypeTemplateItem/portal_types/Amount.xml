@@ -14,9 +14,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>This portal type is an abstract portal type, so that newTempAmount calls can succeed; one should never have to use this portal type for persistent objects.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -49,6 +47,16 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Base Type</string> </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>Amount</string> </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
       </dictionary>
     </pickle>

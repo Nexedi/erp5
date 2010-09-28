@@ -14,11 +14,13 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>This portal type is an abstract portal type, so that newTempMovement calls can succeed; one should never have to use this portal type for persistent objects.</string> </value>
+            <value> <string>The purpose of an Event object is to keep track of the interface between the ERP and third parties.\n
+\n
+This portal type is an abstract portal type, so that newTempEvent calls can succeed; one should never have to use this portal type for persistent objects.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addMovement</string> </value>
+            <value> <string>addEvent</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -30,7 +32,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Movement</string> </value>
+            <value> <string>Event</string> </value>
         </item>
         <item>
             <key> <string>init_script</string> </key>
@@ -50,7 +52,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Movement</string> </value>
+            <value> <string>Event</string> </value>
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
