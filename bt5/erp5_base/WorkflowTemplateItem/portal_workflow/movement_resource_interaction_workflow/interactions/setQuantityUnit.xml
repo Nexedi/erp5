@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
-        <tuple/>
-      </tuple>
+      <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -30,15 +27,15 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <list>
-                <string>Movement_copyQuantityUnitFromResource</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>Movement_copyQuantityUnitFromResource</string>
+              </list>
             </value>
         </item>
         <item>
