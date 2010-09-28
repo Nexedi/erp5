@@ -70,7 +70,7 @@ document.updateContentMd5()\n
             <key> <string>_proxy_roles</string> </key>
             <value>
               <tuple>
-                <string>Auditor</string>
+                <string>Manager</string>
               </tuple>
             </value>
         </item>
