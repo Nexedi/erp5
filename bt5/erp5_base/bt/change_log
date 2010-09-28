@@ -1,3 +1,6 @@
+2010-09-28 tatuya
+* Stop to overwriting a value by movement_resource_interaraction_workflow when the movement is created by a builder.
+
 2010-09-28 yo
 * Make the interaction update_simulation called only once.
 
