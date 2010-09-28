@@ -583,40 +583,6 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     for gadget in web_section_gadgets:
       self.failUnless(gadget.getTitle() in response.getBody())     
 
-  def test_09SubsectionGadget(self, quiet=quiet, run=run_all_test):
-    """ Check Subsection Gadgets """
-    if not run: return 
-    portal = self.getPortal()
-    km_subsection_gadget = portal.portal_gadgets.km_subsection
-
-    # add gadget
-    self.web_section_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_subsection_gadget.getUid()]})
-    self.stepTic()
-
-    self.changeSkin('KM')
-    # "Subsections" gadget
-    gadget_view_form_id  = km_subsection_gadget.view_form_id
-    km_subsection_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad( \
-                                     self.web_section_knowledge_pad,  \
-                                     km_subsection_gadget)
-    self.failUnless('No subsections found.' in 
-                      self.publish(self.base_url_pattern %(self.web_section_url, 
-                                                           gadget_view_form_id, 
-                                                           self.websection.getRelativeUrl(),
-                                                           km_subsection_gadget_box_url)
-                                   , self.auth).getBody())
-    # .. create subsection and make sure it appears in gadget
-    subsection = self.websection.newContent(portal_type='Web Section',  
-                                       title='Sub Section 12345')
-    self.stepTic()
-    self.changeSkin('KM')    
-    self.failUnless(subsection.getTitle() in 
-                    self.publish(self.base_url_pattern %(self.web_section_url,  
-                                                         gadget_view_form_id, 
-                                                         self.websection.getRelativeUrl(),  
-                                                         km_subsection_gadget_box_url)  
-                                    , self.auth).getBody())
-
   def test_10LatestContentGadget(self, quiet=quiet, run=run_all_test):
     """ Check Latest Content Gadgets """
     if not run: return 
@@ -788,64 +754,6 @@ class TestGadgets(ERP5TypeTestCase,  ZopeTestCase.Functional):
     self.failUnless(similar_doc.getTitle() in relation_form_renderer())
     self.failUnless(predecessor_doc.getTitle() in relation_form_renderer())
     self.failUnless(successor_doc.getTitle() in relation_form_renderer())
-
-  def test_13AdminToolboxGadget(self, quiet=quiet, run=run_all_test):
-    """ Check admin toolbox gadget """
-    if not run: return
-    portal = self.getPortal()
-    request = self.app.REQUEST
-    km_admin_gadget = portal.portal_gadgets.km_admin
-
-    # add gadget
-    self.web_section_content_knowledge_pad.KnowledgePad_addBoxList(
-                               **{'uids':[km_admin_gadget.getUid()]})    
-    self.stepTic()
-
-    gadget_view_form_id  = km_admin_gadget.view_form_id
-    km_admin_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad(
-                                             self.web_section_content_knowledge_pad,  
-                                             km_admin_gadget)
-    self.changeSkin('KM')
-    request.set('is_gadget_mode',  1)
-    request.set('parent_web_section_url',  self.webpage.getRelativeUrl())
-    request.set('box_relative_url',  km_admin_gadget_box_url)
-    relation_form_renderer = getattr(self.website.web_page_module[self.webpage.getId()],  
-                                     gadget_view_form_id)
-
-    # "view" mode for Web Page
-    request.set('editable_mode',  0)
-    self.failUnless('Edit Web Page' in relation_form_renderer())
-    self.failUnless('Edit Parent Web Site' in relation_form_renderer())
-
-    # "edit" mode  for Web Page
-    request.set('editable_mode',  1)
-    self.failUnless('View Web Page' in relation_form_renderer())
-    self.failUnless('Edit Parent Web Site' in relation_form_renderer())    
-
-    # "view" mode for Web Section
-    request.set('editable_mode',  0)
-    relation_form_renderer = getattr(self.website[self.websection.getId()],  
-                                     gadget_view_form_id)
-    self.failUnless('Edit Web Section' in relation_form_renderer())
-
-    # "edit" mode  for Web Section
-    request.set('editable_mode',  1)
-    self.failUnless('View Web Section' in relation_form_renderer())
-
-    # "view" mode for Web Section having a default Web Page
-    request.set('editable_mode',  0)
-    self.websection.setAggregateValue(self.webpage)
-    self.webpage.publish()
-    self.stepTic()
-    self.changeSkin('KM')
-    relation_form_renderer = getattr(self.website[self.websection.getId()],
-                                     gadget_view_form_id)
-    #self.failUnless('Edit Web Page' in relation_form_renderer()) # XXX (Ivan): no longer possible
-    self.failUnless('Edit Web Section' in relation_form_renderer())
-
-    # "edit" mode for Web Section having a default Web Page
-    request.set('editable_mode',  1)
-    self.failUnless('View Web Section' in relation_form_renderer())
 
   def test_15GadgetServerSideFailure(self, quiet=quiet, run=run_all_test):
     """ 
