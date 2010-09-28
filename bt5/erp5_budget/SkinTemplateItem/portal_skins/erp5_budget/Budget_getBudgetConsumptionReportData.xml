@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,6 +73,7 @@ if context.getPortalType() == \'Budget\':\n
 else:\n
   # ... or on the budget module, and in this case, all budgets are used\n
   defined_group = request[\'section_category\']\n
+  strict_section_membership = request.get(\'section_category_strict\', False)\n
   from_date = request.get(\'from_date\')\n
   at_date = request.get(\'at_date\')\n
   validation_state = request.get(\'validation_state\', [])\n
@@ -88,16 +86,9 @@ else:\n
   filtered_budget_list = []\n
   for budget in budget_list:\n
     budget = budget.getObject()\n
-    if \'group\' in budget.getVariationBaseCategoryList():\n
-      group_matches = False\n
-      for category in budget.getVariationCategoryList():\n
-        if category.startswith(defined_group): \n
-          group_matches = True\n
-          break\n
-    if not group_matches:\n
-      continue\n
-    group_filtered_budget_list.append(budget)\n
-\n
+    if budget.isMemberOf(defined_group, strict_membership=strict_section_membership):\n
+      group_filtered_budget_list.append(budget)\n
+  \n
   if from_date or at_date:\n
     for budget in group_filtered_budget_list:\n
       if from_date and budget.getStartDateRangeMax() < from_date:\n
@@ -123,6 +114,7 @@ def isVisibleCell(cell_key):\n
   # can this cell be viewed by this user ?\n
   for category in cell_key:\n
     if category.startswith(\'group/\'):\n
+      # strict group membership seems useless at cell level\n
       if not category.startswith(defined_group):\n
         return False\n
   return True\n
@@ -450,15 +442,14 @@ return pformat(line_list)\n
                             <string>category</string>
                             <string>budget_list</string>
                             <string>_getitem_</string>
+                            <string>False</string>
+                            <string>strict_section_membership</string>
                             <string>from_date</string>
                             <string>at_date</string>
                             <string>validation_state</string>
                             <string>group_filtered_budget_list</string>
                             <string>filtered_budget_list</string>
                             <string>budget</string>
-                            <string>False</string>
-                            <string>group_matches</string>
-                            <string>True</string>
                             <string>line_list</string>
                             <string>None</string>
                             <string>target_currency_title</string>
@@ -466,6 +457,7 @@ return pformat(line_list)\n
                             <string>conversion_ratio</string>
                             <string>isVisibleCell</string>
                             <string>dict</string>
+                            <string>True</string>
                             <string>budget_line</string>
                             <string>total_level_1_initial_budget</string>
                             <string>total_level_1_current_budget</string>
