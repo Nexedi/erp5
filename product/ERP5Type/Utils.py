@@ -561,8 +561,6 @@ class TempDocumentConstructor(DocumentConstructor):
       # through the factory system.
       if getattr(aq_base(folder), 'Destination', None) is not None:
         folder = folder.Destination()
-      if folder.isTempObject():
-        folder._setObject(id, o)
       o = o.__of__(folder)
       if kw:
         o._edit(force_update=1, **kw)
