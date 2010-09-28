@@ -129,9 +129,7 @@ return notification_message\n
         <item>
             <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple>
-                <string>Assignee</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
