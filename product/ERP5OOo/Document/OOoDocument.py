@@ -175,7 +175,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       to provide an extensive list of conversion formats.
     """
     if not self.hasBaseData():
-      raise NotConvertedError
+      # if we have no date we can not format it
+      return []
 
     def cached_getTargetFormatItemList(content_type):
       server_proxy = self._mkProxy()

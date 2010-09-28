@@ -1927,6 +1927,21 @@ return 1
     image=self.portal.image_module.newContent(portal_type='Image',
                                                     content_type='image/png')
     self.assertTrue('txt' in image.getTargetFormatList())
+    
+    # test Not converted (i.e. empty) OOoDocument instances
+    presentation=self.portal.document_module.newContent(portal_type='Presentation')
+    self.assertSameSet([], presentation.getTargetFormatList())
+    
+    # test uploading some data
+    upload_file = makeFileUpload('Foo_001.odg')
+    presentation.edit(file=upload_file)
+    self.stepTic()
+    self.assertTrue('odg' in presentation.getTargetFormatList())
+    self.assertTrue('jpg' in presentation.getTargetFormatList())
+    self.assertTrue('png' in presentation.getTargetFormatList())
+
+    
+    
 
   def test_convertToImageOnTraversal(self):
     """
