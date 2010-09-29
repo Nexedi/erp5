@@ -75,6 +75,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
     # Multiple inheritance definition
     updateRelatedContent = XMLMatrix.updateRelatedContent
 
+
     # Force in _edit to modify variation_base_category_list first
     security.declarePrivate( '_edit' )
     def _edit(self, REQUEST=None, force_update = 0, **kw):
@@ -85,8 +86,17 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
 
       # If variations and resources are set at the same time, resource must be
       # set before any variation.
+      # Also, resource must be set before the categories: use, quantity_unit, base_contribution.
+      # Because we use the resource to set the *default* category values in
+      # movement_resource_interaction_worfklow, and we want to set the *proper*
+      # category values when they are existed in the **kw parameter.
+      # Thereby we set the resource first, then, set the rest.
       if kw.has_key('resource_value'):
         self._setResourceValue( kw['resource_value'] )
+      # We also take care the resource, as well as resource_value. For example in builders,
+      # we usually set resource instead of resource_value.
+      if kw.has_key('resource'):
+        self._setResource( kw['resource'] )
       # We must first prepare the variation_base_category_list before we do the edit of the rest
       #LOG('in edit', 0, str(kw))
       if kw.has_key('variation_base_category_list'):
