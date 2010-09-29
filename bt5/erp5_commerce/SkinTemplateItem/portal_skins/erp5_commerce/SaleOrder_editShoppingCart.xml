@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -196,8 +193,6 @@
   shipping.\n
 """\n
 \n
-from Products.ERP5Type.Document import newTempOrderLine\n
-\n
 request = context.REQUEST\n
 translateString = context.Base_translateString \n
 quantity = field_my_buy_quantity\n
@@ -290,8 +285,6 @@ return context.SaleOrder_paymentRedirect(field_my_comment, field_my_payment_mode
                             <string>field_my_comment</string>
                             <string>field_my_payment_mode</string>
                             <string>kw</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempOrderLine</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>request</string>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -77,9 +74,8 @@ else:\n
   shopping_cart_id = \'shopping_cart\'\n
   session = portal_sessions[session_id]\n
   if not shopping_cart_id in session.keys():\n
-    from Products.ERP5Type.Document import newTempOrder\n
     web_site = context.getWebSiteValue()\n
-    shopping_cart = newTempOrder(portal_sessions, shopping_cart_id)\n
+    shopping_cart = portal_sessions.newContent(id=shopping_cart_id, portal_type=\'Sale Order\', temp_object=True)\n
     shopping_cart.setPriceCurrency(web_site.WebSite_getShoppingCartDefaultCurrency().getRelativeUrl())\n
     session[shopping_cart_id] = shopping_cart\n
 \n
@@ -144,9 +140,8 @@ else:\n
                             <string>shopping_cart_id</string>
                             <string>_getitem_</string>
                             <string>session</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempOrder</string>
                             <string>web_site</string>
+                            <string>True</string>
                             <string>shopping_cart</string>
                             <string>_write_</string>
                           </tuple>

@@ -1,3 +1,6 @@
+2010-09-29
+* do not use newTempOrder, create temporary sale order instead (portal type classes require the portal type to exist to create temporary objects, and 'Order' portal type does not exist)
+
 2009-09-14 lucas
 * added navigation for Anonymous user
 
