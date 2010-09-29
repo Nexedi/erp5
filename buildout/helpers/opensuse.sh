@@ -21,6 +21,9 @@ flex
 gc-devel
 gcc
 gcc-c++
+gcc43
+gcc43-c++
+gcc43-java
 gdbm-devel
 gettext-runtime
 giflib-devel
@@ -40,6 +43,7 @@ libneon-devel
 libopenssl-devel
 libpng-devel
 librsync
+libstdc++43-devel
 libtiff-devel
 libtool
 libxml2-devel
