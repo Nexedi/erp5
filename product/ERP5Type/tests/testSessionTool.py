@@ -111,12 +111,12 @@ class TestSessionTool(ERP5TypeTestCase):
 
   def stepTestAcquisitionRamSessionStorage(self, sequence=None, \
                                            sequence_list=None, **kw):
-    from Products.ERP5Type.Document import newTempOrder
+    from Products.ERP5Type.Document import newTempSaleOrder
     portal_sessions =  self.getPortal().portal_sessions
     session = portal_sessions.newContent(
                       self.session_id, \
-                      attr_1 = newTempOrder(portal_sessions, '1'), \
-                      attr_2 = newTempOrder(portal_sessions, '2'),)
+                      attr_1 = newTempSaleOrder(portal_sessions, '1'), \
+                      attr_2 = newTempSaleOrder(portal_sessions, '2'),)
     ## check temp (RAM based) attributes stored in session
     for i in range (1, 3):
       attr_name = 'attr_%s' %i
