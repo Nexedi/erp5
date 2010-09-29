@@ -91,12 +91,17 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       # movement_resource_interaction_worfklow, and we want to set the *proper*
       # category values when they are existed in the **kw parameter.
       # Thereby we set the resource first, then, set the rest.
-      if kw.has_key('resource_value'):
+      if kw.has_key('resource_value_list'):
+        self._setResourceValueList( kw['resource_value_list'] )
+      elif kw.has_key('resouce_value'):
         self._setResourceValue( kw['resource_value'] )
       # We also take care the resource, as well as resource_value. For example in builders,
       # we usually set resource instead of resource_value.
-      if kw.has_key('resource'):
+      if kw.has_key('resource_list'):
+        self._setResourceList( kw['resource_list'] )
+      elif kw.has_key('resource'):
         self._setResource( kw['resource'] )
+
       # We must first prepare the variation_base_category_list before we do the edit of the rest
       #LOG('in edit', 0, str(kw))
       if kw.has_key('variation_base_category_list'):
