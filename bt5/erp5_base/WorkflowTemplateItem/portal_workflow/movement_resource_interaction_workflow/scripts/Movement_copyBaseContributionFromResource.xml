@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -57,7 +54,12 @@
 \n
 resource = movement.getResourceValue()\n
 if resource is not None:\n
-  movement.setBaseContributionList(resource.getBaseContributionList())\n
+  # if the movement already have a base contribution which is valid for this resource, don\'t change it\n
+  movement_base_contribution = movement.getBaseContribution()\n
+  if movement_base_contribution and movement_base_contribution in resource.getBaseContributionList():\n
+    return\n
+  # otherwise initialise to the default base contribution\n
+  movement.setBaseContribution(resource.getDefaultBaseContribution())\n
 </string> </value>
         </item>
         <item>
@@ -108,6 +110,7 @@ if resource is not None:\n
                             <string>_getattr_</string>
                             <string>resource</string>
                             <string>None</string>
+                            <string>movement_base_contribution</string>
                           </tuple>
                         </value>
                     </item>

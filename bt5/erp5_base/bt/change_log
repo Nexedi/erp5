@@ -1,4 +1,7 @@
 2010-09-28 tatuya
+* Stop overwriting a value by movement_resource_interaraction_workflow when the categories are already set a valid value as the new resource.
+
+2010-09-28 tatuya
 * Previous commits(r38692,38707) were not solved the issue that movement_resource_interaction_workflow prevents the delivery buliding. So, revert them.
 
 2010-09-28 tatuya
