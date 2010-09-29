@@ -93,14 +93,25 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       # Thereby we set the resource first, then, set the rest.
       if kw.has_key('resource_value_list'):
         self._setResourceValueList( kw['resource_value_list'] )
+      elif kw.has_key('resource_value_set'):
+        self._setResourceValueSet( kw['resource_value_set'] )
       elif kw.has_key('resouce_value'):
         self._setResourceValue( kw['resource_value'] )
       # We also take care the resource, as well as resource_value. For example in builders,
       # we usually set resource instead of resource_value.
       if kw.has_key('resource_list'):
         self._setResourceList( kw['resource_list'] )
+      elif kw.has_key('resource_set'):
+        self._setResourceSet( kw['resource_set'])
       elif kw.has_key('resource'):
         self._setResource( kw['resource'] )
+      # also resource_uid
+      if kw.has_key('resource_uid_list'):
+        self._setResourceUidList( kw['resource_uid_list'] )
+      elif kw.has_key('resource_uid_set'):
+        self._setResourceUidSet( kw['resource_uid_set'])
+      elif kw.has_key('resource_uid'):
+        self._setResourceUid( kw['resource_uid'] )
 
       # We must first prepare the variation_base_category_list before we do the edit of the rest
       #LOG('in edit', 0, str(kw))
