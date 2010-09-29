@@ -3363,8 +3363,7 @@ class DocumentTemplateItem(BaseTemplateItem):
               raise
             continue
           if self.local_file_importer_name is not None:
-            self.local_file_importer_name(name)
-            # after any import, flush all ZODB caches to force a DB reload
+            # before any import, flush all ZODB caches to force a DB reload
             # otherwise we could have objects trying to get commited while
             # holding reference to a class that is no longer the same one as
             # the class in its import location and pickle doesn't tolerate it.
@@ -3375,6 +3374,7 @@ class DocumentTemplateItem(BaseTemplateItem):
             # connection
             self.getPortalObject()._p_jar.db().cacheMinimize()
             gc.collect()
+            self.local_file_importer_name(name)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       for id in self._archive.keys():
