@@ -71,6 +71,7 @@ from threading import Thread
 import httplib
 import urllib
 from AccessControl import Unauthorized
+from Products.ERP5Type import Permissions
 
 QUIET = 0
 
@@ -2124,7 +2125,6 @@ return 1
     self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList()], \
                         [web_page1])
 
-
   def test_Base_getWorkflowEventInfoList(self):
     """
       Test getting history of an object.
@@ -2145,6 +2145,31 @@ return 1
     self.assertEquals(event_list[-1].action, 'Share Document')
     self.assertEquals(event_list[-2].action, 'Reject Document')
     self.assertEquals(event_list[-3].action, 'Publish Document')
+    
+  def test_ContributeToExistingDocument(self):
+    """
+      Test various cases of contributing to an existing document
+    """
+    request = get_request()
+    portal = self.portal
+    # contribute a document, then make it not editable and check we can not contribute to it
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, \
+               synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()    
+    # passing another portal type should raise an exception
+    kw['portal_type'] = "Spreadsheet"
+    self.assertRaises(ValueError, self.portal.Base_contribute, **kw)
+                                           
+    # make it read only
+    document.manage_permission(Permissions.ModifyPortalContent, [])
+    self.stepTic()
+    kw.pop('portal_type')
+    self.assertRaises(Unauthorized, self.portal.Base_contribute, **kw)
+                                  
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 
