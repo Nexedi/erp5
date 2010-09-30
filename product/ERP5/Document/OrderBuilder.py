@@ -571,10 +571,14 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         base_id = self.matrix_base_id
         getCell = delivery_line.getCell
         delivery_movement_to_update_list = []
-        for cell_key in delivery_line.getCellKeyList(base_id=base_id):
-          cell = getCell(base_id=base_id, *cell_key)
-          if cell is not None:
-            delivery_movement_to_update_list.append(cell)
+        cell_key_list = delivery_line.getCellKeyList(base_id=base_id)
+        if cell_key_list:
+          for cell_key in cell_key_list:
+            cell = getCell(base_id=base_id, *cell_key)
+            if cell is not None:
+              delivery_movement_to_update_list.append(cell)
+        else:
+          delivery_movement_to_update_list.append(delivery_line)
         for grouped_node in grouped_node_list:
           self._processDeliveryCellGroup(
                                     delivery_line,
