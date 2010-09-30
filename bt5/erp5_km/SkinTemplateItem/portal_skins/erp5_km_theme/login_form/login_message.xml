@@ -276,7 +276,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_translateString("Existing users please log in by entering your email adress and password in the two fields below.")</string> </value>
+            <value> <string>python:here.Base_translateString("Existing users please log in by entering your email address and password in the two fields below.")</string> </value>
         </item>
       </dictionary>
     </pickle>
