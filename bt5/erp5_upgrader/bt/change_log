@@ -1,3 +1,6 @@
+2010-09-30 lucas
+* Added message to be logged if during the upgrade of the Local Roles for security groups the Portal Type document does not exists.
+
 2010-02-16 nicolas
 * Add new properties in Signature in order to trig some actions just before or just after business template update/installation
 
