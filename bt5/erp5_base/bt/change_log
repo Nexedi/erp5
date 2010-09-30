@@ -1,4 +1,7 @@
 2010-09-28 tatuya
+* Fix a issue that all the base contribution are not copied when change the resource on a movement.
+
+2010-09-28 tatuya
 * Stop overwriting a value by movement_resource_interaraction_workflow when the categories are already set a valid value as the new resource.
 
 2010-09-28 tatuya
