@@ -6229,6 +6229,9 @@ msgstr "Aucun wiki correspondant n'a été trouvé."
 msgid "No result !"
 msgstr "Pas de résultat !"
 
+msgid "No result."
+msgstr "Pas de résultat."
+
 msgid "No such document was found."
 msgstr "Aucun document correspondant n'a été trouvé."
 
