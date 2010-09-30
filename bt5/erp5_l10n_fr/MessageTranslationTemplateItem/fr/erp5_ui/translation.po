@@ -2022,6 +2022,9 @@ msgstr "Choix"
 msgid "Choose Solve Actions"
 msgstr "Solutionner la divergence"
 
+msgid "Choose a password"
+msgstr "Choisissez un mot de passe"
+
 msgid "Citation of a related action or document."
 msgstr "Une référence d'un type de document  qui décrit les procédures passées, les actions ou stratégies liées à une activité particulière."
 
@@ -3525,6 +3528,9 @@ msgstr "Désignation"
 
 msgid "Designed"
 msgstr "Mis au point"
+
+msgid "Desired Login Name"
+msgstr "Nom de connexion demandé"
 
 msgid "Destination"
 msgstr "Destination"
@@ -6521,6 +6527,9 @@ msgstr "Opérateurs"
 msgid "Optional Resources"
 msgstr "Produits optionels"
 
+msgid "Or write your own question"
+msgstr "Ou écrivez votre propre question"
+
 msgid "Order"
 msgstr "Commande"
 
@@ -6616,6 +6625,9 @@ msgstr "Adresse principale de l'organisation"
 
 msgid "Organisation Module"
 msgstr "Module des organisations"
+
+msgid "Organisation Usual Name"
+msgstr "Nom de l'organisation"
 
 msgid "Organisation that sends the invoice"
 msgstr "L'organisation qui s'occupe d'envoyer les factures."
@@ -7901,6 +7913,9 @@ msgstr "Réassigner le bogue"
 msgid "Re Assign Bug [transition in bug_workflow]"
 msgstr "Réassigner le bogue"
 
+msgid "Re-enter password"
+msgstr "Confirmez le mot de passe"
+
 msgid "Re-install Business Template"
 msgstr "Réinstaller le Business Template"
 
@@ -8192,11 +8207,17 @@ msgstr "Objets liés"
 msgid "Related Objects Qtty"
 msgstr "Nombre d'objets liés"
 
+msgid "Related Organisation"
+msgstr "Organisation liée"
+
 msgid "Related Payment Created"
 msgstr "Écriture de payement correspondante créée"
 
 msgid "Related Payment Transaction"
 msgstr "Écriture de trésorerie correspondante"
+
+msgid "Related Person"
+msgstr "Personne liée"
 
 msgid "Related Persons"
 msgstr "Interlocuteurs"
@@ -8905,6 +8926,9 @@ msgstr "Classification de sécurité"
 
 msgid "Security Key"
 msgstr "Code de sécurité"
+
+msgid "Security Question"
+msgstr "Question secrète"
 
 msgid "See Tales"
 msgstr "Voir TALES"
