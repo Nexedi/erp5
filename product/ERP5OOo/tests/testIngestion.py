@@ -776,11 +776,18 @@ class TestIngestion(ERP5TypeTestCase):
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
     """
-      Don't see a way to test it here, Image.index_html makes heavy use 
-      of REQUEST and RESPONSE, and the rest of the implementation is way down
-      in Zope core
+      Check we are able to resize images
     """
-    printAndLog('stepExportImage not implemented')
+    image = self.portal.image_module.six
+    f = makeFileUpload('TEST-en-002.jpg')
+    image.edit(file=f)
+    self.stepTic()
+    mime, data = image.convert(None)
+    self.assertEquals(mime, 'image/jpeg')
+    mime, small_data = image.convert(None, display='small')
+    mime, large_data = image.convert(None, display='xlarge')
+    # Check we are able to resize the image.
+    self.assertTrue(len(small_data) < len(large_data))
 
   def stepCleanUp(self, sequence=None, sequence_list=None, **kw):
     """
