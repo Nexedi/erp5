@@ -505,7 +505,7 @@ msgid "Action that will open the Career"
 msgstr "l'état d'une affectation toujours valide."
 
 msgid "Action that will trigger the confirmed state of a workflow, for example for an accounting transaction or a sale packing list."
-msgstr "Action qui permet de confirmer un doument dans ERP5"
+msgstr "Action qui permet de confirmer un document dans ERP5"
 
 msgid "Action which will disable the preference"
 msgstr "Cette action permet de désactiver une préférence."
@@ -1429,7 +1429,7 @@ msgid "Bug"
 msgstr "Bogue"
 
 msgid "Bug Event workflow"
-msgstr "Worflow des évènements de bogue"
+msgstr "Workflow des évènements de bogue"
 
 msgid "Bug Line"
 msgstr "Ligne de bogue"
@@ -1642,9 +1642,6 @@ msgid "Cancel Career Step Action [transition in career_workflow]"
 msgstr "Annuler l'étape de carrière"
 
 msgid "Cancel Career Step [transition in career_workflow]"
-msgstr "Annuler l'étape de carrière"
-
-msgid "Cancel Carrer Step [transition in career_workflow]"
 msgstr "Annuler l'étape de carrière"
 
 msgid "Cancel Document Publication"
@@ -2775,11 +2772,11 @@ msgstr "Récupérations de compte utilisateur"
 msgid "Credential Recoveries to Approve"
 msgstr "Récupérations de compte utilisateur à approuver"
 
-msgid "Credential Recoveries to Submit"
-msgstr "Récupérations de compte utilisateur à soumettre"
-
 msgid "Credential Recoveries to Close"
 msgstr "Récupérations de compte utilisateur à clôturer"
+
+msgid "Credential Recoveries to Submit"
+msgstr "Récupérations de compte utilisateur à soumettre"
 
 msgid "Credential Recovery"
 msgstr "Récupération de compte utilisateur"
@@ -2796,11 +2793,11 @@ msgstr "Demandes de comptes utilisateur"
 msgid "Credential Requests to Approve"
 msgstr "Demandes de comptes utilisateur à approuver"
 
-msgid "Credential Requests to Submit"
-msgstr "Demandes de comptes utilisateur à soumettre"
-
 msgid "Credential Requests to Close"
 msgstr "Demandes de comptes utilisateur à clôturer"
+
+msgid "Credential Requests to Submit"
+msgstr "Demandes de comptes utilisateur à soumettre"
 
 msgid "Credential Update"
 msgstr "Mise à jour de compte utilisateur"
@@ -2814,11 +2811,11 @@ msgstr "Mises à jour de comptes utilisateur"
 msgid "Credential Updates to Approve"
 msgstr "Mises à jour de comptes utilisateur à approver"
 
-msgid "Credential Updates to Submit"
-msgstr "Mises à jour de comptes utilisateur à soumettre"
-
 msgid "Credential Updates to Close"
 msgstr "Mises à jour de comptes utilisateur à clôturer"
+
+msgid "Credential Updates to Submit"
+msgstr "Mises à jour de comptes utilisateur à soumettre"
 
 msgid "Credit"
 msgstr "Crédit"
@@ -2993,9 +2990,6 @@ msgstr "Date à laquelle le document a été ingéré."
 
 msgid "Date at which the invoice was shipped"
 msgstr "Date à laquelle la facture a été envoyée."
-
-msgid "Date at wich the document was ingested"
-msgstr "Date à laquelle le document a été ingéré."
 
 msgid "Date has expire."
 msgstr "La date a expirée"
@@ -3197,9 +3191,6 @@ msgstr "Clôturer définitivement l'écriture"
 
 msgid "Definitively Close Transaction [transition in accounting_workflow]"
 msgstr "Clôturer définitivement"
-
-msgid "Delcares a packing list as packed, ready for shipment"
-msgstr "Déclare la livraison comme prête à être expédiée"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -4516,7 +4507,7 @@ msgstr "État du document"
 msgid "File Type"
 msgstr "Type de ficher"
 
-msgid "File commited"
+msgid "File committed"
 msgstr "Fichier committé."
 
 msgid "File format:"
@@ -6070,11 +6061,11 @@ msgstr "Le nom d'un script ou d'une méthode qui affiche le titre d'un noeud"
 msgid "Name of a script or a method that should return the list of nodes"
 msgstr "Le nom d'un script ou d'une méthode qui retourne les noeuds utilisés"
 
+msgid "Name of the method used to display information about the result of the alarm"
+msgstr "Méthode utilisée pour montrer les résultats de l'alarme."
+
 msgid "Name of the script called to generate temporary domains"
 msgstr "Nom du script qui génère des noms temporaires de domaines"
-
-msgid "Name ot the method used to display information about the result of the alarm"
-msgstr "Méthode utilisée pour montrer les résultats de l'alarme."
 
 msgid "Nano Image Height"
 msgstr "Longueur des nano-images"
@@ -7244,9 +7235,6 @@ msgstr "L'email de l'expéditeur qui doit envoyer des réponses aux mails envoy�
 msgid "Preferred timezone"
 msgstr "Le fuseau horaire à utiliser par défaut."
 
-msgid "Preffered classification policy for newly created documents"
-msgstr "La police de classification préférée utilisée pour créer de nouveaux documents."
-
 msgid "Prefix"
 msgstr "Préfixe"
 
@@ -8408,9 +8396,6 @@ msgstr "Demander le traitement"
 msgid "Request Subscription"
 msgstr "Enregistrer la requête d'inscription"
 
-msgid "Request Transaltion [transition in document_publication_workflow]"
-msgstr "Demander la traduction"
-
 msgid "Request Translation"
 msgstr "Demander la traduction"
 
@@ -9177,6 +9162,9 @@ msgid "Short description that will appear in the search result list."
 msgstr "Description qui apparaît dans les résultats de recherche"
 
 msgid "Short title is diplayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map"
+msgstr "Le court titre est affiché dans les outils de navigation avec une priorité plus élevée que le titre long sauf dans un Plan du Site."
+
+msgid "Short title is displayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map"
 msgstr "Le court titre est affiché dans les outils de navigation avec une priorité plus élevée que le titre long sauf dans un Plan du Site."
 
 msgid "Short titles are a precision of Titles in ERP5"
@@ -10363,7 +10351,7 @@ msgstr "La date à laquelle le ticket a été créé."
 msgid "The date at which the ticket was created."
 msgstr "Date de création du ticket."
 
-msgid "The date at wich the trash bin was created"
+msgid "The date at which the trash bin was created"
 msgstr "Date à laquelle la corbeille a été créée."
 
 msgid "The date from which the offer is valid."
@@ -10477,17 +10465,17 @@ msgstr "Le code géographique incorporé de l'organisation, ce code est parfois 
 msgid "The geographic incorporation code of this organisation, sometimes derivated from corporate code"
 msgstr "Le code géographique de l'organisation, ce code est parfois dérivé  du numéro d'immatriculation, et est disponible sur le site de l'Insee."
 
-msgid "The heigh in pixel of extra-small image"
-msgstr "La longueur en pixel des très petites images."
-
-msgid "The heigh in pixel of thumbnail image"
-msgstr "La longueur en pixel des aperçus d'image"
-
 msgid "The height in pixel of extra-large image"
 msgstr "La longueur en pixel des très grandes images."
 
+msgid "The height in pixel of extra-small image"
+msgstr "La longueur en pixel des très petites images."
+
 msgid "The height in pixel of small image"
 msgstr "la longueur en pixel des petites images."
+
+msgid "The height in pixel of thumbnail image"
+msgstr "La longueur en pixel des aperçus d'image"
 
 msgid "The integer you entered was out of range."
 msgstr "Ce nombre est hors limites."
@@ -10759,7 +10747,7 @@ msgstr "La région"
 msgid "The registered capital of this organisation."
 msgstr "Le capital social d'une entreprise."
 
-msgid "The release_alive worklow method sets the document state to released_alive and archives all previously released documents with same reference in the same language."
+msgid "The release_alive workflow method sets the document state to released_alive and archives all previously released documents with same reference in the same language."
 msgstr "Diffuse le document pour certaines personnes ayant le droit de le voir, et archive la version précédente. Le document est modifiable."
 
 msgid "The respond logical action sets the event state to responded."
@@ -11715,11 +11703,11 @@ msgstr "la version du document d'expression de besoins."
 msgid "Version of the web page"
 msgstr "Version de la page web."
 
+msgid "Version of the web page. It increases each time major modifications are done"
+msgstr "La version de la page web. Elle augmente à chaque fois que des modifications sont faites."
+
 msgid "Version ot the message notification. It increases each time major modifications are done"
 msgstr "Version du message de notification."
-
-msgid "Version ot the web page. It increases each time major modifications are done"
-msgstr "La version de la page web. Elle augmente à chaque fois que des modifications sont faites."
 
 msgid "Version:"
 msgstr "Version:"
