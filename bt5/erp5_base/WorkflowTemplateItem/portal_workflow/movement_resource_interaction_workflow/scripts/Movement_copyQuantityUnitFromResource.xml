@@ -54,10 +54,13 @@
 \n
 resource = movement.getResourceValue()\n
 if resource is not None:\n
-  # if the movement already have a quantity unit which is valid for this resource, don\'t change it\n
-  movement_quantity_unit = movement.getQuantityUnit()\n
-  if movement_quantity_unit and movement_quantity_unit in resource.getQuantityUnitList():\n
-    return\n
+  # quantity unit can be acquired from resource.\n
+  # (Amount class has getQuantityUnit method for backward compatibility and it tries to acquire value from resource).\n
+  if movement.hasCategory(\'quantity_unit\'):\n
+    # if the movement already have a quantity unit which is valid for this resource, don\'t change it\n
+    movement_quantity_unit = movement.getQuantityUnit()\n
+    if movement_quantity_unit and movement_quantity_unit in resource.getQuantityUnitList():\n
+      return\n
   # otherwise initialise to the default quantity unit\n
   movement.setQuantityUnit(resource.getDefaultQuantityUnit())\n
 </string> </value>

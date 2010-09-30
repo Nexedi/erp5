@@ -1,3 +1,6 @@
+2010-09-30 yusei
+* Update movement_resource_interaction_workflow and set quantity unit value to movement forcedly if current value is acquired from resource.
+
 2010-09-28 tatuya
 * Fix a issue that all the base contribution are not copied when change the resource on a movement.
 
