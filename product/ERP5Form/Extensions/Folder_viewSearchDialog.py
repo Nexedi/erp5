@@ -69,8 +69,10 @@ def getSearchDialog(self, REQUEST=None):
     field._surcharged_tales(
         dict(
             default=TALESMethod(
-              'here/portal_selections/%s/%s_relative_url | nothing' 
-                                    % (selection_name, request_key)),
+              'here/portal_selections/%s/%s_relative_url | '
+              'here/portal_selections/%s/strict_%s_relative_url | nothing' 
+                                    % (selection_name, request_key,
+                                       selection_name, request_key)),
             items=TALESMethod('python: getattr(here.portal_categories["%s"],'
                              'here.portal_preferences.getPreference("'
                              'preferred_category_child_item_list_method_id",'
@@ -79,6 +81,20 @@ def getSearchDialog(self, REQUEST=None):
                              'display_none_category=False,'
                              'local_sort_id="int_index")' % request_key)),
             ['title', 'items', 'default'])
+
+    field_id = 'your_%s_relative_url_is_strict_' % request_key
+    temp_form.manage_addField(field_id, field_title, 'ProxyField')
+    field = temp_form._getOb(field_id)
+    field.manage_edit_xmlrpc(dict(
+        form_id='Base_viewFieldLibrary',
+        field_id='your_checkbox'))
+    field._surcharged_edit(dict(title='%s Strict' % field_title), ['title'])
+    field._surcharged_tales(
+        dict(
+            default=TALESMethod(
+              'here/portal_selections/%s/strict_%s_relative_url | nothing' 
+                                    % (selection_name, request_key,))),
+        ['title', 'default'])
 
 
   def addFloatField(field_id, field_title):
@@ -333,7 +349,8 @@ def getSearchDialog(self, REQUEST=None):
     field_id = field.getId()
     if field_id.endswith('search_key') or field_id.endswith('_usage_'):
       temp_form.move_field_group([field_id], default_group, 'right')
-    elif field.get_value('field_id') == 'your_category_list' \
+    elif field.get_value('field_id') in ('your_category_list',
+                                         'your_checkbox') \
         or field_id == 'your_SearchableText':
       temp_form.move_field_group([field_id], default_group, 'center')
 
