@@ -2191,16 +2191,13 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     filename = 'REF-en-001.odt'
     upload_file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=upload_file)
-
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     document.submit()
 
     preview_html = document.Document_getPreviewAsHTML().replace('\n', ' ')
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     self.assert_('I use reference to look up TEST' in preview_html)
 
@@ -2218,8 +2215,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     f = makeFileUpload('Foo_001.odt')
     text_document.edit(file=f.read())
     f.close()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # the document should be automatically converted to html
     self.assertEquals(text_document.getExternalProcessingState(), 'converted')
@@ -2263,8 +2259,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
                           priority=Priority.USER)
     self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
     self.assertEqual(user_pref.getPreferenceState(), 'enabled')
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     user_pref.setPreferredThumbnailImageHeight(default_thumbnail_image_height + 10)
     user_pref.setPreferredThumbnailImageWidth(default_thumbnail_image_width + 10)
     #Verify that the new values defined are the ones used by default
