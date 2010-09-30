@@ -6608,6 +6608,9 @@ msgstr "Commandes"
 msgid "Organisation"
 msgstr "Organisation"
 
+msgid "Organisation Default Address"
+msgstr "Adresse principale de l'organisation"
+
 msgid "Organisation Module"
 msgstr "Module des organisations"
 
