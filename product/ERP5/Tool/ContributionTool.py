@@ -44,6 +44,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5.Document.Url import no_crawl_protocol_list, no_host_protocol_list
+from AccessControl import Unauthorized
 
 from zLOG import LOG
 from DateTime import DateTime
