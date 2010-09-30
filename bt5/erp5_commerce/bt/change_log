@@ -1,4 +1,7 @@
-2010-09-29
+2010-09-30 nicolas.dumazet
+* Revert changes from 29th after adding Order abstract portal type to erp5_trade
+
+2010-09-29 nicolas.dumazet
 * do not use newTempOrder, create temporary sale order instead (portal type classes require the portal type to exist to create temporary objects, and 'Order' portal type does not exist)
 
 2009-09-14 lucas
