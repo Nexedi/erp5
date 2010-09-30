@@ -169,8 +169,8 @@ class SessionTool(BaseTool):
 
       session_id = '1234567'
       session = context.portal_sessions[session_id]
-      session['shopping_cart'] = newTempSaleOrder(context, '987654321') # will work only for local RAM sessions
-      (you can also use 'session.edit(shopping_cart= newTempSaleOrder(context, '987654321'))' )
+      session['shopping_cart'] = newTempOrder(context, '987654321') # will work only for local RAM sessions
+      (you can also use 'session.edit(shopping_cart= newTempOrder(context, '987654321'))' )
 
       (later in another script you can acquire shopping_cart):
 
@@ -183,7 +183,7 @@ class SessionTool(BaseTool):
        - it's not recommended to store in portal_sessions ZODB persistent objects because in order 
        to store them in Local RAM portal_sessions tool will remove aquisition wrapper. At "get" 
        request they'll be returend wrapped. 
-       - developer can store temporary RAM based objects like 'TempSaleOrder' but ONLY
+       - developer can store temporary RAM based objects like 'TempOrder' but ONLY
        when using Local RAM type of sessions. In a distributed environment one can use only 
        pickable types ue to the nature of memcached server.
       """
