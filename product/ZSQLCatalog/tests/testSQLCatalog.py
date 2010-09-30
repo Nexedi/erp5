@@ -38,6 +38,9 @@ from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLExpression import MergeConflictError
 
+class MatchList(list):
+  pass
+
 class ReferenceQuery:
   """
     This class is made to be able to compare a generated query tree with a
@@ -92,7 +95,10 @@ class ReferenceQuery:
       else:
         self.args.append(arg)
     if len(kw) == 1:
-      self.column, self.value = kw.items()[0]
+      self.column, value = kw.items()[0]
+      if not isinstance(value, MatchList):
+        value = MatchList([value])
+      self.value = value
     elif len(kw) > 1:
       raise ValueError, 'kw must not have more than one item: %r' % (kw, )
 
@@ -100,7 +106,7 @@ class ReferenceQuery:
     if isinstance(other, SimpleQuery):
       return self.column is not None and \
              other.getColumn() == self.column and \
-             other.getValue() == self.value and \
+             other.getValue() in self.value and \
              other.comparison_operator == self.operator
     elif isinstance(other, ComplexQuery):
       if not (len(other.query_list) == len(self.args) and \
@@ -431,7 +437,8 @@ class TestSQLCatalog(unittest.TestCase):
       {'fulltext': 'a NOT b', 'order_by_list': [('fulltext', ), ]},
       check_search_text=False)
     # If one want to sort on, he must use the equivalent FullText syntax:
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean', fulltext='a -b'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
+      fulltext=MatchList(['a -b', '-b a'])), operator='and'),
       {'fulltext': 'a -b', 'order_by_list': [('fulltext', ), ]},
       check_search_text=False)
     self.catalog(ReferenceQuery(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a'),
@@ -510,11 +517,23 @@ class TestSQLCatalog(unittest.TestCase):
     """
     self.catalog(ReferenceQuery(ReferenceQuery(operator='match', fulltext='a+b'), operator='and'),
                  {'fulltext': 'a+b'})
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean', fulltext='a +b'), operator='and'),
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match_boolean',
+      fulltext=MatchList(['a +b', '+b a'])), operator='and'),
                  {'fulltext': 'a +b'})
-    self.catalog(ReferenceQuery(ReferenceQuery( ReferenceQuery(operator='=', uid='foo'),
-                ReferenceQuery(operator='match_boolean', fulltext='+a b'), operator='and'
-    ), operator='and'), {'fulltext': '+a b uid:foo'})
+    self.catalog(ReferenceQuery(ReferenceQuery(
+        ReferenceQuery(operator='=', uid='foo'),
+        ReferenceQuery(operator='match_boolean',
+          fulltext=MatchList(['+a b', 'b +a'])),
+      operator='and'), operator='and'), {'fulltext': '+a b uid:foo'})
+
+  def test_FullTextQuoting(self):
+    # Quotes must be kept
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match',
+      fulltext='"a"'), operator='and'),
+      {'fulltext': '"a"'})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='match',
+      fulltext='"foo" bar "baz"'), operator='and'),
+      {'fulltext': '"foo" bar "baz"'})
 
   def test_DefaultKeyTextRendering(self):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', default='a% b'), operator='and'),

@@ -26,7 +26,6 @@ from warnings import warn
 from ZTUtils import make_query
 
 # XXX make sure that get_request works.
-current_app = None
 import Products.ERP5Type.Utils
 from Products.ERP5Type import Globals
 
@@ -34,14 +33,18 @@ from Products.ERP5Type import Globals
 original_get_request = Globals.get_request
 convertToUpperCase = Products.ERP5Type.Utils.convertToUpperCase
 
+from Testing.ZopeTestCase.connections import registry
+def get_context():
+  if registry:
+    return registry._conns[-1]
+
 def get_request():
   request = original_get_request()
   if request is not None:
     return request
+  current_app = get_context()
   if current_app is not None:
     return current_app.REQUEST
-  else:
-    return None
 
 Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
@@ -56,8 +59,6 @@ except ImportError:
 
 try:
   import itools.zope
-  def get_context():
-    return current_app
   itools.zope.get_context = get_context
 except ImportError:
   pass
@@ -228,7 +229,6 @@ failed_portal_installation = {}
 # this is a mapping 'list of business template -> boolean
 setup_done = {}
 
-
 def _getConnectionStringDict():
   """Returns the connection strings used for this test.
   """
@@ -321,10 +321,15 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
 
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
+
+      It also does some initialization, as if the portal was accessed for the
+      first time for the current request.
+      For performance reason, this should be used in only 3 places:
+      'setUpERP5Site', 'tic' and 'PortalTestCase._portal'
       """
       portal = self.app[self.getPortalName()]
-      # FIXME: Try not to run this call below so often by moving it somewhere
-      # where it is called exactly once per test.
+      # Make sure skins are correctly set-up (it's not implicitly set up
+      # by Acquisition on Zope 2.12 as it is on 2.8)
       portal.setupCurrentSkin(portal.REQUEST)
       self.REQUEST = portal.REQUEST
       setSite(portal)
@@ -531,9 +536,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
                          erp5_catalog_storage=erp5_catalog_storage, 
                          use_dummy_mail_host=use_dummy_mail_host)
       PortalTestCase.setUp(self)
-      global current_app
-      current_app = self.app
-      self._updateConnectionStrings()
 
     def afterSetUp(self):
       '''Called after setUp() has completed. This is
@@ -557,15 +559,11 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
     def _updateConnectionStrings(self):
       """Update connection strings with values passed by the testRunner
       """
-      global current_app
-      if current_app is not None:
-        self.app = current_app
-      portal = self.getPortal()
       # update connection strings
       for connection_string_name, connection_string in\
                                     _getConnectionStringDict().items():
         connection_name = connection_string_name.replace('_string', '')
-        getattr(portal, connection_name).edit('', connection_string)
+        getattr(self.portal, connection_name).edit('', connection_string)
 
     def _setUpDummyMailHost(self):
       """Replace Original Mail Host by Dummy Mail Host.
@@ -839,7 +837,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
 
     def setUpERP5Site(self,
                      business_template_list=(),
-                     app=None,
                      quiet=0,
                      light_install=1,
                      create_activities=1,
@@ -858,17 +855,12 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
         raise SetupSiteError(
             'Installation of %s already failed, giving up' % portal_name)
       try:
-        if app is None:
-          app = ZopeTestCase.app()
-        # this app will be closed after setUp, but keep an reference anyway, to
-        # make it's REQUEST available during setup
-        global current_app
-        current_app = app
+        self.app = app = self._app()
         app.test_portal_name = portal_name
 
         global setup_done
-        if not (hasattr(aq_base(app), portal_name) and
-                 setup_done.get(tuple(business_template_list))):
+        portal = app._getOb(portal_name, None)
+        if portal is None or not setup_done.get(tuple(business_template_list)):
           setup_done[tuple(business_template_list)] = 1
           business_template_list = \
             self._getBTPathAndIdList(business_template_list)
@@ -888,7 +880,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
               setattr(app, 'isIndexable', 0)
               reindex = 0
 
-            portal = getattr(app, portal_name, None)
             if portal is None:
               if not quiet:
                 ZopeTestCase._print('Adding %s ERP5 Site ... ' % portal_name)
@@ -909,17 +900,12 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
                                        reindex=reindex,
                                        create_activities=create_activities,
                                        **extra_constructor_kw )
-              portal = app[portal_name]
 
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
               transaction.commit()
-            self.portal = portal
-
-            # Make sure skins are correctly set-up (it's not implicitly set up
-            # by Acquisition on Zope 2.12 as it is on 2.8)
-            portal.setupCurrentSkin(portal.REQUEST)
+            self.portal = portal = self.getPortal()
 
             if len(setup_done) == 1: # make sure it is run only once
               try:
@@ -951,8 +937,6 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
               if not quiet:
                 ZopeTestCase._print('Executing setUpOnce ... ')
                 start = time.time()
-              # setUpOnce method may use self.app and self.portal
-              self.app = app
               setup_once()
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
@@ -981,6 +965,7 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
             raise
           else:
             transaction.commit()
+            del self.portal, self.app
             ZopeTestCase.close(app)
       except:
         f = StringIO()
@@ -1243,6 +1228,24 @@ class ZEOServerTestCase(ERP5TypeTestCase):
     self.zeo_server.close_server()
 
 
+class lazy_func_prop(object):
+  """Descriptor to delay the compilations of Python Scripts
+     until some of their attributes are accessed.
+  """
+  default_dict = {}
+  def __init__(self, name, default):
+    self.name = name
+    self.default_dict[name] = default
+  def __get__(self, instance, owner):
+    if self.name not in instance.__dict__:
+      instance.__dict__.update(self.default_dict)
+      instance._orig_compile()
+    return instance.__dict__[self.name]
+  def __set__(self, instance, value):
+    instance.__dict__[self.name] = value
+  def __delete__(self, instance):
+    del instance.__dict__[self.name]
+
 @onsetup
 def optimize():
   '''Significantly reduces portal creation time.'''
@@ -1254,25 +1257,43 @@ def optimize():
 
   # Delay the compilations of Python Scripts until they are really executed.
   from Products.PythonScripts.PythonScript import PythonScript
-  PythonScript_compile = PythonScript._compile
+  # In the future, Python Scripts will be exported without those 2 attributes:
+  PythonScript.func_code = lazy_func_prop('func_code', None)
+  PythonScript.func_defaults = lazy_func_prop('func_defaults', None)
+
+  PythonScript._orig_compile = PythonScript._compile
   def _compile(self):
-    self._lazy_compilation = 1
+    # mark the script as being not compiled
+    for name in lazy_func_prop.default_dict:
+      self.__dict__.pop(name, None)
   PythonScript._compile = _compile
   PythonScript_exec = PythonScript._exec
   def _exec(self, *args):
-    if getattr(self, '_lazy_compilation', 0):
-      self._lazy_compilation = 0
-      PythonScript_compile(self)
+    self.func_code # trigger compilation if needed
     return PythonScript_exec(self, *args)
   PythonScript._exec = _exec
   from Acquisition import aq_parent
   def _makeFunction(self, dummy=0): # CMFCore.FSPythonScript uses dummy arg.
     self.ZCacheable_invalidate()
-    PythonScript_compile(self)
+    self.__dict__.update(lazy_func_prop.default_dict)
+    self._orig_compile()
     if not (aq_parent(self) is None or hasattr(self, '_filepath')):
       # It needs a _filepath, and has an acquisition wrapper.
       self._filepath = self.get_filepath()
   PythonScript._makeFunction = _makeFunction
+
+  # XXX Previous implementation of this 'optimize' function requires that
+  #     Python Scripts always contain up-to-date data for 'func_code' and
+  #     'func_defaults' properties, so make sure we always export them.
+  #     This compatibility code is not required for normal ERP5 instances
+  #     because scripts are compiled at BT installation.
+  from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
+  BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
+  def removeProperties(self, obj, export):
+    if export and isinstance(obj, PythonScript):
+      obj.func_code # trigger compilation if needed
+    return BaseTemplateItem_removeProperties(self, obj, export)
+  BaseTemplateItem.removeProperties = removeProperties
 
   # Do not reindex portal types sub objects by default
   # We will probably disable reindexing for other types later

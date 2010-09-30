@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="CaptchaField" module="Products.ERP5Form.CaptchaField"/>
-        <tuple/>
-      </tuple>
+      <global name="CaptchaField" module="Products.ERP5Form.CaptchaField"/>
     </pickle>
     <pickle>
       <dictionary>

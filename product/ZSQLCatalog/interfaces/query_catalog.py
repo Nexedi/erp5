@@ -105,7 +105,7 @@ class ISearchKeyCatalog(Interface):
       extra_column_list (list)
       query_table (string, None)
         The table to use as catalog table.
-        If given and None, not catalog table will be used. Use this when you
+        If given and None, no catalog table will be used. Use this when you
         are using SQLCatalog to generate manualy a part of another query.
         That table has a special position in returned query:
          - all other tables are joined on this one (when it is required to use

@@ -36,6 +36,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 try:
   from Products import PluggableAuthService
@@ -170,6 +171,10 @@ class Person(EncryptedPasswordMixin, XMLObject):
           PAS _AND_ ERP5UserManager are used
       """
       if value:
+        # Encode reference to hex to prevent uppercase/lowercase conflict in
+        # activity table (when calling countMessageWithTag)
+        tag = 'Person_setReference_%s' % value.encode('hex')
+        # Check that there no existing user
         acl_users = getToolByName(self, 'acl_users')
         if PluggableAuthService is not None and isinstance(acl_users,
               PluggableAuthService.PluggableAuthService.PluggableAuthService):
@@ -182,8 +187,27 @@ class Person(EncryptedPasswordMixin, XMLObject):
               if len(user_list) > 0:
                 raise RuntimeError, 'user id %s already exist' % (value,)
               break
+        # Check that there is no reindexation related to reference indexation
+        portal_activities = getToolByName(self, 'portal_activities')
+        if portal_activities.countMessageWithTag(tag):
+          raise RuntimeError, 'user id %s already exist' % (value,)
+
+        parent_value = self.getParentValue()
+        # Prevent concurrent transaction to set the same reference on 2
+        # different persons
+        parent_value.serialize()
+        # Prevent to set the same reference on 2 different persons during the
+        # same transaction
+        transactional_variable = getTransactionalVariable()
+        if tag in transactional_variable:
+          raise RuntimeError, 'user id %s already exist' % (value,)
+        else:
+          transactional_variable[tag] = None
+      else:
+        tag = None
+
       self._setReference(value)
-      self.reindexObject()
+      self.reindexObject(activate_kw={'tag': tag})
       # invalid the cache for ERP5Security
       portal_caches = getToolByName(self.getPortalObject(), 'portal_caches')
       portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))

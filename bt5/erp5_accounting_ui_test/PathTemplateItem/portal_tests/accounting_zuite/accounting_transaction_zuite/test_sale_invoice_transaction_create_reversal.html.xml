@@ -125,7 +125,7 @@ Test for Creating Reversal Transaction for a Sale Invoice Transaction\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>3</td>\n
+  <td>3 records</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -281,7 +281,7 @@ delivered.\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>3</td>\n
+  <td>3 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n

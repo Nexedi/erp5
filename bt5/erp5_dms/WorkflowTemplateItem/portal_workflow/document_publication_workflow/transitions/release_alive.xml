@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The release_alive worklow method sets the document state to released_alive and archives all previously released documents with same reference in the same language.</string> </value>
+            <value> <string>The release_alive workflow method sets the document state to released_alive and archives all previously released documents with same reference in the same language.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

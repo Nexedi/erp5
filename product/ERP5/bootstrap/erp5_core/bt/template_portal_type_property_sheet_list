@@ -1,3 +1,10 @@
+Acquired Property | AcquiredProperty
+Acquired Property | SimpleItem
+Acquired Property | StandardProperty
+Acquired Property | TranslatableProperty
+Dynamic Category Property | DynamicCategoryProperty
+Standard Property | StandardProperty
+Standard Property | TranslatableProperty
 Trash Bin | Base
 Trash Bin | SimpleItem
 Trash Bin | Task

@@ -1,6 +1,8 @@
+Acquired Property
 Action Information
 Alarm
 Alarm Tool
+Amount
 Application Id Generator
 Applied Rule
 Base Category
@@ -9,6 +11,7 @@ Base Type
 Cache Factory
 Cache Tool
 Category
+Category Property
 Category Tool
 Class Tool
 Conceptual Id Generator
@@ -20,15 +23,19 @@ Domain
 Domain Generator
 Domain Tool
 Dummy Class Tool
+Dynamic Category Property
+Event
 Folder
 Id Tool
 Mapped Value
 Memcached Plugin
 Memcached Tool
+Movement
 Password Tool
 Predicate
 Preference
 Preference Tool
+Property Sheet
 Property Sheet Tool
 Python Script
 Ram Cache
@@ -38,6 +45,7 @@ SQL Non Continuous Increasing Id Generator
 Session Tool
 Simulation Movement
 Simulation Tool
+Standard Property
 Synchronisation Tool
 System Preference
 Template Tool

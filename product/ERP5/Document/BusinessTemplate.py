@@ -28,12 +28,14 @@
 ##############################################################################
 
 import fnmatch, gc, imp, os, re, shutil, sys
+from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Globals import Persistent, PersistentMapping
 from Acquisition import Implicit, aq_base, aq_inner, aq_parent
 from AccessControl import ClassSecurityInfo, Unauthorized, getSecurityManager
 from Products.CMFCore.utils import getToolByName
+from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod, _aq_reset
 from Products.ERP5Type.Utils import readLocalDocument, \
@@ -142,7 +144,7 @@ def _recursiveRemoveUid(obj):
   This is used to prevent unindexing real objects when we delete subobjects on
   a copy of this object.
   """
-  if hasattr(aq_base(obj), 'uid'):
+  if getattr(aq_base(obj), 'uid', _MARKER) is not _MARKER:
     obj.uid = None
   for subobj in obj.objectValues():
     _recursiveRemoveUid(subobj)
@@ -195,6 +197,9 @@ def fixZSQLMethod(portal, method):
           'connection_id for Z SQL Method %s is invalid, using %s' % (
                     method.getId(), sql_connection_list[0]))
       method.connection_id = sql_connection_list[0]
+  # recompile the method
+  method._arg = Aqueduct.parse(method.arguments_src)
+  method.template = method.template_class(method.src)
 
 def registerSkinFolder(skin_tool, skin_folder):
   request = skin_tool.REQUEST
@@ -577,31 +582,37 @@ class BaseTemplateItem(Implicit, Persistent):
   def importFile(self, bta, **kw):
     bta.importFiles(item=self)
 
-  def removeProperties(self, obj):
+  def removeProperties(self, obj, export):
     """
     Remove unneeded properties for export
     """
-    meta_type = getattr(aq_base(obj), 'meta_type', None)
+    obj._p_activate()
+    klass = obj.__class__
+    classname = klass.__name__
 
-    attr_list = [ '_dav_writelocks', '_filepath', '_owner', 'uid',
-                  'workflow_history', '__ac_local_roles__' ]
-    attr_list += {
-        'Script (Python)': ('_lazy_compilation', 'Python_magic'),
-      }.get(meta_type, ())
+    attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'uid',
+                    'workflow_history', '__ac_local_roles__'))
+    if export:
+      # PythonScript covers both Zope Python scripts
+      # and ERP5 Python Scripts
+      if isinstance(obj, PythonScript):
+        # XXX forward compatibility: set to None instead of deleting '_code'
+        #     so that old BT code can import recent BT
+        obj._code = None
+        attr_set.update((#'func_code', 'func_defaults', '_code',
+                         '_lazy_compilation', 'Python_magic'))
+      #elif classname == 'SQL' and klass.__module__== 'Products.ZSQLMethods':
+      #  attr_set.update(('_arg', 'template'))
+      elif interfaces.IIdGenerator.providedBy(obj):
+        attr_set.update(('last_max_id_dict', 'last_id_dict'))
 
-    for attr in attr_list:
-      if attr in obj.__dict__:
+    for attr in obj.__dict__.keys():
+      if attr in attr_set or attr.startswith('_cache_cookie_'):
         delattr(obj, attr)
 
-    if meta_type == 'ERP5 PDF Form':
+    if classname == 'PDFForm':
       if not obj.getProperty('business_template_include_content', 1):
         obj.deletePdfContent()
-    elif meta_type == 'Script (Python)':
-      obj._code = None
-    elif  interfaces.IIdGenerator.providedBy(obj):
-      for dict_name in ('last_max_id_dict', 'last_id_dict'):
-        if getattr(obj, dict_name, None) is not None:
-          setattr(obj, dict_name, None)
     return obj
 
   def getTemplateTypeName(self):
@@ -715,7 +726,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      obj = self.removeProperties(obj)
+      obj = self.removeProperties(obj, 1)
       id_list = obj.objectIds() # FIXME duplicated variable name
       if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
         # we must keep groups because they are deleted along with subobjects
@@ -742,7 +753,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       except AttributeError:
         raise AttributeError, "Could not find object '%s' during business template processing." % relative_url
       _recursiveRemoveUid(obj)
-      obj = self.removeProperties(obj)
+      obj = self.removeProperties(obj, 1)
       id_list = obj.objectIds()
       if hasattr(aq_base(obj), 'groups'): # XXX should check metatype instead
         # we must keep groups because they are deleted along with subobjects
@@ -834,7 +845,6 @@ class ObjectTemplateItem(BaseTemplateItem):
       # FIXME: Why not use the importXML function directly? Are there any BT5s
       # with actual .zexp files on the wild?
       obj = connection.importFile(file_obj, customImporters=customImporters)
-    self.removeProperties(obj)
     self._objects[file_name[:-4]] = obj
 
   def preinstall(self, context, installed_item, **kw):
@@ -844,8 +854,7 @@ class ObjectTemplateItem(BaseTemplateItem):
       type_name = self.__class__.__name__.split('TemplateItem')[-2]
       for path in self._objects:
         if installed_item._objects.has_key(path):
-          upgrade_list.append((path,
-            self.removeProperties(installed_item._objects[path])))
+          upgrade_list.append((path, installed_item._objects[path]))
         else: # new object
           modified_object_list[path] = 'New', type_name
       # update _p_jar property of objects cleaned by removeProperties
@@ -1036,9 +1045,10 @@ class ObjectTemplateItem(BaseTemplateItem):
 
           # install object
           obj = self._objects[path]
-          if getattr(obj, 'meta_type', None) == 'Script (Python)':
-            if getattr(obj, '_code') is None:
-              obj._compile()
+          # XXX Following code make Python Scripts compile twice, because
+          #     _getCopy returns a copy without the result of the compilation.
+          #     A solution could be to add a specific _getCopy method to
+          #     Python Scripts.
           if getattr(aq_base(obj), 'groups', None) is not None:
             # we must keep original order groups
             # because they change when we add subobjects
@@ -1054,6 +1064,7 @@ class ObjectTemplateItem(BaseTemplateItem):
                 'Cleaning corrupted BTreeFolder2 object at %r.' % (path,))
             obj._initBTrees()
           obj = obj._getCopy(container)
+          self.removeProperties(obj, 0)
           try:
             container._setObject(object_id, obj)
           except AttributeError:
@@ -1376,7 +1387,7 @@ class PathTemplateItem(ObjectTemplateItem):
         obj = obj.__of__(context)
         _recursiveRemoveUid(obj)
         id_list = obj.objectIds()
-        obj = self.removeProperties(obj)
+        obj = self.removeProperties(obj, 1)
         if hasattr(aq_base(obj), 'groups'):
           # we must keep groups because it's ereased when we delete subobjects
           groups = deepcopy(obj.groups)
@@ -1493,7 +1504,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
       relative_url = '/'.join([url,id])
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
-      obj = self.removeProperties(obj)
+      obj = self.removeProperties(obj, 1)
       id_list = obj.objectIds()
       if id_list:
         self.build_sub_objects(context, id_list, relative_url)
@@ -1509,7 +1520,7 @@ class CategoryTemplateItem(ObjectTemplateItem):
       obj = p.unrestrictedTraverse(relative_url)
       obj = obj._getCopy(context)
       _recursiveRemoveUid(obj)
-      obj = self.removeProperties(obj)
+      obj = self.removeProperties(obj, 1)
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
       id_list = obj.objectIds()
       if len(id_list) > 0 and include_sub_categories:
@@ -1825,10 +1836,8 @@ class WorkflowTemplateItem(ObjectTemplateItem):
             self._backupObject(action, trashbin, container_path, object_id, keep_subobjects=1)
             container.manage_delObjects([object_id])
           obj = self._objects[path]
-          if getattr(obj, 'meta_type', None) == 'Script (Python)':
-            if getattr(obj, '_code') is None:
-              obj._compile()
           obj = obj._getCopy(container)
+          self.removeProperties(obj, 0)
           container._setObject(object_id, obj)
           obj = container._getOb(object_id)
           obj.manage_afterClone(obj)
@@ -1869,9 +1878,7 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
       relative_url = '%s/%s' % (obj.getPhysicalPath()[-2:])
 
       obj = obj._getCopy(context)
-      # obj is in ghost state and an attribute must be accessed
-      # so that obj.__dict__ does not return an empty dict
-      obj.meta_type
+      obj._p_activate()
       for attr in obj.__dict__.keys():
         if attr == '_property_domain_dict':
           continue
@@ -2630,7 +2637,7 @@ class CatalogMethodTemplateItem(ObjectTemplateItem):
         obj=obj.aq_parent
         connection=obj._p_jar
       obj = connection.importFile(file, customImporters=customImporters)
-      self.removeProperties(obj)
+      self.removeProperties(obj, 0)
       self._objects[file_name[:-4]] = obj
     else:
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
@@ -2723,7 +2730,7 @@ class ActionTemplateItem(ObjectTemplateItem):
           continue
         raise NotFound('Action %r not found' % id)
       key = posixpath.join(url[-2], url[-1], value)
-      self._objects[key] = self.removeProperties(action)
+      self._objects[key] = self.removeProperties(action, 1)
       self._objects[key].wl_clearLocks()
 
   def install(self, context, trashbin, **kw):
@@ -3356,8 +3363,7 @@ class DocumentTemplateItem(BaseTemplateItem):
               raise
             continue
           if self.local_file_importer_name is not None:
-            self.local_file_importer_name(name)
-            # after any import, flush all ZODB caches to force a DB reload
+            # before any import, flush all ZODB caches to force a DB reload
             # otherwise we could have objects trying to get commited while
             # holding reference to a class that is no longer the same one as
             # the class in its import location and pickle doesn't tolerate it.
@@ -3367,6 +3373,8 @@ class DocumentTemplateItem(BaseTemplateItem):
             # Then we need to flush from all caches, not only the one from this
             # connection
             self.getPortalObject()._p_jar.db().cacheMinimize()
+            gc.collect()
+            self.local_file_importer_name(name)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       for id in self._archive.keys():
@@ -4848,42 +4856,22 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Create temporary modules/classes for classes defined by this BT.
       # This is required if the BT contains instances of one of these classes.
-      orig_module_dict = {}
-      instance_oid_list = []
+      module_id_list = []
       for template_id in self.getTemplateDocumentIdList():
-          module_id = 'Products.ERP5Type.Document.' + template_id
-          orig_module_dict[module_id] = sys.modules.get(module_id)
-          # Always redefine the module, so that 'instance_oid_list' contains
-          # the full list of oid to remove from pickle cache.
+        module_id = 'Products.ERP5Type.Document.' + template_id
+        if module_id not in sys.modules:
+          module_id_list.append(module_id)
           sys.modules[module_id] = module = imp.new_module(module_id)
-          module.SimpleItem = SimpleItem.SimpleItem
-          module.instance_oid_list = instance_oid_list
-          exec """class %s(SimpleItem):
-            def __setstate__(self, state):
-              instance_oid_list.append(self._p_oid)
-              return SimpleItem.__setstate__(self, state)""" % template_id \
-            in module.__dict__
+          setattr(module, template_id, type(template_id,
+            (SimpleItem.SimpleItem,), {'__module__': module_id}))
 
       for item_name in self._item_name_list:
         getattr(self, item_name).importFile(bta)
 
-      if instance_oid_list:
-        # If a temporary class was used, we must force all instances using it
-        # to be reloaded (i.e. unpickle) on next access (at installation).
-        # Doing a savepoint will pickle them to a temporary storage so that all
-        # references to it can be freed.
-        transaction.savepoint(optimistic=True)
-        self._p_jar.cacheMinimize()
-        gc.collect()
-
       # Remove temporary modules created above to allow import of real modules
       # (during the installation).
-      # Restore original module if any, in case the new one is not installed.
-      for module_id, module in orig_module_dict.iteritems():
-        if module is None:
-          del sys.modules[module_id]
-        else:
-          sys.modules[module_id] = module
+      for module_id in module_id_list:
+        del sys.modules[module_id]
 
     def getItemsList(self):
       """Return list of items in business template
@@ -5059,8 +5047,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         f1 = StringIO() # for XML export of New Object
         f2 = StringIO() # For XML export of Installed Object
         # Remove unneeded properties
-        new_object = new_item.removeProperties(new_object)
-        installed_object = installed_item.removeProperties(installed_object)
+        new_object = new_item.removeProperties(new_object, 1)
+        installed_object = installed_item.removeProperties(installed_object, 1)
         # XML Export in memory
         OFS.XMLExportImport.exportXML(new_object._p_jar, new_object._p_oid, f1)
         OFS.XMLExportImport.exportXML(installed_object._p_jar, 

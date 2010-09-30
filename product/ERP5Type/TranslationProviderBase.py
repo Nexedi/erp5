@@ -26,7 +26,6 @@ from Acquisition import aq_base, Implicit
 import Products
 
 from Products.ERP5Type.Accessor import Translation
-from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG
 
@@ -107,15 +106,6 @@ class TranslationProviderBase(object):
         result.append(property_name)
     return result
 
-  security.declarePublic('getTranslationDomainNameList')
-  def getTranslationDomainNameList(self):
-    return (['']+
-            [object_.id
-             for object_ in getToolByName(self, 'Localizer').objectValues()
-             if object_.meta_type=='MessageCatalog']+
-            [Translation.TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
-            )
-
   #
   #   ZMI methods
   #
@@ -137,7 +127,7 @@ class TranslationProviderBase(object):
 
     # get a list of message catalogs and add empty one for no traduction and
     # add another for content translation.
-    translation_domain_list = self.getTranslationDomainNameList()
+    translation_domain_list = self.portal_property_sheets.getTranslationDomainNameList()
     return self._translation_form( self
                                    , REQUEST
                                    , translations = translation_list

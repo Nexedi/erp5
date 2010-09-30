@@ -99,7 +99,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
-      tv = getTransactionalVariable(self)
+      tv = getTransactionalVariable()
       cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
       cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
 
@@ -198,7 +198,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
 
       see SimulationMovement._isTreeDelivered
       """
-      tv = getTransactionalVariable(self)
+      tv = getTransactionalVariable()
       cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
       cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
 

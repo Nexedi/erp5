@@ -51,16 +51,6 @@ TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
 FILE_NAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
 REFERENCE_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})(-(?P<language>[a-z]{2}))?(-(?P<version>[0-9]{3}))?"
 
-def printAndLog(msg):
-  """
-  A utility function to print a message
-  to the standard output and to the LOG
-  at the same time
-  """
-  msg = str(msg)
-  ZopeTestCase._print('\n ' + msg)
-  LOG('Testing... ', 0, msg)
-
 
 def makeFilePath(name):
   return os.path.join(TEST_FILES_HOME, name)
@@ -75,10 +65,6 @@ class TestIngestion(ERP5TypeTestCase):
   """
     ERP5 Document Management System - test file ingestion mechanism
   """
-
-  # pseudo constants
-  RUN_ALL_TEST = 1
-  QUIET = 0
 
   ##################################
   ##  ZopeTestCase Skeleton
@@ -98,7 +84,7 @@ class TestIngestion(ERP5TypeTestCase):
             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
             'erp5_web', 'erp5_crm', 'erp5_dms')
 
-  def afterSetUp(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def afterSetUp(self):
     """
       Initialize the ERP5 site.
     """
@@ -290,6 +276,9 @@ class TestIngestion(ERP5TypeTestCase):
         self.assertEquals(document.getExternalProcessingState(), 'converted')
         self.assert_('magic' in document.SearchableText())
         self.assert_('magic' in str(document.asText()))
+      else:
+        # check if SearchableText() does not raise any exception
+        document.SearchableText()
 
   def checkDocumentExportList(self, document_id, format, asserted_target_list):
     """
@@ -469,6 +458,13 @@ class TestIngestion(ERP5TypeTestCase):
       This document will be used in most tests.
     """
     self.newEmptyCataloggedDocument('Image', 'six')
+
+  def stepCreateFileDocument(self, sequence=None, sequence_list=None, **kw):
+    """
+      Create an empty File document with ID 'file'
+      This document will be used in most tests.
+    """
+    self.newEmptyCataloggedDocument('File', 'file')
 
   def stepCheckEmptyState(self, sequence=None, sequence_list=None, **kw):
     """
@@ -731,6 +727,13 @@ class TestIngestion(ERP5TypeTestCase):
     format_list = ['jpg', 'gif', 'bmp', 'png']
     self.ingestFormatList('six', format_list, 'Image')
 
+  def stepIngestFileFormats(self, sequence=None, sequence_list=None, **kw):
+    """
+      ingest all supported file formats
+    """
+    format_list = ['txt', 'rss', 'xml',]
+    self.ingestFormatList('file', format_list)
+
   def stepCheckTextDocumentExportList(self, sequence=None, sequence_list=None, **kw):
     self.checkDocumentExportList('one', 'doc', ['pdf', 'doc', 'rtf', 'writer.html', 'txt'])
 
@@ -759,11 +762,18 @@ class TestIngestion(ERP5TypeTestCase):
 
   def stepExportImage(self, sequence=None, sequence_list=None, **kw):
     """
-      Don't see a way to test it here, Image.index_html makes heavy use 
-      of REQUEST and RESPONSE, and the rest of the implementation is way down
-      in Zope core
+      Check we are able to resize images
     """
-    printAndLog('stepExportImage not implemented')
+    image = self.portal.image_module.six
+    f = makeFileUpload('TEST-en-002.jpg')
+    image.edit(file=f)
+    self.stepTic()
+    mime, data = image.convert(None)
+    self.assertEquals(mime, 'image/jpeg')
+    mime, small_data = image.convert(None, display='small')
+    mime, large_data = image.convert(None, display='xlarge')
+    # Check we are able to resize the image.
+    self.assertTrue(len(small_data) < len(large_data))
 
   def stepCleanUp(self, sequence=None, sequence_list=None, **kw):
     """
@@ -772,7 +782,7 @@ class TestIngestion(ERP5TypeTestCase):
     portal = self.getPortal()
     for module in (portal.document_module, portal.image_module, portal.document_ingestion_module):
       module.manage_delObjects(map(None, module.objectIds()))
-    
+
   def stepContributeFileListWithType(self, sequence=None, sequence_list=None, **kw):
     """
       Contribute all kinds of files giving portal type explicitly
@@ -890,11 +900,11 @@ class TestIngestion(ERP5TypeTestCase):
     attachment_list, ingested_document = self.verifyEmailedDocument()
     self.assertTrue(ingested_document.getRevision() > '1')
 
-  def playSequence(self, step_list, quiet):
+  def playSequence(self, step_list):
     sequence_list = SequenceList()
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def verifyEmailedMultipleDocuments(self):
     """
@@ -926,7 +936,7 @@ class TestIngestion(ERP5TypeTestCase):
       # check aggregate between 'Document Ingestion Message' and ingested document
       self.assertTrue(ingested_document in attachment_list)
     return attachment_list, ingested_document
-    
+
   def verifyEmailedDocument(self):
     """
       Basic checks for verifying a mailed-in document
@@ -937,7 +947,7 @@ class TestIngestion(ERP5TypeTestCase):
                                  title='A Test Mail',
                                  source_title='John Doe')
     self.assertTrue(ingestion_message is not None)
-    
+
     # Second, check attachments to ingested message
     attachment_list = ingestion_message.getAggregateValueList()
     self.assertEqual(len(attachment_list), 1)
@@ -951,35 +961,31 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals('MAIL-en-002.doc', ingested_document.getSourceReference())
     self.assertEquals('converted', ingested_document.getExternalProcessingState())
     self.assertTrue('magic' in ingested_document.asText())
-    
+
     # check aggregate between 'Document Ingestion Message' and ingested document
     self.assertEquals(attachment_list[0], ingested_document)
     return attachment_list, ingested_document
-    
+
   ##################################
   ##  Tests
   ##################################
 
-  def test_01_PreferenceSetup(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_PreferenceSetup(self):
     """
       Make sure that preferences are set up properly and accessible
     """
-    if not run: return
-    if not quiet: printAndLog('test_01_PreferenceSetup')
     preference_tool = self.portal.portal_preferences
     conversion_dict = _getConversionServerDict()
     self.assertEquals(preference_tool.getPreferredOoodocServerAddress(), conversion_dict['hostname'])
     self.assertEquals(preference_tool.getPreferredOoodocServerPortNumber(), conversion_dict['port'])
     self.assertEquals(preference_tool.getPreferredDocumentFileNameRegularExpression(), FILE_NAME_REGULAR_EXPRESSION)
     self.assertEquals(preference_tool.getPreferredDocumentReferenceRegularExpression(), REFERENCE_REGULAR_EXPRESSION)
-    
-  def test_02_FileExtensionRegistry(self, quiet=QUIET, run=RUN_ALL_TEST):
+
+  def test_02_FileExtensionRegistry(self):
     """
       check if we successfully imported registry
       and that it has all the entries we need
     """
-    if not run: return
-    if not quiet: printAndLog('test_02_FileExtensionRegistry')
     reg = self.portal.portal_contribution_registry
     correct_type_mapping = {
             'doc' : 'Text',
@@ -1006,7 +1012,7 @@ class TestIngestion(ERP5TypeTestCase):
       self.assertEquals(reg.findPortalTypeName(file_name, None, None),
                         portal_type)
 
-  def test_03_TextDoc(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_03_TextDoc(self):
     """
       Test basic behaviour of a document:
       - create empty document
@@ -1016,8 +1022,6 @@ class TestIngestion(ERP5TypeTestCase):
       - check that it was properly converted
       - check if coordinates were extracted from file name
     """
-    if not run: return
-    if not quiet: printAndLog('test_03_TextDoc')
     step_list = ['stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepCheckEmptyState'
@@ -1030,9 +1034,9 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepTic'
                  ,'stepCheckConvertedState'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_04_MetadataExtraction(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_04_MetadataExtraction(self):
     """
       Test metadata extraction from various sources:
       - from file name (doublecheck)
@@ -1045,24 +1049,20 @@ class TestIngestion(ERP5TypeTestCase):
       NOTE: metadata of document (title, subject, description)
       are no longer retrieved and set upon conversion
     """
-    if not run: return
-    if not quiet: printAndLog('test_04_MetadataExtraction')
     step_list = [ 'stepCleanUp'
                  ,'stepUploadTextFromContributionTool'
                  ,'stepSetSimulatedDiscoveryScript'
                  ,'stepTic'
                  ,'stepTestMetadataSetting'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_041_MetadataEditing(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_041_MetadataEditing(self):
     """
       Check metadata in the object and in the ODF document
       Edit metadata on the object
       Download ODF, make sure it is changed
     """
-    if not run: return
-    if not quiet: printAndLog('test_04_MetadataEditing')
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepUploadFromViewForm'
@@ -1072,7 +1072,7 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepEditMetadata'
                  ,'stepCheckChangedMetadata'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
   #    Ingest various formats (xls, doc, sxi, ppt etc)
   #    Verify that they are successfully converted
@@ -1083,124 +1083,108 @@ class TestIngestion(ERP5TypeTestCase):
   #      implement _convertToBase (e.g. Image)
   #    Verify that you can not upload file of the wrong format.
 
-  def test_05_FormatIngestionText(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_05_FormatIngestionText(self):
     step_list = ['stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepIngestTextFormats'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_05_FormatIngestionSpreadSheet(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_05_FormatIngestion')
+  def test_05_FormatIngestionSpreadSheet(self):
     step_list = ['stepCleanUp'
                  ,'stepCreateSpreadsheetDocument'
                  ,'stepIngestSpreadsheetFormats'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_05_FormatIngestionPresentation(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_05_FormatIngestion')
+  def test_05_FormatIngestionPresentation(self):
     step_list = ['stepCleanUp'
                  ,'stepCreatePresentationDocument'
                  ,'stepIngestPresentationFormats'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_05_FormatIngestionDrawing(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_05_FormatIngestion')
+  def test_05_FormatIngestionDrawing(self):
     step_list = ['stepCleanUp'
                  ,'stepCreateDrawingDocument'
                  ,'stepIngestDrawingFormats'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_05_FormatIngestionPDF(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_05_FormatIngestion')
+  def test_05_FormatIngestionPDF(self):
     step_list = ['stepCleanUp'
                  ,'stepCreatePDFDocument'
                  ,'stepIngestPDFFormats'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_05_FormatIngestionImage(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_05_FormatIngestion')
+  def test_05_FormatIngestionImage(self):
     step_list = ['stepCleanUp'
                  ,'stepCreateImageDocument'
                  ,'stepIngestImageFormats'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
+  def test_05_FormatIngestionFile(self):
+    step_list = ['stepCleanUp'
+                 ,'stepCreateFileDocument'
+                 ,'stepIngestFileFormats'
+                ]
+    self.playSequence(step_list)
 
   # Test generation of files in all possible formats
   # which means check if they have correct lists of available formats for export
   # actual generation is tested in oood tests
   # PDF and Image should be tested here
-  def test_06_FormatGenerationText(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_06_FormatGeneration')
+  def test_06_FormatGenerationText(self):
     step_list = [ 'stepCleanUp'
                  ,'stepCreateTextDocument'
                  ,'stepCheckTextDocumentExportList'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_06_FormatGenerationSpreadsheet(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_06_FormatGeneration')
+  def test_06_FormatGenerationSpreadsheet(self):
     step_list = [ 'stepCleanUp'
                  ,'stepCreateSpreadsheetDocument'
                  ,'stepCheckSpreadsheetDocumentExportList'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_06_FormatGenerationPresentation(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_06_FormatGeneration')
+  def test_06_FormatGenerationPresentation(self):
     step_list = [ 'stepCleanUp'
                  ,'stepCreatePresentationDocument'
                  ,'stepCheckPresentationDocumentExportList'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_06_FormatGenerationDrawing(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_06_FormatGeneration')
+  def test_06_FormatGenerationDrawing(self):
     step_list = [ 'stepCleanUp'
                  ,'stepCreateDrawingDocument'
                  ,'stepCheckDrawingDocumentExportList'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_06_FormatGenerationPdf(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_06_FormatGeneration')
+  def test_06_FormatGenerationPdf(self):
     step_list = [ 'stepCleanUp'
                  ,'stepCreatePDFDocument'
                  ,'stepExportPDF'
                  ,'stepTic'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_06_FormatGenerationImage(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
-    if not quiet: printAndLog('test_06_FormatGeneration')
+  def test_06_FormatGenerationImage(self):
     step_list = [ 'stepCleanUp'
                  ,'stepCreateImageDocument'
                  ,'stepExportImage'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_08_Cache(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_08_Cache(self):
     """
       I don't know how to verify how cache works
     """
 
-  def test_09_Contribute(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_09_Contribute(self):
     """
       Create content through portal_contributions
       - use newContent to ingest various types 
@@ -1210,16 +1194,14 @@ class TestIngestion(ERP5TypeTestCase):
         - the files were converted
         - metadata was read
     """
-    if not run: return
-    if not quiet: printAndLog('test_09_Contribute')
     step_list = [ 'stepCleanUp'
                  ,'stepContributeFileListWithNoType'
                  ,'stepCleanUp'
                  ,'stepContributeFileListWithType'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_10_MetadataSettingPreferenceOrder(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_10_MetadataSettingPreferenceOrder(self):
     """
       Set some metadata discovery scripts
       Contribute a document, let it get metadata using default setup
@@ -1228,8 +1210,6 @@ class TestIngestion(ERP5TypeTestCase):
       check that the right ones are there
       change preference order, check again
     """
-    if not run: return
-    if not quiet: printAndLog('test_10_MetadataSettingPreferenceOrder')
     step_list = [ 'stepCleanUp' 
                  ,'stepCreateTextDocument'
                  ,'stepStraightUpload'
@@ -1267,16 +1247,14 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepSetSimulatedDiscoveryScriptForOrdering'
                  ,'stepCheckMetadataSettingOrderUFCI'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_11_EmailIngestion(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_11_EmailIngestion(self):
     """
       Simulate email piped to ERP5 by an MTA by uploading test email from file
       Check that document objects are created and appropriate data are set
       (owner, and anything discovered from user and mail body)
     """
-    if not run: return
-    if not quiet: printAndLog('test_11_EmailIngestion')
     step_list = [ 'stepCleanUp'
                  # unknown sender
                  ,'stepReceiveEmail'
@@ -1295,16 +1273,14 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepReceiveMultipleAttachmentsEmail'
                  ,'stepVerifyEmailedMultipleDocumentsMultipleContribution'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_12_UploadTextFromContributionTool(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_12_UploadTextFromContributionTool(self):
     """
       Make sure that when upload file from contribution tool, it creates a new
       document in document module. when reupload same filename file, then it
       does not create a new document and update existing document.
     """
-    if not run: return
-    if not quiet: printAndLog('test_12_ReUploadSameFilenameFile')
     step_list = [ 'stepCleanUp'
                  ,'stepUploadTextFromContributionTool'
                  ,'stepCheckConvertingState'
@@ -1315,9 +1291,9 @@ class TestIngestion(ERP5TypeTestCase):
                  ,'stepReuploadTextFromContributionTool'
                  ,'stepUploadAnotherTextFromContributionTool'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def stepUploadTextFromContributionToolWithNonASCIIFilename(self, 
+  def stepUploadTextFromContributionToolWithNonASCIIFilename(self,
                                  sequence=None, sequence_list=None, **kw):
     """
       Upload a file from contribution.
@@ -1327,7 +1303,7 @@ class TestIngestion(ERP5TypeTestCase):
     sequence.edit(document_id=document.getId())
     transaction.commit()
 
-  def stepDiscoverFromFilenameWithNonASCIIFilename(self, 
+  def stepDiscoverFromFilenameWithNonASCIIFilename(self,
                                  sequence=None, sequence_list=None, **kw):
     """
       Upload a file using contribution tool. This should trigger metadata
@@ -1353,24 +1329,20 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(context.getVersion(), '002')
     self.assertEquals(context.getSourceReference(), file_name)
 
-  def test_13_UploadTextFromContributionToolWithNonASCIIFilename(self, 
-                                           quiet=QUIET, run=RUN_ALL_TEST):
+  def test_13_UploadTextFromContributionToolWithNonASCIIFilename(self):
     """
       Make sure that when upload file from contribution tool, it creates a new
       document in document module. when reupload same filename file, then it
       does not create a new document and update existing document.
     """
-    if not run: return
-    if not quiet:
-      printAndLog('test_13_UploadTextFromContributionToolWithNonASCIIFilename')
     step_list = [ 'stepCleanUp'
                  ,'stepUploadTextFromContributionToolWithNonASCIIFilename'
                  ,'stepTic'
                  ,'stepDiscoverFromFilenameWithNonASCIIFilename'
                 ]
-    self.playSequence(step_list, quiet)
+    self.playSequence(step_list)
 
-  def test_14_ContributionToolIndexation(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_14_ContributionToolIndexation(self):
     """
     Check that contribution tool is correctly indexed after business template
     installation.
@@ -1415,10 +1387,10 @@ class TestIngestion(ERP5TypeTestCase):
     contribution_tool = getToolByName(portal, 'portal_contributions')
     # create an user to simulate upload from him
     user = self.createUser(reference='contributor1')
-    assignment = self.createUserAssignment(user, \
-                                           dict(group='anybody',
-                                                function='function/musician/wind/saxophone',
-                                                site='site/arctic/spitsbergen'))
+    organisation = self.portal.organisation_module.newContent(**dict(group='anybody',
+                                                                     site='site/arctic/spitsbergen'))
+
+    user.setSubordinationValue(organisation)
     portal.document_module.manage_setLocalRoles('contributor1', ['Assignor',])
     self.stepTic()
     file_object = makeFileUpload('TEST-en-002.doc')
@@ -1426,7 +1398,6 @@ class TestIngestion(ERP5TypeTestCase):
     document.discoverMetadata(document.getSourceReference(), 'contributor1') 
     self.stepTic()
     self.assertEquals(document.getSourceReference(), 'TEST-en-002.doc')
-    self.assertEquals('function/musician/wind/saxophone', document.getFunction())
     self.assertEquals('anybody', document.getGroup())
     self.assertEquals('site/arctic/spitsbergen', document.getSite())
 

@@ -1,3 +1,33 @@
+2010-09-30 yusei
+* Update movement_resource_interaction_workflow and set quantity unit value to movement forcedly if current value is acquired from resource.
+
+2010-09-28 tatuya
+* Fix a issue that all the base contribution are not copied when change the resource on a movement.
+
+2010-09-28 tatuya
+* Stop overwriting a value by movement_resource_interaraction_workflow when the categories are already set a valid value as the new resource.
+
+2010-09-28 tatuya
+* Previous commits(r38692,38707) were not solved the issue that movement_resource_interaction_workflow prevents the delivery buliding. So, revert them.
+
+2010-09-28 tatuya
+* Stop to overwriting a value by movement_resource_interaraction_workflow when the movement is created by a builder.
+
+2010-09-28 yo
+* Make the interaction update_simulation called only once.
+
+2010-09-22 nicolas.dumazet
+* Add OOo Document Portal Type
+
+2010-09-22 tatuya
+* Add a movement group to group movements without assignment, by contrast with the assignment movement group.
+
+2010-09-17 yo
+* Add an utility script BusinessPath_build which can be used to unify the way of invoking global builds.
+
+2010-09-17 yo
+* Add a flag to specify if a delivery builder may create any new deliveries or not.
+
 2010-08-09 nicolas.dumazet
 * add a Brain on BusinessPath_zSelectBuildableMovementList
 

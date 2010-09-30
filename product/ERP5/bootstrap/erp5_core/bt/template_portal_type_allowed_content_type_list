@@ -21,6 +21,11 @@ Id Tool | ZODB Continuous Increasing Id Generator
 Memcached Tool | Memcached Plugin
 Preference Tool | Preference
 Preference Tool | System Preference
+Property Sheet Tool | Property Sheet
+Property Sheet | Acquired Property
+Property Sheet | Category Property
+Property Sheet | Dynamic Category Property
+Property Sheet | Standard Property
 Simulation Movement | Applied Rule
 Simulation Tool | Applied Rule
 Template Tool | Business Template

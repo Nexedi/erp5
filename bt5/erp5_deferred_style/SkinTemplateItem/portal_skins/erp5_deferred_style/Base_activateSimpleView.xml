@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -57,7 +54,7 @@
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
 format = request.get(\'format\', \'\')\n
-skin_name = request[\'deferred_portal_skin\']\n
+skin_name = request.get(\'deferred_portal_skin\', portal.portal_skins.getDefaultSkin())\n
 \n
 tag = \'active-report-wrapped-%s\' % random.randint(0, 1000)\n
 priority = 3\n
@@ -171,7 +168,6 @@ return context.Base_redirect(\'view\', keep_items=dict(\n
                             <string>portal</string>
                             <string>request</string>
                             <string>format</string>
-                            <string>_getitem_</string>
                             <string>skin_name</string>
                             <string>random</string>
                             <string>tag</string>

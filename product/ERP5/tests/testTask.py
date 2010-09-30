@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SA and Contributors. All Rights Reserved.
@@ -31,7 +32,8 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
-from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.DCWorkflow.DCWorkflow import ValidationFailed
+from Products.ERP5Type.tests.Sequence import SequenceList, Sequence
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
 class TestTaskMixin:
@@ -696,7 +698,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
 
     self.assertEqual(
       task.getReference(),
-      'T %s'%(task.getId(),)
+      'T-%s'%(task.getId(),)
     )
 
     cb_data = task_module.manage_copyObjects(ids=[task.getId()])
@@ -706,8 +708,50 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
 
     self.assertEqual(
       new_task.getReference(),
-      'T %s'%(new_task.getId(),)
+      'T-%s'%(new_task.getId(),)
     )
+
+  def test_07_taskConstraints(self):
+    """Check tasks constraints"""
+    self.stepLogin()
+    portal = self.getPortal()
+    portal_type = portal.portal_types['Task']
+    original_property_sheet_list = portal_type.getTypePropertySheetList()
+    try:
+      sequence = Sequence(context=self)
+      if not('TaskConstraint' in original_property_sheet_list):
+        new_property_sheet_list = ['TaskConstraint'] + original_property_sheet_list
+        portal_type.edit(type_property_sheet_list=new_property_sheet_list)
+      task_module = portal.getDefaultModule(portal_type=self.task_portal_type)
+      task = task_module.newContent(portal_type=self.task_portal_type)
+      doActionFor = self.portal.portal_workflow.doActionFor
+      self.assertRaises(ValidationFailed, doActionFor, task,
+                          'confirm_action')
+      sequence('CreateOrganisation')
+      sequence('CreateOrganisation')
+      sequence('CreateResource')
+      (source, destination) = sequence.get('organisation_list')
+      check_result = task.checkConsistency()
+      self.assertEquals(len(check_result), 4)
+      task.setDestinationValue(destination)
+      task.setSourceValue(source)
+      check_result = task.checkConsistency()
+      self.assertEquals(len(check_result), 2)
+      task.setStartDate(DateTime())
+      task.setStopDate(DateTime() + 1)
+      check_result = task.checkConsistency()
+      self.assertEquals(len(check_result), 1)
+      resource = sequence.get('resource_list')[0]
+      task.edit(task_line_resource_value = resource,
+                task_line_quantity = self.default_quantity,
+                task_line_price = self.default_price,
+      )
+      check_result = task.checkConsistency()
+      self.assertEquals(len(check_result), 0)
+
+    finally:
+      portal_type.setTypePropertySheetList(original_property_sheet_list)
+
 
 def test_suite():
   suite = unittest.TestSuite()

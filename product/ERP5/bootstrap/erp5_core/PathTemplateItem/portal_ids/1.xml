@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="IdGenerator" module="Products.ERP5Type.Document.IdGenerator"/>
-        <tuple/>
-      </tuple>
+      <global name="IdGenerator" module="Products.ERP5Type.Document.IdGenerator"/>
     </pickle>
     <pickle>
       <dictionary>

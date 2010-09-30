@@ -145,8 +145,8 @@ class Inventory(Delivery):
       
 
     if temp_constructor is None:
-      from Products.ERP5Type.Document import newTempDeliveryLine
-      temp_constructor = newTempDeliveryLine
+      from Products.ERP5Type.Document import newTempMovement
+      temp_constructor = newTempMovement
     stop_date = self.getStopDate()
 
     stock_object_list = []
@@ -238,6 +238,7 @@ class Inventory(Delivery):
                  'start_date': stop_date}
           temp_delivery_line = temp_constructor(self,
                                                 inventory_id)
+          
           # set category on it only if quantity not null
           # thus line with same uid will be deleted but we
           # don't insert line with null quantity as we test

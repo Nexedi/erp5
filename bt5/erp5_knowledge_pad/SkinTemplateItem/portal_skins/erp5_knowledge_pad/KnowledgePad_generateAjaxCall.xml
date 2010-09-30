@@ -81,7 +81,6 @@ if editable_mode in (\'True\', True, 1):\n
 else:\n
   editable_mode = 0\n
 \n
-\n
 s = """\n
   updater(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', %s);\n
   """ %(url, box_relative_url, dom_id, \n

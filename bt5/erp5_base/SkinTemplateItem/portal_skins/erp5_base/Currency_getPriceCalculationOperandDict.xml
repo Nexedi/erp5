@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -80,9 +77,9 @@ else:\n
   kw[\'sort_method\'] = sort_by_date\n
   if validation_state is None:\n
     validation_state=\'validated\'\n
+  kw.setdefault(\'portal_type\', \'Currency Exchange Line\')\n
   predicate_list = context.portal_domains.searchPredicateList(\n
       context=movement,\n
-      portal_type=\'Currency Exchange Line\',\n
       validation_state=validation_state,\n
       test=1,\n
       **kw)\n
@@ -91,7 +88,7 @@ else:\n
   # with the reference currency\n
   for predicate in predicate_list:\n
     operand_dict = predicate.Resource_getPriceCalculationOperandDict(movement=predicate, **kw)\n
-    if operand_dict is not None:\n
+    if operand_dict is not None and operand_dict.get(\'price\'):\n
       return operand_dict\n
 
 

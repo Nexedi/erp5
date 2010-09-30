@@ -14,6 +14,7 @@
 
 # Make sure the xml export will be ordered
 
+import re
 from ZODB.utils import u64, p64
 from Shared.DC.xml import ppml
 from base64 import encodestring
@@ -68,9 +69,11 @@ class OrderedPickler(Pickler):
 from ExtensionClass import Base
 Base__getnewargs__ = getattr(Base, '__getnewargs__', None)
 if Base__getnewargs__ is None:
+  is_old_btree = lambda pickle: None
   def maybeSimplifyClass(klass):
     return klass
 else:
+  is_old_btree = re.compile('cBTrees\\._(..)BTree\n(\\1)BTree\n').match
   def maybeSimplifyClass(klass):
     if isinstance(klass, tuple):
       pureclass, newargs = klass
@@ -122,6 +125,8 @@ def reorderPickle(jar, p):
     obj = unpickler.load()
     pickler.dump(obj)
     p=newp.getvalue()
+    if is_old_btree(p):
+      p = p.replace('_','',1)
     return obj, p
 
 def XMLrecord(oid, plen, p, id_mapping):

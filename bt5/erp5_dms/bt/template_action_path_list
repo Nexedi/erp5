@@ -21,6 +21,7 @@ Drawing | jump_to_wiki_successor
 Drawing | local_permission
 Drawing | print
 Drawing | related_document
+Drawing | update_content_from_url
 Drawing | view
 Drawing | web_view
 External Source Module | view
@@ -59,6 +60,7 @@ PDF | jump_to_wiki_predecessor
 PDF | jump_to_wiki_successor
 PDF | local_permission
 PDF | related_document
+PDF | update_content_from_url
 PDF | view
 PDF | web_view
 Presentation | create_snapshot
@@ -77,6 +79,7 @@ Presentation | jump_to_wiki_successor
 Presentation | local_permission
 Presentation | print
 Presentation | related_document
+Presentation | update_content_from_url
 Presentation | view
 Presentation | web_view
 RSS Feed | crawl
@@ -98,6 +101,7 @@ Spreadsheet | jump_to_wiki_successor
 Spreadsheet | local_permission
 Spreadsheet | print
 Spreadsheet | related_document
+Spreadsheet | update_content_from_url
 Spreadsheet | view
 Spreadsheet | web_view
 System Preference | dms_preference
@@ -118,6 +122,7 @@ Text | local_permission
 Text | print
 Text | related_document
 Text | suggest_reference
+Text | update_content_from_url
 Text | view
 Text | web_view
 URL Crawler | crawl

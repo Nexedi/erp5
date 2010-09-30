@@ -807,7 +807,7 @@ class ODFStrategy(Implicit):
     # such as '0.0', '$0'
     attrib = column.attrib
     for key in attrib.keys():
-      if key.startswith("{%s}" % column.nsmap['office']):
+      if 'office' in column.nsmap and key.startswith("{%s}" % column.nsmap['office']):
         del attrib[key]
     column.text = None
     [column.remove(child) for child in column]

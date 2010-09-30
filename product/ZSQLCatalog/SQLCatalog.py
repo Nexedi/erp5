@@ -98,7 +98,7 @@ try:
   from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 except ImportError:
   LOG('SQLCatalog', WARNING, 'Count not import getTransactionalVariable, expect slowness.')
-  def getTransactionalVariable(context):
+  def getTransactionalVariable():
     return {}
 
 class transactional_cache_decorator:
@@ -111,7 +111,7 @@ class transactional_cache_decorator:
 
   def __call__(self, method):
     def wrapper(wrapped_self):
-      transactional_cache = getTransactionalVariable(None)
+      transactional_cache = getTransactionalVariable()
       cache_id = self.cache_id
       try:
         result = transactional_cache[cache_id]
@@ -1407,7 +1407,7 @@ class Catalog(Folder,
 
     try:
       if not disable_cache:
-        enableReadOnlyTransactionCache(self)
+        enableReadOnlyTransactionCache()
 
       filter_dict = self.filter_dict
       catalogged_object_list_cache = {}
@@ -1531,7 +1531,7 @@ class Catalog(Folder,
           raise
     finally:
       if not disable_cache:
-        disableReadOnlyTransactionCache(self)
+        disableReadOnlyTransactionCache()
 
   if psyco is not None:
     psyco.bind(_catalogObjectList)

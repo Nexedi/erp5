@@ -39,7 +39,7 @@ from AccessControl.Permission import pname, Permission
 from AccessControl.PermissionRole import rolesForPermissionOn
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
-from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain, aq_parent
+from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
 import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
@@ -178,7 +178,7 @@ class WorkflowMethod(Method):
     # Build a list of transitions which may need to be invoked
     instance_path = instance.getPhysicalPath()
     portal_type = instance.portal_type
-    transactional_variable = getTransactionalVariable(instance)
+    transactional_variable = getTransactionalVariable()
     invoke_once_item_list = self._invoke_once.get(portal_type, {}).items()
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
@@ -549,7 +549,7 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
     # Mark as generated
     prop_holder = PropertyHolder()
     # Recurse to parent object
-    parent_object = aq_parent(aq_inner(self))
+    parent_object = self.aq_inner.aq_parent
     parent_klass = parent_object.__class__
     parent_type = parent_object.portal_type
     if getattr(parent_klass, 'isRADContent', 0) and \
@@ -922,7 +922,7 @@ class Base( CopyContainer,
       # Iterate until an ERP5 Site is obtained.
       portal = self.getPortalObject()
       while portal.portal_type != 'ERP5 Site':
-        portal = aq_inner(aq_parent(portal)).getPortalObject()
+        portal = portal.aq_parent.aq_inner.getPortalObject()
 
       # Generate portal_type methods
       if aq_key not in Base.aq_portal_type:
@@ -1086,7 +1086,7 @@ class Base( CopyContainer,
       going to edit the related object
     """
     # Push context to prevent loop
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
     acquisition_key = ('_getDefaultAcquiredProperty', self.getPath(), key,
@@ -1265,7 +1265,7 @@ class Base( CopyContainer,
 
     """
     # Push context to prevent loop
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     if isinstance(portal_type, list):
       portal_type = tuple(portal_type)
     acquisition_key = ('_getAcquiredPropertyList', self.getPath(), key, base_category,
@@ -1702,7 +1702,7 @@ class Base( CopyContainer,
         changes id of an object by calling the Zope machine
     """
     tryMethodCallWithTemporaryPermission(self, 'Copy or Move',
-        aq_parent(aq_inner(self)).manage_renameObject, (self.id, id), {}, CopyError)
+        self.aq_inner.aq_parent.manage_renameObject, (self.id, id), {}, CopyError)
     # Do not flush any more, because it generates locks
 
   security.declareProtected( Permissions.ModifyPortalContent,
@@ -1812,7 +1812,7 @@ class Base( CopyContainer,
       for the implementation of the ZSQLCatalog based listing
       of objects.
     """
-    return aq_parent(aq_inner(self)).getUid()
+    return self.aq_inner.aq_parent.getUid()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentTitleOrId' )
@@ -1820,7 +1820,7 @@ class Base( CopyContainer,
     """
       Returns the title or the id of the parent
     """
-    return aq_parent(aq_inner(self)).getTitleOrId()
+    return self.aq_inner.aq_parent.getTitleOrId()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentRelativeUrl' )
@@ -1828,7 +1828,7 @@ class Base( CopyContainer,
     """
       Returns the title or the id of the parent
     """
-    return aq_parent(aq_inner(self)).getRelativeUrl()
+    return self.aq_inner.aq_parent.getRelativeUrl()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentId' )
@@ -1836,7 +1836,7 @@ class Base( CopyContainer,
     """
       Returns the id of the parent
     """
-    return aq_parent(aq_inner(self)).getId()
+    return self.aq_inner.aq_parent.getId()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentTitle' )
@@ -1844,7 +1844,7 @@ class Base( CopyContainer,
     """
       Returns the title or of the parent
     """
-    return aq_parent(aq_inner(self)).getTitle()
+    return self.aq_inner.aq_parent.getTitle()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getParentValue' )
@@ -1852,7 +1852,7 @@ class Base( CopyContainer,
     """
       Returns the parent of the current object.
     """
-    return aq_parent(aq_inner(self))
+    return self.aq_inner.aq_parent
 
   security.declareProtected( Permissions.AccessContentsInformation, 'getParent' )
   def getParent(self):
@@ -1938,7 +1938,7 @@ class Base( CopyContainer,
     """
       Returns the portal object
     """
-    return aq_parent(aq_inner(self)).getPortalObject()
+    return self.aq_inner.aq_parent.getPortalObject()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getWorkflowIds')
   def getWorkflowIds(self):
@@ -2792,14 +2792,17 @@ class Base( CopyContainer,
     ex : joe_person = person_module.bob_person.asContext(first_name='Joe')
     """
     if context is None:
-      # Make a copy
-      klass = self.__class__
-      try:
-        context = klass(self.getId())
-      except TypeError:
-        # If __init__ does not take the id argument, the class is probably
-        # a tool, and the id is predifined and immutable.
-        context = klass()
+      pt = self._getTypesTool()
+      type_info = pt.getTypeInfo(self.getPortalType())
+      if type_info is None:
+        raise ValueError('No such content type: %s' % portal_type)
+
+      context = type_info.constructInstance(
+              container=self.getParentValue(),
+              id=self.getId(),
+              temp_object=True,
+              is_indexable=False)
+
       context.__dict__.update(self.__dict__)
       # Copy REQUEST properties to self
       if REQUEST is not None:
@@ -2811,13 +2814,7 @@ class Base( CopyContainer,
             setattr(context, k, REQUEST[k])
       # Define local properties
       context.__dict__.update(kw)
-      # Make it a temp content
-      temp_object = TempBase(self.getId())
-      for k in ('isIndexable', 'isTempDocument', 'reindexObject',
-                'recursiveReindexObject', 'activate', 'setUid'):
-        setattr(context, k, getattr(temp_object, k))
-      # Return result
-      return context.__of__(aq_parent(self))
+      return context
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
 
@@ -3110,7 +3107,7 @@ class Base( CopyContainer,
     # use a transactional variable to cache results within the same
     # transaction
     portal_type = self.getPortalType()
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     type_base_cache = tv.setdefault('Base.type_based_cache', {})
 
     cache_key = (portal_type, method_id)
@@ -3811,7 +3808,7 @@ class Base( CopyContainer,
   def setDefaultReindexParameters(self, **kw):
     # This method sets the default keyword parameters to reindex. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = ('default_reindex_parameter', id(aq_base(self)))
     tv[key] = kw
 
@@ -3820,7 +3817,7 @@ class Base( CopyContainer,
   def getDefaultReindexParameterDict(self, inherit_placeless=True):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     if inherit_placeless:
       placeless = tv.get(('default_reindex_parameter', ))
       if placeless is not None:

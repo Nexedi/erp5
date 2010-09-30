@@ -95,7 +95,7 @@ Test Simple view of an Accounting Transaction with Multiple partners\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>3</td>\n
+  <td>3 records</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n

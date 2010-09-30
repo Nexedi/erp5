@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -126,7 +123,10 @@ if document.getValidationState() not in validation_state:\n
 if view and portal_type not in html_portal_type_list:\n
   return \'%s/%s/view\' % (context.absolute_url(), reference)\n
 \n
-return "%s/%s" % (context.absolute_url(), reference)\n
+web_section = context.getWebSectionValue()\n
+if web_section is None:\n
+  web_section = context\n
+return "%s/%s" % (web_section.absolute_url(), reference)\n
 </string> </value>
         </item>
         <item>
@@ -173,6 +173,8 @@ return "%s/%s" % (context.absolute_url(), reference)\n
                             <string>portal</string>
                             <string>valid_portal_type_list</string>
                             <string>validation_state</string>
+                            <string>web_section</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>

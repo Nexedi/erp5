@@ -244,6 +244,57 @@ class TestUserManagement(ERP5TypeTestCase):
     self._makePerson(reference='new_person')
     self.assertRaises(RuntimeError, self._makePerson, reference='new_person')
 
+  def test_MultiplePersonReferenceWithoutCommit(self):
+    """
+    Tests that it's refused to create two Persons with same reference.
+    Check if both persons are created in the same transaction
+    """
+    person_module = self.getPersonModule()
+    new_person = person_module.newContent(
+                     portal_type='Person', reference='new_person')
+    self.assertRaises(RuntimeError, person_module.newContent,
+                     portal_type='Person', reference='new_person')
+
+  def test_MultiplePersonReferenceWithoutTic(self):
+    """
+    Tests that it's refused to create two Persons with same reference.
+    Check if both persons are created in 2 different transactions.
+    """
+    person_module = self.getPersonModule()
+    new_person = person_module.newContent(
+                     portal_type='Person', reference='new_person')
+    transaction.commit()
+    self.assertRaises(RuntimeError, person_module.newContent,
+                     portal_type='Person', reference='new_person')
+
+  def test_MultiplePersonReferenceConcurrentTransaction(self):
+    """
+    Tests that it's refused to create two Persons with same reference.
+    Check if both persons are created in 2 concurrent transactions. 
+    For now, just verify that serialize is called on person_module.
+    """
+    class DummyTestException(Exception):
+      pass
+
+    def verify_serialize_call(self):
+      # Check that serialize is called on person module
+      if self.getRelativeUrl() == 'person_module':
+        raise DummyTestException
+      else:
+        return self.serialize_call()
+
+    # Replace serialize by a dummy method
+    from Products.ERP5Type.Base import Base
+    Base.serialize_call = Base.serialize
+    Base.serialize = verify_serialize_call
+
+    person_module = self.getPersonModule()
+    try:
+      self.assertRaises(DummyTestException, person_module.newContent,
+                       portal_type='Person', reference='new_person')
+    finally:
+      Base.serialize = Base.serialize_call
+
   def test_PersonCopyAndPaste(self):
     """If we copy and paste a person, login must not be copyied."""
     person = self._makePerson(reference='new_person')

@@ -55,6 +55,10 @@ do
     TIME="`expr $TIME + $INTERVAL`"
     if [ $TIME -gt $TIMEOUT ]
     then
+        echo "Messages"
+        echo "SELECT path, processing_node, method_id AS message_count FROM message;" | $MYSQL_BIN $MYSQL_OPT
+        echo "Messages Queue"
+        echo "SELECT path, processing_node, method_id AS message_count FROM message_queue;" | $MYSQL_BIN $MYSQL_OPT
         echo "Timeout"
         exit 1
     fi

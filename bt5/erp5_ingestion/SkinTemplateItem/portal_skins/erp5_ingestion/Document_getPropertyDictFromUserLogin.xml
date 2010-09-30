@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -58,8 +55,11 @@ Gets document properties discovered from the user who contributes / owns the doc
 User would be usually the current user, but sometimes the name has to be given explicitly\n
 if e.g. the doc is contributed by email, and the script is run by zope user.\n
 """\n
-assignment_dict = context.ERP5Site_getPersonAssignmentDict(user_name=user_name)\n
-return assignment_dict\n
+career_dict = context.ERP5Site_getPersonCareerDict(user_name=user_name)\n
+\n
+# XXX: make list of properties configurable through preferences\n
+return {\'group_list\': career_dict[\'group_list\'],\n
+        \'site_list\': career_dict[\'site_list\']}\n
 </string> </value>
         </item>
         <item>
@@ -99,7 +99,8 @@ return assignment_dict\n
                             <string>user_name</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>assignment_dict</string>
+                            <string>career_dict</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>

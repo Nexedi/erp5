@@ -31,6 +31,7 @@
 import threading
 from AdvancedSearchTextDetector import AdvancedSearchTextDetector
 from AdvancedSearchTextParser import AdvancedSearchTextParser
+from FullTextSearchTextParser import FullTextSearchTextParser
 from lexer import ParserOrLexerError
 try:
   from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
@@ -43,49 +44,71 @@ if __name__ == '__main__':
 else:
   DEBUG = 0
 
-parser_pool = threading.local()
+class ParserPool(object):
+  """
+  Per-thread parser pool, because ply is not thread-safe.
+  """
 
-@profiler_decorator
-def getAdvancedSearchTextDetector():
-  try:
-    return parser_pool.advanced_search_text_detector
-  except AttributeError:
-    advanced_search_text_detector = AdvancedSearchTextDetector()
-    advanced_search_text_detector.init(debug=DEBUG)
-    parser_pool.advanced_search_text_detector = advanced_search_text_detector
-    return advanced_search_text_detector
+  def __init__(self):
+    self.parser_pool = threading.local()
+    self.parser_registry = {}
 
-@profiler_decorator
-def getAdvancedSearchTextParser():
-  try:
-    return parser_pool.parser
-  except AttributeError:
-    parser = AdvancedSearchTextParser()
-    parser.init(debug=DEBUG)
-    parser_pool.parser = parser
+  def register(self, parser):
+    parser_registry = self.parser_registry
+    name = '.'.join((parser.__module__, parser.__name__))
+    if name in parser_registry:
+      raise ValueError, 'Duplicate parser for name %r' % (name, )
+    parser_registry[name] = parser
+    return name
+
+  def get(self, name):
+    try:
+      parser = getattr(self.parser_pool, name)
+    except AttributeError:
+      parser = self.parser_registry[name]()
+      parser.init(debug=DEBUG)
+      setattr(self.parser_pool, name, parser)
     return parser
+
+parser_pool = ParserPool()
+DETECTOR_ID = parser_pool.register(AdvancedSearchTextDetector)
+PARSER_ID = parser_pool.register(AdvancedSearchTextParser)
+FULLTEXT_PARSER_ID = parser_pool.register(FullTextSearchTextParser)
+
+def safeParsingDecorator(func):
+  """
+  Wrapper hiding parsing errors and returning None when they occur.
+  This is used to fallback to plain value when value was erroneously detected
+  as being valid SearchableText (detector is not perfect for speed sake).
+  """
+  def wrapper(*args, **kw):
+    try:
+      result = func(*args, **kw)
+    except (KeyboardInterrupt, SystemExit):
+      raise
+    except:
+      result = None
+    return result
+  wrapper.__name__ = func.__name__
+  return wrapper
 
 @profiler_decorator
 def isAdvancedSearchText(input, is_column):
-  return getAdvancedSearchTextDetector()(input, is_column)
+  return parser_pool.get(DETECTOR_ID)(input, is_column)
 
 @profiler_decorator
-def _parse(input, is_column, *args, **kw):
+@safeParsingDecorator
+def parse(input, is_column, *args, **kw):
   if isAdvancedSearchText(input, is_column):
-    result = getAdvancedSearchTextParser()(input, is_column, *args, **kw)
+    result = parser_pool.get(PARSER_ID)(input, is_column, *args, **kw)
   else:
     result = None
   return result
 
 @profiler_decorator
-def parse(*args, **kw):
-  try:
-    result = _parse(*args, **kw)
-  except (KeyboardInterrupt, SystemExit):
-    raise
-  except:
-    result = None
-  return result
+@safeParsingDecorator
+def FullText_parse(input, is_column, *args, **kw):
+  return parser_pool.get(FULLTEXT_PARSER_ID)(input, is_column, *args, **kw)
 
 if __name__ == '__main__':
   class Query:
@@ -320,7 +343,8 @@ if __name__ == '__main__':
     print repr(input)
     try:
       try:
-        detector_result = getAdvancedSearchTextDetector()(input, isColumn)
+        detector_result = parser_pool.get(DETECTOR_ID)(input,
+          isColumn)
       except ParserOrLexerError, message:
         print '  Detector raise: %r' % (message, )
         detector_result = False
@@ -328,7 +352,7 @@ if __name__ == '__main__':
         print '  Detector: %r' % (detector_result, )
       if detector_result:
         print '  LEX:'
-        advanced_parser = getAdvancedSearchTextParser()
+        advanced_parser = parser_pool.get(PARSER_ID)
         lexer = advanced_parser.lexer
         advanced_parser.isColumn = isColumn
         lexer.input(input)

@@ -36,6 +36,7 @@ from zLOG import LOG
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.PsycoWrapper import psyco
 from AccessControl.ImplPython import rolesForPermissionOn
+from AccessControl.PermissionRole import PermissionRole
 
 # Creation of default constructor
 class func_code: pass
@@ -106,15 +107,24 @@ class Setter(Method):
     class __roles__:
       @staticmethod
       def rolesForPermissionOn(ob):
-        # we explictly call _aq_dynamic to prevent acquiering the attribute
+        im_self = ob.im_self
+        name = '%s__roles__' % ob.__name__
+        # Lookup on the class, as getRoles gives priority to ob.__roles__
+        # over class.ob__roles__, this way we have an opportunity to define
+        # security on the class for generated methods.
+        # We explictly call _aq_dynamic to prevent acquiering the attribute
         # from container
-        roles = ob.im_self._aq_dynamic('%s__roles__' % ob.__name__)
-        if roles is None:
-            return rolesForPermissionOn(None, ob.im_self, ('Manager',),
+        roles = getattr(im_self.__class__, name, im_self)
+        if roles is im_self:
+          roles = im_self._aq_dynamic(name)
+          if roles is None:
+            return rolesForPermissionOn(None, im_self, ('Manager',),
                                         '_Modify_portal_content_Permission')
-        else:
-            # wrap explicitly, because we used _aq_dynamic
-            return roles.__of__(ob.im_self)
+        # if roles has an __of__ method, call it explicitly, as the Method
+        # already has an __of__ method that has been already called at this
+        # point.
+        roles = getattr(roles, '__of__', lambda aq_parent: roles)(im_self)
+        return roles
 
 
 from Products.CMFCore.Expression import Expression
@@ -183,15 +193,18 @@ class Getter(Method):
     class __roles__:
       @staticmethod
       def rolesForPermissionOn(ob):
+        im_self = ob.im_self
+        name = '%s__roles__' % ob.__name__
         # we explictly call _aq_dynamic to prevent acquiering the attribute
         # from container
-        roles = ob.im_self._aq_dynamic('%s__roles__' % ob.__name__)
-        if roles is None:
-            return rolesForPermissionOn(None, ob.im_self, ('Manager',),
+        roles = getattr(im_self.__class__, name, im_self)
+        if roles is im_self:
+          roles = im_self._aq_dynamic(name)
+          if roles is None:
+            return rolesForPermissionOn(None, im_self, ('Manager',),
                                         '_Access_contents_information_Permission')
-        else:
-            # wrap explicitly, because we used _aq_dynamic
-            return roles.__of__(ob.im_self)
+        roles = getattr(roles, '__of__', lambda aq_parent: roles)(im_self)
+        return roles
 
 
 class Tester(Method):

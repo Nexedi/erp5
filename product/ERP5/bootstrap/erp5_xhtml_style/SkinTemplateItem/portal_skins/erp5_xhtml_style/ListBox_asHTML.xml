@@ -61,9 +61,9 @@
               is_dialog_mode request/dialog_mode | nothing;\n
               display_style_list here/getDisplayStyleList;\n
               list_style here/getListboxDisplayStyle;\n
-              full_text_search_key here/getFullTextSearchKey;\n
-              full_text_search_key_script here/getFullTextSearchKeyScript;\n
-              show_full_text python: full_text_search_key not in (\'\', None) and full_text_search_key_script not in (\'\', None);\n
+              global_search_column here/getGlobalSearchColumn;\n
+              global_search_column_script string:Base_doSelect;\n
+              show_global_search python: global_search_column not in (\'\', None);\n
               line_list here/query;\n
               listbox_max_lines  python: int(here.getMaxLineNumber());\n
               total_line         python: int(here.total_size);\n
@@ -73,14 +73,14 @@
               current_page_stop  python: (total_line < current_page_max) and total_line or current_page_max;\n
               form_url string:${context_url}/${form_id};\n
               need_pagination python: total_line > listbox_max_lines;\n
-              show_list_style_selection python: len(display_style_list) > 0;\n
+              show_list_style_selection python: len(display_style_list) > 1;\n
               show_listbox_tree_mode_selection python: not is_gadget_mode and \n
                                                        (is_domain_tree_supported or is_report_tree_supported);\n
               show_list_action_link python: here.field.get_value(\'list_action\');\n
               page_navigation_mode python: request.get(\'page_navigation_mode\', here.getPageNavigationMode());\n
               is_slider_mode python: page_navigation_mode in (\'\', \'slider\');\n
               is_default_listbox_field python: field_id==\'listbox\';">\n
- \n
+\n
   <!-- Define hidden input.  -->\n
   <input type="hidden" \n
          name="list_selection_name" \n
@@ -100,6 +100,11 @@
          type="hidden" \n
          name="form_id" \n
          tal:attributes="value form_id" \n
+         tal:replace="nothing"/>\n
+  <input tal:condition="field_id" \n
+         type="hidden" \n
+         name="field_id" \n
+         tal:attributes="value field_id" \n
          tal:replace="nothing"/>\n
 \n
   <tal:block tal:condition="is_gadget_mode">\n
@@ -225,7 +230,8 @@
     </div>\n
 \n
     <div class="listbox-body">\n
-      <table class="listbox">      \n
+      <table class="listbox"\n
+             tal:attributes="class python: \'listbox %s %s-%s\' %(field_id, field_id, list_style)">      \n
         <thead>\n
           <!--Column title -->\n
           <tr class="listbox-label-line">  \n
@@ -281,26 +287,37 @@
                                                     or \'sort-button\';\n
                                   bt_title python: sort_order==\'ascending\' and \'Ascending Display\'\n
                                                    or sort_order==\'descending\' and \'Descending Display\'\n
-                                                   or \'Sort\';">                 \n
+                                                   or \'Sort\';\n
+                                  listbox_field_id string:${field_id}.${sql};">                 \n
                     <!-- Button in normal view -->\n
-                    <button tal:condition="not:is_gadget_mode" \n
+                    <button tal:condition="not:is_gadget_mode"\n
                             type="submit"\n
                             name="setSelectionQuickSortOrder:method"\n
-                            tal:content="title"\n
-                            tal:attributes="title bt_title;\n
-                                            value string:${field_id}.${sql};\n
+                            tal:attributes="title title;\n
+                                            value listbox_field_id;\n
                                             class bt_class;"\n
-                            i18n:domain="ui" i18n:attributes="title" />\n
+                            i18n:domain="ui" i18n:attributes="title">\n
+                      <span i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
+                    </button>\n
 \n
                     <!-- Button in gadget mode -->\n
                     <button tal:condition="is_gadget_mode" \n
-                            tal:define ="params python: {\'setSelectionQuickSortOrder:method\':field_id+\'.\'+sql};"\n
-                            type="button"  \n
-                            tal:content="title"\n
-                            tal:attributes="title bt_title; \n
-                                            onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
-                                            class bt_class;"\n
-                            i18n:domain="ui" i18n:attributes="title"/>\n
+                              tal:define ="params python: {\'setSelectionQuickSortOrder:method\':listbox_field_id};"\n
+                              type="button"  \n
+                              tal:attributes="title title; \n
+                                              onclick python: real_context.KnowledgePad_generateAjaxCall(context_url+\'/\'+form_id,box,dom_id,params);\n
+                                              class bt_class;"\n
+                              i18n:domain="ui" i18n:attributes="title">\n
+                      <span i18n:translate="" i18n:domain="ui" tal:content="title"/>\n
+                    </button>\n
+  \n
+                    <!-- Icon showing sort order -->\n
+                    <img src="images/transparent-image.gif"\n
+                         tal:attributes="alt   bt_title;\n
+                                         title   bt_title;\n
+                                         class bt_class;"\n
+                         i18n:domain="ui" i18n:attributes="title;alt" />\n
+                    \n
                   </th>\n
 \n
                   <th class="listbox-table-header-cell"\n
@@ -356,6 +373,7 @@
 \n
             <!-- Real search columns headers -->\n
             <th class="listbox-table-filter-cell"\n
+                tal:condition="show_search_line"\n
                 tal:repeat="value here/getSearchValueList">\n
               <tal:block tal:define="alias        python: value[0];\n
                                      param        python: value[1];\n
@@ -368,7 +386,9 @@
                 <tal:block tal:condition="python: search_field is None">\n
                   <input tal:condition="python: not is_gadget_mode" \n
                          name="id" size="5" value=""\n
-                         type="text" tal:attributes="name alias; value param"/>\n
+                         type="text" \n
+                         tal:attributes="name alias; value param"\n
+                         onkeypress="submitFormOnEnter(event, this.form, \'Base_doSelect\');"/>\n
                   <!-- Search for gadget mode -->\n
                   <input tal:condition="python: is_gadget_mode" \n
                          tal:define ="params python: {alias:\'this.value\'};"\n
@@ -497,8 +517,8 @@
 \n
       <!-- Full text search -->\n
       <div class="listbox-footer-box"\n
-           tal:condition="show_full_text">\n
-        <tal:block metal:use-macro="container/ListBox_asHTMLLibrary/macros/listbox_full_text_search"/>\n
+           tal:condition="show_global_search">\n
+        <tal:block metal:use-macro="container/ListBox_asHTMLLibrary/macros/listbox_global_search"/>\n
       </div>\n
 \n
       <!--Page navigation in web mode floating in right (slider) or whole width (text) -->\n

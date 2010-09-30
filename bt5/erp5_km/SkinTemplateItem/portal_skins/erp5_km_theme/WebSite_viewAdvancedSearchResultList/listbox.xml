@@ -374,7 +374,7 @@
                 </item>
                 <item>
                     <key> <string>default_display_style</string> </key>
-                    <value> <string>table</string> </value>
+                    <value> <string>search</string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -463,6 +463,14 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string>SearchableText</string> </value>
+                </item>
+                <item>
+                    <key> <string>global_search_column_script</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -574,16 +582,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>thumbnail_Title</string>
-                        </tuple>
-                        <tuple>
                           <string>thumbnail</string>
                           <string>thumbnail_Thumbnail</string>
-                        </tuple>
-                        <tuple>
-                          <string>getIconAsHTML</string>
-                          <string>search_Icon</string>
                         </tuple>
                         <tuple>
                           <string>getSummaryAsHTML</string>

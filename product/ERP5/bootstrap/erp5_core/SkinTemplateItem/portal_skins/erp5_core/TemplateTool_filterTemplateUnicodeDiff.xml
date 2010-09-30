@@ -7,10 +7,6 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value> <string encoding="base64">0fINCg==</string> </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
         </item>
@@ -55,24 +51,9 @@ return False\n
         </item>
         <item>
             <key> <string>_code</string> </key>
-            <value> <string encoding="base64">YwAAAAAAAAAAAQAAAAAAAABzDQAAAGQBAIQAAFoAAGQAAFMoAgAAAE5jAgAAAAkAAAASAAAAAwAA
-AHM7AQAAZAEAZAIAawAAbAEAfQMAAXwDAGQDAHwAAIMCAAF8AwBkBAB8AQCDAgABfAMAZAUAdAQA
-fAEAZAYAgwIAdAUAdAQAfAAAZAYAgwIAZAUAgwIAZAcAZAgAgwIAagIAgwIAAXQGAHwAAIMBAGQJ
-AGoCAG8QAAF0BgB8AQCDAQBkCQBqAgBvogABdAQAfAEAZAYAgwIAdAUAdAQAfAAAZAYAgwIAZAUA
-gwIAZAcAZAgAgwIAagIAbxMAAXQEAHwAAGQGAIMCAGQKAGoCAG8IAAF0BwBTbgEAAXQEAHwBAGQG
-AIMCAHQFAHQEAHwAAGQGAIMCAGQFAIMCAGQLAGQMAIMCAGoCAG8TAAF0BAB8AABkBgCDAgBkDQBq
-AgBvCAABdAcAU24BAAFuAQABfAMAZA4AgwEAAXQIAFNkAABTKA8AAABOaf////8oAQAAAHMDAAAA
-bG9ndA0AAABvbGRfbGluZV9saXN0dA0AAABuZXdfbGluZV9saXN0dAcAAAByZXBsYWNlaQAAAABz
-DwAAAHN0cmluZyBlbmNvZGluZ3MQAAAAdW5pY29kZSBlbmNvZGluZ2kBAAAAcyoAAAA8dmFsdWU+
-IDxzdHJpbmcgZW5jb2Rpbmc9ImNkYXRhIj48IVtDREFUQVt0BgAAAHN0cmluZ3QHAAAAdW5pY29k
-ZXMVAAAAXV0+PC9zdHJpbmc+IDwvdmFsdWU+cwwAAAByZXR1cm4gRmFsc2UoCQAAAHQVAAAAUHJv
-ZHVjdHMuRVJQNVR5cGUuTG9ndAMAAABsb2dSAAAAAFIBAAAAdAkAAABfZ2V0aXRlbV90CQAAAF9n
-ZXRhdHRyX3QDAAAAbGVudAQAAABUcnVldAUAAABGYWxzZSgJAAAAUgAAAABSAQAAAFIFAAAAUgYA
-AABSBwAAAFIIAAAAUgkAAABSCgAAAFILAAAAKAAAAAAoAAAAAHMSAAAARVJQNSBQeXRob24gU2Ny
-aXB0cyYAAABUZW1wbGF0ZVRvb2xfZmlsdGVyVGVtcGxhdGVVbmljb2RlRGlmZgEAAABzGAAAABAB
-DQENATcBJgE0ARMBCAI0ARMBDAEKASgBAAAAdCYAAABUZW1wbGF0ZVRvb2xfZmlsdGVyVGVtcGxh
-dGVVbmljb2RlRGlmZigBAAAAUgwAAAAoAAAAACgAAAAAcxIAAABFUlA1IFB5dGhvbiBTY3JpcHRz
-CAAAADxtb2R1bGU+AQAAAHQAAAAA</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

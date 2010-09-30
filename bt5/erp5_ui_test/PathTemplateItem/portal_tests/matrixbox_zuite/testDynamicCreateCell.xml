@@ -124,7 +124,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
 <tr>\n
@@ -195,7 +195,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 <!-- Matrix box editable fields can use the cell coordinates as "cell_index" in their TALES-->\n

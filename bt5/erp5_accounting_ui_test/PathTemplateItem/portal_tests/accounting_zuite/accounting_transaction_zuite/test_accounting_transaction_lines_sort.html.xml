@@ -100,7 +100,7 @@ Test Simple view of an Accounting Transaction\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>9</td>\n
+  <td>9 records</td>\n
 </tr>\n
 \n
 <!-- store the index of each line -->\n
@@ -181,7 +181,7 @@ other lines\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>10</td>\n
+  <td>10 records</td>\n
 </tr>\n
 \n
 <tr>\n

@@ -322,7 +322,7 @@ class SQLBase:
       # So all connectors must be committed now that we have selected
       # everything needed from MySQL to get a fresh view of ZODB objects.
       transaction.commit()
-      tv = getTransactionalVariable(None)
+      tv = getTransactionalVariable()
       tv['activity_runtime_environment'] = activity_runtime_environment
       # Try to invoke
       try:

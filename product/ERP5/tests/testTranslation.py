@@ -299,7 +299,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
       translated_validation_state_title="En bon usage",
       portal_type='Organisation')))
 
-  @expectedFailure
   def test_07_NegatedQueryForTranslation(self, quiet=0, run=run_all_test):
     """
     Check that catalog search with a negated query parameter doesn't return

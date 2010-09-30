@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ContributionPredicate" module="Products.ERP5Type.Document.ContributionPredicate"/>
-        <tuple/>
-      </tuple>
+      <global name="ContributionPredicate" module="Products.ERP5Type.Document.ContributionPredicate"/>
     </pickle>
     <pickle>
       <dictionary>

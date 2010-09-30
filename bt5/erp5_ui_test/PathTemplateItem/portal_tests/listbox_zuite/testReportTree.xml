@@ -235,7 +235,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <!-- Click on + a -->\n
 <tr>\n
@@ -301,7 +301,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>6</td>\n
+  <td>6 records</td>\n
 </tr>\n
 <!-- Go to next page -->\n
 <tr>\n
@@ -370,7 +370,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>6</td>\n
+  <td>6 records</td>\n
 </tr>\n
 <!-- Show all the 1st level -->\n
 <tr>\n
@@ -438,7 +438,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>8</td>\n
+  <td>8 records</td>\n
 </tr>\n
 <!-- Go to next page -->\n
 <tr>\n
@@ -489,7 +489,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>8</td>\n
+  <td>8 records</td>\n
 </tr>\n
 <!-- Test an empty report tree -->\n
 <tr>\n
@@ -510,7 +510,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>0</td>\n
+  <td>0 records</td>\n
 </tr>\n
 </tal:block>\n
 \n

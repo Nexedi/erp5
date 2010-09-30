@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
-      </tuple>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -95,7 +92,7 @@ commit</string> </value>
                     </item>
                     <item>
                         <key> <string>raw</string> </key>
-                        <value> <string># Warning : This method is obsolete, the new method is IdTool_zGenerateId\n
+                        <value> <string># Warning : This method is obsolete, the new method is IdTool_zCommit\n
 #           it\'s kept for backward compatiblity\n
 \n
 commit</string> </value>

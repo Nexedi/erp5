@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -82,11 +79,6 @@
 <tr>\n
   <td>verifyTextPresent</td>\n
   <td>successfully</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Preview</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

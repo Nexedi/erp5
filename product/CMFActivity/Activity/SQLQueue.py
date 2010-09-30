@@ -291,6 +291,7 @@ class SQLQueue(RAMQueue, SQLBase):
       message_list = []
       for line in result:
         m = self.loadMessage(line.message,
+                             line=line,
                              uid=line.uid,
                              date=line.date,
                              processing_node=line.processing_node)

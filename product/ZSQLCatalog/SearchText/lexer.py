@@ -151,9 +151,10 @@ class lexer(object):
     raise NotImplementedError
 
 def update_docstrings(klass):
+  super_klass = super(klass, klass)
   for property in dir(klass):
     if property.startswith('t_'):
-      source = getattr(lexer, property, None)
+      source = getattr(super_klass, property, None)
       if callable(source):
         destination = getattr(klass, property)
         assert callable(destination)

@@ -440,7 +440,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       portal = self.getPortalObject()
       delivery_module = getattr(portal, delivery_builder.getDeliveryModule())
       delivery_to_update_list = [delivery]
-      delivery_builder._resetUpdated()
       delivery_list = delivery_builder._processDeliveryGroup(
         delivery_module,
         root_group_node,

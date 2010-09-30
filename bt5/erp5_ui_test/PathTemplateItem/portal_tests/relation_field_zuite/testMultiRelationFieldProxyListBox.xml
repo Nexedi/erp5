@@ -118,7 +118,7 @@
 <tr>\n
     <td>verifyText</td>\n
     <td>//span[@class="listbox-current-page-total-number"]</td>\n
-    <td>15</td> <!-- we have 15 Foo and Foo Lines in default template -->\n
+    <td>15 records</td> <!-- we have 15 Foo and Foo Lines in default template -->\n
 </tr>\n
 \n
 <tr>\n
@@ -129,7 +129,7 @@
 <tr>\n
     <td>verifyText</td>\n
     <td>//span[@class="listbox-current-page-total-number"]</td>\n
-    <td>5</td> <!-- we have 5 Foo Lines -->\n
+    <td>5 records</td> <!-- we have 5 Foo Lines -->\n
 </tr>\n
 <tr>\n
     <td>verifyElementPresent</td>\n
@@ -205,7 +205,7 @@
 <tr>\n
     <td>verifyText</td>\n
     <td>//span[@class="listbox-current-page-total-number"]</td>\n
-    <td>10</td> <!-- we have 10 Foos -->\n
+    <td>10 records</td> <!-- we have 10 Foos -->\n
 </tr>\n
 <tr>\n
     <td>verifyElementPresent</td>\n

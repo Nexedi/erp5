@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -106,10 +103,16 @@ if portal_type_list == \'all\':\n
 if isinstance(portal_type_list, str):\n
   portal_type_list=[portal_type_list]\n
 if portal_type_list:\n
-  if len(portal_type_list)==1:\n
-    search_string += \' type:"%s"\' % portal_type_list[0]\n
+  portal_type_string_list = []\n
+  for portal_type in portal_type_list:\n
+    if \' \' in portal_type:\n
+      portal_type = \'"%s"\' %portal_type\n
+    portal_type_string_list.append(\'portal_type:%s\' %portal_type)\n
+  portal_type_string = \'(%s)\' %\' OR \'.join(portal_type_string_list)\n
+  if search_string not in MARKER:\n
+    search_string += \' %s %s\' %(logical_operator, portal_type_string)\n
   else:\n
-    search_string += \' type:(%s)\' %\',\'.join(portal_type_list)\n
+    search_string += portal_type_string\n
 \n
 # search by reference\n
 reference = kw.get(\'reference\', request.get(\'reference\', None))\n
@@ -167,7 +170,7 @@ return search_string\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>logical_operator=\'AND\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -187,12 +190,13 @@ return search_string\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>logical_operator</string>
                             <string>kw</string>
                             <string>None</string>
                             <string>MARKER</string>
@@ -212,8 +216,9 @@ return search_string\n
                             <string>portal_type_list</string>
                             <string>isinstance</string>
                             <string>str</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
+                            <string>portal_type_string_list</string>
+                            <string>portal_type</string>
+                            <string>portal_type_string</string>
                             <string>reference</string>
                             <string>version</string>
                             <string>language</string>
@@ -224,6 +229,7 @@ return search_string\n
                             <string>newest</string>
                             <string>search_mode</string>
                             <string>search_mode_map</string>
+                            <string>_getitem_</string>
                           </tuple>
                         </value>
                     </item>
@@ -235,7 +241,9 @@ return search_string\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <string>AND</string>
+              </tuple>
             </value>
         </item>
         <item>

@@ -682,7 +682,8 @@ class Resource(XMLMatrix, Variated):
       portal = self.getPortalObject()
       domain_tool = getToolByName(portal, 'portal_domains')
       if supply_path_type is None:
-        portal_type_list = portal.getPortalSupplyPathTypeList()
+        portal_type_list = kw.pop('portal_type',
+                                  portal.getPortalSupplyPathTypeList())
       elif isinstance(supply_path_type, (list, tuple)):
         portal_type_list = supply_path_type
       else:

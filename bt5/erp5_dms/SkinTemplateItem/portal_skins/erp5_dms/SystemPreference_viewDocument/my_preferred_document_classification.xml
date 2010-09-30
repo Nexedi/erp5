@@ -98,7 +98,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Preffered classification policy for newly created documents</string> </value>
+                    <value> <string>Preferred classification policy for newly created documents</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

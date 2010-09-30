@@ -86,7 +86,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -124,7 +124,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -158,7 +158,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -182,7 +182,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -206,7 +206,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <!-- no error -->\n
 <!-- }}} -->\n
@@ -221,7 +221,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <!-- no error -->\n
 <!-- }}} -->\n
@@ -242,7 +242,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -266,7 +266,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
@@ -299,7 +299,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <!-- no error -->\n
 <!-- }}} -->\n
@@ -314,7 +314,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <!-- no error -->\n
 <!-- }}} -->\n
@@ -329,7 +329,7 @@ Test sort for Accounting module main listbox, without section\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n

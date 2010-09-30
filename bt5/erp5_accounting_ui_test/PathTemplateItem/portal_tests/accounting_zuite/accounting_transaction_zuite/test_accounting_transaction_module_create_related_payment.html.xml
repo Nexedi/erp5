@@ -90,7 +90,7 @@ Test for Creating Payment Transactions related to some Invoices\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -179,7 +179,7 @@ Test for Creating Payment Transactions related to some Invoices\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>6</td>\n
+  <td>6 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -85,7 +82,7 @@ to set categories</td></tr>\n
 <tr>\n
   <td>type</td>\n
   <td>field_my_category_list</td>\n
-  <td>bar_category/foo_module/0<br />bar_category/foo_module/1</td>\n
+  <td>bar_category/foo_module/0<br />bar_category/foo_module/1<br />foo_category/a/a1</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

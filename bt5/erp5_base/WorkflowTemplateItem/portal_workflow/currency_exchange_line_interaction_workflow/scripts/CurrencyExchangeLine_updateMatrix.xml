@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,11 +59,11 @@ kwd = {\'base_id\': base_id}\n
 context.updateCellRange(script_id=\'CurrencyExchangeLine_asCellRange\', base_id=base_id)\n
 cell_range_key_list = context.getCellRangeKeyList(base_id = base_id)\n
 resource_list = [\'resource/%s\' % context.getParentValue().getRelativeUrl()]\n
-price_currency_list = [\'price_currency/%s\' % context.getPriceCurrency()]\n
-membership_list = resource_list+price_currency_list\n
+price_currency_list = [context.getPriceCurrency(base=True)]\n
+membership_list = resource_list + price_currency_list\n
 context.setMembershipCriterionBaseCategoryList([x.split(\'/\')[0] for x in membership_list])\n
 context.setMembershipCriterionCategoryList(membership_list)\n
-context.setResource(context.getParentValue().getRelativeUrl())\n
+context.setResourceValue(context.getParentValue())\n
 context.setMappedValuePropertyList((\'base_price\',\'discount\'))\n
 if cell_range_key_list != [[None, None]] :\n
   i = 0\n
@@ -82,6 +79,10 @@ if cell_range_key_list != [[None, None]] :\n
     c.setCriterion(\'stop_date\', min=context.getStartDate(), max=context.getStopDate())\n
     if c.getBasePrice() is None and context.getBasePrice() is not None:\n
       c.setBasePrice(context.getBasePrice())\n
+    # set an int index for display\n
+    currency_exchange_type_value_list = c.getValueList(\'currency_exchange_type\')\n
+    if currency_exchange_type_value_list:\n
+      c.setIntIndex(currency_exchange_type_value_list[0].getIntIndex())\n
 </string> </value>
         </item>
         <item>
@@ -127,6 +128,7 @@ if cell_range_key_list != [[None, None]] :\n
                             <string>_getattr_</string>
                             <string>cell_range_key_list</string>
                             <string>resource_list</string>
+                            <string>True</string>
                             <string>price_currency_list</string>
                             <string>membership_list</string>
                             <string>append</string>
@@ -140,6 +142,7 @@ if cell_range_key_list != [[None, None]] :\n
                             <string>category_list</string>
                             <string>_apply_</string>
                             <string>c</string>
+                            <string>currency_exchange_type_value_list</string>
                           </tuple>
                         </value>
                     </item>

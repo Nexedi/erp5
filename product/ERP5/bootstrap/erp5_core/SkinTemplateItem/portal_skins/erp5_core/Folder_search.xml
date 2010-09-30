@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -68,12 +65,12 @@ def sorted(seq):\n
 # the entered value, and what was the usage.\n
 \n
 # Note that we don\'t use queries, because we want to let the catalog filter out\n
-# ignored parameters  by itself.\n
+# ignored parameters by itself.\n
 \n
-usage_map =  dict(min=\'>=\',\n
-                  max=\'<\',\n
-                  ngt=\'<=\',\n
-                  nlt=\'>\',)\n
+usage_map = dict(min=\'>=\',\n
+                 max=\'<\',\n
+                 ngt=\'<=\',\n
+                 nlt=\'>\',)\n
 \n
 new_mapping = dict(ignore_hide_rows=1)\n
 for key in sorted(request.form.keys()):\n
@@ -81,10 +78,10 @@ for key in sorted(request.form.keys()):\n
   value = request.form[key]\n
 \n
   # to remove unnecessary None value\n
-  if value == None:\n
+  if value is None:\n
     request.form.pop(key)\n
     continue\n
-\n
+  \n
   # workaround the bogus case where a value is passed ?value=None\n
   if value == \'None\':\n
     value = None\n
@@ -109,7 +106,10 @@ for key in sorted(request.form.keys()):\n
     new_mapping[real_key] = \'%s %s\' % (usage_map[value], new_mapping[real_key])\n
 \n
   else:\n
-    new_mapping[key] = value\n
+    if request.form.get(\'%s_is_strict_\' % key):\n
+      new_mapping[\'strict_%s\' % key] = value\n
+    else:\n
+      new_mapping[key] = value\n
 \n
 # set selection parameters\n
 container.portal_selections.setSelectionParamsFor(selection_name, new_mapping)\n

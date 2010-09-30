@@ -152,7 +152,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>101</td>\n
+  <td>101 records</td>\n
 </tr>\n
 \n
 <tr>\n
@@ -173,7 +173,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>101</td>\n
+  <td>101 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n

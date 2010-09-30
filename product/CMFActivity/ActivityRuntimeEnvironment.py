@@ -4,7 +4,7 @@ def getActivityRuntimeEnvironment():
   """
     Raises KeyError if called outside activity.
   """
-  return getTransactionalVariable(None)['activity_runtime_environment']
+  return getTransactionalVariable()['activity_runtime_environment']
 
 def _getActivityRuntimeEnvironment():
   try:

@@ -49,6 +49,7 @@ from ZODB.POSException import ConflictError
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from warnings import warn
 
 import md5
 import cgi
@@ -58,6 +59,8 @@ try:
   set
 except NameError:
   from sets import Set as set
+
+DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
 
 class MethodWrapper:
   def __init__(self, context, method_name):
@@ -267,7 +270,7 @@ class ListBoxWidget(Widget.Widget):
                                  description=('The name of the selection to '
                                               'store selection parameters'),
                                  default='',
-                                 required=1)
+                                 required=0)
     property_names.append('selection_name')
 
     meta_types = fields.ListTextAreaField('meta_types',
@@ -409,23 +412,16 @@ class ListBoxWidget(Widget.Widget):
                                 title="Default display style",
                                 description=(
         "A default display style for listbox rendering."),
-                                default='table',
+                                default=DEFAULT_LISTBOX_DISPLAY_STYLE,
                                 required=0)
     property_names.append('default_display_style')
 
-    full_text_search_key = fields.StringField('full_text_search_key',
-                                title="Full text search key",
-                                description=("Full text search key used to make query."),
+    global_search_column = fields.StringField('global_search_column',
+                                title="Global search column",
+                                description=("Global search column make query."),
                                 default=None,
                                 required=0)
-    property_names.append('full_text_search_key')
-
-    full_text_search_key_script = fields.StringField('full_text_search_key_script',
-                                title="Full text search key script",
-                                description=("Full text search key script used to make query."),
-                                default=None,
-                                required=0)
-    property_names.append('full_text_search_key_script')
+    property_names.append('global_search_column')
 
     page_navigation_mode = fields.StringField('page_navigation_mode',
                                 title="Page navigation mode",
@@ -984,17 +980,20 @@ class ListBoxRenderer:
 
   getDefaultDisplayStyle = lazyMethod(getDefaultDisplayStyle)
 
-  def getFullTextSearchKey(self):
+  def getGlobalSearchColumn(self):
     """Return the full text search key."""
-    return self.field.get_value('full_text_search_key')
+    return self.field.get_value('global_search_column')
 
-  getFullTextSearchKey = lazyMethod(getFullTextSearchKey)
+  getGlobalSearchColumn = lazyMethod(getGlobalSearchColumn)
 
-  def getFullTextSearchKeyScript(self):
-    """Return the full text search key script which is responsible for handling full text query."""
-    return self.field.get_value('full_text_search_key_script')
-
-  getFullTextSearchKeyScript = lazyMethod(getFullTextSearchKeyScript)
+  # backwards compatability
+  def getGlobalSearchColumnScript(self):
+    warn("getGlobalSearchColumnScript() is deprecated. Do not use it!", \
+         DeprecationWarning,
+         stacklevel=2)
+    return 'Base_doSelect'
+  getFullTextSearchKey=getGlobalSearchColumn
+  getFullTextSearchKeyScript=getGlobalSearchColumnScript
 
   def getPageNavigationMode(self):
     """Return the list box page navigation mode."""
@@ -1146,8 +1145,7 @@ class ListBoxRenderer:
     default_listbox_display_style = self.getDefaultDisplayStyle()
     listbox_display_style = self.getListboxDisplayStyle()
     dynamic_column_list_override = (self.getDisplayedColumnIdList() != None)
-    list_style_column_change_required = (default_listbox_display_style != listbox_display_style)
-    
+    list_style_column_change_required = listbox_display_style not in ('', DEFAULT_LISTBOX_DISPLAY_STYLE,)
     if dynamic_column_list_override:
       # dynamically setting columns is supported
       available_column = self.getAllColumnList()
@@ -2352,7 +2350,10 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     ignore_layout = int(request.get('ignore_layout', \
                         not request.get('is_web_mode', False) and 1 or 0))
     ui_domain = 'erp5_ui'
-
+    # We need a way to pass the current line object (ie. brain) to the
+    # field which is being displayed. Since the render_view API did not
+    # permit this, we use the 'cell' value to pass the line object.
+    request.set('cell', brain)
     html_list = []
 
     # Generate page selection methods based on the Listbox id
@@ -2425,13 +2426,21 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
                 error = sys.exc_info())
         else:
           try:
-            url = '%s/view?selection_index=%s&amp;selection_name=%s&amp;ignore_layout:int=%s&amp;reset:int=1' % (
+            url = '%s/view' % (
                       # brain.absolute_url() is slow because it invokes
                       # _aq_dynamic() every time to get brain.REQUEST,
                       # so we call request.physicalPathToURL() directly
                       # instead of brain.absolute_url().
-                      request.physicalPathToURL(brain.getPath()),
-                      self.index, selection_name, ignore_layout)
+                      request.physicalPathToURL(brain.getPath()),)
+            params = []
+            if ignore_layout:
+              params.append('ignore_layout:int=1')
+            if selection_name:
+              params.extend(('selection_name=%s' % selection_name,
+                             'selection_index=%s' % self.index,
+                             'reset:int=1'))
+            if params:
+              url = '%s?%s' % (url, '&amp;'.join(params))
           except AttributeError:
             pass
 
@@ -2473,10 +2482,6 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
           error_message = u''
           display_value = original_value
 
-        # We need a way to pass the current line object (ie. brain) to the
-        # field which is being displayed. Since the render_view API did not
-        # permit this, we use the 'cell' value to pass the line object.
-        request.set('cell', brain)
         enabled = editable_field.get_value('enabled', REQUEST=request)
         editable = editable_field.get_value('editable', REQUEST=request)
         if enabled:
@@ -2616,6 +2621,12 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       selection.edit(method_path = method_path, list_url = list_url)
       self.getSelectionTool().setSelectionFor(self.getSelectionName(), selection, REQUEST = self.request)
 
+    # do pass current form and respective field through request
+    request = self.request
+    field_id = self.getId()
+    form = self.getForm()
+    request.set('listbox_form_id', form.getId())
+    request.set('listbox_field_id', field_id)
     pt = self.getPageTemplate()
     return pt()
 

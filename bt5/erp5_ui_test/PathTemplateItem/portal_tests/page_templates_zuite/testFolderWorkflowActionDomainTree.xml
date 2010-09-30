@@ -96,7 +96,7 @@
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>3</td>\n
+  <td>3 records</td>\n
 </tr>\n
 \n
 <!-- Select elements by the domain tree -->\n
@@ -118,7 +118,7 @@
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>3</td>\n
+  <td>3 records</td>\n
 </tr>\n
 \n
 <!-- Click on the \'a\' domain tree -->\n
@@ -130,7 +130,7 @@
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 <!-- Change Stat of this element list -->\n
@@ -144,7 +144,7 @@
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <!-- It\'s the number of element which will be validate -->\n
 <tr>\n
@@ -192,7 +192,7 @@ Note that if a document cannot be processed, it\'s not shown in this list\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <!-- This listbox is a proxy to the module listbox, so it has the same title\n
 and the same columns. -->\n

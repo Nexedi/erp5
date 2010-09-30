@@ -61,7 +61,7 @@ class DocumentMixin:
       string (ex. jpeg, html, text, txt, etc.)
       **kw can be various things - e.g. resolution
     """
-    transaction_variable = getTransactionalVariable(self.getPortalObject())
+    transaction_variable = getTransactionalVariable()
     if LOCK_PERMISSION_KEY in transaction_variable:
       # in convert we want always to check conversion format permission
       # to bypass such check one should use _convert directly
@@ -95,7 +95,7 @@ class DocumentMixin:
     """Private method to check permission when access specified format.
     This method raises
     """
-    transaction_variable = getTransactionalVariable(self.getPortalObject())
+    transaction_variable = getTransactionalVariable()
     if transaction_variable.get(LOCK_PERMISSION_KEY, False):
       # Permission already checked in convert with final format,
       # do not check permission for intermediate formats

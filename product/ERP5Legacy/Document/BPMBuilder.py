@@ -779,16 +779,16 @@ class BPMBuilder(Alarm):
     return obj
 
   def _isUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     return level in tv['builder_processed_list'].get(obj, [])
 
   def _setUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     if tv.get('builder_processed_list', None) is None:
       self._resetUpdated()
     tv['builder_processed_list'][obj] = \
        tv['builder_processed_list'].get(obj, []) + [level]
 
   def _resetUpdated(self):
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     tv['builder_processed_list'] = {}

@@ -1,3 +1,34 @@
+2010-09-28 nicolas.dumazet
+* add portal type Event so that temporary Event objects can be created by NotificationTool
+* document abstract portal types usage.
+
+2010-09-27 nicolas.dumazet
+* do not use manage_addTypeInformation anymore
+
+2010-09-27 nicolas.dumazet
+* correct regular expressions in base_type_interaction_workflow trigger methods
+* add portal type classes-related fields on BaseType_view
+
+2010-09-26 nicolas.dumazet
+* Reload portal type classes generated from Base Type objects if a Type Definition object is modified.
+
+2010-09-24 arnaud.fontaine
+* Add action "Configure Property Sheets".
+
+2010-09-24 arnaud.fontaine
+* Add Portal Types and views for web-based Property Sheets.
+* Add elementary_type to portal_categories to represent Property Sheets types.
+
+2010-09-18 nicolas.dumazet
+* add Amount, Movement and portal types to be able to create temporary objects with portal types as classes
+
+2010-09-10 nicolas delaby
+* Declare new mimetype text/csv
+* Accept text/csv as input mimetype for csv_to_text portal_transform chain.
+
+2010-09-10 nicolas.dumazet
+* Property Sheet portal type and view
+
 2010-09-07 nicolas.dumazet
 * Placeholder for Property Sheet Tool, and related Portal Type
 

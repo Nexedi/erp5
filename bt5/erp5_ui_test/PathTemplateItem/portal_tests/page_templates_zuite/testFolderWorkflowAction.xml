@@ -94,7 +94,7 @@ Validated Foo -->\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
@@ -161,7 +161,7 @@ Note that if a document cannot be processed, it\'s not shown in this list\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <!-- This listbox is a proxy to the module listbox, so it has the same title\n
 and the same columns. -->\n

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="CacheFactory" module="Products.ERP5Type.Document.CacheFactory"/>
-        <tuple/>
-      </tuple>
+      <global name="CacheFactory" module="Products.ERP5Type.Document.CacheFactory"/>
     </pickle>
     <pickle>
       <dictionary>

@@ -64,7 +64,7 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>10</td>\n
+  <td>10 records</td>\n
 </tr>\n
 <!-- }}} -->\n
 \n
@@ -82,7 +82,7 @@ Test `preferred_gap_id` column of Account Module\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 \n
 <!-- make sure we are sorted by preferred_gap_id ASC -->\n

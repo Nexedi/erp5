@@ -52,12 +52,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>3</td>\n
+  <td>3 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-item-number"]</td>\n
-  <td>0</td>\n
+  <td>- 0 items selected</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

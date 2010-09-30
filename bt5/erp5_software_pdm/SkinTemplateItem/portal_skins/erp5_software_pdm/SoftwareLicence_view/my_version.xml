@@ -74,7 +74,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Version ot the web page, it increases each time we do major modification</string> </value>
+                    <value> <string>Version of the web page, it increases each time we do major modification</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

@@ -99,26 +99,33 @@
 \n
 \n
 <div class=" listbox-full-text-search"\n
-     metal:define-macro="listbox_full_text_search"\n
-     tal:define="search_text real_context/Base_getSearchText">\n
-\n
+     metal:define-macro="listbox_global_search"\n
+     tal:define="search_text python: request.get(global_search_column, \n
+                                       selection.params.get(global_search_column));">\n
   <tal:block tal:condition="not: is_gadget_mode">\n
     <!-- Normal mode -->\n
     <input type="text"\n
+           title="Global Search"\n
+           i18n:domain="ui" i18n:attributes="value; title" \n
            tal:attributes="value search_text;\n
-                           name full_text_search_key;\n
-                           onkeypress string: submitFormOnEnter(event, this.form, \'${full_text_search_key_script}\');"/>\n
+                           name global_search_column;\n
+                           onkeypress string: submitFormOnEnter(event, this.form, \'${global_search_column_script}\');"/>\n
     <input class="button" \n
-           i18n:domain="ui" i18n:attributes="value"\n
-           value="Search"  type="submit" \n
-           tal:attributes="name string:${full_text_search_key_script}:method"/>\n
+           value="Search"  \n
+           type="submit"\n
+           title="Search"\n
+           i18n:domain="ui" i18n:attributes="value; title" \n
+           tal:attributes="name string:${global_search_column_script}:method"/>\n
   </tal:block>\n
+\n
   <tal:block tal:condition="is_gadget_mode">\n
     <!-- Gadget mode -->\n
-    <input tal:define="params python: {\'%s:method\' %full_text_search_key_script:\'\',\'%s\' %full_text_search_key:\'this.value\'};"\n
+    <input tal:define="params python: {\'%s:method\' %global_search_column_script:\'\',\'%s\' %global_search_column:\'this.value\'};"\n
            type="text"\n
+           title="Global Search"\n
+           i18n:domain="ui" i18n:attributes="value; title"\n
            tal:attributes=\'value search_text;\n
-                           name full_text_search_key;\n
+                           name global_search_column;\n
                            onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,box_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
   </tal:block>\n
 \n
@@ -126,27 +133,31 @@
 \n
 <!-- Number of listbox records -->\n
 <div class="listbox-number-of-records"\n
-     metal:define-macro="listbox_number_of_records"\n
-     tal:define="is_default_listbox_field python: field_id==\'listbox\';">\n
+     metal:define-macro="listbox_number_of_records">\n
 \n
-  <span class="listbox-current-page-start-number"\n
-        tal:content="current_page_start"/> - \n
-  <span class="listbox-current-page-stop-number"\n
-        tal:content="current_page_stop"/> \n
-  <span i18n:translate="" i18n:domain="ui">of</span>\n
+  <!-- listbox start - stop number -->\n
+  <tal:block tal:condition="python: total_line > 0">\n
+    <span class="listbox-current-page-start-number"\n
+          tal:content="current_page_start"/> - \n
+    <span class="listbox-current-page-stop-number"\n
+          tal:content="current_page_stop"/> \n
+    <span i18n:translate="" i18n:domain="ui">of</span>\n
+  </tal:block>\n
+\n
+  <!-- listbox total rows number -->\n
   <span class="listbox-current-page-total-number"\n
-        tal:content="total_line"\n
-        tal:attributes="class python: test(is_default_listbox_field, \'listbox-current-page-total-number\', \'listbox-current-page-total-number %s-current-page-total-number\' %field_id)" />\n
-  <span i18n:translate="" i18n:domain="ui">records</span> - \n
-\n
-  <span class="listbox-current-item-number"\n
-        tal:attributes="class string:${field_id}-current-item-number"\n
-        tal:condition="show_select_column"\n
+        tal:attributes="class python: test(is_default_listbox_field, \'listbox-current-page-total-number\', \'listbox-current-page-total-number %s-current-page-total-number\' %field_id)"\n
         i18n:translate="" i18n:domain="ui">\n
-    <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block>\n
+    <tal:block tal:replace="total_line" i18n:name="number">0</tal:block> records\n
   </span>\n
-  <span i18n:translate="" i18n:domain="ui">items selected</span>\n
 \n
+  <!-- listbox selected rows number -->\n
+  <span class="listbox-current-item-number"\n
+        tal:condition="show_select_column"\n
+        tal:attributes="class string:${field_id}-current-item-number"\n
+        i18n:translate="" i18n:domain="ui">\n
+    - <tal:block tal:replace="python: len(here.getCheckedUidList())" i18n:name="number">0</tal:block> items selected\n
+  </span>\n
 \n
 </div>\n
 \n

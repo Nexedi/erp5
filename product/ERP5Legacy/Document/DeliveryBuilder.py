@@ -273,7 +273,6 @@ class DeliveryBuilder(OrderBuilder):
     portal = self.getPortalObject()
     delivery_module = getattr(portal, self.getDeliveryModule())
     delivery_to_update_list = [delivery]
-    self._resetUpdated()
     delivery_list = self._processDeliveryGroup(
       delivery_module,
       root_group_node,
@@ -367,6 +366,10 @@ class DeliveryBuilder(OrderBuilder):
       delete_id_list = [x.getId() for x in delivery.contentValues() \
                        if x.getId() not in keep_id_list]
       delivery.deleteContent(delete_id_list)
+      if activate_kw:
+        # XXX _duplicate does not accept activate_kw. So reindex the new
+        # delivery again with activate_kw.
+        delivery.reindexObject(activate_kw=activate_kw)
 
     return delivery
 
@@ -405,6 +408,10 @@ class DeliveryBuilder(OrderBuilder):
       delete_id_list = [x.getId() for x in delivery_line.contentValues() \
                        if x.getId() not in keep_id_list]
       delivery_line.deleteContent(delete_id_list)
+      if activate_kw:
+        # XXX _duplicate does not accept activate_kw. So reindex the new
+        # delivery line again with activate_kw.
+        delivery_line.reindexObject(activate_kw=activate_kw)
 
     return delivery_line
 
@@ -432,5 +439,9 @@ class DeliveryBuilder(OrderBuilder):
         parent._duplicate(parent.manage_copyObjects(ids=ids))[0],
         (delivery_line, old_cell.getId()), {}, CopyError)
       cell = delivery_line[cp['new_id']]
+      if activate_kw:
+        # XXX _duplicate does not accept activate_kw. So reindex the new
+        # cell again with activate_kw.
+        cell.reindexObject(activate_kw=activate_kw)
 
     return cell

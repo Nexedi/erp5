@@ -261,7 +261,7 @@ Test Accounting Transaction Template\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -286,7 +286,7 @@ Test Accounting Transaction Template\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>0</td>\n
+  <td>0 records</td>\n
 </tr>\n
 \n
 <tr>\n

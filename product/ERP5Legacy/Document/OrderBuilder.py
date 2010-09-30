@@ -99,6 +99,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                     , PropertySheet.DeliveryBuilder
                     )
 
+  # XXX it would be better to make the base id configurable at
+  # each builder.
+  matrix_base_id = 'movement'
+
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
             delivery_relative_url_list=None, movement_list=None, **kw):
@@ -262,7 +266,25 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                    [DateMovementGroup,PathMovementGroup,...]
     """
     movement_group_list = self.getMovementGroupList()
-    last_line_movement_group = self.getDeliveryMovementGroupList()[-1]
+
+    # Need to find the last branch movement group for separate methods.
+    last_line_movement_group = None
+    previous_collect_order_group = None
+    for movement_group in movement_group_list:
+      collect_order_group = movement_group.getCollectOrderGroup()
+      if collect_order_group == 'line':
+        if previous_collect_order_group == 'delivery' \
+                or movement_group.isBranch():
+          last_line_movement_group = movement_group
+      elif collect_order_group == 'cell':
+        break
+      previous_collect_order_group = collect_order_group
+    if last_line_movement_group is None:
+      # XXX I think this is an error, but there are many tests which
+      # fail, so for now I permit falling back to the last one.
+      #raise CollectError('No branch movement group found at %r' % (self,))
+      last_line_movement_group = movement_group
+
     separate_method_name_list = self.getDeliveryCellSeparateOrderList([])
     root_group_node = MovementGroupNode(
       separate_method_name_list=separate_method_name_list,
@@ -283,8 +305,16 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       new_property_dict.update(tmp_property_dict)
     return result, new_property_dict
 
-  def _findUpdatableObject(self, instance_list, movement_group_node_list,
-                           divergence_list):
+  def _findUpdatableObject(self, instance_list, current_movement_group_node,
+          movement_group_node_list, divergence_list):
+    # FIXME this code may generate inconsistent results, because
+    # MovementGroupNode.test can return anything else but the
+    # property dict. So it would be better to use the test method
+    # in all cases. It is, however, not so easy to do, because
+    # Movement Group classes might not be prepared for receiving
+    # None instead of a real document object. So it would be safer
+    # to pass a temp object, but generating a temp object is not 
+    # very fast.
     instance = None
     property_dict = {}
     if not instance_list:
@@ -296,21 +326,16 @@ class OrderBuilder(XMLObject, Amount, Predicate):
             property_dict[k] = v
     else:
       # we want to check the original delivery first.
-      # so sort instance_list by that current is exists or not.
-      try:
-        current = movement_group_node_list[-1].getMovementList()[0].getDeliveryValue()
-        portal = self.getPortalObject()
-        while current != portal:
-          try:
-            instance_list.remove(current)
-          except ValueError:
-            pass
-          else:
-            instance_list.insert(0, current)
-            break
-          current = current.getParentValue()
-      except AttributeError:
-        pass
+      movement = current_movement_group_node.getMovementList()[0]
+      delivery_movement = movement.getDeliveryValue()
+      if delivery_movement is not None:
+        delivery = delivery_movement.getRootDeliveryValue()
+        try:
+          instance_list.remove(delivery)
+        except ValueError:
+          pass
+        else:
+          instance_list.insert(0, delivery)
       for instance_to_update in instance_list:
         result, property_dict = self._test(
           instance_to_update, movement_group_node_list, divergence_list)
@@ -351,9 +376,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
               if x.getPortalType() == delivery_portal_type]
     else:
       delivery_to_update_list = []
-    # We do not want to update the same object more than twice in one
-    # _deliveryGroupProcessing().
-    self._resetUpdated()
+
     delivery_list = self._processDeliveryGroup(
                           delivery_module,
                           movement_group_node,
@@ -387,40 +410,43 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       movement_group_node_list = []
     if divergence_list is None:
       divergence_list = []
-    # do not use 'append' or '+=' because they are destructive.
-    movement_group_node_list = movement_group_node_list + [movement_group_node]
     # Parameter initialization
     if delivery_to_update_list is None:
       delivery_to_update_list = []
     delivery_list = []
 
-    if len(collect_order_list):
+    if collect_order_list:
       # Get sorted movement for each delivery
       for grouped_node in movement_group_node.getGroupList():
+        # do not use 'append' or '+=' because they are destructive.
+        new_movement_group_node_list = movement_group_node_list + [grouped_node]
         new_delivery_list = self._processDeliveryGroup(
-                              delivery_module,
-                              grouped_node,
-                              collect_order_list[1:],
-                              movement_group_node_list=movement_group_node_list,
-                              delivery_to_update_list=delivery_to_update_list,
-                              divergence_list=divergence_list,
-                              activate_kw=activate_kw,
-                              force_update=force_update)
+                delivery_module,
+                grouped_node,
+                collect_order_list[1:],
+                movement_group_node_list=new_movement_group_node_list,
+                delivery_to_update_list=delivery_to_update_list,
+                divergence_list=divergence_list,
+                activate_kw=activate_kw,
+                force_update=force_update)
         delivery_list.extend(new_delivery_list)
         force_update = 0
     else:
       # Test if we can update a existing delivery, or if we need to create
       # a new one
       delivery, property_dict = self._findUpdatableObject(
-        delivery_to_update_list, movement_group_node_list,
+        delivery_to_update_list, movement_group_node, movement_group_node_list,
         divergence_list)
 
       # if all deliveries are rejected in case of update, we update the
       # first one.
-      if force_update and delivery is None and len(delivery_to_update_list):
+      if force_update and delivery is None and delivery_to_update_list:
         delivery = delivery_to_update_list[0]
 
       if delivery is None:
+        if not self.getDeliveryCreatable():
+          raise SelectMethodError('No updatable delivery found with %s' \
+                  % (self.getPath(),))
         delivery = self._createDelivery(delivery_module,
                                         movement_group_node.getMovementList(),
                                         activate_kw)
@@ -432,7 +458,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Put properties on delivery
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
-        delivery.edit(**property_dict)
+        delivery.edit(activate_kw=activate_kw, **property_dict)
 
       # Then, create delivery lines
       delivery_line_portal_type = self.getDeliveryLinePortalType()
@@ -444,6 +470,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                 delivery,
                                 grouped_node,
                                 self.getDeliveryLineMovementGroupList()[1:],
+                                movement_group_node_list=[grouped_node],
                                 divergence_list=divergence_list,
                                 delivery_line_to_update_list=delivery_line_to_update_list,
                                 activate_kw=activate_kw,
@@ -478,17 +505,17 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       divergence_list = []
     if delivery_line_to_update_list is None:
       delivery_line_to_update_list = []
-    # do not use 'append' or '+=' because they are destructive.
-    movement_group_node_list = movement_group_node_list + [movement_group_node]
 
-    if len(collect_order_list) and not movement_group_node.getCurrentMovementGroup().isBranch():
+    if collect_order_list and not movement_group_node.getCurrentMovementGroup().isBranch():
       # Get sorted movement for each delivery line
       for grouped_node in movement_group_node.getGroupList():
+        # do not use 'append' or '+=' because they are destructive.
+        new_movement_group_node_list = movement_group_node_list + [grouped_node]
         self._processDeliveryLineGroup(
           delivery,
           grouped_node,
           collect_order_list[1:],
-          movement_group_node_list=movement_group_node_list,
+          movement_group_node_list=new_movement_group_node_list,
           divergence_list=divergence_list,
           delivery_line_to_update_list=delivery_line_to_update_list,
           activate_kw=activate_kw,
@@ -497,8 +524,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Test if we can update an existing line, or if we need to create a new
       # one
       delivery_line, property_dict = self._findUpdatableObject(
-        delivery_line_to_update_list, movement_group_node_list,
-        divergence_list)
+        delivery_line_to_update_list, movement_group_node,
+        movement_group_node_list, divergence_list)
       if delivery_line is not None:
         update_existing_line = 1
         delivery_line_to_update_list.remove(delivery_line)
@@ -512,7 +539,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # Put properties on delivery line
       if property_dict:
         property_dict.setdefault('edit_order', ('stop_date', 'start_date'))
-        delivery_line.edit(force_update=1, **property_dict)
+        delivery_line.edit(force_update=1, activate_kw=activate_kw, 
+                **property_dict)
 
       if movement_group_node.getCurrentMovementGroup().isBranch():
         delivery_line_portal_type = self.getDeliveryLinePortalType()
@@ -524,7 +552,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
             delivery_line,
             grouped_node,
             collect_order_list[1:],
-            movement_group_node_list=movement_group_node_list,
+            movement_group_node_list=[grouped_node],
             divergence_list=divergence_list,
             delivery_line_to_update_list=nested_delivery_line_to_update_list,
             activate_kw=activate_kw,
@@ -532,27 +560,38 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         return
 
       # Update variation category list on line
-      variation_category_dict = dict([(variation_category, True) for
-                                      variation_category in
-                                      delivery_line.getVariationCategoryList()])
+      variation_category_set = set(delivery_line.getVariationCategoryList())
       for movement in movement_group_node.getMovementList():
-        for category in movement.getVariationCategoryList():
-          variation_category_dict[category] = True
-      variation_category_list = sorted(variation_category_dict.keys())
-      delivery_line.setVariationCategoryList(variation_category_list)
+        variation_category_set.update(movement.getVariationCategoryList())
+      variation_category_list = sorted(variation_category_set)
+      delivery_line.edit(variation_category_list=variation_category_list,
+              activate_kw=activate_kw)
       # Then, create delivery movement (delivery cell or complete delivery
       # line)
       grouped_node_list = movement_group_node.getGroupList()
       # If no group is defined for cell, we need to continue, in order to
       # save the quantity value
-      if len(grouped_node_list):
+      if grouped_node_list:
+        base_id = self.matrix_base_id
+        getCell = delivery_line.getCell
+        delivery_movement_to_update_list = []
+        cell_key_list = delivery_line.getCellKeyList(base_id=base_id)
+        if cell_key_list:
+          for cell_key in cell_key_list:
+            cell = getCell(base_id=base_id, *cell_key)
+            if cell is not None:
+              delivery_movement_to_update_list.append(cell)
+        else:
+          delivery_movement_to_update_list.append(delivery_line)
         for grouped_node in grouped_node_list:
           self._processDeliveryCellGroup(
                                     delivery_line,
                                     grouped_node,
                                     self.getDeliveryCellMovementGroupList()[1:],
+                                    movement_group_node_list=[grouped_node],
                                     update_existing_line=update_existing_line,
                                     divergence_list=divergence_list,
+                                    delivery_movement_to_update_list=delivery_movement_to_update_list,
                                     activate_kw=activate_kw,
                                     force_update=force_update)
       else:
@@ -560,8 +599,10 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                   delivery_line,
                                   movement_group_node,
                                   [],
+                                  movement_group_node_list=[],
                                   update_existing_line=update_existing_line,
                                   divergence_list=divergence_list,
+                                  delivery_movement_to_update_list=[delivery_line],
                                   activate_kw=activate_kw,
                                   force_update=force_update)
 
@@ -581,6 +622,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                                 collect_order_list, movement_group_node_list=None,
                                 update_existing_line=0,
                                 divergence_list=None,
+                                delivery_movement_to_update_list=None,
                                 activate_kw=None, force_update=0):
     """
       Build delivery cell from a list of movement on a delivery line
@@ -588,21 +630,23 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     """
     if movement_group_node_list is None:
       movement_group_node_list = []
+    if delivery_movement_to_update_list is None:
+      delivery_movement_to_update_list = []
     if divergence_list is None:
       divergence_list = []
-    # do not use 'append' or '+=' because they are destructive.
-    movement_group_node_list = movement_group_node_list + [movement_group_node]
 
-    if len(collect_order_list):
+    if collect_order_list:
       # Get sorted movement for each delivery line
       for grouped_node in movement_group_node.getGroupList():
+        new_movement_group_node_list = movement_group_node_list + [grouped_node]
         self._processDeliveryCellGroup(
           delivery_line,
           grouped_node,
           collect_order_list[1:],
-          movement_group_node_list=movement_group_node_list,
+          movement_group_node_list=new_movement_group_node_list,
           update_existing_line=update_existing_line,
           divergence_list=divergence_list,
+          delivery_movement_to_update_list=delivery_movement_to_update_list,
           activate_kw=activate_kw,
           force_update=force_update)
     else:
@@ -611,8 +655,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         raise CollectError, "DeliveryBuilder: %s unable to distinct those\
               movements: %s" % (self.getId(), str(movement_list))
       else:
-        # XXX Hardcoded value
-        base_id = 'movement'
+        base_id = self.matrix_base_id
         object_to_update = None
         # We need to initialize the cell
         update_existing_movement = 0
@@ -622,55 +665,50 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         # because matrix range can be empty even if line variation category
         # list is not empty
         property_dict = {}
-        if len(delivery_line.getCellKeyList(base_id=base_id)) == 0:
+        if not delivery_line.getCellKeyList(base_id=base_id):
           # update line
-          if update_existing_line == 1:
-            if self._isUpdated(delivery_line, 'cell'):
-              object_to_update_list = []
-            else:
-              object_to_update_list = [delivery_line]
+          dummy, property_dict = self._findUpdatableObject(
+            delivery_movement_to_update_list, movement_group_node,
+            movement_group_node_list, divergence_list)
+          if delivery_movement_to_update_list:
+            if update_existing_line:
+              update_existing_movement = 1
+            del delivery_movement_to_update_list[:]
           else:
-            object_to_update_list = []
-          object_to_update, property_dict = self._findUpdatableObject(
-            object_to_update_list, movement_group_node_list,
-            divergence_list)
-          if object_to_update is not None:
-            update_existing_movement = 1
-          else:
-            object_to_update = delivery_line
+            # XXX probably an exception should be raised here.
+            pass
+          object_to_update = delivery_line
         else:
-          object_to_update_list = [
-            delivery_line.getCell(base_id=base_id, *cell_key) for cell_key in \
-            delivery_line.getCellKeyList(base_id=base_id) \
-            if delivery_line.hasCell(base_id=base_id, *cell_key)]
           object_to_update, property_dict = self._findUpdatableObject(
-            object_to_update_list, movement_group_node_list,
-            divergence_list)
+            delivery_movement_to_update_list, movement_group_node,
+            movement_group_node_list, divergence_list)
           if object_to_update is not None:
             # We update a existing cell
             # delivery_ratio of new related movement to this cell
             # must be updated to 0.
             update_existing_movement = 1
-
-        if object_to_update is None:
-          # create a new cell
-          cell_key = movement.getVariationCategoryList(
-              omit_optional_variation=1)
-          if not delivery_line.hasCell(base_id=base_id, *cell_key):
-            cell = self._createDeliveryCell(delivery_line, movement,
-                                            activate_kw, base_id, cell_key)
-            vcl = movement.getVariationCategoryList()
-            cell._edit(category_list=vcl,
-                       # XXX hardcoded value
-                       mapped_value_property_list=('quantity', 'price'),
-                       membership_criterion_category_list=vcl,
-                       membership_criterion_base_category_list=movement.\
-                                             getVariationBaseCategoryList())
+            delivery_movement_to_update_list.remove(object_to_update)
           else:
-            raise MatrixError, 'Cell: %s already exists on %s' % \
-                  (str(cell_key), str(delivery_line))
-          object_to_update = cell
-        self._setUpdated(object_to_update, 'cell')
+            # create a new cell
+            cell_key = movement.getVariationCategoryList(
+                    omit_optional_variation=1)
+            if not delivery_line.hasCell(base_id=base_id, *cell_key):
+              cell = self._createDeliveryCell(delivery_line, movement,
+                                              activate_kw, base_id, cell_key)
+              vcl = movement.getVariationCategoryList()
+              # _createDeliveryCell calls reindexObject, so no need to use
+              # edit here.
+              cell._edit(category_list=vcl,
+                         # XXX hardcoded value
+                         mapped_value_property_list=('quantity', 'price'),
+                         membership_criterion_category_list=vcl,
+                         membership_criterion_base_category_list=movement.\
+                                               getVariationBaseCategoryList())
+            else:
+              raise MatrixError, 'Cell: %s already exists on %s' % \
+                    (str(cell_key), str(delivery_line))
+            object_to_update = cell
+
         self._setDeliveryMovementProperties(
                             object_to_update, movement, property_dict,
                             update_existing_movement=update_existing_movement,
@@ -692,14 +730,15 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         property_dict['quantity'] = simulation_movement.getQuantity()
       property_dict['price'] = simulation_movement.getPrice()
       # Update properties on object (quantity, price...)
-      delivery_movement._edit(force_update=1, **property_dict)
+      delivery_movement.edit(force_update=1, activate_kw=activate_kw,
+              **property_dict)
 
   @UnrestrictedMethod
   def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
     """
       Call script on each delivery built.
     """
-    if not len(delivery_list):
+    if not delivery_list:
       return
     # Parameter initialization
     if movement_list is None:
@@ -708,7 +747,7 @@ class OrderBuilder(XMLObject, Amount, Predicate):
                               self.getDeliveryAfterGenerationScriptId()
     related_simulation_movement_path_list = \
                               [x.getPath() for x in movement_list]
-    if delivery_after_generation_script_id not in ["", None]:
+    if delivery_after_generation_script_id:
       for delivery in delivery_list:
         script = getattr(delivery, delivery_after_generation_script_id)
         # BBB: Only Python Scripts were used in the past, and they might not
@@ -778,6 +817,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
   def getDeliveryCellMovementGroupList(self, **kw):
     return self.getMovementGroupList(collect_order_group='cell')
 
+  # XXX this method is not used in OrderBuilder but in DeliveryBuilder.
+  # So it should perhaps be moved to DeliveryBuilder.
   def _searchUpByPortalType(self, obj, portal_type):
     limit_portal_type = self.getPortalObject().getPortalType()
     while obj is not None:
@@ -790,21 +831,6 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       else:
         obj = aq_parent(aq_inner(obj))
     return obj
-
-  def _isUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
-    return level in tv['builder_processed_list'].get(obj, [])
-
-  def _setUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
-    if tv.get('builder_processed_list', None) is None:
-      self._resetUpdated()
-    tv['builder_processed_list'][obj] = \
-       tv['builder_processed_list'].get(obj, []) + [level]
-
-  def _resetUpdated(self):
-    tv = getTransactionalVariable(self)
-    tv['builder_processed_list'] = {}
 
   # for backward compatibilities.
   _deliveryGroupProcessing = _processDeliveryGroup

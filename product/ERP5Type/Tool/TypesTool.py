@@ -29,6 +29,7 @@ from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
 from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
+from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
 
 
 class ComposedObjectIds(object):
@@ -161,6 +162,50 @@ class TypesTool(TypeProvider):
         return None
     return getattr(self, portal_type, None)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentTypeList')
+  def getDocumentTypeList(self):
+    """
+    Return a list of Document types that can be used as Base classes
+    """
+    from Products.ERP5Type import document_class_registry
+    return sorted(document_class_registry)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeClass')
+  def getPortalTypeClass(self, context, temp=False):
+    """
+    Infer a portal type class from the context.
+    Context can be a portal type string, or an object, or a class.
+
+    This is the proper API to retrieve a portal type class, and no one
+    should hack anything anywhere else.
+    """
+    portal_type = None
+    if isinstance(context, type):
+      if context.__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
+        portal_type = context.__name__
+      else:
+        portal_type = getattr(context, 'portal_type', None)
+    elif isinstance(context, str):
+      portal_type = context
+    else:
+      portal_type = getattr(context, 'portal_type', None)
+
+    if portal_type is not None:
+      import erp5
+      if temp:
+        module = erp5.temp_portal_type
+      else:
+        module = erp5.portal_type
+      return getattr(module, portal_type, None)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMixinTypeList')
+  def getMixinTypeList(self):
+    """
+    Return a list of classes names that can be used as Mixins
+    """
+    from Products.ERP5Type import mixin_class_registry
+    return sorted(mixin_class_registry)
+
   security.declareProtected(Permissions.AddPortalContent, 'listDefaultTypeInformation')
   def listDefaultTypeInformation(self):
       # FIXME: This method is only used by manage_addTypeInformation below, and
@@ -195,6 +240,12 @@ class TypesTool(TypeProvider):
 
       return res
 
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'resetDynamicDocuments')
+  def resetDynamicDocuments(self):
+    """Resets all dynamic documents: force reloading erp.* classes"""
+    synchronizeDynamicModules(self, force=True)
 
   security.declareProtected(Permissions.AddPortalContent,
                             'manage_addTypeInformation')

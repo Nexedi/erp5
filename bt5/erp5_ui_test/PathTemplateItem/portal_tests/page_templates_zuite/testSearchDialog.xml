@@ -119,7 +119,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 \n
@@ -164,7 +164,7 @@ commands from selenium 0.8\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 \n
@@ -187,7 +187,7 @@ commands from selenium 0.8\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>0</td>\n
+  <td>0 records</td>\n
 </tr>\n
 \n
 </body>\n

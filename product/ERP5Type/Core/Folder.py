@@ -167,7 +167,8 @@ class FolderMixIn(ExtensionClass.Base):
       # TODO :the **kw makes it impossible to create content not based on
       # ERP5TypeInformation, because factory method often do not support
       # keywords arguments.
-
+    if temp_container:
+      container._setObject(new_id, new_instance.aq_base)
     if kw:
       new_instance._edit(force_update=1, **kw)
     return new_instance

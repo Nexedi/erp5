@@ -242,7 +242,10 @@ class ERP5TypeInformation(XMLObject,
       'alarm', 'rule',
       # ERP5 UBM (5 Classes)
       'resource', 'node', 'item',
-      'path', # movement is generated from all *_movement group above
+      'path', # movement is generated from all *_movement group above.
+      # Documents need to have portal types associated to them
+      # just to be able to spawn temporary objects with the same behavior
+      'abstract',
       # Trade
       'discount', 'payment_condition', 'payment_node',
       'supply', 'supply_path', 'inventory_movement', 
@@ -419,6 +422,21 @@ class ERP5TypeInformation(XMLObject,
     def getTypePropertySheetList(self):
       """Getter for 'type_property_sheet' property"""
       return list(self.property_sheet_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeClass')
+    def getTypeClass(self):
+      """Getter for type_class"""
+      base = self._baseGetTypeClass()
+      if base is None:
+        # backwards compatibility: if the object has no
+        # new-style type class, use the oldstyle factory attribute
+        init_script = self.getTypeFactoryMethodId()
+        if init_script and init_script.startswith('add'):
+          base = init_script[3:]
+          # and of course migrate the property
+          self.setTypeClass(base)
+      return base
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypeBaseCategoryList')

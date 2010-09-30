@@ -43,6 +43,8 @@ from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
 import md5
 import string, re
+from time import time
+from random import random
 from urlparse import urlsplit, urlunsplit
 from zLOG import LOG, INFO
 from Acquisition import aq_base
@@ -139,14 +141,19 @@ class SelectionTool( BaseTool, SimpleItem ):
       return storage_item_list
 
     security.declareProtected( ERP5Permissions.ManagePortal, 'setStorage')
-    def setStorage(self, value, RESPONSE=None):
+    def setStorage(self, storage, anonymous_storage=None, RESPONSE=None):
       """
         Set the storage of Selection Tool.
       """
-      if value in [item[1] for item in self.getStorageItemList()]:
-        self.storage = value
+      if storage in [item[1] for item in self.getStorageItemList()]:
+        self.storage = storage
       else:
-        raise ValueError, 'Given storage type (%s) is now supported.' % (value,)
+        raise ValueError, 'Given storage type (%s) is now supported.' % (storage,)
+      anonymous_storage = anonymous_storage or None
+      if anonymous_storage in [item[1] for item in self.getStorageItemList()] + [None]:
+        self.anonymous_storage = anonymous_storage
+      else:
+        raise ValueError, 'Given storage type (%s) is now supported.' % (anonymous_storage,)
       if RESPONSE is not None:
         RESPONSE.redirect('%s/manage_configure' % (self.absolute_url()))
 
@@ -167,8 +174,11 @@ class SelectionTool( BaseTool, SimpleItem ):
             storage = 'selection_data'
       return storage
 
-    def isMemcachedUsed(self):
-      return 'portal_memcached' in self.getStorage()
+    security.declareProtected( ERP5Permissions.ManagePortal, 'getAnonymousStorage')
+    def getAnonymousStorage(self, default=None):
+      """return the selected storage
+      """
+      return getattr(aq_base(self), 'anonymous_storage', default)
 
     def _redirectToOriginalForm(self, REQUEST=None, form_id=None, dialog_id=None,
                                 query_string=None,
@@ -207,8 +217,6 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
         Returns the selection names of the current user.
       """
-      if self.isMemcachedUsed():
-        return []
       return sorted(self._getSelectionNameListFromContainer())
 
     # backward compatibility
@@ -256,6 +264,8 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       if isinstance(selection_name, (tuple, list)):
         selection_name = selection_name[0]
+      if not selection_name:
+        return None
       selection = self._getSelectionFromContainer(selection_name)
       if selection is not None:
         return selection.__of__(self)
@@ -268,6 +278,12 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
         Sets the selection instance for a given selection_name
       """
+      if not selection_name:
+        return
+      anonymous_uid = REQUEST and REQUEST.get('anonymous_uid', None)
+      if anonymous_uid is not None:
+        self.REQUEST.response.setCookie('anonymous_uid', anonymous_uid,
+                                        path='/')
       if selection_object != None:
         # Set the name so that this selection itself can get its own name.
         selection_object.edit(name=selection_name)
@@ -1366,15 +1382,25 @@ class SelectionTool( BaseTool, SimpleItem ):
       return SelectionTool.inheritedAttribute('_aq_dynamic')(self, name)
 
     def _getUserId(self):
-      return self.portal_membership.getAuthenticatedMember().getUserName()
-      # XXX It would be good to add somthing here
-      # So that 2 anonymous users do not share the same selection
+      tv = getTransactionalVariable()
+      user_id = tv.get('_user_id', None)
+      if user_id is not None:
+        return user_id
+      user_id = self.portal_membership.getAuthenticatedMember().getUserName()
+      if user_id == 'Anonymous User' and self.getAnonymousStorage() is not None:
+        anonymous_uid = self.REQUEST.get('anonymous_uid', None)
+        if anonymous_uid is None:
+          anonymous_uid = md5.new('%s.%s' % (time(), random())).hexdigest()
+          self.REQUEST['anonymous_uid'] = anonymous_uid
+        user_id = 'Anonymous:%s' % anonymous_uid
+      tv['_user_id'] = user_id
+      return user_id
 
     def getTemporarySelectionDict(self):
       """ Temporary selections are used in push/pop nested scope,
       to prevent from editting for stored selection in the scope.
       Typically, it is used for ReportSection."""
-      tv = getTransactionalVariable(self)
+      tv = getTransactionalVariable()
       return tv.setdefault('_temporary_selection_dict', {})
 
     def pushSelection(self, selection_name):
@@ -1402,12 +1428,7 @@ class SelectionTool( BaseTool, SimpleItem ):
           # focus the temporary selection in the most narrow scope.
           return temporary_selection_dict[selection_name][-1]
 
-      if self.isMemcachedUsed():
-        return self._getMemcachedContainer().get('%s-%s' %
-                                                 (user_id, selection_name))
-      else:
-        return self._getPersistentContainer(user_id).get(selection_name,
-                                                         None)
+      return self._getContainer().getSelection(user_id, selection_name)
 
     def _setSelectionToContainer(self, selection_name, selection):
       user_id = self._getUserId()
@@ -1420,59 +1441,111 @@ class SelectionTool( BaseTool, SimpleItem ):
           temporary_selection_dict[selection_name][-1] = selection
           return
 
-      if self.isMemcachedUsed():
-        self._getMemcachedContainer().set('%s-%s' % (user_id, selection_name), aq_base(selection))
-      else:
-        self._getPersistentContainer(user_id)[selection_name] = aq_base(selection)
+      self._getContainer().setSelection(user_id, selection_name, selection)
 
     def _deleteSelectionForUserFromContainer(self, selection_name, user_id):
       if user_id is None: return None
-      if self.isMemcachedUsed():
-        del(self._getMemcachedContainer()['%s-%s' % (user_id, selection_name)])
-      else:
-        del(self._getPersistentContainer(user_id)[selection_name])
+      self._getContainer().deleteSelection(user_id, selection_name)
 
     def _deleteSelectionFromContainer(self, selection_name):
       user_id = self._getUserId()
       self._deleteSelectionForUserFromContainer(selection_name, user_id)
 
     def _deleteGlobalSelectionFromContainer(self, selection_name):
-      if not self.isMemcachedUsed():
-        if getattr(aq_base(self), 'selection_data', None) is not None:
-          for user_id in self.selection_data.keys():
-            mapping = self._getPersistentContainer(user_id)
-            if mapping.has_key(selection_name):
-              del(mapping[selection_name])
+      self._getContainer().deleteGlobalSelection(self, selection_name)
 
     def _getSelectionNameListFromContainer(self):
-      if self.isMemcachedUsed():
-        return []
+      user_id = self._getUserId()
+      return list(set(self._getContainer().getSelectionNameList(user_id) + \
+                      self.getTemporarySelectionDict().keys()))
+
+    def _isAnonymous(self):
+      return self.portal_membership.isAnonymousUser()
+
+    def _getContainer(self):
+      if self._isAnonymous():
+        container_id = '_v_anonymous_selection_container'
+        storage = self.getAnonymousStorage() or self.getStorage()
       else:
-        user_id = self._getUserId()
-        if user_id is None: return []
-
-        tv = getTransactionalVariable(self)
-        return list(set(self._getPersistentContainer(user_id).keys() + self.getTemporarySelectionDict().keys()))
-
-    def _getMemcachedContainer(self):
-      value = getattr(aq_base(self), '_v_selection_data', None)
-      if value is None:
-        plugin_path = self.getStorage()
-        value = self.getPortalObject().\
-                portal_memcached.getMemcachedDict(key_prefix='selection_tool',
-                                                  plugin_path=plugin_path)
-        setattr(self, '_v_selection_data', value)
-      return value
-
-    def _getPersistentContainer(self, user_id):
-      if getattr(aq_base(self), 'selection_data', None) is None:
-        self.selection_data = PersistentMapping()
-      if not self.selection_data.has_key(user_id):
-        self.selection_data[user_id] = SelectionPersistentMapping()
-      return self.selection_data[user_id]
+        container_id = '_v_selection_container'
+        storage = self.getStorage()
+      container = getattr(aq_base(self), container_id, None)
+      if container is None:
+        if storage.startswith('portal_memcached/'):
+          plugin_path = storage
+          value = self.getPortalObject().\
+                  portal_memcached.getMemcachedDict(key_prefix='selection_tool',
+                                                    plugin_path=plugin_path)
+          container = MemcachedContainer(value)
+        else:
+          if getattr(aq_base(self), 'selection_data', None) is None:
+            self.selection_data = PersistentMapping()
+          value = self.selection_data
+          container = PersistentMappingContainer(value)
+        setattr(self, container_id, container)
+      return container
 
 InitializeClass( SelectionTool )
 
+class MemcachedContainer(object):
+  def __init__(self, container):
+    self._container = container
+
+  def getSelectionNameList(self, user_id):
+    return []
+
+  def getSelection(self, user_id, selection_name):
+    try:
+      return self._container.get('%s-%s' % (user_id, selection_name))
+    except KeyError:
+      return None
+
+  def setSelection(self, user_id, selection_name, selection):
+    self._container.set('%s-%s' % (user_id, selection_name), aq_base(selection))
+
+  def deleteSelection(self, user_id, selection_name):
+    del(self._container['%s-%s' % (user_id, selection_name)])
+
+  def deleteGlobalSelection(self, user_id, selection_name):
+    pass
+
+class PersistentMappingContainer(object):
+  def __init__(self, container):
+    self._container = container
+
+  def getSelectionNameList(self, user_id):
+    try:
+      return self._container[user_id].keys()
+    except KeyError:
+      return []
+
+  def getSelection(self, user_id, selection_name):
+    try:
+      return self._container[user_id][selection_name]
+    except KeyError:
+      return None
+
+  def setSelection(self, user_id, selection_name, selection):
+    try:
+      user_container = self._container[user_id]
+    except KeyError:
+      user_container = SelectionPersistentMapping()
+      self._container[user_id] = user_container
+    user_container[selection_name] = aq_base(selection)
+
+  def deleteSelection(self, user_id, selection_name):
+    try:
+      user_container = self._container[user_id]
+      del(user_container[selection_name])
+    except KeyError:
+      pass
+
+  def deleteGlobalSelection(self, user_id, selection_name):
+    for user_container in self._container.itervalues():
+      try:
+        del(user_container[selection_name])
+      except KeyError:
+        pass
 
 class SelectionPersistentMapping(PersistentMapping):
   """A conflict-free PersistentMapping.

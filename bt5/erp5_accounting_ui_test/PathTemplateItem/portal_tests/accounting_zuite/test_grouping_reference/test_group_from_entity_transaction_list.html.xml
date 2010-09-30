@@ -102,7 +102,7 @@ Grouping from entity transaction view\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>5</td>\n
+  <td>5 records</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
@@ -123,7 +123,7 @@ Grouping from entity transaction view\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 \n
 <!-- select and group -->\n
@@ -231,7 +231,7 @@ Grouping from entity transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
@@ -322,7 +322,7 @@ lines -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n

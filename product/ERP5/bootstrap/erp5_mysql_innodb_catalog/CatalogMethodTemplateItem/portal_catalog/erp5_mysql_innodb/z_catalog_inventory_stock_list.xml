@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="SQL" module="Products.ZSQLMethods.SQL"/>
-        <tuple/>
-      </tuple>
+      <global name="SQL" module="Products.ZSQLMethods.SQL"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -150,12 +147,6 @@
                                 </value>
                             </item>
                             <item>
-                                <key> <string>isInventoryMovement</string> </key>
-                                <value>
-                                  <dictionary/>
-                                </value>
-                            </item>
-                            <item>
                                 <key> <string>isMovement</string> </key>
                                 <value>
                                   <dictionary/>
@@ -197,7 +188,6 @@
                             <string>getPortalType</string>
                             <string>getVariationText</string>
                             <string>getSubVariationText</string>
-                            <string>isInventoryMovement</string>
                           </list>
                         </value>
                     </item>
@@ -230,8 +220,7 @@ getStopDate\r\n
 isAccountable\r\n
 getPortalType\r\n
 getVariationText\r\n
-getSubVariationText\r\n
-isInventoryMovement</string> </value>
+getSubVariationText</string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -251,13 +240,12 @@ WHERE\n
 <dtml-in uid>\n
   uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
 </dtml-in>\n
-;\n
 \n
-<dtml-var "\'\\0\'">\n
+<dtml-var sql_delimiter>\n
 \n
 <dtml-let row_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isInventoryMovement[loop_item] and isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
       <dtml-if "getDestinationUid[loop_item]">\n
         <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
         <dtml-call expr="row_list.append([\n
@@ -380,13 +368,12 @@ WHERE\n
 <dtml-in uid>\n
   uid=<dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else> OR </dtml-if>\n
 </dtml-in>\n
-;\n
 \n
-<dtml-var "\'\\0\'">\n
+<dtml-var sql_delimiter>\n
 \n
 <dtml-let row_list="[]" uid_dict="{}">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
-    <dtml-if "isInventoryMovement[loop_item] and isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
+    <dtml-if "isMovement[loop_item] and isAccountable[loop_item] and getResourceUid[loop_item]">\n
       <dtml-if "getDestinationUid[loop_item]">\n
         <dtml-call expr="uid_dict.update({uid[loop_item]: uid_dict.get(uid[loop_item], -1) + 1})">\n
         <dtml-call expr="row_list.append([\n

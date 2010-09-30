@@ -5,22 +5,12 @@
 <p>
   Selection Tool supports Memcached Tool and Persistent Mapping for its storage.
 </p>
-<div>
-  <dtml-let storage_item_list="getStorageItemList()">
-    <dtml-in prefix="store" name="storage_item_list">
-      <dtml-let storage="store_item[1]"
-                  storage_title="store_item[0]"
-                  selected="storage == getStorage()">
-        <dtml-if selected>
-          Current setting: <dtml-var storage_title html_quote>
-        </dtml-if>
-      </dtml-let>
-    </dtml-in>
-  </dtml-let>
-</div>
 
 <form action="setStorage" method="post">
-  <select name="value">
+  <h4>
+    Storage for logged-in users' Selection objects.
+  </h4>
+  <select name="storage">
     <dtml-let storage_item_list="getStorageItemList()">
       <dtml-in prefix="store" name="storage_item_list">
         <dtml-let storage="store_item[1]"
@@ -31,7 +21,27 @@
       </dtml-in>
     </dtml-let>
   </select>
-  <input type="submit" value="Change"/>
+  <h4>
+    Storage for anonymous users' Selection objects.
+  </h4>
+  <p>
+    You can specify another storage to store unique Selection objects for each anonymous user. If you select nothing here, the same Selection object will be shared for all anonymous users and will be stored in the storage selected above. Using a volatile storage (like memcached) is highly recommended.
+  </p>
+  <select name="anonymous_storage">
+    <option value="">&nbsp;</option>
+    <dtml-let storage_item_list="getStorageItemList()">
+      <dtml-in prefix="store" name="storage_item_list">
+        <dtml-let storage="store_item[1]"
+                  storage_title="store_item[0]"
+                  selected="storage == getAnonymousStorage() and 'selected' or ''">
+          <option value="&dtml-storage;" &dtml-selected;>&dtml-storage_title;</option>
+        </dtml-let>
+      </dtml-in>
+    </dtml-let>
+  </select>
+  <p>
+    <input type="submit" value="Change"/>
+  </p>
 </form>
 
 <dtml-var manage_page_footer>

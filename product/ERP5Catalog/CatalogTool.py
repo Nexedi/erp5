@@ -546,7 +546,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       if allowedRolesAndUsers:
         allowedRolesAndUsers.sort()
         cache_key = tuple(allowedRolesAndUsers)
-        tv = getTransactionalVariable(self)
+        tv = getTransactionalVariable()
         try:
           security_uid_cache = tv['getSecurityUidListAndRoleColumnDict']
         except KeyError:

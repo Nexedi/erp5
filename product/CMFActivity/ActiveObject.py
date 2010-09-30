@@ -98,7 +98,7 @@ class ActiveObject(ExtensionClass.Base):
           kw[k] = v
 
     # Get default parameters from a transactional variable.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = ('default_activate_parameter', id(aq_base(self)))
     try:
       for k, v in tv[key].iteritems():
@@ -173,14 +173,14 @@ class ActiveObject(ExtensionClass.Base):
     # This method sets the default keyword parameters to activate. This is
     # useful when you need to specify special parameters implicitly (e.g. to
     # reindexObject).
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = ('default_activate_parameter', id(aq_base(self)))
     tv[key] = kw
 
   def getDefaultActivateParameterDict(self, inherit_placeless=True):
     # This method returns default activate parameters to self.
     # The result can be either a dict object or None.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     if inherit_placeless:
       placeless = tv.get(('default_activate_parameter', ))
       if placeless is not None:

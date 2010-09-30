@@ -76,7 +76,7 @@ Accounting Transaction Module Search Dialog: seach by amount\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <!-- check amounts for lines -->\n
@@ -146,7 +146,7 @@ Accounting Transaction Module Search Dialog: seach by amount\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>1</td>\n
+  <td>1 records</td>\n
 </tr>\n
 \n
 <!-- check amounts for lines -->\n

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts77806058.72</string> </value>
+            <value> <string>ts84965558.43</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -297,9 +294,9 @@ function renameKnowledgePadToServer(dialog_id, title_id, \n
   toggle(dialog_id);\n
 }\n
 \n
-function toggleElement(dom_id){\n
-  /* add gadget to knowledge pad */\n
-  toggle(dom_id);\n
+function toggleElementById(dom_id){\n
+  /* Toggle element by its Id. */\n
+  MochiKit.Visual.toggle(dom_id);\n
 }\n
 \n
 function initialize(){\n
@@ -401,7 +398,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14748</int> </value>
+            <value> <int>14766</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

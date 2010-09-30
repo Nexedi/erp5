@@ -29,10 +29,12 @@ Email | view
 Fax | change_function
 Fax | view
 File | download
+File | update_content_from_url
 File | view
 Image | change_function
 Image | download
 Image | fullsize_view
+Image | update_content_from_url
 Image | view
 Invoice Movement Group | view
 Link | view
@@ -69,6 +71,7 @@ Person | terminate_career
 Person | view
 Preference | base_preference
 Property Assignment Movement Group | view
+Property Grouping Movement Group | view
 Property Movement Group | view
 Quantity Sign Movement Group | view
 Query Module | view

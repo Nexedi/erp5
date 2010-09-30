@@ -401,7 +401,7 @@ div.listbox-body{\n
 }\n
 \n
 div.listbox-tree{\n
-  margin-right: 8px;\n
+  margin-right: 0.1%;\n
   max-width: 10%;\n
   float: left;\n
 }\n
@@ -421,7 +421,7 @@ div.float-right{\n
 }\n
 \n
 div.listbox-content-fixed-width{\n
-   width:90%;\n
+   width:89%;\n
 }\n
 \n
 table.listbox td.listbox-table-no-result-row{\n
@@ -616,7 +616,7 @@ div.listbox-page-navigation button.listbox_last_page span.image {\n
 }\n
 \n
 div.listbox-page-navigation-slider{\n
-  width:auto;\n
+  width:100%;\n
   margin:auto;\n
   padding-right: 0.5em;\n
   float:right;\n
@@ -655,7 +655,6 @@ div.listbox-tree select{\n
 }\n
 \n
 /* Table Listbox elements */\n
-\n
 table.listbox{\n
   border-collapse:collapse;\n
   width:100%;\n
@@ -668,7 +667,7 @@ table.listbox{\n
 table.listbox th,\n
 table.listbox td {\n
   text-align:left;\n
-  vertical-align: middle;\n
+  vertical-align: top;\n
   border-color:#3D6474;\n
   border-style:solid;\n
   border-width:0 1px;\n
@@ -738,20 +737,52 @@ table.listbox th button{\n
 \n
 table.listbox th button.sort-button {\n
   text-decoration: underline;\n
-  padding-right: 12px;\n
+  padding: 0px;\n
 }\n
 \n
 table.listbox th button.sort-button:hover{\n
   color: #FFF;\n
 }\n
 \n
+/* in ERP5 mode no need to have a switch for not clicked sort button */\n
+table.listbox th button.sort-button-asc,\n
 table.listbox th button.sort-button-desc{\n
-  background: url(\'images/1toparrow.png\') no-repeat scroll 100% 50%;\n
+  background: none;\n
 }\n
 \n
-table.listbox th button.sort-button-asc{\n
-  background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 50%;\n
+table.listbox th img.sort-button-desc,\n
+table.listbox th img.sort-button-asc{\n
+  width: 13px;\n
+  height: 13px;\n
+  margin:0;\n
+  padding:0;\n
 }\n
+\n
+table.listbox th img.sort-button-desc{\n
+  background: url(\'images/1toparrow.png\') no-repeat scroll 100% 100%;\n
+}\n
+\n
+table.listbox th img.sort-button-asc{\n
+  background: url(\'images/1bottomarrow.png\') no-repeat scroll 100% 100%;\n
+}\n
+\n
+\n
+/* listbox table in thumbnail style \n
+   In thumbnail style we usually have only one thumbnail colum which through CSS\n
+   we show as floating box table row.\n
+*/\n
+table.listbox-thumbnail tbody tr{\n
+  display:block;\n
+  width: 128px; /* nano image width. XXX: dynamically generate. */\n
+  height:128px; /* nano image height. XXX: dynamically generate. */\n
+  float:left;\n
+  margin: 10px;\n
+}\n
+table.listbox-thumbnail tr.DataA, table.listbox-thumbnail tr.DataB,\n
+table.listbox-thumbnail tr.DataA:hover, table.listbox-thumbnail tr.DataB:hover{\n
+  background-color: transparent; /* in thumbnail mode we don\'t care for hoover */\n
+}\n
+\n
 \n
 /* in search mode listbox may contain top/bottom quick search inputs */\n
 div.search-text-listbox{\n

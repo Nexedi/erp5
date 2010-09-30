@@ -15,6 +15,8 @@
   Portal class
 """
 
+import threading
+from weakref import ref as weakref
 from Products.ERP5Type import Globals
 from Products.ERP5Type.Globals import package_home
 
@@ -29,13 +31,14 @@ from Acquisition import aq_base
 from Products.ERP5Type import allowClassTool
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
 
 from zLOG import LOG, INFO
 from string import join
@@ -176,7 +179,38 @@ class ReferCheckerBeforeTraverseHook:
             'request : "%s"' % http_url)
         response.unauthorized()
 
-class ERP5Site(FolderMixIn, CMFSite):
+
+class _site(threading.local):
+  """Class for getting and setting the site in the thread global namespace
+  """
+  site = ()
+
+  def __new__(cls):
+    self = threading.local.__new__(cls)
+    return self.__get, self.__set
+
+  def __get(self):
+    """Returns the currently processed site
+
+    XXX The returned site is not wrapped in a request.
+    """
+    app, site_id = self.site[-1]
+    return getattr(app(), site_id)
+
+  def __set(self, site):
+    app = aq_base(site.aq_parent)
+    self.site = [x for x in self.site if x[0]() is not app]
+    # Use weak references for automatic cleanup. In practice, this is probably
+    # useless, because there is no reason a thread reopen the database.
+    self.site.append((weakref(app, self.__del), site.id))
+
+  def __del(self, app):
+    self.site = [x for x in self.site if x[0] is not app]
+
+getSite, setSite = _site()
+
+
+class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   """
   The *only* function this class should have is to help in the setup
   of a new ERP5.  It should not assist in the functionality at all.
@@ -210,6 +244,17 @@ class ERP5Site(FolderMixIn, CMFSite):
       Implemented for consistency
     """
     return self.index_html()
+
+  def __of__(self, parent):
+    self = CMFSite.__of__(self, parent)
+    # Use a transactional variable for performance reason,
+    # since ERP5Site.__of__ is called quite often.
+    tv = getTransactionalVariable()
+    if 'ERP5Site.__of__' not in tv:
+      tv['ERP5Site.__of__'] = None
+      setSite(self)
+      synchronizeDynamicModules(self)
+    return self
 
   def manage_beforeDelete(self, item, container):
     # On Zope 2.8, skin is setup during Acquisition (in the .__of__() method).
@@ -340,9 +385,22 @@ class ERP5Site(FolderMixIn, CMFSite):
     """
     return join(self.getPhysicalPath(),'/')
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getRelativeUrl')
+  def getRelativeUrl(self):
+    """
+      Returns the url of an object relative to the portal site.
+    """
+    return self.getPortalObject().portal_url.getRelativeUrl(self)
+
   # Old name - for compatibility
   security.declareProtected(Permissions.AccessContentsInformation, 'getPath')
   getPath = getUrl
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'opaqueValues')
+  def opaqueValues(self, *args, **kw):
+    # XXX nonsense of inheriting from CMFSite that calls __before_traversal__
+    # and tries to load subobjects of the portal too early
+    return []
 
   security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
   def searchFolder(self, **kw):
@@ -1276,7 +1334,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     # This method sets the default keyword parameters to reindex. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
     # Those parameters will affect all reindex calls, not just ones on self.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = ('default_reindex_parameter', )
     tv[key] = kw
 
@@ -1285,7 +1343,7 @@ class ERP5Site(FolderMixIn, CMFSite):
     # This method sets the default keyword parameters to activate. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
     # Those parameters will affect all activate calls, not just ones on self.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = ('default_activate_parameter', )
     tv[key] = kw
 
@@ -1293,7 +1351,7 @@ class ERP5Site(FolderMixIn, CMFSite):
   def getPlacelessDefaultReindexParameters(self):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = ('default_reindex_parameter', )
     return tv.get(key)
 
@@ -1301,7 +1359,7 @@ class ERP5Site(FolderMixIn, CMFSite):
   def getPlacelessDefaultActivateParameters(self):
     # This method returns default activate parameters to self.
     # The result can be either a dict object or None.
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     key = ('default_activate_parameter', )
     return tv.get(key)
 

@@ -33,6 +33,9 @@ import string
 import socket
 import md5
 import urllib2, urllib
+import urlparse
+from cgi import parse_header
+import os
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -41,6 +44,7 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from Products.ERP5.Document.Url import no_crawl_protocol_list, no_host_protocol_list
+from AccessControl import Unauthorized
 
 from zLOG import LOG
 from DateTime import DateTime
@@ -139,7 +143,7 @@ class ContributionTool(BaseTool):
     document = None
 
     # Try to find the file_name
-    mime_type = None
+    content_type = None
     if not url:
       # check if file was provided
       file = kw.get('file', None)
@@ -166,17 +170,29 @@ class ContributionTool(BaseTool):
       file = cStringIO.StringIO()
       file.write(data)
       file.seek(0)
-      # Create a file name based on the URL and quote it
-      file_name = url.split('/')[-1] or url.split('/')[-2]
-      file_name = urllib.quote(file_name, safe='')
-      file_name = file_name.replace('%', '')
+      # if a content-disposition header is present,
+      # try first to read the suggested filename from it.
+      header_info = url_file.info()
+      content_disposition = header_info.getheader('content-disposition', '')
+      file_name = parse_header(content_disposition)[1].get('filename')
+      if not file_name:
+        # Now read the filename from url.
+        # In case of http redirection, the real url must be read
+        # from file object returned by urllib2.urlopen.
+        # It can happens when the header 'Location' is present in request.
+        # See http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.30
+        url = url_file.geturl()
+        # Create a file name based on the URL and quote it
+        file_name = urlparse.urlsplit(url)[-3]
+        file_name = os.path.basename(file_name)
+        file_name = urllib.quote(file_name, safe='')
+        file_name = file_name.replace('%', '')
       # For URLs, we want an id by default equal to the encoded URL
-      if id is None: id = self.encodeURL(url)
-      if hasattr(url_file, 'headers'):
-        headers = url_file.headers
-        if hasattr(headers, 'type'):
-          mime_type = headers.type
-          kw['content_type'] = mime_type
+      if id is None:
+        id = self.encodeURL(url)
+      content_type = header_info.gettype()
+      if content_type:
+        kw['content_type'] = content_type
       kw['file'] = file
 
     # If the portal_type was provided, we can go faster
@@ -205,7 +221,7 @@ class ContributionTool(BaseTool):
     # Check if same file is already exists. if it exists, then update it.
     #
     if portal_type is None:
-      portal_type = self._guessPortalType(file_name, mime_type, data)
+      portal_type = self._guessPortalType(file_name, content_type, data)
       property_dict = self.getMatchedFileNamePatternDict(file_name)
       reference = property_dict.get('reference', None)
       version  = property_dict.get('version', None)
@@ -315,9 +331,11 @@ class ContributionTool(BaseTool):
       property_dict['portal_type'] = (property_dict['portal_type'],)
     else:
       # we have to find candidates by file extenstion
-      if file_name.rfind('.')!= -1:
-        ext = file_name.split('.')[-1]
-        property_dict['portal_type'] = self.ContributionTool_getCandidateTypeListByExtension(ext)
+      basename, extension = os.path.splitext(file_name)
+      if extension:
+        extension = extension.lstrip('.') # remove first dot
+        property_dict['portal_type'] =\
+               self.ContributionTool_getCandidateTypeListByExtension(extension)
     return property_dict
 
   # WebDAV virtual folder support

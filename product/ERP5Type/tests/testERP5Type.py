@@ -193,14 +193,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     def test_02_AqDynamic(self):
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
-      from Products.ERP5Type import Document
+      from Products.ERP5Type.Document import Person
       # Person class should have no method getFirstName
-      self.assertFalse(hasattr(Document.Person, 'getFirstName'))
+      self.assertFalse(hasattr(Person.Person, 'getFirstName'))
       # Calling getFirstName should produce dynamic methods related to the
       # portal_type
       name = person.getFirstName()
       # Person class should have no method getFirstName
-      self.assertFalse(hasattr(Document.Person, 'getFirstName'))
+      self.assertFalse(hasattr(Person.Person, 'getFirstName'))
       # Person class should now have method getFirstName
       self.assertTrue(hasattr(person, 'getFirstName'))
 
@@ -1287,17 +1287,21 @@ class TestPropertySheet:
       obj = self.getPersonModule().newContent(portal_type='Person')
       obj.setTitle('obj title')
       copy = obj.asContext()
+      self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
       copy.setTitle('copy title')
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
+      self.assertEquals(obj.getId(), copy.getId())
 
       # asContext method accepts parameters, and edit the copy with those
       # parameters
       obj = self.getPersonModule().newContent(portal_type='Person', id='obj')
       obj.setTitle('obj title')
       copy = obj.asContext(title='copy title')
+      self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
+      self.assertEquals(obj.getId(), copy.getId())
     
       # acquisition context is the same
       self.assertEquals(self.getPersonModule(), obj.getParentValue())
@@ -1312,11 +1316,25 @@ class TestPropertySheet:
 #       new_copy = obj.asContext(gender=gender.getCategoryRelativeUrl())
 #       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       new_copy = obj.asContext()
+      self.assertTrue(new_copy.isTempObject(), 
+              '%r is not a temp object' % (new_copy,))
+      self.assertEquals(obj.getId(), new_copy.getId())
       new_copy.edit(gender=gender.getCategoryRelativeUrl())
       transaction.commit()
       self.tic()
       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       self.assertEquals(None, obj.getGender())
+
+      # Make sure that we can do the same for a tool.
+      category_tool = self.getCategoryTool()
+      original_title = category_tool.getTitle()
+      copy_title = 'copy of %s' % (original_title,)
+      copy_of_category_tool = category_tool.asContext(title=copy_title)
+      self.assertTrue(copy_of_category_tool.isTempObject(),
+              '%r is not a temp object' % (copy_of_category_tool,))
+      self.assertEquals(category_tool.getTitle(), original_title)
+      self.assertEquals(copy_of_category_tool.getTitle(), copy_title)
+      self.assertEquals(category_tool.getId(), copy_of_category_tool.getId())
 
     def test_21_ActionCondition(self):
       """Tests action conditions
@@ -2460,19 +2478,18 @@ class TestPropertySheet:
 
     def test_AddPermission(self):
       # test "Add permission" on ERP5 Type Information
-      self.portal.portal_types.manage_addTypeInformation(
-            add_meta_type='ERP5 Type Information',
-            id='Test Add Permission Document',
-            typeinfo_name='ERP5Type: Document (ERP5 Document)')
+      object_portal_type = 'Test Add Permission Document'
+      self.portal.portal_types.newContent(id=object_portal_type,
+          type_factory_method_id='addDocument',
+          portal_type='Base Type')
 
-      type_info = self.portal.portal_types.getTypeInfo(
-                        'Test Add Permission Document')
+      type_info = self.portal.portal_types.getTypeInfo(object_portal_type)
       
       # allow this type info in Person Module
       container_type_info = self.getTypesTool().getTypeInfo('Person Module')
       container_type_info._setTypeAllowedContentTypeList(
         container_type_info.getTypeAllowedContentTypeList()
-        + ['Test Add Permission Document'])
+        + [object_portal_type])
 
       # by default this is empty, which implictly means "Add portal content",
       # the default permission
@@ -2483,22 +2500,22 @@ class TestPropertySheet:
       self.assertTrue(getSecurityManager().getUser().has_permission(
                       'Add portal content', container))
       self.assertTrue(type_info in container.allowedContentTypes())
-      container.newContent(portal_type='Test Add Permission Document')
+      container.newContent(portal_type=object_portal_type)
 
       container.manage_permission('Add portal content', [], 0)
       self.assertFalse(type_info in container.allowedContentTypes())
       self.assertRaises(Unauthorized, container.newContent,
-                        portal_type='Test Add Permission Document')
+                        portal_type=object_portal_type)
       
       type_info.permission = 'Manage portal'
       container.manage_permission('Manage portal', [], 0)
       self.assertFalse(type_info in container.allowedContentTypes())
       self.assertRaises(Unauthorized, container.newContent,
-                        portal_type='Test Add Permission Document')
+                        portal_type=object_portal_type)
 
       container.manage_permission('Manage portal', ['Anonymous'], 0)
       self.assertTrue(type_info in container.allowedContentTypes())
-      doc = container.newContent(portal_type='Test Add Permission Document')
+      doc = container.newContent(portal_type=object_portal_type)
 
       # we can also clone such documents only with the permission registered on
       # the type information

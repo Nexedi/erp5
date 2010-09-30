@@ -1560,7 +1560,34 @@ div.download-document-format-list-menu ul li.toggle-hidden-format-dialog-selecti
   height:20px;\n
 }\n
 \n
-
+/* DMS PDF navigation  */\n
+div.pdf-preview-navigation img{\n
+  width: 4px;\n
+  height: 8px;\n
+  margin-right: 4px;\n
+  background-repeat: no-repeat; \n
+  vertical-align: middle;\n
+}\n
+div.pdf-preview-navigation img.shaded{\n
+  opacity: 0.2;\n
+}\n
+\n
+div.pdf-preview-navigation img.first{\n
+  background-image:url("km_img/2leftarrowv.png");\n
+}\n
+\n
+div.pdf-preview-navigation img.previous{\n
+  background-image:url("km_img/1leftarrowv.png");\n
+}\n
+\n
+div.pdf-preview-navigation img.next{\n
+  background-image:url("km_img/1rightarrowv.png");\n
+}\n
+\n
+div.pdf-preview-navigation img.last{\n
+  background-image:url("km_img/2rightarrowv.png");\n
+  width: 5px;\n
+}
 
 ]]></string> </value>
         </item>

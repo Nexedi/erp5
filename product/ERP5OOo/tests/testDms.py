@@ -65,12 +65,13 @@ from zLOG import LOG
 from Products.ERP5.Document.Document import NotConvertedError
 from Products.ERP5Form.PreferenceTool import Priority
 from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.Globals import get_request
 import os
 from threading import Thread
 import httplib
 import urllib
-from PIL import Image
 from AccessControl import Unauthorized
+from Products.ERP5Type import Permissions
 
 QUIET = 0
 
@@ -725,9 +726,9 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEquals('embedded', new_sub_document.getValidationState())
 
-  def test_08_EmbeddedDocumentState(self):
-    """
-    Check the validation state of an embedded document
+  def test_08_NoImagesCreatedDuringHTMLConversion(self):
+    """Converting an ODT to html no longer creates Images embedded in the
+    document.
     """
     filename = 'EmbeddedImage-en-002.odt'
     file = makeFileUpload(filename)
@@ -740,8 +741,6 @@ class TestDocument(TestDocumentMixin):
     document.convert(format='html')
     image_list = document.contentValues(portal_type='Image')
     self.assertEquals(0, len(image_list))
-#     image = image_list[0]
-#     self.assertEquals('embedded', image.getValidationState())
 
   def test_09_SearchableText(self):
     """
@@ -780,10 +779,12 @@ class TestDocument(TestDocumentMixin):
                             title='Super nova organisation')
     self.stepTic()
 
-    def getAdvancedSearchTextResultList(searchable_text, portal_type=None):
+    def getAdvancedSearchTextResultList(searchable_text, portal_type=None,src__=0):
       kw = {'SearchableText': searchable_text}
       if portal_type is not None:
         kw['portal_type'] = portal_type
+      if src__==1:
+        print portal.portal_catalog(src__=src__,**kw)
       return [x.getObject() for x in portal.portal_catalog(**kw)]
 
     # full text search
@@ -900,7 +901,7 @@ class TestDocument(TestDocumentMixin):
     kw['search_portal_type'] = 'Document'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w type:"Document"', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document)', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type'], \
                         parsed_string.keys())
@@ -910,7 +911,7 @@ class TestDocument(TestDocumentMixin):
     kw['reference'] = 'Nxd-test'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w type:"Document" reference:Nxd-test', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference'], \
                         parsed_string.keys())
@@ -921,7 +922,7 @@ class TestDocument(TestDocumentMixin):
     kw['version'] = '001'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w type:"Document" reference:Nxd-test version:001', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', 'version'], \
                         parsed_string.keys())
@@ -933,7 +934,7 @@ class TestDocument(TestDocumentMixin):
     kw['language'] = 'en'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w type:"Document" reference:Nxd-test version:001 language:en', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language'], \
@@ -947,7 +948,7 @@ class TestDocument(TestDocumentMixin):
     kw['contributor_title'] = 'John'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w type:"Document" reference:Nxd-test version:001 language:en contributor_title:John', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title'], \
@@ -961,7 +962,7 @@ class TestDocument(TestDocumentMixin):
     kw['mine'] = 'yes'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w type:"Document" reference:Nxd-test version:001 language:en contributor_title:John mine:yes', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine'], \
@@ -976,7 +977,7 @@ class TestDocument(TestDocumentMixin):
     kw['newest'] = 'yes'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w type:"Document" reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest'], \
@@ -992,7 +993,7 @@ class TestDocument(TestDocumentMixin):
     kw['search_mode'] = 'in_boolean_mode'
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w type:"Document" reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes mode:boolean', \
+    self.assertEquals('searchabletext_any "searchabletext_phrase1 searchabletext_phrase1"  +searchabletext_all1 +searchabletext_all2 -searchabletext_without1 -searchabletext_without2 created:1w AND (portal_type:Document) reference:Nxd-test version:001 language:en contributor_title:John mine:yes newest:yes mode:boolean', \
                       search_string)
     self.assertSameSet(['searchabletext', 'creation_from', 'portal_type', 'reference', \
                         'version', 'language', 'contributor_title', 'mine', 'newest', 'mode'], \
@@ -1006,25 +1007,25 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals('boolean', parsed_string['mode'])
 
     # search with multiple portal_type
-    kw = {'search_portal_type': 'Document,Presentation,Web Page',
+    kw = {'search_portal_type': ['Document','Presentation','Web Page'],
            'searchabletext_any': 'erp5'}
     search_string = assemble(**kw)
     parsed_string = parse(search_string)
-    self.assertEquals('erp5 type:"Document,Presentation,Web Page"', \
+    self.assertEquals('erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")', \
                       search_string)
     self.assertSameSet(['searchabletext', 'portal_type'], \
                         parsed_string.keys())
-    self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
+    #self.assertEquals(kw['search_portal_type'], parsed_string['portal_type'])
 
     # parse with multiple portal_type containing spaces in one portal_type
-    search_string = "type:Drawing,File,Web Page"
+    search_string = 'erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")'
     parsed_string = parse(search_string)
-    self.assertEquals(parsed_string['portal_type'], 'Drawing,File,Web Page')
+    self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','Web Page'])
 
 
-  def test_11_SearchStringSearchCapability(self):
+  def test_11_Base_getAdvancedSearchResultList(self):
     """
-    Test search string search capabilities.
+    Test search string search capabilities using Base_getAdvancedSearchResultList script.
     """
     portal = self.portal
     assemble = portal.Base_assembleSearchString
@@ -1232,11 +1233,36 @@ class TestDocument(TestDocumentMixin):
   def test_PDF_content_information_extra_metadata(self):
     # Extra metadata, such as those stored by pdftk update_info are also
     # available in document.getContentInformation()
-    upload_file = makeFileUpload('metadata.pdf')
+    upload_file = makeFileUpload('metadata.pdf', as_name='REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
+    self.stepTic()
     self.assertEquals('PDF', document.getPortalType())
     content_information = document.getContentInformation()
     self.assertEquals('the value', content_information['NonStandardMetadata'])
+    self.assertEquals('1', content_information['Pages'])
+    self.assertEquals('REF', document.getReference())
+
+    # contribute file which will be merged to current document in synchronous mode
+    # and check content_type recalculated 
+    upload_file = makeFileUpload('Forty-Two.Pages-en-001.pdf', as_name='REF-en-001.pdf')
+    contributed_document = self.portal.Base_contribute(file=upload_file, \
+                                                       synchronous_metadata_discovery=True)
+    self.stepTic()
+    content_information = contributed_document.getContentInformation()
+    
+    # we should have same data, respectively same PDF pages
+    self.assertEqual(contributed_document.getSize(), document.getSize())
+    self.assertEqual(contributed_document.getContentInformation()['Pages'], \
+                     document.getContentInformation()['Pages'])
+    self.assertEqual('42', \
+                     document.getContentInformation()['Pages'])
+
+    # upload with another file and check content_type recalculated
+    upload_file = makeFileUpload('REF-en-001.pdf')
+    document.setFile(upload_file)
+    self.stepTic()
+    content_information = document.getContentInformation()
+    self.assertEquals('1', content_information['Pages'])    
 
   def test_PDF_content_content_type(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
@@ -1813,6 +1839,11 @@ return 1
     """
       Test extensible content of some DMS types. As this is possible only on URL traversal use publish.
     """
+    # Create a root level zope user
+    root_user_folder = self.getPortalObject().aq_parent.acl_users
+    if not root_user_folder.getUser('zope_user'):
+      root_user_folder._doAddUser('zope_user', '', ['Manager',], [])
+      transaction.commit()
     # Create document with good content
     document = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = makeFileUpload('TEST-en-003.odp')
@@ -1820,14 +1851,15 @@ return 1
     self.stepTic()
     self.assertEquals('converted', document.getExternalProcessingState())
     for object_url in ('img1.html', 'img2.html', 'text1.html', 'text2.html'):
-      response = self.publish('%s/%s' %(document.getPath(), object_url),
-                              basic='ERP5TypeTestCase:')
-      self.assertTrue('Status: 200 OK' in response.getOutput())
-      # OOod produced HTML navigation, test it
-      self.assertTrue('First page' in response.getBody())
-      self.assertTrue('Back' in response.getBody())
-      self.assertTrue('Continue' in response.getBody())
-      self.assertTrue('Last page' in response.getBody())
+      for credential in ['ERP5TypeTestCase:', 'zope_user:']:
+        response = self.publish('%s/%s' %(document.getPath(), object_url),
+                                basic=credential)
+        self.assertTrue('Status: 200 OK' in response.getOutput())
+        # OOod produced HTML navigation, test it
+        self.assertTrue('First page' in response.getBody())
+        self.assertTrue('Back' in response.getBody())
+        self.assertTrue('Continue' in response.getBody())
+        self.assertTrue('Last page' in response.getBody())
 
   def test_contributeLink(self):
     """
@@ -1896,6 +1928,21 @@ return 1
     image=self.portal.image_module.newContent(portal_type='Image',
                                                     content_type='image/png')
     self.assertTrue('txt' in image.getTargetFormatList())
+    
+    # test Not converted (i.e. empty) OOoDocument instances
+    presentation=self.portal.document_module.newContent(portal_type='Presentation')
+    self.assertSameSet([], presentation.getTargetFormatList())
+    
+    # test uploading some data
+    upload_file = makeFileUpload('Foo_001.odg')
+    presentation.edit(file=upload_file)
+    self.stepTic()
+    self.assertTrue('odg' in presentation.getTargetFormatList())
+    self.assertTrue('jpg' in presentation.getTargetFormatList())
+    self.assertTrue('png' in presentation.getTargetFormatList())
+
+    
+    
 
   def test_convertToImageOnTraversal(self):
     """
@@ -1941,8 +1988,16 @@ return 1
       f.close()
       infile.close()
       file_size = len(image_data)
-      image = Image.open(filename)
-      image_size = image.size
+      try:
+        from PIL import Image
+        image = Image.open(filename)
+        image_size = image.size
+      except ImportError:
+        from subprocess import Popen, PIPE
+        identify_output = Popen(['identify', filename],
+                                stdout=PIPE).communicate()[0]
+        image_size = tuple(map(lambda x:int(x),
+                               identify_output.split()[2].split('x')))
       os.remove(filename)
       return image_size, file_size
 
@@ -2002,6 +2057,139 @@ return 1
     # if PDF size is larger than A4 format system should deny conversion
     self.assertRaises(Unauthorized, pdf.convert, format='jpeg')
 
+  def test_getSearchText(self):
+    """
+     Test extracting search text script.
+    """
+    request = get_request()
+    portal = self.portal
+
+    # test direct passing argument_name_list
+    request.set('MySearchableText', 'MySearchableText_value')
+    self.assertEqual(request.get('MySearchableText'),
+                     portal.Base_getSearchText(argument_name_list=['MySearchableText']))
+
+    # simulate script being called in a listbox
+    # to simulate this we set 'global_search_column' a listbox
+    form = portal.DocumentModule_viewDocumentList
+    listbox = form.listbox
+    listbox.manage_edit_surcharged_xmlrpc(dict(
+            global_search_column='advanced_search_text'))
+    # render listbox
+    listbox.render()
+    request.set('advanced_search_text', 'advanced_search_text_value')
+    self.assertEqual(request.get('advanced_search_text'),
+                     portal.Base_getSearchText())
+
+  def test_Document_getOtherVersionDocumentList(self):
+    """
+      Test getting list of other documents which have the same reference.
+    """
+    request = get_request()
+    portal = self.portal
+
+    kw={'reference': 'one_that_will_never_change',
+        'language': 'en',
+         'version': '001'}
+    document1 = portal.document_module.newContent(portal_type="Presentation", **kw)
+    self.stepTic()
+    self.assertEquals(0, len(document1.Document_getOtherVersionDocumentList()))
+
+    kw['version'] == '002'
+    document2 = portal.document_module.newContent(portal_type="Spreadsheet", **kw)
+    self.stepTic()
+
+    web_page1 = portal.web_page_module.newContent(portal_type="Web Page", \
+                                                  **{'reference': 'embedded',
+                                                     'version': '001'})
+    web_page2 = portal.web_page_module.newContent(portal_type="Web Page", \
+                                                 **{'reference': 'embedded',
+                                                    'version': '002'})
+    self.stepTic()
+
+    # both documents should be in other's document version list
+    self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList()], \
+                        [document2])
+    self.assertSameSet([x.getObject() for x in document2.Document_getOtherVersionDocumentList()], \
+                        [document1])
+    
+    # limit by portal type works
+    self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList(**{'portal_type':'Presentation'})], \
+                        [])
+
+    # current_web_document mode (i.e. embedded Web Page in Web Section) can override current context
+    request.set('current_web_document', web_page1)
+    self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList()], \
+                        [web_page2])
+    request.set('current_web_document', web_page2)
+    self.assertSameSet([x.getObject() for x in document1.Document_getOtherVersionDocumentList()], \
+                        [web_page1])
+
+  def test_Base_getWorkflowEventInfoList(self):
+    """
+      Test getting history of an object.
+    """
+    portal = self.portal
+    document = portal.document_module.newContent(portal_type="Presentation")
+    document.edit(title='New')
+    document.publish()
+    document.reject()
+    document.share()
+    logged_in_user = str(self.portal.portal_membership.getAuthenticatedMember())
+    event_list = document.Base_getWorkflowEventInfoList()
+    event_list.reverse()
+    # all actions by logged in user
+    for event in event_list:
+      self.assertEquals(event.actor, logged_in_user)
+    self.assertEquals(event_list[0].action, 'Edit')
+    self.assertEquals(event_list[-1].action, 'Share Document')
+    self.assertEquals(event_list[-2].action, 'Reject Document')
+    self.assertEquals(event_list[-3].action, 'Publish Document')
+    
+  def test_ContributeToExistingDocument(self):
+    """
+      Test various cases of contributing to an existing document
+    """
+    request = get_request()
+    portal = self.portal
+    # contribute a document, then make it not editable and check we can not contribute to it
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, \
+               synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()    
+    # passing another portal type should raise an exception
+    kw['portal_type'] = "Spreadsheet"
+    self.assertRaises(ValueError, self.portal.Base_contribute, **kw)
+                                           
+    # make it read only
+    document.manage_permission(Permissions.ModifyPortalContent, [])
+    self.stepTic()
+    kw.pop('portal_type')
+    self.assertRaises(Unauthorized, self.portal.Base_contribute, **kw)
+    
+  def test_ContributeWithMergingToExistingDocument(self):
+    """
+      Test various cases of merging to an existing document
+    """
+    request = get_request()
+    portal = self.portal
+    # contribute a document, then make it not editable and check we can not contribute to it
+    kw=dict(synchronous_metadata_discovery=True)
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()    
+   
+    upload_file = makeFileUpload('TEST-en-003.odp', 'TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertEquals('test-en-003-description', document.getDescription())
+    self.assertEquals('test-en-003-title', document.getTitle())
+    self.assertEquals('test-en-003-keywords', document.getSubject())
+                                  
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
@@ -2022,16 +2210,13 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     filename = 'REF-en-001.odt'
     upload_file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=upload_file)
-
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     document.submit()
 
     preview_html = document.Document_getPreviewAsHTML().replace('\n', ' ')
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     self.assert_('I use reference to look up TEST' in preview_html)
 
@@ -2049,8 +2234,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     f = makeFileUpload('Foo_001.odt')
     text_document.edit(file=f.read())
     f.close()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # the document should be automatically converted to html
     self.assertEquals(text_document.getExternalProcessingState(), 'converted')
@@ -2094,8 +2278,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
                           priority=Priority.USER)
     self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
     self.assertEqual(user_pref.getPreferenceState(), 'enabled')
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     user_pref.setPreferredThumbnailImageHeight(default_thumbnail_image_height + 10)
     user_pref.setPreferredThumbnailImageWidth(default_thumbnail_image_width + 10)
     #Verify that the new values defined are the ones used by default
@@ -2137,7 +2320,7 @@ class TestDocumentPerformance(TestDocumentMixin):
     after = time.time()
     req_time = (after - before)
     # we should have image converted in less than 20s
-    self.assertTrue(req_time < 20.0)
+    self.assertTrue(req_time < 30.0)
     
 def test_suite():
   suite = unittest.TestSuite()

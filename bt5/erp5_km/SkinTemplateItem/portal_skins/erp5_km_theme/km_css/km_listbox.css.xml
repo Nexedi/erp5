@@ -216,6 +216,10 @@ table.listbox tbody tr:hover td {\n
   background-color:#F7F6F0;\n
 }\n
 \n
+/* No results message */\n
+table.listbox td.listbox-table-no-result-row{\n
+  border: none;\n
+}\n
 /* Search inputs */\n
 table.listbox tr.listbox-search-line th.listbox-table-filter-cell input{\n
   border: none;\n
@@ -230,13 +234,29 @@ table.listbox th button.sort-button {\n
 table.listbox th button.sort-button:hover{\n
   color: #FFF;\n
 }\n
-table.listbox th button.sort-button-desc{\n
-  background-image: url(\'./km_img/switch_desc.png\');\n
-}\n
+table.listbox th button.sort-button-desc,\n
 table.listbox th button.sort-button-asc{\n
-  background-image: url(\'./km_img/switch_asc.png\');\n
+  padding-right: 0px;\n
+\n
 }\n
 \n
+table.listbox th img.sort-button-desc,\n
+table.listbox th img.sort-button-asc{\n
+  width: 5px;\n
+  height: 10px;\n
+  padding: 0;\n
+  margin: 0;\n
+}\n
+table.listbox th img.sort-button-desc{\n
+  background: url(\'./km_img/switch_asc.png\') no-repeat scroll 100% 50%;\n
+}\n
+table.listbox th img.sort-button-asc{\n
+  background: url(\'./km_img/switch_desc.png\') no-repeat scroll 100% 50%;\n
+}\n
+table.listbox th button.sort-button-asc,\n
+table.listbox th button.sort-button-desc{\n
+  background: none;\n
+}\n
 \n
 /* Navigation buttons */\n
 div.listbox-page-navigation button{\n

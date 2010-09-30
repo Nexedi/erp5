@@ -447,7 +447,8 @@ class TestPasswordTool(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     self.logout()
-    ret = self.portal.portal_password.mailPasswordResetRequest(user_login='user')
+    ret = self.portal.portal_password.mailPasswordResetRequest(
+                  user_login='user', REQUEST=self.portal.REQUEST)
     self.assertTrue("portal_status_message=User+user+does+not+have+an+email+"\
         "address%2C+please+contact+site+administrator+directly" in str(ret))
 
@@ -466,7 +467,8 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.tic()
     self._assertUserExists('user', 'password')
     self.logout()
-    ret = self.portal.portal_password.mailPasswordResetRequest(user_login='user')
+    ret = self.portal.portal_password.mailPasswordResetRequest(
+                  user_login='user', REQUEST=self.portal.REQUEST)
     self.assertTrue("portal_status_message=User+user+does+not+have+an+email+"\
         "address%2C+please+contact+site+administrator+directly" in str(ret))
 

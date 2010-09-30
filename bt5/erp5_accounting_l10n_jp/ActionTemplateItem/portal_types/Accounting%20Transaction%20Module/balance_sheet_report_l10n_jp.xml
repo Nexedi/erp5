@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
-        <tuple/>
-      </tuple>
+      <global name="ActionInformation" module="Products.CMFCore.ActionInformation"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,16 +67,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Expression" module="Products.CMFCore.Expression"/>
-        <tuple/>
-      </tuple>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/AccountModule_viewJapaneseBalanceSheetReportDialog</string> </value>
+            <value> <string>string:${object_url}/AccountingTransactionModule_viewJapaneseBalanceSheetReportDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

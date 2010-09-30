@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -102,44 +99,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_title</string>
-                          <string>title</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_date</string>
-                          <string>date</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_content</string>
-                          <string>content</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_img</string>
-                          <string>thumbnail</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_link</string>
-                          <string>link</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_others_links</string>
-                          <string>others_links</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_md5</string>
-                          <string>md5</string>
+                          <string>getSummaryAsHTML</string>
+                          <string>Summary</string>
                         </tuple>
                       </list>
                     </value>
@@ -169,40 +130,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>creation_date</string>
-                          <string>Creation Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Modification Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_img</string>
-                          <string>field_img</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_content</string>
-                          <string>field_content</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_title</string>
-                          <string>field_title</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_link</string>
-                          <string>field_link</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_md5</string>
-                          <string>field_md5</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_others_links</string>
-                          <string>field_others_links</string>
-                        </tuple>
-                        <tuple>
-                          <string>field_date</string>
-                          <string>field_date</string>
+                          <string>getSummaryAsHTML</string>
+                          <string>Summary</string>
                         </tuple>
                       </list>
                     </value>
@@ -231,7 +160,7 @@
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>ListBox_asListStyleHTML</string> </value>
+                    <value> <string>ListBox_asHTML</string> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -240,16 +169,7 @@
                 <item>
                     <key> <string>search_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -263,24 +183,7 @@
                 <item>
                     <key> <string>sort_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>reference</string>
-                          <string>Reference</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_validation_state_title</string>
-                          <string>Validation State</string>
-                        </tuple>
-                        <tuple>
-                          <string>translated_portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>modification_date</string>
-                          <string>Date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -296,11 +199,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>field_date</string>
-                          <string></string>
-                        </tuple>
-                        <tuple>
-                          <string>field_img</string>
+                          <string>getSummaryAsHTML</string>
                           <string></string>
                         </tuple>
                       </list>
@@ -314,10 +213,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -330,10 +226,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

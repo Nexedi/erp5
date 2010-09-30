@@ -1187,7 +1187,8 @@ def initialize( context ):
                              instance_home=self._v_instance_home.getPath())
 
       security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
-      def runLiveTest(self, test_list=[], run_only=None, debug=None):
+      def runLiveTest(self, test_list=[], run_only=None, debug=None,
+                      verbose=False):
         """
         Launch live tests
 
@@ -1195,9 +1196,12 @@ def initialize( context ):
                              commas (e.g. testFoo,testBar). This can be regular
                              expressions.
         debug=boolean        Invoke debugger on errors / failures.
+        verbose=boolean      Display more informations when running tests
         """
         path = os.path.join(getConfiguration().instancehome, 'tests')
-        return runLiveTest(test_list, run_only=run_only, debug=debug, path=path)
+        verbosity = verbose and 2 or 1
+        return runLiveTest(test_list, run_only=run_only, debug=debug, path=path,
+                           verbosity=verbosity)
 
       def getProductList(self):
         """ List all products """

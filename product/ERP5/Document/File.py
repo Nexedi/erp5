@@ -268,6 +268,7 @@ class File(Document, CMFFile):
                     + [item[0] for item in temp_ods.getTargetFormatItemList()]\
                     + [item[0] for item in temp_odg.getTargetFormatItemList()]\
                     + [item[0] for item in temp_odb.getTargetFormatItemList()]
+    portal = self.getPortalObject()
     if content_type.startswith('text'):
       # We can wrap it into TextDocument
       from Products.ERP5Type.Document import newTempTextDocument
@@ -295,6 +296,27 @@ class File(Document, CMFFile):
                                          text_content=self.getData(),
                                          content_type=content_type)
       return temp_document.convert(format=format, **kw)
+    elif content_type in portal.portal_transforms._mtmap:
+      # Look if portal_transforms can handle the content_type
+      # of this File
+      kw['format'] = format
+      if not self.hasConversion(**kw):
+        mime_type = str(getToolByName(portal, 'mimetypes_registry').\
+                                           lookupExtension('name.%s' % format))
+        result = portal.portal_transforms.convertToData(mime_type,
+                                                        self.getData(),
+                                                        object=self,
+                                                        context=self,
+                                                        mimetype=content_type)
+        if not result:
+          raise ConversionError('File conversion error. '
+                                'portal_transforms failed to convert '\
+                                'from %s to %s; %r' % (content_type, mime_type,
+                                                      self))
+        self.setConversion(result, mime_type, **kw)
+      else:
+        mime_type, result = self.getConversion(**kw)
+      return mime_type, result
     else:
       # We didn't find suitable wrapper to convert this File
       if format in VALID_TEXT_FORMAT_LIST:

@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title tal:content="template/getId"/>\n
+</head>\n
+<body tal:define="file_name string:tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf;\n
+                  full_filename_location python: here.Zuite_getFilenameLocation(file_name)">\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
+</thead><tbody>\n
+\n
+<tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
+\n
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/web_site_module/km_test_web_site</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=New Document</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>field_your_file</td>\n
+  <td tal:content="full_filename_location"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>dialog_submit_button</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>successfully</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//ul[@class="breadcrumb"]//li[3]/a@href</td>\n
+  <td>file_url</td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${file_url}?editable_mode:int=1</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>PDF</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_title</td>\n
+  <td>TioLive, ERP5, Freedom</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_reference</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_version</td>\n
+  <td>001</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_language</td>\n
+  <td>en</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>tiolive-ERP5.Freedom.TioLive.MultiplePages.PDF-001-en.pdf</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>PDF</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Check PDF thumbnail preview works -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Preview</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-start-number"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-stop-number"]</td>\n
+  <td>10</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>16 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//img[@title=\'Thumbnail\']</td>\n
+  <td></td>\n
+</tr>\n
+<!-- Check PDF thumbnail preview navigation-->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@class="listbox_next_page"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-start-number"]</td>\n
+  <td>11</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-stop-number"]</td>\n
+  <td>16</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>16 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//img[@title=\'Thumbnail\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@class="listbox_previous_page"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-start-number"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-stop-number"]</td>\n
+  <td>10</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>16 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//img[@title=\'Thumbnail\']</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Go to PDF default big preview -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td/a/img[@title=\'Thumbnail\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>2 / 16</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//img[@alt=\'First\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//img[@alt=\'Previous\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//img[@alt=\'Next\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//img[@alt=\'Last\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//div[@class=\'pdf-preview-content\']/img</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Check if PDF thumbnail navigation works -->\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'Next\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>3 / 16</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'First\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>1 / 16</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'Last\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>16 / 16</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//img[@alt=\'First\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>1 / 16</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
+\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testCheckPDFThumbnail</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

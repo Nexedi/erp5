@@ -159,7 +159,7 @@ another object of the same type. -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number x0_listbox-current-page-total-number"]</td>\n
-  <td>2</td> <!-- Creation + paste notification -->\n
+  <td>2 records</td> <!-- Creation + paste notification -->\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n

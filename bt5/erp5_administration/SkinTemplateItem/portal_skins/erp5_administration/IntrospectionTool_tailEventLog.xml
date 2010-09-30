@@ -96,8 +96,11 @@
               logLine += currentLogValue[i] + \'<br/>\\n\';\n
             }\n
             logDiv.innerHTML=logLine;\n
-          } else\n
-            alert("Error! Request status is " + request.status);\n
+          } else {\n
+            logDiv = document.getElementById("log");\n
+            logLine = "Error! Request status is " + request.status;\n
+            logDiv.innerHTML=logLine;\n
+            }\n
         }\n
       }\n
     </script>\n

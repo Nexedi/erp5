@@ -94,14 +94,19 @@ if memcache is not None:
       """
       self.local_cache = {}
       self.scheduled_action_dict = {}
-      init_dict = {}
       self.server_list = server_list
       self.expiration_time = expiration_time
-      if server_max_key_length is not MARKER:
-        init_dict['server_max_key_length'] = server_max_key_length
-      if server_max_value_length is not MARKER:
-        init_dict['server_max_value_length'] = server_max_value_length
-      self.memcached_connection = memcache.Client(server_list, **init_dict)
+      self.server_max_key_length = server_max_key_length
+      self.server_max_value_length = server_max_value_length
+      self._initialiseConnection()
+
+    def _initialiseConnection(self):
+      init_dict = {}
+      if self.server_max_key_length is not MARKER:
+        init_dict['server_max_key_length'] = self.server_max_key_length
+      if self.server_max_value_length is not MARKER:
+        init_dict['server_max_value_length'] = self.server_max_value_length
+      self.memcached_connection = memcache.Client(self.server_list, **init_dict)
 
     def __del__(self):
       """
@@ -127,11 +132,19 @@ if memcache is not None:
                                                     self.local_cache[key], 
                                                     self.expiration_time)
             if not succeed:
-              LOG('MemcacheTool', 0, 'set command to memcached server (%r) failed' % (self.server_list,))
+              self._initialiseConnection()
+              succeed = self.memcached_connection.set(encodeKey(key),
+                                                      self.local_cache[key], 
+                                                      self.expiration_time)
+              if not succeed:
+                LOG('MemcacheTool', 0, 'set command to memcached server (%r) failed' % (self.server_list,))
           elif action is DELETE_ACTION:
             succeed = self.memcached_connection.delete(encodeKey(key), 0)
             if not succeed:
-              LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list,))
+              self._initialiseConnection()
+              succeed = self.memcached_connection.delete(encodeKey(key), 0)
+              if not succeed:
+                LOG('MemcacheTool', 0, 'delete command to memcached server (%r) failed' % (self.server_list,))
       except:
         LOG('MemcachedDict', 0, 'An exception occured during _finish : %s' % (traceback.format_exc(), ))
       self.scheduled_action_dict.clear()
@@ -156,7 +169,10 @@ if memcache is not None:
       if result is MARKER:
         result = self.memcached_connection.get(encoded_key)
         if result is None:
-          raise KeyError, 'Key %s (was %s) not found.' % (encoded_key, key)
+          self._initialiseConnection()
+          result = self.memcached_connection.get(encoded_key)
+          if result is None:
+            raise KeyError, 'Key %s (was %s) not found.' % (encoded_key, key)
         self.local_cache[key] = result
       return result
 

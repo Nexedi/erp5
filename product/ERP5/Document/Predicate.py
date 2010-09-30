@@ -152,10 +152,10 @@ class Predicate(XMLObject):
     # temporarily, if not enabled, because this part is strictly read-only,
     # and context.isMemberOf is very expensive, when the category list has
     # many items.
-    enabled = (getReadOnlyTransactionCache(self) is not None)
+    enabled = getReadOnlyTransactionCache() is not None
     try:
       if not enabled:
-        enableReadOnlyTransactionCache(self)
+        enableReadOnlyTransactionCache()
       for c in membership_criterion_category_list:
         bc = c.split('/', 1)[0]
         if (bc not in tested_base_category) and \
@@ -177,7 +177,7 @@ class Predicate(XMLObject):
                                          strict_membership=strict_membership)
     finally:
       if not enabled:
-        disableReadOnlyTransactionCache(self)
+        disableReadOnlyTransactionCache()
 
 #        LOG('predicate test', 0,
 #            '%s after single membership to %s' % \

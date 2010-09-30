@@ -91,7 +91,7 @@ Grouping from account transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
@@ -248,7 +248,7 @@ Grouping from account transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
@@ -338,7 +338,7 @@ Grouping from account transaction view\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>4</td>\n
+  <td>4 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n

@@ -357,9 +357,9 @@ class SQLDict(RAMDict, SQLBase):
         m = self.loadMessage(line.message,
                              line=line,
                              uid=line.uid,
-                             order_validation_text=line.order_validation_text,
                              date=line.date,
-                             processing_node=line.processing_node)
+                             processing_node=line.processing_node,
+                             order_validation_text=line.order_validation_text)
         message_list.append(m)
       return message_list
     else:

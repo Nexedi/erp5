@@ -598,7 +598,44 @@ return []
     self.assertEqual('thumbnail', getListBoxRenderer(listbox).getListboxDisplayStyle())
     self.assertSameSet([('title', 'Title'), ('thumbnail', 'Thumbnail')],
                          getListBoxRenderer(listbox).getSelectedColumnList())
+
+    # set different than 'table' listbox default mode and check variations
+    listbox.ListBox_setPropertyList(
+             field_default_display_style='search',
+             field_style_columns=['title | thumbnail_Title',
+                                  'thumbnail | thumbnail_Thumbnail',
+                                  'getIconAsHTML | search_Icon',
+                                  'getSummaryAsHTML | search_Summary',
+                                  'B | rss_title',
+                                  'C | rss_description'],)
+    request.set('list_style', 'search')
+    self.assertEqual('search', getListBoxRenderer(listbox).getListboxDisplayStyle())
+    self.assertSameSet([('getIconAsHTML', 'Icon'), ('getSummaryAsHTML', 'Summary')],
+                         getListBoxRenderer(listbox).getSelectedColumnList())
+
+    request.set('list_style', 'thumbnail')
+    self.assertEqual('thumbnail', getListBoxRenderer(listbox).getListboxDisplayStyle())
+    self.assertSameSet([('title', 'Title'), ('thumbnail', 'Thumbnail')],
+                         getListBoxRenderer(listbox).getSelectedColumnList())
+
+    request.set('list_style', 'table')
+    self.assertSameSet([('id', u'ID'), ('title', u'Title'), ('getQuantity', u'Quantity')],
+                         getListBoxRenderer(listbox).getSelectedColumnList())
   
+  def test_ListboxRequestParameterPropagandation(self):
+    """
+      Test that rendering a listbox field will set respective form & field_id of current form
+      in REQUEST for further usage by used by litsbox's columns methods.
+    """
+    portal = self.getPortal()
+    request = get_request()
+    portal.ListBoxZuite_reset()
+    form = portal.FooModule_viewFooList
+    self.assertEqual(None, request.get('listbox_form_id'))
+    form.render()
+    self.assertEqual(form.getId(), request.get('listbox_form_id'))
+    self.assertEqual(form.listbox.getId(), request.get('listbox_field_id'))
+
 
 def test_suite():
   suite = unittest.TestSuite()

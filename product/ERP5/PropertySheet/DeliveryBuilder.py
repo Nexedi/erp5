@@ -101,4 +101,10 @@ class DeliveryBuilder:
                        created',
       'type'        : 'string',
       'mode'        : 'w' },
+
+    { 'id'          : 'delivery_creatable',
+      'description' : 'defines whether to create new deliveries or not',
+      'type'        : 'boolean',
+      'default'     : 1,
+      'mode'        : 'w' },
   )

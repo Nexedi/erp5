@@ -118,7 +118,7 @@ Grouping with multiple pages\n
 <tr>\n
   <td>assertText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>12</td>\n
+  <td>12 records</td>\n
 </tr>\n
 \n
 <!-- select and group -->\n
@@ -135,7 +135,7 @@ Grouping with multiple pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class=\'listbox-current-item-number\']</td>\n
-  <td>1</td>\n
+  <td>- 1 items selected</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
@@ -155,7 +155,7 @@ Grouping with multiple pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class=\'listbox-current-item-number\']</td>\n
-  <td>0</td>\n
+  <td>- 0 items selected</td>\n
 </tr>\n
 \n
 <!-- mark the module as changed, reindex and come back to the entity -->\n
@@ -241,12 +241,12 @@ Grouping with multiple pages\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>2</td>\n
+  <td>2 records</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-item-number"]</td>\n
-  <td>0</td>\n
+  <td>- 0 items selected</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
@@ -337,7 +337,7 @@ lines -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
-  <td>12</td>\n
+  <td>12 records</td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n

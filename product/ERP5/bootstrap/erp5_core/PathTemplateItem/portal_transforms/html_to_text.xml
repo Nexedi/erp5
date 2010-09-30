@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Transform" module="Products.PortalTransforms.Transform"/>
-        <tuple/>
-      </tuple>
+      <global name="Transform" module="Products.PortalTransforms.Transform"/>
     </pickle>
     <pickle>
       <dictionary>

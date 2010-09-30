@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -73,9 +70,9 @@ def getAssignmentDict(username):\n
   assignment_list = person.Person_getAvailableAssignmentValueList()\n
   for assignment in assignment_list:\n
     assignment = assignment.getObject()\n
-    result[\'group_list\'].extend(assignment.getGroupList())\n
-    result[\'function_list\'].extend(assignment.getFunctionList())\n
-    result[\'site_list\'].extend(assignment.getSiteList())\n
+    result[\'group_list\'].extend([x for x in assignment.getGroupList() if x not in result[\'group_list\']])\n
+    result[\'function_list\'].extend([x for x in assignment.getFunctionList() if x not in result[\'function_list\']])\n
+    result[\'site_list\'].extend([x for x in assignment.getSiteList() if x not in result[\'site_list\']])\n
     result[\'destination_trade_relative_url\'] = assignment.getDestinationTradeRelativeUrl()\n
   return result\n
 \n

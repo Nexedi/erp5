@@ -109,7 +109,7 @@
       <span i18n:translate="" i18n:domain="ui">Tab name</span>: \n
       <input type="text" value="" name="pad_title" id="new_pad_title"/><br/><br/>\n
       <button type="button"\n
-              onclick="toggleElement(\'add_new_tab_dialog\');"\n
+              onclick="toggleElementById(\'add_new_tab_dialog\');"\n
               i18n:translate="" \n
               i18n:domain="ui">Cancel</button>\n
       <button type="button"\n
@@ -151,7 +151,7 @@
         <button type="button"\n
                 i18n:translate="" \n
                 i18n:domain="ui"\n
-                onclick="toggleElement(\'rename_tab_dialog\');">Cancel</button>\n
+                onclick="toggleElementById(\'rename_tab_dialog\');">Cancel</button>\n
         <button type="button"\n
                 i18n:translate="" \n
                 i18n:domain="ui"\n
@@ -208,7 +208,7 @@
                               i18n:attributes="title"\n
                               i18n:domain="ui"\n
                               class="clickable_image rename_tab_dialog_image"\n
-                              onclick="toggleElement(\'rename_tab_dialog\');"></span>\n
+                              onclick="toggleElementById(\'rename_tab_dialog\');"></span>\n
 \n
                         <span title="Remove"\n
                               i18n:attributes="title"\n
@@ -246,7 +246,7 @@
                 </tal:block>\n
                 <li class="tab"\n
                     tal:condition="not: isKnowledgePadTemplateUsed"\n
-                    onclick="toggleElement(\'add_new_tab_dialog\');"\n
+                    onclick="toggleElementById(\'add_new_tab_dialog\');"\n
                     i18n:translate="" i18n:domain="ui"\n
                     id="add_new_tab_dialog_link">Add tab</li>\n
                 <li class="tab"\n

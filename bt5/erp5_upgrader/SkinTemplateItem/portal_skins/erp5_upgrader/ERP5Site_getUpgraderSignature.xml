@@ -60,7 +60,7 @@
   specification of an upgrader.\n
 """\n
 # The destination release provided by this upgrader\n
-DESTINATION_RELEASE = \'5.4.6\'\n
+DESTINATION_RELEASE = \'5.4.7\'\n
 \n
 ZOPE_VERSION = "2.8.11"\n
 \n

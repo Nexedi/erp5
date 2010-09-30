@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,6 +68,9 @@ valid_portal_type_list = (\'Notification Message\',)\n
 if language is None:\n
   language = portal.Localizer.get_selected_language()\n
 \n
+# Find the default language\n
+default_language = portal.Localizer.get_default_language() or \'en\'\n
+\n
 if validation_state is None:\n
   validation_state = (\'validated\',)\n
 \n
@@ -85,12 +85,12 @@ notification_message_list = portal_catalog(reference=reference,\n
                                            group_by=(\'reference\',),\n
                                            **kw)\n
 \n
-if len(notification_message_list) == 0 and language != \'en\':\n
+if len(notification_message_list) == 0 and language != default_language:\n
   # Search again with English as a fallback.\n
   notification_message_list = portal_catalog(reference=reference,\n
                                              portal_type=valid_portal_type_list,\n
                                              validation_state=validation_state,\n
-                                             language=\'en\',\n
+                                             language=default_language,\n
                                              sort_on=[(\'version\', \'descending\')],\n
                                              group_by=(\'reference\',),\n
                                              **kw)\n
@@ -166,6 +166,7 @@ return notification_message\n
                             <string>portal_catalog</string>
                             <string>valid_portal_type_list</string>
                             <string>None</string>
+                            <string>default_language</string>
                             <string>_apply_</string>
                             <string>notification_message_list</string>
                             <string>len</string>

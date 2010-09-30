@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -98,7 +95,7 @@
 <!-- this field is configured to show title, int_index and relative url -->\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
@@ -107,13 +104,13 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]</td>\n
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
@@ -122,13 +119,13 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
@@ -137,8 +134,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <!-- click the Title -->\n
@@ -150,7 +147,7 @@
 \n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
@@ -160,17 +157,17 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[3]</td>\n
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
@@ -179,13 +176,13 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
@@ -207,7 +204,7 @@
 \n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
@@ -217,17 +214,17 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img[@alt="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[3]</td>\n
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
@@ -236,13 +233,13 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
@@ -251,8 +248,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <!-- click the Int index -->\n
@@ -264,7 +261,7 @@
 \n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
@@ -273,13 +270,13 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[3]</td>\n
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
@@ -289,17 +286,17 @@
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
@@ -308,8 +305,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[4]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <!-- click the Int index again -->\n
@@ -321,7 +318,7 @@
 \n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[2]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[2]</td>\n
   <td>Title</td>\n
 </tr>\n
 <tr>\n
@@ -330,13 +327,13 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[2]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[2]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[3]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[3]</td>\n
   <td>Sort Index</td>\n
 </tr>\n
 <tr>\n
@@ -346,17 +343,17 @@
 </tr>\n
 <tr>\n
   <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Ascending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Ascending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertElementPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[3]/img[@alt="Descending Display"]</td>\n
+  <td>//tr[@class="listbox-label-line"]/th[3]/img[@title="Descending Display"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>assertText</td>\n
-  <td>//tr[@id=\'listbox_label_line\']/td[4]</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
 <tr>\n
@@ -365,8 +362,8 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertElementNotPresent</td>\n
-  <td>//tr[@id="listbox_label_line"]/td[4]/img</td>\n
+  <td>assertElementPresent</td>\n
+  <td>//tr[@class=\'listbox-label-line\']/th[4]/img[@class="sort-button"]</td>\n
   <td></td>\n
 </tr>\n
 </tal:block>\n

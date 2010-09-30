@@ -3,7 +3,7 @@
 USAGE="""\
 Helper for buildout-base installation of ERP5 on Mandriva 2010.
  Usage:
-   mandriva2010.sh [-h|-l]
+   sh mandriva2010.0.sh [-h|-l]
 
    With no options, attempts to install the dependencies required
    to run the buildout.
@@ -39,6 +39,7 @@ libreadline-devel
 librsync-devel
 libsasl2-devel
 libtermcap-devel
+libtiff-devel
 libtool
 libungif-devel
 libxml2-devel

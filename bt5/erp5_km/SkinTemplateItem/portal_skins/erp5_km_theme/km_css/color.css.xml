@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -223,7 +220,7 @@ a:hover { \n
 }\n
 \n
 #header ul.breadcrumb li a:hover {\n
-\tcolor:#000;\n
+\tcolor:#FFF;\n
 }\n
 \n
 .gadget table thead tr th a, .content table thead tr th a {\n

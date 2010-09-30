@@ -470,15 +470,21 @@ def updateGlobals(this_module, global_hook,
     for module_id in module_id_list:
       import_method(module_id, path=path, is_erp5_type=is_erp5_type)
 
+  from Products.ERP5Type import document_class_registry
+  module_name = this_module.__name__
   # Return core document_class list (for ERP5Type only)
   # this was introduced to permit overriding ERP5Type Document classes
   # which was not possible when they were define in the Document folder
   path, core_module_id_list = getModuleIdList(product_path, 'Core')
   for document in core_module_id_list:
+    module_path = '.'.join((module_name, 'Core', document, document))
+    document_class_registry[document] = module_path
     InitializeDocument(document, document_path=path)
   # Return document_class list
   path, module_id_list = getModuleIdList(product_path, 'Document')
   for document in module_id_list:
+    module_path = '.'.join((module_name, 'Document', document, document))
+    document_class_registry[document] = module_path
     InitializeDocument(document, document_path=path)
 
   # Return interactor_class list
@@ -561,8 +567,6 @@ class TempDocumentConstructor(DocumentConstructor):
       # through the factory system.
       if getattr(aq_base(folder), 'Destination', None) is not None:
         folder = folder.Destination()
-      if folder.isTempObject():
-        folder._setObject(id, o)
       o = o.__of__(folder)
       if kw:
         o._edit(force_update=1, **kw)
@@ -897,6 +901,10 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
   module = imp.load_source(class_id, path)
   getattr(module, class_id, 'patch')
 
+  # and register correctly the new document
+  from Products.ERP5Type import document_class_registry
+  document_class_registry[class_id] = "%s.%s" % (module.__name__, class_id)
+
 def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.
   """
@@ -1111,7 +1119,27 @@ def initializeProduct( context,
     This function does all the initialization steps required
     for a Zope / CMF Product
   """
-  product_name = this_module.__name__.split('.')[-1]
+  module_name = this_module.__name__
+
+  from Products.ERP5Type import document_class_registry
+  # Content classes are exceptions and should be registered here.
+  # other products were all already registered in updateGlobals()
+  # because getModuleIdList works fine for Document/ and Core/
+  for klass in content_classes:
+    n = klass.__name__
+    document_class_registry[n] = "%s.%s" % (klass.__module__, n)
+
+  mixin_module = getattr(this_module, 'mixin', None)
+  if mixin_module is not None:
+    from Products.ERP5Type import mixin_class_registry
+    for k, submodule in inspect.getmembers(mixin_module, inspect.ismodule):
+      for klassname, klass in inspect.getmembers(submodule, inspect.isclass):
+        # only classes defined here
+        if 'mixin' in klass.__module__ and not issubclass(klass, Exception):
+          classpath = '.'.join((module_name, 'mixin', k, klassname))
+          mixin_class_registry[klassname] = classpath
+
+  product_name = module_name.split('.')[-1]
 
   # Define content constructors for Document content classes (RAD)
   initializeDefaultConstructors(content_classes)
@@ -1252,7 +1280,7 @@ def createExpressionContext(object, portal=None):
   """
     Return a context used for evaluating a TALES expression.
   """
-  tv = getTransactionalVariable(None)
+  tv = getTransactionalVariable()
   cache_key = ('createExpressionContext', id(object))
   try:
     return tv[cache_key]
@@ -1319,10 +1347,9 @@ def createExpressionContext(object, portal=None):
   return ec
 
 def getExistingBaseCategoryList(portal, base_cat_list):
-  cache = getReadOnlyTransactionCache(portal)
+  cache = getReadOnlyTransactionCache()
   if cache is None:
-    from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-    cache = getTransactionalVariable(portal)
+    cache = getTransactionalVariable()
   category_tool = portal.portal_categories
   new_base_cat_list = []
   for base_cat in base_cat_list:
