@@ -2153,8 +2153,6 @@ return 1
     request = get_request()
     portal = self.portal
     # contribute a document, then make it not editable and check we can not contribute to it
-    filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
     upload_file = makeFileUpload('TEST-en-002.doc')
     kw = dict(file=upload_file, \
                synchronous_metadata_discovery=True)
@@ -2169,6 +2167,27 @@ return 1
     self.stepTic()
     kw.pop('portal_type')
     self.assertRaises(Unauthorized, self.portal.Base_contribute, **kw)
+    
+  def test_ContributeWithMergingToExistingDocument(self):
+    """
+      Test various cases of merging to an existing document
+    """
+    request = get_request()
+    portal = self.portal
+    # contribute a document, then make it not editable and check we can not contribute to it
+    kw=dict(synchronous_metadata_discovery=True)
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()    
+   
+    upload_file = makeFileUpload('TEST-en-003.odp', 'TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertEquals('test-en-003-description', document.getDescription())
+    self.assertEquals('test-en-003-title', document.getTitle())
+    self.assertEquals('test-en-003-keywords', document.getSubject())
                                   
 
 class TestDocumentWithSecurity(TestDocumentMixin):
