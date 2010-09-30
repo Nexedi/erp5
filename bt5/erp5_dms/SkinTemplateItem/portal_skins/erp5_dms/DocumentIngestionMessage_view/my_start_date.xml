@@ -84,7 +84,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Date at wich the document was ingested</string> </value>
+                    <value> <string>Date at which the document was ingested</string> </value>
                 </item>
                 <item>
                     <key> <string>extra_context</string> </key>
