@@ -197,7 +197,6 @@ class TestPackingListMixin(TestOrderMixin):
       Test if packing list is divergent
     """
     packing_list = sequence.get('new_packing_list')
-    self.failIf('Site Error' in packing_list.view())
     self.stepCheckPackingListIsDivergent(packing_list=packing_list,sequence=sequence)
 
   def stepCheckPackingListIsCalculating(self, sequence=None, sequence_list=None, **kw):
@@ -213,6 +212,10 @@ class TestPackingListMixin(TestOrderMixin):
     """
     packing_list = sequence.get('packing_list')
     self.assertEquals('solved',packing_list.getCausalityState())
+
+  def stepCheckNewPackingListIsSolved(self, sequence=None, sequence_list=None, **kw):
+    packing_list = sequence.get('new_packing_list')
+    self.assertEquals('solved', packing_list.getCausalityState())
 
   def stepCheckPackingListIsDiverged(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1396,6 +1399,7 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         NewPackingListAdoptPrevisionQuantity
         Tic
         CheckPackingListIsSolved
+        CheckNewPackingListIsSolved
         CheckPackingListSplittedTwoTimes
         """
     sequence_list.addSequenceString(sequence_string)
