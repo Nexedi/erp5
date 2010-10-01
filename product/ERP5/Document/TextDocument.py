@@ -127,6 +127,9 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       """
         Convert text using portal_transforms or oood
       """
+      # XXX 'or DEFAULT_CONTENT_TYPE' is compaptibility code used for old
+      # web_page that have neither content_type nor text_format. Migration 
+      # should be done to make all web page having content_type property
       src_mimetype = self.getContentType() or DEFAULT_CONTENT_TYPE
       if not format and src_mimetype == 'text/html':
         format = 'html' # Force safe_html
