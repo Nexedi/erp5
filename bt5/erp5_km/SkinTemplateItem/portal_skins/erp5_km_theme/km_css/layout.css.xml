@@ -476,12 +476,12 @@ ul.breadcrumb li {\n
 \n
 div.breadcrumb{\n
   float:left;\n
-  width: 85%\n
+  width: auto;\n
 }\n
 \n
 div.language-selection{\n
   float:right;\n
-  width: 15%\n
+  width: auto;\n
 }\n
 \n
 \n
@@ -1587,7 +1587,8 @@ div.pdf-preview-navigation img.next{\n
 div.pdf-preview-navigation img.last{\n
   background-image:url("km_img/2rightarrowv.png");\n
   width: 5px;\n
-}
+}\n
+
 
 ]]></string> </value>
         </item>
