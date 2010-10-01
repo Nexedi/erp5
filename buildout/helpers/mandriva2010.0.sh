@@ -21,6 +21,7 @@ gcc
 gcc-c++
 gettext
 groff
+java-devel-gcj
 libSDL-devel
 libSDL_gfx-devel
 libSDL_image-devel
