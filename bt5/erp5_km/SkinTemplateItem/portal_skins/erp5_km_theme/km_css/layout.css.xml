@@ -984,8 +984,7 @@ form p,\n
 \n
 .meta div.input > select {\n
   border: none;\n
-  max-width: 60px;\n
-  margin-left:0.2em;\n
+  margin-left:0.1em;\n
 }\n
 \n
 .meta input.search_text {\n
@@ -1587,8 +1586,7 @@ div.pdf-preview-navigation img.next{\n
 div.pdf-preview-navigation img.last{\n
   background-image:url("km_img/2rightarrowv.png");\n
   width: 5px;\n
-}\n
-
+}
 
 ]]></string> </value>
         </item>
