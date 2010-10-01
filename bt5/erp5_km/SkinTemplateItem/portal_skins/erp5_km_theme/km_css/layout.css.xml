@@ -192,6 +192,12 @@ width:30%;\n
 \n
 }\n
 \n
+.content .field div.input {\n
+\n
+width:70%;\n
+\n
+}\n
+\n
 .column-1, .column-2 {\n
 \n
 \twidth:100%;\n
