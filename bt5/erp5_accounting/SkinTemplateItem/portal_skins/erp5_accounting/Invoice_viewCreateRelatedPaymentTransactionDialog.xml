@@ -92,7 +92,10 @@
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_date</string>
+                        <string>your_plan</string>
+                      </list>
                     </value>
                 </item>
               </dictionary>

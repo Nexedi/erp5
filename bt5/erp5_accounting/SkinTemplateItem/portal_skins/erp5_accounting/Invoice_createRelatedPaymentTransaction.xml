@@ -146,6 +146,9 @@ else:\n
   bank.edit( destination=node,\n
              quantity=bank_quantity )\n
 \n
+if plan:\n
+  related_payment.plan()\n
+\n
 if not batch_mode:\n
   return context.REQUEST.RESPONSE.redirect(\n
     "%s/view?portal_status_message=%s" % (\n
@@ -163,7 +166,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>node, payment_mode, payment, date=None, batch_mode=0</string> </value>
+            <value> <string>node, payment_mode, payment, date=None, plan=False, batch_mode=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -183,7 +186,7 @@ else:\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>6</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
@@ -193,6 +196,7 @@ else:\n
                             <string>payment_mode</string>
                             <string>payment</string>
                             <string>date</string>
+                            <string>plan</string>
                             <string>batch_mode</string>
                             <string>DateTime</string>
                             <string>_getattr_</string>
@@ -233,6 +237,7 @@ else:\n
             <value>
               <tuple>
                 <none/>
+                <int>0</int>
                 <int>0</int>
               </tuple>
             </value>
