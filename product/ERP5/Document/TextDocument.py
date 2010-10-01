@@ -127,7 +127,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       """
         Convert text using portal_transforms or oood
       """
-      src_mimetype = self.getContentType()
+      src_mimetype = self.getContentType() or DEFAULT_CONTENT_TYPE
       if not format and src_mimetype == 'text/html':
         format = 'html' # Force safe_html
       if not format:
