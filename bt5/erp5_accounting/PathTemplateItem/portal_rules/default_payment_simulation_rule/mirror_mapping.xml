@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="MappedProperty" module="Products.ERP5Type.Document.MappedProperty"/>
-        <tuple/>
-      </tuple>
+      <global name="MappedProperty" module="Products.ERP5Type.Document.MappedProperty"/>
     </pickle>
     <pickle>
       <dictionary>
