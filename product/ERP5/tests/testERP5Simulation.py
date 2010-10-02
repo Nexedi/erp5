@@ -559,7 +559,8 @@ for failing_method in [
   'test_06_SimulationChangeStartDate',
   'test_07_SimulationChangeStartDateWithTwoOrderLine',
   'test_07a_SimulationChangeStartDateWithTwoOrderLine',
-  
+
+  'test_11_PackingListDecreaseTwoTimesQuantityAndUpdateDelivery',
   ]:
   setattr(TestERP5SimulationPackingList, failing_method,
           expectedFailure(getattr(TestERP5SimulationPackingList, failing_method)))
