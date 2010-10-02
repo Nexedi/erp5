@@ -415,6 +415,12 @@ class ERP5TypeInformation(XMLObject,
       return list(self.property_sheet_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeBaseCategoryList')
+    def getTypeBaseCategoryList(self):
+      """Getter for 'type_base_category' property"""
+      return list(self.base_category_list)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypeClass')
     def getTypeClass(self):
       """Getter for type_class"""
@@ -428,12 +434,6 @@ class ERP5TypeInformation(XMLObject,
           # and of course migrate the property
           self.setTypeClass(base)
       return base
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getTypeBaseCategoryList')
-    def getTypeBaseCategoryList(self):
-      """Getter for 'type_base_category' property"""
-      return list(self.base_category_list)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInstanceBaseCategoryList')
