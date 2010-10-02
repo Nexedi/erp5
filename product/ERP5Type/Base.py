@@ -290,7 +290,7 @@ class WorkflowMethod(Method):
       self._invoke_always = {}
 
 def _aq_reset():
-  Base.aq_method_generated = {}
+  Base.aq_method_generated = set()
   Base.aq_portal_type = {}
   Base.aq_related_generated = 0
   try:
@@ -525,7 +525,7 @@ def getClassPropertyList(klass):
   return ps_list
 
 def initializeClassDynamicProperties(self, klass):
-  if not Base.aq_method_generated.has_key(klass):
+  if klass not in Base.aq_method_generated:
     # Recurse to superclasses
     for super_klass in klass.__bases__:
       if getattr(super_klass, 'isRADContent', 0):
@@ -536,7 +536,7 @@ def initializeClassDynamicProperties(self, klass):
       if getattr(klass, 'isRADContent', 0):
         setDefaultClassProperties(klass)
       # Mark as generated
-      Base.aq_method_generated[klass] = 1
+      Base.aq_method_generated.add(klass)
 
 def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
   ## Init CachingMethod which implements caching for ERP5
@@ -761,7 +761,7 @@ class Base( CopyContainer,
 
   # Dynamic method acquisition system (code generation)
   aq_method_lock = threading.RLock()
-  aq_method_generated = {}
+  aq_method_generated = set()
   aq_method_generating = []
   aq_portal_type = {}
   aq_related_generated = 0
@@ -908,8 +908,7 @@ class Base( CopyContainer,
           klass = klass.__bases__[0]
 
         # Generate class methods
-        if klass not in Base.aq_method_generated:
-          initializeClassDynamicProperties(self, klass)
+        initializeClassDynamicProperties(self, klass)
 
         # Iterate until an ERP5 Site is obtained.
         portal = self.getPortalObject()
@@ -925,7 +924,7 @@ class Base( CopyContainer,
       if not Base.aq_related_generated:
         from Utils import createRelatedValueAccessors
         portal_types = getToolByName(portal, 'portal_types', None)
-        generated_bid = {}
+        generated_bid = set()
         econtext = createExpressionContext(object=self, portal=portal)
         for pid, ps in PropertySheet.__dict__.iteritems():
           if pid[0] != '_':
@@ -942,12 +941,12 @@ class Base( CopyContainer,
             for bid in base_category_list:
               if bid not in generated_bid:
                 createRelatedValueAccessors(None, bid)
-                generated_bid[bid] = 1
+                generated_bid.add(bid)
         for ptype in portal_types.listTypeInfo():
           for bid in ptype.getTypeBaseCategoryList():
             if bid not in generated_bid :
               createRelatedValueAccessors(None, bid)
-              generated_bid[bid] = 1
+              generated_bid.add(bid)
 
         Base.aq_related_generated = 1
 
