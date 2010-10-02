@@ -898,9 +898,10 @@ class Base( CopyContainer,
       Base.aq_method_generating.append(aq_key)
       try:
         # Proceed with property generation
-        if self.isTempObject():
-          # If self is a temporary object, generate methods for the base
-          # document class rather than for the temporary document class.
+        if self.isTempObject() and len(klass.__bases__) == 1:
+          # If self is a simple temporary object (e.g. not a composed one),
+          # generate methods for the base document class rather than for the
+          # temporary document class.
           # Otherwise, instances of the base document class would fail
           # in calling such methods, because they are not instances of
           # the temporary document class.
