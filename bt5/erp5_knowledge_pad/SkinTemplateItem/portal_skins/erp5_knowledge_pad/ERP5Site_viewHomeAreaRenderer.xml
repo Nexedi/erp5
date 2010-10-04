@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -45,7 +42,7 @@
               knowledge_pads python:\n
                  here.ERP5Site_getKnowledgePadListForUser(mode=mode);\n
               struct python: here.ERP5Site_getActiveKnowledgePadForUser(knowledge_pads);\n
-              active_knowledge_pad python: struct[0];\n
+              global active_knowledge_pad python: struct[0];\n
               knowledge_pads python: struct[1];\n
               hasUserActivity python:\n
                       here.ERP5Site_hasUserActivity(active_knowledge_pad,\n

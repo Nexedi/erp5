@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -84,15 +81,16 @@ tag = \'reversal_creation_%s\' % random.randint(0, 1000)\n
 activated = 0\n
 for obj in object_list:\n
   obj = obj.getObject()\n
-  if obj.getSimulationState() == \'delivered\':\n
-    if countMessage(path=obj.getPath(),\n
-                    method_id=\'AccountingTransaction_createReversalTransaction\'):\n
-      raise Redirect, "%s/view?portal_status_message=%s" % (\n
-                context.absolute_url(), translateString(\n
-        \'Reversal creation already in progress, abandon.\'))\n
-    obj.activate(tag=tag).AccountingTransaction_createReversalTransaction(\n
-                                cancellation_amount=cancellation_amount)\n
-    activated += 1\n
+  if countMessage(path=obj.getPath(),\n
+                  method_id=\'AccountingTransaction_createReversalTransaction\'):\n
+    raise Redirect, "%s/view?portal_status_message=%s" % (\n
+              context.absolute_url(), translateString(\n
+      \'Reversal creation already in progress, abandon.\'))\n
+  obj.activate(tag=tag).AccountingTransaction_createReversalTransaction(\n
+                                cancellation_amount=cancellation_amount,\n
+                                date=date,\n
+                                plan=plan)\n
+  activated += 1\n
 \n
 if not activated:\n
   return context.Base_redirect(form_id,\n
@@ -121,7 +119,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>cancellation_amount=False, uids=[], listbox_uid=[], selection_name=\'\', form_id=\'view\'</string> </value>
+            <value> <string>cancellation_amount=False, date=None, plan=False, uids=[], listbox_uid=[], selection_name=\'\', form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -141,13 +139,15 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
+                        <value> <int>7</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
                             <string>cancellation_amount</string>
+                            <string>date</string>
+                            <string>plan</string>
                             <string>uids</string>
                             <string>listbox_uid</string>
                             <string>selection_name</string>
@@ -187,6 +187,8 @@ return context.Base_redirect(form_id,\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <int>0</int>
+                <none/>
                 <int>0</int>
                 <list/>
                 <list/>

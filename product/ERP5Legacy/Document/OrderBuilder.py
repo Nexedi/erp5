@@ -36,7 +36,7 @@ from Products.ERP5.MovementGroup import MovementGroupNode
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from DateTime import DateTime
-from Acquisition import aq_parent, aq_inner
+from Acquisition import aq_parent, aq_inner, aq_base
 
 from zLOG import LOG
 
@@ -327,7 +327,13 @@ class OrderBuilder(XMLObject, Amount, Predicate):
     else:
       # we want to check the original delivery first.
       movement = current_movement_group_node.getMovementList()[0]
-      delivery_movement = movement.getDeliveryValue()
+      # XXX in the case of Order Builder, the movement is not always
+      # related to simulation, thus it might not have the delivery category.
+      # Possibly, this code should be overridden by DeliveryBuilder.
+      if getattr(aq_base(movement), 'getDeliveryValue', None) is not None:
+        delivery_movement = movement.getDeliveryValue()
+      else:
+        delivery_movement = None
       if delivery_movement is not None:
         delivery = delivery_movement.getRootDeliveryValue()
         try:

@@ -2,16 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="CheckBoxField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_selection</string> </value>
+            <value> <string>your_plan</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -136,7 +133,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Plan the newly created transaction</string> </value>
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
@@ -160,7 +157,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Selected</string> </value>
+                    <value> <string>Plan Transaction</string> </value>
                 </item>
               </dictionary>
             </value>

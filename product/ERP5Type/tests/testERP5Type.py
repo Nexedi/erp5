@@ -2725,6 +2725,16 @@ class TestPropertySheet:
       dummy_instance.setReference('test')
       self.assertEquals('test', dummy_instance.getReference())
 
+    def test_getIcon(self):
+      """
+      Check that getIcon returns proper icon.
+      """
+      portal = self.getPortalObject()
+      folder = self.getOrganisationModule()
+      o = folder.newContent(portal_type='Organisation')
+      self.assertTrue(o.getIcon().endswith(portal.portal_types['Organisation']\
+          .getTypeIcon()))
+
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests

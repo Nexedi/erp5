@@ -199,7 +199,6 @@
                     knowledge_pad.getRelativeUrl()==active_knowledge_pad.getRelativeUrl()"> \n
 \n
                     <li tal:condition="is_active"\n
-                        tal:define="global active_knowledge_pad knowledge_pad"\n
                         class="tab tab_selected">\n
                         <span id="active_knowledge_pad_title" \n
                               tal:content="knowledge_pad/title"/>\n

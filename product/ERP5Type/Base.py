@@ -31,7 +31,7 @@ from struct import unpack
 from copy import copy
 import warnings
 import types
-from threading import local
+import threading
 
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
@@ -290,7 +290,7 @@ class WorkflowMethod(Method):
       self._invoke_always = {}
 
 def _aq_reset():
-  Base.aq_method_generated = {}
+  Base.aq_method_generated = set()
   Base.aq_portal_type = {}
   Base.aq_related_generated = 0
   try:
@@ -525,7 +525,7 @@ def getClassPropertyList(klass):
   return ps_list
 
 def initializeClassDynamicProperties(self, klass):
-  if not Base.aq_method_generated.has_key(klass):
+  if klass not in Base.aq_method_generated:
     # Recurse to superclasses
     for super_klass in klass.__bases__:
       if getattr(super_klass, 'isRADContent', 0):
@@ -536,7 +536,7 @@ def initializeClassDynamicProperties(self, klass):
       if getattr(klass, 'isRADContent', 0):
         setDefaultClassProperties(klass)
       # Mark as generated
-      Base.aq_method_generated[klass] = 1
+      Base.aq_method_generated.add(klass)
 
 def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
   ## Init CachingMethod which implements caching for ERP5
@@ -760,8 +760,9 @@ class Base( CopyContainer,
   isTempDocument = ConstantGetter('isTempDocument', value=False)
 
   # Dynamic method acquisition system (code generation)
-  aq_method_generated = {}
-  aq_method_generating = local()
+  aq_method_lock = threading.RLock()
+  aq_method_generated = set()
+  aq_method_generating = []
   aq_portal_type = {}
   aq_related_generated = 0
 
@@ -833,24 +834,12 @@ class Base( CopyContainer,
 
   def _propertyMap(self):
     """ Method overload - properties are now defined on the ptype """
-    aq_key = self._aq_key()
     self._aq_dynamic('id') # Make sure aq_dynamic has been called once
-    if Base.aq_portal_type.has_key(aq_key):
-      return tuple(list(getattr(Base.aq_portal_type[aq_key], '_properties', ())) +
-                   list(getattr(self, '_local_properties', ())))
-    return ERP5PropertyManager._propertyMap(self)
-
-  def _aq_dynamic_pmethod(self, id):
-    ptype = self.portal_type
-    klass = self.__class__
-    aq_key = (ptype, klass) # We do not use _aq_key() here for speed
-
-    #LOG("In _aq_dynamic_pmethod", 0, str((id, ptype, self)))
-
-    if Base.aq_portal_type.has_key(aq_key):
-      return getattr(Base.aq_portal_type[aq_key], id, None).__of__(self)
-
-    return None
+    property_holder = Base.aq_portal_type.get(self._aq_key())
+    if property_holder is None:
+      return ERP5PropertyManager._propertyMap(self)
+    return (tuple(getattr(property_holder, '_properties', ())) +
+            tuple(getattr(self, '_local_properties', ())))
 
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):
@@ -884,57 +873,58 @@ class Base( CopyContainer,
     # for that portal_type, try to return a value ASAP
     try:
       property_holder = Base.aq_portal_type[aq_key]
+    except KeyError:
+      pass
+    else:
       accessor = getattr(property_holder, id, None)
       if type(accessor) is tuple and id not in RESERVED_TUPLE_PROPERTY:
         accessor = property_holder.createAccessor(id)
       return accessor
-    except KeyError:
-      property_holder = None
-      if getattr(Base.aq_method_generating, 'aq_key', None) == aq_key:
-        # We are already generating for this aq_key, return not to generate
-        # again.
-        return None
 
-    # Store that we are generating for this aq_key, then when we will recurse
-    # in _aq_dynamic during generation for this aq_key, we'll return to prevent
-    # infinite loops. While generating for one aq_key, we will probably have to
-    # generate for another aq_key, a typical example is that to generate
-    # methods for a document, we'll have to generate methods for Types Tool and
-    # Base Category portal.
-    Base.aq_method_generating.aq_key = aq_key
+    Base.aq_method_lock.acquire()
     try:
-      # Proceed with property generation
-      if self.isTempObject():
-        # If self is a temporary object, generate methods for the base
-        # document class rather than for the temporary document class.
-        # Otherwise, instances of the base document class would fail
-        # in calling such methods, because they are not instances of
-        # the temporary document class.
-        klass = klass.__bases__[0]
+      if aq_key in Base.aq_portal_type:
+        # Another thread generated accessors just before we acquired the lock
+        # so we must simply retry.
+        return getattr(self, id, None)
+      if aq_key in Base.aq_method_generating:
+        # We are already generating accessors for this aq_key.
+        # Return immediately to prevent infinite loops.
+        return
+      # Store that we are generating for this aq_key, because _aq_dynamic may
+      # be called recursively. A typical example is that to generate methods
+      # for a document, we'll have to generate methods for Types Tool and
+      # Base Category portal.
+      Base.aq_method_generating.append(aq_key)
+      try:
+        # Proceed with property generation
+        if self.isTempObject() and len(klass.__bases__) == 1:
+          # If self is a simple temporary object (e.g. not a composed one),
+          # generate methods for the base document class rather than for the
+          # temporary document class.
+          # Otherwise, instances of the base document class would fail
+          # in calling such methods, because they are not instances of
+          # the temporary document class.
+          klass = klass.__bases__[0]
 
-      generated = False # Prevent infinite loops
-
-      # Generate class methods
-      if klass not in Base.aq_method_generated:
+        # Generate class methods
         initializeClassDynamicProperties(self, klass)
-        generated = True
 
-      # Iterate until an ERP5 Site is obtained.
-      portal = self.getPortalObject()
-      while portal.portal_type != 'ERP5 Site':
-        portal = portal.aq_parent.aq_inner.getPortalObject()
+        # Iterate until an ERP5 Site is obtained.
+        portal = self.getPortalObject()
+        while portal.portal_type != 'ERP5 Site':
+          portal = portal.aq_parent.aq_inner.getPortalObject()
 
-      # Generate portal_type methods
-      if aq_key not in Base.aq_portal_type:
+        # Generate portal_type methods
         initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal)
-        generated = True
+      finally:
+        del Base.aq_method_generating[-1]
 
       # Generate Related Accessors
       if not Base.aq_related_generated:
         from Utils import createRelatedValueAccessors
-        generated = True
         portal_types = getToolByName(portal, 'portal_types', None)
-        generated_bid = {}
+        generated_bid = set()
         econtext = createExpressionContext(object=self, portal=portal)
         for pid, ps in PropertySheet.__dict__.iteritems():
           if pid[0] != '_':
@@ -950,27 +940,25 @@ class Base( CopyContainer,
                 base_category_list.append(cat)
             for bid in base_category_list:
               if bid not in generated_bid:
-                createRelatedValueAccessors(property_holder, bid)
-                generated_bid[bid] = 1
+                createRelatedValueAccessors(None, bid)
+                generated_bid.add(bid)
         for ptype in portal_types.listTypeInfo():
           for bid in ptype.getTypeBaseCategoryList():
             if bid not in generated_bid :
-              createRelatedValueAccessors(property_holder, bid)
-              generated_bid[bid] = 1
+              createRelatedValueAccessors(None, bid)
+              generated_bid.add(bid)
 
         Base.aq_related_generated = 1
 
-      # Always try to return something after generation
-      if generated:
-        # We suppose that if we reach this point
-        # then it means that all code generation has succeeded
-        # (no except should hide that). We can safely return None
-        # if id does not exist as a dynamic property
-        # Baseline: accessor generation failures should always
-        #           raise an exception up to the user
-        return getattr(self, id, None)
+      # We suppose that if we reach this point
+      # then it means that all code generation has succeeded
+      # (no except should hide that). We can safely return None
+      # if id does not exist as a dynamic property
+      # Baseline: accessor generation failures should always
+      #           raise an exception up to the user
+      return getattr(self, id, None)
     finally:
-      Base.aq_method_generating.aq_key = None
+      Base.aq_method_lock.release()
 
     # Proceed with standard acquisition
     return None

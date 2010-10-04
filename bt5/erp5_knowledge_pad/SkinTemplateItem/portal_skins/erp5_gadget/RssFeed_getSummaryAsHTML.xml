@@ -38,7 +38,7 @@
 
 <tal:block \n
   tal:define="title here/field_title;\n
-              date here/field_date;\n
+              date here/field_date|nothing;\n
               description here/field_content;\n
               image here/field_img;\n
               other_links here/field_others_links;\n

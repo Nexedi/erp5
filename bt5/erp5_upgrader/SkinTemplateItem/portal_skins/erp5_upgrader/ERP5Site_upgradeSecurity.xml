@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,6 +73,8 @@ for pt in portal_type_list:\n
   portal_type_document = getattr(context.portal_types, pt, None )\n
   if portal_type_document is not None:\n
     portal_type_document.updateRoleMapping()\n
+  else:\n
+    message_list.append("Unable to upgrade security on %s portal type because it is not present on portal." % pt)\n
 \n
 message_list.append(\n
             "Update Local Roles for security groups for: \\n\\t%s" % \\\n
