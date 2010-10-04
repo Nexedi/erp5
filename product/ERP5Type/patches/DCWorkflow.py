@@ -254,10 +254,10 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
         variable_match['portal_type'] = list(portal_type_intersection)
       variable_match.setdefault('portal_type', portal_type_list)
 
-      is_permitted_worklist = 0
       if len(variable_match.get('portal_type', [])):
-        pass
-      elif guard is None:
+        continue
+      is_permitted_worklist = 0
+      if guard is None:
         is_permitted_worklist = 1
       elif (not check_guard) or \
           Guard_checkWithoutRoles(guard, security_manager, self, portal):
