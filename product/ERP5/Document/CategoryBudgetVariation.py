@@ -72,36 +72,45 @@ class CategoryBudgetVariation(BudgetVariation):
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
+    query_dict = dict()
     axis = self.getInventoryAxis()
     if not axis:
-      return dict()
+      return query_dict
     base_category = self.getProperty('variation_base_category')
     if not base_category:
-      return dict()
+      return query_dict
 
     context = budget_cell
     if self.isMemberOf('budget_variation/budget'):
       context = budget_cell.getParentValue().getParentValue()
     elif self.isMemberOf('budget_variation/budget_line'):
       context = budget_cell.getParentValue()
+    
+    uid_based_axis = False
+    if axis == 'movement':
+      axis = 'default_%s_uid' % base_category
+      uid_based_axis = True
+    elif axis == 'movement_strict_membership':
+      axis = 'default_strict_%s_uid' % base_category
+      uid_based_axis = True
+    elif axis in ('node', 'section', 'payment', 'function', 'project',
+                  'mirror_section', 'mirror_node' ):
+      axis = '%s_uid' % axis
+      uid_based_axis = True
 
     for criterion_category in context.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
         continue
       criterion_base_category, category_url = criterion_category.split('/', 1)
       if criterion_base_category == base_category:
-        category_uid = self.getPortalObject().portal_categories\
+        if uid_based_axis:
+          category_uid = self.getPortalObject().portal_categories\
                                 .getCategoryUid(criterion_category)
-        # Different possible inventory axis here
-        if axis == 'movement':
-          return {'default_%s_uid' % base_category: category_uid}
-        if axis == 'movement_strict_membership':
-          return {'default_strict_%s_uid' % base_category: category_uid}
-        if axis in ('node', 'section', 'payment', 'function', 'project',
-                    'mirror_section', 'mirror_node' ):
-          return {'%s_uid' % axis: category_uid}
-        return {axis: criterion_category}
-    return dict()
+          query_dict.setdefault(axis, []).append(category_uid)
+        else:
+          query_dict.setdefault(axis, []).append(criterion_category)
+
+    return query_dict
 
   def getInventoryListQueryDict(self, budget_line):
     """Returns the query dict to pass to simulation query for a budget line

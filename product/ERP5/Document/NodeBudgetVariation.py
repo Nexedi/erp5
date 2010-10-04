@@ -125,12 +125,13 @@ class NodeBudgetVariation(BudgetVariation):
   def getInventoryQueryDict(self, budget_cell):
     """ Query dict to pass to simulation query
     """
+    query_dict = dict()
     axis = self.getInventoryAxis()
     if not axis:
-      return dict()
+      return query_dict
     base_category = self.getProperty('variation_base_category')
     if not base_category:
-      return dict()
+      return query_dict
     budget_line = budget_cell.getParentValue()
 
     context = budget_cell
@@ -138,6 +139,15 @@ class NodeBudgetVariation(BudgetVariation):
       context = budget_line.getParentValue()
     elif self.isMemberOf('budget_variation/budget_line'):
       context = budget_line
+    
+    if axis == 'movement':
+      axis = 'default_%s' % base_category
+    if axis == 'movement_strict_membership':
+      axis = 'default_strict_%s' % base_category
+    # TODO: This is not correct if axis is a category such as
+    # section_category, because getInventoryList for now does not support
+    # parameters such as section_category_uid
+    axis = '%s_uid' % axis
 
     portal_categories = self.getPortalObject().portal_categories
     for criterion_category in context.getMembershipCriterionCategoryList():
@@ -145,14 +155,6 @@ class NodeBudgetVariation(BudgetVariation):
         continue
       criterion_base_category, node_url = criterion_category.split('/', 1)
       if criterion_base_category == base_category:
-        if axis == 'movement':
-          axis = 'default_%s' % base_category
-        if axis == 'movement_strict_membership':
-          axis = 'default_strict_%s' % base_category
-        # TODO: This is not correct if axis is a category such as
-        # section_category, because getInventoryList for now does not support
-        # parameters such as section_category_uid
-        axis = '%s_uid' % axis
         if node_url == budget_line.getRelativeUrl():
           # This is the "All Other" virtual node
           other_uid_list = []
@@ -160,14 +162,16 @@ class NodeBudgetVariation(BudgetVariation):
             if '%s/%s' % (base_category, node.getRelativeUrl()) in\
                                     budget_line.getVariationCategoryList():
               other_uid_list.append(node.getUid())
-          return {axis: ComplexQuery(
+          query_dict.setdefault(axis, []).append(
+                      ComplexQuery(
                           NegatedQuery(Query(**{axis: other_uid_list})),
                           Query(**{axis: None}),
-                          operator="OR")}
-        return {axis:
-                portal_categories.getCategoryValue(node_url, base_category=criterion_base_category).getUid()}
+                          operator="OR"))
+        query_dict.setdefault(axis, []).append(
+                portal_categories.getCategoryValue(node_url,
+                  base_category=criterion_base_category).getUid())
 
-    return dict()
+    return query_dict
 
   def getInventoryListQueryDict(self, budget_line):
     """Returns the query dict to pass to simulation query for a budget line

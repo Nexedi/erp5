@@ -362,9 +362,9 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEquals(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
-             node_category='account_type/expense',
-             node_uid=self.portal.account_module.goods_purchase.getUid(),
-             section_category='group/demo_group',),
+             node_category=['account_type/expense'],
+             node_uid=[self.portal.account_module.goods_purchase.getUid()],
+             section_category=['group/demo_group'],),
         budget_model.getInventoryQueryDict(budget_cell))
 
     budget_cell = budget_line.getCell('source/account_module/fixed_assets',
@@ -373,9 +373,9 @@ class TestBudget(ERP5TypeTestCase):
     self.assertEquals(
         dict(from_date=DateTime(2000, 1, 1),
              at_date=DateTime(2000, 12, 31).latestTime(),
-             node_category='account_type/asset',
-             node_uid=self.portal.account_module.fixed_assets.getUid(),
-             section_category='group/demo_group',),
+             node_category=['account_type/asset'],
+             node_uid=[self.portal.account_module.fixed_assets.getUid()],
+             section_category=['group/demo_group'],),
         budget_model.getInventoryQueryDict(budget_cell))
 
     self.assertEquals(
@@ -964,7 +964,74 @@ class TestBudget(ERP5TypeTestCase):
       {('source/account_module/goods_purchase', ): 100.0, },
        budget_line.getEngagedBudgetDict())
 
+  def test_multiple_variation_line_level(self):
+    # tests the behaviour of getInventoryListQueryDict and
+    # getInventoryQueryDict when we are using budget line level variation with
+    # multiple variation set. It should be a 'OR' between all the selected
+    # variations.
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_line',
+                    inventory_axis='node',
+                    variation_base_category='source',
+                    aggregate_value_list=(
+                      self.portal.account_module.goods_purchase,
+                      self.portal.account_module.fixed_assets,
+                    ))
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_line',
+                    inventory_axis='section_category',
+                    variation_base_category='group',)
+    # this variation will be needed to create cells
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=3,
+                    budget_variation='budget_cell',
+                    inventory_axis='node_category_strict_membership',
+                    variation_base_category='account_type',)
 
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    specialise_value=budget_model)
+    budget_line = budget.newContent(portal_type='Budget Line')
+
+    budget_line.edit(
+        variation_category_list=['group/demo_group/sub1',
+                                 'group/demo_group/sub2',
+                                 'source/account_module/goods_purchase',
+                                 'source/account_module/fixed_assets',
+                                 ])
+    self.assertEquals({
+      'from_date': None,
+      'group_by_node': True,
+      'group_by_section_category': True,
+      'section_category': ['group/demo_group/sub1',
+                           'group/demo_group/sub2'],
+      'node_uid': [self.portal.account_module.goods_purchase.getUid(),
+                   self.portal.account_module.fixed_assets.getUid()], },
+      budget_model.getInventoryListQueryDict(budget_line))
+
+    self.assertEquals({
+      'from_date': None,
+      'simulation_state': ('delivered', 'stopped'),
+      # XXX order is reversed for some reason ...
+      'section_category': ['group/demo_group/sub2',
+                           'group/demo_group/sub1'],
+      'node_uid': [self.portal.account_module.fixed_assets.getUid(),
+                   self.portal.account_module.goods_purchase.getUid()],
+      'node_category_strict_membership': ['account_type/expense']},
+
+      # BudgetLine_getInventoryQueryDictForCellIndex uses getInventoryQueryDict
+      # but does not require the cell to be physically present
+      budget_line.BudgetLine_getInventoryQueryDictForCellIndex(
+        cell_index=('account_type/expense')))
+
+  
   # Report
   def test_budget_consumption_report(self):
     budget_model = self.portal.budget_model_module.newContent(
