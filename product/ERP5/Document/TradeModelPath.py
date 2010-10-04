@@ -40,7 +40,7 @@ import zope.interface
 
 from zLOG import LOG
 
-class TradeModelPath(Path, Predicate):
+class TradeModelPath(Path):
   """
     The TradeModelPath class embeds all information related to
     lead times and parties involved at a given phase of a business
