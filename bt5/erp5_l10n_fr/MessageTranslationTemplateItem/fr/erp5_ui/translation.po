@@ -10989,6 +10989,9 @@ msgstr "Cette adresse email est déjà enregistrée."
 msgid "This is the official code of the city in which the company has been registered. Those codes can be found on different websites, depending upon the country needed. In France for instance, it is available on the INSEE website. (www.insee.fr)"
 msgstr "Le code géographique de l'organisation, ce code est parfois dérivé  du numéro d'immatriculation, et est disponible sur le site de l'Insee."
 
+msgid "This login is not available, please change it."
+msgstr "Ce login n'est pas disponible, veuillez le changer"
+
 msgid "This option helps define whether an account is normally Credit or Debit balanced. Any asset and expense account will have a normal debit balance, while any liability, equity, and revenue account will have a normal credit balance. Checking this box will define the account as being a Normal Credit Balance"
 msgstr "Cette option permet de définir si un compte est de nature a être débiteur ou créditeur."
 
