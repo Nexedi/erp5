@@ -245,10 +245,19 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
     guard = worklist_definition.guard
     if action_box_name:
       variable_match = dict(((x, [y % info for y in worklist_definition.getVarMatch(x)]) for x in worklist_definition.getVarMatchKeys()))
+      if 'portal_type' in variable_match and len(variable_match['portal_type']):
+        portal_type_intersection = set(variable_match['portal_type'])\
+            .intersection(portal_type_list)
+        # in case the current workflow is not associated with portal_types
+        # defined on the worklist, don't display the worklist for this
+        # portal_type.
+        variable_match['portal_type'] = list(portal_type_intersection)
       variable_match.setdefault('portal_type', portal_type_list)
 
       is_permitted_worklist = 0
-      if guard is None:
+      if len(variable_match.get('portal_type', [])):
+        pass
+      elif guard is None:
         is_permitted_worklist = 1
       elif (not check_guard) or \
           Guard_checkWithoutRoles(guard, security_manager, self, portal):
