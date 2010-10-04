@@ -82,6 +82,11 @@ class CategoryDivergenceTester(PropertyDivergenceTester):
       delivery_mvt_category_list = delivery_mvt_getProperty(list_prop)
       simulation_category_list = simulation_movement_getProperty(list_prop)
 
+      if delivery_mvt_category_list is None:
+        delivery_mvt_category_list = []
+      if simulation_category_list is None:
+        simulation_category_list = []
+
       # XXX Don't we need to check the order too ?
       delivery_mvt_category_list.sort()
       simulation_category_list.sort()
