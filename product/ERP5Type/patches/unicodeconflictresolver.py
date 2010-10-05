@@ -30,5 +30,5 @@ else:
     # Since we use UTF-8 only in PageTemplate, it is enough here. It is
     # faster than the original implementation, and it is compatible with
     # requests that do not contain Accept-Charset header.
-    return unicode(text, 'utf-8')
+    return unicode(text, 'utf-8', 'replace')
   PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolve
