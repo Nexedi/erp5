@@ -194,7 +194,7 @@ width:30%;\n
 \n
 .content .field div.input {\n
 \n
-width:70%;\n
+width:auto;\n
 \n
 }\n
 \n
