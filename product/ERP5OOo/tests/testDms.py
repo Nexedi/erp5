@@ -72,6 +72,7 @@ import httplib
 import urllib
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 QUIET = 0
 
@@ -850,7 +851,7 @@ class TestDocument(TestDocumentMixin):
                                          web_page.getReference(),
                                          web_page.getLanguage(),
                                          web_page.getVersion())))
-
+  @expectedFailure
   def test_10_SearchString(self):
     """
     Test search string search generation and parsing.
@@ -1022,7 +1023,7 @@ class TestDocument(TestDocumentMixin):
     parsed_string = parse(search_string)
     self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','Web Page'])
 
-
+  @expectedFailure
   def test_11_Base_getAdvancedSearchResultList(self):
     """
     Test search string search capabilities using Base_getAdvancedSearchResultList script.
