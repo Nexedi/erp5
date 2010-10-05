@@ -2173,15 +2173,16 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       if ob is None:
         raise ValueError, "Portal Type %s not found in site" %(portal_type,)
       prop_value = getattr(ob, self.class_property, ())
-      if not allowed_type in prop_value and not self.is_bt_for_diff:
+      if allowed_type in prop_value:
+        if self.class_property not in portal_type:
+          key = '%s/%s' % (self.class_property, portal_type)
+        else:
+          key = portal_type
+        self._objects.setdefault(key, []).append(allowed_type)
+      elif not self.is_bt_for_diff:
         raise ValueError, "%s %s not found in portal type %s" % (
                              getattr(self, 'name', self.__class__.__name__),
                              allowed_type, portal_type)
-      if self.class_property not in portal_type:
-        key = '%s/%s' % (self.class_property, portal_type)
-      else:
-        key = portal_type
-      self._objects.setdefault(key, []).append(allowed_type)
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
