@@ -33,7 +33,7 @@
 </td>
 <td>
   <div class="form-element">
-  <input type="text" name="name_&dtml-index;" value="&dtml-name;" />
+  <input type="text" name="title_&dtml-index;" value="&dtml-title;" />
   </div>
 </td>
 </tr>
@@ -118,11 +118,11 @@
 <td>
   <div class="form-element">
   <select name="permission_&dtml-index;">
-    <dtml-let selected="(not permission) and 'selected' or ' '">
+    <dtml-let selected="(not permissions) and 'selected' or ' '">
       <option value="" &dtml-selected;>(none)</option>
     </dtml-let>
     <dtml-in possible_permissions sort>
-      <dtml-let selected="(permission == _['sequence-item'])
+      <dtml-let selected="(permissions and permissions[0] == _['sequence-item'])
         and 'selected' or ' '">
       <option value="&dtml-sequence-item;" &dtml-selected;>&dtml-sequence-item;</option>
       </dtml-let>
@@ -216,7 +216,7 @@ Add an action
 </td>
 <td>
   <div class="form-element">
-  <input type="text" name="name" value="" />
+  <input type="text" name="title" value="" />
   </div>
 </td>
 </tr>

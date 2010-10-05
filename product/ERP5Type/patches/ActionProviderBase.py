@@ -60,7 +60,7 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
 
 def ActionProviderBase_addAction( self
               , id
-              , name
+              , title
               , action
               , condition
               , permission
@@ -73,8 +73,8 @@ def ActionProviderBase_addAction( self
               ):
     """ Add an action to our list.
     """
-    if not name:
-        raise ValueError('A name is required.')
+    if not title:
+        raise ValueError('A title is required.')
 
     a_expr = action and Expression(text=str(action)) or ''
     i_expr = icon and Expression(text=str(icon)) or ''
@@ -86,7 +86,7 @@ def ActionProviderBase_addAction( self
     new_actions = self._cloneActions()
 
     new_action = ActionInformation( id=str(id)
-                                  , title=str(name)
+                                  , title=str(title)
                                   , description=str(description)
                                   , action=a_expr
                                   , icon=i_expr
@@ -110,7 +110,7 @@ def ActionProviderBase_extractAction( self, properties, index ):
     """ Extract an ActionInformation from the funky form properties.
     """
     id          = str( properties.get( 'id_%d'          % index, '' ) )
-    name        = str( properties.get( 'name_%d'        % index, '' ) )
+    title        = str( properties.get( 'title_%d'        % index, '' ) )
     description = str( properties.get( 'description_%d'        % index, '' ) )
     action      = str( properties.get( 'action_%d'      % index, '' ) )
     icon        = str( properties.get( 'icon_%d'        % index, '' ) )
@@ -120,8 +120,8 @@ def ActionProviderBase_extractAction( self, properties, index ):
     permissions =      properties.get( 'permission_%d'  % index, () )
     priority    = float( properties.get( 'priority_%d'    % index, 1.0 ))
 
-    if not name:
-        raise ValueError('A name is required.')
+    if not title:
+        raise ValueError('A title is required.')
 
     if action is not '':
         action = Expression( text=action )
@@ -148,7 +148,7 @@ def ActionProviderBase_extractAction( self, properties, index ):
         priority = float(priority)
 
     return ActionInformation( id=id
-                            , title=name
+                            , title=title
                             , description=description
                             , action=action
                             , icon=icon
