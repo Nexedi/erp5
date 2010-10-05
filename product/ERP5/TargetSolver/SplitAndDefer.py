@@ -53,7 +53,10 @@ class SplitAndDefer(CopyToTarget):
     applied_rule = simulation_movement.getParentValue()
     rule = applied_rule.getSpecialiseValue()
 
-    if movement_quantity > new_movement_quantity:
+    # When accounting, the debit price is expressed by a minus quantity.
+    # Thus, we must take into account the both minus and plus quantity.
+    if ((movement_quantity < new_movement_quantity <= 0) or
+        (movement_quantity > new_movement_quantity >= 0)):
       split_index = 0
       new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
       while getattr(aq_base(applied_rule), new_id, None) is not None:
