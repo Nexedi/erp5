@@ -547,7 +547,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>foo_selection</string> </value>
+                    <value> <string>foo_listbox_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
