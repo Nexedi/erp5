@@ -2785,7 +2785,7 @@ class ActionTemplateItem(ObjectTemplateItem):
             action_text = action_text.text
           obj.addAction(
                         id = action.id
-                      , name = action.title
+                      , title = action.title
                       , action = action_text
                       , condition = action.getCondition()
                       , permission = action.permissions
