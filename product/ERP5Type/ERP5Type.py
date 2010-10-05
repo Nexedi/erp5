@@ -541,7 +541,6 @@ class ERP5TypeInformation(XMLObject,
 
     def _getActionList(self):
       action_list = self.getCacheableActionList()
-      action_list.sort(key=lambda x:x['priority'])
       return action_list
     _getActionList = CachingMethod(_getActionList,
       id='getActionList',

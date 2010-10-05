@@ -100,6 +100,7 @@ def listFilteredActionsFor(self, object=None):
             # IActionProviders:
             migrateNonProviders(self)
 
+    actions.sort(key=lambda x:x.get('priority', 0))
     # Reorganize the actions by category.
     filtered_actions={'user':[],
                       'folder':[],
