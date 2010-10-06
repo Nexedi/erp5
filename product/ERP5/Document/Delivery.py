@@ -338,7 +338,7 @@ class Delivery(XMLObject, ImmobilisationDelivery, CompositionMixin):
         if not m.isSimulated():
           #LOG('Delivery.isSimulated m.getQuantity',0,m.getQuantity())
           #LOG('Delivery.isSimulated m.getSimulationQuantity',0,m.getSimulationQuantity())
-          if m.getQuantity() != 0.0 or m.getSimulationQuantity() != 0:
+          if m.getQuantity() != 0.0 or m.getSimulationQuantity() not in (0, None):
             return 0
           # else Do we need to create a simulation movement ? XXX probably not
       return 1
