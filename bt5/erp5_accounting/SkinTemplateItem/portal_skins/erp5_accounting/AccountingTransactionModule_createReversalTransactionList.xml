@@ -119,7 +119,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>cancellation_amount=False, date=None, plan=False, uids=[], listbox_uid=[], selection_name=\'\', form_id=\'view\'</string> </value>
+            <value> <string>cancellation_amount=False, date=None, plan=False, uids=[], listbox_uid=[], selection_name=\'\', form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -152,6 +152,7 @@ return context.Base_redirect(form_id,\n
                             <string>listbox_uid</string>
                             <string>selection_name</string>
                             <string>form_id</string>
+                            <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>zExceptions</string>

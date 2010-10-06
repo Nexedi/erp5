@@ -128,7 +128,7 @@ return context.REQUEST.RESPONSE.redirect(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>node, payment_mode, payment, selection_index=None, uids=[], listbox_uid=[],selection_name=\'\'</string> </value>
+            <value> <string>node, payment_mode, payment, selection_index=None, uids=[], listbox_uid=[],selection_name=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -161,6 +161,7 @@ return context.REQUEST.RESPONSE.redirect(\n
                             <string>uids</string>
                             <string>listbox_uid</string>
                             <string>selection_name</string>
+                            <string>kw</string>
                             <string>Products.ERP5Type.Message</string>
                             <string>translateString</string>
                             <string>zExceptions</string>
