@@ -12,3 +12,7 @@ from BaseCache import BaseCache
 from DistributedRamCache import DistributedRamCache
 from Url import Url
 from MemcachedPlugin import MemcachedPlugin
+from StandardProperty import StandardProperty
+from TranslatableProperty import TranslatableProperty
+from AcquiredProperty import AcquiredProperty
+from DynamicCategoryProperty import DynamicCategoryProperty
