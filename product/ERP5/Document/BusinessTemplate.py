@@ -1517,8 +1517,14 @@ class CategoryTemplateItem(ObjectTemplateItem):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
-      obj = p.unrestrictedTraverse(relative_url)
-      obj = obj._getCopy(context)
+      try:
+        obj = p.unrestrictedTraverse(relative_url)
+        obj = obj._getCopy(context)
+      except (KeyError, AttributeError):
+        if self.is_bt_for_diff:
+          continue
+        else:
+          raise ValueError, "%s not found" % relative_url
       _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj, 1)
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
