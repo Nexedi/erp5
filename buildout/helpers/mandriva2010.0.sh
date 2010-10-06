@@ -20,6 +20,7 @@ flex
 gcc
 gcc-c++
 gettext
+git-core
 groff
 java-devel-gcj
 libSDL-devel
