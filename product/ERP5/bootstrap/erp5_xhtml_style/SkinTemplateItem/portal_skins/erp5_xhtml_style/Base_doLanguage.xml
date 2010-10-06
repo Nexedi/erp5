@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -87,6 +84,9 @@ else:\n
 \n
   if select_language is None:\n
     select_language = context.REQUEST.form["Base_doLanguage"]\n
+\n
+  if not select_language:\n
+    select_language = portal.Localizer.get_selected_language()\n
 \n
   portal.Localizer.changeLanguage(select_language)\n
 </string> </value>
