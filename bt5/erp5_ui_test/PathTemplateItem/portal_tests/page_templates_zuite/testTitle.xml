@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -84,7 +81,7 @@
 </tr>\n
 <tal:block tal:repeat="param_dict python: [\n
   {\'message\': \'Foo\', \'translation\': \'Woo\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
-  {\'message\': \'Foos\', \'translation\': \'Woos\', \'language\': \'wo\', \'catalog_id\': \'erp5_content\'},\n
+  {\'message\': \'Foos\', \'translation\': \'Woos\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
   {\'message\': \'Dummy Workflow Action\', \'translation\': \'Muumu Workflow Action\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
   {\'message\': \'History\', \'translation\': \'Leeb\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
   {\'message\': \'Business Template Definition\', \'translation\': \'Afeer Template Definition\', \'language\': \'wo\', \'catalog_id\': \'erp5_ui\'},\n
