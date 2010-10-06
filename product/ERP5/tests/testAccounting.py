@@ -810,7 +810,7 @@ class TestTransactionValidation(AccountingTestCase):
     # asset price but the resource is the same as the accounting resource
     accounting_transaction = self._makeOne(
                portal_type='Purchase Invoice Transaction',
-               start_date=DateTime('2007/01/02'),
+               stop_date=DateTime('2007/01/02'),
                source_section_value=self.organisation_module.client_1,
                lines=(dict(destination_value=self.account_module.payable,
                            destination_debit=500,
