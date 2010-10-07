@@ -22,6 +22,7 @@ modules = [
     'safe_html',      # extract <body> and remove potentially harmful tags
     'html_body',      # extract only the contents of the <body> tag
     'html_to_text',   # re based transform
+    'xml_to_text',    # re based transform
     'text_to_html',   # wrap text in a verbatim env
     'text_pre_to_html', # wrap text into a pre
     'png_to_text',
