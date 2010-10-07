@@ -1605,6 +1605,15 @@ msgstr "Types de campagnes"
 msgid "Campaigns"
 msgstr "Campagnes"
 
+msgid "Can't find corresponding organisation, it's not possible to update your credentials."
+msgstr "Impossible de trouver la personne correspondant à votre login, il n'est pas possible de mettre à jour vos informations."
+
+msgid "Can't find corresponding person, it's not possible to reset your password."
+msgstr "Impossible de trouver la personne correspondant à votre login, il n'est pas possible de réinitialiser votre mot de passe."
+
+msgid "Can't find corresponding person, it's not possible to update your credentials."
+msgstr "Impossible de trouver la personne correspondant à votre login, il n'est pas possible de mettre à jour vos informations."
+
 msgid "Cancel"
 msgstr "Annuler"
 
