@@ -9087,7 +9087,7 @@ msgid "Set ready"
 msgstr "Définir comme prêt à l'envoi"
 
 msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you."
-msgstr "Cocher la case \"Mémoriser mon nom\" autorise ERP5 à se souvenir de votre nom d'utilisateur afin de ne pas avoir à ressaisir ces informations à chaque connexion."
+msgstr "Cocher la case \"Mémoriser mon nom\" autorise ERP5 à se souvenir de votre nom d'utilisateur afin de ne pas avoir à saisir cette information à chaque connexion."
 
 msgid "Settings"
 msgstr "Paramètres"
@@ -11929,7 +11929,7 @@ msgid "Worker ID"
 msgstr "Travailleur"
 
 msgid "Workflow"
-msgstr "État"
+msgstr "Workflow"
 
 msgid "Workflow History"
 msgstr "Historique des états"
