@@ -453,6 +453,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   def __init__(self, id):
     self.id = id
       
+  security.declarePublic('newContent')
   def newContent(self, *args, **kw):
     """ Create a new content """
     # Create data structure if none present
