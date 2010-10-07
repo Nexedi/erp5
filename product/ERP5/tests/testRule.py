@@ -92,7 +92,8 @@ class TestRuleMixin(TestOrderMixin):
         self.packing_list_portal_type)
     pl = pl_module.newContent(portal_type=self.packing_list_portal_type,
         source_section='group/a', destination_section='group/b')
-    pl.newContent(portal_type=self.packing_list_line_portal_type, id='line')
+    pl.newContent(portal_type=self.packing_list_line_portal_type, id='line',
+                  quantity=1)
     pl.setStartDate("2007-07-01")
     transaction.commit()
     self.tic()

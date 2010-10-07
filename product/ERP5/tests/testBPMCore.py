@@ -392,7 +392,7 @@ class TestBPMImplementation(TestBPMMixin):
 
     # mock order
     order = self.portal.sale_order_module.newContent(portal_type="Sale Order")
-    order_line = order.newContent(portal_type="Sale Order Line")
+    order_line = order.newContent(portal_type="Sale Order Line", quantity=1)
 
     # make simulation
     order.order()
