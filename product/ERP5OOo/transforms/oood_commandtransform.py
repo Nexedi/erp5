@@ -187,13 +187,13 @@ class OOOdCommandTransform(commandtransform):
                           xml_declaration=False, pretty_print=False, )
 
   def convert(self):
-    tmp_ooo = newTempOOoDocument(self.context, self.name)
+    tmp_ooo = newTempOOoDocument(self.context, self.name())
     # XXX We store the same content inside data and base_data
     # otherwise conversion server fails to convert html=>odt for example.
     # deeper investigation is required inside oood to understand this issue.
     tmp_ooo.edit( base_data=self.data,
-                  fname=self.name,
-                  source_reference=self.name,
+                  fname=self.name(),
+                  source_reference=self.name(),
                   base_content_type=self.mimetype,
                   content_type=self.mimetype,)
     self.ooo = tmp_ooo
