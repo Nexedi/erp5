@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts85312668.47</string> </value>
+            <value> <string>ts86451743.36</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -397,6 +397,12 @@ div.gadget-latest-documents table.listbox thead{\n
   display: none;\n
 }\n
 \n
+/* Tagged documents  needs no listbox headers*/\n
+div.gadget-tagged-documents div.listbox-head,\n
+div.gadget-tagged-documents table.listbox thead{\n
+  display: none;\n
+}\n
+\n
 /* My Documents gadget needs no listbox headers*/\n
 div.gadget-my-documents div.listbox-head,\n
 div.gadget-my-documents table.listbox thead{\n
@@ -439,7 +445,8 @@ div.gadget-other-versions  div.listbox-head-content,\n
 div.gadget-history  div.listbox-head-content,\n
 div.gadget-my-tasks div.listbox-head-content,\n
 div.gadget-my-contacts div.listbox-head-content,\n
-div.gadget-persons div.listbox-head-content{\n
+div.gadget-persons div.listbox-head-content,\n
+div.gadget-tagged-documents div.listbox-head-content{\n
   display: none;\n
 }\n
 \n
@@ -457,7 +464,7 @@ div.block div.box_inner_content div.worklist_list ul {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8355</int> </value>
+            <value> <int>8572</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

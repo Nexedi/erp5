@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -48,11 +45,11 @@
                          title section/Base_getTitle;"/></li>\n
      <ul class="second_level">\n
 \n
-       <tal:block tal:repeat="root_section python: filter(lambda x:x.isVisible(), section.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\'))">\n
+       <tal:block tal:repeat="root_section python: filter(lambda x:x.isVisible(), section.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\',checked_permission=\'View\'))">\n
          <tal:block \n
             tal:define="section_dom_id python: root_section.getRelativeUrl().replace(\'/\', \'_\');\n
                         image_dom_id python: \'image_%s\' %section_dom_id;\n
-                        siblings python: filter(lambda x:x.isVisible(), root_section.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\'));\n
+                        siblings python: filter(lambda x:x.isVisible(), root_section.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\',checked_permission=\'View\'));\n
                         exists_siblings python: len(siblings)">\n
            <li class="empty-list-node"\n
                tal:condition="not: exists_siblings">\n
