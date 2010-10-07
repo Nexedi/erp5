@@ -55,11 +55,9 @@ box = context.restrictedTraverse(box_relative_url)\n
 preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
 preferred_tag = preferences.get(\'preferred_tag\', None)\n
 if preferred_tag is not None:\n
-  subject_list_from_preferences=preferred_tag.split(\' \')\n
-  filtered_subject_list_from_preferences =[]\n
-  for x in subject_list_from_preferences:\n
-    filtered_subject_list_from_preferences.append("%" + x + "%")\n
-  return context.portal_catalog(subject=filtered_subject_list_from_preferences)\n
+  subject_list_from_preferences=[x for x in preferred_tag.split(\' \') if x!=\'\']\n
+  if subject_list_from_preferences:\n
+    return context.portal_catalog(subject=["%%%s%%" %tag for tag in subject_list_from_preferences])\n
 return []\n
 </string> </value>
         </item>
@@ -105,10 +103,12 @@ return []\n
                             <string>box</string>
                             <string>preferences</string>
                             <string>preferred_tag</string>
-                            <string>subject_list_from_preferences</string>
-                            <string>filtered_subject_list_from_preferences</string>
+                            <string>append</string>
+                            <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
+                            <string>subject_list_from_preferences</string>
+                            <string>tag</string>
                           </tuple>
                         </value>
                     </item>
