@@ -137,7 +137,7 @@ def portal_type_factory(portal_type_name):
     # Initialize Property Sheets accessor holders
     import erp5.accessor_holder
 
-    # Get the web-based Property Sheets for this Portal Type
+    # Get the ZODB Property Sheets for this Portal Type
     property_sheet_name_set = set(
       portal_type.getNewStyleTypePropertySheetList() or [])
 
@@ -194,7 +194,7 @@ def initializeDynamicModules():
       for example classes created through ClassTool that are in
       $INSTANCE_HOME/Document
     erp5.accessor_holder
-      holds accessors of web-based Property Sheet
+      holds accessors of ZODB Property Sheet
   """
   def portal_type_loader(portal_type_name):
     """
@@ -290,7 +290,7 @@ def synchronizeDynamicModules(context, force=False):
       klass.__bases__ = ghostbase
       type(ExtensionBase).__init__(klass, klass)
 
-  # Clear accessor holders of web-based Property Sheets
+  # Clear accessor holders of ZODB Property Sheets
   for accessor_name in erp5.accessor_holder.__dict__.keys():
     if not accessor_name.startswith('__'):
       delattr(erp5.accessor_holder, accessor_name)

@@ -34,9 +34,8 @@ from Products.ERP5.Document.StandardProperty import StandardProperty
 
 class AcquiredProperty(StandardProperty):
   """
-  Define an Acquired Property Document for a web-based Property Sheet
-  (an Acquired Property only brings new attributes to a Standard
-  Property)
+  Define an Acquired Property Document for a ZODB Property Sheet (an
+  Acquired Property only brings new attributes to a Standard Property)
   """
   meta_type = 'ERP5 Acquired Property'
   portal_type = 'Acquired Property'
@@ -54,12 +53,11 @@ class AcquiredProperty(StandardProperty):
                                    'translation_acquired_property')
 
   # Add names specific to 'content' type (see StandardProperty)
-  _name_mapping_filesystem_to_web_dict = \
+  _name_mapping_filesystem_to_zodb_dict = \
       dict([ (name, 'content_' + name,) for name in _content_type_attribute_tuple ],
-           **StandardProperty._name_mapping_filesystem_to_web_dict)
+           **StandardProperty._name_mapping_filesystem_to_zodb_dict)
 
-  # Web-based name of attributes whose value is a TALES Expression
-  # string
+  # ZODB name of attributes whose value is a TALES Expression string
   _expression_attribute_tuple = \
       StandardProperty._expression_attribute_tuple + \
       ('acquisition_portal_type', 'content_portal_type')
@@ -79,7 +77,7 @@ class AcquiredProperty(StandardProperty):
                             'exportToFilesystemDefinition')
   def exportToFilesystemDefinition(self):
     """
-    Return the filesystem definition of this web-based property
+    Return the filesystem definition of this ZODB property
     """
     filesystem_property_dict = \
         StandardProperty.exportToFilesystemDefinition(self)

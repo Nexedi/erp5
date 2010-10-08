@@ -148,8 +148,8 @@ class PropertySheetTool(BaseTool):
                             'exportPropertySheetToFilesystemDefinitionTuple')
   def exportPropertySheetToFilesystemDefinitionTuple(self, property_sheet):
     """
-    Export a given web-based Property Sheet to its filesystem
-    definition as tuple (properties, categories, constraints)
+    Export a given ZODB Property Sheet to its filesystem definition as
+    tuple (properties, categories, constraints)
 
     XXX: Implement constraints
     """

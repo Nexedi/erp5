@@ -34,7 +34,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 class StandardProperty(XMLObject):
   """
-  Define an Acquired Property Document for a web-based Property Sheet
+  Define an Acquired Property Document for a ZODB Property Sheet
   """
   meta_type = 'ERP5 Standard Property'
   portal_type = 'Standard Property'
@@ -47,22 +47,20 @@ class StandardProperty(XMLObject):
                      PropertySheet.StandardProperty,
                      PropertySheet.TranslatableProperty)
 
-  # Names mapping between filesystem to web-based property, only
-  # meaningful when importing a property from its filesystem
-  # definition
-  _name_mapping_filesystem_to_web_dict = {'id': 'reference',
-                                          'type': 'elementary_type',
-                                          'default': 'property_default'}
+  # Names mapping between filesystem to ZODB property, only meaningful
+  # when importing a property from its filesystem definition
+  _name_mapping_filesystem_to_zodb_dict = {'id': 'reference',
+                                           'type': 'elementary_type',
+                                           'default': 'property_default'}
 
-  # Web-based name of attributes whose value is a TALES Expression
-  # string
+  # ZODB name of attributes whose value is a TALES Expression string
   _expression_attribute_tuple = ('property_default',)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
   def exportToFilesystemDefinition(self):
     """
-    Return the filesystem definition of this web-based property
+    Return the filesystem definition of this ZODB property
     """
     return {'id': self.getReference(),
             'description': self.getDescription(),
@@ -80,10 +78,10 @@ class StandardProperty(XMLObject):
   def _convertFromFilesytemPropertyDict(self, filesystem_property_dict):
     """
     Convert a property dict coming from a Property Sheet on the
-    filesystem to a web-based property dict
+    filesystem to a ZODB property dict
     """
-    # Prepare a dictionnary of the web-based property
-    web_property_dict = {}
+    # Prepare a dictionnary of the ZODB property
+    zodb_property_dict = {}
 
     for fs_property_name, value in filesystem_property_dict.iteritems():
       # Property Sheets on the filesystem defined attributes whose
@@ -92,21 +90,21 @@ class StandardProperty(XMLObject):
       if not value:
         continue
 
-      # Convert filesystem property name to web-based if necessary
-      web_property_name = \
-          fs_property_name in self._name_mapping_filesystem_to_web_dict and \
-          self._name_mapping_filesystem_to_web_dict[fs_property_name] or \
+      # Convert filesystem property name to ZODB if necessary
+      zodb_property_name = \
+          fs_property_name in self._name_mapping_filesystem_to_zodb_dict and \
+          self._name_mapping_filesystem_to_zodb_dict[fs_property_name] or \
           fs_property_name
 
       # Convert existing TALES expression class or primitive type to a
       # TALES expression string
-      if web_property_name in self._expression_attribute_tuple:
+      if zodb_property_name in self._expression_attribute_tuple:
         value = isinstance(value, Expression) and \
             value.text or 'python: ' + repr(value)
 
-      web_property_dict[web_property_name] = value
+      zodb_property_dict[zodb_property_name] = value
 
-    return web_property_dict
+    return zodb_property_dict
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')

@@ -34,7 +34,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 
 class DynamicCategoryProperty(XMLObject):
   """
-  Define a Dynamic Category Property Document for a web-based Property
+  Define a Dynamic Category Property Document for a ZODB Property
   Sheets (a dynamic category is defined by a TALES expression rather
   than a string and is being used by Item and Movement for example)
   """
