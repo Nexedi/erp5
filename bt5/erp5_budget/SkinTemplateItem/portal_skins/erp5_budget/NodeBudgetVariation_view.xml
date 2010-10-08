@@ -109,6 +109,7 @@
                     <value>
                       <list>
                         <string>my_aggregate_title_list</string>
+                        <string>my_include_virtual_none_node</string>
                         <string>my_include_virtual_other_node</string>
                       </list>
                     </value>

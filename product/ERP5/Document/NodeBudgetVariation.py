@@ -34,28 +34,6 @@ from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery
 from Products.ERP5Type.Message import translateString
 
 
-class VirtualNode(object):
-  """A Virtual Node for all Other Nodes.
-
-  This virtual document can be used in budget variations.
-  """
-  __allow_access_to_unprotected_subobjects__ = 1
-  def __init__(self, relative_url):
-    """The Virtual Node will use the relative URL of the budget line for
-    memberships.
-    """
-    self.relative_url = relative_url
-
-  def getTitle(self):
-    return str(translateString('All Others'))
-
-  def getRelativeUrl(self):
-    return self.relative_url
-
-  def getUid(self):
-    return -1L
-
-
 class NodeBudgetVariation(BudgetVariation):
   """ A budget variation for node
 
@@ -94,11 +72,15 @@ class NodeBudgetVariation(BudgetVariation):
     node_select_method_id = self.getProperty('node_select_method_id')
     if node_select_method_id:
       return guarded_getattr(context, node_select_method_id)()
+
     # no script defined, used the explicitly selected values
+    node_list = self.getAggregateValueList()
+    portal_categories = self.getPortalObject().portal_categories
+    if self.getProperty('include_virtual_none_node'):
+      node_list.append(portal_categories.budget_special_node.none)
     if self.getProperty('include_virtual_other_node'):
-      return self.getAggregateValueList() + [
-                    VirtualNode(context.getRelativeUrl()), ]
-    return self.getAggregateValueList()
+      node_list.append(portal_categories.budget_special_node.all_other)
+    return node_list
 
   def _getNodeTitle(self, node):
     """Returns the title of a node
@@ -155,18 +137,31 @@ class NodeBudgetVariation(BudgetVariation):
         continue
       criterion_base_category, node_url = criterion_category.split('/', 1)
       if criterion_base_category == base_category:
-        if node_url == budget_line.getRelativeUrl():
+        if node_url == 'budget_special_node/none':
+          # This is the "Nothing" virtual node
+          query_dict.setdefault(axis, []).append(Query(**{axis: None}))
+        if node_url == 'budget_special_node/all_other':
           # This is the "All Other" virtual node
           other_uid_list = []
+          none_node_selected = False
           for node in self._getNodeList(budget_line):
             if '%s/%s' % (base_category, node.getRelativeUrl()) in\
                                     budget_line.getVariationCategoryList():
-              other_uid_list.append(node.getUid())
-          query_dict.setdefault(axis, []).append(
-                      ComplexQuery(
-                          NegatedQuery(Query(**{axis: other_uid_list})),
-                          Query(**{axis: None}),
-                          operator="OR"))
+              if node.getRelativeUrl() == 'budget_special_node/none':
+                none_node_selected = True
+              else:
+                other_uid_list.append(node.getUid())
+          if none_node_selected:
+            # in this case we don't want to include NULL in All others
+            query_dict.setdefault(axis, []).append(
+                            NegatedQuery(Query(**{axis: other_uid_list})))
+          else:
+            query_dict.setdefault(axis, []).append(
+                        ComplexQuery(
+                            NegatedQuery(Query(**{axis: other_uid_list})),
+                            Query(**{axis: None}),
+                            operator="OR"))
+
         query_dict.setdefault(axis, []).append(
                 portal_categories.getCategoryValue(node_url,
                   base_category=criterion_base_category).getUid())
@@ -204,29 +199,38 @@ class NodeBudgetVariation(BudgetVariation):
     # if we have a virtual "all others" node, we don't set a criterion here.
     if self.getProperty('include_virtual_other_node'):
       return query_dict
+    
     found = False
     for node_url in context.getVariationCategoryList(
                           base_category_list=(base_category,)):
-      query_dict.setdefault(axis, []).append(
+      if node_url != '%s/budget_special_node/none' % base_category:
+        query_dict.setdefault(axis, []).append(
                 portal_categories.getCategoryValue(node_url,
                       base_category=base_category).getUid())
       found = True
     if found:
+      if self.getProperty('include_virtual_none_node'):
+        query_dict[axis] = ComplexQuery(
+              Query(**{axis: None}),
+              Query(**{axis: query_dict[axis]}),
+              operator="OR")
       return query_dict
     return dict()
   
   def _getCellKeyFromInventoryListBrain(self, brain, budget_line,
                                          cell_key_cache=None):
-    """Compute key from inventory brain, with support for "all others" virtual
-    node.
+    """Compute key from inventory brain, with support for virtual nodes.
     """
+    cell_key_cache[None] = '%s/budget_special_node/none'\
+                                 % self.getProperty('variation_base_category')
+    
     key = BudgetVariation._getCellKeyFromInventoryListBrain(
                    self, brain, budget_line, cell_key_cache=cell_key_cache)
     if self.getProperty('include_virtual_other_node'):
       if key not in [x[1] for x in
           self.getBudgetVariationRangeCategoryList(budget_line)]:
-        key = '%s/%s' % ( self.getProperty('variation_base_category'),
-                          budget_line.getRelativeUrl() )
+        key = '%s/budget_special_node/all_other' % (
+            self.getProperty('variation_base_category'),)
     return key
 
   def getBudgetLineVariationRangeCategoryList(self, budget_line):
