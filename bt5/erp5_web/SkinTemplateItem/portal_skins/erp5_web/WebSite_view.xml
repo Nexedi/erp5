@@ -95,6 +95,7 @@
                     <value>
                       <list>
                         <string>listbox_modification_date</string>
+                        <string>listbox_visible</string>
                       </list>
                     </value>
                 </item>
@@ -113,7 +114,6 @@
                         <string>my_site_map_section_parent</string>
                         <string>my_site_map_document_parent</string>
                         <string>listbox_int_index</string>
-                        <string>listbox_visible</string>
                       </list>
                     </value>
                 </item>
