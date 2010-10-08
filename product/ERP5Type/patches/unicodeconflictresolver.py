@@ -19,6 +19,8 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
+from zLOG import LOG
+import sys
 try:
   from Products.PageTemplates.unicodeconflictresolver \
        import PreferredCharsetResolver
@@ -30,5 +32,11 @@ else:
     # Since we use UTF-8 only in PageTemplate, it is enough here. It is
     # faster than the original implementation, and it is compatible with
     # requests that do not contain Accept-Charset header.
-    return unicode(text, 'utf-8', 'replace')
-  PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolve
+    try:
+      result = unicode(text, 'utf-8')
+    except UnicodeDecodeError:
+      LOG('unicodeconflictresolver, Unicode Error', 0, text, 
+          error=sys.exc_info())
+      result = unicode(text, 'utf-8', 'replace')
+    return result
+  PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolv
