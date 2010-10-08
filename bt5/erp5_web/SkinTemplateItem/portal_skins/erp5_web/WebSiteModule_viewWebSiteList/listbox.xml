@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13,11 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>lines</string>
+                <string>all_columns</string>
                 <string>columns</string>
                 <string>selection_name</string>
-                <string>domain_tree</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -79,6 +75,25 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>visible</string>
+                          <string>Visible</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>columns</string> </key>
                     <value>
                       <list>
@@ -95,15 +110,11 @@
                           <string>Description</string>
                         </tuple>
                         <tuple>
-                          <string>webmaster</string>
-                          <string>Webmaster</string>
+                          <string>translated_validation_state_title</string>
+                          <string>State</string>
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>domain_tree</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -112,10 +123,6 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewWebFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value> <int>30</int> </value>
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
