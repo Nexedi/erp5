@@ -27,6 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
+from Products.CMFCore.Expression import Expression
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
@@ -52,6 +53,10 @@ class StandardProperty(XMLObject):
   _name_mapping_filesystem_to_web_dict = {'id': 'reference',
                                           'type': 'elementary_type',
                                           'default': 'property_default'}
+
+  # Web-based name of attributes whose value is a TALES Expression
+  # string
+  _expression_attribute_tuple = ('property_default',)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
@@ -81,11 +86,23 @@ class StandardProperty(XMLObject):
     web_property_dict = {}
 
     for fs_property_name, value in filesystem_property_dict.iteritems():
+      # Property Sheets on the filesystem defined attributes whose
+      # value is None, or an empty tuple or string, or either 0, thus
+      # skip them
+      if not value:
+        continue
+
       # Convert filesystem property name to web-based if necessary
       web_property_name = \
           fs_property_name in self._name_mapping_filesystem_to_web_dict and \
           self._name_mapping_filesystem_to_web_dict[fs_property_name] or \
           fs_property_name
+
+      # Convert existing TALES expression class or primitive type to a
+      # TALES expression string
+      if web_property_name in self._expression_attribute_tuple:
+        value = isinstance(value, Expression) and \
+            value.text or 'python: ' + repr(value)
 
       web_property_dict[web_property_name] = value
 

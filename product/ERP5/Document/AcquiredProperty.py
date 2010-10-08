@@ -59,8 +59,10 @@ class AcquiredProperty(StandardProperty):
            **StandardProperty._name_mapping_filesystem_to_web_dict)
 
   # Web-based name of attributes whose value is a TALES Expression
-  _expression_attribute_tuple = ('acquisition_portal_type',
-                                 'content_portal_type')
+  # string
+  _expression_attribute_tuple = \
+      StandardProperty._expression_attribute_tuple + \
+      ('acquisition_portal_type', 'content_portal_type')
 
   @staticmethod
   def _convertValueToTalesExpression(value):
@@ -68,7 +70,10 @@ class AcquiredProperty(StandardProperty):
     Convert a string value to a TALES expression for attributes listed
     in '_expression_attribute_tuple'
     """
-    return value is None and value or Expression(value)
+    if value is None:
+      return None
+
+    return Expression(value)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
@@ -92,22 +97,3 @@ class AcquiredProperty(StandardProperty):
        'translation_acquired_property_id': self.getContentTranslationAcquiredPropertyIdList() or None})
 
     return filesystem_property_dict
-
-  def _convertFromFilesytemPropertyDict(self, filesystem_property_dict):
-    """
-    Convert a property dict coming from a Property Sheet on the
-    filesystem to a web-based property dict
-    """
-    web_property_dict = StandardProperty._convertFromFilesytemPropertyDict(
-      self, filesystem_property_dict)
-
-    # Update the properties whose values are TALES Expression
-    for attribute in self._expression_attribute_tuple:
-      if attribute in web_property_dict:
-        value = isinstance(web_property_dict[attribute], Expression) and \
-            web_property_dict[attribute].text or \
-            'python: ' + repr(web_property_dict[attribute])
-
-        web_property_dict[attribute] = value
-
-    return web_property_dict
