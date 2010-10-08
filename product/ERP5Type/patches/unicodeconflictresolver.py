@@ -39,4 +39,4 @@ else:
           error=sys.exc_info())
       result = unicode(text, 'utf-8', 'replace')
     return result
-  PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolv
+  PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolve
