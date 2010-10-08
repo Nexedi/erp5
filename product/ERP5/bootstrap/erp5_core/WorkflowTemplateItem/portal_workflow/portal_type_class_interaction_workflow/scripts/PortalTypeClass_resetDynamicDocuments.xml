@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].resetDynamicDocuments()\n
+            <value> <string>getattr(state_change[\'object\'].getPortalObject().portal_types, \'Types Tool\').resetDynamicDocuments()\n
 </string> </value>
         </item>
         <item>
@@ -97,6 +97,7 @@
                           <tuple>
                             <string>state_change</string>
                             <string>_getattr_</string>
+                            <string>getattr</string>
                             <string>_getitem_</string>
                           </tuple>
                         </value>
@@ -114,7 +115,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BaseType_resetDynamicDocuments</string> </value>
+            <value> <string>PortalTypeClass_resetDynamicDocuments</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
