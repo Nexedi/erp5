@@ -334,9 +334,15 @@ def caching_instance_method(*args, **kw):
     return lambda *args, **kw: caching_method(*args, **kw)
   return decorator
 
-def transactional_cached(key_method=lambda *args: args):
+_default_key_method = lambda *args: args
+def transactional_cached(key_method=_default_key_method):
   @simple_decorator
   def decorator(function):
+    # Unfornately, we can only check functions (not other callable like class).
+    assert (key_method is not _default_key_method or
+            not getattr(function, 'func_defaults', None)), (
+      "default 'key_method' of 'transactional_cached' does not work with"
+      " functions having default values for parameters")
     key = repr(function)
     def wrapper(*args, **kw):
       cache = getTransactionalVariable().setdefault(key, {})

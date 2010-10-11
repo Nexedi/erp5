@@ -37,7 +37,7 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 
 @transactional_cached()
-def _getEffectiveModel(self, start_date=None, stop_date=None):
+def _getEffectiveModel(self, start_date, stop_date):
   """Return the most appropriate model using effective_date, expiration_date
   and version number.
   An effective model is a model which start and stop_date are equal (or
@@ -79,7 +79,7 @@ def _getEffectiveModel(self, start_date=None, stop_date=None):
 
 
 @transactional_cached()
-def _findPredicateList(container_list, portal_type=None):
+def _findPredicateList(container_list, portal_type):
   predicate_list = []
   reference_dict = {}
   for container in container_list:
@@ -164,7 +164,9 @@ class CompositionMixin:
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asComposedDocument')
-  asComposedDocument = transactional_cached()(asComposedDocument)
+  asComposedDocument = transactional_cached(
+    lambda self, portal_type_list=None: (self, portal_type_list)
+    )(asComposedDocument)
 
   # XXX add accessors to get properties from '_effective_model_list' ?
   #     (cf PaySheetModel)
