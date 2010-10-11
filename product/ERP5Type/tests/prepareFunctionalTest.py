@@ -52,6 +52,7 @@ class TestZelenium(ERP5TypeTestCase):
         """
         return ('erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
                 'erp5_knowledge_pad',
+                'erp5_knowledge_pad_ui_test',
                 'erp5_trade', 'erp5_pdm', 'erp5_ooo_import',
                 'erp5_accounting', 'erp5_invoicing',
                 'erp5_simplified_invoicing', 'erp5_project',
