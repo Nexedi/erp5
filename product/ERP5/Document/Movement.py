@@ -853,13 +853,13 @@ class Movement(XMLObject, Amount, CompositionMixin):
     _setVariationCategoryList needs the resource to be set.
     """
     quantity = 0
-    if kw.has_key('source_debit') and kw.has_key('source_credit'):
+    if 'source_debit' in kw and 'source_credit' in kw:
       source_credit = kw.pop('source_credit') or 0
       source_debit = kw.pop('source_debit') or 0
       quantity += (source_credit - source_debit)
       kw['quantity'] = quantity
       kw['cancellation_amount'] = (source_credit < 0 or source_debit < 0)
-    if kw.has_key('destination_debit') and kw.has_key('destination_credit'):
+    if 'destination_debit' in kw and 'destination_credit' in kw:
       destination_credit = kw.pop('destination_credit') or 0
       destination_debit = kw.pop('destination_debit') or 0
       quantity += (destination_debit - destination_credit)
