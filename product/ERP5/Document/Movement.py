@@ -865,6 +865,20 @@ class Movement(XMLObject, Amount, CompositionMixin):
       quantity += (destination_debit - destination_credit)
       kw['quantity'] = quantity
       kw['cancellation_amount'] = (destination_credit < 0 or destination_debit < 0)
+
+    # If both asset debit and asset credit are passed, we have to take care not
+    # to erase the asset price if one of them is unset.
+    if kw.get('source_asset_debit') or kw.get('source_asset_credit'):
+      if kw.get('source_asset_debit') in (None, ''):
+        kw.pop('source_asset_debit', None)
+      if kw.get('source_asset_credit') in (None, ''):
+        kw.pop('source_asset_credit', None)
+    if kw.get('destination_asset_debit') or kw.get('destination_asset_credit'):
+      if kw.get('destination_asset_debit') in (None, ''):
+        kw.pop('destination_asset_debit', None)
+      if kw.get('destination_asset_credit') in (None, ''):
+        kw.pop('destination_asset_credit', None)
+
     if not edit_order:
       edit_order = ('variation_category_list', )
     return XMLObject._edit(self, edit_order=edit_order, **kw)
