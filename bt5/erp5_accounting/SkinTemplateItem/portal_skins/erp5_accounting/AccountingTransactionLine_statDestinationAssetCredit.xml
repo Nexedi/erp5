@@ -53,7 +53,7 @@
             <value> <string>total = 0\n
 for line in context.objectValues(\n
         portal_type = context.getPortalAccountingMovementTypeList()) :\n
-  total += line.getDestinationAssetCredit()\n
+  total += line.getDestinationInventoriatedTotalAssetCredit()\n
   \n
 return total\n
 </string> </value>
