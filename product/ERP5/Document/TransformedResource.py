@@ -81,17 +81,15 @@ class TransformedResource(MappedValue, XMLMatrix, Amount):
     # Provide default mapped value properties and categories if
     # not defined
     def getMappedValuePropertyList(self):
-      result = self._baseGetMappedValuePropertyList()
-      if result:
-        return result
-      return ('quantity',)
+      return self._baseGetMappedValuePropertyList() or (
+          'converted_quantity', 'efficiency')
 
     def getMappedValueBaseCategoryList(self):
       result = self._baseGetMappedValueBaseCategoryList()
       if not result:
         if not self.hasCellContent(base_id='variation'):
           result = self.getVariationRangeBaseCategoryList() # The current resource variation
-      return list(result) + ['quantity_unit']
+      return result
 
     def getBaseApplication(self):
       """

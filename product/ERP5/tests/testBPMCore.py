@@ -33,9 +33,7 @@ import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
-
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type.tests.utils import reindex
+from Products.ERP5Type.tests.utils import createZODBPythonScript, reindex
 
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests which depend on BPM"""
@@ -60,9 +58,9 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   @reindex
   def createCategories(self):
-    category_tool = getToolByName(self.portal, 'portal_categories')
+    category_tool = self.portal.portal_categories
     self.createCategoriesInCategory(category_tool.base_amount, ['discount',
-      'tax', 'total_tax', 'total_discount', 'total'])
+      'tax', 'total_tax', 'total_discount', 'total', 'fixed_quantity'])
     self.createCategoriesInCategory(category_tool.use,
         self.normal_resource_use_category_list + \
             self.invoicing_resource_use_category_list)

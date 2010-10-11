@@ -659,23 +659,31 @@ def registerBaseCategories(property_sheet):
     base_category_dict[bc] = 1
 
 def importLocalInterface(module_id, path = None, is_erp5_type=False):
-  if path is None:
-    instance_home = getConfiguration().instancehome
-    path = os.path.join(instance_home, "interfaces")
-  path = os.path.join(path, "%s.py" % module_id)
-  f = open(path)
-  try:
-    class_id = "I" + convertToUpperCase(module_id)
-    if not is_erp5_type:
+  def provides(class_id):
+    # Create interface getter
+    accessor_name = 'provides' + class_id
+    setattr(BaseClass, accessor_name, lambda self: self.provides(class_id))
+    BaseClass.security.declarePublic(accessor_name)
+  class_id = "I" + convertToUpperCase(module_id)
+  if is_erp5_type:
+    provides(class_id)
+  else:
+    if path is None:
+      instance_home = getConfiguration().instancehome
+      path = os.path.join(instance_home, "interfaces")
+    path = os.path.join(path, "%s.py" % module_id)
+    f = open(path)
+    try:
       module = imp.load_source(class_id, path, f)
-      import Products.ERP5Type.interfaces
-      setattr(Products.ERP5Type.interfaces, class_id, getattr(module, class_id))
-  finally:
-    f.close()
-  # Create interface getter
-  accessor_name = 'provides' + class_id
-  setattr(BaseClass, accessor_name, lambda self: self.provides(class_id))
-  BaseClass.security.declarePublic(accessor_name)
+    finally:
+      f.close()
+    from zope.interface import Interface
+    from Products.ERP5Type import interfaces
+    InterfaceClass = type(Interface)
+    for k, v in module.__dict__.iteritems():
+      if type(v) is InterfaceClass and v is not Interface:
+        setattr(interfaces, k, v)
+        provides(class_id)
 
 def importLocalConstraint(class_id, path = None):
   import Products.ERP5Type.Constraint

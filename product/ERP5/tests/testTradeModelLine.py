@@ -57,6 +57,35 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
   # Constants and variables shared by tests
   base_unit_quantity = 0.01
 
+  def setBaseAmountQuantityMethod(self, base_amount_id, text):
+    """Populate TradeModelLine_getBaseAmountQuantityMethod shared script
+
+    This helper method edits the script so that:
+    - there's no need to do any cleanup
+    - data produced by previous still behaves as expected
+    """
+    base_amount = self.portal.portal_categories.base_amount
+    try:
+      base_amount = base_amount[self._testMethodName]
+    except KeyError:
+      base_amount = base_amount.newContent(self._testMethodName)
+    try:
+      return base_amount[base_amount_id].getRelativeUrl()
+    except KeyError:
+      base_amount = base_amount.newContent(base_amount_id).getRelativeUrl()
+    skin = self.portal.portal_skins.custom
+    script_id = 'TradeModelLine_getBaseAmountQuantityMethod'
+    test = "\nif base_application == %r:\n  " % base_amount
+    try:
+      old_text = '\n' + skin[script_id].body()
+    except KeyError:
+      old_text = "\nreturn context.getBaseAmountQuantity"
+    else:
+      skin._delObject(script_id)
+    text = test + '\n  '.join(text.splitlines()) + old_text
+    createZODBPythonScript(skin, script_id, "base_application", text)
+    return base_amount
+
   def afterSetUp(self):
     UserDict.__init__(self)
     return TestBPMMixin.afterSetUp(self)
@@ -731,13 +760,21 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       to say "discount 10 euros" or "pay more 10 euros" instead of saying "10%
       discount from total"
     """
+    fixed_quantity = self.setBaseAmountQuantityMethod('fixed_quantity', """\
+return lambda *args, **kw: 1""")
+
     tax = self.createServiceTax()
     trade_condition = self.createTradeCondition((), (
       # create a model line with 100 euros
       dict(reference='A', resource_value=tax, quantity=100, price=1),
       # add a discount of 10 euros
       dict(reference='B', resource_value=tax, quantity=10, price=-1)))
-    order = self.createOrder(trade_condition)
+    order = self.createOrder(trade_condition, (
+      dict(),
+      ))
+    self.assertEqual([], order.getAggregatedAmountList())
+    for line in trade_condition.objectValues():
+      line.setBaseApplication(fixed_quantity)
     amount_list = order.getAggregatedAmountList()
     self.assertEqual([-10, 100], sorted(x.getTotalPrice() for x in amount_list))
 
@@ -904,31 +941,27 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       and trade model line can works with appropriate context(delivery or
       movement) only.
     """
+    bounded_fee = self.setBaseAmountQuantityMethod('bounded_fee', """\
+return lambda *args, **kw: min(800,
+  context.getBaseAmountQuantity(*args, **kw))""")
+    fixed_quantity = self.setBaseAmountQuantityMethod('fixed_quantity', """\
+return lambda *args, **kw: 1""")
+
     tax = self.createServiceTax()
     trade_condition = self.createTradeCondition(self.createBusinessProcess())
     # create a model line and set target level to `delivery`.
-    # XXX When it is possible to accumulate contributed quantities between
-    #     input amounts, the trade condition should be configured as follows:
-    # tml1: - price=1, no resource
-    #       - base_application='base_amount/tax'
-    #       - base_contribution='base_amount/some_accumulating_category'
-    # tml2: - price=0.05, resource=tax
-    #       - base_application='base_amount/some_accumulating_category'
-    #       - test_method_id='isDelivery'
-    # And remove 'base_amount/tax' from base_contribution_list on order.
     tml = self.createTradeModelLine(trade_condition,
                                     reference='TAX',
                                     resource_value=tax,
                                     base_application='base_amount/tax',
-                                    test_method_id='isDelivery',
+                                    target_delivery=True,
                                     price=0.05)
 
     # create an order.
     resource_A = self.createResource('Product', title='A')
     resource_B = self.createResource('Product', title='B')
     order = self.createOrder(trade_condition)
-    base_contribution_list = 'base_amount/tax', 'base_amount/extra_fee'
-    order.setBaseContributionList(base_contribution_list)
+    base_contribution_list = 'base_amount/tax', bounded_fee
     kw = {'portal_type': self.order_line_portal_type,
           'base_contribution_list': base_contribution_list}
     order_line_1 = order.newContent(price=1000, quantity=1,
@@ -939,7 +972,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEqual([75], [x.getTotalPrice() for x in amount_list])
 
     # change target level to `movement`.
-    tml.setTestMethodId('isMovement')
+    tml.setTargetDelivery(False)
     amount_list = order.getGeneratedAmountList()
     self.assertEqual([25, 50], sorted(x.getTotalPrice() for x in amount_list))
 
@@ -948,32 +981,21 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     extra_fee_a = self.createTradeModelLine(trade_condition,
                                             reference='EXTRA_FEE_A',
                                             resource_value=tax,
-                                            base_application='base_amount/extra_fee',
-                                            test_method_id='isMovement',
+                                            base_application=bounded_fee,
                                             price=.2)
-    # Use custom script to return a movement which has a fixed value of quantity.
-    # If a fixed quantity value is set to trade model line directly then it is
-    # applied to all the movements without matching base_application category.
-    createZODBPythonScript(
-      self.portal.portal_skins.custom,
-      'TradeModelLine_getAmountProperty',
-      'amount, base_application, *args, **kw',
-      """\
-if base_application == 'base_amount/extra_fee':
-  return min(800, amount.getTotalPrice())
-""")
     # Extra fee b has a fixed quantity so that this trade model line is applied
     # to all movements by force.
     extra_fee_b = self.createTradeModelLine(trade_condition,
                                             reference='EXTRA_FEE_B',
                                             resource_value=tax,
-                                            test_method_id='isMovement',
+                                            base_application=fixed_quantity,
                                             price=1)
     # for delivery level
     discount = self.createTradeModelLine(trade_condition,
                                          reference='DISCOUNT_B',
                                          resource_value=tax,
-                                         test_method_id='isDelivery',
+                                         base_application=fixed_quantity,
+                                         target_delivery=True,
                                          quantity=10, price=-1)
 
     transaction.commit() # flush transactional cache
@@ -986,16 +1008,14 @@ if base_application == 'base_amount/extra_fee':
     expected_tax = 1000*0.05 + 500*0.05, 500*0.2 + 800*0.2, 1 + 1, -10
     self.assertEqual(sorted(expected_tax),
                      sorted(x.getTotalPrice() for x in amount_list))
-
     # Change target level
-    extra_fee_a.setTestMethodId('isDelivery')
-    extra_fee_b.setTestMethodId('isDelivery')
+    extra_fee_a.setTargetDelivery(True)
+    extra_fee_b.setTargetDelivery(True)
     amount_list = order.getAggregatedAmountList()
     expected_tax = 1000*0.05 + 500*0.05, 800*0.2, 1, -10
     self.assertEqual(sorted(expected_tax),
                      sorted(x.getTotalPrice() for x in amount_list))
 
-  @expectedFailure
   def test_tradeModelLineWithRounding(self):
     """
       Test if trade model line works with rounding.
@@ -1004,9 +1024,10 @@ if base_application == 'base_amount/extra_fee':
     # create a model line and set target level to `delivery`
     tax = self.createTradeModelLine(trade_condition,
                                     reference='TAX',
-                                    base_application_list=['base_amount/tax'],
-                                    base_contribution_list=['base_amount/total_tax'])
-    tax.edit(price=0.05, target_level=TARGET_LEVEL_DELIVERY)
+                                    base_application='base_amount/tax',
+                                    base_contribution='base_amount/total_tax',
+                                    price=0.05,
+                                    target_delivery=True)
 
     # create a rounding model for tax
     rounding_model = self.portal.portal_roundings.newContent(portal_type='Rounding Model')
@@ -1024,62 +1045,51 @@ if base_application == 'base_amount/extra_fee':
     order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
                                     price=3333, quantity=1,
                                     resource_value=resource_A,
-                                    base_contribution_list=['base_amount/tax'])
+                                    base_contribution='base_amount/tax')
     order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
                                     price=171, quantity=1,
                                     resource_value=resource_B,
-                                    base_contribution_list=['base_amount/tax'])
+                                    base_contribution='base_amount/tax')
 
     transaction.commit()
     self.tic()
-
     # check the result without rounding
-    amount_list = order.getAggregatedAmountList(rounding=False)
-    self.assertEqual(1, len(amount_list))
-    self.assertEqual(set([order_line_1, order_line_2]),
-                     set(amount_list[0].getCausalityValueList()))
-    self.assertEqual((3333+171)*0.05, amount_list[0].getTotalPrice())
+    amount, = order.getAggregatedAmountList(rounding=False)
+    self.assertEqual((3333+171)*0.05, amount.getTotalPrice()) # 175.2
     # check the result with rounding
-    amount_list = order.getAggregatedAmountList(rounding=True)
-    self.assertEqual(1, len(amount_list))
-    self.assertEqual(set([order_line_1, order_line_2]),
-                     set(amount_list[0].getCausalityValueList()))
-    self.assertEqual(175, amount_list[0].getTotalPrice())
+    amount, = order.getAggregatedAmountList(rounding=True)
+    self.assertEqual(175, amount.getTotalPrice())
 
     # change tax trade model line to `movement` level
-    tax.edit(target_level=TARGET_LEVEL_MOVEMENT)
+    tax.setTargetDelivery(False)
 
     def getTotalAmount(amount_list):
       result = 0
       for amount in amount_list:
-        if amount.getBaseContribution() in ('base_amount/total', 'base_amount/total_tax'):
+        if amount.getBaseContribution() in ('base_amount/total',
+                                            'base_amount/total_tax'):
           result += amount.getTotalPrice()
       return result
 
     # check the result without rounding
-    amount_list = order.getAggregatedAmountList(rounding=False)
-    self.assertEqual(2, len(amount_list))
-    self.assertEqual(3333*0.05+171*0.05, getTotalAmount(amount_list))
+    amount, = order.getAggregatedAmountList(rounding=False)
+    self.assertEqual(3333*0.05+171*0.05, amount.getTotalPrice()) # 175.2
     # check the result with rounding
-    amount_list = order.getAggregatedAmountList(rounding=True)
-    self.assertEqual(2, len(amount_list))
+    expectedFailure(order.getAggregatedAmountList)(rounding=True)
+    self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
     self.assertEqual(174, getTotalAmount(amount_list))
 
     # check getAggregatedAmountList result of each movement
     # order line 1
-    amount_list = order_line_1.getAggregatedAmountList(rounding=False)
-    self.assertEqual(1, len(amount_list))
-    self.assertEqual(3333*0.05, amount_list[0].getTotalPrice())
-    amount_list = order_line_1.getAggregatedAmountList(rounding=True)
-    self.assertEqual(1, len(amount_list))
-    self.assertEqual(166, amount_list[0].getTotalPrice())
+    amount, = order_line_1.getAggregatedAmountList(rounding=False)
+    self.assertEqual(3333*0.05, amount.getTotalPrice()) # 166.65
+    amount, = order_line_1.getAggregatedAmountList(rounding=True)
+    self.assertEqual(166, amount.getTotalPrice())
     # order line 2
-    amount_list = order_line_2.getAggregatedAmountList(rounding=False)
-    self.assertEqual(1, len(amount_list))
-    self.assertEqual(171*0.05, amount_list[0].getTotalPrice())
-    amount_list = order_line_2.getAggregatedAmountList(rounding=True)
-    self.assertEqual(1, len(amount_list))
-    self.assertEqual(8, amount_list[0].getTotalPrice())
+    amount, = order_line_2.getAggregatedAmountList(rounding=False)
+    self.assertEqual(171*0.05, amount.getTotalPrice()) # 8.55
+    amount, = order_line_2.getAggregatedAmountList(rounding=True)
+    self.assertEqual(8, amount.getTotalPrice())
 
     # change rounding model definition
     rounding_model.setDecimalRoundingOption('ROUND_UP')
@@ -1093,15 +1103,14 @@ if base_application == 'base_amount/extra_fee':
     self.tic()
 
     # check the result without rounding
-    amount_list = order.getAggregatedAmountList(rounding=False)
-    self.assertEqual(2, len(amount_list))
-    self.assertEqual(3.3333*3333*0.05+171*0.05, getTotalAmount(amount_list))
+    amount, = order.getAggregatedAmountList(rounding=False)
+    self.assertEqual(3.3333*3333*0.05+171*0.05, amount.getTotalPrice())
     # check the result with rounding
     # both quantity and total price will be rounded so that the expression
     # should be "round_up(round_up(3.3333 * 3333) * 0.05) + round_up(round_up
     # (1* 171) * 0.05)"
     amount_list = order.getAggregatedAmountList(rounding=True)
-    self.assertEqual(2, len(amount_list))
+    self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
     self.assertEqual(565, getTotalAmount(amount_list))
 
     # create a rounding model to round quantity property of order line
@@ -1119,7 +1128,7 @@ if base_application == 'base_amount/extra_fee':
     amount_list = order.getAggregatedAmountList(rounding=True)
     # The expression should be "round_up(round_up(round_down(3.3333) * 3333)
     # * 0.05) + round_up(round_up(round_down(1) * 171) * 0.05)"
-    self.assertEqual(2, len(amount_list))
+    self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
     self.assertEqual(509, getTotalAmount(amount_list))
 
     # create a rounding model to round price property of order line
@@ -1140,14 +1149,13 @@ if base_application == 'base_amount/extra_fee':
     self.tic()
 
     # check the result without rounding
-    amount_list = order.getAggregatedAmountList(rounding=False)
-    self.assertEqual(2, len(amount_list))
-    self.assertEqual(3.3333*3333*0.05+171.1234*0.05, getTotalAmount(amount_list))
+    amount, = order.getAggregatedAmountList(rounding=False)
+    self.assertEqual(3.3333*3333*0.05+171.1234*0.05, amount.getTotalPrice())
     # check the result with rounding
     amount_list = order.getAggregatedAmountList(rounding=True)
     # The expression should be "round_down(3.3333) * round_up(3333) * 0.05 +
     # round_down(1) * round_up(171.1234) * 0.05"
-    self.assertEqual(2, len(amount_list))
+    self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
     self.assertEqual(508.51000000000005, getTotalAmount(amount_list))
 
   def test_tradeModelLineWithEmptyBaseContributionMovement(self):

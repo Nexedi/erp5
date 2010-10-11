@@ -28,19 +28,11 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.MappedValue import MappedValue
-from Products.ERP5.AggregatedAmountList import AggregatedAmountList
-from Products.ERP5.Document.TradeCondition import TradeCondition
-from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
-import zope.interface
+from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine
 
-class TradeModelLine(MappedValue, XMLMatrix, Amount, AmountGeneratorMixin):
+class TradeModelLine(AmountGeneratorLine):
   """Trade Model Line is a way to represent trade transformation for movements"""
   meta_type = 'ERP5 Trade Model Line'
   portal_type = 'Trade Model Line'
@@ -49,34 +41,18 @@ class TradeModelLine(MappedValue, XMLMatrix, Amount, AmountGeneratorMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Declarative interfaces
-  zope.interface.implements(
-      interfaces.IAmountGenerator,
-      interfaces.IVariated
-  )
-
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                  , PropertySheet.SimpleItem
-                  , PropertySheet.CategoryCore
-                  , PropertySheet.Amount
-                  , PropertySheet.Price
-                  , PropertySheet.TradeModelLine
-                  , PropertySheet.Reference
-                  , PropertySheet.Predicate
-                  , PropertySheet.MappedValue
-                  )
+  property_sheets = (PropertySheet.TradeModelLine, )
 
-  # XXX to be specificied in an interface (IAmountGeneratorLine ?)
-  def getAmountProperty(self, amount, base_application, amount_list, rounding):
-    """
-    Produced amount quantity is needed to initialize transformation
-    """
-    return amount.getTotalPrice()
+  @classmethod
+  def _getBaseAmountQuantity(cls, delivery_amount):
+    return delivery_amount.getTotalPrice()
 
   ### Mapped Value Definition
   # Provide default mapped value properties and categories if
   # not defined
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getMappedValuePropertyList')
   def getMappedValuePropertyList(self):
     """
     """
@@ -90,10 +66,7 @@ class TradeModelLine(MappedValue, XMLMatrix, Amount, AmountGeneratorMixin):
     return ('price', 'efficiency')
 
   def getMappedValueBaseCategoryList(self):
-    result = self._baseGetMappedValueBaseCategoryList()
-    if result:
-      return result
-    return ('base_contribution', 'trade_phase', )
+    return self._baseGetMappedValueBaseCategoryList() or ('trade_phase',)
 
   #
   security.declareProtected(Permissions.AccessContentsInformation,

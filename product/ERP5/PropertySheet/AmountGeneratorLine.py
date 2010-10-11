@@ -27,8 +27,16 @@
 ##############################################################################
 
 
-class TradeModelLine:
+class AmountGeneratorLine:
   """
-    Properties for trade model lines
+    Properties for amount generator lines
   """
-  _categories = ('trade_phase',)
+  _properties = (
+    { 'id'          : 'target_delivery',
+      'description' : "Defines if amount generator line should be applied on"
+                      " delivery (e.g. a stamp on an order) instead of"
+                      " movements (e.g. VAT to every order line).",
+      'type'        : 'boolean',
+      'mode'        : 'w',
+    },
+  )

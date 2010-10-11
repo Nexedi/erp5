@@ -107,8 +107,8 @@
                         <string>my_resource_title</string>
                         <string>my_price</string>
                         <string>my_quantity</string>
-                        <string>my_efficiency</string>
-                        <string>my_create_line</string>
+                        <string>my_trade_phase</string>
+                        <string>my_use</string>
                       </list>
                     </value>
                 </item>
@@ -116,10 +116,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_trade_phase</string>
+                        <string>my_target_delivery</string>
                         <string>my_base_application_list</string>
                         <string>my_base_contribution_list</string>
-                        <string>my_use</string>
                       </list>
                     </value>
                 </item>
