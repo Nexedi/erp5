@@ -1426,6 +1426,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     web_site_module = self.portal.web_site_module
     site = web_site_module.newContent(portal_type='Web Site',
                                       id='site')
+    site.publish()
 
     section = site.newContent(portal_type='Web Section',
                               id='section')
@@ -1761,6 +1762,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     website = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                      id='site')
+    website.publish()
     website.setMembershipCriterionBaseCategory('follow_up')
     website.setMembershipCriterionDocumentList(['follow_up/%s' %
                                                   project.getRelativeUrl()])
@@ -1793,12 +1795,11 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def test_WebSiteModuleDefaultSecurity(self):
     """
-      Test that by default Anonymous User may access Web Site Module
+      Test that by default Anonymous User cannot access Web Site Module
     """
     portal = self.portal
     self.logout()
-    portal.restrictedTraverse('web_site_module')
-    portal.web_site_module.view()
+    self.assertRaises(Unauthorized, portal.web_site_module.view)
 
 
 class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
