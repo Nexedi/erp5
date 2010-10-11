@@ -124,6 +124,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     website = self.getPortal().web_site_module.newContent(portal_type = 'Web Site',
                                                           id = self.website_id,
                                                           **kw)
+    website.publish()
     transaction.commit()
     self.tic()
     return website
