@@ -412,8 +412,8 @@
             <td class="listbox-table-select-cell" tal:condition="show_select_column">&nbsp;</td>\n
             <tal:block tal:repeat="value here/getStatValueList">\n
             <td align="left"\n
+               class="listbox-table-data-cell"\n
                tal:define="original_value python: value[0]; processed_value python: value[1]"\n
-               tal:attributes="align python: isinstance(original_value, (float, int, long)) and \'right\' or \'left\'"\n
                tal:content="structure processed_value" />\n
             </tal:block>\n
           </tr>\n

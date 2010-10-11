@@ -727,6 +727,16 @@ table.listbox input{\n
   float:none;\n
 }\n
 \n
+.listbox-table-data-cell > .figure{\n
+  float:right;\n
+  display:block;\n
+}\n
+\n
+.listbox-table-data-cell > a > .figure{\n
+  float:right;\n
+  display:block;\n
+}\n
+\n
 table.listbox th button{\n
   border-width:0;\n
   cursor:pointer;\n
@@ -795,7 +805,8 @@ div.search-text-listbox{\n
 \n
 div.search-text-listbox input{\n
   width: auto;\n
-}
+}\n
+
 
 ]]></string> </value>
         </item>
