@@ -104,11 +104,18 @@ class asComposedDocument(object):
   Collecting predicates (from effective models) is done lazily. Predicates can
   be accessed through contentValues/objectValues.
   """
+  # Cache created classes to make other caches (like Base.aq_portal_type)
+  # useful and avoid memory leaks.
+  __class_cache = {}
 
   def __new__(cls, orig_self, portal_type_list=None):
     self = orig_self.asContext(_portal_type_list=portal_type_list)
     base_class = self.__class__
-    self.__class__ = type(base_class.__name__, (cls, base_class), {})
+    try:
+      self.__class__ = cls.__class_cache[base_class]
+    except KeyError:
+      cls.__class_cache[base_class] = self.__class__ = \
+        type(base_class.__name__, (cls, base_class), {})
     self._effective_model_list = \
       orig_self._findEffectiveSpecialiseValueList(portal_type_list)
     return self
