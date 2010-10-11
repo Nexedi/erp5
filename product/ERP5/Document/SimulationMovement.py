@@ -320,7 +320,11 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       delivery_value = self.getDeliveryValue()
       if delivery_value is not None:
         return delivery_value.asComposedDocument(*args, **kw)
-      self = self.getParentValue().getParentValue()
+      # below code is for compatibility with old rules
+      grand_parent = self.getParentValue().getParentValue()
+      if grand_parent.getPortalType() == 'Simulation Tool':
+        return self.getOrderValue().asComposedDocument(*args, **kw)
+      self = grand_parent
 
   # Deliverability / orderability
   security.declareProtected( Permissions.AccessContentsInformation,
