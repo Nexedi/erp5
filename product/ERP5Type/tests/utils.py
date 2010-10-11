@@ -110,6 +110,9 @@ class DummyMessageCatalog:
       return word
     else:
       return default
+  def translate(self, msgid, mapping=None, context=None,
+                target_language=None, default=None):
+    return default
 
 class DummyLocalizer:
   """A replacement for stock cookie - based localizer.
