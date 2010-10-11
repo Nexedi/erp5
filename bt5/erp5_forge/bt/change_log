@@ -1,3 +1,6 @@
+2010-10-11 lucas
+* Now portal_type_group_list is an optional param for the script BaseType_copyRoleList.
+
 2010-03-02 yusei
 * Remove short title.
 
