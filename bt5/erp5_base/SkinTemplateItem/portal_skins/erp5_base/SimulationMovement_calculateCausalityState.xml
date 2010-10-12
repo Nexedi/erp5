@@ -50,15 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>simulation_movement = state_change[\'object\']\n
+            <value> <string>delivery_movement = context.getDeliveryValue()\n
 \n
-# It is not quite useful to invoke the method calculate when a newly created\n
-# simulation movement is not indexed yet, so it is better to wait for the indexing\n
-# to be done.\n
-path = simulation_movement.getPath()\n
-method_id_list = (\'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
-simulation_movement.activate(after_path_and_method_id=(path, method_id_list)) \\\n
-    .SimulationMovement_calculateCausalityState()\n
+if delivery_movement is not None:\n
+  delivery = delivery_movement.getRootDeliveryValue()\n
+  delivery.activate().Delivery_calculate()\n
 </string> </value>
         </item>
         <item>
@@ -69,25 +65,7 @@ simulation_movement.activate(after_path_and_method_id=(path, method_id_list)) \\
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Anonymous</string>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Associate</string>
-                <string>Auditor</string>
-                <string>Authenticated</string>
-                <string>Author</string>
-                <string>Manager</string>
-                <string>Member</string>
-                <string>Owner</string>
-                <string>Reviewer</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -107,18 +85,17 @@ simulation_movement.activate(after_path_and_method_id=(path, method_id_list)) \\
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>0</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>state_change</string>
-                            <string>_getitem_</string>
-                            <string>simulation_movement</string>
                             <string>_getattr_</string>
-                            <string>path</string>
-                            <string>method_id_list</string>
+                            <string>context</string>
+                            <string>delivery_movement</string>
+                            <string>None</string>
+                            <string>delivery</string>
                           </tuple>
                         </value>
                     </item>

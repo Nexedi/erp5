@@ -1,4 +1,7 @@
 2010-10-12 yo
+* Fix an error that calculate may be called too early before a new simulation movement is indexed.
+
+2010-10-12 yo
 * Tweak the configurations of several interaction workflows for optimization.
 
 2010-09-30 yusei
