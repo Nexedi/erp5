@@ -35,24 +35,7 @@ os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
-  """
-  Unit test for the cash exchange module
-  Source =  destination
-  Initial cash detail :
-        5 banknotes of 10000
-        12 coin of 200
-        24 banknotes of 5000
-        0 coin of 100
 
-  Ordered by Assignor
-  Confirmed by Assignee
-  Delivered by DestinationAssignee
-  Final cash detail :
-        0 banknotes of 10000
-        0 coin of 200
-        34 banknotes of 5000
-        24 coin of 100
-  """
   # pseudo constants
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
