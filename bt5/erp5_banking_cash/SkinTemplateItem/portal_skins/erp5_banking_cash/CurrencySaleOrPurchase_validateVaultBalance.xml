@@ -82,9 +82,16 @@ context.Baobab_checkCounterOpened(counter_site)\n
 if is_currency_sale:\n
   foreign_currency_portal_type = outgoing_portal_type\n
   default_currency_portal_type = incoming_portal_type\n
+  total_quantity = context.CurrencySale_getQuantity()\n
 else:\n
   foreign_currency_portal_type = incoming_portal_type\n
   default_currency_portal_type = outgoing_portal_type\n
+  total_quantity = context.CurrencyPurchase_getQuantity()\n
+\n
+# check if an exchange rate is defined\n
+if total_quantity is None:\n
+  raise ValidationFailed, (Message(domain=\'ui\',\n
+    message="No exchange rate defined for this currency at document date."))\n
 \n
 # check resource on currency fastinput\n
 doc_resource = context.getResource()\n
@@ -92,11 +99,6 @@ for line in context.contentValues(portal_type=foreign_currency_portal_type):\n
   if line.getResourceValue().getPriceCurrency() != doc_resource:\n
     raise ValidationFailed, (Message(domain="ui",\n
       message="Resource defined on document is different from currency cash."), )\n
-\n
-# check if an exchange rate is defined\n
-if context.CurrencyPurchase_getQuantity() is None:\n
-  raise ValidationFailed, (Message(domain=\'ui\',\n
-    message="No exchange rate defined for this currency at document date."))\n
 \n
 # check outgoing amount\n
 if is_currency_sale:\n
@@ -193,10 +195,11 @@ elif resource_one == 1:\n
                             <string>counter_site</string>
                             <string>foreign_currency_portal_type</string>
                             <string>default_currency_portal_type</string>
+                            <string>total_quantity</string>
+                            <string>None</string>
                             <string>doc_resource</string>
                             <string>_getiter_</string>
                             <string>line</string>
-                            <string>None</string>
                             <string>amount</string>
                             <string>msg</string>
                             <string>default_msg</string>
