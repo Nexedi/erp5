@@ -153,6 +153,11 @@ REQUIRED_BT5_ID_LIST = ("erp5_core",\n
                         "express_customisation",\n
                        )\n
 \n
+# A list bt5 which are required to upgrade catalog.\n
+# After the bt5 be updated, update catalog will be trigger.\n
+UPDATE_CATALOG_BT5_ID_LIST = ()\n
+\n
+\n
 # Call some scripts inside same transaction before or after BT update\n
 BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT = {}\n
 AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT = {\'erp5_mysql_innodb_catalog\': (\'ERP5Site_updateSitePropertyForTestOnly\',)}\n
@@ -554,6 +559,7 @@ signature_dict = {\n
  , \'required_bt5_id_list\': REQUIRED_BT5_ID_LIST\n
    # Provides a list of bt5 which can be upgraded by the upgrader (if already installed)\n
  , \'upgradable_bt5_id_list\': UPGRADABLE_BT5_ID_LIST\n
+ , \'update_catalog_bt5_id_list\' : UPDATE_CATALOG_BT5_ID_LIST\n
  , \'before_triggered_bt5_id_dict\': BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT\n
  , \'after_triggered_bt5_id_dict\': AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT\n
    # Provide a list of bt5 which require reinstallation\n
@@ -631,6 +637,7 @@ else:\n
                             <string>_getattr_</string>
                             <string>UPGRADABLE_BT5_ID_LIST</string>
                             <string>REQUIRED_BT5_ID_LIST</string>
+                            <string>UPDATE_CATALOG_BT5_ID_LIST</string>
                             <string>BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT</string>
                             <string>AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT</string>
                             <string>REINSTALABLE_BT5_ID_LIST</string>

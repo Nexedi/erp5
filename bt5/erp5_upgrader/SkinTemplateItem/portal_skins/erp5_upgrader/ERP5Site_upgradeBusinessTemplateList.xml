@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -94,6 +91,8 @@ upgradable_bt5_id_list = signature[\'upgradable_bt5_id_list\']\n
 reinstalable_bt5_id_list = signature[\'reinstalable_bt5_id_list\']\n
 before_triggered_bt5_id_dict = signature[\'before_triggered_bt5_id_dict\']\n
 after_triggered_bt5_id_dict = signature[\'after_triggered_bt5_id_dict\']\n
+update_catalog_bt5_id_list = signature[\'update_catalog_bt5_id_list\']\n
+\n
 \n
 base_url_list = signature[\'bt5_base_url_list\']\n
 installed_bt5_title_list = [o.getTitle() for o in portal_templates.getInstalledBusinessTemplateList()]\n
@@ -117,7 +116,7 @@ def installBT5(bt5_title, previous_bt5, bt5_counter):\n
     # We must make sure all documents from previous installations \n
     # are already indexed (specially categories).\n
     kw[\'after_method_id\'] = "immediateReindexObject"\n
-  update_catalog = portal_templates.TemplateTool_isUpdateCatalogRequired(bt5_title)\n
+  update_catalog = bt5_title in update_catalog_bt5_id_list \n
   before_triggered_bt5_id_list = before_triggered_bt5_id_dict.get(bt5_title, ())\n
   after_triggered_bt5_id_list = after_triggered_bt5_id_dict.get(bt5_title, ())\n
   keep_original_list = signature[\'keep_original_dict\'].get(bt5_title, ())\n
@@ -227,6 +226,7 @@ return message_list\n
                             <string>reinstalable_bt5_id_list</string>
                             <string>before_triggered_bt5_id_dict</string>
                             <string>after_triggered_bt5_id_dict</string>
+                            <string>update_catalog_bt5_id_list</string>
                             <string>base_url_list</string>
                             <string>append</string>
                             <string>$append0</string>
