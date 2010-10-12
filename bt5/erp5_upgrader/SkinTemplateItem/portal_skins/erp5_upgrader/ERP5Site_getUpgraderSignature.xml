@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,8 +56,20 @@
   The release signature is a kind of declarative\n
   specification of an upgrader.\n
 """\n
+\n
+# Alarm dict is used to enable/disable upgrade alarms.\n
+# ie.: If you don\'t want upgrade products in some environments\n
+# you can just define \'product_upgrader\' : False.\n
+\n
+ALARM_DICT = {\n
+ "system_upgrader" : True,\n
+ "product_upgrader" : True,\n
+ "bt5_upgrader" : True,\n
+ "finalize_upgrader" : True\n
+}\n
+\n
 # The destination release provided by this upgrader\n
-DESTINATION_RELEASE = \'5.4.7\'\n
+DESTINATION_RELEASE = \'5.4.6\'\n
 \n
 ZOPE_VERSION = "2.8.11"\n
 \n
@@ -527,8 +536,10 @@ UPGRADE_OBJECT_CLASS_LIST = ( (\'portal_gadgets\', \n
 \n
 # Wrap everything into a dict\n
 signature_dict = {\n
+   # Defines the alarms enabled for the upgrade\n
+   \'alarm_dict\' : ALARM_DICT\n
    # Defines the default release for bt5\n
-   \'release\': DESTINATION_RELEASE\n
+ , \'release\': DESTINATION_RELEASE\n
    # Defines the default version for zope\n
  , \'zope\': ZOPE_VERSION\n
    # Defines the default version for python\n
@@ -608,6 +619,8 @@ else:\n
                         <value>
                           <tuple>
                             <string>item</string>
+                            <string>True</string>
+                            <string>ALARM_DICT</string>
                             <string>DESTINATION_RELEASE</string>
                             <string>ZOPE_VERSION</string>
                             <string>PYTHON_VERSION</string>

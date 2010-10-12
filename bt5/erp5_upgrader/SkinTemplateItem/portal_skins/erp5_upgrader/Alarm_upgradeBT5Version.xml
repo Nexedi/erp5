@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -60,6 +57,10 @@
 """\n
 # Setup skins\n
 context.ERP5Site_setupUpgraderSkinSelection()\n
+\n
+alarm_dict = context.ERP5Site_getUpgraderSignature("alarm_dict")\n
+if not alarm_dict.get(context.getId(), True):\n
+  return False\n
 \n
 portal_alarms = context.getPortalObject().portal_alarms\n
 activate = context.portal_activities.activate\n
@@ -133,6 +134,9 @@ return message_list\n
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>alarm_dict</string>
+                            <string>True</string>
+                            <string>False</string>
                             <string>portal_alarms</string>
                             <string>activate</string>
                             <string>active_process</string>

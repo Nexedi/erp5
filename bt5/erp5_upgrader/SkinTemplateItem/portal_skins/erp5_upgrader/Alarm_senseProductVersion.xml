@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -58,6 +55,10 @@
 """\n
   Here we make sure the installed products are the right ones\n
 """\n
+alarm_dict = context.ERP5Site_getUpgraderSignature("alarm_dict")\n
+if not alarm_dict.get(context.getId(), True):\n
+  return False\n
+\n
 # check if upgrade is needed\n
 return len(context.ERP5Site_upgradeProductPath()) > 0\n
 
@@ -99,9 +100,12 @@ return len(context.ERP5Site_upgradeProductPath()) > 0\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>len</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>alarm_dict</string>
+                            <string>True</string>
+                            <string>False</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>
