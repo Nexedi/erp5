@@ -41,7 +41,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
   QUIET = 0 # we don't want the test to be quiet
 
   outgoing_quantity_5000 = {'variation/1992': 4, 'variation/2003': 6}
-  outgoing_quantity_100 = {'variation/1992': 200, 'variation/2003': 0}
+  outgoing_quantity_100 = {'variation/1992': 163, 'variation/2003': 0}
 
   def getTitle(self):
     """
@@ -153,8 +153,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
       description='test',
       resource_value=self.currency_2, 
       source_total_asset_price=100.0, 
-      discount=3000.0,
-      quantity=70000.0,
+      discount_ratio=0.02, # 1300
     )
     self.assertEqual(len(module), 1)
     self.assertEqual(cash_to_currency_sale.getSource(),
@@ -228,7 +227,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
         self.guichet_entrante.getRelativeUrl())
       cell_id = cell.getId()
       if cell_id == 'movement_0_0_0':
-        self.assertEqual(cell.getQuantity(), 200.0)
+        self.assertEqual(cell.getQuantity(), 163.0)
       elif cell_id == 'movement_0_1_0':
         self.assertEqual(cell.getQuantity(), 0.0)
       else:
@@ -241,12 +240,11 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     # Check number of lines
     self.assertEqual(len(document), 2)
     self.assertEqual(document.getTotalQuantity(fast=0,
-      portal_type="Incoming Cash To Currency Sale Line"),
-      210)
+      portal_type="Incoming Cash To Currency Sale Line"), 173)
     # Check the total price
     self.assertEqual(document.getTotalPrice(fast=0,
       portal_type="Incoming Cash To Currency Sale Line"),
-      5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 200.0)
+      5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 163.0)
 
   def stepCreateValidOutgoingLine(self, sequence=None, sequence_list=None,
       **kwd):
@@ -328,9 +326,9 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     self.assertEqual(getFutureInventory(node=incoming_counter,
       resource=banknote_5000), 10.0)
     self.assertEqual(getCurrentInventory(node=incoming_counter,
-      resource=coin_100), 200.0)
+      resource=coin_100), 163.0)
     self.assertEqual(getFutureInventory(node=incoming_counter,
-      resource=coin_100), 200.0)
+      resource=coin_100), 163.0)
 
     self.assertEqual(getCurrentInventory(node=outgoing_counter,
       resource=banknote_usd_20), 0.0)
