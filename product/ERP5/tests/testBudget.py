@@ -31,7 +31,7 @@ import transaction
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ZSQLCatalog.SQLCatalog import ComplexQuery
+from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, Query
 from AccessControl import getSecurityManager
 
 class TestBudget(ERP5TypeTestCase):
@@ -657,7 +657,115 @@ class TestBudget(ERP5TypeTestCase):
       {('source_project/organisation_module/my_organisation',): 200.0,
        ('source_project/budget_special_node/none',): -300.0
        }, budget_line.getEngagedBudgetDict())
+   
+  def test_only_none_virtual_node(self):
+    # tests consumptions, by using only "none" virtual node on a node budget
+    # variation
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_cell',
+                    # this does not work for movement, node and section
+                    # categories ...
+                    inventory_axis='project',
+                    variation_base_category='source_project',
+                    aggregate_value_list=(
+                      self.portal.organisation_module.my_organisation,),
+                    include_virtual_none_node=True)
+    budget_model.newContent(
+                    portal_type='Category Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_line',
+                    inventory_axis='node_category_strict_membership',
+                    variation_base_category='account_type',)
 
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2000, 1, 1),
+                    start_date_range_max=DateTime(2000, 12, 31),
+                    specialise_value=budget_model)
+
+    budget_line = budget.newContent(portal_type='Budget Line')
+
+    budget_line.edit(
+        variation_category_list=(
+          'source_project/budget_special_node/none', # this is 'none'
+          'account_type/expense',))
+
+    form = budget_line.BudgetLine_view
+    self.portal.REQUEST.other.update(
+        dict(AUTHENTICATED_USER=getSecurityManager().getUser(),
+
+             field_membership_criterion_base_category_list=
+        form.membership_criterion_base_category_list.get_value('default'),
+             field_mapped_value_property_list=
+        form.mapped_value_property_list.get_value('default'),
+
+             field_matrixbox_quantity_cell_0_0_0="200",
+             field_matrixbox_membership_criterion_category_list_cell_0_0_0=[
+               'source_project/budget_special_node/none',],
+        ))
+    budget_line.Base_edit(form_id=form.getId())
+
+    self.assertEquals(1, len(budget_line.contentValues()))
+
+    class ReferenceQuery:
+      """Helper class to compare queries
+      """
+      def __eq__(me, query):
+        self.assertTrue(isinstance(query, Query))
+        self.assertEquals(query.kw, {'project_uid': None})
+        return True
+
+    self.assertEquals(
+        dict(from_date=DateTime(2000, 1, 1),
+             at_date=DateTime(2000, 12, 31).latestTime(),
+             node_category_strict_membership=['account_type/expense',],
+             project_uid=ReferenceQuery(),
+             group_by_node_category_strict_membership=True,
+             group_by_project=True,
+             ),
+        budget_model.getInventoryListQueryDict(budget_line))
+
+    budget_cell = budget_line.contentValues()[0]
+    self.assertEquals(
+        dict(from_date=DateTime(2000, 1, 1),
+             at_date=DateTime(2000, 12, 31).latestTime(),
+             node_category_strict_membership=['account_type/expense',],
+             project_uid=ReferenceQuery(),
+             ),
+        budget_model.getInventoryQueryDict(budget_cell))
+
+    atransaction = self.portal.accounting_module.newContent(
+                  portal_type='Accounting Transaction',
+                  source_section_value=self.portal.organisation_module.my_organisation,
+                  resource_value=self.portal.currency_module.euro,
+                  start_date=DateTime(2000, 1, 2))
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.goods_purchase,
+                  source_project_value=self.portal.organisation_module.my_organisation,
+                  source_debit=200)
+    atransaction.newContent(
+                  portal_type='Accounting Transaction Line',
+                  source_value=self.portal.account_module.goods_purchase,
+                  source_credit=300)
+    atransaction.stop()
+    
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(
+      {('source_project/budget_special_node/none',): -300.0
+       }, budget_line.getConsumedBudgetDict())
+
+    self.assertEquals(
+      {('source_project/budget_special_node/none',): -300.0
+       }, budget_line.getEngagedBudgetDict())
+
+    self.assertEquals(-300, budget_cell.getConsumedBudget())
 
   def test_none_and_all_others_virtual_nodes_together(self):
     # tests consumptions, by using "none" and "all other" virtual nodes

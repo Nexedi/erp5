@@ -31,7 +31,6 @@ from AccessControl.ZopeGuards import guarded_getattr
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.BudgetVariation import BudgetVariation
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery, ComplexQuery
-from Products.ERP5Type.Message import translateString
 
 
 class NodeBudgetVariation(BudgetVariation):
@@ -131,6 +130,7 @@ class NodeBudgetVariation(BudgetVariation):
     # parameters such as section_category_uid
     axis = '%s_uid' % axis
 
+    query = None
     portal_categories = self.getPortalObject().portal_categories
     for criterion_category in context.getMembershipCriterionCategoryList():
       if '/' not in criterion_category: # safe ...
@@ -139,8 +139,8 @@ class NodeBudgetVariation(BudgetVariation):
       if criterion_base_category == base_category:
         if node_url == 'budget_special_node/none':
           # This is the "Nothing" virtual node
-          query_dict.setdefault(axis, []).append(Query(**{axis: None}))
-        if node_url == 'budget_special_node/all_other':
+          query = Query(**{axis: None})
+        elif node_url == 'budget_special_node/all_other':
           # This is the "All Other" virtual node
           other_uid_list = []
           none_node_selected = False
@@ -153,18 +153,27 @@ class NodeBudgetVariation(BudgetVariation):
                 other_uid_list.append(node.getUid())
           if none_node_selected:
             # in this case we don't want to include NULL in All others
-            query_dict.setdefault(axis, []).append(
-                            NegatedQuery(Query(**{axis: other_uid_list})))
+            query = NegatedQuery(Query(**{axis: other_uid_list}))
           else:
-            query_dict.setdefault(axis, []).append(
-                        ComplexQuery(
+            query = ComplexQuery(
                             NegatedQuery(Query(**{axis: other_uid_list})),
                             Query(**{axis: None}),
-                            operator="OR"))
+                            operator="OR")
 
-        query_dict.setdefault(axis, []).append(
+        else:
+          query_dict.setdefault(axis, []).append(
                 portal_categories.getCategoryValue(node_url,
                   base_category=criterion_base_category).getUid())
+
+    if query:
+      if axis in query_dict:
+        query_dict[axis] = ComplexQuery(
+              query,
+              Query(**{axis: query_dict[axis]}),
+              operator='OR')
+      else:
+        query_dict[axis] = query
+
 
     return query_dict
 
@@ -210,10 +219,13 @@ class NodeBudgetVariation(BudgetVariation):
       found = True
     if found:
       if self.getProperty('include_virtual_none_node'):
-        query_dict[axis] = ComplexQuery(
-              Query(**{axis: None}),
-              Query(**{axis: query_dict[axis]}),
-              operator="OR")
+        if axis in query_dict:
+          query_dict[axis] = ComplexQuery(
+                Query(**{axis: None}),
+                Query(**{axis: query_dict[axis]}),
+                operator="OR")
+        else:
+          query_dict[axis] = Query(**{axis: None})
       return query_dict
     return dict()
   
