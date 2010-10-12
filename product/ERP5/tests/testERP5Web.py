@@ -1376,12 +1376,12 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     self.portal.Localizer.changeLanguage('en')
 
-    target = self.portal.restrictedTraverse('web_site_module/site/section/my-first-web-page')
+    target = self.portal.unrestrictedTraverse('web_site_module/site/section/my-first-web-page')
     self.assertEqual('Hello, World!', target.getTextContent())
 
     self.portal.Localizer.changeLanguage('ja')
 
-    target = self.portal.restrictedTraverse('web_site_module/site/section/my-first-web-page')
+    target = self.portal.unrestrictedTraverse('web_site_module/site/section/my-first-web-page')
     self.assertEqual('こんにちは、世界！', target.getTextContent())
 
   def test_02_LocalRolesFromRoleDefinition(self):
