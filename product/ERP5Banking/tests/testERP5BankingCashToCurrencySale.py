@@ -337,7 +337,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     incoming_counter = self.guichet_entrante.getRelativeUrl()
     outgoing_counter = self.guichet_sortante.getRelativeUrl()
     banknote_5000 = self.billet_5000.getRelativeUrl()
-    banknote_100 = self.billet_100.getRelativeUrl()
+    coin_100 = self.piece_100.getRelativeUrl()
     banknote_usd_20 = self.usd_billet_20.getRelativeUrl()
 
     self.assertEqual(getCurrentInventory(node=incoming_counter,
@@ -345,9 +345,9 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     self.assertEqual(getFutureInventory(node=incoming_counter,
       resource=banknote_5000), 10.0)
     self.assertEqual(getCurrentInventory(node=incoming_counter,
-      resource=banknote_100), 200.0)
+      resource=coin_100), 200.0)
     self.assertEqual(getFutureInventory(node=incoming_counter,
-      resource=banknote_100), 200.0)
+      resource=coin_100), 200.0)
 
     self.assertEqual(getCurrentInventory(node=outgoing_counter,
       resource=banknote_usd_20), 0.0)
