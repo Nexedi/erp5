@@ -56,6 +56,8 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
   """Provides methods to implementations sharing similar logic to Trade Model Lines"""
   # Constants and variables shared by tests
   base_unit_quantity = 0.01
+  node_portal_type = 'Organisation'
+  order_date = DateTime()
 
   def setBaseAmountQuantityMethod(self, base_amount_id, text):
     """Populate TradeModelLine_getBaseAmountQuantityMethod shared script
@@ -65,10 +67,11 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     - data produced by previous still behaves as expected
     """
     base_amount = self.portal.portal_categories.base_amount
-    try:
-      base_amount = base_amount[self._testMethodName]
-    except KeyError:
-      base_amount = base_amount.newContent(self._testMethodName)
+    for name in self.__class__.__name__, self._testMethodName:
+      try:
+        base_amount = base_amount[name]
+      except KeyError:
+        base_amount = base_amount.newContent(name)
     try:
       return base_amount[base_amount_id].getRelativeUrl()
     except KeyError:
@@ -79,7 +82,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     try:
       old_text = '\n' + skin[script_id].body()
     except KeyError:
-      old_text = "\nreturn context.getBaseAmountQuantity"
+      old_text = ''
     else:
       skin._delObject(script_id)
     text = test + '\n  '.join(text.splitlines()) + old_text
@@ -176,19 +179,29 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
       order.newContent(portal_type=self.order_line_portal_type, **line_kw)
     return order
 
-  def getAggregatedAmountDict(self, amount_generator, **expected_amount_dict):
+  def getAggregatedAmountDict(self, amount_generator, partial_check=False,
+                              **expected_amount_dict):
     amount_list = amount_generator.getAggregatedAmountList()
     amount_dict = {}
     for amount in amount_list:
       reference = amount.getReference()
-      expected_amount = expected_amount_dict.pop(reference)
-      for k, v in expected_amount.iteritems():
-        if k == 'causality_value_list':
-          self.assertEqual(v, amount.getValueList('causality'))
-        else:
-          self.assertEqual(v, amount.getProperty(k))
-      amount_dict[reference] = amount
-    self.assertEqual({}, expected_amount_dict)
+      try:
+        expected_amount = expected_amount_dict.pop(reference)
+      except KeyError:
+        if not partial_check:
+          raise
+      else:
+        for k, v in expected_amount.iteritems():
+          if k == 'causality_value_list':
+            self.assertEqual(v, amount.getValueList('causality'))
+          else:
+            self.assertEqual(v, amount.getProperty(k))
+        amount_dict[reference] = amount
+    if partial_check:
+      for value in expected_amount_dict.itervalues():
+        self.assertEqual(None, value)
+    else:
+      self.assertEqual({}, expected_amount_dict)
     return amount_dict
 
   def getTradeModelSimulationMovementList(self, delivery_line):
@@ -219,9 +232,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   new_discount_ratio = -0.04 # -4%
   new_tax_ratio = 0.22 # 22%
-
-  node_portal_type = 'Organisation'
-  order_date = DateTime()
 
   modified_order_line_price_ratio = 2.0
   modified_packing_list_line_quantity_ratio = 0.4

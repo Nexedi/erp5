@@ -29,8 +29,6 @@
 
 import unittest
 import transaction
-
-from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5.tests.testTradeModelLine import TestTradeModelLineMixin
 
 
@@ -39,140 +37,114 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
   shop and make sure that trade model line is capable of real business scene.
   """
 
-  def createOrder(self):
-    module = self.portal.getDefaultModule(portal_type=self.order_portal_type)
-    return module.newContent(portal_type=self.order_portal_type,
-        title=self.id())
+  def appendBaseContributionCategory(self, document, *new_category):
+    document.setBaseContributionList(
+      document.getBaseContributionList() + list(new_category))
 
-  def createTradeCondition(self):
-    module = self.portal.getDefaultModule(
-        portal_type=self.trade_condition_portal_type)
-    trade_condition = module.newContent(
-        portal_type=self.trade_condition_portal_type,
-        title=self.id())
-    return trade_condition
-
-  def getAmount(self, order, reference, return_object=False):
-    amount_list = []
-    for amount in order.getAggregatedAmountList():
-      if amount.getProperty('reference') == reference:
-        amount_list.append(amount)
-    if return_object:
-      return amount_list
-    if amount_list:
-      return sum(amount.getTotalPrice() for amount in amount_list)
-
-  def appendBaseContributionCategory(self, document, new_category):
-    base_contribution_value_list = document.getBaseContributionValueList()
-    document.setBaseContributionValueList(
-      base_contribution_value_list+[new_category])
-
-  def beforeTearDown(self):
-    # abort any transaction
-    transaction.abort()
-    # put non finished activities into ignored state
-    activity_connection = self.portal.cmf_activity_sql_connection
-    for table in 'message', 'message_queue':
-      activity_connection.manage_test(
-          'delete from %s where processing_node=-2' % table)
-
-    def removeAll(*args):
-      for container in args:
-        container.manage_delObjects(ids=list(container.objectIds()))
-    removeAll(self.portal.sale_order_module,
-              self.portal.purchase_order_module,
-              self.portal.sale_trade_condition_module,
-              self.portal.purchase_trade_condition_module,
-              self.portal.person_module,
-              self.portal.organisation_module,
-              self.portal.service_module,
-              self.portal.product_module,
-              self.portal.currency_module,
-              self.portal.portal_categories.product_line,
-              self.portal.portal_categories.base_amount,
-              self.portal.portal_categories.trade_phase,
-              self.portal.portal_categories.use,
-              self.portal.portal_categories.quantity_unit,
-              )
-
-    self.stepTic()
+  def createCategories(self):
+    super(TestComplexTradeModelLineUseCase, self).createCategories()
+    category_tool = self.portal.portal_categories
+    self.createCategoriesInCategory(category_tool.base_amount, (
+      'additional_charge',
+      'discount_amount',
+      'discount_amount_of_non_vat_taxable',
+      'discount_amount_of_vat_taxable',
+      'total_price_of_ordered_items',
+      'total_price_of_vat_taxable',
+      'total_price_without_vat',
+      'total_price_with_vat',
+      'vat_amount',
+      'vat_taxable',
+      ))
+    self.createCategoriesInCategory(category_tool.product_line, (
+      'audio', 'video', 'other'))
+    self.createCategoriesInCategory(category_tool.product_line.audio, ('cd',))
+    self.createCategoriesInCategory(category_tool.product_line.video, ('dvd',))
+    self.createCategoriesInCategory(category_tool.quantity_unit, ('unit',))
 
   def afterSetUp(self):
+    super(TestComplexTradeModelLineUseCase, self).afterSetUp()
     portal = self.portal
 
-    # inherited method
-    self.createCategories()
-
-    self.stepTic()
-
     # add currency
-    jpy = portal.currency_module.newContent(title='Yen', reference='JPY', base_unit_quantity='1')
-
-    self.stepTic()
-
+    jpy = portal.currency_module.newContent(title='Yen', reference='JPY',
+                                            base_unit_quantity='1')
     # add organisations
     my_company = portal.organisation_module.newContent(title='My Company')
     client_1 = portal.organisation_module.newContent(title='Client 1')
-
-    self.stepTic()
-
-    # add base amount subcategories
-    base_amount = portal.portal_categories.base_amount
-    self.total_price_of_ordered_items = base_amount.newContent(id='total_price_of_ordered_items')
-    self.discount_amount_of_non_vat_taxable = base_amount.newContent(id='discount_amount_of_non_vat_taxable')
-    self.discount_amount_of_vat_taxable = base_amount.newContent(id='discount_amount_of_vat_taxable')
-    self.vat_taxable = base_amount.newContent(id='vat_taxable')
-    self.additional_charge = base_amount.newContent('additional_charge')
-    self.total_price_without_vat = base_amount.newContent(id='total_price_without_vat')
-    self.total_price_of_vat_taxable = base_amount.newContent(id='total_price_of_vat_taxable')
-    self.discount_amount = base_amount.newContent(id='discount_amount')
-    self.vat_amount = base_amount.newContent(id='vat_amount')
-    self.total_price_with_vat = base_amount.newContent(id='total_price_with_vat')
-    self.poster_present_1dvd = base_amount.newContent(id='poster_present_1dvd')
-    self.poster_present_3cd = base_amount.newContent(id='poster_present_3cd')
-    self.special_discount_3cd = base_amount.newContent(id='special_discount_3cd')
-    # add product line subcategories
-    product_line = portal.portal_categories.product_line
-    audio = product_line.newContent(id='audio')
-    audio_cd = audio.newContent(id='cd')
-    video = product_line.newContent(id='video')
-    video_dvd = video.newContent(id='dvd')
-    other_product = product_line.newContent(id='other')
-    # add a quantity unit subcategory
-    self.unit = portal.portal_categories.quantity_unit.newContent(id='unit')
-
-    self.stepTic()
 
     # create services
     self.service_vat = portal.service_module.newContent(title='VAT')
     self.service_discount = portal.service_module.newContent(title='DISCOUNT')
     self.service_shipping_fee = portal.service_module.newContent(title='SHIPPING FEE')
 
-    self.stepTic()
-
     # create products
-    def addProductDocument(title, product_line_value):
+    def addProductDocument(title, product_line):
       return portal.product_module.newContent(
         title=title,
-        product_line_value=product_line_value,
-        quantity_unit_value=self.unit,
-        base_contribution_value_list=[self.vat_taxable,
-                                      self.total_price_of_ordered_items])
+        product_line=product_line,
+        quantity_unit='unit',
+        base_contribution_list=('base_amount/vat_taxable',
+                                'base_amount/total_price_of_ordered_items'))
+    self.music_album_1 = addProductDocument('Music Album 1', 'audio/cd')
+    self.movie_dvd_1 = addProductDocument('Movie DVD 1', 'video/dvd')
+    self.music_album_2 = addProductDocument('Movie Album 2', 'audio/cd')
+    self.candy = addProductDocument('Candy', 'other')
+    self.poster = addProductDocument('Poster', 'other')
+    self.music_album_3 = addProductDocument('Movie Album 3', 'audio/cd')
+    self.movie_dvd_2 = addProductDocument('Movie DVD 2', 'video/dvd')
+    self.music_album_4 = addProductDocument('Movie Album 4', 'audio/cd')
 
-    self.music_album_1 = addProductDocument('Music Album 1', audio_cd)
-    self.movie_dvd_1 = addProductDocument('Movie DVD 1', video_dvd)
-    self.music_album_2 = addProductDocument('Movie Album 2', audio_cd)
-    self.candy = addProductDocument('Candy', other_product)
-    self.poster = addProductDocument('Poster', other_product)
-    self.music_album_3 = addProductDocument('Movie Album 3', audio_cd)
-    self.movie_dvd_2 = addProductDocument('Movie DVD 2', video_dvd)
-    self.music_album_4 = addProductDocument('Movie Album 4', audio_cd)
-
-    self.stepTic()
-
-    # create a trade condition and add several common trade model lines in it.
-    self.trade_condition = self.createTradeCondition()
-    self.trade_condition.edit(
+    # create a trade condition with several common trade model lines
+    self.trade_condition = self.createTradeCondition(
+      self.createBusinessProcess(), (
+      dict(title='Total Price Without VAT',
+           reference='TOTAL_PRICE_WITHOUT_VAT',
+           price=1,
+           int_index=10,
+           target_delivery=True,
+           base_application_list=('base_amount/discount_amount_of_non_vat_taxable',
+                                  'base_amount/discount_amount_of_vat_taxable',
+                                  'base_amount/total_price_of_ordered_items',
+                                  'base_amount/additional_charge'),
+           base_contribution='base_amount/total_price_without_vat'),
+      dict(title='Total Price Of VAT Taxable',
+           reference='TOTAL_PRICE_OF_VAT_TAXABLE',
+           price=1,
+           int_index=10,
+           target_delivery=True,
+           base_application_list=('base_amount/discount_amount_of_vat_taxable',
+                                  'base_amount/vat_taxable'),
+           base_contribution='base_amount/total_price_of_vat_taxable'),
+      dict(title='Discount Amount',
+           reference='DISCOUNT_AMOUNT',
+           resource_value=self.service_discount,
+           price=1,
+           trade_phase='default/invoicing',
+           int_index=10,
+           target_delivery=True,
+           base_application_list=('base_amount/discount_amount_of_vat_taxable',
+                                  'base_amount/discount_amount_of_non_vat_taxable'),
+           base_contribution='base_amount/discount_amount'),
+      dict(title='VAT Amount',
+           reference='VAT_AMOUNT',
+           resource_value=self.service_vat,
+           price=0.05,
+           trade_phase='default/invoicing',
+           int_index=10,
+           target_delivery=True,
+           base_application_list=('base_amount/discount_amount_of_vat_taxable',
+                                  'base_amount/vat_taxable'),
+           base_contribution='base_amount/vat_amount'),
+      dict(title='Total Price With VAT',
+           reference='TOTAL_PRICE_WITH_VAT',
+           price=1,
+           int_index=20,
+           target_delivery=True,
+           base_application_list=('base_amount/vat_amount',
+                                  'base_amount/total_price_without_vat'),
+           base_contribution='base_amount/total_price_with_vat')
+      ),
       source_section_value=my_company,
       source_value=my_company,
       source_decision_value=my_company,
@@ -180,60 +152,6 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
       destination_value=client_1,
       destination_decision_value=client_1,
       price_currency_value=jpy)
-    self.trade_condition.newContent(
-      portal_type='Trade Model Line',
-      title='Total Price Without VAT',
-      reference='TOTAL_PRICE_WITHOUT_VAT',
-      price=1,
-      trade_phase=None,
-      int_index=10,
-      base_application_value_list=[self.discount_amount_of_non_vat_taxable,
-                                   self.discount_amount_of_vat_taxable,
-                                   self.total_price_of_ordered_items,
-                                   self.additional_charge],
-      base_contribution_value_list=[self.total_price_without_vat])
-    self.trade_condition.newContent(
-      portal_type='Trade Model Line',
-      title='Total Price Of VAT Taxable',
-      reference='TOTAL_PRICE_OF_VAT_TAXABLE',
-      price=1,
-      trade_phase=None,
-      int_index=10,
-      base_application_value_list=[self.discount_amount_of_vat_taxable,
-                                   self.vat_taxable],
-      base_contribution_value_list=[self.total_price_of_vat_taxable])
-    self.trade_condition.newContent(
-      portal_type='Trade Model Line',
-      title='Discount Amount',
-      reference='DISCOUNT_AMOUNT',
-      resource_value=self.service_discount,
-      price=1,
-      trade_phase_value=portal.portal_categories.trade_phase.default.invoicing,
-      int_index=10,
-      base_application_value_list=[self.discount_amount_of_vat_taxable,
-                                   self.discount_amount_of_non_vat_taxable],
-      base_contribution_value_list=[self.discount_amount])
-    self.trade_condition.newContent(
-      portal_type='Trade Model Line',
-      title='VAT Amount',
-      reference='VAT_AMOUNT',
-      resource_value=self.service_vat,
-      price=0.05,
-      trade_phase_value=portal.portal_categories.trade_phase.default.invoicing,
-      int_index=10,
-      base_application_value_list=[self.discount_amount_of_vat_taxable,
-                                   self.vat_taxable],
-      base_contribution_value_list=[self.vat_amount])
-    self.trade_condition.newContent(
-      portal_type='Trade Model Line',
-      title='Total Price With VAT',
-      reference='TOTAL_PRICE_WITH_VAT',
-      price=1,
-      trade_phase=None,
-      int_index=20,
-      base_application_value_list=[self.vat_amount,
-                                   self.total_price_without_vat],
-      base_contribution_value_list=[self.total_price_with_vat])
 
     self.stepTic()
 
@@ -247,65 +165,56 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
     1 CD   2400 yen
     discount (5000+3000+2400) * 0.1 = 1040 yen
     """
-    createZODBPythonScript(
-      self.portal.portal_skins.custom,
-      'TradeModelLine_getAmountProperty',
-      'amount, base_application, amount_list, *args, **kw',
-      """\
-if base_application == 'base_amount/special_discount_3cd':
-  total_quantity = sum([x.getQuantity() for x in amount_list
-    if x.isMovement() and base_application in x.getBaseContributionList()])
-  if total_quantity < 3:
-    return 0
-""")
-    order = self.createOrder()
-    order.edit(specialise_value=self.trade_condition)
-    order.Order_applyTradeCondition(order.getSpecialiseValue())
-    order.newContent(portal_type='Trade Model Line',
-                     reference='3CD_AND_10PERCENT_DISCOUNT_OFF_THEM',
-                     resource_value=self.service_discount,
-                     price=-0.1,
-                     trade_phase=None,
-                     int_index=0,
-                     base_application_value_list=[self.special_discount_3cd],
-                     base_contribution_value_list=[self.discount_amount_of_vat_taxable])
+    special_discount = self.setBaseAmountQuantityMethod(
+      'special_discount', """\
+def getBaseAmountQuantity(delivery_amount, base_application, **kw):
+  if delivery_amount.isDelivery():
+    total_quantity = sum([movement.getQuantity()
+      for movement in delivery_amount.getMovementList()
+      if base_application in movement.getBaseContributionList()])
+    if total_quantity < 3:
+      return 0
+  return context.getBaseAmountQuantity(
+    delivery_amount, base_application, **kw)
+return getBaseAmountQuantity""")
 
-    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_1,
-                                    quantity=1,
-                                    price=5000)
-    self.appendBaseContributionCategory(order_line_1, self.special_discount_3cd)
-    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_2,
-                                    quantity=1,
-                                    price=3000)
-    self.appendBaseContributionCategory(order_line_2, self.special_discount_3cd)
-    order_line_3 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.candy,
-                                    quantity=1,
-                                    price=100)
+    trade_condition = self.createTradeCondition(
+      self.trade_condition, (
+      dict(reference='SPECIAL_DISCOUNT_3CD_LINEAR',
+           resource_value=self.service_discount,
+           price=-0.1,
+           int_index=0,
+           target_delivery=True,
+           base_application=special_discount,
+           base_contribution='base_amount/discount_amount_of_vat_taxable'),
+      ))
 
-    self.stepTic()
+    order = self.createOrder(trade_condition, (
+      dict(id='1', price=5000, quantity=1, resource_value=self.music_album_1),
+      dict(id='2', price=3000, quantity=1, resource_value=self.music_album_2),
+      dict(id='3', price=100, quantity=1, resource_value=self.candy),
+      ))
+    self.appendBaseContributionCategory(order['1'], special_discount)
+    self.appendBaseContributionCategory(order['2'], special_discount)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_LINEAR=None,
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=8100),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=8505),
+      VAT_AMOUNT=dict(total_price=405))
 
-    # check the current amount
-    #self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 8100)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 405)
-    #self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 8505)
     # add one more cd, then total is 3. the special discount will be applied.
-    order_line_4 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_3,
-                                    quantity=1,
-                                    price=2400)
-    self.appendBaseContributionCategory(order_line_4, self.special_discount_3cd)
-
-    self.stepTic()
-
-    # check again
-    self.assertEqual(self.getAmount(order, '3CD_AND_10PERCENT_DISCOUNT_OFF_THEM'),
-                     -1040)
-    #self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 9460)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 473)
-    #self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 9933)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=self.music_album_3,
+                            quantity=1,
+                            price=2400)
+    self.appendBaseContributionCategory(line, special_discount)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_LINEAR=dict(total_price=-1040),
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=9460),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=9933),
+      VAT_AMOUNT=dict(total_price=473))
 
   def test_usecase2(self):
     """
@@ -317,64 +226,51 @@ if base_application == 'base_amount/special_discount_3cd':
     1 CD  2400 yen
     discount 500 yen
     """
-    createZODBPythonScript(
-      self.portal.portal_skins.custom,
-      'TradeModelLine_calculate3CD500YenDiscount',
-      'current_aggregated_amount_list, current_movement, aggregated_movement_list',
-      """\
-total_quantity = sum([movement.getQuantity() for movement in aggregated_movement_list])
-if total_quantity >= 3:
-  current_movement.setQuantity(-500)
-  return current_movement
-else:
-  return None
-""")
-    order = self.createOrder()
-    order.edit(specialise_value=self.trade_condition)
-    order.Order_applyTradeCondition(order.getSpecialiseValue())
-    order.newContent(portal_type='Trade Model Line',
-                     reference='3CD_AND_500YEN_OFF',
-                     resource_value=self.service_discount,
-                     price=1,
-                     target_level=TARGET_LEVEL_DELIVERY,
-                     calculation_script_id='TradeModelLine_calculate3CD500YenDiscount',
-                     trade_phase=None,
-                     int_index=0,
-                     base_application_value_list=[self.special_discount_3cd],
-                     base_contribution_value_list=[self.discount_amount_of_vat_taxable])
+    special_discount = self.setBaseAmountQuantityMethod(
+      'special_discount', """\
+return lambda delivery_amount, base_application, **kw: \\
+  3 <= sum([movement.getQuantity()
+            for movement in delivery_amount.getMovementList()
+            if base_application in movement.getBaseContributionList()])""")
 
-    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_1,
-                                    quantity=1,
-                                    price=5000)
-    self.appendBaseContributionCategory(order_line_1, self.special_discount_3cd)
-    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_2,
-                                    quantity=1,
-                                    price=3000)
-    self.appendBaseContributionCategory(order_line_2, self.special_discount_3cd)
-    order_line_3 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.movie_dvd_1,
-                                    quantity=1,
-                                    price=3000)
+    trade_condition = self.createTradeCondition(
+      self.trade_condition, (
+      dict(reference='SPECIAL_DISCOUNT_3CD_FIXED',
+           resource_value=self.service_discount,
+           price=-1,
+           quantity=500,
+           int_index=0,
+           target_delivery=True,
+           base_application=special_discount,
+           base_contribution='base_amount/discount_amount_of_vat_taxable'),
+      ))
 
-    self.stepTic()
+    order = self.createOrder(trade_condition, (
+      dict(id='1', price=5000, quantity=1, resource_value=self.music_album_1),
+      dict(id='2', price=3000, quantity=1, resource_value=self.music_album_2),
+      dict(id='3', price=3000, quantity=1, resource_value=self.movie_dvd_1),
+      ))
+    self.appendBaseContributionCategory(order['1'], special_discount)
+    self.appendBaseContributionCategory(order['2'], special_discount)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_FIXED=None,
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=11000),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=11550),
+      VAT_AMOUNT=dict(total_price=550))
 
-    # check the current amount
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 11000)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 550)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 11550)
     # add one more cd, then total is 3. the special discount will be applied.
-    order_line_4 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_3,
-                                    quantity=1,
-                                    price=2400)
-    self.appendBaseContributionCategory(order_line_4, self.special_discount_3cd)
-    # check again
-    self.assertEqual(self.getAmount(order, '3CD_AND_500YEN_OFF'), -500)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 12900)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 645)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 13545)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=self.music_album_3,
+                            quantity=1,
+                            price=2400)
+    self.appendBaseContributionCategory(line, special_discount)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_FIXED=dict(total_price=-500),
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=12900),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=13545),
+      VAT_AMOUNT=dict(total_price=645))
 
   def test_usecase3(self):
     """
@@ -386,66 +282,55 @@ else:
     1 CD  2400 yen
     discount (5000+3000+3000+2400) * 0.1 = 1340 yen
     """
-    createZODBPythonScript(
-      self.portal.portal_skins.custom,
-      'TradeModelLine_calculate3CD10PercentDiscountFromTotal',
-      'current_aggregated_amount_list, current_movement, aggregated_movement_list',
-      '''\
-special_discount_3cd = context.portal_categories.base_amount.special_discount_3cd
-total_quantity = sum([movement.getQuantity() for movement in current_aggregated_amount_list
-                      if special_discount_3cd in movement.getBaseContributionValueList()])
-if total_quantity >= 3:
-  return current_movement
-else:
-  return None
-''')
-    order = self.createOrder()
-    order.edit(specialise_value=self.trade_condition)
-    order.Order_applyTradeCondition(order.getSpecialiseValue())
-    order.newContent(portal_type='Trade Model Line',
-                     reference='3CD_10PERCENT_OFF_FROM_TOTAL',
-                     resource_value=self.service_discount,
-                     price=-0.1,
-                     target_level=TARGET_LEVEL_DELIVERY,
-                     calculation_script_id='TradeModelLine_calculate3CD10PercentDiscountFromTotal',
-                     trade_phase=None,
-                     int_index=0,
-                     base_application_value_list=[self.total_price_of_ordered_items],
-                     base_contribution_value_list=[self.discount_amount_of_vat_taxable])
+    special_discount = self.setBaseAmountQuantityMethod(
+      'special_discount', """\
+def getBaseAmountQuantity(delivery_amount, base_application, **kw):
+  total_quantity = sum([movement.getQuantity()
+    for movement in delivery_amount.getMovementList()
+    if base_application in movement.getBaseContributionList()])
+  if total_quantity < 3:
+    return 0
+  return delivery_amount.getGeneratedAmountQuantity(
+    'base_amount/total_price_of_ordered_items')
+return getBaseAmountQuantity""")
 
-    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_1,
-                                    quantity=1,
-                                    price=5000)
-    self.appendBaseContributionCategory(order_line_1, self.special_discount_3cd)
-    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.movie_dvd_1,
-                                    quantity=1,
-                                    price=3000)
-    order_line_3 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_2,
-                                    quantity=1,
-                                    price=3000)
-    self.appendBaseContributionCategory(order_line_3, self.special_discount_3cd)
+    trade_condition = self.createTradeCondition(
+      self.trade_condition, (
+      dict(reference='SPECIAL_DISCOUNT_3CD_LINEAR',
+           resource_value=self.service_discount,
+           price=-0.1,
+           int_index=0,
+           target_delivery=True,
+           base_application=special_discount,
+           base_contribution='base_amount/discount_amount_of_vat_taxable'),
+      ))
 
-    self.stepTic()
+    order = self.createOrder(trade_condition, (
+      dict(id='1', price=5000, quantity=1, resource_value=self.music_album_1),
+      dict(id='2', price=3000, quantity=1, resource_value=self.movie_dvd_1),
+      dict(id='3', price=3000, quantity=1, resource_value=self.music_album_2),
+      ))
+    self.appendBaseContributionCategory(order['1'], special_discount)
+    self.appendBaseContributionCategory(order['3'], special_discount)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_LINEAR=None,
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=11000),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=11550),
+      VAT_AMOUNT=dict(total_price=550))
 
-    # check the current amount
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 11000)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 550)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 11550)
     # add one more cd, then total is 3. the special discount will be applied.
-    order_line_4 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_3,
-                                    quantity=1,
-                                    price=2400)
-    self.appendBaseContributionCategory(order_line_4, self.special_discount_3cd)
-    # check again
-    self.assertEqual(self.getAmount(order, '3CD_10PERCENT_OFF_FROM_TOTAL'),
-                     -1340)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 12060)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 603)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 12663)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=self.music_album_3,
+                            quantity=1,
+                            price=2400)
+    self.appendBaseContributionCategory(line, special_discount)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_LINEAR=dict(total_price=-1340),
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=12060),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=12663),
+      VAT_AMOUNT=dict(total_price=603))
 
   def test_usecase4(self):
     """
@@ -455,97 +340,72 @@ else:
     1 DVD    3000 yen
     1 Poster    0 yen
     """
-    createZODBPythonScript(
-      self.portal.portal_skins.custom,
-      'TradeModelLine_calculate3CDOr1DVDForPoster',
-      'current_aggregated_amount_list, current_movement, aggregated_movement_list',
-      '''\
-poster_present_3cd = context.portal_categories.base_amount.poster_present_3cd
-poster_present_1dvd = context.portal_categories.base_amount.poster_present_1dvd
+    total_quantity = """\
+def getBaseAmountQuantity(delivery_amount, base_application, **kw):
+  value = delivery_amount.getGeneratedAmountQuantity(base_application)
+  if base_application in delivery_amount.getBaseContributionList():
+    value += delivery_amount.getQuantity()
+  return value
+return getBaseAmountQuantity"""
+    poster_present_1dvd = self.setBaseAmountQuantityMethod(
+      'poster_present_1dvd', total_quantity)
+    poster_present_3cd = self.setBaseAmountQuantityMethod(
+      'poster_present_3cd', total_quantity)
+    special_discount = self.setBaseAmountQuantityMethod(
+      'special_discount', """\
+return lambda delivery_amount, base_application, **kw: \\
+  3 <= delivery_amount.getGeneratedAmountQuantity(%r) or \\
+  1 <= delivery_amount.getGeneratedAmountQuantity(%r)"""
+      % (poster_present_3cd, poster_present_1dvd))
 
-total_quantity_3cd = sum([movement.getQuantity() for movement in aggregated_movement_list
-                          if poster_present_3cd in movement.getBaseContributionValueList()])
-total_quantity_1dvd = sum([movement.getQuantity() for movement in aggregated_movement_list
-                           if poster_present_1dvd in movement.getBaseContributionValueList()])
-if (total_quantity_3cd >= 3 or total_quantity_1dvd >= 1):
-  current_movement.setQuantity(1)
-  return current_movement
-else:
-  return None
-''')
-    order = self.createOrder()
-    order.edit(specialise_value=self.trade_condition)
-    order.Order_applyTradeCondition(order.getSpecialiseValue())
-    order.newContent(portal_type='Trade Model Line',
-                     reference='3CD_OR_1DVD_GET_1_POSTER_FREE',
-                     resource_value=self.poster,
-                     price=0,
-                     target_level=TARGET_LEVEL_DELIVERY,
-                     calculation_script_id='TradeModelLine_calculate3CDOr1DVDForPoster',
-                     trade_phase=None,
-                     base_application_value_list=[self.poster_present_1dvd,
-                                                  self.poster_present_3cd])
+    trade_condition = self.createTradeCondition(
+      self.trade_condition, (
+      dict(reference='SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED',
+           resource_value=self.poster,
+           price=0,
+           int_index=0,
+           target_delivery=True,
+           base_application=special_discount),
+      ))
 
-    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_4,
-                                    quantity=2,
-                                    price=3000)
-    self.appendBaseContributionCategory(order_line_1, self.poster_present_3cd)
+    order = self.createOrder(trade_condition, (
+      dict(id='1', price=3000, quantity=2, resource_value=self.music_album_4),
+      ))
+    self.appendBaseContributionCategory(order['1'], poster_present_3cd)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=None,
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=6000),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=6300),
+      VAT_AMOUNT=dict(total_price=300))
 
-    self.stepTic()
-
-    # check the current amount
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 6000)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 300)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 6300)
-    self.assertEqual(self.getAmount(order, '3CD_OR_1DVD_GET_1_POSTER_FREE'),
-                     None)
     # add 1 dvd, then 1 poster will be given.
-    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.movie_dvd_1,
-                                    quantity=1,
-                                    price=3000)
-    self.appendBaseContributionCategory(order_line_2, self.poster_present_1dvd)
-
-    self.stepTic()
-    
-    # check again
-    one_free_poster_amount_list = self.getAmount(
-      order,
-      '3CD_OR_1DVD_GET_1_POSTER_FREE',
-      return_object=True)
-    self.assertEqual(len(one_free_poster_amount_list), 1)
-    one_free_poster_amount = one_free_poster_amount_list[0]
-    self.assertEqual(one_free_poster_amount.getTotalPrice(), 0)
-    self.assertEqual(one_free_poster_amount.getQuantity(), 1)
-    self.assertEqual(one_free_poster_amount.getPrice(), 0)
-    self.assertEqual(one_free_poster_amount.getResourceValue(), self.poster)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 9000)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 450)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 9450)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=self.movie_dvd_1,
+                            quantity=1,
+                            price=3000)
+    self.appendBaseContributionCategory(line, poster_present_1dvd)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None, quantity=1,
+                                              resource_value=self.poster),
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=9000),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=9450),
+      VAT_AMOUNT=dict(total_price=450))
 
     # even if we buy 3 CDs and 1 DVD, only one poster will be given.
-    order_line_3 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_3,
-                                    quantity=1,
-                                    price=2400)
-    self.appendBaseContributionCategory(order_line_3, self.poster_present_3cd)
-
-    self.stepTic()
-
-    # check again
-    one_free_poster_amount_list = self.getAmount(order,
-                                            '3CD_OR_1DVD_GET_1_POSTER_FREE',
-                                            return_object=True)
-    self.assertEqual(len(one_free_poster_amount_list), 1)
-    one_free_poster_amount = one_free_poster_amount_list[0]
-    self.assertEqual(one_free_poster_amount.getTotalPrice(), 0)
-    self.assertEqual(one_free_poster_amount.getQuantity(), 1)
-    self.assertEqual(one_free_poster_amount.getPrice(), 0)
-    self.assertEqual(one_free_poster_amount.getResourceValue(), self.poster)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 11400)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 570)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 11970)
+    line = order.newContent(portal_type=self.order_line_portal_type,
+                            resource_value=self.music_album_3,
+                            quantity=1,
+                            price=2400)
+    self.appendBaseContributionCategory(line, poster_present_3cd)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None, quantity=1,
+                                              resource_value=self.poster),
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=11400),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=11970),
+      VAT_AMOUNT=dict(total_price=570))
 
   def test_usecase5(self):
     """
@@ -557,156 +417,82 @@ else:
     1 CD     3000 yen
     discount 3000 * 0.15 = 450 yen
     """
-    createZODBPythonScript(
-      self.portal.portal_skins.custom,
-      'TradeModelLine_calculate3CD15PercentDiscountOf1HighestPricedDVD',
-      'current_aggregated_amount_list, current_movement, aggregated_movement_list',
-      '''\
-total_quantity = sum([movement.getQuantity() for movement in aggregated_movement_list])
-if total_quantity >= 3:
-  price_dvd_list = []
-  product_line_dvd = context.portal_categories.product_line.video.dvd
-  for movement in current_aggregated_amount_list:
-    resource = movement.getResourceValue()
-    if resource.getProductLineValue() == product_line_dvd:
-      price_dvd_list.append((movement.getPrice(), movement))
-  if price_dvd_list:
-    price_dvd_list.sort()
-    highest_priced_dvd_movement = price_dvd_list[-1][1]
-    total_price = highest_priced_dvd_movement.getTotalPrice()
+    special_discount = self.setBaseAmountQuantityMethod(
+      'special_discount', """\
+def getBaseAmountQuantity(delivery_amount, base_application, **kw):
+  highest_price = quantity = 0
+  for movement in delivery_amount.getMovementList():
+    if base_application in movement.getBaseContributionList():
+      quantity += movement.getQuantity()
+    if movement.getResourceValue().getProductLine() == 'video/dvd':
+      highest_price = max(highest_price, movement.getPrice())
+  return quantity >= 3 and highest_price
+return getBaseAmountQuantity""")
 
-    from Products.ERP5Type.Document import newTempSimulationMovement
-    causality_value_list = list(aggregated_movement_list) + [highest_priced_dvd_movement]
-    temporary_movement = newTempSimulationMovement(current_movement.getParentValue(), current_movement.getId())
-    temporary_movement.edit(title=current_movement.getProperty('title'),
-                            description=current_movement.getProperty('description'),
-                            resource=current_movement.getProperty('resource'),
-                            reference=current_movement.getProperty('reference'),
-                            int_index=current_movement.getProperty('int_index'),
-                            base_application_list=current_movement.getProperty('base_application_list'),
-                            base_contribution_list=current_movement.getProperty('base_contribution_list'),
-                            start_date=highest_priced_dvd_movement.getStartDate(),
-                            stop_date=highest_priced_dvd_movement.getStopDate(),
-                            create_line=current_movement.getProperty('is_create_line'),
-                            trade_phase_list=current_movement.getTradePhaseList(),
-                            causality_list=[movement.getRelativeUrl() for movement in causality_value_list])
-    temporary_movement.setPrice(current_movement.getProperty('price'))
-    temporary_movement.setQuantity(highest_priced_dvd_movement.getPrice())
-    return temporary_movement
-''')
-    order = self.createOrder()
-    order.edit(specialise_value=self.trade_condition)
-    order.Order_applyTradeCondition(order.getSpecialiseValue())
-    order.newContent(portal_type='Trade Model Line',
-                     reference='3CD_AND_1HIGHEST_PRICED_DVD_15PERCENT_OFF',
-                     resource_value=self.service_discount,
-                     price=-0.15,
-                     target_level=TARGET_LEVEL_DELIVERY,
-                     calculation_script_id='TradeModelLine_calculate3CD15PercentDiscountOf1HighestPricedDVD',
-                     trade_phase=None,
-                     int_index=0,
-                     base_application_value_list=[self.special_discount_3cd],
-                     base_contribution_value_list=[self.discount_amount_of_vat_taxable])
+    trade_condition = self.createTradeCondition(
+      self.trade_condition, (
+      dict(reference='SPECIAL_DISCOUNT_3CD',
+           resource_value=self.service_discount,
+           price=-0.15,
+           int_index=0,
+           target_delivery=True,
+           base_application=special_discount,
+           base_contribution='base_amount/discount_amount_of_vat_taxable'),
+      ))
 
-    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.movie_dvd_1,
-                                    quantity=1,
-                                    price=3000)
-    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.movie_dvd_2,
-                                    quantity=1,
-                                    price=1000)
-    order_line_3 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_1,
-                                    quantity=1,
-                                    price=5000)
-    self.appendBaseContributionCategory(order_line_3, self.special_discount_3cd)
-    order_line_4 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.music_album_2,
-                                    quantity=1,
-                                    price=3000)
-    self.appendBaseContributionCategory(order_line_4, self.special_discount_3cd)
+    order = self.createOrder(trade_condition, (
+      dict(id='1', price=3000, quantity=1, resource_value=self.movie_dvd_1),
+      dict(id='2', price=1000, quantity=1, resource_value=self.movie_dvd_2),
+      dict(id='3', price=5000, quantity=1, resource_value=self.music_album_1),
+      dict(id='4', price=3000, quantity=1, resource_value=self.music_album_2),
+      ))
+    self.appendBaseContributionCategory(order['3'], special_discount)
+    self.appendBaseContributionCategory(order['4'], special_discount)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD=None,
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=12000),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=12600),
+      VAT_AMOUNT=dict(total_price=600))
 
-    self.stepTic()
-
-    # check the current amount
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 12000)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 600)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'),
-                     12600)
     # add one more cd, then total is 3. the special discount will be applied.
-    order_line_3.setQuantity(2)
-
-    self.stepTic()
-
-    # check again
-    self.assertEqual(self.getAmount(order, '3CD_AND_1HIGHEST_PRICED_DVD_15PERCENT_OFF'),
-                     -450)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 16550)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 827.5)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 17377.5)
+    order['3'].setQuantity(2)
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      SPECIAL_DISCOUNT_3CD=dict(total_price=-450),
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=16550),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=17377.5),
+      VAT_AMOUNT=dict(total_price=827.5))
 
   def test_usecase6(self):
     """
     Use case 6 : Add a shipping fee by TradeModelLine and VAT is charged to
     this fee.
     """
-    order = self.createOrder()
-    order.edit(specialise_value=self.trade_condition)
-    order.Order_applyTradeCondition(order.getSpecialiseValue())
-    order.newContent(portal_type='Trade Model Line',
-                     reference='SHIPPING_FEE',
-                     resource_value=self.service_shipping_fee,
-                     price=1,
-                     quantity=500,
-                     target_level=TARGET_LEVEL_DELIVERY,
-                     trade_phase=None,
-                     int_index=0,
-                     base_application_value_list=[],
-                     base_contribution_value_list=[self.additional_charge,
-                                                   self.vat_taxable])
+    fixed_quantity = self.setBaseAmountQuantityMethod('fixed_quantity', """\
+return lambda *args, **kw: 1""")
 
-    order_line_1 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.movie_dvd_1,
-                                    quantity=1,
-                                    price=3000)
-    order_line_2 = order.newContent(portal_type=self.order_line_portal_type,
-                                    resource_value=self.movie_dvd_2,
-                                    quantity=1,
-                                    price=1000)
+    trade_condition = self.createTradeCondition(
+      self.trade_condition, (
+      dict(reference='SHIPPING_FEE',
+           resource_value=self.service_discount,
+           quantity=500,
+           int_index=0,
+           target_delivery=True,
+           base_application=fixed_quantity,
+           base_contribution_list=('base_amount/additional_charge',
+                                   'base_amount/vat_taxable')),
+      ))
 
-    self.stepTic()
-
-    # check amounts
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 4500)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 225)
-    self.assertEqual(
-      len(self.getAmount(order, 'VAT_AMOUNT', return_object=True)),
-      1)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 4725)
-
-    # change trade model line and calculate vat price per movement
-    order.newContent(portal_type='Trade Model Line',
-                     title='VAT Amount',
-                     reference='VAT_AMOUNT',
-                     resource_value=self.service_vat,
-                     price=0.05,
-                     target_level=TARGET_LEVEL_MOVEMENT,
-                     trade_phase_value=self.portal.portal_categories.trade_phase.default.invoicing,
-                     int_index=10,
-                     base_application_value_list=[self.discount_amount_of_vat_taxable,
-                                                  self.vat_taxable],
-                     base_contribution_value_list=[self.vat_amount])
-
-    self.stepTic()
-
-    # check amounts again
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITHOUT_VAT'), 4500)
-    self.assertEqual(self.getAmount(order, 'VAT_AMOUNT'), 225)
-    self.assertEqual(
-      len(self.getAmount(order, 'VAT_AMOUNT', return_object=True)),
-      3)
-    self.assertEqual(self.getAmount(order, 'TOTAL_PRICE_WITH_VAT'), 4725)
+    order = self.createOrder(trade_condition, (
+      dict(id='1', price=3000, quantity=1, resource_value=self.movie_dvd_1),
+      dict(id='2', price=1000, quantity=1, resource_value=self.movie_dvd_2),
+      ))
+    transaction.commit()
+    self.getAggregatedAmountDict(order, partial_check=True,
+      TOTAL_PRICE_WITHOUT_VAT=dict(total_price=4500),
+      TOTAL_PRICE_WITH_VAT=dict(total_price=4725),
+      VAT_AMOUNT=dict(total_price=225))
 
 
 class TestComplexTradeModelLineUseCaseSale(TestComplexTradeModelLineUseCase):

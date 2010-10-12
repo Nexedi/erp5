@@ -60,7 +60,7 @@ class TestBPMMixin(ERP5TypeTestCase):
   def createCategories(self):
     category_tool = self.portal.portal_categories
     self.createCategoriesInCategory(category_tool.base_amount, ['discount',
-      'tax', 'total_tax', 'total_discount', 'total', 'fixed_quantity'])
+      'tax', 'total_tax', 'total_discount', 'total'])
     self.createCategoriesInCategory(category_tool.use,
         self.normal_resource_use_category_list + \
             self.invoicing_resource_use_category_list)

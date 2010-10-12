@@ -57,17 +57,8 @@ class BaseAmount(dict):
   def getContext(self):
     return self._context
 
-  def updateCache(self, base_amount_set, amount_generator_line):
-    cache = self._cache
-    base_amount_set = base_amount_set.difference(cache)
-    if base_amount_set:
-      method = amount_generator_line._getTypeBasedMethod(
-        'getBaseAmountQuantityMethod')
-      for base_amount in base_amount_set:
-        if method is None:
-          cache[base_amount] = amount_generator_line.getBaseAmountQuantity
-        else:
-          cache[base_amount] = method(base_amount)
+  def setAmountGeneratorLine(self, amount_generator_line):
+    self._amount_generator_line = amount_generator_line
 
   def recurse(self, portal_type=None):
     for amount in self._context.objectValues(portal_type=portal_type):
@@ -92,7 +83,9 @@ class BaseAmount(dict):
       return dict.__getitem__(self, key)
     except KeyError:
       value = 0
+      amount_generator_line = self._amount_generator_line
       for lazy in self._lazy:
+        lazy._amount_generator_line = amount_generator_line
         value += lazy.getQuantity(key)
       self[key] = value
       return value
@@ -109,7 +102,17 @@ class BaseAmount(dict):
       return dict.__getitem__(self, key)
     self[key] # initialize entry before we freeze it
     self._frozen.add(key)
-    self[key] = value = self._cache[key](self._context, key, **self._method_kw)
+    try:
+      method = self._cache[key]
+    except KeyError:
+      method = self._amount_generator_line._getTypeBasedMethod(
+        'getBaseAmountQuantityMethod')
+      if method is not None:
+        method = method(key)
+      if method is None:
+        method = self._amount_generator_line.getBaseAmountQuantity
+      self._cache[key] = method
+    self[key] = value = method(self._context, key, **self._method_kw)
     return value
 
 
@@ -241,11 +244,9 @@ class AmountGeneratorMixin:
             cell.getBaseContributionList())
         property_dict['causality_value_list'].append(cell)
 
+      base_amount.setAmountGeneratorLine(self)
       for property_dict in cell_aggregate.itervalues():
         base_application_set = property_dict['base_application_set']
-        # Cache must be prepared with the right context in case that we iterate
-        # through different kinds of amount generator lines.
-        base_amount.updateCache(base_application_set, self)
         # property_dict may include
         #   resource - VAT service or a Component in MRP
         #              (if unset, the amount will only be used for reporting)
@@ -293,13 +294,10 @@ class AmountGeneratorMixin:
           amount = getRoundingProxy(amount, context=self)
         result.append(amount)
         # Contribute
-        base_contribution_set = property_dict['base_contribution_set']
-        if base_contribution_set:
-          quantity *= (property_dict.get('price') or 1) / \
-                      (property_dict.get('efficiency') or 1)
-          base_amount.updateCache(base_contribution_set, self)
-          for base_contribution in base_contribution_set:
-            base_amount[base_contribution] += quantity
+        quantity *= (property_dict.get('price') or 1) / \
+                    (property_dict.get('efficiency') or 1)
+        for base_contribution in property_dict['base_contribution_set']:
+          base_amount[base_contribution] += quantity
 
     is_mapped_value = isinstance(self, MappedValue)
 
