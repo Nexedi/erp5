@@ -903,6 +903,12 @@ fieldset.right .gadget {\n
 \n
 }\n
 \n
+\n
+\n
+#footer hr{\n
+  clear:both;\n
+}\n
+\n
 #wrapper_footer ul {\n
 \n
 \tlist-style-type: none;\n
