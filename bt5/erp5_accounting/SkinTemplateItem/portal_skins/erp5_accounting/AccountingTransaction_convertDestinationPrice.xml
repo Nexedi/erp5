@@ -50,21 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5.Document.Document import ConversionError\n
-\n
-"""\n
+            <value> <string>"""\n
 Script to convert the prices used in the transaction to the \n
 currency of the destination section\n
 form_id : Page that action is called from\n
 \n
 \n
 """\n
-\n
 portal = context.getPortalObject()\n
 #get the precision of the destination\n
-precision =context.getDestinationSectionValue().getPriceCurrencyValue().getQuantityPrecision()\n
+precision = context.getDestinationSectionValue().getPriceCurrencyValue().getQuantityPrecision()\n
 #Get all transaction lines of the transaction \n
-line_list= context.contentValues(\n
+line_list = context.contentValues(\n
       portal_type=portal.getPortalAccountingMovementTypeList())\n
 """\n
 For each transaction line, calculate the price of the resource\n
@@ -74,26 +71,24 @@ and start_date categories \n
 """\n
 \n
 for line in line_list:\n
-  if line.getDestinationSectionValue() is None:\n
-    raise AssertionError\n
-  else:\n
-   currency = line.getResourceValue()\n
-   exchange_ratio = currency.getPrice(context=line.asContext(\n
-                          categories=[\'resource/%s\' % line.getResource(), \n
-                                \'price_currency/currency_module/%s\' %\n
-                      line.getDestinationSectionValue().getPriceCurrencyId()],\n
-                      start_date=line.getStopDate()))\n
+  section = line.getDestinationSectionValue()\n
+  currency = line.getResourceValue()\n
+  if not exchange_rate:\n
+    exchange_rate = currency.getPrice(context=line.asContext(\n
+                          categories=[line.getResource(base=True),\n
+                                      section.getPriceCurrency(base=True)],\n
+                          start_date=line.getStopDate()))\n
 \n
-#redirect to previous page without doing the conversion\n
-   if exchange_ratio is None:\n
-     return context.Base_redirect(form_id,\n
+  # redirect to previous page without doing the conversion\n
+  if exchange_rate is None:\n
+    return context.Base_redirect(form_id,\n
                                   keep_items=dict(\n
-                portal_status_message=context.Base_translateString(\'No exchange ratio found.\'))) \n
-#update the corresponding price and round it according to the precision of\n
-#the converted currency\n
-   line.setDestinationTotalAssetPrice(\n
-       round(exchange_ratio*(line.getQuantity()), precision))\n
+                portal_status_message=context.Base_translateString(\'No exchange ratio found.\')))\n
 \n
+  # update the corresponding price and round it according to the precision of\n
+  # the converted currency\n
+  line.setDestinationTotalAssetPrice(\n
+       round(exchange_rate * (line.getQuantity()), precision))\n
 \n
 msg = context.Base_translateString(\'Price converted.\')\n
 \n
@@ -109,7 +104,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\'</string> </value>
+            <value> <string>exchange_rate=None, form_id=\'view\'</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -129,15 +124,14 @@ return context.Base_redirect(form_id,\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
+                        <value> <int>2</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>exchange_rate</string>
                             <string>form_id</string>
-                            <string>Products.ERP5.Document.Document</string>
-                            <string>ConversionError</string>
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
@@ -145,10 +139,10 @@ return context.Base_redirect(form_id,\n
                             <string>line_list</string>
                             <string>_getiter_</string>
                             <string>line</string>
-                            <string>None</string>
-                            <string>AssertionError</string>
+                            <string>section</string>
                             <string>currency</string>
-                            <string>exchange_ratio</string>
+                            <string>True</string>
+                            <string>None</string>
                             <string>dict</string>
                             <string>round</string>
                             <string>msg</string>
@@ -164,6 +158,7 @@ return context.Base_redirect(form_id,\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <string>view</string>
               </tuple>
             </value>
