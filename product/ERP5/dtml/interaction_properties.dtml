@@ -54,6 +54,11 @@
 </tr>
 
 <tr>
+<th align="left">Do not trigger on a temporary document</th>
+<td><input type="checkbox" name="temporary_document_disallowed:int" value="1" <dtml-if temporary_document_disallowed>checked</dtml-if>/></td>
+</tr>
+
+<tr>
 <th align="left">Script (before)</th>
 <td>
 <select name="script_name:list" multiple size="5">

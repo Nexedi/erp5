@@ -59,6 +59,7 @@ class InteractionDefinition (SimpleItem):
     method_id = ()
     portal_type_filter = None
     once_per_transaction = False
+    temporary_document_disallowed = False
 
     manage_options = (
         {'label': 'Properties', 'action': 'manage_properties'},
@@ -119,6 +120,7 @@ class InteractionDefinition (SimpleItem):
                       portal_type_filter=None,
                       trigger_type=TRIGGER_WORKFLOW_METHOD,
                       once_per_transaction=False,
+                      temporary_document_disallowed=True,
                       script_name=(),
                       after_script_name=(),
                       before_commit_script_name=(),
@@ -149,6 +151,7 @@ class InteractionDefinition (SimpleItem):
         self.description = str(description)
         self.trigger_type = int(trigger_type)
         self.once_per_transaction = bool(once_per_transaction)
+        self.temporary_document_disallowed = bool(temporary_document_disallowed)
         self.script_name = script_name
         self.after_script_name = after_script_name
         self.before_commit_script_name = before_commit_script_name
