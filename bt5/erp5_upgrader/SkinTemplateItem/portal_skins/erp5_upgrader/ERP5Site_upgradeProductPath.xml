@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -55,10 +52,17 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   Update Product Path in zope.conf\n
+\n
+  ERP5Site_getSystemSignatureDict and ERP5Site_setProductPath are \n
+  used to keep backward compatibility with newer implementations.\n
 """\n
 \n
 signature = context.ERP5Site_getUpgraderSignature()\n
-product_version = context.portal_introspections.getSystemSignatureDict()[\'erp5\']\n
+try:\n
+  product_version = context.portal_introspections.getSystemSignatureDict()[\'erp5\']\n
+except:\n
+  # Try to use externals instead because portal_introspections is not available.\n
+  product_version = context.ERP5Site_getSystemSignatureDict()[\'erp5\']\n
 \n
 if product_version == signature["release"]:\n
   return []\n
@@ -67,7 +71,13 @@ if not upgrade:\n
   return ["Upgrade required for Products. Current: %s , Expect %s" % (\n
             product_version, signature["release"]) ]\n
 \n
-context.portal_introspections.setProductPath(signature["release"])\n
+context.ERP5Site_beforeUpgradeProductPath()\n
+\n
+try:\n
+  context.portal_introspections.setProductPath(signature["release"])\n
+except:\n
+  # Try to use externals instead because portal_introspections is not available.\n
+  context.ERP5Site_setProductPath(signature["release"])\n
 \n
 return ["Upgraded Product Path List to %s" % (signature["release"])]\n
 </string> </value>
