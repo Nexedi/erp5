@@ -8973,7 +8973,7 @@ msgid "Select Search"
 msgstr "Type de recherche"
 
 msgid "Select Template"
-msgstr "Sélectionner un template"
+msgstr "Sélectionner un filtre prédéfini"
 
 msgid "Select Variation"
 msgstr "Variantes à commander"
