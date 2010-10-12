@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -58,6 +55,11 @@
 from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST\n
 \n
 if format in VALID_IMAGE_FORMAT_LIST:\n
+  # we do not have any data so we can allow conversion to proceed and lead to a \n
+  # different conversion errorrather than raise Unautorized\n
+  if not context.hasData():\n
+    return True\n
+\n
   # Check if PDF size is not too large for conversion tool\n
   content_information = context.getContentInformation()\n
   size = content_information.get(\'Page size\')\n
@@ -123,6 +125,7 @@ return True\n
                             <string>VALID_IMAGE_FORMAT_LIST</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>True</string>
                             <string>content_information</string>
                             <string>size</string>
                             <string>False</string>
@@ -131,7 +134,6 @@ return True\n
                             <string>width</string>
                             <string>height</string>
                             <string>maximum_surface</string>
-                            <string>True</string>
                           </tuple>
                         </value>
                     </item>
