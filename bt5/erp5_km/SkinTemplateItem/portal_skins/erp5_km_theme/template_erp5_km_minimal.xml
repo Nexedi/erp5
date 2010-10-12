@@ -180,11 +180,6 @@
                       <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
                   </tal:block>\n
                 </tal:block>\n
-                <!-- Web toolbar -->\n
-\n
-                  <tal:block tal:repeat="aggregate python: [(\'toolbox\', splash_area)]">\n
-                      <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
-                  </tal:block>\n
 \n
                 <div id="content_back_km">\n
                   <!-- Headline Box -->\n
