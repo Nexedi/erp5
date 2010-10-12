@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,6 +56,9 @@
   standard way to detect if the SQLUpgrade is needed. Reindexation should \n
   be only a consequence of other script only.\n
 """\n
+signature = context.ERP5Site_getUpgraderSignature()\n
+if not signature.get("recatalog", True):\n
+  return []\n
 \n
 if not upgrade:\n
   # Never consider outdated.\n
@@ -123,9 +123,11 @@ return message_list\n
                         <value>
                           <tuple>
                             <string>upgrade</string>
-                            <string>message_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>signature</string>
+                            <string>True</string>
+                            <string>message_list</string>
                             <string>catalog</string>
                             <string>tag</string>
                           </tuple>

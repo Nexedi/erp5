@@ -539,6 +539,8 @@ UPGRADE_OBJECT_CLASS_LIST = ( (\'portal_gadgets\', \n
                           \'Products.ERP5Type.Document.Gadget.Gadget\', \n
                           \'ERP5Site_testUpgradeObjectClass\'  ), )\n
 \n
+RECATALOG = True\n
+\n
 # Wrap everything into a dict\n
 signature_dict = {\n
    # Defines the alarms enabled for the upgrade\n
@@ -580,6 +582,8 @@ signature_dict = {\n
  , \'erp5_site_property_dict\' : ERP5_SITE_PROPERTY_DICT\n
    # Provide a list of tuples with informations to upgrade object class\n
  , \'upgrade_object_class_list\' : UPGRADE_OBJECT_CLASS_LIST\n
+   # Define if the site will be recatalogued or not after finish upgrade.\n
+ , \'recatalog\' : RECATALOG\n
 }\n
 \n
 if item is not None:\n
@@ -650,6 +654,7 @@ else:\n
                             <string>INTEGRITY_VERIFICATION_SCRIPT_ID_LIST</string>
                             <string>ERP5_SITE_PROPERTY_DICT</string>
                             <string>UPGRADE_OBJECT_CLASS_LIST</string>
+                            <string>RECATALOG</string>
                             <string>signature_dict</string>
                           </tuple>
                         </value>
