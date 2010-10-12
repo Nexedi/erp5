@@ -2781,7 +2781,8 @@ class Base( CopyContainer,
     """
     if context is None:
       pt = self._getTypesTool()
-      type_info = pt.getTypeInfo(self.getPortalType())
+      portal_type = self.getPortalType()
+      type_info = pt.getTypeInfo(portal_type)
       if type_info is None:
         raise ValueError('No such content type: %s' % portal_type)
 
