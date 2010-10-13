@@ -184,7 +184,10 @@ float: left;\n
 \n
 .content .field label, .content .field .input {\n
   width: 100%;\n
+  padding-left:10px;\n
+\n
 }\n
+\n
 \n
 .content .field label {\n
 \n
@@ -1242,7 +1245,7 @@ fieldset.right_registration h4 {\n
   margin: 0 0 10px 0;\n
   font-weight: bold;\n
   padding: 0.1em 0.5em;\n
-  background: #5B7C9B none repeat scroll 0% !important;\n
+  background: #5B7C9B none repeat scroll 0% ;\n
   color: white !important;\n
   display: block;\n
   font-size: 1.2em;\n
@@ -1269,12 +1272,6 @@ fieldset.right_registration label {\n
   text-align:right;\n
   width:11.5em;\n
   padding-right: 0.1em;\n
-}\n
-\n
-fieldset.right_registration div.required label {\n
-  background-image:url(km_img/required_mark.png) !important;\n
-  background-position:left center !important;\n
-  background-repeat:no-repeat !important;\n
 }\n
 \n
 fieldset.left_registration input,\n
@@ -1348,8 +1345,13 @@ div.gadget-management{\n
 }\n
 \n
 div.required label{\n
-  padding-top: 4px;\n
-  background:  url("../km_img/required_mark.png") no-repeat;\n
+  background-image:url("km_img/required_mark.png");\n
+  background-position:left center;\n
+  background-repeat:no-repeat;\n
+  padding-left: 10px;\n
+\n
+/*  padding-top: 4px;\n
+  background:  url("../km_img/required_mark.png") no-repeat;*/\n
 }\n
 \n
 /* login form */\n
