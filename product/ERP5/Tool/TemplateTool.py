@@ -129,7 +129,11 @@ class TemplateTool (BaseTool):
             latest_bt = bt
             break
           elif strict is False and installation_state == 'replaced':
-            revision = int(bt.getRevision())
+            revision = bt.getRevision()
+            try:
+              revision = int(revision)
+            except ValueError:
+              continue
             if revision > latest_revision:
               latest_bt = bt
       return latest_bt
