@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts86451743.36</string> </value>
+            <value> <string>ts86979540.15</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -205,8 +205,13 @@ div.edit-form fieldset{\n
   border: none;\n
 }\n
 \n
+div.block .content .field label, \n
+div.block .content .field .input{\n
+  padding-left: 0px;\n
+}\n
+\n
 div.edit-form label{\n
-  display:block !important;\n
+  display:block;\n
   font-weight:normal;\n
 }\n
 \n
@@ -464,7 +469,7 @@ div.block div.box_inner_content div.worklist_list ul {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8572</int> </value>
+            <value> <int>8653</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
