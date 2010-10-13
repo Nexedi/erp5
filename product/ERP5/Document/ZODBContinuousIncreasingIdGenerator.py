@@ -104,6 +104,8 @@ class ZODBContinuousIncreasingIdGenerator(IdGenerator):
     # Dump the dict_ids dictionary
     if getattr(portal_ids, 'dict_ids', None) is not None:
       for id_group, last_id in portal_ids.dict_ids.items():
+        if not isinstance(id_group, str):
+          id_group = repr(id_group)
         if self.last_id_dict.has_key(id_group) and \
            self.last_id_dict[id_group] > last_id:
           continue

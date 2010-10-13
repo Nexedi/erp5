@@ -104,6 +104,7 @@ class TestERP5Web(ERP5TypeTestCase):
     website = self.getPortal().web_site_module.newContent(portal_type = 'Web Site',
                                                           id = self.website_id,
                                                           **kw)
+    website.publish()
     transaction.commit()
     self.tic()
     return website
@@ -1375,12 +1376,12 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     self.portal.Localizer.changeLanguage('en')
 
-    target = self.portal.restrictedTraverse('web_site_module/site/section/my-first-web-page')
+    target = self.portal.unrestrictedTraverse('web_site_module/site/section/my-first-web-page')
     self.assertEqual('Hello, World!', target.getTextContent())
 
     self.portal.Localizer.changeLanguage('ja')
 
-    target = self.portal.restrictedTraverse('web_site_module/site/section/my-first-web-page')
+    target = self.portal.unrestrictedTraverse('web_site_module/site/section/my-first-web-page')
     self.assertEqual('こんにちは、世界！', target.getTextContent())
 
   def test_02_LocalRolesFromRoleDefinition(self):
@@ -1425,6 +1426,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     web_site_module = self.portal.web_site_module
     site = web_site_module.newContent(portal_type='Web Site',
                                       id='site')
+    site.publish()
 
     section = site.newContent(portal_type='Web Section',
                               id='section')
@@ -1760,6 +1762,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
     website = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                      id='site')
+    website.publish()
     website.setMembershipCriterionBaseCategory('follow_up')
     website.setMembershipCriterionDocumentList(['follow_up/%s' %
                                                   project.getRelativeUrl()])
@@ -1792,12 +1795,11 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
 
   def test_WebSiteModuleDefaultSecurity(self):
     """
-      Test that by default Anonymous User may access Web Site Module
+      Test that by default Anonymous User cannot access Web Site Module
     """
     portal = self.portal
     self.logout()
-    portal.restrictedTraverse('web_site_module')
-    portal.web_site_module.view()
+    self.assertRaises(Unauthorized, portal.web_site_module.view)
 
 
 class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):

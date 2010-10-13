@@ -1,16 +1,43 @@
+##############################################################################
+#
+# Copyright (c) 2010 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Nicolas Dumazet <nicolas.dumazet@nexedi.com>
+#                    Arnaud Fontaine <arnaud.fontaine@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsibility of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# guarantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+##############################################################################
 
-import dynamicmodule
-
-import lazyclass
 import sys
 import inspect
+
 from types import ModuleType
+
+import dynamicmodule
+import lazyclass
 
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
-
 from Products.ERP5Type import document_class_registry, mixin_class_registry
-
 from ExtensionClass import Base as ExtensionBase
 from zLOG import LOG, ERROR, BLATHER
 
@@ -29,6 +56,24 @@ def _import_class(classpath):
     import traceback; traceback.print_exc()
     raise ImportError('Could not import document class %s' % classpath)
 
+def _create_accessor_holder_class(property_sheet_tool,
+                                  property_sheet_name):
+  """
+  If the given Property Sheet exists in portal_property_sheets, then
+  generate its accessor holder
+  """
+  try:
+    return property_sheet_tool.createPropertySheetAccessorHolder(
+      getattr(property_sheet_tool,
+              property_sheet_name))
+
+  except AttributeError:
+    # Not too critical
+    LOG("ERP5Type.Dynamic", ERROR,
+        "Ignoring missing Property Sheet " + property_sheet_name)
+
+    return None
+
 def portal_type_factory(portal_type_name):
   """
   Given a portal type, look up in Types Tool the corresponding
@@ -41,6 +86,7 @@ def portal_type_factory(portal_type_name):
   type_class = None
   mixin_list = []
   interface_list = []
+  accessor_holder_list = []
   # two exceptions that cant be loaded from types tool:
   if portal_type_name == "Base Type":
     # avoid chicken and egg issue:
@@ -52,6 +98,14 @@ def portal_type_factory(portal_type_name):
     # When installing a BT, Business Templates are loaded
     # before creating any Base Type object
     type_class = "BusinessTemplate"
+  elif portal_type_name == "Base Category":
+    # 'elementary_type' is a Base Category needed for Standard
+    # Property and Acquired Property
+    type_class = "BaseCategory"
+  elif portal_type_name == "Category":
+    # 'elementary_type' sub-categories are needed for Standard
+    # Property and Acquired Property
+    type_class = "Category"
   else:
     from Products.ERP5.ERP5Site import getSite
     site = getSite()
@@ -69,7 +123,7 @@ def portal_type_factory(portal_type_name):
     # was not migrated yet)
     type_class = portal_type.getTypeClass()
 
-    # But no such getter exist for Mixins and Interfaces:
+    # But no such getter exists for Mixins and Interfaces:
     # in reality, we can live with such a failure
     try:
       mixin_list = portal_type.getTypeMixinList()
@@ -80,27 +134,52 @@ def portal_type_factory(portal_type_name):
           "Could not load interfaces or Mixins for portal type %s" \
               % portal_type)
 
+    # Initialize Property Sheets accessor holders
+    import erp5.accessor_holder
+
+    # Get the ZODB Property Sheets for this Portal Type
+    property_sheet_name_set = set(
+      portal_type.getNewStyleTypePropertySheetList() or [])
+
+    for property_sheet_name in property_sheet_name_set:
+      try:
+        # Get the already generated accessor holder
+        accessor_holder_list.append(getattr(erp5.accessor_holder,
+                                            property_sheet_name))
+
+      except AttributeError:
+        # Generate the accessor holder as it has not been done yet
+        accessor_holder_class = \
+            _create_accessor_holder_class(site.portal_property_sheets,
+                                          property_sheet_name)
+
+        if accessor_holder_class is not None:
+          setattr(erp5.accessor_holder, property_sheet_name,
+                  accessor_holder_class)
+
+          accessor_holder_list.append(accessor_holder_class)
+
+          LOG("ERP5Type.Dynamic", BLATHER,
+              "Created accessor holder for %s" % property_sheet_name)
+
   if type_class is not None:
     type_class = document_class_registry.get(type_class)
   if type_class is None:
     raise AttributeError('Document class is not defined on Portal Type %s' % portal_type_name)
 
+  type_class = _import_class(type_class)
+
   mixin_path_list = []
   if mixin_list:
     mixin_path_list = map(mixin_class_registry.__getitem__, mixin_list)
+  mixin_class_list = map(_import_class, mixin_path_list)
 
-  ##
-  # XXX initialize interfaces here too
-  # XXX adding accesor_holder for property sheets should be done here
-  ##
+  baseclasses = [type_class] + accessor_holder_list + mixin_class_list
 
-  classpath_list = [type_class] + mixin_path_list
+  LOG("ERP5Type.Dynamic", BLATHER,
+      "Portal type %s loaded with bases %s" \
+          % (portal_type_name, repr(baseclasses)))
 
-  baseclasses = map(_import_class, classpath_list)
-
-  #LOG("ERP5Type.Dynamic", BLATHER,
-  #    "Portal type %s loaded with bases %s" \
-  #        % (portal_type_name, repr(baseclasses)))
   return tuple(baseclasses), dict(portal_type=portal_type_name)
 
 def initializeDynamicModules():
@@ -114,8 +193,9 @@ def initializeDynamicModules():
       holds document classes that have no physical import path,
       for example classes created through ClassTool that are in
       $INSTANCE_HOME/Document
+    erp5.accessor_holder
+      holds accessors of ZODB Property Sheet
   """
-
   def portal_type_loader(portal_type_name):
     """
     Returns a lazily-loaded "portal-type as a class"
@@ -126,9 +206,12 @@ def initializeDynamicModules():
   sys.modules["erp5"] = erp5
   erp5.document = ModuleType("erp5.document")
   sys.modules["erp5.document"] = erp5.document
+  erp5.accessor_holder = ModuleType("erp5.accessor_holder")
+  sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
 
   portal_type_container = dynamicmodule.dynamicmodule('erp5.portal_type',
-                                            portal_type_loader)
+                                                      portal_type_loader)
+
   erp5.portal_type = portal_type_container
 
   def temp_portal_type_loader(portal_type_name):
@@ -166,7 +249,6 @@ def initializeDynamicModules():
   erp5.temp_portal_type = dynamicmodule.dynamicmodule('erp5.temp_portal_type',
                                                    temp_portal_type_loader)
 
-
 last_sync = 0
 def synchronizeDynamicModules(context, force=False):
   """
@@ -180,7 +262,7 @@ def synchronizeDynamicModules(context, force=False):
     and send out an invalidation to other nodes
   """
   return # XXX disabled for now
-  LOG("ERP5Type.Dynamic", 0, "Resetting dynamic classes")
+  LOG("ERP5Type.Dynamic", BLATHER, "Resetting dynamic classes")
 
   portal = context.getPortalObject()
 
@@ -196,8 +278,10 @@ def synchronizeDynamicModules(context, force=False):
       return
     last_sync = cookie
 
-  import erp5.portal_type
-  for class_name, klass in inspect.getmembers(erp5.portal_type, inspect.isclass):
+  import erp5
+
+  for class_name, klass in inspect.getmembers(erp5.portal_type,
+                                              inspect.isclass):
     ghostbase = getattr(klass, '__ghostbase__', None)
     if ghostbase is not None:
       for attr in klass.__dict__.keys():
@@ -206,3 +290,7 @@ def synchronizeDynamicModules(context, force=False):
       klass.__bases__ = ghostbase
       type(ExtensionBase).__init__(klass, klass)
 
+  # Clear accessor holders of ZODB Property Sheets
+  for accessor_name in erp5.accessor_holder.__dict__.keys():
+    if not accessor_name.startswith('__'):
+      delattr(erp5.accessor_holder, accessor_name)

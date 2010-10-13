@@ -82,7 +82,6 @@
                         <string>listbox_destination</string>
                         <string>listbox_destination_credit</string>
                         <string>listbox_destination_debit</string>
-                        <string>listbox_destination_payment</string>
                       </list>
                     </value>
                 </item>

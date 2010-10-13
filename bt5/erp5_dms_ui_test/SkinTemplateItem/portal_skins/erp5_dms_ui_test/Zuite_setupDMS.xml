@@ -55,27 +55,33 @@
 # Setup System Preference\n
 dms_system_preference_id = \'dms_system_preference_ui_tests\'\n
 portal_preferences = context.portal_preferences\n
-if dms_system_preference_id not in portal_preferences.objectIds():\n
-  dms_preference = portal_preferences.newContent(\n
-                    id = dms_system_preference_id,\n
-                    portal_type = \'System Preference\',\n
-                    priority = 1,\n
-                    preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
-                    preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
-                    preferred_synchronous_metadata_discovery = True,\n
-                    preferred_redirect_to_document = True,\n
-                    preferred_ooodoc_server_address = \'localhost\',\n
-                    preferred_ooodoc_server_port_number = 8008)\n
+dms_preference = portal_preferences.getActiveSystemPreference()\n
+if dms_preference is None:\n
+  dms_preference = portal_preferences.newContent(id = dms_system_preference_id,\n
+                                                 portal_type = \'System Preference\')\n
+kw = dict(priority = 1,\n
+          preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
+          preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
+          preferred_synchronous_metadata_discovery = True,\n
+          preferred_redirect_to_document = True,\n
+          preferred_ooodoc_server_address = \'localhost\',\n
+          preferred_ooodoc_server_port_number = 8008)\n
+dms_preference.edit(**kw)\n
+if dms_preference.getPreferenceState()==\'disabled\':\n
   dms_preference.enable()\n
+\n
 # Setup Preference so we can setup Access Tab\n
 dms_preference_id = \'dms_preference_ui_tests\'\n
-if dms_preference_id not in portal_preferences.objectIds():\n
+dms_preference = portal_preferences.getActivePreference()\n
+if dms_preference is None:\n
   dms_preference = portal_preferences.newContent(\n
                     id = dms_preference_id,\n
-                    portal_type = \'Preference\',\n
-                    priority = 1,\n
-                    preferred_html_style_access_tab=1,\n
-                    preferred_listbox_list_mode_line_count=10)\n
+                    portal_type = \'Preference\')\n
+kw=dict(priority = 1,\n
+        preferred_html_style_access_tab=1,\n
+        preferred_listbox_list_mode_line_count=10)\n
+dms_preference.edit(**kw)\n
+if dms_preference.getPreferenceState()==\'disabled\':\n
   dms_preference.enable()\n
 \n
 # Publish all knowledge pad gadgets\n
@@ -138,8 +144,12 @@ return printed\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal_preferences</string>
-                            <string>True</string>
                             <string>dms_preference</string>
+                            <string>None</string>
+                            <string>dict</string>
+                            <string>True</string>
+                            <string>kw</string>
+                            <string>_apply_</string>
                             <string>dms_preference_id</string>
                             <string>_getiter_</string>
                             <string>gadget</string>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
-        <tuple/>
-      </tuple>
+      <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -33,6 +30,12 @@
               <list>
                 <string>DeliveryMovement_calculateCausalityState</string>
               </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -72,6 +75,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

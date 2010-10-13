@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_dhtml_style.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.\n
+                   Sebastien Robin <seb@nexedi.com>\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
+/*\n
+Note: this JavaScript is used to make parallel list field more user friendly\n
+*/\n
+\n
+$(function() {\n
+\n
+  // Make the parallel list field adding more elements automatically.\n
+  $(\'.input:has(.extensible_parallel_list_field)\').change(function(event) {\n
+    event.preventDefault();\n
+    var select_element = $(event.target)\n
+    var add_element = true;\n
+    var to_clone_element = select_element\n
+    var parent = select_element.parent()\n
+    if (parent[0].nodeName == \'DIV\') {\n
+      to_clone_element = parent\n
+      parent = parent.parent()\n
+    }\n
+    var select_list = parent.find(\'select\')\n
+    for(var x = select_list.length; x;) {\n
+      current_select = select_list[--x]\n
+      if (current_select.selectedIndex == 0)\n
+      {\n
+        add_element = false;\n
+      }\n
+    }\n
+    if (add_element) {\n
+      parent.append(jQuery(\'<label>&nbsp;</label>\'))\n
+      var cloned_element = to_clone_element.clone(true)\n
+      cloned_element[0].selectedIndex = 0\n
+      cloned_element.appendTo(parent)\n
+      parent.append(jQuery(\'<p class="clear">\'))\n
+    }\n
+  });\n
+\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,3 +1,7 @@
+knowledge_pad_module/erp5_km_public_front_pad
+knowledge_pad_module/erp5_km_public_front_pad/**
+portal_categories/classification
+portal_categories/classification/**
 portal_categories/group/test_zuite
 portal_categories/group/test_zuite/**
 portal_tests/erp5_km_zuite

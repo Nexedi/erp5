@@ -50,16 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-Script used to get the exchange ratio used \n
-in the conversion of the destination price\n
-"""\n
-\n
-currency = context.getResourceValue()\n
-exchange_ratio = currency.getPrice(context=context.asContext(categories=[\'resource/%s\' % context.getResource(), \n
-                                     \'price_currency/currency_module/%s\' % context.getDestinationSectionValue().getPriceCurrencyId()],\n
-                                      start_date=context.getStopDate()))\n
-return exchange_ratio\n
+            <value> <string>return context.getResourceValue().getPrice(\n
+    context=context.asContext(categories=[context.getResource(base=True),\n
+                                          context.getDestinationSectionValue().getPriceCurrency(base=True)],\n
+                              start_date=context.getStopDate()))\n
 </string> </value>
         </item>
         <item>
@@ -98,8 +92,7 @@ return exchange_ratio\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>currency</string>
-                            <string>exchange_ratio</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>

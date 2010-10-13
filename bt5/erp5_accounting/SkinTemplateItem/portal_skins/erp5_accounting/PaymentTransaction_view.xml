@@ -82,7 +82,6 @@
                         <string>listbox_source</string>
                         <string>listbox_source_debit</string>
                         <string>listbox_source_credit</string>
-                        <string>listbox_source_payment</string>
                       </list>
                     </value>
                 </item>

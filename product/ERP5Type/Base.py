@@ -2781,7 +2781,8 @@ class Base( CopyContainer,
     """
     if context is None:
       pt = self._getTypesTool()
-      type_info = pt.getTypeInfo(self.getPortalType())
+      portal_type = self.getPortalType()
+      type_info = pt.getTypeInfo(portal_type)
       if type_info is None:
         raise ValueError('No such content type: %s' % portal_type)
 
@@ -3041,7 +3042,7 @@ class Base( CopyContainer,
       return method(container, **kw)
 
     # XXX this should not happen, unless the Business Template is broken.
-    return dict(redirect_url=context.absolute_url() + '/view',
+    return dict(redirect_url=container.absolute_url() + '/view',
                 selection_index=None, selection_name=None)
 
   # Hash method
@@ -3481,7 +3482,7 @@ class Base( CopyContainer,
     self.id = self.id
 
   # Helpers
-  def getQuantityPrecisionFromResource(self, resource):
+  def getQuantityPrecisionFromResource(self, resource, d=2):
     """
       Provides a quick access to precision without accessing the resource
       value in ZODB. Here resource is the relative_url of the resource, such as
@@ -3492,14 +3493,17 @@ class Base( CopyContainer,
         resource_value = self.portal_categories.resolveCategory(resource)
         if resource_value is not None:
           return resource_value.getQuantityPrecision()
-      return 0
+      return None
 
     cached_getQuantityPrecisionFromResource = CachingMethod(
                                     cached_getQuantityPrecisionFromResource,
                                     id='Base_getQuantityPrecisionFromResource',
                                     cache_factory='erp5_content_short')
 
-    return cached_getQuantityPrecisionFromResource(resource)
+    precision = cached_getQuantityPrecisionFromResource(resource)
+    if precision is None:
+      precision = d
+    return precision
 
 
   # Documentation Helpers

@@ -515,20 +515,14 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     """
     if not self.getReference():
       return True
+    kw = dict(portal_type=self.getPortalDocumentTypeList(),
+              reference=self.getReference(),
+              version=self.getVersion(),
+              language=self.getLanguage(),
+              validation_state="!=cancelled")
     catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
-    self_count = catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
-                                            reference=self.getReference(),
-                                            version=self.getVersion(),
-                                            language=self.getLanguage(),
-                                            uid=self.getUid(),
-                                            validation_state="!=cancelled"
-                                            )[0][0]
-    count = catalog.unrestrictedCountResults(portal_type=self.getPortalDocumentTypeList(),
-                                            reference=self.getReference(),
-                                            version=self.getVersion(),
-                                            language=self.getLanguage(),
-                                            validation_state="!=cancelled"
-                                            )[0][0]
+    self_count = catalog.unrestrictedCountResults(uid=self.getUid(), **kw)[0][0]
+    count = catalog.unrestrictedCountResults(**kw)[0][0]
     # If self is not indexed yet, then if count == 1, version is not unique
     return count <= self_count
 

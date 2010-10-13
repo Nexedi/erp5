@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -55,11 +52,13 @@
             <key> <string>_body</string> </key>
             <value> <string>simulation_movement = state_change[\'object\']\n
 \n
-delivery_movement = simulation_movement.getDeliveryValue()\n
-\n
-if delivery_movement is not None:\n
-  delivery = delivery_movement.getExplanationValue()\n
-  delivery.activate().Delivery_calculate()\n
+# It is not quite useful to invoke the method calculate when a newly created\n
+# simulation movement is not indexed yet, so it is better to wait for the indexing\n
+# to be done.\n
+path = simulation_movement.getPath()\n
+method_id_list = (\'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
+simulation_movement.activate(after_path_and_method_id=(path, method_id_list)) \\\n
+    .SimulationMovement_calculateCausalityState()\n
 </string> </value>
         </item>
         <item>
@@ -118,9 +117,8 @@ if delivery_movement is not None:\n
                             <string>_getitem_</string>
                             <string>simulation_movement</string>
                             <string>_getattr_</string>
-                            <string>delivery_movement</string>
-                            <string>None</string>
-                            <string>delivery</string>
+                            <string>path</string>
+                            <string>method_id_list</string>
                           </tuple>
                         </value>
                     </item>

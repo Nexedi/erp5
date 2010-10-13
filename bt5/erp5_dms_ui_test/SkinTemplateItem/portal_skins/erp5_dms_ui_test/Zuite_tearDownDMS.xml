@@ -51,9 +51,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># Delete System Preference\n
-portal_preferences = context.portal_preferences\n
-portal_preferences.manage_delObjects([\'dms_system_preference_ui_tests\', \'dms_preference_ui_tests\'])\n
-context.portal_caches.clearAllCache()\n
+#portal_preferences = context.portal_preferences\n
+#portal_preferences.manage_delObjects([\'dms_system_preference_ui_tests\', \'dms_preference_ui_tests\'])\n
+#context.portal_caches.clearAllCache()\n
 print "Done"\n
 return printed\n
 </string> </value>
@@ -102,9 +102,6 @@ return printed\n
                           <tuple>
                             <string>_print_</string>
                             <string>_print</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_preferences</string>
                           </tuple>
                         </value>
                     </item>

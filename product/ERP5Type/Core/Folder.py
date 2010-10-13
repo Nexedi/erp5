@@ -453,6 +453,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   def __init__(self, id):
     self.id = id
       
+  security.declarePublic('newContent')
   def newContent(self, *args, **kw):
     """ Create a new content """
     # Create data structure if none present
@@ -1584,6 +1585,17 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     Folder.inheritedAttribute(
           '_verifyObjectPaste')(self, object, validate_src)
 
+  security.declarePublic('getIconURL')
+  def getIconURL(self):
+    """ Get the absolute URL of the icon for the object.
+        Patched, as ERP5 Type does not provide getExprContext which is used in
+        CMF 2.2
+    """
+    ti = self.getTypeInfo()
+    utool = getToolByName(self, 'portal_url')
+    if ti is None:
+      return '%s/misc_/OFSP/dtmldoc.gif' % utool()
+    return '%s/%s' % (utool(), ti.getTypeIcon())
 
 # We browse all used class from btree and hbtree and set not implemented
 # class if one method defined on a class is not defined on other, thus if

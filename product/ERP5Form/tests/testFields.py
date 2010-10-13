@@ -126,6 +126,11 @@ class TestFloatField(ERP5TypeTestCase):
         self.widget.format_value(self.field, sum([0.1] * 10)))
     self.assertEquals('566.30',
         self.widget.format_value(self.field, 281.80 + 54.50 + 230.00))
+
+  def test_format_no_precision(self):
+    self.assertEquals('7.2', self.widget.format_value(self.field, 7.2))
+    self.assertEquals('0.009999', self.widget.format_value(self.field, 0.009999))
+    self.assertEquals('1000.0', self.widget.format_value(self.field, 1000))
   
   def test_render_view(self):
     self.field.values['input_style'] = '-1 234.5'

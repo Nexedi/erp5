@@ -1,3 +1,6 @@
+2010-10-08 kazuhiko
+* no longer allow Access contents information and View for Anonymous, because there is no reason to allow anonymous users to access web_site_module itself. we should publish Web Site document if we want to publish it.
+
 2010-09-22 kazuhiko
 * use Web Section's url in WebSection_getPermanentURL script, if it is called against a document.
 

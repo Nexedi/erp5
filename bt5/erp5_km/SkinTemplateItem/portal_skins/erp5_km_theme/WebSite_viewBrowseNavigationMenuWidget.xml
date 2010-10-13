@@ -2,16 +2,15 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>web_site_user_ram_cache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -80,7 +79,7 @@
   </li>\n
 \n
   <tal:block tal:condition="anonymous_navigation_menu">\n
-    <li tal:repeat="menu_item menu_item_list">\n
+    <li class="collapse-menu" tal:repeat="menu_item menu_item_list">\n
       <a href="#" >\n
         <tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Menu</tal:block>\n
         <!--[if IE 7]><!-->\n

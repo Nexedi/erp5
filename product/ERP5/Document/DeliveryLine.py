@@ -95,9 +95,6 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
         self._setVariationCategoryList( kw['variation_category_list'] )
       Movement._edit(self, REQUEST=REQUEST,
                        force_update = force_update, **kw)
-      # This one must be the last
-      if kw.has_key('item_id_list'):
-        self._setItemIdList( kw['item_id_list'] )
 
     # We must check if the user has changed the resource of particular line
     security.declareProtected( Permissions.ModifyPortalContent, 'edit' )

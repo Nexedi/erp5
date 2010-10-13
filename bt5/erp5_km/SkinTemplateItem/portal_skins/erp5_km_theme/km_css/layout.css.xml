@@ -192,12 +192,6 @@ width:30%;\n
 \n
 }\n
 \n
-.content .field div.input {\n
-\n
-width:70%;\n
-\n
-}\n
-\n
 .column-1, .column-2 {\n
 \n
 \twidth:100%;\n
@@ -907,6 +901,12 @@ fieldset.right .gadget {\n
   width:952px;\n
   margin: 0 auto;\n
 \n
+}\n
+\n
+\n
+\n
+#footer hr{\n
+  clear:both;\n
 }\n
 \n
 #wrapper_footer ul {\n

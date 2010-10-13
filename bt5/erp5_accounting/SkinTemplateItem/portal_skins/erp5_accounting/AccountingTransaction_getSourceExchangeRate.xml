@@ -50,11 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>currency = context.getResourceValue()\n
-exchange_ratio = currency.getPrice(context=context.asContext(categories=[\'resource/%s\' % context.getResource(), \n
-                                     \'price_currency/currency_module/%s\' % context.getSourceSectionValue().getPriceCurrencyId()],\n
-                                      start_date=context.getStartDate()))\n
-return exchange_ratio\n
+            <value> <string>return context.getResourceValue().getPrice(\n
+    context=context.asContext(categories=[context.getResource(base=True),\n
+                                          context.getSourceSectionValue().getPriceCurrency(base=True)],\n
+                              start_date=context.getStartDate()))\n
 </string> </value>
         </item>
         <item>
@@ -93,8 +92,7 @@ return exchange_ratio\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>currency</string>
-                            <string>exchange_ratio</string>
+                            <string>True</string>
                           </tuple>
                         </value>
                     </item>

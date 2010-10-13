@@ -1517,8 +1517,14 @@ class CategoryTemplateItem(ObjectTemplateItem):
     BaseTemplateItem.build(self, context, **kw)
     p = context.getPortalObject()
     for relative_url in self._archive.keys():
-      obj = p.unrestrictedTraverse(relative_url)
-      obj = obj._getCopy(context)
+      try:
+        obj = p.unrestrictedTraverse(relative_url)
+        obj = obj._getCopy(context)
+      except (KeyError, AttributeError):
+        if self.is_bt_for_diff:
+          continue
+        else:
+          raise ValueError, "%s not found" % relative_url
       _recursiveRemoveUid(obj)
       obj = self.removeProperties(obj, 1)
       include_sub_categories = obj.__of__(context).getProperty('business_template_include_sub_categories', 0)
@@ -2173,15 +2179,16 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
       if ob is None:
         raise ValueError, "Portal Type %s not found in site" %(portal_type,)
       prop_value = getattr(ob, self.class_property, ())
-      if not allowed_type in prop_value and not self.is_bt_for_diff:
+      if allowed_type in prop_value:
+        if self.class_property not in portal_type:
+          key = '%s/%s' % (self.class_property, portal_type)
+        else:
+          key = portal_type
+        self._objects.setdefault(key, []).append(allowed_type)
+      elif not self.is_bt_for_diff:
         raise ValueError, "%s %s not found in portal type %s" % (
                              getattr(self, 'name', self.__class__.__name__),
                              allowed_type, portal_type)
-      if self.class_property not in portal_type:
-        key = '%s/%s' % (self.class_property, portal_type)
-      else:
-        key = portal_type
-      self._objects.setdefault(key, []).append(allowed_type)
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
@@ -2785,7 +2792,7 @@ class ActionTemplateItem(ObjectTemplateItem):
             action_text = action_text.text
           obj.addAction(
                         id = action.id
-                      , name = action.title
+                      , title = action.title
                       , action = action_text
                       , condition = action.getCondition()
                       , permission = action.permissions

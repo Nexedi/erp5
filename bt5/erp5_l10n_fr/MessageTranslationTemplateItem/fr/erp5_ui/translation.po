@@ -1605,6 +1605,15 @@ msgstr "Types de campagnes"
 msgid "Campaigns"
 msgstr "Campagnes"
 
+msgid "Can't find corresponding organisation, it's not possible to update your credentials."
+msgstr "Impossible de trouver l'organisation correspondant à votre login, il n'est pas possible de mettre à jour vos informations."
+
+msgid "Can't find corresponding person, it's not possible to reset your password."
+msgstr "Impossible de trouver la personne correspondant à votre login, il n'est pas possible de réinitialiser votre mot de passe."
+
+msgid "Can't find corresponding person, it's not possible to update your credentials."
+msgstr "Impossible de trouver la personne correspondant à votre login, il n'est pas possible de mettre à jour vos informations."
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -8322,10 +8331,10 @@ msgid "Remaining"
 msgstr "Restant"
 
 msgid "Remember my name"
-msgstr "Mémoriser mon Nom"
+msgstr "Mémoriser mon nom"
 
 msgid "Remember my name."
-msgstr "Mémoriser mon Nom"
+msgstr "Mémoriser mon nom"
 
 msgid "Remove"
 msgstr "Enlever"
@@ -8964,7 +8973,7 @@ msgid "Select Search"
 msgstr "Type de recherche"
 
 msgid "Select Template"
-msgstr "Sélectionner un template"
+msgstr "Sélectionner un filtre prédéfini"
 
 msgid "Select Variation"
 msgstr "Variantes à commander"
@@ -9087,10 +9096,7 @@ msgid "Set ready"
 msgstr "Définir comme prêt à l'envoi"
 
 msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you."
-msgstr "Cocher la case \"Se souvenir de moi\" autorise ERP5 à se souvenir de votre nom d'utilisateur et de votre mot de passe afin de ne pas avoir à ressaisir ces informations à chaque connexion."
-
-msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you next log in, your user name will already be filled in for you."
-msgstr "Cocher 'Mémoriser mon Nom'  permettra de le faire apparaître lors de votre prochaine connexion."
+msgstr "Cocher la case \"Mémoriser mon nom\" autorise ERP5 à se souvenir de votre nom d'utilisateur afin de ne pas avoir à saisir cette information à chaque connexion."
 
 msgid "Settings"
 msgstr "Paramètres"
@@ -9429,7 +9435,7 @@ msgid "Source Accounting Operation Date"
 msgstr "Date comptable pour la source"
 
 msgid "Source Administration"
-msgstr "Administrateur du Fournisseur"
+msgstr "Administrateur chez le fournisseur"
 
 msgid "Source Code"
 msgstr "Code source"
@@ -10989,6 +10995,9 @@ msgstr "Cette adresse email est déjà enregistrée."
 msgid "This is the official code of the city in which the company has been registered. Those codes can be found on different websites, depending upon the country needed. In France for instance, it is available on the INSEE website. (www.insee.fr)"
 msgstr "Le code géographique de l'organisation, ce code est parfois dérivé  du numéro d'immatriculation, et est disponible sur le site de l'Insee."
 
+msgid "This login is not available, please change it."
+msgstr "Ce login n'est pas disponible, veuillez le changer"
+
 msgid "This option helps define whether an account is normally Credit or Debit balanced. Any asset and expense account will have a normal debit balance, while any liability, equity, and revenue account will have a normal credit balance. Checking this box will define the account as being a Normal Credit Balance"
 msgstr "Cette option permet de définir si un compte est de nature a être débiteur ou créditeur."
 
@@ -11386,10 +11395,10 @@ msgid "Unpublishes the document"
 msgstr "Permet de dépublier un document. Il sera possible de le publier à nouveau."
 
 msgid "Unsaved Form Warning"
-msgstr "Avertissement de formulaire non enregistré"
+msgstr "Avertissement en cas de formulaire non enregistré"
 
 msgid "Unversioned Files"
-msgstr "Fichier sans version"
+msgstr "Fichier non versionnés"
 
 msgid "Update"
 msgstr "Actualiser"
@@ -11929,7 +11938,7 @@ msgid "Worker ID"
 msgstr "Travailleur"
 
 msgid "Workflow"
-msgstr "État"
+msgstr "Workflow"
 
 msgid "Workflow History"
 msgstr "Historique des états"

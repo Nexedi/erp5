@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,8 +56,20 @@
   The release signature is a kind of declarative\n
   specification of an upgrader.\n
 """\n
+\n
+# Alarm dict is used to enable/disable upgrade alarms.\n
+# ie.: If you don\'t want upgrade products in some environments\n
+# you can just define \'product_upgrader\' : False.\n
+\n
+ALARM_DICT = {\n
+ "system_upgrader" : True,\n
+ "product_upgrader" : True,\n
+ "bt5_upgrader" : True,\n
+ "finalize_upgrader" : True\n
+}\n
+\n
 # The destination release provided by this upgrader\n
-DESTINATION_RELEASE = \'5.4.7\'\n
+DESTINATION_RELEASE = \'5.4.6\'\n
 \n
 ZOPE_VERSION = "2.8.11"\n
 \n
@@ -143,6 +152,11 @@ REQUIRED_BT5_ID_LIST = ("erp5_core",\n
                         "erp5_ooo_import",\n
                         "express_customisation",\n
                        )\n
+\n
+# A list bt5 which are required to upgrade catalog.\n
+# After the bt5 be updated, update catalog will be trigger.\n
+UPDATE_CATALOG_BT5_ID_LIST = ()\n
+\n
 \n
 # Call some scripts inside same transaction before or after BT update\n
 BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT = {}\n
@@ -525,10 +539,14 @@ UPGRADE_OBJECT_CLASS_LIST = ( (\'portal_gadgets\', \n
                           \'Products.ERP5Type.Document.Gadget.Gadget\', \n
                           \'ERP5Site_testUpgradeObjectClass\'  ), )\n
 \n
+RECATALOG = True\n
+\n
 # Wrap everything into a dict\n
 signature_dict = {\n
+   # Defines the alarms enabled for the upgrade\n
+   \'alarm_dict\' : ALARM_DICT\n
    # Defines the default release for bt5\n
-   \'release\': DESTINATION_RELEASE\n
+ , \'release\': DESTINATION_RELEASE\n
    # Defines the default version for zope\n
  , \'zope\': ZOPE_VERSION\n
    # Defines the default version for python\n
@@ -543,6 +561,7 @@ signature_dict = {\n
  , \'required_bt5_id_list\': REQUIRED_BT5_ID_LIST\n
    # Provides a list of bt5 which can be upgraded by the upgrader (if already installed)\n
  , \'upgradable_bt5_id_list\': UPGRADABLE_BT5_ID_LIST\n
+ , \'update_catalog_bt5_id_list\' : UPDATE_CATALOG_BT5_ID_LIST\n
  , \'before_triggered_bt5_id_dict\': BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT\n
  , \'after_triggered_bt5_id_dict\': AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT\n
    # Provide a list of bt5 which require reinstallation\n
@@ -563,6 +582,8 @@ signature_dict = {\n
  , \'erp5_site_property_dict\' : ERP5_SITE_PROPERTY_DICT\n
    # Provide a list of tuples with informations to upgrade object class\n
  , \'upgrade_object_class_list\' : UPGRADE_OBJECT_CLASS_LIST\n
+   # Define if the site will be recatalogued or not after finish upgrade.\n
+ , \'recatalog\' : RECATALOG\n
 }\n
 \n
 if item is not None:\n
@@ -608,6 +629,8 @@ else:\n
                         <value>
                           <tuple>
                             <string>item</string>
+                            <string>True</string>
+                            <string>ALARM_DICT</string>
                             <string>DESTINATION_RELEASE</string>
                             <string>ZOPE_VERSION</string>
                             <string>PYTHON_VERSION</string>
@@ -618,6 +641,7 @@ else:\n
                             <string>_getattr_</string>
                             <string>UPGRADABLE_BT5_ID_LIST</string>
                             <string>REQUIRED_BT5_ID_LIST</string>
+                            <string>UPDATE_CATALOG_BT5_ID_LIST</string>
                             <string>BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT</string>
                             <string>AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT</string>
                             <string>REINSTALABLE_BT5_ID_LIST</string>
@@ -630,6 +654,7 @@ else:\n
                             <string>INTEGRITY_VERIFICATION_SCRIPT_ID_LIST</string>
                             <string>ERP5_SITE_PROPERTY_DICT</string>
                             <string>UPGRADE_OBJECT_CLASS_LIST</string>
+                            <string>RECATALOG</string>
                             <string>signature_dict</string>
                           </tuple>
                         </value>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -59,6 +56,10 @@
   Here we make sure the all required system libraries are installed in\n
   appropriate version.\n
 """\n
+alarm_dict = context.ERP5Site_getUpgraderSignature("alarm_dict")\n
+if not alarm_dict.get(context.getId(), True):\n
+  return False\n
+\n
 # Verify if upgrade is required for Python\n
 if len(context.ERP5Site_upgradePythonExecutable()) > 0:\n
   return True\n
@@ -107,11 +108,12 @@ return False\n
                         <value>
                           <tuple>
                             <string>kw</string>
-                            <string>len</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>alarm_dict</string>
                             <string>True</string>
                             <string>False</string>
+                            <string>len</string>
                           </tuple>
                         </value>
                     </item>

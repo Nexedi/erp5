@@ -45,7 +45,6 @@ class HTMLToOdt:
     orig = html.tostring(html_tree, encoding='utf-8')
 
     doc = OOOdCommandTransform(context, filename, orig, self.inputs[0])
-    doc.convert()
     odt = doc.convertTo('odt')
     if cache is not None:
       cache.setData(odt)

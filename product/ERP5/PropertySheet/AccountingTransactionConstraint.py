@@ -48,9 +48,21 @@ class AccountingTransactionConstraint:
       'message_property_not_set': 'Date must be defined',
       'message_no_such_property': 'Date must be defined',
       'condition' : 'python: object.getSimulationState() not'
-                     ' in ("cancelled", "deleted")',
+                     ' in ("cancelled", "deleted")'
+                     ' and object.portal_type!="Purchase Invoice Transaction"',
       'type': 'PropertyExistence',
       'start_date' : 1,
+    },
+
+    { 'id': 'date_existence_purchase',
+      'description': 'Date must be defined',
+      'message_property_not_set': 'Date must be defined',
+      'message_no_such_property': 'Date must be defined',
+      'condition' : 'python: object.getSimulationState() not'
+                     ' in ("cancelled", "deleted")'
+                     ' and object.portal_type=="Purchase Invoice Transaction"',
+      'type': 'PropertyExistence',
+      'stop_date' : 1,
     },
 
     { 'id': 'currency_existence',

@@ -1,3 +1,10 @@
+2010-10-08 arnaud.fontaine
+* rename base_type_interaction_workflow to portal_type_class_interaction_workflow and add interactions specific to ZODB Property Sheets
+* modify type class of Standard Property, Acquired Property and Dynamic Category Property portal types to their respective documents.
+
+2010-10-08 yusei
+* Fix BaseType_viewTranslation. getTranslationDomainNameList method used by listbox_domain_name was moved to property sheet tool.
+
 2010-09-28 nicolas.dumazet
 * add portal type Event so that temporary Event objects can be created by NotificationTool
 * document abstract portal types usage.

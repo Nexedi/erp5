@@ -47,16 +47,23 @@ class TestIdTool(ERP5TypeTestCase):
     """
     return "Test Id Tool Upgrade"
 
-  def testUpgradeSQLNonContinuousIdGenerator(self):
+  def testUpgradeIdToolDicts(self):
     # With old erp5_core, we have no generators, no IdTool_* zsql methods,
     # and we have a dictionary stored on id tool
     id_tool = self.getPortal().portal_ids
     # Rebuild a persistent mapping like it already existed in beginning 2010
+    # First persistent mapping of generateNewLengthIdList
     id_tool.dict_length_ids = PersistentMapping()
     id_tool.dict_length_ids['foo'] = Length(5)
     id_tool.dict_length_ids['bar'] = Length(5)
     id_tool.IdTool_zSetLastId(id_group='foo', last_id=5)
     id_tool.IdTool_zSetLastId(id_group='bar', last_id=10)
+    # Then persistent mapping of generateNewId
+    id_tool.dict_ids = PersistentMapping()
+    id_tool.dict_ids['foo'] = 3
+    # it was unfortunately possible to define something else
+    # than strings
+    id_tool.dict_ids[('bar','baz')] = 2
     # Delete new zsql methods which are used by new code
     skin_folder = self.getPortal().portal_skins.erp5_core
     custom_skin_folder = self.getPortal().portal_skins.custom
@@ -94,8 +101,12 @@ class TestIdTool(ERP5TypeTestCase):
     id_list = id_tool.generateNewLengthIdList(id_group='foo')
     # it is known that with current upgrade there is a whole
     self.assertEquals(id_list, [7])
+    new_id = id_tool.generateNewId(id_group='foo')
+    self.assertEquals(new_id, 4)
+    new_id = id_tool.generateNewId(id_group=('bar','baz'))
+    self.assertEquals(new_id, 3)
     # Make sure that the old code is not used any more, so the dic on
-    # id tool should not change
+    # id tool should not change, checking for length_dict
     self.assertEquals(int(id_tool.dict_length_ids['foo'].value), 6)
     id_list = id_tool.generateNewLengthIdList(id_group='bar')
     self.assertEquals(id_list, [11])
@@ -105,3 +116,12 @@ class TestIdTool(ERP5TypeTestCase):
     generator = generator_list[0]
     self.assertEquals(generator.last_max_id_dict['foo'].value, 7)
     self.assertEquals(generator.last_max_id_dict['bar'].value, 11)
+    # Make sure that the old code is not used any more, so the dic on
+    # id tool should not change, checking for dict
+    self.assertEquals(id_tool.dict_ids['foo'], 3)
+    generator_list = [x for x in id_tool.objectValues()
+                      if x.getReference()=='zodb_continuous_increasing']
+    self.assertEquals(len(generator_list), 1)
+    generator = generator_list[0]
+    self.assertEquals(generator.last_id_dict['foo'], 4)
+    self.assertEquals(generator.last_id_dict["('bar', 'baz')"], 3)

@@ -72,7 +72,7 @@ return context.AccountingTransactionModule_setGroupingReference(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uids=[], listbox=None, listbox_uid=[], list_selection_name=\'\', node=\'\', mirror_section=\'\', cancel_url, **kw</string> </value>
+            <value> <string>uids=[], listbox=None, listbox_uid=[], list_selection_name=\'\', node=\'\', mirror_section=\'\', cancel_url=\'\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -126,7 +126,7 @@ return context.AccountingTransactionModule_setGroupingReference(\n
                 <string></string>
                 <string></string>
                 <string></string>
-                <none/>
+                <string></string>
               </tuple>
             </value>
         </item>

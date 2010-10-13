@@ -355,6 +355,17 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(0.0, mvt.getSourceAssetDebit())
     self.assertEquals(200, mvt.getSourceDebit())
 
+  def testEditSourceAssetDebitAndCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(source_asset_debit=100, source_asset_credit=None)
+    self.assertEquals(100, mvt.getSourceAssetDebit())
+    mvt.edit(source_asset_debit=None, source_asset_credit=100)
+    self.assertEquals(100, mvt.getSourceAssetCredit())
+    mvt.edit(source_asset_debit=100, source_asset_credit='')
+    self.assertEquals(100, mvt.getSourceAssetDebit())
+    mvt.edit(source_asset_debit='', source_asset_credit=100)
+    self.assertEquals(100, mvt.getSourceAssetCredit())
+
   def testDestinationAssetCredit(self):
     mvt = self._makeOne('mvt')
     mvt.edit(destination_asset_credit=100)
@@ -381,6 +392,17 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(0.0, mvt.getDestinationAssetDebit())
     self.assertEquals(200, mvt.getDestinationDebit())
   
+  def testEditDestinationAssetDebitAndCredit(self):
+    mvt = self._makeOne('mvt')
+    mvt.edit(destination_asset_debit=100, destination_asset_credit=None)
+    self.assertEquals(100, mvt.getDestinationAssetDebit())
+    mvt.edit(destination_asset_debit=None, destination_asset_credit=100)
+    self.assertEquals(100, mvt.getDestinationAssetCredit())
+    mvt.edit(destination_asset_debit=100, destination_asset_credit='')
+    self.assertEquals(100, mvt.getDestinationAssetDebit())
+    mvt.edit(destination_asset_debit='', destination_asset_credit=100)
+    self.assertEquals(100, mvt.getDestinationAssetCredit())
+
   def testCancellationAmountGetDestinationCredit(self):
     mvt = self._makeOne('mvt')
     mvt.setCancellationAmount(True)

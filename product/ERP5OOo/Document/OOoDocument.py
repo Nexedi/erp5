@@ -426,7 +426,10 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     server_proxy = self._mkProxy()
     response_code, response_dict, response_message = server_proxy.run_convert(
                                       self.getSourceReference() or self.getId(),
-                                      enc(str(self.getData())))
+                                      enc(str(self.getData())),
+                                      None,
+                                      None,
+                                      self.getContentType())
     if response_code == 200:
       # sucessfully converted document
       self._setBaseData(dec(response_dict['data']))

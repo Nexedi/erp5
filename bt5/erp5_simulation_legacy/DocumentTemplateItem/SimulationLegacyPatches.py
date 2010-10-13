@@ -51,7 +51,11 @@ def patch():
       delivery_value = self.getDeliveryValue()
       if delivery_value is not None:
         return delivery_value.asComposedDocument(*args, **kw)
-      self = self.getParentValue().getParentValue()
+      # below code is for compatibility with old rules
+      grand_parent = self.getParentValue().getParentValue()
+      if grand_parent.getPortalType() == 'Simulation Tool':
+        return self.getOrderValue().asComposedDocument(*args, **kw)
+      self = grand_parent
 
   from Products.ERP5.Document.SimulationMovement import SimulationMovement
   SimulationMovement.asComposedDocument = asComposedDocument

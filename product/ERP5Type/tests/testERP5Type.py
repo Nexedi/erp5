@@ -2735,6 +2735,43 @@ class TestPropertySheet:
       self.assertTrue(o.getIcon().endswith(portal.portal_types['Organisation']\
           .getTypeIcon()))
 
+    def test_actionPriority(self):
+      """Tests action priority
+      """
+      portal = self.getPortalObject()
+      portal_actions = self.getPortal().portal_actions
+      try:
+        module = self.getPersonModule()
+        person = module.newContent(id='1', portal_type='Person')
+        def addCustomAction(name, priority):
+          portal_actions.addAction(id=name,
+                                   title=name,
+                                   description='',
+                                   action='string:${object_url}/Base_viewDict',
+                                   condition='',
+                                   permission='View',
+                                   category='object_view',
+                                   priority=priority)
+        initial_action_list = portal_actions.listFilteredActionsFor(person)\
+            .get('object_view',[])
+        addCustomAction('test_before', -1)
+        max_priority = max([x.get('priority', 0) for x in initial_action_list])
+        addCustomAction('test_after', max_priority + 1)
+        final_action_list = portal_actions.listFilteredActionsFor(person)\
+            .get('object_view',[])
+        self.assertEquals(len(final_action_list), len(initial_action_list) + 2)
+        self.assertEquals(final_action_list[0]['id'], 'test_before')
+        self.assertEquals(final_action_list[-1]['id'], 'test_after')
+        # check that we have another portal types action in the middle
+        self.assertTrue('view' in [x['id'] for x in final_action_list[1:-1]])
+      finally:
+        index_list = []
+        action_list = portal_actions._cloneActions()
+        for action in action_list:
+          if action.id in ('test_before', 'test_after'):
+            index_list.append(action_list.index(action))
+        if len(index_list):
+          portal_actions.deleteActions(selections=index_list)
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests

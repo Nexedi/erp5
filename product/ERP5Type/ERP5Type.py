@@ -550,6 +550,11 @@ class ERP5TypeInformation(XMLObject,
 
     def _getActionList(self):
       action_list = self.getCacheableActionList()
+      # This sort is a duplicate of calculation with what is done
+      # on portal_actions.listFilteredActionsFor . But getDefaultViewFor
+      # needs the sort here. This needs to be reviewed, because it is possible
+      # to define in portal_actions some actions that will have higher
+      # priorities than actions defined on portal types
       action_list.sort(key=lambda x:x['priority'])
       return action_list
     _getActionList = CachingMethod(_getActionList,

@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>editable_columns</string>
                 <string>list_method</string>
                 <string>selection_name</string>
                 <string>stat_method</string>
@@ -74,29 +73,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>editable_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>destination_debit</string>
-                          <string>Debit</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_credit</string>
-                          <string>Credit</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination</string>
-                          <string>Account</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_payment</string>
-                          <string>Section Bank Account</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
                 <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_destination_view_listbox</string> </value>

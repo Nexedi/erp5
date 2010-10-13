@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -43,34 +40,67 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-/****************************************************************/\n
-/*   TODO: make it dynamic from website layout configuration    */\n
-/*   Must be removed from bt5                                   */\n
-/****************************************************************/\n
-\n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
-\n
-/* ########## */\n
-/* ## Type ## */\n
-/* ########## */\n
-\n
-.homebanner { font-family: Helvetica, Arial, Verdana, Sans;font-size:10pt; }\n
-.homebanner h2 { font-size:26pt; }\n
-.homebanner h4 { font-size:14pt; }\n
-\n
-/* ############ */\n
-/* ## Layout ## */\n
-/* ############ */\n
 \n
 /* ## home banner #################################### start ## */\n
 \n
 .homebanner {\n
 \n
-\tposition:relative;\n
+\tbackground: url(../community_img/homebanner.jpg) no-repeat transparent;\n
+\tcolor:#fff;\n
+\ttext-shadow: 0 1px 0 #006686;\n
+\n
+}\n
+\n
+.homebanner h2 {\n
+\n
+\ttext-shadow: 0 3px 0 #0d7dab;\n
+\n
+}\n
+\n
+.homebanner ul li {\n
+\t\n
+\tlist-style-image: none;\n
+\tlist-style-type: none;\n
+\tbackground: url(../community_img/bannerbullet.png) no-repeat transparent;\n
+\n
+}\n
+\n
+.button-why:link, .button-why:active, .button-why:visited {\n
+\n
+\tbackground: url(../community_img/bannerbuttons.png) no-repeat transparent;\n
+\n
+}\n
+.button-why:hover {\n
+\n
+\tbackground-position: 0 100%;\n
+\n
+}\n
+\n
+.button-try:link, .button-try:active, .button-try:visited {\n
+\n
+\tbackground: url(../community_img/bannerbuttons.png) no-repeat transparent;\n
+\tbackground-position: -158px 0;\n
+\n
+}\n
+.button-try:hover {\n
+\n
+\tbackground-position: -158px 100%;\n
+\n
+}\n
+\n
+/* ## home banner ##################################### end ### */\n
+\n
+\n
+\n
+/* ## home banner #################################### start ## */\n
+\n
+.homebanner {\n
+\n
 \tdisplay: block;\n
 \twidth: 924px;\n
 \theight: 283px;\n
-\tmargin: 0 10px 10px 10px; \n
+margin:0 14px 10px;\n
 \n
 }\n
 \n
@@ -136,61 +166,11 @@
 \n
 }\n
 \n
-/* ## home banner ##################################### end ### */\n
 \n
-/* ########### */\n
-/* ## Color ## */\n
-/* ########### */\n
 \n
-/* ## home banner #################################### start ## */\n
 \n
-.homebanner {\n
-\n
-\tbackground: url(../km_img/homebanner.jpg) no-repeat transparent;\n
-\tcolor:#fff;\n
-\ttext-shadow: 0 1px 0 #006686;\n
-\n
-}\n
-\n
-.homebanner h2 {\n
-\n
-\ttext-shadow: 0 3px 0 #0d7dab;\n
-\n
-}\n
-\n
-.homebanner ul li {\n
-\t\n
-\tlist-style-image: none;\n
-\tlist-style-type: none;\n
-\tbackground: url(../km_img/bannerbullet.png) no-repeat transparent;\n
-\n
-}\n
-\n
-.button-why:link, .button-why:active, .button-why:visited {\n
-\n
-\tbackground: url(../km_img/bannerbuttons.png) no-repeat transparent;\n
-\n
-}\n
-.button-why:hover {\n
-\n
-\tbackground-position: 0 100%;\n
-\n
-}\n
-\n
-.button-try:link, .button-try:active, .button-try:visited {\n
-\n
-\tbackground: url(../km_img/bannerbuttons.png) no-repeat transparent;\n
-\tbackground-position: -158px 0;\n
-\n
-}\n
-.button-try:hover {\n
-\n
-\tbackground-position: -158px 100%;\n
-\n
-}\n
 \n
 /* ## home banner ##################################### end ### */\n
-\n
 
 
 ]]></string> </value>
@@ -206,6 +186,10 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>splash.css</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

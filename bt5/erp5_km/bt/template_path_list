@@ -21,6 +21,8 @@ portal_gadgets/km_my_tasks
 portal_gadgets/km_my_tasks/**
 portal_gadgets/km_subsection
 portal_gadgets/km_subsection/**
+portal_gadgets/km_tagged_document
+portal_gadgets/km_tagged_document/**
 portal_gadgets/web_site_browser
 portal_gadgets/web_site_browser/**
 web_page_module/minimal_km_footer

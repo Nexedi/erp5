@@ -38,6 +38,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                        _getConversionServerDict
 from Products.ERP5OOo.tests.testIngestion import FILE_NAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_data', 'crm_emails', name)
@@ -720,11 +721,12 @@ class TestCRMMailSend(BaseTestCRM):
   def test_MailFromMailMessageEvent(self):
     # passing start_action transition on event workflow will send an email to the
     # person as destination
+    text_content = 'Mail Content'
     event = self.portal.event_module.newContent(portal_type='Mail Message')
     event.setSource('person_module/me')
     event.setDestination('person_module/recipient')
     event.setTitle('A Mail')
-    event.setTextContent('Mail Content')
+    event.setTextContent(text_content)
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
     transaction.commit()
@@ -734,7 +736,7 @@ class TestCRMMailSend(BaseTestCRM):
     mfrom, mto, messageText = last_message
     self.assertEquals('"Me," <me@erp5.org>', mfrom)
     self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
-    
+    self.assertEquals(event.getTextContent(), text_content)
     message = email.message_from_string(messageText)
 
     self.assertEquals('A Mail',
@@ -743,7 +745,7 @@ class TestCRMMailSend(BaseTestCRM):
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
         part = i
-    self.assertEqual('Mail Content', part.get_payload(decode=True))
+    self.assertEqual(text_content, part.get_payload(decode=True))
 
     #
     # Test multiple recipients.
@@ -753,7 +755,7 @@ class TestCRMMailSend(BaseTestCRM):
     # multiple recipients.
     event.setDestinationList(['person_module/recipient', 'person_module/me'])
     event.setTitle('A Mail')
-    event.setTextContent('Mail Content')
+    event.setTextContent(text_content)
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
     transaction.commit()
@@ -824,15 +826,17 @@ class TestCRMMailSend(BaseTestCRM):
   def test_MailMessageHTML(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
     # then the mail should have HTML.
+    text_content = 'Hello<br/>World'
     event = self.portal.event_module.newContent(portal_type='Mail Message')
     event.setSource('person_module/me')
     event.setDestination('person_module/recipient')
     event.setContentType('text/html')
-    event.setTextContent('Hello<br/>World')
+    event.setTextContent(text_content)
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
     transaction.commit()
     self.tic()
+    self.assertEquals(event.getTextContent(), text_content)
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
@@ -845,7 +849,26 @@ class TestCRMMailSend(BaseTestCRM):
       if i.get_content_type()=='text/html':
         part = i
     self.assertNotEqual(part, None)
-    self.assertEqual('<html><body>Hello<br/>World</body></html>', part.get_payload(decode=True))
+    self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True))
+
+  @expectedFailure
+  def test_MailMessageHTMLbis(self):
+    # test sending a mail message edited as HTML (the default with FCKEditor),
+    # then the mail should have HTML
+    text_content = 'Hello<br/>World'
+    event = self.portal.event_module.newContent(portal_type='Mail Message')
+    event.setSource('person_module/me')
+    event.setDestination('person_module/recipient')
+    event.setContentType('text/html')
+    event.setTextContent(text_content)
+    self.portal.portal_workflow.doActionFor(event, 'start_action',
+                                            send_mail=1)
+    transaction.commit()
+    self.tic()
+    # This test fails because of known issue for outgoing emails.
+    # there is conflict between properties from data
+    # and properties from document.
+    self.assertEquals(event.getContentType(), 'text/html')
 
   def test_MailMessageEncoding(self):
     # test sending a mail message with non ascii characters

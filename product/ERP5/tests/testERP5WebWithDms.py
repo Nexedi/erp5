@@ -124,6 +124,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     website = self.getPortal().web_site_module.newContent(portal_type = 'Web Site',
                                                           id = self.website_id,
                                                           **kw)
+    website.publish()
     transaction.commit()
     self.tic()
     return website
@@ -589,7 +590,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
       # first, preview the draft in its physical location (in document module)
       response = self.publish('%s/asEntireHTML' % document.absolute_url_path(),
                               credential)
-      self.assertEquals(response.getHeader('content-type'), 'text/html')
+      self.assertTrue(response.getHeader('content-type').startswith('text/html'))
       html = response.getBody()
       self.assertTrue('<img' in html, html)
 
@@ -614,7 +615,7 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
     response = self.publish('%s/%s/asEntireHTML' % (
               website.absolute_url_path(), document_reference))
-    self.assertEquals(response.getHeader('content-type'), 'text/html')
+    self.assertTrue(response.getHeader('content-type').startswith('text/html'))
     html = response.getBody()
     self.assertTrue('<img' in html, html)
     

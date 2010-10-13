@@ -164,6 +164,9 @@ class Message(Persistent):
 
     return message
 
+  def __repr__(self):
+    return "<ERP5Type.Message.Message for %r>" % self.message
+
   def __str__(self):
     """
     Return the translated message as a string object.

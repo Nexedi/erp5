@@ -31,6 +31,8 @@ import unittest
 import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
+
 
 class TestERP5Discussion(ERP5TypeTestCase):
   """Test for erp5_discussion business template.
@@ -83,7 +85,8 @@ class TestERP5Discussion(ERP5TypeTestCase):
         
     self.stepCreateThread();
     self.stepTic()
-
+    
+  @expectedFailure
   def test_02_createDiscussionPost(self):
     """Create a disucssion post inscite a discussion thread"""
 

@@ -324,6 +324,19 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
     def _getWorkflowStateOf(self, ob, id_only=0):
           return None
 
+    def _checkTransitionGuard(self, t, ob, **kw):
+        # This check can be implemented with a guard expression, but
+        # it has a lot of overhead to use a TALES, so we make a special
+        # treatment for the frequent case, that is, disallow the trigger
+        # on a temporary document.
+        if t.temporary_document_disallowed:
+            isTempDocument = getattr(ob, 'isTempDocument', None)
+            if isTempDocument is not None:
+                if isTempDocument():
+                    return 0
+
+        return DCWorkflowDefinition._checkTransitionGuard(self, t, ob, **kw)
+
 Globals.InitializeClass(InteractionWorkflowDefinition)
 
 addWorkflowFactory(InteractionWorkflowDefinition, id='interaction_workflow',

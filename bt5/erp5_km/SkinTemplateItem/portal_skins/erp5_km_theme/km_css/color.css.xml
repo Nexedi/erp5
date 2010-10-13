@@ -245,7 +245,8 @@ a.pub:link, a.pub:active, a.pub:visited, .pub { \n
 \n
 #footer a:link, #footer a:active, #footer a:visited,\n
 #footer ul li a:link, #footer ul li a:active, #footer ul li a:visited { \n
-  color:#eae9df; \n
+  color:#FFF;\n
+  font-weight:bold;\n
 }\n
 \n
 #footer a:hover, #footer ul li a:hover { color:#fff; }\n

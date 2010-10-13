@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -57,7 +54,7 @@
 cb_data = context.manage_copyObjects(\n
      ids=[r.getId() for r in context.contentValues(portal_type=\'Role Information\')])\n
 \n
-if portal_type_group_list:\n
+if portal_type_group_list is not None:\n
   for ti in context.portal_types.contentValues():\n
     if ti == context or ti.getId() in portal_type_list:\n
       continue\n
@@ -87,7 +84,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>remove_existing_roles, portal_type_list, portal_type_group_list, form_id=\'view\', **kw</string> </value>
+            <value> <string>remove_existing_roles, portal_type_list, portal_type_group_list=None, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -127,6 +124,7 @@ return context.Base_redirect(form_id,\n
                             <string>_getiter_</string>
                             <string>r</string>
                             <string>cb_data</string>
+                            <string>None</string>
                             <string>ti</string>
                             <string>group</string>
                             <string>_getitem_</string>
@@ -144,6 +142,7 @@ return context.Base_redirect(form_id,\n
             <key> <string>func_defaults</string> </key>
             <value>
               <tuple>
+                <none/>
                 <string>view</string>
               </tuple>
             </value>

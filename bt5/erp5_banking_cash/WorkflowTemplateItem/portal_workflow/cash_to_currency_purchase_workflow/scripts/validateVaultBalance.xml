@@ -53,78 +53,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
-from Products.ERP5Type.Message import Message\n
-transaction = state_change[\'object\']\n
-\n
-currency = transaction.getResourceTitle()\n
-encaisse_billets_et_monnaies = "/encaisse_des_billets_et_monnaies/sortante"\n
-\n
-\n
-ressource_title = transaction.getResourceTitle().lower()\n
-ressource_title = ressource_title.replace(" ", "_")\n
-encaisse_devise = "/encaisse_des_devises/%s/entrante" %(ressource_title)\n
-\n
-#encaisse_devise = "/encaisse_des_devises/%s/entrante" %(transaction.getResourceTitle().lower())\n
-\n
-counter_site = transaction.getSource()\n
-\n
-# check we don\'t change of user\n
-transaction.Baobab_checkSameUserVault(counter_site)\n
-\n
-incoming_destination = counter_site + encaisse_devise\n
-outgoing_source = counter_site + encaisse_billets_et_monnaies\n
-\n
-# check again that we are in the good accounting date\n
-transaction.Baobab_checkCounterDateOpen(site=outgoing_source, date=transaction.getStartDate())\n
-\n
-# check again that the counter is open\n
-\n
-context.Baobab_checkCounterOpened(counter_site)\n
-base_price = transaction.getSourceTotalAssetPrice()\n
-# Check the amount.\n
-\n
-if base_price is None or base_price <= 0:\n
-  msg = Message(domain="ui", message="Amount is not valid.")\n
-  raise ValidationFailed, (msg,)\n
-\n
-# Check Taxes\n
-fix_montant = transaction.getDiscount()\n
-pourcentage = transaction.getDiscountRatio()\n
-\n
-# check resource on incoming line\n
-doc_resource = transaction.getResource()\n
-for line in transaction.contentValues(portal_type="Incoming Cash To Currency Purchase Line"):\n
-  if line.getResourceValue().getPriceCurrency() != doc_resource:\n
-    msg = Message(domain="ui", message="Resource defined on document is different from input cash.")\n
-    raise ValidationFailed, (msg,)\n
-\n
-resource_two = transaction.CashDelivery_checkCounterInventory(outgoing_source,portal_type=\'Outgoing Cash To Currency Purchase Line\')\n
-\n
-billetage_entre = transaction.getTotalPrice(portal_type=[\'Incoming Cash To Currency Purchase Line\', \'Cash Delivery Cell\'],fast=0)\n
-billetage_sorti = transaction.getTotalPrice(portal_type=[\'Outgoing Cash To Currency Purchase Line\', \'Cash Delivery Cell\'],fast=0)\n
-\n
-\n
-quantity = transaction.getQuantity()\n
-\n
-\n
-if resource_two == 2:\n
-  msg = Message(domain="ui", message="No Resource.")\n
-  raise ValidationFailed, (msg,)\n
-elif billetage_entre != base_price :\n
-  msg = Message(domain="ui", message="Received amount is different from input cash.")\n
-  raise ValidationFailed, (msg,)\n
-elif billetage_sorti != quantity :\n
-  msg = Message(domain="ui", message="Return amount is different from output cash")\n
-  raise ValidationFailed, (msg,) \n
-elif resource_two!= 0 :\n
-  msg = Message(domain="ui", message="Insufficient balance")\n
-  raise ValidationFailed, (msg,)\n
-
-
-]]></string> </value>
+            <value> <string>state_change[\'object\'].CurrencySaleOrPurchase_validateVaultBalance(\n
+    incoming_portal_type=\'Incoming Cash To Currency Purchase Line\',\n
+    outgoing_portal_type=\'Outgoing Cash To Currency Purchase Line\',\n
+    is_currency_sale=False,\n
+)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -161,33 +95,9 @@ elif resource_two!= 0 :\n
                         <value>
                           <tuple>
                             <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
                             <string>_getattr_</string>
-                            <string>currency</string>
-                            <string>encaisse_billets_et_monnaies</string>
-                            <string>ressource_title</string>
-                            <string>encaisse_devise</string>
-                            <string>counter_site</string>
-                            <string>incoming_destination</string>
-                            <string>outgoing_source</string>
-                            <string>context</string>
-                            <string>base_price</string>
-                            <string>None</string>
-                            <string>msg</string>
-                            <string>fix_montant</string>
-                            <string>pourcentage</string>
-                            <string>doc_resource</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>resource_two</string>
-                            <string>billetage_entre</string>
-                            <string>billetage_sorti</string>
-                            <string>quantity</string>
+                            <string>_getitem_</string>
+                            <string>False</string>
                           </tuple>
                         </value>
                     </item>

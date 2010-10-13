@@ -83,7 +83,7 @@ if at_date is None:\n
 tracking_kw = {\n
   \'at_date\': at_date,\n
   \'node\': node,\n
-  \'limit_expression\': (int(kw.get(\'list_start\')) or 0, int(kw.get(\'list_lines\')) or 20),\n
+  \'limit_expression\': (int(kw.get(\'list_start\', 0)), int(kw.get(\'list_lines\', 20))),\n
 }\n
 \n
 request = context.REQUEST\n

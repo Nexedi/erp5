@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -88,8 +85,8 @@ uid = context.getUid()\n
 url = context.absolute_url()\n
 title = context.getTitle() or (hasattr(context, \'getReference\') and context.getReference()) or context.getId()\n
 portal_type = context.getTranslatedPortalType()\n
-website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
-popup = context.Document_getPopupInfo(context.REQUEST.get(\'current_web_site\')) or \'\'\n
+website = context.REQUEST.get(\'current_web_site\', context.getWebSiteValue())\n
+popup = (context.Document_getPopupInfo(website) or \'\').encode(\'utf-8\')\n
 \n
 found = context.Base_showFoundText()\n
 owner_html = getOwnerHTML(context) or \'\'\n

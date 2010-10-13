@@ -278,7 +278,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'\', \'\')] + Base_getTranslatedAccountingWorkflowStateItemList()</string> </value>
+            <value> <string>python:[(\'\', \'\')] + context.Base_getTranslatedAccountingWorkflowStateItemList()</string> </value>
         </item>
       </dictionary>
     </pickle>

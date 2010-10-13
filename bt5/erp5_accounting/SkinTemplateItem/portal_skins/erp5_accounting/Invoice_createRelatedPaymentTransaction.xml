@@ -166,7 +166,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>node, payment_mode, payment, date=None, plan=False, batch_mode=0</string> </value>
+            <value> <string>node, payment_mode, payment, date=None, plan=False, batch_mode=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -198,6 +198,7 @@ else:\n
                             <string>date</string>
                             <string>plan</string>
                             <string>batch_mode</string>
+                            <string>kw</string>
                             <string>DateTime</string>
                             <string>_getattr_</string>
                             <string>context</string>

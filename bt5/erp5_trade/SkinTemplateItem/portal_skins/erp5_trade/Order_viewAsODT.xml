@@ -55,7 +55,7 @@ AAA=</string> </value>
                          tal:define="data_dict here/Order_getODTDataDict;\n
                                      set_precision python: request.set(\'precision\', here.getQuantityPrecisionFromResource(here.getPriceCurrency()));\n
                                      quantity_renderer nocall:here/Base_viewTradeFieldLibrary/my_view_mode_quantity/render_pdf;\n
-                                     price_renderer nocall:here/Base_viewTradeFieldLibrary/my_view_mode_price/render_pdf;\n
+                                     price_renderer nocall:here/Base_viewTradeFieldLibrary/my_view_mode_total_price/render_pdf;\n
                                      default_language python:test(request.get(\'international_form\'), \'en\', here.Localizer.get_selected_language())">\n
   <office:scripts/>\n
   <office:font-face-decls>\n

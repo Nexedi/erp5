@@ -3474,6 +3474,37 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
+  def test_06_BusinessTemplateReInstallWithBaseCategory(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Test Business Template reinstall after removing Base Category'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateBaseCategory \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddBaseCategoryToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       RemoveBaseCategory \
+                       CheckPreinstallReturnSomething \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
   # test of actions
   def test_07_BusinessTemplateWithOneAction(self, quiet=quiet, run=run_all_test):
     if not run: return
