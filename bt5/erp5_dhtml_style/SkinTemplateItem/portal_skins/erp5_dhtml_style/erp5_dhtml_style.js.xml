@@ -58,9 +58,14 @@ $(function() {\n
   // Make the parallel list field adding more elements automatically.\n
   $(\'.input:has(.extensible_parallel_list_field)\').change(function(event) {\n
     event.preventDefault();\n
-    var select_element = $(this)\n
+    var select_element = $(event.target)\n
     var add_element = true;\n
+    var to_clone_element = select_element\n
     var parent = select_element.parent()\n
+    if (parent[0].nodeName == \'DIV\') {\n
+      to_clone_element = parent\n
+      parent = parent.parent()\n
+    }\n
     var select_list = parent.find(\'select\')\n
     for(var x = select_list.length; x;) {\n
       current_select = select_list[--x]\n
@@ -71,8 +76,8 @@ $(function() {\n
     }\n
     if (add_element) {\n
       parent.append(jQuery(\'<label>&nbsp;</label>\'))\n
-      var cloned_element = $(select_element).clone(true)\n
-      cloned_element.find(\'select\')[0].selectedIndex = 0\n
+      var cloned_element = to_clone_element.clone(true)\n
+      cloned_element[0].selectedIndex = 0\n
       cloned_element.appendTo(parent)\n
       parent.append(jQuery(\'<p class="clear">\'))\n
     }\n
