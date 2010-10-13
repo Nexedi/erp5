@@ -3482,7 +3482,7 @@ class Base( CopyContainer,
     self.id = self.id
 
   # Helpers
-  def getQuantityPrecisionFromResource(self, resource):
+  def getQuantityPrecisionFromResource(self, resource, d=2):
     """
       Provides a quick access to precision without accessing the resource
       value in ZODB. Here resource is the relative_url of the resource, such as
@@ -3493,14 +3493,17 @@ class Base( CopyContainer,
         resource_value = self.portal_categories.resolveCategory(resource)
         if resource_value is not None:
           return resource_value.getQuantityPrecision()
-      return 0
+      return None
 
     cached_getQuantityPrecisionFromResource = CachingMethod(
                                     cached_getQuantityPrecisionFromResource,
                                     id='Base_getQuantityPrecisionFromResource',
                                     cache_factory='erp5_content_short')
 
-    return cached_getQuantityPrecisionFromResource(resource)
+    precision = cached_getQuantityPrecisionFromResource(resource)
+    if precision is None:
+      precision = d
+    return precision
 
 
   # Documentation Helpers
