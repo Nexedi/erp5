@@ -79,7 +79,7 @@
   </li>\n
 \n
   <tal:block tal:condition="anonymous_navigation_menu">\n
-    <li tal:repeat="menu_item menu_item_list">\n
+    <li class="collapse-menu" tal:repeat="menu_item menu_item_list">\n
       <a href="#" >\n
         <tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Menu</tal:block>\n
         <!--[if IE 7]><!-->\n
