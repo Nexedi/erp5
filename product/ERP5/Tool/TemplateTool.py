@@ -402,17 +402,20 @@ class TemplateTool (BaseTool):
           pid = prop['id']
           prop_path = os.path.join('.', bt_path, pid)
           if not os.path.exists(prop_path):
-            continue
-          value = open(prop_path, 'rb').read()
+            value = None
+          else:
+            value = open(prop_path, 'rb').read()
           if value is 'None':
             # At export time, we used to export non-existent properties:
             #   str(obj.getProperty('non-existing')) == 'None'
             # Discard them
-            continue
+            value = None
+          if prop_type in ('text', 'string'):
+            prop_dict[pid] = value or ''
           if prop_type in ('text', 'string', 'int', 'boolean'):
-            prop_dict[pid] = value
+            prop_dict[pid] = value or 0
           elif prop_type in ('lines', 'tokens'):
-            prop_dict[pid[:-5]] = value.splitlines()
+            prop_dict[pid[:-5]] = (value or '').splitlines()
         prop_dict.pop('id', '')
         bt.edit(**prop_dict)
         # import all others objects
