@@ -58,6 +58,8 @@ def special_extract_tb(tb, limit = None):
         
         # display where we failed in the sequence
         if co == Sequence.play.func_code:
+          if line is None:
+            line = ''
           line += '\n    Current Sequence:'
           sequence = f.f_locals['self']
           for idx, step in enumerate(sequence._step_list):
