@@ -412,7 +412,7 @@ class TemplateTool (BaseTool):
             value = None
           if prop_type in ('text', 'string'):
             prop_dict[pid] = value or ''
-          if prop_type in ('text', 'string', 'int', 'boolean'):
+          elif prop_type in ('int', 'boolean'):
             prop_dict[pid] = value or 0
           elif prop_type in ('lines', 'tokens'):
             prop_dict[pid[:-5]] = (value or '').splitlines()
