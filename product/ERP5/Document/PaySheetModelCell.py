@@ -28,11 +28,8 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-
 from Products.ERP5.Document.TradeModelCell import TradeModelCell
-
 import zope.interface
 
 class PaySheetModelCell(TradeModelCell):
@@ -51,4 +48,4 @@ class PaySheetModelCell(TradeModelCell):
         if not result:
             if not self.hasCellContent(base_id='variation'):
                 result = self.getVariationRangeBaseCategoryList() # The current resource variation
-        return list(result) + ['trade_phase', 'base_contribution', 'quantity_unit']
+        return result + ['trade_phase', 'quantity_unit']

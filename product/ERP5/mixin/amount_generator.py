@@ -209,7 +209,7 @@ class AmountGeneratorMixin:
         return
       # Try to collect cells and aggregate their mapped properties
       # using resource + variation as aggregation key or base_application
-      # for intermediate lines
+      # for intermediate lines.
       amount_generator_cell_list = [self] + self.contentValues(
         portal_type=amount_generator_cell_type_list)
       cell_aggregate = {} # aggregates final line information
@@ -249,6 +249,16 @@ class AmountGeneratorMixin:
 
       base_amount.setAmountGeneratorLine(self)
       for property_dict in cell_aggregate.itervalues():
+        # Ignore line (i.e. self) if cells produce unrelated amounts.
+        # With Transformed Resource (Transformation), line is considered in
+        # order to gather common properties and cells are used to describe
+        # varianted properties: only 1 amount is produced.
+        # In cases like trade, payroll or assorted resources,
+        # we want to ignore the line if they are cells.
+        # See also implementations of 'getCellAggregateKey'
+        causality_value = property_dict['causality_value_list'][-1]
+        if causality_value is self and len(cell_aggregate) > 1:
+          continue
         base_application_set = property_dict['base_application_set']
         # property_dict may include
         #   resource - VAT service or a Component in MRP
@@ -274,16 +284,15 @@ class AmountGeneratorMixin:
           if quantity_key in property_dict:
             try:
               quantity *= property_dict.pop(quantity_key)
-            except ValueError: # None or ''
+            except TypeError: # None or ''
               pass
             break
         if not quantity:
           continue
         # Create an Amount object
         amount = newTempAmount(portal,
-          # we only want the id to be unique
-          property_dict['causality_value_list'][0]
-          .getRelativeUrl().replace('/', '_'))
+          # we only want the id to be unique so we pick a random causality
+          causality_value.getRelativeUrl().replace('/', '_'))
         amount._setCategoryList(property_dict.pop('category_list', ()))
         amount._edit(
           quantity=quantity,

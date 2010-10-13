@@ -28,15 +28,11 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-
 from Products.ERP5.Document.TradeModelLine import TradeModelLine
-from Products.ERP5.Document.MappedValue import MappedValue
-
 import zope.interface
 
-class TradeModelCell(TradeModelLine, MappedValue):
+class TradeModelCell(TradeModelLine):
     """Trade Model Line
     """
     meta_type = 'ERP5 Trade Model Cell'

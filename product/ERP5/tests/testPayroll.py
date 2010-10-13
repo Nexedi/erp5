@@ -34,7 +34,7 @@ from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
 import transaction
 
-class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
+class TestPayrollMixin(TestTradeModelLineMixin):
   BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
                CreateBusinessProcess
                CreateBusinessLink
@@ -158,6 +158,17 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
 
   def getBusinessTemplateList(self):
     return TestTradeModelLineMixin.getBusinessTemplateList(self) + ('erp5_payroll', )
+
+  def stepCreatePriceCurrency(self, sequence):
+    sequence.edit(price_currency = self.createResource('Currency',
+        title='Currency', base_unit_quantity=self.base_unit_quantity))
+
+  def stepCreateBusinessProcess(self, sequence):
+    sequence.edit(business_process=self.createBusinessProcess(title=self.id()))
+
+  def stepCreateBusinessLink(self, sequence):
+    business_process = sequence.get('business_process')
+    sequence.edit(business_link=self.createBusinessLink(business_process))
 
   def createService(self):
     module = self.portal.getDefaultModule(portal_type='Service')
@@ -1078,14 +1089,10 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
     model_line = self.createModelLine(model)
     model_line.edit(title='intermediate line',
                     int_index = 10,
-                    trade_phase='payroll/france/urssaf',
-                    resource_value=sequence.get('urssaf_service'),
                     reference='intermediate_line',
-                    variation_category_list=['contribution_share/employee',
-                                             'contribution_share/employer'],
+                    price=0.2,
                     base_contribution_list=['base_amount/payroll/base/income_tax'],
-                    base_application_list=['base_amount/payroll/base/contribution'],
-                    create_line=False,)
+                    base_application_list=['base_amount/payroll/base/contribution'])
     sequence.edit(intermediate_model_line = model_line)
 
   def stepModelCreateAppliedOnTaxModelLine(self, sequence=None, **kw):
@@ -1104,20 +1111,6 @@ class TestPayrollMixin(ERP5ReportTestCase, TestTradeModelLineMixin):
                     base_contribution_list=['base_amount/payroll/report/salary/net'],
                     base_application_list=['base_amount/payroll/base/income_tax'])
     sequence.edit(model_line_applied_on_tax = model_line)
-
-  def stepIntermediateModelLineCreateMovements(self, sequence=None,
-      **kw):
-    model_line = sequence.get('intermediate_model_line')
-    cell1 = model_line.newCell('contribution_share/employee',
-        portal_type='Pay Sheet Model Cell',
-        base_id='movement',
-        mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.2, quantity=None, contribution_share='employee')
-    cell2 = model_line.newCell('contribution_share/employer',
-        portal_type='Pay Sheet Model Cell',
-        base_id='movement',
-        mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.2, quantity=None, contribution_share='employer')
 
   def stepAppliedOnTaxModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('model_line_applied_on_tax')
@@ -2071,7 +2064,6 @@ class TestPayroll(TestPayrollMixin):
                Tic
                ModelCreateIntermediateModelLine
                ModelCreateAppliedOnTaxModelLine
-               IntermediateModelLineCreateMovements
                AppliedOnTaxModelLineCreateMovements
                CreateBasicPaysheet
                PaysheetCreateLabourPaySheetLine

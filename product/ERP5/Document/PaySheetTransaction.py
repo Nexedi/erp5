@@ -152,7 +152,8 @@ class PaySheetTransaction(Invoice):
   def updateAggregatedAmountList(self, *args, **kw):
     amount_dict = dict(((x.getReference(),
                          tuple(x.getVariationCategoryList())), x)
-                       for x in self.getAggregatedAmountList(*args, **kw))
+                       for x in self.getAggregatedAmountList(*args, **kw)
+                       if x.getResource())
     movement_to_delete_list = []
     for movement in self.getMovementList():
       if movement.getBaseApplication():
