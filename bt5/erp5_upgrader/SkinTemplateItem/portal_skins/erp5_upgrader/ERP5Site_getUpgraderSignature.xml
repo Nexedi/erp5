@@ -525,7 +525,7 @@ ERP5_SITE_PROPERTY_DICT = {}\n
 # Define alarm configuration list, which alarm will be enabled or\n
 # disabled.\n
 # Usage (("alarm_id", True or False ),) \n
-ALARM_CONFIGURATION_list = ()\n
+ALARM_TOOL_CONFIGURATION_LIST = ()\n
 \n
 \n
 #\n
@@ -591,7 +591,7 @@ signature_dict = {\n
    # Define if the site will be recatalogued or not after finish upgrade.\n
  , \'recatalog\' : RECATALOG\n
    # Define which alarm should be enabled or disabled.\n
- , \'alarm_configuration_list\' : ALARM_CONFIGURATION_DICT\n
+ , \'alarm_tool_configuration_list\' : ALARM_TOOL_CONFIGURATION_LIST\n
 }\n
 \n
 if item is not None:\n
@@ -661,10 +661,9 @@ else:\n
                             <string>CATALOG_FILTER_DICT</string>
                             <string>INTEGRITY_VERIFICATION_SCRIPT_ID_LIST</string>
                             <string>ERP5_SITE_PROPERTY_DICT</string>
-                            <string>ALARM_CONFIGURATION_list</string>
+                            <string>ALARM_TOOL_CONFIGURATION_LIST</string>
                             <string>UPGRADE_OBJECT_CLASS_LIST</string>
                             <string>RECATALOG</string>
-                            <string>ALARM_CONFIGURATION_DICT</string>
                             <string>signature_dict</string>
                           </tuple>
                         </value>

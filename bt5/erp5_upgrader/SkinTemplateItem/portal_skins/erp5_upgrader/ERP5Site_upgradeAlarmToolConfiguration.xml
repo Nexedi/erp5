@@ -50,83 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
+            <value> <string>"""\n
 """\n
-  Finalize Upgrade is the final step of upgrader. Here should contains\n
-  the scripts that should be executed after the business template installation.\n
-"""\n
-# Setup skins\n
-context.ERP5Site_setupUpgraderSkinSelection()\n
-\n
-clear_cache_kw = dict(activity=\'SQLQueue\', \n
-                      priority=3, \n
-                      tag="tag_upgrader_clear_cache")\n
-\n
-portal_alarms = context.getPortalObject().portal_alarms\n
-activate = context.portal_activities.activate\n
-# Group Messages into the same active process.\n
-active_process = portal_alarms.upgrader_controller.getLastActiveProcess()\n
-if active_process is None:\n
-  active_process = context.newActiveProcess()\n
-\n
-active_process = active_process.getPath()\n
-\n
 message_list = []\n
-bt5_upgrader_sense = portal_alarms.bt5_upgrader.sense()\n
-if bt5_upgrader_sense:\n
-  activate(active_process=active_process,\n
-           activity=\'SQLQueue\',\n
-           priority=2).Alarm_saveActiveResult(\n
-              summary="ERROR: Finalize Upgrader not started",\n
-              severity=0,\n
-              detail=\'BT5 Upgrader Sense: %s\' % (bt5_upgrader_sense))\n
+portal_alarms = context.portal_alarms\n
+alarm_tool_configuration_list = context.ERP5Site_getUpgraderSignature("alarm_tool_configuration_list")\n
+if alarm_tool_configuration_list is None:\n
+  return message_list\n
 \n
-# Verify if is required upgrade Global Site Properties. \n
-message_list.extend(context.ERP5Site_upgradeGlobalPropertyList(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeWorkflowChain(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeValidationStateList(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeData(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradePortalTypePropertySheet(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeSecurity(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeMySQLCharset(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeSQLCatalogFilter(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeObjectClass(upgrade=1))\n
-\n
-message_list.extend(context.ERP5Site_upgradeAlarmToolConfiguration(upgrade=1))\n
-\n
-\n
-# Verify if there was any change previously and \n
-if len(message_list) > 0:\n
- message_list.extend(context.ERP5Site_upgradeSQLCatalog(upgrade=1))\n
- clear_cache_kw[\'after_tag\'] = \'tag_migration_finish\'\n
-\n
-activate(active_process=active_process,\n
-           activity=\'SQLQueue\',\n
-           priority=2).Alarm_saveActiveResult(summary="Finalize Upgrade",\n
-                       severity=0,\n
-                       detail=\'\\n\'.join(message_list))\n
-\n
-clear_cache_kw[\'after_method_id\'] = [\'Alarm_saveActiveResult\',\'immediateReindexObject\']\n
-context.portal_caches.activate(**clear_cache_kw).clearAllCache()\n
-\n
-activate(active_process=active_process,\n
-           activity=\'SQLQueue\',\n
-           priority=4,\n
-           after_tag=clear_cache_kw[\'tag\']).ERP5Site_notifyUpgradeIntegrity(active_process=active_process)\n
-\n
+for alarm_id, is_enabled in alarm_tool_configuration_list:  \n
+  obj = getattr(portal_alarms, alarm_id, None)\n
+  if obj is not None and int(obj.getEnabled()) != int(is_enabled):\n
+    message = "Upgrade is required for Alarm %s, enabled = %s (expected %s)" % \\\n
+                (alarm_id, obj.getEnabled(),is_enabled )\n
+    if int(upgrade) == 1:\n
+      obj.setEnabled(int(is_enabled))\n
+      message = "[ UPDATED ] " + message\n
+    message_list.append(message)\n
+    \n
 return message_list\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -136,7 +79,7 @@ return message_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>upgrade=0</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -156,27 +99,26 @@ return message_list\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>kw</string>
+                            <string>upgrade</string>
+                            <string>message_list</string>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>dict</string>
-                            <string>clear_cache_kw</string>
                             <string>portal_alarms</string>
-                            <string>activate</string>
-                            <string>active_process</string>
+                            <string>alarm_tool_configuration_list</string>
                             <string>None</string>
-                            <string>message_list</string>
-                            <string>bt5_upgrader_sense</string>
-                            <string>len</string>
-                            <string>_write_</string>
-                            <string>_apply_</string>
-                            <string>_getitem_</string>
+                            <string>_getiter_</string>
+                            <string>alarm_id</string>
+                            <string>is_enabled</string>
+                            <string>getattr</string>
+                            <string>obj</string>
+                            <string>int</string>
+                            <string>message</string>
                           </tuple>
                         </value>
                     </item>
@@ -188,12 +130,14 @@ return message_list\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_upgradeFinalize</string> </value>
+            <value> <string>ERP5Site_upgradeAlarmToolConfiguration</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
