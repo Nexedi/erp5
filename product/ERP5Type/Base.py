@@ -3042,7 +3042,7 @@ class Base( CopyContainer,
       return method(container, **kw)
 
     # XXX this should not happen, unless the Business Template is broken.
-    return dict(redirect_url=context.absolute_url() + '/view',
+    return dict(redirect_url=container.absolute_url() + '/view',
                 selection_index=None, selection_name=None)
 
   # Hash method
