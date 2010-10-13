@@ -170,7 +170,7 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
 def getBaseAmountQuantity(delivery_amount, base_application, **kw):
   if delivery_amount.isDelivery():
     total_quantity = sum([movement.getQuantity()
-      for movement in delivery_amount.getMovementList()
+      for movement in delivery_amount.getBaseAmountList()
       if base_application in movement.getBaseContributionList()])
     if total_quantity < 3:
       return 0
@@ -230,7 +230,7 @@ return getBaseAmountQuantity""")
       'special_discount', """\
 return lambda delivery_amount, base_application, **kw: \\
   3 <= sum([movement.getQuantity()
-            for movement in delivery_amount.getMovementList()
+            for movement in delivery_amount.getBaseAmountList()
             if base_application in movement.getBaseContributionList()])""")
 
     trade_condition = self.createTradeCondition(
@@ -286,7 +286,7 @@ return lambda delivery_amount, base_application, **kw: \\
       'special_discount', """\
 def getBaseAmountQuantity(delivery_amount, base_application, **kw):
   total_quantity = sum([movement.getQuantity()
-    for movement in delivery_amount.getMovementList()
+    for movement in delivery_amount.getBaseAmountList()
     if base_application in movement.getBaseContributionList()])
   if total_quantity < 3:
     return 0
@@ -421,7 +421,7 @@ return lambda delivery_amount, base_application, **kw: \\
       'special_discount', """\
 def getBaseAmountQuantity(delivery_amount, base_application, **kw):
   highest_price = quantity = 0
-  for movement in delivery_amount.getMovementList():
+  for movement in delivery_amount.getBaseAmountList():
     if base_application in movement.getBaseContributionList():
       quantity += movement.getQuantity()
     if movement.getResourceValue().getProductLine() == 'video/dvd':

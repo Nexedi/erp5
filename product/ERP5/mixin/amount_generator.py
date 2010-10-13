@@ -29,6 +29,7 @@
 import random
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from Acquisition import Implicit
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.Document.MappedValue import MappedValue
@@ -43,76 +44,84 @@ from Products.ERP5.Document.MappedValue import MappedValue
 #     Old simulation implemented both but they conflict.
 #     Current code implements the 2nd option: Should we use 'use' instead ?
 
-class BaseAmount(dict):
+class BaseAmountDict(Implicit):
   """Dictionary holding accumulated base amounts
   """
-
-  def __init__(self, context, cache, method_kw):
-    self._context = context
+  def __init__(self, cache, method_kw):
+    self._dict = {}
     self._frozen = set()
-    self._lazy = []
+    self._amount_list = []
     self._cache = cache
     self._method_kw = method_kw
-
-  def getContext(self):
-    return self._context
 
   def setAmountGeneratorLine(self, amount_generator_line):
     self._amount_generator_line = amount_generator_line
 
-  def recurse(self, portal_type=None):
-    for amount in self._context.objectValues(portal_type=portal_type):
+  def recurseMovementList(self, movement_list):
+    for amount in movement_list:
       # Add only movement which are input. Output will be recalculated.
       # XXX See above comment about the absence of base_application
       #     (for example, we could check if resource use category is in the
       #     normal resource use preference list).
       if not amount.getBaseApplication():
-        base_amount = self.__class__(amount, self._cache, self._method_kw)
-        self._lazy.append(base_amount)
-        for base_amount in base_amount.recurse(portal_type):
-          yield base_amount
+        amount = self.__class__(self._cache, self._method_kw).__of__(amount)
+        self._amount_list.append(amount)
+        yield amount
     yield self
 
-  def __getitem__(self, key):
-    """Get intermediate computed quantity for given base_application"""
-    if key in self._frozen:
+  def contribute(self, base_amount, value):
+    if base_amount in self._frozen:
       raise ValueError("Can not contribute to %r because this base_amount is"
                        " already applied. Order of Amount Generator Lines is"
-                       " wrong." % key)
+                       " wrong." % base_amount)
+    self._dict[base_amount] = self._getQuantity(base_amount) + value
+
+  def _getQuantity(self, base_amount):
+    """Get intermediate computed quantity for given base_application"""
     try:
-      return dict.__getitem__(self, key)
+      return self._dict[base_amount]
     except KeyError:
       value = 0
       amount_generator_line = self._amount_generator_line
-      for lazy in self._lazy:
-        lazy._amount_generator_line = amount_generator_line
-        value += lazy.getQuantity(key)
-      self[key] = value
+      for base_amount_dict in self._amount_list:
+        base_amount_dict._amount_generator_line = amount_generator_line
+        value += base_amount_dict.getGeneratedAmountQuantity(base_amount)
+      self._dict[base_amount] = value
       return value
 
-  def getQuantity(self, key):
-    """Get final computed quantity for given base_application
+  getBaseAmountList__roles__ = None # public
+  def getBaseAmountList(self):
+    """Return list of amounts that are sub-objects of self
+
+    Returned objects are wrapped like self.
+    Example: for a delivery, they are manually created movements.
+    """
+    return list(self._amount_list)
+
+  getGeneratedAmountQuantity__roles__ = None # public
+  def getGeneratedAmountQuantity(self, base_amount):
+    """Get final computed quantity for given base_amount
 
     Note: During a call to getQuantity, this method may be called again by
           getGeneratedAmountQuantity for the same amount and key.
           In this case, the returned value is the last intermediate value just
           before finalization.
     """
-    if key in self._frozen:
-      return dict.__getitem__(self, key)
-    self[key] # initialize entry before we freeze it
-    self._frozen.add(key)
+    if base_amount in self._frozen:
+      return self._getQuantity(base_amount)
+    self._frozen.add(base_amount)
     try:
-      method = self._cache[key]
+      method = self._cache[base_amount]
     except KeyError:
       method = self._amount_generator_line._getTypeBasedMethod(
         'getBaseAmountQuantityMethod')
       if method is not None:
-        method = method(key)
+        method = method(base_amount)
       if method is None:
         method = self._amount_generator_line.getBaseAmountQuantity
-      self._cache[key] = method
-    self[key] = value = method(self._context, key, **self._method_kw)
+      self._cache[base_amount] = method
+    value = method(self, base_amount, **self._method_kw)
+    self._dict[base_amount] = value
     return value
 
 
@@ -134,14 +143,6 @@ class AmountGeneratorMixin:
 
   # Declarative interfaces
   zope.interface.implements(interfaces.IAmountGenerator,)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getGeneratedAmountQuantity')
-  def getGeneratedAmountQuantity(self, base_application):
-    """Give access to computed quantities during generation of amounts"""
-    base_amount = getTransactionalVariable()[
-      'amount_generator.getGeneratedAmountList'][self]
-    return base_amount.getQuantity(base_application)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')
@@ -169,23 +170,25 @@ class AmountGeneratorMixin:
     result = []
 
     args = (getTransactionalVariable().setdefault(
-              "amount_generator.BaseAmount", {}),
+              "amount_generator.BaseAmountDict", {}),
             dict(rounding=rounding))
     # If amount_list is None, then try to collect amount_list from
     # the current context
     if amount_list is None:
       if self.providesIMovementCollection():
-        base_amount_list = BaseAmount(self, *args) \
-          .recurse(amount_generator_type_list)
+        base_amount_list = BaseAmountDict(*args).__of__(self) \
+          .recurseMovementList(self.getMovementList())
       elif self.providesIAmount():
-        base_amount_list = BaseAmount(self, *args),
+        base_amount_list = BaseAmountDict(*args).__of__(self),
       elif self.providesIAmountList():
-        base_amount_list = (BaseAmount(amount, *args) for amount in self)
+        base_amount_list = (BaseAmountDict(*args).__of__(amount)
+                            for amount in self)
       else:
         raise ValueError("%r must implement IMovementCollection, IAmount or"
                          " IAmountList" % self)
     else:
-      base_amount_list = (BaseAmount(amount, *args) for amount in amount_list)
+      base_amount_list = (BaseAmountDict(*args).__of__(amount)
+                          for amount in amount_list)
 
     # First define the method that will browse recursively
     # the amount generator lines and accumulate applicable values
@@ -264,7 +267,7 @@ class AmountGeneratorMixin:
         # need values converted to the default management unit.
         # If no quantity is provided, we consider that the value is 1.0
         # (XXX is it OK ?) XXX-JPS Need careful review with taxes
-        quantity = float(sum(map(base_amount.getQuantity,
+        quantity = float(sum(map(base_amount.getGeneratedAmountQuantity,
                                  base_application_set)))
         for quantity_key in ('net_quantity', 'converted_quantity',
                              'net_converted_quantity', 'quantity'):
@@ -297,25 +300,17 @@ class AmountGeneratorMixin:
         quantity *= (property_dict.get('price') or 1) / \
                     (property_dict.get('efficiency') or 1)
         for base_contribution in property_dict['base_contribution_set']:
-          base_amount[base_contribution] += quantity
+          base_amount.contribute(base_contribution, quantity)
 
     is_mapped_value = isinstance(self, MappedValue)
 
-    tv = getTransactionalVariable()
-    # backup & restore existing cached value for reentrancy
-    original_cache = tv.get('amount_generator.getGeneratedAmountList')
-    try:
-      tv['amount_generator.getGeneratedAmountList'] = base_amount_cache = {}
-      for base_amount in base_amount_list:
-        delivery_amount = base_amount.getContext()
-        base_amount_cache[delivery_amount] = base_amount
-        if not is_mapped_value:
-          self = delivery_amount.asComposedDocument(amount_generator_type_list)
-        # Browse recursively the amount generator lines and accumulate
-        # applicable values - now execute the method
-        accumulateAmountList(self)
-    finally:
-      tv['amount_generator.getGeneratedAmountList'] = original_cache
+    for base_amount in base_amount_list:
+      delivery_amount = base_amount.getObject()
+      if not is_mapped_value:
+        self = delivery_amount.asComposedDocument(amount_generator_type_list)
+      # Browse recursively the amount generator lines and accumulate
+      # applicable values - now execute the method
+      accumulateAmountList(self)
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,

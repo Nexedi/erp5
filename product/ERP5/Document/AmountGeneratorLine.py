@@ -64,6 +64,7 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
   def getBaseAmountQuantity(cls, delivery_amount, base_application, rounding):
     """Default method to compute quantity for the given base_application"""
     value = delivery_amount.getGeneratedAmountQuantity(base_application)
+    delivery_amount = delivery_amount.getObject()
     if base_application in delivery_amount.getBaseContributionList():
       value += cls._getBaseAmountQuantity(delivery_amount)
     return value

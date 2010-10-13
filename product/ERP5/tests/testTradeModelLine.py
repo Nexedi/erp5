@@ -504,6 +504,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.tic()
 
     if not build:
+      # Check amount_generator refuses to produce amounts
+      # if lines are not ordered correctly.
+      self['trade_model_line/tax'].setIntIndex(0)
+      self.assertRaises(ValueError, order.getGeneratedAmountList)
+      transaction.abort()
+
       for movement in (order, order['taxed'], order['discounted'],
                        order['taxed_discounted']):
         self.checkComposition(movement, [trade_condition], {
