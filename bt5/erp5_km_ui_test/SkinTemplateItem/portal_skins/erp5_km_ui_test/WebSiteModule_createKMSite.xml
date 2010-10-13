@@ -64,6 +64,16 @@ for reference in (\'minimal_km_footer\', \'km.web.site.test.page\',):\n
                                                  reference = reference)\n
   if km_page.getValidationState()==\'draft\':\n
     km_page.publish()\n
+\n
+# publish default knowledge pad \n
+pad = portal.restrictedTraverse("knowledge_pad_module/erp5_km_public_front_pad")\n
+if pad.getValidationState()!=\'public\':\n
+  pad.visible()\n
+  pad.public()\n
+  for box in pad.objectValues():\n
+    box.visible()\n
+    box.public()\n
+\n
 # clear cache so UI is regenarated\n
 portal.portal_caches.clearAllCache()\n
 \n
@@ -120,6 +130,8 @@ return "Created Successfully."\n
                             <string>_getiter_</string>
                             <string>reference</string>
                             <string>km_page</string>
+                            <string>pad</string>
+                            <string>box</string>
                           </tuple>
                         </value>
                     </item>
