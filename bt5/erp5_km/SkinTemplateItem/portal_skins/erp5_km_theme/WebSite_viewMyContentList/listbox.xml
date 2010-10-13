@@ -117,7 +117,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>document_selection</string> </value>
+                    <value> <string>my_document_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
