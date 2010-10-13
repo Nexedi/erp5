@@ -521,6 +521,12 @@ INTEGRITY_VERIFICATION_SCRIPT_ID_LIST = (\'ERP5Site_verifyUpgradeIntegrity\',\n
 #\n
 ERP5_SITE_PROPERTY_DICT = {}\n
 \n
+# \n
+# Define alarm configuration list, which alarm will be enabled or\n
+# disabled.\n
+# Usage (("alarm_id", True or False ),) \n
+ALARM_CONFIGURATION_list = ()\n
+\n
 \n
 #\n
 # Define instructions for migrate object class of a group of objects like:\n
@@ -584,6 +590,8 @@ signature_dict = {\n
  , \'upgrade_object_class_list\' : UPGRADE_OBJECT_CLASS_LIST\n
    # Define if the site will be recatalogued or not after finish upgrade.\n
  , \'recatalog\' : RECATALOG\n
+   # Define which alarm should be enabled or disabled.\n
+ , \'alarm_configuration_list\' : ALARM_CONFIGURATION_DICT\n
 }\n
 \n
 if item is not None:\n
@@ -653,8 +661,10 @@ else:\n
                             <string>CATALOG_FILTER_DICT</string>
                             <string>INTEGRITY_VERIFICATION_SCRIPT_ID_LIST</string>
                             <string>ERP5_SITE_PROPERTY_DICT</string>
+                            <string>ALARM_CONFIGURATION_list</string>
                             <string>UPGRADE_OBJECT_CLASS_LIST</string>
                             <string>RECATALOG</string>
+                            <string>ALARM_CONFIGURATION_DICT</string>
                             <string>signature_dict</string>
                           </tuple>
                         </value>
