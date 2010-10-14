@@ -2830,7 +2830,7 @@ class TestPropertySheet:
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
   # when this one fails.
-  expression = 'python: here.getPortalType() or 1'
+  expression = 'python: context.getPortalType() or 1'
 
   def getTitle(self):
     return "ERP5Type"
