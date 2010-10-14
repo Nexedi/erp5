@@ -73,14 +73,20 @@ ERP5Site.ERP5Site_getExpressInstanceUid =\
 ERP5Site.security.declarePublic('ERP5Site_getExpressInstanceUid')
 
 # portal_wizard patches
-def raises_socket_error(self, **kw):
+def raises_socket_error(self, *args, **kw):
   raise socket.error
 
-def raises_socket_sslerror(self, **kw):
+def raises_socket_sslerror(self, *args, **kw):
   raise socket.sslerror
 
-def raises_valueerror(self, **kw):
+def raises_valueerror(self, *args, **kw):
   raise ValueError
+
+def raises_socket_timeout(self, *args, **kw):
+  raise socket.timeout
+
+def raises_socket_gaierror(self, *args, **kw):
+  raise socket.gaierror
 
 class TestERP5RemoteUserManager(ERP5TypeTestCase):
   """Low level tests of remote logging"""
@@ -168,6 +174,12 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
         portal_type=self.person_portal_type,
         reference=reference, title=password)
 
+  def checkLogin(self, expected, sent):
+    """Helper to check login, clear cache later and commit transaction"""
+    self.assertEqual(expected,
+        self.erp5_remote_manager.authenticateCredentials(sent))
+    self.portal.portal_caches.clearAllCache()
+
   ############################################################################
   # TESTS
   ############################################################################
@@ -178,8 +190,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
+    self.checkLogin(('someone', 'someone'), kw)
 
   def test_incorrect_login(self):
     login = 'someone'
@@ -188,8 +199,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': 'another_password'}
-    self.assertEqual(None,
-        self.erp5_remote_manager.authenticateCredentials(kw))
+    self.checkLogin(None, kw)
 
   def test_incorrect_login_in_case_of_no_connection(self):
     login = 'someone'
@@ -201,8 +211,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.removeAuthenticationServerPreferences()
     transaction.commit()
     self.tic()
-    self.assertEqual(None,
-        self.erp5_remote_manager.authenticateCredentials(kw))
+    self.checkLogin(None, kw)
 
   def test_loggable_in_case_of_server_socket_error(self):
     login = 'someone'
@@ -211,10 +220,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
-    transaction.commit()
-    self.tic()
+    self.checkLogin(('someone', 'someone'), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -222,8 +228,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_error
       self.assertRaises(socket.error,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
+      self.checkLogin(('someone', 'someone'), kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
@@ -234,10 +239,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
-    transaction.commit()
-    self.tic()
+    self.checkLogin(('someone', 'someone'), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -245,8 +247,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_sslerror
       self.assertRaises(socket.sslerror,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
+      self.checkLogin(('someone', 'someone'), kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
@@ -257,10 +258,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
-    transaction.commit()
-    self.tic()
+    self.checkLogin(('someone', 'someone'), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -268,8 +266,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_valueerror
       self.assertRaises(ValueError,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
+      self.checkLogin(None, kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
@@ -281,10 +278,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
-    transaction.commit()
-    self.tic()
+    self.checkLogin(('someone', 'someone'), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -292,13 +286,47 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_error
       self.assertRaises(socket.error,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
-      self.assertEqual(None,
-        self.erp5_remote_manager.authenticateCredentials(
-          {'login':kw['login'], 'password':'wrong_password'}))
-      self.assertEqual(('someone', 'someone'),
-        self.erp5_remote_manager.authenticateCredentials(kw))
+      self.checkLogin(('someone', 'someone'), kw)
+      self.checkLogin(None, {'login':kw['login'], 'password':'wrong_password'})
+      self.checkLogin(('someone', 'someone'), kw)
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
+
+  def test_loggable_in_case_of_server_socket_timeout(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    self.checkLogin(('someone', 'someone'), kw)
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_socket_timeout
+      self.assertRaises(socket.timeout,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.checkLogin(('someone', 'someone'), kw)
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
+
+  def test_loggable_in_case_of_server_gaierror(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    self.checkLogin(('someone', 'someone'), kw)
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_socket_gaierror
+      self.assertRaises(socket.gaierror,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.checkLogin(('someone', 'someone'), kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
