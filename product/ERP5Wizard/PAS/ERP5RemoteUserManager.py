@@ -107,7 +107,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
             if login in self.remote_authentication_cache:
                 del self.remote_authentication_cache[login]
         else:
-            # store in cache if different
+            # update ZODB cache
             if result == 1:
                 # successfully logged in
                 stored_encrypted_password = self.remote_authentication_cache\
