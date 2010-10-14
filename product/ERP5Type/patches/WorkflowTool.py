@@ -849,4 +849,4 @@ try:
 except ImportError:
   from Products.CMFCore import WorkflowCore
   # We're on CMF 2, where WorkflowMethod has been removed from CMFCore
-  WorkflowCore.WorkflowMethod = WorkflowCore.WorkflowAction = WorkflowMethod
+  #WorkflowCore.WorkflowMethod = WorkflowCore.WorkflowAction = WorkflowMethod
