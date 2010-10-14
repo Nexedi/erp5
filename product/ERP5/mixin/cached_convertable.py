@@ -74,8 +74,8 @@ class CachedConvertableMixin:
   def _getCacheFactory(self):
     """
     """
-    if self.isTempObject():
-      return
+    if self.getOriginalDocument() is None:
+      return None
     cache_tool = getToolByName(self, 'portal_caches')
     preference_tool = getToolByName(self, 'portal_preferences')
     cache_factory_name = preference_tool.getPreferredConversionCacheFactory('document_cache_factory')
@@ -148,12 +148,12 @@ class CachedConvertableMixin:
                         'data': cached_value,
                         'date': date,
                         'size': size}
-    if self.isTempObject():
+    cache_factory = self._getCacheFactory()
+    if cache_factory is None:
       if getattr(aq_base(self), 'temp_conversion_data', None) is None:
         self.temp_conversion_data = {}
       self.temp_conversion_data[cache_id] = stored_data_dict
       return
-    cache_factory = self._getCacheFactory()
     cache_duration = cache_factory.cache_duration
     # The purpose of this transaction cache is to help calls
     # to the same cache value in the same transaction.
@@ -168,7 +168,8 @@ class CachedConvertableMixin:
     """
     """
     cache_id = self._getCacheKey(**kw)
-    if self.isTempObject():
+    cache_factory = self._getCacheFactory()
+    if cache_factory is None:
       return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
     # The purpose of this cache is to help calls to the same cache value
     # in the same transaction.
@@ -177,7 +178,7 @@ class CachedConvertableMixin:
       return tv[cache_id]
     except KeyError:
       pass
-    for cache_plugin in self._getCacheFactory().getCachePluginList():
+    for cache_plugin in cache_factory.getCachePluginList():
       cache_entry = cache_plugin.get(cache_id, DEFAULT_CACHE_SCOPE)
       if cache_entry is not None:
         data_dict = cache_entry.getValue()
