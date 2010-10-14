@@ -126,7 +126,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
-    """Clear everthing"""
+    """Clear everything"""
     self.portal.acl_users.manage_delObjects(self.erp5_remote_manager_id)
     self.portal.deleteContent('portal_witch')
     self.removeAuthenticationServerPreferences()
@@ -183,7 +183,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
   # TESTS
   ############################################################################
   def test_correct_login(self):
-    """Checks typical login scenrio"""
+    """Checks typical login scenario"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -203,7 +203,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.checkLogin(None, kw)
 
   def test_incorrect_login_in_case_of_no_connection(self):
-    """Checks that in case if there is no auth server defined it is not possible ot login"""
+    """Checks that in case if there is no authentication server defined it is not possible to login"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
