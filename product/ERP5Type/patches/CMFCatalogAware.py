@@ -30,7 +30,7 @@ def reindexObject(self, idxs=[], *args, **kw):
         # Update the modification date.
         if getattr(aq_base(self), 'notifyModified', None) is not None:
             self.notifyModified()
-    catalog = self._getCatalogTool()
+    catalog = getattr(self.getPortalObject(), 'portal_catalog', None)
     if catalog is not None:
         catalog.reindexObject(self, idxs=idxs, *args, **kw)
 
