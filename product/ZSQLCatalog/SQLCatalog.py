@@ -978,6 +978,13 @@ class Catalog(Folder,
         result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
     return result
 
+  @profiler_decorator
+  @transactional_cache_decorator('SQLCatalog.getColumnIds')
+  @profiler_decorator
+  @caching_instance_method(id='SQLCatalog.getColumnIds',
+    cache_factory='erp5_content_long',
+  )
+  @profiler_decorator
   def getResultColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -992,6 +999,13 @@ class Catalog(Folder,
     keys.sort()
     return keys
 
+  @profiler_decorator
+  @transactional_cache_decorator('SQLCatalog.getSortColumnIds')
+  @profiler_decorator
+  @caching_instance_method(id='SQLCatalog.getSortColumnIds',
+      cache_factory='erp5_content_long',
+  )
+  @profiler_decorator
   def getSortColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
