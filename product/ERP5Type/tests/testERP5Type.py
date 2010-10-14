@@ -1279,10 +1279,16 @@ class TestPropertySheet:
       self.assertEquals(email.getDefaultAvailableLanguage(), 'ja')
       self.assertEquals(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
 
-    NAME_INCLUDED_PROPERTY = '''
+    NAME_INCLUDED_PROPERTY_PERSON = '''
           { 'id':         'name_included_in_address',
             'type':       'boolean',
-            'default'     : False,
+            'default'     : True,
+            'mode':       'rw', }
+    '''
+    NAME_INCLUDED_PROPERTY_EMAIL = '''
+          { 'id':         'name_included_in_address',
+            'type':       'boolean',
+            'default'     : True,
             'acquired_property_id': ('name_included_in_address', ),
             'acquisition_base_category': ( 'parent', ),
             'acquisition_portal_type'  : ( 'Person', ),
@@ -1299,21 +1305,28 @@ class TestPropertySheet:
       Boolean accessors generate both an getPropertyName and an isPropertyName
       Check in particular that both behave the same way regarding acquisition
       """
-      self._addProperty('Person', self.NAME_INCLUDED_PROPERTY)
-      self._addProperty('Email', self.NAME_INCLUDED_PROPERTY)
+      self._addProperty('Person', self.NAME_INCLUDED_PROPERTY_PERSON)
+      self._addProperty('Email', self.NAME_INCLUDED_PROPERTY_EMAIL)
 
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
 
+      self.assertTrue(person.getNameIncludedInAddress())
+      self.assertTrue(person.isNameIncludedInAddress())
+      self.assertTrue(email.getNameIncludedInAddress())
+      self.assertTrue(email.isNameIncludedInAddress())
+      # setting the property on the acquisition target should be reflected on
+      # the object acquiring the value
+      person.setNameIncludedInAddress(False)
       self.assertFalse(person.getNameIncludedInAddress())
       self.assertFalse(person.isNameIncludedInAddress())
       self.assertFalse(email.getNameIncludedInAddress())
       self.assertFalse(email.isNameIncludedInAddress())
-      # setting it to true on the acquisition target should be reflected on the
-      # object acquiring the value
-      person.setNameIncludedInAddress(True)
-      self.assertTrue(person.getNameIncludedInAddress())
-      self.assertTrue(person.isNameIncludedInAddress())
+      # setting the property on the acquiring object should mask the value on
+      # the acquisition target.
+      email.setNameIncludedInAddress(True)
+      self.assertFalse(person.getNameIncludedInAddress())
+      self.assertFalse(person.isNameIncludedInAddress())
       self.assertTrue(email.getNameIncludedInAddress())
       self.assertTrue(email.isNameIncludedInAddress())
 
