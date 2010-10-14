@@ -1338,6 +1338,9 @@ class TestPropertySheet:
       obj.setTitle('obj title')
       copy = obj.asContext()
       self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
+      self.assertEquals(obj, copy.getOriginalDocument())
+      self.assertEquals(obj.absolute_url(),
+                        copy.getOriginalDocument().absolute_url())
       copy.setTitle('copy title')
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
@@ -1671,6 +1674,7 @@ class TestPropertySheet:
       from Products.ERP5Type.Document import newTempPerson
       o = newTempPerson(portal, 'temp_person_1')
       self.assertTrue(o.isTempObject())
+      self.assertEquals(o.getOriginalDocument(), None)
 
       # This should generate a workflow method.
       self.assertEquals(o.getValidationState(), 'draft')
