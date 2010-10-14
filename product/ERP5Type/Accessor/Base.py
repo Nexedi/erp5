@@ -67,15 +67,14 @@ class Setter(Method):
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
       self._storage_id = storage_id
 
-    def __call__(self, instance, *args, **kw):
-      value = args[0]
+    def __call__(self, instance, value, *args, **kw):
       modified_object_list = []
       # Modify the property
       if value in self._null:
         setattr(instance, self._storage_id, None)
       elif self._property_type == 'content':
         # A file object should be provided
-        file_upload = args[0]
+        file_upload = value
         if isinstance(file_upload, FileUpload) or \
                 getattr(aq_base(value), 'tell', None) is not None:
           # When editing through the web interface, we are always provided a
@@ -100,7 +99,7 @@ class Setter(Method):
           LOG('ERP5Type WARNING', 0, '%s is not a file like object'
               % str(file_upload))
       else:
-        setattr(instance, self._storage_id, self._cast(args[0]))
+        setattr(instance, self._storage_id, self._cast(value))
         modified_object_list.append(instance)
       return modified_object_list
 
@@ -123,17 +122,14 @@ class Setter(Method):
         # if roles has an __of__ method, call it explicitly, as the Method
         # already has an __of__ method that has been already called at this
         # point.
-        roles = getattr(roles, '__of__', lambda aq_parent: roles)(im_self)
-        return roles
+        return getattr(roles, '__of__', lambda aq_parent: roles)(im_self)
 
 
 from Products.CMFCore.Expression import Expression
 def _evaluateTales(instance=None, value=None):
   from Products.ERP5Type.Utils import createExpressionContext
   __traceback_info__ = (instance, value)
-  expression = Expression(value)
-  econtext = createExpressionContext(instance)
-  return expression(econtext)
+  return Expression(value)(createExpressionContext(instance))
 
 evaluateTales = CachingMethod(_evaluateTales, id = 'evaluateTales', cache_factory='erp5_content_short')
 
@@ -170,10 +166,6 @@ class Getter(Method):
       self._is_tales_type = (property_type == 'tales')
 
     def __call__(self, instance, *args, **kw):
-      if len(args) > 0:
-        default = args[0]
-      else:
-        default = self._default
       # No acquisition on properties but inheritance.
       # Instead of using getattr, which use inheritance from SuperClass
       # why not use __dict__.get directly ?
@@ -184,6 +176,10 @@ class Getter(Method):
           return evaluateTales(instance, value)
         else:
           return value
+      if args:
+        default = args[0]
+      else:
+        default = self._default
       if self._is_tales_type and default is not None and kw.get('evaluate', 1):
         return evaluateTales(instance, default)
       return default
@@ -203,8 +199,7 @@ class Getter(Method):
           if roles is None:
             return rolesForPermissionOn(None, im_self, ('Manager',),
                                         '_Access_contents_information_Permission')
-        roles = getattr(roles, '__of__', lambda aq_parent: roles)(im_self)
-        return roles
+        return getattr(roles, '__of__', lambda aq_parent: roles)(im_self)
 
 
 class Tester(Method):
