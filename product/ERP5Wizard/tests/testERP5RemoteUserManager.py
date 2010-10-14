@@ -26,17 +26,16 @@
 #
 ##############################################################################
 
+from AccessControl.SecurityManagement import newSecurityManager
+from Products.ERP5.ERP5Site import ERP5Site
+from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products.ERP5Type.Base import Base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Wizard import addERP5RemoteUserManager
+from Products.ERP5Wizard.Tool.WizardTool import GeneratorCall
+import socket
 import transaction
 import unittest
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
-from AccessControl.SecurityManagement import getSecurityManager,\
-    newSecurityManager
-from Products.ERP5Type.Base import Base
-from Products.ERP5.ERP5Site import ERP5Site
-from Products.ERP5Wizard.Tool.WizardTool import GeneratorCall
 
 # portal_witch simulation
 def proxyMethodHandler(self, kw):
@@ -73,6 +72,15 @@ ERP5Site.ERP5Site_getExpressInstanceUid =\
     ERP5Site_getExpressInstanceUid
 ERP5Site.security.declarePublic('ERP5Site_getExpressInstanceUid')
 
+# portal_wizard patches
+def raises_socket_error(self, **kw):
+  raise socket.error
+
+def raises_socket_sslerror(self, **kw):
+  raise socket.sslerror
+
+def raises_valueerror(self, **kw):
+  raise ValueError
 
 class TestERP5RemoteUserManager(ERP5TypeTestCase):
   """Low level tests of remote logging"""
@@ -156,7 +164,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
   def createPerson(self, reference, password):
     """Creates person with reference and password in title to simulate remote
     logging"""
-    person = self.person_module.newContent(
+    self.person_module.newContent(
         portal_type=self.person_portal_type,
         reference=reference, title=password)
 
@@ -193,7 +201,106 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.removeAuthenticationServerPreferences()
     transaction.commit()
     self.tic()
-    self.assertEqual(None, self.erp5_remote_manager.authenticateCredentials(kw))
+    self.assertEqual(None,
+        self.erp5_remote_manager.authenticateCredentials(kw))
+
+  def test_loggable_in_case_of_server_socket_error(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+    transaction.commit()
+    self.tic()
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_socket_error
+      self.assertRaises(socket.error,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
+
+  def test_loggable_in_case_of_server_socket_sslerror(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+    transaction.commit()
+    self.tic()
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_socket_sslerror
+      self.assertRaises(socket.sslerror,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
+
+  def test_not_loggable_in_case_of_server_raises_anything_else(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+    transaction.commit()
+    self.tic()
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_valueerror
+      self.assertRaises(ValueError,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
+
+  def test_loggable_in_case_of_server_socket_error_with_failed_login_between(
+      self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+    transaction.commit()
+    self.tic()
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_socket_error
+      self.assertRaises(socket.error,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+      self.assertEqual(None,
+        self.erp5_remote_manager.authenticateCredentials(
+          {'login':kw['login'], 'password':'wrong_password'}))
+      self.assertEqual(('someone', 'someone'),
+        self.erp5_remote_manager.authenticateCredentials(kw))
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
 def test_suite():
   suite = unittest.TestSuite()
