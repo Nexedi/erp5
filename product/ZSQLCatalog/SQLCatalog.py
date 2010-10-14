@@ -934,7 +934,8 @@ class Catalog(Folder,
     return tuple(result_list)
 
   @caching_instance_method(id='SQLCatalog.getColumnIds',
-                           cache_factory='erp5_content_long')
+    cache_factory='erp5_content_long',
+  )
   def _getColumnIds(self):
     keys = set()
     add_key = keys.add
@@ -961,7 +962,9 @@ class Catalog(Folder,
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
   @profiler_decorator
-  @caching_instance_method(id='SQLCatalog.getColumnMap', cache_factory='erp5_content_long')
+  @caching_instance_method(id='SQLCatalog.getColumnMap',
+    cache_factory='erp5_content_long',
+  )
   @profiler_decorator
   def getColumnMap(self):
     """
@@ -1816,7 +1819,8 @@ class Catalog(Folder,
     return self.sql_catalog_scriptable_keys
 
   @caching_instance_method(id='SQLCatalog.getTableIndex',
-                           cache_factory='erp5_content_long')
+    cache_factory='erp5_content_long',
+  )
   def _getTableIndex(self, table):
     table_index = {}
     method = getattr(self, self.sql_catalog_index, '')
@@ -2256,7 +2260,9 @@ class Catalog(Folder,
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
   @profiler_decorator
-  @caching_instance_method(id='SQLCatalog._getSearchKeyDict', cache_factory='erp5_content_long')
+  @caching_instance_method(id='SQLCatalog._getSearchKeyDict',
+    cache_factory='erp5_content_long',
+  )
   @profiler_decorator
   def _getSearchKeyDict(self):
     result = {}
