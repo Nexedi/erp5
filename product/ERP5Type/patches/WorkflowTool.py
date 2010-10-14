@@ -830,6 +830,7 @@ class WorkflowMethod( Method ):
 
         """ Invoke the wrapped method, and deal with the results.
         """
+        instance.pdb()
         wf = getToolByName(instance, 'portal_workflow', None)
         if wf is None or not hasattr(wf, 'wrapWorkflowMethod'):
             # No workflow tool found.
@@ -849,4 +850,5 @@ try:
 except ImportError:
   from Products.CMFCore import WorkflowCore
   # We're on CMF 2, where WorkflowMethod has been removed from CMFCore
-  #WorkflowCore.WorkflowMethod = WorkflowCore.WorkflowAction = WorkflowMethod
+  #WorkflowCore.WorkflowMethod = WorkflowMethod
+  WorkflowCore.WorkflowAction = WorkflowMethod
