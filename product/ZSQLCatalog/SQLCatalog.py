@@ -101,6 +101,15 @@ except ImportError:
   def getTransactionalVariable():
     return {}
 
+def generateCatalogCacheId(method_id, *args, **kwd):
+  self = args[0]
+  # XXX: getPath is overkill for a unique cache identifier.
+  # What I would like to use instead of it is:
+  #   (self._p_jar.db().database_name, self._p_oid)
+  # but database_name is not unique in at least ZODB 3.4 (Zope 2.8.8).
+  return str((method_id, self.getCacheSequenceNumber(), self.getPath(),
+    args[1:], kwd))
+
 class transactional_cache_decorator:
   """
     Implements singleton-style caching.
@@ -112,7 +121,9 @@ class transactional_cache_decorator:
   def __call__(self, method):
     def wrapper(wrapped_self):
       transactional_cache = getTransactionalVariable()
-      cache_id = self.cache_id
+      cache_id = str((self.cache_id,
+        getInstanceID(wrapped_self),
+      ))
       try:
         result = transactional_cache[cache_id]
       except KeyError:
@@ -935,6 +946,7 @@ class Catalog(Folder,
 
   @caching_instance_method(id='SQLCatalog.getColumnIds',
     cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
   )
   def _getColumnIds(self):
     keys = set()
@@ -964,6 +976,7 @@ class Catalog(Folder,
   @profiler_decorator
   @caching_instance_method(id='SQLCatalog.getColumnMap',
     cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
   )
   @profiler_decorator
   def getColumnMap(self):
@@ -983,6 +996,7 @@ class Catalog(Folder,
   @profiler_decorator
   @caching_instance_method(id='SQLCatalog.getColumnIds',
     cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
   )
   @profiler_decorator
   def getResultColumnIds(self):
@@ -1004,6 +1018,7 @@ class Catalog(Folder,
   @profiler_decorator
   @caching_instance_method(id='SQLCatalog.getSortColumnIds',
       cache_factory='erp5_content_long',
+      cache_id_generator=generateCatalogCacheId,
   )
   @profiler_decorator
   def getSortColumnIds(self):
@@ -1834,6 +1849,7 @@ class Catalog(Folder,
 
   @caching_instance_method(id='SQLCatalog.getTableIndex',
     cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
   )
   def _getTableIndex(self, table):
     table_index = {}
@@ -2276,6 +2292,7 @@ class Catalog(Folder,
   @profiler_decorator
   @caching_instance_method(id='SQLCatalog._getSearchKeyDict',
     cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
   )
   @profiler_decorator
   def _getSearchKeyDict(self):
