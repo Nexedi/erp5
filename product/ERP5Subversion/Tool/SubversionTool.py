@@ -397,6 +397,20 @@ class SubversionTool(BaseTool):
     # Get the svn client object.
     return newSubversionClient(self, **kw)
   
+  security.declareProtected('Import/Export objects', 'createSubversionPath')
+  def createSubversionPath(self, working_copy, business_template):
+    """
+     create the working copy path corresponding to the given business
+     template, checking it is in the working copy list in preferences
+    """
+    bt_name = business_template.getTitle()
+    assert bt_name == os.path.basename(bt_name), 'Invalid bt_name'
+    working_copy = self._getWorkingPath(working_copy)
+    wc_path = os.path.join(working_copy, bt_name)
+    os.mkdir(wc_path)
+    client = self._getClient()
+    client.add([wc_path])
+
   security.declareProtected('Import/Export objects', 'getSubversionPath')
   def getSubversionPath(self, business_template, with_name=True):
     """
