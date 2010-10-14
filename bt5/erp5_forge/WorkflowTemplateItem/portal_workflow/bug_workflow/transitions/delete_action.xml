@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
-        <tuple/>
-      </tuple>
+      <global name="TransitionDefinition" module="Products.DCWorkflow.Transitions"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -60,10 +57,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>
