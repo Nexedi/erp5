@@ -101,14 +101,13 @@ except ImportError:
   def getTransactionalVariable():
     return {}
 
-def generateCatalogCacheId(method_id, *args, **kwd):
-  self = args[0]
+def generateCatalogCacheId(method_id, self, *args, **kwd):
   # XXX: getPath is overkill for a unique cache identifier.
   # What I would like to use instead of it is:
   #   (self._p_jar.db().database_name, self._p_oid)
   # but database_name is not unique in at least ZODB 3.4 (Zope 2.8.8).
   return str((method_id, self.getCacheSequenceNumber(), self.getPath(),
-    args[1:], kwd))
+    args, kwd))
 
 class transactional_cache_decorator:
   """
