@@ -84,7 +84,7 @@ except ImportError:
 
   getGlobalTranslationService = GlobalTranslationService
 
-from Products.ERP5Type.Globals import get_request
+from Products.ERP5Type import Globals
 from cPickle import dumps, loads
 
 try:
@@ -135,7 +135,7 @@ class Message(Persistent):
     the return value is a string object. If it is a unicode object,
     the return value is a unicode object.
     """
-    request = get_request()
+    request = Globals.get_request()
     if request is not None:
       context = request['PARENTS'][0]
       translation_service = getGlobalTranslationService()
