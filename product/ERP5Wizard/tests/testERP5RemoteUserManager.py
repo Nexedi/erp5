@@ -107,10 +107,10 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
   def setUpRemoteUserManager(self):
     acl_users = self.portal.acl_users
     addERP5RemoteUserManager(acl_users, self.erp5_remote_manager_id)
-    erp5_remote_manager = getattr(acl_users, self.erp5_remote_manager_id)
+    self.erp5_remote_manager = getattr(acl_users, self.erp5_remote_manager_id)
     erp5_users = getattr(acl_users, 'erp5_users')
     erp5_users.manage_activateInterfaces(['IUserEnumerationPlugin'])
-    erp5_remote_manager.manage_activateInterfaces(['IAuthenticationPlugin'])
+    self.erp5_remote_manager.manage_activateInterfaces(['IAuthenticationPlugin'])
     transaction.commit()
 
   def afterSetUp(self):
@@ -119,7 +119,6 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.setUpRemoteUserManager()
     self.person_module = self.portal.person_module
     acl_users = self.portal.acl_users
-    self.erp5_remote_manager = getattr(acl_users, self.erp5_remote_manager_id)
     # set preferences before each test, as test suite can have different
     # ip/port after being saved and then loaded
     self.setUpAuthenticationServerPreferences()
@@ -273,6 +272,9 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       self.assertRaises(ValueError,
           self.portal.portal_wizard.callRemoteProxyMethod)
       self.checkLogin(None, kw)
+      # assert that ZODB cache is emptied
+      self.assertFalse(login in \
+          self.erp5_remote_manager.remote_authentication_cache)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
