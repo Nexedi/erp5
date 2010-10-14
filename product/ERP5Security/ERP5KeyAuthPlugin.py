@@ -31,7 +31,7 @@ from base64 import encodestring, decodestring
 from urllib import quote, unquote
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 try:
     from zope.interface import Interface
 except ImportError:

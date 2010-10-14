@@ -323,7 +323,7 @@ Code Generation in ERP5Type
     If we look at the file Document/__init__.py, we can see some generated code::
 
       # Hide internal implementation
-      from Globals import InitializeClass
+      from Products.ERP5Type.Globals import InitializeClass
       from Demo import Demo as ERP5Demo
       # Default constructor for Demo
       # Can be overriden by adding a method addDemo in class Demo

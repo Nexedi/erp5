@@ -29,7 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from ZPublisher.HTTPRequest import FileUpload
-from Globals import DTMLFile
+from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
     ConstantGetter
 from Products.ERP5Type.Tool.BaseTool import BaseTool
