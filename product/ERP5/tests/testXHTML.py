@@ -237,6 +237,15 @@ class TestXHTML(ERP5TypeTestCase):
           if selection_name in ("",None):
             error_list.append(form_path)
     self.assertEquals(error_list, [])
+    
+  def test_duplicatingSelectionNameInListbox(self):
+    """ 
+    Check for duplicating selection name in listboxes.
+    Usually we should not have duplicates except in some rare cases 
+    described in SkinsTool_getDuplicateSelectionNameDict
+    """
+    duplicating_selection_name_dict = self.portal.portal_skins.SkinsTool_getDuplicateSelectionNameDict()
+    self.assertEquals(duplicating_selection_name_dict, {})    
 
   def test_callableListMethodInListbox(self):
     # check all list_method in listboxes
