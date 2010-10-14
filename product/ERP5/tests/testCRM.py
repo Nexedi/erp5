@@ -442,6 +442,8 @@ class TestCRMMailIngestion(BaseTestCRM):
                                                         'person_module/he']),
       # multiple e-mails in the "Name" part that shouldn't be parsed
       ('"me@erp5.org,sender@customer.com," <he@erp5.org>', ['person_module/he']),
+      # capitalised version
+      ('"me@erp5.org,sEnder@CUSTOMER.cOm," <he@ERP5.OrG>', ['person_module/he']),
       # a < sign
       ('"He<" <he@erp5.org>', ['person_module/he']),
     )
