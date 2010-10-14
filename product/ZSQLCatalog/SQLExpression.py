@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from zLOG import LOG
+import warnings
 from interfaces.sql_expression import ISQLExpression
 from zope.interface.verify import verifyClass
 from zope.interface import implements
@@ -132,7 +132,8 @@ class SQLExpression(object):
     else:
       self.limit = (limit, )
     if from_expression is not None:
-      LOG('SQLExpression', 0, 'Providing a from_expression is deprecated.')
+      warnings.warn("Providing a 'from_expression' is deprecated.",
+                    DeprecationWarning)
     self.from_expression = from_expression
 
   @profiler_decorator
