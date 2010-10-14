@@ -7,15 +7,14 @@
 #
 
 from Products.CMFCore.FSZSQLMethod import FSZSQLMethod
-from Products.CMFCore.utils import expandpath
 from Products.ZSQLMethods.SQL import SQL
 
 def FSZSQLMethod_readFile(self, reparse):
-    fp = expandpath(self._filepath)
-    file = open(fp, 'r')    # not 'rb', as this is a text file!
+    file = open(self._filepath, 'r') # not 'rb', as this is a text file!
     try:
         data = file.read()
-    finally: file.close()
+    finally:
+        file.close()
 
     RESPONSE = {}
     RESPONSE['BODY'] = data
