@@ -101,6 +101,8 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.portal = self.getPortalObject()
+    self.createDummyWitchTool()
+    self.setUpRemoteUserManager()
     self.person_module = self.portal.person_module
     acl_users = self.portal.acl_users
     self.erp5_remote_manager = getattr(acl_users, self.erp5_remote_manager_id)
@@ -111,6 +113,10 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.tic()
 
   def beforeTearDown(self):
+    """Clear everthing"""
+    self.portal.acl_users.manage_delObjects(self.erp5_remote_manager_id)
+    self.portal.deleteContent('portal_witch')
+    self.removeAuthenticationServerPreferences()
     self.portal.portal_caches.clearAllCache()
     transaction.commit()
     self.tic()
@@ -118,25 +124,26 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  def setUpAuthenticationServerPreferences(self):
+  def removeAuthenticationServerPreferences(self):
+    portal_preferences = self.portal.portal_preferences
+    if self.system_preference_id in portal_preferences.objectIds():
+      portal_preferences.deleteContent(self.system_preference_id)
+
+  def setUpAuthenticationServerPreferences(self, server_url=None,
+      server_root=None):
+    if server_url is None:
+      server_url = self.portal.absolute_url() + '/'
+    if server_root is None:
+      self.getPortalId()
     portal_preferences = self.portal.portal_preferences
     # disable all existing system preferences
-    system_preference = None
-    if self.system_preference_id in portal_preferences.objectIds():
-      system_preference = getattr(portal_preferences,
-          self.system_preference_id)
-      self.assertEqual(self.system_preference_portal_type,
-          system_preference.getPortalType())
-    else:
-      system_preference = portal_preferences.newContent(
-          portal_type=self.system_preference_portal_type)
-    system_preference.edit(
-        preferred_witch_tool_server_url=self.portal.absolute_url() + '/',
-        preferred_witch_tool_server_root=self.getPortalId(),
+    system_preference = portal_preferences.newContent(
+        portal_type=self.system_preference_portal_type,
+        id=self.system_preference_id,
+        preferred_witch_tool_server_url=server_url,
+        preferred_witch_tool_server_root=server_root,
     )
-    if self.portal.portal_workflow.isTransitionPossible(system_preference,
-        'enable'):
-      system_preference.enable()
+    system_preference.enable()
     self.assertEqual('global', system_preference.getPreferenceState())
     # clear cache after setting preferences
     self.portal.portal_caches.clearAllCache()
@@ -146,13 +153,6 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       self.portal.newContent(id='portal_witch',
         portal_type=self.base_type_portal_type)
 
-  def setUpOnce(self):
-    self.portal = self.getPortalObject()
-    self.setUpRemoteUserManager()
-    self.createDummyWitchTool()
-    transaction.commit()
-    self.tic()
-
   def createPerson(self, reference, password):
     """Creates person with reference and password in title to simulate remote
     logging"""
@@ -160,6 +160,9 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
         portal_type=self.person_portal_type,
         reference=reference, title=password)
 
+  ############################################################################
+  # TESTS
+  ############################################################################
   def test_correct_login(self):
     login = 'someone'
     password = 'somepass'
