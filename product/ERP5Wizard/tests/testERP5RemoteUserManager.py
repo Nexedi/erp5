@@ -368,7 +368,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
     try:
-      WizardTool.callRemoteProxyMethod = raises_value_error
+      WizardTool.callRemoteProxyMethod = raises_valueerror
       self.assertRaises(ValueError,
           self.portal.portal_wizard.callRemoteProxyMethod)
       self.assertEqual(expected,
@@ -390,7 +390,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_gaierror
       self.assertRaises(socket.gaierror,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.checkLogin(('someone', 'someone'), kw)
+      self.checkLogin(None, kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
