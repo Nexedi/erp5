@@ -117,7 +117,6 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.portal.acl_users.manage_delObjects(self.erp5_remote_manager_id)
     self.portal.deleteContent('portal_witch')
     self.removeAuthenticationServerPreferences()
-    self.portal.portal_caches.clearAllCache()
     transaction.commit()
     self.tic()
     self.person_module.deleteContent(list(self.person_module.objectIds()))
@@ -128,6 +127,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     portal_preferences = self.portal.portal_preferences
     if self.system_preference_id in portal_preferences.objectIds():
       portal_preferences.deleteContent(self.system_preference_id)
+    self.portal.portal_caches.clearAllCache()
 
   def setUpAuthenticationServerPreferences(self, server_url=None,
       server_root=None):
@@ -182,6 +182,18 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     kw = {'login':login, 'password': 'another_password'}
     self.assertEqual(None,
         self.erp5_remote_manager.authenticateCredentials(kw))
+
+  def test_incorrect_login_in_case_of_no_connection(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    self.removeAuthenticationServerPreferences()
+    transaction.commit()
+    self.tic()
+    self.assertEqual(None, self.erp5_remote_manager.authenticateCredentials(kw))
 
 def test_suite():
   suite = unittest.TestSuite()
