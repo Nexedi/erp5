@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   Get all listbox fields that uses the same selection name.\n
 """\n
 \n
@@ -79,8 +81,16 @@ for field_path, field in skins_tool.ZopeFind(\n
   selection_name_dict.setdefault(\n
          field.get_value(\'selection_name\'), []).append(field_path)\n
 \n
-return selection_name_dict\n
-</string> </value>
+# leave only duplicating ones\n
+duplicating_selection_name_dict = {}\n
+for selection_name, field_list in selection_name_dict.items():\n
+  if len(field_list) > 1:\n
+    duplicating_selection_name_dict[selection_name] = field_list\n
+\n
+return duplicating_selection_name_dict\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -127,6 +137,11 @@ return selection_name_dict\n
                             <string>form</string>
                             <string>original_field</string>
                             <string>None</string>
+                            <string>duplicating_selection_name_dict</string>
+                            <string>selection_name</string>
+                            <string>field_list</string>
+                            <string>len</string>
+                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

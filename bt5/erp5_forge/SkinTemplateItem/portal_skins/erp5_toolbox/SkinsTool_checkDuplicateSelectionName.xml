@@ -50,20 +50,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   Print all listbox that uses the same selection name.\n
 """\n
 \n
 selection_name_dict = context.SkinsTool_getDuplicateSelectionNameDict()\n
 for selection_name, field_list in selection_name_dict.items():\n
-  if len(field_list) > 1:\n
-    print repr(selection_name), \'\\n\\t\', \'\\n\\t\'.join(field_list)\n
+  print repr(selection_name), \'\\n\\t\', \'\\n\\t\'.join(field_list)\n
 return printed\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -107,7 +102,6 @@ return printed\n
                             <string>_getiter_</string>
                             <string>selection_name</string>
                             <string>field_list</string>
-                            <string>len</string>
                             <string>repr</string>
                           </tuple>
                         </value>
