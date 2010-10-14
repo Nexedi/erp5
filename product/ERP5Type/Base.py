@@ -2647,9 +2647,8 @@ class Base( CopyContainer,
     """
       This returns the translated portal_type
     """
-    portal_type = self.portal_type
-    localizer = getToolByName(self, 'Localizer')
-    return localizer.erp5_ui.gettext(portal_type).encode('utf8')
+    localizer = self.getPortalObject().Localizer
+    return localizer.erp5_ui.gettext(self.portal_type).encode('utf8')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMetaType')
   def getMetaType(self):

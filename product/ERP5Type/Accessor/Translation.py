@@ -29,7 +29,6 @@
 from zLOG import LOG
 from Products.ERP5Type.PsycoWrapper import psyco
 from Acquisition import aq_base
-from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type.Accessor.Base import func_code, ATTRIBUTE_PREFIX, evaluateTales, Getter as BaseGetter, Method
 from Products.ERP5Type.Accessor import Accessor, AcquiredProperty
@@ -72,7 +71,7 @@ class TranslatedPropertyGetter(BaseGetter):
         default = self._default
 
       if self._language is None:
-        language = kw.get('language') or getToolByName(instance, 'Localizer').get_selected_language()
+        language = kw.get('language') or instance.getPortalObject().Localizer.get_selected_language()
       else:
         language = self._language
       try:
@@ -83,7 +82,7 @@ class TranslatedPropertyGetter(BaseGetter):
       value = instance.getProperty(self._property_id)
       if domain == '' or (value in ('', None)):
         return value
-      localizer = getToolByName(instance, 'Localizer')
+      localizer = instance.getPortalObject().Localizer
       message_catalog = getattr(localizer, domain, None)
       if message_catalog is not None:
         return message_catalog.gettext(unicode(value, 'utf8'), lang=self._language).encode('utf8')
@@ -246,7 +245,7 @@ class TranslatedPropertyTester(Method):
 
     if domain==TRANSLATION_DOMAIN_CONTENT_TRANSLATION:
       if self._language is None:
-        language = kw.get('language') or getToolByName(instance, 'Localizer').get_selected_language()
+        language = kw.get('language') or instance.getPortalObject().Localizer.get_selected_language()
       else:
         language = self._language
       try:
