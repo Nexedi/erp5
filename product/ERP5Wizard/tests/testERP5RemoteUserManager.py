@@ -408,6 +408,21 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
+  def test_wrong_login_clears_zodb_cache(self):
+    """Check that wrong login attempt clears ZODB cache"""
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    self.checkLogin(('someone', 'someone'), kw)
+    self.assertTrue(login in \
+        self.erp5_remote_manager.remote_authentication_cache)
+    self.checkLogin(None, {'login':kw['login'], 'password':'wrong_password'})
+    self.assertFalse(login in \
+        self.erp5_remote_manager.remote_authentication_cache)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5RemoteUserManager))
