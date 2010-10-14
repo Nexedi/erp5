@@ -70,7 +70,8 @@ class EditorWidget(Widget.TextAreaWidget):
                                    size=1,
                                    items=[('Standard Text Area', 'text_area'),
                                           ('FCK Editor', 'fck_editor'), 
-                                          ('Bespin Editor', 'bespin')])
+                                          ('Bespin Editor', 'bespin'),
+                                          ('Xinha Editor', 'xinha')])
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """
@@ -92,6 +93,16 @@ class EditorWidget(Widget.TextAreaWidget):
                           'field'      : field,
                           'inputvalue' : value,
                           'inputname'  : key
+                        })
+    elif text_editor == "xinha":
+      xinha_support = getattr(here, 'xinha_support', None)
+      if xinha_support is None:
+        return Widget.TextAreaWidget.render(self, field, key, value, REQUEST)
+      return xinha_support.pt_render(
+           extra_context= {
+                          'field'       : field,
+                          'field_value' : value,
+                          'field_name'  : key
                         })
     else:
       return here.fckeditor_wysiwyg_support.pt_render(
