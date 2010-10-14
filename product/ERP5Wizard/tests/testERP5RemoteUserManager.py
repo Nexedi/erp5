@@ -330,6 +330,70 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
+  def test_loggable_in_case_of_server_gaierror_normal_cache(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    expected = ('someone', 'someone')
+    sent = kw
+    self.assertEqual(expected,
+        self.erp5_remote_manager.authenticateCredentials(sent))
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_socket_gaierror
+      self.assertRaises(socket.gaierror,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.assertEqual(expected,
+        self.erp5_remote_manager.authenticateCredentials(sent))
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
+
+  def test_loggable_in_case_of_server_raises_anythin_else_normal_cache(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    expected = ('someone', 'someone')
+    sent = kw
+    self.assertEqual(expected,
+        self.erp5_remote_manager.authenticateCredentials(sent))
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_value_error
+      self.assertRaises(ValueError,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.assertEqual(expected,
+        self.erp5_remote_manager.authenticateCredentials(sent))
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
+
+  def test_not_loggable_in_case_of_server_gaierror_no_log_before(self):
+    login = 'someone'
+    password = 'somepass'
+    self.createPerson(login, password)
+    transaction.commit()
+    self.tic()
+    kw = {'login':login, 'password': password}
+    # patch Wizard Tool to raise in callRemoteProxyMethod
+    from Products.ERP5Wizard.Tool.WizardTool import WizardTool
+    original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
+    try:
+      WizardTool.callRemoteProxyMethod = raises_socket_gaierror
+      self.assertRaises(socket.gaierror,
+          self.portal.portal_wizard.callRemoteProxyMethod)
+      self.checkLogin(('someone', 'someone'), kw)
+    finally:
+      WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5RemoteUserManager))
