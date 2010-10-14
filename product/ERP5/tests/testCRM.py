@@ -526,7 +526,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEquals('Hello,\nContent of the mail.\n', str(new_event.getTextContent()))
     self.assertEquals('Mail Message', new_event.getPortalType())
     self.assertEquals('text/plain', new_event.getContentType())
-    self.assertEquals('message/rfc822', new_event._baseGetContentType())
     # check if parsing of metadata from content is working
     content_dict = {'source_list': ['person_module/sender'],
                     'destination_list': ['person_module/me',
