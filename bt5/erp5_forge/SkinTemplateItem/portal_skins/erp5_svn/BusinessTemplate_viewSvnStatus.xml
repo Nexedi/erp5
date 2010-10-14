@@ -109,7 +109,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       </div>\n
       \n
       <br/>\n
-      <div style="color: black; font-weight: bold;" tal:define="repos_url python:context.getPortalObject()[\'portal_subversion\'].info(context)[\'url\']">\n
+      <div style="color: black; font-weight: bold;" tal:define="repos_url context/BusinessTemplate_getRepositoryURL">\n
         Repository URL: <a tal:attributes="href repos_url" tal:content="repos_url"></a>\n
       </div><br/>\n
       <button type="button" onclick="treeTaller()">Taller</button>\n
