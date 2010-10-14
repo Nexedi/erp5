@@ -87,7 +87,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
                        **{'login': login,
                           'password': password,
                           'erp5_uid': erp5_uid}))
-        except (socket.sslerror, socket.error):
+        except socket.error:
             # issue with socket, read from "ZODB cache"
             LOG('ERP5RemoteUserManager', INFO, 'Socket issue with server, '
               'used local cache', error=True)
