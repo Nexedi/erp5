@@ -50,20 +50,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  Print all listbox that uses the same selection name.\n
+            <value> <string>"""\n
+  Get all listbox fields that uses the same selection name.\n
 """\n
 \n
-selection_name_dict = context.SkinsTool_getDuplicateSelectionNameDict()\n
-for selection_name, field_list in selection_name_dict.items():\n
-  if len(field_list) > 1:\n
-    print repr(selection_name), \'\\n\\t\', \'\\n\\t\'.join(field_list)\n
-return printed\n
-
-
-]]></string> </value>
+skins_tool = context.portal_skins\n
+selection_name_dict = {}\n
+\n
+ok_to_share_selection_form_list = [\'Resource_viewInventory\', \'Resource_viewMovementHistory\']\n
+\n
+for field_path, field in skins_tool.ZopeFind(\n
+         skins_tool, obj_metatypes=[\'ProxyField\', \'ListBox\'], search_sub=1):\n
+  form = field.aq_parent\n
+  if field.meta_type == \'ProxyField\':\n
+    original_field = field.getRecursiveTemplateField()\n
+    if original_field is not None and \\\n
+       (original_field.meta_type != \'ListBox\' \\\n
+        or field.is_delegated(\'selection_name\')\n
+        or original_field.get_tales(\'selection_name\')!=\'\'):\n
+      continue\n
+  elif field.meta_type == \'ListBox\':\n
+    if field.get_tales(\'selection_name\')!=\'\':\n
+      continue\n
+  # in some rare cases sharing a selection can be done intentional so avoid them\n
+  if form.getId() in ok_to_share_selection_form_list:\n
+    continue\n
+\n
+  selection_name_dict.setdefault(\n
+         field.get_value(\'selection_name\'), []).append(field_path)\n
+\n
+return selection_name_dict\n
+</string> </value>
         </item>
         <item>
             <key> <string>_code</string> </key>
@@ -99,16 +116,17 @@ return printed\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>_print_</string>
-                            <string>_print</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>skins_tool</string>
                             <string>selection_name_dict</string>
+                            <string>ok_to_share_selection_form_list</string>
                             <string>_getiter_</string>
-                            <string>selection_name</string>
-                            <string>field_list</string>
-                            <string>len</string>
-                            <string>repr</string>
+                            <string>field_path</string>
+                            <string>field</string>
+                            <string>form</string>
+                            <string>original_field</string>
+                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -125,7 +143,7 @@ return printed\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>SkinsTool_checkDuplicateSelectionName</string> </value>
+            <value> <string>SkinsTool_getDuplicateSelectionNameDict</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
