@@ -46,6 +46,9 @@ And run it:
 
   $ python2.6 -S bootstrap.py -c buildout-2.12.cfg
 
+WARNING: please read "Troubleshooting" section bellow, you may need to
+unset environment variables in your GNU/Linux distribution
+
 If curl or wget are available, it can be done in one line:
 
 in case of curl:
