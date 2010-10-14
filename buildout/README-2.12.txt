@@ -34,10 +34,29 @@ For example:
 
   svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout/ ~/erp5.buildout
 
-Run the Zope 2.12 buildout:
-
   $ cd ~/erp5.buildout
-  $ python2.6 -S bootstrap/bootstrap.py -v 1.4.4 -c buildout-2.12.cfg
+
+Bootstrap buildout
+~~~~~~~~~~~~~~~~~~
+
+Download the newest bootstrap.py file from:
+  http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py
+
+And run it:
+
+  $ python2.6 -S bootstrap.py -c buildout-2.12.cfg
+
+If curl or wget are available, it can be done in one line:
+
+in case of curl:
+  $ curl -s http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python2.6 -S - -c buildout-2.12.cfg
+
+in case of wget:
+  $ wget -q  -O - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python2.6 -S - -c buildout-2.12.cfg
+
+Run the Zope 2.12 buildout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   $ bin/buildout -v -c buildout-2.12.cfg
 
 This will download and install the software components needed to run ERP5 on
