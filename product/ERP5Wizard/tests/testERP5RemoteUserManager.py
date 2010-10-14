@@ -184,6 +184,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
   # TESTS
   ############################################################################
   def test_correct_login(self):
+    """Checks typical login scenrio"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -193,6 +194,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.checkLogin(('someone', 'someone'), kw)
 
   def test_incorrect_login(self):
+    """Checks that incorrect login does not work"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -202,6 +204,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.checkLogin(None, kw)
 
   def test_incorrect_login_in_case_of_no_connection(self):
+    """Checks that in case if there is no auth server defined it is not possible ot login"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -214,6 +217,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.checkLogin(None, kw)
 
   def test_loggable_in_case_of_server_socket_error(self):
+    """Check that in case if socket.error is raised login works from ZODB cache"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -233,6 +237,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
   def test_loggable_in_case_of_server_socket_sslerror(self):
+    """Check that in case if socket.sslerror is raised login works from ZODB cache"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -252,6 +257,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
   def test_not_loggable_in_case_of_server_raises_anything_else(self):
+    """Check that in case if non socket is raised login does not works"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -272,6 +278,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
 
   def test_loggable_in_case_of_server_socket_error_with_failed_login_between(
       self):
+    """Check that in case if socket.sslerror is raised login works from ZODB cache, when wrong credentials was passed"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -293,6 +300,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
   def test_loggable_in_case_of_server_socket_timeout(self):
+    """Check that in case if socket.timeout is raised login works from ZODB cache"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -312,6 +320,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
   def test_loggable_in_case_of_server_gaierror(self):
+    """Check that in case if socket.gaierror is raised login works from ZODB cache"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -331,6 +340,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
   def test_loggable_in_case_of_server_gaierror_normal_cache(self):
+    """Check that in case if socket.gaierror is raised login works from usual cache"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -354,6 +364,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
   def test_loggable_in_case_of_server_raises_anythin_else_normal_cache(self):
+    """Check that in case if non socket is raised login works from usual cache"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
@@ -377,6 +388,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
   def test_not_loggable_in_case_of_server_gaierror_no_log_before(self):
+    """Check that in case if socket.gaierror is raised login does not work in case of empty ZODB cache"""
     login = 'someone'
     password = 'somepass'
     self.createPerson(login, password)
