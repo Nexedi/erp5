@@ -176,8 +176,9 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEquals(None, p.getPassword())
     self.assertEquals('default', p.getPassword('default'))
 
-  def testPreferenceInteractionWorkflow(self, quiet=0, run=run_all_test):
-    """ Test copy/paste a Person object. """
+  def testPreferenceInteractionWorkflow(self):
+    """ when setting reference, a script create preference is
+        called by activities, check this behavior. """
     if not run:
       return
     person_module = self.getPersonModule()
