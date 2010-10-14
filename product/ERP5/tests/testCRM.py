@@ -365,6 +365,29 @@ class TestCRM(BaseTestCRM):
       self.assertEqual(new_event.getTextContent(), '> Event Content')
       self.assertEqual(new_event.getTitle(), 'Re: Event Title')
 
+  def test_SupportRequest_referenceAutomaticallyGenerated(self):
+    """
+      When you create or clone a Support Request document, it must 
+      have the reference generated automatically.
+    """
+    portal_type = "Support Request"
+    title = "Title of the Support Request"
+    content = "This is the content of the Support Request"
+    module = self.portal.support_request_module
+    support_request = module.newContent(portal_type=portal_type,
+                                        title=title,)
+    self.stepTic()
+
+    self.assertNotEquals(None, support_request.getReference())
+
+    new_support_request = support_request.Base_createCloneDocument(
+                                                                 batch_mode=1)
+    self.assertEquals(new_support_request.getTitle(), title)
+    self.assertNotEquals(None, support_request.getReference())
+    self.assertNotEquals(support_request.getReference(), 
+                                        new_support_request.getReference())
+
+
 
 class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.
