@@ -81,4 +81,3 @@ class IMovementCollectionDiff(Interface):
 
     property_dict -- properties to update     
     """
- 

@@ -49,5 +49,3 @@ class VariationMixin:
     (not of the predicate) could be handled through additional matrix
     dimensions rather than through ad-hoc definition.  
   """
-
-  
