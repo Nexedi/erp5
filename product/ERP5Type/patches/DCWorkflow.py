@@ -119,9 +119,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
     '''
     if not self.worklists:
       return None  # Optimization
-    workflow_tool = getToolByName(self, 'portal_workflow')
-    workflow = getattr(workflow_tool, self.id)
-    _getPortalTypeListForWorkflow = CachingMethod(workflow.getPortalTypeListForWorkflow,
+    _getPortalTypeListForWorkflow = CachingMethod(self.getPortalTypeListForWorkflow,
                                                   id=('_getPortalTypeListForWorkflow', self.id), 
                                                   cache_factory = 'erp5_ui_long')
     portal_type_list = _getPortalTypeListForWorkflow()
@@ -217,8 +215,6 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
   """
   if not self.worklists:
     return None
-  workflow_tool = getToolByName(self, 'portal_workflow')
-  workflow = getattr(workflow_tool, self.id)
 
   def getPortalTypeListForWorkflow(workflow_id):
       workflow_tool = getToolByName(self, 'portal_workflow')

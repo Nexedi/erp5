@@ -16,7 +16,6 @@
 
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Acquisition import aq_base
-from Products.CMFCore.utils import getToolByName
 
 def reindexObject(self, idxs=[], *args, **kw):
     """
@@ -31,7 +30,7 @@ def reindexObject(self, idxs=[], *args, **kw):
         # Update the modification date.
         if getattr(aq_base(self), 'notifyModified', None) is not None:
             self.notifyModified()
-    catalog = getToolByName(self, 'portal_catalog', None)
+    catalog = self._getCatalogTool()
     if catalog is not None:
         catalog.reindexObject(self, idxs=idxs, *args, **kw)
 

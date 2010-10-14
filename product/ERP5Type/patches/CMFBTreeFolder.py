@@ -18,7 +18,6 @@ try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
 except ImportError:
   from Products.BTreeFolder2.CMFBTreeFolder import CMFBTreeFolder
-from Products.CMFCore.utils import getToolByName
 
 """
   This patch tries to give only portal types that are defined
@@ -33,7 +32,7 @@ def CMFBTreeFolder_allowedContentTypes(self):
       this folder.
   """
   result = []
-  portal_types = getToolByName(self, 'portal_types')
+  portal_types = self.getPortalObject().portal_types
   myType = portal_types.getTypeInfo(self)
 
   if myType is not None:
