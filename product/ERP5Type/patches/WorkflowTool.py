@@ -830,7 +830,6 @@ class WorkflowMethod( Method ):
 
         """ Invoke the wrapped method, and deal with the results.
         """
-        instance.pdb()
         wf = getToolByName(instance, 'portal_workflow', None)
         if wf is None or not hasattr(wf, 'wrapWorkflowMethod'):
             # No workflow tool found.
