@@ -190,7 +190,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.checkLogin(('someone', 'someone'), kw)
+    self.checkLogin((login, login), kw)
 
   def test_incorrect_login(self):
     """Checks that incorrect login does not work"""
@@ -223,7 +223,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.checkLogin(('someone', 'someone'), kw)
+    self.checkLogin((login, login), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -231,7 +231,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_error
       self.assertRaises(socket.error,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.checkLogin(('someone', 'someone'), kw)
+      self.checkLogin((login, login), kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
@@ -243,7 +243,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.checkLogin(('someone', 'someone'), kw)
+    self.checkLogin((login, login), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -251,7 +251,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_sslerror
       self.assertRaises(socket.sslerror,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.checkLogin(('someone', 'someone'), kw)
+      self.checkLogin((login, login), kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
@@ -263,7 +263,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.checkLogin(('someone', 'someone'), kw)
+    self.checkLogin((login, login), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -287,7 +287,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.checkLogin(('someone', 'someone'), kw)
+    self.checkLogin((login, login), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -295,9 +295,9 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_error
       self.assertRaises(socket.error,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.checkLogin(('someone', 'someone'), kw)
+      self.checkLogin((login, login), kw)
       self.checkLogin(None, {'login':kw['login'], 'password':'wrong_password'})
-      self.checkLogin(('someone', 'someone'), kw)
+      self.checkLogin((login, login), kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
@@ -309,7 +309,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.checkLogin(('someone', 'someone'), kw)
+    self.checkLogin((login, login), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -317,7 +317,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_timeout
       self.assertRaises(socket.timeout,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.checkLogin(('someone', 'someone'), kw)
+      self.checkLogin((login, login), kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
@@ -329,7 +329,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.checkLogin(('someone', 'someone'), kw)
+    self.checkLogin((login, login), kw)
     # patch Wizard Tool to raise in callRemoteProxyMethod
     from Products.ERP5Wizard.Tool.WizardTool import WizardTool
     original_callRemoteProxyMethod=WizardTool.callRemoteProxyMethod
@@ -337,7 +337,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
       WizardTool.callRemoteProxyMethod = raises_socket_gaierror
       self.assertRaises(socket.gaierror,
           self.portal.portal_wizard.callRemoteProxyMethod)
-      self.checkLogin(('someone', 'someone'), kw)
+      self.checkLogin((login, login), kw)
     finally:
       WizardTool.callRemoteProxyMethod = original_callRemoteProxyMethod
 
@@ -349,7 +349,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    expected = ('someone', 'someone')
+    expected = (login, login)
     sent = kw
     self.assertEqual(expected,
         self.erp5_remote_manager.authenticateCredentials(sent))
@@ -373,7 +373,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    expected = ('someone', 'someone')
+    expected = (login, login)
     sent = kw
     self.assertEqual(expected,
         self.erp5_remote_manager.authenticateCredentials(sent))
@@ -416,7 +416,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     kw = {'login':login, 'password': password}
-    self.checkLogin(('someone', 'someone'), kw)
+    self.checkLogin((login, login), kw)
     self.assertTrue(login in \
         self.erp5_remote_manager.remote_authentication_cache)
     self.checkLogin(None, {'login':kw['login'], 'password':'wrong_password'})
