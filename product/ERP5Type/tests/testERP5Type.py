@@ -51,6 +51,7 @@ from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
@@ -1278,7 +1279,43 @@ class TestPropertySheet:
       self.assertEquals(email.getDefaultAvailableLanguage(), 'ja')
       self.assertEquals(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
 
+    NAME_INCLUDED_PROPERTY = '''
+          { 'id':         'name_included_in_address',
+            'type':       'boolean',
+            'default'     : False,
+            'acquired_property_id': ('name_included_in_address', ),
+            'acquisition_base_category': ( 'parent', ),
+            'acquisition_portal_type'  : ( 'Person', ),
+            'acquisition_copy_value'   : 0,
+            'acquisition_mask_value'   : 1,
+            'acquisition_accessor_id'  : 'getNameIncludedInAddress',
+            'acquisition_depends'      : None,
+            'mode':       'rw', }
+    '''
 
+    @expectedFailure
+    def test_19d_AcquiredBooleanAccessor(self):
+      """Tests acquired boolean accessor.
+      Boolean accessors generate both an getPropertyName and an isPropertyName
+      Check in particular that both behave the same way regarding acquisition
+      """
+      self._addProperty('Person', self.NAME_INCLUDED_PROPERTY)
+      self._addProperty('Email', self.NAME_INCLUDED_PROPERTY)
+
+      person = self.getPersonModule().newContent(portal_type='Person')
+      email = person.newContent(portal_type='Email')
+
+      self.assertFalse(person.getNameIncludedInAddress())
+      self.assertFalse(person.isNameIncludedInAddress())
+      self.assertFalse(email.getNameIncludedInAddress())
+      self.assertFalse(email.isNameIncludedInAddress())
+      # setting it to true on the acquisition target should be reflected on the
+      # object acquiring the value
+      person.setNameIncludedInAddress(True)
+      self.assertTrue(person.getNameIncludedInAddress())
+      self.assertTrue(person.isNameIncludedInAddress())
+      self.assertTrue(email.getNameIncludedInAddress())
+      self.assertTrue(email.isNameIncludedInAddress())
 
     def test_20_AsContext(self):
       """asContext method return a temporary copy of an object.
