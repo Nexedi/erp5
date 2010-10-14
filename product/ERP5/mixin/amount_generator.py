@@ -289,6 +289,9 @@ class AmountGeneratorMixin:
             break
         if not quantity:
           continue
+        # Backward compatibility
+        if getattr(aq_base(self), 'create_line', None) == 0:
+          property_dict['resource'] = None
         # Create an Amount object
         amount = newTempAmount(portal,
           # we only want the id to be unique so we pick a random causality
