@@ -122,6 +122,7 @@ class transactional_cache_decorator:
     def wrapper(wrapped_self):
       transactional_cache = getTransactionalVariable()
       cache_id = str((self.cache_id,
+        wrapped_self.getCacheSequenceNumber(),
         getInstanceID(wrapped_self),
       ))
       try:
@@ -596,6 +597,8 @@ class Catalog(Folder,
   manage_catalogFind = DTMLFile('dtml/catalogFind',globals())
   manage_catalogAdvanced = DTMLFile('dtml/catalogAdvanced', globals())
 
+  _cache_sequence_number = 0
+
   def __init__(self, id, title='', container=None):
     if container is not None:
       self=self.__of__(container)
@@ -605,6 +608,12 @@ class Catalog(Folder,
     self.names = {}   # mapping from column to attribute name
     self.indexes = {}   # empty mapping
     self.filter_dict = PersistentMapping()
+
+  def getCacheSequenceNumber(self):
+    return self._cache_sequence_number
+
+  def _clearCaches(self):
+    self._cache_sequence_number += 1
 
   def getSQLCatalogRoleKeysList(self):
     """
@@ -840,6 +849,7 @@ class Catalog(Folder,
       self.insertMaxUid()
 
     self._clearSecurityCache()
+    self._clearCaches()
 
   def insertMaxUid(self):
     """
