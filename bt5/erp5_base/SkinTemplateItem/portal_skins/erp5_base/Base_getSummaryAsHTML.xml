@@ -86,7 +86,8 @@ url = context.absolute_url()\n
 title = context.getTitle() or (hasattr(context, \'getReference\') and context.getReference()) or context.getId()\n
 portal_type = context.getTranslatedPortalType()\n
 website = context.REQUEST.get(\'current_web_site\', context.getWebSiteValue())\n
-popup = (context.Document_getPopupInfo(website) or \'\').encode(\'utf-8\')\n
+\n
+popup = context.Document_getPopupInfo(website) or \'\'\n
 \n
 found = context.Base_showFoundText()\n
 owner_html = getOwnerHTML(context) or \'\'\n
