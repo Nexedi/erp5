@@ -1006,6 +1006,11 @@ form p,\n
   margin-left: 10px;\n
 \n
 }\n
+\n
+div.search_text{\n
+  margin-right: 4px;\n
+}\n
+\n
 .meta input.search_text:focus {color:#000000;}\n
 \n
 .meta input.search_button {\n

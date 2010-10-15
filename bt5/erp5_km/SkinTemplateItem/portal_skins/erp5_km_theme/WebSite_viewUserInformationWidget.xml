@@ -73,7 +73,7 @@
      tal:attributes="href string:${portal_path}/login_form"\n
      i18n:translate="" i18n:domain="ui"\n
      i18n:attributes="title"\n
-     title="Log in">Login</a>\n
+     title="Log in">Log in</a>\n
 </tal:block>\n
 \n
 </tal:block>\n
