@@ -17,6 +17,11 @@ from lxml import etree
 from lxml.etree import HTMLParser as LHTMLParser
 from lxml.html import tostring
 
+try:
+  from lxml.html.soupparser import fromstring as soupfromstring
+except ImportError:
+  # Means BeautifulSoup module is not installed
+  soupfromstring = None
 # tag mapping: tag -> short or long tag
 VALID_TAGS = VALID_TAGS.copy()
 NASTY_TAGS = NASTY_TAGS.copy()
@@ -347,6 +352,7 @@ class SafeHTML:
 
         html_string = orig
         already_repaired = False
+        one_more_bullet_with_beautifulsoup = soupfromstring is not None
         while True:
             try:
                 safe = scrubHTML(
@@ -363,8 +369,20 @@ class SafeHTML:
                 # ouch !
                 # HTMLParser is not able to parse very dirty HTML string,
                 # try to repair any broken html with help of lxml
-                if already_repaired:
+                if already_repaired and not one_more_bullet_with_beautifulsoup:
+                  # Even lxml nor BeautifulSoup doesn't perform miracles
+                  # so Give up !
                   raise
+                elif already_repaired and one_more_bullet_with_beautifulsoup:
+                  # Is BeautifulSoup can perform miracles ?
+                  one_more_bullet_with_beautifulsoup = False
+                  # This function can raise the exception HTMLParseError.
+                  # So consider this parsing as last chance 
+                  # to get parsable html.
+                  repaired_html_tree = soupfromstring(html_string)
+                  html_string = tostring(repaired_html_tree,
+                                         include_meta_content_type=True,
+                                         method='xml')
                 already_repaired = True
                 encoding = kwargs.get('encoding')
                 # recover parameter is equal to True by default
