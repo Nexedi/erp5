@@ -3,3 +3,4 @@ Computer Partition | validation_workflow
 Computer | edit_workflow
 Computer | validation_workflow
 Internet Protocol Address | edit_workflow
+Tcp Port Number | edit_workflow

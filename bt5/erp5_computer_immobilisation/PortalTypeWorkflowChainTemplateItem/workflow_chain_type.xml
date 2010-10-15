@@ -11,4 +11,8 @@
   <type>Internet Protocol Address</type>
   <workflow>edit_workflow</workflow>
  </chain>
+ <chain>
+  <type>Tcp Port Number</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
 </workflow_chain>
