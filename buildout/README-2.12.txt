@@ -145,7 +145,7 @@ $ bin/supervisord                   # 6
 Also, we need databases in the mysql server that correspond to both the ERP5
 instance we're going to create, and the testrunner we will want to run:
 
-$ var/bin/mysql -u root
+$ var/bin/mysql -h 127.0.0.1 -u root
 mysql> create database development_site;
 mysql> grant all privileges on development_site.* to 'development_user'@'localhost' identified by 'development_password';
 mysql> grant all privileges on development_site.* to 'development_user'@'127.0.0.1' identified by 'development_password';
