@@ -1,3 +1,6 @@
+2010-10-15 nicolas.dumazet
+* No restrictions on subtypes of Order portal type
+
 2010-09-30 nicolas.dumazet
 * Add abstract Order portal type to be able to create temporary documents of Order portal type.
 
