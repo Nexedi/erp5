@@ -30,11 +30,12 @@ def Legacy_getBusinessTemplateList(cls):
   def Legacy_getBusinessTemplateList(self):
     bt_list = []
     for bt in getBusinessTemplateList(self):
-      if bt != 'erp5_simulation_test':
+      if bt != 'erp5_simulation_test' and bt not in bt_list:
         bt_list.append(bt)
         if bt == 'erp5_simulation':
           bt_list.append(bt +  '_legacy')
-        elif bt in ('erp5_accounting', 'erp5_trade', 'erp5_project'):
+        elif bt in ('erp5_accounting', 'erp5_mrp',
+                     'erp5_project', 'erp5_trade'):
           bt_list.append(bt +  '_simulation_legacy')
     return tuple(bt_list)
   cls.getBusinessTemplateList = Legacy_getBusinessTemplateList

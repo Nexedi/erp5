@@ -59,6 +59,10 @@ class TestMRPMixin(TestBPMMixin):
       if rule.getValidationState() == 'validated':
         rule.invalidate()
 
+  def getRule(self, **kw):
+    return self.portal.portal_rules.searchFolder(
+          sort_on='version', sort_order='descending', **kw)[0].getObject()
+
   def _createDocument(self, portal_type, **kw):
     module = self.portal.getDefaultModule(
         portal_type=portal_type)
@@ -99,6 +103,8 @@ class TestMRPMixin(TestBPMMixin):
     self.createCategoriesInCategory(category_tool.trade_phase, ['mrp',])
     self.createCategoriesInCategory(category_tool.trade_phase.mrp,
         ['p' + str(i) for i in range(5)]) # phase0 ~ 4
+    self.createCategoriesInCategory(category_tool.trade_state,
+      ('ready', 'partial', 'done'))
 
   @reindex
   def createDefaultOrder(self, transformation=None, business_process=None):
@@ -157,41 +163,34 @@ class TestMRPMixin(TestBPMMixin):
     """    mrp/p2                    mrp/3
     ready -------- partial_produced ------- done
     """
-    business_process = self.createBusinessProcess()
-    business_link_p2 = self.createBusinessLink(business_process)
-    business_link_p3 = self.createBusinessLink(business_process)
-    business_state_ready = self.createBusinessState(business_process)
-    business_state_partial = self.createBusinessState(business_process)
-    business_state_done = self.createBusinessState(business_process)
-
     # organisations
     source_section = self.createOrganisation(title='source_section')
     source = self.createOrganisation(title='source')
     destination_section = self.createOrganisation(title='destination_section')
     destination = self.createOrganisation(title='destination')
-    
-    business_process.edit(referential_date='stop_date')
-    business_link_p2.edit(id='p2',
-                          predecessor_value=business_state_ready,
-                          successor_value=business_state_partial,
-                          quantity=1,
-                          trade_phase=['mrp/p2'],
-                          source_section_value=source_section,
-                          source_value=source,
-                          destination_section_value=destination_section,
-                          destination_value=destination,
-                          )
-    business_link_p3.edit(id='p3',
-                          predecessor_value=business_state_partial,
-                          successor_value=business_state_done,
-                          quantity=1,
-                          deliverable=1, # root explanation
-                          trade_phase=['mrp/p3'],
-                          source_section_value=source_section,
-                          source_value=source,
-                          destination_section_value=destination_section,
-                          destination_value=destination,
-                          )
+
+    business_process = self.createBusinessProcess(referential_date='stop_date')
+    self.createBusinessLink(business_process,
+                            id='p2',
+                            predecessor='trade_state/ready',
+                            successor='trade_state/partial',
+                            quantity=1,
+                            trade_phase=['mrp/p2'],
+                            source_section_value=source_section,
+                            source_value=source,
+                            destination_section_value=destination_section,
+                            destination_value=destination)
+    self.createBusinessLink(business_process,
+                            id='p3',
+                            predecessor='trade_state/partial',
+                            successor='trade_state/done',
+                            quantity=1,
+                            deliverable=1, # root explanation
+                            trade_phase=['mrp/p3'],
+                            source_section_value=source_section,
+                            source_value=source,
+                            destination_section_value=destination_section,
+                            destination_value=destination)
     return business_process
 
   @reindex
@@ -200,62 +199,43 @@ class TestMRPMixin(TestBPMMixin):
     ready ======== partial_produced
            mrp/p3
     """
-    business_process = self.createBusinessProcess()
-    business_link_p2 = self.createBusinessLink(business_process)
-    business_link_p3 = self.createBusinessLink(business_process)
-    business_state_ready = self.createBusinessState(business_process)
-    business_state_partial = self.createBusinessState(business_process)
-
     # organisations
     source_section = self.createOrganisation(title='source_section')
     source = self.createOrganisation(title='source')
     destination_section = self.createOrganisation(title='destination_section')
     destination = self.createOrganisation(title='destination')
 
-    business_process.edit(referential_date='stop_date')
-    business_link_p2.edit(id='p2',
-                          predecessor_value=business_state_ready,
-                          successor_value=business_state_partial,
-                          quantity=1,
-                          trade_phase=['mrp/p2'],
-                          source_section_value=source_section,
-                          source_value=source,
-                          destination_section_value=destination_section,
-                          destination_value=destination,
-                          )
-    business_link_p3.edit(id='p3',
-                          predecessor_value=business_state_ready,
-                          successor_value=business_state_partial,
-                          quantity=1,
-                          deliverable=1, # root explanation
-                          trade_phase=['mrp/p3'],
-                          source_section_value=source_section,
-                          source_value=source,
-                          destination_section_value=destination_section,
-                          destination_value=destination,
-                          )
+    business_process = self.createBusinessProcess(referential_date='stop_date')
+    self.createBusinessLink(business_process,
+                            id='p2',
+                            predecessor='trade_state/ready',
+                            successor='trade_state/partial',
+                            quantity=1,
+                            trade_phase=['mrp/p2'],
+                            source_section_value=source_section,
+                            source_value=source,
+                            destination_section_value=destination_section,
+                            destination_value=destination)
+    self.createBusinessLink(business_process,
+                            id='p3',
+                            predecessor='trade_state/ready',
+                            successor='trade_state/partial',
+                            quantity=1,
+                            deliverable=1, # root explanation
+                            trade_phase=['mrp/p3'],
+                            source_section_value=source_section,
+                            source_value=source,
+                            destination_section_value=destination_section,
+                            destination_value=destination)
     return business_process
 
-  @reindex
-  def beforeTearDown(self):
-    super(TestMRPMixin, self).beforeTearDown()
-    transaction.abort()
-    for module in (
-      self.portal.organisation_module,
-      self.portal.production_order_module, 
-      self.portal.transformation_module,
-      self.portal.business_process_module,
-      # don't remove document because reuse it for testing of id
-      # self.portal.product_module,
-      self.portal.portal_simulation,):    
-      module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
 
-class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
+class TestMRPImplementation(TestMRPMixin):
   """the test for implementation"""
+
   @skip('Unfinished experimental feature')
   def test_TransformationRule_getHeadProductionPathList(self):
-    rule = self.portal.portal_rules.default_transformation_model_rule
+    rule = self.getRule(reference='default_transformation_model_rule')
 
     transformation = self.createDefaultTransformation()
 
@@ -279,8 +259,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     path_p3 = '%s/p3' % business_process.getRelativeUrl()
 
     # organisations
-    path = business_process.objectValues(
-      portal_type=self.portal.getPortalBusinessLinkTypeList())[0]
+    path = business_process.p2
     source_section = path.getSourceSection()
     source = path.getSource()
     destination_section = path.getDestinationSection()
@@ -304,7 +283,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     # test mock
     applied_rule = movement.newContent(potal_type='Applied Rule')
 
-    rule = self.portal.portal_rules.default_transformation_model_rule
+    rule = self.getRule(reference='default_transformation_model_rule')
     rule.expand(applied_rule)
 
     # assertion
@@ -343,8 +322,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     phase_p3 = '%s/p3' % business_process.getRelativeUrl()
 
     # organisations
-    path = business_process.objectValues(
-      portal_type=self.portal.getPortalBusinessLinkTypeList())[0]
+    path = business_process.p2
     source_section = path.getSourceSection()
     source = path.getSource()
     destination_section = path.getDestinationSection()
@@ -369,7 +347,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     # test mock
     applied_rule = movement.newContent(potal_type='Applied Rule')
 
-    rule = self.portal.portal_rules.default_transformation_model_rule
+    rule = self.getRule(reference='default_transformation_model_rule')
     rule.expand(applied_rule)
 
     # assertion
@@ -412,8 +390,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     phase_p3 = '%s/p3' % business_process.getRelativeUrl()
 
     # organisations
-    path = business_process.objectValues(
-      portal_type=self.portal.getPortalBusinessLinkTypeList())[0]
+    path = business_process.p2
     source_section = path.getSourceSection()
     source = path.getSource()
     destination_section = path.getDestinationSection()
@@ -431,7 +408,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
       movement._baseSetFrozen(1)
 
     # re-expand
-    rule = self.portal.portal_rules.default_transformation_model_rule
+    rule = self.getRule(reference='default_transformation_model_rule')
     rule.expand(applied_rule)
 
     # assertion
@@ -510,7 +487,7 @@ class TestMRPImplementation(TestMRPMixin, ERP5TypeTestCase):
     # test mock
     applied_rule = movement.newContent(potal_type='Applied Rule')
 
-    rule = self.portal.portal_rules.default_transformation_sourcing_model_rule
+    rule = self.getRule(reference='default_transformation_sourcing_model_rule')
     rule.expand(applied_rule)
 
     # assertion

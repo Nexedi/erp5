@@ -46,6 +46,8 @@ class TestBPMMixin(ERP5TypeTestCase):
   business_process_portal_type = 'Business Process'
   business_link_portal_type = 'Business Link'
   trade_model_path_portal_type = 'Trade Model Path'
+  default_business_process = \
+    'business_process_module/erp5_default_business_process'
 
   normal_resource_use_category_list = ['normal']
   invoicing_resource_use_category_list = ['discount', 'tax']
@@ -77,7 +79,7 @@ class TestBPMMixin(ERP5TypeTestCase):
         portal_type=self.business_process_portal_type,)
     business_process =  module.newContent(
       portal_type=self.business_process_portal_type,
-      specialise_value=module.erp5_default_business_process)
+      specialise=self.default_business_process)
     business_process._edit(**kw)
     self.createTradeModelPath(business_process,
       reference='default_path',
