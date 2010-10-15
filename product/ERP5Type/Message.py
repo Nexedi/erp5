@@ -84,6 +84,8 @@ except ImportError:
 
   getGlobalTranslationService = GlobalTranslationService
 
+translation_service_translate = getGlobalTranslationService().translate
+
 from Products.ERP5Type import Globals
 from cPickle import dumps, loads
 
@@ -135,31 +137,28 @@ class Message(Persistent):
     the return value is a string object. If it is a unicode object,
     the return value is a unicode object.
     """
-    request = Globals.get_request()
-    if request is not None:
-      context = request['PARENTS'][0]
-      translation_service = getGlobalTranslationService()
-
     message = self.message
-    if self.domain is None or request is None or translation_service is None :
+    if self.domain is None:
       # Map the translated string with given parameters
-      if type(self.mapping) is type({}):
+      if type(self.mapping) is dict:
         if isinstance(message, unicode) :
           message = message.encode('utf-8')
         message = Template(message).substitute(self.mapping)
     else:
-      translated_message = translation_service.translate(
+      from Products.ERP5.ERP5Site import getSite
+      translated_message = translation_service_translate(
                                              self.domain,
-                                             self.message,
+                                             message,
                                              mapping=self.mapping,
-                                             context=context,
+                                             context=getSite(),
                                              default=self.default)
       if translated_message is not None:
         message = translated_message
 
-    if isinstance(self.message, str) and isinstance(message, unicode):
-      message = message.encode('utf-8')
-    elif isinstance(self.message, unicode) and isinstance(message, str):
+    if isinstance(self.message, str):
+      if isinstance(message, unicode):
+        message = message.encode('utf-8')
+    elif isinstance(message, str):
       message = message.decode('utf-8')
 
     return message

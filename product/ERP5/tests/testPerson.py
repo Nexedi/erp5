@@ -179,8 +179,6 @@ class TestPerson(ERP5TypeTestCase):
   def testPreferenceInteractionWorkflow(self):
     """ when setting reference, a script create preference is
         called by activities, check this behavior. """
-    if not run:
-      return
     person_module = self.getPersonModule()
     title = "Séb"
     person = person_module.newContent(portal_type='Person', title=title)
