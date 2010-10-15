@@ -234,7 +234,9 @@ class AmountGeneratorMixin:
         # Then collect the mapped values (quantity, price, trade_phase...)
         for key in cell.getMappedValuePropertyList():
           # XXX-JPS Make sure handling of list properties can be handled
-          property_dict[key] = cell.getProperty(key)
+          dict_key = key in ('net_quantity', 'converted_quantity',
+                             'net_converted_quantity') and 'quantity' or key
+          property_dict[dict_key] = cell.getProperty(key)
         category_list = cell.getAcquiredCategoryMembershipList(
           cell.getMappedValueBaseCategoryList(), base=1)
         property_dict['category_list'] += category_list
@@ -279,14 +281,10 @@ class AmountGeneratorMixin:
         # (XXX is it OK ?) XXX-JPS Need careful review with taxes
         quantity = float(sum(map(base_amount.getGeneratedAmountQuantity,
                                  base_application_set)))
-        for quantity_key in ('net_quantity', 'converted_quantity',
-                             'net_converted_quantity', 'quantity'):
-          if quantity_key in property_dict:
-            try:
-              quantity *= property_dict.pop(quantity_key)
-            except TypeError: # None or ''
-              pass
-            break
+        try:
+          quantity *= property_dict.pop('quantity', 1)
+        except TypeError: # None or ''
+          pass
         if not quantity:
           continue
         # Backward compatibility

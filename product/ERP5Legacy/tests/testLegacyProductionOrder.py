@@ -65,7 +65,8 @@ class TestProductionOrderMixin(TestOrderMixin):
   def getBusinessTemplateList(self):
     """
     """
-    return TestOrderMixin.getBusinessTemplateList(self) + ('erp5_mrp',)
+    return TestOrderMixin.getBusinessTemplateList(self) + (
+      'erp5_mrp', 'erp5_mrp_simulation_legacy')
 
   def setUpPreferences(self):
     portal = self.getPortal()

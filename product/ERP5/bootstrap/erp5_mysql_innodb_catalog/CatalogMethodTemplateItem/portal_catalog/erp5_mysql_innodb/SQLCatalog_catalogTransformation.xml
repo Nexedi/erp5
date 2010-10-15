@@ -75,13 +75,14 @@ for transformation_relative_url, variation_list_list in transformation_item_list
     continue\n
   for variation_list in variation_list_list:\n
     movement = newTempMovement(resource, \'temp\',\n
+                               specialise_value=transformation,\n
                                variation_category_list=variation_list,\n
-                               resource=resource.getRelativeUrl(),\n
+                               resource_value=resource,\n
                                quantity=1.0)\n
     base_row = dict(uid=resource.getUid(), variation_text=movement.getVariationText())\n
 \n
     row_dict_list = []\n
-    for amount in transformation.getAggregatedAmountList([movement]):\n
+    for amount in movement.getAggregatedAmountList():\n
       transformed_resource_uid = amount.getResourceUid()\n
       quantity = amount.getQuantity()\n
       if transformed_resource_uid is not None and quantity is not None:\n

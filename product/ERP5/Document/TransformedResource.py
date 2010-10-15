@@ -29,21 +29,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import zope.interface
 
-from warnings import warn
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine
 
-from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.MappedValue import MappedValue
 
-from Products.ERP5.Document.Predicate import Predicate
-
-class TransformedResource(MappedValue, XMLMatrix, Amount):
+class TransformedResource(AmountGeneratorLine):
     """
     TransformedResource defines which resource is being transformed
     in order to produce a product define in the parent Transformation
@@ -51,8 +43,8 @@ class TransformedResource(MappedValue, XMLMatrix, Amount):
 
     TODO:
     - transformations used to work perfectly for more than 3 dimensions
-      of variations. However, this feature was broken with time and 
-      is no longer usable. It is time to reimplement it. This is 
+      of variations. However, this feature was broken with time and
+      is no longer usable. It is time to reimplement it. This is
       completely unrelated to MatrixBox reimplementation unlike
       what is stated in some comments.
     """
@@ -65,18 +57,8 @@ class TransformedResource(MappedValue, XMLMatrix, Amount):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.Reference
-                      , PropertySheet.TransformedResource
-                      )
+    property_sheets = (PropertySheet.TransformedResource, )
 
-    # Declarative interfaces
-    zope.interface.implements(interfaces.IAmountGenerator,
-                              interfaces.IVariated,
-                              interfaces.IVariationRange,)
     ### Mapped Value Definition
     # Provide default mapped value properties and categories if
     # not defined
@@ -91,30 +73,41 @@ class TransformedResource(MappedValue, XMLMatrix, Amount):
           result = self.getVariationRangeBaseCategoryList() # The current resource variation
       return result
 
+    def getCellAggregateKey(self):
+      """Define a key in order to aggregate amounts at cell level"""
+      return None
+
+    @classmethod
+    def getBaseAmountQuantity(cls, delivery_amount, base_application, rounding):
+      value = delivery_amount.getGeneratedAmountQuantity(base_application)
+      if base_application == 'produced_quantity':
+        value += delivery_amount.getQuantity()
+      return value
+
     def getBaseApplication(self):
       """
-      
+      """
+      return self.getBaseApplicationList()[0]
+
+    def getBaseApplicationList(self):
+      """
       """
       # It is OK to try to acquire
-      if getattr(self, '_baseGetBaseApplication', None) is not None:
-        result = self._baseGetBaseApplication()
-        if result:
-          return result
-      return 'produced_quantity'
+      return self._categoryGetBaseApplicationList() or ['produced_quantity']
 
     ### Variation matrix definition
     # XXX-JPS Some explanation needed
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'updateVariationCategoryList')
     def updateVariationCategoryList(self):
       """
-        Check if variation category list of the resource changed and 
+        Check if variation category list of the resource changed and
         update transformed resource by doing a set cell range
       """
       self.setQVariationBaseCategoryList(self.getQVariationBaseCategoryList())
       self.setVVariationBaseCategoryList(self.getVVariationBaseCategoryList())
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.ModifyPortalContent,
                               '_setQVariationBaseCategoryList')
     def _setQVariationBaseCategoryList(self, value):
       """
@@ -124,7 +117,7 @@ class TransformedResource(MappedValue, XMLMatrix, Amount):
       self._baseSetQVariationBaseCategoryList(value)
       self._updateCellRange('quantity')
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.ModifyPortalContent,
                               '_setVVariationBaseCategoryList')
     def _setVVariationBaseCategoryList(self, value):
       """
@@ -137,7 +130,7 @@ class TransformedResource(MappedValue, XMLMatrix, Amount):
       # XXX-JPS This should be handled by interaction workflow or interactor
       # XXX-JPS SO many cases are not handled well...
 
-    security.declareProtected(Permissions.ModifyPortalContent, 
+    security.declareProtected(Permissions.ModifyPortalContent,
                               'setVVariationBaseCategoryList')
     def setVVariationBaseCategoryList(self, value):
       """

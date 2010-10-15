@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Utils import cartesianProduct
+from Products.ERP5.Document.AmountGeneratorLine import AmountGeneratorLine
 from Products.ERP5.Document.TransformedResource import TransformedResource
 from Products.ERP5Type.Base import TempBase
 
@@ -114,14 +115,6 @@ class AssortedResource(TransformedResource):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Amount
-                      , PropertySheet.TransformedResource
-                      )
-
     # Local property sheet
     _properties = (
       { 'id'          : 'variation_base_category',
@@ -137,6 +130,8 @@ class AssortedResource(TransformedResource):
         'acquisition_depends'       : None,
         'mode'        : 'w' },
     )
+
+    getCellAggregateKey = AmountGeneratorLine.getCellAggregateKey
 
     security.declareProtected(Permissions.AccessContentsInformation, 'getAssortedVariationCategoryList')
     def getAssortedVariationCategoryList(self, cell_index):
@@ -500,8 +495,8 @@ class AssortedResource(TransformedResource):
 
       return error_list
 
-    security.declareProtected(Permissions.AccessContentsInformation, 'getAggregatedAmountList')
-    def getAggregatedAmountList(self, REQUEST):
+    if 0: # obsolete
+     def getAggregatedAmountList(self, REQUEST):
       # First, we set initial values for quantity and variation
       # Currently, we only consider discrete variations
       # Continuous variations will be implemented in a future version of ERP5
