@@ -1371,7 +1371,7 @@ div.required label{\n
 /* login form */\n
 fieldset.registration {\n
   float:left;\n
-  width:42.5%;\n
+  width:49.5%;\n
   background-color: #FFFFFF;\n
   margin-right: 0.5%;\n
   height: 775px;\n
