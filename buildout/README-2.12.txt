@@ -181,11 +181,7 @@ the 'zope-instance-template:user' variable.
 
 You should also be able to run ERP5 unit tests like so:
 
- $ bin/runUnitTest --erp5_sql_connection_string="test@127.0.0.1:10002 test" testBusinessTemplate
-
-The '127.0.0.1:10002' coordinate above refers to the address of the configured
-mysql instance, according to the settings 'configuration:mysql_host' and
-'configuration:mysql_port' in 'instance-profiles/mysql.cfg'.
+ $ bin/runUnitTest testClassTool
 
 Troubleshooting
 ===============
