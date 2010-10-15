@@ -70,19 +70,47 @@ from ExtensionClass import Base
 Base__getnewargs__ = getattr(Base, '__getnewargs__', None)
 if Base__getnewargs__ is None:
   is_old_btree = lambda pickle: None
-  def maybeSimplifyClass(klass):
-    return klass
+  def getCleanClass(classdef):
+    return classdef
 else:
   is_old_btree = re.compile('cBTrees\\._(..)BTree\n(\\1)BTree\n').match
-  def maybeSimplifyClass(klass):
-    if isinstance(klass, tuple):
-      pureclass, newargs = klass
+  def getCleanClass(classdef):
+    if isinstance(classdef, tuple):
+      pureclass, newargs = classdef
       if (newargs == () and
           not isinstance(pureclass, tuple) and
           getattr(pureclass, '__getnewargs__', None) is Base__getnewargs__):
         return pureclass
-    return klass
+    return classdef
 # END ExtensionClass.Base.__getnewargs__ XML simplification
+
+from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
+
+PICKLE_CLEANERS = {}
+
+class cleaner_for(object):
+
+    def __init__(self, classdef):
+        self.classdef = classdef
+
+    def __call__(self, callable):
+        PICKLE_CLEANERS[self.classdef] = callable
+        return callable
+
+# BBB: Remove this cleaner when we drop support for Zope 2.8
+@cleaner_for(ZopePageTemplate)
+def cleanup_ZopePageTemplate(state):
+    if isinstance(state.get('_text'), str):
+        state['_text'] = unicode(state['_text'], 'utf-8')
+        state['output_encoding'] = 'utf-8'
+    if isinstance(state.get('title'), str):
+        state['title'] = unicode(state['title'], 'utf-8')
+
+def cleanupState(classdef, state):
+    classdef = getCleanClass(classdef)
+    cleanupState = PICKLE_CLEANERS.get(classdef, lambda state: None)
+    cleanupState(state)
+    return classdef, state
 
 def reorderPickle(jar, p):
     from ZODB.ExportImport import Ghost, Unpickler, Pickler, StringIO, persistent_id
@@ -119,10 +147,10 @@ def reorderPickle(jar, p):
     pickler=OrderedPickler(newp,1)
     pickler.persistent_id=persistent_id
 
-    klass = unpickler.load()
-    klass = maybeSimplifyClass(klass)
-    pickler.dump(klass)
+    classdef = unpickler.load()
     obj = unpickler.load()
+    classdef, obj = cleanupState(classdef, obj)
+    pickler.dump(classdef)
     pickler.dump(obj)
     p=newp.getvalue()
     if is_old_btree(p):
