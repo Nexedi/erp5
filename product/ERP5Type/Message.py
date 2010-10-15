@@ -146,11 +146,12 @@ class Message(Persistent):
         message = Template(message).substitute(self.mapping)
     else:
       from Products.ERP5.ERP5Site import getSite
+      request = Globals.get_request()
       translated_message = translation_service_translate(
                                              self.domain,
                                              message,
                                              mapping=self.mapping,
-                                             context=getSite(),
+                                             context=getSite(request),
                                              default=self.default)
       if translated_message is not None:
         message = translated_message

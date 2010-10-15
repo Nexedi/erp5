@@ -22,6 +22,7 @@ from Products.ERP5Type.Globals import package_home
 
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 from ZPublisher import BeforeTraverse
+from ZPublisher.BaseRequest import RequestContainer
 from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite
 from Products.CMFCore.utils import getToolByName
@@ -189,13 +190,13 @@ class _site(threading.local):
     self = threading.local.__new__(cls)
     return self.__get, self.__set
 
-  def __get(self):
-    """Returns the currently processed site
-
-    XXX The returned site is not wrapped in a request.
+  def __get(self, REQUEST=None):
+    """Returns the currently processed site, optionally wrapped in a request
     """
     app, site_id = self.site[-1]
-    return getattr(app(), site_id)
+    if REQUEST is None:
+      return getattr(app(), site_id)
+    return getattr(app().__of__(RequestContainer(REQUEST=REQUEST)), site_id)
 
   def __set(self, site):
     app = aq_base(site.aq_parent)
