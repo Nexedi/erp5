@@ -290,7 +290,7 @@ class AmountGeneratorMixin:
         if not quantity:
           continue
         # Backward compatibility
-        if getattr(aq_base(self), 'create_line', None) == 0:
+        if getattr(self.aq_base, 'create_line', None) == 0:
           property_dict['resource'] = None
         # Create an Amount object
         amount = newTempAmount(portal,
