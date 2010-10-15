@@ -93,7 +93,7 @@ class CachedConvertableMixin:
   def generateCacheId(self, **kw):
     """
     """
-    return self._getCacheKey(self, **kw)
+    return self._getCacheKey(**kw)
 
   def _getCacheKey(self, **kw):
     """
