@@ -360,8 +360,11 @@ class CopyContainer:
           Unindex the object from the portal catalog.
       """
       if self.isIndexable:
-        catalog = getattr(self.getPortalObject(), 'portal_catalog', None)
-        if catalog is not None:
+        try:
+          catalog = self.getPortalObject().portal_catalog
+        except AttributeError:
+          pass
+        else:
           # Make sure there is not activity for this object
           self.flushActivity(invoke=0)
           uid = getattr(self,'uid',None)
