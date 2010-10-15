@@ -88,6 +88,8 @@ portal_type = context.getTranslatedPortalType()\n
 website = context.REQUEST.get(\'current_web_site\', context.getWebSiteValue())\n
 \n
 popup = context.Document_getPopupInfo(website) or \'\'\n
+if isinstance(popup, unicode):\n
+  popup = popup.encode(\'utf-8\')\n
 \n
 found = context.Base_showFoundText()\n
 owner_html = getOwnerHTML(context) or \'\'\n
@@ -191,6 +193,8 @@ return html\n
                             <string>title</string>
                             <string>portal_type</string>
                             <string>popup</string>
+                            <string>isinstance</string>
+                            <string>unicode</string>
                             <string>found</string>
                             <string>owner_html</string>
                             <string>date_renderer</string>
