@@ -346,7 +346,7 @@ class SafeHTML:
             return data
 
         html_string = orig
-        allready_repaired = False
+        already_repaired = False
         while True:
             try:
                 safe = scrubHTML(
@@ -363,9 +363,9 @@ class SafeHTML:
                 # ouch !
                 # HTMLParser is not able to parse very dirty HTML string,
                 # try to repair any broken html with help of lxml
-                if allready_repaired:
+                if already_repaired:
                   raise
-                allready_repaired = True
+                already_repaired = True
                 encoding = kwargs.get('encoding')
                 # recover parameter is equal to True by default
                 # in lxml API. I pass the argument to improve readability
