@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80047918.22</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>text.svg</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n
+<!-- Created with Inkscape (http://www.inkscape.org/) -->\n
+<svg\n
+   xmlns:dc="http://purl.org/dc/elements/1.1/"\n
+   xmlns:cc="http://web.resource.org/cc/"\n
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n
+   xmlns:svg="http://www.w3.org/2000/svg"\n
+   xmlns="http://www.w3.org/2000/svg"\n
+   xmlns:xlink="http://www.w3.org/1999/xlink"\n
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"\n
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n
+   width="22.000000px"\n
+   height="22.000000px"\n
+   id="svg1306"\n
+   sodipodi:version="0.32"\n
+   inkscape:version="0.42.2"\n
+   sodipodi:docbase="/home/andreas/projekt/bild/tango/22"\n
+   sodipodi:docname="draw-text2.svg">\n
+  <defs\n
+     id="defs1308">\n
+    <linearGradient\n
+       id="linearGradient3682">\n
+      <stop\n
+         style="stop-color:#1f1f1f;stop-opacity:1.0000000;"\n
+         offset="0.0000000"\n
+         id="stop3684" />\n
+      <stop\n
+         style="stop-color:#5c5c5c;stop-opacity:1.0000000;"\n
+         offset="1.0000000"\n
+         id="stop3686" />\n
+    </linearGradient>\n
+    <linearGradient\n
+       inkscape:collect="always"\n
+       id="linearGradient3558">\n
+      <stop\n
+         style="stop-color:#000000;stop-opacity:1;"\n
+         offset="0"\n
+         id="stop3560" />\n
+      <stop\n
+         style="stop-color:#000000;stop-opacity:0;"\n
+         offset="1"\n
+         id="stop3562" />\n
+    </linearGradient>\n
+    <radialGradient\n
+       inkscape:collect="always"\n
+       xlink:href="#linearGradient3558"\n
+       id="radialGradient3564"\n
+       cx="22.571428"\n
+       cy="30.857143"\n
+       fx="22.571428"\n
+       fy="30.857143"\n
+       r="15.571428"\n
+       gradientTransform="matrix(1.000000,0.000000,0.000000,0.651376,4.300378e-15,10.75754)"\n
+       gradientUnits="userSpaceOnUse" />\n
+    <linearGradient\n
+       id="linearGradient2834">\n
+      <stop\n
+         style="stop-color:#ffffff;stop-opacity:1;"\n
+         offset="0"\n
+         id="stop2836" />\n
+      <stop\n
+         style="stop-color:#b3b3b3;stop-opacity:0.0000000;"\n
+         offset="1.0000000"\n
+         id="stop2838" />\n
+    </linearGradient>\n
+    <linearGradient\n
+       inkscape:collect="always"\n
+       xlink:href="#linearGradient2834"\n
+       id="linearGradient2840"\n
+       x1="19.944447"\n
+       y1="16.527262"\n
+       x2="24.133829"\n
+       y2="19.642126"\n
+       gradientUnits="userSpaceOnUse"\n
+       gradientTransform="matrix(0.498259,0.000000,0.000000,0.466519,-0.799974,-0.839637)" />\n
+    <linearGradient\n
+       inkscape:collect="always"\n
+       xlink:href="#linearGradient3682"\n
+       id="linearGradient3688"\n
+       x1="23.305620"\n
+       y1="24.843527"\n
+       x2="14.388516"\n
+       y2="9.5902243"\n
+       gradientUnits="userSpaceOnUse"\n
+       gradientTransform="matrix(0.498259,0.000000,0.000000,0.488600,-0.799974,-1.273557)" />\n
+  </defs>\n
+  <sodipodi:namedview\n
+     id="base"\n
+     pagecolor="#ffffff"\n
+     bordercolor="#666666"\n
+     borderopacity="1.0"\n
+     inkscape:pageopacity="0.0"\n
+     inkscape:pageshadow="2"\n
+     inkscape:zoom="14.000000"\n
+     inkscape:cx="17.541947"\n
+     inkscape:cy="12.572768"\n
+     inkscape:current-layer="layer1"\n
+     showgrid="false"\n
+     inkscape:grid-bbox="true"\n
+     inkscape:document-units="px"\n
+     showguides="true"\n
+     inkscape:guide-bbox="true"\n
+     inkscape:window-width="1280"\n
+     inkscape:window-height="885"\n
+     inkscape:window-x="0"\n
+     inkscape:window-y="25" />\n
+  <metadata\n
+     id="metadata1311">\n
+    <rdf:RDF>\n
+      <cc:Work\n
+         rdf:about="">\n
+        <dc:format>image/svg+xml</dc:format>\n
+        <dc:type\n
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />\n
+        <dc:title></dc:title>\n
+      </cc:Work>\n
+    </rdf:RDF>\n
+  </metadata>\n
+  <g\n
+     id="layer1"\n
+     inkscape:label="Layer 1"\n
+     inkscape:groupmode="layer">\n
+    <path\n
+       sodipodi:type="arc"\n
+       style="opacity:0.47368422;color:#000000;fill:url(#radialGradient3564);fill-opacity:1.0000000;fill-rule:nonzero;stroke:none;stroke-width:1.0000000;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-dashoffset:0.0000000;stroke-opacity:1.0000000;visibility:visible;display:inline;overflow:visible"\n
+       id="path3556"\n
+       sodipodi:cx="22.571428"\n
+       sodipodi:cy="30.857143"\n
+       sodipodi:rx="15.571428"\n
+       sodipodi:ry="10.142858"\n
+       d="M 38.142857 30.857143 A 15.571428 10.142858 0 1 1  7.0000000,30.857143 A 15.571428 10.142858 0 1 1  38.142857 30.857143 z"\n
+       transform="matrix(0.706422,0.000000,0.000000,0.208015,-4.944952,13.47138)" />\n
+    <path\n
+       style="font-size:54.869392px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125.00000%;writing-mode:lr-tb;text-anchor:start;fill:url(#linearGradient3688);fill-opacity:1.0000000;stroke:#000000;stroke-width:1.0000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"\n
+       d="M 15.189363,15.520771 L 7.1531447,15.520771 L 5.8598048,19.513834 L 0.51627279,19.513834 L 8.1009381,0.48837876 L 14.228221,0.48837876 L 21.560524,19.464779 L 16.444188,19.464779 L 15.189363,15.520771 M 8.3990779,12.473977 L 13.858901,12.473977 L 11.171254,5.1526958 L 8.3990779,12.473977"\n
+       id="text1314"\n
+       sodipodi:nodetypes="ccccccccccccc" />\n
+    <path\n
+       style="font-size:54.869392px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:start;line-height:125.00000%;writing-mode:lr-tb;text-anchor:start;opacity:0.37912086;fill:none;fill-opacity:1.0000000;stroke:url(#linearGradient2840);stroke-width:1.0000008;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000;font-family:Bitstream Vera Sans"\n
+       d="M 15.684541,15.159554 L 6.6710758,15.159554 L 5.4166733,18.527305 L 2.0035414,18.527305 L 8.7384662,1.4621947 L 13.512484,1.4621947 L 20.022564,18.410463 L 16.899702,18.410463 L 15.684541,15.159554 z "\n
+       id="path2047"\n
+       sodipodi:nodetypes="ccccccccc" />\n
+    <image\n
+       id="image2089"\n
+       height="459.00000"\n
+       width="400.00000"\n
+       sodipodi:absref="/home/andreas/palette2.png"\n
+       xlink:href="/home/andreas/palette2.png"\n
+       x="-354.93631"\n
+       y="-214.53793" />\n
+    <path\n
+       style="fill:none;fill-opacity:0.75000000;fill-rule:evenodd;stroke:#999999;stroke-width:1.0000007;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-opacity:1.0000000;opacity:0.51098901"\n
+       d="M 8.1686844,13.551882 L 14.147791,13.551882"\n
+       id="path5142"\n
+       sodipodi:nodetypes="cc" />\n
+  </g>\n
+</svg>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>6700</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

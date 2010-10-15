@@ -1,0 +1,237 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>menu.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>body{\n
+\tfont-family:sans-serif;\n
+\tfont-size:13px;\n
+\tcolor:black;\n
+}\n
+\n
+.mbmenu{\n
+  display:none;\n
+}\n
+.rootVoices{\n
+\tbackground-color:#f3f3f3;\n
+\tpadding:5px;\n
+\tpadding-bottom:0;\n
+}\n
+.rootVoices td.rootVoice {\n
+\tbackground-color:transparent;\n
+\twidth:120px;\n
+\tline-height:18px;\n
+\tfont-family:Arial,Helvetica,sans-serif;\n
+\tcolor: gray;\n
+\tfont-size:12px;\n
+\tpadding:8px;\n
+\tpadding-left:10px;\n
+\tcursor: pointer;\n
+}\n
+.rootVoices td.selected{\n
+\tbackground-color:gray;\n
+\tcolor:#ffffff;\n
+\tcursor: pointer;\n
+\tfont-size:14px;\n
+}\n
+\n
+.menuShadow{\n
+\tpadding:2px;\n
+\tpadding-bottom:0px;\n
+\tleft:-2;\n
+\ttop:1px;\n
+}\n
+\n
+.menuContainer{\n
+\tbackground-color:gray;\n
+}\n
+\n
+.menuContainer .line{\n
+\tbackground-color:white;\n
+\twidth:100%;\n
+\tpadding-left:-5;\n
+}\n
+\n
+.menuContainer .line.title {\n
+\ttext-align:right;\n
+}\n
+\n
+.menuContainer .line.title a{\n
+\tcolor:dimgray;\n
+\tfont-size:14px;\n
+}\n
+\n
+.menuContainer td a{\n
+\ttext-decoration:none;\n
+\tcolor: #000000;\n
+}\n
+\n
+.menuContainer td.voice{\n
+\tborder-top:1px solid #f3f3f3;\n
+\tfont-family:Arial,Helvetica,sans-serif;\n
+\tfont-size:12px;\n
+\tpadding:5px;\n
+}\n
+\n
+.menuContainer .separator{\n
+\tbackground-color:#f1f1f1;\n
+\theight:1px;\n
+}\n
+.menuContainer td.img{\n
+\tborder-top:1px solid #f3f3f3;\n
+\tfont-family:Arial,Helvetica,sans-serif;\n
+\ttext-align:center;\n
+\tfont-size:12px;\n
+\tcolor: #c3c3c3;\n
+\tbackground-color:#f9f9f9;\n
+\twidth:24px;\n
+\tpadding:5px;\n
+}\n
+.menuContainer td.img img{\n
+\twidth:20px;\n
+}\n
+.menuContainer .textBox{\n
+\tpadding: 5px;\n
+\tfont-family:Arial,Helvetica,sans-serif;\n
+\tfont-size:12px;\n
+\tbackground-color:#ffffff;\n
+\tcolor: #c3c3c3;\n
+}\n
+.menuContainer .selected td{\n
+\tbackground-color:#f3f3f3;\n
+\tbackground-image:url("../images/bgnd_sel_2.jpg")\n
+}\n
+.menuContainer .selected td a{\n
+\tcolor:#000;\n
+  display:block;\n
+}\n
+.menuContainer .disabled td, .menuContainer .disabled td a {\n
+\tcolor: #cccccc;\n
+}\n
+.menuContainer .subMenuOpener{\n
+\tbackground-image:url("../images/menuArrow.gif");\n
+\tbackground-repeat:no-repeat;\n
+\tbackground-position:right;\n
+}\n
+\n
+/*\n
+vertical menu\n
+*/\n
+\n
+\n
+/**/\n
+\n
+.rootVerticalVoices{\n
+\tbackground-color:#333;\n
+\tpadding:0px;\n
+}\n
+.rootVerticalVoices td.rootVoice {\n
+/*border-top:1px solid #666;*/\n
+\twidth:130px;\n
+\tfont-family:Arial,Helvetica,sans-serif;\n
+\tcolor: gray;\n
+\tfont-size:13px;\n
+\tpadding:7px;\n
+\tcursor: pointer;\n
+}\n
+.rootVerticalVoices td.selected{\n
+\tbackground-image:url("../images/bgnd_sel_4.png");\n
+\tcolor:#ffffff;\n
+\tcursor: pointer;\n
+}\n
+\n
+\n
+.verticalMenu{\n
+\tbackground-color:#000;\n
+\t/*\n
+ The menu container style must be set via the options paramiter\n
+ within the function call due to a Safari bug interpreting css on the fly...\n
+ */\n
+}\n
+.verticalMenu .line{\n
+\tbackground-color:#333;\n
+\twidth:100%;\n
+\tpadding-left:-5px;\n
+}\n
+.verticalMenu td a{\n
+\ttext-decoration:none;\n
+\tcolor: #d3d3d3;\n
+}\n
+.verticalMenu td.voice{\n
+\tborder-top:0px solid #666;\n
+\tfont-family:Arial,Helvetica,sans-serif;\n
+\tfont-size:12px;\n
+\tpadding:5px;\n
+}\n
+.verticalMenu .separator{\n
+\tbackground-color:#666;\n
+\theight:1px;\n
+}\n
+.verticalMenu td.img{\n
+\tborder-top:0px solid #666;\n
+\tfont-family:Arial,Helvetica,sans-serif;\n
+\ttext-align:center;\n
+\tfont-size:12px;\n
+\tcolor: #c3c3c3;\n
+\tbackground-color:#333;\n
+\twidth:24px;\n
+\tpadding:5px;\n
+}\n
+.verticalMenu td.img img{\n
+\twidth:20px;\n
+}\n
+.verticalMenu .textBox{\n
+\tpadding: 10px;\n
+\tfont-family:Arial,Helvetica,sans-serif;\n
+\tfont-size:12px;\n
+\tcolor: #c3c3c3;\n
+}\n
+.verticalMenu .selected td{\n
+\tbackground-image:url("../images/bgnd_sel_4.png");\n
+}\n
+.verticalMenu .selected td a{\n
+\tcolor:#fff;\n
+}\n
+.verticalMenu .disabled td, .verticalMenu .disabled td a {\n
+\tcolor: #666;\n
+}\n
+\n
+\n
+.verticalMenu .subMenuOpener{\n
+\tbackground-image:url("../images/menuArrow_w.gif");\n
+\tbackground-repeat:no-repeat;\n
+\tbackground-position:right;\n
+}\n
+\n
+.verticalMenu .menuShadow{\n
+\tbackground:black;\n
+\tpadding:5px;\n
+}\n
+\n
+</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80005897.0</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>node_clone.png</string> </value>
+        </item>
+        <item>
+            <key> <string>__propsets__</string> </key>
+            <value>
+              <tuple>
+                <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAACAklEQVRIidWUT0iTcRjHPwORZLAK
+gh0EqcjSjKJbtcVAyEMkiY7Wwb1rh2J2CqQIdvHSH927VqGVduokHYLMyNOgKFICK98RRNGqSx4i
+dkgL50vfLm+yyMHW3osPPJff7/l9Ps/hyw/WTHnVQUAX2aUEaKO78K3qwdQX8hJZ2bToNchb4Wtt
+An0EXS47EtYkRQk5PaEFULBSwQGQQM/LTfgihZd/CR5VJwg6gqer3abmop3HM2PFhtPfRV5iRjZH
+NAnaUKkg5Age/wO3jKNmzlhK52KKDI6O064BtigJ8lUIB1C7I8iWnppWb1faihXTuZhSOSNVKWwz
+aBg0CroJugGacASfQddAmcad+Qeh6JTdnbwj04oNVrPtOQdWTfurEXhBMdApUALUBxoBCb9srkpc
+keoCS9q2780sqLsKeFlpJ0h0lMTwnURQ512AA6gLJEL6tSK4px80KuoKfn84mwLJ1/xNDWOLBZL6
+RKvug9bVDDfnjHD8esYGqWn3ewvU5rSnZvjQXG+PaRnLQ6/iOmhMPQQ11YiUB7QD1DLwJHHMtIzl
+dC4mM2dcqHlbUD2tuku/PtSP/Jzf2z9jX3px0i044FeEcS38SYln2tae+PSqn9v/VUBneVuS868S
+h3XLPcF6HaJPhRXBbS3SrLh7AoA2neGEnhHRLNs1DKpzV7BW6zdXyU5tqdX/WQAAAABJRU5ErkJg
+gg==</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>571</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PropertySheet" module="OFS.PropertySheets"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_md</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>xmlns</string> </key>
+                    <value> <unicode>http://apache.org/dav/props/</unicode> </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <unicode>executable</unicode> </value>
+                  </item>
+                  <item>
+                      <key> <string>meta</string> </key>
+                      <value>
+                        <dictionary>
+                          <item>
+                              <key> <string>__xml_attrs__</string> </key>
+                              <value>
+                                <dictionary/>
+                              </value>
+                          </item>
+                        </dictionary>
+                      </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>executable</string> </key>
+            <value> <string>T</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
