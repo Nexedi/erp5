@@ -1207,75 +1207,6 @@ class TestPayrollMixin(TestTradeModelLineMixin):
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
-  def stepPaysheetCreateModelLine(self, sequence=None, **kw):
-    paysheet = sequence.get('paysheet')
-    model_line = self.createModelLine(paysheet)
-    model_line.edit(title='model line in the paysheet',
-                    trade_phase='payroll/france/urssaf',
-                    resource_value=sequence.get('old_age_insurance_service'),
-                    reference='model_line_in_the_payesheet',
-                    variation_category_list=['contribution_share/employee',
-                                             'contribution_share/employer'],
-                    base_application_list=[ 'base_amount/payroll/base/contribution'],
-                    base_contribution_list=['base_amount/payroll/base/income_tax'])
-    sequence.edit(model_line_on_paysheet = model_line)
-
-  def stepPaysheetModelLineCreateMovements(self, sequence=None, **kw):
-    model_line = sequence.get('model_line_on_paysheet')
-    cell1 = model_line.newCell('contribution_share/employee',
-                               portal_type='Pay Sheet Model Cell',
-                               base_id='movement',
-                               quantity = None,
-                               mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(price=0.5, contribution_share='employee')
-    cell2 = model_line.newCell('contribution_share/employer',
-                               portal_type='Pay Sheet Model Cell',
-                               base_id='movement',
-                               quantity = None,
-                               mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(price=0.8, contribution_share='employer')
-
-  def stepCheckUpdateAggregatedAmountListReturnWithModelLineOnPaysheet(self,
-      sequence=None, **kw):
-    paysheet = sequence.get('paysheet')
-    self.checkUpdateAggregatedAmountListReturn(paysheet, 0, 4)
-
-  def stepCheckPaysheetLineAreCreatedWithModelLineOnPaysheet(self,
-      sequence=None, **kw):
-    paysheet = sequence.get('paysheet')
-    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
-    self.assertEqual(len(paysheet_line_list), 3)
-    self.assertEqual(len(paysheet.getMovementList(portal_type=\
-        'Pay Sheet Cell')), 4) # 2 from the urssaf paysheet line
-                               # 2 from the line create with the paysheet model
-                               # line
-    self.assertEqual(len(paysheet.contentValues(portal_type=\
-        'Pay Sheet Model Line')), 1)
-
-  def stepCheckPaysheetLineFromModelLineAmounts(self, sequence=None, **kw):
-    paysheet = sequence.get('paysheet')
-    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
-    for paysheet_line in paysheet_line_list:
-      service = paysheet_line.getResourceTitle()
-      if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.1)
-        cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.5)
-      elif service == 'Labour':
-        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
-      elif service == 'Old Age Insurance':
-        cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.5)
-        cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.8)
-      else:
-        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
-
   def stepModelModifyUrssafModelLine(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
     # modify price on movements :
@@ -1316,23 +1247,6 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     for paysheet_line in paysheet_line_list:
       service = paysheet_line.getResourceTitle()
       if service == 'Labour':
-        self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
-      else:
-        self.fail("Unknown service for line %s" % paysheet_line.getTitle())
-
-  def stepCheckPaysheetModelLineOverLoadAmounts(self, sequence=None, **kw):
-    paysheet = sequence.get('paysheet')
-    paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
-    for paysheet_line in paysheet_line_list:
-      service = paysheet_line.getResourceTitle()
-      if service == 'Urssaf':
-        cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getQuantity(), 3000)
-        self.assertEquals(cell1.getPrice(), 0.3)
-        cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getQuantity(), 3000)
-        self.assertEquals(cell2.getPrice(), 0.7)
-      elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
@@ -2075,27 +1989,6 @@ class TestPayroll(TestPayrollMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_modelLineInPaysheet(self):
-    '''
-      Put a Pay Sheet Model Line in Pay Sheet Transaction. This line will
-      be like editable line
-    '''
-    sequence_list = SequenceList()
-    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               CreateOldAgeInsuranaceService
-               PaysheetCreateModelLine
-               PaysheetModelLineCreateMovements
-               Tic
-               CheckUpdateAggregatedAmountListReturnWithModelLineOnPaysheet
-               PaysheetApplyTransformation
-               Tic
-               CheckPaysheetLineAreCreatedWithModelLineOnPaysheet
-               CheckPaysheetLineFromModelLineAmounts
-               CheckUpdateAggregatedAmountListReturnNothing
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
   def test_updateModifyMovements(self):
     '''
       Calculate the paySheet using a model, modify one value in the model and
@@ -2172,25 +2065,6 @@ class TestPayroll(TestPayrollMixin):
                CheckPaysheetLineLabourAmountOnly
                CheckUpdateAggregatedAmountListReturnNothing
                CheckPaysheetLineLabourAmountOnly
-    """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-  def test_modelLineOverLoad(self):
-    '''
-      Check it's possible to overload a model line from the model tree by
-      having a model line with the same reference in the paysheet.
-    '''
-    sequence_list = SequenceList()
-    sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
-               PaysheetCreateUrssafModelLine
-               PaysheetUrssafModelLineCreateMovements
-               CheckUpdateAggregatedAmountListReturn
-               PaysheetApplyTransformation
-               Tic
-               CheckPaysheetLineAreCreated
-               CheckPaysheetModelLineOverLoadAmounts
-               CheckUpdateAggregatedAmountListReturnNothing
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
