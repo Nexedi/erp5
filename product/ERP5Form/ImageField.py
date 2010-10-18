@@ -32,9 +32,7 @@ from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from OFS.Image import Image as OFSImage
 from lxml.etree import Element
-from Acquisition import aq_base
 from lxml import etree
-from decimal import Decimal
 import re
 
 DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
@@ -66,7 +64,7 @@ class ImageFieldWidget(Widget.TextWidget):
         "The display size. See ERP5.Document.Image.default_displays_id_list "
         "for possible values. This is only used with ERP5 Images."),
                                default='thumbnail',
-                               required=1)
+                               required=0)
 
     image_format = fields.StringField('image_format',
                                title='Image Format',
@@ -100,13 +98,18 @@ class ImageFieldWidget(Widget.TextWidget):
               field.get_value('title')
         css_class = field.get_value('css_class')
         extra = field.get_value('extra')
-        display = field.get_value('image_display')
-        format = field.get_value('image_format')
-        resolution = field.get_value('image_resolution')
+        options = {}
+        options['display'] = field.get_value('image_display')
+        options['format'] = field.get_value('image_format')
+        options['resolution'] = field.get_value('image_resolution')
+        parameters = '&'.join(['%s=%s' % (k, v) for k, v in options.items() \
+                               if v])
+        if parameters:
+            image = '%s?%s' % (image, parameters)
         return Widget.render_element(
             "img",
             alt=alt,
-            src="%s?display=%s&format=%s&" % (image, display, format),
+            src=image,
             css_class=css_class,
             extra=extra,
         )

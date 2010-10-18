@@ -2,16 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>web_section_user_ram_cache</string> </value>
+            <value> <string>web_section_ram_cache</string> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -57,23 +54,26 @@
 </tal:block>\n
 \n
 <tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
-                       portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url());">\n
+                       portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url());\n
+                       user_name python: here.portal_membership.getAuthenticatedMember();\n
+                       is_anonymous_user here/portal_membership/isAnonymousUser">\n
 \n
-<tal:block tal:condition="not:here/portal_membership/isAnonymousUser">\n
+<tal:block tal:condition="not:is_anonymous_user">\n
   <a id="login-logout-link" \n
      href="#" tal:attributes="href string:${portal_path}/WebSite_logout"\n
-    i18n:translate="" i18n:domain="ui">\n
-    Logout\n
-  </a>\n
+    i18n:translate="" i18n:domain="ui"\n
+    title="Log out"\n
+    i18n:attributes="title"\n
+    tal:content="user_name"/>\n
 </tal:block>\n
 \n
-<tal:block tal:condition="here/portal_membership/isAnonymousUser">\n
+<tal:block tal:condition="is_anonymous_user">\n
   <a id="login-logout-link" \n
      href="#" \n
      tal:attributes="href string:${portal_path}/login_form"\n
-     i18n:translate="" i18n:domain="ui">\n
-     Login\n
-  </a>\n
+     i18n:translate="" i18n:domain="ui"\n
+     i18n:attributes="title"\n
+     title="Log in">Log in</a>\n
 </tal:block>\n
 \n
 </tal:block>\n

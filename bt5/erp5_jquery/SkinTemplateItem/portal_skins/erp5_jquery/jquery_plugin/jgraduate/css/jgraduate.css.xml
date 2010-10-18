@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jgraduate.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* \n
+ * jGraduate Default CSS\n
+ * \n
+ * Copyright (c) 2009 Jeff Schiller\n
+ *\n
+ * Licensed under the Apache License Version 2\n
+ */\n
+\n
+h2.jGraduate_Title {\n
+  font-family: Arial, Helvetica, Sans-Serif;\n
+  font-size: 11px !important;\n
+  font-weight: bold;\n
+  margin: -13px 0px 0px 0px;\n
+  padding: 0px;\n
+  text-align: center;\n
+}\n
+\n
+.jGraduate_Picker {\n
+\tfont-family: Arial, Helvetica, Sans-Serif;\n
+\tfont-size: 12px;\n
+\tborder-style: solid;\n
+\tborder-color: lightgrey black black lightgrey;\n
+\tborder-width: 1px;\n
+\tbackground-color: #EFEFEF;\n
+\tposition: absolute;\n
+\tpadding: 10px;\n
+}\n
+\n
+.jGraduate_tabs li {\n
+\tbackground-color: #ccc;\n
+\tdisplay: inline;\n
+\tborder: solid 1px grey;\n
+\tpadding: 3px;\n
+\tmargin: 2px;\n
+\tcursor: pointer;\n
+}\n
+\n
+li.jGraduate_tab_current {\n
+\tbackground-color: #EFEFEF;\n
+\tdisplay: inline;\n
+\tpadding: 3px;\n
+\tmargin: 2px;\n
+\tborder: solid 1px black;\n
+\tcursor: pointer;\n
+}\n
+\n
+.jGraduate_colPick {\n
+\tdisplay: none;\n
+}\n
+\n
+.jGraduate_lgPick {\t\n
+\tdisplay: none;\n
+\tborder: outset 1px #666;\n
+\tpadding: 10px 7px 5px 5px;\n
+\toverflow: auto;\n
+}\n
+\n
+.jGraduate_rgPick {\t\n
+\tdisplay: none;\n
+\tborder: outset 1px #666;\n
+\tpadding: 10px 7px 5px 5px;\n
+\toverflow: auto;\n
+/*\tposition: relative;*/\n
+}\n
+\n
+.jGraduate_tabs {\n
+\tposition: relative;\n
+\tbackground-color: #EFEFEF;\n
+\tpadding: 0px;\n
+\tmargin: 0px;\n
+\tmargin-bottom: 5px;\n
+}\n
+\n
+div.jGraduate_Swatch {\n
+\tfloat: left;\n
+\tmargin: 8px;\n
+}\n
+div.jGraduate_GradContainer {\n
+\tborder: 2px inset #EEE;\n
+\tbackground-image: url(../images/map-opacity.png); \n
+\tbackground-position: 0px 0px;\n
+\theight: 256px;\n
+}\n
+\n
+.jGraduate_AlphaArrows {\n
+\tposition: absolute;\n
+\tmargin-top: -10px;\n
+\tmargin-left: 250.5px;\n
+}\n
+\n
+div.jGraduate_Opacity {\n
+\tborder: 2px inset #eee;\n
+\tmargin-top: 14px;\n
+\tbackground-color: black;\n
+\tbackground-image: url(../images/Maps.png);\n
+\tbackground-position: 0px -2816px;\n
+\theight: 20px;\n
+\tcursor: ew-resize;\n
+}\n
+\n
+div.lg_jGraduate_OpacityField {\n
+\tposition: absolute;\n
+\tbottom: 25px;\n
+\tleft: 292px;\n
+}\n
+\n
+div.jGraduate_Form {\n
+\tfloat: left;\n
+\twidth: 140px;\n
+\tmargin: -3px 3px 0px 4px;\n
+}\n
+\n
+div.jGraduate_StopSection {\n
+\twidth: 120px;\n
+\ttext-align: center;\n
+}\n
+\n
+div.jGraduate_RadiusField {\n
+\t\n
+\ttext-align: center;\n
+\tfloat: left;\n
+}\n
+\n
+div.jGraduate_RadiusField input {\n
+\tmargin-top: 10px;\n
+}\n
+\n
+.jGraduate_RadiusField .jGraduate_Form_Section {\n
+\twidth: 250px;\n
+\tpadding: 2px;\n
+\theight: 80px;\n
+\toverflow: visible;\n
+}\n
+\n
+.jGraduate_Form_Section input[type=text] {\n
+\twidth: 38px;\n
+}\n
+\n
+.jGraduate_Radius {\n
+\tborder:1px solid #BBB;\n
+\tcursor:ew-resize;\n
+\theight:20px;\n
+\tmargin-top:14px;\n
+\tposition: relative;\n
+}\n
+\n
+\n
+.jGraduate_RadiusArrows {\n
+\ttop: 0;\n
+\tleft: 0;\n
+\tposition: absolute;\n
+\tmargin-top: -10px;\n
+\tmargin-left: 250.5px;\n
+}\n
+\n
+\n
+div.jGraduate_OkCancel {\n
+\tfloat: left;\n
+\twidth: 113px;\n
+}\n
+\n
+input.jGraduate_Ok, input.jGraduate_Cancel {\n
+\tdisplay: block;\n
+\twidth: 100px;\n
+\tmargin-left: -4px;\n
+\tmargin-right: -4px;\n
+}\n
+input.jGraduate_Ok {\n
+\tmargin: 9px -4px 5px -4px;\n
+}\n
+\n
+.colorBox {\n
+\tfloat: left;\n
+\theight: 16px;\n
+\twidth: 16px;\n
+\tborder: 1px solid #808080;\n
+\tcursor: pointer;\n
+\tmargin: 4px 4px 4px 30px;\n
+}\n
+\n
+.colorBox + label {\n
+\tfloat: left;\n
+\tmargin-top: 7px;\n
+}\n
+\n
+label.jGraduate_Form_Heading {\n
+\tposition: relative;\n
+\ttop: 10px;\n
+\tbackground-color: #EFEFEF;\n
+\tpadding: 2px;\n
+\tfont-weight: bold;\n
+\tfont-size: 13px;\n
+}\n
+\n
+div.jGraduate_Form_Section {\n
+\tborder-style: solid;\n
+\tborder-width: 1px;\n
+\tborder-color: grey;\n
+\t-moz-border-radius: 5px;\n
+\t-webkit-border-radius: 5px;\n
+\tpadding: 15px 5px 5px 5px;\n
+\tmargin: 2px;\n
+\twidth: 110px;\n
+\ttext-align: center;\n
+\toverflow: auto;\n
+}\n
+\n
+div.jGraduate_LightBox {\n
+\tposition: fixed;\n
+\ttop: 0px;\n
+\tleft: 0px;\n
+\tright: 0px;\n
+\tbottom: 0px;\n
+\tbackground-color: #000;\n
+\topacity: 0.5;\n
+\tdisplay: none;\n
+}\n
+\n
+div.jGraduate_stopPicker {\n
+\tposition: absolute;\n
+\tdisplay: none;\n
+\tbackground: #E8E8E8;\n
+}\n
+\n
+\n
+.jGraduate_rgPick {\n
+\twidth: 530px;\n
+}\n
+\n
+.jGraduate_rgPick div.jGraduate_Form {\n
+\twidth: 270px;\n
+\tposition: absolute;\n
+\tleft: 284px;\n
+\twidth: 266px;\n
+\ttop: 130px;\n
+\tmargin: -3px 3px 0px 4px;\n
+}\n
+\n
+.jGraduate_Colorblocks {\n
+\tdisplay: table;\n
+\tborder-spacing: 0 5px;\n
+}\n
+\n
+.jGraduate_colorblock {\n
+\tdisplay: table-row;\n
+}\n
+\n
+.jGraduate_Colorblocks .jGraduate_colorblock > * {\n
+\tdisplay: table-cell;\n
+\tvertical-align: middle;\n
+\tmargin: 0;\n
+\tfloat: none;\n
+}\n
+\n
+.jGraduate_rgPick div.jGraduate_StopSection {\n
+\tfloat: left;\n
+\twidth: 133px;\n
+\tmargin: 0;\n
+}\n
+\n
+.jGraduate_rgPick .jGraduate_OkCancel {\n
+\tposition: absolute;\n
+\tright: 0;\n
+}\n
+\n
+.rg_jGraduate_OpacityField {\n
+\tposition: absolute;\n
+\tleft: 288px;\n
+\tbottom: 24px;\n
+}
+
+]]></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

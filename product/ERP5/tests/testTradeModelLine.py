@@ -1050,7 +1050,7 @@ return lambda *args, **kw: 1""")
     # create a rounding model for tax
     rounding_model = self.portal.portal_roundings.newContent(portal_type='Rounding Model')
     rounding_model.setDecimalRoundingOption('ROUND_DOWN')
-    rounding_model.setDecimalExponent('1')
+    rounding_model.setPrecision(1)
     rounding_model.setRoundedPropertyId('total_price')
     rounding_model._setMembershipCriterionCategoryList(['base_contribution/base_amount/total_tax'])
     rounding_model._setMembershipCriterionBaseCategoryList(['base_contribution'])
@@ -1111,7 +1111,7 @@ return lambda *args, **kw: 1""")
 
     # change rounding model definition
     rounding_model.setDecimalRoundingOption('ROUND_UP')
-    rounding_model.setDecimalExponent('1')
+    rounding_model.setPrecision(1)
     rounding_model.setRoundedPropertyIdList(['total_price', 'quantity'])
 
     # change quantity
@@ -1134,7 +1134,7 @@ return lambda *args, **kw: 1""")
     # create a rounding model to round quantity property of order line
     rounding_model_for_quantity = self.portal.portal_roundings.newContent(portal_type='Rounding Model')
     rounding_model_for_quantity.setDecimalRoundingOption('ROUND_DOWN')
-    rounding_model_for_quantity.setDecimalExponent('1')
+    rounding_model_for_quantity.setPrecision(1)
     rounding_model_for_quantity.setRoundedPropertyId('quantity')
     rounding_model_for_quantity._setMembershipCriterionCategoryList(['base_contribution/base_amount/tax'])
     rounding_model_for_quantity._setMembershipCriterionBaseCategoryList(['base_contribution'])
@@ -1152,7 +1152,7 @@ return lambda *args, **kw: 1""")
     # create a rounding model to round price property of order line
     rounding_model_for_price = self.portal.portal_roundings.newContent(portal_type='Rounding Model')
     rounding_model_for_price.setDecimalRoundingOption('ROUND_UP')
-    rounding_model_for_price.setDecimalExponent('0.1')
+    rounding_model_for_price.setPrecision(0.1)
     rounding_model_for_price.setRoundedPropertyId('price')
     rounding_model_for_price._setMembershipCriterionCategoryList(['base_contribution/base_amount/tax'])
     rounding_model_for_price._setMembershipCriterionBaseCategoryList(['base_contribution'])

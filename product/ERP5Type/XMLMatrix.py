@@ -266,9 +266,7 @@ class XMLMatrix(Folder):
                             # uid should be consistent
         else:
           # In all cases, we have to remove the temp object
-          LOG("Del2 Object",0, temp_object_id)
-          LOG("Del2 Object",0, str(o.uid))
-          #ATTENTION -> if path is not good, it will not be able to uncatalog !!!
+          #WARNING -> if path is not good, it will not be able to uncatalog !!!
           #o.immediateReindexObject() # STILL A PROBLEM -> getUidForPath XXX
 
           if object_id not in new_object_id_list: # do not unindex a new object

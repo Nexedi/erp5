@@ -56,6 +56,30 @@ class TestRoundingTool(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
+  def testRoundValueMethod(self):
+    """
+    Test rounding method
+    """
+    rounding_tool = self.portal.portal_roundings
+    rounding_model = rounding_tool.newContent(portal_type='Rounding Model')
+    rounding_model.edit(decimal_rounding_option='ROUND_HALF_UP')
+
+    rounding_model.edit(precision=0.01)
+    self.assertEqual(rounding_model.roundValue(12.344), 12.34)
+    self.assertEqual(rounding_model.roundValue(12.355), 12.36)
+    rounding_model.edit(precision=0.1)
+    self.assertEqual(rounding_model.roundValue(12.34), 12.3)
+    self.assertEqual(rounding_model.roundValue(12.35), 12.4)
+    rounding_model.edit(precision=1.0)
+    self.assertEqual(rounding_model.roundValue(1.1), 1)
+    self.assertEqual(rounding_model.roundValue(1.5), 2)
+    rounding_model.edit(precision=10.0)
+    self.assertEqual(rounding_model.roundValue(1.1), 0)
+    self.assertEqual(rounding_model.roundValue(5.0), 10)
+    rounding_model.edit(precision=100.0)
+    self.assertEqual(rounding_model.roundValue(132), 100)
+    self.assertEqual(rounding_model.roundValue(150), 200)
+
   def testBasicRounding(self):
     """
     Test basic features of rounding tool
@@ -81,7 +105,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     # rounding model dummy never match to sale order line
     rounding_model_dummy= rounding_tool.newContent(portal_type='Rounding Model')
     rounding_model_dummy.edit(decimal_rounding_option='ROUND_DOWN',
-                              precision=2,
+                              precision=0.01,
                               rounded_property_id_list=['price',
                                                         'quantity',
                                                         'total_price'])
@@ -92,7 +116,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     # add a rounding model for price of sale order line
     rounding_model_1 = rounding_tool.newContent(portal_type='Rounding Model')
     rounding_model_1.edit(decimal_rounding_option='ROUND_DOWN',
-                          precision=2,
+                          precision=0.01,
                           rounded_property_id_list=['price'])
     rounding_model_1.setCriterionProperty('portal_type')
     rounding_model_1.setCriterion('portal_type', identity=['Sale Order Line'],
@@ -113,7 +137,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(wrapped_line.getProperty('quantity'), 0.0)
     self.assertEqual(wrapped_line.getTotalPrice(), 0.0)
     self.assertEqual(wrapped_line.getProperty('total_price'), 0.0)
-    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
+    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 0.01)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), None)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
 
@@ -141,7 +165,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(wrapped_line.getProperty('quantity'), 78.91)
     self.assertEqual(wrapped_line.getTotalPrice(), 123.45*78.91)
     self.assertEqual(wrapped_line.getProperty('total_price'), 123.45*78.91)
-    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
+    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 0.01)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), None)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
 
@@ -149,7 +173,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.login('developer')
     rounding_model_2 = rounding_tool.newContent(portal_type='Rounding Model')
     rounding_model_2.edit(decimal_rounding_option='ROUND_UP',
-                          precision=1,
+                          precision=0.1,
                           rounded_property_id_list=['quantity'])
 
     transaction.commit()
@@ -166,7 +190,7 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(wrapped_line.getProperty('quantity'), 78.91)
     self.assertEqual(wrapped_line.getTotalPrice(), 123.45*78.91)
     self.assertEqual(wrapped_line.getProperty('total_price'), 123.45*78.91)
-    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
+    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 0.01)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), None)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
 
@@ -185,15 +209,15 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(wrapped_line.getProperty('quantity'), 79.0)
     self.assertEqual(wrapped_line.getTotalPrice(), 123.45*79.0)
     self.assertEqual(wrapped_line.getProperty('total_price'), 123.45*79.0)
-    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
-    self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), 1)
+    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 0.01)
+    self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), 0.1)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
 
     # add a rounding model for total price of any portal type
     self.login('developer')
     rounding_model_3 = rounding_tool.newContent(portal_type='Rounding Model')
     rounding_model_3.edit(decimal_rounding_option='ROUND_UP',
-                          precision=-1,
+                          precision=10,
                           rounded_property_id_list=['total_price'])
 
     self.login('assignor')
@@ -208,11 +232,11 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(wrapped_line.getProperty('price'), 123.45)
     self.assertEqual(wrapped_line.getQuantity(), 79.0)
     self.assertEqual(wrapped_line.getProperty('quantity'), 79.0)
-    self.assertEqual(wrapped_line.getTotalPrice(), 9750.0)
-    self.assertEqual(wrapped_line.getProperty('total_price'), 9750.0)
-    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 2)
-    self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), 1)
-    self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), -1)
+    self.assertEqual(wrapped_line.getTotalPrice(), 9760.0)
+    self.assertEqual(wrapped_line.getProperty('total_price'), 9760.0)
+    self.assertEqual(wrapped_line.getRoundingModelPrecision('price'), 0.01)
+    self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), 0.1)
+    self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), 10)
 
 
 def test_suite():

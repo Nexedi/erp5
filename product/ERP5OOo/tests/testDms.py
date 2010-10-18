@@ -1942,9 +1942,6 @@ return 1
     self.assertTrue('jpg' in presentation.getTargetFormatList())
     self.assertTrue('png' in presentation.getTargetFormatList())
 
-    
-    
-
   def test_convertToImageOnTraversal(self):
     """
     Test converting to image all Document portal types on traversal i.e.:
@@ -2189,7 +2186,29 @@ return 1
     self.assertEquals('test-en-003-description', document.getDescription())
     self.assertEquals('test-en-003-title', document.getTitle())
     self.assertEquals('test-en-003-keywords', document.getSubject())
-                                  
+
+
+  def test_DocumentIndexation(self):
+    """
+      Test how a document is being indexed in MySQL.
+    """
+    portal = self.portal
+    document = portal.document_module.newContent(
+                                        portal_type='Presentation', \
+                                        reference='XXX-YYY-ZZZZ',
+                                        subject_list = ['subject1', 'subject2'])
+    self.stepTic()
+    # full text indexation
+    full_text_result = portal.erp5_sql_connection.manage_test('select * from full_text where uid="%s"' %document.getUid())
+    self.assertTrue('subject2' in full_text_result[0]['searchabletext'])
+    self.assertTrue('subject1' in full_text_result[0]['searchabletext'])
+    self.assertTrue(document.getReference() in full_text_result[0]['searchabletext'])
+    
+    # subject indexation
+    subject_result = portal.erp5_sql_connection.manage_test('select * from subject where uid="%s"' %document.getUid())
+    self.assertTrue('subject2' in subject_result[0]['subject'])
+    self.assertTrue('subject1' in subject_result[0]['subject'])
+    
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 

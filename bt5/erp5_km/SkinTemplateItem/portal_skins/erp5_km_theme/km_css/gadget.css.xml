@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts86451743.36</string> </value>
+            <value> <string>ts87390711.89</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -53,6 +53,12 @@ div.gadget-management{\n
   display:block;\n
   float:right;\n
   margin-bottom:5px;\n
+}\n
+\n
+/* hide labels for columns */\n
+div.gadget-management > label,\n
+div.right-gadget > label{\n
+  display:none;\n
 }\n
 \n
 div.draggable_wrapper{\n
@@ -205,17 +211,29 @@ div.edit-form fieldset{\n
   border: none;\n
 }\n
 \n
+div.block .content .field label, \n
+div.block .content .field .input{\n
+  padding-left: 0px;\n
+}\n
+\n
 div.edit-form label{\n
-  display:block !important;\n
+  display:block;\n
   font-weight:normal;\n
 }\n
 \n
 div.edit-form button{\n
   margin-top: 0.5em;\n
+  margin-left: 0.5em;\n
 }\n
+\n
+div.edit-form div.field{\n
+  padding-left: 0.5em;\n
+}\n
+div.edit-form label,\n
 div.edit-form input{\n
-  width:100%;\n
+  width:auto;\n
 }\n
+\n
 \n
 /* listbox buttons in gadget mode */\n
 div.block table.listbox button.sort_button,\n
@@ -464,7 +482,7 @@ div.block div.box_inner_content div.worklist_list ul {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8572</int> </value>
+            <value> <int>8854</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -58,6 +58,11 @@ portal = context.getPortalObject()\n
 # setup DMS settings\n
 portal.Zuite_setupDMS()\n
 \n
+# publish web site so anonymous user may access it\n
+km_web_site = portal.web_site_module.km_test_web_site\n
+if km_web_site.getValidationState()!=\'published\':\n
+  km_web_site.publish()\n
+\n
 # publish the test web page so we can use it in tests for setting default WEb Section page\n
 for reference in (\'minimal_km_footer\', \'km.web.site.test.page\',):\n
   km_page = portal.portal_catalog.getResultValue(portal_type = \'Web Page\',\n
@@ -127,6 +132,7 @@ return "Created Successfully."\n
                             <string>_getattr_</string>
                             <string>context</string>
                             <string>portal</string>
+                            <string>km_web_site</string>
                             <string>_getiter_</string>
                             <string>reference</string>
                             <string>km_page</string>

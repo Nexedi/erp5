@@ -49,7 +49,7 @@ class OpenOrderRule(DeliveryRule):
 
   # Simulation workflow
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, applied_rule, force=0, **kw):
+  def expand(self, applied_rule, force=0, calculation_base_date=None, **kw):
     """
       Expands the Order to a new simulation tree.
       expand is only allowed to modify a simulation movement if it doesn't
@@ -71,12 +71,16 @@ class OpenOrderRule(DeliveryRule):
         portal_type=order.getPortalOrderMovementTypeList())
 
       now = DateTime()
+      passed_calculation_base_date = calculation_base_date
       for order_movement in order_movement_list:
-        end_date = order_movement.getStopDate() - order.getForecastingTermDayCount()
-        if end_date > now:
-          calculation_base_date = now
+        if passed_calculation_base_date is None:
+          end_date = order_movement.getStopDate() - order.getForecastingTermDayCount()
+          if end_date > now:
+            calculation_base_date = now
+          else:
+            calculation_base_date = end_date
         else:
-          calculation_base_date = end_date
+          calculation_base_date = passed_calculation_base_date
         last_simulation_movement = self._getLastSimulationMovementValue(applied_rule, order_movement)
         if last_simulation_movement is not None:
           schedule_start_date = last_simulation_movement.getStartDate()

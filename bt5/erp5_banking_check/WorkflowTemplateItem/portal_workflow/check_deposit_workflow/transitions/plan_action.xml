@@ -45,7 +45,7 @@
         </item>
         <item>
             <key> <string>script_name</string> </key>
-            <value> <string>validateConsistency</string> </value>
+            <value> <string>validatePlanActionConsistency</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

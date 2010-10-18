@@ -101,6 +101,17 @@ except ImportError:
   def getTransactionalVariable():
     return {}
 
+def getInstanceID(instance):
+  # XXX: getPhysicalPath is overkill for a unique cache identifier.
+  # What I would like to use instead of it is:
+  #   (self._p_jar.db().database_name, self._p_oid)
+  # but database_name is not unique in at least ZODB 3.4 (Zope 2.8.8).
+  return instance.getPhysicalPath()
+
+def generateCatalogCacheId(method_id, self, *args, **kwd):
+  return str((method_id, self.getCacheSequenceNumber(), getInstanceID(self),
+    args, kwd))
+
 class transactional_cache_decorator:
   """
     Implements singleton-style caching.
@@ -112,7 +123,10 @@ class transactional_cache_decorator:
   def __call__(self, method):
     def wrapper(wrapped_self):
       transactional_cache = getTransactionalVariable()
-      cache_id = self.cache_id
+      cache_id = str((self.cache_id,
+        wrapped_self.getCacheSequenceNumber(),
+        getInstanceID(wrapped_self),
+      ))
       try:
         result = transactional_cache[cache_id]
       except KeyError:
@@ -585,6 +599,8 @@ class Catalog(Folder,
   manage_catalogFind = DTMLFile('dtml/catalogFind',globals())
   manage_catalogAdvanced = DTMLFile('dtml/catalogAdvanced', globals())
 
+  _cache_sequence_number = 0
+
   def __init__(self, id, title='', container=None):
     if container is not None:
       self=self.__of__(container)
@@ -594,6 +610,12 @@ class Catalog(Folder,
     self.names = {}   # mapping from column to attribute name
     self.indexes = {}   # empty mapping
     self.filter_dict = PersistentMapping()
+
+  def getCacheSequenceNumber(self):
+    return self._cache_sequence_number
+
+  def _clearCaches(self):
+    self._cache_sequence_number += 1
 
   def getSQLCatalogRoleKeysList(self):
     """
@@ -829,6 +851,7 @@ class Catalog(Folder,
       self.insertMaxUid()
 
     self._clearSecurityCache()
+    self._clearCaches()
 
   def insertMaxUid(self):
     """
@@ -934,7 +957,9 @@ class Catalog(Folder,
     return tuple(result_list)
 
   @caching_instance_method(id='SQLCatalog.getColumnIds',
-                           cache_factory='erp5_content_long')
+    cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
+  )
   def _getColumnIds(self):
     keys = set()
     add_key = keys.add
@@ -961,7 +986,10 @@ class Catalog(Folder,
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog.getColumnMap')
   @profiler_decorator
-  @caching_instance_method(id='SQLCatalog.getColumnMap', cache_factory='erp5_content_long')
+  @caching_instance_method(id='SQLCatalog.getColumnMap',
+    cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
+  )
   @profiler_decorator
   def getColumnMap(self):
     """
@@ -975,6 +1003,14 @@ class Catalog(Folder,
         result.setdefault('%s.%s' % (table, field), []).append(table) # Is this inconsistent ?
     return result
 
+  @profiler_decorator
+  @transactional_cache_decorator('SQLCatalog.getColumnIds')
+  @profiler_decorator
+  @caching_instance_method(id='SQLCatalog.getColumnIds',
+    cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
+  )
+  @profiler_decorator
   def getResultColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -989,6 +1025,14 @@ class Catalog(Folder,
     keys.sort()
     return keys
 
+  @profiler_decorator
+  @transactional_cache_decorator('SQLCatalog.getSortColumnIds')
+  @profiler_decorator
+  @caching_instance_method(id='SQLCatalog.getSortColumnIds',
+      cache_factory='erp5_content_long',
+      cache_id_generator=generateCatalogCacheId,
+  )
+  @profiler_decorator
   def getSortColumnIds(self):
     """
     Calls the show column method and returns dictionnary of
@@ -1816,7 +1860,9 @@ class Catalog(Folder,
     return self.sql_catalog_scriptable_keys
 
   @caching_instance_method(id='SQLCatalog.getTableIndex',
-                           cache_factory='erp5_content_long')
+    cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
+  )
   def _getTableIndex(self, table):
     table_index = {}
     method = getattr(self, self.sql_catalog_index, '')
@@ -2256,7 +2302,10 @@ class Catalog(Folder,
   @profiler_decorator
   @transactional_cache_decorator('SQLCatalog._getSearchKeyDict')
   @profiler_decorator
-  @caching_instance_method(id='SQLCatalog._getSearchKeyDict', cache_factory='erp5_content_long')
+  @caching_instance_method(id='SQLCatalog._getSearchKeyDict',
+    cache_factory='erp5_content_long',
+    cache_id_generator=generateCatalogCacheId,
+  )
   @profiler_decorator
   def _getSearchKeyDict(self):
     result = {}

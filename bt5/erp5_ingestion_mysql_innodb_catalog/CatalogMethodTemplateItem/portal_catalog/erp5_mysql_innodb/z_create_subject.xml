@@ -86,7 +86,7 @@
   uid BIGINT UNSIGNED NOT NULL,\n
   subject VARCHAR(255),\n
   PRIMARY KEY `uid` (`uid`),\n
-  KEY `allowedRolesAndUsers` (`Subject`)\n
+  KEY `subject` (`subject`)\n
 ) TYPE=InnoDB; \n
 </string> </value>
         </item>
@@ -128,7 +128,7 @@
   uid BIGINT UNSIGNED NOT NULL,\n
   subject VARCHAR(255),\n
   PRIMARY KEY `uid` (`uid`),\n
-  KEY `allowedRolesAndUsers` (`Subject`)\n
+  KEY `subject` (`subject`)\n
 ) TYPE=InnoDB; \n
 </string> </value>
                     </item>

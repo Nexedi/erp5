@@ -34,10 +34,32 @@ For example:
 
   svn co https://svn.erp5.org/repos/public/erp5/trunk/buildout/ ~/erp5.buildout
 
-Run the Zope 2.12 buildout:
-
   $ cd ~/erp5.buildout
-  $ python2.6 -S bootstrap/bootstrap.py -v 1.4.4 -c buildout-2.12.cfg
+
+Bootstrap buildout
+~~~~~~~~~~~~~~~~~~
+
+Download the newest bootstrap.py file from:
+  http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py
+
+And run it:
+
+  $ python2.6 -S bootstrap.py -c buildout-2.12.cfg
+
+WARNING: please read "Troubleshooting" section bellow, you may need to
+unset environment variables in your GNU/Linux distribution
+
+If curl or wget are available, it can be done in one line:
+
+in case of curl:
+  $ curl -s http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python2.6 -S - -c buildout-2.12.cfg
+
+in case of wget:
+  $ wget -q  -O - http://svn.zope.org/*checkout*/zc.buildout/trunk/bootstrap/bootstrap.py | python2.6 -S - -c buildout-2.12.cfg
+
+Run the Zope 2.12 buildout
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
   $ bin/buildout -v -c buildout-2.12.cfg
 
 This will download and install the software components needed to run ERP5 on
@@ -123,11 +145,11 @@ $ bin/supervisord                   # 6
 Also, we need databases in the mysql server that correspond to both the ERP5
 instance we're going to create, and the testrunner we will want to run:
 
-$ var/bin/mysql -u root
+$ var/bin/mysql -h 127.0.0.1 -u root
 mysql> create database development_site;
 mysql> grant all privileges on development_site.* to 'development_user'@'localhost' identified by 'development_password';
 mysql> grant all privileges on development_site.* to 'development_user'@'127.0.0.1' identified by 'development_password';
-mysql> create database test212
+mysql> create database test212;
 mysql> grant all privileges on test212.* to 'test'@'localhost';
 mysql> grant all privileges on test212.* to 'test'@'127.0.0.1';
 
@@ -159,11 +181,7 @@ the 'zope-instance-template:user' variable.
 
 You should also be able to run ERP5 unit tests like so:
 
- $ bin/runUnitTest --erp5_sql_connection_string="test@127.0.0.1:10002 test" testBusinessTemplate
-
-The '127.0.0.1:10002' coordinate above refers to the address of the configured
-mysql instance, according to the settings 'configuration:mysql_host' and
-'configuration:mysql_port' in 'instance-profiles/mysql.cfg'.
+ $ bin/runUnitTest testClassTool
 
 Troubleshooting
 ===============

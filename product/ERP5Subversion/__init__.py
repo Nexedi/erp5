@@ -55,7 +55,9 @@ def initialize( context ):
                          content_classes = content_classes)
 
 from AccessControl.SecurityInfo import allow_module
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 
 allow_module('Products.ERP5Subversion.SubversionClient')
+ModuleSecurityInfo('Products.ERP5Subversion.Tool.SubversionTool').declarePublic('SubversionUnknownBusinessTemplateError')
 
 

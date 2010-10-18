@@ -98,12 +98,6 @@ if transaction.getTotalPrice(fast=0, portal_type = \'Check Operation Line\') != 
   msg = Message(domain=\'ui\', message="Total price doesn\'t match.")\n
   raise ValidationFailed, (msg,)\n
 \n
-# if manual validation, check overdreaft facility\n
-if state_change[\'transition\'].getId() == "wait_action":\n
-  context.checkAccountIsOverdraftFacility(state_change)\n
-    \n
-\n
-bank_account_dict = {}\n
 seen_check_dict = {}\n
 \n
 is_check_less = transaction.isCheckLess()\n
@@ -161,31 +155,7 @@ for check_operation_line in transaction.contentValues(filter = {\'portal_type\' 
     check = transaction.Base_checkCheck(bank_account=source_bank_account, reference=check_number,\n
                                 resource=check_type)\n
     if check_operation_line.getAggregate() != check.getRelativeUrl():\n
-      check_operation_line.edit(aggregate=check.getRelativeUrl())    \n
-  \n
-  # Test if the account balance is sufficient.\n
-  if state_change[\'transition\'].getId() == "plan_action":\n
-    account_path = source_bank_account.getRelativeUrl()\n
-    if bank_account_dict.has_key(account_path):\n
-      check_price = bank_account_dict[account_path] + check_operation_line.getPrice()      \n
-    else:\n
-      check_price = check_operation_line.getPrice()\n
-    bank_account_dict[account_path] = check_price\n
-    error = context.BankAccount_checkBalance(account_path, check_price)\n
-    if error[\'error_code\'] == 1:\n
-      msg = Message(domain=\'ui\', message="Bank account $account is not sufficient on line $line.",\n
-                    mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})\n
-      raise ValidationFailed, (msg,)\n
-    elif error[\'error_code\'] == 2:\n
-      msg = Message(domain=\'ui\', message="Bank account $account is not valid on $line.",\n
-                    mapping={"account": source_bank_account.getInternalBankAccountNumber(), "line" : check_operation_line.getId()})\n
-      raise ValidationFailed, (msg,)\n
-    elif error[\'error_code\'] != 0:\n
-      msg = Message(domain=\'ui\', message="Unknown error code.")\n
-      raise ValidationFailed, (msg,)\n
-\n
-if transaction.getSimulationState() == "draft" and state_change[\'transition\'].getId() == "plan_action":\n
-  context.createCheckDepositLine(state_change)\n
+      check_operation_line.edit(aggregate=check.getRelativeUrl())\n
 
 
 ]]></string> </value>
@@ -248,8 +218,6 @@ if transaction.getSimulationState() == "draft" and state_change[\'transition\'].
                             <string>msg</string>
                             <string>price</string>
                             <string>destination_bank_account</string>
-                            <string>context</string>
-                            <string>bank_account_dict</string>
                             <string>seen_check_dict</string>
                             <string>is_check_less</string>
                             <string>_getiter_</string>
@@ -261,9 +229,6 @@ if transaction.getSimulationState() == "draft" and state_change[\'transition\'].
                             <string>seen_check</string>
                             <string>_write_</string>
                             <string>check</string>
-                            <string>account_path</string>
-                            <string>check_price</string>
-                            <string>error</string>
                           </tuple>
                         </value>
                     </item>

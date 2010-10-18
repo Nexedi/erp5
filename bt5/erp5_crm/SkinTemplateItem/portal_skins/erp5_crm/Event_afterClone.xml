@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,7 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setData(None)\n
+            <value> <string># We must copy these properties as they are retrieved from data\n
+title = context.getTitle()\n
+content = context.getTextContent()\n
+type = context.getContentType()\n
+context.edit(title=title, text_content=content, content_type=type, data=None)\n
 </string> </value>
         </item>
         <item>
@@ -92,6 +93,9 @@
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>title</string>
+                            <string>content</string>
+                            <string>type</string>
                             <string>None</string>
                           </tuple>
                         </value>

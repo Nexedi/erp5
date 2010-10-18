@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -98,11 +95,9 @@
                       <list>
                         <string>my_title</string>
                         <string>my_reference</string>
+                        <string>my_rounded_property_id_list</string>
                         <string>my_decimal_rounding_option</string>
                         <string>my_precision</string>
-                        <string>my_decimal_exponent</string>
-                        <string>my_rounding_method_id</string>
-                        <string>my_rounded_property_id_list</string>
                       </list>
                     </value>
                 </item>
@@ -110,6 +105,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_rounding_method_id</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>

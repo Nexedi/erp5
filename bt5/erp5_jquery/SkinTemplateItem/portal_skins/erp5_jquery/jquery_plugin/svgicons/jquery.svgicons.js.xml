@@ -1,0 +1,501 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80003877.29</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>jquery.svgicons.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿/*\n
+ * SVG Icon Loader 2.0\n
+ *\n
+ * jQuery Plugin for loading SVG icons from a single file\n
+ *\n
+ * Copyright (c) 2009 Alexis Deveria\n
+ * http://a.deveria.com\n
+ *\n
+ * Apache 2 License\n
+\n
+How to use:\n
+\n
+1. Create the SVG master file that includes all icons:\n
+\n
+The master SVG icon-containing file is an SVG file that contains \n
+<g> elements. Each <g> element should contain the markup of an SVG\n
+icon. The <g> element has an ID that should \n
+correspond with the ID of the HTML element used on the page that should contain \n
+or optionally be replaced by the icon. Additionally, one empty element should be\n
+added at the end with id "svg_eof".\n
+\n
+2. Optionally create fallback raster images for each SVG icon.\n
+\n
+3. Include the jQuery and the SVG Icon Loader scripts on your page.\n
+\n
+4. Run $.svgIcons() when the document is ready:\n
+\n
+$.svgIcons( file [string], options [object literal]);\n
+\n
+File is the location of a local SVG or SVGz file.\n
+\n
+All options are optional and can include:\n
+\n
+- \'w (number)\': The icon widths\n
+\n
+- \'h (number)\': The icon heights\n
+\n
+- \'fallback (object literal)\': List of raster images with each\n
+\tkey being the SVG icon ID to replace, and the value the image file name.\n
+\t\n
+- \'fallback_path (string)\': The path to use for all images\n
+\tlisted under "fallback"\n
+\t\n
+- \'replace (boolean)\': If set to true, HTML elements will be replaced by,\n
+\trather than include the SVG icon.\n
+\n
+- \'placement (object literal)\': List with selectors for keys and SVG icon ids\n
+\tas values. This provides a custom method of adding icons.\n
+\n
+- \'resize (object literal)\': List with selectors for keys and numbers\n
+\tas values. This allows an easy way to resize specific icons.\n
+\t\n
+- \'callback (function)\': A function to call when all icons have been loaded. \n
+\tIncludes an object literal as its argument with as keys all icon IDs and the \n
+\ticon as a jQuery object as its value.\n
+\n
+- \'id_match (boolean)\': Automatically attempt to match SVG icon ids with\n
+\tcorresponding HTML id (default: true)\n
+\t\n
+- \'no_img (boolean)\': Prevent attempting to convert the icon into an <img>\n
+\telement (may be faster, help for browser consistency)\n
+\n
+- \'svgz (boolean)\': Indicate that the file is an SVGZ file, and thus not to\n
+\tparse as XML. SVGZ files add compression benefits, but getting data from\n
+\tthem fails in Firefox 2 and older.\n
+\n
+5. To access an icon at a later point without using the callback, use this:\n
+\t$.getSvgIcon(id (string));\n
+\n
+This will return the icon (as jQuery object) with a given ID.\n
+\t\n
+6. To resize icons at a later point without using the callback, use this:\n
+\t$.resizeSvgIcons(resizeOptions) (use the same way as the "resize" parameter)\n
+\n
+\n
+Example usage #1:\n
+\n
+$(function() {\n
+\t$.svgIcons(\'my_icon_set.svg\'); // The SVG file that contains all icons\n
+\t// No options have been set, so all icons will automatically be inserted \n
+\t// into HTML elements that match the same IDs. \n
+});\n
+\n
+Example usage #2:\n
+\n
+$(function() {\n
+\t$.svgIcons(\'my_icon_set.svg\', { // The SVG file that contains all icons\n
+\t\tcallback: function(icons) { // Custom callback function that sets click\n
+\t\t\t\t\t\t\t\t\t// events for each icon\n
+\t\t\t$.each(icons, function(id, icon) {\n
+\t\t\t\ticon.click(function() {\n
+\t\t\t\t\talert(\'You clicked on the icon with id \' + id);\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t}\n
+\t}); //The SVG file that contains all icons\n
+});\n
+\n
+Example usage #3:\n
+\n
+$(function() {\n
+\t$.svgIcons(\'my_icon_set.svgz\', { // The SVGZ file that contains all icons\n
+\t\tw: 32,\t// All icons will be 32px wide\n
+\t\th: 32,  // All icons will be 32px high\n
+\t\tfallback_path: \'icons/\',  // All fallback files can be found here\n
+\t\tfallback: {\n
+\t\t\t\'#open_icon\': \'open.png\',  // The "open.png" will be appended to the\n
+\t\t\t\t\t\t\t\t\t   // HTML element with ID "open_icon"\n
+\t\t\t\'#close_icon\': \'close.png\',\n
+\t\t\t\'#save_icon\': \'save.png\'\n
+\t\t},\n
+\t\tplacement: {\'.open_icon\',\'open\'}, // The "open" icon will be added\n
+\t\t\t\t\t\t\t\t\t\t  // to all elements with class "open_icon"\n
+\t\tresize: function() {\n
+\t\t\t\'#save_icon .svg_icon\': 64  // The "save" icon will be resized to 64 x 64px\n
+\t\t},\n
+\t\t\n
+\t\tcallback: function(icons) { // Sets background color for "close" icon \n
+\t\t\ticons[\'close\'].css(\'background\',\'red\');\n
+\t\t},\n
+\t\t\n
+\t\tsvgz: true // Indicates that an SVGZ file is being used\n
+\t\t\n
+\t})\n
+});\n
+\n
+*/\n
+\n
+\n
+(function($) {\n
+\tvar svg_icons = {};\n
+\n
+\t$.svgIcons = function(file, opts) {\n
+\t\tvar svgns = "http://www.w3.org/2000/svg",\n
+\t\t\txlinkns = "http://www.w3.org/1999/xlink",\n
+\t\t\ticon_w = opts.w?opts.w : 24,\n
+\t\t\ticon_h = opts.h?opts.h : 24,\n
+\t\t\telems, svgdoc, testImg,\n
+\t\t\ticons_made = false, data_loaded = false, load_attempts = 0,\n
+\t\t\tua = navigator.userAgent, isOpera = !!window.opera, isSafari = (ua.indexOf(\'Safari/\') > -1 && ua.indexOf(\'Chrome/\')==-1),\n
+\t\t\tdata_pre = \'data:image/svg+xml;charset=utf-8;base64,\';\n
+\t\t\t\n
+\t\t\tif(opts.svgz) {\n
+\t\t\t\tvar data_el = $(\'<object data="\' + file + \'" type=image/svg+xml>\').appendTo(\'body\').hide();\n
+\t\t\t\ttry {\n
+\t\t\t\t\tsvgdoc = data_el[0].contentDocument;\n
+\t\t\t\t\t// TODO: IE still loads this, shouldn\'t even bother.\n
+\t\t\t\t\tdata_el.load(getIcons);\n
+\t\t\t\t\tgetIcons(0, true); // Opera will not run "load" event if file is already cached\n
+\t\t\t\t} catch(err1) {\n
+\t\t\t\t\tuseFallback();\n
+\t\t\t\t}\n
+\t\t\t} else {\n
+\t\t\t\t$.ajax({\n
+\t\t\t\t\turl: file,\n
+\t\t\t\t\tdataType: \'xml\',\n
+\t\t\t\t\tsuccess: function(data) {\n
+\t\t\t\t\t\tsvgdoc = data;\n
+\t\t\t\t\t\t$(function() {\n
+\t\t\t\t\t\t\tgetIcons(\'ajax\');\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t},\n
+\t\t\t\t\terror: function(err) {\n
+\t\t\t\t\t\t// TODO: Fix Opera widget icon bug\n
+\t\t\t\t\t\tif(window.opera) {\n
+\t\t\t\t\t\t\t$(function() {\n
+\t\t\t\t\t\t\t\tuseFallback();\n
+\t\t\t\t\t\t\t});\n
+\t\t\t\t\t\t} else {\n
+\t\t\t\t\t\t\tif(err.responseXML) {\n
+\t\t\t\t\t\t\t\tsvgdoc = err.responseXML;\n
+\t\t\t\t\t\t\t\t$(function() {\n
+\t\t\t\t\t\t\t\t\tgetIcons(\'ajax\');\n
+\t\t\t\t\t\t\t\t});\t\t\t\t\t\t\t\n
+\t\t\t\t\t\t\t} \n
+\t\t\t\t\t\t}\n
+\t\t\t\t\t}\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\t\n
+\t\tfunction getIcons(evt, no_wait) {\n
+\t\t\tif(evt !== \'ajax\') {\n
+\t\t\t\tif(data_loaded) return;\n
+\t\t\t\t// Webkit sometimes says svgdoc is undefined, other times\n
+\t\t\t\t// it fails to load all nodes. Thus we must make sure the "eof" \n
+\t\t\t\t// element is loaded.\n
+\t\t\t\tsvgdoc = data_el[0].contentDocument; // Needed again for Webkit\n
+\t\t\t\tvar isReady = (svgdoc && svgdoc.getElementById(\'svg_eof\'));\n
+\t\t\t\tif(!isReady && !(no_wait && isReady)) {\n
+\t\t\t\t\tload_attempts++;\n
+\t\t\t\t\tif(load_attempts < 50) {\n
+\t\t\t\t\t\tsetTimeout(getIcons, 20);\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tuseFallback();\n
+\t\t\t\t\t\tdata_loaded = true;\n
+\t\t\t\t\t}\n
+\t\t\t\t\treturn;\n
+\t\t\t\t}\n
+\t\t\t\tdata_loaded = true;\n
+\t\t\t}\n
+\t\t\t// Clean source SVGs (mostly for Inkscape files)\n
+\t\t\t// TODO: Find a way to do this without crashing Safari (when converting to IMG)\n
+\t\t\t$(svgdoc).find(\'metadata\').remove().end()\n
+\t\t\t\t.find(\'*\').each(function(i, el) {\n
+\t\t\t\tif(el.nodeName.indexOf(\':\') != -1) {\n
+\t\t\t\t\t$(el).remove();\n
+\t\t\t\t}\n
+\t\t\t\tvar attrs = $.extend(false, el.attributes, {});\n
+\t\t\t\tfor(i in attrs) {\n
+\t\t\t\t\tvar attr = attrs[i];\n
+\t\t\t\t\tvar fullattr = attr.prefix?attr.prefix + \':\' + attr.localName:\'\';\n
+\t\t\t\t\tif(attr.prefix) {\n
+\t\t\t\t\t\tel.removeAttribute(attr.localName); // for Opera\n
+\t\t\t\t\t\tel.removeAttribute(fullattr); // for Webkit\n
+\t\t\t\t\t} \n
+\t\t\t\t\tif(fullattr == \'xlink:href\') {\n
+\t\t\t\t\t\tel.setAttribute(\'xlink:href\', attr.nodeValue);\n
+\t\t\t\t\t}\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t\telems = $(svgdoc.firstChild).children(); //.getElementsByTagName(\'foreignContent\');\n
+\t\t\tvar testSrc = data_pre + \'PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNzUiIGhlaWdodD0iMjc1Ij48L3N2Zz4%3D\';\n
+\t\t\t\n
+\t\t\ttestImg = $(new Image()).attr({\n
+\t\t\t\tsrc: testSrc,\n
+\t\t\t\twidth: 0,\n
+\t\t\t\theight: 0\n
+\t\t\t}).appendTo(\'body\')\n
+\t\t\t.load(function () {\n
+\t\t\t\t// Safari 4 crashes, Opera and Chrome don\'t\n
+\t\t\t\tmakeIcons(!isSafari);\n
+\t\t\t}).error(function () {\n
+\t\t\t\tmakeIcons();\n
+\t\t\t});\n
+\t\t}\n
+\t\t\n
+\t\tfunction makeIcons(toImage, fallback) {\n
+\t\t\tif(icons_made) return;\n
+\t\t\tif(opts.no_img) toImage = false;\n
+\t\t\tvar holder;\n
+\t\t\t\n
+\t\t\tvar setIcon = function(target, icon, id, setID) {\n
+\t\t\t\tif(isOpera) icon.css(\'visibility\',\'hidden\');\n
+\t\t\t\tif(opts.replace) {\n
+\t\t\t\t\tif(setID) icon.attr(\'id\',id);\n
+\t\t\t\t\tvar cl = target.attr(\'class\');\n
+\t\t\t\t\tif(cl) icon.attr(\'class\',\'svg_icon \'+cl);\n
+\t\t\t\t\ttarget.replaceWith(icon);\n
+\t\t\t\t} else {\n
+\t\t\t\t\t\n
+\t\t\t\t\ttarget.append(icon);\n
+\t\t\t\t}\n
+\t\t\t\tif(isOpera) {\n
+\t\t\t\t\tsetTimeout(function() {\n
+\t\t\t\t\t\ticon.attr(\'style\',\'visibility:visible;\');\n
+\t\t\t\t\t},1);\n
+\t\t\t\t}\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tvar addIcon = function(icon, id) {\n
+\t\t\t\tif(opts.id_match === undefined || opts.id_match !== false) {\n
+\t\t\t\t\tsetIcon(holder, icon, id, true);\n
+\t\t\t\t}\n
+\t\t\t\tsvg_icons[id] = icon;\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tif(toImage) {\n
+\t\t\t\tvar temp_holder = $(document.createElement(\'div\'));\n
+\t\t\t\ttemp_holder.hide().appendTo(\'body\');\n
+\t\t\t} \n
+\t\t\tif(fallback) {\n
+\t\t\t\tvar path = opts.fallback_path?opts.fallback_path:\'\';\n
+\t\t\t\t$.each(fallback, function(id, imgsrc) {\n
+\t\t\t\t\tholder = $(\'#\' + id);\n
+\t\t\t\t\tvar icon = $(new Image())\n
+\t\t\t\t\t\t.attr({\n
+\t\t\t\t\t\t\t\'class\':\'svg_icon\',\n
+\t\t\t\t\t\t\tsrc: path + imgsrc,\n
+\t\t\t\t\t\t\t\'width\': icon_w,\n
+\t\t\t\t\t\t\t\'height\': icon_h,\n
+\t\t\t\t\t\t\t\'alt\': \'icon\'\n
+\t\t\t\t\t\t});\n
+\t\t\t\t\t\n
+\t\t\t\t\taddIcon(icon, id);\n
+\t\t\t\t});\n
+\t\t\t} else {\n
+\t\t\t\t$.each(elems, function(i, elem) {\n
+\t\t\t\t\tvar id = elem.getAttribute(\'id\');\n
+\t\t\t\t\tif(id == \'svg_eof\') return;\n
+\t\t\t\t\tholder = $(\'#\' + id);\n
+\t\t\t\n
+\t\t\t\t\tvar svg = elem.getElementsByTagNameNS(svgns, \'svg\')[0];\n
+\t\t\t\t\tvar svgroot = svgdoc.createElementNS(svgns, "svg");\n
+\t\t\t\t\tsvgroot.setAttributeNS(svgns, \'viewBox\', [0,0,icon_w,icon_h].join(\' \'));\n
+\t\t\t\t\t\n
+\t\t\t\t\t// Make flexible by converting width/height to viewBox\n
+\t\t\t\t\tvar w = svg.getAttribute(\'width\');\n
+\t\t\t\t\tvar h = svg.getAttribute(\'height\');\n
+\t\t\t\t\tsvg.removeAttribute(\'width\');\n
+\t\t\t\t\tsvg.removeAttribute(\'height\');\n
+\t\t\t\t\t\n
+\t\t\t\t\tvar vb = svg.getAttribute(\'viewBox\');\n
+\t\t\t\t\tif(!vb) {\n
+\t\t\t\t\t\tsvg.setAttribute(\'viewBox\', [0,0,w,h].join(\' \'));\n
+\t\t\t\t\t}\n
+\t\t\t\t\t\n
+\t\t\t\t\t$(svgroot).attr({\n
+\t\t\t\t\t\t"xmlns": svgns,\n
+\t\t\t\t\t\t"width": icon_w,\n
+\t\t\t\t\t\t"height": icon_h,\n
+\t\t\t\t\t\t"xmlns:xlink": xlinkns,\n
+\t\t\t\t\t\t"class": \'svg_icon\'\n
+\t\t\t\t\t});\n
+\n
+\t\t\t\t\t// Without cloning, Firefox will make another GET request.\n
+\t\t\t\t\t// With cloning, causes issue in Opera/Win/Non-EN\n
+\t\t\t\t\tif(!isOpera) svg = svg.cloneNode(true);\n
+\t\t\t\t\t\n
+\t\t\t\t\tsvgroot.appendChild(svg);\n
+\t\t\t\n
+\t\t\t\t\tif(toImage) {\n
+\t\t\t\t\t\t// Without cloning, Safari will crash\n
+\t\t\t\t\t\t// With cloning, causes issue in Opera/Win/Non-EN\n
+\t\t\t\t\t\tvar svgcontent = isOpera?svgroot:svgroot.cloneNode(true);\n
+\t\t\t\t\t\ttemp_holder.empty().append(svgroot);\n
+\t\t\t\t\t\tvar str = data_pre + encode64(temp_holder.html());\n
+\t\t\t\t\t\tvar icon = $(new Image())\n
+\t\t\t\t\t\t\t.attr({\'class\':\'svg_icon\', src:str});\n
+\t\t\t\t\t} else {\n
+\t\t\t\t\t\tvar icon = fixIDs($(svgroot), i);\n
+\t\t\t\t\t}\n
+\t\t\t\t\taddIcon(icon, id);\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\t\n
+\t\t\tif(opts.placement) {\n
+\t\t\t\t$.each(opts.placement, function(sel, id) {\n
+\t\t\t\t\tif(!svg_icons[id]) return;\n
+\t\t\t\t\t$(sel).each(function(i) {\n
+\t\t\t\t\t\tvar copy = svg_icons[id].clone();\n
+\t\t\t\t\t\tif(i > 0 && !toImage) copy = fixIDs(copy, i, true);\n
+\t\t\t\t\t\tsetIcon($(this), copy, id);\n
+\t\t\t\t\t})\n
+\t\t\t\t});\n
+\t\t\t}\n
+\t\t\tif(!fallback) {\n
+\t\t\t\tif(toImage) temp_holder.remove();\n
+\t\t\t\tif(data_el) data_el.remove();\n
+\t\t\t\ttestImg.remove();\n
+\t\t\t}\n
+\n
+\t\t\tif(opts.resize) $.resizeSvgIcons(opts.resize);\n
+\n
+\t\t\ticons_made = true;\n
+\t\t\t\n
+\t\t\tif(opts.callback) opts.callback(svg_icons);\n
+\t\t\t\n
+\t\t}\n
+\t\t\n
+\t\tfunction fixIDs(svg_el, svg_num, force) {\n
+\t\t\tvar defs = svg_el.find(\'defs\');\n
+\t\t\tif(!defs.length) return svg_el;\n
+\t\t\t\n
+\t\t\tdefs.find(\'[id]\').each(function(i) {\n
+\t\t\t\tvar id = this.id;\n
+\t\t\t\tvar no_dupes = ($(svgdoc).find(\'#\' + id).length <= 1);\n
+\t\t\t\tif(isOpera) no_dupes = false; // Opera didn\'t clone svg_el, so not reliable\n
+\t\t\t\t// if(!force && no_dupes) return;\n
+\t\t\t\tvar new_id = \'x\' + id + svg_num + i;\n
+\t\t\t\t$(this).attr(\'id\', new_id);\t\t\t\n
+\t\n
+\t\t\t\tsvg_el.find(\'[fill="url(#\' + id + \')"]\').each(function() {\n
+\t\t\t\t\t$(this).attr(\'fill\', \'url(#\' + new_id + \')\');\n
+\t\t\t\t}).end().find(\'[stroke="url(#\' + id + \')"]\').each(function() {\n
+\t\t\t\t\t$(this).attr(\'stroke\', \'url(#\' + new_id + \')\');\n
+\t\t\t\t}).end().find(\'use\').each(function() {\n
+\t\t\t\t\tif(this.getAttribute(\'xlink:href\') == \'#\' + id) {\n
+\t\t\t\t\t\tthis.setAttributeNS(xlinkns,\'href\',\'#\' + new_id);\n
+\t\t\t\t\t}\n
+\t\t\t\t}).end().find(\'[filter="url(#\' + id + \')"]\').each(function() {\n
+\t\t\t\t\t$(this).attr(\'filter\', \'url(#\' + new_id + \')\');\n
+\t\t\t\t});\n
+\t\t\t});\n
+\t\t\treturn svg_el;\n
+\t\t}\n
+\t\t\n
+\t\tfunction useFallback() {\n
+\t\t\tif(file.indexOf(\'.svgz\') != -1) {\n
+\t\t\t\tvar reg_file = file.replace(\'.svgz\',\'.svg\');\n
+\t\t\t\tif(window.console) {\n
+\t\t\t\t\tconsole.log(\'.svgz failed, trying with .svg\');\n
+\t\t\t\t}\n
+\t\t\t\t$.svgIcons(reg_file, opts);\n
+\t\t\t} else if(opts.fallback) {\n
+\t\t\t\tmakeIcons(false, opts.fallback);\n
+\t\t\t}\n
+\t\t}\n
+\t\t\t\t\n
+\t\tfunction encode64(input) {\n
+\t\t\t// base64 strings are 4/3 larger than the original string\n
+\t\t\tif(window.btoa) return window.btoa(input);\n
+\t\t\tvar _keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";\n
+\t\t\tvar output = new Array( Math.floor( (input.length + 2) / 3 ) * 4 );\n
+\t\t\tvar chr1, chr2, chr3;\n
+\t\t\tvar enc1, enc2, enc3, enc4;\n
+\t\t\tvar i = 0, p = 0;\n
+\t\t\n
+\t\t\tdo {\n
+\t\t\t\tchr1 = input.charCodeAt(i++);\n
+\t\t\t\tchr2 = input.charCodeAt(i++);\n
+\t\t\t\tchr3 = input.charCodeAt(i++);\n
+\t\t\n
+\t\t\t\tenc1 = chr1 >> 2;\n
+\t\t\t\tenc2 = ((chr1 & 3) << 4) | (chr2 >> 4);\n
+\t\t\t\tenc3 = ((chr2 & 15) << 2) | (chr3 >> 6);\n
+\t\t\t\tenc4 = chr3 & 63;\n
+\t\t\n
+\t\t\t\tif (isNaN(chr2)) {\n
+\t\t\t\t\tenc3 = enc4 = 64;\n
+\t\t\t\t} else if (isNaN(chr3)) {\n
+\t\t\t\t\tenc4 = 64;\n
+\t\t\t\t}\n
+\t\t\n
+\t\t\t\toutput[p++] = _keyStr.charAt(enc1);\n
+\t\t\t\toutput[p++] = _keyStr.charAt(enc2);\n
+\t\t\t\toutput[p++] = _keyStr.charAt(enc3);\n
+\t\t\t\toutput[p++] = _keyStr.charAt(enc4);\n
+\t\t\t} while (i < input.length);\n
+\t\t\n
+\t\t\treturn output.join(\'\');\n
+\t\t}\n
+\t}\n
+\t\n
+\t$.getSvgIcon = function(id) { return svg_icons[id]; }\n
+\t\n
+\t$.resizeSvgIcons = function(obj) {\n
+\t\t// FF2 and older don\'t detect .svg_icon, so we change it detect svg elems instead\n
+\t\tvar change_sel = !$(\'.svg_icon:first\').length;\n
+\t\t$.each(obj, function(sel, size) {\n
+\t\t\tvar arr = $.isArray(size);\n
+\t\t\tvar w = arr?size[0]:size,\n
+\t\t\t\th = arr?size[1]:size;\n
+\t\t\tif(change_sel) {\n
+\t\t\t\tsel = sel.replace(/\\.svg_icon/g,\'svg\');\n
+\t\t\t}\n
+\t\t\t$(sel).each(function() {\n
+\t\t\t\tthis.setAttribute(\'width\', w);\n
+\t\t\t\tthis.setAttribute(\'height\', h);\n
+\t\t\t\tif(window.opera && window.widget) {\n
+\t\t\t\t\tthis.parentNode.style.width = w + \'px\';\n
+\t\t\t\t\tthis.parentNode.style.height = h + \'px\';\n
+\t\t\t\t}\n
+\t\t\t});\n
+\t\t});\n
+\t}\n
+\t\n
+})(jQuery);\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>13548</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

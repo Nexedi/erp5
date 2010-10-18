@@ -51,6 +51,7 @@ from AccessControl.ZopeGuards import guarded_getattr, guarded_hasattr
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.utils import removeZODBPythonScript
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class PropertySheetTestCase(ERP5TypeTestCase):
   """Base test case class for property sheets tests.
@@ -1278,7 +1279,56 @@ class TestPropertySheet:
       self.assertEquals(email.getDefaultAvailableLanguage(), 'ja')
       self.assertEquals(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
 
+    NAME_INCLUDED_PROPERTY_PERSON = '''
+          { 'id':         'name_included_in_address',
+            'type':       'boolean',
+            'default'     : True,
+            'mode':       'rw', }
+    '''
+    NAME_INCLUDED_PROPERTY_EMAIL = '''
+          { 'id':         'name_included_in_address',
+            'type':       'boolean',
+            'default'     : True,
+            'acquired_property_id': ('name_included_in_address', ),
+            'acquisition_base_category': ( 'parent', ),
+            'acquisition_portal_type'  : ( 'Person', ),
+            'acquisition_copy_value'   : 0,
+            'acquisition_mask_value'   : 1,
+            'acquisition_accessor_id'  : 'getNameIncludedInAddress',
+            'acquisition_depends'      : None,
+            'mode':       'rw', }
+    '''
 
+    @expectedFailure
+    def test_19d_AcquiredBooleanAccessor(self):
+      """Tests acquired boolean accessor.
+      Boolean accessors generate both an getPropertyName and an isPropertyName
+      Check in particular that both behave the same way regarding acquisition
+      """
+      self._addProperty('Person', self.NAME_INCLUDED_PROPERTY_PERSON)
+      self._addProperty('Email', self.NAME_INCLUDED_PROPERTY_EMAIL)
+
+      person = self.getPersonModule().newContent(portal_type='Person')
+      email = person.newContent(portal_type='Email')
+
+      self.assertTrue(person.getNameIncludedInAddress())
+      self.assertTrue(person.isNameIncludedInAddress())
+      self.assertTrue(email.getNameIncludedInAddress())
+      self.assertTrue(email.isNameIncludedInAddress())
+      # setting the property on the acquisition target should be reflected on
+      # the object acquiring the value
+      person.setNameIncludedInAddress(False)
+      self.assertFalse(person.getNameIncludedInAddress())
+      self.assertFalse(person.isNameIncludedInAddress())
+      self.assertFalse(email.getNameIncludedInAddress())
+      self.assertFalse(email.isNameIncludedInAddress())
+      # setting the property on the acquiring object should mask the value on
+      # the acquisition target.
+      email.setNameIncludedInAddress(True)
+      self.assertFalse(person.getNameIncludedInAddress())
+      self.assertFalse(person.isNameIncludedInAddress())
+      self.assertTrue(email.getNameIncludedInAddress())
+      self.assertTrue(email.isNameIncludedInAddress())
 
     def test_20_AsContext(self):
       """asContext method return a temporary copy of an object.
@@ -1288,6 +1338,9 @@ class TestPropertySheet:
       obj.setTitle('obj title')
       copy = obj.asContext()
       self.assertTrue(copy.isTempObject(), '%r is not a temp object' % (copy,))
+      self.assertEquals(obj, copy.getOriginalDocument())
+      self.assertEquals(obj.absolute_url(),
+                        copy.getOriginalDocument().absolute_url())
       copy.setTitle('copy title')
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
@@ -1621,6 +1674,7 @@ class TestPropertySheet:
       from Products.ERP5Type.Document import newTempPerson
       o = newTempPerson(portal, 'temp_person_1')
       self.assertTrue(o.isTempObject())
+      self.assertEquals(o.getOriginalDocument(), None)
 
       # This should generate a workflow method.
       self.assertEquals(o.getValidationState(), 'draft')
@@ -2776,7 +2830,7 @@ class TestPropertySheet:
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
   # when this one fails.
-  expression = 'python: here.getPortalType() or 1'
+  expression = 'python: context.getPortalType() or 1'
 
   def getTitle(self):
     return "ERP5Type"

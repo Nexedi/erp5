@@ -1,0 +1,197 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80003299.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lang.pt-BR.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>[\n
+{"id":"layer_new","title":"Nova Camada"},\n
+{"id":"layer_delete","title":"Deletar Camada"},\n
+{"id":"layer_rename","title":"Renomear Camada"},\n
+{"id":"layer_up","title":"Camada para Cima"},\n
+{"id":"layer_down","title":"Camada para baixo"},\n
+{"id":"tool_clear","title":"Nova Imagem"},\n
+{"id":"tool_open","title":"Abrir Imagem"},\n
+{"id":"tool_save","title":"Salvar Imagem"},\n
+{"id":"tool_docprops","title":"Propriedades"},\n
+{"id":"tool_source","title":"Código"},\n
+{"id":"tool_undo","title":"Desfazer"},\n
+{"id":"tool_redo","title":"Refazer"},\n
+{"id":"tool_clone","title":"Duplicar Elemento"},\n
+{"id":"tool_delete","title":"Excluir Elemento"},\n
+{"id":"tool_move_top","title":"Mover para Cima"},\n
+{"id":"tool_move_bottom","title":"Mover para Baixo"},\n
+{"id":"group_opacity","title":"Mudar a opacidade"},\n
+{"id":"angle","title":"Ângulo de rotação"},\n
+{"id":"tool_clone_multi","title":"Duplicar Elementos"},\n
+{"id":"tool_delete_multi","title":"Eliminar Elementos"},\n
+{"id":"tool_alignleft","title":"Alinhar à Esquerda"},\n
+{"id":"tool_aligncenter","title":"Alinhar ao centro"},\n
+{"id":"tool_alignright","title":"Alinhar à Direita"},\n
+{"id":"tool_aligntop","title":"Alinhar Acima"},\n
+{"id":"tool_alignmiddle","title":"Alinhar no Méio"},\n
+{"id":"tool_alignbottom","title":"Alinhar Abaixo"},\n
+{"id":"align_relative_to","title":"Alinhar em relação a ..."},\n
+{"id":"tool_group","title":"Agrupar"},\n
+{"id":"tool_ungroup","title":"Desagrupar"},\n
+{"id":"rect_width","title":"Alterar a largura retângulo"},\n
+{"id":"rect_height","title":"Alterar altura do retângulo"},\n
+{"id":"rect_rx","title":"Radio do chanfro"},\n
+{"id":"image_width","title":"Alterar a largura da imagem"},\n
+{"id":"image_height","title":"Alterar altura da imagem"},\n
+{"id":"image_url","title":"Alterar caminho URL"},\n
+{"id":"circle_cx","title":"Ponto horizontal do centro cx"},\n
+{"id":"circle_cy","title":"Ponto Vertical do centro cy"},\n
+{"id":"circle_r","title":"Alterar raio"},\n
+{"id":"ellipse_cx","title":"Ponto horizontal do centro cx"},\n
+{"id":"ellipse_cy","title":"Ponto Vertical do centro cy"},\n
+{"id":"ellipse_rx","title":"Alterar raio horizontal"},\n
+{"id":"ellipse_ry","title":"Alterar raio vertical"},\n
+{"id":"line_x1","title":"Ponto horizontal do início da linha x1"},\n
+{"id":"line_y1","title":"Ponto vertical do início da linha y1"},\n
+{"id":"line_x2","title":"Ponto horizontal do fim da linha x2"},\n
+{"id":"line_y2","title":"Ponto vertical do fim da linha y2"},\n
+{"id":"tool_bold","title":"Negrito"},\n
+{"id":"tool_italic","title":"Itálico"},\n
+{"id":"font_family","title":"Fonte"},\n
+{"id":"font_size","title":"Alterar tamanho da fonte"},\n
+{"id":"text","title":"Alterar o conteúdo do texto"},\n
+{"id":"tool_select","title":"Seleção"},\n
+{"id":"tool_fhpath","title":"Lápis"},\n
+{"id":"tool_line","title":"Linha"},\n
+{"id":"tools_rect_show","title":"Quadrado / Retângulo"},\n
+{"id":"tools_ellipse_show","title":"Elipse / Círculo"},\n
+{"id":"tool_text","title":"Texto"},\n
+{"id":"tool_path","title":"Área"},\n
+{"id":"tool_image","title":"Imagem"},\n
+{"id":"tool_zoom","title":"Zoom"},\n
+{"id":"zoom","title":"Alterar o zoom"},\n
+{"id":"fill_color","title":"Cor do preenchimento"},\n
+{"id":"stroke_color","title":"Cor do contorno"},\n
+{"id":"stroke_width","title":"Alterar a largura do contorno"},\n
+{"id":"stroke_style","title":"Alterar o estilo do contorno"},\n
+{"id":"palette","title":"Clique para mudar a cor do preenchimento, Shift + Clique para mudar a cor do contorno"},\n
+{"id":"tool_square","title":"Quadrado"},\n
+{"id":"tool_rect","title":"Retângulo"},\n
+{"id":"tool_fhrect","title":"Retangulo à mão-livre"},\n
+{"id":"tool_circle","title":"Circle"},\n
+{"id":"tool_ellipse","title":"Elipse"},\n
+{"id":"tool_fhellipse","title":"Elipse à mão-livre"},\n
+{"id":"bkgnd_color","title":"Mudar a cor de fundo / opacidade"},\n
+{"id":"rwidthLabel","textContent":"largura:"},\n
+{"id":"rheightLabel","textContent":"altura:"},\n
+{"id":"cornerRadiusLabel","textContent":"Raio:"},\n
+{"id":"iwidthLabel","textContent":"largura:"},\n
+{"id":"iheightLabel","textContent":"altura:"},\n
+{"id":"svginfo_width","textContent":"Largura:"},\n
+{"id":"svginfo_height","textContent":"Altura:"},\n
+{"id":"angleLabel","textContent":"ângulo:"},\n
+{"id":"relativeToLabel","textContent":"em relação ao:"},\n
+{"id":"zoomLabel","textContent":"zoom:"},\n
+{"id":"layersLabel","textContent":"Camadas:"},\n
+{"id":"selectedPredefined","textContent":"Selecionar predefinidos:"},\n
+{"id":"fitToContent","textContent":"Ajustar ao conteúdo"},\n
+{"id":"tool_source_save","textContent":"Salvar"},\n
+{"id":"tool_docprops_save","textContent":"Salvar"},\n
+{"id":"tool_docprops_cancel","textContent":"Cancelar"},\n
+{"id":"tool_source_cancel","textContent":"Cancelar"},\n
+{"id":"fit_to_all","textContent":"Ajustar a todo o conteúdo"},\n
+{"id":"fit_to_layer_content","textContent":"Ajustar ao conteúdo da camada"},\n
+{"id":"fit_to_sel","textContent":"Ajustar à seleção"},\n
+{"id":"fit_to_canvas","textContent":"Ajustar à tela"},\n
+{"id":"selected_objects","textContent":"objetos selecionados"},\n
+{"id":"largest_object","textContent":"maior objeto"},\n
+{"id":"smallest_object","textContent":"menor objeto"},\n
+{"id":"page","textContent":"Página"},\n
+{"id":"fill_tool_bottom","textContent":"Preenchimento:"},\n
+{"id":"stroke_tool_bottom","textContent":"Contorno:"},\n
+{"id":"path_node_x","title":"Coordenada do ponto x"},\n
+{"id":"path_node_y","title":"Coordenada do ponto y"},\n
+{"id":"seg_type","title":"Mudar Tipo de segmento"},\n
+{"id":"straight_segments","textContent":"Reta"},\n
+{"id":"curve_segments","textContent":"Curva"},\n
+{"id":"tool_node_clone","title":"Duplicar ponto"},\n
+{"id":"tool_node_delete","title":"Deletar ponto"},\n
+{"id":"selLayerLabel","textContent":"Mover elementos para:"},\n
+{"id":"selLayerNames","title":"Mover elementos selecionados para outra camada"},\n
+{"id":"sidepanel_handle","title":"Arraste para os lados para alterar a largura","textContent":"C a m a d a s"},\n
+{"id":"tool_wireframe","title":"Modo Somente Contornos"},\n
+{"id":"svginfo_image_props","textContent":"Propriedades da Imagem"},\n
+{"id":"svginfo_title","textContent":"Título"},\n
+{"id":"svginfo_dim","textContent":"Dimensões"},\n
+{"id":"includedImages","textContent":"Imagens incluídas"},\n
+{"id":"image_opt_embed","textContent":"Embutir dados (arquivos locais)"},\n
+{"id":"image_opt_ref","textContent":"Usar referência a arquivo"},\n
+{"id":"svginfo_editor_prefs","textContent":"Preferências"},\n
+{"id":"svginfo_lang","textContent":"Idioma"},\n
+{"id":"svginfo_change_background","textContent":"Mudar fundo"},\n
+{"id":"svginfo_bg_note","textContent":"Aviso: Fundo não será salvo com a imagem."},\n
+{"id":"svginfo_icons","textContent":"Tamanho do ícone"},\n
+{"id":"icon_small","textContent":"Pequeno"},\n
+{"id":"icon_medium","textContent":"Medio"},\n
+{"id":"icon_large","textContent":"Grande"},\n
+{"id":"icon_xlarge","textContent":"Extra"},\n
+{"id":"selected_x","title":"Mudar coodenada x"},\n
+{"id":"selected_y","title":"Mudar coodenada y"},\n
+{"id":"tool_topath","title":"Mudar para Área"},\n
+{"id":"tool_reorient","title":"Reorientar Área"},\n
+{"id":"tool_node_link","title":"Alinhar ponto de controle da curva"},\n
+{"js_strings": {\n
+\t"invalidAttrValGiven":"Valor inválido",\n
+\t"noContentToFitTo":"Sem conteúdo",\n
+\t\'layer\':"Camada",\n
+\t"dupeLayerName":"Já existe uma camada com esse nome",\n
+\t"enterUniqueLayerName":"Por favor, insira um nome único",\n
+\t"enterNewLayerName":"Por favor, insira o nome da nova camada",\n
+\t"layerHasThatName":"A camada já possui este nome",\n
+\t"QmoveElemsToLayer":"Mover os elementos selecionados para a camada: \'%s\'?",\n
+\t"QwantToClear":"Deseja apagar o desenho?\\nIsso também vai limpar o histórico!",\n
+\t"QerrorsRevertToSource":"Foram encontrados erros no seu código SVG.\\nVoltar para o código SVG original?",\n
+\t"QignoreSourceChanges":"Ignorar mudanças no código SVG?",\n
+\t"featNotSupported":"Recurso não suportado",\n
+\t"enterNewImgURL":"Insirao caminho URL da imagem",\n
+\t"ok":"Ok",\n
+\t"cancel":"Cancelar",\n
+\t"pathNodeTooltip":"Arraste o ponto para move-lo. \\nDuplo-click para mudar o tipo de segmento (Reta / Curva)",\n
+\t"pathCtrlPtTooltip":"Arraste ponto de controle da curva para alterar suas propriedades",\n
+\t"key_up":"seta pra cima",\n
+\t"key_down":"seta pra baixo",\n
+\t"key_backspace":"backspace",\n
+\t"key_del":"delete"\n
+\t}\n
+}\n
+]\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8089</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

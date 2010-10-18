@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -45,6 +42,7 @@
            preferences  box/KnowledgeBox_getDefaultPreferencesDict;\n
            actions python:getattr(context,\'portal_workflow\').listActionInfos();\n
            absolute_url  context/absolute_url;\n
+           portal_url context/portal_url;\n
            box_id python: \'visual_\'+str(box.getId())">\n
 \n
 <div class="worklist_list">\n
@@ -65,9 +63,7 @@
     <li tal:repeat="action actions"\n
         tal:attributes="id python:\'li\'+box_id+\'_\'+str(repeat[\'action\'].index)">\n
       <tal:block >\n
-        <a onmouseover="this.style.backgroundColor=\'#ECECEC\';" \n
-           onmouseout="this.style.backgroundColor=\'inherit\';"\n
-           tal:attributes="onclick python:\'div=$(\\\'div_\'+box.getId()+\'_\'+str(repeat[\'action\'].index)+\'\\\');;if(getElementsByTagAndClassName(\\\'table\\\',\\\'listbox\\\',div)!=\\\'\\\'){this.style.fontWeight=\\\'normal\\\';;while(div.childNodes[0]){div.removeChild(div.childNodes[0])}}else{this.style.fontWeight=\\\'bold\\\';;\'+context.KnowledgePad_generateAjaxCall(absolute_url+\'/ERP5Site_viewWorklist\',box,\'div_\'+box.getId()+\'_\'+str(repeat[\'action\'].index),{\'worklist\':action[\'workflow_id\']+\'/\'+action[\'worklist_id\'], \'dom_id\':\'div_\'+box.getId()+\'_\'+str(repeat[\'action\'].index)})+\'}\'" \n
+        <a tal:attributes="href python: absolute_url+action[\'url\'][len(portal_url):]"\n
            tal:content="action/title"></a>\n
         <div tal:attributes="id python:\'div_\'+box.getId()+\'_\'+str(repeat[\'action\'].index)"></div>\n
       </tal:block>\n
@@ -75,7 +71,8 @@
   </ul>\n
 \n
 </div>\n
-</tal:block>
+</tal:block>\n
+
 
 ]]></string> </value>
         </item>

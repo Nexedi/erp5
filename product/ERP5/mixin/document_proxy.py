@@ -67,4 +67,3 @@ class DocumentProxyMixin:
     if proxied_document is None:
       raise DocumentProxyError("Unable to find a proxied document")
     return proxied_document
- 

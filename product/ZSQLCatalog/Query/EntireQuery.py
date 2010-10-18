@@ -46,7 +46,7 @@ class EntireQuery(object):
   """
     This is not a Query subclass, since it does not define a
     registerColumnMap method, and instead does the ColumnMap handling
-    internaly.
+    internally.
   """
 
   implements(IEntireQuery)

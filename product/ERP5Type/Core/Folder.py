@@ -33,7 +33,6 @@ from Acquisition import aq_base, aq_parent, aq_inner
 from OFS.History import Historical
 import ExtensionClass
 
-from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
 from Products.CMFCore.CMFCatalogAware import CMFCatalogAware
 from Products.CMFCore.PortalFolder import ContentFilter
@@ -1553,7 +1552,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
   def _verifyObjectPaste(self, object, validate_src=1):
     # To paste in an ERP5Type folder, we need to check 'Add permission'
     # that might be defined on the sub object type information.
-    pt = getToolByName(self, 'portal_types')
+    pt = self.getPortalObject().portal_types
     subobject_type = pt.getTypeInfo(object)
     if subobject_type is not None:
       sm = getSecurityManager()
@@ -1592,10 +1591,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         CMF 2.2
     """
     ti = self.getTypeInfo()
-    utool = getToolByName(self, 'portal_url')
+    url = self.getPortalObject().portal_url()
     if ti is None:
-      return '%s/misc_/OFSP/dtmldoc.gif' % utool()
-    return '%s/%s' % (utool(), ti.getTypeIcon())
+      return '%s/misc_/OFSP/dtmldoc.gif' % url
+    return '%s/%s' % (url, ti.getTypeIcon())
 
 # We browse all used class from btree and hbtree and set not implemented
 # class if one method defined on a class is not defined on other, thus if

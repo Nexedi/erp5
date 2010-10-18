@@ -2,16 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>web_site_user_ram_cache</string> </value>
+            <value> <string>web_section_user_ram_cache</string> </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -53,20 +50,27 @@
 <tal:block tal:define="current_web_site python:request.get(\'current_web_site\', here);\n
                        portal_path python:request.get(\'current_web_site_url\', current_web_site.absolute_url());\n
                        available_language_list current_web_site/getAvailableLanguageList;\n
-                       language_list current_web_site/Localizer/get_languages_map;"\n
+                       language_list current_web_site/Localizer/get_languages_map;\n
+                       display_language_icons python:here.getLayoutProperty(\'layout_display_language_icons\', True);"\n
            tal:condition="python:len(language_list) > 1">\n
+\n
   <ul class="language_box">\n
     <tal:block tal:repeat="language language_list">\n
       <li tal:define="language_id language/id"\n
           tal:condition="python:language_id in available_language_list">\n
         <a href="" class="selected"\n
             tal:attributes="href string:${portal_path}/Base_doLanguage?select_language=${language_id};\n
-                            class python:int(language[\'selected\']) * \'selected\' or \'not_selected\'">\n
-          <img alt="language/id" src="${portal_path}/km_img/icon_lang_en.png"\n
-               tal:define="title python:here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])"\n
+                            class python:int(language[\'selected\']) * \'selected\' or \'not_selected\'"\n
+            tal:define="title python:here.Localizer.erp5_ui.gettext(language[\'title\'], lang=language[\'id\'])">\n
+          <img src="${portal_path}/km_img/icon_lang_en.png"\n
+               tal:condition="display_language_icons"\n
                tal:attributes="src string:${portal_path}/km_img/icon_lang_${language_id}.png;\n
                                title title;\n
                                alt title" />\n
+          <span tal:condition="not: display_language_icons"\n
+                tal:content="language_id"\n
+                tal:attributes="title title;\n
+                                alt title"/>\n
         </a>\n
       </li>\n
     </tal:block>\n

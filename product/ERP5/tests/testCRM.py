@@ -365,6 +365,29 @@ class TestCRM(BaseTestCRM):
       self.assertEqual(new_event.getTextContent(), '> Event Content')
       self.assertEqual(new_event.getTitle(), 'Re: Event Title')
 
+  def test_SupportRequest_referenceAutomaticallyGenerated(self):
+    """
+      When you create or clone a Support Request document, it must 
+      have the reference generated automatically.
+    """
+    portal_type = "Support Request"
+    title = "Title of the Support Request"
+    content = "This is the content of the Support Request"
+    module = self.portal.support_request_module
+    support_request = module.newContent(portal_type=portal_type,
+                                        title=title,)
+    self.stepTic()
+
+    self.assertNotEquals(None, support_request.getReference())
+
+    new_support_request = support_request.Base_createCloneDocument(
+                                                                 batch_mode=1)
+    self.assertEquals(new_support_request.getTitle(), title)
+    self.assertNotEquals(None, support_request.getReference())
+    self.assertNotEquals(support_request.getReference(), 
+                                        new_support_request.getReference())
+
+
 
 class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.
@@ -442,6 +465,8 @@ class TestCRMMailIngestion(BaseTestCRM):
                                                         'person_module/he']),
       # multiple e-mails in the "Name" part that shouldn't be parsed
       ('"me@erp5.org,sender@customer.com," <he@erp5.org>', ['person_module/he']),
+      # capitalised version
+      ('"me@erp5.org,sEnder@CUSTOMER.cOm," <he@ERP5.OrG>', ['person_module/he']),
       # a < sign
       ('"He<" <he@erp5.org>', ['person_module/he']),
     )
@@ -497,6 +522,39 @@ class TestCRMMailIngestion(BaseTestCRM):
     destination_list.sort()
     self.assertEquals(['person_module/he', 'person_module/me'],
                       destination_list)
+
+  def test_clone(self):
+    # cloning an event must keep title and text-content
+    event = self._ingestMail('simple')
+    transaction.commit()
+    self.tic()
+    self.assertEquals('Simple Mail Test', event.getTitle())
+    self.assertEquals('Simple Mail Test', event.getTitleOrId())
+    self.assertEquals('Hello,\nContent of the mail.\n', str(event.asText()))
+    self.assertEquals('Hello,\nContent of the mail.\n', str(event.getTextContent()))
+    self.assertEquals('Mail Message', event.getPortalType())
+    self.assertEquals('text/plain', event.getContentType())
+    self.assertEquals('message/rfc822', event._baseGetContentType())
+    # check if parsing of metadata from content is working
+    content_dict = {'source_list': ['person_module/sender'],
+                    'destination_list': ['person_module/me',
+                                         'person_module/he']}
+    self.assertEquals(event.getPropertyDictFromContent(), content_dict)
+    new_event = event.Base_createCloneDocument(batch_mode=1)
+    transaction.commit()
+    self.tic()
+    self.assertEquals('Simple Mail Test', new_event.getTitle())
+    self.assertEquals('Simple Mail Test', new_event.getTitleOrId())
+    self.assertEquals('Hello,\nContent of the mail.\n', str(new_event.asText()))
+    self.assertEquals('Hello,\nContent of the mail.\n', str(new_event.getTextContent()))
+    self.assertEquals('Mail Message', new_event.getPortalType())
+    self.assertEquals('text/plain', new_event.getContentType())
+    # check if parsing of metadata from content is working
+    content_dict = {'source_list': ['person_module/sender'],
+                    'destination_list': ['person_module/me',
+                                         'person_module/he']}
+    self.assertEquals(new_event.getPropertyDictFromContent(), content_dict)
+
 
   def test_follow_up(self):
     # follow up is found automatically, based on the content of the mail, and

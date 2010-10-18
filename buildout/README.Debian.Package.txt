@@ -14,5 +14,5 @@ For example:
 
 Run make inside:
   cd ~/buildout
-  make debian-appliance PACKAGE_VERSION=001
+  make -f Makefile.packages debian-appliance PACKAGE_VERSION=001
 

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -103,6 +100,9 @@ message_list.extend(context.ERP5Site_upgradeMySQLCharset(upgrade=1))\n
 message_list.extend(context.ERP5Site_upgradeSQLCatalogFilter(upgrade=1))\n
 \n
 message_list.extend(context.ERP5Site_upgradeObjectClass(upgrade=1))\n
+\n
+message_list.extend(context.ERP5Site_upgradeAlarmToolConfiguration(upgrade=1))\n
+\n
 \n
 # Verify if there was any change previously and \n
 if len(message_list) > 0:\n

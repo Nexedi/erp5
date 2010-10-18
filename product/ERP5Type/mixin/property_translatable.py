@@ -29,7 +29,7 @@ import zope.interface
 from Products.ERP5Type.interfaces.property_translatable import IPropertyTranslatable
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 
 
 INTERNAL_TRANSLATION_DICT_NAME = '__translation_dict'

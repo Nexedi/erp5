@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -33,6 +34,8 @@ from AccessControl import Unauthorized
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import Permissions
+
+import transaction
 
 
 class TestPerson(ERP5TypeTestCase):
@@ -172,6 +175,21 @@ class TestPerson(ERP5TypeTestCase):
 
     self.assertEquals(None, p.getPassword())
     self.assertEquals('default', p.getPassword('default'))
+
+  def testPreferenceInteractionWorkflow(self):
+    """ when setting reference, a script create preference is
+        called by activities, check this behavior. """
+    person_module = self.getPersonModule()
+    title = "Séb"
+    person = person_module.newContent(portal_type='Person', title=title)
+    person.setReference('test_seb')
+    transaction.commit()
+    self.tic()
+    portal = self.getPortal()
+    last_id = portal.portal_preferences.getLastId()
+    last_preference = portal.portal_preferences[last_id]
+    self.assertTrue("Séb" in last_preference.getTitle())
+    
 
 def test_suite():
   suite = unittest.TestSuite()

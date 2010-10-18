@@ -91,6 +91,9 @@ if len(context.ERP5Site_upgradeSQLCatalogFilter()) > 0: \n
 if len(context.ERP5Site_upgradeSQLCatalog()) > 0: \n
   return True\n
 \n
+if len(context.ERP5Site_upgradeAlarmToolConfiguration()) > 0:\n
+  return True\n
+\n
 # (rafael) Maybe this is dangerous, enable it when this\n
 # is appropriated tested.\n
 #if len(context.ERP5Site_upgradeMySQLCharset()) > 0: \n

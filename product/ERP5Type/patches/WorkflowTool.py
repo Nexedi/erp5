@@ -448,10 +448,11 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         if a is not None:
           worklist_dict[wf_id] = a
 
-  if len(worklist_dict):
-    is_anonymous = getToolByName(self, 'portal_membership').isAnonymousUser()
-    portal_url = getToolByName(self, 'portal_url')()
-    portal_catalog = getToolByName(self, 'portal_catalog')
+  if worklist_dict:
+    portal = self.getPortalObject()
+    is_anonymous = portal.portal_membership.isAnonymousUser()
+    portal_url = portal.portal_url()
+    portal_catalog = portal.portal_catalog
     search_result = getattr(self, "Base_getCountFromWorklistTable", None)
     use_cache = search_result is not None
     if use_cache:
@@ -848,4 +849,5 @@ try:
 except ImportError:
   from Products.CMFCore import WorkflowCore
   # We're on CMF 2, where WorkflowMethod has been removed from CMFCore
-  WorkflowCore.WorkflowMethod = WorkflowCore.WorkflowAction = WorkflowMethod
+  #WorkflowCore.WorkflowMethod = WorkflowMethod
+  WorkflowCore.WorkflowAction = WorkflowMethod

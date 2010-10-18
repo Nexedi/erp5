@@ -15,7 +15,7 @@
 """ Classes: ERP5RemoteUserManager
 """
 
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\
     setSecurityManager, newSecurityManager
@@ -87,7 +87,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
                        **{'login': login,
                           'password': password,
                           'erp5_uid': erp5_uid}))
-        except (socket.sslerror, socket.error):
+        except socket.error:
             # issue with socket, read from "ZODB cache"
             LOG('ERP5RemoteUserManager', INFO, 'Socket issue with server, '
               'used local cache', error=True)
@@ -107,7 +107,7 @@ class ERP5RemoteUserManager(ERP5UserManager):
             if login in self.remote_authentication_cache:
                 del self.remote_authentication_cache[login]
         else:
-            # store in cache if different
+            # update ZODB cache
             if result == 1:
                 # successfully logged in
                 stored_encrypted_password = self.remote_authentication_cache\

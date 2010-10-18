@@ -2792,7 +2792,7 @@ class ActionTemplateItem(ObjectTemplateItem):
             action_text = action_text.text
           obj.addAction(
                         id = action.id
-                      , title = action.title
+                      , name = action.title
                       , action = action_text
                       , condition = action.getCondition()
                       , permission = action.permissions
@@ -4835,7 +4835,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                   'install_object_list_list', 'id_generator', 'bt_for_diff'):
           continue
         value = self.getProperty(id)
-        if value is None:
+        if not value:
           continue
         if prop_type in ('text', 'string', 'int', 'boolean'):
           bta.addObject(obj=value, name=id, path=path+os.sep+'bt', ext='')

@@ -60,7 +60,7 @@ class Query(object):
     """
       This method must always be overloaded by subclasses.
     """
-    raise NotImplementedError, '%s is incompeltely implemented.' % (self.__class__.__name__, )
+    raise NotImplementedError, '%s is incompletely implemented.' % (self.__class__.__name__, )
 
 verifyClass(IQuery, Query)
 

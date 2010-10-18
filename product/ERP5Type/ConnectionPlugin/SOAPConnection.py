@@ -26,9 +26,25 @@
 #
 ##############################################################################
 
+import SOAPpy
 
 class SOAPConnection:
   """
     Holds a SOAP connection
   """
-  pass
+  __allow_access_to_unprotected_subobjects__ = 1
+
+  def __init__(self, url, user_name=None, password=None):
+    self.url = url
+    self._user_name = user_name
+    self._password = password
+
+  def connect(self):
+    """Get a handle to a remote connection."""
+    # TODO:
+    # * transport (http) level authentication using self._user_name and
+    #   self._password.
+    # * support calling from restricted environment.
+    url = self.url
+    proxy = SOAPpy.SOAPProxy(url)
+    return proxy

@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 /****************************************************************/\n
 /*   TODO: XXX-JPS                                              */\n
@@ -184,7 +184,10 @@ float: left;\n
 \n
 .content .field label, .content .field .input {\n
   width: 100%;\n
+  padding-left:10px;\n
+\n
 }\n
+\n
 \n
 .content .field label {\n
 \n
@@ -416,6 +419,7 @@ button, select, input {\n
 \tclear: both;\n
 \twidth:100%;\n
 \tpadding: 5px 0;\n
+        height: 20px;\n
 \n
 }\n
 \n
@@ -501,7 +505,6 @@ ul.widget_management_box li{\n
   display: block;\n
 }\n
 ul.language_box li {\n
-\n
 \tfloat:left;\n
 \tmargin: 0 2px;\n
 \n
@@ -516,17 +519,26 @@ ul.language_box img {\n
   opacity:0.7;\n
 }\n
 \n
+/* Language icon */\n
 ul.language_box .selected img {\n
-\n
   padding:2px;\n
   border:1px solid #808080;\n
   opacity:1;\n
-\n
 }\n
 \n
 ul.language_box .not_selected img:hover{\n
   border: 1px solid #808080;\n
   padding:2px;\n
+}\n
+\n
+/* Language strings */\n
+ul.language_box .not_selected span,\n
+ul.language_box .selected span {\n
+  color:gray;\n
+}\n
+ul.language_box .selected span{\n
+  text-decoration:underline;\n
+  text-shadow:none;\n
 }\n
 \n
 ul.widget_management_box{\tpadding: 0 0px 0 0;}\n
@@ -775,20 +787,6 @@ div#mainwrapper div#wrapper_right fieldset.widget table.gadget td div {\n
 \tmargin: 0 !important;\n
 \tborder: 0 !important;\n
 }\n
-/*\n
-div#mainwrapper div#wrapper_right fieldset.widget div.field ul{\n
-  list-style-position:inside;\n
-  list-style-type:square;\n
-}\n
-*/\n
-\n
-div#mainwrapper div#wrapper_right fieldset.widget div.field label{\n
-  display:block;\n
-  float:left;\n
-  min-width:5em;\n
-  margin:0pt;\n
-  color:black;\n
-}\n
 \n
 div#mainwrapper div#wrapper_right fieldset.widget div.field label:after {content: ":"}\n
 div#mainwrapper div#wrapper_bottom div.gadget fieldset.widget,\n
@@ -800,9 +798,7 @@ div#mainwrapper div#wrapper_right div.gadget fieldset.widget{\n
 div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
   display:none;\n
 }\n
-div#mainwrapper div.wrapper div.gadget fieldset.widget div.field label{\n
-  display:none;\n
-}\n
+\n
 \n
 .document > .content ul li {\n
 \n
@@ -991,18 +987,24 @@ form p,\n
 .meta div.input > select {\n
   border: none;\n
   margin-left:0.1em;\n
+  height: 20px;\n
 }\n
 \n
 .meta input.search_text {\n
 \n
   color:#777777;\n
-  padding:2px;\n
   font-size:1em;\n
   border: none;\n
   width: 120px;\n
   margin-left: 10px;\n
+  height: 18px\n
 \n
 }\n
+\n
+div.search_text{\n
+  margin-right: 4px;\n
+}\n
+\n
 .meta input.search_text:focus {color:#000000;}\n
 \n
 .meta input.search_button {\n
@@ -1242,7 +1244,7 @@ fieldset.right_registration h4 {\n
   margin: 0 0 10px 0;\n
   font-weight: bold;\n
   padding: 0.1em 0.5em;\n
-  background: #5B7C9B none repeat scroll 0% !important;\n
+  background: #5B7C9B none repeat scroll 0% ;\n
   color: white !important;\n
   display: block;\n
   font-size: 1.2em;\n
@@ -1269,12 +1271,6 @@ fieldset.right_registration label {\n
   text-align:right;\n
   width:11.5em;\n
   padding-right: 0.1em;\n
-}\n
-\n
-fieldset.right_registration div.required label {\n
-  background-image:url(km_img/required_mark.png) !important;\n
-  background-position:left center !important;\n
-  background-repeat:no-repeat !important;\n
 }\n
 \n
 fieldset.left_registration input,\n
@@ -1348,14 +1344,19 @@ div.gadget-management{\n
 }\n
 \n
 div.required label{\n
-  padding-top: 4px;\n
-  background:  url("../km_img/required_mark.png") no-repeat;\n
+  background-image:url("km_img/required_mark.png");\n
+  background-position:left center;\n
+  background-repeat:no-repeat;\n
+  padding-left: 10px;\n
+\n
+/*  padding-top: 4px;\n
+  background:  url("../km_img/required_mark.png") no-repeat;*/\n
 }\n
 \n
 /* login form */\n
 fieldset.registration {\n
   float:left;\n
-  width:42.5%;\n
+  width:49.5%;\n
   background-color: #FFFFFF;\n
   margin-right: 0.5%;\n
   height: 775px;\n
@@ -1456,7 +1457,7 @@ div.web-toolbar div.menu div.field input, div.web-toolbar div.menu div.field sel
 \n
 .hiddenLabel label,\n
 .hidden_label label { \n
-  display: none !important\n
+  display: none;\n
 }\n
 \n
 fieldset.hidden_fieldset {\n
@@ -1528,7 +1529,7 @@ div.download-document-format-list-container span{\n
   cursor: pointer; \n
   display:block;\n
   float:right;\n
-  background:transparent url(km_img/collapse-down-arrow.gif) no-repeat scroll right 6px;\n
+  background:transparent url(km_img/collapse-down-arrow.gif) no-repeat scroll right 5px;\n
   padding: 3px;\n
   padding-right: 10px;\n
   font-weight: bold;\n
@@ -1594,7 +1595,7 @@ div.pdf-preview-navigation img.last{\n
   width: 5px;\n
 }
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -1609,8 +1610,12 @@ div.pdf-preview-navigation img.last{\n
             <value> <string>layout.css</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

@@ -25,7 +25,6 @@ from OFS.CopySupport import _cb_encode, _cb_decode, cookie_path
 from OFS.CopySupport import sanity_check
 from Products.ERP5Type import Permissions
 from Acquisition import aq_base, aq_inner, aq_parent
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import PersistentMapping, MessageDialog
 from Products.ERP5Type.Utils import get_request
@@ -157,11 +156,10 @@ class CopyContainer:
       ob = self._getOb(id)
       # Make sure there is no activities pending on that object
       try:
-        portal_activities = getToolByName(self, 'portal_activities')
+        portal_activities = self.getPortalObject().portal_activities
       except AttributeError:
-        # There is no activity tool
-        portal_activities = None
-      if portal_activities is not None:
+        pass # There is no activity tool
+      else:
         if portal_activities.countMessage(path=ob.getPath())>0:
           raise ActivityPendingError, 'Sorry, pending activities prevent ' \
                          +  'changing id at this current stage'
@@ -249,8 +247,8 @@ class CopyContainer:
     self_base = aq_base(self)
     #LOG("After Clone ",0, "self:%s item:%s" % (repr(self), repr(item)))
     #LOG("After Clone ",0, "self:%s item:%s" % (repr(self), repr(self.getPortalObject().objectIds())))
-    portal_catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
-    self_base.uid = portal_catalog.newUid()
+    portal = self.getPortalObject()
+    self_base.uid = portal.portal_catalog.newUid()
 
     # Give the Owner local role to the current user, zope only does this if no
     # local role has been defined on the object, which breaks ERP5Security
@@ -286,7 +284,7 @@ class CopyContainer:
 
     # Add info about copy to edit workflow
     REQUEST = get_request()
-    pw = getToolByName(self, 'portal_workflow')
+    pw = portal.portal_workflow
     if 'edit_workflow' in pw.getChainFor(self)\
         and (REQUEST is None or
             not REQUEST.get('is_business_template_installation', 0)):
@@ -362,8 +360,11 @@ class CopyContainer:
           Unindex the object from the portal catalog.
       """
       if self.isIndexable:
-        catalog = getToolByName(self, 'portal_catalog', None)
-        if catalog is not None:
+        try:
+          catalog = self.getPortalObject().portal_catalog
+        except AttributeError:
+          pass
+        else:
           # Make sure there is not activity for this object
           self.flushActivity(invoke=0)
           uid = getattr(self,'uid',None)
@@ -400,7 +401,7 @@ class CopyContainer:
           # Update the modification date.
           if getattr(aq_base(self), 'notifyModified', _marker) is not _marker:
               self.notifyModified()
-      catalog = getToolByName(self.getPortalObject(), 'portal_catalog', None)
+      catalog = getattr(self.getPortalObject(), 'portal_catalog', None)
       if catalog is not None:
           catalog.moveObject(self, idxs=idxs)
 
@@ -511,8 +512,8 @@ class CopyContainer:
 
   def _postDuplicate(self):
     self_base = aq_base(self)
-    portal_catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
-    self_base.uid = portal_catalog.newUid()
+    portal = self.getPortalObject()
+    self_base.uid = portal.portal_catalog.newUid()
 
     # Give the Owner local role to the current user, zope only does this if no
     # local role has been defined on the object, which breaks ERP5Security

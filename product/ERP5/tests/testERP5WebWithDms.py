@@ -265,7 +265,9 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # viewing non available document in Web Section (with no authorization_forced)
     self.logout()
     self.assertEqual(None,  websection._getExtensibleContent(request,  document_reference))
-    self.assertEqual('404 Not Found',  request.RESPONSE.getHeader('status'))
+    path = websection.absolute_url_path() + '/' + document_reference
+    response = self.publish(path)
+    self.assertEqual(404, response.getStatus())
 
     # set authorization_forced flag
     self.login()

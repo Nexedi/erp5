@@ -100,7 +100,7 @@
 \tdisplay: block;\n
 \twidth: 924px;\n
 \theight: 283px;\n
-margin:0 14px 10px;\n
+        margin:10px 14px 10px;\n
 \n
 }\n
 \n

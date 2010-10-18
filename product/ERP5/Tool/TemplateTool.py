@@ -120,20 +120,23 @@ class TemplateTool (BaseTool):
       # However, that unlikely happens, and using a Z SQL Method has a
       # potential danger because business templates may exchange catalog
       # methods, so the database could be broken temporarily.
-      replaced_list = []
-      replaced_list_append = replaced_list.append
+      latest_bt = None
+      latest_revision = 0
       for bt in self.contentValues(filter={'portal_type':'Business Template'}):
         if bt.getTitle() == title:
           installation_state = bt.getInstallationState()
           if installation_state == 'installed':
-            return bt
+            latest_bt = bt
+            break
           elif strict is False and installation_state == 'replaced':
-            replaced_list_append((bt.getId(), bt.getRevision()))
-      # still there means that we might search for a replaced bt
-      if len(replaced_list):
-        replaced_list.sort(key=lambda x: -int(x[1]))
-        return self._getOb(replaced_list[0][0])
-      return None
+            revision = bt.getRevision()
+            try:
+              revision = int(revision)
+            except ValueError:
+              continue
+            if revision > latest_revision:
+              latest_bt = bt
+      return latest_bt
 
     def getInstalledBusinessTemplatesList(self):
       """Deprecated.
@@ -399,17 +402,20 @@ class TemplateTool (BaseTool):
           pid = prop['id']
           prop_path = os.path.join('.', bt_path, pid)
           if not os.path.exists(prop_path):
-            continue
-          value = open(prop_path, 'rb').read()
+            value = None
+          else:
+            value = open(prop_path, 'rb').read()
           if value is 'None':
             # At export time, we used to export non-existent properties:
             #   str(obj.getProperty('non-existing')) == 'None'
             # Discard them
-            continue
-          if prop_type in ('text', 'string', 'int', 'boolean'):
-            prop_dict[pid] = value
+            value = None
+          if prop_type in ('text', 'string'):
+            prop_dict[pid] = value or ''
+          elif prop_type in ('int', 'boolean'):
+            prop_dict[pid] = value or 0
           elif prop_type in ('lines', 'tokens'):
-            prop_dict[pid[:-5]] = value.splitlines()
+            prop_dict[pid[:-5]] = (value or '').splitlines()
         prop_dict.pop('id', '')
         bt.edit(**prop_dict)
         # import all others objects

@@ -29,7 +29,10 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet, Permissions
 from Products.ERP5.Document.Predicate import Predicate
 from Products.ERP5Type.Utils import UpperCase
+from decimal import Decimal
+from Products.ERP5.Tool.RoundingTool import ROUNDING_OPTION_DICT
 import ExtensionClass
+from math import log
 
 class RoundingModel(Predicate):
   """
@@ -56,34 +59,38 @@ class RoundingModel(Predicate):
   def roundValue(self, value):
     if not value:
       return value
-    if self.getRoundingMethodId() is not None:
-      rounding_method = getattr(self, self.getRoundingMethodId(), None)
+
+    rounding_method_id = self.getRoundingMethodId()
+    if rounding_method_id is not None:
+      rounding_method = getattr(self, rounding_method_id, None)
       if rounding_method is None:
-        raise ValueError, 'Rounding method (%s) was not found.'
+        raise ValueError('Rounding method (%s) was not found.' \
+                % (rounding_method_id,))
     else:
-      from decimal import Decimal
-      from Products.ERP5.Tool.RoundingTool import ROUNDING_OPTION_DICT
       decimal_rounding_option = self.getDecimalRoundingOption()
-      if (decimal_rounding_option is None or
-          decimal_rounding_option not in ROUNDING_OPTION_DICT):
-        raise ValueError, 'Decimal rounding option must be selected.'
-      def rounding_method(value, decimal_exponent, precision):
+      if decimal_rounding_option not in ROUNDING_OPTION_DICT:
+        raise ValueError('Decimal rounding option must be selected.')
+
+      def rounding_method(value, precision):
         if precision is None:
-          precision = 0
-        if decimal_exponent is None:
-          if precision > 0:
-            decimal_exponent = '1.' + '0' * precision
-          else:
-            decimal_exponent = '1'
-        result = float(
-          Decimal(str(value)).quantize(Decimal(decimal_exponent),
-                                       rounding=decimal_rounding_option))
-        if precision < 0:
-          # FIXME!!!!!
-          result = round(result, precision)
+          precision = 1
+
+        scale = int(log(precision, 10))
+        if scale > 0 or (scale==0 and precision>=1):
+          value = Decimal(str(value))
+          scale = Decimal(str(int(precision))).quantize(value)
+          precision = Decimal('1')
+          value /= scale
+          value = value.quantize(precision, rounding=decimal_rounding_option)
+          value *= scale
+          result = float(value.quantize(precision))
+        else:
+          result = float(
+            Decimal(str(value)).quantize(Decimal(str(precision)),
+                                         rounding=decimal_rounding_option))
         return result
 
-    return rounding_method(value, self.getDecimalExponent(), self.getPrecision())
+    return rounding_method(value, self.getPrecision())
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRoundingProxy')
   def getRoundingProxy(self, document):
@@ -99,23 +106,14 @@ class RoundingModel(Predicate):
       temp_document = document._getOriginalDocument()
       original_document = document
     else:
-      from Products.ERP5Type import Document
-      if document.__class__.__name__ == 'TempDocument':
-        class_ = document.__class__.__bases__[0]
-      else:
-        class_ = document.__class__
-      constructor = getattr(Document, 'newTemp%s' % class_.__name__)
-      temp_document = constructor(document.getParentValue(), 'id')
-      temp_document.__dict__.update(document.__dict__)
+      temp_document = document.asContext()
       original_document = temp_document
 
     for property_id in rounding_model.getRoundedPropertyIdList():
       getter_name = 'get%s' % UpperCase(property_id)
-      getter = getattr(temp_document,
-                       getter_name, None)
+      getter = getattr(temp_document, getter_name, None)
       setter_name = 'set%s' % UpperCase(property_id)
-      setter = getattr(temp_document,
-                       setter_name, None)
+      setter = getattr(temp_document, setter_name, None)
 
       if getter is not None and setter is not None:
         # round the property value itself

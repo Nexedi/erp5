@@ -1,37 +1,37 @@
 # -*- coding: utf-8 -*-
-##############################################################################                                 
-#                                                                                                              
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.                                        
-#                    Francois-Xavier Algrain <fxalgrain@tiolive.com>                                                   
-#                                                                                                              
-# WARNING: This program as such is intended to be used by professional                                         
-# programmers who take the whole responsability of assessing all potential                                     
-# consequences resulting from its eventual inadequacies and bugs                                               
-# End users who are looking for a ready-to-use solution with commercial                                        
-# garantees and support are strongly adviced to contract a Free Software                                       
-# Service Company                                                                                              
-#                                                                                                              
-# This program is Free Software; you can redistribute it and/or                                                
-# modify it under the terms of the GNU General Public License                                                  
-# as published by the Free Software Foundation; either version 2                                               
-# of the License, or (at your option) any later version.                                                       
-#                                                                                                              
-# This program is distributed in the hope that it will be useful,                                              
-# but WITHOUT ANY WARRANTY; without even the implied warranty of                                               
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                                                
-# GNU General Public License for more details.                                                                 
-#                                                                                                              
-# You should have received a copy of the GNU General Public License                                            
-# along with this program; if not, write to the Free Software                                                  
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                                  
-#                                                                                                              
-##############################################################################     
+##############################################################################
+#
+# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+#                    Francois-Xavier Algrain <fxalgrain@tiolive.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+##############################################################################
 
 from base64 import encodestring, decodestring
 from urllib import quote, unquote
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
-from Globals import InitializeClass
+from Products.ERP5Type.Globals import InitializeClass
 try:
     from zope.interface import Interface
 except ImportError:
@@ -66,7 +66,7 @@ class ILoginEncryptionPlugin(Interface):
 
 
 #Form for new plugin in ZMI
-manage_addERP5KeyAuthPluginForm = PageTemplateFile(     
+manage_addERP5KeyAuthPluginForm = PageTemplateFile(
     'www/ERP5Security_addERP5KeyAuthPlugin', globals(),
     __name__='manage_addERP5KeyAuthPluginForm')
 
@@ -92,17 +92,17 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
     <ERP5_Root>/web_page_module/1/view?__ac_key=207221200213146153166
 
     where value of __ac_key contains (encrypted):
-    - proxied (i.e. granting user) username 
+    - proxied (i.e. granting user) username
     - PAS plugin encryption key
 
-  XXX: improve encrypt & decrypt part to use PAS encryption_key with a true 
+  XXX: improve encrypt & decrypt part to use PAS encryption_key with a true
   python encryption library (reuse of public / private key architecture)!
 
   """
 
   meta_type = "ERP5 Key Authentication"
   login_path = 'login_form'
-  security = ClassSecurityInfo()  
+  security = ClassSecurityInfo()
   block_length = 3
   cookie_name = "__ac_key"
   default_cookie_name = "__ac"
@@ -130,7 +130,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   def __init__(self, id, title=None, encryption_key='', cookie_name='', default_cookie_name=''):
     #Check parameters
     if cookie_name is None or cookie_name == '':
-      cookie_name = id      
+      cookie_name = id
     if encryption_key is None or encryption_key == '':
       encryption_key = id
     if "__ac_key" in [cookie_name, default_cookie_name]:
@@ -171,7 +171,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       crypted_login += crypted_letter
 
     return crypted_login
-  
+
   security.declarePrivate('decrypt')
   def decrypt(self, crypted_login):
     """Decrypt string and return the login"""
@@ -187,7 +187,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
     for block in range(0, clogin_length, self.block_length):
       delta = position % key_length
       crypted_letter = crypted_login[block:block + self.block_length]
-      crypted_letter = int(crypted_letter) - self.encrypted_key[delta] 
+      crypted_letter = int(crypted_letter) - self.encrypted_key[delta]
       letter = chr(crypted_letter)
       login += letter
       position += 1
@@ -203,12 +203,12 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       creds = {}
       #Search __ac_key
       key = request.get('__ac_key', None)
-      if key is not None:     
+      if key is not None:
         creds['key'] = key
         #Save this in cookie
         self.updateCredentials(request,request["RESPONSE"],None,None)
       else:
-        # Look in the request for the names coming from the login form     
+        # Look in the request for the names coming from the login form
         #It's default method
         login_pw = request._authUserPW()
 
@@ -220,13 +220,13 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
           self.updateCredentials(request,request["RESPONSE"],name,password)
 
         else:
-          #search in cookies      
+          #search in cookies
           cookie = request.get(self.cookie_name, None)
           if cookie is not None:
             #Cookie is found
             cookie_val = unquote(cookie)
             creds['key'] = cookie_val
-          else:     
+          else:
             #Default cookie if needed
             default_cookie = request.get(self.default_cookie_name, None)
             if default_cookie is not None:
@@ -249,7 +249,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       LOG('ERP5KeyAuthPlugin.extractCredentials', PROBLEM, str(e))
 
     return creds
-  
+
   ################################
   #   ICredentialsUpdatePlugin   #
   ################################
@@ -278,7 +278,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   security.declarePrivate('resetCredentials')
   def resetCredentials(self, request, response):
     """Expire cookies of authentification """
-    response.expireCookie(self.cookie_name, path='/')    
+    response.expireCookie(self.cookie_name, path='/')
     response.expireCookie(self.default_cookie_name, path='/')
 
 
@@ -294,7 +294,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       # Forbidden the usage of the super user.
       if login == SUPER_USER:
         return None
-      
+
       #Function to allow cache
       def _authenticateCredentials(login):
         if not login:
@@ -327,12 +327,12 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
                 continue
               valid_assignment_list.append(assignment)
 
-            # validate 
+            # validate
             if len(valid_assignment_list) > 0:
               return (login,login)
           finally:
             setSecurityManager(sm)
-          
+
           raise _AuthenticationFailure()
 
       #Cache Method for best performance
@@ -342,8 +342,8 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
       try:
           return _authenticateCredentials(
                           login=login)
-      except _AuthenticationFailure:            
-            return None     
+      except _AuthenticationFailure:
+            return None
       except StandardError,e:
           #Log standard error
           LOG('ERP5KeyAuthPlugin.authenticateCredentials', PROBLEM, str(e))
@@ -354,16 +354,16 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
   ################################
 
   #'Edit' option form
-  manage_editERP5KeyAuthPluginForm = PageTemplateFile( 
-      'www/ERP5Security_editERP5KeyAuthPlugin', 
+  manage_editERP5KeyAuthPluginForm = PageTemplateFile(
+      'www/ERP5Security_editERP5KeyAuthPlugin',
       globals(),
       __name__='manage_editERP5KeyAuthPluginForm' )
-  
+
   security.declareProtected( ManageUsers, 'manage_editKeyAuthPlugin' )
   def manage_editKeyAuthPlugin(self, encryption_key,cookie_name,default_cookie_name, RESPONSE=None):
     """Edit the object"""
     error_message = ''
-      
+
     #Test paramaeters
     if "__ac_key" in [cookie_name, default_cookie_name]:
       raise ValueError, "Cookie name must be different of __ac_key"
@@ -374,7 +374,7 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
     else:
       self.encryption_key = encryption_key
       self.encrypted_key = self.transformKey(self.encryption_key);
-      
+
     #Save cookie name
     if cookie_name == '' or cookie_name is None:
       error_message += 'Invalid cookie name '

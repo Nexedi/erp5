@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.PsycoWrapper import psyco
 from Base import Getter as BaseGetter, Setter as BaseSetter
 from warnings import warn
@@ -54,7 +53,7 @@ class Getter(BaseGetter):
       self._key = key
 
     def __call__(self, instance):
-      portal_workflow = getToolByName(instance, 'portal_workflow')
+      portal_workflow = instance.getPortalObject().portal_workflow
       wf = portal_workflow.getWorkflowById(self._key)
       return wf._getWorkflowStateOf(instance, id_only=1)
 
@@ -79,7 +78,7 @@ class TitleGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance):
-      portal_workflow = getToolByName(instance, 'portal_workflow')
+      portal_workflow = instance.getPortalObject().portal_workflow
       wf = portal_workflow.getWorkflowById(self._key)
       return wf._getWorkflowStateOf(instance).title
 
@@ -90,13 +89,12 @@ class TranslatedGetter(Getter):
     """
 
     def __call__(self, instance):
-      portal_workflow = getToolByName(instance, 'portal_workflow')
-      localizer = getToolByName(instance, 'Localizer')
-      wf = portal_workflow.getWorkflowById(self._key)
+      portal = instance.getPortalObject()
+      wf = portal.portal_workflow.getWorkflowById(self._key)
       state_id = wf._getWorkflowStateOf(instance, id_only=1)
       warn('Translated workflow state getters, such as %s are deprecated' %
             self._id, DeprecationWarning)
-      return localizer.erp5_ui.gettext(state_id).encode('utf8')
+      return portal.localizer.erp5_ui.gettext(state_id).encode('utf8')
 
     psyco.bind(__call__)
 
@@ -106,10 +104,10 @@ class TranslatedTitleGetter(TitleGetter):
     """
 
     def __call__(self, instance):
-      portal_workflow = getToolByName(instance, 'portal_workflow')
-      localizer = getToolByName(instance, 'Localizer')
+      portal = instance.getPortalObject()
+      localizer = portal.Localizer
       wf_id = self._key
-      wf = portal_workflow.getWorkflowById(wf_id)
+      wf = portal.portal_workflow.getWorkflowById(wf_id)
       selected_language = localizer.get_selected_language()
       state_title = wf._getWorkflowStateOf(instance).title
       msg_id = '%s [state in %s]' % (state_title, wf_id)

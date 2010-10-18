@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80003299.33</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>lang.nl.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>[\n
+{"id": "align_relative_to", "title": "Uitlijnen relatief ten opzichte van ..."},\n
+{"id": "bkgnd_color", "title": "Verander achtergrond kleur/doorzichtigheid"},\n
+{"id": "circle_cx", "title": "Verander het X coordinaat van het cirkel middelpunt"},\n
+{"id": "circle_cy", "title": "Verander het Y coordinaat van het cirkel middelpunt"},\n
+{"id": "circle_r", "title": "Verander de cirkel radius"},\n
+{"id": "connector_no_arrow", "textContent": "Geen pijl"},\n
+{"id": "copyrightLabel", "textContent": "Mogelijk gemaakt door"},\n
+{"id": "cornerRadiusLabel", "title": "Verander hoekradius rechthoek"},\n
+{"id": "curve_segments", "textContent": "Gebogen"},\n
+{"id": "ellipse_cx", "title": "Verander het X coordinaat van het ellips middelpunt"},\n
+{"id": "ellipse_cy", "title": "Verander het Y coordinaat van het ellips middelpunt"},\n
+{"id": "ellipse_rx", "title": "Verander ellips X radius"},\n
+{"id": "ellipse_ry", "title": "Verander ellips Y radius"},\n
+{"id": "fill_color", "title": "Verander vul kleur"},\n
+{"id": "fitToContent", "textContent": "Pas om inhoud"},\n
+{"id": "fit_to_all", "textContent": "Pas om alle inhoud"},\n
+{"id": "fit_to_canvas", "textContent": "Pas om canvas"},\n
+{"id": "fit_to_layer_content", "textContent": "Pas om laag inhoud"},\n
+{"id": "fit_to_sel", "textContent": "Pas om selectie"},\n
+{"id": "font_family", "title": "Verander lettertype"},\n
+{"id": "icon_large", "textContent": "Groot"},\n
+{"id": "icon_medium", "textContent": "Gemiddeld"},\n
+{"id": "icon_small", "textContent": "Klein"},\n
+{"id": "icon_xlarge", "textContent": "Extra groot"},\n
+{"id": "idLabel", "title": "Identificeer het element"},\n
+{"id": "image_height", "title": "Verander hoogte afbeelding"},\n
+{"id": "image_opt_embed", "textContent": "Toevoegen data (lokale bestanden)"},\n
+{"id": "image_opt_ref", "textContent": "Gebruik bestand referentie"},\n
+{"id": "image_url", "title": "Verander URL"},\n
+{"id": "image_width", "title": "Verander breedte afbeelding"},\n
+{"id": "includedImages", "textContent": "Ingesloten afbeeldingen"},\n
+{"id": "largest_object", "textContent": "Grootste object"},\n
+{"id": "layer_delete", "title": "Delete laag"},\n
+{"id": "layer_down", "title": "Beweeg laag omlaag"},\n
+{"id": "layer_new", "title": "Nieuwe laag"},\n
+{"id": "layer_rename", "title": "Hernoem laag"},\n
+{"id": "layer_up", "title": "Beweeg laag omhoog"},\n
+{"id": "layersLabel", "textContent": "Lagen:"},\n
+{"id": "line_x1", "title": "Verander start X coordinaat van de lijn"},\n
+{"id": "line_x2", "title": "Verander eind X coordinaat van de lijn"},\n
+{"id": "line_y1", "title": "Verander start Y coordinaat van de lijn"},\n
+{"id": "line_y2", "title": "Verander eind Y coordinaat van de lijn"},\n
+{"id": "linecap_butt", "title": "Lijneinde: Geen"},\n
+{"id": "linecap_round", "title": "Lijneinde: Rond"},\n
+{"id": "linecap_square", "title": "Lijneinde: Vierkant"},\n
+{"id": "linejoin_bevel", "title": "Lijnverbinding: Afgestompt"},\n
+{"id": "linejoin_miter", "title": "Lijnverbinding: Hoek"},\n
+{"id": "linejoin_round", "title": "Lijnverbinding: Rond"},\n
+{"id": "main_icon", "title": "Hoofdmenu"},\n
+{"id": "mode_connect", "title": "Verbind twee objecten"},\n
+{"id": "page", "textContent": "Pagina"},\n
+{"id": "palette", "title": "Klik om de vul kleur te veranderen, shift-klik om de lijn kleur te veranderen"},\n
+{"id": "path_node_x", "title": "Verander X coordinaat knooppunt"},\n
+{"id": "path_node_y", "title": "Verander Y coordinaat knooppunt"},\n
+{"id": "rect_height_tool", "title": "Verander hoogte rechthoek"},\n
+{"id": "rect_width_tool", "title": "Verander breedte rechthoek"},\n
+{"id": "relativeToLabel", "textContent": "Relatief ten opzichte van:"},\n
+{"id": "seg_type", "title": "Verander segment type"},\n
+{"id": "selLayerLabel", "textContent": "Verplaats elementen naar:"},\n
+{"id": "selLayerNames", "title": "Verplaats geselecteerde elementen naar andere laag"},\n
+{"id": "selectedPredefined", "textContent": "Kies voorgedefinieerd:"},\n
+{"id": "selected_objects", "textContent": "Geselecteerde objecten"},\n
+{"id": "selected_x", "title": "Verander X coordinaat"},\n
+{"id": "selected_y", "title": "Verander Y coordinaat"},\n
+{"id": "smallest_object", "textContent": "Kleinste object"},\n
+{"id": "straight_segments", "textContent": "Recht"},\n
+{"id": "stroke_color", "title": "Verander lijn kleur"},\n
+{"id": "stroke_style", "title": "Verander lijn stijl"},\n
+{"id": "stroke_width", "title": "Verander lijn breedte"},\n
+{"id": "svginfo_bg_note", "textContent": "Let op: De achtergrond wordt niet opgeslagen met de afbeelding."},\n
+{"id": "svginfo_change_background", "textContent": "Editor achtergrond"},\n
+{"id": "svginfo_dim", "textContent": "Canvas afmetingen"},\n
+{"id": "svginfo_editor_prefs", "textContent": "Editor eigenschappen"},\n
+{"id": "svginfo_height", "textContent": "Hoogte:"},\n
+{"id": "svginfo_icons", "textContent": "Icoon grootte"},\n
+{"id": "svginfo_image_props", "textContent": "Afbeeldingeigenschappen"},\n
+{"id": "svginfo_lang", "textContent": "Taal"},\n
+{"id": "svginfo_title", "textContent": "Titel"},\n
+{"id": "svginfo_width", "textContent": "Breedte:"},\n
+{"id": "text", "title": "Wijzig tekst"},\n
+{"id": "toggle_stroke_tools", "title": "Toon/verberg meer lijn gereedschap"},\n
+{"id": "tool_add_subpath", "title": "Subpad toevoegen"},\n
+{"id": "tool_alignbottom", "title": "Onder uitlijnen"},\n
+{"id": "tool_aligncenter", "title": "Centreren"},\n
+{"id": "tool_alignleft", "title": "Links uitlijnen"},\n
+{"id": "tool_alignmiddle", "title": "Midden uitlijnen"},\n
+{"id": "tool_alignright", "title": "Rechts uitlijnen"},\n
+{"id": "tool_aligntop", "title": "Boven uitlijnen"},\n
+{"id": "tool_angle", "title": "Draai"},\n
+{"id": "tool_blur", "title": "Verander Gaussische vervaging waarde"},\n
+{"id": "tool_bold", "title": "Vet"},\n
+{"id": "tool_circle", "title": "Cirkel"},\n
+{"id": "tool_clear", "textContent": "Nieuwe afbeelding"},\n
+{"id": "tool_clone", "title": "Kloon element"},\n
+{"id": "tool_clone_multi", "title": "Kloon elementen"},\n
+{"id": "tool_delete", "title": "Delete element"},\n
+{"id": "tool_delete_multi", "title": "Delete geselecteerde elementen"},\n
+{"id": "tool_docprops", "textContent": "Documenteigenschappen"},\n
+{"id": "tool_docprops_cancel", "textContent": "Annuleren"},\n
+{"id": "tool_docprops_save", "textContent": "Ok"},\n
+{"id": "tool_ellipse", "title": "Ellips"},\n
+{"id": "tool_export", "textContent": "Exporteer als PNG"},\n
+{"id": "tool_eyedropper", "title": "Kleuren kopieer gereedschap"},\n
+{"id": "tool_fhellipse", "title": "Vrije stijl ellips"},\n
+{"id": "tool_fhpath", "title": "Potlood"},\n
+{"id": "tool_fhrect", "title": "Vrije stijl rechthoek"},\n
+{"id": "tool_font_size", "title": "Verander lettertype grootte"},\n
+{"id": "tool_group", "title": "Groepeer elementen"},\n
+{"id": "tool_image", "title": "Afbeelding"},\n
+{"id": "tool_import", "textContent": "Importeer SVG"},\n
+{"id": "tool_italic", "title": "Cursief"},\n
+{"id": "tool_line", "title": "Lijn"},\n
+{"id": "tool_move_bottom", "title": "Naar achtergrond"},\n
+{"id": "tool_move_top", "title": "Naar voorgrond"},\n
+{"id": "tool_node_clone", "title": "Kloon knooppunt"},\n
+{"id": "tool_node_delete", "title": "Delete knooppunt"},\n
+{"id": "tool_node_link", "title": "Koppel controle punten"},\n
+{"id": "tool_opacity", "title": "Verander opaciteit geselecteerde item"},\n
+{"id": "tool_open", "textContent": "Open afbeelding"},\n
+{"id": "tool_openclose_path", "title": "Open/sluit subpad"},\n
+{"id": "tool_path", "title": "Pad"},\n
+{"id": "tool_position", "title": "Lijn element uit relatief ten opzichte van de pagina"},\n
+{"id": "tool_rect", "title": "Rechthoek"},\n
+{"id": "tool_redo", "title": "Opnieuw doen"},\n
+{"id": "tool_reorient", "title": "Herorienteer pad"},\n
+{"id": "tool_save", "textContent": "Afbeelding opslaan"},\n
+{"id": "tool_select", "title": "Selecteer"},\n
+{"id": "tool_source", "title": "Bewerk bron"},\n
+{"id": "tool_source_cancel", "textContent": "Annuleren"},\n
+{"id": "tool_source_save", "textContent": "Veranderingen toepassen"},\n
+{"id": "tool_square", "title": "Vierkant"},\n
+{"id": "tool_text", "title": "Tekst"},\n
+{"id": "tool_topath", "title": "Zet om naar pad"},\n
+{"id": "tool_undo", "title": "Ongedaan maken"},\n
+{"id": "tool_ungroup", "title": "Groepering opheffen"},\n
+{"id": "tool_wireframe", "title": "Draadmodel"},\n
+{"id": "tool_zoom", "title": "Zoom"},\n
+{"id": "url_notice", "title": "Let op: Dit plaatje kan niet worden geintegreerd (embeded). Het hangt af van dit pad om te worden afgebeeld."},\n
+{"id": "zoom_panel", "title": "In-/uitzoomen"},\n
+{"id": "sidepanel_handle", "textContent": "L a g e n", "title": "Sleep naar links/rechts om het zijpaneel te vergroten/verkleinen"},\n
+{\n
+ "js_strings": {\n
+  "QerrorsRevertToSource": "Er waren analyse fouten in je SVG bron.\\nTeruggaan naar de originele SVG bron?", \n
+  "QignoreSourceChanges": "Veranderingen in de SVG bron negeren?", \n
+  "QmoveElemsToLayer": "Verplaats geselecteerde elementen naar laag \'%s\'?", \n
+  "QwantToClear": "Wil je de afbeelding leeg maken?\\nDit zal ook de ongedaan maak geschiedenis wissen!", \n
+  "cancel": "Annuleren", \n
+  "defsFailOnSave": "Let op: Vanwege een fout in je browser, kan dit plaatje verkeerd verschijnen (missende hoeken en/of elementen). Het zal goed verschijnen zodra het plaatje echt wordt opgeslagen.", \n
+  "dupeLayerName": "Er is al een laag met die naam!", \n
+  "enterNewImgURL": "Geef de nieuwe afbeelding URL", \n
+  "enterNewLayerName": "Geef een nieuwe laag naam", \n
+  "enterUniqueLayerName": "Geef een unieke laag naam", \n
+  "exportNoBlur": "Vervaagde elementen zullen niet vervaagd worden geexporteerd.", \n
+  "exportNoDashArray": "Lijnstijlen zullen gevuld worden geexporteerd..", \n
+  "exportNoImage": "Plaatjes elementen zullen niet worden geexporteerd.", \n
+  "exportNoText": "Tekst kan mogelijk niet zo worden geexporteerd zoals verwacht.", \n
+  "exportNoforeignObject": "Vreemde objecten zullen niet worden geexporteerd.", \n
+  "featNotSupported": "Functie wordt niet ondersteund", \n
+  "invalidAttrValGiven": "Verkeerde waarde gegeven", \n
+  "key_backspace": "backspace", \n
+  "key_del": "delete", \n
+  "key_down": "omlaag", \n
+  "key_up": "omhoog", \n
+  "layer": "Laag", \n
+  "layerHasThatName": "Laag heeft al die naam", \n
+  "loadingImage": "Laden van het plaatje, even geduld aub...", \n
+  "noContentToFitTo": "Geen inhoud om omheen te passen", \n
+  "noteTheseIssues": "Let op de volgende problemen: ", \n
+  "ok": "Ok", \n
+  "pathCtrlPtTooltip": "Versleep het controle punt om de boog eigenschappen te veranderen", \n
+  "pathNodeTooltip": "Versleep knooppunt om hem te verslepen. Dubbel klik knooppunt om het segment type te veranderen", \n
+  "saveFromBrowser": "Kies \\"Save As...\\" in je browser om dit plaatje op te slaan als een %s bestand."\n
+ }\n
+}\n
+]</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10407</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

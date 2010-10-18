@@ -30,8 +30,8 @@
 import zope.interface
 
 from AccessControl import ClassSecurityInfo
-from Globals import DTMLFile
 from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 
 from Products.ERP5 import _dtmldir

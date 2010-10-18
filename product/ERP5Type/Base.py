@@ -2647,9 +2647,8 @@ class Base( CopyContainer,
     """
       This returns the translated portal_type
     """
-    portal_type = self.portal_type
-    localizer = getToolByName(self, 'Localizer')
-    return localizer.erp5_ui.gettext(portal_type).encode('utf8')
+    localizer = self.getPortalObject().Localizer
+    return localizer.erp5_ui.gettext(self.portal_type).encode('utf8')
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getMetaType')
   def getMetaType(self):
@@ -2801,11 +2800,30 @@ class Base( CopyContainer,
         for k in REQUEST.keys():
           if k != 'SESSION':
             setattr(context, k, REQUEST[k])
+      # Set the original document
+      kw['_original'] = self
       # Define local properties
       context.__dict__.update(kw)
       return context
     else:
       return context.asContext(REQUEST=REQUEST, **kw)
+
+  security.declarePublic('getOriginalDocument')
+  def getOriginalDocument(self, context=None, REQUEST=None, **kw):
+    """
+    This method returns:
+    * the original document for an asContext() result document.
+    * self for a real document.
+    * None for a temporary document.
+    """
+    if not self.isTempObject():
+      return self
+    else:
+      original = getattr(self, '_original', None)
+      if original is not None:
+        return aq_inner(original)
+      else:
+        return None
 
   security.declarePublic('isTempObject')
   def isTempObject(self):

@@ -1,7 +1,7 @@
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
-#              Aurélien Calonne <aurel@nexedi.com>
+#              Aurelien Calonne <aurel@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential

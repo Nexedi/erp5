@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80047904.21</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>conn.svg</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg xmlns="http://www.w3.org/2000/svg">\n
+\t<g id="mode_connect">\n
+\t\t<svg viewBox="0 0 24 24" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">\n
+\t\t <defs>\n
+\n
+\t\t  <line stroke-width="5" fill="none" stroke="#000000" id="svg_2" y2="121" x2="136" y1="7" x1="136">\n
+\t\t   <stop stop-opacity="1" stop-color="#4687a0"/>\n
+\t\t   <stop stop-opacity="1" stop-color="#ffffff"/>\n
+\t\t  </line>\n
+\t\t  <linearGradient y2="0.18359" x2="0.29688" y1="0.92188" x1="0.62109" id="svg_3">\n
+\t\t   <stop stop-opacity="1" stop-color="#417dad" offset="0"/>\n
+\t\t   <stop stop-opacity="1" stop-color="#ffffff" offset="1"/>\n
+\t\t  </linearGradient>\n
+\t\t </defs>\n
+\t\t <g>\n
+\t\t  <title>Layer 1</title>\n
+\t\t  <line x1="5.64676" y1="5.60056" x2="18.50037" y2="18.62557" id="svg_5" stroke="#000000" fill="none"/>\n
+\t\t  <rect opacity="0.75" stroke-width="0.5" x="0.5" y="0.5" width="9.625" height="5.125" id="svg_1" fill="url(#svg_3)" stroke="#000000"/>\n
+\t\t  <rect opacity="0.75" id="svg_4" stroke-width="0.5" x="13.75" y="18.25" width="9.625" height="5.125" fill="url(#svg_3)" stroke="#000000"/>\n
+\t\t  <g id="svg_9">\n
+\t\t   <path d="m14.57119,9.12143l-0.98244,5.18852l2.70861,-4.36084" id="svg_6" fill="#a0a0a0" stroke="#000000"/>\n
+\t\t   <path d="m14.27564,6.76258c-0.25872,0.72562 -0.40735,1.65632 -0.33812,2.15432l2.90784,1.2509c0.30961,-0.21212 1.08198,-1.1814 1.08198,-1.73736" id="svg_7" fill="url(#svg_3)" stroke="#000000"/>\n
+\t\t   <path d="m16.28893,0.37519l-2.46413,5.9304l4.76481,2.39435l2.13178,-4.96735" id="svg_8" fill="url(#svg_3)" stroke="#000000"/>\n
+\t\t  </g>\n
+\t\t </g>\n
+\t\t</svg>\n
+\t</g>\n
+\t<g id="svg_eof"/>\n
+</svg>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1575</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

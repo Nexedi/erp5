@@ -119,9 +119,9 @@ class ApparelModel:
       'mode'        : 'w' },
   )
 
-  _categories = ( 'composition', 'transformation_state', 'pricing', 'origin', 'brand', 'tariff_nomenclature' )
+  _categories = ( 'composition', 'pricing', 'origin', 'brand', 'tariff_nomenclature' )
   #_categories = ( 'transformation_state', 'apparel_pricing', 'apparel_creation_type', 'brand', 'tariff_nomenclature' )
-                  #     XXXXXXX              XXXX                XXXX   apparel_model_creation_type                        (As in Brussels Tariff Nomenclature)               
+                  #     XXXXXXX              XXXX                XXXX   apparel_model_creation_type                        (As in Brussels Tariff Nomenclature)
 
   _constraints = (
     { 'id'            : 'apparel_shape',

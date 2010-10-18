@@ -12,6 +12,7 @@
               <list>
                 <string>hide_rows_on_no_search_criterion</string>
                 <string>portal_types</string>
+                <string>selection_name</string>
                 <string>sort</string>
               </list>
             </value>
@@ -96,6 +97,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>latest_changed_document_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
