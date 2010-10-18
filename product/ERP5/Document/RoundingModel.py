@@ -76,7 +76,7 @@ class RoundingModel(Predicate):
           precision = 1
 
         scale = int(log(precision, 10))
-        if scale > 0:
+        if scale > 0 or (scale==0 and precision>=1):
           value = Decimal(str(value))
           scale = Decimal(str(int(precision))).quantize(value)
           precision = Decimal('1')
