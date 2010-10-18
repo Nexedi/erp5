@@ -2792,7 +2792,7 @@ class ActionTemplateItem(ObjectTemplateItem):
             action_text = action_text.text
           obj.addAction(
                         id = action.id
-                      , title = action.title
+                      , name = action.title
                       , action = action_text
                       , condition = action.getCondition()
                       , permission = action.permissions
