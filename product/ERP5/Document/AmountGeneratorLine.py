@@ -49,7 +49,8 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
   zope.interface.implements(interfaces.IAmountGeneratorLine)
 
   # Declarative properties
-  property_sheets = (PropertySheet.AmountGeneratorLine, )
+  property_sheets = (PropertySheet.DublinCore,
+                     PropertySheet.AmountGeneratorLine)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getCellAggregateKey')

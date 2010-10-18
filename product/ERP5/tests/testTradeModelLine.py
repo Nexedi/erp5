@@ -58,6 +58,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
   base_unit_quantity = 0.01
   node_portal_type = 'Organisation'
   order_date = DateTime()
+  amount_generator_line_portal_type = 'Trade Model Line'
 
   def setBaseAmountQuantityMethod(self, base_amount_id, text):
     """Populate TradeModelLine_getBaseAmountQuantityMethod shared script
@@ -77,7 +78,8 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
     except KeyError:
       base_amount = base_amount.newContent(base_amount_id).getRelativeUrl()
     skin = self.portal.portal_skins.custom
-    script_id = 'TradeModelLine_getBaseAmountQuantityMethod'
+    script_id = self.amount_generator_line_portal_type.replace(' ', '') \
+                + '_getBaseAmountQuantityMethod'
     test = "\nif base_application == %r:\n  " % base_amount
     try:
       old_text = '\n' + skin[script_id].body()

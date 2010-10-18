@@ -34,6 +34,11 @@ class PaymentCondition:
   """
 
   _properties = (
+        {   'id'          : 'calculation_script_id',
+            'description' : 'If a script is defined on trade model Line, this '
+                            'script will be used for calculation',
+            'type'        : 'string',
+            'mode'        : 'w' },
         {   'id'          : 'payment_term', # XXX-JPS rename to business_term or trade_term
             'description' : 'payment term in a number of days',
             'type'        : 'int',

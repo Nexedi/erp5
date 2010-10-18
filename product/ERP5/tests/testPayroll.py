@@ -58,6 +58,7 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                Tic
   """ + BUSINESS_PATH_CREATION_SEQUENCE_STRING
 
+  amount_generator_line_portal_type = 'Pay Sheet Model Line'
 
   def getTitle(self):
     return "Payroll"
@@ -66,6 +67,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     """Prepare the test."""
     TestTradeModelLineMixin.afterSetUp(self)
     self.createCategories()
+    self.fixed_quantity = self.setBaseAmountQuantityMethod('fixed_quantity',
+      "return lambda *args, **kw: 1")
 
   @reindex
   def beforeTearDown(self):
@@ -1421,6 +1424,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
         trade_phase='payroll/france/labour',
         reference='model_without_ref',
         resource_value=labour,
+        target_delivery=True,
+        base_application=self.fixed_quantity,
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=10000.0)
@@ -1468,6 +1473,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
         trade_phase='payroll/france/labour',
         reference='model_without_date',
         resource_value=labour,
+        target_delivery=True,
+        base_application=self.fixed_quantity,
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=10000.0)
@@ -1547,6 +1554,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
         trade_phase='payroll/france/labour',
         reference='check_model_date_validity_1',
         resource_value=labour,
+        target_delivery=True,
+        base_application=self.fixed_quantity,
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=20000,
@@ -1557,6 +1566,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
         trade_phase='payroll/france/labour',
         reference='check_model_date_validity_2',
         resource_value=labour,
+        target_delivery=True,
+        base_application=self.fixed_quantity,
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
         quantity=30000,

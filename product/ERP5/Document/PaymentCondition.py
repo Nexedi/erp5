@@ -45,15 +45,8 @@ class PaymentCondition(TradeModelLine):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.Amount
-                    , PropertySheet.PaymentCondition
+  property_sheets = ( PropertySheet.PaymentCondition
                     , PropertySheet.Chain
-                    , PropertySheet.SortIndex
-                    , PropertySheet.TradeModelLine
                     )
 
   security.declareProtected(Permissions.AccessContentsInformation,
