@@ -786,20 +786,6 @@ div#mainwrapper div#wrapper_right fieldset.widget table.gadget td div {\n
 \tmargin: 0 !important;\n
 \tborder: 0 !important;\n
 }\n
-/*\n
-div#mainwrapper div#wrapper_right fieldset.widget div.field ul{\n
-  list-style-position:inside;\n
-  list-style-type:square;\n
-}\n
-*/\n
-\n
-div#mainwrapper div#wrapper_right fieldset.widget div.field label{\n
-  display:block;\n
-  float:left;\n
-  min-width:5em;\n
-  margin:0pt;\n
-  color:black;\n
-}\n
 \n
 div#mainwrapper div#wrapper_right fieldset.widget div.field label:after {content: ":"}\n
 div#mainwrapper div#wrapper_bottom div.gadget fieldset.widget,\n
@@ -811,9 +797,7 @@ div#mainwrapper div#wrapper_right div.gadget fieldset.widget{\n
 div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
   display:none;\n
 }\n
-div#mainwrapper div.wrapper div.gadget fieldset.widget div.field label{\n
-  display:none;\n
-}\n
+\n
 \n
 .document > .content ul li {\n
 \n
@@ -1472,7 +1456,7 @@ div.web-toolbar div.menu div.field input, div.web-toolbar div.menu div.field sel
 \n
 .hiddenLabel label,\n
 .hidden_label label { \n
-  display: none !important\n
+  display: none;\n
 }\n
 \n
 fieldset.hidden_fieldset {\n
