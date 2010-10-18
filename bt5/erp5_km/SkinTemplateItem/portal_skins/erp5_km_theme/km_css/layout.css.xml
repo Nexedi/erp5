@@ -419,6 +419,7 @@ button, select, input {\n
 \tclear: both;\n
 \twidth:100%;\n
 \tpadding: 5px 0;\n
+        height: 20px;\n
 \n
 }\n
 \n
@@ -1528,7 +1529,7 @@ div.download-document-format-list-container span{\n
   cursor: pointer; \n
   display:block;\n
   float:right;\n
-  background:transparent url(km_img/collapse-down-arrow.gif) no-repeat scroll right 6px;\n
+  background:transparent url(km_img/collapse-down-arrow.gif) no-repeat scroll right 5px;\n
   padding: 3px;\n
   padding-right: 10px;\n
   font-weight: bold;\n
