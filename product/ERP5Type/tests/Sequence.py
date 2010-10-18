@@ -191,6 +191,7 @@ class SequenceList:
   def play(self, context, quiet=0):
     i = 1
     for sequence in self._sequence_list:
+      sequence._played_index = 0
       sequence.play(context, sequence_number=i, quiet=quiet)
       i+=1
 
