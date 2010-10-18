@@ -60,7 +60,7 @@ def ActionProviderBase_manage_editActionsForm( self, REQUEST, manage_tabs_messag
 
 def ActionProviderBase_addAction( self
               , id
-              , title
+              , name
               , action
               , condition
               , permission
@@ -73,8 +73,8 @@ def ActionProviderBase_addAction( self
               ):
     """ Add an action to our list.
     """
-    if not title:
-        raise ValueError('A title is required.')
+    if not name:
+        raise ValueError('A name is required.')
 
     a_expr = action and Expression(text=str(action)) or ''
     i_expr = icon and Expression(text=str(icon)) or ''
@@ -86,7 +86,7 @@ def ActionProviderBase_addAction( self
     new_actions = self._cloneActions()
 
     new_action = ActionInformation( id=str(id)
-                                  , title=str(title)
+                                  , title=str(name)
                                   , description=str(description)
                                   , action=a_expr
                                   , icon=i_expr
