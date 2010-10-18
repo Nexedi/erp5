@@ -84,8 +84,6 @@ except ImportError:
 
   getGlobalTranslationService = GlobalTranslationService
 
-translation_service_translate = getGlobalTranslationService().translate
-
 from Products.ERP5Type import Globals
 from cPickle import dumps, loads
 
@@ -147,7 +145,8 @@ class Message(Persistent):
     else:
       from Products.ERP5.ERP5Site import getSite
       request = Globals.get_request()
-      translated_message = translation_service_translate(
+      translation_service = getGlobalTranslationService()
+      translated_message = translation_service.translate(
                                              self.domain,
                                              message,
                                              mapping=self.mapping,
