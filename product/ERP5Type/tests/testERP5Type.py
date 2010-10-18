@@ -2799,7 +2799,7 @@ class TestPropertySheet:
         person = module.newContent(id='1', portal_type='Person')
         def addCustomAction(name, priority):
           portal_actions.addAction(id=name,
-                                   title=name,
+                                   name=name,
                                    description='',
                                    action='string:${object_url}/Base_viewDict',
                                    condition='',
