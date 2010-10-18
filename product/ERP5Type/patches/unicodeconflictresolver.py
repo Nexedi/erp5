@@ -19,8 +19,10 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
-from zLOG import LOG
-import sys
+from logging import getLogger
+import traceback
+logger = getLogger(__name__)
+
 try:
   from Products.PageTemplates.unicodeconflictresolver \
        import PreferredCharsetResolver
@@ -34,9 +36,11 @@ else:
     # requests that do not contain Accept-Charset header.
     try:
       result = unicode(text, 'utf-8')
-    except UnicodeDecodeError:
-      LOG('unicodeconflictresolver, Unicode Error', 0, text, 
-          error=sys.exc_info())
+    except UnicodeDecodeError, e:
+      tb_info = ''.join(traceback.format_stack())
+      logger.warn('UnicodeDecodeError: %s\ntext: %r\nat:\n%s' %
+                  (e, text, tb_info))
       result = unicode(text, 'utf-8', 'replace')
     return result
   PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolve
+
