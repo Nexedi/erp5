@@ -251,8 +251,8 @@ class TestEgov(ERP5TypeTestCase):
     pdf_file_name = 'Certificat_Residence.pdf'
     pdf_file_data = makeFileUpload(pdf_file_name)
     scribus_file_data = makeFileUpload(scribus_file_name)
-    procedure.edit(default_scribus_form=scribus_file_data,
-            default_pdf_form=pdf_file_data)
+    procedure.edit(scribus_form_file=scribus_file_data,
+            pdf_form_file=pdf_file_data)
     self.tic()
     transaction.commit()
     self.tic()
