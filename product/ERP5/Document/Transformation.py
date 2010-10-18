@@ -237,7 +237,7 @@ class Transformation(MappedValue, AmountGeneratorMixin, VariatedMixin):
                                      **kw):
       """
         Returns the list of possible variations
-        XXX Copied and modified from Variated
+        XXX Copied and modified from VariatedMixin
         Result is left display.
       """
       variation_category_item_list = []

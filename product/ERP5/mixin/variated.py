@@ -27,21 +27,16 @@
 #
 ##############################################################################
 
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Globals import InitializeClass
-from Products.CMFCore.utils import getToolByName
-
-from Products.ERP5Type import Context, interfaces, Permissions
-from Products.ERP5Type.Base import Base
-from Products.CMFCategory.Renderer import Renderer
-
 from warnings import warn
-from zope.interface import implements
+from AccessControl import ClassSecurityInfo
+from Products.CMFCategory.Renderer import Renderer
+from Products.ERP5Type import interfaces, Permissions
+import zope.interface
 
-class VariatedMixin(Base):
+
+class VariatedMixin:
   """
-    Variated is a mix-in class for all classes which implement
-    the Variated Interface.
+    Mix-in class for all classes which implement the Variated Interface.
 
     A Variable object is an object which can variate
     according to multiple dimensions. Variable objects include:
@@ -59,7 +54,7 @@ class VariatedMixin(Base):
   security = ClassSecurityInfo()
 
   # Declarative interfaces
-  implements(interfaces.IVariated)
+  zope.interface.implements(interfaces.IVariated)
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationBaseCategoryList')
@@ -345,7 +340,7 @@ class VariatedMixin(Base):
     elif type(base_category_list) is type('a'):
       base_category_list = (base_category_list, )
 
-    traverse = getToolByName(self, 'portal_categories').unrestrictedTraverse
+    traverse = self.getPortalObject().portal_categories.unrestrictedTraverse
     # Render categories
     for base_category in base_category_list:
       result += getattr(traverse(base_category), display_method_id)(
@@ -359,15 +354,14 @@ class VariatedMixin(Base):
                             'getVariationRangeCategoryList')
   def getVariationRangeCategoryList(self, base_category_list=(), base=1,
                                     root=1, current_category=None,
-                                    omit_individual_variation=0):
+                                    omit_individual_variation=0, **kw):
     """
       Returns the range of acceptable categories
     """
     vrcil = self.getVariationRangeCategoryItemList(
-                          base_category_list=base_category_list,
-                          base=base, root=root, 
-                          current_category=current_category,
-                          omit_individual_variation=omit_individual_variation)
+        base_category_list=base_category_list, base=base, root=root,
+        current_category=current_category,
+        omit_individual_variation=omit_individual_variation, **kw)
     # display is on left
     return [x[1] for x in vrcil]
 
@@ -390,5 +384,3 @@ class VariatedMixin(Base):
     category_list = list(self.getVariationCategoryList())
     category_list.sort()
     return '\n'.join(category_list)
-
-InitializeClass(VariatedMixin)

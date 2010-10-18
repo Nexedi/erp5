@@ -32,10 +32,10 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Predicate import Predicate
-from Products.ERP5.Variated import Variated
+from Products.ERP5.mixin.variated import VariatedMixin
 
 
-class BudgetLine(Predicate, XMLMatrix, Variated):
+class BudgetLine(Predicate, XMLMatrix, VariatedMixin):
   """ A Line of budget, variated in budget cells.
   """
 

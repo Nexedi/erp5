@@ -30,7 +30,7 @@
 import zope.interface
 from math import log
 from AccessControl import ClassSecurityInfo
-from Products.ERP5.Variated import Variated
+from Products.ERP5.mixin.variated import VariatedMixin
 from Products.ERP5.VariationValue import VariationValue
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Base import Base
@@ -41,7 +41,7 @@ from zLOG import LOG, ERROR
 from warnings import warn
 
 
-class Amount(Base, Variated):
+class Amount(Base, VariatedMixin):
   """
     A mix-in class which provides some utilities
     (variations, conversions, etc.)
@@ -61,8 +61,7 @@ class Amount(Base, Variated):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IVariated,
-                            interfaces.IAmount)
+  zope.interface.implements(interfaces.IAmount)
 
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.SimpleItem
@@ -108,7 +107,7 @@ class Amount(Base, Variated):
                                    current_category=None,**kw):
     """
       Returns the list of possible variations
-      XXX Copied and modified from Variated
+      XXX Copied and modified from VariatedMixin
       Result is left display.
     """
     variation_category_item_list = []
@@ -274,7 +273,7 @@ class Amount(Base, Variated):
       result = resource.getVariationBaseCategoryList(
           omit_optional_variation=omit_optional_variation)
     else:
-      result = Variated.getVariationRangeBaseCategoryList(self)
+      result = super(Amount, self).getVariationRangeBaseCategoryList()
     return result
 
   security.declareProtected(Permissions.AccessContentsInformation,

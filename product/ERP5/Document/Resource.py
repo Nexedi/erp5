@@ -38,14 +38,13 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5Type.Utils import cartesianProduct
-
-from Products.ERP5.Variated import Variated
+from Products.ERP5.mixin.variated import VariatedMixin
 from Products.CMFCategory.Renderer import Renderer
 from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG, WARNING
 
-class Resource(XMLMatrix, Variated):
+class Resource(XMLMatrix, VariatedMixin):
     """
       A Resource
     """
@@ -147,8 +146,8 @@ class Resource(XMLMatrix, Variated):
             other_base_category_dict.iteritems() if y == 1]
         # Get category variation
         if other_base_category_list:
-          result.extend(Variated.getVariationRangeCategoryItemList(
-              self, base_category_list=other_base_category_list,
+          result.extend(super(Resource, self).getVariationRangeCategoryItemList(
+              base_category_list=other_base_category_list,
               base=base, display_base_category=display_base_category, **kw))
         # Return result
         return result
@@ -187,7 +186,7 @@ class Resource(XMLMatrix, Variated):
               if not x in optional_bc_list]
               
       
-      result = Variated.getVariationCategoryItemList(self, 
+      result = super(Resource, self).getVariationCategoryItemList(
                             base_category_list=other_bc_list, 
                             display_base_category=display_base_category, 
                             display_id=display_id, base=base, **kw)
