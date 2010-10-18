@@ -147,10 +147,9 @@ class SupplyLink(Path, XMLObject):
           rule = applied_rule.getSpecialiseValue()
           transformation = rule.getTransformation(movement)
           # Call getAggregatedAmountList
-          tmp_context = movement.getParentValue().getParentValue().asContext()
-          tmp_context.asComposedDocument = lambda *args: transformation
+          input_amount = applied_rule.getParentValue()
           resource_list = [x.getResourceValue()
-            for x in tmp_context.getAggregatedAmountList()
+            for x in transformation.getAggregatedAmountList((input_amount,))
             if x.getCausalityValue().getIndustrialPhase() in ind_phase_url_list]
           current_resource = movement.getResourceValue()
           if current_resource not in resource_list:

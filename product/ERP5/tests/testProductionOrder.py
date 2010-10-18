@@ -395,25 +395,16 @@ class TestProductionOrderMixin(TestOrderMixin):
     """
       Fills categories of variation
     """
-
     transformation = sequence.get('transformation')
+    transformation.setVariationBaseCategoryList(self.variation_category_list)
 
-    transformation.edit(
-        variation_base_category_list = self.variation_category_list
-    )
-    
   def stepFillTransformationWithResource(self, sequence=None, sequence_list=None,
                                **kw):
 
     transformation = sequence.get('transformation')
-
     resource = sequence.get('resource')
-
     self.assertNotEquals(None, resource)
-
-    transformation.edit(
-      resource_value = resource
-    )
+    transformation.setResourceValue(resource)
 
   def stepSetOrderLineQuantity(self, sequence=None, sequence_list=None,
                                **kw):

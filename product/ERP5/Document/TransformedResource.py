@@ -71,6 +71,8 @@ class TransformedResource(AmountGeneratorLine):
       if not result:
         if not self.hasCellContent(base_id='variation'):
           result = self.getVariationRangeBaseCategoryList() # The current resource variation
+        if 'trade_phase' not in result:
+          result.append('trade_phase')
       return result
 
     def getCellAggregateKey(self):
@@ -81,7 +83,7 @@ class TransformedResource(AmountGeneratorLine):
     def getBaseAmountQuantity(cls, delivery_amount, base_application, rounding):
       value = delivery_amount.getGeneratedAmountQuantity(base_application)
       if base_application == 'produced_quantity':
-        value += delivery_amount.getQuantity()
+        value += delivery_amount.getConvertedQuantity()
       return value
 
     def getBaseApplication(self):

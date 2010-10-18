@@ -26,8 +26,8 @@
 #
 ##############################################################################
 
-from testProductionOrder import TestProductionOrderMixin
-from testInventoryAPI import BaseTestUnitConversion
+from Products.ERP5.tests.testProductionOrder import TestProductionOrderMixin
+from Products.ERP5.tests.testInventoryAPI import BaseTestUnitConversion
 import transaction
 
 class TestTransformationMixin(TestProductionOrderMixin):
@@ -146,15 +146,7 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
         resource_value=component,
         quantity=1)
     transformed_resource.setTested(True)
-    from Products.ERP5Type.Document import newTempAmount
-    amount = newTempAmount(transformation, "foobar")
-    amount.edit(
-        quantity = 1.0,
-        resource = component.getRelativeUrl(),
-    )
-    aggregated_amount_list = transformation.getAggregatedAmountList(amount)
-    self.assertEquals(len(aggregated_amount_list), 1)
-    aggregated_amount = aggregated_amount_list[0]
+    aggregated_amount, = transformation.getAggregatedAmountList()
     # Make sure that the isTested method is working properly on the
     # temp object
     self.assertTrue(aggregated_amount.isTested())

@@ -30,7 +30,7 @@
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 from Products.CMFCategory.Renderer import Renderer
-from Products.ERP5Type import interfaces, Permissions
+from Products.ERP5Type import interfaces, Permissions, PropertySheet
 import zope.interface
 
 
@@ -54,7 +54,11 @@ class VariatedMixin:
   security = ClassSecurityInfo()
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IVariated)
+  zope.interface.implements(interfaces.IVariated,
+                            interfaces.IVariationRange)
+
+  isRADContent = 1 # for 'property_sheets'
+  property_sheets = (PropertySheet.VariationRange, )
 
   security.declareProtected(Permissions.AccessContentsInformation, 
                             'getVariationBaseCategoryList')

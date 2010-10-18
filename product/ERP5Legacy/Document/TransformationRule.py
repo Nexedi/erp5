@@ -219,7 +219,6 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
       transformation = self.getTransformation(applied_rule)
       # Generate the fake context
       tmp_context = parent_movement.asContext(categories=category_list)
-      tmp_context.asComposedDocument = lambda *args: transformation
       # Calculate the industrial phase list
       previous_ind_phase_list = supply_chain.\
           getPreviousPackingListIndustrialPhaseList(current_supply_link)
@@ -228,7 +227,7 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
       # Call getAggregatedAmountList
       # XXX expand failed if transformation is not defined.
       # Do we need to catch the exception ?
-      amount_list = tmp_context.getAggregatedAmountList()
+      amount_list = transformation.getAggregatedAmountList((tmp_context,))
       # Add entries in the consumed_movement_dict
       consumed_movement_dict = {}
       for amount in amount_list:

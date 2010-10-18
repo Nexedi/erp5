@@ -63,8 +63,7 @@ class Amount(Base, VariatedMixin):
   # Declarative interfaces
   zope.interface.implements(interfaces.IAmount)
 
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.SimpleItem
+  property_sheets = ( PropertySheet.SimpleItem
                     , PropertySheet.Amount
                     , PropertySheet.Price
                     , PropertySheet.Reference

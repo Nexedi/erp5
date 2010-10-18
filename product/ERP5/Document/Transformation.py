@@ -31,14 +31,12 @@
 #
 ##############################################################################
 from zLOG import LOG, WARNING
-
-import zope.interface
-
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 
 from Products.CMFCategory.Renderer import Renderer
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.MappedValue import MappedValue
 
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
@@ -46,7 +44,9 @@ from Products.ERP5.mixin.variated import VariatedMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5Type.XMLObject import XMLObject
 
-class Transformation(MappedValue, AmountGeneratorMixin, VariatedMixin):
+# XXX Give priority to VariatedMixin (over Amount) due to conflicting
+#     implementations of getVariationBaseCategoryList
+class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
     """
       Build of material - contains a list of transformed resources
 
@@ -65,58 +65,46 @@ class Transformation(MappedValue, AmountGeneratorMixin, VariatedMixin):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.VariationRange
-                      , PropertySheet.Predicate
-                      , PropertySheet.Comment
-                      , PropertySheet.Reference
+    property_sheets = ( PropertySheet.Comment
                       , PropertySheet.Version
                       #, PropertySheet.Resource
                       , PropertySheet.TransformedResource
-                      , PropertySheet.Path
                       , PropertySheet.Transformation
                       , PropertySheet.Order
                       , PropertySheet.Task
                       )
 
-    # Declarative interfaces
-    zope.interface.implements(interfaces.IVariated, 
-                              interfaces.IVariationRange,
-                              interfaces.IAmountGenerator
-                              )
+    def getAggregatedAmountList(self, *args, **kw):
+      """
+      """
+      getAggregatedAmountList = \
+        super(Transformation, self).getAggregatedAmountList
+      # Detect old use of getAggregatedAmountList
+      if 'context' in kw:
+        context = kw.pop('context')
+      else:
+        if not args or isinstance(args[0], (list, tuple)):
+          return getAggregatedAmountList(*args, **kw)
+        context, args = args[0], args[1:]
+      warn("The API of getAggregatedAmountList has changed:"
+           " it must be called on the context instead of passing"
+           " the context as first parameter", DeprecationWarning)
+      # XXX add a 'transformation_amount_generator' group type
+      kw['amount_generator_type_list'] = ('Transformation',
+                                          'Transformed Resource',
+                                          'Assorted Resource')
+      if context is not None:
+        context = (context,)
+      return getAggregatedAmountList(context, *args, **kw)
+
+    def getQuantity(self, default=None):
+      # Used for amount generation
+      # (Transformation is defined for 1 unit of target resource)
+      return 1
 
     # Predicate Value implementation
     #   asPredicate takes into account the resource
     # XXX-JPS not Impl.
-
-    def getCellAggregateKey(self, amount_generator_cell):
-      """Define a key in order to aggregate amounts at cell level
-
-        Transformed Resource (Transformation)
-          key must be None because:
-            - quantity and variation are defined in different cells so that the
-              user does not need to enter values depending on all axes
-            - amount_generator_cell.test should filter only 1 variant
-          current key = (acquired resource, acquired variation)
-
-        Assorted Resource (Transformation)
-          key = (assorted resource, assorted resource variation)
-          usually resource and quantity provided together
-
-        Payroll
-          key = (payroll resource, payroll resource variation)
-
-        Tax
-          key = (tax resource, tax resource variation)
-      """
-      if len(amount_generator_cell.contentValues()):
-        key = (amount_generator_cell.getRelativeUrl(),)
-      else:
-        key = (amount_generator_cell.getParentValue().getRelativeUrl(),)
-      return key
 
     # Mapped Value implementation
     #  Transformation itself provides no properties or categories
@@ -125,34 +113,6 @@ class Transformation(MappedValue, AmountGeneratorMixin, VariatedMixin):
 
     def getMappedValueBaseCategoryList(self):
       return ()
-
-    # Amount Generator Mixin
-    def _getGlobalPropertyDict(self, context, amount_list=None, rounding=False):
-      """
-      No global properties needed
-      """
-      return {
-      }
-
-    def _getAmountPropertyDict(self, amount, amount_list=None, rounding=False):
-      """
-      Produced amount quantity is needed to initialize transformation
-      """
-      # XXX 1 is for compatibility
-      return {
-        'produced_quantity' : amount.getQuantity(1),
-      }
-
-    def getBaseApplication(self):
-      """
-      
-      """
-      # It is OK to try to acquire
-      if getattr(self, '_baseGetBaseApplication', None) is not None:
-        result = self._baseGetBaseApplication()
-        if result:
-          return result
-      return 'produced_quantity'
 
     # IVariationRange and IVariated Implementation
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -228,6 +188,15 @@ class Transformation(MappedValue, AmountGeneratorMixin, VariatedMixin):
           result = self.portal_categories.getCategoryChildTitleItemList(
                          base_category_list, base=1, display_none_category=0)
         return result
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'setVariationBaseCategoryList')
+    def setVariationBaseCategoryList(self, value):
+      """
+        Define the possible base categories and reindex object
+      """
+      self._setVariationBaseCategoryList(value)
+      self.reindexObject()
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getVariationCategoryItemList')

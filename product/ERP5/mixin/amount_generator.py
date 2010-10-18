@@ -174,8 +174,10 @@ class AmountGeneratorMixin:
             dict(rounding=rounding))
     # If amount_list is None, then try to collect amount_list from
     # the current context
+    default_target = None
     if amount_list is None:
       if self.providesIMovementCollection():
+        default_target = 'isMovement'
         base_amount_list = BaseAmountDict(*args).__of__(self) \
           .recurseMovementList(self.getMovementList())
       elif self.providesIAmount():
@@ -204,8 +206,8 @@ class AmountGeneratorMixin:
         return
       elif (self.getPortalType() not in amount_generator_line_type_list):
         return
-      if not getattr(delivery_amount, self.isTargetDelivery() and
-                                      'isDelivery' or 'isMovement')():
+      target_method = self.isTargetDelivery() and 'isDelivery' or default_target
+      if target_method and not getattr(delivery_amount, target_method)():
         return
       # Try to collect cells and aggregate their mapped properties
       # using resource + variation as aggregation key or base_application

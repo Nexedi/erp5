@@ -27,14 +27,14 @@
 #
 ##############################################################################
 
-import zope.interface
 from math import log
 from warnings import warn
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5Type.Utils import cartesianProduct
@@ -44,7 +44,7 @@ from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG, WARNING
 
-class Resource(XMLMatrix, VariatedMixin):
+class Resource(XMLObject, XMLMatrix, VariatedMixin):
     """
       A Resource
     """
@@ -57,20 +57,13 @@ class Resource(XMLMatrix, VariatedMixin):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated, )
-
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
+    property_sheets = ( PropertySheet.DublinCore
                       , PropertySheet.Price
                       , PropertySheet.Resource
                       , PropertySheet.Reference
                       , PropertySheet.Comment
                       , PropertySheet.FlowCapacity
-                      , PropertySheet.VariationRange
                       , PropertySheet.DefaultSupply
                       , PropertySheet.Aggregated
                       )

@@ -98,9 +98,8 @@ class TestProductionOrderMixin(TestOrderMixin):
       some categories for testing them
     """
     TestOrderMixin.createCategories(self)
-    operation_category_list = ['operation1', 'operation2']
     if len(self.category_tool.operation.contentValues()) == 0:
-      for category_id in operation_category_list:
+      for category_id in self.operation_category_list:
         o = self.category_tool.operation.newContent(
                                                portal_type='Category',
                                                id=category_id)
