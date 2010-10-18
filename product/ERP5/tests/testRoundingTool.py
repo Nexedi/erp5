@@ -56,6 +56,30 @@ class TestRoundingTool(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
+  def testRoundValueMethod(self):
+    """
+    Test rounding method
+    """
+    rounding_tool = self.portal.portal_roundings
+    rounding_model = rounding_tool.newContent(portal_type='Rounding Model')
+    rounding_model.edit(decimal_rounding_option='ROUND_HALF_UP')
+
+    rounding_model.edit(precision=0.01)
+    self.assertEqual(rounding_model.roundValue(12.344), 12.34)
+    self.assertEqual(rounding_model.roundValue(12.355), 12.36)
+    rounding_model.edit(precision=0.1)
+    self.assertEqual(rounding_model.roundValue(12.34), 12.3)
+    self.assertEqual(rounding_model.roundValue(12.35), 12.4)
+    rounding_model.edit(precision=1.0)
+    self.assertEqual(rounding_model.roundValue(1.1), 1)
+    self.assertEqual(rounding_model.roundValue(1.5), 2)
+    rounding_model.edit(precision=10.0)
+    self.assertEqual(rounding_model.roundValue(1.1), 0)
+    self.assertEqual(rounding_model.roundValue(5.0), 10)
+    rounding_model.edit(precision=100.0)
+    self.assertEqual(rounding_model.roundValue(132), 100)
+    self.assertEqual(rounding_model.roundValue(150), 200)
+
   def testBasicRounding(self):
     """
     Test basic features of rounding tool
