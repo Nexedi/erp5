@@ -38,12 +38,6 @@ from Products.ERP5Type.Utils import setDefaultClassProperties, setDefaultPropert
 
 from zLOG import LOG, ERROR, BLATHER
 
-class AccessorHolder(object):
-  """
-  Base class of an accessor holder class for Property Sheets
-  """
-  pass
-
 class PropertySheetTool(BaseTool):
   """
   Provides a configurable registry of property sheets
@@ -87,8 +81,6 @@ class PropertySheetTool(BaseTool):
     """
     Create a new Property Sheet in portal_property_sheets from a given
     filesystem-based Property Sheet definition.
-
-    XXX: Implement constraints
     """
     new_property_sheet = self.newContent(id=klass.__name__,
                                          portal_type='Property Sheet')
@@ -151,7 +143,8 @@ class PropertySheetTool(BaseTool):
     Export a given ZODB Property Sheet to its filesystem definition as
     tuple (properties, categories, constraints)
 
-    XXX: Implement constraints
+    XXX: Move this code and the accessor generation code (from Utils)
+         within their respective documents
     """
     properties = []
     constraints = []
@@ -170,26 +163,21 @@ class PropertySheetTool(BaseTool):
       elif portal_type == "Dynamic Category Property":
         categories.append(property.exportToFilesystemDefinition())
 
-    return (properties, categories, constraints, )
+      elif portal_type.endswith('Constraint'):
+        from Acquisition import aq_base
+        constraints.append(aq_base(property.asContext()))
 
-  security.declarePrivate('createPropertySheetAccessorHolder')
-  def createPropertySheetAccessorHolder(self, property_sheet):
+    return (properties, categories, constraints)
+
+  def _createCommonPropertySheetAccessorHolder(self,
+                                               property_holder,
+                                               property_sheet_id,
+                                               accessor_holder_module_name):
     """
-    Create a new accessor holder from the given Property Sheet (the
-    accessors are created through a Property Holder)
-
-    XXX: Workflows?
+    Create a new accessor holder class from the given Property Holder
+    within the given accessor holder module (when the migration will
+    be finished, there should only be one accessor holder module)
     """
-    property_holder = PropertyHolder()
-
-    definition_tuple = \
-        self.exportPropertySheetToFilesystemDefinitionTuple(property_sheet)
-
-    # Prepare the Property Holder
-    property_holder._properties, \
-      property_holder._categories, \
-      property_holder._constraints = definition_tuple
-
     setDefaultClassProperties(property_holder)
 
     try:
@@ -197,16 +185,26 @@ class PropertySheetTool(BaseTool):
     except:
       import traceback
       LOG("Tool.PropertySheetTool", ERROR,
-          "Could not generate accessor holder class for %s: %s" % \
-          (property_sheet.getTitle(), traceback.format_exc()))
+          "Could not generate accessor holder class for %s (module=%s): %s" %\
+          (property_sheet_id,
+           accessor_holder_module_name,
+           traceback.format_exc()))
 
       return None
 
     # Create the new accessor holder class and set its module properly
-    accessor_holder_class = type(property_sheet.getId(),
-                                 (AccessorHolder,), {})
-
-    accessor_holder_class.__module__ = 'erp5.accessor_holder'
+    accessor_holder_class = type(property_sheet_id, (object,), dict(
+      __module__ = accessor_holder_module_name,
+      constraints = property_holder.constraints,
+      # The following attributes have been defined only because they
+      # are being used in ERP5Type.Utils when getting all the
+      # property_sheets of the property_holder (then, they are added
+      # to the local properties, categories and constraints lists)
+      _properties = property_holder._properties,
+      # Necessary for getBaseCategoryList
+      _categories = property_holder._categories,
+      _constraints = property_holder._constraints
+      ))
 
     # Set all the accessors (defined by a tuple) from the Property
     # Holder to the new accessor holder class (code coming from
@@ -227,3 +225,46 @@ class PropertySheetTool(BaseTool):
       setattr(accessor_holder_class, id, accessor)
 
     return accessor_holder_class
+
+  security.declarePrivate('createFilesystemPropertySheetAccessorHolder')
+  def createFilesystemPropertySheetAccessorHolder(self, property_sheet):
+    """
+    Create a new accessor holder from the given filesystem Property
+    Sheet (the accessors are created through a Property Holder)
+
+    XXX: Workflows?
+    XXX: Remove as soon as the migration is finished
+    """
+    property_holder = PropertyHolder()
+
+    property_holder._properties = getattr(property_sheet, '_properties', [])
+    property_holder._categories = getattr(property_sheet, '_categories', [])
+    property_holder._constraints = getattr(property_sheet, '_constraints', [])
+
+    return self._createCommonPropertySheetAccessorHolder(
+      property_holder,
+      property_sheet.__name__,
+      'erp5.filesystem_accessor_holder')
+
+  security.declarePrivate('createZodbPropertySheetAccessorHolder')
+  def createZodbPropertySheetAccessorHolder(self, property_sheet):
+    """
+    Create a new accessor holder from the given ZODB Property Sheet
+    (the accessors are created through a Property Holder)
+
+    XXX: Workflows?
+    """
+    definition_tuple = \
+      self.exportPropertySheetToFilesystemDefinitionTuple(property_sheet)
+
+    property_holder = PropertyHolder()
+
+    # Prepare the Property Holder
+    property_holder._properties, \
+      property_holder._categories, \
+      property_holder._constraints = definition_tuple
+
+    return self._createCommonPropertySheetAccessorHolder(
+      property_holder,
+      property_sheet.getId(),
+      'erp5.zodb_accessor_holder')

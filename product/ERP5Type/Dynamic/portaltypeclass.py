@@ -38,8 +38,9 @@ import lazyclass
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
+from Products.ERP5Type import PropertySheet as FilesystemPropertySheet
 from ExtensionClass import Base as ExtensionBase
-from zLOG import LOG, ERROR, BLATHER
+from zLOG import LOG, ERROR, INFO
 
 def _import_class(classpath):
   try:
@@ -57,22 +58,49 @@ def _import_class(classpath):
     raise ImportError('Could not import document class %s' % classpath)
 
 def _create_accessor_holder_class(property_sheet_tool,
+                                  property_sheet_module,
                                   property_sheet_name):
   """
   If the given Property Sheet exists in portal_property_sheets, then
   generate its accessor holder
   """
-  try:
-    return property_sheet_tool.createPropertySheetAccessorHolder(
-      getattr(property_sheet_tool,
-              property_sheet_name))
 
-  except AttributeError:
-    # Not too critical
-    LOG("ERP5Type.Dynamic", ERROR,
-        "Ignoring missing Property Sheet " + property_sheet_name)
+def _fill_accessor_holder_list(accessor_holder_list,
+                               create_accessor_holder_func,
+                               property_sheet_name_set,
+                               accessor_holder_module,
+                               property_sheet_module):
+  """
+  Fill the accessor holder list with the given Property Sheets (which
+  could be coming either from the filesystem or ZODB)
+  """
+  for property_sheet_name in property_sheet_name_set:
+    try:
+      # Get the already generated accessor holder
+      accessor_holder_list.append(getattr(accessor_holder_module,
+                                          property_sheet_name))
 
-    return None
+    except AttributeError:
+      # Generate the accessor holder as it has not been done yet
+      try:
+        accessor_holder_class = \
+          create_accessor_holder_func(getattr(property_sheet_module,
+                                              property_sheet_name))
+
+      except AttributeError:
+        # Not too critical
+        LOG("ERP5Type.Dynamic", ERROR,
+            "Ignoring missing Property Sheet " + property_sheet_name)
+
+      else:
+        setattr(accessor_holder_module, property_sheet_name,
+                accessor_holder_class)
+
+        accessor_holder_list.append(accessor_holder_class)
+
+        LOG("ERP5Type.Dynamic", INFO,
+            "Created accessor holder for %s in %s" % (property_sheet_name,
+                                                      accessor_holder_module))
 
 def portal_type_factory(portal_type_name):
   """
@@ -134,33 +162,27 @@ def portal_type_factory(portal_type_name):
           "Could not load interfaces or Mixins for portal type %s" \
               % portal_type)
 
-    # Initialize Property Sheets accessor holders
-    import erp5.accessor_holder
+    import erp5
 
-    # Get the ZODB Property Sheets for this Portal Type
-    property_sheet_name_set = set(
-      portal_type.getNewStyleTypePropertySheetList() or [])
+    # Initialize filesystem Property Sheets accessor holders
+    _fill_accessor_holder_list(
+      accessor_holder_list,
+      site.portal_property_sheets.createFilesystemPropertySheetAccessorHolder,
+      set(portal_type.getTypePropertySheetList() or ()),
+      erp5.filesystem_accessor_holder,
+      FilesystemPropertySheet)
 
-    for property_sheet_name in property_sheet_name_set:
-      try:
-        # Get the already generated accessor holder
-        accessor_holder_list.append(getattr(erp5.accessor_holder,
-                                            property_sheet_name))
+    # Initialize ZODB Property Sheets accessor holders
+    _fill_accessor_holder_list(
+      accessor_holder_list,
+      site.portal_property_sheets.createZodbPropertySheetAccessorHolder,
+      set(portal_type.getTypeZodbPropertySheetList() or ()),
+      erp5.zodb_accessor_holder,
+      site.portal_property_sheets)
 
-      except AttributeError:
-        # Generate the accessor holder as it has not been done yet
-        accessor_holder_class = \
-            _create_accessor_holder_class(site.portal_property_sheets,
-                                          property_sheet_name)
-
-        if accessor_holder_class is not None:
-          setattr(erp5.accessor_holder, property_sheet_name,
-                  accessor_holder_class)
-
-          accessor_holder_list.append(accessor_holder_class)
-
-          LOG("ERP5Type.Dynamic", BLATHER,
-              "Created accessor holder for %s" % property_sheet_name)
+    LOG("ERP5Type.Dynamic", INFO,
+        "%s: accessor_holder_list: %s" % (portal_type_name,
+                                          accessor_holder_list))
 
   if type_class is not None:
     type_class = document_class_registry.get(type_class)
@@ -176,7 +198,7 @@ def portal_type_factory(portal_type_name):
 
   baseclasses = [type_class] + accessor_holder_list + mixin_class_list
 
-  LOG("ERP5Type.Dynamic", BLATHER,
+  LOG("ERP5Type.Dynamic", INFO,
       "Portal type %s loaded with bases %s" \
           % (portal_type_name, repr(baseclasses)))
 
@@ -193,8 +215,13 @@ def initializeDynamicModules():
       holds document classes that have no physical import path,
       for example classes created through ClassTool that are in
       $INSTANCE_HOME/Document
-    erp5.accessor_holder
-      holds accessors of ZODB Property Sheet
+    erp5.zodb_accessor_holder
+      holds accessors of ZODB Property Sheets
+    erp5.filesystem_accessor_holder
+      holds accessors of filesystem Property Sheets
+
+  XXX: there should be only one accessor_holder once the code is
+       stable and all the Property Sheets have been migrated
   """
   def portal_type_loader(portal_type_name):
     """
@@ -206,8 +233,11 @@ def initializeDynamicModules():
   sys.modules["erp5"] = erp5
   erp5.document = ModuleType("erp5.document")
   sys.modules["erp5.document"] = erp5.document
-  erp5.accessor_holder = ModuleType("erp5.accessor_holder")
-  sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
+
+  erp5.zodb_accessor_holder = ModuleType("erp5.zodb_accessor_holder")
+  sys.modules["erp5.zodb_accessor_holder"] = erp5.zodb_accessor_holder
+  erp5.filesystem_accessor_holder = ModuleType("erp5.filesystem_accessor_holder")
+  sys.modules["erp5.filesystem_accessor_holder"] = erp5.filesystem_accessor_holder
 
   portal_type_container = dynamicmodule.dynamicmodule('erp5.portal_type',
                                                       portal_type_loader)
@@ -249,6 +279,18 @@ def initializeDynamicModules():
   erp5.temp_portal_type = dynamicmodule.dynamicmodule('erp5.temp_portal_type',
                                                    temp_portal_type_loader)
 
+def _clear_accessor_holder_module(module):
+  """
+  Clear the given accessor holder module (either for filesystem or
+  ZODB)
+
+  XXX: Merge into synchronizeDynamicModules as soon as we get rid of
+       these two accessor holder modules
+  """
+  for property_sheet_id in module.__dict__.keys():
+    if not property_sheet_id.startswith('__'):
+      delattr(module, property_sheet_id)
+
 last_sync = 0
 def synchronizeDynamicModules(context, force=False):
   """
@@ -262,7 +304,7 @@ def synchronizeDynamicModules(context, force=False):
     and send out an invalidation to other nodes
   """
   return # XXX disabled for now
-  LOG("ERP5Type.Dynamic", BLATHER, "Resetting dynamic classes")
+  LOG("ERP5Type.Dynamic", INFO, "Resetting dynamic classes")
 
   portal = context.getPortalObject()
 
@@ -291,6 +333,7 @@ def synchronizeDynamicModules(context, force=False):
       type(ExtensionBase).__init__(klass, klass)
 
   # Clear accessor holders of ZODB Property Sheets
-  for accessor_name in erp5.accessor_holder.__dict__.keys():
-    if not accessor_name.startswith('__'):
-      delattr(erp5.accessor_holder, accessor_name)
+  _clear_accessor_holder_module(erp5.zodb_accessor_holder)
+
+  # Clear accessor holders of filesystem Property Sheets
+  _clear_accessor_holder_module(erp5.filesystem_accessor_holder)
