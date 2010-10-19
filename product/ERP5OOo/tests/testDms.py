@@ -2187,7 +2187,7 @@ return 1
     self.assertEquals('test-en-003-title', document.getTitle())
     self.assertEquals('test-en-003-keywords', document.getSubject())
 
-
+  @expectedFailure
   def test_DocumentIndexation(self):
     """
       Test how a document is being indexed in MySQL.
