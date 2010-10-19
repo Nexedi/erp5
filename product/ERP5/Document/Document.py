@@ -639,7 +639,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     reference = self.getReference()
     if not reference:
       return
-    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
+    catalog = self.getPortalObject().portal_catalog
     res = catalog(reference=self.getReference(), sort_on=(('creation_date','ascending'),))
     # XXX this should be security-unaware - delegate to script with proxy roles
     return res[0].getLanguage() # XXX what happens if it is empty?
