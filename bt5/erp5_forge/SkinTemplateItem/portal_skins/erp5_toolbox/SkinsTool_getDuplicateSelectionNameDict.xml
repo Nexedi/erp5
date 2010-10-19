@@ -64,25 +64,26 @@ ok_to_share_selection_form_list = [\'Resource_viewInventory\', \'Resource_viewMo
 for field_path, field in skins_tool.ZopeFind(\n
          skins_tool, obj_metatypes=[\'ProxyField\', \'ListBox\'], search_sub=1):\n
   form = field.aq_parent\n
-  if field.meta_type == \'ProxyField\':\n
-    original_field = field.getRecursiveTemplateField()\n
-    if original_field is not None and \\\n
-       (original_field.meta_type != \'ListBox\' \\\n
-        or field.is_delegated(\'selection_name\')\n
-        or original_field.get_tales(\'selection_name\')!=\'\'):\n
-      continue\n
-  elif field.meta_type == \'ListBox\':\n
-    if field.get_tales(\'selection_name\')!=\'\':\n
-      continue\n
   # in some rare cases sharing a selection can be done intentional so avoid them\n
   if form.getId() in ok_to_share_selection_form_list:\n
     continue\n
   # if the form looks like a field library, we don\'t care, because it is not used directly.\n
   if form.getId().endswith(\'FieldLibrary\'):\n
     continue\n
+  if field.meta_type == \'ProxyField\':\n
+    try:\n
+      if field.get_recursive_tales(\'selection_name\') != \'\':\n
+        continue\n
+      selection_name = field.get_recursive_orig_value(\'selection_name\')\n
+    except KeyError:\n
+      continue\n
+  elif field.meta_type == \'ListBox\':\n
+    if field.get_tales(\'selection_name\')!=\'\':\n
+      continue\n
+    selection_name = field.get_orig_value(\'selection_name\')\n
 \n
   selection_name_dict.setdefault(\n
-         field.get_value(\'selection_name\'), []).append(field_path)\n
+         selection_name, []).append(field_path)\n
 \n
 # leave only duplicating ones\n
 duplicating_selection_name_dict = {}\n
@@ -138,10 +139,9 @@ return duplicating_selection_name_dict\n
                             <string>field_path</string>
                             <string>field</string>
                             <string>form</string>
-                            <string>original_field</string>
-                            <string>None</string>
-                            <string>duplicating_selection_name_dict</string>
                             <string>selection_name</string>
+                            <string>KeyError</string>
+                            <string>duplicating_selection_name_dict</string>
                             <string>field_list</string>
                             <string>len</string>
                             <string>_write_</string>
