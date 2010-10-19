@@ -765,11 +765,7 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
         msg='%r != %r' % (a, b)
-      for i in a:
-        self.failUnless(i in b, msg)
-      for i in b:
-        self.failUnless(i in a, msg)
-      self.assertEquals(len(a), len(b), msg)
+      self.assertEquals(set(a), set(b), msg)
     assertSameSet = failIfDifferentSet
 
     def assertWorkflowTransitionFails(self, object, workflow_id, transition_id,
