@@ -144,6 +144,10 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
     c = kw.pop("connection_id", None)
     #if c is not None:
       #LOG("DA", 300, "connection %s provided to %s" %(c, self.id))
+    # patch: dynamic brain configuration
+    zsql_brain = kw.pop('zsql_brain', None) 
+    # patch end
+    
       
     if REQUEST is None:
         if kw: REQUEST=kw
@@ -225,7 +229,19 @@ def DA__call__(self, REQUEST=None, __ick__=None, src__=0, test__=0, **kw):
         LOG("DA call raise", ERROR, "DB = %s, c = %s, query = %s" %(DB__, c, query), error=sys.exc_info())
         raise
 
-    if hasattr(self, '_v_brain'): brain=self._v_brain
+    # patch: dynamic brain configuration
+    if zsql_brain is not None:
+        try:
+          class_file_, class_name_ = zsql_brain.rsplit('.', 1)
+        except:
+          #import pdb; pdb.post_mortem()
+          raise
+        brain = getBrain(class_file_, class_name_)
+        # XXX remove this logging for performance
+        LOG(__name__, INFO, "Using special brain: %r\n" % (brain,))
+    elif hasattr(self, '_v_brain'):
+    # end patch:
+        brain=self._v_brain
     else:
         brain=self._v_brain=getBrain(self.class_file_, self.class_name_)
 
