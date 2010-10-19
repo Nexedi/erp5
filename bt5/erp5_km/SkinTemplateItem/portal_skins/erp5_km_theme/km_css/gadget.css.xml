@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87390711.89</string> </value>
+            <value> <string>ts87491856.73</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -52,7 +52,12 @@ div.right-gadget div.portal-column {\n
 div.gadget-management{\n
   display:block;\n
   float:right;\n
-  margin-bottom:5px;\n
+  height: 1.65em;\n
+}\n
+\n
+div.right-gadget{\n
+  float:right;\n
+  display:block;\n
 }\n
 \n
 /* hide labels for columns */\n
@@ -482,7 +487,7 @@ div.block div.box_inner_content div.worklist_list ul {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8854</int> </value>
+            <value> <int>8904</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

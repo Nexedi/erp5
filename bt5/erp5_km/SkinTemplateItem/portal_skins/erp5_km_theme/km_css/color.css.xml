@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 /****************************************************************/\n
 /*   TODO: XXX-JPS                                              */\n
@@ -161,9 +161,9 @@ table.table-b tbody tr td { \n
   border:none; \n
 }\n
 \n
-table tbody tr:hover td {\n
+/*table tbody tr:hover td {\n
 \tbackground-color: #f7f6f0;\n
-}\n
+}*/\n
 \n
 .pnav {\n
 \tbackground-color: #ecebe2;\n
@@ -431,7 +431,7 @@ div.searchDetails a.modification-date-link{\n
 }\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -446,8 +446,12 @@ div.searchDetails a.modification-date-link{\n
             <value> <string>color.css</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
