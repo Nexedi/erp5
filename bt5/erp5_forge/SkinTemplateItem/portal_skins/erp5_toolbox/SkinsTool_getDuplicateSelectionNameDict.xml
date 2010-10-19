@@ -81,7 +81,8 @@ for field_path, field in skins_tool.ZopeFind(\n
     if field.get_tales(\'selection_name\')!=\'\':\n
       continue\n
     selection_name = field.get_orig_value(\'selection_name\')\n
-\n
+  if selection_name == \'\':\n
+    continue\n
   selection_name_dict.setdefault(\n
          selection_name, []).append(field_path)\n
 \n

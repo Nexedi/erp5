@@ -1,5 +1,5 @@
 2010-10-19 Kazuhiko
-* When checking duplicated selection names, we should use get_recursive_orig_value('selection_name') instead of getRecursiveTemplateField().get_value('selection_name'), because delegation for selection_name can end at any intermediate proxy field.
+* When checking duplicated selection names, we should use get_recursive_orig_value('selection_name') instead of getRecursiveTemplateField().get_value('selection_name'), because delegation for selection_name can end at any intermediate proxy field. And skip an empty selection name that is now valid for a listbox where we don't want to store a selection.
 
 2010-10-19 yo
 * When checking duplicated selection names, skip field libraries, as they don't matter.
