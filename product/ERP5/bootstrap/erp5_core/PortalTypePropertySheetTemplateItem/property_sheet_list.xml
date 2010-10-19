@@ -5,8 +5,18 @@
   <item>StandardProperty</item>
   <item>TranslatableProperty</item>
  </portal_type>
+ <portal_type id="Category Existence Constraint">
+  <item>CategoryExistenceConstraint</item>
+  <item>Predicate</item>
+  <item>SimpleItem</item>
+ </portal_type>
  <portal_type id="Dynamic Category Property">
   <item>DynamicCategoryProperty</item>
+ </portal_type>
+ <portal_type id="Property Existence Constraint">
+  <item>Predicate</item>
+  <item>PropertyExistenceConstraint</item>
+  <item>SimpleItem</item>
  </portal_type>
  <portal_type id="Standard Property">
   <item>StandardProperty</item>

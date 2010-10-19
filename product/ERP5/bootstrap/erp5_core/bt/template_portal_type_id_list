@@ -11,6 +11,7 @@ Base Type
 Cache Factory
 Cache Tool
 Category
+Category Existence Constraint
 Category Property
 Category Tool
 Class Tool
@@ -35,6 +36,7 @@ Password Tool
 Predicate
 Preference
 Preference Tool
+Property Existence Constraint
 Property Sheet
 Property Sheet Tool
 Python Script

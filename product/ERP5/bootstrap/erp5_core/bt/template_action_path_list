@@ -32,6 +32,8 @@ Cache Factory | statistics
 Cache Factory | view
 Cache Tool | statistics
 Cache Tool | view
+Category Existence Constraint | predicate
+Category Existence Constraint | view
 Category Property | view
 Category Tool | export_category_list
 Category Tool | fast_input
@@ -56,6 +58,8 @@ Preference Tool | view
 Preference | html_style_preferences
 Preference | view
 Preference | view_template
+Property Existence Constraint | predicate
+Property Existence Constraint | view
 Property Sheet Tool | view
 Property Sheet | view
 Python Script | repository_history_view

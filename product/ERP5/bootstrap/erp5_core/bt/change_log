@@ -1,3 +1,8 @@
+2010-10-19 arnaud.fontaine
+* add views and portal types for category and property existence constraints.
+* fix field names in Property Sheet and Property Sheet Tool views.
+* add description to Property Sheet view.
+
 2010-10-08 arnaud.fontaine
 * rename base_type_interaction_workflow to portal_type_class_interaction_workflow and add interactions specific to ZODB Property Sheets
 * modify type class of Standard Property, Acquired Property and Dynamic Category Property portal types to their respective documents.
