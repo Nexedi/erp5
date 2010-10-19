@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,7 +67,7 @@ order.activate(tag=tag, after_tag=expand_tag).updateAppliedRule(\n
 order_portal_type = order.getPortalType()\n
 if order_portal_type == \'Open Sale Order\':\n
   delivery_builder = order.portal_deliveries.sale_order_builder\n
-  delivery_builder.activate(activity=\'SQLQueue\', after_tag=expand_tag).build(explanation_uid=order.getUid())\n
+  delivery_builder.activate(activity=\'SQLQueue\', after_tag=(expand_tag, tag)).build(explanation_uid=order.getUid())\n
 </string> </value>
         </item>
         <item>
