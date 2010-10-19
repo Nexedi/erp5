@@ -28,7 +28,7 @@
 
 class DynamicCategoryProperty:
     """
-    Define a Dynamic Category Property for new-style Property Sheets,
+    Define a Dynamic Category Property for ZODB Property Sheets,
     meaningful for Property Sheets which defines an Expression within
     _categories (only Item and Movement for now)
     """

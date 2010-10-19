@@ -16,3 +16,5 @@ from StandardProperty import StandardProperty
 from TranslatableProperty import TranslatableProperty
 from AcquiredProperty import AcquiredProperty
 from DynamicCategoryProperty import DynamicCategoryProperty
+from CategoryExistenceConstraint import CategoryExistenceConstraint
+from PropertyExistenceConstraint import PropertyExistenceConstraint

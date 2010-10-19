@@ -26,41 +26,18 @@
 #
 ##############################################################################
 
-class AcquiredProperty:
+class PropertyExistenceConstraint:
     """
-    Define an Acquired Property for ZODB Property Sheets
+    Define a Property Existence Constraint for ZODB Property Sheets
     """
     _properties = (
-        {   'id': 'acquisition_base_category',
+        {   'id': 'constraint_property',
             'type': 'lines',
-            'description' : 'The base categories to browse' },
-        {   'id': 'acquisition_object_id',
+            'description' : 'Properties to check the existence for' },
+        {   'id': 'message_no_such_property',
             'type': 'lines',
-            'description' : 'The default contained object id to look up' },
-        # TALES expression
-        {   'id': 'acquisition_portal_type',
-            'type': 'string',
-            'description' : 'The portal types to browse' },
-        {   'id': 'acquisition_accessor_id',
-            'type': 'string',
-            'description' : 'Property to get from source' },
-        {   'id': 'alt_accessor_id',
+            'description' : 'Error message when there is no such property' },
+        {   'id': 'message_property_not_set',
             'type': 'lines',
-            'description' : 'Alternative accessor ids' },
-        {   'id': 'acquisition_copy_value',
-            'type': 'boolean',
-            'description' : 'Determines if acquired value should be copied' },
-        {   'id': 'acquisition_mask_value',
-            'type': 'boolean',
-            'description' : 'Determines if the local value have priority' },
-        # TALES expression
-        {   'id': 'content_portal_type',
-            'type': 'string',
-            'description' : 'Portal type of the object to create' },
-        {   'id': 'content_acquired_property_id',
-            'type': 'lines',
-            'description' : 'Properties to be synchronized with the current object' },
-        {   'id': 'content_translation_acquired_property_id',
-            'type': 'lines',
-            'description' : 'Properties to be translated' },
+            'description' : 'Error message when the property is not set' },
         )

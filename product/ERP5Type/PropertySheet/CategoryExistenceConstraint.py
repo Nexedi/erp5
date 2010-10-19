@@ -26,41 +26,21 @@
 #
 ##############################################################################
 
-class AcquiredProperty:
+class CategoryExistenceConstraint:
     """
-    Define an Acquired Property for ZODB Property Sheets
+    Define a Category Existence Constraint for ZODB Property Sheets
     """
     _properties = (
-        {   'id': 'acquisition_base_category',
+        {   'id': 'constraint_base_category',
             'type': 'lines',
-            'description' : 'The base categories to browse' },
-        {   'id': 'acquisition_object_id',
+            'description' : 'Categories to check the existence for' },
+        {   'id': 'constraint_portal_type',
             'type': 'lines',
-            'description' : 'The default contained object id to look up' },
-        # TALES expression
-        {   'id': 'acquisition_portal_type',
+            'description' : 'Portal type' },
+        {   'id': 'message_category_not_set',
             'type': 'string',
-            'description' : 'The portal types to browse' },
-        {   'id': 'acquisition_accessor_id',
+            'description' : 'Error message when the category is not defined' },
+        {   'id': 'message_category_not_associated_with_portal_type',
             'type': 'string',
-            'description' : 'Property to get from source' },
-        {   'id': 'alt_accessor_id',
-            'type': 'lines',
-            'description' : 'Alternative accessor ids' },
-        {   'id': 'acquisition_copy_value',
-            'type': 'boolean',
-            'description' : 'Determines if acquired value should be copied' },
-        {   'id': 'acquisition_mask_value',
-            'type': 'boolean',
-            'description' : 'Determines if the local value have priority' },
-        # TALES expression
-        {   'id': 'content_portal_type',
-            'type': 'string',
-            'description' : 'Portal type of the object to create' },
-        {   'id': 'content_acquired_property_id',
-            'type': 'lines',
-            'description' : 'Properties to be synchronized with the current object' },
-        {   'id': 'content_translation_acquired_property_id',
-            'type': 'lines',
-            'description' : 'Properties to be translated' },
+            'description' : 'Error message when there is no such category' },
         )

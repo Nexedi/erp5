@@ -28,7 +28,7 @@
 
 class StandardProperty:
     """
-    Define a Standard Property for new-style Property Sheets
+    Define a Standard Property for ZODB Property Sheets
     """
     _properties = (
         # 'reference'  has  be  used  in  favor  of  'id'  because  of
