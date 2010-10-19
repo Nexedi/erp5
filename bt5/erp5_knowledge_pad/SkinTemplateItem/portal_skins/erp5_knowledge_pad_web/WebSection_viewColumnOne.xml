@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,11 +34,8 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
-<link href="erp5_knowledge_box_web_1column.css" \n
-      rel="stylesheet" \n
-      type="text/css" /> \n
 \n
 <tal:block \n
   tal:define="isAnon python: context.portal_membership.isAnonymousUser();\n
@@ -87,15 +81,7 @@
                                               \'portal-column-undraggable\', \n
                                               \'portal-column\')"\n
            tal:define="layout active_knowledge_pad/KnowledgePad_getBoxColumnLayout;">\n
-        <div tal:condition="not: isAnon" id="add-stick-gadget-tool-section">\n
-          <div style="float:left; width:60%;">\n
-            <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget"> Add Gadgets</span>\n
-          </div>\n
-          <div style="float:left; width:38%; text-align:right;">\n
-            <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/stick"> Stick/Unstick</span>\n
-          </div>\n
-        </div>\n
-          \n
+\n
         <span tal:condition="python: len(layout)>=1"\n
               tal:replace="structure python:\n
                   active_knowledge_pad.KnowledgePad_viewColumnWidget(section_layout=layout[0],  \n
@@ -133,7 +119,7 @@
     \n
   </tal:block>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -148,8 +134,12 @@
             <value> <string>WebSection_viewColumnOne</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Left Column</string> </value>
+            <value> <unicode>Left Column</unicode> </value>
         </item>
       </dictionary>
     </pickle>
