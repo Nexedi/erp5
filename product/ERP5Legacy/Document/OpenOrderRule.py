@@ -90,10 +90,14 @@ class OpenOrderRule(DeliveryRule):
         else:
           # Because order's start_date might be matched with the periodicity.
           order_start_date = order_movement.getStartDate()
-          schedule_start_date = order_start_date-1
-          schedule_list = [date_pair
-                           for date_pair in self._getOrderDateScheduleTupleList(order_movement, schedule_start_date, **kw)
-                           if date_pair[0]>=order_start_date]
+          schedule_start_date = order_start_date - 1
+          schedule_list = []
+          for date_pair in self._getOrderDateScheduleTupleList(order_movement,
+                  schedule_start_date,
+                  calculation_base_date=calculation_base_date,
+                  **kw):
+            if date_pair[0] >= order_start_date:
+              schedule_list.append(date_pair)
 
         for start_date, stop_date in schedule_list:
           property_dict = {'start_date':start_date, 'stop_date':stop_date}
