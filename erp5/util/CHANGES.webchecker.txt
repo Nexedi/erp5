@@ -1,3 +1,8 @@
+0.0.6 (2010-10-19)
+------------------
+- Bug fix about RawConfigParser
+  [Nicolas Delaby]
+
 2010-08-13 Nicolas Delaby
 -------------------------
 small Bug fix.
