@@ -354,8 +354,28 @@ class SerializeTestCase(unittest.TestCase):
         for field in form.get_fields():
             self.assert_(form2.has_field(field.getId()))
             field2 = getattr(form2, field.getId())
-            # XXX test if values are the same
-            self.assertEquals(field.values, field2.values)
+
+            # XXX In Formulator, None and '' are treated as nearly
+            # being identical, and validators often turn '' to None.
+            # So there may be false positive, if we compare the values
+            # naively.
+            message = 'the values of %r and %r are different: %r != %r' \
+                    % (field, field2, field.values, field2.values)
+            self.assertEquals(sorted(field.values.iterkeys()),
+                    sorted(field2.values.keys()),
+                    message)
+
+            def compare(a, b):
+                if a is None:
+                    a = ''
+                if b is None:
+                    b = ''
+                return a == b
+
+            for key in field.values.keys():
+                self.assertTrue(compare(field.values[key], field2.values[key]),
+                        message)
+
             # test if default renderings are the same
             self.assertEquals(field.render(REQUEST=request),
                               field2.render(REQUEST=request))
