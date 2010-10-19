@@ -91,7 +91,7 @@
              title="Minimize"></a>\n
         </tal:block>\n
         <span class="gadget_title" \n
-              tal:content="python: here.Base_translateString(box.getProperty(\'preferred_header_title\', box.getProperty(\'title\', None)) or gadget.getTitle())"/>\n
+              tal:content="python: here.Base_translateString(box.getProperty(\'preferred_header_title\', None) or gadget.getTitle())"/>\n
         </span>\n
       </h3>\n
 \n
