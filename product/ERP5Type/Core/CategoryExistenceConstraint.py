@@ -28,11 +28,11 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Core.Constraint import Constraint
+from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
-class CategoryExistenceConstraint(Constraint):
+class CategoryExistenceConstraint(ConstraintMixin):
   """
   This constraint checks whether a category has been defined on this
   object (without acquisition). This is only relevant for ZODB

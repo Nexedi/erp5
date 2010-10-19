@@ -37,15 +37,12 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import UpperCase
 
-class Constraint(Predicate):
+class ConstraintMixin(Predicate):
   """
-  Constraint implementation (only relevant for ZODB Property sheets,
-  use Products.ERP5Type.Constraint instead for filesystem Property
-  Sheets) relying on Predicate
+  Mixin Constraint implementation (only relevant for ZODB Property
+  sheets, use Products.ERP5Type.Constraint instead for filesystem
+  Property Sheets) relying on Predicate
   """
-  meta_type = 'ERP5 Constraint'
-  portal_type = 'Constraint'
-
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)

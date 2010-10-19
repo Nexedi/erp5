@@ -28,11 +28,11 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Core.Constraint import Constraint
+from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
-class PropertyExistenceConstraint(Constraint):
+class PropertyExistenceConstraint(ConstraintMixin):
   """
   This constraint checks whether a property has been defined on this
   object. This is only relevant for ZODB Property Sheets (filesystem
