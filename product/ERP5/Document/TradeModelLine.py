@@ -33,7 +33,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ERP5.Document.TradeCondition import TradeCondition
 from Products.ERP5.PropertySheet.TradeModelLine import (TARGET_LEVEL_MOVEMENT,

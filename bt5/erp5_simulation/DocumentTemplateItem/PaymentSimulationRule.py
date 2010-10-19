@@ -32,7 +32,7 @@ will replace PaymentRule.
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.mixin.rule import RuleMixin
 from Products.ERP5.mixin.movement_collection_updater import \
      MovementCollectionUpdaterMixin

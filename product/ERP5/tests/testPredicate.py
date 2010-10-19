@@ -274,7 +274,7 @@ class TestPredicates(TestPredicateMixIn):
   def test_Interface(self):
     """Test Predicate implements Predicate interface."""
     from Products.ERP5Type.interfaces import IPredicate
-    from Products.ERP5Type.Document.Predicate import Predicate
+    from Products.ERP5Type.Core.Predicate import Predicate
     predicate = self.createPredicate()
     self.failUnless(IPredicate.providedBy(predicate))
     from zope.interface.verify import verifyClass

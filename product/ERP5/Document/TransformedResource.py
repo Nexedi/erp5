@@ -39,7 +39,7 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 
 class TransformedResource(Predicate, XMLObject, XMLMatrix, Amount):
     """

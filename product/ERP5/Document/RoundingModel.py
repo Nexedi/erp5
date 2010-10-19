@@ -27,7 +27,7 @@
 ##############################################################################
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet, Permissions
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type.Utils import UpperCase
 from decimal import Decimal
 from Products.ERP5.Tool.RoundingTool import ROUNDING_OPTION_DICT
