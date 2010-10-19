@@ -74,11 +74,13 @@ class HTTPCacheCheckerTestSuite(object):
   ACCEPTABLE_STATUS_LIST = ('200', '304', '302',)
 
   def __init__(self, root_url, working_directory, varnishlog_binary_path,
-               header_list, email_address, smtp_host, debug_level):
+               wget_binary_path, header_list, email_address, smtp_host,
+               debug_level, file_log_path):
     """
       root_url : website to check
       working_directory : where fetched data will be downloaded
       varnishlog_binary_path :  path to varnishlog
+      wget_binary_path : path to wget command
       header_list : Key == Header id.
                     value: if equals True means header
                              needs to be present in RESPONSE
@@ -89,15 +91,17 @@ class HTTPCacheCheckerTestSuite(object):
       debug_level : log level of this utility (debug =>very verbose,
                                                info=>normal,
                                                warning=> nothing)
+      file_log_path: path to log file
     """
     self.root_url = root_url
     self.working_directory = working_directory
     self.varnishlog_binary_path = varnishlog_binary_path
+    self.wget_binary_path = wget_binary_path
     self.header_list = header_list
     self.email_address = email_address
     self.smtp_host = smtp_host
     level = self.LOG_LEVEL_DICT.get(debug_level, logging.INFO)
-    logging.basicConfig(filename='erp5_web_checker.log', level=level)
+    logging.basicConfig(filename=file_log_path, level=level)
     self.report_dict = {}
     self._timeout = 30
 
@@ -225,8 +229,8 @@ class HTTPCacheCheckerTestSuite(object):
   def _runSpider(self):
     """Run wget in working_directory with headers in result
     """
-    wget_command_string = 'wget -r -nc --retry-connrefused --save-headers %s '\
-                                                                % self.root_url
+    wget_command_string = '%s -r -nc --retry-connrefused --save-headers %s '\
+                                       % (self.wget_binary_path, self.root_url)
     logging.debug('wget command:%r' % wget_command_string)
     wget_argument_list = shlex.split(wget_command_string)
     wget_process = Popen(wget_argument_list, stdin=PIPE,
@@ -424,14 +428,17 @@ def web_checker_utility():
     parser.error('incorrect number of arguments')
   config_path = args[0]
 
-  config = ConfigParser.RawConfigParser()
+  config = ConfigParser.RawConfigParser(defaults=dict(wget_binary_path='wget',
+                                              file_log_path='web_checker.log'))
   config.read(config_path)
   working_directory = config.get('web_checker', 'working_directory')
   url = config.get('web_checker', 'url')
-  varnishlog_binary_path = config.get('web_checker' , 'varnishlog_binary_path')
-  email_address = config.get('web_checker' , 'email_address')
-  smtp_host = config.get('web_checker' , 'smtp_host')
-  debug_level = config.get('web_checker' , 'debug_level')
+  varnishlog_binary_path = config.get('web_checker', 'varnishlog_binary_path')
+  wget_binary_path = config.get('web_checker', 'wget_binary_path')
+  email_address = config.get('web_checker', 'email_address')
+  smtp_host = config.get('web_checker', 'smtp_host')
+  debug_level = config.get('web_checker', 'debug_level')
+  file_log_path = config.get('web_checker', 'file_log_path')
   header_list = {}
   for header, configuration in config.items('header_list'):
     if configuration in ('True', 'true', 'yes'):
@@ -449,10 +456,12 @@ def web_checker_utility():
   instance = HTTPCacheCheckerTestSuite(url,
                                        working_directory,
                                        varnishlog_binary_path,
+                                       wget_binary_path,
                                        header_list,
                                        email_address,
                                        smtp_host,
-                                       debug_level)
+                                       debug_level,
+                                       file_log_path)
 
   result = instance.start(prohibited_file_name_list=prohibited_file_name_list,
                        prohibited_folder_name_list=prohibited_folder_name_list)
