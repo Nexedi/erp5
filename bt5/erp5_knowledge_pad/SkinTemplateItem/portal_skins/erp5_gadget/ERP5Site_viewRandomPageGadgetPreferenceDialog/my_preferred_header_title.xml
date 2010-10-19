@@ -2,16 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="StringField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="StringField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_title</string> </value>
+            <value> <string>my_preferred_header_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -121,9 +118,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -258,22 +253,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.hasTitle() and context.getTitle() or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
