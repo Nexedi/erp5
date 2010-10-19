@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import tempfile
@@ -106,4 +107,61 @@ class popentransform:
             os.unlink(tmpname)
 
         cache.setData(out)
+        return cache
+
+from subprocess import Popen, PIPE
+import shlex
+
+class subprocesstransform:
+    """abstract class for subprocess command based transform
+
+    Command must read from stdin and write to stdout
+    """
+    implements(itransform)
+
+    binaryName = ""
+    binaryArgs = ""
+    useStdin = True
+
+    def __init__(self, name=None, binary=None, binaryArgs=None, useStdin=None,
+                 **kwargs):
+        if name is not None:
+            self.__name__ = name
+        if binary is not None:
+            self.binary = bin_search(binary)
+        else:
+            self.binary = bin_search(self.binaryName)
+        if binaryArgs is not None:
+            self.binaryArgs = binaryArgs
+        if useStdin is not None:
+            self.useStdin = useStdin
+
+    def name(self):
+        return self.__name__
+
+    def getData(self, couterr):
+        return couterr.read()
+
+    def convert(self, data, cache, **kwargs):
+        command = "%s %s" % (self.binary, self.binaryArgs)
+
+        if self.useStdin:
+          tempfile_object = tempfile.NamedTemporaryFile()
+          tmpname = tempfile_object.name
+          tempfile_object.write( data)
+          tempfile_object.seek(0)
+          command = command % {'infile': tmpname} # apply tmp name to command
+        argument_list = shlex.split(command)
+        if self.useStdin:
+          process = Popen(argument_list, stdin=tempfile_object, stdout=PIPE,
+                          stderr=PIPE, close_fds=True)
+          data_out, data_err = process.communicate()
+          tempfile_object.close()
+        else:
+          process = Popen(argument_list, stdin=PIPE, stdout=PIPE,
+                          stderr=PIPE, close_fds=True)
+          data_out, data_err = process.communicate(input=data)
+        if data_err:
+          raise OSError, data_err
+        cache.setData(data_out)
         return cache
