@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block \n
      tal:repeat="box_id python: options[\'section_layout\']"\n
@@ -94,7 +91,7 @@
              title="Minimize"></a>\n
         </tal:block>\n
         <span class="gadget_title" \n
-              tal:content="python: here.Base_translateString(box.getProperty(\'preferred_header_title\', None) or gadget.getTitle())"/>\n
+              tal:content="python: here.Base_translateString(box.getProperty(\'preferred_header_title\', box.getProperty(\'title\', None)) or gadget.getTitle())"/>\n
         </span>\n
       </h3>\n
 \n
@@ -205,7 +202,7 @@
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -220,8 +217,12 @@
             <value> <string>KnowledgePad_viewColumnWidget</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Render boxes for a column</string> </value>
+            <value> <unicode>Render boxes for a column</unicode> </value>
         </item>
       </dictionary>
     </pickle>
