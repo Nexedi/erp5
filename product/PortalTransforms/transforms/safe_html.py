@@ -122,7 +122,8 @@ def decode_htmlentity(m):
    except ValueError:
       return entity_value
 
-charset_parser = re.compile('charset="?(?P<charset>[^"]*)"?$')
+charset_parser = re.compile('charset="?(?P<charset>[^"]*)"?[\S/]?',
+                            re.IGNORECASE)
 class CharsetReplacer:
   def __init__(self, encoding):
     self.encoding = encoding
