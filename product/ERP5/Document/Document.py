@@ -35,7 +35,7 @@ from AccessControl.SecurityManagement import newSecurityManager, setSecurityMana
 from Acquisition import aq_base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import get_request
-from Products.CMFCore.utils import getToolByName, _checkPermission
+from Products.CMFCore.utils import _checkPermission
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.DateUtils import convertDateToHour,\
@@ -454,7 +454,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     """
     if not self.getReference():
       return self
-    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
+    catalog = self.getPortalObject().portal_catalog
     kw = dict(reference=self.getReference(), sort_on=(('version','descending'),))
     if language is not None:
       kw['language'] = language
@@ -495,7 +495,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
       Returns a list of documents with same reference, same portal_type
       but different version and given language or any language if not given.
     """
-    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
+    catalog = self.getPortalObject().portal_catalog
     kw = dict(portal_type=self.getPortalType(),
                    reference=self.getReference(),
                    sort_on=(('version', 'descending', 'SIGNED'),)
@@ -520,7 +520,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
               version=self.getVersion(),
               language=self.getLanguage(),
               validation_state="!=cancelled")
-    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
+    catalog = self.getPortalObject().portal_catalog
     self_count = catalog.unrestrictedCountResults(uid=self.getUid(), **kw)[0][0]
     count = catalog.unrestrictedCountResults(**kw)[0][0]
     # If self is not indexed yet, then if count == 1, version is not unique
@@ -534,8 +534,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
       in order to be consistent with the property sheet
       definition.
     """
-    getInfoFor = getToolByName(self.getPortalObject(),
-                                                  'portal_workflow').getInfoFor
+    getInfoFor = self.getPortalObject().portal_workflow.getInfoFor
     revision = len(getInfoFor(self, 'history', (), 'edit_workflow'))
     # XXX Also look at processing_status_workflow for compatibility.
     revision += len([history_item for history_item in\
@@ -572,7 +571,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
       finishIngestion.
     """
     document = self
-    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
+    catalog = self.getPortalObject().portal_catalog
     if self.getReference():
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalDocumentTypeList(),
@@ -618,7 +617,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
       for the current user.
     """
     if not self.getReference(): return []
-    catalog = getToolByName(self.getPortalObject(), 'portal_catalog')
+    catalog = self.getPortalObject().portal_catalog
     kw = dict(portal_type=self.getPortalType(),
               reference=self.getReference(),
               group_by=('language',))
