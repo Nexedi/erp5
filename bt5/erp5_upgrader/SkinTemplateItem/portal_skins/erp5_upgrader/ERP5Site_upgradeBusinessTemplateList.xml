@@ -140,7 +140,7 @@ def reinstallBT5(bt5_title, previous_bt5, bt5_counter):\n
     # We must make sure all documents from previous installations \n
     # are already indexed (specially categories).\n
     kw[\'after_method_id\'] = "immediateReindexObject"\n
-  update_catalog = portal_templates.TemplateTool_isUpdateCatalogRequired(bt5_title)\n
+  update_catalog = bt5_title in update_catalog_bt5_id_list\n
   portal_templates.activate(**kw).TemplateTool_reinstallBT5(\n
                                                     bt5_title,\n
                                                     update_catalog=update_catalog)\n
