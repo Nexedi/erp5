@@ -441,6 +441,10 @@ def web_checker_utility():
   file_log_path = config.get('web_checker', 'file_log_path')
   header_list = {}
   for header, configuration in config.items('header_list'):
+    if key in config.defaults().keys():
+      # defaults are shared for all sections.
+      # so discard them from header_list
+      continue
     if configuration in ('True', 'true', 'yes'):
       value = True
     else:
