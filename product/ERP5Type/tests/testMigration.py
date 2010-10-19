@@ -6,7 +6,6 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
-@expectedFailure # XXX remove me once portal type classes code is committed
 class TestNewStyleClasses(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
@@ -127,6 +126,10 @@ class TestNewStyleClasses(ERP5TypeTestCase):
     finally:
       # reset the type
       person_type.setTypeClass('Person')
+
+# XXX remove me once portal type classes code is committed
+TestNewStyleClasses = expectedFailure(TestNewStyleClasses)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestNewStyleClasses))
