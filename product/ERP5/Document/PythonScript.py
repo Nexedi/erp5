@@ -41,7 +41,6 @@ manage_addPythonScriptFormThroughZMI = \
 def addPythonScriptThroughZMI(self, id, title="", REQUEST=None):
     """Add a Python script to a folder.
     """
-    from Products.ERP5Type.Document import addPythonScript
     type_info = self.getPortalObject().portal_types.getTypeInfo("Python Script")
     type_info.constructInstance(
       container=self,
