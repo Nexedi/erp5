@@ -469,8 +469,8 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
         return result_list[0].getObject()
       except IndexError:
         return None
-    else:
-      first = result_list[0].getObject()
+    elif result_list:
+      first =  result_list[0].getObject()
       in_original = None
       for record in result_list:
         document = record.getObject()
