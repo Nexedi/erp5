@@ -198,10 +198,11 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
     def getRequirementListByMimetype(self, origin_mimetype, target_mimetype):
       """Return requirements only if origin_mimetype
-      and target_mimetype match transform policy
+      and target_mimetype are matching transform policy
 
       As an example pdf => text conversion force a transformation
-      to intermediate HTML format, just because html_to_text is a requirement.
+      to intermediate HTML format, because w3m_dump is a requirement
+      to output plain/text.
       But we want using pdf_to_text directly.
 
       So requirements are returned only if
