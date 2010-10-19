@@ -1,3 +1,6 @@
+2010-10-19 yo
+* When checking duplicated selection names, skip field libraries, as they don't matter.
+
 2010-10-11 lucas
 * Now portal_type_group_list is an optional param for the script BaseType_copyRoleList.
 

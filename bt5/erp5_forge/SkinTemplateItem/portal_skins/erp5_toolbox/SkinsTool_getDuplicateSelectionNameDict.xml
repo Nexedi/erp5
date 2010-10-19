@@ -77,6 +77,9 @@ for field_path, field in skins_tool.ZopeFind(\n
   # in some rare cases sharing a selection can be done intentional so avoid them\n
   if form.getId() in ok_to_share_selection_form_list:\n
     continue\n
+  # if the form looks like a field library, we don\'t care, because it is not used directly.\n
+  if form.getId().endswith(\'FieldLibrary\'):\n
+    continue\n
 \n
   selection_name_dict.setdefault(\n
          field.get_value(\'selection_name\'), []).append(field_path)\n
