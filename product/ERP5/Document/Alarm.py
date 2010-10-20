@@ -35,7 +35,6 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from DateTime import DateTime
 from Products.ERP5Type.Message import Message
-from Products.ERP5Type.DateUtils import addToDate, atTheEndOfPeriod
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from AccessControl.SecurityManagement import getSecurityManager, \
             setSecurityManager, newSecurityManager
