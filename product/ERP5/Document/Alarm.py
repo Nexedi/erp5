@@ -140,6 +140,17 @@ class PeriodicityMixin:
       return date.timezone()
     return None
 
+  def _getNextMonth(self, date, timezone):
+    year = date.year()
+    month = date.month()
+    if month == 12:
+      year += 1
+      month = 1
+    else:
+      month += 1
+
+    return DateTime(year, month, 1, 0, 0, 0, timezone)
+
   def _getNextDay(self, date, timezone):
     if timezone is not None:
       new_date = DateTime(date.timeTime() + 86400.0, timezone)
