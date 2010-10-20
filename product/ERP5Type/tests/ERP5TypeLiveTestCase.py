@@ -444,7 +444,7 @@ class ERP5TypeLiveTestCase(ProcessingNodeTestCase, PortalTestCase):
 
         return ResponseWrapper(response, outstream, path)
 
-def runLiveTest(test_list, verbosity=1, **kw):
+def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
   from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
   from Products.ERP5Type.tests import backportUnittest
@@ -472,9 +472,8 @@ def runLiveTest(test_list, verbosity=1, **kw):
     ERP5TypeTestLoader.filter_test_list = [re.compile(x).search
                                             for x in run_only.split(',')]
   suite = ERP5TypeTestLoader().loadTestsFromNames(test_list)
-  stream = StringIO()
-  output = StringIO()
+  output = stream
+  if stream is None:
+    output = StringIO()
   output.write("**Running Live Test:\n")
   result = TestRunner(stream=output, verbosity=verbosity).run(suite)
-  output.write(stream.getvalue())
-  return output.getvalue()

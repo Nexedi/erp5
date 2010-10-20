@@ -37,6 +37,7 @@ from Products.CMFCore.utils import UniqueObject
 
 import OFS
 import transaction
+from cStringIO import StringIO
 from zExceptions import BadRequest
 from zExceptions import Unauthorized
 from Acquisition import Implicit
@@ -71,6 +72,8 @@ from DateTime import DateTime
 import Products
 
 from zLOG import LOG, WARNING
+
+global_stream = None
 
 """
   ClassTool allows to create classes from the ZMI using code templates.
@@ -1187,6 +1190,19 @@ def initialize( context ):
                              instance_home=self._v_instance_home.getPath())
 
       security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
+      def readTestOutput(self, position=0):
+        """
+        Return unread part of the test result
+        """
+        result = ''
+        position = int(position)
+        global global_stream
+        if global_stream is not None:
+          global_stream.seek(position)
+          result = global_stream.read()
+        return result
+
+      security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
       def runLiveTest(self, test_list=[], run_only=None, debug=None,
                       verbose=False):
         """
@@ -1200,8 +1216,13 @@ def initialize( context ):
         """
         path = os.path.join(getConfiguration().instancehome, 'tests')
         verbosity = verbose and 2 or 1
-        return runLiveTest(test_list, run_only=run_only, debug=debug, path=path,
-                           verbosity=verbosity)
+        instance_home = getConfiguration().instancehome
+        global global_stream
+        global_stream = StringIO()
+        result = runLiveTest(test_list, run_only=run_only, debug=debug, path=path,
+                           stream=global_stream, verbosity=verbosity)
+        global_stream.seek(0)
+        return global_stream.read()
 
       def getProductList(self):
         """ List all products """
