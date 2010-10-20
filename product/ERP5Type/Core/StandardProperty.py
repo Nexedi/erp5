@@ -44,6 +44,7 @@ class StandardProperty(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   property_sheets = (PropertySheet.SimpleItem,
+                     PropertySheet.Reference,
                      PropertySheet.StandardProperty,
                      PropertySheet.TranslatableProperty)
 

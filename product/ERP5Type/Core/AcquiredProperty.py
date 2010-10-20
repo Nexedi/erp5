@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.StandardProperty import StandardProperty
+from Products.ERP5Type.Core.StandardProperty import StandardProperty
 
 class AcquiredProperty(StandardProperty):
   """

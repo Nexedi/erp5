@@ -45,7 +45,9 @@ class DynamicCategoryProperty(XMLObject):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  property_sheets = (PropertySheet.DynamicCategoryProperty,)
+  property_sheets = (PropertySheet.SimpleItem,
+                     PropertySheet.Reference,
+                     PropertySheet.DynamicCategoryProperty)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
