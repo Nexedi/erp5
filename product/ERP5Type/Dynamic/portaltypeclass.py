@@ -148,7 +148,10 @@ def portal_type_factory(portal_type_name):
       # XXX heuristic: bootstrap issues should happen only inside ERP5Type.
       if not path.startswith('Products.ERP5Type.'):
         continue
-      klass = _import_class(path)
+
+      module_path, class_name = path.rsplit('.', 1)
+      module = __import__(module_path, {}, {}, (module_path,))
+      klass = getattr(module, class_name)
       try:
         try:
           document_portal_type = getattr(klass, 'portal_type')
