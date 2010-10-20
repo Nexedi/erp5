@@ -692,7 +692,9 @@ class BusinessProcess(Path, XMLObject):
     if not trade_phase:
       trade_phase = amount.getTradePhase()
       if not trade_phase:
-        raise ValueError("A trade_phase must be defined on the Amount or provided to getTradePhaseMovementList")
+        raise ValueError("%s: a trade_phase must be defined on the " \
+                         "Amount or provided to getTradePhaseMovementList" %
+                          amount.getRelativeUrl())
 
     # Build a list of temp movements
     from Products.ERP5Type.Document import newTempMovement
