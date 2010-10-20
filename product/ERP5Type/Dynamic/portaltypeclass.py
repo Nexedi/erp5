@@ -122,6 +122,8 @@ def portal_type_factory(portal_type_name):
     # loaded Base Type class, but you cant load
     # Base Type class without accessing portal_types/Base Type
     type_class = "ERP5TypeInformation"
+  elif portal_type_name == "Solver Type":
+    type_class = "SolverTypeInformation"
   elif portal_type_name == "Business Template":
     # When installing a BT, Business Templates are loaded
     # before creating any Base Type object
@@ -160,7 +162,7 @@ def portal_type_factory(portal_type_name):
       # log loudly the error, but it's not _critical_
       LOG("ERP5Type.Dynamic", ERROR,
           "Could not load interfaces or Mixins for portal type %s" \
-              % portal_type)
+              % portal_type_name)
 
     import erp5
 
