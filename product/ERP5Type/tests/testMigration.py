@@ -4,7 +4,6 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import skip
 
 class TestNewStyleClasses(ERP5TypeTestCase):
 
@@ -126,8 +125,6 @@ class TestNewStyleClasses(ERP5TypeTestCase):
     finally:
       # reset the type
       person_type.setTypeClass('Person')
-
-TestNewStyleClasses = skip("portal type classes code is not yet committed")(TestNewStyleClasses)
 
 def test_suite():
   suite = unittest.TestSuite()

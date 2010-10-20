@@ -29,7 +29,7 @@ import Products
 from Products.CMFCore.TypesTool import FactoryTypeInformation
 from Products.CMFCore.Expression import Expression
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
-from Products.CMFCore.utils import _checkPermission, getToolByName
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import interfaces, Constraint, Permissions, PropertySheet
 from Products.ERP5Type.Base import getClassPropertyList
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -304,48 +304,24 @@ class ERP5TypeInformation(XMLObject,
         """
         return default
 
-    # The following 2 methods should not be used.
-    _getFactoryMethod = deprecated(FactoryTypeInformation._getFactoryMethod)
-    _constructInstance = deprecated(FactoryTypeInformation._constructInstance)
-
-    def _queryFactoryMethod(self, container, temp_object=0):
-      product = self.product
-      factory = self.factory
-      if not product or not factory:
-        return ValueError('Product factory for %s was undefined'
-                          % self.getId())
-      try:
-        p = container.manage_addProduct[product]
-      except AttributeError:
-        pass
-      else:
-        if temp_object:
-          factory = factory[:3] == 'add' and 'newTemp' + factory[3:] or ''
-        m = getattr(p, factory, None)
-        if m is None:
-          return ValueError('Product factory for %s was invalid'
-                            % self.getId())
-        if temp_object:
-          return m
-        permission = self.permission
-        if permission:
-          if _checkPermission(permission, container):
-            return m
-        else:
-          try:
-            # validate() can either raise Unauthorized or return 0 to
-            # mean unauthorized.
-            if getSecurityManager().validate(p, p, factory, m):
-              return m
-          except zExceptions_Unauthorized, e:
-            return e
-      return AccessControl_Unauthorized('Cannot create %s' % self.getId())
-
     security.declarePublic('isConstructionAllowed')
     def isConstructionAllowed(self, container):
       """Test if user is allowed to create an instance in the given container
       """
-      return not isinstance(self._queryFactoryMethod(container), Exception)
+      permission = self.permission or 'Add portal content'
+      return getSecurityManager().checkPermission(permission, container)
+
+    security.declarePublic('constructTempInstance')
+    def constructTempInstance(self, container, id, *args, **kw ):
+      """
+      All ERP5Type.Document.newTempXXXX are constructTempInstance methods
+      """
+      # you should not pass temp_object to constructTempInstance
+      ob = self.constructInstance(container, id, temp_object=1, *args, **kw)
+      if container.isTempObject():
+        container._setObject(id, ob.aq_base)
+      return ob
+
 
     security.declarePublic('constructInstance')
     def constructInstance(self, container, id, created_by_builder=0,
@@ -356,10 +332,37 @@ class ERP5TypeInformation(XMLObject,
       Call the init_script for the portal_type.
       Returns the object.
       """
-      m = self._queryFactoryMethod(container, temp_object)
-      if isinstance(m, Exception):
-        raise m
-      ob = m(id, **kw)
+      if not temp_object and not self.isConstructionAllowed(container):
+        raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
+
+      portal = container.getPortalObject()
+      klass = portal.portal_types.getPortalTypeClass(
+          self.getId(),
+          temp=temp_object)
+      ob = klass(id)
+
+      if temp_object:
+        ob = ob.__of__(container)
+        for ignore in ('activate_kw', 'is_indexable', 'reindex_kw'):
+          kw.pop(ignore, None)
+      else:
+        activate_kw = kw.pop('activate_kw', None)
+        if activate_kw is not None:
+          ob.__of__(container).setDefaultActivateParameters(**activate_kw)
+        reindex_kw = kw.pop('reindex_kw', None)
+        if reindex_kw is not None:
+          ob.__of__(container).setDefaultReindexParameters(**reindex_kw)
+        is_indexable = kw.pop('is_indexable', None)
+        if is_indexable is not None:
+          ob.isIndexable = is_indexable
+        container._setObject(id, ob)
+        ob = container._getOb(id)
+        # if no activity tool, the object has already an uid
+        if getattr(aq_base(ob), 'uid', None) is None:
+          ob.uid = portal.portal_catalog.newUid()
+
+      if kw:
+        ob._edit(force_update=1, **kw)
 
       # Portal type has to be set before setting other attributes
       # in order to initialize aq_dynamic
@@ -375,7 +378,7 @@ class ERP5TypeInformation(XMLObject,
 
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
-        workflow_tool = getToolByName(self.getPortalObject(), 'portal_workflow', None)
+        workflow_tool = getToolByName(portal, 'portal_workflow', None)
         if workflow_tool is not None:
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
