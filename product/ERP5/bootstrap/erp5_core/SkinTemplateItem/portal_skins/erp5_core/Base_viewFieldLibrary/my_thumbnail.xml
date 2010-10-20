@@ -267,7 +267,7 @@
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
-                    <value> <int>75</int> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -320,7 +320,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_preferences.getPreference(\'preferred_image_format\', \'png\')</string> </value>
+            <value> <string>python: here.portal_preferences.getPreferredImageFormat()</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -333,7 +333,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_preferences.getPreference(\'preferred_image_quality\', \'75\')</string> </value>
+            <value> <string>python: here.portal_preferences.getPreferredImageQuality()</string> </value>
         </item>
       </dictionary>
     </pickle>
