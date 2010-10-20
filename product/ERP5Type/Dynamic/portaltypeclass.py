@@ -53,8 +53,7 @@ def _import_class(classpath):
     InitializeClass(klass)
 
     return klass
-  except:
-    import traceback; traceback.print_exc()
+  except StandardError:
     raise ImportError('Could not import document class %s' % classpath)
 
 def _create_accessor_holder_class(property_sheet_tool,
@@ -123,7 +122,6 @@ def portal_type_factory(portal_type_name):
   try:
     portal_type = getattr(type_tool, portal_type_name)
   except:
-    import traceback; traceback.print_stack()
     raise AttributeError('portal type %s not found in Types Tool' \
                             % portal_type_name)
 

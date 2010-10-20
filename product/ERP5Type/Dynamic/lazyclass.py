@@ -19,7 +19,7 @@ def lazyclass(name, portal_type_class_attr_getter):
         portal_type = klass.__name__
         try:
           baseclasses, attributes = portal_type_class_attr_getter(portal_type)
-        except:
+        except AttributeError:
           LOG("ERP5Type.Dynamic", ERROR,
               "Could not access Portal Type Object for type %s" % name)
           import traceback; traceback.print_exc()
