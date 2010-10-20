@@ -152,9 +152,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -174,11 +172,15 @@
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -265,7 +267,7 @@
                 </item>
                 <item>
                     <key> <string>image_resolution</string> </key>
-                    <value> <string></string> </value>
+                    <value> <int>75</int> </value>
                 </item>
                 <item>
                     <key> <string>max_length</string> </key>
@@ -318,7 +320,20 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/hasData</string> </value>
+            <value> <string>python: here.portal_preferences.getPreference(\'preferred_image_format\', \'png\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.portal_preferences.getPreference(\'preferred_image_quality\', \'75\')</string> </value>
         </item>
       </dictionary>
     </pickle>
