@@ -3,6 +3,7 @@ from ExtensionClass import Base as ExtensionBase
 
 from zLOG import LOG, ERROR, BLATHER
 
+# FIXME: bad name
 def lazyclass(name, portal_type_class_attr_getter):
     def load(self, attr):
         klass = None

@@ -42,6 +42,7 @@ from Products.ERP5Type import PropertySheet as FilesystemPropertySheet
 from ExtensionClass import Base as ExtensionBase
 from zLOG import LOG, ERROR, INFO
 
+# FIXME: bad name
 def _import_class(classpath):
   try:
     module_path, class_name = classpath.rsplit('.', 1)
@@ -56,6 +57,7 @@ def _import_class(classpath):
   except StandardError:
     raise ImportError('Could not import document class %s' % classpath)
 
+# FIXME: bad name
 def _create_accessor_holder_class(property_sheet_tool,
                                   property_sheet_module,
                                   property_sheet_name):
@@ -64,6 +66,7 @@ def _create_accessor_holder_class(property_sheet_tool,
   generate its accessor holder
   """
 
+# FIXME: bad name
 def _fill_accessor_holder_list(accessor_holder_list,
                                create_accessor_holder_func,
                                property_sheet_name_set,
@@ -101,6 +104,7 @@ def _fill_accessor_holder_list(accessor_holder_list,
             "Created accessor holder for %s in %s" % (property_sheet_name,
                                                       accessor_holder_module))
 
+# FIXME: bad name
 def portal_type_factory(portal_type_name):
   """
   Given a portal type, look up in Types Tool the corresponding
@@ -224,6 +228,7 @@ def initializeDynamicModules():
   XXX: there should be only one accessor_holder once the code is
        stable and all the Property Sheets have been migrated
   """
+  # FIXME: bad name
   def portal_type_loader(portal_type_name):
     """
     Returns a lazily-loaded "portal-type as a class"
@@ -245,6 +250,7 @@ def initializeDynamicModules():
 
   erp5.portal_type = portal_type_container
 
+  # FIXME: bad name
   def temp_portal_type_loader(portal_type_name):
     """
     Returns a class suitable for a temporary portal type
@@ -280,6 +286,7 @@ def initializeDynamicModules():
   erp5.temp_portal_type = dynamicmodule.dynamicmodule('erp5.temp_portal_type',
                                                    temp_portal_type_loader)
 
+# FIXME: bad name
 def _clear_accessor_holder_module(module):
   """
   Clear the given accessor holder module (either for filesystem or
