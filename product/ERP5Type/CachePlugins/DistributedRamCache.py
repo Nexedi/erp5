@@ -84,6 +84,7 @@ class DistributedRamCache(BaseCache):
       dictionary = local_dict[configuration_key]
     except KeyError:
       dictionary = MemcachedDict(self._servers.split('\n'),
+                      expiration_time=self._expiration_time,
                       server_max_key_length=self._server_max_key_length,
                       server_max_value_length=self._server_max_value_length)
       local_dict[configuration_key] = dictionary
