@@ -30,7 +30,7 @@
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, PropertySheet
 
 class CategoryExistenceConstraint(ConstraintMixin):
   """
@@ -45,6 +45,11 @@ class CategoryExistenceConstraint(ConstraintMixin):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  property_sheets = (PropertySheet.SimpleItem,
+                     PropertySheet.Predicate,
+                     PropertySheet.Reference,
+                     PropertySheet.CategoryExistenceConstraint)
 
   _message_id_list = [ 'message_category_not_set',
                        'message_category_not_associated_with_portal_type' ]

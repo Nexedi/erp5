@@ -85,3 +85,15 @@ class ConstraintMixin(Predicate):
     Default method is to call checkConsistency with fixit set to 1
     """
     return self.checkConsistency(obj, fixit=1, **kw)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'exportToFilesystemDefinition')
+  def exportToFilesystemDefinition(self):
+    """
+    Return a temporary copy of the constraint object (with acquisition
+    wrapping removed) in order to maintain compatibility and be able
+    to use setDefaultProperties
+
+    XXX: remove as soon as the code is stable
+    """
+    return self.asContext().aq_base

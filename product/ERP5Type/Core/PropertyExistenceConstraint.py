@@ -30,7 +30,7 @@
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
+from Products.ERP5Type import Permissions, PropertySheet
 
 class PropertyExistenceConstraint(ConstraintMixin):
   """
@@ -51,6 +51,11 @@ class PropertyExistenceConstraint(ConstraintMixin):
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  property_sheets = (PropertySheet.SimpleItem,
+                     PropertySheet.Predicate,
+                     PropertySheet.Reference,
+                     PropertySheet.PropertyExistenceConstraint)
 
   # Define by default error messages
   _message_id_list = ['message_no_such_property',

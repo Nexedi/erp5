@@ -152,20 +152,17 @@ class PropertySheetTool(BaseTool):
 
     for property in property_sheet.contentValues():
       portal_type = property.getPortalType()
+      property_definition = property.exportToFilesystemDefinition()
 
-      if portal_type == "Standard Property" or \
-         portal_type == "Acquired Property":
-        properties.append(property.exportToFilesystemDefinition())
-
-      elif portal_type == "Category Property":
-        categories.append(property.getId())
-
-      elif portal_type == "Dynamic Category Property":
-        categories.append(property.exportToFilesystemDefinition())
+      if portal_type == "Category Property" or \
+         portal_type == "Dynamic Category Property":
+        categories.append(property_definition)
 
       elif portal_type.endswith('Constraint'):
-        from Acquisition import aq_base
-        constraints.append(aq_base(property.asContext()))
+        constraints.append(property_definition)
+
+      else:
+        properties.append(property_definition)
 
     return (properties, categories, constraints)
 
