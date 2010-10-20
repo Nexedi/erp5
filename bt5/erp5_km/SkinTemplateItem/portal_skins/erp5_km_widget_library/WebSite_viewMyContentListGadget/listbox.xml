@@ -146,7 +146,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>WebSection_viewKMWidgetFieldLibrary</string> </value>
+                    <value> <string>Base_viewKMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_action</string> </key>
