@@ -10,7 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default_params</string>
+                <string>count_method</string>
+                <string>editable_columns</string>
+                <string>hide_rows_on_no_search_criterion</string>
+                <string>list_method</string>
                 <string>portal_types</string>
                 <string>selection_name</string>
                 <string>sort</string>
@@ -57,10 +60,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default_params</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -73,19 +74,15 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
+                    <key> <string>sort</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -96,9 +93,22 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default_params</string> </key>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>thumbnail</string>
+                          <string>Thumbnail</string>
+                        </tuple>
+                        <tuple>
+                          <string>creation_date</string>
+                          <string>Creation Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -110,6 +120,16 @@
                     <value> <string>Base_viewKMFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>portal_types</string> </key>
                     <value>
                       <list/>
@@ -117,14 +137,14 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>my_document_list_selection</string> </value>
+                    <value> <string>latest_addition_document_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>modification_date</string>
+                          <string>creation_date</string>
                           <string>DESC</string>
                         </tuple>
                       </list>
@@ -136,7 +156,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>My Documents</string> </value>
+                    <value> <string>Latest Additions</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -152,20 +172,20 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:((\'owner\', here.portal_membership.getAuthenticatedMember().getUserName()), (\'validation_state\', ()), (\'all_versions\', 1))</string> </value>
+            <value> <string>python: [(x, x) for x in here.getPortalDocumentTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python:zip(here.getPortalDocumentTypeList(), here.getPortalDocumentTypeList())</string> </value>
+            <key> <string>method_name</string> </key>
+            <value> <string>ERP5Site_getSearchResultList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -138,6 +138,10 @@
                       <list>
                         <string>assigned_member_listbox</string>
                         <string>latest_content_listbox</string>
+                        <string>listbox</string>
+                        <string>listbox_creation_date</string>
+                        <string>listbox_modification_date</string>
+                        <string>listbox_thumbnail</string>
                       </list>
                     </value>
                 </item>

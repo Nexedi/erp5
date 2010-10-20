@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSite_viewMyContentList</string> </value>
+            <value> <string>WebSite_viewLatestAdditionList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -135,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>My Documents</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -143,10 +143,6 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
