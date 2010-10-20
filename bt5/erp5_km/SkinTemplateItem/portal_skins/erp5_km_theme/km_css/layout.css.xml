@@ -1520,10 +1520,11 @@ div.searchDetails, span.found{\n
 \n
 /* Download widget */\n
 div.download-document-format-list-container{\n
-  display:block;\n
-  float:left;\n
-  max-width: 200px;\n
   color:#000000;\n
+  left:0px;\n
+  top:0px;\n
+  position:absolute;\n
+  z-index:100;\n
 }\n
 div.download-document-format-list-container span{\n
   cursor: pointer; \n
@@ -1536,10 +1537,13 @@ div.download-document-format-list-container span{\n
 }\n
 \n
 div.download-document-format-list-menu{\n
-  display:block;\n
+  width: 200px;\n
   float:left;\n
   border: 1px solid #A8A799;\n
   background-color: #FFFFFF;\n
+  left:-200px;\n
+  top:0px;\n
+  position:relative;\n
 }\n
 \n
 div.download-document-format-list-container span:hover,\n
