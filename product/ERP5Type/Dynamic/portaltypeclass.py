@@ -109,7 +109,7 @@ def portal_type_factory(portal_type_name):
   and computes __bases__ and __dict__ for the class that will
   be created to represent this portal type
   """
-  LOG("ERP5Type.Dynamic", 0, "Loading portal type %s..." % portal_type_name)
+  #LOG("ERP5Type.Dynamic", 0, "Loading portal type %s..." % portal_type_name)
 
   type_class = None
   mixin_list = []
@@ -164,25 +164,25 @@ def portal_type_factory(portal_type_name):
 
     import erp5
 
-    # Initialize filesystem Property Sheets accessor holders
-    _fill_accessor_holder_list(
-      accessor_holder_list,
-      site.portal_property_sheets.createFilesystemPropertySheetAccessorHolder,
-      set(portal_type.getTypePropertySheetList() or ()),
-      erp5.filesystem_accessor_holder,
-      FilesystemPropertySheet)
+#broken#    # Initialize filesystem Property Sheets accessor holders
+#broken#    _fill_accessor_holder_list(
+#broken#      accessor_holder_list,
+#broken#      site.portal_property_sheets.createFilesystemPropertySheetAccessorHolder,
+#broken#      set(portal_type.getTypePropertySheetList() or ()),
+#broken#      erp5.filesystem_accessor_holder,
+#broken#      FilesystemPropertySheet)
+#broken#
+#broken#    # Initialize ZODB Property Sheets accessor holders
+#broken#    _fill_accessor_holder_list(
+#broken#      accessor_holder_list,
+#broken#      site.portal_property_sheets.createZodbPropertySheetAccessorHolder,
+#broken#      set(portal_type.getTypeZodbPropertySheetList() or ()),
+#broken#      erp5.zodb_accessor_holder,
+#broken#      site.portal_property_sheets)
 
-    # Initialize ZODB Property Sheets accessor holders
-    _fill_accessor_holder_list(
-      accessor_holder_list,
-      site.portal_property_sheets.createZodbPropertySheetAccessorHolder,
-      set(portal_type.getTypeZodbPropertySheetList() or ()),
-      erp5.zodb_accessor_holder,
-      site.portal_property_sheets)
-
-    LOG("ERP5Type.Dynamic", INFO,
-        "%s: accessor_holder_list: %s" % (portal_type_name,
-                                          accessor_holder_list))
+    #LOG("ERP5Type.Dynamic", INFO,
+    #    "%s: accessor_holder_list: %s" % (portal_type_name,
+    #                                      accessor_holder_list))
 
   if type_class is not None:
     type_class = document_class_registry.get(type_class)
@@ -198,9 +198,9 @@ def portal_type_factory(portal_type_name):
 
   baseclasses = [type_class] + accessor_holder_list + mixin_class_list
 
-  LOG("ERP5Type.Dynamic", INFO,
-      "Portal type %s loaded with bases %s" \
-          % (portal_type_name, repr(baseclasses)))
+  #LOG("ERP5Type.Dynamic", INFO,
+  #    "Portal type %s loaded with bases %s" \
+  #        % (portal_type_name, repr(baseclasses)))
 
   return tuple(baseclasses), dict(portal_type=portal_type_name)
 
@@ -303,9 +303,6 @@ def synchronizeDynamicModules(context, force=False):
   * with force=True, forcefully reset the classes on the current node
     and send out an invalidation to other nodes
   """
-  return # XXX disabled for now
-  LOG("ERP5Type.Dynamic", INFO, "Resetting dynamic classes")
-
   portal = context.getPortalObject()
 
   global last_sync
@@ -319,6 +316,8 @@ def synchronizeDynamicModules(context, force=False):
       # up to date, nothing to do
       return
     last_sync = cookie
+
+  LOG("ERP5Type.Dynamic", 0, "Resetting dynamic classes")
 
   import erp5
 
