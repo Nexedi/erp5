@@ -1,3 +1,6 @@
+2010-10-20 Kazuhiko
+* use objectValues instead of searchFolder for portal_caches and portal_memcached's view.
+
 2010-10-19 arnaud.fontaine
 * add views and portal types for category and property existence constraints.
 * fix field names in Property Sheet and Property Sheet Tool views.

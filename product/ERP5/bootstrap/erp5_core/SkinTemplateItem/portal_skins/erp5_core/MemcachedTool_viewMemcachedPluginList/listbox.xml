@@ -11,6 +11,8 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>count_method</string>
+                <string>list_method</string>
                 <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
@@ -97,12 +99,22 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -170,6 +182,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>objectValues</string> </value>
         </item>
       </dictionary>
     </pickle>
