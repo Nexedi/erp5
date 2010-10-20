@@ -28,7 +28,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>PortalTypeClass_resetDynamicDocuments</string>
+                <string>DynamicClassGeneration_resetDynamicDocuments</string>
               </list>
             </value>
         </item>
@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>When a new Category or Property Sheet is added to portal_categories, reload all the accessor holders.</string> </value>
+            <value> <string>When a new property is added to an existing property sheet, reload all the accessor holders.</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Tool_resetDynamicClasses</string> </value>
+            <value> <string>PropertySheet_resetDynamicClasses</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
@@ -69,8 +69,7 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
-                <string>Category Tool</string>
-                <string>Property Sheet Tool</string>
+                <string>Property Sheet</string>
               </list>
             </value>
         </item>
@@ -79,6 +78,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

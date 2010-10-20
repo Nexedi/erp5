@@ -1,20 +1,20 @@
-Acquired Property | portal_type_class_interaction_workflow
+Acquired Property | dynamic_class_generation_interaction_workflow
 Action Information | base_type_interaction_workflow
 Alarm | edit_workflow
+Base Category | dynamic_class_generation_interaction_workflow
 Base Category | edit_workflow
-Base Category | portal_type_class_interaction_workflow
 Base Type | base_type_interaction_workflow
-Base Type | portal_type_class_interaction_workflow
-Category Property | portal_type_class_interaction_workflow
-Category Tool | portal_type_class_interaction_workflow
+Base Type | dynamic_class_generation_interaction_workflow
+Category Property | dynamic_class_generation_interaction_workflow
+Category Tool | dynamic_class_generation_interaction_workflow
 Category | edit_workflow
 Distributed Ram Cache | distributed_ram_cache_interaction_workflow
 Document | edit_workflow
-Dynamic Category Property | portal_type_class_interaction_workflow
+Dynamic Category Property | dynamic_class_generation_interaction_workflow
 Mapped Value | edit_workflow
 Memcached Plugin | memcached_plugin_interaction_workflow
 Predicate | rule_interaction_workflow
 Preference | preference_workflow
-Property Sheet | portal_type_class_interaction_workflow
-Standard Property | portal_type_class_interaction_workflow
+Property Sheet | dynamic_class_generation_interaction_workflow
+Standard Property | dynamic_class_generation_interaction_workflow
 System Preference | preference_workflow

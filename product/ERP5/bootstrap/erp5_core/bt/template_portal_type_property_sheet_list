@@ -1,16 +1,3 @@
-Acquired Property | AcquiredProperty
-Acquired Property | SimpleItem
-Acquired Property | StandardProperty
-Acquired Property | TranslatableProperty
-Category Existence Constraint | CategoryExistenceConstraint
-Category Existence Constraint | Predicate
-Category Existence Constraint | SimpleItem
-Dynamic Category Property | DynamicCategoryProperty
-Property Existence Constraint | Predicate
-Property Existence Constraint | PropertyExistenceConstraint
-Property Existence Constraint | SimpleItem
-Standard Property | StandardProperty
-Standard Property | TranslatableProperty
 Trash Bin | Base
 Trash Bin | SimpleItem
 Trash Bin | Task
