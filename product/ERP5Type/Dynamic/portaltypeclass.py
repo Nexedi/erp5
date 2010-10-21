@@ -102,7 +102,6 @@ def portalTypeFactory(portal_type_name):
   """
   #LOG("ERP5Type.Dynamic", 0, "Loading portal type %s..." % portal_type_name)
 
-  type_class = None
   mixin_list = []
   interface_list = []
   accessor_holder_list = []
@@ -110,62 +109,37 @@ def portalTypeFactory(portal_type_name):
   from Products.ERP5.ERP5Site import getSite
   site = getSite()
 
-  type_tool = site.portal_types
-  if portal_type_name == "Base Type":
-    type_class = "ERP5TypeInformation"
-  elif portal_type_name == "Solver Type":
-    type_class = "SolverTypeInformation"
-  else:
-    try:
-      portal_type = getattr(type_tool, portal_type_name)
-    except:
-      raise AttributeError('portal type %s not found in Types Tool' \
-                              % portal_type_name)
+  types_tool = site.portal_types
+  try:
+    portal_type = getattr(types_tool, portal_type_name)
+  except AttributeError:
+    raise AttributeError('portal type %s not found in Types Tool' \
+                            % portal_type_name)
 
-    # type_class has a compatibility getter that should return
-    # something even if the field is not set (i.e. Base Type object
-    # was not migrated yet)
-    try:
-      type_class = portal_type.getTypeClass()
+  # type_class has a compatibility getter that should return
+  # something even if the field is not set (i.e. Base Type object
+  # was not migrated yet)
+  type_class = portal_type.getTypeClass()
 
-      # But no such getter exists for Mixins and Interfaces:
-      # in reality, we can live with such a failure
-      try:
-        mixin_list = portal_type.getTypeMixinList()
-        interface_list = portal_type.getTypeInterfaceList()
-      except StandardError:
-        # log loudly the error, but it's not _critical_
-        LOG("ERP5Type.Dynamic", ERROR,
-            "Could not load interfaces or Mixins for portal type %s" \
-                % portal_type_name)
-    except AttributeError:
-      # Try to figure out a coresponding document class from the document side.
-      # This is required for the bootstrap (e.g. Base Category).
-      for name, path in document_class_registry.iteritems():
-        # XXX heuristic: bootstrap issues should happen only inside ERP5Type.
-        if not path.startswith('Products.ERP5Type.'):
-          continue
+  # But no such getter exists for Mixins and Interfaces:
+  # in reality, we can live with such a failure
+  try:
+    mixin_list = portal_type.getTypeMixinList()
+    interface_list = portal_type.getTypeInterfaceList()
+  except StandardError:
+    # log loudly the error, but it's not _critical_
+    LOG("ERP5Type.Dynamic", ERROR,
+        "Could not load interfaces or Mixins for portal type %s" \
+            % portal_type_name)
 
-        module_path, class_name = path.rsplit('.', 1)
-        module = __import__(module_path, {}, {}, (module_path,))
-        klass = getattr(module, class_name)
-        try:
-          try:
-            document_portal_type = getattr(klass, 'portal_type')
-            if document_portal_type == portal_type_name:
-              type_class = name
-              break
-          except AttributeError:
-            pass
-        finally:
-          del klass
-
+  type_class_path = None
   if type_class is not None:
-    type_class = document_class_registry.get(type_class)
-  if type_class is None:
-    raise AttributeError('Document class is not defined on Portal Type %s' % portal_type_name)
+    type_class_path = document_class_registry.get(type_class)
+  if type_class_path is None:
+    raise AttributeError('Document class is not defined on Portal Type %s' \
+            % portal_type_name)
 
-  type_class = _importClass(type_class)
+  klass = _importClass(type_class_path)
 
   ## Disabled because there will be no commit of
   ## type_zodb_property_sheet, only use for testing ATM
@@ -208,7 +182,7 @@ def portalTypeFactory(portal_type_name):
     mixin_path_list = map(mixin_class_registry.__getitem__, mixin_list)
   mixin_class_list = map(_importClass, mixin_path_list)
 
-  baseclasses = [type_class] + accessor_holder_list + mixin_class_list
+  baseclasses = [klass] + accessor_holder_list + mixin_class_list
 
   #LOG("ERP5Type.Dynamic", INFO,
   #    "Portal type %s loaded with bases %s" \
