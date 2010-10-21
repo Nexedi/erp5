@@ -39,7 +39,7 @@ from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
+from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 
 from zLOG import LOG, INFO
 from string import join
