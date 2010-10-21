@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -83,13 +80,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_preferred_header_title</string>
-                        <string>my_preferred_rss_feed</string>
-                        <string>my_preferred_username</string>
-                        <string>my_preferred_password</string>
-                        <string>my_listbox_selection_list_lines</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -101,7 +92,13 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_preferred_header_title</string>
+                        <string>my_preferred_rss_feed</string>
+                        <string>my_preferred_username</string>
+                        <string>my_preferred_password</string>
+                        <string>my_listbox_selection_list_lines</string>
+                      </list>
                     </value>
                 </item>
                 <item>
