@@ -1,4 +1,7 @@
 2010-10-21 yusei
+* Add reset movement price action to returned sale packing list.
+
+2010-10-21 yusei
 * Add reverse_arrow_category parameter to Order_applyTradeCondition. This option is useful when trade condition is applied to returned packing list.
 
 2010-10-15 nicolas.dumazet
