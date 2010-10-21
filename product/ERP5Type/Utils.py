@@ -967,8 +967,9 @@ def importLocalDocument(class_id, document_path = None):
       return MigrateMe
     else:
       return klass
-  from dynamic.dynamic_module import newDynamicModule
-  document_module = newDynamicModule(module_name, migrate_me_document_loader)
+  from dynamic.dynamic_module import registerDynamicModule
+  document_module = registerDynamicModule(module_name,
+                                          migrate_me_document_loader)
 
   setattr(Products.ERP5Type.Document, class_id, document_module)
 

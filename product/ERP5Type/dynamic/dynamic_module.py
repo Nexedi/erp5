@@ -19,7 +19,7 @@ class DynamicModule(ModuleType):
         setattr(self, name, obj)
         return obj
 
-def newDynamicModule(name, factory):
+def registerDynamicModule(name, factory):
     d = DynamicModule(name, factory)
     sys.modules[name] = d
     return d

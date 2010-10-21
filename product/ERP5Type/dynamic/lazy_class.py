@@ -3,7 +3,8 @@ from ExtensionClass import Base as ExtensionBase
 
 from zLOG import LOG, ERROR, BLATHER
 
-def newLazyClass(name, portal_type_class_attr_getter):
+def generateLazyPortalTypeClass(portal_type_name,
+                                portal_type_class_loader):
     def load(self, attr):
         klass = None
         # self might be a subclass of a portal type class
@@ -18,12 +19,14 @@ def newLazyClass(name, portal_type_class_attr_getter):
 
         portal_type = klass.__name__
         try:
-          baseclasses, attributes = portal_type_class_attr_getter(portal_type)
+          baseclasses, attributes = portal_type_class_loader(portal_type)
         except AttributeError:
           LOG("ERP5Type.Dynamic", ERROR,
-              "Could not access Portal Type Object for type %s" % name)
+              "Could not access Portal Type Object for type %s"
+              % portal_type_name)
           import traceback; traceback.print_exc()
-          raise AttributeError("Could not access Portal Type Object for type %s" % name)
+          raise AttributeError("Could not access Portal Type Object for type %s"
+              % portal_type_name)
 
         # save the old bases to be able to restore a ghost state later
         klass.__ghostbase__ = klass.__bases__
@@ -67,4 +70,4 @@ def newLazyClass(name, portal_type_class_attr_getter):
             #    "loading attribute %s.%s..." % (name, attr))
             return load(self, attr)
 
-    return type(name, (GhostPortalType,), dict())
+    return type(portal_type_name, (GhostPortalType,), dict())

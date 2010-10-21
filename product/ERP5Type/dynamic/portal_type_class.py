@@ -32,8 +32,8 @@ import inspect
 
 from types import ModuleType
 
-from dynamic_module import newDynamicModule
-from lazy_class import newLazyClass
+from dynamic_module import registerDynamicModule
+from lazy_class import generateLazyPortalTypeClass
 
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
@@ -93,7 +93,7 @@ def _fillAccessorHolderList(accessor_holder_list,
             "Created accessor holder for %s in %s" % (property_sheet_name,
                                                       accessor_holder_module))
 
-def portalTypeFactory(portal_type_name):
+def generatePortalTypeClass(portal_type_name):
   """
   Given a portal type, look up in Types Tool the corresponding
   Base Type object holding the definition of this portal type,
@@ -209,11 +209,12 @@ def initializeDynamicModules():
   XXX: there should be only one accessor_holder once the code is
        stable and all the Property Sheets have been migrated
   """
-  def portalTypeLoader(portal_type_name):
+  def loadPortalTypeClass(portal_type_name):
     """
     Returns a lazily-loaded "portal-type as a class"
     """
-    return newLazyClass(portal_type_name, portalTypeFactory)
+    return generateLazyPortalTypeClass(portal_type_name,
+                                       generatePortalTypeClass)
 
   erp5 = ModuleType("erp5")
   sys.modules["erp5"] = erp5
@@ -225,12 +226,12 @@ def initializeDynamicModules():
   erp5.filesystem_accessor_holder = ModuleType("erp5.filesystem_accessor_holder")
   sys.modules["erp5.filesystem_accessor_holder"] = erp5.filesystem_accessor_holder
 
-  portal_type_container = newDynamicModule('erp5.portal_type',
-                                           portalTypeLoader)
+  portal_type_container = registerDynamicModule('erp5.portal_type',
+                                                loadPortalTypeClass)
 
   erp5.portal_type = portal_type_container
 
-  def tempPortalTypeLoader(portal_type_name):
+  def loadTempPortalTypeClass(portal_type_name):
     """
     Returns a class suitable for a temporary portal type
 
@@ -262,8 +263,8 @@ def initializeDynamicModules():
       setattr(TempDocument, '%s__roles__' % method_id, None)
     return TempDocument
 
-  erp5.temp_portal_type = newDynamicModule('erp5.temp_portal_type',
-                                           tempPortalTypeLoader)
+  erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
+                                                loadTempPortalTypeClass)
 
 def _clearAccessorHolderModule(module):
   """
