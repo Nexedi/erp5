@@ -138,6 +138,7 @@
                         <string>my_gadget_preferences_integer_field</string>
                         <string>my_gadget_preferences_list_field</string>
                         <string>my_gadget_preferences_password</string>
+                        <string>my_gadget_preferences_label_field</string>
                       </list>
                     </value>
                 </item>
