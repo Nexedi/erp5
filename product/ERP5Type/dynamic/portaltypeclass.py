@@ -80,7 +80,7 @@ def _fillAccessorHolderList(accessor_holder_list,
 
       except AttributeError:
         # Not too critical
-        LOG("ERP5Type.Dynamic", ERROR,
+        LOG("ERP5Type.dynamic", ERROR,
             "Ignoring missing Property Sheet " + property_sheet_name)
 
       else:
@@ -89,7 +89,7 @@ def _fillAccessorHolderList(accessor_holder_list,
 
         accessor_holder_list.append(accessor_holder_class)
 
-        LOG("ERP5Type.Dynamic", INFO,
+        LOG("ERP5Type.dynamic", INFO,
             "Created accessor holder for %s in %s" % (property_sheet_name,
                                                       accessor_holder_module))
 
@@ -100,7 +100,7 @@ def portalTypeFactory(portal_type_name):
   and computes __bases__ and __dict__ for the class that will
   be created to represent this portal type
   """
-  #LOG("ERP5Type.Dynamic", 0, "Loading portal type %s..." % portal_type_name)
+  #LOG("ERP5Type.dynamic", 0, "Loading portal type %s..." % portal_type_name)
 
   mixin_list = []
   interface_list = []
@@ -128,7 +128,7 @@ def portalTypeFactory(portal_type_name):
     interface_list = portal_type.getTypeInterfaceList()
   except StandardError:
     # log loudly the error, but it's not _critical_
-    LOG("ERP5Type.Dynamic", ERROR,
+    LOG("ERP5Type.dynamic", ERROR,
         "Could not load interfaces or Mixins for portal type %s" \
             % portal_type_name)
 
@@ -173,7 +173,7 @@ def portalTypeFactory(portal_type_name):
   #   erp5.filesystem_accessor_holder,
   #   FilesystemPropertySheet)
 
-  # LOG("ERP5Type.Dynamic", INFO,
+  # LOG("ERP5Type.dynamic", INFO,
   #     "%s: accessor_holder_list: %s" % (portal_type_name,
   #                                       accessor_holder_list))
 
@@ -184,7 +184,7 @@ def portalTypeFactory(portal_type_name):
 
   baseclasses = [klass] + accessor_holder_list + mixin_class_list
 
-  #LOG("ERP5Type.Dynamic", INFO,
+  #LOG("ERP5Type.dynamic", INFO,
   #    "Portal type %s loaded with bases %s" \
   #        % (portal_type_name, repr(baseclasses)))
 
@@ -303,7 +303,7 @@ def synchronizeDynamicModules(context, force=False):
       return
     last_sync = cookie
 
-  LOG("ERP5Type.Dynamic", 0, "Resetting dynamic classes")
+  LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
 
   import erp5
 

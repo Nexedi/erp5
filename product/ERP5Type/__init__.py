@@ -99,7 +99,7 @@ def initialize( context ):
                          content_constructors = content_constructors,
                          content_classes = content_classes)
 
-  from Dynamic import portaltypeclass
+  from dynamic import portaltypeclass
   portaltypeclass.initializeDynamicModules()
 
   # Register our Workflow factories directly (if on CMF 2)
