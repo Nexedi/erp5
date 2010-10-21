@@ -111,49 +111,54 @@ def portalTypeFactory(portal_type_name):
   site = getSite()
 
   type_tool = site.portal_types
-  try:
-    portal_type = getattr(type_tool, portal_type_name)
-  except:
-    raise AttributeError('portal type %s not found in Types Tool' \
-                            % portal_type_name)
-
-  # type_class has a compatibility getter that should return
-  # something even if the field is not set (i.e. Base Type object
-  # was not migrated yet)
-  try:
-    type_class = portal_type.getTypeClass()
-
-    # But no such getter exists for Mixins and Interfaces:
-    # in reality, we can live with such a failure
+  if portal_type_name == "Base Type":
+    type_class = "ERP5TypeInformation"
+  elif portal_type_name == "Solver Type":
+    type_class = "SolverTypeInformation"
+  else:
     try:
-      mixin_list = portal_type.getTypeMixinList()
-      interface_list = portal_type.getTypeInterfaceList()
-    except StandardError:
-      # log loudly the error, but it's not _critical_
-      LOG("ERP5Type.Dynamic", ERROR,
-          "Could not load interfaces or Mixins for portal type %s" \
-              % portal_type_name)
-  except AttributeError:
-    # Try to figure out a coresponding document class from the document side.
-    # This is required for the bootstrap (e.g. Base Type).
-    for name, path in document_class_registry.iteritems():
-      # XXX heuristic: bootstrap issues should happen only inside ERP5Type.
-      if not path.startswith('Products.ERP5Type.'):
-        continue
+      portal_type = getattr(type_tool, portal_type_name)
+    except:
+      raise AttributeError('portal type %s not found in Types Tool' \
+                              % portal_type_name)
 
-      module_path, class_name = path.rsplit('.', 1)
-      module = __import__(module_path, {}, {}, (module_path,))
-      klass = getattr(module, class_name)
+    # type_class has a compatibility getter that should return
+    # something even if the field is not set (i.e. Base Type object
+    # was not migrated yet)
+    try:
+      type_class = portal_type.getTypeClass()
+
+      # But no such getter exists for Mixins and Interfaces:
+      # in reality, we can live with such a failure
       try:
+        mixin_list = portal_type.getTypeMixinList()
+        interface_list = portal_type.getTypeInterfaceList()
+      except StandardError:
+        # log loudly the error, but it's not _critical_
+        LOG("ERP5Type.Dynamic", ERROR,
+            "Could not load interfaces or Mixins for portal type %s" \
+                % portal_type_name)
+    except AttributeError:
+      # Try to figure out a coresponding document class from the document side.
+      # This is required for the bootstrap (e.g. Base Category).
+      for name, path in document_class_registry.iteritems():
+        # XXX heuristic: bootstrap issues should happen only inside ERP5Type.
+        if not path.startswith('Products.ERP5Type.'):
+          continue
+
+        module_path, class_name = path.rsplit('.', 1)
+        module = __import__(module_path, {}, {}, (module_path,))
+        klass = getattr(module, class_name)
         try:
-          document_portal_type = getattr(klass, 'portal_type')
-          if document_portal_type == portal_type_name:
-            type_class = name
-            break
-        except AttributeError:
-          pass
-      finally:
-        del klass
+          try:
+            document_portal_type = getattr(klass, 'portal_type')
+            if document_portal_type == portal_type_name:
+              type_class = name
+              break
+          except AttributeError:
+            pass
+        finally:
+          del klass
 
   if type_class is not None:
     type_class = document_class_registry.get(type_class)
