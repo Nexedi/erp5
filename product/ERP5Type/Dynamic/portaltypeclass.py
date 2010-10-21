@@ -32,7 +32,7 @@ import inspect
 
 from types import ModuleType
 
-import dynamicmodule
+from dynamicmodule import newDynamicModule
 import lazyclass
 
 from Products.ERP5Type.Globals import InitializeClass
@@ -249,9 +249,8 @@ def initializeDynamicModules():
   erp5.filesystem_accessor_holder = ModuleType("erp5.filesystem_accessor_holder")
   sys.modules["erp5.filesystem_accessor_holder"] = erp5.filesystem_accessor_holder
 
-  # FIXME: JPS: rename to dynamic_module.newDynamicModule()?
-  portal_type_container = dynamicmodule.dynamicmodule('erp5.portal_type',
-                                                      portal_type_loader)
+  portal_type_container = newDynamicModule('erp5.portal_type',
+                                           portal_type_loader)
 
   erp5.portal_type = portal_type_container
 
@@ -288,8 +287,8 @@ def initializeDynamicModules():
       setattr(TempDocument, '%s__roles__' % method_id, None)
     return TempDocument
 
-  erp5.temp_portal_type = dynamicmodule.dynamicmodule('erp5.temp_portal_type',
-                                                   temp_portal_type_loader)
+  erp5.temp_portal_type = newDynamicModule('erp5.temp_portal_type',
+                                           temp_portal_type_loader)
 
 def _clearAccessorHolderModule(module):
   """
