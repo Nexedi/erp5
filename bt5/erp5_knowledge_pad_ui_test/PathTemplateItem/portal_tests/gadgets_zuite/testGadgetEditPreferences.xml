@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
@@ -50,29 +50,12 @@
 \n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/init">init</span>\n
 \n
-<!--<tr>\n
-  <td>store</td>\n
-  <td tal:content="python: here.portal_preferences.getPreferredWitchToolServerRoot()"></td>\n
-  <td>remote_nexedi_erp5_instance_id</td>\n
-</tr>\n
-<tr>\n
-  <td>store</td>\n
-  <td>${base_url}/portal_wizard/proxy/${remote_nexedi_erp5_instance_id}/web_site_module/yuna_kb</td>\n
-  <td>km_base_url</td>\n
-</tr>\n
-<tr>\n
-  <td>store</td>\n
-  <td>erp5_site_selected_tab=express_support_tab</td>\n
-  <td>base_jump</td>\n
-</tr>-->\n
 <!-- Set longer timeout. -->\n
 <tr>\n
   <td>setTimeout</td>\n
   <td>180000</td>\n
   <td></td>\n
 </tr>\n
-\n
-<!--<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/login_as_express_user"> Switch to Express User</span>-->\n
 \n
 <tr>\n
   <td>openAndWait</td>\n
@@ -184,6 +167,32 @@ Wait for activities</span>\n
   <td></td>\n
 </tr>\n
 \n
+<!-- Edit gadget form submit by pressing enter -->\n
+<tr>\n
+  <td>click</td>\n
+  <td>//div[@id=\'${calendar_box_id}\']/h3/span/a[2]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>\n
+  <td>Calendar AAAAA</td>\n
+</tr>\n
+<tr>\n
+  <td>keyPressAndWait</td>\n
+  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>\n
+  <td>\\13</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Preference updated.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Calendar AAAAA</td>\n
+  <td></td>\n
+</tr>\n
 \n
 \n
 <!-- Test deleting a gadget -->\n
@@ -204,7 +213,6 @@ Wait for activities</span>\n
   <td>Are you sure you want to remove this gadget from your personalized page?</td>\n
   <td></td>\n
 </tr>\n
-\n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
 Wait for activities</span>\n
 <tr>\n
@@ -212,23 +220,19 @@ Wait for activities</span>\n
   <td>${base_url}/view</td>\n
   <td></td>\n
 </tr>\n
-\n
 <tr>\n
   <td>verifyTextNotPresent</td>\n
-  <td>Calendar YYYYY</td>\n
+  <td>Calendar AAAAA</td>\n
   <td></td>\n
 </tr>\n
 \n
-<!--<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/login_as_functional_test_user"> Switch to Functional Test User</span>\n
-\n
-<span metal:use-macro="container/ExpressZuite_viewTestMacroLibrary/macros/restore_test_environment">restore</span>-->\n
 \n
 </tbody></table>\n
 </body>\n
 </html>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -243,8 +247,12 @@ Wait for activities</span>\n
             <value> <string>testGadgetEditPreferences</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
