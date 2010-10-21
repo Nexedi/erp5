@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13,14 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list/>
-            </value>
-        </item>
-        <item>
-            <key> <string>delegated_message_list</string> </key>
-            <value>
-              <list>
-                <string>external_validator_failed</string>
-              </list>
             </value>
         </item>
         <item>
@@ -33,7 +22,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>You did not enter a floating point number.</string> </value>
+                    <value> <string>The input failed the external validator.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -86,7 +75,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewSoftwarePDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
