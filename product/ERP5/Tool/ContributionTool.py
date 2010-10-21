@@ -31,7 +31,10 @@ import cStringIO
 import re
 import string
 import socket
-import md5
+try:
+  from hashlib import md5 as md5_new
+except ImportError:
+  from md5 import new as md5_new
 import urllib2, urllib
 import urlparse
 from cgi import parse_header
@@ -511,7 +514,7 @@ class ContributionTool(BaseTool):
     is simimar in cost to accessing them.
     """
     # Produce an MD5 from the URL
-    hex_md5 = md5.md5(url).hexdigest()
+    hex_md5 = md5_new(url).hexdigest()
     # Take the first part in the URL which is not empty
     # LOG("encodeURL", 0, url)
     url_segment = url.split(':')[1]
@@ -614,7 +617,7 @@ class ContributionTool(BaseTool):
 
       # Step 2: compare and update if necessary (md5)
       # md5 stuff to compare contents
-      new_content_md5 = md5.md5(data).hexdigest()
+      new_content_md5 = md5_new(data).hexdigest()
       content_md5 = content.getContentMd5()
       if content_md5 == new_content_md5:
         return

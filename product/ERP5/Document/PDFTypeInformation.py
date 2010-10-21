@@ -40,7 +40,10 @@ from OFS.DTMLDocument import DTMLDocument
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.Core.ActionInformation import CacheableAction
 
-import md5
+try:
+  from hashlib import md5 as md5_new
+except ImportError:
+  from md5 import new as md5_new
 
 def getPropertiesCSSDict(parsed_scribus
                       , page_gap
@@ -432,7 +435,7 @@ class PDFTypeInformation(ERP5TypeInformation):
 
     generateParsedScribus = CachingMethod(generateParsedScribus,
                                         ('PDFTypeInformation_generateParsedScribus',
-                                        md5.new(scribus_form.getData()).digest()),
+                                        md5_new(scribus_form.getData()).digest()),
                                         cache_factory='dms_cache_factory')
     return generateParsedScribus()
 
@@ -545,7 +548,7 @@ class PDFTypeInformation(ERP5TypeInformation):
       return form
     #generateERP5Form = CachingMethod(generateERP5Form,
     #                                ('PDFTypeInformation_generateERP5Form',
-    #                                md5.new(self.getDefaultScribusFormValue().getData()).digest()),
+    #                                md5_new(self.getDefaultScribusFormValue().getData()).digest()),
     #                                cache_factory='dms_cache_factory')
     return generateERP5Form().__of__(self)
 
@@ -595,7 +598,7 @@ class PDFTypeInformation(ERP5TypeInformation):
 
     generateERP5FormCSS = CachingMethod(generateERP5FormCSS,
                                         ('PDFTypeInformation_generateERP5FormCSS',
-                                        md5.new(self.getDefaultScribusFormValue().getData()).digest()),
+                                        md5_new(self.getDefaultScribusFormValue().getData()).digest()),
                                         cache_factory='dms_cache_factory')
     self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/css')
     return generateERP5FormCSS()

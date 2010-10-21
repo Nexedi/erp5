@@ -51,7 +51,10 @@ from Products.PythonScripts.Utility import allow_class
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
 
-import md5
+try:
+  from hashlib import md5 as md5_new
+except ImportError:
+  from md5 import new as md5_new
 import cgi
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
@@ -2565,7 +2568,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     if checked_uid_list is not None:
       checked_uid_list = [str(uid) for uid in checked_uid_list]
       checked_uid_list.sort()
-      md5_string = md5.new(str(checked_uid_list)).hexdigest()
+      md5_string = md5_new(str(checked_uid_list)).hexdigest()
     else:
       md5_string = None
 

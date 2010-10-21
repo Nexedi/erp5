@@ -41,7 +41,10 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
-import md5
+try:
+  from hashlib import md5 as md5_new
+except ImportError:
+  from md5 import new as md5_new
 import string, re
 from time import time
 from random import random
@@ -1150,7 +1153,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       # convert each element to a string.
       object_uid_list = [str(x) for x in object_uid_list]
       object_uid_list.sort()
-      new_md5_string = md5.new(str(object_uid_list)).hexdigest()
+      new_md5_string = md5_new(str(object_uid_list)).hexdigest()
       return md5_string != new_md5_string
 
 
@@ -1390,7 +1393,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if user_id == 'Anonymous User' and self.getAnonymousStorage() is not None:
         anonymous_uid = self.REQUEST.get('anonymous_uid', None)
         if anonymous_uid is None:
-          anonymous_uid = md5.new('%s.%s' % (time(), random())).hexdigest()
+          anonymous_uid = md5_new('%s.%s' % (time(), random())).hexdigest()
           self.REQUEST['anonymous_uid'] = anonymous_uid
         user_id = 'Anonymous:%s' % anonymous_uid
       tv['_user_id'] = user_id
