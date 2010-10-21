@@ -32,8 +32,8 @@ import inspect
 
 from types import ModuleType
 
-from dynamicmodule import newDynamicModule
-from lazyclass import newLazyClass
+from dynamic_module import newDynamicModule
+from lazy_class import newLazyClass
 
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
