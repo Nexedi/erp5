@@ -831,13 +831,16 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
     f.write(text)
   finally:
     f.close()
-  # load the file, so that an error is raised if file is invalid
-  module = imp.load_source(class_id, path)
-  getattr(module, class_id)
+
+  module_path = "erp5.document"
+  classpath = "%s.%s" % (module_path, class_id)
+  module = imp.load_source(classpath, path)
+  import erp5.document
+  setattr(erp5.document, class_id, getattr(module, class_id))
 
   # and register correctly the new document
   from Products.ERP5Type import document_class_registry
-  document_class_registry[class_id] = "%s.%s" % (module.__name__, class_id)
+  document_class_registry[class_id] = classpath
 
 def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.
@@ -935,10 +938,9 @@ def importLocalDocument(class_id, document_path = None):
     path = os.path.join(path, "%s.py" % class_id)
     module_path = "erp5.document"
     classpath = "%s.%s" % (module_path, class_id)
-    try:
-      module = imp.load_source(classpath, path)
-    except:
-      raise AttributeError("document was not registered: %s, %s" % (class_id, document_path))
+    module = imp.load_source(classpath, path)
+    import erp5.document
+    setattr(erp5.document, class_id, getattr(module, class_id))
     document_class_registry[class_id] = classpath
   else:
     module_path = classpath.rsplit('.', 1)[0]
