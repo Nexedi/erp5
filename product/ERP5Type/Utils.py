@@ -93,7 +93,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from zLOG import LOG, BLATHER, PROBLEM, WARNING, INFO
+from zLOG import LOG, BLATHER, PROBLEM, WARNING, INFO, TRACE
 
 #####################################################
 # Avoid importing from (possibly unpatched) Globals
@@ -912,7 +912,7 @@ class PersistentMigrationMixin(object):
       klass = getattr(erp5.portal_type, portal_type)
       self.__class__ = klass
       self.__setstate__(value)
-      LOG('ERP5Type', INFO, "Migration for object %s" % self)
+      LOG('ERP5Type', TRACE, "Migration for object %s" % self)
 
 from Globals import Persistent, PersistentMapping
 
