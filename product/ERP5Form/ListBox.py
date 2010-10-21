@@ -54,12 +54,6 @@ from warnings import warn
 import md5
 import cgi
 
-# For compatibility with Python 2.3.
-try:
-  set
-except NameError:
-  from sets import Set as set
-
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
 
 class MethodWrapper:
