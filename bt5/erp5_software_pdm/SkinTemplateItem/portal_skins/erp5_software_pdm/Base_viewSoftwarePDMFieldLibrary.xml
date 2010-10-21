@@ -135,6 +135,15 @@
                         <string>my_version</string>
                         <string>my_purchase_supply_line_aggregate_title</string>
                         <string>my_sale_supply_line_aggregate_title</string>
+                        <string>my_activity_list</string>
+                        <string>my_content_type</string>
+                        <string>my_follow_up_title_list</string>
+                        <string>my_group_list</string>
+                        <string>my_product_line_list</string>
+                        <string>my_region_list</string>
+                        <string>my_subject_list</string>
+                        <string>my_url_string</string>
+                        <string>my_list_mode_listbox</string>
                       </list>
                     </value>
                 </item>
