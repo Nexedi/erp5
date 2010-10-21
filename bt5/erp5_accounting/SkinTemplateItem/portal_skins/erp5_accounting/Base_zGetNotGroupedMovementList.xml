@@ -155,7 +155,7 @@ reference or having a grouping reference with movements where date is after the\
 at_date. \n
 \n
 Here, a group of movement means:\n
- section_uid is the same\n
+ section_uid is from section_uid:list, or is the same if section_uid is not passed.\n
  mirror_section_uid is the same\n
  node_uid is the same\n
  grouping_reference is the same\n
@@ -166,8 +166,7 @@ Here, a group of movement means:\n
          mirror_section.relative_url as mirror_section_relative_url,\n
          mirror_section.title as mirror_section_title,\n
          stock.date as date,\n
-         IFNULL(stock.total_price, 0) as total_price,\n
-         IFNULL(stock.quantity, 0) as total_quantity\n
+         IFNULL(stock.total_price, 0) as total_price\n
 \n
   FROM catalog, stock LEFT JOIN catalog AS mirror_section on \n
         ( stock.mirror_section_uid = mirror_section.uid )\n
@@ -196,8 +195,7 @@ Here, a group of movement means:\n
       mirror_section.relative_url as mirror_section_relative_url,\n
       mirror_section.title as mirror_section_title,\n
       stock.date as date,\n
-      IFNULL(stock.total_price, 0) as total_price,\n
-      IFNULL(stock.quantity, 0) as total_quantity\n
+      IFNULL(stock.total_price, 0) as total_price\n
 \n
   FROM  catalog AS catalog_2, stock AS stock_2, \n
         catalog AS catalog, stock AS stock LEFT JOIN catalog AS mirror_section\n
@@ -222,7 +220,12 @@ Here, a group of movement means:\n
         catalog_2.uid = stock_2.uid and\n
         catalog.grouping_reference = catalog_2.grouping_reference and\n
         catalog.grouping_reference is not NULL and\n
-        stock.section_uid = stock_2.section_uid and\n
+       <dtml-if section_uid>\n
+        stock_2.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
+         <dtml-unless sequence-end>, </dtml-unless> </dtml-in section_uid> ) and\n
+       <dtml-else>\n
+        stock_2.section_uid = stock.section_uid and\n
+       </dtml-if>\n
         stock.mirror_section_uid = stock_2.mirror_section_uid and\n
         stock_2.simulation_state != \'cancelled\' and\n
         stock.node_uid = stock_2.node_uid\n
@@ -230,8 +233,7 @@ Here, a group of movement means:\n
   HAVING max(stock_2.date) > <dtml-sqlvar "at_date" type="datetime">\n
 )\n
 \n
-ORDER BY mirror_section_title, date\n
-
+ORDER BY mirror_section_title, date
 
 ]]></string> </value>
         </item>
@@ -276,7 +278,7 @@ reference or having a grouping reference with movements where date is after the\
 at_date. \n
 \n
 Here, a group of movement means:\n
- section_uid is the same\n
+ section_uid is from section_uid:list, or is the same if section_uid is not passed.\n
  mirror_section_uid is the same\n
  node_uid is the same\n
  grouping_reference is the same\n
@@ -287,8 +289,7 @@ Here, a group of movement means:\n
          mirror_section.relative_url as mirror_section_relative_url,\n
          mirror_section.title as mirror_section_title,\n
          stock.date as date,\n
-         IFNULL(stock.total_price, 0) as total_price,\n
-         IFNULL(stock.quantity, 0) as total_quantity\n
+         IFNULL(stock.total_price, 0) as total_price\n
 \n
   FROM catalog, stock LEFT JOIN catalog AS mirror_section on \n
         ( stock.mirror_section_uid = mirror_section.uid )\n
@@ -317,8 +318,7 @@ Here, a group of movement means:\n
       mirror_section.relative_url as mirror_section_relative_url,\n
       mirror_section.title as mirror_section_title,\n
       stock.date as date,\n
-      IFNULL(stock.total_price, 0) as total_price,\n
-      IFNULL(stock.quantity, 0) as total_quantity\n
+      IFNULL(stock.total_price, 0) as total_price\n
 \n
   FROM  catalog AS catalog_2, stock AS stock_2, \n
         catalog AS catalog, stock AS stock LEFT JOIN catalog AS mirror_section\n
@@ -343,7 +343,12 @@ Here, a group of movement means:\n
         catalog_2.uid = stock_2.uid and\n
         catalog.grouping_reference = catalog_2.grouping_reference and\n
         catalog.grouping_reference is not NULL and\n
-        stock.section_uid = stock_2.section_uid and\n
+       <dtml-if section_uid>\n
+        stock_2.section_uid in (<dtml-in section_uid><dtml-var sequence-item>\n
+         <dtml-unless sequence-end>, </dtml-unless> </dtml-in section_uid> ) and\n
+       <dtml-else>\n
+        stock_2.section_uid = stock.section_uid and\n
+       </dtml-if>\n
         stock.mirror_section_uid = stock_2.mirror_section_uid and\n
         stock_2.simulation_state != \'cancelled\' and\n
         stock.node_uid = stock_2.node_uid\n
@@ -351,8 +356,7 @@ Here, a group of movement means:\n
   HAVING max(stock_2.date) > <dtml-sqlvar "at_date" type="datetime">\n
 )\n
 \n
-ORDER BY mirror_section_title, date\n
-
+ORDER BY mirror_section_title, date
 
 ]]></string> </value>
                     </item>
