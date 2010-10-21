@@ -30,7 +30,7 @@
 import unittest
 
 from Products.ERP5Type.tests.utils import LogInterceptor
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.backportUnittest import skip
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
@@ -3229,6 +3229,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       delattr(Organisation, 'firstTest')
       delattr(Organisation, 'secondTest')
 
+  @skip
   def test_115_checkProcessShutdown(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
