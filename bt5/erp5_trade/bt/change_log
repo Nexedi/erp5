@@ -1,3 +1,6 @@
+2010-10-21 yusei
+* Add reverse_arrow_category parameter to Order_applyTradeCondition. This option is useful when trade condition is applied to returned packing list.
+
 2010-10-15 nicolas.dumazet
 * No restrictions on subtypes of Order portal type
 
