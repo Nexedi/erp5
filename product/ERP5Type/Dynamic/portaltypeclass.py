@@ -33,7 +33,7 @@ import inspect
 from types import ModuleType
 
 from dynamicmodule import newDynamicModule
-import lazyclass
+from lazyclass import newLazyClass
 
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
@@ -42,8 +42,7 @@ from Products.ERP5Type import PropertySheet as FilesystemPropertySheet
 from ExtensionClass import Base as ExtensionBase
 from zLOG import LOG, ERROR, INFO
 
-# FIXME: bad name
-def _import_class(classpath):
+def _importClass(classpath):
   try:
     module_path, class_name = classpath.rsplit('.', 1)
     module = __import__(module_path, {}, {}, (module_path,))
@@ -94,8 +93,7 @@ def _fillAccessorHolderList(accessor_holder_list,
             "Created accessor holder for %s in %s" % (property_sheet_name,
                                                       accessor_holder_module))
 
-# FIXME: bad name
-def portal_type_factory(portal_type_name):
+def portalTypeFactory(portal_type_name):
   """
   Given a portal type, look up in Types Tool the corresponding
   Base Type object holding the definition of this portal type,
@@ -162,7 +160,7 @@ def portal_type_factory(portal_type_name):
   if type_class is None:
     raise AttributeError('Document class is not defined on Portal Type %s' % portal_type_name)
 
-  type_class = _import_class(type_class)
+  type_class = _importClass(type_class)
 
   ## Disabled because there will be no commit of
   ## type_zodb_property_sheet, only use for testing ATM
@@ -203,7 +201,7 @@ def portal_type_factory(portal_type_name):
   mixin_path_list = []
   if mixin_list:
     mixin_path_list = map(mixin_class_registry.__getitem__, mixin_list)
-  mixin_class_list = map(_import_class, mixin_path_list)
+  mixin_class_list = map(_importClass, mixin_path_list)
 
   baseclasses = [type_class] + accessor_holder_list + mixin_class_list
 
@@ -232,12 +230,11 @@ def initializeDynamicModules():
   XXX: there should be only one accessor_holder once the code is
        stable and all the Property Sheets have been migrated
   """
-  # FIXME: bad name
-  def portal_type_loader(portal_type_name):
+  def portalTypeLoader(portal_type_name):
     """
     Returns a lazily-loaded "portal-type as a class"
     """
-    return lazyclass.lazyclass(portal_type_name, portal_type_factory)
+    return newLazyClass(portal_type_name, portalTypeFactory)
 
   erp5 = ModuleType("erp5")
   sys.modules["erp5"] = erp5
@@ -250,12 +247,11 @@ def initializeDynamicModules():
   sys.modules["erp5.filesystem_accessor_holder"] = erp5.filesystem_accessor_holder
 
   portal_type_container = newDynamicModule('erp5.portal_type',
-                                           portal_type_loader)
+                                           portalTypeLoader)
 
   erp5.portal_type = portal_type_container
 
-  # FIXME: bad name
-  def temp_portal_type_loader(portal_type_name):
+  def tempPortalTypeLoader(portal_type_name):
     """
     Returns a class suitable for a temporary portal type
 
@@ -288,7 +284,7 @@ def initializeDynamicModules():
     return TempDocument
 
   erp5.temp_portal_type = newDynamicModule('erp5.temp_portal_type',
-                                           temp_portal_type_loader)
+                                           tempPortalTypeLoader)
 
 def _clearAccessorHolderModule(module):
   """
