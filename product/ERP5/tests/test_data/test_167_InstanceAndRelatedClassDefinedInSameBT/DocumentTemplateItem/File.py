@@ -28,4 +28,5 @@
 from Products.ERP5Type.XMLObject import XMLObject
 
 class File(XMLObject):
+  portal_type = 'File'
   isClassOverriden = True
