@@ -112,25 +112,44 @@ def generatePortalTypeClass(portal_type_name):
   types_tool = site.portal_types
   try:
     portal_type = getattr(types_tool, portal_type_name)
+
+    # type_class has a compatibility getter that should return
+    # something even if the field is not set (i.e. Base Type object
+    # was not migrated yet)
+    type_class = portal_type.getTypeClass()
+
+    # But no such getter exists for Mixins and Interfaces:
+    # in reality, we can live with such a failure
+    try:
+      mixin_list = portal_type.getTypeMixinList()
+      interface_list = portal_type.getTypeInterfaceList()
+    except StandardError:
+      # log loudly the error, but it's not _critical_
+      LOG("ERP5Type.dynamic", ERROR,
+          "Could not load interfaces or Mixins for portal type %s" \
+              % portal_type_name)
   except AttributeError:
-    raise AttributeError('portal type %s not found in Types Tool' \
-                            % portal_type_name)
-
-  # type_class has a compatibility getter that should return
-  # something even if the field is not set (i.e. Base Type object
-  # was not migrated yet)
-  type_class = portal_type.getTypeClass()
-
-  # But no such getter exists for Mixins and Interfaces:
-  # in reality, we can live with such a failure
-  try:
-    mixin_list = portal_type.getTypeMixinList()
-    interface_list = portal_type.getTypeInterfaceList()
-  except StandardError:
-    # log loudly the error, but it's not _critical_
-    LOG("ERP5Type.dynamic", ERROR,
-        "Could not load interfaces or Mixins for portal type %s" \
-            % portal_type_name)
+    # Try to figure out a coresponding document class from the document side.
+    # This can happen when calling newTempAmount for instance:
+    #  Amount has no corresponding Base Type and will never have one
+    #  But the semantic of newTempXXX requires us to create an
+    #  object using the Amount Document, so we promptly do it:
+    for name, path in document_class_registry.iteritems():
+      module_path, class_name = path.rsplit('.', 1)
+      if portal_type_name.replace(' ', '') != class_name:
+        continue
+      module = __import__(module_path, {}, {}, (module_path,))
+      try:
+        klass = getattr(module, class_name)
+        try:
+          document_portal_type = getattr(klass, 'portal_type')
+          if document_portal_type == portal_type_name:
+            type_class = name
+            break
+        except AttributeError:
+          pass
+      finally:
+        del klass
 
   type_class_path = None
   if type_class is not None:
