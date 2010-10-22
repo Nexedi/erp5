@@ -130,14 +130,7 @@ class PeriodicityMixin:
       return date.month() in periodicity_month_list
 
   def _getTimezone(self, date):
-    # This method provides an utility to deal with a timezone as a workaround.
-    # This is necessary because DateTime does not respect the real timezone
-    # such as Europe/Paris, but only stores a difference from GMT such as
-    # GMT+1, thus it does not work nicely with daylight savings.
-    if date.tzoffset() == 0:
-      # Looks like using GMT.
-      return date.timezone()
-    return None
+    return date.timezone()
 
   def _getNextMonth(self, date, timezone):
     year = date.year()
@@ -221,15 +214,17 @@ class PeriodicityMixin:
       elif not (self._validateDay(next_start_date) and
                 self._validateWeek(next_start_date)):
         next_start_date = self._getNextDay(next_start_date, timezone)
-      elif not self._validateMinute(next_start_date, previous_date):
-        next_start_date = self._getNextMinute(next_start_date, timezone)
       elif not self._validateHour(next_start_date):
         next_start_date = self._getNextHour(next_start_date, timezone)
+      elif not self._validateMinute(next_start_date, previous_date):
+        next_start_date = self._getNextMinute(next_start_date, timezone)
       else:
         parts = list(next_start_date.parts())
         parts[5] = previous_date.second() # XXX keep old behaviour
-        parts[6] = timezone
-        return DateTime(*parts)
+        next_start_date = DateTime(*parts)
+        if timezone is not None:
+          next_start_date = next_start_date.toZone(timezone)
+        return next_start_date
 
   # XXX May be we should create a Date class for following methods ???
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayList')
@@ -606,7 +601,7 @@ Alarm Tool Node: %s
     alarm_date = self.getAlarmDate()
     if alarm_date is not None:
       if current_date is None:
-        # This is usefull to set the current date as parameter for
+        # This is useful to set the current date as parameter for
         # unit testing, by default it should be now
         current_date = DateTime()
       alarm_date = self.getNextPeriodicalDate(current_date, 
