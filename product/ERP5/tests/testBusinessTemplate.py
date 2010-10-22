@@ -3388,8 +3388,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        ImportBusinessTemplate \
@@ -4459,8 +4459,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4636,8 +4636,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4699,8 +4699,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckLocalRolesExists \
                        CheckPropertySheetExists \
                        CheckSkinsLayers \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4788,8 +4788,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckRoleExists \
                        CheckLocalRolesExists \
                        CheckPropertySheetExists \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4849,8 +4849,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4885,8 +4885,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckRoleExists \
                        CheckLocalRolesExists \
                        CheckPropertySheetExists \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
