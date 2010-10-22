@@ -72,9 +72,9 @@
 \n
   <div class="post_body" tal:replace="structure summary">Here is a blog post content</div>\n
 \n
-  <div class="post_read_more"><a tal:attributes="href url">Read more</a></div>\n
+  <div class="post_read_more"><a tal:attributes="href url" i18n:translate="" i18n:domain="ui">Read more</a></div>\n
   <div class="post_bottom">\n
-  <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> comment</a> | \n
+    <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> <tal:block i18n:translate="" i18n:domain="ui">comment</tal:block></a> | \n
   Share: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="blog_images/facebook-button.png"></a>&nbsp;&nbsp;\n
          <a title="Twitter" tal:attributes="href twitter_url"><img width="20px" alt="Twitter Logo" src="blog_images/twitter-button.png"></a>\n
 \n
