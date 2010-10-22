@@ -1203,7 +1203,7 @@ def initialize( context ):
         return result
 
       security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
-      def runLiveTest(self, test_list=[], run_only=None, debug=None,
+      def runLiveTest(self, test_list=None, run_only=None, debug=None,
                       verbose=False):
         """
         Launch live tests
@@ -1214,6 +1214,13 @@ def initialize( context ):
         debug=boolean        Invoke debugger on errors / failures.
         verbose=boolean      Display more informations when running tests
         """
+        # Allow having strings for verbose and debug
+        verbose = int(verbose) and True or False
+        debug = int(debug) and True or False
+        if test_list is None:
+          test_list = []
+        elif isinstance(test_list, str):
+          test_list = test_list.split(',')
         path = os.path.join(getConfiguration().instancehome, 'tests')
         verbosity = verbose and 2 or 1
         instance_home = getConfiguration().instancehome
