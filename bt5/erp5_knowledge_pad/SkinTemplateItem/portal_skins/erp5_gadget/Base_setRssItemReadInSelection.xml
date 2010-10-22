@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -56,10 +53,12 @@
             <value> <string>portal_selection = getattr(context,\'portal_selections\')\n
 selection = portal_selection.getSelectionFor(selection_name)\n
 params = selection.getParams()\n
-readItemList = params.get(\'rss_read_item:list\', {})\n
-readItemList[item]=\'\'\n
-params[\'rss_read_item:list\'] = readItemList\n
+readItemList = params.get(\'rss_read_item_list\', [])\n
+if item not in readItemList:\n
+  readItemList.append(item)\n
+params[\'rss_read_item_list\'] = readItemList\n
 portal_selection.setSelectionParamsFor(selection_name, params)\n
+return item\n
 </string> </value>
         </item>
         <item>

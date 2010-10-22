@@ -193,11 +193,19 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -229,6 +237,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -252,6 +264,10 @@
                 </item>
                 <item>
                     <key> <string>meta_types</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_mode</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -306,6 +322,10 @@
                 </item>
                 <item>
                     <key> <string>stat_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>

@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block \n
   tal:define="title here/field_title;\n
@@ -45,30 +45,33 @@
               link here/field_link;\n
               md5  here/field_md5;\n
               box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-              dom_id python: (\'%s-%s\' %(box_relative_url.replace(\'/\',\'_\'), md5))">\n
+              dom_id python: (\'%s-%s\' %(box_relative_url.replace(\'/\',\'_\'), md5));\n
+              selection_name python: context.Base_getListboxGadgetSelectionName(context.REQUEST.get(\'box_relative_url\', \'\'));\n
+              selection python: context.portal_selections.getSelectionFor(selection_name);\n
+              selection_params python: selection.getParams();\n
+              read_item_list python:selection_params.get(\'rss_read_item_list\', []);\n
+              is_read python: md5 in read_item_list">\n
+\n
+\n
   <div class="document-gadget-quick-preview">\n
 \n
     <div class="teaser"\n
-         tal:attributes="onclick string:toggle(\'${dom_id}\');">\n
-\n
+         tal:attributes="class python: test(is_read, \'teaser read\', \'teaser unread\');\n
+                         onclick string:if(this.className!=\'teaser read\'){this.className=\'teaser read\';;MochiKit.Async.doSimpleXMLHttpRequest(\'Base_setRssItemReadInSelection\', {\'selection_name\':\'${selection_name}\',\'item\':\'${md5}\'})};;toggle(\'${dom_id}\');">\n
+      <img class="thumbnail-image"\n
+           tal:condition="python: image not in ((), None,)"\n
+           tal:attributes="src python: image[0]" alt="Thumbnail"/>\n
       <span class="document-title"\n
             tal:content="title"/> - \n
-\n
       <span class="modification-date"\n
             tal:content="date"/>\n
-\n
     </div>\n
 \n
-    <!-- Hidden thumbnail & description -->\n
+    <!-- Hidden description -->\n
     <div class="body" style="display:none;"\n
          tal:attributes="id dom_id">\n
-      <div class="document-thumbnail"\n
-           tal:condition="python: image not in ((), None,)"\n
-           tal:content="structure image"/>\n
-      <br/>\n
       <div class="rss-description"\n
             tal:content="structure description"/>\n
-      <br/>\n
       <a target="_blank" \n
          class="document-link"\n
          title="Original Document"\n
@@ -80,7 +83,7 @@
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -95,8 +98,12 @@
             <value> <string>RssFeed_getSummaryAsHTML</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
