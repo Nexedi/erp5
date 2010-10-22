@@ -166,7 +166,8 @@ Here, a group of movement means:\n
          mirror_section.relative_url as mirror_section_relative_url,\n
          mirror_section.title as mirror_section_title,\n
          stock.date as date,\n
-         IFNULL(stock.total_price, 0) as total_price\n
+         IFNULL(stock.total_price, 0) as total_price,\n
+         IFNULL(stock.quantity, 0) as total_quantity\n
 \n
   FROM catalog, stock LEFT JOIN catalog AS mirror_section on \n
         ( stock.mirror_section_uid = mirror_section.uid )\n
@@ -195,7 +196,8 @@ Here, a group of movement means:\n
       mirror_section.relative_url as mirror_section_relative_url,\n
       mirror_section.title as mirror_section_title,\n
       stock.date as date,\n
-      IFNULL(stock.total_price, 0) as total_price\n
+      IFNULL(stock.total_price, 0) as total_price,\n
+      IFNULL(stock.quantity, 0) as total_quantity\n
 \n
   FROM  catalog AS catalog_2, stock AS stock_2, \n
         catalog AS catalog, stock AS stock LEFT JOIN catalog AS mirror_section\n
@@ -289,7 +291,8 @@ Here, a group of movement means:\n
          mirror_section.relative_url as mirror_section_relative_url,\n
          mirror_section.title as mirror_section_title,\n
          stock.date as date,\n
-         IFNULL(stock.total_price, 0) as total_price\n
+         IFNULL(stock.total_price, 0) as total_price,\n
+         IFNULL(stock.quantity, 0) as total_quantity\n
 \n
   FROM catalog, stock LEFT JOIN catalog AS mirror_section on \n
         ( stock.mirror_section_uid = mirror_section.uid )\n
@@ -318,7 +321,8 @@ Here, a group of movement means:\n
       mirror_section.relative_url as mirror_section_relative_url,\n
       mirror_section.title as mirror_section_title,\n
       stock.date as date,\n
-      IFNULL(stock.total_price, 0) as total_price\n
+      IFNULL(stock.total_price, 0) as total_price,\n
+      IFNULL(stock.quantity, 0) as total_quantity\n
 \n
   FROM  catalog AS catalog_2, stock AS stock_2, \n
         catalog AS catalog, stock AS stock LEFT JOIN catalog AS mirror_section\n
