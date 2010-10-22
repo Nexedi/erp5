@@ -830,11 +830,7 @@ class Base( CopyContainer,
                                        cache_factory='erp5_ui_long'))
 
   def _aq_key(self):
-    klass_list = self.__class__.__mro__
-    i = 0
-    while klass_list[i].__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
-      i += 1
-    return (self.portal_type, klass_list[i])
+    return (self.portal_type, self.__class__)
 
   def _propertyMap(self):
     """ Method overload - properties are now defined on the ptype """
@@ -858,11 +854,7 @@ class Base( CopyContainer,
       Test purpose
     """
     ptype = self.portal_type
-    klass_list = self.__class__.__mro__
-    i = 0
-    while klass_list[i].__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
-      i += 1
-    klass = klass_list[i]
+    klass = self.__class__
     aq_key = (ptype, klass) # We do not use _aq_key() here for speed
     initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, \
         self.getPortalObject())
@@ -874,11 +866,7 @@ class Base( CopyContainer,
     # and default properties can be associated per portal type
     # and per class. Other uses are possible (ex. WebSection).
     ptype = self.portal_type
-    klass_list = self.__class__.__mro__
-    i = 0
-    while klass_list[i].__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
-      i += 1
-    klass = klass_list[i]
+    klass = self.__class__
     aq_key = (ptype, klass) # We do not use _aq_key() here for speed
 
     # If this is a portal_type property and everything is already defined
