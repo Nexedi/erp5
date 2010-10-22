@@ -65,7 +65,7 @@ if hasattr(context, \'REQUEST\'):\n
   if here is not None:\n
     separator = here.getLayoutProperty(\'layout_blog_first_part_separator\', separator)\n
 \n
-if context.text_content == "text/html":\n
+if context.getTextFormat() == "text/html":\n
   # We must analyse the separator a bit.\n
   # XXXX: this whole logic is too light for this problem, but I don\'t want to parse the whole HTML.\n
   if "</" in separator:\n
