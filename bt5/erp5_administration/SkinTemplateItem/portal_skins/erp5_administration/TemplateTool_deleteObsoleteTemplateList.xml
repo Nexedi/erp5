@@ -63,7 +63,7 @@ for bt in bt_list:\n
   elif installation_state == \'not_installed\':\n
     if len([x for x in bt_list \\\n
      if x.getTitle() == bt.getTitle() and \\\n
-        x.getInstallationState() == \'installed\' and \\\n
+        x.getInstallationState() in (\'installed\', \'not_installed\') and \\\n
         int(x.getRevision() or \'0\') > int(bt.getRevision() or \'0\')]):\n
       delete_list.append(bt_id)\n
 \n
