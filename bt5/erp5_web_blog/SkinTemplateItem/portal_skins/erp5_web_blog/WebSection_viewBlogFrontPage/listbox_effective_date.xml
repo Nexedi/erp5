@@ -265,7 +265,7 @@
                 </item>
                 <item>
                     <key> <string>date_separator</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>/</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
