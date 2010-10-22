@@ -963,7 +963,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           for subdocument in document.objectValues():
             recurse(hook, subdocument, my_prefix)
       def saveHook(document, prefix):
-        uid = getattr(document, 'uid', None)
+        uid = getattr(aq_base(document), 'uid', None)
         if uid is None:
           return 0
         else:
