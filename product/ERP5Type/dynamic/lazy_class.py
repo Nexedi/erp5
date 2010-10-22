@@ -60,6 +60,8 @@ def generateLazyPortalTypeClass(portal_type_name,
             will change after the first call.
             """
             if attr in ('__class__',
+                        '__getnewargs__',
+                        '__getstate__',
                         '__dict__',
                         '__module__',
                         '__name__',
