@@ -423,9 +423,24 @@ class ERP5TypeInformation(XMLObject,
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
 
-    # XXX this is required for a bootstrap issue.
+    # XXX these methods, _baseGetTypeClass, getTypeMixinList, and
+    # getTypeInterfaceList, are required for a bootstrap issue that
+    # the portal type class Base Type is required for _aq_dynamic on
+    # Base Type. So surpress calling _aq_dynamic when obtaining information
+    # required for generating a portal type class by declaring these methods
+    # explicitly.
     def _baseGetTypeClass(self):
       return getattr(aq_base(self), 'type_class', None)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeMixinList')
+    def getTypeMixinList(self):
+      return getattr(aq_base(self), 'type_mixin', ())
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeInterfaceList')
+    def getTypeInterfaceList(self):
+      return getattr(aq_base(self), 'type_interface', ())
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypeClass')
