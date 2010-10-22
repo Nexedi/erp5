@@ -38,6 +38,7 @@ class IngestionFile(Base, Folder):
   """
 
   meta_type = 'ERP5 Ingestion File'
+  portal_type = 'Ingestion File'
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
