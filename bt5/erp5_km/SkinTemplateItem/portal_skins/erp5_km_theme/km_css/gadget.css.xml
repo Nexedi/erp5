@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87491856.73</string> </value>
+            <value> <string>ts87749184.51</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -432,37 +432,6 @@ div.gadget-my-documents table.listbox thead{\n
   display: none;\n
 }\n
 \n
-/* Some gadgets share same Document_getSummaryAsHTML or RssFeed_getSummaryAsHTML */\n
-div.document-gadget-quick-preview div.teaser{\n
-  cursor: pointer;\n
-}\n
-\n
-div.document-gadget-quick-preview span.document-title,\n
-div.document-gadget-quick-preview span.modification-date{\n
-  font-size:0.8em;\n
-}\n
-\n
-div.document-gadget-quick-preview span.document-title{\n
-  color:#969696;\n
-}\n
-\n
-div.document-gadget-quick-preview span.modification-date{\n
-  color: #C0C0C0;\n
-}\n
-\n
-div.document-gadget-quick-preview a.document-link{\n
-  color:#000;\n
-  font-weight:bold;\n
-}\n
-\n
-/* Rss Feed reader gadget needs no listbox headers or \n
-show number of records  or show \'No results\' as listbox title is used for this */\n
-div.gadget-rss-reader table.listbox thead,\n
-div.gadget-rss-reader div.listbox-number-of-records,\n
-div.gadget-rss-reader table.listbox td.listbox-table-no-result-row{\n
-  display: none;\n
-}\n
-\n
 /* "Other versions", "History", "My Tasks", "My contacts", "Persons" gadgets needs no listbox headers */\n
 div.gadget-other-versions  div.listbox-head-content,\n
 div.gadget-history  div.listbox-head-content,\n
@@ -487,7 +456,7 @@ div.block div.box_inner_content div.worklist_list ul {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8904</int> </value>
+            <value> <int>8054</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
