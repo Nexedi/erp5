@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87752153.8</string> </value>
+            <value> <string>ts87753583.75</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -516,13 +516,14 @@ div.teaser .thumbnail-image{\n
   margin:4px;\n
   float:left;\n
 }\n
-\n
+div.teaser .icon {\n
+  vertical-align:middle;\n
+}\n
 div.gadget-rss-reader-logo img{\n
   float:right;\n
   margin:4px;\n
   width:auto;\n
 }\n
-\n
 </string> </value>
         </item>
         <item>
@@ -531,7 +532,7 @@ div.gadget-rss-reader-logo img{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8792</int> </value>
+            <value> <int>8836</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
