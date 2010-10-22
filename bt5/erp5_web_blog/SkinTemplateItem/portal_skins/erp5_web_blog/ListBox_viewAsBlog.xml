@@ -65,8 +65,8 @@
     <strong tal:content="structure date_rendered">date</strong>\n
   </small>\n
 \n
-  <small class="post_author">Author: <span tal:replace="author">Author</span></small> | <small class="post_category">Category: \n
-    <tal:block tal:repeat="category categories"><a tal:attributes="href python: \'%s?tag=%s\' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small>\n
+  <small class="post_author">Author: <span tal:replace="author">Author</span></small><tal:block tal:condition="categories"> | <small class="post_category">Category: \n
+    <tal:block tal:repeat="category categories"><a tal:attributes="href python: \'%s?tag=%s\' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small></tal:block>\n
 \n
 </div><!--End post_head -->\n
 \n
