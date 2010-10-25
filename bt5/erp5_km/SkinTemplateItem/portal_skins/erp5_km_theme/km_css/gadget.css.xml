@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87749184.51</string> </value>
+            <value> <string>ts87990943.13</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -328,9 +328,15 @@ div.wait_block p{\n
   margin-left: 0.5em;\n
 }\n
 \n
-/* disable cursor for anonymous users */\n
+/* disable cursor for anonymous users,\n
+   disable "move" icon background */\n
 div.portal-column-undraggable .handle{\n
   cursor: default;\n
+  background:none;\n
+  background-color:#C0BFB3;\n
+}\n
+div.portal-column-undraggable h3.handle span{\n
+  padding: 0;\n
 }\n
 \n
 /* Decrease padding for gadgets\' text */\n
@@ -456,7 +462,7 @@ div.block div.box_inner_content div.worklist_list ul {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8054</int> </value>
+            <value> <int>8198</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
