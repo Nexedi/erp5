@@ -569,6 +569,7 @@ class DefaultLogicalPathGetter(BaseGetter):
     func_code.co_varnames = ('self',)
     func_code.co_argcount = 1
     func_defaults = ()
+    _item_method = 'getTitle'
 
     def __init__(self, id, key):
       self._id = id
@@ -581,13 +582,17 @@ class DefaultLogicalPathGetter(BaseGetter):
                                                  portal_type=kw.get('portal_type',()),
                                                  checked_permission=kw.get('checked_permission', None))
       if value is not None:
-        return value.getLogicalPath()
-      else:
-        return None
+        return value.getLogicalPath(item_method=self._item_method)
+      return None
 
     psyco.bind(__call__)
 
 LogicalPathGetter = DefaultLogicalPathGetter
+
+class DefaultTranslatedLogicalPathGetter(DefaultLogicalPathGetter):
+  _item_method = "getTranslatedTitle"
+
+TranslatedLogicalPathGetter = DefaultTranslatedLogicalPathGetter
 
 class IdListGetter(BaseGetter):
     """
@@ -640,6 +645,7 @@ class LogicalPathListGetter(BaseGetter):
     func_code.co_varnames = ('self',)
     func_code.co_argcount = 1
     func_defaults = ()
+    _item_method = 'getTitle'
 
     def __init__(self, id, key):
       self._id = id
@@ -647,7 +653,8 @@ class LogicalPathListGetter(BaseGetter):
       self._key = key
 
     def __call__(self, instance, *args, **kw):
-      return [x.getLogicalPath() for x in instance._getAcquiredValueList(self._key,
+      return [x.getLogicalPath(item_method=self._item_method)
+         for x in instance._getAcquiredValueList(self._key,
                                                  spec=kw.get('spec',()),
                                                  filter=kw.get('filter', None),
                                                  portal_type=kw.get('portal_type',()),

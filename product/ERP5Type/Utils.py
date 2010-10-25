@@ -2439,12 +2439,19 @@ def createValueAccessors(property_holder, id,
   if not hasattr(property_holder, accessor_name):
     property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
     property_holder.declareProtected(read_permission, accessor_name)
+  accessor_name = 'get' + UpperCase(id) + 'TranslatedLogicalPath'
+  if not hasattr(property_holder, accessor_name):
+    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedLogicalPathGetter, ())
+    property_holder.declareProtected(read_permission, accessor_name)
   accessor_name = '_categoryGetDefault' + UpperCase(id) + 'LogicalPath'
   if not hasattr(property_holder, accessor_name):
     property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
   accessor_name = '_categoryGet' + UpperCase(id) + 'LogicalPath'
   if not hasattr(property_holder, accessor_name):
     property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
+  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedLogicalPath'
+  if not hasattr(property_holder, accessor_name):
+    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedLogicalPathGetter, ())
 
   setter_name = 'set' + UpperCase(id) + 'Value'
   if not hasattr(property_holder, setter_name):

@@ -1747,7 +1747,7 @@ class TestPropertySheet:
       for View permission
       """
       # Create a few categories
-      region_category = self.getPortal().portal_categories.region
+      region_category = self.portal.portal_categories.region
       beta_id = "beta"
       beta_title = "Beta System"
       beta = region_category.newContent(
@@ -1767,9 +1767,13 @@ class TestPropertySheet:
               title =       gamma_title, )
       gamma_path = gamma.getCategoryRelativeUrl()
 
+      alpha = gamma.newContent(portal_type='Category',
+                               id='alpha',
+                               title='Alpha')
+
       # Make sure categories are reindexed
       transaction.commit()
-      self.tic() 
+      self.tic()
 
       self.assertEquals(beta.getRelativeUrl(), 'region/beta')
 
@@ -1805,8 +1809,19 @@ class TestPropertySheet:
           None,
           foo.getRegionTitle(checked_permission=checked_permission))
 
-      # Check getCategoryValue accessor
+      # Check getCategoryLogicalPath accesor
       foo.setDefaultRegionValue(beta)
+      self.assertEquals(beta_title, foo.getRegionLogicalPath())
+
+      foo.setDefaultRegionValue(alpha)
+      self.assertEquals('Gamma System/Alpha', foo.getRegionLogicalPath())
+
+      # Check getCategoryValue accessor
+      # XXX did you know ?
+      # calling setDefaultRegionValue here would append a default region, and
+      # the region list would be [beta, alpha].
+      # bug or feature ? I don't know ...
+      foo.setRegionValue(beta)
       self.assertEquals(beta, foo.getRegionValue())
       self.assertEquals(
           None,
@@ -2260,6 +2275,27 @@ class TestPropertySheet:
       self.assertFalse(doc.getDummyTranslationDomain())
       self.assertEquals('foo', doc.getTranslatedDummy())
       self.assertEquals([], self.portal.Localizer.erp5_ui._translated)
+
+    def test_translated_category_accessors(self):
+      region_category = self.portal.portal_categories.region
+      gamma = region_category.newContent(portal_type="Category",
+                                         id="gamma",
+                                         title="Gamma System")
+      alpha = gamma.newContent(portal_type='Category',
+                               id='alpha',
+                               title='Alpha')
+      self.portal.Localizer = DummyLocalizer()
+      doc = self.portal.person_module.newContent(portal_type='Person',
+                                                 region='gamma/alpha')
+
+      self.assertEquals('Alpha', doc.getRegionTranslatedTitle())
+      # the value of the category title is translated with erp5_content
+      self.assertEquals(['Alpha'], self.portal.Localizer.erp5_content._translated)
+
+      self.portal.Localizer.erp5_content._translated = []
+      self.assertEquals('Gamma System/Alpha', doc.getRegionTranslatedLogicalPath())
+      self.assertEquals(['Gamma System', 'Alpha'],
+                        self.portal.Localizer.erp5_content._translated)
 
 
     # _aq_reset should be called implicitly when the system configuration
