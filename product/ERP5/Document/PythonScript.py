@@ -87,6 +87,14 @@ class PythonScript(XMLObject, ZopePythonScript):
                       , PropertySheet.DublinCore
                       , PropertySheet.PythonScript
                       )
+
+    def __init__(self, *args, **kw):
+      """
+      override to call __init__ of python scripts in order to set
+      correctly bindings
+      """
+      XMLObject.__init__(self, *args, **kw)
+      ZopePythonScript.__init__(self, *args, **kw)
     
     def _setBody(self, value):
       """
