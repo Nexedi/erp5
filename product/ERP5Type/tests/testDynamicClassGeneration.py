@@ -56,7 +56,11 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
     import_path = os.path.join(os.environ['INSTANCE_HOME'], 'import')
     if not os.path.exists(import_path):
+      if os.path.islink(import_path):
+        # broken symlink
+        os.unlink(import_path)
       os.mkdir(import_path)
+
     shutil.copy(zexp_path, import_path)
 
     person_module = self.getPortal().person_module
