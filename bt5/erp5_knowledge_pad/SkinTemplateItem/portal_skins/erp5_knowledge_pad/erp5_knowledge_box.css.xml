@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87753583.75</string> </value>
+            <value> <string>ts88001741.62</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -319,25 +319,36 @@ div.block ul{\n
 }\n
 \n
 \n
-/* When we show listbox in gagets we need to override some CSS*/\n
-div.block table.listbox,\n
-div.box_inner_content .input,\n
-div.box_inner_content .search.result .resultList{\n
-  width:100%;\n
-  margin:0em;\n
-  padding:0em;\n
-}\n
+/* \n
 \n
-.box_inner_content .search.result .extendedSearchBar{\n
-  display:none;\n
-}\n
+  Gadget listbox CSS\n
 \n
+*/\n
 div.block table.listbox .right{\n
   float:right;\n
 }\n
 \n
 div.block table.listbox .left{\n
   float:left;\n
+}\n
+div.block .listbox-head{\n
+  margin-left:0;\n
+}\n
+div.block div.listbox-head-spacer{\n
+  display:none;\n
+}\n
+div.block div.listbox-head-content {\n
+  background: none;\n
+  background-color: #E3EAFA;\n
+  border: none;\n
+  margin-left:0;\n
+  padding-left: 10px;\n
+}\n
+div.block table.listbox tr{\n
+  margin-top:2px;\n
+}\n
+div.block table.listbox tr.DataB {\n
+  background-color:#FFF;\n
 }\n
 \n
 div.block div.input{\n
@@ -532,7 +543,7 @@ div.gadget-rss-reader-logo img{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8836</int> </value>
+            <value> <int>8927</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
