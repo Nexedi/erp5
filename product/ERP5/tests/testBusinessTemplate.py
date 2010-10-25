@@ -6842,47 +6842,48 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.stepTic()
     
     new_bt.install()
+    try:
+      type_provider = self.portal._getOb('dummy_type_provider', None)
+      self.assertNotEqual(None, type_provider)
 
-    type_provider = self.portal._getOb('dummy_type_provider', None)
-    self.assertNotEqual(None, type_provider)
+      # This type provider, will be automatically registered on types tool during
+      # business template installation, because it contains type information
+      self.assertTrue('dummy_type_provider' in types_tool.type_provider_list)
+      # The type is reinstalled
+      self.assertTrue('Dummy Type' in type_provider.objectIds())
+      # is available from types tool
+      self.assertTrue('Dummy Type' in [ti.getId() for
+                      ti in types_tool.listTypeInfo()])
+      
+      dummy_type = types_tool.getTypeInfo('Dummy Type')
+      self.assertNotEquals(None, dummy_type)
+      # all the configuration from the type is still here
+      self.assertEquals(['Reference'], dummy_type.getTypePropertySheetList())
+      self.assertEquals(['source'], dummy_type.getTypeBaseCategoryList())
+      self.assertEquals(['Dummy Type'], dummy_type.getTypeAllowedContentTypeList())
+      self.assertEquals(['Dummy Type'], dummy_type.getTypeHiddenContentTypeList())
 
-    # This type provider, will be automatically registered on types tool during
-    # business template installation, because it contains type information
-    self.assertTrue('dummy_type_provider' in types_tool.type_provider_list)
-    # The type is reinstalled
-    self.assertTrue('Dummy Type' in type_provider.objectIds())
-    # is available from types tool
-    self.assertTrue('Dummy Type' in [ti.getId() for
-                    ti in types_tool.listTypeInfo()])
-    
-    dummy_type = types_tool.getTypeInfo('Dummy Type')
-    self.assertNotEquals(None, dummy_type)
-    # all the configuration from the type is still here
-    self.assertEquals(['Reference'], dummy_type.getTypePropertySheetList())
-    self.assertEquals(['source'], dummy_type.getTypeBaseCategoryList())
-    self.assertEquals(['Dummy Type'], dummy_type.getTypeAllowedContentTypeList())
-    self.assertEquals(['Dummy Type'], dummy_type.getTypeHiddenContentTypeList())
+      action_list = dummy_type.contentValues(portal_type='Action Information')
+      self.assertEquals(['View'], [action.getTitle() for action in action_list])
+      self.assertEquals(['view'], [action.getReference() for action in action_list])
+      
+      role_list = dummy_type.contentValues(portal_type='Role Information')
+      self.assertEquals(['Dummy Role Definition'],
+                        [role.getTitle() for role in role_list])
+      
+      self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
+      
+      # and our type can be used
+      instance = self.portal.newContent(portal_type='Dummy Type',
+                                        id='test_document')
+      instance.setSourceReference('OK')
+      self.assertEquals('OK', instance.getSourceReference())
 
-    action_list = dummy_type.contentValues(portal_type='Action Information')
-    self.assertEquals(['View'], [action.getTitle() for action in action_list])
-    self.assertEquals(['view'], [action.getReference() for action in action_list])
-    
-    role_list = dummy_type.contentValues(portal_type='Role Information')
-    self.assertEquals(['Dummy Role Definition'],
-                      [role.getTitle() for role in role_list])
-    
-    self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
-    
-    # and our type can be used
-    instance = self.portal.newContent(portal_type='Dummy Type',
-                                      id='test_document')
-    instance.setSourceReference('OK')
-    self.assertEquals('OK', instance.getSourceReference())
-
-    new_bt.uninstall()
-    self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
-    self.assertEquals(None, types_tool.getTypeInfo('Dummy Type'))
-    self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
+    finally:
+      new_bt.uninstall()
+      self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
+      self.assertEquals(None, types_tool.getTypeInfo('Dummy Type'))
+      self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
 
   def test_type_provider_2(self):
     self.portal._setObject('dummy_type_provider', DummyTypeProvider())
