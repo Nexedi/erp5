@@ -106,7 +106,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     person = person_module.newContent(id='John Dough', portal_type='Person')
 
     person_type = portal.portal_types.Person
-    self.assertEquals(person_type.getTypeMixinList(), None)
+    self.assertEquals(person_type.getTypeMixinList() or [], [])
 
     try:
       self.assertEquals(getattr(person, 'asText', None), None)
