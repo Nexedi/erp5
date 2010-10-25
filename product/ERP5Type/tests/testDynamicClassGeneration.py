@@ -28,7 +28,6 @@
 #
 ##############################################################################
 
-import os, shutil
 import unittest
 
 import transaction
@@ -46,22 +45,8 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     Products.ERP5Type.Document.Person.Person type
     """
     file_name = 'non_migrated_person.zexp'
-    import Products.ERP5Type.tests as test_module
-    test_path = test_module.__path__
-    if isinstance(test_path, list):
-      test_path = test_path[0]
 
-    zexp_path = os.path.join(test_path, 'input', file_name)
-    self.assertTrue(os.path.exists(zexp_path))
-
-    import_path = os.path.join(os.environ['INSTANCE_HOME'], 'import')
-    if not os.path.exists(import_path):
-      if os.path.islink(import_path):
-        # broken symlink
-        os.unlink(import_path)
-      os.mkdir(import_path)
-
-    shutil.copy(zexp_path, import_path)
+    self.copyInputFileToImportFolder(file_name)
 
     person_module = self.getPortal().person_module
     person_module.manage_importObject(file_name)
