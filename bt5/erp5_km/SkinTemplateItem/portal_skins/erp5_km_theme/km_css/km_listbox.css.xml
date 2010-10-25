@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
 \n
@@ -156,17 +156,18 @@ div.listbox-action-widget span.description span {\n
 </tal:block>\n
 </tal:block>\n
 \n
-/* We hide listbox spacer */\n
+/* We hide listbox spacer in both normal and gadget mode */\n
 div.listbox-head-spacer{\n
   display:none;\n
 }\n
 \n
-div.listbox-head-content{\n
-  background-color:transparent;\n
+div.listbox-head-content,\n
+div.block div.listbox-head-content{\n
+  background-color:#FFF;\n
+  background: none;\n
   margin-left:0px;\n
   border: none;\n
 }\n
-\n
 div.listbox-title span{\n
   font-weight: bold;\n
 }\n
@@ -281,7 +282,7 @@ div.listbox-page-navigation button.listbox_last_page span.image {\n
 }\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -296,8 +297,12 @@ div.listbox-page-navigation button.listbox_last_page span.image {\n
             <value> <string>km_listbox.css</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
