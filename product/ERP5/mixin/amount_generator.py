@@ -30,6 +30,7 @@ import random
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Acquisition import Implicit
+from Products.ERP5.AggregatedAmountList import AggregatedAmountList
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.Document.MappedValue import MappedValue
@@ -167,7 +168,7 @@ class AmountGeneratorMixin:
       portal.getPortalAmountGeneratorCellTypeList()
 
     # Set empty result by default
-    result = []
+    result = AggregatedAmountList()
 
     args = (getTransactionalVariable().setdefault(
               "amount_generator.BaseAmountDict", {}),
@@ -230,15 +231,20 @@ class AmountGeneratorMixin:
             'base_contribution_set': set(),
             'category_list': [],
             'causality_value_list': [],
+            'efficiency': self.getEfficiency(),
+            'quantity_unit': self.getQuantityUnit(),
             # XXX If they are several cells, we have duplicate references.
             'reference': self.getReference(),
           }
         # Then collect the mapped values (quantity, price, trade_phase...)
         for key in cell.getMappedValuePropertyList():
+          if key in ('net_converted_quantity',
+                     'net_quantity', 'converted_quantity'):
+            # XXX only 'quantity' is accepted and it is treated
+            #     as if it was 'converted_quantity'
+            raise NotImplementedError
           # XXX-JPS Make sure handling of list properties can be handled
-          dict_key = key in ('net_quantity', 'converted_quantity',
-                             'net_converted_quantity') and 'quantity' or key
-          property_dict[dict_key] = cell.getProperty(key)
+          property_dict[key] = cell.getProperty(key)
         category_list = cell.getAcquiredCategoryMembershipList(
           cell.getMappedValueBaseCategoryList(), base=1)
         property_dict['category_list'] += category_list
@@ -276,9 +282,7 @@ class AmountGeneratorMixin:
         #   base_contribution_list - needed to produce reports with
         #                            getTotalPrice
         # 'efficiency' is stored separately in the generated amount,
-        # for future simulation of efficiencies (use net_quantity otherwise).
-        # 'converted_quantity' is used preferrably to 'quantity' since we
-        # need values converted to the default management unit.
+        # for future simulation of efficiencies.
         # If no quantity is provided, we consider that the value is 1.0
         # (XXX is it OK ?) XXX-JPS Need careful review with taxes
         quantity = float(sum(map(base_amount.getGeneratedAmountQuantity,
@@ -297,6 +301,8 @@ class AmountGeneratorMixin:
           # we only want the id to be unique so we pick a random causality
           causality_value.getRelativeUrl().replace('/', '_'))
         amount._setCategoryList(property_dict.pop('category_list', ()))
+        if amount.getQuantityUnit():
+          del property_dict['quantity_unit']
         amount._edit(
           quantity=quantity,
           # XXX Are title, int_index and description useful ??
@@ -304,6 +310,9 @@ class AmountGeneratorMixin:
           int_index=self.getIntIndex(),
           description=self.getDescription(),
           **property_dict)
+        # convert to default management unit if possible
+        amount._setQuantity(amount.getConvertedQuantity())
+        amount._setQuantityUnit(amount.getResourceDefaultQuantityUnit())
         if rounding:
           # We hope here that rounding is sufficient at line level
           amount = getRoundingProxy(amount, context=self)
@@ -341,7 +350,7 @@ class AmountGeneratorMixin:
       amount_list=amount_list, rounding=rounding,
       amount_generator_type_list=amount_generator_type_list)
     aggregated_amount_dict = {}
-    result_list = []
+    result_list = AggregatedAmountList()
     for amount in generated_amount_list:
       key = (amount.getPrice(), amount.getEfficiency(),
              amount.getReference(), amount.categories)

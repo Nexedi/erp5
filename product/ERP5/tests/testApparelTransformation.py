@@ -155,7 +155,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     portal = self.getPortal()
     operation_dict = {}
     for operation_name in ('piquage', 'taillage'):
-      operation = portal.portal_categories.operation.newContent(id=operation_name)
+      operation = portal.portal_categories.operation.newContent(operation_name,
+        quantity_unit='time/min')
       operation_dict[operation_name] = operation
     sequence.edit(operation_dict=operation_dict)
     
@@ -331,8 +332,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     operation.edit(
         title = op_name,
         quantity = 10.,
-        categories = operation.getCategoryList() + [ 'resource/' + operation_dict[op_name].getRelativeUrl(),
-                                                     'quantity_unit/time/min'],
+        resource_value=operation_dict[op_name],
         int_index=4,
         )
 
@@ -346,8 +346,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     operation = transformation.newContent(portal_type=self.operation_portal_type)
     operation.edit(
         title = op_name,
-        categories = operation.getCategoryList() + [ 'resource/' + operation_dict[op_name].getRelativeUrl(),
-                                                     'quantity_unit/time/min'],
+        resource_value=operation_dict[op_name],
         int_index=5,
         )
     base_category_list = ['size']
@@ -629,21 +628,17 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     produced_resource = transformation.getResource()
     production_order_module = self.portal.getDefaultModule("Production Order")
     production_order = production_order_module.newContent(
-                                      portal_type="Production Order")
+                                      portal_type="Production Order",
+                                      temp_object=1,
+                                      specialise_value=transformation)
     for i, expected in enumerate(expected_list):
       context = production_order.newContent(
-          portal_type="Production Order Line")
-      context.edit(
-          quantity = 1.0,
-          variation_category_list = expected['id'],
-          resource = produced_resource,
-          specialise=transformation.getRelativeUrl(),
+          portal_type="Production Order Line",
+          quantity=1,
+          variation_category_list=expected['id'],
+          resource=produced_resource,
       )
-      aggregated_amount_list = context.getAggregatedAmountList(
-                  amount_generator_type_list=("Transformation",
-                      "Transformation Transformed Resource",
-                      "Transformation Operation",
-                      ))
+      aggregated_amount_list = context.getAggregatedAmountList()
       expected_amount_list = expected['amount']
       
       expected_amount_list_len = len(expected_amount_list)

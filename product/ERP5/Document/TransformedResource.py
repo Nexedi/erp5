@@ -63,8 +63,7 @@ class TransformedResource(AmountGeneratorLine):
     # Provide default mapped value properties and categories if
     # not defined
     def getMappedValuePropertyList(self):
-      return self._baseGetMappedValuePropertyList() or (
-          'converted_quantity', 'efficiency')
+      return self._baseGetMappedValuePropertyList() or ('quantity',)
 
     def getMappedValueBaseCategoryList(self):
       result = self._baseGetMappedValueBaseCategoryList()

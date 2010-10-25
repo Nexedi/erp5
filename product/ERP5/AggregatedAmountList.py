@@ -27,15 +27,13 @@
 #
 ##############################################################################
 
-from UserList import UserList
-
 import zope.interface
 from Products.ERP5Type import interfaces
 from Products.ERP5Type.Globals import InitializeClass
 from Products.PythonScripts.Utility import allow_class
 from AccessControl import ClassSecurityInfo
 
-class AggregatedAmountList(UserList):
+class AggregatedAmountList(list):
   """
     Temporary object needed to aggregate Amount value
     And to calculate some report or total value

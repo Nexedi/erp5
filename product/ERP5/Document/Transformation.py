@@ -92,6 +92,7 @@ class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
       # XXX add a 'transformation_amount_generator' group type
       kw['amount_generator_type_list'] = ('Transformation',
                                           'Transformed Resource',
+                                          'Transformation Operation',
                                           'Assorted Resource')
       if context is not None:
         context = (context,)

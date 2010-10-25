@@ -658,21 +658,19 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       Get all pricing parameters from Predicate.
       """
       # Search all categories context
-      new_category_list = []
-      if context is not None:
-        new_category_list += context.getCategoryList()
+      if context is None:
+        new_category_list = []
+      else:
+        new_category_list = context.getCategoryList()
       #XXX This should be 'category_list' instead of 'categories' to respect
       # the naming convention. Must take care of side effects when fixing
-      if kw.has_key('categories'):
-        new_category_list.extend(kw['categories'])
-        del kw['categories']
+      new_category_list += kw.pop('categories', ())
       resource_category = 'resource/' + self.getRelativeUrl()
       if not resource_category in new_category_list:
-        new_category_list += (resource_category, )
+        new_category_list.append(resource_category)
       # Generate the predicate mapped value
       # to get some price values.
       portal = self.getPortalObject()
-      domain_tool = getToolByName(portal, 'portal_domains')
       if supply_path_type is None:
         portal_type_list = kw.pop('portal_type',
                                   portal.getPortalSupplyPathTypeList())
@@ -681,17 +679,20 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       else:
         portal_type_list = (supply_path_type,)
 
+      sort_method = kw.pop('sort_method', self._pricingSortMethod)
       # Generate the fake context
-      tmp_context = self.asContext(context=context, 
-                                   categories=new_category_list,
-                                   REQUEST=REQUEST, **kw)
-      tmp_kw = kw.copy()
-      if 'sort_method' not in tmp_kw:
-        tmp_kw['sort_method'] = self._pricingSortMethod
-      mapped_value = domain_tool.generateMultivaluedMappedValue(
+      tmp_context = context.asContext(categories=new_category_list,
+                                      REQUEST=REQUEST, **kw)
+      # XXX When called for a generated amount, base_application may point
+      #     to nonexistant base_amount (e.g. "produced_quantity" for
+      #     transformations), which would make domain tool return nothing.
+      #     Following hack cleans up a category we don't want to test anyway.
+      tmp_context.setBaseApplication(None)
+      mapped_value = portal.portal_domains.generateMultivaluedMappedValue(
                                              tmp_context,
                                              portal_type=portal_type_list,
-                                             has_cell_content=0, **tmp_kw)
+                                             has_cell_content=0,
+                                             sort_method=sort_method, **kw)
       # Get price parameters
       price_parameter_dict = {
         'base_price': None,

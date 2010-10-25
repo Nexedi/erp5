@@ -63,7 +63,7 @@ class TradeModelLine(AmountGeneratorLine):
     if self._baseGetQuantity(None) is not None:
       return ('quantity', 'price', 'step')
     # Else tax provides only a ratio on amount
-    return ('price', 'efficiency')
+    return ('price',)
 
   def getMappedValueBaseCategoryList(self):
     return self._baseGetMappedValueBaseCategoryList() or ('trade_phase',)
