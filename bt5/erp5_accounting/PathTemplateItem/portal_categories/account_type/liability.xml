@@ -38,7 +38,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -46,9 +48,7 @@
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <int>3</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
