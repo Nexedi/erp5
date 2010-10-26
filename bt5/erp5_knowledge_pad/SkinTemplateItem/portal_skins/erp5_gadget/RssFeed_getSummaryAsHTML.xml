@@ -46,12 +46,10 @@
               md5  here/field_md5;\n
               box_relative_url python: request.get(\'box_relative_url\', \'\');\n
               dom_id python: (\'%s-%s\' %(box_relative_url.replace(\'/\',\'_\'), md5));\n
-              selection_name python: context.Base_getListboxGadgetSelectionName(context.REQUEST.get(\'box_relative_url\', \'\'));\n
-              selection python: context.portal_selections.getSelectionFor(selection_name);\n
-              selection_params python: selection.getParams();\n
+              selection_name python: context.Base_getListboxGadgetSelectionName(box_relative_url);\n
+              selection_params python: context.portal_selections.getSelectionParamsFor(selection_name);\n
               read_item_list python:selection_params.get(\'rss_read_item_list\', []);\n
-              is_read python: md5 in read_item_list">\n
-\n
+              is_read python: md5 in read_item_list;">\n
 \n
   <div class="document-gadget-quick-preview">\n
 \n
