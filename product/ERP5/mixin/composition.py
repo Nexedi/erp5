@@ -220,12 +220,18 @@ class CompositionMixin:
           effective_set.add(model)
           if 1: #model.test(self): # XXX
             effective_list.append(model)
-    parent = self.getParentValue()
-    if hasattr(aq_base(parent), 'asComposedDocument'):
-      parent = parent.asComposedDocument(specialise_type_list)
-      specialise_value_list += parent.getValueList('specialise')
-      effective_list += [model for model in parent._effective_model_list
-                               if model not in effective_set]
+    # Inherit from parent only if empty, so that a child can override.
+    # This should not be an issue when a SO line is linked to transformation
+    # and the SO to a STC, because asComposedDocument should be called with
+    # different lists of portal types.
+    if _LEGACY_SIMULATION or not specialise_value_list:
+      parent = self.getParentValue()
+      if getattr(aq_base(parent), 'asComposedDocument', None) is not None:
+        parent = parent.asComposedDocument(specialise_type_list)
+        # return parent._effective_model_list, parent.getValueList('specialise')
+        specialise_value_list += parent.getValueList('specialise')
+        effective_list += [model for model in parent._effective_model_list
+                                 if model not in effective_set]
     return effective_list, specialise_value_list
 
 del asComposedDocument # to be unhidden (and renamed ?) if needed
