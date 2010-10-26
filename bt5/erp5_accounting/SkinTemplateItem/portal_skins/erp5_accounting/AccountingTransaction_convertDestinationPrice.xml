@@ -113,57 +113,6 @@ return context.Base_redirect(form_id,\n
             </value>
         </item>
         <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>exchange_rate</string>
-                            <string>form_id</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>precision</string>
-                            <string>line_list</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>section</string>
-                            <string>currency</string>
-                            <string>True</string>
-                            <string>None</string>
-                            <string>dict</string>
-                            <string>round</string>
-                            <string>msg</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <string>view</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountingTransaction_convertDestinationPrice</string> </value>
         </item>

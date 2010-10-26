@@ -79,57 +79,6 @@ return portal.portal_simulation.getInventoryAssetPrice(\n
             </value>
         </item>
         <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>brain</string>
-                            <string>selection</string>
-                            <string>omit_asset_increase</string>
-                            <string>omit_asset_decrease</string>
-                            <string>selection_name</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>params</string>
-                            <string>_write_</string>
-                            <string>True</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <int>0</int>
-                <int>0</int>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountModule_getBalance</string> </value>
         </item>

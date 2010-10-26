@@ -91,53 +91,6 @@ return mirror_payment.getSourceFreeText()\n
             </value>
         </item>
         <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>brain</string>
-                            <string>selection</string>
-                            <string>selection_name</string>
-                            <string>kw</string>
-                            <string>None</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>section_category</string>
-                            <string>transaction</string>
-                            <string>source_section</string>
-                            <string>mirror_payment</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountingTransaction_getMirrorPaymentSourceFreeText</string> </value>
         </item>

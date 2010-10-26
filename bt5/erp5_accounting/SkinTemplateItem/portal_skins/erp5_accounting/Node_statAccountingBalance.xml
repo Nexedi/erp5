@@ -166,68 +166,6 @@ return getInventoryAssetPrice(\n
             </value>
         </item>
         <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>selection</string>
-                            <string>omit_asset_increase</string>
-                            <string>omit_asset_decrease</string>
-                            <string>selection_name</string>
-                            <string>kw</string>
-                            <string>Products.ZSQLCatalog.SQLCatalog</string>
-                            <string>Query</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>params</string>
-                            <string>getInventoryAssetPrice</string>
-                            <string>getSelectionDomainDictFor</string>
-                            <string>_getitem_</string>
-                            <string>_write_</string>
-                            <string>payment_uid</string>
-                            <string>None</string>
-                            <string>project_uid</string>
-                            <string>function_uid</string>
-                            <string>node</string>
-                            <string>period_start_date</string>
-                            <string>at_date</string>
-                            <string>_apply_</string>
-                            <string>period_openning_balance</string>
-                            <string>max</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <int>0</int>
-                <int>0</int>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Node_statAccountingBalance</string> </value>
         </item>

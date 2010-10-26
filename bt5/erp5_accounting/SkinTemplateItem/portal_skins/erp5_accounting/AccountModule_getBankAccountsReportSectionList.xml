@@ -127,59 +127,6 @@ return result\n
             </value>
         </item>
         <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>Products.ERP5Form.Report</string>
-                            <string>ReportSection</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>_getitem_</string>
-                            <string>to_date</string>
-                            <string>transaction_section_category</string>
-                            <string>transaction_simulation_state</string>
-                            <string>None</string>
-                            <string>from_date</string>
-                            <string>result</string>
-                            <string>params</string>
-                            <string>_write_</string>
-                            <string>groupCategory</string>
-                            <string>entities</string>
-                            <string>entity_columns</string>
-                            <string>_getiter_</string>
-                            <string>entity</string>
-                            <string>bank</string>
-                            <string>o</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>AccountModule_getBankAccountsReportSectionList</string> </value>
         </item>

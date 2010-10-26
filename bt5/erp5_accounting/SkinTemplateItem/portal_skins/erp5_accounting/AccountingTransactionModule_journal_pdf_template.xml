@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <?xml version="1.0" encoding="iso-8859-1"?>\n
 <template bottommargin=\'2cm\' showboundary=\'0\' topmargin=\'2cm\' \n
@@ -106,7 +106,7 @@
   </stylesheet>\n
 </template>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -121,8 +121,12 @@
             <value> <string>AccountingTransactionModule_journal_pdf_template</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

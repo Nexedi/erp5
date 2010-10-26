@@ -179,64 +179,6 @@ transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
             </value>
         </item>
         <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>_getitem_</string>
-                            <string>transaction</string>
-                            <string>_getattr_</string>
-                            <string>portal</string>
-                            <string>bank_account_portal_type</string>
-                            <string>section_portal_type_list</string>
-                            <string>invalid_state_list</string>
-                            <string>container</string>
-                            <string>_getiter_</string>
-                            <string>dict</string>
-                            <string>line</string>
-                            <string>account</string>
-                            <string>third_party</string>
-                            <string>bank_account</string>
-                            <string>None</string>
-                            <string>unicode</string>
-                            <string>bank_account_currency</string>
-                            <string>source_currency</string>
-                            <string>source_section</string>
-                            <string>destination_currency</string>
-                            <string>destination_section</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>validateTransactionLines</string> </value>
         </item>
