@@ -687,7 +687,9 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       #     to nonexistant base_amount (e.g. "produced_quantity" for
       #     transformations), which would make domain tool return nothing.
       #     Following hack cleans up a category we don't want to test anyway.
-      tmp_context._setBaseApplication(None)
+      #     Also, do not use '_setBaseApplication' to bypass interactions.
+      portal.portal_categories._setCategoryMembership(tmp_context,
+        ('base_application',), ())
       mapped_value = portal.portal_domains.generateMultivaluedMappedValue(
                                              tmp_context,
                                              portal_type=portal_type_list,
