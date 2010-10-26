@@ -35,6 +35,7 @@ from types import ModuleType
 from dynamic_module import registerDynamicModule
 from lazy_class import generateLazyPortalTypeClass
 
+from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
@@ -316,3 +317,7 @@ def synchronizeDynamicModules(context, force=False):
 
   # Clear accessor holders of filesystem Property Sheets
   _clearAccessorHolderModule(erp5.filesystem_accessor_holder)
+
+  # Necessary because accessors are wrapped in WorkflowMethod by
+  # _aq_dynamic (performed in createAccessorHolder)
+  _aq_reset()
