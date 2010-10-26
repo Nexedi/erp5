@@ -429,9 +429,8 @@ table.listbox td.listbox-table-no-result-row{\n
   text-align:center;\n
 }\n
 \n
-table.listbox tr.listbox_stat_line{\n
+table.listbox tr.listbox-stat-line{\n
   border-top: 1px solid #3D6474;\n
-\n
 }\n
 \n
 \n
