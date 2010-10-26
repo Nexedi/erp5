@@ -1,7 +1,8 @@
-2010-10-21 arnaud.fontaine
-* rename portal_type_class_interaction_workflow to dynamic_class_generation_interaction_workflow.
-* use CategoryProperty document for Category Property portal type.
-* use reference for the views of properties for ZODB Property Sheets instead of id or title.
+2010-10-26 arnaud.fontaine
+* add id fields for all the views for ZODB Property Sheets.
+* add dynamic_class_generation_interaction_workflow to Property Sheet Tool.
+* clean up interactions in dynamic_class_generation_interaction_workflow.
+* add Category Existence Constraint and Property Existence Constraint to dynamic_class_generation_interaction_workflow.
 
 2010-10-20 Kazuhiko
 * use objectValues instead of searchFolder for portal_caches and portal_memcached's view.

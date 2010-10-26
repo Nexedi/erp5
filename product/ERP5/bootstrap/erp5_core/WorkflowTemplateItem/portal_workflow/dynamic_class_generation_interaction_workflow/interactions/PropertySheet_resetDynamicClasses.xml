@@ -69,7 +69,9 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
+                <string>Category Tool</string>
                 <string>Property Sheet</string>
+                <string>Property Sheet Tool</string>
               </list>
             </value>
         </item>

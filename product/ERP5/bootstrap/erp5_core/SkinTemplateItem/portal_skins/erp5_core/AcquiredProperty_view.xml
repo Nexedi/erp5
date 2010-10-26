@@ -95,6 +95,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_id</string>
                         <string>my_reference</string>
                         <string>my_elementary_type</string>
                         <string>my_property_default</string>
