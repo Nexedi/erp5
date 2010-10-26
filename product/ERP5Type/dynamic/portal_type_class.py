@@ -163,7 +163,8 @@ def generatePortalTypeClass(portal_type_name):
   # _fillAccessorHolderList(
   #   accessor_holder_list,
   #   site.portal_property_sheets.createFilesystemPropertySheetAccessorHolder,
-  #   [ klass.__name__ for klass in getClassPropertyList(type_class) ],
+  #   [ property_sheet.__name__ for property_sheet in \
+  #     getClassPropertyList(klass) ],
   #   erp5.filesystem_accessor_holder,
   #   FilesystemPropertySheet)
 

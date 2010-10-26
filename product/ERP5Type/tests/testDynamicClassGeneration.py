@@ -274,16 +274,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       self._newCategoryExistenceConstraint()
 
       # Create all the test Properties
-      for op in ('change', 'delete', 'assign'):
-        self._newStandardProperty(op)
-        self._newAcquiredProperty(op)
-        self._newCategoryProperty(op)
-        self._newDynamicCategoryProperty(op)
+      for operation_type in ('change', 'delete', 'assign'):
+        self._newStandardProperty(operation_type)
+        self._newAcquiredProperty(operation_type)
+        self._newCategoryProperty(operation_type)
+        self._newDynamicCategoryProperty(operation_type)
 
     # Bind all test properties to this instance, so they can be
     # accessed easily in further tests
-    for prop in self.test_property_sheet.contentValues():
-      setattr(self, prop.getReference(), prop)
+    for property in self.test_property_sheet.contentValues():
+      setattr(self, property.getReference(), property)
 
     # Create a Portal Type for the tests, this is necessary, otherwise
     # there will be no accessor holder generated
@@ -313,7 +313,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self.tic()
 
     # Ensure that erp5.acessor_holder is empty
-    from Products.ERP5Type.Dynamic.portaltypeclass import \
+    from Products.ERP5Type.dynamic.portal_type_class import \
         synchronizeDynamicModules
 
     synchronizeDynamicModules(portal, force=True)
