@@ -215,7 +215,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>gadget-rss-reader-logo</string> </value>
+                    <value> <string>hidden_label gadget-rss-reader-logo</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
