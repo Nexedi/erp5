@@ -1203,7 +1203,7 @@ def initialize( context ):
         return result
 
       security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
-      def runLiveTest(self, test_list=None, run_only=None, debug=None,
+      def runLiveTest(self, test_list=None, run_only=None, debug=False,
                       verbose=False):
         """
         Launch live tests
