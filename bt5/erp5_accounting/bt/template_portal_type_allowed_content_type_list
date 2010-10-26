@@ -22,6 +22,7 @@ Invoice Root Simulation Rule | Category Membership Divergence Tester
 Invoice Root Simulation Rule | DateTime Divergence Tester
 Invoice Root Simulation Rule | Float Divergence Tester
 Invoice Root Simulation Rule | Net Converted Quantity Divergence Tester
+Invoice Root Simulation Rule | Specialise Divergence Tester
 Invoice Root Simulation Rule | String Divergence Tester
 Invoice Root Simulation Rule | Variation Divergence Tester
 Organisation | Accounting Period
@@ -33,6 +34,7 @@ Payment Simulation Rule | Float Divergence Tester
 Payment Simulation Rule | Mapped Property
 Payment Simulation Rule | Net Converted Quantity Divergence Tester
 Payment Simulation Rule | Predicate
+Payment Simulation Rule | Specialise Divergence Tester
 Payment Simulation Rule | String Divergence Tester
 Payment Simulation Rule | Variation Divergence Tester
 Payment Transaction | Accounting Transaction Line

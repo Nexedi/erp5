@@ -3,7 +3,7 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="CategoryMembershipEquivalenceTester" module="Products.ERP5Type.Document.CategoryMembershipEquivalenceTester"/>
+        <global name="SpecialiseEquivalenceTester" module="Products.ERP5Type.Document.SpecialiseEquivalenceTester"/>
         <tuple/>
       </tuple>
     </pickle>
@@ -33,15 +33,7 @@
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Category Membership Divergence Tester</string> </value>
-        </item>
-        <item>
-            <key> <string>tested_property</string> </key>
-            <value>
-              <tuple>
-                <string>specialise</string>
-              </tuple>
-            </value>
+            <value> <string>Specialise Divergence Tester</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

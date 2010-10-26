@@ -24,6 +24,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Specialise Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+ <chain>
   <type>String Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>

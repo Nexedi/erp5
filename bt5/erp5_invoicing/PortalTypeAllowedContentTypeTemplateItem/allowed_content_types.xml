@@ -9,6 +9,7 @@
   <item>Float Divergence Tester</item>
   <item>Mapped Property</item>
   <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
@@ -20,6 +21,7 @@
   <item>Mapped Property</item>
   <item>Net Converted Quantity Divergence Tester</item>
   <item>Predicate</item>
+  <item>Specialise Divergence Tester</item>
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>
@@ -34,6 +36,7 @@
   <item>Float Divergence Tester</item>
   <item>Mapped Property</item>
   <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
   <item>String Divergence Tester</item>
   <item>Variation Divergence Tester</item>
  </portal_type>

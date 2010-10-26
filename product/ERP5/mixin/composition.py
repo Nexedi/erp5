@@ -199,39 +199,53 @@ class CompositionMixin:
   def _findEffectiveAndInitialModelList(self, specialise_type_list):
     start_date = self.getStartDate()
     stop_date = self.getStopDate()
-    effective_list = [self]
+    effective_list = []
     effective_set = set()
-    effective_index = 0
+    effective_index = -1
+    model_list = self.getInheritedSpecialiseValueList(specialise_type_list)
+    specialise_value_list = model_list
     while effective_index < len(effective_list):
-      # we don't use getSpecialiseValueList to avoid acquisition on the parent
-      model_list = effective_list[effective_index].getValueList('specialise',
-                                      portal_type=specialise_type_list or ())
-      if _LEGACY_SIMULATION and not effective_index: # XXX compatibility
-        effective_set.add(self)
-        specialise_value_list = model_list
-      if effective_set:
-        effective_index += 1
-      else: # first iteration
-        del effective_list[0]
-        specialise_value_list = model_list
+      if effective_index >= 0:
+        # we don't use getSpecialiseValueList to avoid acquisition on the parent
+        model_list = effective_list[effective_index].getValueList('specialise',
+                                        portal_type=specialise_type_list or ())
+      elif _LEGACY_SIMULATION:
+        parent = self
+        while isinstance(parent, CompositionMixin):
+          effective_list.append(parent)
+          parent = parent.getParentValue()
+        effective_index += len(effective_list)
+      effective_index += 1
       for model in model_list:
         model = _getEffectiveModel(model, start_date, stop_date)
         if model not in effective_set:
           effective_set.add(model)
           if 1: #model.test(self): # XXX
             effective_list.append(model)
-    # Inherit from parent only if empty, so that a child can override.
-    # This should not be an issue when a SO line is linked to transformation
-    # and the SO to a STC, because asComposedDocument should be called with
-    # different lists of portal types.
-    if _LEGACY_SIMULATION or not specialise_value_list:
-      parent = self.getParentValue()
-      if getattr(aq_base(parent), 'asComposedDocument', None) is not None:
-        parent = parent.asComposedDocument(specialise_type_list)
-        # return parent._effective_model_list, parent.getValueList('specialise')
-        specialise_value_list += parent.getValueList('specialise')
-        effective_list += [model for model in parent._effective_model_list
-                                 if model not in effective_set]
     return effective_list, specialise_value_list
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInheritedSpecialiseValueList')
+  def getInheritedSpecialiseValueList(self, specialise_type_list=None,
+                                      exclude_specialise_type_list=()):
+    """Get inherited specialise values
+
+    Values are inherited from parent only if portal types differ,
+    so that a child can override.
+    """
+    portal_type_set = set()
+    specialise_list = []
+    for value in self.getValueList('specialise'):
+      portal_type = value.getPortalType()
+      if not (portal_type in exclude_specialise_type_list or
+          specialise_type_list and portal_type not in specialise_type_list):
+        portal_type_set.add(portal_type)
+        specialise_list.append(value)
+    parent = self.getParentValue()
+    if isinstance(parent, CompositionMixin):
+      portal_type_set.update(exclude_specialise_type_list)
+      specialise_list += parent.getInheritedSpecialiseValueList(
+        specialise_type_list, portal_type_set)
+    return specialise_list
 
 del asComposedDocument # to be unhidden (and renamed ?) if needed

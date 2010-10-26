@@ -9,12 +9,14 @@ Delivery Root Simulation Rule | Category Membership Divergence Tester
 Delivery Root Simulation Rule | DateTime Divergence Tester
 Delivery Root Simulation Rule | Float Divergence Tester
 Delivery Root Simulation Rule | Net Converted Quantity Divergence Tester
+Delivery Root Simulation Rule | Specialise Divergence Tester
 Delivery Root Simulation Rule | String Divergence Tester
 Delivery Root Simulation Rule | Variation Divergence Tester
 Delivery Simulation Rule | Category Membership Divergence Tester
 Delivery Simulation Rule | DateTime Divergence Tester
 Delivery Simulation Rule | Float Divergence Tester
 Delivery Simulation Rule | Net Converted Quantity Divergence Tester
+Delivery Simulation Rule | Specialise Divergence Tester
 Delivery Simulation Rule | String Divergence Tester
 Delivery Simulation Rule | Variation Divergence Tester
 Internal Order Line | Internal Order Cell
@@ -33,6 +35,7 @@ Order Root Simulation Rule | Category Membership Divergence Tester
 Order Root Simulation Rule | DateTime Divergence Tester
 Order Root Simulation Rule | Float Divergence Tester
 Order Root Simulation Rule | Net Converted Quantity Divergence Tester
+Order Root Simulation Rule | Specialise Divergence Tester
 Order Root Simulation Rule | String Divergence Tester
 Order Root Simulation Rule | Variation Divergence Tester
 Preference | Sale Order

@@ -5,6 +5,7 @@ Invoice Simulation Rule | DateTime Divergence Tester
 Invoice Simulation Rule | Float Divergence Tester
 Invoice Simulation Rule | Mapped Property
 Invoice Simulation Rule | Net Converted Quantity Divergence Tester
+Invoice Simulation Rule | Specialise Divergence Tester
 Invoice Simulation Rule | String Divergence Tester
 Invoice Simulation Rule | Variation Divergence Tester
 Invoice Transaction Simulation Rule | Accounting Rule Cell
@@ -14,6 +15,7 @@ Invoice Transaction Simulation Rule | Float Divergence Tester
 Invoice Transaction Simulation Rule | Mapped Property
 Invoice Transaction Simulation Rule | Net Converted Quantity Divergence Tester
 Invoice Transaction Simulation Rule | Predicate
+Invoice Transaction Simulation Rule | Specialise Divergence Tester
 Invoice Transaction Simulation Rule | String Divergence Tester
 Invoice Transaction Simulation Rule | Variation Divergence Tester
 Rule Tool | Invoice Simulation Rule
@@ -24,5 +26,6 @@ Trade Model Simulation Rule | DateTime Divergence Tester
 Trade Model Simulation Rule | Float Divergence Tester
 Trade Model Simulation Rule | Mapped Property
 Trade Model Simulation Rule | Net Converted Quantity Divergence Tester
+Trade Model Simulation Rule | Specialise Divergence Tester
 Trade Model Simulation Rule | String Divergence Tester
 Trade Model Simulation Rule | Variation Divergence Tester
