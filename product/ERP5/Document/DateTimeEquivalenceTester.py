@@ -26,12 +26,10 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-
 from Products.ERP5.Document.Predicate import Predicate
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
 class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
@@ -58,9 +56,6 @@ class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
     PropertySheet.SolverSelection
     )
 
-  # Declarative interfaces
-  zope.interface.implements(interfaces.IEquivalenceTester,)
-
   def _compare(self, prevision_movement, decision_movement):
     """
     If prevision_movement and decision_movement don't match, it returns a
@@ -71,8 +66,10 @@ class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      decision_value = decision_movement.getProperty(tested_property) or DateTime(0)
-    prevision_value = prevision_movement.getProperty(tested_property) or DateTime(0)
+      decision_value = self._getTestedPropertyValue(
+        decision_movement, tested_property) or DateTime(0)
+    prevision_value = self._getTestedPropertyValue(
+      prevision_movement, tested_property) or DateTime(0)
 
     delta = decision_value - prevision_value
     # XXX we should use appropriate property sheets and getter methods
@@ -95,16 +92,3 @@ class DateTimeEquivalenceTester(Predicate, EquivalenceTesterMixin):
         'The difference of ${property_name} between decision and prevision is larger than ${value}.',
         dict(property_name=tested_property,
              value=absolute_tolerance_max))
-
-  def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
-    """
-    Returns a list of properties to update on decision_movement
-    prevision_movement so that next call to compare returns True.
-
-    prevision_movement -- a simulation movement (prevision)
-
-    decision_movement -- a delivery movement (decision)
-    """
-    tested_property = self.getTestedProperty()
-    prevision_value = prevision_movement.getProperty(tested_property)
-    return {tested_property:prevision_value}

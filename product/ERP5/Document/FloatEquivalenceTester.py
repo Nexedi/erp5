@@ -28,11 +28,9 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5.Document.Predicate import Predicate
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
 class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
@@ -56,9 +54,6 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                       , PropertySheet.DecimalOption
                      )
 
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IEquivalenceTester, )
-
   def _compare(self, prevision_movement, decision_movement):
     """
     If prevision_movement and decision_movement don't match, it returns a
@@ -69,8 +64,10 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      decision_value = self._getPropertyValue(decision_movement, tested_property) or 0.0
-    prevision_value = self._getPropertyValue(prevision_movement, tested_property) or 0.0
+      decision_value = self._getTestedPropertyValue(decision_movement,
+                                                    tested_property) or 0.0
+    prevision_value = self._getTestedPropertyValue(prevision_movement,
+                                                   tested_property) or 0.0
 
     # use delivery_ratio if specified
     if self.getProperty('use_delivery_ratio') and \
@@ -173,19 +170,3 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                                                ROUND_DOWN)
     return Decimal(str(value)).quantize(Decimal(self.getDecimalExponent()),
                                     rounding=rounding_option)
-
-  def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
-    """
-    Returns a list of properties to update on decision_movement
-    prevision_movement so that next call to compare returns True.
-
-    prevision_movement -- a simulation movement (prevision)
-
-    decision_movement -- a delivery movement (decision)
-    """
-    tested_property = self.getTestedProperty()
-    prevision_value = self._getPropertyValue(prevision_movement, tested_property)
-    return {tested_property:prevision_value}
-
-  def _getPropertyValue(self, document, property):
-    return document.getProperty(property)
