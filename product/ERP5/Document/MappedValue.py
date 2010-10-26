@@ -39,6 +39,10 @@ _MARKER = []
 class MappedValue(Predicate):
   """
     A MappedValue allows to associate a value to a predicate
+
+  XXX Why do we redefine xxxProperty methods ?
+      When a property is defined by a property sheet with a specific storage_id,
+      they break accessors of this property when a value is mapped to it.
   """
   meta_type = 'ERP5 Mapped Value'
   portal_type = 'Mapped Value'

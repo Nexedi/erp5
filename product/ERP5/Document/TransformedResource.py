@@ -63,7 +63,18 @@ class TransformedResource(AmountGeneratorLine):
     # Provide default mapped value properties and categories if
     # not defined
     def getMappedValuePropertyList(self):
-      return self._baseGetMappedValuePropertyList() or ('quantity',)
+      result = self._baseGetMappedValuePropertyList()
+      if not result:
+        result = ['quantity']
+        # Take into account variation_property_list for each variation
+        # for which hasProperty is true...
+        # FIXME: Why the resource and not the model line itself ? Or both ??
+        resource = self.getDefaultResourceValue()
+        if resource is not None:
+          # XXX Using getattr directly is a hack. See MappedValue.__doc__
+          result.extend(key for key in resource.getVariationPropertyList()
+                            if getattr(self, key, self) is not self)
+      return result
 
     def getMappedValueBaseCategoryList(self):
       result = self._baseGetMappedValueBaseCategoryList()

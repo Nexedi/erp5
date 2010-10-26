@@ -134,8 +134,13 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     """
     # Only for testing purpose, use a property sheet that has nothing to
     # do with component. It would have been possible to create a new
-    # property sheet for this test
+    # property sheet for this test.
+    # When one do that, the property sheet should be added to many other types
+    # like movements, order lines and so on.
+    self._addPropertySheet('Amount', 'Bug')
     self._addPropertySheet(self.transformed_resource_portal_type, 'Bug')
+    # XXX 'tested' works here because 'storage_id' does not differ
+    #     (see also MappedValue.__doc__)
     variation_property_list = ['tested']
 
     transformation = self.createTransformation()
