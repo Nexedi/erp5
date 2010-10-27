@@ -1,5 +1,6 @@
 2010-10-26 nicolas.dumazet
 * fix type classes of Property Sheet Tool and Property Sheet
+* add Template Tool filter for Portal Type classes XML changes
 
 2010-10-26 arnaud.fontaine
 * add id fields for all the views for ZODB Property Sheets.
