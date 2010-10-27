@@ -317,9 +317,13 @@ class ERP5TypeInformation(XMLObject,
       All ERP5Type.Document.newTempXXXX are constructTempInstance methods
       """
       # you should not pass temp_object to constructTempInstance
-      ob = self.constructInstance(container, id, temp_object=1, *args, **kw)
-      if container.isTempObject():
+      original_container = container.getOriginalDocument()
+      if original_container is None
+        ob = self.constructInstance(container, id, temp_object=1, *args, **kw)
         container._setObject(id, ob.aq_base)
+      else:
+        ob = self.constructInstance(original_container, id, temp_object=1,
+                                    *args, **kw)
       return ob
 
 
