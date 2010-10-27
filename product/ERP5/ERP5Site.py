@@ -193,10 +193,14 @@ class _site(threading.local):
   def __get(self, REQUEST=None):
     """Returns the currently processed site, optionally wrapped in a request
     """
-    app, site_id = self.site[-1]
-    if REQUEST is None:
-      return getattr(app(), site_id)
-    return getattr(app().__of__(RequestContainer(REQUEST=REQUEST)), site_id)
+    while True:
+      app, site_id = self.site[-1]
+      app = app()
+      if app._p_jar.opened:
+        if REQUEST is None:
+          return getattr(app, site_id)
+        return getattr(app.__of__(RequestContainer(REQUEST=REQUEST)), site_id)
+      del self.site[-1]
 
   def __set(self, site):
     app = aq_base(site.aq_parent)
