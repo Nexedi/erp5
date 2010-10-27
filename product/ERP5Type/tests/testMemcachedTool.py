@@ -154,8 +154,6 @@ class TestMemcachedTool(ERP5TypeTestCase):
   def test_04_deleteValue(self):
     """
       Tests that deleting a value works.
-      Note that deleting a value should raise a KeyError.
-      But because of python-memcached limitations, all we get is a None value.
     """
     tested_dict = self.getMemcachedDict()
     tested_key = 'test_key'
@@ -163,7 +161,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     tested_dict[tested_key] = tested_value
     self.assertTrue(tested_dict[tested_key] == tested_value)
     del tested_dict[tested_key]
-    self.assertTrue(tested_dict[tested_key] is None)
+    self.assertRaises(KeyError, tested_dict.__getitem__, tested_key)
 
   def test_05_deleteValueAndCommit(self):
     """

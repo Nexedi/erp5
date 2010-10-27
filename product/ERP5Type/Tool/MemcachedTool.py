@@ -168,6 +168,8 @@ if memcache is not None:
       # We need to register in this function too to be able to flush cache at 
       # transaction end.
       self._register()
+      if self.scheduled_action_dict.get(key) == DELETE_ACTION:
+        raise KeyError
       encoded_key = encodeKey(key)
       result = self.local_cache.get(key, MARKER)
       if result is MARKER:
@@ -207,8 +209,6 @@ if memcache is not None:
     def get(self, key, default=None):
       """
         Get an item from local cache, otherwise from memcached.
-        Note that because __getitem__ never raises error, 'default' will never
-        be used (None will be returned instead).
       """
       try:
         return self.__getitem__(key)
