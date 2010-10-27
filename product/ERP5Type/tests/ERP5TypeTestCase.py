@@ -898,7 +898,10 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
                                        reindex=reindex,
                                        create_activities=create_activities,
                                        **extra_constructor_kw )
-
+              sql = extra_constructor_kw.get('erp5_sql_connection_string')
+              if sql:
+                app[portal_name]._setProperty('erp5_site_global_id',
+                                              base64.standard_b64encode(sql))
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
