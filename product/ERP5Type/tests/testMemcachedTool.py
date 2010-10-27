@@ -165,7 +165,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     del tested_dict[tested_key]
     self.assertTrue(tested_dict[tested_key] is None)
 
-  def test_05_deteteValueAndCommit(self):
+  def test_05_deleteValueAndCommit(self):
     """
       Tests that deleted values are actually deleted in memcached.
     """
@@ -176,14 +176,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     self.assertTrue(tested_dict[tested_key] == tested_value)
     del tested_dict[tested_key]
     transaction.commit()
-    try:
-      dummy = tested_dict[tested_key]
-    except KeyError:
-      pass
-    except:
-      self.fail('Wrong error type is raised when key is not found.')
-    else:
-      self.fail('No error is raised when key is not found.')
+    self.assertRaises(KeyError, tested_dict.__getitem__, tested_key)
 
   def test_06_checkNonStringKeyFails(self):
     """
