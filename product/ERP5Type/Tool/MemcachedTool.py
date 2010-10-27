@@ -171,12 +171,11 @@ if memcache is not None:
       encoded_key = encodeKey(key)
       result = self.local_cache.get(key, MARKER)
       if result is MARKER:
-        result = self.memcached_connection.get(encoded_key)
-        if result is None:
+        try:
+          result = self.memcached_connection.get(encoded_key)
+        except memcache.Client.MemcachedConnectionError:
           self._initialiseConnection()
           result = self.memcached_connection.get(encoded_key)
-          if result is None:
-            raise KeyError, 'Key %s (was %s) not found.' % (encoded_key, key)
         self.local_cache[key] = result
       return result
 
