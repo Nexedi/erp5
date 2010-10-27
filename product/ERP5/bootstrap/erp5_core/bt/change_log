@@ -1,3 +1,6 @@
+2010-10-26 nicolas.dumazet
+* fix type classes of Property Sheet Tool and Property Sheet
+
 2010-10-26 arnaud.fontaine
 * add id fields for all the views for ZODB Property Sheets.
 * add dynamic_class_generation_interaction_workflow to Property Sheet Tool.
