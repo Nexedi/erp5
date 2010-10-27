@@ -318,7 +318,7 @@ class ERP5TypeInformation(XMLObject,
       """
       # you should not pass temp_object to constructTempInstance
       original_container = container.getOriginalDocument()
-      if original_container is None
+      if original_container is None:
         ob = self.constructInstance(container, id, temp_object=1, *args, **kw)
         container._setObject(id, ob.aq_base)
       else:
