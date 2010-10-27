@@ -101,6 +101,10 @@ if memcache is not None:
       self._initialiseConnection()
 
     def _initialiseConnection(self):
+      try:
+        self.memcached_connection.disconnect_all()
+      except AttributeError:
+        pass
       init_dict = {}
       if self.server_max_key_length is not MARKER:
         init_dict['server_max_key_length'] = self.server_max_key_length
