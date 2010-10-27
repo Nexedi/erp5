@@ -29,7 +29,7 @@ from cPickle import loads, dumps
 from types import TupleType
 from types import StringType
 from types import DictionaryType
-from OFS import XMLExportImport
+from OFS import ObjectManager, XMLExportImport
 
 from logging import getLogger
 log = getLogger(__name__)
@@ -235,4 +235,4 @@ def exportXML(jar, oid, file=None):
     write('</ZopeData>\n')
     return file
 
-XMLExportImport.exportXML = exportXML
+ObjectManager.exportXML = XMLExportImport.exportXML = exportXML
