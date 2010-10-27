@@ -681,8 +681,9 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
 
       sort_method = kw.pop('sort_method', self._pricingSortMethod)
       # Generate the fake context
-      tmp_context = context.asContext(categories=new_category_list,
-                                      REQUEST=REQUEST, **kw)
+      tmp_context = self.asContext(context=context,
+                                   categories=new_category_list,
+                                   REQUEST=REQUEST, **kw)
       # XXX When called for a generated amount, base_application may point
       #     to nonexistant base_amount (e.g. "produced_quantity" for
       #     transformations), which would make domain tool return nothing.

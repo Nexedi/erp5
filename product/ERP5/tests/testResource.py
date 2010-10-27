@@ -632,7 +632,8 @@ class TestResource(ERP5TypeTestCase):
     # Fill the PDM preferences
     preference = self.portal.portal_preferences.default_site_preference
     preference.setPreferredProductOptionalVariationBaseCategoryList(['industrial_phase'])
-    preference.enable()
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
     transaction.commit()
     self.tic()
     # Create another product/supply, in order to be sure that the
