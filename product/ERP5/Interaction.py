@@ -120,7 +120,7 @@ class InteractionDefinition (SimpleItem):
                       portal_type_filter=None,
                       trigger_type=TRIGGER_WORKFLOW_METHOD,
                       once_per_transaction=False,
-                      temporary_document_disallowed=True,
+                      temporary_document_disallowed=False,
                       script_name=(),
                       after_script_name=(),
                       before_commit_script_name=(),
