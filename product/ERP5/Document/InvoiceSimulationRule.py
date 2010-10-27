@@ -101,7 +101,13 @@ class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate
 class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
 
   def _getUpdatePropertyDict(self, input_movement):
-    return {'delivery': None}
+    # Filter out specialise values we don't want, like transformations
+    # XXX Should there be a configurable property on the rule ?
+    specialise_list = [x.getRelativeUrl()
+      for x in input_movement.getSpecialiseValueList()
+      if x.providesIBusinessProcess() or
+         x.getPortalType().endswith('Trade Condition')]
+    return {'delivery': None, 'specialise': specialise_list}
 
   def _getInputMovementList(self, movement_list=None, rounding=None):
     return [self._applied_rule.getParentValue(),]
