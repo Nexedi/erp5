@@ -159,14 +159,7 @@ def initializeInstanceHome(tests_framework_home,
   old_pwd = os.getcwd()
   try:
     os.chdir(instance_home)
-    # Before r23751, Extensions dir was initialized to be a symlink to real
-    # instance home Extensions folder, now it's initialized as an independant
-    # folder. If this test instance still have a symlink for Extensions, change
-    # it in a folder.
-    if os.path.islink('Extensions'):
-      os.remove('Extensions')
-
-    for d in static_dir_list + ('bin', 'etc', 'tests', 'var', 'log'):
+    for d in ('bin', 'etc', 'tests', 'var', 'log'):
       if not os.path.exists(d):
         os.mkdir(d)
     for d in ('Products', 'bt5', 'svn', 'lib', 'import'):
@@ -571,6 +564,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
         _print('Dumping static files...\n')
       live_instance_path = os.environ.get('live_instance_path')
       for static_dir in static_dir_list:
+        if os.path.islink(static_dir):
+          continue
         if live_instance_path:
           backup_path = os.path.join(live_instance_path, static_dir)
         else:
@@ -580,7 +575,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0):
         except OSError, e:
           if e.errno != errno.ENOENT:
             raise
-        shutil.copytree(static_dir, backup_path, symlinks=True)
+        os.rename(static_dir, backup_path)
     elif zeo_client_pid_list is not None:
       _print('WARNING: No static files saved. You will have to do it manually.')
 
