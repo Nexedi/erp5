@@ -44,13 +44,8 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     Import a .zexp containing a Person created with an old
     Products.ERP5Type.Document.Person.Person type
     """
-    file_name = 'non_migrated_person.zexp'
-
-    self.copyInputFileToImportFolder(file_name)
-
-    person_module = self.getPortal().person_module
-    person_module.manage_importObject(file_name)
-
+    person_module = self.portal.person_module
+    self.importObjectFromFile(person_module, 'non_migrated_person.xml')
     transaction.commit()
 
     non_migrated_person = person_module.non_migrated_person

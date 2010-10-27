@@ -1020,27 +1020,14 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
         transaction.commit()
       self.tic()
 
-    def copyInputFileToImportFolder(self, relative_path):
-      """
-      Copies a file located in $TESTFILEDIR/input/ to
-      import/ folder of test instance and returns the
-      full path.
-      If files already exists, overwrites it.
-      """
+    def importObjectFromFile(self, container, relative_path, **kw):
+      """Import an object from a file located in $TESTFILEDIR/input/"""
       test_path = os.path.dirname(__file__)
-
       source_path = os.path.join(test_path, 'input', relative_path)
-      self.assertTrue(os.path.exists(source_path))
-
-      import_path = os.path.join(instancehome, 'import')
-      if not os.path.exists(import_path):
-        if os.path.islink(import_path):
-          # broken symlink
-          os.unlink(import_path)
-        os.mkdir(import_path)
-
-      shutil.copy(source_path, import_path)
-      return import_path
+      assert os.path.exists(source_path)
+      obj = container._importObjectFromFile(source_path, **kw)
+      obj.manage_afterClone(obj)
+      return obj
 
     def publish(self, path, basic=None, env=None, extra=None,
                 request_method='GET', stdin=None, handle_errors=True):
