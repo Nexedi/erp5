@@ -42,7 +42,6 @@ from Products.ERP5Type.Utils import cartesianProduct
 
 from Products.ERP5.Variated import Variated
 from Products.CMFCategory.Renderer import Renderer
-from Products.CMFCore.utils import getToolByName
 
 from zLOG import LOG, WARNING
 
@@ -383,7 +382,7 @@ class Resource(XMLMatrix, Variated):
       Returns inventory
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -393,7 +392,7 @@ class Resource(XMLMatrix, Variated):
       Returns current inventory
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -404,7 +403,7 @@ class Resource(XMLMatrix, Variated):
       (current inventory - deliverable)
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -414,7 +413,7 @@ class Resource(XMLMatrix, Variated):
       Returns inventory at infinite
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventory(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -424,7 +423,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -434,7 +433,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -444,7 +443,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -454,7 +453,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -464,7 +463,7 @@ class Resource(XMLMatrix, Variated):
       Returns statistics of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -474,7 +473,7 @@ class Resource(XMLMatrix, Variated):
       Returns statistics of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -484,7 +483,7 @@ class Resource(XMLMatrix, Variated):
       Returns statistics of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -494,7 +493,7 @@ class Resource(XMLMatrix, Variated):
       Returns statistics of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -504,7 +503,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -514,7 +513,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -524,7 +523,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventoryChart(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -534,7 +533,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryHistoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -544,7 +543,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryHistoryChart(**kw)
 
     # XXX FIXME
@@ -558,7 +557,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getMovementHistoryList(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -568,7 +567,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getMovementHistoryStat(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -578,7 +577,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getNextNegativeInventoryDate(**kw)
 
 
@@ -590,7 +589,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -600,7 +599,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getCurrentInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -610,7 +609,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableInventoryAssetPrice(**kw)
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -620,7 +619,7 @@ class Resource(XMLMatrix, Variated):
       Returns list of inventory grouped by section or site
       """
       kw['resource_uid'] = self.getUid()
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getFutureInventoryAssetPrice(**kw)
 
 
@@ -681,7 +680,7 @@ class Resource(XMLMatrix, Variated):
       # Generate the predicate mapped value
       # to get some price values.
       portal = self.getPortalObject()
-      domain_tool = getToolByName(portal, 'portal_domains')
+      domain_tool = portal.portal_domains
       if supply_path_type is None:
         portal_type_list = kw.pop('portal_type',
                                   portal.getPortalSupplyPathTypeList())
