@@ -125,7 +125,7 @@
 </tr>\n
 <tr>\n
   <td>waitForCondition</td>\n
-  <td>selenium.isElementPresent(\'//img[@class="gadget-rss-reader-logo"]\')</td>\n
+  <td>selenium.isElementPresent(\'//img[@class="hidden_label gadget-rss-reader-logo"]\')</td>\n
   <td>10000</td> \n
 </tr>\n
 \n
