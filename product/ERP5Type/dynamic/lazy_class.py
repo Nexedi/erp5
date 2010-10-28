@@ -59,10 +59,11 @@ def generateLazyPortalTypeClass(portal_type_name,
             Because __bases__ is changed, the behavior of this object
             will change after the first call.
             """
+            # Class must be loaded if '__of__' is requested because otherwise,
+            # next call to __getattribute__ would lose any acquisition wrapper.
             if attr in ('__class__',
                         '__getnewargs__',
                         '__getstate__',
-                        '__of__',
                         '__dict__',
                         '__module__',
                         '__name__',

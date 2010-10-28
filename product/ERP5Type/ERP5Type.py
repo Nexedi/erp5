@@ -453,14 +453,9 @@ class ERP5TypeInformation(XMLObject,
         init_script = self.getTypeFactoryMethodId()
         if init_script and init_script.startswith('add'):
           base = init_script[3:]
-          # and of course migrate the property
-          try:
-            self.setTypeClass(base)
-          except KeyError:
-            # Unfortunately, the above setter may trigger an interaction,
-            # but the interaction workflow may not be present yet at the
-            # bootstrap time, thus simply ignore such an error for now.
-            pass
+          # and of course migrate the property,
+          # avoiding any useless interaction/reindexation
+          self.type_class = base
       return base
 
     security.declareProtected(Permissions.AccessContentsInformation,

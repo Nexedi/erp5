@@ -913,6 +913,7 @@ class Base( CopyContainer,
 
       # Generate Related Accessors
       if not Base.aq_related_generated:
+        Base.aq_related_generated = 1
         from Utils import createRelatedValueAccessors
         portal_types = getToolByName(portal, 'portal_types', None)
         generated_bid = set()
@@ -938,8 +939,6 @@ class Base( CopyContainer,
             if bid not in generated_bid :
               createRelatedValueAccessors(None, bid)
               generated_bid.add(bid)
-
-        Base.aq_related_generated = 1
 
       # We suppose that if we reach this point
       # then it means that all code generation has succeeded
