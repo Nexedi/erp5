@@ -68,7 +68,7 @@ request = container.REQUEST\n
 requested_tag = request.get(\'tag\') # XXX-JPS it would be better to use subject which is the normal term in ERP5\n
 current_section = context.getWebSectionValue()\n
 result = []\n
-for item in current_section.WebSection_getDocumentValueList(): # XXX-JPS this could be way too slow\n
+for item in current_section.WebSection_getDocumentValueList(**kw): # XXX-JPS this could be way too slow\n
   if requested_tag is not None:\n
     if requested_tag in item.getSubjectList():\n
       result.append(item)\n
@@ -121,6 +121,7 @@ return result\n
                             <string>current_section</string>
                             <string>result</string>
                             <string>_getiter_</string>
+                            <string>_apply_</string>
                             <string>item</string>
                             <string>None</string>
                           </tuple>
