@@ -26,9 +26,10 @@
 #
 ##############################################################################
 
-from xmlrpclib import Fault
+from xmlrpclib import Fault, ProtocolError
 from xmlrpclib import Transport
 from xmlrpclib import SafeTransport
+import socket
 
 class TimeoutTransport(SafeTransport):
   """A xmlrpc transport with configurable timeout.
@@ -45,15 +46,22 @@ class TimeoutTransport(SafeTransport):
     super__init__(self)
 
   def send_content(self, connection, request_body):
-    connection.putheader("Content-Type", "text/xml")
-    connection.putheader("Content-Length", str(len(request_body)))
-    connection.endheaders()
-    if self._timeout:
-      connection._conn.sock.settimeout(self._timeout)
-    if request_body:
-      connection.send(request_body)
+    try:
+      connection.putheader("Content-Type", "text/xml")
+      connection.putheader("Content-Length", str(len(request_body)))
+      connection.endheaders()
+      if self._timeout:
+        connection._conn.sock.settimeout(self._timeout)
+      if request_body:
+        connection.send(request_body)
+    except socket.error, e:
+      raise ProtocolError(connection._conn.host, -1,
+                          "Could not connect to server", None)
 
-  def make_connection(self, h):
-    if self._scheme == 'http':
-      return Transport.make_connection(self, h)
-    return SafeTransport.make_connection(self, h)
+  def make_connection(self, host):
+    try:
+      if self._scheme == 'http':
+        return Transport.make_connection(self, host)
+      return SafeTransport.make_connection(self, host)
+    except socket.error, e:
+      raise ProtocolError(host, -1, "Could not connect to server", None)
