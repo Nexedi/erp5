@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
@@ -81,8 +82,8 @@ class Resource(XMLMatrix, Variated):
     # Some genericity is needed
     security.declareProtected(Permissions.AccessContentsInformation,
                                            'getVariationRangeCategoryItemList')
-    def getVariationRangeCategoryItemList(self, base_category_list=(), base=1, 
-                                          root=1, display_id='title', 
+    def getVariationRangeCategoryItemList(self, base_category_list=(), base=1,
+                                          root=1, display_id='title',
                                           display_base_category=1,
                                           current_category=None,
                                           omit_individual_variation=0, **kw):
@@ -91,7 +92,7 @@ class Resource(XMLMatrix, Variated):
 
           resource.getVariationRangeCategoryItemList
             => [(display, value)]
-        
+
       ## Variation API (exemple) ##
         Base categories defined:
           - colour
@@ -128,7 +129,7 @@ class Resource(XMLMatrix, Variated):
             individual_variation_list]
         other_base_category_dict = dict([(i,1) for i in base_category_list])
  
-        if not omit_individual_variation:              
+        if not omit_individual_variation:
           for variation in individual_variation_list:
             for base_category in variation.getVariationBaseCategoryList():
               if base_category_list is ()\
@@ -174,7 +175,7 @@ class Resource(XMLMatrix, Variated):
       """
       base_category_list = base_category_list or \
           self.getVariationBaseCategoryList()
-      
+
       individual_bc_list = self.getIndividualVariationBaseCategoryList()
       other_bc_list = [x for x in base_category_list
           if not x in individual_bc_list]
@@ -185,13 +186,13 @@ class Resource(XMLMatrix, Variated):
         if optional_bc_list:
           other_bc_list = [x for x in other_bc_list
               if not x in optional_bc_list]
-              
-      
-      result = Variated.getVariationCategoryItemList(self, 
-                            base_category_list=other_bc_list, 
-                            display_base_category=display_base_category, 
+
+
+      result = Variated.getVariationCategoryItemList(self,
+                            base_category_list=other_bc_list,
+                            display_base_category=display_base_category,
                             display_id=display_id, base=base, **kw)
-      
+
       if not omit_individual_variation:
         individual_variation_list = self.searchFolder(
             portal_type=self.getPortalVariationTypeList())
@@ -375,7 +376,7 @@ class Resource(XMLMatrix, Variated):
     ####################################################
     # Stock Management
     ####################################################
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventory')
     def getInventory(self, **kw):
       """
@@ -385,7 +386,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventory')
     def getCurrentInventory(self, **kw):
       """
@@ -395,7 +396,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getCurrentInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventory')
     def getAvailableInventory(self, **kw):
       """
@@ -406,7 +407,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getAvailableInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventory')
     def getFutureInventory(self, **kw):
       """
@@ -416,7 +417,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getFutureInventory(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryList')
     def getInventoryList(self, **kw):
       """
@@ -426,7 +427,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryList')
     def getCurrentInventoryList(self, **kw):
       """
@@ -436,7 +437,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getCurrentInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getAvailableInventoryList')
     def getAvailableInventoryList(self, **kw):
       """
@@ -446,7 +447,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getAvailableInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventoryList')
     def getFutureInventoryList(self, **kw):
       """
@@ -456,7 +457,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getFutureInventoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryStat')
     def getInventoryStat(self, **kw):
       """
@@ -466,7 +467,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryStat')
     def getCurrentInventoryStat(self, **kw):
       """
@@ -486,7 +487,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getAvailableInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventoryStat')
     def getFutureInventoryStat(self, **kw):
       """
@@ -496,7 +497,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getFutureInventoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryChart')
     def getInventoryChart(self, **kw):
       """
@@ -506,7 +507,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getCurrentInventoryChart')
     def getCurrentInventoryChart(self, **kw):
       """
@@ -516,7 +517,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getCurrentInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getFutureInventoryChart')
     def getFutureInventoryChart(self, **kw):
       """
@@ -526,7 +527,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getFutureInventoryChart(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryHistoryList')
     def getInventoryHistoryList(self, **kw):
       """
@@ -536,7 +537,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getInventoryHistoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryHistoryChart')
     def getInventoryHistoryChart(self, **kw):
       """
@@ -550,7 +551,7 @@ class Resource(XMLMatrix, Variated):
     # Method getCurrentMovementHistoryList, 
     # getAvailableMovementHistoryList, getFutureMovementHistoryList
     # can be added
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryList')
     def getMovementHistoryList(self, **kw):
       """
@@ -560,7 +561,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getMovementHistoryList(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryStat')
     def getMovementHistoryStat(self, **kw):
       """
@@ -570,7 +571,7 @@ class Resource(XMLMatrix, Variated):
       portal_simulation = getToolByName(self, 'portal_simulation')
       return portal_simulation.getMovementHistoryStat(**kw)
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getNextNegativeInventoryDate')
     def getNextNegativeInventoryDate(self, **kw):
       """
@@ -639,7 +640,7 @@ class Resource(XMLMatrix, Variated):
       return None
 
     # Predicate handling
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'asPredicate')
     def asPredicate(self):
       """
@@ -658,7 +659,7 @@ class Resource(XMLMatrix, Variated):
         return -1 # a defines a destination section and wins
       return 1 # a defines no destination section and loses
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPriceParameterDict')
     def getPriceParameterDict(self, context=None, REQUEST=None,
                               supply_path_type=None, **kw):
@@ -731,7 +732,7 @@ class Resource(XMLMatrix, Variated):
                 price_parameter_dict[price_parameter_name] = \
                     price_parameter_value[0]
       return price_parameter_dict
-      
+
     security.declareProtected(Permissions.AccessContentsInformation,
         'getPricingVariable')
     def getPricingVariable(self, context=None):
@@ -752,7 +753,7 @@ class Resource(XMLMatrix, Variated):
         return 0.0
       return float(method())
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPriceCalculationOperandDict')
     def getPriceCalculationOperandDict(self, default=None, context=None,
             REQUEST=None, **kw):
@@ -849,7 +850,7 @@ class Resource(XMLMatrix, Variated):
         return {'price': unit_base_price}
       return default
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getPrice')
     def getPrice(self, default=None, context=None, REQUEST=None, **kw):
       """
@@ -864,14 +865,14 @@ class Resource(XMLMatrix, Variated):
         LOG('ERP5', WARNING, msg)
         context = default
         default = None
-      
-      operand_dict = self.getPriceCalculationOperandDict(default=default, 
+
+      operand_dict = self.getPriceCalculationOperandDict(default=default,
               context=context, REQUEST=REQUEST, **kw)
       if operand_dict is not None:
         return operand_dict['price']
       return default
 
-    security.declareProtected(Permissions.AccessContentsInformation, 
+    security.declareProtected(Permissions.AccessContentsInformation,
                               'getQuantityPrecision')
     def getQuantityPrecision(self):
       """Return the floating point precision of a quantity.
