@@ -16,12 +16,10 @@
                 <string>css_class</string>
                 <string>editable_columns</string>
                 <string>enabled</string>
-                <string>list_action</string>
                 <string>list_method</string>
                 <string>portal_types</string>
                 <string>search</string>
                 <string>search_columns</string>
-                <string>selection_name</string>
                 <string>sort_columns</string>
                 <string>title</string>
               </list>
@@ -126,7 +124,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden_label</string> </value>
+                    <value> <string>hidden_label gadget-assigned-members</string> </value>
                 </item>
                 <item>
                     <key> <string>editable_columns</string> </key>
@@ -145,15 +143,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>my_gadget_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewKMFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>list_action</string> </key>
-                    <value> <string>WebSection_redirectToMemberList</string> </value>
+                    <value> <string>Base_viewKnowledgePadFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
@@ -190,10 +184,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>assigned_member_widget_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>

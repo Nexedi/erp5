@@ -140,11 +140,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox</string> </value>
+                    <value> <string>my_gadget_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewKMFieldLibrary</string> </value>
+                    <value> <string>Base_viewKnowledgePadFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
