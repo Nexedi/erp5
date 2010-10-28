@@ -869,7 +869,8 @@ class ObjectTemplateItem(BaseTemplateItem):
         try:
           OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
           old_obj_xml = old_io.getvalue()
-        except ImportError, e: # module is already removed etc.
+        except (ImportError, UnicodeDecodeError), e: # module is already
+                                                     # removed etc.
           old_obj_xml = '(%s: %s)' % (e.__class__.__name__, e)
         new_io.close()
         old_io.close()
