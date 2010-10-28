@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>default</string>
+                <string>description</string>
                 <string>items</string>
                 <string>title</string>
               </list>
@@ -84,6 +85,10 @@
                     <value> <string>10</string> </value>
                 </item>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Using this property you can set number of listbox lines in gadget.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_gadget_preferences_list_field</string> </value>
                 </item>
@@ -103,7 +108,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Show items by page</string> </value>
+                    <value> <string>Number of lines displayed (if any)</string> </value>
                 </item>
               </dictionary>
             </value>

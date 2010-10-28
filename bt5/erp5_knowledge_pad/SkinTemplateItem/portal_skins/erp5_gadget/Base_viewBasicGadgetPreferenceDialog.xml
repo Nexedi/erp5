@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Auto generated form</string> </value>
+            <value> <string>Basic gadget preferences edit form.</string> </value>
         </item>
         <item>
             <key> <string>edit_order</string> </key>
@@ -109,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_viewPersonListGadgetPreferenceDialog</string> </value>
+            <value> <string>Base_viewBasicGadgetPreferenceDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -141,6 +141,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
