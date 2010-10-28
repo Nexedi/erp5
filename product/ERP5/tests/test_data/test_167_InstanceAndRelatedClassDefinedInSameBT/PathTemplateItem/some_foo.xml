@@ -2,13 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="File" module="erp5.portal_type"/>
+      <global name="Foo" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>some_file</string> </value>
+            <value> <string>some_foo</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,13 +2,16 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="File" module="erp5.portal_type"/>
+      <tuple>
+        <global name="File" module="Products.ERP5Type.Document.File"/>
+        <tuple/>
+      </tuple>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>some_file</string> </value>
+            <value> <string>old_file</string> </value>
         </item>
       </dictionary>
     </pickle>

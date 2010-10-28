@@ -5556,7 +5556,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(compareVersionStrings('1.0rc1', '>= 1.0rc1'))
 
   def test_checkDependencies(self):
-    from Products.ERP5Type.Document.BusinessTemplate import \
+    from Products.ERP5.Document.BusinessTemplate import \
           BusinessTemplateMissingDependency
     template_tool = self.getPortal().portal_templates
     erp5_core_version = template_tool.getInstalledBusinessTemplate(
@@ -6664,13 +6664,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # This test does too much since we don't modify objects anymore during
     # download. Objects are cleaned up during installation, which does not
     # require any specific action about garbage collection or pickle cache.
-    from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
+    from Products.ERP5.Document.BusinessTemplate import BaseTemplateItem
     portal = self.portal
     BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
+    object_id_list = 'old_file', 'some_file', 'some_foo'
     marker_list = []
     def removeProperties(self, obj, export):
       # Check it works if the object is modified during install.
-      obj.int_index = marker_list.pop()
+      if obj.id in object_id_list:
+        obj.int_index = marker_list.pop()
       return obj
     SimpleItem_getCopy = SimpleItem._getCopy
     try:
@@ -6680,7 +6682,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
                              'test_167_InstanceAndRelatedClassDefinedInSameBT')
       # create a previously existing instance of the overriden document type
-      from Products.ERP5Type.Document.File import File
+      File = portal.portal_types.getPortalTypeClass('File')
       portal._setObject('another_file', File('another_file'))
       transaction.commit()
       self.tic()
@@ -6690,7 +6692,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       # check its class has not yet been overriden
       self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
       for i in (0, 1):
-        marker_list.append(i)
+        marker_list += [i] * len(object_id_list)
         gc.disable()
         bt = template_tool.download(bt_path)
         assert marker_list
@@ -6700,7 +6702,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         bt.install(force=1)
         assert not marker_list
         gc.enable()
-        self.assertEqual(portal.some_file.int_index, i)
+        for id in object_id_list:
+          self.assertEqual(getattr(portal, id).int_index, i)
         transaction.commit()
         self.tic()
     finally:

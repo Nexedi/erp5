@@ -59,6 +59,7 @@ from Products.ERP5Type.Utils import readLocalTest, \
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from cStringIO import StringIO
@@ -3354,6 +3355,7 @@ class DocumentTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
+      need_reset = isinstance(self, DocumentTemplateItem)
       for id in self._objects.keys():
         if update_dict.has_key(id) or force:
           if not force:
@@ -3366,11 +3368,14 @@ class DocumentTemplateItem(BaseTemplateItem):
           try:
             self.local_file_writer_name(name, text, create=0)
           except IOError, error:
-            LOG("BusinessTemplate.py", WARNING, "Cannot install class %s on file system" %(name,))
+            LOG(self.__class__.__name__, WARNING,
+                "Cannot install class %r on file system" % name)
             if error.errno:
               raise
             continue
-          if self.local_file_importer_name is not None:
+          if self.local_file_importer_name is None:
+            continue
+          if need_reset:
             # before any import, flush all ZODB caches to force a DB reload
             # otherwise we could have objects trying to get commited while
             # holding reference to a class that is no longer the same one as
@@ -3380,9 +3385,12 @@ class DocumentTemplateItem(BaseTemplateItem):
             transaction.savepoint(optimistic=True)
             # Then we need to flush from all caches, not only the one from this
             # connection
-            self.getPortalObject()._p_jar.db().cacheMinimize()
+            portal = self.getPortalObject()
+            portal._p_jar.db().cacheMinimize()
+            synchronizeDynamicModules(portal, force=True)
             gc.collect()
-            self.local_file_importer_name(name)
+            need_reset = False
+          self.local_file_importer_name(name)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       for id in self._archive.keys():
@@ -4861,6 +4869,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Create temporary modules/classes for classes defined by this BT.
       # This is required if the BT contains instances of one of these classes.
+      # XXX This is not required with portal types as classes.
+      #     It is still there for compatibility with non-migrated objects.
       module_id_list = []
       for template_id in self.getTemplateDocumentIdList():
         module_id = 'Products.ERP5Type.Document.' + template_id
