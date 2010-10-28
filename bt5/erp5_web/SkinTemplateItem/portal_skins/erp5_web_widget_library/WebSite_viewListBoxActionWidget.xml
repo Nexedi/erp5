@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -43,13 +40,13 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:comment replace="nothing">Display button to manage element in listbox.\n
 The condition on list style is for compatibility.\n
 You can implement this in web site layout.\n
 \n
-XXX TODO: make print, sort, find, configure work\n
+XXX TODO: make print, sort, find  work\n
 </tal:comment>\n
 \n
 <tal:block tal:define="list_style request/list_style | nothing"\n
@@ -91,14 +88,6 @@ XXX TODO: make print, sort, find, configure work\n
                 <span class="description" i18n:translate="" >Delete</span>\n
               </span>\n
             </button>\n
-            <!--button type="submit" class="print_button" title="Print"\n
-                    name="Folder_print:method"\n
-                    i18n:attributes="title" >\n
-             <span>\n
-                <span class="image">&nbsp;</span>\n
-                <span class="description" i18n:translate="" >Print</span>\n
-              </span>\n
-            </button-->\n
             <button type="submit" class="new_button" title="New"\n
                     name="Folder_create:method"\n
                     i18n:attributes="title" >\n
@@ -115,22 +104,6 @@ XXX TODO: make print, sort, find, configure work\n
                 <span class="description" i18n:translate="" >Reset</span>\n
               </span>\n
             </button>\n
-            <!--a tal:condition="sort_actions" class="sort_button button" title="Sort"\n
-               tal:attributes="href python: here.ERP5Site_renderCustomLink(sort_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_sort\')"\n
-               i18n:attributes="title" >\n
-             <span>\n
-                <span class="image">&nbsp;</span>\n
-                <span class="description" i18n:translate="" >Sort</span>\n
-              </span>\n
-            </a-->\n
-            <!--button type="submit" class="find_button" title="Search"\n
-                    name="Folder_search:method"\n
-                    i18n:attributes="title" >\n
-             <span>\n
-                <span class="image">&nbsp;</span>\n
-                <span class="description" i18n:translate="" >Search</span>\n
-              </span>\n
-            </button-->\n
             <button type="submit" class="filter_button" title="Filter"\n
                     name="Folder_filter:method"\n
                     i18n:attributes="title" >\n
@@ -139,20 +112,21 @@ XXX TODO: make print, sort, find, configure work\n
                 <span class="description" i18n:translate="" >Filter</span>\n
               </span>\n
             </button>\n
-            <!--a tal:condition="ui_actions" class="config_button button" title="Configure"\n
-               tal:attributes="href python: here.ERP5Site_renderCustomLink(ui_actions[0][\'url\'], http_parameter_list, dialog_category=\'object_ui\')"\n
-               i18n:attributes="title" >\n
+            <button type="submit" class="config_button" title="Configure"\n
+                    name="Base_viewUIDialog:method"\n
+                    i18n:attributes="title" >\n
              <span>\n
                 <span class="image">&nbsp;</span>\n
                 <span class="description" i18n:translate="" >Configure</span>\n
               </span>\n
-            </a-->\n
+            </button>\n
+\n
             </div>\n
           </div>\n
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -167,8 +141,12 @@ XXX TODO: make print, sort, find, configure work\n
             <value> <string>WebSite_viewListBoxActionWidget</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
