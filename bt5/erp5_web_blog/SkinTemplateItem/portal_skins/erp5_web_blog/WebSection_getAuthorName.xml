@@ -61,7 +61,7 @@
 \n
 document = context.getObject()\n
 source = document.getContributorValue()\n
-return (source is not None and source.getTitle() or "User unknown")\n
+return (source is not None and source.getTitle() or "Unknown User")\n
 </string> </value>
         </item>
         <item>
