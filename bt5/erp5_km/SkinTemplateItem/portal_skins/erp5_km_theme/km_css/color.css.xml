@@ -230,7 +230,7 @@ a:hover { \n
  \tbackground-position: 100% 50%;\n
 }\n
 \n
-a.draft:link, a.draft:active, a.draft:visited, .draft { \n
+a.draft:link, a.draft:active, a.draft:visited { \n
   color:#4574cb; \n
 }\n
 \n
@@ -428,6 +428,20 @@ div.searchDetails a.owner-link{\n
 \n
 div.searchDetails a.modification-date-link{\n
   color: inherit;\n
+}\n
+\n
+/* workflow states  colors*/\n
+ .draft-state { \n
+  color:#4574cb; \n
+}\n
+ .published-state, .released-state, .shared-state { \n
+  color: green; \n
+}\n
+.hidden-state{\n
+  color:red;\n
+}\n
+.archived-state{\n
+  color:gray;\n
 }\n
 
 
