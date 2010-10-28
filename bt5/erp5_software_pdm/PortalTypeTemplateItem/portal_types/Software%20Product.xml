@@ -33,9 +33,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>software_product_icon.png</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

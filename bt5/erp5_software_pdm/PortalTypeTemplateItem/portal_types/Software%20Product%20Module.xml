@@ -89,6 +89,10 @@
             <key> <string>product</string> </key>
             <value> <string>ERP5Type</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>Folder</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

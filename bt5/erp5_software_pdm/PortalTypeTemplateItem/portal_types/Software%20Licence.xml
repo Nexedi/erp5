@@ -27,9 +27,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>document_icon.gif</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -80,6 +78,16 @@
                 <string>short_title</string>
                 <string>subject_list</string>
               </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>SoftwareLicence</string> </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
             </value>
         </item>
       </dictionary>
