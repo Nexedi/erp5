@@ -85,10 +85,6 @@
             <value> <string>Folder_view</string> </value>
         </item>
         <item>
-            <key> <string>meta_type</string> </key>
-            <value> <string>ERP5 Folder</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Base Type</string> </value>
         </item>
