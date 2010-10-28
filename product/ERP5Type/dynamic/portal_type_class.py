@@ -104,23 +104,21 @@ def generatePortalTypeClass(portal_type_name):
   from Products.ERP5.ERP5Site import getSite
   site = getSite()
 
-  types_tool = site.portal_types
-  portal_type = None
-  mixin_list = []
-  interface_list = []
   accessor_holder_list = []
 
-  try:
-    portal_type = types_tool[portal_type_name]
-  except KeyError:
+  # Do not use __getitem__ (or _getOb) because portal_type may exist in a
+  # type provider other than Types Tool.
+  portal_type = getattr(site.portal_types, portal_type_name, None)
+  if portal_type is None:
     # Try to figure out a coresponding document class from the document side.
     # This can happen when calling newTempAmount for instance:
     #  Amount has no corresponding Base Type and will never have one
     #  But the semantic of newTempXXX requires us to create an
     #  object using the Amount Document, so we promptly do it:
     type_class = portal_type_name.replace(' ', '')
-
-  if portal_type is not None:
+    mixin_list = []
+    interface_list = []
+  else:
     # type_class has a compatibility getter that should return
     # something even if the field is not set (i.e. Base Type object
     # was not migrated yet)
