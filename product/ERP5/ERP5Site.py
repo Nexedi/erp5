@@ -1645,6 +1645,8 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Memcached Tool', None)
     if not p.hasObject('portal_types'):
       addTool('ERP5 Types Tool', None)
+    if not p.hasObject('portal_property_sheets'):
+      addTool('ERP5 Property Sheet Tool', None)
 
     try:
       addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
