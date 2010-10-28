@@ -1,3 +1,6 @@
+2010-10-28 arnaud.fontaine
+* remove portal_property_sheets as it is now created in ERP5Site.py.
+
 2010-10-26 nicolas.dumazet
 * fix type classes of Property Sheet Tool and Property Sheet
 * add Template Tool filter for Portal Type classes XML changes
