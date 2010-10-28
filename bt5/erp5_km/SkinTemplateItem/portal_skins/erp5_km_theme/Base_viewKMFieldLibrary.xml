@@ -103,9 +103,7 @@
                 <item>
                     <key> <string>right column (Document Relations)</string> </key>
                     <value>
-                      <list>
-                        <string>document_related</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -136,8 +134,6 @@
                     <key> <string>right column (Toolbox)</string> </key>
                     <value>
                       <list>
-                        <string>assigned_member_listbox</string>
-                        <string>latest_content_listbox</string>
                         <string>listbox</string>
                         <string>listbox_creation_date</string>
                         <string>listbox_modification_date</string>
