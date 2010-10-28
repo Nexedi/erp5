@@ -29,7 +29,7 @@
 
 import xmlrpclib, base64, re, zipfile, cStringIO
 from warnings import warn
-from xmlrpclib import Fault
+from xmlrpclib import Fault, ServerProxy, ProtocolError
 from AccessControl import ClassSecurityInfo
 from AccessControl import Unauthorized
 from OFS.Image import Pdata
@@ -61,6 +61,47 @@ dec=base64.decodestring
 
 _MARKER = []
 EMBEDDED_FORMAT = '_embedded'
+
+class _ProtocolErrorCatcher(object):
+  def __init__(self, orig_callable):
+    self.__callable = orig_callable
+  def __call__(self, *args, **kw):
+    """
+    Catch Protocol Errors (transport layer) and specifically
+    identify them as OOo server network/communication error
+
+    xml-rpc application level errors still go through: if a wrong method
+    is called, or with wrong parameters, xmlrpclib.Fault will be raised.
+    """
+    try:
+      return self.__callable(*args, **kw)
+    except ProtocolError, e:
+      raise ConversionError("Network error while contacting OOo conversion"
+                            " server: server might be unreachable")
+
+class OOoServerProxy(ServerProxy):
+  """
+  xmlrpc-like ServerProxy object adapted for OOo conversion server
+  """
+  def __init__(self, context):
+    preference_tool = getToolByName(context, 'portal_preferences')
+
+    address = preference_tool.getPreferredOoodocServerAddress()
+    port = preference_tool.getPreferredOoodocServerPortNumber()
+    if address in ('', None) or port in ('', None) :
+      raise ConversionError('OOoDocument: cannot proceed with conversion:'
+            ' conversion server host and port is not defined in preferences')
+
+    uri = 'http://%s:%d' % (address, port)
+    transport = TimeoutTransport(timeout=360, scheme='http')
+
+    ServerProxy.__init__(self, uri, allow_none=True, transport=transport)
+
+  def __getattr__(self, attr):
+    obj = ServerProxy.__getattr__(self, attr)
+    if callable(obj):
+      obj.__call__ = _ProtocolErrorCatcher(obj.__call__)
+    return obj
 
 class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixin, File,
                   TextConvertableMixin, Document):
@@ -140,30 +181,6 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     """
     return True
 
-  # Format conversion implementation
-  def _getServerCoordinate(self):
-    """
-      Returns the oood conversion server coordinates
-      as defined in preferences.
-    """
-    preference_tool = getToolByName(self, 'portal_preferences')
-    address = preference_tool.getPreferredOoodocServerAddress()
-    port = preference_tool.getPreferredOoodocServerPortNumber()
-    if address in ('', None) or port in ('', None) :
-      raise ConversionError('OOoDocument: can not proceed with conversion:'
-            ' conversion server host and port is not defined in preferences')
-    return address, port
-
-  def _mkProxy(self):
-    """
-      Create an XML-RPC proxy to access the conversion server.
-    """
-    server_proxy = xmlrpclib.ServerProxy(
-             'http://%s:%d' % self._getServerCoordinate(),
-             allow_none=True,
-             transport=TimeoutTransport(timeout=360, scheme='http'))
-    return server_proxy
-
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTargetFormatItemList')
   def getTargetFormatItemList(self):
@@ -179,7 +196,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return []
 
     def cached_getTargetFormatItemList(content_type):
-      server_proxy = self._mkProxy()
+      server_proxy = OOoServerProxy(self)
       try:
         allowed_target_item_list = server_proxy.getAllowedTargetItemList(
                                                       content_type)
@@ -223,7 +240,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       Communicates with server to convert a file 
     """
     if not self.hasBaseData():
-      raise NotConvertedError
+      # XXX please pass a meaningful description of error as argument
+      raise NotConvertedError()
     if format == 'text-content':
       # Extract text from the ODF file
       cs = cStringIO.StringIO()
@@ -235,7 +253,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       cs.close()
       z.close()
       return 'text/plain', s
-    server_proxy = self._mkProxy()
+    server_proxy = OOoServerProxy(self)
     orig_format = self.getBaseContentType()
     generate_result = server_proxy.run_generate(self.getId(),
                                        enc(str(self.getBaseData())),
@@ -269,7 +287,8 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       return self.getContentType(), self.getData()
     # Check if we have already a base conversion
     if not self.hasBaseData():
-      raise NotConvertedError
+      # XXX please pass a meaningful description of error as argument
+      raise NotConvertedError()
     # Make sure we can support html and pdf by default
     is_html = 0
     requires_pdf_first = 0
@@ -423,7 +442,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       by invoking the conversion server. Store the result
       on the object. Update metadata information.
     """
-    server_proxy = self._mkProxy()
+    server_proxy = OOoServerProxy(self)
     response_code, response_dict, response_message = server_proxy.run_convert(
                                       self.getSourceReference() or self.getId(),
                                       enc(str(self.getData())),
@@ -461,9 +480,10 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
       through the invocation of the conversion server.
     """
     if not self.hasBaseData():
-      raise NotConvertedError
+      # XXX please pass a meaningful description of error as argument
+      raise NotConvertedError()
 
-    server_proxy = self._mkProxy()
+    server_proxy = OOoServerProxy(self)
     response_code, response_dict, response_message = \
           server_proxy.run_setmetadata(self.getId(),
                                        enc(str(self.getBaseData())),
