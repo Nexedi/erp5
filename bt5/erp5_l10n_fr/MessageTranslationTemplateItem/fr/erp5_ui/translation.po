@@ -573,6 +573,9 @@ msgstr "Ajouter des tâches"
 msgid "Add gadgets"
 msgstr "Ajouter des gadgets"
 
+msgid "Add new comment"
+msgstr "Ajouter un nouveau commentaire"
+
 msgid "Add new tab"
 msgstr "Ajouter un onglet"
 
@@ -6175,6 +6178,9 @@ msgstr "Nouvelle page par défaut pour la section ${web_section}."
 msgid "New event created."
 msgstr "Nouvel évènement créé."
 
+msgid "New post created in background."
+msgstr "Nouveau message créé en arrière-plan."
+
 msgid "News"
 msgstr "Actualité"
 
@@ -7156,6 +7162,9 @@ msgstr "Portal type"
 
 msgid "Post"
 msgstr "Envoyer"
+
+msgid "Post Comment"
+msgstr "Poster le commentaire"
 
 msgid "Post Event"
 msgstr "Envoyer l'évènement"
@@ -11385,6 +11394,9 @@ msgstr "Prix unitaire"
 msgid "Unknown"
 msgstr "Inconnu"
 
+msgid "Unknown User"
+msgstr "Utilisateur inconnu"
+
 msgid "Unpublish"
 msgstr "Dépublier"
 
@@ -12116,6 +12128,9 @@ msgstr "Collection"
 
 msgid "comment"
 msgstr "Commentaire"
+
+msgid "comments"
+msgstr "Commentaires"
 
 msgid "content of the event"
 msgstr "Le contenu de l'évènement."
