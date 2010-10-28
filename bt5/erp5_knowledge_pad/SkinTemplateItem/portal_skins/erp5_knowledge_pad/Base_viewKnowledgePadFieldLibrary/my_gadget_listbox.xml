@@ -10,17 +10,19 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>default</string>
-                <string>description</string>
-                <string>enabled</string>
-                <string>items</string>
-                <string>title</string>
+                <string>count_method</string>
+                <string>css_class</string>
+                <string>hide_rows_on_no_search_criterion</string>
+                <string>lines</string>
+                <string>list_method</string>
+                <string>select</string>
+                <string>selection_name</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_listbox_selection_list_lines</string> </value>
+            <value> <string>my_gadget_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -57,18 +59,12 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
+                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
+                    <key> <string>css_class</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -79,17 +75,31 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -100,38 +110,46 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>default</string> </key>
-                    <value> <string>10</string> </value>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string>Using this property you can set number of listbox lines in gadget.</string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>hidden_label gadget</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_gadget_preferences_list_field</string> </value>
+                    <value> <string>my_list_mode_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewKnowledgePadFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <int>20</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_method</string> </key>
                     <value>
-                      <list/>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>search_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Number of lines displayed (if any)</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -147,7 +165,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:\'listbox\' in getattr(here, here.getSpecialiseValue().view_form_id).objectIds()</string> </value>
+            <value> <string>python: int(context.restrictedTraverse(context.REQUEST.get(\'box_relative_url\', \'\')).KnowledgeBox_getDefaultPreferencesDict().get(\'listbox_selection_list_lines\', None) or 5)</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -160,7 +178,20 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [[str(x),  str(x)] for x in range(31)]</string> </value>
+            <value> <string>python: context.Base_getListboxGadgetSelectionName(context.REQUEST.get(\'box_relative_url\', \'\'))</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>portal_catalog</string> </value>
         </item>
       </dictionary>
     </pickle>
