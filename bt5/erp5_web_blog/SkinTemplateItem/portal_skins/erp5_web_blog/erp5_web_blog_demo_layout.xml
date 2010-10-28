@@ -94,7 +94,7 @@
                     <key> <string>side box (Tags)</string> </key>
                     <value>
                       <list>
-                        <string>tag_list</string>
+                        <string>subject_list</string>
                       </list>
                     </value>
                 </item>

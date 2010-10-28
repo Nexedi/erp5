@@ -66,7 +66,7 @@
   </small>\n
 \n
   <small class="post_author"><tal:block i18n:translate="" i18n:domain="ui">Author</tal:block>: <span tal:replace="author">Author</span></small><tal:block tal:condition="categories"> | <small class="post_category"><tal:block i18n:translate="" i18n:domain="ui">Category</tal:block>: \n
-    <tal:block tal:repeat="category categories"><a tal:attributes="href python: \'%s?tag=%s\' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small></tal:block>\n
+    <tal:block tal:repeat="category categories"><a tal:attributes="href python: \'%s?subject=%s\' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small></tal:block>\n
 \n
 </div><!--End post_head -->\n
 \n

@@ -45,7 +45,7 @@
 <ul tal:define="current_web_section python:request.get(\'current_web_section\', here)">\n
  <li tal:repeat="line here/query">\n
 <tal:block tal:define="render_result line/render">\n
-<a tal:attributes="href python: \'%s?tag=%s\' % (current_web_section.absolute_url(), render_result[0][1])" tal:content="python: render_result[0][1]"></a>\n
+<a tal:attributes="href python: \'%s?subject=%s\' % (current_web_section.absolute_url(), render_result[0][1])" tal:content="python: render_result[0][1]"></a>\n
 </tal:block>\n
  </li>\n
 </ul>\n
@@ -63,7 +63,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_viewTagListWidget</string> </value>
+            <value> <string>WebSection_viewSubjectListWidget</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

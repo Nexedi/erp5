@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tag_list</string> </value>
+            <value> <string>subject_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -369,6 +369,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
@@ -377,6 +381,12 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -413,6 +423,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>hidden</string> </key>
                     <value> <int>0</int> </value>
                 </item>
@@ -441,8 +455,12 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>page_navigation_mode</string> </key>
+                    <value> <string>slider</string> </value>
+                </item>
+                <item>
                     <key> <string>page_template</string> </key>
-                    <value> <string>WebSection_viewTagListWidget</string> </value>
+                    <value> <string>WebSection_viewSubjectListWidget</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -503,6 +521,12 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

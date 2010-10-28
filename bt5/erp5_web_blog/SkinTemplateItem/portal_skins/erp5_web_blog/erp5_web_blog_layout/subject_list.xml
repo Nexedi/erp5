@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>tag_list</string> </value>
+            <value> <string>subject_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
