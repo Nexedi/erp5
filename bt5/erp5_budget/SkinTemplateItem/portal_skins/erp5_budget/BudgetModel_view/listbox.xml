@@ -10,10 +10,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
+                <string>all_columns</string>
                 <string>columns</string>
-                <string>sort</string>
+                <string>editable_columns</string>
                 <string>selection_name</string>
+                <string>sort</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -75,20 +77,50 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>columns</string> </key>
+                    <key> <string>all_columns</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>variation_base_category</string>
+                          <string>Variation Base Category</string>
                         </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
                         <tuple>
                           <string>int_index</string>
                           <string>Index</string>
                         </tuple>
                         <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_portal_type</string>
                           <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>budget_variation_translated_title</string>
+                          <string>Budget Variation</string>
+                        </tuple>
+                        <tuple>
+                          <string>inventory_axis_translated_title</string>
+                          <string>Inventory Axis</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Index</string>
                         </tuple>
                       </list>
                     </value>
