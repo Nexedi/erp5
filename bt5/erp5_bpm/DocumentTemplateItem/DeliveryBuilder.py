@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Document.BPMBuilder import BPMBuilder
+from Products.ERP5.Document.BPMBuilder import BPMBuilder
 
 class DeliveryBuilder(BPMBuilder):
   # CMF Type Definition
