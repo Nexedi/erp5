@@ -142,6 +142,7 @@
                         <string>my_gadget_listbox</string>
                         <string>my_listbox_selection_list_lines</string>
                         <string>my_preferred_header_title</string>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>
