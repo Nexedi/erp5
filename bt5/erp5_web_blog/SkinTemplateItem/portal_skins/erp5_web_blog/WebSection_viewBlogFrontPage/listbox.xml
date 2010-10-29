@@ -358,7 +358,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>WebSection_getAuthorName</string>
+                          <string>contributor</string>
                           <string>Author</string>
                         </tuple>
                         <tuple>

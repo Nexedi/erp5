@@ -96,6 +96,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_contributor</string>
                       </list>
                     </value>
                 </item>
