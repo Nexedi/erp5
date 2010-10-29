@@ -94,10 +94,10 @@
                     <value>
                       <list>
                         <string>my_preferred_header_title</string>
+                        <string>my_listbox_selection_list_lines</string>
                         <string>my_preferred_rss_feed</string>
                         <string>my_preferred_username</string>
                         <string>my_preferred_password</string>
-                        <string>my_listbox_selection_list_lines</string>
                       </list>
                     </value>
                 </item>

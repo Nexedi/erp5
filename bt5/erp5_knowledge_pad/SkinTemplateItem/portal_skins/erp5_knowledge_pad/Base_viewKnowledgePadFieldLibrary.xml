@@ -140,6 +140,8 @@
                         <string>my_gadget_preferences_password</string>
                         <string>my_gadget_preferences_label_field</string>
                         <string>my_gadget_listbox</string>
+                        <string>my_listbox_selection_list_lines</string>
+                        <string>my_preferred_header_title</string>
                       </list>
                     </value>
                 </item>
