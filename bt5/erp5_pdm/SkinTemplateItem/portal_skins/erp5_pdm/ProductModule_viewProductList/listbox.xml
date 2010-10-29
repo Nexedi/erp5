@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -13,7 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>portal_types</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -76,26 +73,19 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_product_module_listbox</string> </value>
+                    <value> <string>my_view_mode_product_module_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Resource_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Product</string>
-                          <string>Product</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string>Products</string> </value>
                 </item>
               </dictionary>
             </value>
