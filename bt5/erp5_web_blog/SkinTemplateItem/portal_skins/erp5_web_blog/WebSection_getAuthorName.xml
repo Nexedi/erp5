@@ -59,9 +59,7 @@
     design.\n
 """\n
 \n
-document = context.getObject()\n
-source = document.getContributorValue()\n
-return (source is not None and source.getTitle() or context.Base_translateString("Unknown User"))\n
+return context.getContributorTitle() or context.Base_translateString("Unknown User")\n
 </string> </value>
         </item>
         <item>
@@ -108,9 +106,6 @@ return (source is not None and source.getTitle() or context.Base_translateString
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
-                            <string>document</string>
-                            <string>source</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
