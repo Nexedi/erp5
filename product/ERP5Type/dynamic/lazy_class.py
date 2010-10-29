@@ -1,20 +1,27 @@
+# -*- coding: utf-8 -*-
+
+import sys
 from Products.ERP5Type.Base import Base as ERP5Base
 from ExtensionClass import Base as ExtensionBase
-
+from ZODB.broken import Broken, PersistentBroken
 from zLOG import LOG, ERROR, BLATHER
+
+# PersistentBroken can't be reused directly
+# because its « layout differs from 'GhostPortalType' »
+ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
+  for x in PersistentBroken.__dict__.iteritems()
+  if x[0] not in ('__dict__', '__module__', '__weakref__')))
 
 def generateLazyPortalTypeClass(portal_type_name,
                                 portal_type_class_loader):
     def load(self, attr):
-        klass = None
         # self might be a subclass of a portal type class
         # we need to find the right parent class to change
-        for candidate_klass in self.__class__.__mro__:
+        for klass in self.__class__.__mro__:
           # XXX hardcoded, this doesnt look too good
-          if candidate_klass.__module__ == "erp5.portal_type":
-            klass = candidate_klass
+          if klass.__module__ == "erp5.portal_type":
             break
-        if klass is None:
+        else:
           raise AttributeError("Could not find a portal type class in class hierarchy")
 
         portal_type = klass.__name__
@@ -22,11 +29,10 @@ def generateLazyPortalTypeClass(portal_type_name,
           baseclasses, attributes = portal_type_class_loader(portal_type)
         except AttributeError:
           LOG("ERP5Type.Dynamic", ERROR,
-              "Could not access Portal Type Object for type %s"
-              % portal_type_name)
-          import traceback; traceback.print_exc()
-          raise AttributeError("Could not access Portal Type Object for type %s"
-              % portal_type_name)
+              "Could not access Portal Type Object for type %r"
+              % portal_type, error=sys.exc_info())
+          baseclasses = (ERP5BaseBroken, )
+          attributes = {}
 
         # save the old bases to be able to restore a ghost state later
         klass.__ghostbase__ = klass.__bases__
