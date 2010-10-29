@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -151,6 +148,40 @@
                         <string>my_destination_carrier_title</string>
                         <string>my_source_carrier_title</string>
                         <string>my_base_unit_price</string>
+                        <string>my_product_individual_variations_listbox</string>
+                        <string>listbox_variation_base_category</string>
+                        <string>my_aggregated_portal_type_list</string>
+                        <string>my_base_contribution_list</string>
+                        <string>my_base_height</string>
+                        <string>my_base_length</string>
+                        <string>my_base_volume</string>
+                        <string>my_base_weight</string>
+                        <string>my_base_width</string>
+                        <string>my_default_image_absolute_url</string>
+                        <string>my_default_image_file</string>
+                        <string>my_ean13_code</string>
+                        <string>my_individual_variation_base_category_list</string>
+                        <string>my_optional_variation_base_category_list</string>
+                        <string>my_product_line</string>
+                        <string>my_quantity_unit_list</string>
+                        <string>my_required_aggregated_portal_type_list</string>
+                        <string>my_use_list</string>
+                        <string>my_variation_base_category_list</string>
+                        <string>my_variation_category_list</string>
+                        <string>my_view_mode_product_module_listbox</string>
+                        <string>my_view_mode_module_listbox</string>
+                        <string>my_variation_base_category</string>
+                        <string>matrixbox</string>
+                        <string>my_additional_price_quantity_step_list</string>
+                        <string>my_quantity_step_list</string>
+                        <string>matrixbox_max_delay</string>
+                        <string>matrixbox_max_flow</string>
+                        <string>matrixbox_min_delay</string>
+                        <string>matrixbox_min_flow</string>
+                        <string>matrixbox_min_stock</string>
+                        <string>matrixbox_non_discountable_additional_price</string>
+                        <string>my_non_discountable_additional_price_quantity_step_list</string>
+                        <string>matrixbox_max_stock</string>
                       </list>
                     </value>
                 </item>

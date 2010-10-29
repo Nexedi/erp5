@@ -10,6 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>css_class</string>
                 <string>description</string>
                 <string>title</string>
               </list>
@@ -17,7 +18,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_max_delay</string> </value>
+            <value> <string>my_base_volume</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,16 +74,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>figure</string> </value>
+                </item>
+                <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The maximal delay of a resource.</string> </value>
+                    <value> <string>Default Quantity of a resource in ERP5. It can be a product or it can be time quantity like hours or minutes for example. Quantity can be found in almost every business field of ERP5 and will always have this meaning, unless the term is different or precise, such as Priced Quantity for example.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_quantity</string> </value>
+                    <value> <string>my_float_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -90,7 +95,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Max. Delay (Day)</string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+Volume (m&#179;)
+
+]]></string> </value>
                 </item>
               </dictionary>
             </value>

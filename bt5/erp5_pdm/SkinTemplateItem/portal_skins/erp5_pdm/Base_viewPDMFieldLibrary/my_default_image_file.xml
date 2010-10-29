@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_max_delay</string> </value>
+            <value> <string>my_default_image_file</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,15 +74,15 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The maximal delay of a resource.</string> </value>
+                    <value> <string>Upload the photo for this Product.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_quantity</string> </value>
+                    <value> <string>my_file_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Max. Delay (Day)</string> </value>
+                    <value> <string>Upload</string> </value>
                 </item>
               </dictionary>
             </value>
