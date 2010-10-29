@@ -31,7 +31,7 @@
 import unittest
 
 import transaction
-
+from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import skip
 
@@ -140,6 +140,21 @@ class TestPortalTypeClass(ERP5TypeTestCase):
       # reset the type
       person_type.setTypeClass('Person')
       transaction.commit()
+
+  def testTempPortalType(self):
+    newType = self.portal.portal_types.newContent
+    new_type_list = [newType(portal_type='Base Type', type_class='Folder',
+                             type_filter_content_type=False).getId()
+                     for i in (0, 1)]
+    newDocument = self.portal.newContent(self.id(), 'Folder').newContent
+    for temp_first, portal_type in enumerate(new_type_list):
+      obj = newDocument(portal_type='Folder', temp_object=temp_first)
+      obj.newContent('file', portal_type)
+      obj.file.aq_base
+      obj = newDocument(portal_type='Folder', temp_object=not temp_first)
+      obj.newContent('file', portal_type)
+      obj.file.aq_base
+
 
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """

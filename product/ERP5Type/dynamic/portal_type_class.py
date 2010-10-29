@@ -33,14 +33,13 @@ import inspect
 from types import ModuleType
 
 from dynamic_module import registerDynamicModule
-from lazy_class import generateLazyPortalTypeClass
+from lazy_class import generateLazyPortalTypeClass, InitializePortalTypeClass
 
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
 from Products.ERP5Type import PropertySheet as FilesystemPropertySheet
-from ExtensionClass import Base as ExtensionBase
 from zLOG import LOG, ERROR, INFO
 
 def _importClass(classpath):
@@ -241,7 +240,7 @@ def initializeDynamicModules():
     class TempDocument(klass):
       isTempDocument = PropertyConstantGetter('isTempDocument', value=True)
       __roles__ = None
-    TempDocument.__name__ = "Temp" + portal_type_name
+    TempDocument.__name__ = "Temp " + portal_type_name
 
     # Replace some attributes.
     for name in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
@@ -309,7 +308,7 @@ def synchronizeDynamicModules(context, force=False):
         if attr != '__module__':
           delattr(klass, attr)
       klass.__bases__ = ghostbase
-      type(ExtensionBase).__init__(klass, klass)
+      InitializePortalTypeClass(klass)
 
   # Clear accessor holders of ZODB Property Sheets
   _clearAccessorHolderModule(erp5.zodb_accessor_holder)

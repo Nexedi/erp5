@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import sys
+import gc, sys
 from Products.ERP5Type.Base import Base as ERP5Base
 from ExtensionClass import Base as ExtensionBase
 from ZODB.broken import Broken, PersistentBroken
@@ -11,6 +11,14 @@ from zLOG import LOG, ERROR, BLATHER
 ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
   for x in PersistentBroken.__dict__.iteritems()
   if x[0] not in ('__dict__', '__module__', '__weakref__')))
+
+ExtensionClass = type(ExtensionBase)
+def InitializePortalTypeClass(klass):
+  # beware of the scary meta type
+  ExtensionClass.__init__(klass, klass)
+  for klass in gc.get_referrers(klass):
+    if isinstance(klass, ExtensionClass):
+      InitializePortalTypeClass(klass)
 
 def generateLazyPortalTypeClass(portal_type_name,
                                 portal_type_class_loader):
@@ -41,8 +49,7 @@ def generateLazyPortalTypeClass(portal_type_name,
         for key, value in attributes.iteritems():
           setattr(klass, key, value)
 
-        # beware of the scary meta type
-        type(ExtensionBase).__init__(klass, klass)
+        InitializePortalTypeClass(klass)
 
         return getattr(self, attr)
 
