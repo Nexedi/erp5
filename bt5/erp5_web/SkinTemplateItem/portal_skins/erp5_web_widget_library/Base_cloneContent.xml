@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -77,7 +74,7 @@ context.Base_createCloneDocument(web_mode=1, \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>clone=1, form_id, editable_mode=0</string> </value>
+            <value> <string>clone=1, form_id=\'view\', editable_mode=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -129,7 +126,7 @@ context.Base_createCloneDocument(web_mode=1, \n
             <value>
               <tuple>
                 <int>1</int>
-                <none/>
+                <string>view</string>
                 <int>0</int>
               </tuple>
             </value>
