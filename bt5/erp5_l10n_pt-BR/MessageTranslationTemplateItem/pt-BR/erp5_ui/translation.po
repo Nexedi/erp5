@@ -9,6 +9,54 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "${count} Apparel Colour Range Variations created."
+msgstr ""
+
+msgid "${count} Compositions created."
+msgstr ""
+
+msgid "${count} documents created successfully."
+msgstr ""
+
+msgid "${count} tasks created."
+msgstr ""
+
+msgid "${date} at ${hour_minute_text}"
+msgstr ""
+
+msgid "${date} is already in an open accounting period."
+msgstr ""
+
+msgid "${day_name} ${date}"
+msgstr ""
+
+msgid "${days} Days"
+msgstr ""
+
+msgid "${days} Days End of Month"
+msgstr ""
+
+msgid "${delivery_portal_type} ${delivery_title}"
+msgstr ""
+
+msgid "${delivery_portal_type} ${delivery_title} (${causality_portal_type} ${causality_title})"
+msgstr ""
+
+msgid "${grouped_line_count} lines grouped."
+msgstr ""
+
+msgid "${key} ${usage}"
+msgstr ""
+
+msgid "${min_quantity} <= Quantity"
+msgstr ""
+
+msgid "${min_quantity} <= Quantity < ${max_quantity}"
+msgstr ""
+
+msgid "${month_name} ${year}"
+msgstr ""
+
 msgid "${number} records"
 msgstr "${number} registros"
 
@@ -19,6 +67,30 @@ msgid "- ${number} items selected"
 msgstr "- ${number} items selecionados"
 
 msgid "-- Developper Mode --"
+msgstr ""
+
+msgid "-- Directory --"
+msgstr ""
+
+msgid "-- Object --"
+msgstr ""
+
+msgid "-- Others --"
+msgstr ""
+
+msgid "-- Quick Search --"
+msgstr ""
+
+msgid "-- Select Classification --"
+msgstr ""
+
+msgid "-- Select Document Type --"
+msgstr ""
+
+msgid "-- Select Project --"
+msgstr ""
+
+msgid "-- User --"
 msgstr ""
 
 msgid "-- Workflows --"
@@ -229,14 +301,68 @@ msgstr "Módulo de Contas"
 msgid "Account Name"
 msgstr "Nome da Conta"
 
+msgid "Account Number Method"
+msgstr ""
+
+msgid "Account Reference"
+msgstr ""
+
+msgid "Account Statement"
+msgstr ""
+
 msgid "Account Type"
 msgstr "Tipo de Conta"
+
+msgid "Account Type must be set"
+msgstr ""
+
+msgid "Account Workflow"
+msgstr ""
+
+msgid "Account does not have account_type category."
+msgstr ""
+
+msgid "Account for Bank Line"
+msgstr ""
+
+msgid "Account is member of ${category}, this should have account_type in ${account_type_list}."
+msgstr ""
+
+msgid "Account must be defined"
+msgstr ""
 
 msgid "Accounting"
 msgstr "Contabilidade"
 
+msgid "Accounting Currency"
+msgstr ""
+
+msgid "Accounting Date"
+msgstr ""
+
+msgid "Accounting Date Module"
+msgstr ""
+
+msgid "Accounting Dates"
+msgstr ""
+
+msgid "Accounting Line Report"
+msgstr ""
+
+msgid "Accounting Lines"
+msgstr ""
+
+msgid "Accounting Operation Date"
+msgstr ""
+
 msgid "Accounting Period"
 msgstr "Exercício Contábil"
+
+msgid "Accounting Period Workflow"
+msgstr ""
+
+msgid "Accounting Periods"
+msgstr ""
 
 msgid "Accounting Preference"
 msgstr "Preferência de contabilidade"
@@ -244,11 +370,113 @@ msgstr "Preferência de contabilidade"
 msgid "Accounting Preferences"
 msgstr "Preferências de contabilidade"
 
+msgid "Accounting Rule Cell"
+msgstr ""
+
+msgid "Accounting Rule Cell Line"
+msgstr ""
+
 msgid "Accounting Transaction"
 msgstr "Transação Contábil"
 
+msgid "Accounting Transaction Line"
+msgstr ""
+
+msgid "Accounting Transaction Lines"
+msgstr ""
+
+msgid "Accounting Transaction Lines added."
+msgstr ""
+
+msgid "Accounting Transaction Module"
+msgstr ""
+
+msgid "Accounting Transaction Title"
+msgstr ""
+
+msgid "Accounting Transaction can only be deleted in draft or cancelled states."
+msgstr ""
+
+msgid "Accounting Transactions"
+msgstr ""
+
+msgid "Accounting Transactions to Close"
+msgstr ""
+
+msgid "Accounting Transactions to Post"
+msgstr ""
+
+msgid "Accounting Transactions to Start"
+msgstr ""
+
+msgid "Accounting View"
+msgstr ""
+
+msgid "Accounting Workflow"
+msgstr ""
+
+msgid "Accounting periods created."
+msgstr ""
+
+msgid "Accounting preferences: The default currency when creating new transactions"
+msgstr ""
+
+msgid "Accounting preferences: The default organisation to use when creating a new accounting transaction"
+msgstr ""
+
+msgid "Accounting preferences: The default section category for reporting"
+msgstr ""
+
+msgid "Accounting preferences: The maximum (inclusive) date for transactions"
+msgstr ""
+
+msgid "Accounting preferences: The minimum (inclusive) date for transactions"
+msgstr ""
+
+msgid "Accounting preferences: The preferred account number method."
+msgstr ""
+
+msgid "Accounting preferences: The preferred accounting plan"
+msgstr ""
+
 msgid "Accounts"
 msgstr "Contas"
+
+msgid "Accounts to Validate"
+msgstr ""
+
+msgid "Acknowledge"
+msgstr ""
+
+msgid "Acknowledge Event"
+msgstr ""
+
+msgid "Acknowledge Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Acknowledge Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Acknowledgeable Messages"
+msgstr ""
+
+msgid "Acknowledged"
+msgstr ""
+
+msgid "Acknowledged [state in event_workflow]"
+msgstr ""
+
+msgid "Acquisition Append Value"
+msgstr ""
+
+msgid "Acquisition Copy Value"
+msgstr ""
+
+msgid "Acquisition Mask Value"
+msgstr ""
+
+msgid "Acquisition Sync Value"
+msgstr ""
 
 msgid "Action"
 msgstr "Ação"
@@ -298,17 +526,56 @@ msgstr "Atores"
 msgid "Add ${portal_type}"
 msgstr "Adicionar ${portal_type}"
 
-msgid "Added Files"
-msgstr "Arquivos Adicionados"
+msgid "Add Accounting Transaction Lines"
+msgstr ""
+
+msgid "Add Document with Requirements"
+msgstr ""
+
+msgid "Add Gadgets"
+msgstr ""
+
+msgid "Add Requirements"
+msgstr ""
+
+msgid "Add Task Related to This Project"
+msgstr ""
+
+msgid "Add Tasks"
+msgstr ""
+
+msgid "Add gadgets"
+msgstr ""
+
+msgid "Add new tab"
+msgstr ""
+
+msgid "Add tab"
+msgstr ""
 
 msgid "Additional Payments"
 msgstr "Pagamentos Adicionais"
+
+msgid "Additional Price"
+msgstr ""
 
 msgid "Additional Term (days)"
 msgstr "Termo Adicional (dias)"
 
 msgid "Address"
 msgstr "Endereço"
+
+msgid "Addresses"
+msgstr ""
+
+msgid "Adopt Prevision"
+msgstr ""
+
+msgid "Adopt prevision"
+msgstr ""
+
+msgid "Advanced Document Search"
+msgstr ""
 
 msgid "Advanced Search"
 msgstr "Busca Avançada"
@@ -349,17 +616,344 @@ msgstr "Resposta"
 msgid "Answered"
 msgstr "Respondido"
 
+msgid "Answered [state in query_workflow]"
+msgstr ""
+
+msgid "Any Documents"
+msgstr ""
+
+msgid "Apparel Bath"
+msgstr ""
+
+msgid "Apparel Baths"
+msgstr ""
+
+msgid "Apparel Cloth"
+msgstr ""
+
+msgid "Apparel Cloth List"
+msgstr ""
+
+msgid "Apparel Cloth Module"
+msgstr ""
+
+msgid "Apparel Cloth to design"
+msgstr ""
+
+msgid "Apparel Clothes"
+msgstr ""
+
+msgid "Apparel Color Range Variation"
+msgstr ""
+
+msgid "Apparel Colour Range"
+msgstr ""
+
+msgid "Apparel Colour Range List"
+msgstr ""
+
+msgid "Apparel Colour Range Module"
+msgstr ""
+
+msgid "Apparel Colour Range Variation"
+msgstr ""
+
+msgid "Apparel Colour Range Variation Line"
+msgstr ""
+
+msgid "Apparel Colour Range must be defined."
+msgstr ""
+
+msgid "Apparel Colour Ranges"
+msgstr ""
+
+msgid "Apparel Component"
+msgstr ""
+
+msgid "Apparel Component Module"
+msgstr ""
+
+msgid "Apparel Component Variation"
+msgstr ""
+
+msgid "Apparel Components"
+msgstr ""
+
+msgid "Apparel Consumption"
+msgstr ""
+
+msgid "Apparel Consumption List"
+msgstr ""
+
+msgid "Apparel Consumption Module"
+msgstr ""
+
+msgid "Apparel Fabric"
+msgstr ""
+
+msgid "Apparel Fabric Colour Variation"
+msgstr ""
+
+msgid "Apparel Fabric Item Fast Input"
+msgstr ""
+
+msgid "Apparel Fabric List"
+msgstr ""
+
+msgid "Apparel Fabric Module"
+msgstr ""
+
+msgid "Apparel Fabric Template"
+msgstr ""
+
+msgid "Apparel Fabric to validate"
+msgstr ""
+
+msgid "Apparel Fabrics"
+msgstr ""
+
+msgid "Apparel Measurement"
+msgstr ""
+
+msgid "Apparel Measurement List"
+msgstr ""
+
+msgid "Apparel Measurement Module"
+msgstr ""
+
+msgid "Apparel Measurements"
+msgstr ""
+
+msgid "Apparel Model"
+msgstr ""
+
+msgid "Apparel Model Colour Variation"
+msgstr ""
+
+msgid "Apparel Model Colour Variation already exists with this price. Check your line."
+msgstr ""
+
+msgid "Apparel Model Industrial Description"
+msgstr ""
+
+msgid "Apparel Model List"
+msgstr ""
+
+msgid "Apparel Model Module"
+msgstr ""
+
+msgid "Apparel Model Morphology Variation"
+msgstr ""
+
+msgid "Apparel Model Template"
+msgstr ""
+
+msgid "Apparel Model To Design"
+msgstr ""
+
+msgid "Apparel Model To Price"
+msgstr ""
+
+msgid "Apparel Model To Prototype"
+msgstr ""
+
+msgid "Apparel Models"
+msgstr ""
+
+msgid "Apparel Models To Analyse"
+msgstr ""
+
+msgid "Apparel Models To Propose"
+msgstr ""
+
+msgid "Apparel Models To Quote"
+msgstr ""
+
+msgid "Apparel Models To Review"
+msgstr ""
+
+msgid "Apparel Models To Study"
+msgstr ""
+
+msgid "Apparel Models To Validate"
+msgstr ""
+
+msgid "Apparel Shape"
+msgstr ""
+
+msgid "Apparel Shape Industrial Description"
+msgstr ""
+
+msgid "Apparel Shape List"
+msgstr ""
+
+msgid "Apparel Shape Module"
+msgstr ""
+
+msgid "Apparel Shape Owner"
+msgstr ""
+
+msgid "Apparel Shape Reference"
+msgstr ""
+
+msgid "Apparel Shape Taken"
+msgstr ""
+
+msgid "Apparel Shape to design"
+msgstr ""
+
+msgid "Apparel Shapes"
+msgstr ""
+
+msgid "Apparel Size"
+msgstr ""
+
+msgid "Apparel Size List"
+msgstr ""
+
+msgid "Apparel Size Module"
+msgstr ""
+
+msgid "Apparel Sizes"
+msgstr ""
+
+msgid "Apparel Technical Drawing"
+msgstr ""
+
+msgid "Apparel fabric"
+msgstr ""
+
+msgid "Apparel shape"
+msgstr ""
+
+msgid "Applied Rule"
+msgstr ""
+
+msgid "Apply Pay Sheet Model"
+msgstr ""
+
+msgid "Apply Purchase Trade Condition"
+msgstr ""
+
+msgid "Apply Sale Trade Condition"
+msgstr ""
+
+msgid "Apply Trade Condition"
+msgstr ""
+
+msgid "Approval Requested [state in ticket_workflow]"
+msgstr ""
+
+msgid "Approve"
+msgstr ""
+
+msgid "Approved"
+msgstr ""
+
+msgid "April"
+msgstr ""
+
 msgid "Archive"
 msgstr "Arquivar"
 
 msgid "Archive a document which has been replaced by a more recent version by setting the validation state to archived."
 msgstr "Arquiva um documento que tenha sido substituído por uma versão mais recente, definindo o estado como arquivado."
 
-msgid "Ascending Display"
+msgid "Archive Document Action"
+msgstr ""
+
+msgid "Archive Document Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Archive Document [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Archive [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Archived"
+msgstr ""
+
+msgid "Archived [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Area"
+msgstr ""
+
+msgid "Arguments"
+msgstr ""
+
+msgid "Articles"
+msgstr ""
+
+msgid "Ascending"
+msgstr ""
+
+msgid "Ask For Analyse"
+msgstr ""
+
+msgid "Ask For Modeling"
+msgstr ""
+
+msgid "Ask For Prototyping"
+msgstr ""
+
+msgid "Ask For Quotation"
+msgstr ""
+
+msgid "Ask for More Details"
+msgstr ""
+
+msgid "Assessment"
+msgstr ""
+
+msgid "Assessment Form"
+msgstr ""
+
+msgid "Asset"
 msgstr ""
 
 msgid "Assign"
 msgstr "Designar"
+
+msgid "Assign Bug"
+msgstr ""
+
+msgid "Assign Bug [transition in bug_workflow]"
+msgstr ""
+
+msgid "Assign Document Action [transition in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Assign Document [transition in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Assign Event"
+msgstr ""
+
+msgid "Assign Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Assign Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Assign Translation"
+msgstr ""
+
+msgid "Assign Translation Action"
+msgstr ""
+
+msgid "Assign Translation Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Assign Translation [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Assign for Translation"
+msgstr ""
+
+msgid "Assign to Ticket"
+msgstr ""
 
 msgid "Assigned"
 msgstr "Designado"
@@ -373,6 +967,15 @@ msgstr "Atribuído para"
 msgid "Assignment"
 msgstr "Atribuição"
 
+msgid "Assignment Start Date"
+msgstr ""
+
+msgid "Assignment Stop Date"
+msgstr ""
+
+msgid "Assignment Validation Workflow"
+msgstr ""
+
 msgid "Assignments"
 msgstr "Atribuições"
 
@@ -385,8 +988,35 @@ msgstr "Atributos"
 msgid "BT Title"
 msgstr "Título"
 
+msgid "Backup And Remove"
+msgstr ""
+
+msgid "Backup And Upgrade"
+msgstr ""
+
+msgid "Bad login provided."
+msgstr ""
+
 msgid "Balance"
 msgstr "Balanço"
+
+msgid "Balance Sheet"
+msgstr ""
+
+msgid "Balance Side Required"
+msgstr ""
+
+msgid "Balance Transaction"
+msgstr ""
+
+msgid "Balance Transaction Line"
+msgstr ""
+
+msgid "Balance Transaction Lines"
+msgstr ""
+
+msgid "Balance at Stop Date (${date})"
+msgstr ""
 
 msgid "Bank"
 msgstr "Banco"
@@ -394,8 +1024,26 @@ msgstr "Banco"
 msgid "Bank Account"
 msgstr "Conta Bancária"
 
+msgid "Bank Account ${bank_account_reference} is invalid."
+msgstr ""
+
+msgid "Bank Account ${bank_account_reference} uses ${bank_account_currency} as default currency."
+msgstr ""
+
+msgid "Bank Account Holder Name"
+msgstr ""
+
+msgid "Bank Account Key"
+msgstr ""
+
 msgid "Bank Account Number"
 msgstr "Número da Conta Bancária"
+
+msgid "Bank Account Title"
+msgstr ""
+
+msgid "Bank Account Type"
+msgstr ""
 
 msgid "Bank Accounts"
 msgstr "Contas Bancárias"
@@ -403,14 +1051,50 @@ msgstr "Contas Bancárias"
 msgid "Bank Code"
 msgstr "Número da agência"
 
-msgid "Bars"
+msgid "Bank Country Code"
+msgstr ""
+
+msgid "Bank account must be defined for bank type accounts"
+msgstr ""
+
+msgid "Base"
+msgstr ""
+
+msgid "Base Apparel Shape"
+msgstr ""
+
+msgid "Base Application"
 msgstr ""
 
 msgid "Base Categories"
 msgstr ""
 
+msgid "Base Category"
+msgstr ""
+
+msgid "Base Contribution"
+msgstr ""
+
+msgid "Base Contribution must be defined"
+msgstr ""
+
+msgid "Base Domain"
+msgstr ""
+
+msgid "Base Participation"
+msgstr ""
+
 msgid "Base Price"
 msgstr "Preço Base"
+
+msgid "Base Price Variation Axes"
+msgstr ""
+
+msgid "Base Salary"
+msgstr ""
+
+msgid "Base size"
+msgstr ""
 
 msgid "Begin"
 msgstr "Início"
@@ -418,28 +1102,223 @@ msgstr "Início"
 msgid "Begin Date"
 msgstr "Data de Início"
 
+msgid "Beginning of this career step"
+msgstr ""
+
+msgid "Bill Of Material Description"
+msgstr ""
+
+msgid "Bill of Materials and Operations"
+msgstr ""
+
+msgid "Billable Client"
+msgstr ""
+
+msgid "Billable Expense"
+msgstr ""
+
+msgid "Billing Supplier"
+msgstr ""
+
+msgid "Birth Date"
+msgstr ""
+
 msgid "Birth Name"
 msgstr "Nome de Solteira"
 
 msgid "Birthday"
 msgstr "Data de Nascimento"
 
+msgid "Birthplace"
+msgstr ""
+
+msgid "Block Account"
+msgstr ""
+
+msgid "Body"
+msgstr ""
+
+msgid "Both"
+msgstr ""
+
+msgid "Both sections must be defined for invoices"
+msgstr ""
+
 msgid "Branch Number"
 msgstr "Número da Agência"
 
+msgid "Brand"
+msgstr ""
+
+msgid "Brief description of the outcome of a project"
+msgstr ""
+
+msgid "Brief description of the outcome of the project"
+msgstr ""
+
+msgid "Brief title"
+msgstr ""
+
+msgid "Browse"
+msgstr ""
+
+msgid "Budget"
+msgstr ""
+
+msgid "Budget Cell"
+msgstr ""
+
+msgid "Budget Consumption"
+msgstr ""
+
+msgid "Budget Explanation"
+msgstr ""
+
+msgid "Budget Line"
+msgstr ""
+
+msgid "Budget Lines"
+msgstr ""
+
+msgid "Budget Model"
+msgstr ""
+
+msgid "Budget Models"
+msgstr ""
+
+msgid "Budget Module"
+msgstr ""
+
+msgid "Budget Situation"
+msgstr ""
+
+msgid "Budget Start Date"
+msgstr ""
+
+msgid "Budget Stop Date"
+msgstr ""
+
+msgid "Budget Transaction"
+msgstr ""
+
+msgid "Budget Transaction Module"
+msgstr ""
+
+msgid "Budget Transactions"
+msgstr ""
+
+msgid "Budget Transfert"
+msgstr ""
+
+msgid "Budget Transfert Line"
+msgstr ""
+
+msgid "Budget Type"
+msgstr ""
+
+msgid "Budget Variation"
+msgstr ""
+
+msgid "Budget Variations"
+msgstr ""
+
+msgid "Budget Workflow"
+msgstr ""
+
+msgid "Budget title"
+msgstr ""
+
+msgid "Budget to Submit"
+msgstr ""
+
+msgid "Budget transactions"
+msgstr ""
+
+msgid "Budgets"
+msgstr ""
+
+msgid "Bug"
+msgstr ""
+
+msgid "Bug Event workflow"
+msgstr ""
+
+msgid "Bug Line"
+msgstr ""
+
+msgid "Bug Lines to Send"
+msgstr ""
+
+msgid "Bug Module"
+msgstr ""
+
+msgid "Bug Workflow"
+msgstr ""
+
 msgid "Bugs"
+msgstr ""
+
+msgid "Bugs Assigned to Follow"
+msgstr ""
+
+msgid "Bugs to Follow"
+msgstr ""
+
+msgid "Bugs to Resolve"
+msgstr ""
+
+msgid "Bugs to Validate"
+msgstr ""
+
+msgid "Build Business Template"
+msgstr ""
+
+msgid "Build Business Template Action [transition in business_template_building_workflow]"
+msgstr ""
+
+msgid "Build Business Template [transition in business_template_building_workflow]"
+msgstr ""
+
+msgid "Building"
 msgstr ""
 
 msgid "Building State"
 msgstr ""
 
+msgid "Building [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Building is used when a packing list is confirmed, during the calculation process of ERP5. A building causality state indicates that the system is calculating whether the Packing list is convergent or divergent."
+msgstr ""
+
 msgid "Built"
+msgstr ""
+
+msgid "Built [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Business Field"
 msgstr ""
 
 msgid "Business Template"
 msgstr ""
 
+msgid "Business Template Building Workflow"
+msgstr ""
+
 msgid "Business Template Definition"
+msgstr ""
+
+msgid "Business Template ID"
+msgstr ""
+
+msgid "Business Template Installation Workflow"
+msgstr ""
+
+msgid "Business Template Name"
+msgstr ""
+
+msgid "Business Template Title"
 msgstr ""
 
 msgid "Business Templates"
@@ -450,6 +1329,54 @@ msgstr ""
 
 msgid "Buyer"
 msgstr "Comprador"
+
+msgid "CAD Library"
+msgstr ""
+
+msgid "CRM"
+msgstr ""
+
+msgid "CSV Style"
+msgstr ""
+
+msgid "Cache Duration"
+msgstr ""
+
+msgid "Cache Factories"
+msgstr ""
+
+msgid "Cache Factories List"
+msgstr ""
+
+msgid "Cache Factory"
+msgstr ""
+
+msgid "Cache Key"
+msgstr ""
+
+msgid "Cache Plugin Details"
+msgstr ""
+
+msgid "Cache Plugin Type"
+msgstr ""
+
+msgid "Cache Plugins"
+msgstr ""
+
+msgid "Cache Tool"
+msgstr ""
+
+msgid "Calculate Packing [transition in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Calculate Pay Sheet"
+msgstr ""
+
+msgid "Calculate the Pay Sheet Transaction"
+msgstr ""
+
+msgid "Calculated Price"
+msgstr ""
 
 msgid "Calculating"
 msgstr "Calculando"
@@ -466,6 +1393,129 @@ msgstr "Cancelar Ação"
 msgid "Cancel Assignment"
 msgstr "Cancelar atribuição"
 
+msgid "Cancel Assignment Action [transition in assignment_workflow]"
+msgstr ""
+
+msgid "Cancel Assignment [transition in assignment_workflow]"
+msgstr ""
+
+msgid "Cancel Budget"
+msgstr ""
+
+msgid "Cancel Budget Action"
+msgstr ""
+
+msgid "Cancel Career Step"
+msgstr ""
+
+msgid "Cancel Career Step Action [transition in career_workflow]"
+msgstr ""
+
+msgid "Cancel Career Step [transition in career_workflow]"
+msgstr ""
+
+msgid "Cancel Document Publication"
+msgstr ""
+
+msgid "Cancel Document Publication Action"
+msgstr ""
+
+msgid "Cancel Document Publication Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Cancel Document Publication [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Cancel Event"
+msgstr ""
+
+msgid "Cancel Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Cancel Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Cancel Inventory"
+msgstr ""
+
+msgid "Cancel Inventory Action [transition in inventory_workflow]"
+msgstr ""
+
+msgid "Cancel Inventory [transition in inventory_workflow]"
+msgstr ""
+
+msgid "Cancel Order"
+msgstr ""
+
+msgid "Cancel Order Action"
+msgstr ""
+
+msgid "Cancel Order Action [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Cancel Order Action [transition in order_workflow]"
+msgstr ""
+
+msgid "Cancel Order [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Cancel Order [transition in order_workflow]"
+msgstr ""
+
+msgid "Cancel Packing List"
+msgstr ""
+
+msgid "Cancel Packing List Action"
+msgstr ""
+
+msgid "Cancel Packing List Action [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Cancel Packing List [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Cancel Query Action [transition in query_workflow]"
+msgstr ""
+
+msgid "Cancel Query [transition in query_workflow]"
+msgstr ""
+
+msgid "Cancel Sale Opportunity Action [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Cancel Sale Opportunity [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Cancel Ticket"
+msgstr ""
+
+msgid "Cancel Ticket Action"
+msgstr ""
+
+msgid "Cancel Ticket Action [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Cancel Ticket [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Cancel Transaction"
+msgstr ""
+
+msgid "Cancel Transaction Action"
+msgstr ""
+
+msgid "Cancel Transaction Action [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Cancel Transaction [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Cancel [transition in bug_event_workflow]"
+msgstr ""
+
+msgid "Cancel [transition in bug_workflow]"
+msgstr ""
+
 msgid "Cancel a document in ERP5"
 msgstr "Cancelar um document no ERP5."
 
@@ -475,11 +1525,80 @@ msgstr "Cancelado"
 msgid "Cancelled"
 msgstr "Cancelado"
 
+msgid "Cancelled [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in accounting_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in assignment_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in bug_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in career_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in event_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in inventory_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in open_order_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in order_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in query_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in requirement_analysis_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in task_report_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in task_workflow]"
+msgstr ""
+
+msgid "Cancelled [state in ticket_workflow]"
+msgstr ""
+
+msgid "Cancelled."
+msgstr ""
+
+msgid "Cardholder Name"
+msgstr ""
+
 msgid "Career"
 msgstr "Carreira"
 
+msgid "Career Begin Date"
+msgstr ""
+
+msgid "Career Comments"
+msgstr ""
+
 msgid "Career End"
 msgstr "Final da Carreira"
+
+msgid "Career End Date"
+msgstr ""
 
 msgid "Career Function"
 msgstr "Função na Carreira"
@@ -487,7 +1606,64 @@ msgstr "Função na Carreira"
 msgid "Career Start"
 msgstr "Início da Carreira"
 
-msgid "Catalog Methods"
+msgid "Career Start Date"
+msgstr ""
+
+msgid "Career Step"
+msgstr ""
+
+msgid "Career Steps"
+msgstr ""
+
+msgid "Career Title"
+msgstr ""
+
+msgid "Career Validation Workflow"
+msgstr ""
+
+msgid "Career end"
+msgstr ""
+
+msgid "Careers"
+msgstr ""
+
+msgid "Cash"
+msgstr ""
+
+msgid "Cash Classification"
+msgstr ""
+
+msgid "Cash Exchange"
+msgstr ""
+
+msgid "Cash Extraction"
+msgstr ""
+
+msgid "Cash Extraction Line"
+msgstr ""
+
+msgid "Cash Extraction Module"
+msgstr ""
+
+msgid "Cash Register"
+msgstr ""
+
+msgid "Cash Status"
+msgstr ""
+
+msgid "Cash To Currency Purchase"
+msgstr ""
+
+msgid "Cash To Currency Sale"
+msgstr ""
+
+msgid "Cash Transfer"
+msgstr ""
+
+msgid "Cash Transfer Line"
+msgstr ""
+
+msgid "Cash Transfers"
 msgstr ""
 
 msgid "Categories"
@@ -496,8 +1672,47 @@ msgstr "Categorias"
 msgid "Category"
 msgstr "Categoria"
 
+msgid "Category Budget Variation"
+msgstr ""
+
+msgid "Category Divergence Tester"
+msgstr ""
+
+msgid "Category Fast Input"
+msgstr ""
+
+msgid "Category Item List Method"
+msgstr ""
+
+msgid "Category Tool"
+msgstr ""
+
 msgid "Causality"
 msgstr "Gerado de "
+
+msgid "Causality (Invoices ...)"
+msgstr ""
+
+msgid "Causality State"
+msgstr ""
+
+msgid "Causality Workflow"
+msgstr ""
+
+msgid "Causality workflow"
+msgstr ""
+
+msgid "Cell Level Divergences"
+msgstr ""
+
+msgid "Cells"
+msgstr ""
+
+msgid "Change Function"
+msgstr ""
+
+msgid "Change Language"
+msgstr ""
 
 msgid "Change Log"
 msgstr ""
@@ -508,11 +1723,65 @@ msgstr ""
 msgid "Change Password"
 msgstr "Trocar Senha"
 
+msgid "Change State"
+msgstr ""
+
+msgid "Changelog"
+msgstr ""
+
 msgid "Chat Address"
 msgstr "Endereço de bate-papo"
 
 msgid "Check All"
 msgstr "Marcar Todos"
+
+msgid "Checkbook"
+msgstr ""
+
+msgid "Checkbook Deliveries"
+msgstr ""
+
+msgid "Checkbook Delivery"
+msgstr ""
+
+msgid "Checkbook Delivery Module"
+msgstr ""
+
+msgid "Checkbook Reception"
+msgstr ""
+
+msgid "Checkbook Reception Module"
+msgstr ""
+
+msgid "Checkbook Request"
+msgstr ""
+
+msgid "Checkbook Request Module"
+msgstr ""
+
+msgid "Checkbook Requests"
+msgstr ""
+
+msgid "Checkbook Type"
+msgstr ""
+
+msgid "Checkbook Type Module"
+msgstr ""
+
+msgid "Checkbooks"
+msgstr ""
+
+msgid "Checkbox field used to define whether the default page should be displayed."
+msgstr ""
+
+msgid "Checkbox field used to determine if the metric type of the resource is the default measure"
+msgstr ""
+
+msgid "Checkbox field used to force authorization for anonymous user if document can not be found"
+msgstr ""
+
+msgid "Checked if the bank account has an overdraft facility."
+msgstr ""
 
 msgid "Children"
 msgstr "Crianças"
@@ -529,8 +1798,26 @@ msgstr ""
 msgid "Clean Up SVN Locks"
 msgstr ""
 
+msgid "Cleaning Code"
+msgstr ""
+
+msgid "Cleanup Descriptions"
+msgstr ""
+
+msgid "Click here to contribute by email."
+msgstr ""
+
 msgid "Client"
 msgstr "Cliente"
+
+msgid "Client Account"
+msgstr ""
+
+msgid "Client Administrator"
+msgstr ""
+
+msgid "Client Bank Account"
+msgstr ""
 
 msgid "Client Project"
 msgstr "Projeto do Cliente"
@@ -538,8 +1825,71 @@ msgstr "Projeto do Cliente"
 msgid "Client Reference"
 msgstr "Referência do Cliente"
 
+msgid "Client Transaction Reference"
+msgstr ""
+
+msgid "Client must be defined"
+msgstr ""
+
+msgid "Client must be validated"
+msgstr ""
+
+msgid "Clients"
+msgstr ""
+
+msgid "Clone"
+msgstr ""
+
+msgid "Clone Ticket and Events"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Close Accounting Period"
+msgstr ""
+
+msgid "Close Accounting Period Action"
+msgstr ""
+
+msgid "Close Accounting Period Action [transition in accounting_period_workflow]"
+msgstr ""
+
+msgid "Close Accounting Period [transition in accounting_period_workflow]"
+msgstr ""
+
+msgid "Close Accounting Transaction"
+msgstr ""
+
+msgid "Close Bug"
+msgstr ""
+
+msgid "Close Bug [transition in bug_workflow]"
+msgstr ""
+
+msgid "Close Project"
+msgstr ""
+
 msgid "Close Task"
 msgstr "Fechar Tarefa"
+
+msgid "Close Ticket"
+msgstr ""
+
+msgid "Close Ticket Action"
+msgstr ""
+
+msgid "Close Ticket Action [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Close Ticket [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Close action will close either an accounting period, a transaction or an account. Those documents cannot be modified anymore, except the accounting period that can be reopened,"
+msgstr ""
+
+msgid "Close the accounting period, can't be reopened later, no more transaction can be input on this accounting period"
+msgstr ""
 
 msgid "Closed"
 msgstr "Fechado"
@@ -564,6 +1914,15 @@ msgstr "Comentários que podem ser lidos por usuários internos, mas ao contrár
 
 msgid "Component"
 msgstr "Componente"
+
+msgid "Component Individual Variation"
+msgstr ""
+
+msgid "Component Individual Variations"
+msgstr ""
+
+msgid "Component List"
+msgstr ""
 
 msgid "Component Module"
 msgstr "Módulo de Componentes"
@@ -654,26 +2013,251 @@ msgstr "Nome Corporativo"
 msgid "Corporate Registration Code"
 msgstr "CNPJ"
 
+msgid "Count"
+msgstr ""
+
+msgid "Counter"
+msgstr ""
+
+msgid "Counterpart Account"
+msgstr ""
+
+msgid "Counters"
+msgstr ""
+
 msgid "Country"
 msgstr "País"
+
+msgid "Country of origin"
+msgstr ""
+
+msgid "Country prefix"
+msgstr ""
+
+msgid "Crawl"
+msgstr ""
+
+msgid "Crawl Content"
+msgstr ""
+
+msgid "Crawled Content"
+msgstr ""
+
+msgid "Crawling Depth"
+msgstr ""
+
+msgid "Crawling Scope"
+msgstr ""
+
+msgid "Create Default Web Page"
+msgstr ""
+
+msgid "Create Document"
+msgstr ""
+
+msgid "Create Follow Up Ticket"
+msgstr ""
+
+msgid "Create Follow Up Ticket Action"
+msgstr ""
+
+msgid "Create Initial Balance Transaction"
+msgstr ""
 
 msgid "Create Module"
 msgstr "Criar Módulo"
 
+msgid "Create New Bug"
+msgstr ""
+
+msgid "Create New Document"
+msgstr ""
+
+msgid "Create New Documents"
+msgstr ""
+
+msgid "Create New Event"
+msgstr ""
+
+msgid "Create New Events"
+msgstr ""
+
+msgid "Create New File"
+msgstr ""
+
+msgid "Create New Module"
+msgstr ""
+
+msgid "Create New Web Page"
+msgstr ""
+
+msgid "Create Pay Sheet Line"
+msgstr ""
+
+msgid "Create Related Event"
+msgstr ""
+
+msgid "Create Related Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Create Related Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Create Related Payment"
+msgstr ""
+
+msgid "Create Related Payments"
+msgstr ""
+
+msgid "Create Reversal Transaction"
+msgstr ""
+
+msgid "Create Reversal Transactions"
+msgstr ""
+
 msgid "Create Sale Opportunity"
 msgstr "Criar Oportunidade de Venda"
+
+msgid "Create Secondary Periods"
+msgstr ""
+
+msgid "Create Snapshot"
+msgstr ""
+
+msgid "Create Terms"
+msgstr ""
+
+msgid "Create Terms from English Ones for Translation"
+msgstr ""
+
+msgid "Create User"
+msgstr ""
+
+msgid "Create User Action [transition in user_account_workflow]"
+msgstr ""
+
+msgid "Create User [transition in user_account_workflow]"
+msgstr ""
+
+msgid "Create Your New Account"
+msgstr ""
+
+msgid "Create a New Event for Reply"
+msgstr ""
+
+msgid "Create a Task"
+msgstr ""
+
+msgid "Created After"
+msgstr ""
+
+msgid "Created Before"
+msgstr ""
+
+msgid "Created Clone ${portal_type}."
+msgstr ""
+
+msgid "Created and associated ${count} new events to the selected ticket."
+msgstr ""
+
+msgid "Created and associated a new ${portal_type} to the ticket."
+msgstr ""
+
+msgid "Created by"
+msgstr ""
+
+msgid "Creates a simulation movement with the difference between prevision and current, allows to postpone part of delivery of a sale packing list"
+msgstr ""
+
+msgid "Creating"
+msgstr ""
+
+msgid "Creating a balance transaction is only required to set openning balances for the first period. Balance Transaction will be created automatically when closing accounting periods."
+msgstr ""
 
 msgid "Creation Date"
 msgstr "Data de Criação"
 
+msgid "Creation date"
+msgstr ""
+
+msgid "Credential Question"
+msgstr ""
+
+msgid "Credential Recoveries"
+msgstr ""
+
+msgid "Credential Recoveries to Approve"
+msgstr ""
+
+msgid "Credential Recoveries to Close"
+msgstr ""
+
+msgid "Credential Recoveries to Submit"
+msgstr ""
+
+msgid "Credential Recovery"
+msgstr ""
+
+msgid "Credential Request"
+msgstr ""
+
+msgid "Credential Request Created."
+msgstr ""
+
+msgid "Credential Requests"
+msgstr ""
+
+msgid "Credential Requests to Approve"
+msgstr ""
+
+msgid "Credential Requests to Close"
+msgstr ""
+
+msgid "Credential Requests to Submit"
+msgstr ""
+
+msgid "Credential Update"
+msgstr ""
+
+msgid "Credential Update Created."
+msgstr ""
+
+msgid "Credential Updates"
+msgstr ""
+
+msgid "Credential Updates to Approve"
+msgstr ""
+
+msgid "Credential Updates to Close"
+msgstr ""
+
+msgid "Credential Updates to Submit"
+msgstr ""
+
 msgid "Credit"
 msgstr "Crédito"
+
+msgid "Credit Account"
+msgstr ""
+
+msgid "Credit Balance"
+msgstr ""
 
 msgid "Credit Card"
 msgstr "Cartão de Crédito"
 
+msgid "Credit Card Number"
+msgstr ""
+
+msgid "Credit Card Type"
+msgstr ""
+
 msgid "Credit Normal Balance"
 msgstr "Balanço Normal de Crédito"
+
+msgid "Credit Transactions"
+msgstr ""
 
 msgid "Currencies"
 msgstr "Moedas correntes"
@@ -684,11 +2268,110 @@ msgstr "Moeda Corrente"
 msgid "Currency Code"
 msgstr "Código da moeda"
 
+msgid "Currency Exchange Cell"
+msgstr ""
+
+msgid "Currency Exchange Cells"
+msgstr ""
+
+msgid "Currency Exchange Line"
+msgstr ""
+
+msgid "Currency Exchange Lines"
+msgstr ""
+
+msgid "Currency Exchange Rates"
+msgstr ""
+
+msgid "Currency ISO Code"
+msgstr ""
+
+msgid "Currency List"
+msgstr ""
+
+msgid "Currency Module"
+msgstr ""
+
+msgid "Currency Purchase"
+msgstr ""
+
+msgid "Currency Sale"
+msgstr ""
+
 msgid "Currency Symbol"
 msgstr "Símbolo Monetário"
 
+msgid "Currency must be defined"
+msgstr ""
+
+msgid "Currency must be defined in preferences."
+msgstr ""
+
 msgid "Current"
 msgstr "Corrente"
+
+msgid "Current Budget"
+msgstr ""
+
+msgid "Current Description"
+msgstr ""
+
+msgid "Current Editing State"
+msgstr ""
+
+msgid "Current Function"
+msgstr ""
+
+msgid "Current Period"
+msgstr ""
+
+msgid "Current Value"
+msgstr ""
+
+msgid "Current [state in edit_workflow]"
+msgstr ""
+
+msgid "Current career comments"
+msgstr ""
+
+msgid "Current career must exist."
+msgstr ""
+
+msgid "Current grade"
+msgstr ""
+
+msgid "Current organisation"
+msgstr ""
+
+msgid "Current salary coefficient"
+msgstr ""
+
+msgid "Current salary level"
+msgstr ""
+
+msgid "Current skills"
+msgstr ""
+
+msgid "Customer"
+msgstr ""
+
+msgid "Customer Account"
+msgstr ""
+
+msgid "Customer Colour"
+msgstr ""
+
+msgid "Customer Measure"
+msgstr ""
+
+msgid "Customer Reference"
+msgstr ""
+
+msgid "Customer Size"
+msgstr ""
+
+msgid "Customer reference"
+msgstr ""
 
 msgid "Cut"
 msgstr "Cortar"
@@ -714,17 +2397,50 @@ msgstr "Data em que a conta bancária foi encerrada"
 msgid "Date at which the bank account has been opened"
 msgstr "Data na qual a conta bancária foi aberta."
 
+msgid "Date at which the bug was submitted"
+msgstr ""
+
 msgid "Date at which the document was ingested"
 msgstr "Data em que o documento foi inserido"
 
 msgid "Date at which the invoice was shipped"
 msgstr "Data em que a fatura foi enviada"
 
+msgid "Date has expire."
+msgstr ""
+
+msgid "Date is not in a started Accounting Period for destination section."
+msgstr ""
+
+msgid "Date is not in a started Accounting Period for source section."
+msgstr ""
+
+msgid "Date must be defined"
+msgstr ""
+
+msgid "Date transaction takes effect"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
 msgid "Day / Month / Year"
 msgstr "Dia / Mês / Ano"
 
+msgid "Days"
+msgstr ""
+
+msgid "Days Of Month"
+msgstr ""
+
+msgid "Days Of Week"
+msgstr ""
+
 msgid "Debit"
 msgstr "Débito"
+
+msgid "Debit Balance"
+msgstr ""
 
 msgid "Debit Limit"
 msgstr "Limite de Débito"
@@ -768,12 +2484,242 @@ msgstr "Define quem irá receber a fatura."
 msgid "Delete"
 msgstr "Apagar"
 
+msgid "Delete Account Action [transition in account_workflow]"
+msgstr ""
+
+msgid "Delete Account [transition in account_workflow]"
+msgstr ""
+
+msgid "Delete Accounting Period Action [transition in accounting_period_workflow]"
+msgstr ""
+
+msgid "Delete Accounting Period [transition in accounting_period_workflow]"
+msgstr ""
+
+msgid "Delete Action [transition in inventory_workflow]"
+msgstr ""
+
+msgid "Delete Action [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Delete Action [transition in order_workflow]"
+msgstr ""
+
+msgid "Delete Action [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Delete Action [transition in rule_validation_workflow]"
+msgstr ""
+
+msgid "Delete Action [transition in validation_workflow]"
+msgstr ""
+
+msgid "Delete Assignment Action [transition in assignment_workflow]"
+msgstr ""
+
+msgid "Delete Business Template Action [transition in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Delete Business Template [transition in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Delete Document Action [transition in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Delete Document Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Delete Document [transition in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Delete Document [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Delete Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Delete Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Delete Message Action [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Delete Message [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Delete Objects"
+msgstr ""
+
+msgid "Delete Preference Action [transition in preference_workflow]"
+msgstr ""
+
+msgid "Delete Preference [transition in preference_workflow]"
+msgstr ""
+
+msgid "Delete Query Action [transition in query_workflow]"
+msgstr ""
+
+msgid "Delete Query [transition in query_workflow]"
+msgstr ""
+
+msgid "Delete Sale Opportunity Action [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Delete Sale Opportunity [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Delete The Objects"
+msgstr ""
+
+msgid "Delete Ticket Action [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Delete Ticket [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Delete Transaction Action [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Delete [transition in bug_workflow]"
+msgstr ""
+
+msgid "Delete [transition in inventory_workflow]"
+msgstr ""
+
+msgid "Delete [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Delete [transition in order_workflow]"
+msgstr ""
+
+msgid "Delete [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Delete [transition in rule_validation_workflow]"
+msgstr ""
+
+msgid "Delete [transition in validation_workflow]"
+msgstr ""
+
 msgid "Delete a document in ERP5"
 msgstr "Apagar um documento no ERP5"
 
 msgid "Deleted"
 msgstr "Apagado"
 
+msgid "Deleted [state in account_workflow]"
+msgstr ""
+
+msgid "Deleted [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Deleted [state in accounting_workflow]"
+msgstr ""
+
+msgid "Deleted [state in assignment_workflow]"
+msgstr ""
+
+msgid "Deleted [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Deleted [state in bug_workflow]"
+msgstr ""
+
+msgid "Deleted [state in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Deleted [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Deleted [state in event_workflow]"
+msgstr ""
+
+msgid "Deleted [state in inventory_workflow]"
+msgstr ""
+
+msgid "Deleted [state in knowledge_pad_validation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Deleted [state in open_order_workflow]"
+msgstr ""
+
+msgid "Deleted [state in order_workflow]"
+msgstr ""
+
+msgid "Deleted [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Deleted [state in preference_workflow]"
+msgstr ""
+
+msgid "Deleted [state in project_workflow]"
+msgstr ""
+
+msgid "Deleted [state in query_workflow]"
+msgstr ""
+
+msgid "Deleted [state in requirement_analysis_workflow]"
+msgstr ""
+
+msgid "Deleted [state in rule_validation_workflow]"
+msgstr ""
+
+msgid "Deleted [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Deleted [state in task_report_workflow]"
+msgstr ""
+
+msgid "Deleted [state in task_workflow]"
+msgstr ""
+
+msgid "Deleted [state in ticket_workflow]"
+msgstr ""
+
+msgid "Deleted [state in validation_workflow]"
+msgstr ""
+
+msgid "Deleted objects: ${object_ids}"
+msgstr ""
+
+msgid "Deleted."
+msgstr ""
+
+msgid "Deliver"
+msgstr ""
+
+msgid "Deliver Event"
+msgstr ""
+
+msgid "Deliver Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Deliver Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Deliver Packing List"
+msgstr ""
+
+msgid "Deliver Packing List Action"
+msgstr ""
+
+msgid "Deliver Packing List Action [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Deliver Packing List [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Deliver [transition in bug_event_workflow]"
+msgstr ""
+
+msgid "Deliver to"
+msgstr ""
 msgid "Deliverable to"
 msgstr "Entregue para"
 
@@ -786,17 +2732,132 @@ msgstr "Entregar"
 msgid "Delivery Date"
 msgstr "Data de Entrega"
 
+msgid "Delivery Date must be after Shipping Date"
+msgstr ""
+
+msgid "Delivery Date must be defined"
+msgstr ""
+
+msgid "Delivery Interaction Workflow"
+msgstr ""
+
+msgid "Delivery Level Divergences"
+msgstr ""
+
+msgid "Delivery Line"
+msgstr ""
+
+msgid "Delivery Line Title"
+msgstr ""
+
 msgid "Delivery Mode"
 msgstr "Modo de Entrega"
+
+msgid "Delivery Movement Interaction Workflow"
+msgstr ""
+
+msgid "Delivery Rule"
+msgstr ""
+
+msgid "Delivery State"
+msgstr ""
+
+msgid "Delivery Title"
+msgstr ""
+
+msgid "Delivery Tool"
+msgstr ""
 
 msgid "Dependencies"
 msgstr "Dependências"
 
+msgid "Descending"
+msgstr ""
+
 msgid "Description"
 msgstr "Descrição"
 
+msgid "Description of project line."
+msgstr ""
+
+msgid "Descriptions cleaned up."
+msgstr ""
+
+#: [Glossary term 11681]
+msgid "Designation"
+msgstr ""
+
+msgid "Designed"
+msgstr ""
+
+msgid "Desired Login Name"
+msgstr ""
+
 msgid "Destination"
 msgstr "Destino"
+
+msgid "Destination Account"
+msgstr ""
+
+msgid "Destination Accounting Operation Date"
+msgstr ""
+
+msgid "Destination Administration"
+msgstr ""
+
+msgid "Destination Conversion"
+msgstr ""
+
+msgid "Destination Payment"
+msgstr ""
+
+msgid "Destination Price Currency"
+msgstr ""
+
+msgid "Destination Reference"
+msgstr ""
+
+msgid "Destination Section"
+msgstr ""
+
+msgid "Destination Vault"
+msgstr ""
+
+msgid "Destination administration organisation"
+msgstr ""
+
+msgid "Destination administration person"
+msgstr ""
+
+msgid "Destination client of the invoice"
+msgstr ""
+
+msgid "Destination conversion should not be set."
+msgstr ""
+
+msgid "Destination decision organisation"
+msgstr ""
+
+msgid "Destination decision person"
+msgstr ""
+
+msgid "Destination payment"
+msgstr ""
+
+msgid "Destination section"
+msgstr ""
+
+msgid "Destination site"
+msgstr ""
+
+msgid "Detail Analytics"
+msgstr ""
+
+msgid "Detailed Beginning Balance"
+msgstr ""
+
+msgid "Detailed Report"
+msgstr ""
 
 msgid "Details"
 msgstr "Detalhes"
@@ -807,7 +2868,25 @@ msgstr "Detectar Arquivo Convertido"
 msgid "Detect Uploaded File"
 msgstr "Detectar Arquivo Carregado"
 
-msgid "Diff BusinessTemplate"
+msgid "Diff Business Template"
+msgstr ""
+
+msgid "Diff Two Objects"
+msgstr ""
+
+msgid "Differences"
+msgstr ""
+
+msgid "Difficulty"
+msgstr ""
+
+msgid "Dig"
+msgstr ""
+
+msgid "Dimension"
+msgstr ""
+
+msgid "Direction"
 msgstr ""
 
 msgid "Disable"
@@ -828,11 +2907,62 @@ msgstr "Linha de Desconto"
 msgid "Discount Model Line"
 msgstr "Linha de Modelo de Desconto"
 
+msgid "Discount Module"
+msgstr ""
+
+msgid "Discount Ratio"
+msgstr ""
+
+msgid "Discount Ratio Quantity Step"
+msgstr ""
+
+msgid "Discount Ratio Variation Axes"
+msgstr ""
+
+msgid "Discount Type"
+msgstr ""
+
 msgid "Discounts"
 msgstr "Descontos"
 
+msgid "Display Default Page"
+msgstr ""
+
+msgid "Display Method ID"
+msgstr ""
+
+msgid "Distributed Ram Cache"
+msgstr ""
+
+msgid "Distributed Ram Cache Plugin"
+msgstr ""
+
 msgid "Diverged"
 msgstr "Divergente"
+
+msgid "Diverged [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Divergence"
+msgstr ""
+
+msgid "Divergence Messages"
+msgstr ""
+
+msgid "Divergence Scope"
+msgstr ""
+
+msgid "Divergence Tester"
+msgstr ""
+
+msgid "Divergence Testers"
+msgstr ""
+
+msgid "Divergences"
+msgstr ""
+
+msgid "Divergent [transition in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Do not forget to logout or exit your browser when you are done."
 msgstr "Não esqueça de sair do sistema quando você terminar."
@@ -855,6 +2985,111 @@ msgstr "Documentos neste estado foram apagados pelo usuário como resultado de c
 msgid "Draft"
 msgstr "Rascunho"
 
+msgid "Draft Campaigns"
+msgstr ""
+
+msgid "Draft Events"
+msgstr ""
+
+msgid "Draft Meetings"
+msgstr ""
+
+msgid "Draft Support Requests"
+msgstr ""
+
+msgid "Draft To Validate"
+msgstr ""
+
+msgid "Draft [state in account_workflow]"
+msgstr ""
+
+msgid "Draft [state in accounting_period_workflow]"
+msgstr ""
+
+msgid "Draft [state in accounting_workflow]"
+msgstr ""
+
+msgid "Draft [state in assignment_workflow]"
+msgstr ""
+
+msgid "Draft [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Draft [state in bug_workflow]"
+msgstr ""
+
+msgid "Draft [state in business_template_building_workflow]"
+msgstr ""
+
+msgid "Draft [state in career_workflow]"
+msgstr ""
+
+msgid "Draft [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Draft [state in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Draft [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Draft [state in event_workflow]"
+msgstr ""
+
+msgid "Draft [state in external_document_publication_workflow]"
+msgstr ""
+
+msgid "Draft [state in inventory_workflow]"
+msgstr ""
+
+msgid "Draft [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Draft [state in open_order_workflow]"
+msgstr ""
+
+msgid "Draft [state in order_workflow]"
+msgstr ""
+
+msgid "Draft [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Draft [state in project_workflow]"
+msgstr ""
+
+msgid "Draft [state in publication_workflow]"
+msgstr ""
+
+msgid "Draft [state in query_workflow]"
+msgstr ""
+
+msgid "Draft [state in requirement_analysis_workflow]"
+msgstr ""
+
+msgid "Draft [state in rule_validation_workflow]"
+msgstr ""
+
+msgid "Draft [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Draft [state in task_report_workflow]"
+msgstr ""
+
+msgid "Draft [state in task_workflow]"
+msgstr ""
+
+msgid "Draft [state in ticket_workflow]"
+msgstr ""
+
+msgid "Draft [state in user_account_workflow]"
+msgstr ""
+
+msgid "Draft [state in validation_workflow]"
+msgstr ""
+
+msgid "Drafts to Publish"
+msgstr ""
+
 msgid "Drafts to Validate"
 msgstr "Rasculhos para Validar"
 
@@ -867,8 +3102,29 @@ msgstr "ERP5"
 msgid "ERP5 Modules"
 msgstr "Módulos ERP5"
 
+msgid "ERP5 Site"
+msgstr ""
+
+msgid "Earned on this period"
+msgstr ""
+
+msgid "Economic Class"
+msgstr ""
+
 msgid "Edit"
 msgstr "Editar"
+
+msgid "Edit ${portal_type}"
+msgstr ""
+
+msgid "Edit Action [transition in edit_workflow]"
+msgstr ""
+
+msgid "Edit Business Template [transition in business_template_building_workflow]"
+msgstr ""
+
+msgid "Edit Parent ${portal_type}"
+msgstr ""
 
 msgid "Edit Portal Type '${portal_type}'"
 msgstr ""
@@ -876,23 +3132,122 @@ msgstr ""
 msgid "Edit Workflow"
 msgstr "Workflow de edição "
 
+msgid "Edit [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Edit [transition in edit_workflow]"
+msgstr ""
+
+msgid "Edit [transition in processing_status_workflow]"
+msgstr ""
+
+msgid "Editable"
+msgstr ""
+
 msgid "Effective Date"
 msgstr "Data de Efetivação"
+
+msgid "Efficiency"
+msgstr ""
 
 msgid "Efficiency (%)"
 msgstr "Eficiência (%)"
 
+msgid "Efficiency (coef.)"
+msgstr ""
+
+msgid "Eip"
+msgstr ""
+
 msgid "Email"
 msgstr "Email"
+
+msgid "Email Confirmation"
+msgstr ""
+
+msgid "Email Ingestion Address"
+msgstr ""
+
+msgid "Email notification about document ingestion"
+msgstr ""
+
+msgid "Embed Category Action [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Embed Category [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Embed [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Embed [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Embedded"
+msgstr ""
 
 msgid "Embedded Document"
 msgstr "Document Embutido"
 
+msgid "Embedded Document [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Embedded [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Emission Letter"
+msgstr ""
+
+msgid "Emit"
+msgstr ""
+
+msgid "Emit date"
+msgstr ""
+
+msgid "Emitted"
+msgstr ""
+
+msgid "Employee"
+msgstr ""
+
+msgid "Employee Name"
+msgstr ""
+
 msgid "Employee Number"
 msgstr "Número do Funcionário"
 
+msgid "Employee Share"
+msgstr ""
+
+msgid "Employee Share Amount"
+msgstr ""
+
+msgid "Employee Share Rate"
+msgstr ""
+
+msgid "Employer"
+msgstr ""
+
+msgid "Employer Share"
+msgstr ""
+
+msgid "Employer Share Amount"
+msgstr ""
+
+msgid "Employer Share Rate"
+msgstr ""
+
 msgid "Empty"
 msgstr "Vazio"
+
+msgid "Empty [state in processing_status_workflow]"
+msgstr ""
+
+msgid "Empty lines deleted."
+msgstr ""
+
+msgid "Empty+lines+deleted."
+msgstr ""
 
 msgid "Enable"
 msgstr "Habilitar"
@@ -900,11 +3255,19 @@ msgstr "Habilitar"
 msgid "Enable Preference"
 msgstr "Habilitar Preferência"
 
+msgid "Enable Preference Action [transition in preference_workflow]"
+msgstr ""
+
+msgid "Enable Preference [transition in preference_workflow]"
+msgstr ""
+
 msgid "Enabled"
 msgstr "Habilitado"
 
 msgid "Enables a \"global\" preference"
 msgstr "Habilita a preferência como global"
+msgid "Enabled [state in preference_workflow]"
+msgstr ""
 
 msgid "Enables a preference"
 msgstr "Habilitar preferência"
@@ -918,17 +3281,107 @@ msgstr "Data de Fim"
 msgid "End of Month"
 msgstr "Final do Mês"
 
+msgid "End of current career step"
+msgstr ""
+
+msgid "End of this current career step"
+msgstr ""
+
+msgid "Engaged"
+msgstr ""
+
+msgid "Engaged Budget"
+msgstr ""
+
 msgid "English"
 msgstr "Inglês"
+
+msgid "Enquire"
+msgstr ""
+
+msgid "Enquire Sale Opportunity Action [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Enquire Sale Opportunity [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Enquired"
+msgstr ""
+
+msgid "Enquired [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Entity"
+msgstr ""
+
+msgid "Entity Role"
+msgstr ""
+
+msgid "Equals To"
+msgstr ""
+
+msgid "Equity"
+msgstr ""
+
+msgid "Equity + Liability"
+msgstr ""
+
+msgid "Errand ratio"
+msgstr ""
 
 msgid "Error Message"
 msgstr "Mensagem de erro"
 
+msgid "Error: ChangeLog message can not be empty."
+msgstr ""
+
+msgid "Estimated Begin Date"
+msgstr ""
+
+msgid "Estimated End Date"
+msgstr ""
+
 msgid "Estimated Time"
 msgstr "Tempo Estimado"
 
+msgid "Evaluate"
+msgstr ""
+
+msgid "Event"
+msgstr ""
+
+msgid "Event Activity"
+msgstr ""
+
+msgid "Event Date"
+msgstr ""
+
+msgid "Event Detailed Report"
+msgstr ""
+
+msgid "Event Direction"
+msgstr ""
+
 msgid "Event Module"
 msgstr "Módulo de Eventos"
+
+msgid "Event Nature"
+msgstr ""
+
+msgid "Event Origin"
+msgstr ""
+
+msgid "Event Preview"
+msgstr ""
+
+msgid "Event Sender Email"
+msgstr ""
+
+msgid "Event Title"
+msgstr ""
+
+msgid "Event Type"
+msgstr ""
 
 msgid "Events"
 msgstr "Eventos"
@@ -936,14 +3389,98 @@ msgstr "Eventos"
 msgid "Events in this state are incoming events or carbon copies of outgoing events received through the email interface of ERP5 CRM."
 msgstr "Eventos neste estado são os eventos de entrada ou cópias de carbono de eventos de saída recebidos através da interface do e-mail do ERP5 CRM."
 
+msgid "Events in this state are incoming events or carbon copies of outgoing events which have been responded and which do not need further processing through assignment. "
+msgstr ""
+
+msgid "Events in this state are outgoing events which have been assigned and are waiting to be sent."
+msgstr ""
+
+msgid "Events in this state are outgoing events which were posted. Some events may be delivered later, whenever the recipient confirms he received them."
+msgstr ""
+
+msgid "Everybody"
+msgstr ""
+
+msgid "Everything"
+msgstr ""
+
+msgid "Exact Match"
+msgstr ""
+
+msgid "Exchange"
+msgstr ""
+
+msgid "Exchange Rage"
+msgstr ""
+
 msgid "Exchange Rate"
 msgstr "Taxa de Câmbio"
+
+msgid "Exchange Type"
+msgstr ""
+
+msgid "Exclusive Discount Ratio"
+msgstr ""
+
+msgid "Existing users please log in by entering your email adress and password in the two fields below."
+msgstr ""
+
+msgid "Exit Preview"
+msgstr ""
+
+msgid "Expand Other Parties Accounts"
+msgstr ""
+
+msgid "Expanded Transformation"
+msgstr ""
+
+msgid "Expanded View"
+msgstr ""
+
+msgid "Expanded view"
+msgstr ""
+
+msgid "Expense"
+msgstr ""
 
 msgid "Expenses"
 msgstr "Despesas"
 
 msgid "Expiration Date"
 msgstr "Data de Expiração"
+
+msgid "Expire"
+msgstr ""
+
+msgid "Expire Category Action [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Expire Category [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Expire Event"
+msgstr ""
+
+msgid "Expire Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Expire Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Expire Protected Category [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Expire Published Category [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Expire Sale Opportunity Action [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Expire Sale Opportunity [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Expire [transition in category_publication_workflow]"
+msgstr ""
 
 msgid "Expired"
 msgstr "Expirado"
@@ -954,8 +3491,74 @@ msgstr "Explica o qual é o resultado esperado para esta linha de projeto."
 msgid "Export XMI File"
 msgstr "Exportar Arquivo XMI"
 
+msgid "Expired [state in event_workflow]"
+msgstr ""
+
+msgid "Expired [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Expired [state in event_workflow]"
+msgstr ""
+
+msgid "Expired [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Explanation"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Export Business Template"
+msgstr ""
+
+msgid "Export Format"
+msgstr ""
+
+msgid "Export Mode"
+msgstr ""
+
+msgid "Export Terms As PO File"
+msgstr ""
+
+msgid "Export Terms as PO File"
+msgstr ""
+
+msgid "Export to Spreadsheet"
+msgstr ""
+
+msgid "Express Support"
+msgstr ""
+
 msgid "Extension"
 msgstr "Ramal"
+
+msgid "External Document Publication Workflow"
+msgstr ""
+
+msgid "External Folder"
+msgstr ""
+
+msgid "External Processing Workflow"
+msgstr ""
+
+msgid "External Source Content"
+msgstr ""
+
+msgid "External Source List"
+msgstr ""
+
+msgid "External Source Module"
+msgstr ""
+
+msgid "External Source View"
+msgstr ""
+
+msgid "External Sources"
+msgstr ""
+
+msgid "Extract [transition in document_publication_workflow]"
+msgstr ""
 
 msgid "FAX"
 msgstr "Fax"
@@ -981,14 +3584,68 @@ msgstr "Características"
 msgid "File"
 msgstr "Arquivo"
 
+msgid "File History"
+msgstr ""
+
+msgid "File Name"
+msgstr ""
+
+msgid "File Path"
+msgstr ""
+
+msgid "File State"
+msgstr ""
+
+msgid "File Type"
+msgstr ""
+
+msgid "File committed"
+msgstr ""
+
+msgid "File format:"
+msgstr ""
+
+msgid "File to upload"
+msgstr ""
+
+msgid "File uploaded."
+msgstr ""
+
+msgid "FileName"
+msgstr ""
+
+msgid "Filename"
+msgstr ""
+
+msgid "Filename parsing regular expression"
+msgstr ""
+
 msgid "Files"
 msgstr "Arquivos"
 
-msgid "Files And Images"
+msgid "Files and Images"
 msgstr "Arquivos e Imagens"
+
+msgid "Files commited successfully."
+msgstr ""
+
+msgid "Fill your login and new password."
+msgstr ""
 
 msgid "Filter"
 msgstr "Filtrar"
+
+msgid "Final Balance (Credit)"
+msgstr ""
+
+msgid "Final Balance (Debit)"
+msgstr ""
+
+msgid "Final Credit Balance"
+msgstr ""
+
+msgid "Final Debit Balance"
+msgstr ""
 
 msgid "Financial Information"
 msgstr "Informações Financeiras"
@@ -998,6 +3655,30 @@ msgstr "Informações Financeiras"
 
 msgid "Find"
 msgstr "Procurar"
+
+msgid "Find Terms"
+msgstr ""
+
+msgid "Find Terms from Property Sheet"
+msgstr ""
+
+msgid "Find Terms from Workflows"
+msgstr ""
+
+msgid "Finish Task"
+msgstr ""
+
+msgid "Finish Translation"
+msgstr ""
+
+msgid "Finish Translation Action"
+msgstr ""
+
+msgid "Finish Translation Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Finish Translation [transition in document_publication_workflow]"
+msgstr ""
 
 msgid "Finish the work"
 msgstr "Terminar o Trabalho"
@@ -1011,6 +3692,21 @@ msgstr "Primeiro Nome"
 msgid "First name."
 msgstr "Primeiro Nome."
 
+msgid "Fiscal Report"
+msgstr ""
+
+msgid "Flat List"
+msgstr ""
+
+msgid "Float Quantity Style"
+msgstr ""
+
+msgid "Flow Capacity (obsolete - use Supply Line)"
+msgstr ""
+
+msgid "Flow capacity"
+msgstr ""
+
 msgid "Folder"
 msgstr "Pasta"
 
@@ -1019,6 +3715,27 @@ msgstr ""
 
 msgid "Format"
 msgstr "Formato"
+
+msgid "Format in which the user want to export the document"
+msgstr ""
+
+msgid "Format in which the user wants to export the document containing all tasks reports related to the project"
+msgstr ""
+
+msgid "Format of the event content"
+msgstr ""
+
+msgid "Format of the text contained in the page"
+msgstr ""
+
+msgid "Found"
+msgstr ""
+
+msgid "French"
+msgstr ""
+
+msgid "Frequency"
+msgstr ""
 
 msgid "Frequency (weeks)"
 msgstr "Freqüência (semanas)"
@@ -1032,11 +3749,98 @@ msgstr "Frequência em Horas"
 msgid "Frequency In Months"
 msgstr "Frequência em meses"
 
+msgid "Frequency In Weeks"
+msgstr ""
+
+msgid "Friday"
+msgstr ""
+
+msgid "From ${start_date} to ${stop_date}"
+msgstr ""
+
+msgid "From Date"
+msgstr ""
+
+msgid "From Date N-1"
+msgstr ""
+
+msgid "Full Inventory"
+msgstr ""
+
+msgid "Full Size Image"
+msgstr ""
+
+msgid "Full Sized Image"
+msgstr ""
+
+msgid "Full Text Search"
+msgstr ""
+
 msgid "Function"
 msgstr "Função"
 
+msgid "Function changed."
+msgstr ""
+
+msgid "Functions"
+msgstr ""
+
+msgid "Future"
+msgstr ""
+
+msgid "GAP"
+msgstr ""
+
+msgid "GAP - ${gap_title}"
+msgstr ""
+
+msgid "GAP Account ID"
+msgstr ""
+
+msgid "GAP ID"
+msgstr ""
+
+msgid "GAP No"
+msgstr ""
+
+msgid "GAP Number"
+msgstr ""
+
+msgid "GAP Root"
+msgstr ""
+
+msgid "GAP must be set"
+msgstr ""
+
+msgid "GSM"
+msgstr ""
+
+msgid "Gadget added."
+msgstr ""
+
 msgid "Gender"
 msgstr "Sexo"
+
+msgid "General Accounting Plan"
+msgstr ""
+
+msgid "General Ledger"
+msgstr ""
+
+msgid "General Ledger Summary"
+msgstr ""
+
+msgid "General description of a document in ERP5. Descriptions are not supposed to be internal, and in a case of certain documents such as invoices for example, will be seen by your customers."
+msgstr ""
+
+msgid "General description which may be printed out on official documents and read by suppliers and clients."
+msgstr ""
+
+msgid "Generate"
+msgstr ""
+
+msgid "Generate Action"
+msgstr ""
 
 msgid "Generate POT File"
 msgstr "Gerar um Arquivo POT"
@@ -1047,13 +3851,76 @@ msgstr "Habilitar Globalmente"
 msgid "Globally Enabled"
 msgstr "Habilitado Globalmente"
 
+msgid "Globally Enabled [state in preference_workflow]"
+msgstr ""
+
+msgid "Glossary"
+msgstr ""
+
+msgid "Glossary Module"
+msgstr ""
+
+msgid "Glossary Term"
+msgstr ""
+
+msgid "Go"
+msgstr ""
+
+msgid "Godfather"
+msgstr ""
+
+msgid "Greater Than"
+msgstr ""
+
+msgid "Gross"
+msgstr ""
+
+msgid "Gross Salary"
+msgstr ""
+
+msgid "Gross Weight"
+msgstr ""
+
+msgid "Gross Weight (kg)"
+msgstr ""
+
 msgid "Group"
 msgstr "Grupo"
 
 msgid "Guess Portal Types From Modules"
 msgstr ""
 
-msgid "Guess Properties Of Portal Types"
+msgid "Group by"
+msgstr ""
+
+msgid "Group:"
+msgstr ""
+
+msgid "Grouping"
+msgstr ""
+
+msgid "Grouping Reference"
+msgstr ""
+
+msgid "Grouping Reference Fast Input"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "Guess Portal Types from Modules"
+msgstr ""
+
+msgid "Guess Properties of Portal Types"
+msgstr ""
+
+msgid "HTML Representation"
+msgstr ""
+
+msgid "Handled Project"
+msgstr ""
+
+msgid "Handler"
 msgstr ""
 
 msgid "Having trouble logging in? Make sure to enable cookies in your web browser."
@@ -1071,6 +3938,24 @@ msgstr ""
 msgid "Hide"
 msgstr "Ocultar"
 
+msgid "Hide Analytical Details"
+msgstr ""
+
+msgid "Hide Document"
+msgstr ""
+
+msgid "Hide Document Action"
+msgstr ""
+
+msgid "Hide Document Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Hide Document [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Hide tabs"
+msgstr ""
+
 msgid "Hides a document which was published or released by mistake by setting the validation_state to hidden."
 msgstr "Esconde um documento que foi publicado ou lançado por engano, definindo seu como oculto."
 
@@ -1078,6 +3963,9 @@ msgid "History"
 msgstr "Histórico"
 
 msgid "Hostname of the oood server."
+msgstr ""
+
+msgid "Hours"
 msgstr ""
 
 msgid "How much this currency is worth in terms of the reference currency."
@@ -1089,11 +3977,54 @@ msgstr "Estilo de HTML"
 msgid "I forgot my password!"
 msgstr "Esqueci minha senha!"
 
+msgid "IBAN Key"
+msgstr ""
+
 msgid "ID"
-msgstr "Id"
+msgstr "ID"
+
+msgid "ID of a page template or form which defines the rendering layout for contents"
+msgstr ""
+
+msgid "ID of a page template or form which defines the rendering layout for the container"
+msgstr ""
+
+msgid "ID of a page template, script, form or any callable object"
+msgstr ""
+
+msgid "ID of a script to test if the rule should be applied."
+msgstr ""
+
+msgid "ISO code of the currency or something similar : find some help here http://www.erp5.org/ResourceLibrary"
+msgstr ""
+
+msgid "Id of a project report line"
+msgstr ""
+
+msgid "Id of a script used to generate prevision in simulation."
+msgstr ""
+
+msgid "Id of the person working on the task"
+msgstr ""
+
+msgid "Identifiant number"
+msgstr ""
+
+msgid "Identifiant of the external folder"
+msgstr ""
+
+msgid "Identifiant of the web page"
+msgstr ""
 
 msgid "Identification"
 msgstr "Identificação"
+
+#: [Glossary term 11681]
+msgid "Identifying word or words by which someone or something is called and classified or distinguished from others"
+msgstr ""
+
+msgid "Identity Criterion"
+msgstr ""
 
 msgid "If a document is missing in order to process an action, ERP5 will warn the user that this is Missing"
 msgstr "Se um documento está faltando com o objetivo de processar uma ação, o ERP5 irá advertir o usuário de que este está faltando."
@@ -1164,8 +4095,23 @@ msgstr "Contatos iniciais"
 msgid "Inspect object"
 msgstr ""
 
+msgid "Install"
+msgstr ""
+
 msgid "Install Business Template"
 msgstr "Instalar Business Template"
+
+msgid "Install Business Template Action [transition in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Install Business Template [transition in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Install Business Templates from Repositories"
+msgstr ""
+
+msgid "Installation Choice"
+msgstr ""
 
 msgid "Installation State"
 msgstr "Estado de Instalação "
@@ -1173,11 +4119,32 @@ msgstr "Estado de Instalação "
 msgid "Installed"
 msgstr "Instalado"
 
+msgid "Installed [state in business_template_installation_workflow]"
+msgstr ""
+
 msgid "Instructions"
 msgstr "Instruções"
 
+msgid "Int Index"
+msgstr ""
+
+msgid "Integer use to sort agent"
+msgstr ""
+
+msgid "Interaction Workflow Definition"
+msgstr ""
+
+msgid "Internal Money Deposit"
+msgstr ""
+
+msgid "Internal Money Deposit Module"
+msgstr ""
+
 msgid "Internal Packing List"
 msgstr "Lista de Entrega Interna"
+
+msgid "Internal Packing List Cell"
+msgstr ""
 
 msgid "Internal Packing List Line"
 msgstr "Linha"
@@ -1191,10 +4158,52 @@ msgstr "Lista de Entregas Internas"
 msgid "Invalidate"
 msgstr "Invalidar"
 
+msgid "Invalidate Account"
+msgstr ""
+
+msgid "Invalidate Account Action [transition in account_workflow]"
+msgstr ""
+
+msgid "Invalidate Account [transition in account_workflow]"
+msgstr ""
+
+msgid "Invalidate Action"
+msgstr ""
+
+msgid "Invalidate Action [transition in rule_validation_workflow]"
+msgstr ""
+
+msgid "Invalidate Action [transition in validation_workflow]"
+msgstr ""
+
+msgid "Invalidate Message Action [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Invalidate Message [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Invalidate [transition in rule_validation_workflow]"
+msgstr ""
+
+msgid "Invalidate [transition in validation_workflow]"
+msgstr ""
+
 msgid "Invalidated"
 msgstr "Invalidado"
 
+msgid "Invalidated [state in account_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in rule_validation_workflow]"
+msgstr ""
+
+msgid "Invalidated [state in validation_workflow]"
+msgstr ""
+
 msgid "Inventories"
+msgstr ""
+
+msgid "Inventories to validate"
 msgstr ""
 
 msgid "Inventory"
@@ -1230,17 +4239,89 @@ msgstr "Items"
 msgid "Items+Copied."
 msgstr "Items+Copiado(s)."
 
+msgid "Items paste in progress."
+msgstr ""
+
+msgid "January"
+msgstr ""
+
+msgid "Journal"
+msgstr ""
+
+msgid "Journal Type"
+msgstr ""
+
+msgid "Journal from Selection"
+msgstr ""
+
+msgid "Journalise"
+msgstr ""
+
+msgid "Journalise Transaction"
+msgstr ""
+
+msgid "Journalise Transaction Action"
+msgstr ""
+
+msgid "Journalise Transaction Action [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Journalise Transaction [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Journalised"
+msgstr ""
+
+msgid "Journalised [state in accounting_workflow]"
+msgstr ""
+
+msgid "Journalize"
+msgstr ""
+
+msgid "July"
+msgstr ""
+
 msgid "Jump"
 msgstr "Ir para"
 
+msgid "Jump Relation"
+msgstr ""
+
+msgid "Jump to Accounting Preference"
+msgstr ""
+
+msgid "Jump to Active Preference"
+msgstr ""
+
+msgid "Jump to Bank Accounts"
+msgstr ""
+
+msgid "Jump to Related Payment"
+msgstr ""
+
 msgid "Jump..."
 msgstr "Ir para..."
+
+msgid "June"
+msgstr "Junho"
 
 msgid "Keyword Keys"
 msgstr "Palavras Chaves"
 
 msgid "Language"
 msgstr "Idioma"
+
+msgid "Language Code"
+msgstr ""
+
+msgid "Language of the file being uploaded  for a bug"
+msgstr ""
+
+msgid "Language of the message notification"
+msgstr ""
+
+msgid "Language of the term"
+msgstr ""
 
 msgid "Language of the web page, it uses code like en, fr, ja..."
 msgstr "Idioma da página web, utiliza-se códigos como en, fr, ja ..."
@@ -1299,8 +4380,29 @@ msgstr "Sair"
 msgid "Logged In as :"
 msgstr "Conectado como :"
 
+msgid "Logged in as :"
+msgstr ""
+
+msgid "Logical Compact Path"
+msgstr ""
+
+msgid "Logical Path"
+msgstr ""
+
 msgid "Login"
 msgstr "Entrar"
+
+msgid "Login ID"
+msgstr ""
+
+msgid "Login and/or password is incorrect."
+msgstr ""
+
+msgid "Login failure"
+msgstr ""
+
+msgid "Login success"
+msgstr ""
 
 msgid "Logout"
 msgstr "Sair"
@@ -1345,6 +4447,48 @@ msgstr "Altura da Imagem Média"
 msgid "Medium Image Width"
 msgstr "Largura da Imagem Média"
 
+msgid "Meeting"
+msgstr ""
+
+msgid "Meeting Detailed Report"
+msgstr ""
+
+msgid "Meeting Module"
+msgstr ""
+
+msgid "Meeting Status"
+msgstr ""
+
+msgid "Meeting Type"
+msgstr ""
+
+msgid "Meeting Types"
+msgstr ""
+
+msgid "Meetings"
+msgstr ""
+
+msgid "Member ID"
+msgstr ""
+
+msgid "Memory Used"
+msgstr ""
+
+msgid "Merge Deliveries"
+msgstr ""
+
+msgid "Merged Deliveries"
+msgstr ""
+
+msgid "Message explaining the content of the bug line."
+msgstr ""
+
+msgid "Messages"
+msgstr ""
+
+msgid "Meta Type"
+msgstr ""
+
 msgid "Metadata"
 msgstr "Metadados"
 
@@ -1360,11 +4504,29 @@ msgstr "Largura da Imagem Micro"
 msgid "Middle Name"
 msgstr "Nome do Meio"
 
+msgid "Migrate Folder"
+msgstr ""
+
 msgid "Min. Stock"
 msgstr "Estoque Min."
 
 msgid "Missing"
 msgstr "Faltando"
+
+msgid "Missing [state in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Mobile Telephone"
+msgstr ""
+
+msgid "Model Line"
+msgstr ""
+
+msgid "Model Line Calculation Script"
+msgstr ""
+
+msgid "Modeling"
+msgstr ""
 
 msgid "Modification Date"
 msgstr "Data de Modificação"
@@ -1381,8 +4543,71 @@ msgstr "Categorias Modificadas."
 msgid "Modules"
 msgstr "Módulos"
 
+msgid "Monday"
+msgstr ""
+
+msgid "Monetary Destruction"
+msgstr ""
+
+msgid "Monetary Issue"
+msgstr ""
+
+msgid "Monetary Recall"
+msgstr ""
+
+msgid "Money Amounts Fields Width"
+msgstr ""
+
+msgid "Money Quantity Style"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
 msgid "Month / Day / Year"
 msgstr "Mês / Dia / Ano"
+
+msgid "Monthly"
+msgstr ""
+
+msgid "Monthly Report"
+msgstr ""
+
+msgid "Months"
+msgstr ""
+
+msgid "More news..."
+msgstr ""
+
+msgid "More tasks..."
+msgstr ""
+
+msgid "Motive"
+msgstr ""
+
+msgid "Movement Date"
+msgstr ""
+
+msgid "Movements"
+msgstr ""
+
+msgid "Multiple (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} already exists."
+msgstr ""
+
+msgid "My Contacts"
+msgstr ""
+
+msgid "My Content List"
+msgstr ""
+
+msgid "My Contributed Content"
+msgstr ""
+
+msgid "My Documents"
+msgstr ""
+
+msgid "My Drafts of Accounting Transactions"
+msgstr ""
 
 msgid "My Favourites"
 msgstr "Meus Favoritos"
@@ -1399,6 +4624,18 @@ msgstr "Meu Idioma"
 msgid "Name"
 msgstr "Nome"
 
+msgid "Name of a script or a method that displays a title for the node"
+msgstr ""
+
+msgid "Name of a script or a method that should return the list of nodes"
+msgstr ""
+
+msgid "Name of the method used to display information about the result of the alarm"
+msgstr ""
+
+msgid "Name of the script called to generate temporary domains"
+msgstr ""
+
 msgid "Nano Image Height"
 msgstr "Altura da Imagem Nano"
 
@@ -1408,29 +4645,255 @@ msgstr "Largura da Imagem Nano"
 msgid "Nationality"
 msgstr "Nacionalidade"
 
+msgid "Net"
+msgstr ""
+
+msgid "Net Loss"
+msgstr ""
+
+msgid "Net Profit"
+msgstr ""
+
+msgid "Net Salary"
+msgstr ""
+
+msgid "Net Salary Report"
+msgstr ""
+
+msgid "Net Total Price"
+msgstr ""
+
+msgid "Net Width"
+msgstr ""
+
+msgid "Net Width (cm)"
+msgstr ""
+
+msgid "Net payable"
+msgstr ""
+
+msgid "Net width (cm)"
+msgstr ""
+
 msgid "New"
 msgstr "Novo"
 
 msgid "New ${portal_type}"
 msgstr "Novo(a) ${portal_type}"
 
-msgid "New Events"
-msgstr "Novos Eventos"
+msgid "New ${portal_type} added."
+msgstr ""
+
+msgid "New ${portal_type} created."
+msgstr ""
+
+msgid "New Event"
+msgstr "Novo Evento"
+
+msgid "New File"
+msgstr ""
+
+msgid "New Function"
+msgstr ""
+
+msgid "New Incoming Events"
+msgstr ""
+
+msgid "New Link"
+msgstr ""
+
+msgid "New Page"
+msgstr ""
+
+msgid "New User Registration"
+msgstr ""
+
+msgid "New Value"
+msgstr ""
+
+msgid "New Web Page of section ${web_section}."
+msgstr ""
+
+msgid "New [state in document_ingestion_workflow]"
+msgstr ""
+
+msgid "New [state in event_workflow]"
+msgstr ""
+
+msgid "New default Web Page for section ${web_section}."
+msgstr ""
+
+msgid "New event created."
+msgstr ""
+
+msgid "News"
+msgstr ""
 
 msgid "Next"
 msgstr "Próximo"
 
+msgid "Next Alarm Date"
+msgstr ""
+
 msgid "Next Page"
 msgstr "Próxima Página"
+
+msgid "No ${portal_type} Related."
+msgstr ""
+
+msgid "No ${portal_type} related."
+msgstr ""
+
+msgid "No Apparel Model Colour Variation found."
+msgstr ""
+
+msgid "No Trade Condition."
+msgstr ""
+
+msgid "No bank account for current organisation."
+msgstr ""
+
+msgid "No composition found."
+msgstr ""
+
+msgid "No divergence found."
+msgstr ""
+
+msgid "No exchange ratio found."
+msgstr ""
+
+msgid "No file or an empty file was specified."
+msgstr ""
+
+msgid "No file was selected for contribution."
+msgstr ""
+
+msgid "No invoice in your selection."
+msgstr ""
+
+msgid "No new Apparel Colour Range Variation defined."
+msgstr ""
+
+msgid "No new Apparel Component defined."
+msgstr ""
+
+msgid "No pay sheet model."
+msgstr ""
+
+msgid "No person found for your user"
+msgstr ""
+
+msgid "No quantity is defined on this line."
+msgstr ""
+
+msgid "No related documents found."
+msgstr ""
+
+msgid "No related wiki documents found."
+msgstr ""
+
+msgid "No result !"
+msgstr ""
+
+msgid "No result."
+msgstr ""
+
+msgid "No such document was found."
+msgstr ""
+
+msgid "No trade condition."
+msgstr ""
+
+msgid "No valid transaction in your selection."
+msgstr ""
+
+msgid "Node Budget Variation"
+msgstr ""
+
+msgid "Non Deductible Tax"
+msgstr ""
+
+msgid "Non Discountable Additional Price"
+msgstr ""
+
+msgid "Non Tax Withholding"
+msgstr ""
+
+msgid "Non Taxable Bonus"
+msgstr ""
+
+msgid "Non-Billable Expense"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "Normal Balance"
+msgstr ""
+
+msgid "Normal Credit Balance"
+msgstr ""
+
+#: [Glossary term 11679]
+msgid "Normal Working Hours"
+msgstr ""
+
+msgid "Not Greater Than"
+msgstr ""
+
+msgid "Not Grouped Lines in Beginning Balance"
+msgstr ""
 
 msgid "Not Installed"
 msgstr "Não Instalado "
 
+msgid "Not Installed [state in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Not Less Than"
+msgstr ""
+
+msgid "Not available"
+msgstr ""
+
 msgid "Note"
 msgstr "Nota"
 
+msgid "Nothing matches."
+msgstr ""
+
+msgid "Nothing more to pay."
+msgstr ""
+
+msgid "Nothing to add."
+msgstr ""
+
+msgid "Nothing to paste."
+msgstr ""
+
+msgid "Notification"
+msgstr ""
+
 msgid "Notification Message"
 msgstr "Mensagem de notificação"
+
+msgid "Notification Message Content List"
+msgstr ""
+
+msgid "Notification Message Module"
+msgstr ""
+
+msgid "Notification Message Workflow"
+msgstr ""
+
+msgid "Notification Messages"
+msgstr ""
+
+msgid "Notification Mode"
+msgstr ""
+
+msgid "November"
+msgstr ""
 
 msgid "Number"
 msgstr "Número"
@@ -1447,6 +4910,24 @@ msgstr "Objeto"
 msgid "Object Created."
 msgstr "Objeto Criado."
 
+msgid "Object copied as ${item_id}"
+msgstr ""
+
+msgid "Object copied from ${source_item}"
+msgstr ""
+
+msgid "Object created."
+msgstr ""
+
+msgid "Object+Created."
+msgstr ""
+
+msgid "Objects"
+msgstr ""
+
+msgid "October"
+msgstr ""
+
 msgid "Offer"
 msgstr "Oferecer"
 
@@ -1456,32 +4937,236 @@ msgstr "Oferecer por Email"
 msgid "Offered"
 msgstr "Oferecido"
 
+msgid "Offered Purchase Orders to Follow"
+msgstr ""
+
+msgid "Offered Sale Orders to Follow"
+msgstr ""
+
+msgid "Offered [state in open_order_workflow]"
+msgstr ""
+
+msgid "Offered [state in order_workflow]"
+msgstr ""
+
+msgid "Offered [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Offers to Send"
+msgstr ""
+
+msgid "Office Document"
+msgstr ""
+
+msgid "Old Value"
+msgstr ""
+
+msgid "Omit \"Grouped References\""
+msgstr ""
+
+msgid "Omit \"grouped references\""
+msgstr ""
+
+msgid "Omit Balanced Account"
+msgstr ""
+
+msgid "Omit Empty Accounts"
+msgstr ""
+
+msgid "Omit Grouped References"
+msgstr ""
+
+msgid "Omit balanced accounts"
+msgstr ""
+
+msgid "Omit empty accounts"
+msgstr ""
+
 msgid "Open"
 msgstr "Abrir"
 
-msgid "Open Assignment"
-msgstr "Abrir Atribuição"
+msgid "Open Bug"
+msgstr ""
+
+msgid "Open Bugs"
+msgstr ""
+
+msgid "Open Campaigns"
+msgstr ""
+
+msgid "Open Meetings"
+msgstr ""
+
+msgid "Open Project"
+msgstr ""
+
+msgid "Open Support Requests"
+msgstr ""
+
+msgid "Open Ticket"
+msgstr ""
+
+msgid "Open Ticket Action"
+msgstr ""
+
+msgid "Open Ticket Action [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Open Ticket [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Open [state in bug_workflow]"
+msgstr ""
+
+msgid "Open [state in project_workflow]"
+msgstr ""
+
+msgid "Open [state in ticket_workflow]"
+msgstr ""
+
+msgid "Open the account and helps input transactions on it"
+msgstr ""
 
 msgid "Opening Date"
 msgstr "Data de Abertura"
 
+msgid "Opens the accounting period in order to input transactions."
+msgstr ""
+
 msgid "Operation"
-msgstr "Operação "
+msgstr ""
+
+msgid "Operation Date"
+msgstr ""
 
 msgid "Optional Resource"
 msgstr "Recurso Opcional"
 
+msgid "Operation Resource"
+msgstr ""
+
+msgid "Operation Title"
+msgstr ""
+
+msgid "Operation Upper Limit"
+msgstr ""
+
+msgid "Operations"
+msgstr ""
+
+msgid "Operations Manager"
+msgstr ""
+
+msgid "Operator"
+msgstr ""
+
+msgid "Operators"
+msgstr ""
+
+msgid "Optional Resources"
+msgstr ""
+
+msgid "Or write your own question"
+msgstr ""
+
 msgid "Order"
 msgstr "Ordenar"
+
+msgid "Order Builder"
+msgstr ""
+
+msgid "Order Date"
+msgstr ""
+
+msgid "Order Index"
+msgstr ""
+
+msgid "Order Interaction Workflow"
+msgstr ""
+
+msgid "Order Line"
+msgstr ""
+
+msgid "Order Lines"
+msgstr ""
+
+msgid "Order Milestone"
+msgstr ""
+
+msgid "Order Milestones"
+msgstr ""
+
+msgid "Order Movement Interaction Workflow"
+msgstr ""
+
+msgid "Order Placed"
+msgstr ""
+
+msgid "Order Placed [state in open_order_workflow]"
+msgstr ""
+
+msgid "Order Placed [state in order_workflow]"
+msgstr ""
+
+msgid "Order Reference"
+msgstr ""
+
+msgid "Order Report"
+msgstr ""
+
+msgid "Order Rule"
+msgstr ""
+
+msgid "Order Summary"
+msgstr ""
+
+msgid "Order Tool"
+msgstr ""
+
+msgid "Order Type"
+msgstr ""
+
+msgid "Order Workflow"
+msgstr ""
+
+msgid "Order date"
+msgstr ""
 
 msgid "Order has been confirmed to the customer or has been confirmed by the supplier"
 msgstr "Pedido foi confirmado para o cliente ou foi confirmado pelo fornecedor."
 
+msgid "Order reference"
+msgstr ""
+
+msgid "Order type"
+msgstr ""
+
+msgid "Order updated."
+msgstr ""
+
 msgid "Ordered"
 msgstr "Solicitado"
 
+msgid "Ordered Quantity"
+msgstr ""
+
+msgid "Ordered [state in task_workflow]"
+msgstr ""
+
+msgid "Orders"
+msgstr ""
+
 msgid "Organisation"
 msgstr "Organização"
+
+msgid "Organisation Default Address"
+msgstr ""
+
+msgid "Organisation Module"
+msgstr ""
+
+msgid "Organisation Usual Name"
+msgstr ""
 
 msgid "Organisation that sends the invoice"
 msgstr "Organização que emite a fatura"
@@ -1495,8 +5180,32 @@ msgstr "Organizações captura as informações do contato (ex. nome, número de
 msgid "Origin"
 msgstr "Origem"
 
+msgid "Origin Reference"
+msgstr ""
+
 msgid "Original Filename"
 msgstr "Nome Original"
+
+msgid "Original Reference"
+msgstr ""
+
+msgid "Original Supplier or Worker"
+msgstr ""
+
+msgid "Original filename"
+msgstr ""
+
+msgid "Orphan Files"
+msgstr ""
+
+msgid "Orphaned Requirements"
+msgstr ""
+
+msgid "Orphaned Requirements Report"
+msgstr ""
+
+msgid "Other Parties"
+msgstr ""
 
 msgid "Others"
 msgstr "Outros"
@@ -1513,11 +5222,47 @@ msgstr "Linha de crédito de uma conta bancária"
 msgid "PDF documents store PDF files and can convert them to HTML, Text or different image formats."
 msgstr "Documento PDF armazena um arquivo PDF e podem ser convertidos para HTML, Texto ou diferentes formatos de imagem."
 
+msgid "Overtime Duration"
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
+msgid "Owners:"
+msgstr ""
+
+msgid "PDF"
+msgstr ""
+
+msgid "PDM"
+msgstr ""
+
 msgid "Pack Container"
 msgstr "Empacotar"
 
 msgid "Packed"
 msgstr "Empacotado"
+
+msgid "Packed [state in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Packing List Causality Workflow"
+msgstr ""
+
+msgid "Packing List Line"
+msgstr ""
+
+msgid "Packing List Movement"
+msgstr ""
+
+msgid "Packing List Workflow"
+msgstr ""
+
+msgid "Packing List updated."
+msgstr ""
+
+msgid "Packing Lists"
+msgstr ""
 
 msgid "Packing list has been shipped"
 msgstr "A Entrega foi enviada."
@@ -1540,14 +5285,86 @@ msgstr "Confirmação (Senha)"
 msgid "Password Confirmation"
 msgstr "Confirmação (Senha)"
 
+msgid "Password Tool"
+msgstr ""
+
+msgid "Password changed."
+msgstr ""
+
 msgid "Password for a user in ERP5"
 msgstr "Senha de um usuário no ERP5"
+
+msgid "Password of the user wanting to register"
+msgstr ""
+
+msgid "Password reset."
+msgstr ""
+
+msgid "Password to commit in the svn"
+msgstr ""
+
+msgid "Passwords do not match."
+msgstr ""
 
 msgid "Paste"
 msgstr "Colar"
 
 msgid "Paths"
 msgstr "Caminhos"
+
+msgid "Pay Sheet Cell"
+msgstr ""
+
+msgid "Pay Sheet Line"
+msgstr ""
+
+msgid "Pay Sheet Line Report Section"
+msgstr ""
+
+msgid "Pay Sheet Lines"
+msgstr ""
+
+msgid "Pay Sheet Model"
+msgstr ""
+
+msgid "Pay Sheet Model Line"
+msgstr ""
+
+msgid "Pay Sheet Model Lines"
+msgstr ""
+
+msgid "Pay Sheet Model Module"
+msgstr ""
+
+msgid "Pay Sheet Model Ratio Line"
+msgstr ""
+
+msgid "Pay Sheet Model Slice"
+msgstr ""
+
+msgid "Pay Sheet Models"
+msgstr ""
+
+msgid "Pay Sheet Transaction"
+msgstr ""
+
+msgid "Pay Sheet Transaction Line"
+msgstr ""
+
+msgid "Pay Sheet Transaction Lines"
+msgstr ""
+
+msgid "Pay Sheet Transaction updated."
+msgstr ""
+
+msgid "Pay Sheet View"
+msgstr ""
+
+msgid "Pay sheet calculation done."
+msgstr ""
+
+msgid "Payable"
+msgstr ""
 
 msgid "Payee"
 msgstr "Beneficiário"
@@ -1573,14 +5390,103 @@ msgstr ""
 msgid "Payment conditions can be either on a sale/purchase order or on a sale/purchase trade condition document. Payment condition describes the payment conditions that will be applied to an order, such as the payment mode, the term, etc.."
 msgstr "Condições de pagamento pode existir tanto em um pedido de venda/compra ou em uma condição de negócio de compra/venda. Condição de pagamento descreve as condições de pagamento que será aplicado para um pedido, tal como, modo de pagamento, prazo, etc.."
 
-msgid "PdfDocument"
-msgstr "Dcoumento PDF"
+msgid "Payment additional term (day)"
+msgstr ""
+
+msgid "Payment creation already in progress, abandon."
+msgstr ""
+
+msgid "Payment of ${invoice_title}"
+msgstr ""
+
+msgid "Payments creation for ${activated_invoice_count} on ${total_selection_count} invoices in progress."
+msgstr ""
+
+msgid "Payroll Taxes Report"
+msgstr ""
+
+#: erp5/portal_skins/erp5_payroll/PaySheetTransaction_viewAsODTStyles
+#: [Glossary term 11672]
+msgid "Payslip"
+msgstr ""
+
+msgid "Payslip Order"
+msgstr ""
+
+msgid "Pending"
+msgstr ""
+
+msgid "Pending Events"
+msgstr ""
+
+msgid "Pending Offers"
+msgstr ""
+
+msgid "Pending [state in document_staging_workflow]"
+msgstr ""
+
+msgid "Pending [state in event_workflow]"
+msgstr ""
+
+msgid "Pending prototypes"
+msgstr ""
+
+msgid "People"
+msgstr ""
+
+msgid "Per Product"
+msgstr ""
+
+msgid "Per Third Party"
+msgstr ""
+
+msgid "Percentage"
+msgstr ""
 
 msgid "Percentage Of Total"
 msgstr "Porcentagem do Total"
 
+msgid "Percentage Realized"
+msgstr ""
+
+msgid "Percentage of Total"
+msgstr ""
+
+msgid "Percentage of total"
+msgstr ""
+
+msgid "Period Start Date"
+msgstr ""
+
+msgid "Periodicity"
+msgstr ""
+
+msgid "Periodicity Start Date"
+msgstr ""
+
+msgid "Periodicity Stop Date"
+msgstr ""
+
 msgid "Person"
 msgstr "Pessoa"
+
+msgid "Person Assignment View"
+msgstr ""
+
+msgid "Person Career"
+msgstr ""
+
+msgid "Person Career View"
+msgstr ""
+
+msgid "Person Detailed Report"
+msgstr ""
+
+msgid "Person Module"
+msgstr ""
+
+msgid "Person who is at the origin of the document"
+msgstr ""
 
 msgid "Person who is creating the event."
 msgstr "Pessoa que está criando o evento."
@@ -1600,14 +5506,131 @@ msgstr "Telefone"
 msgid "Phone Call"
 msgstr "Ligação Telefônica"
 
+msgid "Physical location where the task is being performed"
+msgstr ""
+
+msgid "Place Order"
+msgstr ""
+
+msgid "Place Order Action"
+msgstr ""
+
+msgid "Place Order Action [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Place Order Action [transition in order_workflow]"
+msgstr ""
+
+msgid "Place Order [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Place Order [transition in order_workflow]"
+msgstr ""
+
+msgid "Placking List"
+msgstr ""
+
+msgid "Plain Text"
+msgstr ""
+
 msgid "Plan"
 msgstr "Planejar"
+
+msgid "Plan Order"
+msgstr ""
+
+msgid "Plan Order Action"
+msgstr ""
+
+msgid "Plan Order Action [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Plan Order Action [transition in order_workflow]"
+msgstr ""
+
+msgid "Plan Order [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Plan Order [transition in order_workflow]"
+msgstr ""
+
+msgid "Plan Transaction"
+msgstr ""
+
+msgid "Plan Transaction Action"
+msgstr ""
+
+msgid "Plan Transaction Action [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Plan Transaction [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Plan [transition in bug_event_workflow]"
+msgstr ""
+
+msgid "Plan will set the document State as planned in ERP5"
+msgstr ""
 
 msgid "Planned"
 msgstr "Planejado"
 
+msgid "Planned [state in accounting_workflow]"
+msgstr ""
+
+msgid "Planned [state in bug_event_workflow]"
+msgstr ""
+
+msgid "Planned [state in open_order_workflow]"
+msgstr ""
+
+msgid "Planned [state in order_workflow]"
+msgstr ""
+
+msgid "Planned [state in requirement_analysis_workflow]"
+msgstr ""
+
+msgid "Planned [state in task_workflow]"
+msgstr ""
+
 msgid "Planning"
 msgstr "Planejamento"
+
+msgid "Plans of purchase orders"
+msgstr ""
+
+msgid "Please select one (or more) object."
+msgstr ""
+
+msgid "Please select one object."
+msgstr ""
+
+msgid "Please select one or more items first."
+msgstr ""
+
+msgid "Please select one or more items to copy first."
+msgstr ""
+
+msgid "Please select one or more items to cut first."
+msgstr ""
+
+msgid "Please select one or more items to delete first."
+msgstr ""
+
+msgid "Please select upload file."
+msgstr ""
+
+msgid "Please set a ChangeLog message."
+msgstr ""
+
+msgid "Please specify a URL before trying to start to crawl content."
+msgstr ""
+
+msgid "Please use link above ('Add gadget') to prepare it yourself."
+msgstr ""
+
+msgid "Please wait until your tab is being prepared."
+msgstr ""
 
 msgid "Port of the oood server."
 msgstr ""
@@ -1621,14 +5644,74 @@ msgstr "Tipos de Conteúdo"
 msgid "Portuguese/Brazil"
 msgstr "Português/Brasil"
 
-msgid "Post Code"
-msgstr "Código Postal"
+msgid "Post"
+msgstr ""
+
+msgid "Post Event"
+msgstr ""
+
+msgid "Post Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Post Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Post Query"
+msgstr ""
+
+msgid "Post Query Action [transition in query_workflow]"
+msgstr ""
+
+msgid "Post Query [transition in query_workflow]"
+msgstr ""
+
+msgid "Post Transaction Action [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Post Transaction [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Post Transaction to General Ledger"
+msgstr ""
+
+msgid "Post Transaction to General Ledger [transition in accounting_workflow]"
+msgstr ""
+
+msgid "Post [transition in bug_event_workflow]"
+msgstr ""
 
 msgid "Post a Query"
 msgstr ""
 
+msgid "Post to Ledger"
+msgstr ""
+
 msgid "Postal Code"
 msgstr "Código Postal"
+
+msgid "Posted"
+msgstr ""
+
+msgid "Posted Events"
+msgstr ""
+
+msgid "Posted State is used for accounting transactions that have been properly posted to the ledger accounts and validated by an accountant"
+msgstr ""
+
+msgid "Posted [state in event_workflow]"
+msgstr ""
+
+msgid "Posted [state in query_workflow]"
+msgstr ""
+
+msgid "Posted to General Ledger"
+msgstr ""
+
+msgid "Posted to General Ledger [state in accounting_workflow]"
+msgstr ""
+
+msgid "Posted to Ledger"
+msgstr ""
 
 msgid "Precision"
 msgstr "Precisão"
@@ -1651,20 +5734,119 @@ msgstr "Preferências"
 msgid "Preferred classification policy for newly created documents"
 msgstr "Política de classificação preferencial para documentos recém-criados"
 
+msgid "Preferred email for replies sent through the CRM system."
+msgstr ""
+
+msgid "Preferred timezone"
+msgstr ""
+
 msgid "Prefix"
 msgstr "Prefixo"
+
+msgid "Prepare Response"
+msgstr ""
+
+msgid "Prepare Response Action"
+msgstr ""
 
 msgid "Presentation"
 msgstr "Apresentação"
 
+msgid "Prev. Period"
+msgstr ""
+
+msgid "Preview"
+msgstr ""
+
+msgid "Preview Error:"
+msgstr ""
+
 msgid "Previous"
 msgstr "Anterior"
+
+msgid "Previous Balance"
+msgstr ""
+
+msgid "Previous Page"
+msgstr ""
+
+msgid "Previous Period"
+msgstr ""
+
+msgid "Prevision Quantity"
+msgstr ""
+
+msgid "Prevision Value"
+msgstr ""
 
 msgid "Price"
 msgstr "Preço"
 
+msgid "Price Currency"
+msgstr ""
+
+msgid "Price Validity"
+msgstr ""
+
+msgid "Price Variation Axes"
+msgstr ""
+
+msgid "Price Variation axes"
+msgstr ""
+
+msgid "Price converted."
+msgstr ""
+
+msgid "Price for one unit."
+msgstr ""
+
+msgid "Priced"
+msgstr ""
+
+msgid "Priced Quantity"
+msgstr ""
+
+msgid "Prices reset."
+msgstr ""
+
+msgid "Pricing Interaction Workflow"
+msgstr ""
+
 msgid "Print"
 msgstr "Imprimir"
+
+msgid "Print Invoice"
+msgstr ""
+
+msgid "Print Mode"
+msgstr ""
+
+msgid "Print Order"
+msgstr ""
+
+msgid "Print Packing List"
+msgstr ""
+
+msgid "Print Payslip"
+msgstr ""
+
+msgid "Print Style"
+msgstr ""
+
+msgid "Printed by %(user)s at %(date)s"
+msgstr ""
+
+msgid "Printing Format"
+msgstr ""
+
+msgid "Printing format"
+msgstr ""
+
+msgid "Printing format of a document in ERP5"
+msgstr ""
+
+msgid "Printouts"
+msgstr ""
 
 msgid "Priority"
 msgstr "Prioridade"
@@ -1675,8 +5857,41 @@ msgstr ""
 msgid "Private"
 msgstr "Privado"
 
+msgid "Private [state in document_staging_workflow]"
+msgstr ""
+
+msgid "Privilege"
+msgstr ""
+
+msgid "Privileges"
+msgstr ""
+
+msgid "Problem"
+msgstr ""
+
+msgid "Problem Detected"
+msgstr ""
+
+msgid "Process file [transition in processing_status_workflow]"
+msgstr ""
+
 msgid "Product"
 msgstr "Produto"
+
+msgid "Product Individual Variation"
+msgstr ""
+
+msgid "Product Individual Variations"
+msgstr ""
+
+msgid "Product Interest"
+msgstr ""
+
+msgid "Product Line"
+msgstr ""
+
+msgid "Product Module"
+msgstr ""
 
 msgid "Product or Service"
 msgstr "Produto ou Serviço"
@@ -1684,22 +5899,136 @@ msgstr "Produto ou Serviço"
 msgid "Products"
 msgstr "Produtos"
 
+msgid "Products to Validate"
+msgstr ""
+
 msgid "Profile"
 msgstr "Perfil"
+
+msgid "Profit And Loss Account"
+msgstr ""
+
+msgid "Profit and Loss"
+msgstr ""
+
+msgid "Progression"
+msgstr ""
 
 msgid "Project"
 msgstr "Projeto"
 
+msgid "Project Cell"
+msgstr ""
+
+msgid "Project Constraints"
+msgstr ""
+
+msgid "Project ID"
+msgstr ""
+
 msgid "Project Line"
 msgstr "Linha de Projeto"
+
+msgid "Project Lines"
+msgstr "Linhas de Projeto"
 
 msgid "Project Location"
 msgstr "Localização do Projeto"
 
+msgid "Project Mapping"
+msgstr ""
+
+msgid "Project Milestone"
+msgstr ""
+
+msgid "Project Milestones"
+msgstr ""
+
+msgid "Project Module"
+msgstr ""
+
+msgid "Project Monthly Report"
+msgstr ""
+
+msgid "Project Planning"
+msgstr ""
+
+msgid "Project Report"
+msgstr ""
+
+msgid "Project Report Line"
+msgstr ""
+
+msgid "Project Report Lines"
+msgstr ""
+
+msgid "Project Reports"
+msgstr ""
+
+msgid "Project Title"
+msgstr ""
+
+msgid "Project Workflow"
+msgstr ""
+
+msgid "Project to Open"
+msgstr ""
+
+msgid "Project to Resume"
+msgstr ""
+
+msgid "Project:"
+msgstr ""
+
 msgid "Projects"
 msgstr "Projetos"
 
-msgid "Property Sheets"
+msgid "Property"
+msgstr ""
+
+msgid "Property ${property_id} was not defined."
+msgstr ""
+
+msgid "Property Criteria"
+msgstr ""
+
+msgid "Property Divergence Tester"
+msgstr ""
+
+msgid "Property Name"
+msgstr ""
+
+msgid "Property Tester"
+msgstr ""
+
+msgid "Propose"
+msgstr ""
+
+msgid "Proposed"
+msgstr ""
+
+msgid "Prospect Contacted"
+msgstr ""
+
+msgid "Prospect Contacted [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Protect Category Action [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Protect Category [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Protect [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Protected [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Protocol"
+msgstr ""
+
+msgid "Prototyping"
 msgstr ""
 
 msgid "Provision"
@@ -1711,56 +6040,377 @@ msgstr "Público"
 msgid "Public description of the document."
 msgstr "Descrição pública do documento."
 
+msgid "Public [state in external_document_publication_workflow]"
+msgstr ""
+
+msgid "Public [state in knowledge_pad_validation_workflow]"
+msgstr ""
+
+msgid "Public [transition in knowledge_pad_validation_workflow]"
+msgstr ""
+
 msgid "Publication Date"
 msgstr "Data de Publicação"
+
+msgid "Publication Section"
+msgstr ""
+
+msgid "Publication State"
+msgstr ""
+
+msgid "Publication Workflow"
+msgstr ""
 
 msgid "Publish"
 msgstr "Publicar"
 
+msgid "Publish Alive"
+msgstr ""
+
+msgid "Publish Category Action [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Publish Category [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Publish Document"
+msgstr ""
+
+msgid "Publish Document Action"
+msgstr ""
+
+msgid "Publish Document Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Publish Document Action [transition in external_document_publication_workflow]"
+msgstr ""
+
+msgid "Publish Document Action [transition in publication_workflow]"
+msgstr ""
+
+msgid "Publish Document Alive"
+msgstr ""
+
+msgid "Publish Document Alive Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Publish Document Alive [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Publish Document [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Publish Document [transition in external_document_publication_workflow]"
+msgstr ""
+
+msgid "Publish Document [transition in publication_workflow]"
+msgstr ""
+
+msgid "Publish [transition in category_publication_workflow]"
+msgstr ""
+
+msgid "Publish [transition in document_staging_workflow]"
+msgstr ""
+
 msgid "Published"
 msgstr "Publicado"
+
+msgid "Published Alive"
+msgstr ""
+
+msgid "Published Alive [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Published [state in category_publication_workflow]"
+msgstr ""
+
+msgid "Published [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Published [state in publication_workflow]"
+msgstr ""
+
+msgid "Published:"
+msgstr ""
 
 msgid "Publishes a document and triggers the archival of any public document of a previous version"
 msgstr "Publica um documento e aciona o arquivamento de qualquer documento público de uma versão anterior"
 
+msgid "Purchase"
+msgstr ""
+
 msgid "Purchase Invoice Transaction"
+msgstr ""
+
+msgid "Purchase Invoice Transaction Line"
+msgstr ""
+
+msgid "Purchase Invoice Transaction Lines"
+msgstr ""
+
+msgid "Purchase Invoice Transaction related to Purchase Packing List."
+msgstr ""
+
+msgid "Purchase Invoices to Solve"
 msgstr ""
 
 msgid "Purchase Order"
 msgstr "Pedido de Compra"
 
+msgid "Purchase Order Cell"
+msgstr ""
+
+msgid "Purchase Order Line"
+msgstr ""
+
+msgid "Purchase Order Lines"
+msgstr ""
+
+msgid "Purchase Order Module"
+msgstr ""
+
+msgid "Purchase Order related to Purchase Invoice Transaction."
+msgstr ""
+
+msgid "Purchase Order related to Purchase Packing List."
+msgstr ""
+
 msgid "Purchase Orders"
 msgstr "Pedidos de Compra"
+
+msgid "Purchase Orders to Confirm"
+msgstr ""
+
+msgid "Purchase Orders to Order"
+msgstr ""
+
+msgid "Purchase Orders to Plan"
+msgstr ""
 
 msgid "Purchase Packing List"
 msgstr "Entrega de Compra"
 
+msgid "Purchase Packing List Cell"
+msgstr ""
+
+msgid "Purchase Packing List Details"
+msgstr ""
+
+msgid "Purchase Packing List Line"
+msgstr ""
+
+msgid "Purchase Packing List Lines"
+msgstr ""
+
+msgid "Purchase Packing List Module"
+msgstr ""
+
+msgid "Purchase Packing List Movements"
+msgstr ""
+
+msgid "Purchase Packing List related to Purchase Invoice Transaction."
+msgstr ""
+
+msgid "Purchase Packing List related to Purchase Order."
+msgstr ""
+
+msgid "Purchase Packing List to Confirm"
+msgstr ""
+
+msgid "Purchase Packing List to Receive"
+msgstr ""
+
+msgid "Purchase Packing List to Solve"
+msgstr ""
+
+msgid "Purchase Packing List to Validate"
+msgstr ""
+
 msgid "Purchase Packing Lists"
+msgstr ""
+
+msgid "Purchase Price"
+msgstr ""
+
+msgid "Purchase Proposals to Approve"
 msgstr ""
 
 msgid "Purchase Supplies"
 msgstr ""
 
+msgid "Purchase Supply"
+msgstr ""
+
+msgid "Purchase Supply Cell"
+msgstr ""
+
+msgid "Purchase Supply Line"
+msgstr ""
+
+msgid "Purchase Supply Lines"
+msgstr ""
+
+msgid "Purchase Supply Module"
+msgstr ""
+
+msgid "Purchase Trade Condition"
+msgstr ""
+
+msgid "Purchase Trade Condition Module"
+msgstr ""
+
 msgid "Purchase Trade Conditions"
+msgstr ""
+
+msgid "Purchase Trade Conditions to Validate"
+msgstr ""
+
+msgid "Purchase orders not confirmed"
+msgstr ""
+
+msgid "Purchase trade condition"
+msgstr ""
+
+msgid "Qualified Sale Opportunity for which the customer is waiting for an offer."
+msgstr ""
+
+msgid "Quality"
+msgstr ""
+
+msgid "Quality Reference"
+msgstr ""
+
+msgid "Quality reference"
 msgstr ""
 
 msgid "Quantity"
 msgstr "Quantidade"
 
+msgid "Quantity < ${max_quantity}"
+msgstr ""
+
+msgid "Quantity Divergence Tester"
+msgstr ""
+
+msgid "Quantity Fields Width"
+msgstr ""
+
+msgid "Quantity Precision"
+msgstr ""
+
+msgid "Quantity Ratio"
+msgstr ""
+
+msgid "Quantity Report"
+msgstr ""
+
+msgid "Quantity Reports"
+msgstr ""
+
+msgid "Quantity Step"
+msgstr ""
+
 msgid "Quantity Unit"
 msgstr "Unidade (Quantidade)"
 
+msgid "Quantity Unit must be defined"
+msgstr ""
+
+msgid "Quantity Variation Axes"
+msgstr ""
+
+msgid "Quantity axes"
+msgstr ""
+
+msgid "Quantity must be defined in lines"
+msgstr ""
+
+msgid "Quantity ratio"
+msgstr ""
+
+msgid "Quantity step"
+msgstr ""
+
+msgid "Quantity unit"
+msgstr ""
+
+msgid "Quarterly"
+msgstr ""
+
 msgid "Queries"
+msgstr ""
+
+msgid "Queries to Answer"
 msgstr ""
 
 msgid "Query"
 msgstr "Consulta"
 
+msgid "Query Module"
+msgstr ""
+
 msgid "Query Type"
 msgstr "Tipo de Consulta"
 
+msgid "Query Workflow"
+msgstr ""
+
+msgid "Query was answered."
+msgstr ""
+
+msgid "Question"
+msgstr ""
+
+msgid "Question can not be empty."
+msgstr ""
+
+msgid "Quick Search"
+msgstr ""
+
+msgid "Quote Original Message"
+msgstr ""
+
+msgid "Quoting"
+msgstr ""
+
 msgid "RSS Feed"
 msgstr "Feed RSS"
+
+msgid "Ram Cache"
+msgstr ""
+
+msgid "Ram Cache Plugin"
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
+msgid "Ratio Setting"
+msgstr ""
+
+msgid "Ratio Setting Value"
+msgstr ""
+
+msgid "Ratio Settings"
+msgstr ""
+
+msgid "Raw Width (cm)"
+msgstr ""
+
+msgid "Re Assign Bug"
+msgstr ""
+
+msgid "Re Assign Bug [transition in bug_workflow]"
+msgstr ""
+
+msgid "Re-enter password"
+msgstr ""
+
+msgid "Re-install Business Template"
+msgstr ""
+
+msgid "Re-install Business Template [transition in business_template_installation_workflow]"
+msgstr ""
 
 msgid "Ready"
 msgstr "Pronto"
@@ -1771,11 +6421,65 @@ msgstr "Cliente Real"
 msgid "Receive"
 msgstr "Receber"
 
+msgid "Receive Document Action [transition in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Receive Document [transition in document_ingestion_workflow]"
+msgstr ""
+
+msgid "Receive Enquiry"
+msgstr ""
+
+msgid "Receive Enquiry [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Receive Event"
+msgstr ""
+
+msgid "Receive Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Receive Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Receive Packing List"
+msgstr ""
+
+msgid "Receive Packing List Action"
+msgstr ""
+
+msgid "Receive Packing List Action [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Receive Packing List [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Receive [transition in document_ingestion_workflow]"
+msgstr ""
+
 msgid "Received"
 msgstr "Recebido"
 
+msgid "Received [state in packing_list_workflow]"
+msgstr ""
+
+msgid "Received date"
+msgstr ""
+
+msgid "Recent Changes"
+msgstr ""
+
+msgid "Recipient"
+msgstr ""
+
 msgid "Recipient or Beneficiary"
 msgstr "Destinatário ou Beneficiário"
+
+msgid "Recipient or Beneficiary must be defined"
+msgstr ""
+
+msgid "Recipient or Beneficiary of the invoice"
+msgstr ""
 
 msgid "Recipient or beneficiary of the supply"
 msgstr "Destinatário ou beneficiário do fornecimento"
@@ -1786,17 +6490,182 @@ msgstr "Reconfigurar o Portal"
 msgid "Reference"
 msgstr "Referência"
 
+msgid "Reference Currency"
+msgstr ""
+
+msgid "Reference Date"
+msgstr ""
+
+msgid "Reference Documents"
+msgstr ""
+
+msgid "Reference Prefix"
+msgstr ""
+
+msgid "Reference categories"
+msgstr ""
+
+msgid "Reference generated for all order lines and milestones."
+msgstr ""
+
+msgid "Reference generated for all requirements."
+msgstr ""
+
+msgid "Reference lookup regular expression"
+msgstr ""
+
+msgid "Reference of the Payment chosen by the accountant or the person in charge of accounting in ERP5. The payment reference can be a check number for example. Payment Reference only appears in Payment transactions"
+msgstr ""
+
+msgid "Reference of the web page used to retrieved it"
+msgstr ""
+
+msgid "Reference updated."
+msgstr ""
+
+msgid "Reference:"
+msgstr ""
+
+msgid "Referenced Documents"
+msgstr ""
+
+msgid "References"
+msgstr ""
+
+msgid "Refundable VAT"
+msgstr ""
+
+msgid "Refuse"
+msgstr ""
+
+msgid "Refused"
+msgstr ""
+
+msgid "Refusing to process more than 1000 objects, check your selection."
+msgstr ""
+
 msgid "Region"
 msgstr "Região"
+
+msgid "Register"
+msgstr ""
+
+msgid "Registered Capital"
+msgstr ""
+
+msgid "Registration Field Library"
+msgstr ""
+
+msgid "Reinstall Business Template Action [transition in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Reinstall Business Template [transition in business_template_installation_workflow]"
+msgstr ""
 
 msgid "Reject"
 msgstr "Rejeitar"
 
+msgid "Reject Document"
+msgstr ""
+
+msgid "Reject Document Action"
+msgstr ""
+
+msgid "Reject Document Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Reject Document [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Reject Message Action [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Reject Message [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Reject Offer"
+msgstr ""
+
+msgid "Reject Offer Action [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Reject Offer Action [transition in order_workflow]"
+msgstr ""
+
+msgid "Reject Offer Action [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Reject Offer [transition in open_order_workflow]"
+msgstr ""
+
+msgid "Reject Offer [transition in order_workflow]"
+msgstr ""
+
+msgid "Reject Offer [transition in sale_opportunity_workflow]"
+msgstr ""
+
 msgid "Rejected"
 msgstr "Rejeitado"
 
+msgid "Rejected [state in open_order_workflow]"
+msgstr ""
+
+msgid "Rejected [state in order_workflow]"
+msgstr ""
+
+msgid "Rejected [state in sale_opportunity_workflow]"
+msgstr ""
+
 msgid "Rejects a document which was submitted by setting its validation state to draft."
 msgstr "Rejeita um documento que foi submetido pela validação a partir do Rascunho."
+
+msgid "Rejeter"
+msgstr ""
+
+msgid "Related"
+msgstr ""
+
+msgid "Related Agents"
+msgstr ""
+
+msgid "Related Apparel Cloth"
+msgstr ""
+
+msgid "Related Apparel Colour Range Colour Variation"
+msgstr ""
+
+msgid "Related Apparel Colour Range Variation"
+msgstr ""
+
+msgid "Related Apparel Fabrics"
+msgstr ""
+
+msgid "Related Apparel Model"
+msgstr ""
+
+msgid "Related Apparel Shape"
+msgstr ""
+
+msgid "Related Balance Transaction"
+msgstr ""
+
+msgid "Related Bug"
+msgstr ""
+
+msgid "Related Business Template"
+msgstr ""
+
+msgid "Related Colour Range Colour Variation"
+msgstr ""
+
+msgid "Related Components"
+msgstr ""
+
+msgid "Related Documents"
+msgstr ""
+
+msgid "Related Events"
+msgstr ""
 
 msgid "Related Invoice"
 msgstr "Faturas Relacionadas"
@@ -1804,11 +6673,116 @@ msgstr "Faturas Relacionadas"
 msgid "Related Objects"
 msgstr "Objetos Relacionados"
 
+msgid "Related Objects Qtty"
+msgstr ""
+
+msgid "Related Organisation"
+msgstr ""
+
+msgid "Related Payment Created"
+msgstr ""
+
+msgid "Related Payment Transaction"
+msgstr ""
+
+msgid "Related Person"
+msgstr ""
+
+msgid "Related Persons"
+msgstr ""
+
+msgid "Related Purchase Invoice"
+msgstr ""
+
+msgid "Related Purchase Order"
+msgstr ""
+
+msgid "Related Purchase Packing List"
+msgstr ""
+
+msgid "Related Purchase Trade Condition"
+msgstr ""
+
+msgid "Related Sale Invoice Transaction"
+msgstr ""
+
+msgid "Related Sale Order"
+msgstr ""
+
+msgid "Related Sale Packing List"
+msgstr ""
+
+msgid "Related Sale Trade Condition"
+msgstr ""
+
+msgid "Related Task Reports"
+msgstr ""
+
+msgid "Related Tasks"
+msgstr ""
+
+msgid "Related Tasks Report"
+msgstr ""
+
+msgid "Related Transformation"
+msgstr ""
+
+msgid "Related Trash Bin"
+msgstr ""
+
+msgid "Related payment created."
+msgstr ""
+
+msgid "Relation Results"
+msgstr ""
+
+msgid "Relation Unchanged."
+msgstr ""
+
+msgid "Relation unchanged."
+msgstr ""
+
 msgid "Release"
 msgstr "Liberar"
 
+msgid "Release Alive"
+msgstr ""
+
+msgid "Release Document"
+msgstr ""
+
+msgid "Release Document Action"
+msgstr ""
+
+msgid "Release Document Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Release Document Alive"
+msgstr ""
+
+msgid "Release Document Alive Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Release Document Alive [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Release Document [transition in document_publication_workflow]"
+msgstr ""
+
 msgid "Released"
 msgstr "Liberado"
+
+msgid "Released Alive"
+msgstr ""
+
+msgid "Released Alive [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Released [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Released:"
+msgstr ""
 
 msgid "Releases a document and triggers the archival of any released document of a previous version"
 msgstr "Libera um documento e aciona o arquivamento de qualquer documento lançado de uma versão anterior"
@@ -1831,6 +6805,9 @@ msgstr "Substituído"
 msgid "Reply to"
 msgstr "Responder para"
 
+msgid "Reply to Event by Email"
+msgstr ""
+
 msgid "Reply to email address, extracted from header."
 msgstr "Responder para o e-mail extraído do cabeçalho."
 
@@ -1840,11 +6817,77 @@ msgstr "Relatório"
 msgid "Report Format"
 msgstr "Formato do Relatório"
 
+msgid "Report Method"
+msgstr ""
+
+msgid "Report Started"
+msgstr ""
+
 msgid "Report Style"
 msgstr "Estilo do relatório"
 
+msgid "Reporter"
+msgstr ""
+
+msgid "Reports"
+msgstr ""
+
+msgid "Repositories"
+msgstr ""
+
 msgid "Request"
 msgstr "Requerer"
+
+msgid "Request Approval"
+msgstr ""
+
+msgid "Request Approval Action"
+msgstr ""
+
+msgid "Request Approval Action [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Request Approval Action [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Request Approval [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Request Approval [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Request Approval of Manager"
+msgstr ""
+
+msgid "Request Approval of Manager [transition in ticket_workflow]"
+msgstr ""
+
+msgid "Request Processing"
+msgstr ""
+
+msgid "Request Processing Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Request Processing [transition in event_workflow]"
+msgstr ""
+
+msgid "Request Subscription"
+msgstr ""
+
+msgid "Request Translation"
+msgstr ""
+
+msgid "Request Translation Action"
+msgstr ""
+
+msgid "Request Translation Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Request Translation [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Requested Project"
+msgstr ""
 
 msgid "Requester"
 msgstr "Solicitante"
@@ -1852,23 +6895,155 @@ msgstr "Solicitante"
 msgid "Requirement"
 msgstr "Requisíto"
 
+msgid "Requirement Analysis Workflow"
+msgstr ""
+
+msgid "Requirement Count"
+msgstr ""
+
+msgid "Requirement Coverage"
+msgstr ""
+
+msgid "Requirement Description"
+msgstr ""
+
+msgid "Requirement Document"
+msgstr ""
+
+msgid "Requirement Document Fast Input"
+msgstr ""
+
+msgid "Requirement Documents"
+msgstr ""
+
+msgid "Requirement Module"
+msgstr ""
+
+msgid "Requirement State"
+msgstr ""
+
+msgid "Requirement Title"
+msgstr ""
+
+msgid "Requirement document added."
+msgstr ""
+
 msgid "Requirements"
 msgstr "Requisitos"
 
-msgid "Resolve SVN conflicted files"
+msgid "Requirements Fast Input"
+msgstr ""
+
+msgid "Requirements with Sub-Requirements"
+msgstr ""
+
+msgid "Reset List Setting"
+msgstr ""
+
+msgid "Reset Password"
+msgstr ""
+
+msgid "Reset Prices"
+msgstr ""
+
+msgid "Resolve"
+msgstr ""
+
+msgid "Resolve SVN Conflicted Files"
+msgstr ""
+
+msgid "Resolve [transition in bug_workflow]"
+msgstr ""
+
+msgid "Resolved"
+msgstr ""
+
+msgid "Resolved [state in bug_workflow]"
 msgstr ""
 
 msgid "Resource"
 msgstr "Recurso"
 
+msgid "Resource Inventory"
+msgstr ""
+
+msgid "Resource List"
+msgstr ""
+
+msgid "Resource Quantity Unit"
+msgstr ""
+
+msgid "Resource Title"
+msgstr ""
+
+msgid "Resource involved"
+msgstr ""
+
+msgid "Resource quantity unit"
+msgstr ""
+
 msgid "Resources"
 msgstr "Recursos"
+
+msgid "Respond"
+msgstr ""
+
+msgid "Respond Event"
+msgstr ""
+
+msgid "Respond Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Respond Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Respond Workflow Action"
+msgstr ""
 
 msgid "Responded"
 msgstr "Respondido"
 
+msgid "Responded [state in event_workflow]"
+msgstr ""
+
 msgid "Restart"
 msgstr "Reabrir"
+
+msgid "Restart Accounting Period"
+msgstr ""
+
+msgid "Restart Accounting Period Action [transition in accounting_period_workflow]"
+msgstr ""
+
+msgid "Restart Accounting Period [transition in accounting_period_workflow]"
+msgstr ""
+
+msgid "Restart Task"
+msgstr ""
+
+msgid "Restart Transaction (journalise)"
+msgstr ""
+
+msgid "Restart Transaction Action"
+msgstr ""
+
+msgid "Result"
+msgstr ""
+
+msgid "Results"
+msgstr ""
+
+msgid "Results <em>${start} - ${stop}</em> of <em>${total}</em>."
+msgstr ""
+
+msgid "Retract"
+msgstr ""
+
+msgid "Retract Document Publication Action [transition in external_document_publication_workflow]"
+msgstr ""
+
+msgid "Retract Document Publication [transition in external_document_publication_workflow]"
+msgstr ""
 
 msgid "Returned Sale Packing List"
 msgstr "Entrega Retornada de Venda "
@@ -1894,7 +7069,37 @@ msgstr "Direitos"
 msgid "Role"
 msgstr "Papel"
 
+msgid "Role Definition"
+msgstr ""
+
+msgid "Roles"
+msgstr ""
+
+msgid "Rule"
+msgstr ""
+
+msgid "Rule Tool"
+msgstr ""
+
+msgid "Rule Tool Contents"
+msgstr ""
+
+msgid "Rule Validation Workflow"
+msgstr ""
+
+msgid "Rules"
+msgstr ""
+
 msgid "Run Unit Tests"
+msgstr ""
+
+msgid "Running Balance"
+msgstr ""
+
+msgid "SQL Cache"
+msgstr ""
+
+msgid "SQL Cache Plugin"
 msgstr ""
 
 msgid "Salary Coefficient"
@@ -1903,14 +7108,59 @@ msgstr "Coeficiente Salarial"
 msgid "Salary Level"
 msgstr "Nível Salarial"
 
+msgid "Salary Range"
+msgstr ""
+
+msgid "Salary Ranges"
+msgstr ""
+
+msgid "Salary coefficient"
+msgstr ""
+
+msgid "Salary level"
+msgstr ""
+
+msgid "Sale"
+msgstr ""
+
+msgid "Sale Invoice Lines"
+msgstr ""
+
 msgid "Sale Invoice Transaction"
+msgstr ""
+
+msgid "Sale Invoice Transaction Line"
+msgstr ""
+
+msgid "Sale Invoice Transaction Lines"
+msgstr ""
+
+msgid "Sale Invoices to Solve"
 msgstr ""
 
 msgid "Sale Opportunities"
 msgstr "Oportunidades de Venda"
 
+msgid "Sale Opportunities to Qualify"
+msgstr ""
+
+msgid "Sale Opportunities to Validate"
+msgstr ""
+
 msgid "Sale Opportunity"
 msgstr "Oportunidade de Venda"
+
+msgid "Sale Opportunity Detailed Report"
+msgstr ""
+
+msgid "Sale Opportunity Module"
+msgstr ""
+
+msgid "Sale Opportunity Status"
+msgstr ""
+
+msgid "Sale Opportunity Type"
+msgstr ""
 
 msgid "Sale Opportunity converted into Sale"
 msgstr "Oportunidade de Venda é convertido para uma Venda"
@@ -1927,19 +7177,91 @@ msgstr "Linhas de Pedido de Venda"
 msgid "Sale Order Module"
 msgstr "Módulo de Pedido de Venda"
 
+msgid "Sale Order Planning"
+msgstr ""
+
+msgid "Sale Order Planning Box"
+msgstr ""
+
 msgid "Sale Orders"
 msgstr "Pedidos de Venda"
+
+msgid "Sale Orders to Confirm"
+msgstr ""
+
+msgid "Sale Orders to Order"
+msgstr ""
+
+msgid "Sale Orders to Plan"
+msgstr ""
 
 msgid "Sale Packing List"
 msgstr "Entrega de Venda"
 
+msgid "Sale Packing List Cell"
+msgstr ""
+
+msgid "Sale Packing List Details"
+msgstr ""
+
 msgid "Sale Packing List Line"
 msgstr "Linha de Entrega de Venda"
+
+msgid "Sale Packing List Lines"
+msgstr ""
+
+msgid "Sale Packing List Module"
+msgstr ""
+
+msgid "Sale Packing List Movements"
+msgstr ""
+
+msgid "Sale Packing List to Prepare"
+msgstr ""
+
+msgid "Sale Packing List to Process"
+msgstr ""
+
+msgid "Sale Packing List to Ship"
+msgstr ""
+
+msgid "Sale Packing List to Solve"
+msgstr ""
+
+msgid "Sale Packing List to Validate"
+msgstr ""
+
+msgid "Sale Packing List to process"
+msgstr ""
+
+msgid "Sale Packing List to ship"
+msgstr ""
 
 msgid "Sale Packing Lists"
 msgstr "Lista de Entregas de Venda"
 
+msgid "Sale Price"
+msgstr ""
+
+msgid "Sale Proposals to Approve"
+msgstr ""
+
 msgid "Sale Supplies"
+msgstr ""
+
+msgid "Sale Supply"
+msgstr ""
+
+msgid "Sale Supply Cell"
+msgstr ""
+
+msgid "Sale Supply Line"
+msgstr ""
+
+msgid "Sale Supply Lines"
+msgstr ""
+
+msgid "Sale Supply Module"
 msgstr ""
 
 msgid "Sale Trade Condition"
@@ -1966,11 +7288,59 @@ msgstr "Buscar"
 msgid "Search Results"
 msgstr "Resultados da Busca"
 
+msgid "Search Select:"
+msgstr ""
+
+msgid "Search Tips"
+msgstr ""
+
+msgid "Search Transactions"
+msgstr ""
+
+msgid "Search Type:"
+msgstr ""
+
+msgid "Search results"
+msgstr ""
+
+msgid "Section"
+msgstr ""
+
+msgid "Section Account"
+msgstr ""
+
+msgid "Section Bank Account"
+msgstr ""
+
 msgid "Section Category"
+msgstr ""
+
+msgid "Section Content"
 msgstr ""
 
 msgid "Section Transaction Reference"
 msgstr "Referencia  "
+
+msgid "Security Classification"
+msgstr ""
+
+msgid "Security Key"
+msgstr ""
+
+msgid "Security Question"
+msgstr ""
+
+msgid "See Tales"
+msgstr ""
+
+msgid "Segment"
+msgstr ""
+
+msgid "Select Actions"
+msgstr ""
+
+msgid "Select Exchange"
+msgstr ""
 
 msgid "Select Favorite"
 msgstr "Selecionar Favoritos"
@@ -1978,11 +7348,65 @@ msgstr "Selecionar Favoritos"
 msgid "Select Language"
 msgstr "Selecionar Idioma"
 
+msgid "Select Method ID"
+msgstr ""
+
 msgid "Select Module"
 msgstr "Selecionar Módulo"
 
+msgid "Select Print"
+msgstr ""
+
+msgid "Select Report"
+msgstr ""
+
+msgid "Select Search"
+msgstr ""
+
+msgid "Select Template"
+msgstr ""
+
+msgid "Select Variation"
+msgstr ""
+
+msgid "Select appropriate document in the list."
+msgstr ""
+
+msgid "Sell"
+msgstr ""
+
+msgid "Sell Action [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Sell [transition in sale_opportunity_workflow]"
+msgstr ""
+
 msgid "Seller"
 msgstr "Vendedor"
+
+msgid "Send"
+msgstr ""
+
+msgid "Send Mail"
+msgstr ""
+
+msgid "Send Offer"
+msgstr ""
+
+msgid "Send Offer Action [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Send Offer [transition in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Send by Email"
+msgstr ""
+
+msgid "Sender"
+msgstr ""
+
+msgid "Sender / Caller"
+msgstr ""
 
 msgid "Sender or Caller"
 msgstr "Remetente ou Emissor"
@@ -1990,14 +7414,74 @@ msgstr "Remetente ou Emissor"
 msgid "Sender or Provider"
 msgstr "Remetente ou Fornecedor"
 
+msgid "Sender or Provider must be defined"
+msgstr ""
+
+msgid "Sends an offer to the prospect and waits for the decision"
+msgstr ""
+
+msgid "Sense Method"
+msgstr ""
+
+msgid "Sent"
+msgstr ""
+
+msgid "Sent [state in bug_event_workflow]"
+msgstr ""
+
+msgid "September"
+msgstr ""
+
 msgid "Serial Number"
 msgstr "Número Serial"
 
 msgid "Service"
 msgstr "Serviço"
 
+msgid "Service Condition"
+msgstr ""
+
+msgid "Service Individual Variation"
+msgstr ""
+
+msgid "Service Individual Variations"
+msgstr ""
+
+msgid "Service Module"
+msgstr ""
+
+msgid "Service Provider"
+msgstr ""
+
 msgid "Services"
 msgstr "Serviços"
+
+msgid "Services to Validate"
+msgstr ""
+
+msgid "Set List Setting"
+msgstr ""
+
+msgid "Set Packing List Ready"
+msgstr ""
+
+msgid "Set Packing List Ready Action"
+msgstr ""
+
+msgid "Set Packing List Ready Action [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Set Packing List Ready [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Set Ready"
+msgstr ""
+
+msgid "Set Relation"
+msgstr ""
+
+msgid "Set Resolved"
+msgstr ""
 
 msgid "Set ready"
 msgstr "Definir Como Pronto"
@@ -2008,11 +7492,47 @@ msgstr "Define o estado do documento como iniciado"
 msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you."
 msgstr "Ao marcar a opção 'Lembrar meu usuário', um cookie será definido, com o nome do seu usuário. Então na próxima vez que você for entrar no sistema, o nome de seu usuário já estará preenchido."
 
+msgid "Settings"
+msgstr ""
+
+msgid "Severity"
+msgstr ""
+
+msgid "Shape"
+msgstr ""
+
+msgid "Shape Type"
+msgstr ""
+
+msgid "Shape type"
+msgstr ""
+
 msgid "Share"
 msgstr "Compartilhar"
 
 msgid "Share Alive"
 msgstr "Compartilhar Ativo"
+
+msgid "Share Document"
+msgstr ""
+
+msgid "Share Document Action"
+msgstr ""
+
+msgid "Share Document Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Share Document Alive"
+msgstr ""
+
+msgid "Share Document Alive Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Share Document Alive [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Share Document [transition in document_publication_workflow]"
+msgstr ""
 
 msgid "Shared"
 msgstr "Compartilhado"
@@ -2020,8 +7540,32 @@ msgstr "Compartilhado"
 msgid "Shared Alive"
 msgstr "Compartilhado Ativo"
 
+msgid "Shared Alive [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Shared [state in document_publication_workflow]"
+msgstr ""
+
 msgid "Ship"
 msgstr "Enviar"
+
+msgid "Ship From"
+msgstr ""
+
+msgid "Ship Packing List"
+msgstr ""
+
+msgid "Ship Packing List Action"
+msgstr ""
+
+msgid "Ship Packing List Action [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Ship Packing List [transition in packing_list_workflow]"
+msgstr ""
+
+msgid "Ship To"
+msgstr ""
 
 msgid "Ship the packing list and declares a packing list as shipped"
 msgstr "Envia a entrega e define a entrega como enviada."
@@ -2029,11 +7573,65 @@ msgstr "Envia a entrega e define a entrega como enviada."
 msgid "Shipped"
 msgstr "Enviado"
 
+msgid "Shipped [state in packing_list_workflow]"
+msgstr ""
+
 msgid "Shipping Date"
 msgstr "Data de Envio"
 
+msgid "Shipping Date must be defined"
+msgstr ""
+
+msgid "Short Title"
+msgstr ""
+
+msgid "Short description of the event that will appear in the search result list."
+msgstr ""
+
+msgid "Short description that will appear in the search result list."
+msgstr ""
+
+msgid "Short title is diplayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map"
+msgstr ""
+
+msgid "Short title is displayed in any navigation widget (breadrumb, navigation menu, section list, ...) with a higher priority than long title, except in Site Map"
+msgstr ""
+
+msgid "Short titles are a precision of Titles in ERP5"
+msgstr ""
+
+msgid "Show Accounts Without Transactions"
+msgstr ""
+
 msgid "Show All"
 msgstr "Mostrar Todos"
+
+msgid "Show tabs"
+msgstr ""
+
+msgid "Signature"
+msgstr ""
+
+msgid "Signature Preview"
+msgstr ""
+
+msgid "Similar"
+msgstr ""
+
+msgid "Similar Documents"
+msgstr ""
+
+msgid "Similarity Cloud"
+msgstr ""
+
+msgid "Simulation Interaction Workflow"
+msgstr ""
+
+msgid "Simulation Movement"
+msgstr ""
+
+msgid "Simulation Movement Interaction Workflow"
+msgstr ""
 
 msgid "Simulation State"
 msgstr "Estado"
@@ -2041,32 +7639,293 @@ msgstr "Estado"
 msgid "Site"
 msgstr "Sítio"
 
+msgid "Site Sections"
+msgstr ""
+
+msgid "Site or Warehouse"
+msgstr ""
+
+msgid "Sitemap"
+msgstr ""
+
+msgid "Size"
+msgstr ""
+
+msgid "Size:"
+msgstr ""
+
+msgid "Skill"
+msgstr ""
+
+msgid "Skills"
+msgstr ""
+
 msgid "Skin Folders"
 msgstr "Pastas de Skin"
+
+msgid "Slice"
+msgstr ""
+
+msgid "Slice Min and Max"
+msgstr ""
+
+msgid "Slice Settings"
+msgstr ""
 
 msgid "Small Image Height"
 msgstr "Tamanho da Imagem Pequena"
 
+msgid "Small Image Width"
+msgstr ""
+
+msgid "Social Code"
+msgstr ""
+
+msgid "Social Form"
+msgstr ""
+
+msgid "Social Name"
+msgstr ""
+
+msgid "Social Security"
+msgstr ""
+
 msgid "Social Security Identification Number"
 msgstr "Número de Identificação do Seguro Social"
+
+msgid "Social Service"
+msgstr ""
+
+msgid "Social capital"
+msgstr ""
+
+msgid "Social capital currency"
+msgstr ""
+
+msgid "Social code"
+msgstr ""
+
+msgid "Social form"
+msgstr ""
+
+msgid "Software Licence"
+msgstr ""
+
+msgid "Software Licences"
+msgstr ""
 
 msgid "Sold"
 msgstr "Vendido"
 
+msgid "Sold [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Solve Alarm"
+msgstr ""
+
+msgid "Solve Divergence"
+msgstr ""
+
+msgid "Solve Divergences"
+msgstr ""
+
+msgid "Solve Divergences Action [transition in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Solve Divergences [transition in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Solve Method"
+msgstr ""
+
 msgid "Solved"
 msgstr "Resolvido"
+
+msgid "Solved [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Solver List"
+msgstr ""
 
 msgid "Solving"
 msgstr "Resolvendo"
 
+msgid "Solving [state in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Solving means that an action has been taken to correct the divergent state of a document in ERP5. During the calculations, the state will be displayed as Solving. Once the calculations are over, the state will become Solved."
+msgstr ""
+
+msgid "Some divergences seem already solved. Please retry."
+msgstr ""
+
+msgid "Sorry your selection has changed"
+msgstr ""
+
+msgid "Sorry+You+Can+Not+Delete+${count}+Item."
+msgstr ""
+
+msgid "Sorry+You+Can+Not+Delete+${count}+Items."
+msgstr ""
+
+msgid "Sorry, ${count} items are in use."
+msgstr ""
+
+msgid "Sorry, 1 item is in use."
+msgstr ""
+
+msgid "Sorry, a ${portal_type} with reference '${reference}' and version '${version} [${language}]' already exists. Please select another reference or version."
+msgstr ""
+
+msgid "Sorry, it is not possible to suggest a reference from an empty title."
+msgstr ""
+
+msgid "Sorry, this document is not available"
+msgstr ""
+
+msgid "Sorry, this is a ${portal_type}. This file should be uploaded into a ${appropriate_type} document."
+msgstr ""
+
+msgid "Sorry, this is not one of ${portal_type}. This file should be uploaded into a file document."
+msgstr ""
+
+msgid "Sorry, user ${user} could not be accessed."
+msgstr ""
+
+msgid "Sorry, you can not delete ${count} item."
+msgstr ""
+
+msgid "Sorry, you can not delete ${count} items."
+msgstr ""
+
+msgid "Sorry, you can not paste these items here."
+msgstr ""
+
+msgid "Sorry, your selection has changed."
+msgstr ""
+
+msgid "Sorry,+${count}+Items+Are+In+Use."
+msgstr ""
+
+msgid "Sorry,+1+Item+Is+In+Use."
+msgstr ""
+
 msgid "Sort"
 msgstr "Ordenar"
+
+msgid "Sort Index"
+msgstr ""
+
+msgid "Sort Index will either give a calculation order or a sorting order of a document in a list that contains many documents."
+msgstr ""
 
 msgid "Source"
 msgstr "Fonte"
 
+msgid "Source Account"
+msgstr ""
+
+msgid "Source Accounting Operation Date"
+msgstr ""
+
+msgid "Source Administration"
+msgstr ""
+
+msgid "Source Code"
+msgstr ""
+
+msgid "Source Conversion"
+msgstr ""
+
+msgid "Source Credit"
+msgstr ""
+
+msgid "Source Debit"
+msgstr ""
+
+msgid "Source Group"
+msgstr ""
+
+msgid "Source Payment"
+msgstr ""
+
+msgid "Source Price Currency"
+msgstr ""
+
+msgid "Source Project"
+msgstr ""
+
+msgid "Source Ref"
+msgstr ""
+
+msgid "Source Reference"
+msgstr ""
+
+msgid "Source Title"
+msgstr ""
+
+msgid "Source Vault"
+msgstr ""
+
+msgid "Source administration"
+msgstr ""
+
+msgid "Source conversion should not be set."
+msgstr ""
+
+msgid "Source decision"
+msgstr ""
+
+msgid "Source file path"
+msgstr ""
+
+msgid "Source payment"
+msgstr ""
+
+msgid "Source section"
+msgstr ""
+
+msgid "Specialised Trade Conditions"
+msgstr ""
+
+msgid "Specific Customer"
+msgstr ""
+
+msgid "Specific Reference"
+msgstr ""
+
+msgid "Specific condition"
+msgstr ""
+
+msgid "Split"
+msgstr ""
+
 msgid "Split Document"
 msgstr "Dividir Documento"
+
+msgid "Split Document [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Split Prevision"
+msgstr ""
+
+msgid "Split Translation"
+msgstr ""
+
+msgid "Split Translation Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Split Translation [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Split and Defer"
+msgstr ""
+
+msgid "Split and Defer Action [transition in delivery_causality_workflow]"
+msgstr ""
+
+msgid "Split and Defer [transition in delivery_causality_workflow]"
+msgstr ""
 
 msgid "Splits a document in multiple subdocuments to accelerate translation. Sets validation_state to split."
 msgstr "Dividi um documento em múltiplos sub documentos para acelerar a tradução. Define o estado de validação para dividido."
@@ -2074,11 +7933,50 @@ msgstr "Dividi um documento em múltiplos sub documentos para acelerar a traduç
 msgid "Spreadsheet"
 msgstr "Planilha"
 
+msgid "Spreadsheet Column"
+msgstr ""
+
+msgid "Spreadsheet Column to Property Mapping"
+msgstr ""
+
+msgid "Spreadsheet Name"
+msgstr ""
+
 msgid "Start"
 msgstr "Iniciar"
 
+msgid "Start Accounting Period"
+msgstr ""
+
+msgid "Start Accounting Period Action [transition in accounting_period_workflow]"
+msgstr ""
+
+msgid "Start Accounting Period [transition in accounting_period_workflow]"
+msgstr ""
+
+msgid "Start Assignment"
+msgstr ""
+
+msgid "Start Assignment Action [transition in assignment_workflow]"
+msgstr ""
+
+msgid "Start Assignment [transition in assignment_workflow]"
+msgstr ""
+
+msgid "Start Career Step"
+msgstr ""
+
+msgid "Start Career Step Action [transition in career_workflow]"
+msgstr ""
+
+msgid "Start Career Step [transition in career_workflow]"
+msgstr ""
+
 msgid "Start Date"
 msgstr "Data Inicial"
+
+msgid "Start Periods ?"
+msgstr ""
 
 msgid "Start Project"
 msgstr "Iniciar Projeto"
@@ -2086,17 +7984,44 @@ msgstr "Iniciar Projeto"
 msgid "Start Task"
 msgstr "Iniciar Tarefa"
 
+msgid "Start date is after stop date."
+msgstr ""
+
+msgid "Start the created periods"
+msgstr ""
+
+msgid "Start to Work on It"
+msgstr ""
+
 msgid "Started"
 msgstr "Iniciado"
 
-msgid "Started Project"
-msgstr "Projeto Iniciado"
+msgid "Started [state in accounting_period_workflow]"
+msgstr ""
 
-msgid "Starting"
-msgstr "Iniciando"
+msgid "Started [state in assignment_workflow]"
+msgstr ""
+
+msgid "Started [state in career_workflow]"
+msgstr ""
+
+msgid "Started [state in open_order_workflow]"
+msgstr ""
+
+msgid "Started [state in requirement_analysis_workflow]"
+msgstr ""
+
+msgid "Started [state in task_report_workflow]"
+msgstr ""
+
+msgid "Started crawling external source."
+msgstr ""
 
 msgid "State"
 msgstr "Estado"
+
+msgid "State of a career which has been closed"
+msgstr ""
 
 msgid "State of a document that has been cancelled"
 msgstr "Estado de um documento que tenha sido cancelado"
@@ -2119,8 +8044,47 @@ msgstr "Estado do documento quando convertido para um documento aberto"
 msgid "States"
 msgstr "Estados"
 
+msgid "State of the query after being deleted"
+msgstr ""
+
+msgid "Statistics"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Status changed."
+msgstr ""
+
+msgid "Status:"
+msgstr ""
+
 msgid "Stock"
 msgstr "Estoque"
+
+msgid "Stock Report"
+msgstr ""
+
+msgid "Stock by Variation"
+msgstr ""
+
+msgid "Stock per Variation"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Stop Accounting Period"
+msgstr ""
+
+msgid "Stop Assignment"
+msgstr ""
+
+msgid "Stop Assignment Action [transition in assignment_workflow]"
+msgstr ""
+
+msgid "Stop Assignment [transition in assignment_workflow]"
+msgstr ""
 
 msgid "Stop Career Step"
 msgstr "Parar Carreira"
@@ -2143,8 +8107,77 @@ msgstr "Parado é um estado de um documento que o seu uso foi interrompido no ER
 msgid "Street Address"
 msgstr "Endereço"
 
-msgid "Sub-Features"
-msgstr "Sub-Característica"
+msgid "Strict Section Category"
+msgstr ""
+
+msgid "String Fields Width"
+msgstr ""
+
+msgid "String representation of the path of the place 'where the documented item is defined"
+msgstr ""
+
+msgid "Sub-Requirement Count"
+msgstr ""
+
+msgid "Sub-Requirement Description"
+msgstr ""
+
+msgid "Sub-Requirement Title"
+msgstr ""
+
+msgid "Sub-Requirements"
+msgstr ""
+
+msgid "Subcategories"
+msgstr ""
+
+msgid "Subject"
+msgstr ""
+
+msgid "Submit"
+msgstr ""
+
+msgid "Submit Budget"
+msgstr ""
+
+msgid "Submit Budget Action"
+msgstr ""
+
+msgid "Submit Document for Review"
+msgstr ""
+
+msgid "Submit Document for Review Action"
+msgstr ""
+
+msgid "Submit Document for Review Action [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Submit Document for Review [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Submit Doument for Review [transition in document_publication_workflow]"
+msgstr ""
+
+msgid "Submit Event"
+msgstr ""
+
+msgid "Submit Event Action"
+msgstr ""
+
+msgid "Submit Event Action [transition in event_workflow]"
+msgstr ""
+
+msgid "Submit Event [transition in event_workflow]"
+msgstr ""
+
+msgid "Submit Message Action [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Submit Message [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Submit Project"
+msgstr ""
 
 msgid "Submit for Review"
 msgstr "Submeter para Revisão"
@@ -2155,6 +8188,42 @@ msgstr "Submete um documento para revisão definindo o estado de validação com
 msgid "Submitted"
 msgstr "Submetido"
 
+msgid "Submitted Campaigns"
+msgstr ""
+
+msgid "Submitted Date"
+msgstr ""
+
+msgid "Submitted Meetings"
+msgstr ""
+
+msgid "Submitted Sale Opportunities to Validate"
+msgstr ""
+
+msgid "Submitted Support Requests"
+msgstr ""
+
+msgid "Submitted [state in document_publication_workflow]"
+msgstr ""
+
+msgid "Submitted [state in notification_message_workflow]"
+msgstr ""
+
+msgid "Submitted [state in sale_opportunity_workflow]"
+msgstr ""
+
+msgid "Subpages"
+msgstr ""
+
+msgid "Subsections"
+msgstr ""
+
+msgid "Substitution Mapping Method ID"
+msgstr ""
+
+msgid "Substitution mapping method id for the web page"
+msgstr ""
+
 msgid "Subversion"
 msgstr "Controle de Versão"
 
@@ -2164,17 +8233,110 @@ msgstr ""
 msgid "Suffix"
 msgstr "Sufixo"
 
+msgid "Suggest Reference"
+msgstr ""
+
+msgid "Sumitted"
+msgstr ""
+
+msgid "Summary"
+msgstr ""
+
+msgid "Summary for each Account Class"
+msgstr ""
+
+msgid "Summary per Resource, Line, Worker"
+msgstr ""
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Supervisor"
+msgstr ""
+
 msgid "Supplier"
 msgstr "Fornecedor"
+
+msgid "Supplier / Worker"
+msgstr ""
+
+msgid "Supplier Account"
+msgstr ""
+
+msgid "Supplier Administrator"
+msgstr ""
+
+msgid "Supplier Bank Account"
+msgstr ""
+
+msgid "Supplier Colour"
+msgstr ""
+
+msgid "Supplier Price"
+msgstr ""
 
 msgid "Supplier Project"
 msgstr "Projeto Fornecedor"
 
+msgid "Supplier Ref"
+msgstr ""
+
 msgid "Supplier Reference"
 msgstr "Referência do Fornecedor"
 
+msgid "Supplier Transaction Reference"
+msgstr ""
+
+msgid "Supplier must be defined"
+msgstr ""
+
+msgid "Suppliers"
+msgstr ""
+
+msgid "Supplies"
+msgstr ""
+
+msgid "Supply"
+msgstr ""
+
+msgid "Supply Cell"
+msgstr ""
+
+msgid "Supply Line"
+msgstr ""
+
+msgid "Supply Lines"
+msgstr ""
+
+msgid "Support Request"
+msgstr ""
+
+msgid "Support Request Detailed Report"
+msgstr ""
+
+msgid "Support Request Module"
+msgstr ""
+
+msgid "Support Request Status"
+msgstr ""
+
+msgid "Support Request Type"
+msgstr ""
+
+msgid "Support Request Types"
+msgstr ""
+
 msgid "Support Requests"
 msgstr "Pedidos de Suporte"
+
+msgid "Surcharge Ratio"
+msgstr ""
+
+msgid "Surcharge Ratio Quantity Step"
+msgstr ""
+
+msgid "Surcharge Ratio Variation Axes"
+msgstr ""
 
 msgid "Surname"
 msgstr "Sobrenome"
@@ -2194,8 +8356,26 @@ msgstr "Preço Alvo"
 msgid "Task"
 msgstr "Tarefa"
 
+msgid "Task Constraints"
+msgstr ""
+
+msgid "Task Fast Input Dialog"
+msgstr ""
+
+msgid "Task Items"
+msgstr ""
+
 msgid "Task Line"
 msgstr "Linha de Tarefa"
+
+msgid "Task Line Title"
+msgstr ""
+
+msgid "Task Lines"
+msgstr ""
+
+msgid "Task Module"
+msgstr ""
 
 msgid "Task Report"
 msgstr "Relatório de Tarefa"
@@ -2203,20 +8383,72 @@ msgstr "Relatório de Tarefa"
 msgid "Task Report Line"
 msgstr "Linha de Relatório de Tarefa"
 
+msgid "Task Report Lines"
+msgstr ""
+
+msgid "Task Report Module"
+msgstr ""
+
+msgid "Task Report State"
+msgstr ""
+
+msgid "Task Report Workflow"
+msgstr ""
+
 msgid "Task Reports"
 msgstr "Relatórios de Tarefas"
+
+msgid "Task Reports to Close"
+msgstr ""
+
+msgid "Task Reports to Finish"
+msgstr ""
+
+msgid "Task Reports to Follow"
+msgstr ""
+
+msgid "Task Reports to Start"
+msgstr ""
+
+msgid "Task Reports to Validate"
+msgstr ""
 
 msgid "Task Title"
 msgstr "Título"
 
+msgid "Task Workflow"
+msgstr ""
+
 msgid "Tasks"
 msgstr "Tarefas"
+
+msgid "Tasks Reports"
+msgstr ""
+
+msgid "Tasks Summary"
+msgstr ""
+
+msgid "Tasks can not be created, start date is empty."
+msgstr ""
+
+msgid "Tasks to Confirm"
+msgstr ""
+
+msgid "Tasks to Order"
+msgstr ""
+
+msgid "Tasks to Validate"
+msgstr ""
 
 msgid "Tax"
 msgstr "Imposto"
 
+msgid "Tax Category"
+msgstr ""
+
 msgid "Tax Line"
-msgstr "Linha de Imposto"
+msgstr ""
+
 
 msgid "Tax Model Line"
 msgstr "Linha de Module de Imposto"
@@ -2229,6 +8461,12 @@ msgstr "Linhas de Modelo de Imposto são equivalentes a Linha de Imposto, apenas
 
 msgid "Telephone"
 msgstr "Telefone"
+
+msgid "Tell if there is a unit test or not that check the bug"
+msgstr ""
+
+msgid "Tell when we need to notify users of alarm's result"
+msgstr ""
 
 msgid "Tells who requested the ticket"
 msgstr "Informa quem solicitou o ticket"
@@ -2253,6 +8491,15 @@ msgstr "Editor de Texto"
 
 msgid "Text Format"
 msgstr "Formato do texto"
+
+msgid "TextArea Field Height"
+msgstr ""
+
+msgid "TextArea Field Width"
+msgstr ""
+
+msgid "The Account in the third party's accounting"
+msgstr ""
 
 msgid "The Accounting Period is closed. It is no longer possible to add accounting transactions in this period. A balance transaction has been created."
 msgstr "O período de contabilidade está fechado. Não é mais possível adicionar transações contábeis no período. Uma transação de equilíbrio foi criado."
@@ -2582,6 +8829,12 @@ msgstr "TioLive Perfil"
 msgid "Title"
 msgstr "Título"
 
+msgid "Title of the bug, brief description of the problem"
+msgstr ""
+
+msgid "Title of the document which is at the origin of the event"
+msgstr ""
+
 msgid "Title of the entity which is responsible of accepting the ticket request"
 msgstr "Título da entidade que é responsável por aceitar um ticket solicitado."
 
@@ -2636,6 +8889,24 @@ msgstr "Modo de tradução"
 msgid "Trash Bins"
 msgstr ""
 
+msgid "Trash Birth Date"
+msgstr ""
+
+msgid "Trash Folder"
+msgstr ""
+
+msgid "Trash Objects"
+msgstr ""
+
+msgid "Trash Tool"
+msgstr ""
+
+msgid "Trial Balance"
+msgstr ""
+
+msgid "Tuesday"
+msgstr ""
+
 msgid "Type"
 msgstr "Tipo"
 
@@ -2648,26 +8919,143 @@ msgstr "Desmarcar Todos"
 msgid "Undo"
 msgstr "Desfazer"
 
+msgid "Ungrouping"
+msgstr ""
+
+msgid "Uninstall Business Template"
+msgstr ""
+
+msgid "Uninstall Business Template Action [transition in business_template_installation_workflow]"
+msgstr ""
+
+msgid "Uninstall Business Template [transition in business_template_installation_workflow]"
+msgstr ""
+
 msgid "Unit"
 msgstr "Unidade"
+
+msgid "Unit Base Price"
+msgstr ""
+
+msgid "Unit Price"
+msgstr ""
+
+msgid "Unknown"
+msgstr ""
 
 msgid "Unpublish"
 msgstr "Despublicar"
 
+msgid "Unpublish Document Action [transition in publication_workflow]"
+msgstr ""
+
+msgid "Unpublish Document [transition in publication_workflow]"
+msgstr ""
+
 msgid "Unpublishes the document"
 msgstr "Despublicar documento"
+
+msgid "Unsaved Form Warning"
+msgstr ""
+
+msgid "Unversioned Files"
+msgstr ""
+
+msgid "Update"
+msgstr ""
 
 msgid "Update Assignment"
 msgstr "Atualizar Designação"
 
+msgid "Update Assignment Action [transition in assignment_workflow]"
+msgstr ""
+
+msgid "Update Assignment [transition in assignment_workflow]"
+msgstr ""
+
 msgid "Update Business Template from SVN"
+msgstr ""
+
+msgid "Update Fields"
+msgstr ""
+
+msgid "Update Fields by English Glossary"
+msgstr ""
+
+msgid "Update File Metadata [transition in processing_status_workflow]"
+msgstr ""
+
+msgid "Update My Credentials"
+msgstr ""
+
+msgid "Update Quantity from Container"
+msgstr ""
+
+msgid "Update Quantity from Container [transition in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Update Relation"
+msgstr ""
+
+msgid "Update Repository Information"
+msgstr ""
+
+msgid "Update Summary Budget Cells"
+msgstr ""
+
+msgid "Update Tools"
+msgstr ""
+
+msgid "Update Variations"
+msgstr ""
+
+msgid "Update Workflows"
+msgstr ""
+
+msgid "Update Workflows by English Glossary"
 msgstr ""
 
 msgid "Update quantity"
 msgstr "Atualizar Quantidade"
 
+msgid "Update quantity Action [transition in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Update quantity [transition in packing_list_container_workflow]"
+msgstr ""
+
+msgid "Update variations"
+msgstr ""
+
 msgid "Updated"
 msgstr "Atualizado"
+
+msgid "Updated Business Templates"
+msgstr ""
+
+msgid "Updated [state in assignment_workflow]"
+msgstr ""
+
+msgid "Upgrade"
+msgstr ""
+
+msgid "Upgrade Business Templates from Repositories"
+msgstr ""
+
+msgid "Upkeep Code"
+msgstr ""
+
+msgid "Upkeep code"
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Upload Business Template"
+msgstr ""
+
+msgid "Upload File"
+msgstr ""
 
 msgid "Upload Module"
 msgstr ""
@@ -2711,6 +9099,21 @@ msgstr "Utilize este estado para fechar a conta. Nenhuma transação pode ser de
 msgid "User"
 msgstr "Usuário"
 
+msgid "User ${user} does not exist."
+msgstr ""
+
+msgid "User Account Workflow"
+msgstr ""
+
+msgid "User ID is not specified."
+msgstr ""
+
+msgid "User Interface"
+msgstr ""
+
+msgid "User Interface Languages"
+msgstr ""
+
 msgid "User Login"
 msgstr "Usuário"
 
@@ -2720,29 +9123,125 @@ msgstr "Usuário"
 msgid "User Password"
 msgstr "Senha"
 
+msgid "User Profiles Workflow"
+msgstr ""
+
+msgid "Using category for section is invalid."
+msgstr ""
+
 msgid "Usual Name"
 msgstr "Nome Usual"
+
+msgid "Usual name"
+msgstr ""
+
+msgid "VAT Code"
+msgstr ""
+
+msgid "VAT ID"
+msgstr ""
+
+msgid "VAT code"
+msgstr ""
+
+msgid "Valid From"
+msgstr ""
+
+msgid "Valid Until"
+msgstr ""
 
 msgid "Validate"
 msgstr "Validar"
 
+msgid "Validate Account"
+msgstr ""
+
+msgid "Validate Account Action [transition in account_workflow]"
+msgstr ""
+
+msgid "Validate Account [transition in account_workflow]"
+msgstr ""
+
+msgid "Validate Accounting Transaction"
+msgstr ""
+
+msgid "Validate Action"
+msgstr ""
+
+msgid "Validate Action [transition in rule_validation_workflow]"
+msgstr ""
+
+msgid "Validate Action [transition in validation_workflow]"
+msgstr ""
+
+msgid "Validate Analysis"
+msgstr ""
+
+msgid "Validate Budget"
+msgstr ""
+
+msgid "Validate Budget Action"
+msgstr ""
+
+msgid "Validate Installation"
+msgstr ""
+
+msgid "Validate Inventory"
+msgstr ""
+
+msgid "Validate Inventory Action [transition in inventory_workflow]"
+msgstr ""
+
+msgid "Validate Inventory [transition in inventory_workflow]"
+msgstr ""
+
+msgid "Validate Message Action [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Validate Message [transition in notification_message_workflow]"
+msgstr ""
+
+msgid "Validate Modeling"
+msgstr ""
+
+msgid "Validate Pricing"
+msgstr ""
+
+msgid "Validate Transaction"
+msgstr ""
+
+msgid "Validate Workflow Action"
+msgstr ""
+
+msgid "Validate [transition in rule_validation_workflow]"
+msgstr ""
+
+msgid "Validate [transition in validation_workflow]"
+msgstr ""
+
 msgid "Validated"
 msgstr "Validado"
+
 
 msgid "Validates a document in ERP5"
 msgstr "Valida o documento no ERP5"
 
+
 msgid "Validation Workflow"
 msgstr "Workflow de Validação "
+
 
 msgid "Validity End Date"
 msgstr "Data de Término de Validade"
 
+
 msgid "Value"
 msgstr "Valor"
 
+
 msgid "Vendor"
 msgstr "Vendedor"
+
 
 msgid "Vendor of the transaction"
 msgstr "Vendedor da transação"
@@ -2753,6 +9252,24 @@ msgstr "Versão"
 msgid "Version of the document. It increases each time major modifications are done"
 msgstr "Versão do documento. Incrementa cada de vez que uma modificação é realizada."
 
+msgid "Version of the file to be uploaded in the bug."
+msgstr ""
+
+msgid "Version of the requirement document."
+msgstr ""
+
+msgid "Version of the web page"
+msgstr ""
+
+msgid "Version of the web page. It increases each time major modifications are done"
+msgstr ""
+
+msgid "Version ot the message notification. It increases each time major modifications are done"
+msgstr ""
+
+msgid "Version:"
+msgstr ""
+
 msgid "View"
 msgstr "Geral"
 
@@ -2762,11 +9279,38 @@ msgstr "Ver Faturas"
 msgid "View SVN History"
 msgstr ""
 
+msgid "View SVN Repository Information"
+msgstr ""
+
 msgid "View SVN Repository Infos"
+msgstr ""
+
+msgid "View Source"
+msgstr ""
+
+msgid "View Style"
+msgstr ""
+
+msgid "Visible [state in knowledge_pad_validation_workflow]"
+msgstr ""
+
+msgid "Visible [transition in knowledge_pad_validation_workflow]"
 msgstr ""
 
 msgid "Visit"
 msgstr "Visita"
+
+msgid "Visual Pattern"
+msgstr ""
+
+msgid "Voter ID"
+msgstr ""
+
+msgid "Warehouse"
+msgstr ""
+
+msgid "Web Message"
+msgstr ""
 
 msgid "Web Page"
 msgstr "Página Web"
@@ -2789,28 +9333,207 @@ msgstr "Largura (cm)"
 msgid "Width (m)"
 msgstr "Largura (m)"
 
+msgid "Will set the sale opportunity state as sold. This means that the sale opportunity is successful and that the customer has accepted the offer that has been made to him/her"
+msgstr ""
+
 msgid "Will update the quantity of invoiced products depending upon the quantity of products that have been packed in the container."
 msgstr "Irá atualizar a quantidade de produtos faturados, dependendo da quantidade de produtos que foram acondicionados no pacote."
 
-msgid "Workflow Chains"
+msgid "With"
+msgstr ""
+
+msgid "Without"
+msgstr ""
+
+msgid "Word count:"
+msgstr ""
+
+msgid "Work"
+msgstr ""
+
+msgid "Work Duration"
+msgstr ""
+
+msgid "Work Duration Unit"
+msgstr ""
+
+msgid "Work Period End"
+msgstr ""
+
+msgid "Work Period Start"
+msgstr ""
+
+#: portal_categories/base_amount/overtime [Glossary term 3166]
+msgid "Work done in addition to regular working hours"
+msgstr ""
+
+msgid "Work period end must be defined"
+msgstr ""
+
+msgid "Work period start must be defined"
+msgstr ""
+
+msgid "Worker"
+msgstr ""
+
+msgid "Worker ID"
+msgstr ""
+
+msgid "Workflow"
+msgstr ""
+
+msgid "Workflow History"
+msgstr ""
+
+msgid "Workflow Item Path"
+msgstr ""
+
+msgid "Workflow Report"
+msgstr ""
+
+msgid "Workflow Report Dialog"
+msgstr ""
+
+msgid "Workflow modification in progress."
 msgstr ""
 
 msgid "Workflows"
 msgstr ""
 
+msgid "Workflows updated."
+msgstr ""
+
+msgid "Works"
+msgstr ""
+
+msgid "X Axis"
+msgstr ""
+
+msgid "Xlarge Image Height"
+msgstr ""
+
+msgid "Xlarge Image Width"
+msgstr ""
+
+msgid "Xsmall Image Height"
+msgstr ""
+
+msgid "Xsmall Image Width"
+msgstr ""
+
+msgid "Y Axis"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
 msgid "Year / Month / Day"
 msgstr "Ano / Mês / Dia"
+
+msgid "You already have such gadgets."
+msgstr ""
+
+msgid "You are here:"
+msgstr ""
+
+msgid "You are not allowed to add ${portal_type} in this context."
+msgstr ""
+
+msgid "You are not allowed to add new content in this context."
+msgstr ""
+
+msgid "You are not allowed to clone this object."
+msgstr ""
+
+msgid "You are not allowed to create this object."
+msgstr ""
+
+msgid "You are not authorized to view any related document."
+msgstr ""
+
+msgid "You are not authorized to view the related document."
+msgstr ""
+
+msgid "You are not currently logged in. Your username and or password may be incorrect. Your browser may also not be configured to accept HTTP cookies. If you need help please contact ${admin_email}."
+msgstr ""
 
 msgid "You can log in with another user name or <a href=\"javascript:history.back();\">go back</a>."
 msgstr "Você pode acessar com outro usuário ou  <a href=\"javascript:history.back();\">voltar</a>."
 
+
 msgid "You don't have enough permissions to access this page"
 msgstr "Você não tem permissão suficiente para acessar essa página."
 
-msgid "a list of template names provided by this template"
+msgid "You can login with another user name or ${go_back}."
 msgstr ""
 
-msgid "a list of template names required by this template"
+msgid "You did not enter a floating point number."
+msgstr ""
+
+msgid "You did not enter a valid date and time."
+msgstr ""
+
+msgid "You did not enter an email address."
+msgstr ""
+
+msgid "You did not enter an integer."
+msgstr ""
+
+msgid "You do not have enough permission for converting this document."
+msgstr ""
+
+msgid "You do not have enough permissions to access this page."
+msgstr ""
+
+msgid "You do not have permission to add new bug."
+msgstr ""
+
+msgid "You do not have permission to add new event."
+msgstr ""
+
+msgid "You do not have the permissions to edit the object."
+msgstr ""
+
+msgid "You don't have enough permissions to access this page"
+msgstr ""
+
+msgid "You don't have the permissions to edit the object."
+msgstr ""
+
+msgid "You have been logged out."
+msgstr ""
+
+msgid "You have been logged out. Thank you for using this website."
+msgstr ""
+
+msgid "You have unsaved changes"
+msgstr ""
+
+msgid "You selected an item that was not in the list."
+msgstr ""
+
+msgid "You'll be automatically redirected."
+msgstr ""
+
+msgid "Your Item No."
+msgstr ""
+
+msgid "Your account was successfully created."
+msgstr ""
+
+msgid "Your report is attached.\n"
+msgstr ""
+
+msgid "Your tab is empty."
+msgstr ""
+
+msgid "Zip Code"
+msgstr ""
+
+msgid "accounting_workflow"
+msgstr ""
+
+msgid "action"
 msgstr ""
 
 msgid "action called when editing a document"
@@ -2956,6 +9679,9 @@ msgstr "A altura em pixel da imagem média"
 
 msgid "the height in pixel of micro image"
 msgstr "a altura em pixel da imagem micro"
+
+msgid "the height in pixel of nano image"
+msgstr ""
 
 msgid "the number of revision used by the business template. This number increases each time we commit a modification"
 msgstr "O número de revisão utilizado pelo modelo de negócio. Esse número incrementa cada vez que enviamos uma modificação."
