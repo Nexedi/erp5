@@ -56,7 +56,7 @@ from Products.ERP5Type.Utils import readLocalExtension, \
 from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, PersistentMigrationMixin
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
@@ -954,6 +954,12 @@ class ObjectTemplateItem(BaseTemplateItem):
                                                  **original_reindex_parameters)
     return original_reindex_parameters
 
+  def _getObjectKeyList(self):
+    # sort to add objects before their subobjects
+    keys = self._objects.keys()
+    keys.sort()
+    return keys
+
   def install(self, context, trashbin, **kw):
     self.beforeInstall()
     update_dict = kw.get('object_to_update')
@@ -981,12 +987,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       groups = {}
       old_groups = {}
       portal = context.getPortalObject()
-      # sort to add objects before their subobjects
-      keys = self._objects.keys()
-      keys.sort()
       # set safe activities execution order
       original_reindex_parameters = self.setSafeReindexationMode(context)
-      for path in keys:
+      object_key_list = self._getObjectKeyList()
+      for path in object_key_list:
         if update_dict.has_key(path) or force:
           # get action for the oject
           action = 'backup'
@@ -1225,7 +1229,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             if getattr(aq_base(container), 'objectIds', None) is not None:
               fillRecursivePathList(['%s/%s' % (from_path, sub_content_id) for\
                                         sub_content_id in container.objectIds()])
-      fillRecursivePathList(self._objects.keys())
+      fillRecursivePathList(object_key_list)
       for recursive_path in recursive_path_list:
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
@@ -1898,6 +1902,31 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
           delattr(obj, attr)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
+
+  def _getObjectKeyList(self):
+    # Sort portal types to install according to their dependencies
+    object_key_list = self._objects.keys()
+    path_dict = dict(x.split('/')[1:] + [x] for x in object_key_list)
+    cache = {}
+    def solveDependency(path):
+      score = cache.get(path)
+      if score is None:
+        obj = self._objects[path]
+        klass = obj.__class__
+        if klass.__module__.startswith('Products.ERP5Type.Document.'):
+          portal_type = obj.portal_type
+          obj._p_deactivate()
+        else:
+          portal_type = klass.__name__
+        depend = path_dict.get(portal_type)
+        cache[path] = score = depend and 1 + solveDependency(depend)[0] or 0
+      return score, path
+    PersistentMigrationMixin._no_migration += 1
+    try:
+      object_key_list.sort(key=solveDependency)
+    finally:
+      PersistentMigrationMixin._no_migration -= 1
+    return object_key_list
 
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information

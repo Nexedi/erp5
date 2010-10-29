@@ -887,14 +887,14 @@ class PersistentMigrationMixin(object):
   It allows us to migrate ERP5Type.Document.XXX.YYY classes to
   erp5.portal_type.ZZZ namespace
 
-  Note that migration can be disabled by setting the migrate
-  class attribute to 0/False, as all old objects in the system
+  Note that migration can be disabled by setting the '_no_migration'
+  class attribute to a nonzero value, as all old objects in the system
   should inherit from this mixin
   """
-  migrate = 1
+  _no_migration = 0
 
   def __setstate__(self, value):
-    if not PersistentMigrationMixin.migrate:
+    if PersistentMigrationMixin._no_migration:
       super(PersistentMigrationMixin, self).__setstate__(value)
       return
 

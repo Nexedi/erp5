@@ -6667,7 +6667,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     from Products.ERP5.Document.BusinessTemplate import BaseTemplateItem
     portal = self.portal
     BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
-    object_id_list = 'old_file', 'some_file', 'some_foo'
+    object_id_list = 'old_file', 'some_file'
     marker_list = []
     def removeProperties(self, obj, export):
       # Check it works if the object is modified during install.
