@@ -325,6 +325,7 @@ class Arrow:
                     'source_carrier', 'destination_carrier',
                     'source_referral', 'destination_referral',
                     'source_account', 'destination_account',
+                    'source_funding', 'destination_funding',
                     #'source_advice', 'destination_advice',
                     #'source_transport', 'destination_transport',
                     # Virtual categories
