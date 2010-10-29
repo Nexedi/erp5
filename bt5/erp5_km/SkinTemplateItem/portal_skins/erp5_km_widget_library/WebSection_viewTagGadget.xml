@@ -72,7 +72,6 @@
                     <key> <string>gadget</string> </key>
                     <value>
                       <list>
-                        <string>tags_label</string>
                         <string>listbox</string>
                       </list>
                     </value>
