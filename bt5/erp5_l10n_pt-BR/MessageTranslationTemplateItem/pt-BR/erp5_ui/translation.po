@@ -24,8 +24,111 @@ msgstr ""
 msgid "-- Workflows --"
 msgstr "-- Fluxos de Trabalho --"
 
+msgid "-- Your Instances --"
+msgstr "-- Suas Instâncias --"
+
+msgid "A Campaign is a marketing mini-project which keeps track of all events associated to a given marketing action. Use it for example to manage press relation campaigns, assessment campaigns, product presentation campaigns which involve contacting many customers through email, phone, etc."
+msgstr "Uma Campanha é um mini-projeto de marketing que acompanha os eventos relacionados à uma ação de Marketing. Pode-se usar uma Campanha para gerenciar campanhas relacionadas a divulgação na imprensa, campanhas de avaliação, apresentação de produtos que envolvam contar muitos clientes por email, telefone, etc."
+
+msgid "A Currency is a resource which can be credited or debited on general ledger accounts. It defines currency information, identification and exchange rates to one or multiple reference currencies."
+msgstr "A Moeda Corrente é um recurso que pode ser creditado ou debitado nas contas do razão geral. Ela define a moeda local, a identificação e taxas de câmbio a uma ou várias moedas de referência."
+
+msgid "A Graphic file (OOo, DXF)"
+msgstr "Um arquivo gráfico (OOo, DXF)"
+
+msgid "A Note is an event which can be used to track project or tickets besides formal communication based on email, fax, etc."
+msgstr "Uma nota é um evento que pode ser usado para rastrear projetos ou tickets além da comunicação formal, baseado em e-mail, fax, etc"
+
+msgid "A Presentation file (OOo, PPT)"
+msgstr "Um arquivo de apresentação (OOo, PPT)"
+
+msgid "A Product is a tangible good which can be produced and traded (ex. a pen, a bicycle, a suit, etc.). Products may define multiple variations and configuration options. Trading information such as price, customer, reference, etc. may be defined on a Product, although it is recommended in complex environments to use Sale Supplies for that purpose. In a production environment, Components are procured and Products are sold."
+msgstr "Um produto é um bem tangível que podem ser produzidos e comercializados (por exemplo, uma caneta, uma bicicleta, uma roupa, etc.) Os produtos podem definir múltiplas variações e opções de configuração. Informações de negociação, tais como preço, cliente, referência, etc, podem ser definidas em um produto, mas é recomendado em ambientes complexos de usar *Sales Supplies* para esta finalidade. Em um ambiente de produção, os componentes são adquiridos e produtos são vendidos."
+
+msgid "A Query allows for capturing questions of users about ERP5 documents. It can be used as a collaboration tool, for sharing knowledge or to provide online help."
+msgstr "A consulta permite a captura questões dos utilizadores sobre os documentos do ERP5. Ele pode ser usado como uma ferramenta de colaboração, para compartilhar conhecimentos ou para fornecer ajuda on-line."
+
+msgid "A Sale packing list gathers the different shipment details regarding a sale order."
+msgstr "Uma entrega de venda reúne os detalhes de diferentes expedições a respeito de um pedido de venda."
+
+msgid "A Service is an immaterial Resource that can be traded (eg. shipping, support ...)"
+msgstr "Um Serviço é um Recurso imaterial que pode ser negociado."
+
+msgid "A Spreadsheet file (OOo, XLS)"
+msgstr "Um arquivo de planilha (OOo, XLS)"
+
+msgid "A Telephone object can contain a telephone number."
+msgstr "Um objeto Telefone contém um número de telefone."
+
+msgid "A Text file (OOo, DOC)"
+msgstr "Um arquivo texto (OOo, DOC)"
+
+msgid "A URL allows to represent in a standard way coordinates such as web sites, emails, ftp sites, etc."
+msgstr "A URL permite representar de uma forma padrão de coordenadas, tais como web sites, e-mails, sites FTP, etc."
+
+msgid "A Visit is an event which can be used to register visits with third parties, be them customers, suppliers or prospects"
+msgstr "Uma Visita é um evento que pode ser usado para registrar as visitas  com terceiros, sejam eles clientes ou fornecedores."
+
+msgid "A Web Page is an HTML document which contains images and files."
+msgstr "Uma página Web é um documento HTML que contém imagens e arquivos."
+
+msgid "A Web Site is the root of a tree of Web Sections and web documents (like web pages or any erp5 object like products, etc.)."
+msgstr "Um Web Site é a raiz de uma árvore de seções Web e documentos Web (como páginas web ou qualquer objeto ERP5 produtos similares, etc.)"
+
+msgid ""
+"A bank account number holds a collection of numbers and codes (ex. SWIFT, RIB, etc.) which may be used to identify a bank account. It is owned by a Person or an Organisation. A Bank Account contains Agents with Agent Privileges used by the owner to delegate the management of the bank account to trusted third-party Persons.\n"
+"\n"
+"BankAccount inherits from Base and from the mix-in Coordinate."
+msgstr ""
+"Um número de conta bancária contém uma coleção de números e/ou códigos (p.e. SWIFT, RIB, 34132, etc.) que pode ser usado para identificar uma conta bancária. Este número pertence a uma Pessoa ou Empresa. Uma conta bancária contem agentes com privilégios utilizados por seu dono para delegar o gerenciamento da conta para terceiros de sua confiança.\n"
+"\n"
+"(Comentário Técnico, não contribui para o usuário)\n"
+"A Conta Bancária herda conceitos da Base e de Coordenação"
+
 msgid "A change log"
 msgstr ""
+
+msgid "A chat address is an identifier in an Instant Messaging service."
+msgstr "O endereço de bate-papo é um identificador para um serviço de mensagens instantâneas."
+
+msgid "A credit registered in a bank and that can be used for a payment"
+msgstr "Um cartão de crédito que pode ser usado para pagamento."
+
+msgid "A discount consists in cutting the price of a product in a sale order."
+msgstr "Um desconto consiste em reduzir o preço de um produto em uma ordem de venda."
+
+msgid "A discount line bears a specific discount that will be applied to either an order or a product."
+msgstr "A Linha de Desconto tem um desconto específico, que será aplicada a qualquer pedido ou um produto."
+
+msgid "A document for which translation has been requested and which has not yet been assigned a translator or a revisor."
+msgstr "Um documento cuja tradução tenha sido solicitada e que ainda não tenha sido enviada para um tradutor ou um revisor."
+
+msgid "A document shared by limited people in the organisation (ex. team, project, etc.)"
+msgstr "Um documento compartilhado por pessoas limitadas na organização (ex. equipe, projeto, etc)"
+
+msgid "A document shared by limited people in the organisation (ex. team, project, etc.). Every assigned knowledge contributor or knowledge manager may modify it depending on its classification policy."
+msgstr "Um documento compartilhado por pessoas limitadas na organização (ex. time, projeto, etc.). Todo o contribuidor de conhecimento ou gerente de conhecimento designado, pode modificar o documento dependendo da política de classificação."
+
+msgid "A document that has been confirmed in ERP5"
+msgstr "Um documento que foi confirmado no ERP5"
+
+msgid "A document which has been submitted for review by the relevant reviewer."
+msgstr "Um documento que foi submetido para revisão pelo revisor pertinente."
+
+msgid "A document which is part of another document and which acquired security from it."
+msgstr "Um documento que é parte de outro documento e que tem a mesma permissão dele"
+
+msgid "A document which is released and becomes accessible to its associates (team, project, members, partners, etc.) based on the security definition"
+msgstr "Um documento que é publicado e se torna acessível aos seus associados (projeto da equipe, membros, parceiros, etc) com base na definição de segurança"
+
+msgid "A fax number that can be stored on a person or organisation document"
+msgstr "Um número de fax pode ser armazenado em uma pessoa ou documento da organização"
+
+msgid "A file, in its widest sense"
+msgstr "Um arquivo, em seu sentido mais amplo"
+
+msgid "A geographic address holds the geographic address of a person or company."
+msgstr "Um endereço geográfico mantém um referência espacial de uma pessoa ou uma empresa"
 
 msgid "A list of allowed content types for portal types"
 msgstr ""
@@ -66,14 +169,59 @@ msgstr ""
 msgid "A list of workflow chains of portal types used by this template"
 msgstr ""
 
+msgid "A public document. Everyone can access it."
+msgstr "Um documento público. Todos podem acessar este documento."
+
+msgid "A published document. Everyone can access it."
+msgstr "Um documento publicado. Todos podem acessar."
+
+msgid "A purchase packing list gathers the different shipment details regarding a purchase order"
+msgstr "Uma entrega de compra reúne os detalhes de diferentes expedições a respeito de um pedido de compra."
+
 msgid "A revision identifier"
 msgstr ""
+
+msgid "A step in the career of a person."
+msgstr "Um passo na carreira de uma pessoa."
+
+msgid "A tax document helps the user define the name and abbreviation of the different taxes that will be used in ERP5. Although, this document do not bear any ratio or % notion."
+msgstr "Imposto ajuda ao usuário a definir o nome e a abreviação de diferentes impostos que serão usados no ERP5. Embora, esse documento não tem nenhuma relação ou % de noção."
+
+msgid "A typical per unit height of the resource"
+msgstr "Uma típica unidade de Altura do Recurso."
+
+msgid "A typical per unit length of the resource"
+msgstr "Uma típica unidade de comprimento do Recurso."
+
+msgid "A typical per unit weight of the resource"
+msgstr "Uma típica unidade de peso do Recurso."
+
+msgid "A typical per unit width of the resource"
+msgstr "Uma típica unidade de largura do Recurso."
 
 msgid "A version identifier"
 msgstr ""
 
+msgid "Accept Decision"
+msgstr "Aceitar Decisão"
+
+msgid "Accept Translation"
+msgstr "Aceitar Tradução"
+
+msgid "Accept the new value defined on the invoice and update the prevision accordingly"
+msgstr "Aceitar o novo valor definido na fatura e atualizar a previsão de acordada"
+
+msgid "Accepts a translation and sets the validation state to submitted, waiting for further approval before publication."
+msgstr "Aceita uma tradução e define o estado como submetido, esperando uma nova aprovação antes de ser publicado."
+
+msgid "Accepts the change that has been done rather than the original prevision. This action will be available whenever a packing list is divergent."
+msgstr "Aceita a mudança que foi feita ao invés do valor na previsão inicial. Esta ação estará disponível sempre que uma entrega é divergente."
+
 msgid "Account"
 msgstr "Conta"
+
+msgid "Account Invalidated"
+msgstr "Conta Invalidada"
 
 msgid "Account Module"
 msgstr "Módulo de Contas"
@@ -86,6 +234,9 @@ msgstr "Tipo de Conta"
 
 msgid "Accounting"
 msgstr "Contabilidade"
+
+msgid "Accounting Period"
+msgstr "Exercício Contábil"
 
 msgid "Accounting Preference"
 msgstr "Preferência de contabilidade"
@@ -101,6 +252,24 @@ msgstr "Contas"
 
 msgid "Action"
 msgstr "Ação"
+
+msgid "Action called in order to change the state of the assignment to update it"
+msgstr "Ação chamada para mudar o estado da uma designação de atualizá-lo"
+
+msgid "Action that will mark the career step of a person as stopped"
+msgstr "Ação que marcará a carreira da pessoa como parada."
+
+msgid "Action used to start the treatment of a project"
+msgstr "Ação utilizada para iniciar o projeto"
+
+msgid "Action used to stop a project"
+msgstr "Ação usada para parar um projeto"
+
+msgid "Action used to suspend a project. Once a project is suspended it is not worked on anymore, but can be reopened later."
+msgstr "Ação usada para suspender um projeto. Uma vez que o projeto está suspenso, este não é trabalhado mais, mas pode ser reaberto mais tarde."
+
+msgid "Action which will disable the preference"
+msgstr "Ação que irá desabilitar a preferência"
 
 msgid "Action..."
 msgstr "Ação..."
@@ -135,6 +304,9 @@ msgstr "Arquivos Adicionados"
 msgid "Additional Payments"
 msgstr "Pagamentos Adicionais"
 
+msgid "Additional Term (days)"
+msgstr "Termo Adicional (dias)"
+
 msgid "Address"
 msgstr "Endereço"
 
@@ -150,8 +322,38 @@ msgstr "Alarme"
 msgid "Allowed Content Types"
 msgstr ""
 
+msgid "An Account defines a legislation independent general ledger account which can hold multiple amounts of currencies. It can be mapped to any number of national accounting nomenclatures and to financial analysis plan."
+msgstr "Uma Conta define um plano contábil genérico, independente de legislação, que pode conter múltiplas moedas. Pode ser mapeado para qualquer nomeclatura nacional contábil e plano de análise financeira."
+
+msgid "An Agent is a Person who is permitted to perform some actions on the bank account according to Privileges."
+msgstr "Um Agente é uma pessoa a quem é permitido realizar algumas ações em contas bancárias, segundo previlégios do sistema."
+
+msgid "An Assignment allows a person to be assigned to an organisation during a period without changing his career organisation."
+msgstr "Uma Designação permite uma pessoa ser nomeada para uma organização durante um período de tempo sem mudar sua carreira organizacional."
+
+msgid "An Email object can contain a link to an online resource."
+msgstr "Um objeto de e-mail pode conter um link para um recurso online."
+
+msgid "An RSS feed is a text document which can populate itself with news extracted from its own content."
+msgstr "Um feed RSS é um documento de texto que pode preencher-se com notícias extraídas de seu próprio conteúdo."
+
+msgid "An accounting transaction, created from scratch by the accountant or whoever entitled to create transactions in ERP5"
+msgstr "Uma transação contábil, criada a partir do zero por um contador ou alguém autorizado a criar transações no ERP5"
+
+msgid "An inventory line can be found in inventory documents, and bears the available stock of a certain product reference. There will be one inventory line for each product reference of the inventory."
+msgstr "Uma Linha de Inventário pode ser encontrado em documentos do tipo Inventário, e tem o estoque disponível de uma determinada referência de um produto. Haverá uma Linha de Inventário para cada referência de produto do Inventário"
+
+msgid "Answer"
+msgstr "Resposta"
+
 msgid "Answered"
 msgstr "Respondido"
+
+msgid "Archive"
+msgstr "Arquivar"
+
+msgid "Archive a document which has been replaced by a more recent version by setting the validation state to archived."
+msgstr "Arquiva um documento que tenha sido substituído por uma versão mais recente, definindo o estado como arquivado."
 
 msgid "Ascending Display"
 msgstr ""
@@ -173,6 +375,9 @@ msgstr "Atribuição"
 
 msgid "Assignments"
 msgstr "Atribuições"
+
+msgid "Assignments in updated state are being updated before being reopened."
+msgstr "Atribuições no estado atualizado estão sendo atualizadas antes de serem reabertas."
 
 msgid "Attributes"
 msgstr "Atributos"
@@ -210,11 +415,17 @@ msgstr "Preço Base"
 msgid "Begin"
 msgstr "Início"
 
+msgid "Begin Date"
+msgstr "Data de Início"
+
 msgid "Birth Name"
 msgstr "Nome de Solteira"
 
 msgid "Birthday"
 msgstr "Data de Nascimento"
+
+msgid "Branch Number"
+msgstr "Número da Agência"
 
 msgid "Bugs"
 msgstr ""
@@ -237,14 +448,26 @@ msgstr ""
 msgid "BusinessTemplate_viewSvnStatus"
 msgstr ""
 
+msgid "Buyer"
+msgstr "Comprador"
+
 msgid "Calculating"
 msgstr "Calculando"
+
+msgid "Campaign"
+msgstr "Campanha"
 
 msgid "Cancel"
 msgstr "Cancelar"
 
+msgid "Cancel Action"
+msgstr "Cancelar Ação"
+
 msgid "Cancel Assignment"
 msgstr "Cancelar atribuição"
+
+msgid "Cancel a document in ERP5"
+msgstr "Cancelar um document no ERP5."
 
 msgid "Canceled"
 msgstr "Cancelado"
@@ -285,6 +508,9 @@ msgstr ""
 msgid "Change Password"
 msgstr "Trocar Senha"
 
+msgid "Chat Address"
+msgstr "Endereço de bate-papo"
+
 msgid "Check All"
 msgstr "Marcar Todos"
 
@@ -303,6 +529,18 @@ msgstr ""
 msgid "Clean Up SVN Locks"
 msgstr ""
 
+msgid "Client"
+msgstr "Cliente"
+
+msgid "Client Project"
+msgstr "Projeto do Cliente"
+
+msgid "Client Reference"
+msgstr "Referência do Cliente"
+
+msgid "Close Task"
+msgstr "Fechar Tarefa"
+
 msgid "Closed"
 msgstr "Fechado"
 
@@ -312,11 +550,17 @@ msgstr "Data de Encerramento"
 msgid "Code"
 msgstr "Código"
 
+msgid "Coefficient used to materialize different salary levels for persons who have the same qualification but not the same experience: such as 1.1 or 1.2 or 2.1 etc, the higher the figure, the higher the salary"
+msgstr "Um coeficiente relacionado com a classificação do salário da pessoa"
+
 msgid "Comment"
 msgstr "Comentário"
 
 msgid "Comments"
 msgstr "Comentários"
+
+msgid "Comments which can be read by internal users but unlike description, are not printed out on official documents."
+msgstr "Comentários que podem ser lidos por usuários internos, mas ao contrário de descrição, não são impressos em documentos oficiais."
 
 msgid "Component"
 msgstr "Componente"
@@ -345,11 +589,43 @@ msgstr "Tipo do Contato"
 msgid "Contacts"
 msgstr "Contatos"
 
+msgid "Container"
+msgstr "Pacote"
+
+msgid "Container Line"
+msgstr "Item do Pacote"
+
+msgid "Container is the term used in sales packing lists to nominate the container in which the goods will be shipped. The quantity of goods in the container that will be shipped can be different from the quantity of goods that was ordered, and in this case, it will possible for the user to take the action \"Update quantity from container\"."
+msgstr ""
+"Pacote é o termo utilizado em vendas para designar a embalagem em que as mercadorias serão enviada.\n"
+"A quantidade de mercadorias no Pacote que será enviado pode ser diferente da quantidade de mercadorias que foi ordenado, e, neste caso, será possível para o usuário tomar a ação \"Atualizar Quantidade\"."
+
+msgid "Container lines bear the different good references included in the container. If three different goods (e-g product references) are in the same container, there will be three container lines: one for each product reference."
+msgstr ""
+"Item do Pacote suportam diferentes referências a produtos incluídas no pacote.\n"
+"Se três diferentes produtos (por exemplo, referências de produtos) estiverem no mesmo pacote,\n"
+"haverá três Item do Pacote: uma referência para cada produto."
+
+msgid "Content format"
+msgstr "Formato do Conteúdo"
+
+msgid "Content format of a document in ERP5"
+msgstr "Formato do conteúdo de um document no ERP5"
+
 msgid "Contents"
 msgstr "Conteúdo"
 
+msgid "Contribution Tool"
+msgstr "Ferramenta de Contribuição"
+
+msgid "Contribution Tool provides a single place to contribute content to an ERP5 Site."
+msgstr "Ferramenta de contribuição é um lugar único para conteúdo de contribuição para um site de ERP5."
+
 msgid "Contributors"
 msgstr "Colaboradores"
+
+msgid "Conversion Format for reports."
+msgstr "Formato de conversão para os relatórios."
 
 msgid "Conversion Server Address"
 msgstr ""
@@ -357,11 +633,26 @@ msgstr ""
 msgid "Conversion Server Port"
 msgstr ""
 
+msgid "Convert File"
+msgstr "Converter Arquivo"
+
+msgid "Converted"
+msgstr "Convertido"
+
+msgid "Converting"
+msgstr "Convertendo"
+
 msgid "Copy"
 msgstr "Copiar"
 
 msgid "Copyright"
 msgstr ""
+
+msgid "Corporate Name"
+msgstr "Nome Corporativo"
+
+msgid "Corporate Registration Code"
+msgstr "CNPJ"
 
 msgid "Country"
 msgstr "País"
@@ -411,8 +702,23 @@ msgstr "Dados+Atualizados."
 msgid "Date"
 msgstr "Data"
 
+msgid "Date Format"
+msgstr "Formato da Data"
+
 msgid "Date Order"
 msgstr "Ordem da Data"
+
+msgid "Date at which the bank account has been closed"
+msgstr "Data em que a conta bancária foi encerrada"
+
+msgid "Date at which the bank account has been opened"
+msgstr "Data na qual a conta bancária foi aberta."
+
+msgid "Date at which the document was ingested"
+msgstr "Data em que o documento foi inserido"
+
+msgid "Date at which the invoice was shipped"
+msgstr "Data em que a fatura foi enviada"
 
 msgid "Day / Month / Year"
 msgstr "Dia / Mês / Ano"
@@ -420,11 +726,50 @@ msgstr "Dia / Mês / Ano"
 msgid "Debit"
 msgstr "Débito"
 
+msgid "Debit Limit"
+msgstr "Limite de Débito"
+
+msgid "Declare Container Missing"
+msgstr "Declarar Falta do Pacote"
+
+msgid "Declares a packing list as packed, ready for shipment"
+msgstr "Declara a entrega como empacotada, pronto para envio."
+
+msgid "Declares a packing list as received and creates the related accounting transaction"
+msgstr "Declara a entrega como recebida e cria transação contábil relacionada."
+
+msgid "Declares the packing list status as received"
+msgstr "Declara a entrega com o estado como recebido."
+
+msgid "Default Classification"
+msgstr "Classificação Padrão"
+
+msgid "Default Price"
+msgstr "Preço Padrão"
+
 msgid "Default Quantity"
 msgstr "Quantidade Padrão "
 
+msgid "Default Style used for reports."
+msgstr "Estilo padrão usado para relatórios."
+
+msgid "Default state of the document"
+msgstr "Estado padrão do documento"
+
+msgid "Defines the additional term (in days) allowed to the customer to pay his order"
+msgstr "Define o termo adicional (em dias) permitidos para o cliente pagar seu pedido."
+
+msgid "Defines the steps of a sale opportunity"
+msgstr "Define as etapas de uma oportunidade de venda"
+
+msgid "Defines to who the invoice will be sent"
+msgstr "Define quem irá receber a fatura."
+
 msgid "Delete"
 msgstr "Apagar"
+
+msgid "Delete a document in ERP5"
+msgstr "Apagar um documento no ERP5"
 
 msgid "Deleted"
 msgstr "Apagado"
@@ -456,8 +801,17 @@ msgstr "Destino"
 msgid "Details"
 msgstr "Detalhes"
 
+msgid "Detect Converted File"
+msgstr "Detectar Arquivo Convertido"
+
+msgid "Detect Uploaded File"
+msgstr "Detectar Arquivo Carregado"
+
 msgid "Diff BusinessTemplate"
 msgstr ""
+
+msgid "Disable"
+msgstr "Desabilitar"
 
 msgid "Disable Preference"
 msgstr "Desabilitar Preferência "
@@ -468,17 +822,35 @@ msgstr "Desabilitado"
 msgid "Discount"
 msgstr "Desconto"
 
+msgid "Discount Line"
+msgstr "Linha de Desconto"
+
+msgid "Discount Model Line"
+msgstr "Linha de Modelo de Desconto"
+
 msgid "Discounts"
 msgstr "Descontos"
 
 msgid "Diverged"
 msgstr "Divergente"
 
+msgid "Do not forget to logout or exit your browser when you are done."
+msgstr "Não esqueça de sair do sistema quando você terminar."
+
 msgid "Document"
 msgstr "Documento"
 
+msgid "Document is a minimal type designed to hold flexible content. It can be used for rapid application development and prototyping. It is only provided here as an example, as a reminder and as a way to prevent creating a new portal type with such a generic name. It should not be used in normal situation."
+msgstr "O documento é um tipo mínimo projetado para manter o conteúdo flexível. Ele pode ser usado para o desenvolvimento rápido de aplicações e protótipos. Este é fornecido apenas como exemplo, como um lembrete e como forma de impedir a criação de um novo tipo de portal com um nome tão genérico. Não deve ser utilizado em situação normal."
+
+msgid "Documentation URL"
+msgstr "URL de documentação"
+
 msgid "Documents"
 msgstr "Documentos"
+
+msgid "Documents in this state were deleted by the user as a result of clicking on the trash button or calling the delete action"
+msgstr "Documentos neste estado foram apagados pelo usuário como resultado de clicar no botão de lixeira ou chamando a ação de exclusão"
 
 msgid "Draft"
 msgstr "Rascunho"
@@ -486,11 +858,17 @@ msgstr "Rascunho"
 msgid "Drafts to Validate"
 msgstr "Rasculhos para Validar"
 
+msgid "Drawing"
+msgstr "Desenho"
+
 msgid "ERP5"
 msgstr "ERP5"
 
 msgid "ERP5 Modules"
 msgstr "Módulos ERP5"
+
+msgid "Edit"
+msgstr "Editar"
 
 msgid "Edit Portal Type '${portal_type}'"
 msgstr ""
@@ -507,14 +885,38 @@ msgstr "Eficiência (%)"
 msgid "Email"
 msgstr "Email"
 
+msgid "Embedded Document"
+msgstr "Document Embutido"
+
+msgid "Employee Number"
+msgstr "Número do Funcionário"
+
+msgid "Empty"
+msgstr "Vazio"
+
+msgid "Enable"
+msgstr "Habilitar"
+
 msgid "Enable Preference"
 msgstr "Habilitar Preferência"
 
 msgid "Enabled"
 msgstr "Habilitado"
 
+msgid "Enables a \"global\" preference"
+msgstr "Habilita a preferência como global"
+
+msgid "Enables a preference"
+msgstr "Habilitar preferência"
+
 msgid "End"
 msgstr "Fim"
+
+msgid "End Date"
+msgstr "Data de Fim"
+
+msgid "End of Month"
+msgstr "Final do Mês"
 
 msgid "English"
 msgstr "Inglês"
@@ -531,6 +933,12 @@ msgstr "Módulo de Eventos"
 msgid "Events"
 msgstr "Eventos"
 
+msgid "Events in this state are incoming events or carbon copies of outgoing events received through the email interface of ERP5 CRM."
+msgstr "Eventos neste estado são os eventos de entrada ou cópias de carbono de eventos de saída recebidos através da interface do e-mail do ERP5 CRM."
+
+msgid "Exchange Rate"
+msgstr "Taxa de Câmbio"
+
 msgid "Expenses"
 msgstr "Despesas"
 
@@ -539,6 +947,9 @@ msgstr "Data de Expiração"
 
 msgid "Expired"
 msgstr "Expirado"
+
+msgid "Explains what is the expected outcome of this Project Line"
+msgstr "Explica o qual é o resultado esperado para esta linha de projeto."
 
 msgid "Export XMI File"
 msgstr "Exportar Arquivo XMI"
@@ -609,11 +1020,29 @@ msgstr ""
 msgid "Format"
 msgstr "Formato"
 
+msgid "Frequency (weeks)"
+msgstr "Freqüência (semanas)"
+
+msgid "Frequency In Days"
+msgstr "Frequência em dias"
+
+msgid "Frequency In Hours"
+msgstr "Frequência em Horas"
+
+msgid "Frequency In Months"
+msgstr "Frequência em meses"
+
 msgid "Function"
 msgstr "Função"
 
 msgid "Gender"
 msgstr "Sexo"
+
+msgid "Generate POT File"
+msgstr "Gerar um Arquivo POT"
+
+msgid "Globally Enable"
+msgstr "Habilitar Globalmente"
 
 msgid "Globally Enabled"
 msgstr "Habilitado Globalmente"
@@ -627,17 +1056,32 @@ msgstr ""
 msgid "Guess Properties Of Portal Types"
 msgstr ""
 
+msgid "Having trouble logging in? Make sure to enable cookies in your web browser."
+msgstr "Está tendo problmes para entrar no sistema? Habilite os cookies no seu navegador."
+
 msgid "Height (cm)"
 msgstr "Altura (cm)"
 
+msgid "Height (m)"
+msgstr "Altura (m)"
+
 msgid "Hidden Content Types"
 msgstr ""
+
+msgid "Hide"
+msgstr "Ocultar"
+
+msgid "Hides a document which was published or released by mistake by setting the validation_state to hidden."
+msgstr "Esconde um documento que foi publicado ou lançado por engano, definindo seu como oculto."
 
 msgid "History"
 msgstr "Histórico"
 
 msgid "Hostname of the oood server."
 msgstr ""
+
+msgid "How much this currency is worth in terms of the reference currency."
+msgstr "Quanto vale esta moeda em termos de moeda de referência."
 
 msgid "Html Style"
 msgstr "Estilo de HTML"
@@ -648,14 +1092,32 @@ msgstr "Esqueci minha senha!"
 msgid "ID"
 msgstr "Id"
 
+msgid "Identification"
+msgstr "Identificação"
+
+msgid "If a document is missing in order to process an action, ERP5 will warn the user that this is Missing"
+msgstr "Se um documento está faltando com o objetivo de processar uma ação, o ERP5 irá advertir o usuário de que este está faltando."
+
+msgid "If set, payment will occur at the end of the month of the payment term."
+msgstr "Se definido, o pagamento ocorrerá no final do mês do prazo de pagamento."
+
 msgid "Image"
 msgstr "Imagem"
+
+msgid "Image type documents in ERP5. Many formats are supported"
+msgstr "Documentos do tipo imagem no ERP5. Muitos formatos são suportados"
 
 msgid "Images"
 msgstr "Imagens"
 
 msgid "Import / Export"
 msgstr "Importar / Exportar"
+
+msgid "In a purchase/sale trade condition document, a discount model line defines the discount behaviour of an order towards certain products."
+msgstr "Em documento de condição de venda/compra, uma Linha de Modelo de Desconto define o comportamento do desconto de um pedido para certos produtos."
+
+msgid "In this state, no transaction can be input anymore on the account as it has been closed"
+msgstr "Neste estado, nenhuma transação pode ser inserida na conta uma vez que foi fechada"
 
 msgid "Incoming FAX"
 msgstr "Fax Recebido"
@@ -668,6 +1130,27 @@ msgstr "Carta Recebida"
 
 msgid "Index"
 msgstr "Índice"
+
+msgid "Index used to sort invoice lines in a list"
+msgstr "Índice usado para ordenar as linhas da fatura em uma lista"
+
+msgid "Indicate how often (in days) the event will happen (every x days)"
+msgstr "Indique quantas vezes(em dias) o evento vai acontecer(a cada dia x)"
+
+msgid "Indicate how often (in hours) the event will happen (every x hours)"
+msgstr "Indicar a freqüência (em horas) que o evento vai acontecer (a cada X horas)"
+
+msgid "Indicate how often (in week) the event will happen (every x weeks)"
+msgstr "Indica quão frequente (em semanas) o evento irá acontecer (toda x semanas)"
+
+msgid "Indicates how often (in months) the event will happen (every x months)"
+msgstr "Indique quantas vezes(em meses) o evento vai acontecer(a cada mês x)"
+
+msgid "Indicates if we display link to translation system in interface or not"
+msgstr "Indica se é mostrado o link para o sistema de tradução"
+
+msgid "Indicates that the conversion of document to an open document is in process"
+msgstr "Indica que a conversão do documento para um documento aberto está na fila para ser convertido"
 
 msgid "Industrial Phase"
 msgstr "Fase Industrial"
@@ -690,6 +1173,9 @@ msgstr "Estado de Instalação "
 msgid "Installed"
 msgstr "Instalado"
 
+msgid "Instructions"
+msgstr "Instruções"
+
 msgid "Internal Packing List"
 msgstr "Lista de Entrega Interna"
 
@@ -702,11 +1188,23 @@ msgstr "Linhas"
 msgid "Internal Packing Lists"
 msgstr "Lista de Entregas Internas"
 
+msgid "Invalidate"
+msgstr "Invalidar"
+
 msgid "Invalidated"
 msgstr "Invalidado"
 
 msgid "Inventories"
 msgstr ""
+
+msgid "Inventory"
+msgstr "Inventário"
+
+msgid "Inventory Line"
+msgstr "Linha de Inventário"
+
+msgid "Invoice Date"
+msgstr "Data da Fatura"
 
 msgid "Invoice Line"
 msgstr "Linha da Fatura"
@@ -717,17 +1215,20 @@ msgstr "Linhas da Fatura"
 msgid "Invoice Number"
 msgstr "Número da Fatura"
 
+msgid "Invoice Sender"
+msgstr "Emissor da Fatura"
+
 msgid "Item"
 msgstr "Item"
 
 msgid "Item Module"
 msgstr "Módulo de Itens"
 
-msgid "Items+Copied."
-msgstr "Items+Copiado(s)."
-
 msgid "Items"
 msgstr "Items"
+
+msgid "Items+Copied."
+msgstr "Items+Copiado(s)."
 
 msgid "Jump"
 msgstr "Ir para"
@@ -741,6 +1242,12 @@ msgstr "Palavras Chaves"
 msgid "Language"
 msgstr "Idioma"
 
+msgid "Language of the web page, it uses code like en, fr, ja..."
+msgstr "Idioma da página web, utiliza-se códigos como en, fr, ja ..."
+
+msgid "Large Image Height"
+msgstr "Altura da Imagem Maior"
+
 msgid "Last"
 msgstr ""
 
@@ -752,6 +1259,9 @@ msgstr "Último Nome."
 
 msgid "Length (cm)"
 msgstr "Comprimento (cm)"
+
+msgid "Length (m)"
+msgstr "Comprimento (m)"
 
 msgid "Level"
 msgstr "Nível"
@@ -765,11 +1275,20 @@ msgstr "Lista"
 msgid "List Mode"
 msgstr ""
 
+msgid "List of the specific needs to complete the project"
+msgstr "Lista de necessidades específicas para completar o projeto.\n"
+
+msgid "List of the specific needs to complete the task"
+msgstr "Lista de necessidades específicas para completar a tarefa."
+
 msgid "Local ID of the object in its enclosing container"
 msgstr ""
 
 msgid "Localisation"
 msgstr "Localização "
+
+msgid "Location"
+msgstr "Localização"
 
 msgid "Log in"
 msgstr "Entrar"
@@ -777,14 +1296,17 @@ msgstr "Entrar"
 msgid "Log out"
 msgstr "Sair"
 
-msgid "Logout"
-msgstr "Sair"
-
 msgid "Logged In as :"
 msgstr "Conectado como :"
 
 msgid "Login"
 msgstr "Entrar"
+
+msgid "Logout"
+msgstr "Sair"
+
+msgid "Lost Sale Opportunity, as it has been rejected by the customer"
+msgstr "Oportunidade de Venda rejeitada pelo cliente"
 
 msgid "Mail Message"
 msgstr "Mensagem de Email "
@@ -804,14 +1326,42 @@ msgstr "Gerenciar Membros"
 msgid "Marital Status"
 msgstr "Estado civil"
 
+msgid ""
+"Mark the beginning and the end of an Accounting Period.\n"
+"Once the period is closed (i.e. the Accounting Period Delimiter is in delivered state), it is no longer possible to validate Transaction in this period"
+msgstr ""
+"Define o início e o fim de um Exercício Contábil.\n"
+"Uma vez que o período esteja fechado (p.e. o Delimitador de Período Contábil esteja no estado de entregue), não será mais possível validar transações neste período."
+
+msgid "Max. Stock"
+msgstr "Estoque Max."
+
+msgid "Means that the container has been prepared and is ready to be shipped"
+msgstr "Significa que o pacote foi preparado e está pronto para ser entregue."
+
+msgid "Medium Image Height"
+msgstr "Altura da Imagem Média"
+
+msgid "Medium Image Width"
+msgstr "Largura da Imagem Média"
+
 msgid "Metadata"
 msgstr "Metadados"
 
 msgid "Methods"
 msgstr "Métodos"
 
+msgid "Micro Image Height"
+msgstr "Altura da Imagem Micro"
+
+msgid "Micro Image Width"
+msgstr "Largura da Imagem Micro"
+
 msgid "Middle Name"
 msgstr "Nome do Meio"
+
+msgid "Min. Stock"
+msgstr "Estoque Min."
 
 msgid "Missing"
 msgstr "Faltando"
@@ -834,20 +1384,26 @@ msgstr "Módulos"
 msgid "Month / Day / Year"
 msgstr "Mês / Dia / Ano"
 
-msgid "My favourites"
-msgstr "Meus favoritos"
-
 msgid "My Favourites"
 msgstr "Meus Favoritos"
-
-msgid "My language"
-msgstr "Meu Idioma"
 
 msgid "My Language"
 msgstr "Meu Idioma"
 
+msgid "My favourites"
+msgstr "Meus favoritos"
+
+msgid "My language"
+msgstr "Meu Idioma"
+
 msgid "Name"
 msgstr "Nome"
+
+msgid "Nano Image Height"
+msgstr "Altura da Imagem Nano"
+
+msgid "Nano Image Width"
+msgstr "Largura da Imagem Nano"
 
 msgid "Nationality"
 msgstr "Nacionalidade"
@@ -873,8 +1429,14 @@ msgstr "Não Instalado "
 msgid "Note"
 msgstr "Nota"
 
+msgid "Notification Message"
+msgstr "Mensagem de notificação"
+
 msgid "Number"
 msgstr "Número"
+
+msgid "Number of Lines Displayed in View Mode ListBoxs"
+msgstr "Número de linhas exibidas nos Listboxes no modo View"
 
 msgid "Number of childs."
 msgstr "Número de crianças."
@@ -912,14 +1474,56 @@ msgstr "Recurso Opcional"
 msgid "Order"
 msgstr "Ordenar"
 
+msgid "Order has been confirmed to the customer or has been confirmed by the supplier"
+msgstr "Pedido foi confirmado para o cliente ou foi confirmado pelo fornecedor."
+
+msgid "Ordered"
+msgstr "Solicitado"
+
 msgid "Organisation"
 msgstr "Organização"
+
+msgid "Organisation that sends the invoice"
+msgstr "Organização que emite a fatura"
 
 msgid "Organisations"
 msgstr "Organizações"
 
+msgid "Organisations capture the contact information (ex. name, phone number) and their classification (ex. site, group, function etc.). Organisations are supported by a standard validation workflow."
+msgstr "Organizações captura as informações do contato (ex. nome, número de telefone) e sua classificação (ex. site do grupo, função, etc.) As organizações são apoiadas por um fluxo de trabalho de validação padrão."
+
+msgid "Origin"
+msgstr "Origem"
+
+msgid "Original Filename"
+msgstr "Nome Original"
+
 msgid "Others"
 msgstr "Outros"
+
+msgid "Outcome Description"
+msgstr "Descrição do Resultado Esperado"
+
+msgid "Overdraft Facility"
+msgstr "Linha de Crédito"
+
+msgid "Overdraft facility of a bank account"
+msgstr "Linha de crédito de uma conta bancária"
+
+msgid "PDF documents store PDF files and can convert them to HTML, Text or different image formats."
+msgstr "Documento PDF armazena um arquivo PDF e podem ser convertidos para HTML, Texto ou diferentes formatos de imagem."
+
+msgid "Pack Container"
+msgstr "Empacotar"
+
+msgid "Packed"
+msgstr "Empacotado"
+
+msgid "Packing list has been shipped"
+msgstr "A Entrega foi enviada."
+
+msgid "Packing list that has been prepared (packed), ready for shipment"
+msgstr "Entrega que foi preparada (empacotada), pronta para o envio."
 
 msgid "Parameters"
 msgstr "Parâmetros"
@@ -936,20 +1540,38 @@ msgstr "Confirmação (Senha)"
 msgid "Password Confirmation"
 msgstr "Confirmação (Senha)"
 
+msgid "Password for a user in ERP5"
+msgstr "Senha de um usuário no ERP5"
+
 msgid "Paste"
 msgstr "Colar"
 
 msgid "Paths"
 msgstr "Caminhos"
 
+msgid "Payee"
+msgstr "Beneficiário"
+
+msgid "Payer"
+msgstr "Pagador"
+
 msgid "Payment"
 msgstr "Pagamento"
+
+msgid "Payment Condition"
+msgstr "Condição de Pagamento"
+
+msgid "Payment Date"
+msgstr "Data de Pagamento"
 
 msgid "Payment Mode"
 msgstr "Forma de Pagamento"
 
 msgid "Payment Transaction"
 msgstr ""
+
+msgid "Payment conditions can be either on a sale/purchase order or on a sale/purchase trade condition document. Payment condition describes the payment conditions that will be applied to an order, such as the payment mode, the term, etc.."
+msgstr "Condições de pagamento pode existir tanto em um pedido de venda/compra ou em uma condição de negócio de compra/venda. Condição de pagamento descreve as condições de pagamento que será aplicado para um pedido, tal como, modo de pagamento, prazo, etc.."
 
 msgid "PdfDocument"
 msgstr "Dcoumento PDF"
@@ -960,11 +1582,17 @@ msgstr "Porcentagem do Total"
 msgid "Person"
 msgstr "Pessoa"
 
+msgid "Person who is creating the event."
+msgstr "Pessoa que está criando o evento."
+
 msgid "Personal Name"
 msgstr "Nome Pessoal"
 
 msgid "Persons"
 msgstr "Pessoas"
+
+msgid "Persons capture the contact information (ex. name, phone number) and the relation between entities (ex. who is assigned to which function and which organisation). Persons are supported by a standard validation workflow."
+msgstr "Pessoas mantém a informação de contato (p.e. nome, número de telefone) e o relacionamento entre entidades (p.e. quem está associado à qual função em qual organização). Pessoas são mantidas por um workflow padrão."
 
 msgid "Phone"
 msgstr "Telefone"
@@ -1005,14 +1633,23 @@ msgstr "Código Postal"
 msgid "Precision"
 msgstr "Precisão"
 
+msgid "Predecessors"
+msgstr "Antecessores"
+
 msgid "Preference"
 msgstr "Preferência"
 
 msgid "Preference Tool"
 msgstr ""
 
+msgid "Preference objects store user preferences, and are editable through the Preference Tool."
+msgstr "Preferência armazenada as preferências do usuário, e não modificadas através da ferramenta de preferências."
+
 msgid "Preferences"
 msgstr "Preferências"
+
+msgid "Preferred classification policy for newly created documents"
+msgstr "Política de classificação preferencial para documentos recém-criados"
 
 msgid "Prefix"
 msgstr "Prefixo"
@@ -1035,8 +1672,14 @@ msgstr "Prioridade"
 msgid "Priority of the preference."
 msgstr ""
 
+msgid "Private"
+msgstr "Privado"
+
 msgid "Product"
 msgstr "Produto"
+
+msgid "Product or Service"
+msgstr "Produto ou Serviço"
 
 msgid "Products"
 msgstr "Produtos"
@@ -1047,6 +1690,12 @@ msgstr "Perfil"
 msgid "Project"
 msgstr "Projeto"
 
+msgid "Project Line"
+msgstr "Linha de Projeto"
+
+msgid "Project Location"
+msgstr "Localização do Projeto"
+
 msgid "Projects"
 msgstr "Projetos"
 
@@ -1056,8 +1705,23 @@ msgstr ""
 msgid "Provision"
 msgstr ""
 
+msgid "Public"
+msgstr "Público"
+
+msgid "Public description of the document."
+msgstr "Descrição pública do documento."
+
+msgid "Publication Date"
+msgstr "Data de Publicação"
+
 msgid "Publish"
 msgstr "Publicar"
+
+msgid "Published"
+msgstr "Publicado"
+
+msgid "Publishes a document and triggers the archival of any public document of a previous version"
+msgstr "Publica um documento e aciona o arquivamento de qualquer documento público de uma versão anterior"
 
 msgid "Purchase Invoice Transaction"
 msgstr ""
@@ -1089,8 +1753,32 @@ msgstr "Unidade (Quantidade)"
 msgid "Queries"
 msgstr ""
 
+msgid "Query"
+msgstr "Consulta"
+
+msgid "Query Type"
+msgstr "Tipo de Consulta"
+
+msgid "RSS Feed"
+msgstr "Feed RSS"
+
+msgid "Ready"
+msgstr "Pronto"
+
 msgid "Real Client"
 msgstr "Cliente Real"
+
+msgid "Receive"
+msgstr "Receber"
+
+msgid "Received"
+msgstr "Recebido"
+
+msgid "Recipient or Beneficiary"
+msgstr "Destinatário ou Beneficiário"
+
+msgid "Recipient or beneficiary of the supply"
+msgstr "Destinatário ou beneficiário do fornecimento"
 
 msgid "Reconfigure Portal"
 msgstr "Reconfigurar o Portal"
@@ -1101,14 +1789,29 @@ msgstr "Referência"
 msgid "Region"
 msgstr "Região"
 
+msgid "Reject"
+msgstr "Rejeitar"
+
 msgid "Rejected"
 msgstr "Rejeitado"
+
+msgid "Rejects a document which was submitted by setting its validation state to draft."
+msgstr "Rejeita um documento que foi submetido pela validação a partir do Rascunho."
 
 msgid "Related Invoice"
 msgstr "Faturas Relacionadas"
 
 msgid "Related Objects"
 msgstr "Objetos Relacionados"
+
+msgid "Release"
+msgstr "Liberar"
+
+msgid "Released"
+msgstr "Liberado"
+
+msgid "Releases a document and triggers the archival of any released document of a previous version"
+msgstr "Libera um documento e aciona o arquivamento de qualquer documento lançado de uma versão anterior"
 
 msgid "Remember my name"
 msgstr "Lembrar meu usuário"
@@ -1119,11 +1822,32 @@ msgstr "Arquivos Removidos"
 msgid "Removed files"
 msgstr "Arquivos removidos."
 
+msgid "Reopens a document that would have been closed previously, in order to modify it, such as an accounting period"
+msgstr "Reabre um documento que teria sido fechado anteriormente a fim de modificá-lo, como um período contabilístico"
+
 msgid "Replaced"
 msgstr "Substituído"
 
+msgid "Reply to"
+msgstr "Responder para"
+
+msgid "Reply to email address, extracted from header."
+msgstr "Responder para o e-mail extraído do cabeçalho."
+
 msgid "Report"
 msgstr "Relatório"
+
+msgid "Report Format"
+msgstr "Formato do Relatório"
+
+msgid "Report Style"
+msgstr "Estilo do relatório"
+
+msgid "Request"
+msgstr "Requerer"
+
+msgid "Requester"
+msgstr "Solicitante"
 
 msgid "Requirement"
 msgstr "Requisíto"
@@ -1142,6 +1866,9 @@ msgstr "Recursos"
 
 msgid "Responded"
 msgstr "Respondido"
+
+msgid "Restart"
+msgstr "Reabrir"
 
 msgid "Returned Sale Packing List"
 msgstr "Entrega Retornada de Venda "
@@ -1185,6 +1912,9 @@ msgstr "Oportunidades de Venda"
 msgid "Sale Opportunity"
 msgstr "Oportunidade de Venda"
 
+msgid "Sale Opportunity converted into Sale"
+msgstr "Oportunidade de Venda é convertido para uma Venda"
+
 msgid "Sale Order"
 msgstr "Pedido de Venda"
 
@@ -1221,6 +1951,12 @@ msgstr "Módulo de Condições de Venda"
 msgid "Sale Trade Conditions"
 msgstr "Condições de Venda"
 
+msgid "Sale order lines are part of sale orders and bear the different product or service references that have been sold by the company."
+msgstr "Linha de Pedido de Venda sao partes de um Pedido de Venda e tem um produto ou serviço diferente que foram vendido pela empresa."
+
+msgid "Sale packing list lines are part of sale packing lists, and bear the different references that have been sold. For each product/service reference there will be a sale packing list line."
+msgstr "Linha de Entrega de Venda são partes de uma entrega de venda, e tem diferentes referências que foram vendidas. Para cada referência de produto/serviço existirá uma Linha de Entrega de Venda."
+
 msgid "Save"
 msgstr "Salvar"
 
@@ -1245,11 +1981,53 @@ msgstr "Selecionar Idioma"
 msgid "Select Module"
 msgstr "Selecionar Módulo"
 
+msgid "Seller"
+msgstr "Vendedor"
+
+msgid "Sender or Caller"
+msgstr "Remetente ou Emissor"
+
+msgid "Sender or Provider"
+msgstr "Remetente ou Fornecedor"
+
+msgid "Serial Number"
+msgstr "Número Serial"
+
 msgid "Service"
 msgstr "Serviço"
 
 msgid "Services"
 msgstr "Serviços"
+
+msgid "Set ready"
+msgstr "Definir Como Pronto"
+
+msgid "Sets the document state as started"
+msgstr "Define o estado do documento como iniciado"
+
+msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you."
+msgstr "Ao marcar a opção 'Lembrar meu usuário', um cookie será definido, com o nome do seu usuário. Então na próxima vez que você for entrar no sistema, o nome de seu usuário já estará preenchido."
+
+msgid "Share"
+msgstr "Compartilhar"
+
+msgid "Share Alive"
+msgstr "Compartilhar Ativo"
+
+msgid "Shared"
+msgstr "Compartilhado"
+
+msgid "Shared Alive"
+msgstr "Compartilhado Ativo"
+
+msgid "Ship"
+msgstr "Enviar"
+
+msgid "Ship the packing list and declares a packing list as shipped"
+msgstr "Envia a entrega e define a entrega como enviada."
+
+msgid "Shipped"
+msgstr "Enviado"
 
 msgid "Shipping Date"
 msgstr "Data de Envio"
@@ -1266,6 +2044,15 @@ msgstr "Sítio"
 msgid "Skin Folders"
 msgstr "Pastas de Skin"
 
+msgid "Small Image Height"
+msgstr "Tamanho da Imagem Pequena"
+
+msgid "Social Security Identification Number"
+msgstr "Número de Identificação do Seguro Social"
+
+msgid "Sold"
+msgstr "Vendido"
+
 msgid "Solved"
 msgstr "Resolvido"
 
@@ -1278,8 +2065,23 @@ msgstr "Ordenar"
 msgid "Source"
 msgstr "Fonte"
 
+msgid "Split Document"
+msgstr "Dividir Documento"
+
+msgid "Splits a document in multiple subdocuments to accelerate translation. Sets validation_state to split."
+msgstr "Dividi um documento em múltiplos sub documentos para acelerar a tradução. Define o estado de validação para dividido."
+
+msgid "Spreadsheet"
+msgstr "Planilha"
+
+msgid "Start"
+msgstr "Iniciar"
+
 msgid "Start Date"
 msgstr "Data Inicial"
+
+msgid "Start Project"
+msgstr "Iniciar Projeto"
 
 msgid "Start Task"
 msgstr "Iniciar Tarefa"
@@ -1287,11 +2089,32 @@ msgstr "Iniciar Tarefa"
 msgid "Started"
 msgstr "Iniciado"
 
+msgid "Started Project"
+msgstr "Projeto Iniciado"
+
 msgid "Starting"
 msgstr "Iniciando"
 
 msgid "State"
 msgstr "Estado"
+
+msgid "State of a document that has been cancelled"
+msgstr "Estado de um documento que tenha sido cancelado"
+
+msgid "State of a document that has been invalidated in ERP5"
+msgstr "Estado de um documento que tenha sido invalidado no ERP5"
+
+msgid "State of a document that has been planned in ERP5"
+msgstr "Estado de um documento que foi planejado no ERP5"
+
+msgid "State of a document that has been validated in ERP5"
+msgstr "Estado do documento que está validado no ERP5"
+
+msgid "State of a preference that is enabled for a complete site"
+msgstr "Estado da preferência que é habilitado para todo o site"
+
+msgid "State of the document when converted to an open document"
+msgstr "Estado do documento quando convertido para um documento aberto"
 
 msgid "States"
 msgstr "Estados"
@@ -1299,14 +2122,38 @@ msgstr "Estados"
 msgid "Stock"
 msgstr "Estoque"
 
+msgid "Stop Career Step"
+msgstr "Parar Carreira"
+
+msgid "Stop Date"
+msgstr "Data Final"
+
+msgid "Stop Project"
+msgstr "Parar Projeto"
+
 msgid "Stopped"
 msgstr "Parado"
+
+msgid "Stopped Project"
+msgstr "Projeto Parado"
+
+msgid "Stopped is a state of a document for which the treatment has been stopped in ERP5"
+msgstr "Parado é um estado de um documento que o seu uso foi interrompido no ERP5"
 
 msgid "Street Address"
 msgstr "Endereço"
 
 msgid "Sub-Features"
 msgstr "Sub-Característica"
+
+msgid "Submit for Review"
+msgstr "Submeter para Revisão"
+
+msgid "Submits a document for review by setting validation_state to submitted."
+msgstr "Submete um documento para revisão definindo o estado de validação como submetido."
+
+msgid "Submitted"
+msgstr "Submetido"
 
 msgid "Subversion"
 msgstr "Controle de Versão"
@@ -1317,11 +2164,29 @@ msgstr ""
 msgid "Suffix"
 msgstr "Sufixo"
 
+msgid "Supplier"
+msgstr "Fornecedor"
+
+msgid "Supplier Project"
+msgstr "Projeto Fornecedor"
+
+msgid "Supplier Reference"
+msgstr "Referência do Fornecedor"
+
 msgid "Support Requests"
 msgstr "Pedidos de Suporte"
 
 msgid "Surname"
 msgstr "Sobrenome"
+
+msgid "Suspend Project"
+msgstr "Suspender Projeto"
+
+msgid "Suspended Project"
+msgstr "Projeto Suspendido"
+
+msgid "System Preference"
+msgstr "Preferência do sistema"
 
 msgid "Target Price"
 msgstr "Preço Alvo"
@@ -1347,35 +2212,393 @@ msgstr "Título"
 msgid "Tasks"
 msgstr "Tarefas"
 
+msgid "Tax"
+msgstr "Imposto"
+
+msgid "Tax Line"
+msgstr "Linha de Imposto"
+
+msgid "Tax Model Line"
+msgstr "Linha de Module de Imposto"
+
+msgid "Tax lines can be included in sale or purchase orders in order to define the tax rate that will be applied to taxable products and services of the order."
+msgstr "Linha de Imposto podem ser incluído em pedidos de venda/compra para definir a taxa de imposto que será aplicada aos produtos e serviços tributáveis do pedido."
+
+msgid "Tax model lines are the equivalent of tax lines, only they are used in purchase and trade conditions instead of purchase and trade orders."
+msgstr "Linhas de Modelo de Imposto são equivalentes a Linha de Imposto, apenas são usados em  Condições de Compra e Venda ao invés de Pedido de Compra e Venda."
+
 msgid "Telephone"
 msgstr "Telefone"
+
+msgid "Tells who requested the ticket"
+msgstr "Informa quem solicitou o ticket"
 
 msgid "Template Tool"
 msgstr ""
 
+msgid "Temporary close"
+msgstr "Fechar Temporariamente"
+
+msgid "Temporary closed"
+msgstr "Temporariamente encerrado"
+
+msgid "Term (days)"
+msgstr "Prazo (dias)"
+
 msgid "Text"
 msgstr "Texto"
+
+msgid "Text Editor"
+msgstr "Editor de Texto"
+
+msgid "Text Format"
+msgstr "Formato do texto"
+
+msgid "The Accounting Period is closed. It is no longer possible to add accounting transactions in this period. A balance transaction has been created."
+msgstr "O período de contabilidade está fechado. Não é mais possível adicionar transações contábeis no período. Uma transação de equilíbrio foi criado."
+
+msgid "The Accounting Period is open. It is therefore possible to post accounting."
+msgstr "O período de contabilidade esta aberto. Portanto, é possível enviar mensagens de contabilidade."
+
+msgid "The Accounting Period is temporary closed, but can be opened back. In this state it is not possible to post transactions during this period."
+msgstr "O período de contabilidade é temporário encerrado, mas pode ser aberto novamente. Neste estado, não é possível publicar transacções durante o período."
+
+msgid "The Accounting Period will be temporary closed, but can be reopened. In this state it is not possible to post transactions during this period."
+msgstr "O período contábil será temporariamente fechado, mas pode ser reaberto. Neste estado, não é possível publicar transações durante o período."
+
+msgid "The Closed State notifies that either the accounting period, the account or the transaction has been closed, and cannot be modified anymore."
+msgstr "O estado fechado informa que o período contábil, a conta ou a transação foram fechadas e não podem mais ser modificada."
+
+msgid "The Date"
+msgstr "Data"
+
+msgid "The Default Quantity."
+msgstr "A quantidade padrão."
+
+msgid "The End date of an operation"
+msgstr "A data de término de uma operação"
+
+msgid "The Invoice Reference"
+msgstr "A referência da fatura"
+
+msgid "The Location where the project is handled, most of the time the name of an organisation."
+msgstr "A localização onde o projeto é tratado. Na maioria dos casos, a referência é o nome da organização."
+
+msgid "The Sale Opportunity has expired."
+msgstr "Uma oportunidade de venda que expirou."
+
+msgid "The Share Alive workflow method sets the document validation state to shared_alive and archives any previously shared document with same version and same language."
+msgstr "O método de workflow, Compartilhar Ativo, define o estado de validação do documento como Compartilhado Ativo e arquiva qualquer documento compartilhado anterior com a mesma versão e com a mesma língua."
+
+msgid "The Share workflow method sets the document validation state to shared and archive any previous shared document with same reference and same language."
+msgstr "O método de workflow compartilhar define o estado do documento como compartilhado e arquiva qualquer documento anterior compartilhado com mesma referência e mesma língua."
+
+msgid "The Social Security Identification Number of the organisation"
+msgstr "O Número de Identificação do Seguro Social da organização"
+
+msgid "The Social Security Identification Number of the person"
+msgstr "O Número de Identificação do Seguro Social da pessoa"
 
 msgid "The Subversion working copies"
 msgstr ""
 
+msgid "The Version of the Rule"
+msgstr "A versão da regra"
+
+msgid "The absolute date at which payment is expected to be made."
+msgstr "A data em que o pagamento deverá ser feito."
+
+msgid "The account is open and can be used to input transactions."
+msgstr "A conta é aberta e pode ser usada para operações de entrada."
+
+msgid "The accountable project on the client side."
+msgstr "O projeto de responsabilidade no lado do cliente."
+
+msgid "The accountable project on the supplier side."
+msgstr "O projeto responsável do lado do fornecedor."
+
+msgid "The amount limit an agent is allowed to debit on a bank account"
+msgstr "O limite que um agente é permitido para débito em conta bancária"
+
+msgid "The bank organisation which delivered the credit card"
+msgstr "A organizaçao bancária que emitiu o cartão de crédito"
+
+msgid "The branch number is a 6 digit number as part of a bank account number that indicates the bank and the branch where the account is held."
+msgstr "O número da agência é um número de 6 dígitos parte de um número de conta bancária que indica o banco e a agência onde a conta é mantida."
+
+msgid "The content of the document considered as a text string"
+msgstr "O conteúdo do documento considerado como um texto."
+
+msgid "The corporate registration code of this organisation"
+msgstr "O código de registro empresarial da organização"
+
+msgid "The date at which an operation starts in ERP5"
+msgstr "A data em que a operação iniciou no ERP5"
+
+msgid "The date at which products were shipped or the date at which a service started."
+msgstr "A data na qual os produtos foram enviados ou a data na qual um serviço foi iniciado."
+
+msgid "The date at which shipped products were delivered or the date at which a service was completed."
+msgstr "A data que os produtos enviados foram entregues ou a data que o serviço foi acabado."
+
+msgid "The date at which the agent has no right anymore on the bank account"
+msgstr "A data que o agente não tem mais direito na conta bancária."
+
+msgid "The date at which the event was created"
+msgstr "A data em que o evento foi criado"
+
+msgid "The date at which the ticket is supposed to stop."
+msgstr "A data em que o ticket irá parar."
+
+msgid "The date at which the ticket was created."
+msgstr "A data em que o ticket foi criado."
+
+msgid "The date from which the offer is valid."
+msgstr "A data em que a oferta é válida."
+
+msgid "The date the organisation was registered."
+msgstr "A data que a organização foi registrada"
+
+msgid "The date when a document is published."
+msgstr "A data do documento quando é publicado"
+
+msgid "The date when the document expires."
+msgstr "Data quando o documento expira."
+
+msgid "The date when the document starts being valid."
+msgstr "Data na qual o documento passa a ser válido."
+
+msgid "The default price"
+msgstr "O preço padrão"
+
+msgid "The default price for the task"
+msgstr "O preço base para a tarefa."
+
+msgid "The document is private and can be seen only by its owner."
+msgstr "O documento é confidencial e só pode ser visto pelo dono."
+
+msgid "The height in pixel of small image"
+msgstr "O tamanho do pixel da imagem pequena"
+
+msgid "The inventory module helps the user make a full inventory of the available products in the different warehouses of the company. There will be an inventory line for each product reference that is part of the inventory."
+msgstr "O módulo de inventário ajuda o usuário para fazer um inventário completo dos produtos disponíveis em diferentes armazéns de empresa. Existirá uma Linha de Inventário para cada referência de produto que faz parte do inventário."
+
+msgid "The invoice date for the client in the case of a Purchase Invoice Transaction"
+msgstr "A Data da Fatura para o cliente no caso de uma Transação de Fatura de Compra"
+
+msgid "The invoice date for the supplier in the case of a Sale Invoice Transaction."
+msgstr "A Data da Fatura para o fornecedor no caso de uma Transação da Fatura de Venda"
+
+msgid "The invoiced person or organisation."
+msgstr "A pessoa ou organização faturados."
+
+msgid "The invoicing person or organisation."
+msgstr "A pessoa ou organizacao da fatura."
+
+msgid "The list of project lines that need to be fulfilled before this one is treated"
+msgstr "A lista de linhas de projeto que precisam ser completadas antes desta ser iniciada."
+
+msgid "The list of tasks that need to be fulfilled before this one is treated"
+msgstr "A lista de tarefas que precisam ser totalmente completadas antes desta iniciar."
+
+msgid "The list of the resources involved in the project. Most of the time, it's a supplier's worker"
+msgstr "A lista de recursos envolvidos em um projeto, na maioria das vezes um produto ou um componente."
+
+msgid "The maximal stock quantity of a resource."
+msgstr "A quantidade máxima de estoque de um recurso."
+
+msgid "The minimal stock quantity of a resource."
+msgstr "A quantidade mínima de estoque de um recurso."
+
+msgid "The name of a document in ERP5"
+msgstr "O nome do documento no ERP5"
+
+msgid "The number of digit after the comma for the given currency, for example 2 means we can have cents (0,00)"
+msgstr "O número de dígitos depois da vírgula para a moeda dada, por exemplo, 2 significa que podemos ter centavos (0,00)"
+
+msgid "The number of partner for the person."
+msgstr "Número de parcerias da pessoa."
+
+msgid "The official name of this organisation"
+msgstr "O nome oficial desta organização"
+
 msgid "The order of year, month and day."
 msgstr ""
+
+msgid "The organisation for which the currency exchange line is applied for."
+msgstr "A Organização para qual a Linha de Troca de Moeda é aplicada."
+
+msgid "The organisation or person in charge of paying for the client."
+msgstr "A pessoa ou organização encarregada de pagar o cliente."
+
+msgid "The organisation or person in charge of receiving the payment for the supplier."
+msgstr "A pessoa ou organização encarregada de receber o pagamento."
+
+msgid "The organisation or person who sends merchandise or provides the service."
+msgstr "A organização ou pessoa que envia  a mercadoria ou presta o serviço."
+
+msgid "The organisation where the person is affected."
+msgstr "A Organização onde a pessoa é efectuada."
+
+msgid "The original filename of the document"
+msgstr "O nome original do arquivo"
+
+msgid "The person or organisation in charge of handling the sales process or of taking the sales decision."
+msgstr "A pessoa ou organização responsável em tratar os processos de venda ou tomar decisões relacionadas a venda."
+
+msgid "The person or organisation in charge of selecting the supplier or taking the decision to place the order."
+msgstr "A pessoa ou organização encarregada de selecionar o fornecedor ou de tomar a decisão de alocar o pedido."
+
+msgid "The person or organisation in charge of sending the invoice or handling administrative paperwork for the supplier."
+msgstr "A pessoa ou organização responsável pelo envio da fatura ou a manipulaçao da burocracia administrativa para o fornecedor."
+
+msgid "The phone number"
+msgstr "Número do Telefone"
+
+msgid "The preferred date order in which datetime field will be displayed (dd/mm/yyyy, yyyy/mm/dd, ...)"
+msgstr "A ordem preferencial da data em que o campo de data/hora será exibido (dd/mm/yyyy, yyyy/mm/dd, ...)"
+
+msgid ""
+"The prefix for the person's full name.\n"
+"\n"
+"Usually something like Dr. or Mr."
+msgstr "O prefixo para o nome completo da pessoa. Normalmente: Dr. ou Sr."
+
+msgid "The printing format of the invoice."
+msgstr "O formato de impressão da fatura."
+
+msgid "The product or service which is traded"
+msgstr "O produto ou serviço que é comercializado"
+
+msgid "The project for the assignment."
+msgstr "O projeto para a Atribuição."
+
+msgid "The project has been started"
+msgstr "O projeto foi iniciado"
+
+msgid "The project has been stopped"
+msgstr "O projeto foi interrompido"
+
+msgid "The project in which the client is involved in"
+msgstr "O projeto que o cliente está envolvido."
+
+msgid "The reference of the client."
+msgstr "A referência do cliente."
+
+msgid "The reference of the supplier."
+msgstr "A Referência do Fornecedor"
+
+msgid "The request workflow method sets the document validation state to requested."
+msgstr "O método de workflow requerer define o estado de validação do documento como requerido ou solicitado."
+
+msgid "The section Organisation for documents."
+msgstr "A seção Organização para documentos."
 
 msgid "The section category for documents; usually something like group/nexedi."
 msgstr ""
 
+msgid ""
+"The suffix for the person full name.\n"
+"\n"
+"Can be something like 'Jr.'"
+msgstr ""
+"O sufixo para o nome completo da pessoa.\n"
+"Por exemplo 'Jr.'"
+
+msgid "The supplier of the invoice"
+msgstr "O Fornecedor da fatura"
+
+msgid ""
+"The symbol used to represent the currency.\n"
+"\n"
+"It is for example $, ¥, €, £..."
+msgstr ""
+"O símbolo usado para representar a moeda.\n"
+"É por exemplo $, ¥, €, R $ ..."
+
+msgid "The telephone area"
+msgstr "A código de área do telefone"
+
+msgid "The telephone country code"
+msgstr "O código telefonico do país."
+
+msgid "The telephone number suffix (extension)"
+msgstr "A extensão / sufixo do telefone"
+
+msgid "The telephone region."
+msgstr "A região do telefone."
+
+msgid "The term (days) allowed to the customer for the payment of the order"
+msgstr "O prazo (dias) permitido para o cliente para o pagamento do pedido."
+
+msgid "The text content of an answer to a query"
+msgstr "O conteúdo do texto de resposta de uma consulta"
+
+msgid "The text editor used by default"
+msgstr "O Editor de texto usado como padrão"
+
+msgid "The text format used by default"
+msgstr "Formato do texto usado por padrão"
+
+msgid "The title of the Invoice."
+msgstr "O título da fatura"
+
+msgid "The title of the resource involved"
+msgstr "Titulo do Recurso envolvido"
+
 msgid "The user name for Subversion"
 msgstr ""
+
+msgid "This action invalidates a document in ERP5"
+msgstr "Esta ação invalida um documento no ERP5"
 
 msgid "This is Spam"
 msgstr "Isso é Spam"
 
+msgid "This method is invoked each time a file is uploaded"
+msgstr "Este método é chamado cada vez que um arquivo é enviado."
+
+msgid "This workflow method is called to convert a file to a certain format"
+msgstr "Este método é chamado para converter um arquivo para um determinado formato"
+
 msgid "Time"
 msgstr "Data/Hora"
 
+msgid "TioLive Chat"
+msgstr "TioLive Bate-Papo"
+
+msgid "TioLive Documentation"
+msgstr "Documentação do TioLive"
+
+msgid "TioLive Instances"
+msgstr "TioLive Instâncias"
+
+msgid "TioLive Mail"
+msgstr "TioLive E-mail"
+
+msgid "TioLive Profile"
+msgstr "TioLive Perfil"
+
 msgid "Title"
 msgstr "Título"
+
+msgid "Title of the entity which is responsible of accepting the ticket request"
+msgstr "Título da entidade que é responsável por aceitar um ticket solicitado."
+
+msgid "Title of the entity who is responsible of supervising the project"
+msgstr "Título da entidade que é responsável por supervisionar o projeto."
+
+msgid "Title of the entity who is responsible of supervising the task"
+msgstr "Título da entidade que é responsável por supervisionar a tarefa."
+
+msgid "Title of the party to which the task is paid to"
+msgstr "O Título da equipe para qual a tarefa é paga."
+
+msgid "Title of the task which is at the origin of the task report."
+msgstr "Título da tarefa que está definida na origem do relatório da tarefa."
+
+msgid "To who the task had been assigned"
+msgstr "Aquele que foi designado para a tarefa."
 
 msgid "Total"
 msgstr "Total"
@@ -1404,11 +2627,20 @@ msgstr "Recurso Transformado"
 msgid "Transformed Resources"
 msgstr "Recursos Transformados"
 
+msgid "Translation Requested"
+msgstr "Tradução solicitada"
+
+msgid "Translator Mode"
+msgstr "Modo de tradução"
+
 msgid "Trash Bins"
 msgstr ""
 
 msgid "Type"
 msgstr "Tipo"
+
+msgid "Type or Title of the query posted by a user"
+msgstr "Tipo ou Título da consulta enviada por um usuário"
 
 msgid "Uncheck All"
 msgstr "Desmarcar Todos"
@@ -1419,11 +2651,32 @@ msgstr "Desfazer"
 msgid "Unit"
 msgstr "Unidade"
 
+msgid "Unpublish"
+msgstr "Despublicar"
+
+msgid "Unpublishes the document"
+msgstr "Despublicar documento"
+
+msgid "Update Assignment"
+msgstr "Atualizar Designação"
+
 msgid "Update Business Template from SVN"
 msgstr ""
 
+msgid "Update quantity"
+msgstr "Atualizar Quantidade"
+
+msgid "Updated"
+msgstr "Atualizado"
+
 msgid "Upload Module"
 msgstr ""
+
+msgid "Upload file"
+msgstr "Enviar Arquivo"
+
+msgid "Url of the document"
+msgstr "URL do documento"
 
 msgid "Use Case"
 msgstr "Caso de Uso"
@@ -1433,6 +2686,27 @@ msgstr "Ator do Caso de Uso"
 
 msgid "Use Cases"
 msgstr "Casos de Uso"
+
+msgid "Use Project Line to build project architecture."
+msgstr "Use a Linha de Projeto para construir a arquitetura do projeto."
+
+msgid "Use Task Line to detail the element of a Task. It is useful to create the complete hierarchy of a Project."
+msgstr "Use a Linha de Tarefa para detalhar o elemento de uma tarefa. Ele é interessante para criar uma completa hierarquia de um projeto."
+
+msgid "Use Task Report Line to detail different steps of task operations."
+msgstr "Usa a Linha de Relatório de Tarefa para detalhar diferentes aspectos das operações das tarefas."
+
+msgid "Use Task to define tasks of a project."
+msgstr "Utilize tarefa para definir as tarefas de um projeto."
+
+msgid "Use this action to notify that a task has been validated and can be closed"
+msgstr "Utilize esta ação para comunicar que uma tarefa was validada e pode ser fechada"
+
+msgid "Use this action to notify that task processing has begun"
+msgstr "Utilize esta ação para avisar que a tarefa foi iniciada"
+
+msgid "Use this state to close the account. No transactions can be input on this account after closing."
+msgstr "Utilize este estado para fechar a conta. Nenhuma transação pode ser de inserida nesta conta após o seu fechamento."
 
 msgid "User"
 msgstr "Usuário"
@@ -1455,14 +2729,29 @@ msgstr "Validar"
 msgid "Validated"
 msgstr "Validado"
 
+msgid "Validates a document in ERP5"
+msgstr "Valida o documento no ERP5"
+
 msgid "Validation Workflow"
 msgstr "Workflow de Validação "
+
+msgid "Validity End Date"
+msgstr "Data de Término de Validade"
 
 msgid "Value"
 msgstr "Valor"
 
+msgid "Vendor"
+msgstr "Vendedor"
+
+msgid "Vendor of the transaction"
+msgstr "Vendedor da transação"
+
 msgid "Version"
 msgstr "Versão"
+
+msgid "Version of the document. It increases each time major modifications are done"
+msgstr "Versão do documento. Incrementa cada de vez que uma modificação é realizada."
 
 msgid "View"
 msgstr "Geral"
@@ -1476,14 +2765,32 @@ msgstr ""
 msgid "View SVN Repository Infos"
 msgstr ""
 
+msgid "Visit"
+msgstr "Visita"
+
+msgid "Web Page"
+msgstr "Página Web"
+
 msgid "Weight (g)"
 msgstr "Peso (g)"
+
+msgid "Weight (kg)"
+msgstr "Peso (kg)"
 
 msgid "Welcome to ERP5"
 msgstr "Bem vindo ao ERP5"
 
+msgid "When a user of ERP5 wants to materialize a sale that has been done by his company, he or she should use a sale order. Sale orders contain some general information about the buyer and the seller, and contain sale order lines."
+msgstr "Quando um usuário do ERP5 quer materializar uma venda que foi feita pela sua empresa, ele ou ela deve usar um Pedido de Venda. Pedidos de Venda contém algumas informações gerais sobre o comprador e o vendedor, e possui Linha de Pedido de Venda."
+
 msgid "Width (cm)"
 msgstr "Largura (cm)"
+
+msgid "Width (m)"
+msgstr "Largura (m)"
+
+msgid "Will update the quantity of invoiced products depending upon the quantity of products that have been packed in the container."
+msgstr "Irá atualizar a quantidade de produtos faturados, dependendo da quantidade de produtos que foram acondicionados no pacote."
 
 msgid "Workflow Chains"
 msgstr ""
@@ -1505,6 +2812,9 @@ msgstr ""
 
 msgid "a list of template names required by this template"
 msgstr ""
+
+msgid "action called when editing a document"
+msgstr "Ação chamada para editar um documento"
 
 msgid "answered"
 msgstr "respondido"
@@ -1533,6 +2843,12 @@ msgstr "Confirmado"
 msgid "converted"
 msgstr "Convertido"
 
+msgid "default state of the document in the converting process"
+msgstr "Estado padrão do documento quando este está no processo de conversão"
+
+msgid "defines the base url where documentation will be reachable"
+msgstr "Define a url base onde a documentação será obtida."
+
 msgid "deleted"
 msgstr "Apagado"
 
@@ -1551,6 +2867,9 @@ msgstr "Rascunho"
 msgid "edit"
 msgstr "editar"
 
+msgid "empty"
+msgstr "Projeto que está suspendido"
+
 msgid "enabled"
 msgstr "habilitado"
 
@@ -1563,8 +2882,20 @@ msgstr "gerado"
 msgid "installed"
 msgstr "instalado"
 
+msgid "instructions in order to explain how to use the resource"
+msgstr "Instruções no pedido a fim de explicar como usar o recurso"
+
 msgid "invalidated"
 msgstr "inválido"
+
+msgid "marks the container as missing"
+msgstr "Marca o Pacote como faltando."
+
+msgid "marks the container as packed"
+msgstr "Marca o pacote como empacotado."
+
+msgid "marks the document as it has been confirmed to the customer or it has been confirmed by the supplier"
+msgstr "Define o documento como foi confirmado para o cliente ou que foi confirmado pelo fornecedor."
 
 msgid "missing"
 msgstr "Perdido"
@@ -1574,6 +2905,9 @@ msgstr "modificado"
 
 msgid "new"
 msgstr "novo"
+
+msgid "number of line displayed by a listbox when used in view mode (in a document for example)"
+msgstr "Número de linhas exibidas em um listbox quando usada em modo de visão (em um documento por exemplo)"
 
 msgid "offered"
 msgstr "oferecido"
@@ -1587,11 +2921,17 @@ msgstr "Pendente"
 msgid "planned"
 msgstr "planejado"
 
+msgid "portal type"
+msgstr "Mensagem de notificação"
+
 msgid "ready"
 msgstr "pronto"
 
 msgid "replaced"
 msgstr "substibuído"
+
+msgid "serial number of the container"
+msgstr "Número serial do pacote."
 
 msgid "solved"
 msgstr "resolvido"
@@ -1602,1809 +2942,41 @@ msgstr "resolvendo"
 msgid "started"
 msgstr "Iniciado"
 
+msgid "the employee number of a person"
+msgstr "O número do funcionário."
+
+msgid "the heigh in pixel of nano image"
+msgstr "A altura em pixel da Imagem Nano"
+
+msgid "the height in pixel for large image"
+msgstr "A altura em pixel para a largura da imagem Maior"
+
+msgid "the height in pixel of medium image"
+msgstr "A altura em pixel da imagem média"
+
+msgid "the height in pixel of micro image"
+msgstr "a altura em pixel da imagem micro"
+
+msgid "the number of revision used by the business template. This number increases each time we commit a modification"
+msgstr "O número de revisão utilizado pelo modelo de negócio. Esse número incrementa cada vez que enviamos uma modificação."
+
+msgid "the width in pixel of medium image"
+msgstr "A altura em pixel da imagem média"
+
+msgid "the width in pixel of micro image"
+msgstr "A largura em pixel da imagem micro"
+
+msgid "the width in pixel of nano image"
+msgstr "a largura em pixel da imagem Nano"
+
 msgid "updated"
 msgstr "atualizado"
 
 msgid "validated"
 msgstr "válido"
 
-msgid "Set ready"
-msgstr "Definir Como Pronto"
-
-msgid "Declares a packing list as packed, ready for shipment"
-msgstr "Declara a entrega como empacotada, pronto para envio."
-
-msgid "The Sale Opportunity has expired."
-msgstr "Uma oportunidade de venda que expirou."
-
-msgid "Shared Alive"
-msgstr "Compartilhado Ativo"
-
-msgid ""
-"A document shared by limited people in the organisation (ex. team, project, "
-"etc.). Every assigned knowledge contributor or knowledge manager may modify "
-"it depending on its classification policy."
-msgstr ""
-"Um documento compartilhado por pessoas limitadas na organização (ex. time, "
-"projeto, etc.). Todo o contribuidor de conhecimento ou gerente de "
-"conhecimento designado, pode modificar o documento dependendo da política de "
-"classificação."
-
-msgid "Submit for Review"
-msgstr "Submeter para Revisão"
-
-msgid "Submits a document for review by setting validation_state to submitted."
-msgstr ""
-"Submete um documento para revisão definindo o estado de validação como "
-"submetido."
-
-msgid "State of a preference that is enabled for a complete site"
-msgstr "Estado da preferência que é habilitado para todo o site"
-
-msgid "Updated"
-msgstr "Atualizado"
-
-msgid "Assignments in updated state are being updated before being reopened."
-msgstr ""
-"Atribuições no estado atualizado estão sendo atualizadas antes de serem "
-"reabertas."
-
-msgid "Having trouble logging in? Make sure to enable cookies in your web browser."
-msgstr "Está tendo problmes para entrar no sistema? Habilite os cookies no seu navegador."
-
-msgid "Hide"
-msgstr "Ocultar"
-
-msgid ""
-"Hides a document which was published or released by mistake by setting the "
-"validation_state to hidden."
-msgstr ""
-"Esconde um documento que foi publicado ou lançado por engano, definindo seu "
-"como oculto."
-
-msgid ""
-"If a document is missing in order to process an action, ERP5 will warn the "
-"user that this is Missing"
-msgstr ""
-"Se um documento está faltando com o objetivo de processar uma ação, o ERP5 "
-"irá advertir o usuário de que este está faltando."
-
-msgid "Shipped"
-msgstr "Enviado"
-
-msgid "Packing list has been shipped"
-msgstr "A Entrega foi enviada."
-
-msgid "Update quantity"
-msgstr "Atualizar Quantidade"
-
-msgid ""
-"Will update the quantity of invoiced products depending upon the quantity of "
-"products that have been packed in the container."
-msgstr ""
-"Irá atualizar a quantidade de produtos faturados, dependendo da quantidade "
-"de produtos que foram acondicionados no pacote."
-
-msgid ""
-"Publishes a document and triggers the archival of any public document of a "
-"previous version"
-msgstr ""
-"Publica um documento e aciona o arquivamento de qualquer documento público "
-"de uma versão anterior"
-
-msgid "Upload file"
-msgstr "Enviar Arquivo"
-
-msgid "This method is invoked each time a file is uploaded"
-msgstr "Este método é chamado cada vez que um arquivo é enviado."
-
-msgid "Sold"
-msgstr "Vendido"
-
-msgid "Sale Opportunity converted into Sale"
-msgstr "Oportunidade de Venda é convertido para uma Venda"
-
-msgid "Defines the steps of a sale opportunity"
-msgstr "Define as etapas de uma oportunidade de venda"
-
-msgid "Accept Decision"
-msgstr "Aceitar Decisão"
-
-msgid ""
-"Accept the new value defined on the invoice and update the prevision "
-"accordingly"
-msgstr ""
-"Aceitar o novo valor definido na fatura e atualizar a previsão de acordada"
-
-msgid "Ship"
-msgstr "Enviar"
-
-msgid "Ship the packing list and declares a packing list as shipped"
-msgstr "Envia a entrega e define a entrega como enviada."
-
-msgid "Private"
-msgstr "Privado"
-
-msgid "The document is private and can be seen only by its owner."
-msgstr "O documento é confidencial e só pode ser visto pelo dono."
-
-msgid "Do not forget to logout or exit your browser when you are done."
-msgstr "Não esqueça de sair do sistema quando você terminar."
-
-msgid ""
-"Documents in this state were deleted by the user as a result of clicking on "
-"the trash button or calling the delete action"
-msgstr ""
-"Documentos neste estado foram apagados pelo usuário como resultado de clicar "
-"no botão de lixeira ou chamando a ação de exclusão"
-
-msgid "Embedded Document"
-msgstr "Document Embutido"
-
-msgid ""
-"A document which is part of another document and which acquired security "
-"from it."
-msgstr ""
-"Um documento que é parte de outro documento e que tem a mesma permissão dele"
-
-msgid "Stop Career Step"
-msgstr "Parar Carreira"
-
-msgid "Action that will mark the career step of a person as stopped"
-msgstr "Ação que marcará a carreira da pessoa como parada."
-
-msgid "Released"
-msgstr "Liberado"
-
-msgid ""
-"A document which is released and becomes accessible to its associates (team, "
-"project, members, partners, etc.) based on the security definition"
-msgstr ""
-"Um documento que é publicado e se torna acessível aos seus associados "
-"(projeto da equipe, membros, parceiros, etc) com base na definição de "
-"segurança"
-
-msgid "Archive"
-msgstr "Arquivar"
-
-msgid ""
-"Archive a document which has been replaced by a more recent version by "
-"setting the validation state to archived."
-msgstr ""
-"Arquiva um documento que tenha sido substituído por uma versão mais recente, "
-"definindo o estado como arquivado."
-
-msgid "Release"
-msgstr "Liberar"
-
-msgid ""
-"Releases a document and triggers the archival of any released document of a "
-"previous version"
-msgstr ""
-"Libera um documento e aciona o arquivamento de qualquer documento lançado de "
-"uma versão anterior"
-
-msgid "Share Alive"
-msgstr "Compartilhar Ativo"
-
-msgid ""
-"The Share Alive workflow method sets the document validation state to "
-"shared_alive and archives any previously shared document with same version "
-"and same language."
-msgstr ""
-"O método de workflow, Compartilhar Ativo, define o estado de validação do "
-"documento como Compartilhado Ativo e arquiva qualquer documento "
-"compartilhado anterior com a mesma versão e com a mesma língua."
-
-msgid "Received"
-msgstr "Recebido"
-
-msgid "Declares the packing list status as received"
-msgstr "Declara a entrega com o estado como recebido."
-
-msgid "Published"
-msgstr "Publicado"
-
-msgid "A published document. Everyone can access it."
-msgstr "Um documento publicado. Todos podem acessar."
-
-msgid "Identification"
-msgstr "Identificação"
-
-msgid "Vendor"
-msgstr "Vendedor"
-
-msgid "Vendor of the transaction"
-msgstr "Vendedor da transação"
-
-msgid "Original Filename"
-msgstr "Nome Original"
-
-msgid "The original filename of the document"
-msgstr "O nome original do arquivo"
-
-msgid "Sender or Provider"
-msgstr "Remetente ou Fornecedor"
-
-msgid "Medium Image Width"
-msgstr "Largura da Imagem Média"
-
-msgid "the width in pixel of medium image"
-msgstr "A altura em pixel da imagem média"
-
-msgid "Micro Image Height"
-msgstr "Altura da Imagem Micro"
-
-msgid "the height in pixel of micro image"
-msgstr "a altura em pixel da imagem micro"
-
-msgid "Default Classification"
-msgstr "Classificação Padrão"
-
-msgid "Preferred classification policy for newly created documents"
-msgstr "Política de classificação preferencial para documentos recém-criados"
-
-msgid "Password for a user in ERP5"
-msgstr "Senha de um usuário no ERP5"
-
-msgid "Documentation URL"
-msgstr "URL de documentação"
-
-msgid "defines the base url where documentation will be reachable"
-msgstr "Define a url base onde a documentação será obtida."
-
-msgid "Nano Image Height"
-msgstr "Altura da Imagem Nano"
-
-msgid "the heigh in pixel of nano image"
-msgstr "A altura em pixel da Imagem Nano"
-
-msgid "The telephone number suffix (extension)"
-msgstr "A extensão / sufixo do telefone"
-
-msgid "Url of the document"
-msgstr "URL do documento"
-
-msgid "The organisation where the person is affected."
-msgstr "A Organização onde a pessoa é efectuada."
-
-msgid "Serial Number"
-msgstr "Número Serial"
-
-msgid "serial number of the container"
-msgstr "Número serial do pacote."
-
-msgid "The date when the document expires."
-msgstr "Data quando o documento expira."
-
-msgid "The phone number"
-msgstr "Número do Telefone"
-
-msgid "Date at which the bank account has been closed"
-msgstr "Data em que a conta bancária foi encerrada"
-
-msgid "Frequency In Days"
-msgstr "Frequência em dias"
-
-msgid "Indicate how often (in days) the event will happen (every x days)"
-msgstr "Indique quantas vezes(em dias) o evento vai acontecer(a cada dia x)"
-
-msgid "The organisation for which the currency exchange line is applied for."
-msgstr "A Organização para qual a Linha de Troca de Moeda é aplicada."
-
-msgid "Requester"
-msgstr "Solicitante"
-
-msgid "Tells who requested the ticket"
-msgstr "Informa quem solicitou o ticket"
-
-msgid "Nano Image Width"
-msgstr "Largura da Imagem Nano"
-
-msgid "the width in pixel of nano image"
-msgstr "a largura em pixel da imagem Nano"
-
-msgid "Client"
-msgstr "Cliente"
-
-msgid "Defines to who the invoice will be sent"
-msgstr "Define quem irá receber a fatura."
-
-msgid "Report Style"
-msgstr "Estilo do relatório"
-
-msgid "Default Style used for reports."
-msgstr "Estilo padrão usado para relatórios."
-
-msgid "Text Format"
-msgstr "Formato do texto"
-
-msgid "The text format used by default"
-msgstr "Formato do texto usado por padrão"
-
-msgid "The Date"
-msgstr "Data"
-
-msgid ""
-"Comments which can be read by internal users but unlike description, are not "
-"printed out on official documents."
-msgstr ""
-"Comentários que podem ser lidos por usuários internos, mas ao contrário de "
-"descrição, não são impressos em documentos oficiais."
-
-msgid "End Date"
-msgstr "Data de Fim"
-
-msgid "The date at which the ticket is supposed to stop."
-msgstr "A data em que o ticket irá parar."
-
-msgid "Micro Image Width"
-msgstr "Largura da Imagem Micro"
-
-msgid "the width in pixel of micro image"
-msgstr "A largura em pixel da imagem micro"
-
-msgid ""
-"Title of the entity which is responsible of accepting the ticket request"
-msgstr "Título da entidade que é responsável por aceitar um ticket solicitado."
-
-msgid "The date when the document starts being valid."
-msgstr "Data na qual o documento passa a ser válido."
-
-msgid "The date the organisation was registered."
-msgstr "A data que a organização foi registrada"
-
-msgid "Branch Number"
-msgstr "Número da Agência"
-
-msgid ""
-"The branch number is a 6 digit number as part of a bank account number that "
-"indicates the bank and the branch where the account is held."
-msgstr ""
-"O número da agência é um número de 6 dígitos parte de um número de conta "
-"bancária que indica o banco e a agência onde a conta é mantida."
-
-msgid "Convert File"
-msgstr "Converter Arquivo"
-
-msgid "This workflow method is called to convert a file to a certain format"
-msgstr ""
-"Este método é chamado para converter um arquivo para um determinado formato"
-
-msgid ""
-"Events in this state are incoming events or carbon copies of outgoing events "
-"received through the email interface of ERP5 CRM."
-msgstr ""
-"Eventos neste estado são os eventos de entrada ou cópias de carbono de "
-"eventos de saída recebidos através da interface do e-mail do ERP5 CRM."
-
-msgid "Public"
-msgstr "Público"
-
-msgid "A public document. Everyone can access it."
-msgstr "Um documento público. Todos podem acessar este documento."
-
-msgid "Reject"
-msgstr "Rejeitar"
-
-msgid ""
-"Rejects a document which was submitted by setting its validation state to "
-"draft."
-msgstr ""
-"Rejeita um documento que foi submetido pela validação a partir do Rascunho."
-
-msgid ""
-"Accepts the change that has been done rather than the original prevision. "
-"This action will be available whenever a packing list is divergent."
-msgstr ""
-"Aceita a mudança que foi feita ao invés do valor na previsão inicial. Esta "
-"ação estará disponível sempre que uma entrega é divergente."
-
-msgid "Default state of the document"
-msgstr "Estado padrão do documento"
-
-msgid "Submitted"
-msgstr "Submetido"
-
-msgid ""
-"A document which has been submitted for review by the relevant reviewer."
-msgstr "Um documento que foi submetido para revisão pelo revisor pertinente."
-
-msgid "Empty"
-msgstr "Vazio"
-
-msgid "default state of the document in the converting process"
-msgstr "Estado padrão do documento quando este está no processo de conversão"
-
-msgid "Ready"
-msgstr "Pronto"
-
-msgid "Packing list that has been prepared (packed), ready for shipment"
-msgstr "Entrega que foi preparada (empacotada), pronta para o envio."
-
-msgid "State of a document that has been validated in ERP5"
-msgstr "Estado do documento que está validado no ERP5"
-
-msgid "Lost Sale Opportunity, as it has been rejected by the customer"
-msgstr "Oportunidade de Venda rejeitada pelo cliente"
-
-msgid "The account is open and can be used to input transactions."
-msgstr "A conta é aberta e pode ser usada para operações de entrada."
-
-msgid "Share"
-msgstr "Compartilhar"
-
-msgid ""
-"The Share workflow method sets the document validation state to shared and "
-"archive any previous shared document with same reference and same language."
-msgstr ""
-"O método de workflow compartilhar define o estado do documento como "
-"compartilhado e arquiva qualquer documento anterior compartilhado com mesma "
-"referência e mesma língua."
-
-msgid "Translation Requested"
-msgstr "Tradução solicitada"
-
-msgid ""
-"A document for which translation has been requested and which has not yet "
-"been assigned a translator or a revisor."
-msgstr ""
-"Um documento cuja tradução tenha sido solicitada e que ainda não tenha sido "
-"enviada para um tradutor ou um revisor."
-
-msgid "Receive"
-msgstr "Receber"
-
-msgid ""
-"Declares a packing list as received and creates the related accounting "
-"transaction"
-msgstr "Declara a entrega como recebida e cria transação contábil relacionada."
-
-msgid "Request"
-msgstr "Requerer"
-
-msgid ""
-"The request workflow method sets the document validation state to requested."
-msgstr ""
-"O método de workflow requerer define o estado de validação do documento como "
-"requerido ou solicitado."
-
-msgid "Unpublish"
-msgstr "Despublicar"
-
-msgid "Unpublishes the document"
-msgstr "Despublicar documento"
-
-msgid "Accept Translation"
-msgstr "Aceitar Tradução"
-
-msgid ""
-"Accepts a translation and sets the validation state to submitted, waiting "
-"for further approval before publication."
-msgstr ""
-"Aceita uma tradução e define o estado como submetido, esperando uma nova "
-"aprovação antes de ser publicado."
-
-msgid "Validates a document in ERP5"
-msgstr "Valida o documento no ERP5"
-
-msgid "Edit"
-msgstr "Editar"
-
-msgid "action called when editing a document"
-msgstr "Ação chamada para editar um documento"
-
-msgid ""
-"marks the document as it has been confirmed to the customer or it has been "
-"confirmed by the supplier"
-msgstr ""
-"Define o documento como foi confirmado para o cliente ou que foi confirmado "
-"pelo fornecedor."
-
-msgid "Ordered"
-msgstr "Solicitado"
-
-msgid ""
-"Order has been confirmed to the customer or has been confirmed by the "
-"supplier"
-msgstr ""
-"Pedido foi confirmado para o cliente ou foi confirmado pelo fornecedor."
-
-msgid "Shared"
-msgstr "Compartilhado"
-
-msgid ""
-"A document shared by limited people in the organisation (ex. team, project, "
-"etc.)"
-msgstr ""
-"Um documento compartilhado por pessoas limitadas na organização (ex. equipe, "
-"projeto, etc)"
-
-msgid "Update Assignment"
-msgstr "Atualizar Designação"
-
-msgid ""
-"Action called in order to change the state of the assignment to update it"
-msgstr "Ação chamada para mudar o estado da uma designação de atualizá-lo"
-
-msgid "Packed"
-msgstr "Empacotado"
-
-msgid "Means that the container has been prepared and is ready to be shipped"
-msgstr "Significa que o pacote foi preparado e está pronto para ser entregue."
-
-msgid "Text Editor"
-msgstr "Editor de Texto"
-
-msgid "The text editor used by default"
-msgstr "O Editor de texto usado como padrão"
-
-msgid "Answer"
-msgstr "Resposta"
-
-msgid "The text content of an answer to a query"
-msgstr "O conteúdo do texto de resposta de uma consulta"
-
-msgid "Debit Limit"
-msgstr "Limite de Débito"
-
-msgid "The amount limit an agent is allowed to debit on a bank account"
-msgstr "O limite que um agente é permitido para débito em conta bancária"
-
-msgid "Corporate Registration Code"
-msgstr "CNPJ"
-
-msgid "The corporate registration code of this organisation"
-msgstr "O código de registro empresarial da organização"
-
-msgid ""
-"The number of digit after the comma for the given currency, for example 2 "
-"means we can have cents (0,00)"
-msgstr ""
-"O número de dígitos depois da vírgula para a moeda dada, por exemplo, 2 "
-"significa que podemos ter centavos (0,00)"
-
-msgid "Report Format"
-msgstr "Formato do Relatório"
-
-msgid "Conversion Format for reports."
-msgstr "Formato de conversão para os relatórios."
-
-msgid "The project for the assignment."
-msgstr "O projeto para a Atribuição."
-
-msgid "Recipient or Beneficiary"
-msgstr "Destinatário ou Beneficiário"
-
-msgid "Recipient or beneficiary of the supply"
-msgstr "Destinatário ou beneficiário do fornecimento"
-
-msgid "Medium Image Height"
-msgstr "Altura da Imagem Média"
-
-msgid "the height in pixel of medium image"
-msgstr "A altura em pixel da imagem média"
-
-msgid "Validity End Date"
-msgstr "Data de Término de Validade"
-
-msgid "The date at which the agent has no right anymore on the bank account"
-msgstr "A data que o agente não tem mais direito na conta bancária."
-
-msgid "Language of the web page, it uses code like en, fr, ja..."
-msgstr "Idioma da página web, utiliza-se códigos como en, fr, ja ..."
-
-msgid "The number of partner for the person."
-msgstr "Número de parcerias da pessoa."
-
-msgid "The section Organisation for documents."
-msgstr "A seção Organização para documentos."
-
-msgid ""
-"The prefix for the person's full name.\n"
-"\n"
-"Usually something like Dr. or Mr."
-msgstr "O prefixo para o nome completo da pessoa. Normalmente: Dr. ou Sr."
-
-msgid "Corporate Name"
-msgstr "Nome Corporativo"
-
-msgid "The official name of this organisation"
-msgstr "O nome oficial desta organização"
-
-msgid "The content of the document considered as a text string"
-msgstr "O conteúdo do documento considerado como um texto."
-
-msgid "Instructions"
-msgstr "Instruções"
-
-msgid "instructions in order to explain how to use the resource"
-msgstr "Instruções no pedido a fim de explicar como usar o recurso"
-
-msgid "Frequency In Hours"
-msgstr "Frequência em Horas"
-
-msgid "Indicate how often (in hours) the event will happen (every x hours)"
-msgstr ""
-"Indicar a freqüência (em horas) que o evento vai acontecer (a cada X horas)"
-
-msgid "The title of the resource involved"
-msgstr "Titulo do Recurso envolvido"
-
-msgid ""
-"Coefficient used to materialize different salary levels for persons who have "
-"the same qualification but not the same experience: such as 1.1 or 1.2 or "
-"2.1 etc, the higher the figure, the higher the salary"
-msgstr "Um coeficiente relacionado com a classificação do salário da pessoa"
-
-msgid "Width (m)"
-msgstr "Largura (m)"
-
-msgid "A typical per unit width of the resource"
-msgstr "Uma típica unidade de largura do Recurso."
-
-msgid ""
-"The symbol used to represent the currency.\n"
-"\n"
-"It is for example $, ¥, €, £..."
-msgstr ""
-"O símbolo usado para representar a moeda.\n"
-"É por exemplo $, ¥, €, R $ ..."
-
-msgid "Number of Lines Displayed in View Mode ListBoxs"
-msgstr "Número de linhas exibidas nos Listboxes no modo View"
-
-msgid ""
-"number of line displayed by a listbox when used in view mode (in a document "
-"for example)"
-msgstr ""
-"Número de linhas exibidas em um listbox quando usada em modo de visão (em um "
-"documento por exemplo)"
-
-msgid "Large Image Height"
-msgstr "Altura da Imagem Maior"
-
-msgid "the height in pixel for large image"
-msgstr "A altura em pixel para a largura da imagem Maior"
-
-msgid "Begin Date"
-msgstr "Data de Início"
-
-msgid "The date at which the ticket was created."
-msgstr "A data em que o ticket foi criado."
-
-msgid "Frequency (weeks)"
-msgstr "Freqüência (semanas)"
-
-msgid "Indicate how often (in week) the event will happen (every x weeks)"
-msgstr ""
-"Indica quão frequente (em semanas) o evento irá acontecer (toda x semanas)"
-
-msgid "Overdraft Facility"
-msgstr "Linha de Crédito"
-
-msgid "Overdraft facility of a bank account"
-msgstr "Linha de crédito de uma conta bancária"
-
-msgid "Weight (kg)"
-msgstr "Peso (kg)"
-
-msgid "A typical per unit weight of the resource"
-msgstr "Uma típica unidade de peso do Recurso."
-
-msgid "Date at which the document was ingested"
-msgstr "Data em que o documento foi inserido"
-
-msgid "The date at which the event was created"
-msgstr "A data em que o evento foi criado"
-
-msgid "Content format"
-msgstr "Formato do Conteúdo"
-
-msgid "Content format of a document in ERP5"
-msgstr "Formato do conteúdo de um document no ERP5"
-
-msgid "Reply to"
-msgstr "Responder para"
-
-msgid "Reply to email address, extracted from header."
-msgstr "Responder para o e-mail extraído do cabeçalho."
-
-msgid "Small Image Height"
-msgstr "Tamanho da Imagem Pequena"
-
-msgid "The height in pixel of small image"
-msgstr "O tamanho do pixel da imagem pequena"
-
-msgid ""
-"The suffix for the person full name.\n"
-"\n"
-"Can be something like 'Jr.'"
-msgstr ""
-"O sufixo para o nome completo da pessoa.\n"
-"Por exemplo 'Jr.'"
-
-msgid "The telephone area"
-msgstr "A código de área do telefone"
-
-msgid "Employee Number"
-msgstr "Número do Funcionário"
-
-msgid "the employee number of a person"
-msgstr "O número do funcionário."
-
-msgid "Date Format"
-msgstr "Formato da Data"
-
-msgid ""
-"The preferred date order in which datetime field will be displayed (dd/mm/"
-"yyyy, yyyy/mm/dd, ...)"
-msgstr ""
-"A ordem preferencial da data em que o campo de data/hora será exibido (dd/mm/"
-"yyyy, yyyy/mm/dd, ...)"
-
-msgid "Sender or Caller"
-msgstr "Remetente ou Emissor"
-
-msgid "Person who is creating the event."
-msgstr "Pessoa que está criando o evento."
-
-msgid "Height (m)"
-msgstr "Altura (m)"
-
-msgid "A typical per unit height of the resource"
-msgstr "Uma típica unidade de Altura do Recurso."
-
-msgid ""
-"the number of revision used by the business template. This number increases "
-"each time we commit a modification"
-msgstr ""
-"O número de revisão utilizado pelo modelo de negócio. Esse número incrementa "
-"cada vez que enviamos uma modificação."
-
-msgid "Length (m)"
-msgstr "Comprimento (m)"
-
-msgid "A typical per unit length of the resource"
-msgstr "Uma típica unidade de comprimento do Recurso."
-
-msgid "Exchange Rate"
-msgstr "Taxa de Câmbio"
-
-msgid "How much this currency is worth in terms of the reference currency."
-msgstr "Quanto vale esta moeda em termos de moeda de referência."
-
-msgid "Query Type"
-msgstr "Tipo de Consulta"
-
-msgid "Type or Title of the query posted by a user"
-msgstr "Tipo ou Título da consulta enviada por um usuário"
-
-msgid "Stop Date"
-msgstr "Data Final"
-
-msgid "The End date of an operation"
-msgstr "A data de término de uma operação"
-
-msgid "The telephone country code"
-msgstr "O código telefonico do país."
-
-msgid "Frequency In Months"
-msgstr "Frequência em meses"
-
-msgid "Indicates how often (in months) the event will happen (every x months)"
-msgstr "Indique quantas vezes(em meses) o evento vai acontecer(a cada mês x)"
-
-msgid ""
-"Version of the document. It increases each time major modifications are done"
-msgstr ""
-"Versão do documento. Incrementa cada de vez que uma modificação é realizada."
-
-msgid "Translator Mode"
-msgstr "Modo de tradução"
-
-msgid "Indicates if we display link to translation system in interface or not"
-msgstr "Indica se é mostrado o link para o sistema de tradução"
-
-msgid "A document that has been confirmed in ERP5"
-msgstr "Um documento que foi confirmado no ERP5"
-
-msgid ""
-"Stopped is a state of a document for which the treatment has been stopped in "
-"ERP5"
-msgstr ""
-"Parado é um estado de um documento que o seu uso foi interrompido no ERP5"
-
-msgid ""
-"The Closed State notifies that either the accounting period, the account or "
-"the transaction has been closed, and cannot be modified anymore."
-msgstr ""
-"O estado fechado informa que o período contábil, a conta ou a transação "
-"foram fechadas e não podem mais ser modificada."
-
-msgid "State of a document that has been cancelled"
-msgstr "Estado de um documento que tenha sido cancelado"
-
-msgid "Supplier Reference"
-msgstr "Referência do Fornecedor"
-
-msgid "The reference of the supplier."
-msgstr "A Referência do Fornecedor"
-
-msgid "Term (days)"
-msgstr "Prazo (dias)"
-
-msgid "The term (days) allowed to the customer for the payment of the order"
-msgstr "O prazo (dias) permitido para o cliente para o pagamento do pedido."
-
-msgid "Additional Term (days)"
-msgstr "Termo Adicional (dias)"
-
-msgid ""
-"Defines the additional term (in days) allowed to the customer to pay his "
-"order"
-msgstr ""
-"Define o termo adicional (em dias) permitidos para o cliente pagar seu "
-"pedido."
-
-msgid ""
-"The date at which shipped products were delivered or the date at which a "
-"service was completed."
-msgstr ""
-"A data que os produtos enviados foram entregues ou a data que o serviço foi "
-"acabado."
-
-msgid "Payment Date"
-msgstr "Data de Pagamento"
-
-msgid "The absolute date at which payment is expected to be made."
-msgstr "A data em que o pagamento deverá ser feito."
-
-msgid "Client Reference"
-msgstr "Referência do Cliente"
-
-msgid "The reference of the client."
-msgstr "A referência do cliente."
-
-msgid "End of Month"
-msgstr "Final do Mês"
-
-msgid "If set, payment will occur at the end of the month of the payment term."
-msgstr ""
-"Se definido, o pagamento ocorrerá no final do mês do prazo de pagamento."
-
-msgid "The date from which the offer is valid."
-msgstr "A data em que a oferta é válida."
-
-msgid ""
-"The date at which products were shipped or the date at which a service "
-"started."
-msgstr ""
-"A data na qual os produtos foram enviados ou a data na qual um serviço foi "
-"iniciado."
-
-msgid "Seller"
-msgstr "Vendedor"
-
-msgid ""
-"The person or organisation in charge of handling the sales process or of "
-"taking the sales decision."
-msgstr ""
-"A pessoa ou organização responsável em tratar os processos de venda ou tomar "
-"decisões relacionadas a venda."
-
-msgid "Supplier Project"
-msgstr "Projeto Fornecedor"
-
-msgid "The accountable project on the supplier side."
-msgstr "O projeto responsável do lado do fornecedor."
-
-msgid "The name of a document in ERP5"
-msgstr "O nome do documento no ERP5"
-
-msgid ""
-"The organisation or person who sends merchandise or provides the service."
-msgstr "A organização ou pessoa que envia  a mercadoria ou presta o serviço."
-
-msgid "The invoiced person or organisation."
-msgstr "A pessoa ou organização faturados."
-
-msgid "Payee"
-msgstr "Beneficiário"
-
-msgid ""
-"The organisation or person in charge of receiving the payment for the "
-"supplier."
-msgstr "A pessoa ou organização encarregada de receber o pagamento."
-
-msgid "Invoice Sender"
-msgstr "Emissor da Fatura"
-
-msgid ""
-"The person or organisation in charge of sending the invoice or handling "
-"administrative paperwork for the supplier."
-msgstr ""
-"A pessoa ou organização responsável pelo envio da fatura ou a manipulaçao da "
-"burocracia administrativa para o fornecedor."
-
-msgid "Client Project"
-msgstr "Projeto do Cliente"
-
-msgid "The accountable project on the client side."
-msgstr "O projeto de responsabilidade no lado do cliente."
-
-msgid "Supplier"
-msgstr "Fornecedor"
-
-msgid "The invoicing person or organisation."
-msgstr "A pessoa ou organizacao da fatura."
-
-msgid "Payer"
-msgstr "Pagador"
-
-msgid "The organisation or person in charge of paying for the client."
-msgstr "A pessoa ou organização encarregada de pagar o cliente."
-
-msgid ""
-"Buyer"
-""
-msgstr "Comprador"
-
-msgid ""
-"The person or organisation in charge of selecting the supplier or taking the "
-"decision to place the order."
-msgstr ""
-"A pessoa ou organização encarregada de selecionar o fornecedor ou de tomar a "
-"decisão de alocar o pedido."
-
-msgid "Account Invalidated"
-msgstr "Conta Invalidada"
-
-msgid ""
-"Use this state to close the account. No transactions can be input on this "
-"account after closing."
-msgstr "Utilize este estado para fechar a conta. Nenhuma transação pode ser de inserida nesta conta após o seu fechamento."
-
-msgid "In this state, no transaction can be input anymore on the account as it has been closed"
-msgstr "Neste estado, nenhuma transação pode ser inserida na conta uma vez que foi fechada"
-
-msgid ""
-"The Accounting Period is open. It is therefore possible to post accounting."
-msgstr "O período de contabilidade esta aberto. Portanto, é possível enviar mensagens de contabilidade."
-
-msgid "Temporary closed"
-msgstr "Temporariamente encerrado"
-
-msgid ""
-"The Accounting Period is temporary closed, but can be opened back. In this "
-"state it is not possible to post transactions during this period."
-msgstr ""
-"O período de contabilidade é temporário encerrado, mas pode ser aberto "
-"novamente. Neste estado, não é possível publicar transacções durante o "
-"período."
-
-msgid "Temporary close"
-msgstr "Fechar Temporariamente"
-
-msgid ""
-"The Accounting Period will be temporary closed, but can be reopened. In this "
-"state it is not possible to post transactions during this period."
-msgstr ""
-"O período contábil será temporariamente fechado, mas pode ser reaberto. "
-"Neste estado, não é possível publicar transações durante o período."
-
-msgid "The date at which an operation starts in ERP5"
-msgstr "A data em que a operação iniciou no ERP5"
-
-msgid "Date at which the bank account has been opened"
-msgstr "Data na qual a conta bancária foi aberta."
-
-msgid "Cancel a document in ERP5"
-msgstr "Cancelar um document no ERP5."
-
-msgid "Delete a document in ERP5"
-msgstr "Apagar um documento no ERP5"
-
-msgid "Invalidate"
-msgstr "Invalidar"
-
-msgid "This action invalidates a document in ERP5"
-msgstr "Esta ação invalida um documento no ERP5"
-
-msgid "State of a document that has been invalidated in ERP5"
-msgstr "Estado de um documento que tenha sido invalidado no ERP5"
-
-msgid "State of a document that has been planned in ERP5"
-msgstr "Estado de um documento que foi planejado no ERP5"
-
-msgid "Restart"
-msgstr "Reabrir"
-
-msgid ""
-"Reopens a document that would have been closed previously, in order to "
-"modify it, such as an accounting period"
-msgstr ""
-"Reabre um documento que teria sido fechado anteriormente a fim de modificá-"
-"lo, como um período contabilístico"
-
-msgid "Start"
-msgstr "Iniciar"
-
-msgid "Sets the document state as started"
-msgstr "Define o estado do documento como iniciado"
-
-msgid "Setting the 'Remember my name' option will set a cookie with your username, so that when you login next time, your user name will already be filled in for you."
-msgstr "Ao marcar a opção 'Lembrar meu usuário', um cookie será definido, com o nome do seu usuário. Então na próxima vez que você for entrar no sistema, o nome de seu usuário já estará preenchido."
-
-msgid ""
-"An Account defines a legislation independent general ledger account which "
-"can hold multiple amounts of currencies. It can be mapped to any number of "
-"national accounting nomenclatures and to financial analysis plan."
-msgstr ""
-"Uma Conta define um plano contábil genérico, independente de legislação, que "
-"pode conter múltiplas moedas. Pode ser mapeado para qualquer nomeclatura "
-"nacional contábil e plano de análise financeira."
-
-msgid "Accounting Period"
-msgstr "Exercício Contábil"
-
-msgid ""
-"Mark the beginning and the end of an Accounting Period.\n"
-"Once the period is closed (i.e. the Accounting Period Delimiter is in "
-"delivered state), it is no longer possible to validate Transaction in this "
-"period"
-msgstr ""
-"Define o início e o fim de um Exercício Contábil.\n"
-"Uma vez que o período esteja fechado (p.e. o Delimitador de Período Contábil "
-"esteja no estado de entregue), não será mais possível validar transações "
-"neste período."
-
-msgid ""
-"An accounting transaction, created from scratch by the accountant or whoever "
-"entitled to create transactions in ERP5"
-msgstr ""
-"Uma transação contábil, criada a partir do zero por um contador ou alguém "
-"autorizado a criar transações no ERP5"
-
-msgid "Campaign"
-msgstr "Campanha"
-
-msgid ""
-"A Campaign is a marketing mini-project which keeps track of all events "
-"associated to a given marketing action. Use it for example to manage press "
-"relation campaigns, assessment campaigns, product presentation campaigns "
-"which involve contacting many customers through email, phone, etc."
-msgstr ""
-"Uma Campanha é um mini-projeto de marketing que acompanha os eventos "
-"relacionados à uma ação de Marketing. Pode-se usar uma Campanha para "
-"gerenciar campanhas relacionadas a divulgação na imprensa, campanhas de "
-"avaliação, apresentação de produtos que envolvam contar muitos clientes por "
-"email, telefone, etc."
-
-msgid ""
-"A Note is an event which can be used to track project or tickets besides "
-"formal communication based on email, fax, etc."
-msgstr ""
-"Uma nota é um evento que pode ser usado para rastrear projetos ou tickets "
-"além da comunicação formal, baseado em e-mail, fax, etc"
-
-msgid "Visit"
-msgstr "Visita"
-
-msgid ""
-"A Visit is an event which can be used to register visits with third parties, "
-"be them customers, suppliers or prospects"
-msgstr ""
-"Uma Visita é um evento que pode ser usado para registrar as visitas  com "
-"terceiros, sejam eles clientes ou fornecedores."
-
-msgid "Contribution Tool"
-msgstr "Ferramenta de Contribuição"
-
-msgid ""
-"Contribution Tool provides a single place to contribute content to an ERP5 "
-"Site."
-msgstr ""
-"Ferramenta de contribuição é um lugar único para conteúdo de contribuição "
-"para um site de ERP5."
-
-msgid ""
-"A Product is a tangible good which can be produced and traded (ex. a pen, a "
-"bicycle, a suit, etc.). Products may define multiple variations and "
-"configuration options. Trading information such as price, customer, "
-"reference, etc. may be defined on a Product, although it is recommended in "
-"complex environments to use Sale Supplies for that purpose. In a production "
-"environment, Components are procured and Products are sold."
-msgstr ""
-"Um produto é um bem tangível que podem ser produzidos e comercializados (por "
-"exemplo, uma caneta, uma bicicleta, uma roupa, etc.) Os produtos podem "
-"definir múltiplas variações e opções de configuração. Informações de "
-"negociação, tais como preço, cliente, referência, etc, podem ser definidas "
-"em um produto, mas é recomendado em ambientes complexos de usar *Sales "
-"Supplies* para esta finalidade. Em um ambiente de produção, os componentes "
-"são adquiridos e produtos são vendidos."
-
-msgid ""
-"A Service is an immaterial Resource that can be traded (eg. shipping, "
-"support ...)"
-msgstr "Um Serviço é um Recurso imaterial que pode ser negociado."
-
-msgid "Drawing"
-msgstr "Desenho"
-
-msgid "A Graphic file (OOo, DXF)"
-msgstr "Um arquivo gráfico (OOo, DXF)"
-
-msgid ""
-"PDF documents store PDF files and can convert them to HTML, Text or "
-"different image formats."
-msgstr ""
-"Documento PDF armazena um arquivo PDF e podem ser convertidos para HTML, "
-"Texto ou diferentes formatos de imagem."
-
-msgid "A Presentation file (OOo, PPT)"
-msgstr "Um arquivo de apresentação (OOo, PPT)"
-
-msgid "RSS Feed"
-msgstr "Feed RSS"
-
-msgid ""
-"An RSS feed is a text document which can populate itself with news extracted "
-"from its own content."
-msgstr ""
-"Um feed RSS é um documento de texto que pode preencher-se com notícias "
-"extraídas de seu próprio conteúdo."
-
-msgid "Spreadsheet"
-msgstr "Planilha"
-
-msgid "A Spreadsheet file (OOo, XLS)"
-msgstr "Um arquivo de planilha (OOo, XLS)"
-
-msgid "A Text file (OOo, DOC)"
-msgstr "Um arquivo texto (OOo, DOC)"
-
-msgid ""
-"A geographic address holds the geographic address of a person or company."
-msgstr ""
-"Um endereço geográfico mantém um referência espacial de uma pessoa ou uma "
-"empresa"
-
-msgid ""
-"An Agent is a Person who is permitted to perform some actions on the bank "
-"account according to Privileges."
-msgstr ""
-"Um Agente é uma pessoa a quem é permitido realizar algumas ações em contas "
-"bancárias, segundo previlégios do sistema."
-
-msgid ""
-"An Assignment allows a person to be assigned to an organisation during a "
-"period without changing his career organisation."
-msgstr ""
-"Uma Designação permite uma pessoa ser nomeada para uma organização durante "
-"um período de tempo sem mudar sua carreira organizacional."
-
-msgid ""
-"A bank account number holds a collection of numbers and codes (ex. SWIFT, "
-"RIB, etc.) which may be used to identify a bank account. It is owned by a "
-"Person or an Organisation. A Bank Account contains Agents with Agent "
-"Privileges used by the owner to delegate the management of the bank account "
-"to trusted third-party Persons.\n"
-"\n"
-"BankAccount inherits from Base and from the mix-in Coordinate."
-msgstr ""
-"Um número de conta bancária contém uma coleção de números e/ou códigos (p.e. "
-"SWIFT, RIB, 34132, etc.) que pode ser usado para identificar uma conta "
-"bancária. Este número pertence a uma Pessoa ou Empresa. Uma conta bancária "
-"contem agentes com privilégios utilizados por seu dono para delegar o "
-"gerenciamento da conta para terceiros de sua confiança.\n"
-"\n"
-"(Comentário Técnico, não contribui para o usuário)\n"
-"A Conta Bancária herda conceitos da Base e de Coordenação"
-
-msgid "A step in the career of a person."
-msgstr "Um passo na carreira de uma pessoa."
-
-msgid "Chat Address"
-msgstr "Endereço de bate-papo"
-
-msgid "A chat address is an identifier in an Instant Messaging service."
-msgstr ""
-"O endereço de bate-papo é um identificador para um serviço de mensagens "
-"instantâneas."
-
-msgid "A credit registered in a bank and that can be used for a payment"
-msgstr "Um cartão de crédito que pode ser usado para pagamento."
-
-msgid ""
-"A Currency is a resource which can be credited or debited on general ledger "
-"accounts. It defines currency information, identification and exchange rates "
-"to one or multiple reference currencies."
-msgstr ""
-"A Moeda Corrente é um recurso que pode ser creditado ou debitado nas contas "
-"do razão geral. Ela define a moeda local, a identificação e taxas de câmbio "
-"a uma ou várias moedas de referência."
-
-msgid "An Email object can contain a link to an online resource."
-msgstr "Um objeto de e-mail pode conter um link para um recurso online."
-
-msgid "A fax number that can be stored on a person or organisation document"
-msgstr ""
-"Um número de fax pode ser armazenado em uma pessoa ou documento da "
-"organização"
-
-msgid "A file, in its widest sense"
-msgstr "Um arquivo, em seu sentido mais amplo"
-
-msgid "Image type documents in ERP5. Many formats are supported"
-msgstr "Documentos do tipo imagem no ERP5. Muitos formatos são suportados"
-
-msgid ""
-"A URL allows to represent in a standard way coordinates such as web sites, "
-"emails, ftp sites, etc."
-msgstr ""
-"A URL permite representar de uma forma padrão de coordenadas, tais como web "
-"sites, e-mails, sites FTP, etc."
-
-msgid "Notification Message"
-msgstr "Mensagem de notificação"
-
-msgid "portal type"
-msgstr "Mensagem de notificação"
-
-msgid ""
-"Organisations capture the contact information (ex. name, phone number) and "
-"their classification (ex. site, group, function etc.). Organisations are "
-"supported by a standard validation workflow."
-msgstr ""
-"Organizações captura as informações do contato (ex. nome, número de "
-"telefone) e sua classificação (ex. site do grupo, função, etc.) As "
-"organizações são apoiadas por um fluxo de trabalho de validação padrão."
-
-msgid ""
-"Persons capture the contact information (ex. name, phone number) and the "
-"relation between entities (ex. who is assigned to which function and which "
-"organisation). Persons are supported by a standard validation workflow."
-msgstr ""
-"Pessoas mantém a informação de contato (p.e. nome, número de telefone) e o "
-"relacionamento entre entidades (p.e. quem está associado à qual função em "
-"qual organização). Pessoas são mantidas por um workflow padrão."
-
-msgid "Query"
-msgstr "Consulta"
-
-msgid ""
-"A Query allows for capturing questions of users about ERP5 documents. It can "
-"be used as a collaboration tool, for sharing knowledge or to provide online "
-"help."
-msgstr ""
-"A consulta permite a captura questões dos utilizadores sobre os documentos "
-"do ERP5. Ele pode ser usado como uma ferramenta de colaboração, para "
-"compartilhar conhecimentos ou para fornecer ajuda on-line."
-
-msgid "A Telephone object can contain a telephone number."
-msgstr "Um objeto Telefone contém um número de telefone."
-
-msgid ""
-"Document is a minimal type designed to hold flexible content. It can be used "
-"for rapid application development and prototyping. It is only provided here "
-"as an example, as a reminder and as a way to prevent creating a new portal "
-"type with such a generic name. It should not be used in normal situation."
-msgstr ""
-"O documento é um tipo mínimo projetado para manter o conteúdo flexível. Ele "
-"pode ser usado para o desenvolvimento rápido de aplicações e protótipos. "
-"Este é fornecido apenas como exemplo, como um lembrete e como forma de "
-"impedir a criação de um novo tipo de portal com um nome tão genérico. Não "
-"deve ser utilizado em situação normal."
-
-msgid ""
-"Preference objects store user preferences, and are editable through the "
-"Preference Tool."
-msgstr ""
-"Preferência armazenada as preferências do usuário, e não modificadas através "
-"da ferramenta de preferências."
-
-msgid "System Preference"
-msgstr "Preferência do sistema"
-
-msgid "Container"
-msgstr "Pacote"
-
-msgid ""
-"Container is the term used in sales packing lists to nominate the container "
-"in which the goods will be shipped. The quantity of goods in the container "
-"that will be shipped can be different from the quantity of goods that was "
-"ordered, and in this case, it will possible for the user to take the action "
-"\"Update quantity from container\"."
-msgstr ""
-"Pacote é o termo utilizado em vendas para designar a embalagem em que as "
-"mercadorias serão enviada.\n"
-"A quantidade de mercadorias no Pacote que será enviado pode ser diferente da "
-"quantidade de mercadorias que foi ordenado, e, neste caso, será possível "
-"para o usuário tomar a ação \"Atualizar Quantidade\"."
-
-msgid "Container Line"
-msgstr "Item do Pacote"
-
-msgid ""
-"Container lines bear the different good references included in the "
-"container. If three different goods (e-g product references) are in the same "
-"container, there will be three container lines: one for each product "
-"reference."
-msgstr ""
-"Item do Pacote suportam diferentes referências a produtos incluídas no "
-"pacote.\n"
-"Se três diferentes produtos (por exemplo, referências de produtos) estiverem "
-"no mesmo pacote,\n"
-"haverá três Item do Pacote: uma referência para cada produto."
-
-msgid "A discount consists in cutting the price of a product in a sale order."
-msgstr ""
-"Um desconto consiste em reduzir o preço de um produto em uma ordem de venda."
-
-msgid "Discount Line"
-msgstr "Linha de Desconto"
-
-msgid ""
-"A discount line bears a specific discount that will be applied to either an "
-"order or a product."
-msgstr ""
-"A Linha de Desconto tem um desconto específico, que será aplicada a qualquer "
-"pedido ou um produto."
-
-msgid "Discount Model Line"
-msgstr "Linha de Modelo de Desconto"
-
-msgid ""
-"In a purchase/sale trade condition document, a discount model line defines "
-"the discount behaviour of an order towards certain products."
-msgstr ""
-"Em documento de condição de venda/compra, uma Linha de Modelo de Desconto "
-"define o comportamento do desconto de um pedido para certos produtos."
-
-msgid "Inventory"
-msgstr "Inventário"
-
-msgid ""
-"The inventory module helps the user make a full inventory of the available "
-"products in the different warehouses of the company. There will be an "
-"inventory line for each product reference that is part of the inventory."
-msgstr ""
-"O módulo de inventário ajuda o usuário para fazer um inventário completo dos "
-"produtos disponíveis em diferentes armazéns de empresa. Existirá uma Linha "
-"de Inventário para cada referência de produto que faz parte do inventário."
-
-msgid "Inventory Line"
-msgstr "Linha de Inventário"
-
-msgid ""
-"An inventory line can be found in inventory documents, and bears the "
-"available stock of a certain product reference. There will be one inventory "
-"line for each product reference of the inventory."
-msgstr ""
-"Uma Linha de Inventário pode ser encontrado em documentos do tipo "
-"Inventário, e tem o estoque disponível de uma determinada referência de um "
-"produto. Haverá uma Linha de Inventário para cada referência de produto do "
-"Inventário"
-
-msgid "Payment Condition"
-msgstr "Condição de Pagamento"
-
-msgid ""
-"Payment conditions can be either on a sale/purchase order or on a sale/"
-"purchase trade condition document. Payment condition describes the payment "
-"conditions that will be applied to an order, such as the payment mode, the "
-"term, etc.."
-msgstr ""
-"Condições de pagamento pode existir tanto em um pedido de venda/compra ou em "
-"uma condição de negócio de compra/venda. Condição de pagamento descreve as "
-"condições de pagamento que será aplicado para um pedido, tal como, modo de "
-"pagamento, prazo, etc.."
-
-msgid ""
-"Sale order lines are part of sale orders and bear the different product or "
-"service references that have been sold by the company."
-msgstr ""
-"Linha de Pedido de Venda sao partes de um Pedido de Venda e tem um produto "
-"ou serviço diferente que foram vendido pela empresa."
-
-msgid ""
-"Sale packing list lines are part of sale packing lists, and bear the "
-"different references that have been sold. For each product/service reference "
-"there will be a sale packing list line."
-msgstr ""
-"Linha de Entrega de Venda são partes de uma entrega de venda, e tem "
-"diferentes referências que foram vendidas. Para cada referência de produto/"
-"serviço existirá uma Linha de Entrega de Venda."
-
-msgid "Tax"
-msgstr "Imposto"
-
-msgid ""
-"A tax document helps the user define the name and abbreviation of the "
-"different taxes that will be used in ERP5. Although, this document do not "
-"bear any ratio or % notion."
-msgstr ""
-"Imposto ajuda ao usuário a definir o nome e a abreviação de diferentes "
-"impostos que serão usados no ERP5. Embora, esse documento não tem nenhuma "
-"relação ou % de noção."
-
-msgid "Tax Line"
-msgstr "Linha de Imposto"
-
-msgid ""
-"Tax lines can be included in sale or purchase orders in order to define the "
-"tax rate that will be applied to taxable products and services of the order."
-msgstr ""
-"Linha de Imposto podem ser incluído em pedidos de venda/compra para definir "
-"a taxa de imposto que será aplicada aos produtos e serviços tributáveis do "
-"pedido."
-
-msgid "Tax Model Line"
-msgstr "Linha de Module de Imposto"
-
-msgid ""
-"Tax model lines are the equivalent of tax lines, only they are used in "
-"purchase and trade conditions instead of purchase and trade orders."
-msgstr ""
-"Linhas de Modelo de Imposto são equivalentes a Linha de Imposto, apenas são "
-"usados em  Condições de Compra e Venda ao invés de Pedido de Compra e Venda."
-
-msgid "Web Page"
-msgstr "Página Web"
-
-msgid "A Web Page is an HTML document which contains images and files."
-msgstr "Uma página Web é um documento HTML que contém imagens e arquivos."
-
-msgid ""
-"A Web Site is the root of a tree of Web Sections and web documents (like web "
-"pages or any erp5 object like products, etc.)."
-msgstr ""
-"Um Web Site é a raiz de uma árvore de seções Web e documentos Web (como "
-"páginas web ou qualquer objeto ERP5 produtos similares, etc.)"
-
-msgid "Publication Date"
-msgstr "Data de Publicação"
-
-msgid "The date when a document is published."
-msgstr "A data do documento quando é publicado"
-
-msgid "The telephone region."
-msgstr "A região do telefone."
-
-msgid ""
-"A purchase packing list gathers the different shipment details regarding a "
-"purchase order"
-msgstr ""
-"Uma entrega de compra reúne os detalhes de diferentes expedições a respeito "
-"de um pedido de compra."
-
-msgid ""
-"When a user of ERP5 wants to materialize a sale that has been done by his "
-"company, he or she should use a sale order. Sale orders contain some general "
-"information about the buyer and the seller, and contain sale order lines."
-msgstr ""
-"Quando um usuário do ERP5 quer materializar uma venda que foi feita pela sua "
-"empresa, ele ou ela deve usar um Pedido de Venda. Pedidos de Venda contém "
-"algumas informações gerais sobre o comprador e o vendedor, e possui Linha de "
-"Pedido de Venda."
-
-msgid ""
-"A Sale packing list gathers the different shipment details regarding a sale "
-"order."
-msgstr ""
-"Uma entrega de venda reúne os detalhes de diferentes expedições a respeito "
-"de um pedido de venda."
-
-msgid "The bank organisation which delivered the credit card"
-msgstr "A organizaçao bancária que emitiu o cartão de crédito"
-
-msgid "Disable"
-msgstr "Desabilitar"
-
-msgid "Action which will disable the preference"
-msgstr "Ação que irá desabilitar a preferência"
-
-msgid "Split Document"
-msgstr "Dividir Documento"
-
-msgid ""
-"Splits a document in multiple subdocuments to accelerate translation. Sets "
-"validation_state to split."
-msgstr ""
-"Dividi um documento em múltiplos sub documentos para acelerar a tradução. "
-"Define o estado de validação para dividido."
-
-msgid "Converted"
-msgstr "Convertido"
-
-msgid "State of the document when converted to an open document"
-msgstr "Estado do documento quando convertido para um documento aberto"
-
-msgid "Enable"
-msgstr "Habilitar"
-
-msgid "Enables a preference"
-msgstr "Habilitar preferência"
-
-msgid "Converting"
-msgstr "Convertendo"
-
-msgid ""
-"Indicates that the conversion of document to an open document is in process"
-msgstr ""
-"Indica que a conversão do documento para um documento aberto está na fila "
-"para ser convertido"
-
-msgid "Invoice Date"
-msgstr "Data da Fatura"
-
-msgid ""
-"The invoice date for the client in the case of a Purchase Invoice Transaction"
-msgstr "A Data da Fatura para o cliente no caso de uma Transação de Fatura de Compra"
-
-msgid "The title of the Invoice."
-msgstr "O título da fatura"
-
-msgid "Default Price"
-msgstr "Preço Padrão"
-
-msgid "The default price"
-msgstr "O preço padrão"
-
-msgid "Public description of the document."
-msgstr "Descrição pública do documento."
-
-msgid "Product or Service"
-msgstr "Produto ou Serviço"
-
-msgid "The product or service which is traded"
-msgstr "O produto ou serviço que é comercializado"
-
-msgid "Organisation that sends the invoice"
-msgstr "Organização que emite a fatura"
-
-msgid "Date at which the invoice was shipped"
-msgstr "Data em que a fatura foi enviada"
-
-msgid "The invoice date for the supplier in the case of a Sale Invoice Transaction."
-msgstr "A Data da Fatura para o fornecedor no caso de uma Transação da Fatura de Venda"
-
-msgid "Social Security Identification Number"
-msgstr "Número de Identificação do Seguro Social"
-
-msgid "The Social Security Identification Number of the person"
-msgstr "O Número de Identificação do Seguro Social da pessoa"
-
-msgid "The printing format of the invoice."
-msgstr "O formato de impressão da fatura."
-
-msgid "The Default Quantity."
-msgstr "A quantidade padrão."
-
-msgid "The Social Security Identification Number of the organisation"
-msgstr "O Número de Identificação do Seguro Social da organização"
-
-msgid "Stopped Project"
-msgstr "Projeto Parado"
-
-msgid "The project has been stopped"
-msgstr "O projeto foi interrompido"
-
-msgid "Start Project"
-msgstr "Iniciar Projeto"
-
-msgid "Action used to start the treatment of a project"
-msgstr "Ação utilizada para iniciar o projeto"
-
-msgid "Started Project"
-msgstr "Projeto Iniciado"
-
-msgid "The project has been started"
-msgstr "O projeto foi iniciado"
-
-msgid "Suspend Project"
-msgstr "Suspender Projeto"
-
-msgid ""
-"Action used to suspend a project. Once a project is suspended it is not "
-"worked on anymore, but can be reopened later."
-msgstr ""
-"Ação usada para suspender um projeto. Uma vez que o projeto está suspenso, "
-"este não é trabalhado mais, mas pode ser reaberto mais tarde."
-
-msgid "Suspended Project"
-msgstr "Projeto Suspendido"
-
-msgid "empty"
-msgstr "Projeto que está suspendido"
-
-msgid "Stop Project"
-msgstr "Parar Projeto"
-
-msgid "Action used to stop a project"
-msgstr "Ação usada para parar um projeto"
-
-msgid ""
-"The list of the resources involved in the project. Most of the time, it's a "
-"supplier's worker"
-msgstr "A lista de recursos envolvidos em um projeto, na maioria das vezes um produto ou um componente."
-
-msgid "To who the task had been assigned"
-msgstr "Aquele que foi designado para a tarefa."
-
-msgid "List of the specific needs to complete the project"
-msgstr "Lista de necessidades específicas para completar o projeto.\n"
-
-msgid "List of the specific needs to complete the task"
-msgstr "Lista de necessidades específicas para completar a tarefa."
-
-msgid "Use this action to notify that task processing has begun"
-msgstr "Utilize esta ação para avisar que a tarefa foi iniciada"
-
-msgid "Close Task"
-msgstr "Fechar Tarefa"
-
-msgid ""
-"Use this action to notify that a task has been validated and can be closed"
-msgstr ""
-"Utilize esta ação para comunicar que uma tarefa was validada e pode ser "
-"fechada"
-
-msgid "Location"
-msgstr "Localização"
-
-msgid "Project Location"
-msgstr "Localização do Projeto"
-
-msgid ""
-"The Location where the project is handled, most of the time the name of an "
-"organisation."
-msgstr ""
-"A localização onde o projeto é tratado. Na maioria dos casos, a referência é "
-"o nome da organização."
-
-msgid "Outcome Description"
-msgstr "Descrição do Resultado Esperado"
-
-msgid "Explains what is the expected outcome of this Project Line"
-msgstr "Explica o qual é o resultado esperado para esta linha de projeto."
-
-msgid "Predecessors"
-msgstr "Antecessores"
-
-msgid ""
-"The list of project lines that need to be fulfilled before this one is "
-"treated"
-msgstr "A lista de linhas de projeto que precisam ser completadas antes desta ser iniciada."
-
-msgid "The list of tasks that need to be fulfilled before this one is treated"
-msgstr "A lista de tarefas que precisam ser totalmente completadas antes desta iniciar."
-
-msgid ""
-"The Accounting Period is closed. It is no longer possible to add accounting "
-"transactions in this period. A balance transaction has been created."
-msgstr ""
-"O período de contabilidade está fechado. Não é mais possível adicionar "
-"transações contábeis no período. Uma transação de equilíbrio foi criado."
-
-msgid "Index used to sort invoice lines in a list"
-msgstr "Índice usado para ordenar as linhas da fatura em uma lista"
-
-msgid "The supplier of the invoice"
-msgstr "O Fornecedor da fatura"
-
-msgid "The Version of the Rule"
-msgstr "A versão da regra"
-
-msgid "The Invoice Reference"
-msgstr "A referência da fatura"
-
-msgid "Title of the entity who is responsible of supervising the project"
-msgstr "Título da entidade que é responsável por supervisionar o projeto."
-
-msgid "Title of the entity who is responsible of supervising the task"
-msgstr "Título da entidade que é responsável por supervisionar a tarefa."
-
-msgid "Project Line"
-msgstr "Linha de Projeto"
-
-msgid "Use Project Line to build project architecture."
-msgstr "Use a Linha de Projeto para construir a arquitetura do projeto."
-
-msgid "Use Task to define tasks of a project."
-msgstr "Utilize tarefa para definir as tarefas de um projeto."
-
-msgid ""
-"Use Task Line to detail the element of a Task. It is useful to create the "
-"complete hierarchy of a Project."
-msgstr ""
-"Use a Linha de Tarefa para detalhar o elemento de uma tarefa. Ele é "
-"interessante para criar uma completa hierarquia de um projeto."
-
-msgid "Use Task Report Line to detail different steps of task operations."
-msgstr ""
-"Usa a Linha de Relatório de Tarefa para detalhar diferentes aspectos das "
-"operações das tarefas."
-
-msgid "Origin"
-msgstr "Origem"
-
-msgid "Title of the task which is at the origin of the task report."
-msgstr "Título da tarefa que está definida na origem do relatório da tarefa."
-
-msgid "The default price for the task"
-msgstr "O preço base para a tarefa."
-
-msgid "Title of the party to which the task is paid to"
-msgstr "O Título da equipe para qual a tarefa é paga."
-
-msgid "The project in which the client is involved in"
-msgstr "O projeto que o cliente está envolvido."
-
-msgid "Detect Uploaded File"
-msgstr "Detectar Arquivo Carregado"
-
-msgid "will automatically detect when file is completely uploaded"
-msgstr "Detecta automaticamente quando o arquivo for completamente carregado"
-
-msgid "Detect Converted File"
-msgstr "Detectar Arquivo Convertido"
-
 msgid "will automatically detect when file is completely converted"
 msgstr "detectará automaticamente quando o arquivo é completamente convertido"
 
-msgid "Pack Container"
-msgstr "Empacotar"
-
-msgid "marks the container as packed"
-msgstr "Marca o pacote como empacotado."
-
-msgid "Declare Container Missing"
-msgstr "Declarar Falta do Pacote"
-
-msgid "marks the container as missing"
-msgstr "Marca o Pacote como faltando."
-
-msgid "Generate POT File"
-msgstr "Gerar um Arquivo POT"
-
-msgid "Globally Enable"
-msgstr "Habilitar Globalmente"
-
-msgid "Enables a \"global\" preference"
-msgstr "Habilita a preferência como global"
-
-msgid "Min. Stock"
-msgstr "Estoque Min."
-
-msgid "The minimal stock quantity of a resource."
-msgstr "A quantidade mínima de estoque de um recurso."
-
-msgid "Max. Stock"
-msgstr "Estoque Max."
-
-msgid "The maximal stock quantity of a resource."
-msgstr "A quantidade máxima de estoque de um recurso."
-
-msgid "TioLive Documentation"
-msgstr "Documentação do TioLive"
-
-msgid "TioLive Instances"
-msgstr "TioLive Instâncias"
-
-msgid "TioLive Profile"
-msgstr "TioLive Perfil"
-
-msgid "TioLive Chat"
-msgstr "TioLive Bate-Papo"
-
-msgid "TioLive Mail"
-msgstr "TioLive E-mail"
-
-msgid "-- Your Instances --"
-msgstr "-- Suas Instâncias --"
-
-msgid "Cancel Action"
-msgstr "Cancelar Ação"
-
+msgid "will automatically detect when file is completely uploaded"
+msgstr "Detecta automaticamente quando o arquivo for completamente carregado"

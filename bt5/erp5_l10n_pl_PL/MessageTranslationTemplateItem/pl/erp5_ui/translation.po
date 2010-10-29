@@ -1515,6 +1515,9 @@ msgstr "Element"
 msgid "Item Module"
 msgstr "Moduł elementów"
 
+msgid "Items"
+msgstr "Elementy"
+
 msgid "Items Copied."
 msgstr "Elementów skopiowanych."
 
@@ -1523,9 +1526,6 @@ msgstr "Elementów wklejonych."
 
 msgid "Items+Copied."
 msgstr "Elementów+skopiowanych."
-
-msgid "Items"
-msgstr "Elementy"
 
 msgid "Journal"
 msgstr "Rejestr zakupu/sprzedaży"
