@@ -140,7 +140,9 @@ class String(Scalar):
                 v = self.mapping.convertBase64(v)
             else:
                 # Make sure we never produce this kind of xml output
-                raise
+                # XXX: In fact, this can happen when DemoStorage is used
+                #      See notes in XMLExportImport.exportXML
+                raise NotImplementedError
         id = ''
         encoding=''
         if hasattr(self, 'encoding'):
