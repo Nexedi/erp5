@@ -910,6 +910,7 @@ class PersistentMigrationMixin(object):
       # proceed with migration
       import erp5.portal_type
       klass = getattr(erp5.portal_type, portal_type)
+      assert self.__class__ != klass
       self.__class__ = klass
       self.__setstate__(value)
       LOG('ERP5Type', TRACE, "Migration for object %s" % self)
