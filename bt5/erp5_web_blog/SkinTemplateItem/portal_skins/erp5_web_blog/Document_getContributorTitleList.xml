@@ -51,11 +51,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This simple script returns the contributor title of the current context.\n
+  This simple script returns the contributor title list of the current context.\n
   It has a proxy_role of manager to allowed anonymous to get the contributor title\n
 """\n
 \n
-return context.getContributorTitle() or context.Base_translateString("Unknown User")\n
+return len(context.getContributorTitleList()) and context.getContributorTitleList() or [context.Base_translateString("Unknown User")]\n
 </string> </value>
         </item>
         <item>
@@ -100,6 +100,7 @@ return context.getContributorTitle() or context.Base_translateString("Unknown Us
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>len</string>
                             <string>_getattr_</string>
                             <string>context</string>
                           </tuple>
@@ -118,11 +119,11 @@ return context.getContributorTitle() or context.Base_translateString("Unknown Us
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_getContributorTitle</string> </value>
+            <value> <string>Document_getContributorTitleList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Get the contributor title from a document</string> </value>
+            <value> <string>Get the contributor title list from a document</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
