@@ -101,10 +101,10 @@ select_expression = {\'date\' : \'DATE_FORMAT(creation_date, "%s")\'%sql_format}
 group_by = [\'DATE_FORMAT(creation_date, "%s")\' % sql_format,]\n
 \n
 # count number of object created by the user for each type of document\n
-result_list = context.portal_catalog.countResults(select_expression=select_expression_list,\n
+result_list = context.portal_catalog.countResults(select_expression=select_expression,\n
                                                   portal_type=portal_type_list,limit=None,\n
                                                   owner=context.getReference(),query=query,\n
-                                                  group_by_expression=group_by_list)\n
+                                                  group_by_expression=group_by)\n
 \n
 # build result dict per portal_type then period\n
 period_count_dict = {}\n
@@ -193,8 +193,6 @@ return [obj,]\n
                             <string>_apply_</string>
                             <string>select_expression</string>
                             <string>group_by</string>
-                            <string>select_expression_list</string>
-                            <string>group_by_list</string>
                             <string>result_list</string>
                             <string>period_count_dict</string>
                             <string>result</string>
