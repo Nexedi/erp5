@@ -118,7 +118,7 @@ return context.getContributorTitle() or context.Base_translateString("Unknown Us
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_getAuthorName</string> </value>
+            <value> <string>Document_getContributorTitle</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
