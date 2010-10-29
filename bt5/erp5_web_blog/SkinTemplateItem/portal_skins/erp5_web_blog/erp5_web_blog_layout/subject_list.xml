@@ -71,7 +71,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>tag_list</string> </value>
+                    <value> <string>subject_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
