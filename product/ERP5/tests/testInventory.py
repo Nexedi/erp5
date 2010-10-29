@@ -67,7 +67,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
   inventory_line_portal_type = inventory_portal_type + ' Line'
   inventory_cell_portal_type = inventory_portal_type + ' Cell'
   price_currency =  'currency_module/euro'
-  
+
   def getTitle(self):
     return "Inventory"
 
@@ -117,7 +117,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                             id=category_id)
         else:
           self.createCategory(last_category, category_id)
-          
+
   def stepCreateItemList(self, sequence=None, sequence_list=None, **kw):
     """
       Create some items to manipulate during the module test
@@ -130,7 +130,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       item_list.append(item)
       item.edit(quantity = (i+1)*10)
     sequence.edit(item_list = item_list)
-      
+
   def stepCreateOrganisationsForModule(self, sequence=None,
                                         sequence_list=None, **kw):
     """
@@ -177,7 +177,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_line = inventory.newContent(portal_type = self.inventory_line_portal_type)
     inventory_line.edit(resource_value = resource,
                         aggregate_value_list = aggregate_value_list)
-    # Now, quantity is not defined any more automatically. 
+    # Now, quantity is not defined any more automatically.
     inventory_line.edit(quantity=sum([x.getQuantity() for x in \
         aggregate_value_list]))
     inventory.deliver()
@@ -198,7 +198,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
     return inventory
-                        
+
   def stepCreateSingleInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Create a single Inventory object for Inventory Module testing
@@ -212,7 +212,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory.deliver()
     inventory_list.append(inventory)
     sequence.edit(inventory_list=inventory_list)
-                        
+
   def stepCreateSingleVariatedInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Create a single Inventory object for Inventory Module testing
@@ -245,7 +245,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         mapped_value_property_list = ['quantity'],
         )
     inventory.deliver()
-                        
+
   def stepCreatePackingListForModule(self, sequence=None,
                                       sequence_list=None, **kw):
     """
@@ -348,7 +348,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                       "stop_action", "packing_list_workflow")
     workflow_tool.doActionFor(packing_list,
                       "deliver_action", "packing_list_workflow")
-                        
+
   def stepCreateOrganisationList(self, sequence=None, sequence_list=None, **kw):
     """
       Create some organisations to manipulate during the test
@@ -367,7 +367,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     for i in range(10):
       self.stepCreateOrganisation(sequence=sequence, sequence_list=sequence_list, **kw)
       organisation_list.append(sequence.get('organisation'))
-      
+
     category_tool = self.getPortal().portal_categories
     bc = category_tool.site
     self.createCategory(bc, ['Place1', ['A', 'B'], 'Place2', ['C'], 'Place3', ['D']])
@@ -375,11 +375,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     organisation_list[3] = bc.Place1.B
     organisation_list[6] = bc.Place2.C
     organisation_list[9] = bc.Place3.D
-    
+
     sequence.edit(
       organisation = None,
       organisation_list = organisation_list)
-        
+
 
   def stepCreateVariatedResourceList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -392,8 +392,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     sequence.edit(
       resource=None,
       resource_list = resource_list)
-      
-    
+
+
   def stepCreatePackingListList(self, sequence=None, sequence_list=None, **kw):
     """
       Create some packing lists
@@ -449,7 +449,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                {'variation':['size/Baby', '3', '5'], 'quantity':16.5},
              ]
            }  # line end
-        ] 
+        ]
       }, # packing list end
       { 'source':6, 'destination':3, 'source_section':4, 'destination_section':0,
         'source_payment':5, 'destination_payment':1, 'start_date':DateTime()-25, 'lines':[
@@ -511,7 +511,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                {'variation':['size/Man', '3', '4'], 'quantity':6.},
              ]
            }, # line end
-        ] 
+        ]
       }, # packing list end
       { 'source':3, 'destination':9, 'source_section':0, 'destination_section':7,
         'source_payment':1, 'destination_payment':8, 'start_date':DateTime()-10, 'lines':[
@@ -525,17 +525,17 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                {'variation':['size/Baby', '3', '5'], 'quantity':18.},
              ]
            }, # line end
-        ] 
+        ]
       }, # packing list end
     ]
-    
+
     packing_list_list = []
     delivery_line_list = []
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
     order = sequence.get('order')
     packing_list_module = self.getPortal().getDefaultModule(self.packing_list_portal_type)
-    
+
     for data in data_list:
       # Create Packing List
       packing_list = packing_list_module.newContent(portal_type=self.packing_list_portal_type)
@@ -562,12 +562,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
             resource_value = resource_value,
             variation_category_list=variation_category_list
         )
-        
+
         # Set cell range
         base_category_dict = {}
         for i in range(len(base_category_list)):
           base_category_dict[base_category_list[i]] = i
-        
+
         # Set cells
         for cell in line['cells']:
           variation = cell['variation']
@@ -588,7 +588,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
               mapped_value_property_list = ['quantity'],
               )
     sequence.edit(packing_list_list = packing_list_list)
-    
+
   def stepCreateTestingCategories(self, sequence=None, sequence_list=None, **kw):
     """
       Create some categories and affect them to resources and organisations
@@ -596,11 +596,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     category_tool = self.getPortal().portal_categories
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
-    
+
     bc = category_tool.newContent(portal_type = 'Base Category', id = 'testing_category')
     self.createCategory(bc, ['a', ['aa', 'ab'], 'o', 'z', ['za', 'zb', ['zba', 'zbb'], 'zc'] ])
     self.stepTic()
-    
+
     category_org_list = [ ['testing_category/a/aa', 'testing_category/o'], # 0
                           ['testing_category/a/aa', 'testing_category/z'], # 1
                           ['testing_category/a/aa', 'testing_category/z/zb/zba'], # 2
@@ -612,12 +612,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                           ['testing_category/z', 'testing_category/a/ab'], # 8
                           ['testing_category/a', 'testing_category/z/zb'],# 9
                         ]
-                        
+
     category_res_list = [ ['testing_category/a/aa', 'testing_category/z'],
                           ['testing_category/a/aa', 'testing_category/z/za'],
                           ['testing_category/a/aa', 'testing_category/o']
                         ]
-    
+
     for i in range(len(category_org_list)):
       organisation = organisation_list[i]
       new_categories = category_org_list[i]
@@ -626,7 +626,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       resource = resource_list[i]
       new_categories = category_res_list[i]
       resource.edit(categories = resource.getCategoryList() + new_categories)
-      
+
 
   def stepTestGetInventoryOnNode(self, sequence=None, sequence_list=None, **kw):
     """
@@ -655,7 +655,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                          {'date':DateTime(),    'inventory':152.},]
       },
     ]
- 
+
     for expected_values in expected_values_list:
       organisation = organisation_list[expected_values['id']]
       url = organisation.getRelativeUrl()
@@ -664,7 +664,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         date = value['date']
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, at_date=date, node=url)
-  
+
 
   def stepTestGetInventoryOnPayment(self, sequence=None, sequence_list=None, **kw):
     """
@@ -688,7 +688,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                          {'date':DateTime(),    'inventory':152.},]
       },
     ]
- 
+
     for expected_values in expected_values_list:
       organisation = organisation_list[expected_values['id']]
       url = organisation.getRelativeUrl()
@@ -697,7 +697,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         date = value['date']
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, at_date=date, payment=url)
-        
+
 
   def stepTestGetInventoryOnSection(self, sequence=None, sequence_list=None, **kw):
     """
@@ -721,7 +721,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                          {'date':DateTime(),    'inventory':152.},]
       },
     ]
- 
+
     for expected_values in expected_values_list:
       organisation = organisation_list[expected_values['id']]
       url = organisation.getRelativeUrl()
@@ -730,8 +730,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         date = value['date']
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, at_date=date, section=url)
-        
-        
+
+
   def stepTestGetInventoryOnMirrorSection(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventory on each mirror section
@@ -754,7 +754,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                          {'date':DateTime(),    'inventory':-152.},]
       },
     ]
- 
+
     for expected_values in expected_values_list:
       organisation = organisation_list[expected_values['id']]
       url = organisation.getRelativeUrl()
@@ -763,8 +763,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         date = value['date']
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, at_date=date, mirror_section=url)
-        
-        
+
+
   def stepTestGetInventoryOnResource(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventory on each resource
@@ -788,7 +788,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                          {'date':DateTime(),    'inventory':18.5},]
       },
     ]
- 
+
     organisation_url = organisation_list[0].getRelativeUrl()
     for expected_values in expected_values_list:
       resource = resource_list[expected_values['id']]
@@ -798,11 +798,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         date = value['date']
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, at_date=date, resource=url, section=organisation_url)
-        
-        
+
+
   def stepTestGetInventoryOnVariationText(self, sequence=None, sequence_list=None, **kw):
     """
-    
+
     """
     simulation = self.getPortal().portal_simulation
     delivery = sequence.get('packing_list_list')[0]
@@ -811,7 +811,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
               'values':[{'inventory':17.},]
       },
     ]
-    
+
     organisation_list = sequence.get('organisation_list')
     organisation_url = organisation_list[0].getRelativeUrl()
     for expected_values in expected_values_list:
@@ -820,14 +820,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       for value in values:
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, variation_text=variation_text, section=organisation_url)
-    
+
   def stepTestInventoryListBrainGetQuantity(self, sequence=None, sequence_list=None, **kw):
     """
-    
+
     """
     simulation = self.getPortal().portal_simulation
     delivery = sequence.get('packing_list_list')[0]
-    
+
     organisation_list = sequence.get('organisation_list')
     organisation_url = organisation_list[0].getRelativeUrl()
     movement = delivery['1']['movement_0_0_0']
@@ -846,8 +846,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         self.assertEquals(inventory.getQuantity(), 0.5)
     self.failUnless(found==1)
 
-    
-    
+
+
   def stepTestGetInventoryOnVariationCategory(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventory on some variation categories
@@ -892,10 +892,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                   {'date':DateTime()-12, 'inventory':204.75},
                                   {'date':DateTime(),    'inventory':201.75},]
       },
-      
-      
+
+
     ]
- 
+
     organisation_url = organisation_list[0].getRelativeUrl()
     for expected_values in expected_values_list:
       category_list = expected_values['id']
@@ -907,8 +907,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                at_date=date,
                                variation_category=category_list,
                                section=organisation_url)
-        
-        
+
+
   def stepTestGetInventoryWithOmitOutput(self, sequence=None,
                                          sequence_list=None, **kw):
     """
@@ -937,7 +937,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                          {'date':DateTime(),    'inventory':152.},]
       },
     ]
- 
+
     for expected_values in expected_values_list:
       organisation = organisation_list[expected_values['id']]
       url = organisation.getRelativeUrl()
@@ -949,8 +949,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                at_date=date,
                                node=url,
                                omit_output=1)
-        
-        
+
+
   def stepTestGetInventoryWithOmitInput(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventory on each node with omit_input
@@ -978,7 +978,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                          {'date':DateTime(),    'inventory':0.},]
       },
     ]
- 
+
     for expected_values in expected_values_list:
       organisation = organisation_list[expected_values['id']]
       url = organisation.getRelativeUrl()
@@ -990,7 +990,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                at_date=date,
                                node=url,
                                omit_input=1)
-                
+
 
   def stepTestGetInventoryOnSectionCategory(self, sequence=None,
                                             sequence_list=None, **kw):
@@ -1004,7 +1004,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       {'id':'testing_category/z', 'values':[{'inventory':-274.5},] },
       {'id':'testing_category/o', 'values':[{'inventory':0.},] },
     ]
- 
+
     for expected_values in expected_values_list:
       category = expected_values['id']
       values = expected_values['values']
@@ -1012,8 +1012,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory,
                                section_category=category)
-        
-        
+
+
   def stepTestGetInventoryOnPaymentCategory(self, sequence=None,
                                             sequence_list=None, **kw):
     """
@@ -1026,7 +1026,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       {'id':'testing_category/a/ab', 'values':[{'inventory':152.},] },
       {'id':'testing_category/a', 'values':[{'inventory':426.5},] },
     ]
- 
+
     for expected_values in expected_values_list:
       category = expected_values['id']
       values = expected_values['values']
@@ -1034,8 +1034,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory,
                                payment_category=category)
-        
-        
+
+
   def stepTestGetInventoryOnNodeCategory(self, sequence=None,
                                          sequence_list=None, **kw):
     """
@@ -1049,15 +1049,15 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       {'id':'testing_category/a', 'values':[{'inventory':0.},] },
       {'id':'testing_category/z', 'values':[{'inventory':0.},] },
     ]
-       
+
     for expected_values in expected_values_list:
       category = expected_values['id']
       values = expected_values['values']
       for value in values:
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, node_category=category)
-        
-        
+
+
   def stepTestGetInventoryOnMirrorSectionCategory(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventory with a section_category argument
@@ -1069,15 +1069,15 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       {'id':'testing_category/z', 'values':[{'inventory':274.5},] },
       {'id':'testing_category/o', 'values':[{'inventory':0.},] },
     ]
- 
+
     for expected_values in expected_values_list:
       category = expected_values['id']
       values = expected_values['values']
       for value in values:
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, mirror_section_category=category)
-          
-  
+
+
   def stepTestGetInventoryOnResourceCategory(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventory with a resource_category argument
@@ -1089,7 +1089,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       {'id':'testing_category/z/za', 'values':[{'inventory':25.5},] },
       {'id':'testing_category/z', 'values':[{'inventory':256.},] },
     ]
- 
+
     for expected_values in expected_values_list:
       category = expected_values['id']
       values = expected_values['values']
@@ -1098,8 +1098,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         self._testGetInventory(expected=e_inventory,
                                resource_category=category,
                                section=organisation_list[0].getRelativeUrl())
-        
-        
+
+
   def _testGetInventory(self, expected, **kw):
     """
       Shared testing method
@@ -1115,7 +1115,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       LOG('SQL Query was : ', 0, str(simulation.getInventory(src__=1, **kw)))
       self.assertEquals(e_inventory, a_inventory, msg)
 
-               
+
   def stepTestGetInventoryOnSimulationState(self, sequence=None,
                                             sequence_list=None, **kw):
     """
@@ -1128,7 +1128,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     workflow_tool = self.getPortal().portal_workflow
     simulation = self.getPortal().portal_simulation
     transit_simulation_state = ['started']
-    
+
     transition_list = [
        {'id':0, 'action':'confirm_action'}, # a
        {'id':0, 'action':'set_ready_action'}, # b
@@ -1143,7 +1143,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                             {'id':3, 'action':'start_action'}, # k
                             {'id':3, 'action':'stop_action'}, # l
     ]
-    
+
     expected_values_list = [
      #( without omit_transit, with omit_transit)
       ({'Current':  0.  , 'Available': 0.  , 'Future':  0.  },
@@ -1173,18 +1173,18 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       ({'Current':128.5 , 'Available': 128.5  , 'Future':274.5 }, # l
        {'Current':128.5 , 'Available': 128.5  , 'Future':274.5 }),
     ]
- 
+
     organisation_list = sequence.get('organisation_list')
     organisation_url = organisation_list[0].getRelativeUrl()
     date = DateTime()
-    
+
     def _testWithState(expected_values, omit_transit):
       # Get current workflow states to add it to the log
       state_list = []
       for packing_list in packing_list_list:
         state_list.append(workflow_tool.getStatusOf(
                 packing_list_workflow, packing_list)[state_variable])
-      
+
       LOG('Testing with these workflow states :', 0, state_list)
       for name, e_inventory in expected_values.items():
         method_name = 'get%sInventory' % name
@@ -1193,23 +1193,23 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
           LOG('TEST ERROR : Simulation Tool has no %s method'
               % method_name, 0, '')
           self.failUnless(0)
-        a_inventory = method(section=organisation_url, 
+        a_inventory = method(section=organisation_url,
                              omit_transit=omit_transit,
                              transit_simulation_state=transit_simulation_state,
                              at_date=date)
         if a_inventory != e_inventory:
           LOG('TEST ERROR : Inventory quantity differs between expected (%s) and real (%s) quantities' % (repr(e_inventory), repr(a_inventory)), 0, 'with method %s and omit_transit=%s' % (method_name, omit_transit))
-          LOG('SQL Query was :', 0, method(section=organisation_url, 
+          LOG('SQL Query was :', 0, method(section=organisation_url,
                              omit_transit=omit_transit,
                              transit_simulation_state=transit_simulation_state,
                              at_date=date, src__=1))
           self.assertEquals(a_inventory, e_inventory)
-        
+
     # First, test with draft state everywhere
     LOG('Testing Inventory with every Packing List in draft state...', 0, '')
     for omit_transit in (0,1):
       _testWithState(expected_values_list[0][omit_transit], omit_transit)
-      
+
     i = 0
     for expected_values in expected_values_list[1:]:
       self.tic() # acceptable here because this is not the job
@@ -1223,14 +1223,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       transited_pl.recursiveImmediateReindexObject() # XXX
       transaction.commit()
       self.stepTic()
-      
+
       for omit_transit in (0,1):
         values = expected_values[omit_transit]
         _testWithState(values, omit_transit)
-        
+
       i += 1
 
-      
+
   def stepTestGetInventoryWithSelectionReport(self, sequence=None, sequence_list=None, **kw):
     """
     """
@@ -1257,7 +1257,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                          {'date':DateTime(),    'inventory':152.},]
       },
     ]
- 
+
     for expected_values in expected_values_list:
       selection_domain = DomainSelection(domain_dict = {'destination_section':organisation_list[expected_values['id']],
                                                         'source_section':organisation_list[expected_values['id']]})
@@ -1266,15 +1266,15 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         date = value['date']
         e_inventory = value['inventory']
         self._testGetInventory(expected=e_inventory, at_date=date, selection_domain=selection_domain)
-    
-    
+
+
   def stepTestGetInventoryListOnSection(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventoryList on a section
     """
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
-    
+
     # Build expected list
     expected_list = []
     for i in range(1, 31):
@@ -1344,7 +1344,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                              'section_relative_url': i[1],
                              'resource_relative_url': i[2],
                              'inventory':0. })
-    
+
     item_dict = { 'node': organisation_list,
                   'section': organisation_list,
                   'resource': resource_list }
@@ -1358,7 +1358,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self._testGetInventoryList(expected=expected_l,
                                section=organisation_list[0].getRelativeUrl(),
                                omit_simulation=1)
-    
+
   def stepTestGetInventoryListOnNode(self, sequence=None,
                                      sequence_list=None, **kw):
     """
@@ -1366,7 +1366,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     """
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
-    
+
     # Build expected list
     expected_list = []
     for i in range(1, 31):
@@ -1411,7 +1411,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                              'section_relative_url': i[1],
                              'resource_relative_url': i[2],
                              'inventory':0. })
-    
+
     item_dict = { 'node': organisation_list,
                   'section': organisation_list,
                   'resource': resource_list }
@@ -1426,14 +1426,14 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                                 node=organisation_list[2].getRelativeUrl(),
                                 omit_simulation=1)
 
-    
+
   def stepTestGetInventoryListWithOmitInput(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventoryList on a section with omit_input
     """
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
-    
+
     # Build expected list
     expected_list = []
     for i in range(1, 24):
@@ -1451,7 +1451,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     for i in [18]:
       quantity = (i + 0.)
       expected_list.append({ 'node_relative_url': 3, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':-quantity })
-    
+
     item_dict = {'node':organisation_list, 'section':organisation_list, 'resource':resource_list}
     expected_l = expected_list[:]
     for expected in expected_l:
@@ -1459,15 +1459,15 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         attr_name = attribute.split('_')[0]
         expected[attribute] = item_dict[attr_name][expected[attribute]].getRelativeUrl()
     self._testGetInventoryList(expected=expected_l, section=organisation_list[0].getRelativeUrl(), omit_simulation=1, omit_input=1)
-    
-    
+
+
   def stepTestGetInventoryListWithOmitOutput(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventoryList on a section with omit_output
     """
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
-    
+
     # Build expected list
     expected_list = []
     for i in range(1, 31):
@@ -1485,7 +1485,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     for i in range(40, 41):
       quantity = (i + 0.) / 2
       expected_list.append({ 'node_relative_url': 3, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':quantity })
-    
+
     item_dict = {'node':organisation_list, 'section':organisation_list, 'resource':resource_list}
     expected_l = expected_list[:]
     for expected in expected_l:
@@ -1493,18 +1493,18 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         attr_name = attribute.split('_')[0]
         expected[attribute] = item_dict[attr_name][expected[attribute]].getRelativeUrl()
     self._testGetInventoryList(expected=expected_l, section=organisation_list[0].getRelativeUrl(), omit_simulation=1, omit_output=1)
-    
-    
+
+
   def stepTestGetInventoryListWithGroupBy(self, sequence=None, sequence_list=None, **kw):
     """
       Test getInventoryList by using group_by_*
     """
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
-    
+
     # Build expected list
-    expected_list_list = [ 
-      ({'group_by_node':1}, [ 
+    expected_list_list = [
+      ({'group_by_node':1}, [
         {'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':0, 'inventory':120. },
         {'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':1, 'inventory':25.5 },
         {'node_relative_url': 2, 'section_relative_url':0, 'resource_relative_url':2, 'inventory':16.5 },
@@ -1549,16 +1549,16 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
         {'resource_relative_url':0, 'inventory':6.5 },
         {'resource_relative_url':0, 'inventory':6.5 },
         {'resource_relative_url':0, 'inventory':0.}, #None }, # Sum of lines (quantity of lines is NULL)
-        
+
         {'resource_relative_url':1, 'inventory':15.5 },
         {'resource_relative_url':1, 'inventory':10. },
         {'resource_relative_url':1, 'inventory':0. }, #None }, # Sum of lines (quantity of lines is ULL)
-        
+
         {'resource_relative_url':2, 'inventory':18.5 },
         {'resource_relative_url':2, 'inventory':0. }, #None }, # Sum of lines (quantity of lines is NULL)
       ]),
     ]
-    
+
     item_dict = {'node':organisation_list, 'section':organisation_list, 'resource':resource_list}
     for expected_tuple in expected_list_list:
       param, expected_list = expected_tuple
@@ -1569,8 +1569,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
           expected[attribute] = item_dict[attr_name][expected[attribute]].getRelativeUrl()
       LOG('Testing getInventoryList with', 0, param)
       self._testGetInventoryList(expected=expected_l, omit_simulation=1, **param)
-        
-    
+
+
   def _testGetInventoryList(self, expected, **kw):
     """
       Shared testing method
@@ -1582,7 +1582,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       attribute_list = [x for x in expected[0].keys() if x != 'inventory']
     else:
       attribute_list = []
-    
+
     LOG('Testing getInventoryList with args :', 0, kw)
     inventory_list = simulation.getInventoryList(**kw)
     for inventory in inventory_list:
@@ -1621,8 +1621,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       LOG('TEST ERROR : Not all expected values were matched. Remaining =', 0, expected)
       LOG('SQL Query was : ', 0, str(simulation.getInventoryList(src__=1, **kw)))
       self.failUnless(len(expected), 0)
-      
-      
+
+
   def stepTestGetNextNegativeInventoryDate(self, sequence=None, sequence_list=None, **kw):
     """
       Test getNextNegativeInventoryDate
@@ -1640,7 +1640,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                {'variation':variation_categories, 'quantity':100000.},
              ]
            }, # line end
-        ] 
+        ]
       }, # packing list end
       { 'source':6, 'destination':node, 'source_section':4, 'destination_section':0,
         'source_payment':5, 'destination_payment':1, 'start_date':expected_negative_date+5, 'lines':[
@@ -1648,10 +1648,10 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                {'variation':variation_categories, 'quantity':100000.},
              ]
            }, # line end
-        ] 
+        ]
       }, # packing list end
     ]
-    
+
     portal = self.getPortal()
     simulation = portal.portal_simulation
     packing_list_module = portal.getDefaultModule(self.packing_list_portal_type)
@@ -1659,7 +1659,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     organisation_list = sequence.get('organisation_list')
     resource_list = sequence.get('resource_list')
     delivery_line_list = []
-    
+
     for data in data_list:
       # Create Packing List
       packing_list = packing_list_module.newContent(portal_type=self.packing_list_portal_type)
@@ -1686,12 +1686,12 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
             resource_value=resource_value,
             variation_category_list=variation_category_list,
         )
-        
+
         # Set cell range
         base_category_dict = {}
         for i in range(len(base_category_list)):
           base_category_dict[base_category_list[i]] = i
-        
+
         # Set cells
         for cell in line['cells']:
           variation = cell['variation']
@@ -1711,11 +1711,11 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
               mapped_value_property_list = ['quantity'],
               )
       sequence.edit(packing_list_list = packing_list_list)
-    
+
     transaction.commit()
     self.stepTic()
     transaction.commit()
-    
+
     # Then test the next negative date
     next_date = simulation.getNextNegativeInventoryDate(
                       resource=resource_value.getRelativeUrl(),
@@ -1744,7 +1744,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.assertEquals(next_date, expected_negative_date)
 
 
-  def checkVariatedInventory(self, sequence=None, sequence_list=None, 
+  def checkVariatedInventory(self, sequence=None, sequence_list=None,
                              variation_category_list=None,
                              quantity=None,**kw):
     """
@@ -1759,7 +1759,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                     variation_text=variation_text
                 )
     self.assertEquals(inventory, quantity)
-      
+
   def stepTestInitialVariatedInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Test Inventory Module behavior
@@ -1809,7 +1809,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                     sequence.get('node').getRelativeUrl()))
     step += 1
     sequence.edit(step=step)
-    
+
   def stepModifyFirstInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Modify the first entered Inventory, to test the quantity change
@@ -1821,8 +1821,8 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     inventory_line.edit(
         aggregate_value_list=aggregate_value_list,
         quantity=sum([x.getQuantity() for x in aggregate_value_list]))
-                  
-                
+
+
   def test_01_getInventory(self, quiet=0, run=run_all_test):
     """
       Test the getInventory methods
