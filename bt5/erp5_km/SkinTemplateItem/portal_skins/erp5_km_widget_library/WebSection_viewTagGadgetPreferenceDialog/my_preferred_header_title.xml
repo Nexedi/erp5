@@ -7,16 +7,8 @@
     <pickle>
       <dictionary>
         <item>
-            <key> <string>delegated_list</string> </key>
-            <value>
-              <list>
-                <string>title</string>
-              </list>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
-            <value> <string>my_header</string> </value>
+            <value> <string>my_preferred_header_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,7 +65,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_gadget_preferences_label_field</string> </value>
+                    <value> <string>my_preferred_header_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -82,10 +74,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Please enter list of tags separated by space</string> </value>
                 </item>
               </dictionary>
             </value>
