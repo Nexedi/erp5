@@ -70,6 +70,7 @@ import os
 from threading import Thread
 import httplib
 import urllib
+import difflib
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -625,7 +626,13 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals('application/pdf', response.getHeader('content-type'))
     self.assertEquals('attachment; filename="import.file.with.dot.in.filename.pdf"',
                       response.getHeader('content-disposition'))
-    self.assertEquals(response.getBody(), str(doc.convert('pdf')[1]))
+    response_body = response.getBody()
+    conversion = str(doc.convert('pdf')[1])
+    diff = '\n'+'\n'.join(difflib.unified_diff(response_body.splitlines(),
+                                          conversion.splitlines(),
+                                          fromfile='first_call.pdf',
+                                          tofile='second_call.pdf'))
+    self.assertEquals(response_body, conversion, diff)
 
     # test Print icon works on OOoDocument
     response = self.publish('%s/OOoDocument_print' % doc.getPath())
