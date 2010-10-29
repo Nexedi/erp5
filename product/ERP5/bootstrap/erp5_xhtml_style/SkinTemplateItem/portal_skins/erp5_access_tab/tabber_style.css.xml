@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="OFS.Image"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -15,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts48186920.11</string> </value>
+            <value> <string>ts88398269.73</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,21 +24,23 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>/*========================================================================================\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*========================================================================================\n
 **  tabber.js default style\n
 **========================================================================================*/\n
 \n
 /* Replace code at erp5.css*/\n
 \n
-.document .actions li.non_selected a span {\n
+#tab_box > li.non_selected a span {\n
   padding: 5px 8px 3px 0px !important;\n
 }\n
 \n
-.document .actions li.selected a span {\n
+#tab_box > li.selected a span {\n
   padding: 5px 8px 4px 0px !important;\n
 }\n
 \n
-.document .actions li a span img {\n
+#tab_box > li a span img {\n
   margin: -2px;\n
   padding-right: 3px;\n
 }\n
@@ -155,7 +154,9 @@ table tr td {\n
   vertical-align:top;\n
 }\n
 \n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -163,7 +164,7 @@ table tr td {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>2697</long> </value>
+            <value> <int>2673</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
