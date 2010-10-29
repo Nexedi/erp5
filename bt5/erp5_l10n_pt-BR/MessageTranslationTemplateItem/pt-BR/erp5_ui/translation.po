@@ -1727,10 +1727,10 @@ msgid "Purchase Invoice Transaction"
 msgstr ""
 
 msgid "Purchase Order"
-msgstr "Ordem de Compra"
+msgstr "Pedido de Compra"
 
 msgid "Purchase Orders"
-msgstr "Ordens de Compra"
+msgstr "Pedidos de Compra"
 
 msgid "Purchase Packing List"
 msgstr "Entrega de Compra"
