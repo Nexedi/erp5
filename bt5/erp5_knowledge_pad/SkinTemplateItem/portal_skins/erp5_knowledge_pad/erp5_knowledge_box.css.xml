@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88001741.62</string> </value>
+            <value> <string>ts88335933.96</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -152,6 +152,7 @@ div.edit-form {\n
   border-width: 0 1px 1px 1px;\n
   background-color: #BDD0F0;\n
   overflow: auto;\n
+  width:auto;\n
 }\n
 \n
 /* Tabs for Knowledge Pads */ \n
@@ -543,7 +544,7 @@ div.gadget-rss-reader-logo img{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8927</int> </value>
+            <value> <int>8941</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
