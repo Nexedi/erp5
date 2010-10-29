@@ -14,11 +14,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>blog_images</string> </value>
+            <value> <string>erp5_web_blog_image</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>XXX-JPS - no plurals in ERP5 - rename</string> </value>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
