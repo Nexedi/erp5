@@ -748,10 +748,11 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
       """
       Find other skins id installed in the same time
       """
+      portal = self.getPortalObject()
       folder_id = self.aq_parent.id
       # Find a business template which manages the context skin folder.
       folder_id_set = set([folder_id])
-      for template in self.portal_templates.getInstalledBusinessTemplateList():
+      for template in portal.portal_templates.getInstalledBusinessTemplateList():
         template_skin_id_list = template.getTemplateSkinIdList()
         if folder_id in template_skin_id_list:
           folder_id_set.update(set(template_skin_id_list))
@@ -760,7 +761,7 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
           if '_' in folder_id:
             surcharged_folder_id = 'erp5_%s' % folder_id.split('_')[-1]
             if (surcharged_folder_id != folder_id) and \
-              (getattr(self.portal_skins, surcharged_folder_id, None) \
+              (getattr(portal.portal_skins, surcharged_folder_id, None) \
                                                              is not None):
               folder_id_set.add(surcharged_folder_id)
 
