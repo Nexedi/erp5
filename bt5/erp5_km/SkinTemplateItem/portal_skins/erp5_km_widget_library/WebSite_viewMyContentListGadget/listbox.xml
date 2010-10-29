@@ -23,6 +23,7 @@
                 <string>search_columns</string>
                 <string>select</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>sort_columns</string>
                 <string>title</string>
                 <string>url_columns</string>
@@ -68,6 +69,38 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>all_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -76,7 +109,43 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>select</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -169,6 +238,17 @@
                 <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>web_view_my_content_selection_gadget</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>descending</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
