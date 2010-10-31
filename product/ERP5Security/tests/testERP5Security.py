@@ -404,8 +404,8 @@ class TestUserManagement(ERP5TypeTestCase):
 
   def test_PersonLoginIsPossibleToUnset(self):
     """Make sure that it is possible to remove reference"""
-    p = self._makePerson(reference='foo', password='secret',)
-    p.setReference(None)
+    person = self._makePerson(reference='foo', password='secret',)
+    person.setReference(None)
     transaction.commit()
     self.tic()
     self.assertEqual(None, person.getReference())

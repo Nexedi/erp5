@@ -170,10 +170,11 @@ class Person(EncryptedPasswordMixin, XMLObject):
         - we want to prevent duplicated user ids, but only when
           PAS _AND_ ERP5UserManager are used
       """
+      activate_kw = {}
       if value:
         # Encode reference to hex to prevent uppercase/lowercase conflict in
         # activity table (when calling countMessageWithTag)
-        tag = 'Person_setReference_%s' % value.encode('hex')
+        activate_kw['tag'] = tag = 'Person_setReference_' + value.encode('hex')
         # Check that there no existing user
         acl_users = getToolByName(self, 'acl_users')
         if PluggableAuthService is not None and isinstance(acl_users,
@@ -203,11 +204,9 @@ class Person(EncryptedPasswordMixin, XMLObject):
           raise RuntimeError, 'user id %s already exist' % (value,)
         else:
           transactional_variable[tag] = None
-      else:
-        tag = None
 
       self._setReference(value)
-      self.reindexObject(activate_kw={'tag': tag})
+      self.reindexObject(activate_kw=activate_kw)
       # invalid the cache for ERP5Security
       portal_caches = getToolByName(self.getPortalObject(), 'portal_caches')
       portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
