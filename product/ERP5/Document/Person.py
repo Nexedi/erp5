@@ -29,10 +29,6 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
-
-#from Products.ERP5.Core.Node import Node
-
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
@@ -171,12 +167,13 @@ class Person(EncryptedPasswordMixin, XMLObject):
           PAS _AND_ ERP5UserManager are used
       """
       activate_kw = {}
+      portal = self.getPortalObject()
       if value:
         # Encode reference to hex to prevent uppercase/lowercase conflict in
         # activity table (when calling countMessageWithTag)
         activate_kw['tag'] = tag = 'Person_setReference_' + value.encode('hex')
         # Check that there no existing user
-        acl_users = getToolByName(self, 'acl_users')
+        acl_users = portal.acl_users
         if PluggableAuthService is not None and isinstance(acl_users,
               PluggableAuthService.PluggableAuthService.PluggableAuthService):
           plugin_list = acl_users.plugins.listPlugins(
@@ -189,14 +186,12 @@ class Person(EncryptedPasswordMixin, XMLObject):
                 raise RuntimeError, 'user id %s already exist' % (value,)
               break
         # Check that there is no reindexation related to reference indexation
-        portal_activities = getToolByName(self, 'portal_activities')
-        if portal_activities.countMessageWithTag(tag):
+        if portal.portal_activities.countMessageWithTag(tag):
           raise RuntimeError, 'user id %s already exist' % (value,)
 
-        parent_value = self.getParentValue()
         # Prevent concurrent transaction to set the same reference on 2
         # different persons
-        parent_value.serialize()
+        self.getParentValue().serialize()
         # Prevent to set the same reference on 2 different persons during the
         # same transaction
         transactional_variable = getTransactionalVariable()
@@ -208,7 +203,7 @@ class Person(EncryptedPasswordMixin, XMLObject):
       self._setReference(value)
       self.reindexObject(activate_kw=activate_kw)
       # invalid the cache for ERP5Security
-      portal_caches = getToolByName(self.getPortalObject(), 'portal_caches')
+      portal_caches = portal.portal_caches
       portal_caches.clearCache(cache_factory_list=('erp5_content_short', ))
 
     # Time management
@@ -226,7 +221,7 @@ class Person(EncryptedPasswordMixin, XMLObject):
         calendar_uid_list.extend(assignment.getCalendarUidList())
       kw['node'] = [self.getUid()] + calendar_uid_list
 
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableTime(*args, **kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 
@@ -243,7 +238,7 @@ class Person(EncryptedPasswordMixin, XMLObject):
         calendar_uid_list.extend(assignment.getCalendarUidList())
       kw['node'] = [self.getUid()] + calendar_uid_list
 
-      portal_simulation = getToolByName(self, 'portal_simulation')
+      portal_simulation = self.getPortalObject().portal_simulation
       return portal_simulation.getAvailableTimeSequence(*args, **kw)
 
     # Notifiation API
