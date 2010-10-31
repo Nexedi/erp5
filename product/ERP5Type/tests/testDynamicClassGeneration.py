@@ -33,7 +33,7 @@ import unittest
 import transaction
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import skip
+from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
 
 class TestPortalTypeClass(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
@@ -154,6 +154,23 @@ class TestPortalTypeClass(ERP5TypeTestCase):
       obj = newDocument(portal_type='Folder', temp_object=not temp_first)
       obj.newContent('file', portal_type)
       obj.file.aq_base
+
+  @expectedFailure
+  def testBoundMethodCaching(self):
+    """Test that it is safe to cache a bound method during a transaction
+
+    This test currently fails with the following exception:
+      TypeError: unbound method newContent() must be called with FolderMixIn
+                 instance as first argument (got Folder instance instead)
+
+    What is the scope of this failure ? Is this test a realistic use case ?
+    Is there anyway to reset dynamic classes without triggering this error ?
+    Or do we need to reset the fewest classes as possible ?
+    """
+    newDocument = self.portal.newContent(self.id(), 'Folder').newContent
+    self.portal.portal_type.newContent(portal_type='Base Type',
+                                       type_class='Folder')
+    newDocument(portal_type='Folder')
 
 
 class TestZodbPropertySheet(ERP5TypeTestCase):
