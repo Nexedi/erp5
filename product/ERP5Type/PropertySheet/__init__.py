@@ -1,4 +1,5 @@
 from Base import Base
+from CacheFactory import CacheFactory
 from DublinCore import DublinCore
 from Folder import Folder
 from SimpleItem import SimpleItem
