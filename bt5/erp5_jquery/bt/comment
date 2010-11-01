@@ -1,0 +1,2 @@
+erp5_jquery skins folder is registered as PathTemplateItem not as SkinTemplateItem in this business template, so that sub folders can be handled by other business templates.
+This business template is the refactored version of erp5_jquery, and the previous version is still available by installing erp5_jquery_legacy instead of this one.

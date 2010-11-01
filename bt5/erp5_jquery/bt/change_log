@@ -1,0 +1,2 @@
+2010-11-01 kazuhiko
+* refactored version of erp5_jquery that only contains jQuery Core 1.4.3.
