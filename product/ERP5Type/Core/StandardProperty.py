@@ -68,7 +68,7 @@ class StandardProperty(XMLObject):
             'type': self.getElementaryType(),
             'storage_id': self.getStorageId(),
             'multivalued': self.getMultivalued(),
-            'default': self.getPropertyDefault(),
+            'default': Expression(self.getPropertyDefault()),
             'range': self.getRange(),
             'preference': self.getPreference(),
             'read_permission': self.getReadPermission(),
@@ -85,12 +85,6 @@ class StandardProperty(XMLObject):
     zodb_property_dict = {}
 
     for fs_property_name, value in filesystem_property_dict.iteritems():
-      # Property Sheets on the filesystem defined attributes whose
-      # value is None, or an empty tuple or string, or either 0, thus
-      # skip them
-      if not value:
-        continue
-
       # Convert filesystem property name to ZODB if necessary
       zodb_property_name = \
           fs_property_name in self._name_mapping_filesystem_to_zodb_dict and \
