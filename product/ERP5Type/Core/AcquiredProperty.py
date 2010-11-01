@@ -50,7 +50,7 @@ class AcquiredProperty(StandardProperty):
   # Filesystem-based name of attributes specific to 'content' type
   _content_type_attribute_tuple = ('portal_type',
                                    'acquired_property_id',
-                                   'translation_acquired_property')
+                                   'translation_acquired_property_id')
 
   # Add names specific to 'content' type (see StandardProperty)
   _name_mapping_filesystem_to_zodb_dict = \
@@ -83,15 +83,15 @@ class AcquiredProperty(StandardProperty):
         StandardProperty.exportToFilesystemDefinition(self)
 
     filesystem_property_dict.update(
-      {'acquisition_base_category': self.getAcquisitionBaseCategoryList() or None,
-       'acquisition_object_id': self.getAcquisitionObjectIdList() or None,
+      {'acquisition_base_category': self.getAcquisitionBaseCategoryList(),
+       'acquisition_object_id': self.getAcquisitionObjectIdList(),
        'acquisition_portal_type': self._convertValueToTalesExpression(self.getAcquisitionPortalType()),
        'acquisition_accessor_id': self.getAcquisitionAccessorId(),
-       'alt_accessor_id': self.getAltAccessorIdList() or None,
+       'alt_accessor_id': self.getAltAccessorIdList(),
        'acquisition_copy_value': self.getAcquisitionCopyValue(),
        'acquisition_mask_value': self.getAcquisitionMaskValue(),
        'portal_type': self._convertValueToTalesExpression(self.getContentPortalType()),
-       'acquired_property_id': self.getContentAcquiredPropertyIdList() or None,
-       'translation_acquired_property_id': self.getContentTranslationAcquiredPropertyIdList() or None})
+       'acquired_property_id': self.getContentAcquiredPropertyIdList(),
+       'translation_acquired_property_id': self.getContentTranslationAcquiredPropertyIdList()})
 
     return filesystem_property_dict

@@ -26,6 +26,8 @@
 #
 ##############################################################################
 
+from Products.ERP5Type import Permissions
+
 class StandardProperty:
     """
     Define a Standard Property for ZODB Property Sheets
@@ -39,26 +41,33 @@ class StandardProperty:
         # TALES expression
         {   'id': 'property_default',
             'type': 'string',
-            'description': 'Default value if not set' },
+            'description': 'Default value if not set',
+            'default': None },
         {   'id': 'multivalued',
             'type': 'boolean',
-            'description': 'Determines if the property is multivalued' },
+            'description': 'Determines if the property is multivalued',
+            'default': False },
         {   'id': 'range',
             'type': 'boolean',
-            'description': 'Determines if the range accessors should be created' },
+            'description': 'Determines if the range accessors should be created' ,
+            'default': False },
         {   'id': 'preference',
             'type': 'boolean',
-            'description': 'Determines if the preference accessors should be created' },
+            'description': 'Determines if the preference accessors should be created',
+            'default': False },
         # CMF compatibility
         {   'id': 'storage_id',
             'type': 'string',
-            'description' : 'Name to be used instead of the Reference' },
+            'description' : 'Name to be used instead of the Reference',
+            'default': None },
         {   'id': 'read_permission',
             'type': 'string',
-            'description' : 'Permission needed to access Getters' },
+            'description' : 'Permission needed to access Getters',
+            'default': Permissions.AccessContentsInformation },
         {   'id': 'write_permission',
             'type': 'string',
-            'description' : 'Permission needed to access Setters' },
+            'description' : 'Permission needed to access Setters',
+            'default': Permissions.ModifyPortalContent },
         )
 
     _categories = ('elementary_type',)
