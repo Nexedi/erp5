@@ -1288,6 +1288,32 @@ Hé Hé Hé!""", page.asText().strip())
                                     relative_url=website.getRelativeUrl(), 
                                     title=website.getTitle())))
 
+  def test_19_WebModeAndEditableMode(self):
+    """
+    Check if isWebMode & isEditableMode API works. 
+    """
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    website = self.setupWebSite()
+    
+    # web mode
+    self.assertEquals(False, self.portal.person_module.isWebMode())
+    self.assertEquals(True, website.isWebMode())
+    self.assertEquals(True, getattr(website, 'person_module').isWebMode())
+    
+    # editable mode
+    self.assertEquals(False, self.portal.person_module.isEditableMode())
+    self.assertEquals(False, website.isEditableMode())
+    self.assertEquals(False, getattr(website, 'person_module').isEditableMode())
+    
+    request.set('editable_mode', 1)
+    self.assertEquals(1, self.portal.person_module.isEditableMode())
+    self.assertEquals(1, website.isEditableMode())
+    self.assertEquals(1, getattr(website, 'person_module').isEditableMode())
+    
+    
+    
+
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """
   Test for erp5_web with simple security.
