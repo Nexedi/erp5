@@ -97,16 +97,13 @@ class PropertySheetTool(BaseTool):
     for category in getattr(klass, '_categories', []):
       # A category may be a TALES Expression rather than a plain
       # string
-      if isinstance(category, Expression):
-        new_category = new_property_sheet.newContent(
-          portal_type='Dynamic Category Property')
+      portal_type = isinstance(category, Expression) and \
+        'Dynamic Category Property' or 'Category Property'
 
-        # Set the category TALES expression
-        new_category.importFromFilesystemDefinition(category)
+      new_category = new_property_sheet.newContent(
+        portal_type=portal_type)
 
-      else:
-        new_property_sheet.newContent(id=category,
-                                      portal_type='Category Property')
+      new_category.importFromFilesystemDefinition(category)
 
     return new_property_sheet
 
