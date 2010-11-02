@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>README.md</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>#About\n
+**jQuery Hotkeys** is a plug-in that lets you easily add and remove handlers for keyboard events anywhere in your code supporting almost any key combination.  \n
+\n
+This plugin is based off of the plugin by Tzury Bar Yochay: [jQuery.hotkeys](http://github.com/tzuryby/hotkeys)\n
+\n
+The syntax is as follows:\n
+\n
+    $(expression).bind(types, keys, handler);\n
+    $(expression).unbind(types, handler);\n
+    \n
+    $(document).bind(\'keydown\', \'ctrl+a\', fn);\n
+    \n
+    // e.g. replace \'$\' sign with \'EUR\'\n
+    $(\'input.foo\').bind(\'keyup\', \'$\', function(){\n
+      this.value = this.value.replace(\'$\', \'EUR\');\n
+    });\n
+\n
+## Types\n
+Supported types are `\'keydown\'`, `\'keyup\'` and `\'keypress\'`\n
+\n
+## Notes\n
+\n
+If you want to use more than one modifiers (e.g. alt+ctrl+z) you should define them by an alphabetical order e.g. alt+ctrl+shift\n
+\n
+Hotkeys aren\'t tracked if you\'re inside of an input element (unless you explicitly bind the hotkey directly to the input). This helps to avoid conflict with normal user typing.\n
+\n
+## jQuery Compatibility\n
+\n
+Works with jQuery 1.4.2 and newer.\n
+\n
+It known to be working with all the major browsers on all available platforms (Win/Mac/Linux)\n
+\n
+ * IE 6/7/8\n
+ * FF 1.5/2/3\n
+ * Opera-9\n
+ * Safari-3\n
+ * Chrome-0.2\n
+\n
+### Addendum\n
+\n
+Firefox is the most liberal one in the manner of letting you capture all short-cuts even those that are built-in in the browser such as `Ctrl-t` for new tab, or `Ctrl-a` for selecting all text. You can always bubble them up to the browser by returning `true` in your handler.\n
+\n
+Others, (IE) either let you handle built-in short-cuts, but will add their functionality after your code has executed. Or (Opera/Safari) will *not* pass those events to the DOM at all.\n
+\n
+*So, if you bind `Ctrl-Q` or `Alt-F4` and your Safari/Opera window is closed don\'t be surprised.*</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
