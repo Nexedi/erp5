@@ -17,13 +17,16 @@ ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
 
 class GhostPortalType(ERP5Base): #SimpleItem
   """
-  Ghost state for a portal type that is not loaded.
+  Ghost state for a portal type class that is not loaded.
 
-  One instance of this class exists per portal type class on the system.
-  When an object of this portal type is loaded (a new object is created,
-  or an attribute of an existing object is accessed) this class will
-  change the bases of the portal type class so that it points to the
-  correct Document+Mixin+interfaces+AccessorHolder classes.
+  When an instance of this portal type class is loaded (a new object is
+  created, or an attribute of an existing object is accessed) this class will
+  force loading the portal type real inheritance and properties from the ZODB.
+
+  The portal type class will then update its __bases__ so that it points to
+  the correct Document+Mixin+interfaces+AccessorHolder classes: after the first
+  load, a portal type class does not use GhostPortalType in its __bases__
+  anymore.
   """
   def __init__(self, *args, **kw):
     self.__class__.loadClass()
@@ -53,7 +56,10 @@ class GhostPortalType(ERP5Base): #SimpleItem
 
 class PortalTypeMetaClass(ExtensionClass):
   """
-  Meta class that will be used by portal type classes
+  Meta class that is used by portal type classes
+
+  - Tracks subclasses of portal type classes
+  - Takes care of ghosting/unghosting
   """
 
   # register which classes subclass portal type classes
