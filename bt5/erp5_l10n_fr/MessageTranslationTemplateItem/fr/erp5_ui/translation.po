@@ -555,6 +555,9 @@ msgstr "Ajouter ${portal_type}"
 msgid "Add Accounting Transaction Lines"
 msgstr "Ajouter des lignes comptables"
 
+msgid "Add Blog Message"
+msgstr "Ajouter un article de blog"
+
 msgid "Add Document with Requirements"
 msgstr "Ajouter un document avec des spécificités"
 
@@ -6138,6 +6141,9 @@ msgstr "Nouveau ${portal_type} ajouté."
 
 msgid "New ${portal_type} created."
 msgstr "Nouveau ${portal_type} créé."
+
+msgid "New Blog Message created."
+msgstr "Nouvel article de blog créé."
 
 msgid "New Event"
 msgstr "Nouvel évènement"
