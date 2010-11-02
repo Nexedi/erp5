@@ -290,8 +290,9 @@ class WorkflowMethod(Method):
       self._invoke_always = {}
 
 def _aq_reset():
-  Base.aq_method_generated = set()
-  Base.aq_portal_type = {}
+  # using clear to prevent changing the reference
+  Base.aq_method_generated.clear()
+  Base.aq_portal_type.clear()
   Base.aq_related_generated = 0
   try:
     from Products.ERP5Form.PreferenceTool import PreferenceTool
