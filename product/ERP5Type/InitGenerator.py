@@ -64,7 +64,7 @@ def InitializeInteractor(interactor_class, interactor_path=None):
 def initializeProductDocumentRegistry():
   from Utils import importLocalDocument
   for (class_id, document_path) in product_document_registry:
-    importLocalDocument(class_id, document_path=document_path)
+    importLocalDocument(class_id, path=document_path)
     #from Testing import ZopeTestCase
     #ZopeTestCase._print('Added product document to ERP5Type repository: %s (%s) \n' % (class_id, document_path))
     #LOG('Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path), 0, '')

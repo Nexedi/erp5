@@ -917,7 +917,7 @@ class PersistentMigrationMixin(object):
 
 from Globals import Persistent, PersistentMapping
 
-def importLocalDocument(class_id, document_path = None):
+def importLocalDocument(class_id, path=None):
   """Imports a document class and registers it in ERP5Type Document
   repository ( Products.ERP5Type.Document )
   """
@@ -925,17 +925,16 @@ def importLocalDocument(class_id, document_path = None):
   import Permissions
 
   from Products.ERP5Type import document_class_registry
-
-  classpath = document_class_registry.get(class_id)
-  if classpath is None:
-    # if the document was not registered before, it means that it is
-    # a local document in INSTANCE_HOME/Document/
+  if path and '/Products/' in path:
+    classpath = document_class_registry[class_id]
+    module_path = classpath.rsplit('.', 1)[0]
+    module = __import__(module_path, {}, {}, (module_path,))
+  else:
+    # local document in INSTANCE_HOME/Document/
     # (created by ClassTool?)
-    if document_path is None:
+    if path is None:
       instance_home = getConfiguration().instancehome
       path = os.path.join(instance_home, "Document")
-    else:
-      path = document_path
     path = os.path.join(path, "%s.py" % class_id)
     module_path = "erp5.document"
     classpath = "%s.%s" % (module_path, class_id)
@@ -943,9 +942,6 @@ def importLocalDocument(class_id, document_path = None):
     import erp5.document
     setattr(erp5.document, class_id, getattr(module, class_id))
     document_class_registry[class_id] = classpath
-  else:
-    module_path = classpath.rsplit('.', 1)[0]
-    module = __import__(module_path, {}, {}, (module_path,))
 
   ### Migration
   module_name = "Products.ERP5Type.Document.%s" % class_id
@@ -991,8 +987,7 @@ def importLocalDocument(class_id, document_path = None):
   return klass, tuple()
 
 
-def initializeLocalRegistry(directory_name, import_local_method,
-                            path_arg_name='path'):
+def initializeLocalRegistry(directory_name, import_local_method):
   """
   Initialize local directory.
   """
@@ -1010,8 +1005,7 @@ def initializeLocalRegistry(directory_name, import_local_method,
       if python_file_expr.search(file_name,1):
         module_name = file_name[0:-3]
         try:
-          # XXX Arg are not consistent
-          import_local_method(module_name, **{path_arg_name: document_path})
+          import_local_method(module_name, path=document_path)
           LOG('ERP5Type', BLATHER,
               'Added local %s to ERP5Type repository: %s (%s)'
               % (directory_name, module_name, document_path))
@@ -1024,8 +1018,7 @@ def initializeLocalRegistry(directory_name, import_local_method,
 
 def initializeLocalDocumentRegistry():
   # XXX Arg are not consistent
-  initializeLocalRegistry("Document", importLocalDocument,
-                          path_arg_name='document_path')
+  initializeLocalRegistry("Document", importLocalDocument)
 
 def initializeLocalPropertySheetRegistry():
   initializeLocalRegistry("PropertySheet", importLocalPropertySheet)
