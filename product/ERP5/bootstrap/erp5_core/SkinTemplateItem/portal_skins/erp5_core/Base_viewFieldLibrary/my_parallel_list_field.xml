@@ -235,7 +235,7 @@
                 </item>
                 <item>
                     <key> <string>hash_script_id</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>Base_hashCategoryList</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
