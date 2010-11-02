@@ -81,7 +81,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Item_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewItemFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

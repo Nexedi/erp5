@@ -83,6 +83,9 @@
                         <string>your_title</string>
                         <string>my_current_site</string>
                         <string>your_resource</string>
+                        <string>my_origin</string>
+                        <string>my_translated_validation_state_title</string>
+                        <string>your_item_extra_property_list</string>
                       </list>
                     </value>
                 </item>
