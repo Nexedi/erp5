@@ -182,6 +182,7 @@
                         <string>listbox_modification_date</string>
                         <string>listbox_creation_date</string>
                         <string>listbox_owner_title</string>
+                        <string>your_form_box_field</string>
                       </list>
                     </value>
                 </item>
