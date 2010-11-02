@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,12 +73,22 @@ results = context.Base_getRssDataAsDict(url = feed_url, username = username, pas
 readItemList = {}\n
 md5_list = []\n
 message_list = []\n
-context.REQUEST.set(\'rss_title\',results.get(\'title\',\'No title for this feed\'))\n
-context.REQUEST.set(\'rss_link\',results.get(\'link\',None))\n
-context.REQUEST.set(\'rss_logo\',results.get(\'logo\',None))\n
 items = results.get(\'items\',None)\n
+\n
+rss_title = results.get(\'title\',\'No title for this feed\')\n
+if items is not None:\n
+  rss_title = \'%s (%s)\' %(rss_title, len(items))\n
+\n
+rss_logo = results.get(\'logo\', None)\n
+if rss_logo not in (\'\', None):\n
+  context.REQUEST.set(\'rss_logo\',rss_logo)\n
+\n
+context.REQUEST.set(\'rss_title\', rss_title)\n
+context.REQUEST.set(\'rss_link\',results.get(\'link\',None))\n
+\n
 if items is None:\n
   return []\n
+\n
 for result in items:\n
   md5_list.append(result[\'md5\'])\n
   date = context.Base_getDiffBetweenDateAndNow(result.get(\'date\',None))\n
@@ -95,12 +102,9 @@ for result in items:\n
             field_md5 = result.get(\'md5\',\'\')\n
            )\n
   message_list.append(message)\n
-if selection:\n
-  params = selection.getParams()\n
-  readItemList = params.get(\'rss_read_item:list\', {})\n
-  for readItem in readItemList.keys():\n
-    if readItem not in md5_list:\n
-      del(readItemList[readItem])\n
+# export to request so rendering form can use \n
+context.REQUEST.set(\'rss_documents_count\', len(message_list))\n
+\n
 return message_list\n
 </string> </value>
         </item>
@@ -160,14 +164,14 @@ return message_list\n
                             <string>message_list</string>
                             <string>None</string>
                             <string>items</string>
+                            <string>rss_title</string>
+                            <string>len</string>
+                            <string>rss_logo</string>
                             <string>_getiter_</string>
                             <string>result</string>
                             <string>_getitem_</string>
                             <string>date</string>
                             <string>message</string>
-                            <string>params</string>
-                            <string>readItem</string>
-                            <string>_write_</string>
                           </tuple>
                         </value>
                     </item>

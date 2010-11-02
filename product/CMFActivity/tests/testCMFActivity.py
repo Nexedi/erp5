@@ -30,7 +30,7 @@
 import unittest
 
 from Products.ERP5Type.tests.utils import LogInterceptor
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.backportUnittest import skip
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
@@ -40,11 +40,7 @@ from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.CMFActivity.Activity.SQLDict import SQLDict
 from Products.CMFActivity.Errors import ActivityPendingError, ActivityFlushError
-#from Products.ERP5Type.Document.Organisation import Organisation
-# The above cannot be imported at top level because it doesn't exist until
-# Products.ERP5 has been initialized. We set it up as global and populate it
-# later:
-Organisation = None
+from erp5.portal_type import Organisation
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from ZODB.POSException import ConflictError
@@ -127,10 +123,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     if not(organisation_module.hasContent(self.company_id)):
       o1 = organisation_module.newContent(id=self.company_id)
     self.stepTic()
-    # import it now that Products.ERP5 has been initialized
-    global Organisation
-    from Products.ERP5Type.Document.Organisation import Organisation as Org
-    Organisation = Org
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -260,7 +252,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     def DeferredSetTitle(self,value):
       self.activate(activity=activity)._setTitle(value)
-    from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     organisation =  portal.organisation._getOb(self.company_id)
     organisation._setTitle(self.title1)
@@ -283,7 +274,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self._setDescription(value)
     def DeferredSetTitle(self,value):
       self._setTitle(value)
-    from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
     organisation =  portal.organisation._getOb(self.company_id)
@@ -309,7 +299,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       self.activate(activity=activity)._setTitle(value)
     def DeferredSetDescription(self,value):
       self.activate(activity=activity)._setDescription(value)
-    from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
     organisation =  portal.organisation._getOb(self.company_id)
@@ -340,7 +329,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       if commit_sub:
         transaction.savepoint(optimistic=True)
       self.activate(activity=second or activity,priority=4)._setDescription(value)
-    from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.DeferredSetTitle = DeferredSetTitle
     Organisation.DeferredSetDescription = DeferredSetDescription
     organisation =  portal.organisation._getOb(self.company_id)
@@ -368,7 +356,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal = self.getPortal()
     def crashThisActivity(self):
       self.IWillCrach()
-    from Products.ERP5Type.Document.Organisation import Organisation
     organisation =  portal.organisation._getOb(self.company_id)
     Organisation.crashThisActivity = crashThisActivity
     organisation.activate(activity=activity).crashThisActivity()
@@ -440,7 +427,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       active_process = self.portal_activities.newActiveProcess()
       self.activate(active_process=active_process).getTitle()
       return active_process
-    from Products.ERP5Type.Document.Organisation import Organisation
     Organisation.Organisation_test = Organisation_test
     active_process = portal.portal_activities.newActiveProcess()
     organisation.activate(activity=activity,active_process=active_process).Organisation_test()
@@ -1892,7 +1878,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         else:
           obj.foobar = number
       del object_list[:]
-    from Products.ERP5Type.Document.Folder import Folder
+    from Products.ERP5Type.Core.Folder import Folder
     Folder.setFoobar = setFoobar    
 
     def getFoobar(self):
@@ -3257,16 +3243,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation = portal.organisation_module.newContent(portal_type='Organisation')
     transaction.commit()
     self.tic()
-    activity_lock = threading.Lock()
-    activity_lock.acquire()
-    rendez_vous_lock = threading.Lock()
-    rendez_vous_lock.acquire()
+    activity_event = threading.Event()
+    rendez_vous_event = threading.Event()
     def waitingActivity(context):
       # Inform test that we arrived at rendez-vous.
-      rendez_vous_lock.release()
-      # When this lock is available, it means test has called process_shutdown.
-      activity_lock.acquire()
-      activity_lock.release()
+      rendez_vous_event.set()
+      # When this event is available, it means test has called process_shutdown.
+      activity_event.wait()
     from Products.CMFActivity.Activity.Queue import Queue
     original_queue_tic = Queue.tic
     queue_tic_test_dict = {}
@@ -3312,16 +3295,12 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
       activity_thread.start()
       # Wait at rendez-vous for activity to arrive.
-      arrived = False
-      while (not arrived) and activity_thread.isAlive():
-        arrived = rendez_vous_lock.acquire(1)
-      if not arrived:
-        raise Exception, 'Something wrong happened in activity thread.'
+      rendez_vous_event.wait()
       # Initiate shutdown
       process_shutdown_thread.start()
       try:
         # Let waiting activity finish and wait for thread exit
-        activity_lock.release()
+        activity_event.set()
         activity_thread.join()
         process_shutdown_thread.join()
         # Check that there is still one activity pending
@@ -3338,7 +3317,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         from Products.CMFActivity.ActivityTool import cancelProcessShutdown
         try:
           cancelProcessShutdown()
-        except:
+        except StandardException:
           # If something failed in process_shutdown, shutdown lock might not
           # be taken in CMFActivity, leading to a new esception here hiding
           # test error.
@@ -3562,6 +3541,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     portal = self.portal
     
+    # Make a new Person object to make sure that the portal type
+    # is migrated to an instance of a portal type class, otherwise
+    # the portal type may generate an extra active object.
+    portal.person_module.newContent(portal_type='Person')
+    transaction.commit()
+    self.tic()
+
     original_reindex_parameters = portal.getPlacelessDefaultReindexParameters()
     if original_reindex_parameters is None:
       original_reindex_parameters = {}

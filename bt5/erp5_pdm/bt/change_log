@@ -1,3 +1,6 @@
+2010-10-19 yo
+* Specify Acquisition Portal Types to industrial_phase.
+
 2010-07-20 yusuke
 * Supply Cell must be inherit start_date range from the parent.
 

@@ -31,6 +31,7 @@
 import os
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
+from transaction import get as get_transaction
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')

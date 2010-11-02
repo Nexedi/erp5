@@ -152,9 +152,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -217,7 +215,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>left gadget-rss-reader-logo</string> </value>
+                    <value> <string>hidden_label gadget-rss-reader-logo</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -257,7 +255,7 @@
                 </item>
                 <item>
                     <key> <string>image_display</string> </key>
-                    <value> <string>thumbnail</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>image_format</string> </key>
@@ -305,20 +303,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: request.get(\'rss_logo\',\'\')</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: request.get(\'rss_logo\',\'\') not in (\'\', None)</string> </value>
+            <value> <string>python: request.get(\'rss_logo\',\'images/transparent-image.gif\')</string> </value>
         </item>
       </dictionary>
     </pickle>

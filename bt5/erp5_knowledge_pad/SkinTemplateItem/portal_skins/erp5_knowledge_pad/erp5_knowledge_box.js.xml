@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts84965558.43</string> </value>
+            <value> <string>ts87651539.15</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -153,6 +153,14 @@ function createDefaultPadOnServer(timeout, create_url,\n
   function handleServerSuccess(res){\n
       checkForActivitiesOnServer(timeout, return_url);};\n
 };\n
+\n
+// This function can be used to submit gadget preferences form whenever\n
+// an enter is pressed in form\n
+function submitGadgetPreferenceFormOnEnter(event, form_fields_main_prefix, box_relative_url){\n
+  if(event.keyCode == 13){\n
+    submitSynchronousGadgetPreferenceForm(form_fields_main_prefix, box_relative_url);\n
+  }\n
+}\n
 \n
 function submitSynchronousGadgetPreferenceForm(\n
                                 form_fields_main_prefix, \n
@@ -398,7 +406,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14766</int> </value>
+            <value> <int>15083</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

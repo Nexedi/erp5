@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Acquired Property</type>
-  <workflow>portal_type_class_interaction_workflow</workflow>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Action Information</type>
@@ -13,23 +13,27 @@
  </chain>
  <chain>
   <type>Base Category</type>
-  <workflow>edit_workflow, portal_type_class_interaction_workflow</workflow>
+  <workflow>dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Base Type</type>
-  <workflow>base_type_interaction_workflow, portal_type_class_interaction_workflow</workflow>
+  <workflow>base_type_interaction_workflow, dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Category</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Category Existence Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category Property</type>
-  <workflow>portal_type_class_interaction_workflow</workflow>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Category Tool</type>
-  <workflow>portal_type_class_interaction_workflow</workflow>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Distributed Ram Cache</type>
@@ -41,7 +45,7 @@
  </chain>
  <chain>
   <type>Dynamic Category Property</type>
-  <workflow>portal_type_class_interaction_workflow</workflow>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Mapped Value</type>
@@ -60,12 +64,20 @@
   <workflow>preference_workflow</workflow>
  </chain>
  <chain>
+  <type>Property Existence Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Property Sheet</type>
-  <workflow>portal_type_class_interaction_workflow</workflow>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Property Sheet Tool</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Standard Property</type>
-  <workflow>portal_type_class_interaction_workflow</workflow>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>System Preference</type>

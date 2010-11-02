@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Products.ERP5Type.Document.Folder.Folder</string> </value>
+            <value> <string>Folder</string> </value>
         </item>
         <item>
             <key> <string>type_interface_list</string> </key>

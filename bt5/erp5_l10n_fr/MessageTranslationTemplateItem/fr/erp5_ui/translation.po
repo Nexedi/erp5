@@ -555,6 +555,9 @@ msgstr "Ajouter ${portal_type}"
 msgid "Add Accounting Transaction Lines"
 msgstr "Ajouter des lignes comptables"
 
+msgid "Add Blog Message"
+msgstr "Ajouter un article de blog"
+
 msgid "Add Document with Requirements"
 msgstr "Ajouter un document avec des spécificités"
 
@@ -572,6 +575,9 @@ msgstr "Ajouter des tâches"
 
 msgid "Add gadgets"
 msgstr "Ajouter des gadgets"
+
+msgid "Add new comment"
+msgstr "Ajouter un nouveau commentaire"
 
 msgid "Add new tab"
 msgstr "Ajouter un onglet"
@@ -6136,6 +6142,9 @@ msgstr "Nouveau ${portal_type} ajouté."
 msgid "New ${portal_type} created."
 msgstr "Nouveau ${portal_type} créé."
 
+msgid "New Blog Message created."
+msgstr "Nouvel article de blog créé."
+
 msgid "New Event"
 msgstr "Nouvel évènement"
 
@@ -6174,6 +6183,9 @@ msgstr "Nouvelle page par défaut pour la section ${web_section}."
 
 msgid "New event created."
 msgstr "Nouvel évènement créé."
+
+msgid "New post created in background."
+msgstr "Nouveau message créé en arrière-plan."
 
 msgid "News"
 msgstr "Actualité"
@@ -7157,6 +7169,9 @@ msgstr "Portal type"
 msgid "Post"
 msgstr "Envoyer"
 
+msgid "Post Comment"
+msgstr "Poster le commentaire"
+
 msgid "Post Event"
 msgstr "Envoyer l'évènement"
 
@@ -7930,6 +7945,9 @@ msgstr "Réinstaller le Business Template"
 
 msgid "Re-install Business Template [transition in business_template_installation_workflow]"
 msgstr "Réinstaller le Business Template"
+
+msgid "Read more"
+msgstr "Lire la suite"
 
 msgid "Ready"
 msgstr "Prêt "
@@ -11382,6 +11400,9 @@ msgstr "Prix unitaire"
 msgid "Unknown"
 msgstr "Inconnu"
 
+msgid "Unknown User"
+msgstr "Utilisateur inconnu"
+
 msgid "Unpublish"
 msgstr "Dépublier"
 
@@ -12113,6 +12134,9 @@ msgstr "Collection"
 
 msgid "comment"
 msgstr "Commentaire"
+
+msgid "comments"
+msgstr "Commentaires"
 
 msgid "content of the event"
 msgstr "Le contenu de l'évènement."

@@ -56,9 +56,10 @@ from Products.ERP5Type.Utils import readLocalExtension, \
 from Products.ERP5Type.Utils import readLocalTest, \
                                     writeLocalTest, \
                                     removeLocalTest
-from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import convertToUpperCase, PersistentMigrationMixin
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from OFS.Traversable import NotFound
 from OFS import SimpleItem, XMLExportImport
 from cStringIO import StringIO
@@ -869,7 +870,8 @@ class ObjectTemplateItem(BaseTemplateItem):
         try:
           OFS.XMLExportImport.exportXML(old_object._p_jar, old_object._p_oid, old_io)
           old_obj_xml = old_io.getvalue()
-        except ImportError, e: # module is already removed etc.
+        except (ImportError, UnicodeDecodeError), e: # module is already
+                                                     # removed etc.
           old_obj_xml = '(%s: %s)' % (e.__class__.__name__, e)
         new_io.close()
         old_io.close()
@@ -952,6 +954,12 @@ class ObjectTemplateItem(BaseTemplateItem):
                                                  **original_reindex_parameters)
     return original_reindex_parameters
 
+  def _getObjectKeyList(self):
+    # sort to add objects before their subobjects
+    keys = self._objects.keys()
+    keys.sort()
+    return keys
+
   def install(self, context, trashbin, **kw):
     self.beforeInstall()
     update_dict = kw.get('object_to_update')
@@ -963,7 +971,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           for subdocument in document.objectValues():
             recurse(hook, subdocument, my_prefix)
       def saveHook(document, prefix):
-        uid = getattr(document, 'uid', None)
+        uid = getattr(aq_base(document), 'uid', None)
         if uid is None:
           return 0
         else:
@@ -979,12 +987,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       groups = {}
       old_groups = {}
       portal = context.getPortalObject()
-      # sort to add objects before their subobjects
-      keys = self._objects.keys()
-      keys.sort()
       # set safe activities execution order
       original_reindex_parameters = self.setSafeReindexationMode(context)
-      for path in keys:
+      object_key_list = self._getObjectKeyList()
+      for path in object_key_list:
         if update_dict.has_key(path) or force:
           # get action for the oject
           action = 'backup'
@@ -1033,7 +1039,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             subobjects_dict = self._backupObject(action, trashbin,
                                                  container_path, object_id)
             # in case of portal types, we want to keep some properties
-            if getattr(old_obj, 'meta_type', None) == 'ERP5 Base Type':
+            if interfaces.ITypeProvider.providedBy(container):
               for attr in ('allowed_content_types',
                            'hidden_content_type_list',
                            'property_sheet_list',
@@ -1223,7 +1229,7 @@ class ObjectTemplateItem(BaseTemplateItem):
             if getattr(aq_base(container), 'objectIds', None) is not None:
               fillRecursivePathList(['%s/%s' % (from_path, sub_content_id) for\
                                         sub_content_id in container.objectIds()])
-      fillRecursivePathList(self._objects.keys())
+      fillRecursivePathList(object_key_list)
       for recursive_path in recursive_path_list:
         if recursive_path in update_dict:
           action = update_dict[recursive_path]
@@ -1896,6 +1902,31 @@ class PortalTypeTemplateItem(ObjectTemplateItem):
           delattr(obj, attr)
       self._objects[relative_url] = obj
       obj.wl_clearLocks()
+
+  def _getObjectKeyList(self):
+    # Sort portal types to install according to their dependencies
+    object_key_list = self._objects.keys()
+    path_dict = dict(x.split('/')[1:] + [x] for x in object_key_list)
+    cache = {}
+    def solveDependency(path):
+      score = cache.get(path)
+      if score is None:
+        obj = self._objects[path]
+        klass = obj.__class__
+        if klass.__module__.startswith('Products.ERP5Type.Document.'):
+          portal_type = obj.portal_type
+          obj._p_deactivate()
+        else:
+          portal_type = klass.__name__
+        depend = path_dict.get(portal_type)
+        cache[path] = score = depend and 1 + solveDependency(depend)[0] or 0
+      return score, path
+    PersistentMigrationMixin._no_migration += 1
+    try:
+      object_key_list.sort(key=solveDependency)
+    finally:
+      PersistentMigrationMixin._no_migration -= 1
+    return object_key_list
 
   # XXX : this method is kept temporarily, but can be removed once all bt5 are
   # re-exported with separated workflow-chain information
@@ -3353,6 +3384,7 @@ class DocumentTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
+      need_reset = isinstance(self, DocumentTemplateItem)
       for id in self._objects.keys():
         if update_dict.has_key(id) or force:
           if not force:
@@ -3365,11 +3397,14 @@ class DocumentTemplateItem(BaseTemplateItem):
           try:
             self.local_file_writer_name(name, text, create=0)
           except IOError, error:
-            LOG("BusinessTemplate.py", WARNING, "Cannot install class %s on file system" %(name,))
+            LOG(self.__class__.__name__, WARNING,
+                "Cannot install class %r on file system" % name)
             if error.errno:
               raise
             continue
-          if self.local_file_importer_name is not None:
+          if self.local_file_importer_name is None:
+            continue
+          if need_reset:
             # before any import, flush all ZODB caches to force a DB reload
             # otherwise we could have objects trying to get commited while
             # holding reference to a class that is no longer the same one as
@@ -3379,9 +3414,12 @@ class DocumentTemplateItem(BaseTemplateItem):
             transaction.savepoint(optimistic=True)
             # Then we need to flush from all caches, not only the one from this
             # connection
-            self.getPortalObject()._p_jar.db().cacheMinimize()
+            portal = self.getPortalObject()
+            portal._p_jar.db().cacheMinimize()
+            synchronizeDynamicModules(portal, force=True)
             gc.collect()
-            self.local_file_importer_name(name)
+            need_reset = False
+          self.local_file_importer_name(name)
     else:
       BaseTemplateItem.install(self, context, trashbin, **kw)
       for id in self._archive.keys():
@@ -4863,6 +4901,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Create temporary modules/classes for classes defined by this BT.
       # This is required if the BT contains instances of one of these classes.
+      # XXX This is not required with portal types as classes.
+      #     It is still there for compatibility with non-migrated objects.
       module_id_list = []
       for template_id in self.getTemplateDocumentIdList():
         module_id = 'Products.ERP5Type.Document.' + template_id

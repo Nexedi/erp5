@@ -31,7 +31,6 @@ from DateTime import DateTime
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Message import Message
-from Products.ERP5Type.DateUtils import addToDate, atTheEndOfPeriod
 
 class PeriodicityMixin:
   """
@@ -123,6 +122,52 @@ class PeriodicityMixin:
     elif len(periodicity_month_list) > 0:
       return date.month() in periodicity_month_list
 
+  def _getTimezone(self, date):
+    return date.timezone()
+
+  def _getNextMonth(self, date, timezone):
+    year = date.year()
+    month = date.month()
+    if month == 12:
+      year += 1
+      month = 1
+    else:
+      month += 1
+
+    return DateTime(year, month, 1, 0, 0, 0, timezone)
+
+  def _getNextDay(self, date, timezone):
+    if timezone is not None:
+      new_date = DateTime(date.timeTime() + 86400.0, timezone)
+    else:
+      new_date = DateTime(date.timeTime() + 86400.0)
+
+    # Due to daylight savings, 24 hours later does not always mean that
+    # it's next day.
+    while new_date.day() == date.day():
+      if timezone is not None:
+        new_date = DateTime(new_date.timeTime() + 3600.0, timezone)
+      else:
+        new_date = DateTime(new_date.timeTime() + 3600.0)
+    return DateTime(new_date.year(), new_date.month(), new_date.day(),
+            0, 0, 0, timezone)
+
+  def _getNextHour(self, date, timezone):
+    if timezone is not None:
+      new_date = DateTime(date.timeTime() + 3600.0, timezone)
+    else:
+      new_date = DateTime(date.timeTime() + 3600.0)
+    return DateTime(new_date.year(), new_date.month(), new_date.day(),
+            new_date.hour(), 0, 0, timezone)
+
+  def _getNextMinute(self, date, timezone):
+    if timezone is not None:
+      new_date = DateTime(date.timeTime() + 60.0, timezone)
+    else:
+      new_date = DateTime(date.timeTime() + 60.0)
+    return DateTime(new_date.year(), new_date.month(), new_date.day(),
+            new_date.hour(), new_date.minute(), 0, timezone)
+
   security.declareProtected(Permissions.AccessContentsInformation, 'getNextPeriodicalDate')
   def getNextPeriodicalDate(self, current_date, next_start_date=None):
     """
@@ -152,22 +197,27 @@ class PeriodicityMixin:
               and next_start_date >= periodicity_stop_date):
       return None
 
+    timezone = self._getTimezone(next_start_date)
     previous_date = next_start_date
-    next_start_date = max(addToDate(next_start_date, minute=1), current_date)
+    next_start_date = max(self._getNextMinute(next_start_date, timezone),
+            current_date)
     while 1:
       if not self._validateMonth(next_start_date):
-        next_start_date = atTheEndOfPeriod(next_start_date, 'month')
+        next_start_date = self._getNextMonth(next_start_date, timezone)
       elif not (self._validateDay(next_start_date) and
                 self._validateWeek(next_start_date)):
-        next_start_date = atTheEndOfPeriod(next_start_date, 'day')
-      elif not self._validateMinute(next_start_date, previous_date):
-        next_start_date = addToDate(next_start_date, minute=1)
+        next_start_date = self._getNextDay(next_start_date, timezone)
       elif not self._validateHour(next_start_date):
-        next_start_date = addToDate(next_start_date, hour=1)
+        next_start_date = self._getNextHour(next_start_date, timezone)
+      elif not self._validateMinute(next_start_date, previous_date):
+        next_start_date = self._getNextMinute(next_start_date, timezone)
       else:
         parts = list(next_start_date.parts())
         parts[5] = previous_date.second() # XXX keep old behaviour
-        return DateTime(*parts)
+        next_start_date = DateTime(*parts)
+        if timezone is not None:
+          next_start_date = next_start_date.toZone(timezone)
+        return next_start_date
 
   # XXX May be we should create a Date class for following methods ???
   security.declareProtected(Permissions.AccessContentsInformation, 'getWeekDayList')

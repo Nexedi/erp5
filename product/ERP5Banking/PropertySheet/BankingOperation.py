@@ -38,7 +38,7 @@ class BankingOperation:
         'storage_id'  : 'movement',
         'description' : 'The current amount',
         'type'        : 'content',
-        'portal_type' : ('Banking Operation Line'),
+        'portal_type' : ('Banking Operation Line',),
         'acquired_property_id'       : ('source_debit', 'source_credit'),
         'mode'        : 'w' },
       )

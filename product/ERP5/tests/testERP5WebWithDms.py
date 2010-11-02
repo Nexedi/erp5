@@ -633,7 +633,65 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     png = response.getBody()
     self.assertTrue(png.startswith('\x89PNG'))
 
+  def test_ImageConversionThroughWebSite(self):
+    """Check that conversion parameters pass in url
+    are hounoured to display an image in context of a website
+    """
+    portal = self.getPortal()
+    request = portal.REQUEST
+    request['PARENTS'] = [self.app]
+    website = self.setupWebSite()
+    web_section_portal_type = 'Web Section'
+    web_section = website.newContent(portal_type=web_section_portal_type)
 
+    web_page_reference = 'NXD-WEB-PAGE'
+    content = '<p>initial text</p>'
+    web_page_module = portal.getDefaultModule(portal_type='Web Page')
+    web_page = web_page_module.newContent(portal_type='Web Page',
+                                          reference=web_page_reference,
+                                          text_content=content)
+    web_page.publish()
+
+
+    image_reference = 'NXD-IMAGE'
+    image_module = portal.getDefaultModule(portal_type='Image')
+    upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
+    image = image_module.newContent(portal_type='Image',
+                                    file=upload_file,
+                                    reference=image_reference)
+    image.publish()
+    transaction.commit()
+    self.tic()
+    credential = 'ERP5TypeTestCase:'
+
+    # testing Image conversions, raw
+
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference + '?format=', credential)
+    self.assertEquals(response.getHeader('content-type'), 'image/png')
+
+    # testing Image conversions, png
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference + '?format=png', credential)
+    self.assertEquals(response.getHeader('content-type'), 'image/png')
+
+    # testing Image conversions, jpg
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference + '?format=jpg', credential)
+    self.assertEquals(response.getHeader('content-type'), 'image/jpeg')
+
+    # testing Image conversions, resizing
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference + '?display=large', credential)
+    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    large_image = response.getBody()
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference + '?display=small', credential)
+    self.assertEquals(response.getHeader('content-type'), 'image/png')
+    small_image = response.getBody()
+    # if larger image is longer than smaller, then
+    # Resizing works
+    self.assertTrue(len(large_image) > len(small_image))
 
 def test_suite():
   suite = unittest.TestSuite()

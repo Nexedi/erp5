@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 
 # Just for compatibility    
 class PredicateGroup(Predicate):

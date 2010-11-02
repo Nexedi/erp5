@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="File" module="Products.ERP5Type.Document.File"/>
-        <tuple/>
-      </tuple>
+      <global name="File" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

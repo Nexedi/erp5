@@ -28,7 +28,7 @@
 
 from AccessControl import ClassSecurityInfo
 from DateTime import DateTime
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 

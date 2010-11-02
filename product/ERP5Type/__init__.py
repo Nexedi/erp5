@@ -98,6 +98,10 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
+
+  from dynamic.portal_type_class import initializeDynamicModules
+  initializeDynamicModules()
+
   # Register our Workflow factories directly (if on CMF 2)
   Products.ERP5Type.Workflow.registerAllWorkflowFactories(context)
   # We should register local constraints at some point

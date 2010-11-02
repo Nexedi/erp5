@@ -557,7 +557,7 @@ class OOoTemplate(ZopePageTemplate):
     if batch_mode:
       ooo = ooo_builder.render()
     else:
-      ooo = ooo_builder.render(name=self.title or self.id)
+      ooo = ooo_builder.render(name=self.title or self.id, source=source)
 
     if DevelopmentMode:
       # Validate XML in development mode

@@ -29,6 +29,10 @@
             <key> <string>id</string> </key>
             <value> <string>Memcached Plugin</string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>MemcachedPlugin</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>

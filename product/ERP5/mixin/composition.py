@@ -32,7 +32,7 @@ from Acquisition import aq_base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Utils import sortValueList
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.Document.BusinessProcess import BusinessProcess
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 

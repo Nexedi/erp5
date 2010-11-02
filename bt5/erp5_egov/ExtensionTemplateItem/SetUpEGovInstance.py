@@ -52,16 +52,10 @@ def allowAccessOnContributionRegistryPortalTypes(self):
 def allowAccessOnPersonAndOrganisation(self):
   '''Add local role on person and organisation to give
      administrative agent access.
-   '''
+  '''
+  portal_type_list = map(self.getPortalObject().portal_types.getTypeInfo,
+    ('Person', 'Person Module', 'Organisation', 'Organisation Module'))
 
-  self.portal = self.getPortalObject()
-  person_portal_type = self.portal.portal_types.getTypeInfo('Person')
-  person_module_portal_type = self.portal.portal_types.getTypeInfo('Person Module')
-  organisation_portal_type = self.portal.portal_types.getTypeInfo('Organisation')
-  organisation_module_portal_type = self.portal.portal_types.getTypeInfo('Organisation Module')
-
-  portal_type_list = (person_portal_type, person_module_portal_type, organisation_portal_type, \
-                      organisation_module_portal_type)
   role_category_list = ['role/gouvernement']
   for ptype in portal_type_list:
     role_info_list=[role_info.getTitle() for role_info in ptype.contentValues(portal_type='Role Information')]
@@ -81,10 +75,8 @@ def enableEgovProcedureLogin(self, portal_type):
   and subcription forms (citizen, company, agent)
   '''
   portal = self.getPortalObject()
+  acl_users = portal.acl_users
 
-  def getAclUsers(self):
-    return getattr(self.getPortalObject(), 'acl_users', None)
-  acl_users = getAclUsers(self)
   erp5security_dispatcher = acl_users.manage_addProduct['ERP5eGovSecurity']
   # add the portal_type in Egov portal_type_list
   if {'meta_type': 'EGOV User Manager', 'id': 'egov_users'} in \
@@ -106,11 +98,7 @@ def setUpEGovSecurityManager(self):
   '''use safi PAS to be able to login organisation'''
 
   portal = self.getPortalObject()
-
-  def getAclUsers(self):
-    return getattr(self.getPortalObject(), 'acl_users', None)
-
-  acl_users = getAclUsers(self)
+  acl_users = portal.acl_users
 
   # Add EGOVUserManager
   ZopeTestCase.installProduct('ERP5eGovSecurity')

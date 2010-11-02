@@ -53,9 +53,7 @@ class Priority:
   USER  = 3
 
 def updatePreferenceClassPropertySheetList():
-  # The Preference class should be imported from the common location
-  # in ERP5Type since it could be overloaded in another product
-  from Products.ERP5Type.Document.Preference import Preference
+  from Products.ERP5Form.Document.Preference import Preference
   # 'Static' property sheets defined on the class
   class_property_sheet_list = Preference.property_sheets
   # Time to lookup for preferences defined on other modules

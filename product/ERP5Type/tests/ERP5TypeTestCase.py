@@ -15,6 +15,7 @@ import os
 import random
 import re
 import socket
+import shutil
 import sys
 import time
 import traceback
@@ -765,11 +766,7 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
         msg='%r != %r' % (a, b)
-      for i in a:
-        self.failUnless(i in b, msg)
-      for i in b:
-        self.failUnless(i in a, msg)
-      self.assertEquals(len(a), len(b), msg)
+      self.assertEquals(set(a), set(b), msg)
     assertSameSet = failIfDifferentSet
 
     def assertWorkflowTransitionFails(self, object, workflow_id, transition_id,
@@ -901,7 +898,10 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
                                        reindex=reindex,
                                        create_activities=create_activities,
                                        **extra_constructor_kw )
-
+              sql = extra_constructor_kw.get('erp5_sql_connection_string')
+              if sql:
+                app[portal_name]._setProperty('erp5_site_global_id',
+                                              base64.standard_b64encode(sql))
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
@@ -1032,6 +1032,15 @@ class ERP5TypeTestCase(ProcessingNodeTestCase, PortalTestCase):
         # in case of using not in sequence commit transaction
         transaction.commit()
       self.tic()
+
+    def importObjectFromFile(self, container, relative_path, **kw):
+      """Import an object from a file located in $TESTFILEDIR/input/"""
+      test_path = os.path.dirname(__file__)
+      source_path = os.path.join(test_path, 'input', relative_path)
+      assert os.path.exists(source_path)
+      obj = container._importObjectFromFile(source_path, **kw)
+      obj.manage_afterClone(obj)
+      return obj
 
     def publish(self, path, basic=None, env=None, extra=None,
                 request_method='GET', stdin=None, handle_errors=True):

@@ -93,7 +93,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from zLOG import LOG, BLATHER, PROBLEM, WARNING, INFO
+from zLOG import LOG, BLATHER, PROBLEM, WARNING, INFO, TRACE
 
 #####################################################
 # Avoid importing from (possibly unpatched) Globals
@@ -506,72 +506,6 @@ from Products.ERP5Type.Globals import InitializeClass
 from Accessor.Base import func_code
 from Products.CMFCore.utils import manage_addContentForm, manage_addContent
 from AccessControl.PermissionRole import PermissionRole
-from MethodObject import Method
-
-class DocumentConstructor(Method):
-    func_code = func_code()
-    func_code.co_varnames = ('folder', 'id', 'REQUEST', 'kw')
-    func_code.co_argcount = 2
-    func_defaults = (None,)
-
-    def __init__(self, klass):
-      self.klass = klass
-
-    def __call__(self, folder, id, REQUEST=None,
-                 activate_kw=None, is_indexable=None, reindex_kw=None, **kw):
-      o = self.klass(id)
-      if activate_kw is not None:
-        o.__of__(folder).setDefaultActivateParameters(**activate_kw)
-      if reindex_kw is not None:
-        o.__of__(folder).setDefaultReindexParameters(**reindex_kw)
-      if is_indexable is not None:
-        o.isIndexable = is_indexable
-      folder._setObject(id, o)
-      o = folder._getOb(id)
-      # if no activity tool, the object has already an uid
-      if getattr(aq_base(o), 'uid', None) is None:
-        o.uid = folder.portal_catalog.newUid()
-      if kw: o._edit(force_update=1, **kw)
-      if REQUEST is not None:
-        REQUEST['RESPONSE'].redirect( 'manage_main' )
-      return o
-
-class TempDocumentConstructor(DocumentConstructor):
-
-    def __init__(self, klass):
-      # Create a new class to set permissions specific to temporary objects.
-      class TempDocument(klass):
-        isTempDocument = PropertyConstantGetter('isTempDocument', value=True)
-        __roles__ = None
-
-      # Replace some attributes.
-      for name in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
-                   'activate', 'setUid', 'setTitle', 'getTitle', 'getUid'):
-        setattr(TempDocument, name, getattr(klass, '_temp_%s' % name))
-
-      # Make some methods public.
-      for method_id in ('reindexObject', 'recursiveReindexObject',
-                        'activate', 'setUid', 'setTitle', 'getTitle',
-                        'edit', 'setProperty', 'getUid', 'setCriterion',
-                        'setCriterionPropertyList'):
-        setattr(TempDocument, '%s__roles__' % method_id, None)
-
-      self.klass = TempDocument
-
-    def __call__(self, folder, id, REQUEST=None,
-                 activate_kw=None, is_indexable=None, reindex_kw=None, **kw):
-      o = self.klass(id)
-      # Use the real container instead of the factory dispatcher.
-      #
-      # XXX some code use this constructor directly instead of
-      # through the factory system.
-      if getattr(aq_base(folder), 'Destination', None) is not None:
-        folder = folder.Destination()
-      o = o.__of__(folder)
-      if kw:
-        o._edit(force_update=1, **kw)
-      return o
-
 
 python_file_parser = re.compile('^(.*)\.py$')
 
@@ -905,13 +839,20 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
     f.write(text)
   finally:
     f.close()
-  # load the file, so that an error is raised if file is invalid
-  module = imp.load_source(class_id, path)
-  getattr(module, class_id, 'patch')
+
+  module_path = "erp5.document"
+  classpath = "%s.%s" % (module_path, class_id)
+  module = imp.load_source(classpath, path)
+  klass = getattr(module, class_id, None)
+  if klass is None:
+    assert hasattr(module, 'patch')
+    return
+  import erp5.document
+  setattr(erp5.document, class_id, klass)
 
   # and register correctly the new document
   from Products.ERP5Type import document_class_registry
-  document_class_registry[class_id] = "%s.%s" % (module.__name__, class_id)
+  document_class_registry[class_id] = classpath
 
 def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.
@@ -950,122 +891,123 @@ def setDefaultClassProperties(property_holder):
         )
       }
 
-def importLocalDocument(class_id, document_path = None):
+class PersistentMigrationMixin(object):
+  """
+  All classes issued from ERP5Type.Document.XXX submodules
+  will gain with mixin as a base class.
+
+  It allows us to migrate ERP5Type.Document.XXX.YYY classes to
+  erp5.portal_type.ZZZ namespace
+
+  Note that migration can be disabled by setting the '_no_migration'
+  class attribute to a nonzero value, as all old objects in the system
+  should inherit from this mixin
+  """
+  _no_migration = 0
+
+  def __setstate__(self, value):
+    if PersistentMigrationMixin._no_migration:
+      super(PersistentMigrationMixin, self).__setstate__(value)
+      return
+
+    portal_type = value.get('portal_type')
+    if portal_type is None:
+      portal_type = getattr(self.__class__, 'portal_type', None)
+    if portal_type is None:
+      LOG('ERP5Type', PROBLEM,
+          "no portal type was found for %s (class %s)" \
+               % (self, self.__class__))
+      super(PersistentMigrationMixin, self).__setstate__(value)
+    else:
+      # proceed with migration
+      import erp5.portal_type
+      klass = getattr(erp5.portal_type, portal_type)
+      assert self.__class__ != klass
+      self.__class__ = klass
+      self.__setstate__(value)
+      LOG('ERP5Type', TRACE, "Migration for object %s" % self)
+
+from Globals import Persistent, PersistentMapping
+
+def importLocalDocument(class_id, path=None):
   """Imports a document class and registers it in ERP5Type Document
   repository ( Products.ERP5Type.Document )
   """
   import Products.ERP5Type.Document
   import Permissions
 
-  if document_path is None:
-    instance_home = getConfiguration().instancehome
-    path = os.path.join(instance_home, "Document")
+  from Products.ERP5Type import document_class_registry
+  if path and '/Products/' in path:
+    classpath = document_class_registry[class_id]
+    module_path = classpath.rsplit('.', 1)[0]
+    module = __import__(module_path, {}, {}, (module_path,))
   else:
-    path = document_path
-  path = os.path.join(path, "%s.py" % class_id)
+    # local document in INSTANCE_HOME/Document/
+    # (created by ClassTool?)
+    if path is None:
+      instance_home = getConfiguration().instancehome
+      path = os.path.join(instance_home, "Document")
+    path = os.path.join(path, "%s.py" % class_id)
+    module_path = "erp5.document"
+    classpath = "%s.%s" % (module_path, class_id)
+    module = imp.load_source(classpath, path)
+    klass = getattr(module, class_id, None)
+    # Tolerate that Document doesn't define any class, which can be useful
+    # if we only want to monkey patch.
+    # XXX A new 'Patch' folder should be introduced instead. Each module would
+    #     define 2 methods: 'patch' and 'unpatch' (for proper upgrading).
+    if klass is None:
+      assert hasattr(module, 'patch')
+      return
+    import erp5.document
+    setattr(erp5.document, class_id, klass)
+    document_class_registry[class_id] = classpath
 
-  module_path = 'Products.ERP5Type.Document.' + class_id
-  document_module = sys.modules.get(module_path)
-  # Import Document Class and Initialize it
-  f = open(path)
-  try:
-    document_module = imp.load_source(module_path, path, f)
-  except Exception:
-    f.close()
-    if document_module is not None:
-      sys.modules[module_path] = document_module
-    raise
-  else:
-    f.close()
-  # Tolerate that Document doesn't define any class, which can be useful if we
-  # only want to monkey patch.
-  # XXX A new 'Patch' folder should be introduced instead. Each module would
-  #     define 2 methods: 'patch' and 'unpatch' (for proper upgrading).
-  try:
-    document_class = getattr(document_module, class_id)
-  except AttributeError:
-    document_module.patch
-    return
-  else:
-    document_constructor = DocumentConstructor(document_class)
-    document_constructor_name = "add%s" % class_id
-    document_constructor.__name__ = document_constructor_name
-    setattr(Products.ERP5Type.Document, class_id, document_module)
-    setattr(Products.ERP5Type.Document, document_constructor_name,
-                                      document_constructor)
-    setDefaultClassProperties(document_class)
-    ModuleSecurityInfo('Products.ERP5Type.Document').declareProtected(
-        Permissions.AddPortalContent, document_constructor_name,)
-    InitializeClass(document_class)
+  ### Migration
+  module_name = "Products.ERP5Type.Document.%s" % class_id
 
-  # Temp documents are created as standard classes with a different constructor
-  # which patches some methods are the instance level to prevent reindexing
-  temp_document_constructor = TempDocumentConstructor(document_class)
+  # Most of Document modules define a single class
+  # (ERP5Type.Document.Person.Person)
+  # but some (eek) need to act as module to find other documents,
+  # e.g. ERP5Type.Document.BusinessTemplate.SkinTemplateItem
+  #
+  def migrate_me_document_loader(document_name):
+    klass = getattr(module, document_name)
+    if issubclass(klass, (Persistent, PersistentMapping)):
+      setDefaultClassProperties(klass)
+      InitializeClass(klass)
+
+      class MigrateMe(PersistentMigrationMixin, klass):
+        pass
+      MigrateMe.__name__ = document_name
+      MigrateMe.__module__ = module_name
+      return MigrateMe
+    else:
+      return klass
+  from dynamic.dynamic_module import registerDynamicModule
+  document_module = registerDynamicModule(module_name,
+                                          migrate_me_document_loader)
+
+  setattr(Products.ERP5Type.Document, class_id, document_module)
+
+  ### newTempFoo
+  from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+  klass = getattr(module, class_id)
+  temp_type = ERP5TypeInformation(klass.portal_type)
+  temp_document_constructor = temp_type.constructTempInstance
+
   temp_document_constructor_name = "newTemp%s" % class_id
-  temp_document_constructor.__name__ = temp_document_constructor_name
   setattr(Products.ERP5Type.Document,
           temp_document_constructor_name,
           temp_document_constructor)
   ModuleSecurityInfo('Products.ERP5Type.Document').declarePublic(
                       temp_document_constructor_name,) # XXX Probably bad security
 
-  # Update Meta Types
-  new_meta_types = []
-  for meta_type in Products.meta_types:
-    if meta_type['name'] != document_class.meta_type:
-      new_meta_types.append(meta_type)
-    else:
-      # Update new_meta_types
-      instance_class = None
-      new_meta_types.append(
-            { 'name': document_class.meta_type,
-              'action': ('manage_addProduct/%s/%s' % (
-                         'ERP5Type', document_constructor_name)),
-              'product': 'ERP5Type',
-              'permission': document_class.add_permission,
-              'visibility': 'Global',
-              'interfaces': document_class.__implements__,
-              'instance': instance_class,
-              'container_filter': None
-              },)
-  Products.meta_types = tuple(new_meta_types)
-  # Update Constructors
-  m = Products.ERP5Type._m
-  if hasattr(document_class, 'factory_type_information'):
-    constructors = ( manage_addContentForm
-                   , manage_addContent
-                   , document_constructor
-                   , temp_document_constructor
-                   , ('factory_type_information',
-                        document_class.factory_type_information) )
-  else:
-    constructors = ( manage_addContentForm
-                   , manage_addContent
-                   , document_constructor
-                   , temp_document_constructor )
-  initial = constructors[0]
-  m[initial.__name__]=manage_addContentForm
-  default_permission = ('Manager',)
-  pr=PermissionRole(document_class.add_permission, default_permission)
-  m[initial.__name__+'__roles__']=pr
-  for method in constructors[1:]:
-    if isinstance(method, tuple):
-      name, method = method
-    else:
-      name=os.path.split(method.__name__)[-1]
-    if name != 'factory_type_information':
-      # Add constructor to product dispatcher
-      m[name]=method
-    else:
-      # Append fti to product dispatcher
-      if not m.has_key(name): m[name] = []
-      m[name].append(method)
-    m[name+'__roles__']=pr
+  # XXX really?
+  return klass, tuple()
 
-  return document_class, constructors
 
-def initializeLocalRegistry(directory_name, import_local_method,
-                            path_arg_name='path'):
+def initializeLocalRegistry(directory_name, import_local_method):
   """
   Initialize local directory.
   """
@@ -1083,8 +1025,7 @@ def initializeLocalRegistry(directory_name, import_local_method,
       if python_file_expr.search(file_name,1):
         module_name = file_name[0:-3]
         try:
-          # XXX Arg are not consistent
-          import_local_method(module_name, **{path_arg_name: document_path})
+          import_local_method(module_name, path=document_path)
           LOG('ERP5Type', BLATHER,
               'Added local %s to ERP5Type repository: %s (%s)'
               % (directory_name, module_name, document_path))
@@ -1097,8 +1038,7 @@ def initializeLocalRegistry(directory_name, import_local_method,
 
 def initializeLocalDocumentRegistry():
   # XXX Arg are not consistent
-  initializeLocalRegistry("Document", importLocalDocument,
-                          path_arg_name='document_path')
+  initializeLocalRegistry("Document", importLocalDocument)
 
 def initializeLocalPropertySheetRegistry():
   initializeLocalRegistry("PropertySheet", importLocalPropertySheet)
@@ -1149,25 +1089,11 @@ def initializeProduct( context,
 
   product_name = module_name.split('.')[-1]
 
-  # Define content constructors for Document content classes (RAD)
-  initializeDefaultConstructors(content_classes)
-  extra_content_constructors = []
-  for content_class in content_classes:
-    if hasattr(content_class, 'add' + content_class.__name__):
-      extra_content_constructors += [
-                getattr(content_class, 'add' + content_class.__name__)]
-    if hasattr(content_class, 'newTemp' + content_class.__name__):
-      extra_content_constructors += [
-                getattr(content_class, 'newTemp' + content_class.__name__)]
-
   # Define FactoryTypeInformations for all content classes
   contentFactoryTypeInformations = []
   for content in content_classes:
     if hasattr(content, 'factory_type_information'):
       contentFactoryTypeInformations.append(content.factory_type_information)
-
-  # Aggregate
-  content_constructors = list(content_constructors) + list(extra_content_constructors)
 
 
   # Try to make some standard directories available
@@ -1258,31 +1184,6 @@ def createConstraintList(property_holder, constraint_definition):
 #####################################################
 # Constructor initialization
 #####################################################
-
-def initializeDefaultConstructors(klasses):
-    for klass in klasses:
-      if getattr(klass, 'isRADContent', 0) and hasattr(klass, 'security'):
-        setDefaultConstructor(klass)
-        klass.security.declareProtected(Permissions.AddPortalContent,
-                                        'add' + klass.__name__)
-
-def setDefaultConstructor(klass):
-    """
-      Create the default content creation method
-    """
-    document_constructor_name = 'add' + klass.__name__
-    if not hasattr(klass, document_constructor_name):
-      document_constructor = DocumentConstructor(klass)
-      setattr(klass, document_constructor_name, document_constructor)
-      document_constructor.__name__ = document_constructor_name
-
-    temp_document_constructor_name = 'newTemp' + klass.__name__
-    if not hasattr(klass, temp_document_constructor_name):
-      temp_document_constructor = TempDocumentConstructor(klass)
-      setattr(klass, temp_document_constructor_name, temp_document_constructor)
-      temp_document_constructor.__name__ = temp_document_constructor_name
-      klass.security.declarePublic(temp_document_constructor_name)
-
 
 def createExpressionContext(object, portal=None):
   """
@@ -2552,12 +2453,19 @@ def createValueAccessors(property_holder, id,
   if not hasattr(property_holder, accessor_name):
     property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
     property_holder.declareProtected(read_permission, accessor_name)
+  accessor_name = 'get' + UpperCase(id) + 'TranslatedLogicalPath'
+  if not hasattr(property_holder, accessor_name):
+    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedLogicalPathGetter, ())
+    property_holder.declareProtected(read_permission, accessor_name)
   accessor_name = '_categoryGetDefault' + UpperCase(id) + 'LogicalPath'
   if not hasattr(property_holder, accessor_name):
     property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
   accessor_name = '_categoryGet' + UpperCase(id) + 'LogicalPath'
   if not hasattr(property_holder, accessor_name):
     property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
+  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedLogicalPath'
+  if not hasattr(property_holder, accessor_name):
+    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedLogicalPathGetter, ())
 
   setter_name = 'set' + UpperCase(id) + 'Value'
   if not hasattr(property_holder, setter_name):

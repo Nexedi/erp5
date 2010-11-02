@@ -380,7 +380,6 @@ class EmailDocument(TextDocument):
         return self._baseGetTitle()
       else:
         return self._baseGetTitle(default)
-    message = self._getMessage()
     subject = self.getContentInformation().get('Subject', '')
     # Remove all newlines
     if '\r' in subject:

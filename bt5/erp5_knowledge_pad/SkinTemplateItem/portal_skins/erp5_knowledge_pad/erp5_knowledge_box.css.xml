@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts84987054.12</string> </value>
+            <value> <string>ts88355484.13</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -152,6 +152,7 @@ div.edit-form {\n
   border-width: 0 1px 1px 1px;\n
   background-color: #BDD0F0;\n
   overflow: auto;\n
+  width:auto;\n
 }\n
 \n
 /* Tabs for Knowledge Pads */ \n
@@ -319,25 +320,36 @@ div.block ul{\n
 }\n
 \n
 \n
-/* When we show listbox in gagets we need to override some CSS*/\n
-div.block table.listbox,\n
-div.box_inner_content .input,\n
-div.box_inner_content .search.result .resultList{\n
-  width:100%;\n
-  margin:0em;\n
-  padding:0em;\n
-}\n
+/* \n
 \n
-.box_inner_content .search.result .extendedSearchBar{\n
-  display:none;\n
-}\n
+  Gadget listbox CSS\n
 \n
+*/\n
 div.block table.listbox .right{\n
   float:right;\n
 }\n
 \n
 div.block table.listbox .left{\n
   float:left;\n
+}\n
+div.block .listbox-head{\n
+  margin-left:0;\n
+}\n
+div.block div.listbox-head-spacer{\n
+  display:none;\n
+}\n
+div.block div.listbox-head-content {\n
+/*  background: none;*/\n
+  background-color: #E3EAFA;\n
+  border: none;\n
+  margin-left:0;\n
+  padding-left: 10px;\n
+}\n
+div.block table.listbox tr{\n
+  margin-top:2px;\n
+}\n
+div.block table.listbox tr.DataB {\n
+  background-color:#FFF;\n
 }\n
 \n
 div.block div.input{\n
@@ -478,10 +490,28 @@ div.block div.worklist_list ul li a:hover{\n
   text-decoration:none;\n
 }\n
 \n
-/* RSS Feed gadget */\n
+/* Some gadgets share same Document_getSummaryAsHTML or RssFeed_getSummaryAsHTML */\n
 div.document-gadget-quick-preview div.teaser{\n
   cursor: pointer;\n
 }\n
+\n
+div.document-gadget-quick-preview span.document-title,\n
+div.document-gadget-quick-preview span.modification-date{\n
+  font-size:1em;\n
+  color: #000;\n
+}\n
+\n
+/* Some items can be marked as read and we need a way to visualize it */\n
+div.document-gadget-quick-preview div.read span.document-title,\n
+div.document-gadget-quick-preview div.read span.modification-date{\n
+  color: #969696;\n
+}\n
+\n
+div.document-gadget-quick-preview a.document-link{\n
+  color:#000;\n
+  font-weight:bold;\n
+}\n
+\n
 /* Rss Feed reader gadget needs no listbox headers or \n
 show number of records  or show \'No results\' as listbox title is used for this */\n
 div.gadget-rss-reader table.listbox thead,\n
@@ -489,7 +519,26 @@ div.gadget-rss-reader div.listbox-number-of-records,\n
 div.gadget-rss-reader table.listbox td.listbox-table-no-result-row{\n
   display: none;\n
 }\n
-</string> </value>
+\n
+div.rss-description{\n
+  padding-top:4px;\n
+}\n
+\n
+div.teaser .thumbnail-image{\n
+  margin:4px;\n
+  float:left;\n
+}\n
+div.teaser .icon {\n
+  vertical-align:middle;\n
+}\n
+div.gadget-rss-reader-logo img{\n
+  float:right;\n
+  margin:4px;\n
+  width:auto;\n
+}\n
+div.gadget-rss-reader div.listbox-head-content {\n
+  background-color: transparent;\n
+}</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -497,7 +546,7 @@ div.gadget-rss-reader table.listbox td.listbox-table-no-result-row{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8086</int> </value>
+            <value> <int>9028</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

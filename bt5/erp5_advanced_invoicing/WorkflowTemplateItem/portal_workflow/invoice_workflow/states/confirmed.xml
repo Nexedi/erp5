@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
-        <tuple/>
-      </tuple>
+      <global name="StateDefinition" module="Products.DCWorkflow.States"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -36,6 +33,7 @@
                 <string>start</string>
                 <string>start_action</string>
                 <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>
@@ -50,10 +48,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>

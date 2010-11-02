@@ -59,7 +59,5 @@ def patch():
 
   from Products.ERP5.Document.SimulationMovement import SimulationMovement
   SimulationMovement.asComposedDocument = asComposedDocument
-  from Products.ERP5Type.Document.SimulationMovement import SimulationMovement
-  SimulationMovement.asComposedDocument = asComposedDocument
 
 patch()

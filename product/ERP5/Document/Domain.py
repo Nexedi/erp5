@@ -32,7 +32,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 
 from Products.ERP5.Document.MetaResource import MetaResource
 from Products.ERP5.Document.MetaNode import MetaNode
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 
 class Domain(Predicate, MetaNode, MetaResource):
   """

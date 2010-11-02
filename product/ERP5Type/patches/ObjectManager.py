@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-# Import: add rename feature
+# Import: add rename feature and make _importObjectFromFile return the object
 from OFS.ObjectManager import ObjectManager, customImporters
 
 def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id=None):
@@ -36,5 +36,6 @@ def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id
     # that the object was imported into.
     ob=self._getOb(id)
     ob.manage_changeOwnershipType(explicit=0)
+    return ob
 
 ObjectManager._importObjectFromFile=ObjectManager_importObjectFromFile

@@ -3388,8 +3388,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        ImportBusinessTemplate \
@@ -4459,8 +4459,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4636,8 +4636,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4699,8 +4699,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckLocalRolesExists \
                        CheckPropertySheetExists \
                        CheckSkinsLayers \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4788,8 +4788,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckRoleExists \
                        CheckLocalRolesExists \
                        CheckPropertySheetExists \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4849,8 +4849,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -4885,8 +4885,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckRoleExists \
                        CheckLocalRolesExists \
                        CheckPropertySheetExists \
-                       RemovePortalType \
                        RemoveModule \
+                       RemovePortalType \
                        RemoveSkinFolder \
                        RemoveBaseCategory \
                        RemoveWorkflow \
@@ -5556,7 +5556,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(compareVersionStrings('1.0rc1', '>= 1.0rc1'))
 
   def test_checkDependencies(self):
-    from Products.ERP5Type.Document.BusinessTemplate import \
+    from Products.ERP5.Document.BusinessTemplate import \
           BusinessTemplateMissingDependency
     template_tool = self.getPortal().portal_templates
     erp5_core_version = template_tool.getInstalledBusinessTemplate(
@@ -6664,13 +6664,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # This test does too much since we don't modify objects anymore during
     # download. Objects are cleaned up during installation, which does not
     # require any specific action about garbage collection or pickle cache.
-    from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
+    from Products.ERP5.Document.BusinessTemplate import BaseTemplateItem
     portal = self.portal
     BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
+    object_id_list = 'old_file', 'some_file'
     marker_list = []
     def removeProperties(self, obj, export):
       # Check it works if the object is modified during install.
-      obj.int_index = marker_list.pop()
+      if obj.id in object_id_list:
+        obj.int_index = marker_list.pop()
       return obj
     SimpleItem_getCopy = SimpleItem._getCopy
     try:
@@ -6680,7 +6682,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       bt_path = os.path.join(os.path.dirname(__file__), 'test_data',
                              'test_167_InstanceAndRelatedClassDefinedInSameBT')
       # create a previously existing instance of the overriden document type
-      from Products.ERP5Type.Document.File import File
+      File = portal.portal_types.getPortalTypeClass('File')
       portal._setObject('another_file', File('another_file'))
       transaction.commit()
       self.tic()
@@ -6690,7 +6692,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       # check its class has not yet been overriden
       self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
       for i in (0, 1):
-        marker_list.append(i)
+        marker_list += [i] * len(object_id_list)
         gc.disable()
         bt = template_tool.download(bt_path)
         assert marker_list
@@ -6700,7 +6702,8 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         bt.install(force=1)
         assert not marker_list
         gc.enable()
-        self.assertEqual(portal.some_file.int_index, i)
+        for id in object_id_list:
+          self.assertEqual(getattr(portal, id).int_index, i)
         transaction.commit()
         self.tic()
     finally:
@@ -6842,47 +6845,48 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.stepTic()
     
     new_bt.install()
+    try:
+      type_provider = self.portal._getOb('dummy_type_provider', None)
+      self.assertNotEqual(None, type_provider)
 
-    type_provider = self.portal._getOb('dummy_type_provider', None)
-    self.assertNotEqual(None, type_provider)
+      # This type provider, will be automatically registered on types tool during
+      # business template installation, because it contains type information
+      self.assertTrue('dummy_type_provider' in types_tool.type_provider_list)
+      # The type is reinstalled
+      self.assertTrue('Dummy Type' in type_provider.objectIds())
+      # is available from types tool
+      self.assertTrue('Dummy Type' in [ti.getId() for
+                      ti in types_tool.listTypeInfo()])
+      
+      dummy_type = types_tool.getTypeInfo('Dummy Type')
+      self.assertNotEquals(None, dummy_type)
+      # all the configuration from the type is still here
+      self.assertEquals(['Reference'], dummy_type.getTypePropertySheetList())
+      self.assertEquals(['source'], dummy_type.getTypeBaseCategoryList())
+      self.assertEquals(['Dummy Type'], dummy_type.getTypeAllowedContentTypeList())
+      self.assertEquals(['Dummy Type'], dummy_type.getTypeHiddenContentTypeList())
 
-    # This type provider, will be automatically registered on types tool during
-    # business template installation, because it contains type information
-    self.assertTrue('dummy_type_provider' in types_tool.type_provider_list)
-    # The type is reinstalled
-    self.assertTrue('Dummy Type' in type_provider.objectIds())
-    # is available from types tool
-    self.assertTrue('Dummy Type' in [ti.getId() for
-                    ti in types_tool.listTypeInfo()])
-    
-    dummy_type = types_tool.getTypeInfo('Dummy Type')
-    self.assertNotEquals(None, dummy_type)
-    # all the configuration from the type is still here
-    self.assertEquals(['Reference'], dummy_type.getTypePropertySheetList())
-    self.assertEquals(['source'], dummy_type.getTypeBaseCategoryList())
-    self.assertEquals(['Dummy Type'], dummy_type.getTypeAllowedContentTypeList())
-    self.assertEquals(['Dummy Type'], dummy_type.getTypeHiddenContentTypeList())
+      action_list = dummy_type.contentValues(portal_type='Action Information')
+      self.assertEquals(['View'], [action.getTitle() for action in action_list])
+      self.assertEquals(['view'], [action.getReference() for action in action_list])
+      
+      role_list = dummy_type.contentValues(portal_type='Role Information')
+      self.assertEquals(['Dummy Role Definition'],
+                        [role.getTitle() for role in role_list])
+      
+      self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
+      
+      # and our type can be used
+      instance = self.portal.newContent(portal_type='Dummy Type',
+                                        id='test_document')
+      instance.setSourceReference('OK')
+      self.assertEquals('OK', instance.getSourceReference())
 
-    action_list = dummy_type.contentValues(portal_type='Action Information')
-    self.assertEquals(['View'], [action.getTitle() for action in action_list])
-    self.assertEquals(['view'], [action.getReference() for action in action_list])
-    
-    role_list = dummy_type.contentValues(portal_type='Role Information')
-    self.assertEquals(['Dummy Role Definition'],
-                      [role.getTitle() for role in role_list])
-    
-    self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
-    
-    # and our type can be used
-    instance = self.portal.newContent(portal_type='Dummy Type',
-                                      id='test_document')
-    instance.setSourceReference('OK')
-    self.assertEquals('OK', instance.getSourceReference())
-
-    new_bt.uninstall()
-    self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
-    self.assertEquals(None, types_tool.getTypeInfo('Dummy Type'))
-    self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
+    finally:
+      new_bt.uninstall()
+      self.assertNotEquals(None, types_tool.getTypeInfo('Base Category'))
+      self.assertEquals(None, types_tool.getTypeInfo('Dummy Type'))
+      self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
 
   def test_type_provider_2(self):
     self.portal._setObject('dummy_type_provider', DummyTypeProvider())

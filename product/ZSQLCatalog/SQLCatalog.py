@@ -2354,6 +2354,12 @@ class Catalog(Folder,
     """
     return getComparisonOperatorInstance(operator)
 
+  PROPAGATE_PARAMETER_SET = set(['selection_domain',
+                                 'selection_report',
+                                 # XXX should get the next parameters from
+                                 # the ZSQLMethod class itself
+                                 'zsql_brain',
+                               ])
   @profiler_decorator
   def _queryResults(self, REQUEST=None, build_sql_query_method=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
@@ -2363,11 +2369,10 @@ class Catalog(Folder,
     # XXX: decide if this should be made normal
     ENFORCE_SEPARATION = True
     if ENFORCE_SEPARATION:
-      new_kw = {}
       # Some parameters must be propagated:
-      for parameter_id in ('selection_domain', 'selection_report'):
-        if parameter_id in kw:
-          new_kw[parameter_id] = kw[parameter_id]
+      new_kw = dict((name, kw[name])
+                    for name in self.PROPAGATE_PARAMETER_SET & set(kw))
+      # discard all others:
       kw = new_kw
     kw['where_expression'] = query['where_expression']
     kw['sort_on'] = query['order_by_expression']
@@ -2376,6 +2381,7 @@ class Catalog(Folder,
     kw['limit_expression'] = query['limit_expression']
     kw['select_expression'] = query['select_expression']
     kw['group_by_expression'] = query['group_by_expression']
+    # XXX: why not kw.update(query)??
     return kw
 
   def queryResults(self, sql_method, REQUEST=None, src__=0, build_sql_query_method=None, **kw):

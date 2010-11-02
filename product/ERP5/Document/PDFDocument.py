@@ -37,6 +37,7 @@ from Products.ERP5.Document.Image import Image
 from Products.ERP5.Document.Document import ConversionError,\
                                             VALID_TEXT_FORMAT_LIST
 from subprocess import Popen, PIPE
+import errno
 
 class PDFDocument(Image):
   """
@@ -116,13 +117,19 @@ class PDFDocument(Image):
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(self.getData())
     tmp.seek(0)
-    command_result = Popen(['pdftotext', '-layout', '-enc', 'UTF-8',
-                                                    '-nopgbrk', tmp.name, '-'],
-                                                  stdout=PIPE).communicate()[0]
-    h = command_result
-    tmp.close()
-    if h:
-      return h
+    try:
+      command = ['pdftotext', '-layout', '-enc', 'UTF-8',
+                 '-nopgbrk', tmp.name, '-']
+      try:
+        command_result = Popen(command, stdout=PIPE).communicate()[0]
+      except OSError, e:
+        if e.errno == errno.ENOENT:
+          raise ConversionError('pdftotext was not found')
+        raise
+    finally:
+      tmp.close()
+    if command_result:
+      return command_result
     else:
       # Try to use OCR
       # As high dpi images are required, it may take some times to convert the
@@ -179,14 +186,22 @@ class PDFDocument(Image):
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(self.getData())
     tmp.seek(0)
-    command_result = Popen(['pdftohtml', '-enc', 'UTF-8', '-stdout',
-                            '-noframes', '-i', tmp.name], stdout=PIPE)\
-                                                              .communicate()[0]
 
-    h = command_result
-    tmp.close()
+    command_result = None
+    try:
+      command = ['pdftohtml', '-enc', 'UTF-8', '-stdout',
+                 '-noframes', '-i', tmp.name]
+      try:
+        command_result = Popen(command, stdout=PIPE).communicate()[0]
+      except OSError, e:
+        if e.errno == errno.ENOENT:
+          raise ConversionError('pdftohtml was not found')
+        raise
+
+    finally:
+      tmp.close()
     # Quick hack to remove bg color - XXX
-    h = h.replace('<BODY bgcolor="#A0A0A0"', '<BODY ')
+    h = command_result.replace('<BODY bgcolor="#A0A0A0"', '<BODY ')
     # Make links relative
     h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1],
                                                           'href="asEntireHTML')
@@ -208,13 +223,20 @@ class PDFDocument(Image):
     tmp = tempfile.NamedTemporaryFile()
     tmp.write(self.getData())
     tmp.seek(0)
+    command_result = None
     try:
+
       # First, we use pdfinfo to get standard metadata
-      command_result = Popen(['pdfinfo', '-meta', '-box', tmp.name],
-                                                  stdout=PIPE).communicate()[0]
-      h = command_result
+      command = ['pdfinfo', '-meta', '-box', tmp.name]
+      try:
+        command_result = Popen(command, stdout=PIPE).communicate()[0]
+      except OSError, e:
+        if e.errno == errno.ENOENT:
+          raise ConversionError('pdfinfo was not found')
+        raise
+
       result = {}
-      for line in h.splitlines():
+      for line in command_result.splitlines():
         item_list = line.split(':')
         key = item_list[0].strip()
         value = ':'.join(item_list[1:]).strip()
@@ -222,14 +244,14 @@ class PDFDocument(Image):
 
       # Then we use pdftk to get extra metadata
       try:
-        command_result = Popen(['pdftk', tmp.name, 'dump_data', 'output'],
-                                                  stdout=PIPE).communicate()[0]
-      except OSError:
-        # pdftk not found
-        pass
+        command = ['pdftk', tmp.name, 'dump_data', 'output']
+        command_result = Popen(command, stdout=PIPE).communicate()[0]
+      except OSError, e:
+        # if pdftk not found, pass
+        if e.errno != errno.ENOENT:
+          raise
       else:
-        h = command_result
-        line_list = (line for line in h.splitlines())
+        line_list = (line for line in command_result.splitlines())
         while True:
           try:
             line = line_list.next()

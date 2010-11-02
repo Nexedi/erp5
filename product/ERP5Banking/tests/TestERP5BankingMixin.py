@@ -28,6 +28,7 @@
 
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from transaction import get as get_transaction
 
 def isSameSet(a, b):
   for i in a:

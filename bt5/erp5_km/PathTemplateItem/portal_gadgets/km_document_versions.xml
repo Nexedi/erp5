@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="Gadget" module="Products.ERP5.Document.Gadget"/>
-        <tuple/>
-      </tuple>
+      <global name="Gadget" module="Products.ERP5.Document.Gadget"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -109,6 +106,10 @@
             </value>
         </item>
         <item>
+            <key> <string>edit_form_id</string> </key>
+            <value> <string>Base_viewBasicGadgetPreferenceDialog</string> </value>
+        </item>
+        <item>
             <key> <string>gadget_type</string> </key>
             <value>
               <tuple/>
@@ -157,7 +158,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -165,7 +166,7 @@
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>

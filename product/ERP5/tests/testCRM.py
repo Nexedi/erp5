@@ -1395,20 +1395,33 @@ class TestCRMMailSend(BaseTestCRM):
       All events uses after script and interaciton
       workflow add a test for clone
     """
-    portal_type = "Mail Message"
-    title = "Title of the event"
-    content = "This is the content of the event"
+    # XXX in the case of title, getTitle ignores the title attribute,
+    # if any data is stored. In the case of text_content, getTextContent
+    # respects the text_content attribute, even if any data is stored.
+    # This sounds inconsistent, but this seems to be the spec.
+    portal_type = 'Mail Message'
+    dummy_title = 'Dummy title'
+    real_title = 'Real Title'
+    dummy_content = 'Dummy content'
+    real_content = 'Real content'
     event = self.portal.event_module.newContent(portal_type=portal_type,
-                                                title=title,
-                                                text_content=content,)
-    event.setData("This is the context of the event...")
+                                                title=dummy_title,
+                                                text_content=real_content,)
+    self.assertFalse(event.hasFile(), '%r has a file' % (event,))
+    self.assertEquals(event.getTitle(), dummy_title)
+    self.assertEquals(event.getTextContent(), real_content)
+
+    event.setData('Subject: %s\r\n\r\n%s' % (real_title, dummy_content))
+    self.assertTrue(event.hasFile(), '%r has no file' % (event,))
+    self.assertEquals(event.getTitle(), real_title)
+    self.assertEquals(event.getTextContent(), real_content)
 
     self.stepTic()
     new_event = event.Base_createCloneDocument(batch_mode=1)
-    self.failIf(new_event.hasFile())
-    self.assertEquals(new_event.getData(), "")
-    self.assertEquals(new_event.getTitle(), title)
-    self.assertEquals(new_event.getTextContent(), content)
+    self.assertFalse(new_event.hasFile(), '%r has a file' % (new_event,))
+    self.assertEquals(new_event.getData(), '')
+    self.assertEquals(new_event.getTitle(), real_title)
+    self.assertEquals(new_event.getTextContent(), real_content)
 
 
 def test_suite():

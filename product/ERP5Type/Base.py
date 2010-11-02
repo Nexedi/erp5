@@ -290,8 +290,9 @@ class WorkflowMethod(Method):
       self._invoke_always = {}
 
 def _aq_reset():
-  Base.aq_method_generated = set()
-  Base.aq_portal_type = {}
+  # using clear to prevent changing the reference
+  Base.aq_method_generated.clear()
+  Base.aq_portal_type.clear()
   Base.aq_related_generated = 0
   try:
     from Products.ERP5Form.PreferenceTool import PreferenceTool
@@ -898,15 +899,6 @@ class Base( CopyContainer,
       Base.aq_method_generating.append(aq_key)
       try:
         # Proceed with property generation
-        if self.isTempObject() and len(klass.__bases__) == 1:
-          # If self is a simple temporary object (e.g. not a composed one),
-          # generate methods for the base document class rather than for the
-          # temporary document class.
-          # Otherwise, instances of the base document class would fail
-          # in calling such methods, because they are not instances of
-          # the temporary document class.
-          klass = klass.__bases__[0]
-
         # Generate class methods
         initializeClassDynamicProperties(self, klass)
 
@@ -922,6 +914,7 @@ class Base( CopyContainer,
 
       # Generate Related Accessors
       if not Base.aq_related_generated:
+        Base.aq_related_generated = 1
         from Utils import createRelatedValueAccessors
         portal_types = getToolByName(portal, 'portal_types', None)
         generated_bid = set()
@@ -947,8 +940,6 @@ class Base( CopyContainer,
             if bid not in generated_bid :
               createRelatedValueAccessors(None, bid)
               generated_bid.add(bid)
-
-        Base.aq_related_generated = 1
 
       # We suppose that if we reach this point
       # then it means that all code generation has succeeded
@@ -3391,28 +3382,23 @@ class Base( CopyContainer,
   security.declarePublic('isWebMode')
   def isWebMode(self):
     """
-      return True if we are in web_mode and if editable_mode is NOT set
+      return True if we are in web mode
     """
     if self.getApplicableLayout() is None:
       return False
     if getattr(self.REQUEST, 'ignore_layout', 0):
-      return False
-    if getattr(self.REQUEST, 'editable_mode', 0):
       return False
     return True
 
   security.declarePublic('isEditableWebMode')
   def isEditableWebMode(self):
     """
-      return True if we are in web_mode and if editable_mode is set
+      return True if we are in editable mode
     """
-    if self.getApplicableLayout() is None:
-      return False
-    if getattr(self.REQUEST, 'ignore_layout', 0):
-      return False
-    if not getattr(self.REQUEST, 'editable_mode', 1):
-      return False
-    return True
+    return getattr(self.REQUEST, 'editable_mode', 0)
+    
+  isEditableMode = isEditableWebMode # for backwards compatability
+
 
   security.declareProtected(Permissions.ChangeLocalRoles,
                             'updateLocalRolesOnSecurityGroups')

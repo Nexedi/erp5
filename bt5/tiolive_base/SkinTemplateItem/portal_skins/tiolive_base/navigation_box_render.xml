@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
@@ -72,7 +69,7 @@
               </tal:block>\n
             </tal:block>\n
             <option tal:condition="python: getattr(here, \'Base_getUserRemoteBusinessConfigurationReferenceList\', None) is not None and not isAnonymousUser"\n
-                      disabled="disabled">-- <tal:block tal:content="string: Your Instances" i18n:translate="" i18n:domain="ui" /> --</option>\n
+                      disabled="disabled">-- <tal:block i18n:translate="" i18n:domain="ui">Your Instances</tal:block> --</option>\n
             <tal:block tal:condition="python: getattr(here, \'Base_getUserRemoteBusinessConfigurationReferenceList\', None) is not None"\n
                        tal:repeat="instance_id python: here.Base_getUserRemoteBusinessConfigurationReferenceList()">\n
               <option tal:attributes="value python: \'%s/%s\' % (here.ERP5Site_getTioLiveSiteRootUrl(include_language=0), instance_id)"><tal:block tal:content="python: \'Go to %s\' % instance_id" i18n:translate="" i18n:domain="ui"></tal:block></option>\n
@@ -151,7 +148,7 @@
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -166,8 +163,12 @@
             <value> <string>navigation_box_render</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ListBox" module="Products.ERP5Form.ListBox"/>
-        <tuple/>
-      </tuple>
+      <global name="ListBox" module="Products.ERP5Form.ListBox"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -361,7 +358,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>WebSection_getAuthorName</string>
+                          <string>contributor</string>
                           <string>Author</string>
                         </tuple>
                         <tuple>
@@ -393,7 +390,11 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>hidden_label</string> </value>
+                </item>
+                <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -404,6 +405,12 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_style_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>domain_root_list</string> </key>
@@ -422,12 +429,7 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>effective_date</string>
-                          <string>effective_date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -443,6 +445,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
@@ -471,6 +477,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_mode</string> </key>
+                    <value> <string>slider</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
@@ -517,7 +527,12 @@
                 <item>
                     <key> <string>sort</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>effective_date</string>
+                          <string>descending</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -535,6 +550,12 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -560,10 +581,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

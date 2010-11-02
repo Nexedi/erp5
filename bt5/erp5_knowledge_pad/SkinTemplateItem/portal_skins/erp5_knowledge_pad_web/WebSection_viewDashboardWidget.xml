@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <div id="page_wrapper"  \n
      tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
@@ -46,7 +43,10 @@
                  isAnon python: here.portal_membership.isAnonymousUser();\n
                  columns python: options.get(\'columns\', 3);\n
                  is_tab_empty python: (len(layout)==1 and len(layout[0])==0) or\n
-                                     (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0) ">\n
+                                      (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0);\n
+                 column_css_class python: test(isAnon, \n
+                                            \'portal-column portal-column-undraggable\', \n
+                                            \'portal-column\')">\n
 \n
     <div tal:condition="python: is_tab_empty and not isAnon">\n
       <h4 i18n:translate="" \n
@@ -57,9 +57,7 @@
     </div>\n
 \n
     <div id="portal-column-0"\n
-         tal:attributes="class python: test(isAnon, \n
-                                              \'portal-column-undraggable\', \n
-                                              \'portal-column\')"\n
+         tal:attributes="class column_css_class"\n
          tal:condition="python: columns>=1">\n
       <tal:block tal:condition="python: columns==1">\n
         <span   \n
@@ -77,9 +75,7 @@
     </div>\n
 \n
     <div id="portal-column-1"\n
-         tal:attributes="class python: test(isAnon, \n
-                                              \'portal-column-undraggable\', \n
-                                              \'portal-column\')"\n
+         tal:attributes="class column_css_class"\n
          tal:condition="python: columns>=2">\n
       <tal:block tal:condition="python: len(layout)>=2">\n
         <span tal:replace="structure python:\n
@@ -90,9 +86,7 @@
     </div>\n
 \n
     <div id="portal-column-2"\n
-         tal:attributes="class python: test(isAnon, \n
-                                              \'portal-column-undraggable\', \n
-                                              \'portal-column\')"\n
+         tal:attributes="class column_css_class"\n
          tal:condition="python: columns>=3">\n
       <tal:block tal:condition="python: len(layout)>=3">\n
         <span tal:replace="structure python:\n
@@ -106,7 +100,7 @@
 </div>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -121,8 +115,12 @@
             <value> <string>WebSection_viewDashboardWidget</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>Render draggable and droppable column structure</string> </value>
+            <value> <unicode>Render draggable and droppable column structure</unicode> </value>
         </item>
       </dictionary>
     </pickle>

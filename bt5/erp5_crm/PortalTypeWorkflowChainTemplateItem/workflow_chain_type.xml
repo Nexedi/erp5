@@ -36,6 +36,10 @@
   <workflow>edit_workflow, pricing_interaction_workflow, sale_opportunity_workflow, ticket_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Short Message</type>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Site Message</type>
   <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow</workflow>
  </chain>

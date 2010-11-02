@@ -163,7 +163,8 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
             return data
 
         ## get a path to output mime type
-        requirements = self._policies.get(str(target_mt), [])
+        requirements = self.getRequirementListByMimetype(str(orig_mt),
+                                                         str(target_mt))
         path = self._findPath(orig_mt, target_mt, list(requirements))
         if not path and requirements:
             log('Unable to satisfy requirements %s' % ', '.join(requirements),
@@ -194,6 +195,29 @@ class TransformTool(UniqueObject, ActionProviderBase, Folder):
 
         # return idatastream object
         return result
+
+    def getRequirementListByMimetype(self, origin_mimetype, target_mimetype):
+      """Return requirements only if origin_mimetype
+      and target_mimetype are matching transform policy
+
+      As an example pdf => text conversion force a transformation
+      to intermediate HTML format, because w3m_dump is a requirement
+      to output plain/text.
+      But we want using pdf_to_text directly.
+
+      So requirements are returned only if
+      origin_mimetype and target_mimetype sastify
+      the requirement: ie html_to_text is returned
+      only if origin_mimetype  == 'text/html' and
+      target_mimetype == 'text/plain'
+      """
+      result_list = []
+      candidate_requirement_list = self._policies.get(target_mimetype, [])
+      for candidate_requirement in candidate_requirement_list:
+        transform = getattr(self, candidate_requirement)
+        if origin_mimetype in transform.inputs:
+          result_list.append(candidate_requirement)
+      return result_list
 
     security.declarePublic('convertToData')
     def convertToData(self, target_mimetype, orig, data=None, object=None,

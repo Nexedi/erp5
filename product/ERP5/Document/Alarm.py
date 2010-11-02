@@ -374,7 +374,7 @@ Alarm Tool Node: %s
     alarm_date = self.getAlarmDate()
     if alarm_date is not None:
       if current_date is None:
-        # This is usefull to set the current date as parameter for
+        # This is useful to set the current date as parameter for
         # unit testing, by default it should be now
         current_date = DateTime()
       alarm_date = self.getNextPeriodicalDate(current_date, 

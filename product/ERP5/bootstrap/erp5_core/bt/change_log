@@ -1,3 +1,28 @@
+2010-11-01 nicolas.dumazet
+* remove my_type_factory_method_id from BaseType_view as type_class is replacing this field with portal type classes code
+* export migrated portal types with new type_class property
+
+2010-10-28 arnaud.fontaine
+* remove portal_property_sheets as it is now created in ERP5Site.py.
+
+2010-10-26 nicolas.dumazet
+* fix type classes of Property Sheet Tool and Property Sheet
+* add Template Tool filter for Portal Type classes XML changes
+
+2010-10-26 arnaud.fontaine
+* add id fields for all the views for ZODB Property Sheets.
+* add dynamic_class_generation_interaction_workflow to Property Sheet Tool.
+* clean up interactions in dynamic_class_generation_interaction_workflow.
+* add Category Existence Constraint and Property Existence Constraint to dynamic_class_generation_interaction_workflow.
+
+2010-10-20 Kazuhiko
+* use objectValues instead of searchFolder for portal_caches and portal_memcached's view.
+
+2010-10-19 arnaud.fontaine
+* add views and portal types for category and property existence constraints.
+* fix field names in Property Sheet and Property Sheet Tool views.
+* add description to Property Sheet view.
+
 2010-10-08 arnaud.fontaine
 * rename base_type_interaction_workflow to portal_type_class_interaction_workflow and add interactions specific to ZODB Property Sheets
 * modify type class of Standard Property, Acquired Property and Dynamic Category Property portal types to their respective documents.

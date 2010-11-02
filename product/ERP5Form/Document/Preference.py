@@ -59,6 +59,7 @@ class Preference( Folder ):
                     ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.DublinCore
+                    , PropertySheet.Preference
                     )
   
   # Declarative security

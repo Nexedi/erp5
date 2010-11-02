@@ -29,7 +29,7 @@ from Products.ERP5Type.ERP5Type import ERP5TypeInformation
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
 from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
-from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
+from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 
 
 class ComposedObjectIds(object):

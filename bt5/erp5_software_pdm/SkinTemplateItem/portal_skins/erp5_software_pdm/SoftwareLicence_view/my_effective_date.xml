@@ -2,13 +2,16 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
-        <tuple/>
-      </tuple>
+      <global name="ProxyField" module="Products.ERP5Form.ProxyField"/>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>delegated_list</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>my_effective_date</string> </value>
@@ -72,7 +75,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Document_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewSoftwarePDMFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

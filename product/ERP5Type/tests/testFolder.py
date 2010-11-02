@@ -240,8 +240,8 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       type_list = ['Folder', 'Category' ]
       self._setAllowedContentTypesForFolderType(type_list)
       obj = self.folder.newContent(portal_type="Category")
-      from_class_as_string = 'Products.ERP5Type.Document.Category.Category'
-      to_class_as_string = 'Products.ERP5Type.Document.Folder.Folder'
+      from_class_as_string = 'erp5.portal_type.Category'
+      to_class_as_string = 'erp5.portal_type.Folder'
       from_class = obj.__class__
       to_class = self.folder.__class__
       test_script = self._createUpgradeObjectClassPythonScript()

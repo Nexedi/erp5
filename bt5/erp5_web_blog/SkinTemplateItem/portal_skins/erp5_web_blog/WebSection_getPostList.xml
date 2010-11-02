@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -55,11 +52,10 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   This script returns the blog post that must be displayed in the current section.\n
-  The blog post are filtered through the tag parameter that is retrieved through\n
+  The blog post are filtered through the subject parameter that is retrieved through\n
   the GET parameters.\n
 \n
   TODO: XXX-JPS\n
-  - why don\'t you explicitly define subject as a parameter of the method\n
   - again, way too slow if this returns 1,000,000 documents\n
   - appropriate way is to either call context.getDocumentValueList(subject=subject, **kw)\n
     or context.getDocumentValueList(subject=subject), depending on your goal\n
@@ -68,15 +64,14 @@
 \n
 request = container.REQUEST\n
 \n
-requested_tag = request.get(\'tag\') # XXX-JPS it would be better to use subject which is the normal term in ERP5\n
 current_section = context.getWebSectionValue()\n
-result = []\n
-for item in current_section.WebSection_getDocumentValueList(): # XXX-JPS this could be way too slow\n
-  if requested_tag is not None:\n
-    if requested_tag in item.getSubjectList():\n
-      result.append(item)\n
-  else:\n
-    result.append(item)\n
+result = current_section.WebSection_getDocumentValueList(**kw)\n
+result_with_subject = []\n
+if subject is not None:\n
+  for item in result: # XXX-JPS this could be way too slow\n
+    if subject in item.getSubjectList():\n
+      result_with_subject.append(item)\n
+  return result_with_subject\n
 \n
 return result\n
 </string> </value>
@@ -89,7 +84,7 @@ return result\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>subject=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>errors</string> </key>
@@ -109,23 +104,25 @@ return result\n
                   <dictionary>
                     <item>
                         <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
+                        <value> <int>1</int> </value>
                     </item>
                     <item>
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
+                            <string>subject</string>
                             <string>kw</string>
                             <string>_getattr_</string>
                             <string>container</string>
                             <string>request</string>
-                            <string>requested_tag</string>
                             <string>context</string>
                             <string>current_section</string>
+                            <string>_apply_</string>
                             <string>result</string>
+                            <string>result_with_subject</string>
+                            <string>None</string>
                             <string>_getiter_</string>
                             <string>item</string>
-                            <string>None</string>
                           </tuple>
                         </value>
                     </item>
@@ -137,7 +134,9 @@ return result\n
         <item>
             <key> <string>func_defaults</string> </key>
             <value>
-              <none/>
+              <tuple>
+                <none/>
+              </tuple>
             </value>
         </item>
         <item>

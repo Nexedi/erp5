@@ -1793,7 +1793,7 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
       id=solver_id,
       tested_property_list=tested_property_list,
       automatic_solver=1,
-      type_factory_method_id='add%s' % solver_class,
+      type_class=solver_class,
       type_group_list=('target_solver',),
     )
     solver.setCriterion(property='portal_type',

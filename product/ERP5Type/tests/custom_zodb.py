@@ -1,3 +1,4 @@
+import errno
 import os
 import shutil
 import socket
@@ -9,7 +10,7 @@ from asyncore import socket_map
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
 from Products.ERP5Type.tests.utils import getMySQLArguments, instance_random
-from Products.ERP5Type.tests.runUnitTest import static_dir_list
+from Products.ERP5Type.tests.runUnitTest import static_dir_list, WIN
 
 def _print(message):
   sys.stderr.write(message + "\n")
@@ -45,9 +46,12 @@ if save_mysql:
     os.system(command)
 
 _print("Cleaning static files ... ")
-for dir in static_dir_list:
-  for f in glob.glob(os.path.join(instance_home, dir, '*')):
-    os.remove(f)
+for static_dir in static_dir_list:
+  static_dir = os.path.join(instance_home, static_dir)
+  if os.path.islink(static_dir):
+    os.remove(static_dir)
+  elif os.path.exists(static_dir):
+    shutil.rmtree(static_dir)
 
 if load:
   if save_mysql:
@@ -68,10 +72,19 @@ if load:
     else:
       backup_path = full_path + '.bak'
     if os.path.exists(backup_path):
-      os.rmdir(full_path)
-      shutil.copytree(backup_path, full_path, symlinks=True)
+      if not save or WIN:
+        shutil.copytree(backup_path, full_path, symlinks=True)
+      else:
+        if not live_instance_path:
+          backup_path = os.path.basename(backup_path)
+        os.symlink(backup_path, full_path)
 elif save and not zeo_client and os.path.exists(data_fs_path):
   os.remove(data_fs_path)
+
+for static_dir in static_dir_list:
+  static_dir = os.path.join(instance_home, static_dir)
+  if not os.path.exists(static_dir):
+    os.mkdir(static_dir)
 
 zeo_server_pid = None
 zeo_client_pid_list = []

@@ -81,8 +81,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>title</string>
-                          <string>Title</string>
+                          <string>id</string>
+                          <string>Name</string>
                         </tuple>
                       </list>
                     </value>

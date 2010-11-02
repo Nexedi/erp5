@@ -1,8 +1,2 @@
-2010-10-13 gabriel
-* Add jquery_plugin folder. This folder is used by erp5_web_ung_core.
-
-2010-06-30 yo
-* Add jquery-ui-1.8.2.
-
-2010-06-30 yo
-* The initial version.
+2010-11-01 kazuhiko
+* refactored version of erp5_jquery that only contains jQuery Core 1.4.3.

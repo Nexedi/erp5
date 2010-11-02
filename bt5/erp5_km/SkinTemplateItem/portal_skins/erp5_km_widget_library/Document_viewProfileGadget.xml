@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -62,7 +59,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>gadget</string>
+                <string>gadget-profile</string>
               </list>
             </value>
         </item>
@@ -71,7 +68,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>gadget</string> </key>
+                    <key> <string>gadget-profile</string> </key>
                     <value>
                       <list>
                         <string>document_profile_title</string>
@@ -106,7 +103,7 @@
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>gadget_tab_view</string> </value>
+            <value> <string>gadget_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>

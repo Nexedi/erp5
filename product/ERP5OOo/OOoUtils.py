@@ -199,12 +199,12 @@ class OOoBuilder(Implicit):
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
     return "%s%s" % (is_legacy and '#' or '', name,)
 
-  def render(self, name='', extension='sxw'):
+  def render(self, name='', extension='sxw', source=False):
     """
     returns the OOo document
     """
     request = get_request()
-    if name:
+    if name and not(source):
       request.response.setHeader('Content-Disposition',
                               'attachment; filename=%s.%s' % (name, extension))
 

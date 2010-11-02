@@ -60,6 +60,9 @@ portal = context.getPortalObject()\n
 document = request.get(\'current_web_document\', context)\n
 \n
 kw[\'reference\'] = document.getReference()\n
+if kw[\'reference\'] is None:\n
+  # we can not find other "verions" of this document as it doesn\'t have a reference\n
+  return []\n
 kw[\'uid\'] = \'!=%s\' %document.getUid()\n
 return portal.portal_catalog(**kw)\n
 </string> </value>
@@ -105,6 +108,8 @@ return portal.portal_catalog(**kw)\n
                             <string>portal</string>
                             <string>document</string>
                             <string>_write_</string>
+                            <string>_getitem_</string>
+                            <string>None</string>
                             <string>_apply_</string>
                           </tuple>
                         </value>

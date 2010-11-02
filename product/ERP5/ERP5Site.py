@@ -39,7 +39,7 @@ from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.Dynamic.portaltypeclass import synchronizeDynamicModules
+from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 
 from zLOG import LOG, INFO
 from string import join
@@ -180,6 +180,7 @@ class ReferCheckerBeforeTraverseHook:
             'request : "%s"' % http_url)
         response.unauthorized()
 
+import ZODB
 
 class _site(threading.local):
   """Class for getting and setting the site in the thread global namespace
@@ -190,13 +191,19 @@ class _site(threading.local):
     self = threading.local.__new__(cls)
     return self.__get, self.__set
 
-  def __get(self, REQUEST=None):
+  def __get(self, REQUEST=None,
+            # XXX Compatibility code (ZODB >= 3.9 has no __version__ anymore)
+            __opened='_opened'[getattr(ZODB, '__version__', '3.9') >= '3.9':]):
     """Returns the currently processed site, optionally wrapped in a request
     """
-    app, site_id = self.site[-1]
-    if REQUEST is None:
-      return getattr(app(), site_id)
-    return getattr(app().__of__(RequestContainer(REQUEST=REQUEST)), site_id)
+    while True:
+      app, site_id = self.site[-1]
+      app = app()
+      if getattr(app._p_jar, __opened):
+        if REQUEST is None:
+          return getattr(app, site_id)
+        return getattr(app.__of__(RequestContainer(REQUEST=REQUEST)), site_id)
+      del self.site[-1]
 
   def __set(self, site):
     app = aq_base(site.aq_parent)
@@ -1636,6 +1643,8 @@ class ERP5Generator(PortalGenerator):
       addTool('ERP5 Memcached Tool', None)
     if not p.hasObject('portal_types'):
       addTool('ERP5 Types Tool', None)
+    if not p.hasObject('portal_property_sheets'):
+      addTool('ERP5 Property Sheet Tool', None)
 
     try:
       addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool

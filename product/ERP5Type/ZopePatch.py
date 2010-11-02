@@ -62,6 +62,7 @@ from Products.ERP5Type.patches import make_hidden_input
 from Products.ERP5Type.patches import ClientStorage
 from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
+from Products.ERP5Type.patches import ZODBConnection
 # BACK: Forward Compatibility with Zope 2.12 or CMF 2.2. Remove when we've
 # dropped support for older versions.
 from Products.ERP5Type.patches import TransactionAddBeforeCommitHook

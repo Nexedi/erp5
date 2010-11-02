@@ -29,8 +29,6 @@
             <value>
               <tuple>
                 <string>account_type/asset/bank/cash</string>
-                <string>account_type/asset/bank/cash</string>
-                <string>account_type/asset/bank/cash</string>
               </tuple>
             </value>
         </item>
@@ -52,13 +50,17 @@
         </item>
         <item>
             <key> <string>int_index</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

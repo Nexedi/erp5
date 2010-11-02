@@ -33,8 +33,10 @@ class TranslatableProperty:
     _properties = (
         {   'id': 'translatable',
             'type': 'boolean',
-            'description' : 'Determines if the value is translatable' },
+            'description' : 'Determines if the value is translatable',
+            'default': False },
         {   'id': 'translation_domain',
             'type': 'string',
-            'description' : 'Define the translation domain' },
+            'description' : 'Define the translation domain',
+            'default': None },
         )

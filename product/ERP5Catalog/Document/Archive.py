@@ -31,7 +31,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import PropertySheet, Permissions, interfaces
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5.Document.Predicate import Predicate
+from Products.ERP5Type.Core.Predicate import Predicate
 from zope.interface import implements
 
 class Archive(Predicate):

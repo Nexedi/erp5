@@ -282,11 +282,11 @@ var addOnChangeEventHandler = function() {\n
           } \n
           /* Listbox or MatrixBox */\n
           if (nodes[j].nodeName == "DIV" && (\n
-              nodes[j].getAttribute("class") == "listbox" ||\n
+              nodes[j].getAttribute("class") == "listbox-container" ||\n
               nodes[j].getAttribute("class") == "MatrixContent")) {\n
             trs = nodes[j].getElementsByTagName(\'td\');\n
             for (k=0; k<trs.length; k++){\n
-              if (trs[k].getAttribute("class") == "listbox_search_line") {\n
+              if (trs[k].getAttribute("class") == "listbox-search-line") {\n
                 continue;\n
               }\n
               inputs = trs[k].getElementsByTagName(\'input\');\n

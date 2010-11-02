@@ -103,7 +103,7 @@ class Person:
     , 'mode'       : 'w'
     },
     { 'id'         : 'child_count'
-    , 'description': 'Number of childs.'
+    , 'description': 'Number of children.'
     , 'type'       : 'int'
     , 'mode'       : 'w'
     },

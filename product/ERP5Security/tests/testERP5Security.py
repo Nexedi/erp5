@@ -402,6 +402,14 @@ class TestUserManagement(ERP5TypeTestCase):
 
     self._assertUserExists('the_user', 'secret')
 
+  def test_PersonLoginIsPossibleToUnset(self):
+    """Make sure that it is possible to remove reference"""
+    person = self._makePerson(reference='foo', password='secret',)
+    person.setReference(None)
+    transaction.commit()
+    self.tic()
+    self.assertEqual(None, person.getReference())
+
 class TestLocalRoleManagement(ERP5TypeTestCase):
   """Tests Local Role Management with ERP5Security.
 

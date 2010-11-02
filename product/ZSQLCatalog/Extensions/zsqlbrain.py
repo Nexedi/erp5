@@ -15,26 +15,27 @@
 import string
 import Acquisition
 import sys
+import traceback
 from ZODB.POSException import ConflictError
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityInfo import allow_class
 
-from zLOG import LOG
+from zLOG import LOG, WARNING
 
 _MARKER = []
 
-class  ZSQLBrain(Acquisition.Implicit):
+class ZSQLBrain(Acquisition.Implicit):
   security = ClassSecurityInfo()
   security.declareObjectPublic()
 
   def _aq_dynamic(self, name):
-   """Acquire an attribute from a real object.
-   """
-   if name.startswith('__') :
-     return None
-   o = self.getObject()
-   return getattr(o, name, None)
+    """Acquire an attribute from a real object.
+    """
+    if name.startswith('__') :
+      return None
+    o = self.getObject()
+    return getattr(o, name, None)
 
   def getURL(self):
     return self.path
@@ -120,3 +121,38 @@ class  ZSQLBrain(Acquisition.Implicit):
       pass
 
 allow_class(ZSQLBrain)
+
+class ZSQLBrainNoObject(ZSQLBrain):
+  security = ClassSecurityInfo()
+  security.declareObjectPublic()
+  
+  def getObject(self):
+    stack = ''.join(traceback.format_stack())
+    LOG('Products.ZSQLCatalog.Extentions.zsqlbrain.ZSQLBrainNoObject', WARNING,
+        "Attempted direct access to object %r:\n%s" % (self.getPath(), stack))
+    return None
+
+  def getProperty(self, name, d=_MARKER, **kw):
+    value = None
+    if hasattr(self, name):
+      value = getattr(self, name)
+    else:
+      stack = ''.join(traceback.format_stack())
+      LOG('Products.ZSQLCatalog.Extentions.zsqlbrain.ZSQLBrainNoObject',
+          WARNING,
+          "Non-existing property %r on record for %r:\n%s" % (name,
+                                                              self.getPath(), 
+                                                              stack))
+      return None
+    return value
+
+  def _aq_dynamic(self, name):
+    """Do not acquire an attribute from a real object.
+    """
+    stack = ''.join(traceback.format_stack(limit=5))
+    LOG('Products.ZSQLCatalog.Extentions.zsqlbrain.ZSQLBrainNoObject', WARNING,
+        "Non-existing attribute %r on record for %r:\n%s" % (name,
+                                                             self.getPath(), 
+                                                             stack))
+allow_class(ZSQLBrainNoObject)
+

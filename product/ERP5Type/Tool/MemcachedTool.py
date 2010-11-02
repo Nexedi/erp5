@@ -101,6 +101,10 @@ if memcache is not None:
       self._initialiseConnection()
 
     def _initialiseConnection(self):
+      try:
+        self.memcached_connection.disconnect_all()
+      except AttributeError:
+        pass
       init_dict = {}
       if self.server_max_key_length is not MARKER:
         init_dict['server_max_key_length'] = self.server_max_key_length
@@ -164,15 +168,16 @@ if memcache is not None:
       # We need to register in this function too to be able to flush cache at 
       # transaction end.
       self._register()
+      if self.scheduled_action_dict.get(key) == DELETE_ACTION:
+        raise KeyError
       encoded_key = encodeKey(key)
       result = self.local_cache.get(key, MARKER)
       if result is MARKER:
-        result = self.memcached_connection.get(encoded_key)
-        if result is None:
+        try:
+          result = self.memcached_connection.get(encoded_key)
+        except memcache.Client.MemcachedConnectionError:
           self._initialiseConnection()
           result = self.memcached_connection.get(encoded_key)
-          if result is None:
-            raise KeyError, 'Key %s (was %s) not found.' % (encoded_key, key)
         self.local_cache[key] = result
       return result
 
@@ -204,8 +209,6 @@ if memcache is not None:
     def get(self, key, default=None):
       """
         Get an item from local cache, otherwise from memcached.
-        Note that because __getitem__ never raises error, 'default' will never
-        be used (None will be returned instead).
       """
       try:
         return self.__getitem__(key)

@@ -29,7 +29,7 @@ from cPickle import loads, dumps
 from types import TupleType
 from types import StringType
 from types import DictionaryType
-from OFS import XMLExportImport
+from OFS import ObjectManager, XMLExportImport
 
 from logging import getLogger
 log = getLogger(__name__)
@@ -177,6 +177,13 @@ def XMLrecord(oid, plen, p, id_mapping):
 XMLExportImport.XMLrecord = XMLrecord
 
 def exportXML(jar, oid, file=None):
+    # XXX: For performance reasons, we should change XMLExportImport/ppml code
+    #      so that we can call reorderPickle and XMLrecord only once.
+    #      This means we should be able to do a real export immediately.
+    #      This would also fix random failures when DemoStorage is used,
+    #      because oids can have values that have a shorter representation
+    #      in 'repr' instead of 'base64' (see ppml.convert) and ppml.String
+    #      does not support this.
 
     if file is None: file=TemporaryFile()
     elif type(file) is StringType: file=open(file,'w+b')
@@ -235,4 +242,4 @@ def exportXML(jar, oid, file=None):
     write('</ZopeData>\n')
     return file
 
-XMLExportImport.exportXML = exportXML
+ObjectManager.exportXML = XMLExportImport.exportXML = exportXML

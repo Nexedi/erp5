@@ -1,17 +1,4 @@
 <property_sheet_list>
- <portal_type id="Acquired Property">
-  <item>AcquiredProperty</item>
-  <item>SimpleItem</item>
-  <item>StandardProperty</item>
-  <item>TranslatableProperty</item>
- </portal_type>
- <portal_type id="Dynamic Category Property">
-  <item>DynamicCategoryProperty</item>
- </portal_type>
- <portal_type id="Standard Property">
-  <item>StandardProperty</item>
-  <item>TranslatableProperty</item>
- </portal_type>
  <portal_type id="Trash Bin">
   <item>Base</item>
   <item>SimpleItem</item>

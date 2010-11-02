@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,9 +34,9 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
-<div class="blog_rss"><a href="./Blog_viewAsRSS"><img src="blog_images/rss-image.png" alt="This blog as RSS" /></a></div>\n
+<div class="blog_rss"><a href="./Blog_viewAsRSS"><img src="erp5_web_blog_image/rss-image.png" alt="This blog as RSS" /></a></div>\n
 \n
 <tal:block tal:define="real_context here/getContext; \n
                        base_url_string real_context/absolute_url;\n
@@ -68,18 +65,18 @@
     <strong tal:content="structure date_rendered">date</strong>\n
   </small>\n
 \n
-  <small class="post_author">Author: <span tal:replace="author">Author</span></small> | <small class="post_category">Category: \n
-    <tal:block tal:repeat="category categories"><a tal:attributes="href python: \'%s?tag=%s\' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small>\n
+  <small class="post_author"><tal:block i18n:translate="" i18n:domain="ui">Author</tal:block>: <span tal:replace="author">Author</span></small><tal:block tal:condition="categories"> | <small class="post_category"><tal:block i18n:translate="" i18n:domain="ui">Category</tal:block>: \n
+    <tal:block tal:repeat="category categories"><a tal:attributes="href python: \'%s?subject=%s\' % (base_url_string, category)" tal:content="category">cat.</a><tal:block tal:condition="not: repeat/category/end"> ; </tal:block></tal:block></small></tal:block>\n
 \n
 </div><!--End post_head -->\n
 \n
   <div class="post_body" tal:replace="structure summary">Here is a blog post content</div>\n
 \n
-  <div class="post_read_more"><a tal:attributes="href url">Read more</a></div>\n
+  <div class="post_read_more"><a tal:attributes="href url" i18n:translate="" i18n:domain="ui">Read more</a></div>\n
   <div class="post_bottom">\n
-  <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> comment</a> | \n
-  Share: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="blog_images/facebook-button.png"></a>&nbsp;&nbsp;\n
-         <a title="Twitter" tal:attributes="href twitter_url"><img width="20px" alt="Twitter Logo" src="blog_images/twitter-button.png"></a>\n
+    <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> <tal:block i18n:translate="" i18n:domain="ui">comment</tal:block></a> | \n
+    <tal:block i18n:translate="" i18n:domain="ui">Share</tal:block>: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="erp5_web_blog_image/facebook-button.png"></a>&nbsp;&nbsp;\n
+         <a title="Twitter" tal:attributes="href twitter_url"><img width="20px" alt="Twitter Logo" src="erp5_web_blog_image/twitter-button.png"></a>\n
 \n
   </div><!--End post_bottom-->\n
 \n
@@ -90,9 +87,10 @@
 \n
     <tal:block tal:condition="not: repeat/line/end"><br /><hr class="post_separator" /></tal:block>\n
 \n
-</tal:block>
+</tal:block>\n
 
-]]></string> </value>
+
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -107,8 +105,12 @@
             <value> <string>ListBox_viewAsBlog</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

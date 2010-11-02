@@ -54,6 +54,10 @@ Sale Opportunity | create_new_file
 Sale Opportunity | document_list
 Sale Opportunity | new_event
 Sale Opportunity | view
+Short Message | assessment
+Short Message | preview
+Short Message | related_events
+Short Message | view
 Site Message | assessment
 Site Message | preview
 Site Message | related_events

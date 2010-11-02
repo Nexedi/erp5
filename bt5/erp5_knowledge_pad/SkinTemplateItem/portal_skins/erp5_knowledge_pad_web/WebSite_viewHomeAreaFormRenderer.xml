@@ -34,11 +34,8 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
-<link href="erp5_knowledge_box_web_3columns.css" \n
-      rel="stylesheet" \n
-      type="text/css" />\n
 <tal:block  \n
   tal:define="mode python: \'web_front\';\n
               default_pad_group python: \'\';\n
@@ -117,7 +114,7 @@
 </tal:block>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -132,8 +129,12 @@
             <value> <string>WebSite_viewHomeAreaFormRenderer</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
