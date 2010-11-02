@@ -55,7 +55,7 @@
 \'\'\'\n
 \n
 web_site = context.getWebSiteValue()\n
-blog_section_id = context.getLayoutProperty(\'layout_blog_section_id\', default=\'blog\')\n
+blog_section_id = web_site.getLayoutProperty(\'layout_blog_section_id\', default=\'blog\')\n
 blog = getattr(web_site, blog_section_id, None)\n
 if blog is None:\n
   raise ValueError, \'Impossible to find %r blog section id. Please check \'\\\n
