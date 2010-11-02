@@ -16,40 +16,40 @@ ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
   if x[0] not in ('__dict__', '__module__', '__weakref__')))
 
 class GhostPortalType(ERP5Base): #SimpleItem
-    """
-    Ghost state for a portal type that is not loaded.
+  """
+  Ghost state for a portal type that is not loaded.
 
-    One instance of this class exists per portal type class on the system.
-    When an object of this portal type is loaded (a new object is created,
-    or an attribute of an existing object is accessed) this class will
-    change the bases of the portal type class so that it points to the
-    correct Document+Mixin+interfaces+AccessorHolder classes.
-    """
-    def __init__(self, *args, **kw):
-        self.__class__.loadClass()
-        getattr(self, '__init__')(*args, **kw)
+  One instance of this class exists per portal type class on the system.
+  When an object of this portal type is loaded (a new object is created,
+  or an attribute of an existing object is accessed) this class will
+  change the bases of the portal type class so that it points to the
+  correct Document+Mixin+interfaces+AccessorHolder classes.
+  """
+  def __init__(self, *args, **kw):
+    self.__class__.loadClass()
+    getattr(self, '__init__')(*args, **kw)
 
-    def __getattribute__(self, attr):
-        """
-        This is only called once to load the class.
-        Because __bases__ is changed, the behavior of this object
-        will change after the first call.
-        """
-        # Class must be loaded if '__of__' is requested because otherwise,
-        # next call to __getattribute__ would lose any acquisition wrapper.
-        if attr in ('__class__',
-                    '__getnewargs__',
-                    '__getstate__',
-                    '__dict__',
-                    '__module__',
-                    '__name__',
-                    '__repr__',
-                    '__str__') or attr[:3] in ('_p_', '_v_'):
-            return super(GhostPortalType, self).__getattribute__(attr)
-        #LOG("ERP5Type.Dynamic", BLATHER,
-        #    "loading attribute %s.%s..." % (name, attr))
-        self.__class__.loadClass()
-        return getattr(self, attr)
+  def __getattribute__(self, attr):
+    """
+    This is only called once to load the class.
+    Because __bases__ is changed, the behavior of this object
+    will change after the first call.
+    """
+    # Class must be loaded if '__of__' is requested because otherwise,
+    # next call to __getattribute__ would lose any acquisition wrapper.
+    if attr in ('__class__',
+                '__getnewargs__',
+                '__getstate__',
+                '__dict__',
+                '__module__',
+                '__name__',
+                '__repr__',
+                '__str__') or attr[:3] in ('_p_', '_v_'):
+      return super(GhostPortalType, self).__getattribute__(attr)
+    #LOG("ERP5Type.Dynamic", BLATHER,
+    #    "loading attribute %s.%s..." % (name, attr))
+    self.__class__.loadClass()
+    return getattr(self, attr)
 
 class PortalTypeMetaClass(ExtensionClass):
   """
@@ -88,9 +88,9 @@ class PortalTypeMetaClass(ExtensionClass):
     InitializeClass(cls)
 
     # And we need to do the same thing on subclasses
-    for subcls in PortalTypeMetaClass.getSubclassList(cls):
-      pmc_init_of(subcls)
-      InitializeClass(subcls)
+    for subclass in PortalTypeMetaClass.getSubclassList(cls):
+      pmc_init_of(subclass)
+      InitializeClass(subclass)
 
   def restoreGhostState(cls):
     ghostbase = getattr(cls, '__ghostbase__', None)
@@ -132,4 +132,4 @@ class PortalTypeMetaClass(ExtensionClass):
     klass.resetAcquisitionAndSecurity()
 
 def generateLazyPortalTypeClass(portal_type_name):
-    return PortalTypeMetaClass(portal_type_name, (GhostPortalType,), {})
+  return PortalTypeMetaClass(portal_type_name, (GhostPortalType,), {})
