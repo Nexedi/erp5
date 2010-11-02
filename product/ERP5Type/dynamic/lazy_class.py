@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import gc, sys
+import sys
 from Products.ERP5Type.Base import Base as ERP5Base
 from ExtensionClass import Base as ExtensionBase
 from ZODB.broken import Broken, PersistentBroken
@@ -13,12 +13,36 @@ ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
   if x[0] not in ('__dict__', '__module__', '__weakref__')))
 
 ExtensionClass = type(ExtensionBase)
+
+class PortalTypeMetaClass(ExtensionClass):
+  """
+  Meta class that will be used by portal type classes
+  """
+  # register which classes subclass portal type classes
+  subclass_register = {} # XXX ideal defaultdict(list) wannabe
+  def __init__(cls, name, bases, dictionary):
+    """
+    This method is called when a portal type class is
+    created, or when a class inheriting a portal type
+    class is created
+    """
+    for parent in bases:
+      if issubclass(type(parent), PortalTypeMetaClass):
+        PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
+
+    super(PortalTypeMetaClass, cls).__init__(name, bases, dictionary)
+
+  @classmethod
+  def getSubclassList(metacls, cls):
+    """
+    Returns classes deriving from cls
+    """
+    return metacls.subclass_register.get(cls, [])
+
 def InitializePortalTypeClass(klass):
-  # beware of the scary meta type
   ExtensionClass.__init__(klass, klass)
-  for klass in gc.get_referrers(klass):
-    if isinstance(klass, ExtensionClass):
-      InitializePortalTypeClass(klass)
+  for klass in PortalTypeMetaClass.getSubclassList(klass):
+    ExtensionClass.__init__(klass, klass)
 
 def generateLazyPortalTypeClass(portal_type_name,
                                 portal_type_class_loader):
@@ -87,4 +111,4 @@ def generateLazyPortalTypeClass(portal_type_name,
             #    "loading attribute %s.%s..." % (name, attr))
             return load(self, attr)
 
-    return type(portal_type_name, (GhostPortalType,), dict())
+    return PortalTypeMetaClass(portal_type_name, (GhostPortalType,), dict())
