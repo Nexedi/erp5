@@ -143,6 +143,7 @@
                         <string>my_listbox_selection_list_lines</string>
                         <string>my_preferred_header_title</string>
                         <string>listbox_modification_date</string>
+                        <string>listbox_getSummaryAsHTML</string>
                       </list>
                     </value>
                 </item>
