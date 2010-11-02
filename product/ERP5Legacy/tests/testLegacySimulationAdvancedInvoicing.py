@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+#          Julien Muchembled <jm@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# guarantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -25,17 +26,12 @@
 #
 ##############################################################################
 
-def Legacy_getBusinessTemplateList(cls):
-  getBusinessTemplateList = cls.getBusinessTemplateList
-  def Legacy_getBusinessTemplateList(self):
-    bt_list = []
-    for bt in getBusinessTemplateList(self):
-      if bt != 'erp5_simulation_test' and bt not in bt_list:
-        bt_list.append(bt)
-        if bt == 'erp5_simulation':
-          bt_list.append(bt +  '_legacy')
-        elif bt in ('erp5_accounting', 'erp5_invoicing', 'erp5_mrp',
-                    'erp5_project', 'erp5_trade'):
-          bt_list.append(bt +  '_simulation_legacy')
-    return tuple(bt_list)
-  cls.getBusinessTemplateList = Legacy_getBusinessTemplateList
+import sys
+from Products.ERP5Legacy.tests import testLegacySimulationInvoice
+sys.modules['Products.ERP5.tests.testInvoice'] = testLegacySimulationInvoice
+
+from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
+from Products.ERP5.tests.testAdvancedInvoicing import *
+
+Legacy_getBusinessTemplateList(TestAdvancedInvoice)
+TestAdvancedInvoice.business_process = None

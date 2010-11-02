@@ -143,6 +143,9 @@ class TestInvoiceMixin(TestPackingListMixin):
     user = uf.getUserById('test_invoice_user').__of__(uf)
     newSecurityManager(None, user)
 
+  def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
+    pass # see createBusinessProcess
+
   ## XXX move this to "Sequence class"
   def playSequence(self, sequence_string, quiet=0) :
     sequence_list = SequenceList()

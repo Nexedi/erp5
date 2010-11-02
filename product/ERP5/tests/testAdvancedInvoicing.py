@@ -37,7 +37,7 @@ from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testInvoice import TestSaleInvoiceMixin
+from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 
 class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   """Test methods for sale and purchase invoice.
@@ -364,6 +364,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
                               portal_type='Organisation', title='Vendor')
     invoice = self.portal.getDefaultModule(self.invoice_portal_type).newContent(
                               portal_type=self.invoice_portal_type,
+                              specialise=self.business_process,
                               start_date=DateTime(2008, 12, 31),
                               title='Invoice',
                               source_value=vendor,
