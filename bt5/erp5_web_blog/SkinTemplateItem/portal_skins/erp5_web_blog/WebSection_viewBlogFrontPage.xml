@@ -88,6 +88,7 @@
                     <value>
                       <list>
                         <string>listbox_effective_date</string>
+                        <string>listbox_contributor</string>
                       </list>
                     </value>
                 </item>
@@ -96,7 +97,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_contributor</string>
                       </list>
                     </value>
                 </item>
