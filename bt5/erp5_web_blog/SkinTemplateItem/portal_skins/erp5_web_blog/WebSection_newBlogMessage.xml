@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+portal_type = \'Web Page\'\n
+module = portal.getDefaultModule(portal_type=portal_type)\n
+\n
+authenticated_member = context.ERP5Site_getAuthenticatedMemberPersonValue()\n
+contributor_list=[]\n
+if authenticated_member is not None:\n
+  contributor_list.append(authenticated_member.getRelativeUrl())\n
+article = module.newContent(portal_type=portal_type,\n
+                  title=title,\n
+                  version=version,\n
+                  text_content=text_content,\n
+                  subject_list=subject_list,\n
+                  site_list=site_list,\n
+                  reference=reference,\n
+                  publication_section_list=publication_section_list,\n
+                  language=language,\n
+                  group_list=group_list,\n
+                  function_list=function_list,\n
+                  effective_date=effective_date,\n
+                  classification=classification,\n
+                  contributor_list=contributor_list,)\n
+\n
+portal_status_message = context.Base_translateString("New Blog Message created.")\n
+return article.Base_redirect(\'\', keep_items = dict(portal_status_message=portal_status_message ))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_code</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>classification=None, effective_date=None, function_list=None, group_list=None, language=None, publication_section_list=None, reference=None, site_list=None, subject_list=None, text_content=None, title=None, version=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>errors</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_code</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>co_argcount</string> </key>
+                        <value> <int>12</int> </value>
+                    </item>
+                    <item>
+                        <key> <string>co_varnames</string> </key>
+                        <value>
+                          <tuple>
+                            <string>classification</string>
+                            <string>effective_date</string>
+                            <string>function_list</string>
+                            <string>group_list</string>
+                            <string>language</string>
+                            <string>publication_section_list</string>
+                            <string>reference</string>
+                            <string>site_list</string>
+                            <string>subject_list</string>
+                            <string>text_content</string>
+                            <string>title</string>
+                            <string>version</string>
+                            <string>kw</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
+                            <string>portal_type</string>
+                            <string>module</string>
+                            <string>authenticated_member</string>
+                            <string>contributor_list</string>
+                            <string>None</string>
+                            <string>article</string>
+                            <string>portal_status_message</string>
+                            <string>dict</string>
+                          </tuple>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>func_defaults</string> </key>
+            <value>
+              <tuple>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+                <none/>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_newBlogMessage</string> </value>
+        </item>
+        <item>
+            <key> <string>warnings</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
