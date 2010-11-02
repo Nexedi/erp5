@@ -182,6 +182,7 @@
                         <string>matrixbox_non_discountable_additional_price</string>
                         <string>my_non_discountable_additional_price_quantity_step_list</string>
                         <string>matrixbox_max_stock</string>
+                        <string>my_portal_variation_base_category_list</string>
                       </list>
                     </value>
                 </item>
