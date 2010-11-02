@@ -17,8 +17,10 @@ class PortalTypeMetaClass(ExtensionClass):
   """
   Meta class that will be used by portal type classes
   """
+
   # register which classes subclass portal type classes
   subclass_register = {} # XXX ideal defaultdict(list) wannabe
+
   def __init__(cls, name, bases, dictionary):
     """
     This method is called when a portal type class is
@@ -38,19 +40,19 @@ class PortalTypeMetaClass(ExtensionClass):
     """
     return metacls.subclass_register.get(cls, [])
 
-def InitializePortalTypeClass(klass):
-  # First, fill the __get__ slot of the class
-  # that has been null'ed after resetting its __bases__
-  # This descriptor is the magic allowing __of__ and our
-  # _aq_dynamic trick
-  pmc_init_of(klass)
-  # Then, call __class_init__ on the class for security
-  InitializeClass(klass)
+  def resetAcquisitionAndSecurity(cls):
+    # First, fill the __get__ slot of the class
+    # that has been null'ed after resetting its __bases__
+    # This descriptor is the magic allowing __of__ and our
+    # _aq_dynamic trick
+    pmc_init_of(cls)
+    # Then, call __class_init__ on the class for security
+    InitializeClass(cls)
 
-  # And we need to do the same thing on subclasses
-  for klass in PortalTypeMetaClass.getSubclassList(klass):
-    pmc_init_of(klass)
-    InitializeClass(klass)
+    # And we need to do the same thing on subclasses
+    for subcls in PortalTypeMetaClass.getSubclassList(cls):
+      pmc_init_of(subcls)
+      InitializeClass(subcls)
 
 def generateLazyPortalTypeClass(portal_type_name,
                                 portal_type_class_loader):
@@ -81,7 +83,7 @@ def generateLazyPortalTypeClass(portal_type_name,
         for key, value in attributes.iteritems():
           setattr(klass, key, value)
 
-        InitializePortalTypeClass(klass)
+        klass.resetAcquisitionAndSecurity()
 
         return getattr(self, attr)
 

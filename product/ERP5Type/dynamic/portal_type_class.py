@@ -33,7 +33,7 @@ import inspect
 from types import ModuleType
 
 from dynamic_module import registerDynamicModule
-from lazy_class import generateLazyPortalTypeClass, InitializePortalTypeClass
+from lazy_class import generateLazyPortalTypeClass
 
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Globals import InitializeClass
@@ -308,7 +308,7 @@ def synchronizeDynamicModules(context, force=False):
         if attr != '__module__':
           delattr(klass, attr)
       klass.__bases__ = ghostbase
-      InitializePortalTypeClass(klass)
+      klass.resetAcquisitionAndSecurity()
 
   # Clear accessor holders of ZODB Property Sheets
   _clearAccessorHolderModule(erp5.zodb_accessor_holder)
