@@ -14,7 +14,9 @@ class DynamicModule(ModuleType):
         if name == '__path__':
             raise AttributeError('%s does not have __path__' % (self,))
         obj = self._factory(name)
-        if hasattr(obj, '__module__'):
+        # _factory can return an instance, a constant, or a class
+        if isinstance(obj, type):
+            # if it's a class we want to set __module__
             obj.__module__ = self.__name__
         setattr(self, name, obj)
         return obj
