@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80061401.32</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>closepath_icons.svg</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg xmlns="http://www.w3.org/2000/svg">\n
+<g id="tool_closepath">\n
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n
+ <g>\n
+  <title>Layer 1</title>\n
+  <path stroke="#000" stroke-width="15" fill="#ffc8c8" d="m121.5,40l-84,106l27,115l166,2l29,-111"/>\n
+  <line x1="240" y1="136" x2="169.5" y2="74" stroke="#A00" stroke-width="25" fill="none"/>\n
+  <path stroke="none" fill ="#A00" d="m158,65l31,74l-3,-50l51,-3z"/>\n
+  <g stroke-width="15" stroke="#00f" fill="#0ff">\n
+  <circle r="30" cy="41" cx="123"/>\n
+  <circle r="30" cy="146" cx="40"/>\n
+  <circle r="30" cy="260" cx="69"/>\n
+  <circle r="30" cy="260" cx="228"/>\n
+  <circle r="30" cy="148" cx="260"/>\n
+  </g>\n
+ </g>\n
+</svg>\n
+</g>\n
+<g id="tool_openpath">\n
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n
+ <g>\n
+  <title>Layer 1</title>\n
+  <path stroke="#000" stroke-width="15" fill="#ffc8c8" d="m123.5,38l-84,106l27,115l166,2l29,-111"/>\n
+  <line x1="276.5" y1="153" x2="108.5" y2="24" stroke="#000" stroke-width="10" fill="none"/>\n
+  <g stroke-width="15" stroke="#00f" fill="#0ff">\n
+   <circle r="30" cy="41" cx="123"/>\n
+   <circle r="30" cy="146" cx="40"/>\n
+   <circle r="30" cy="260" cx="69"/>\n
+   <circle r="30" cy="260" cx="228"/>\n
+   <circle r="30" cy="148" cx="260"/>\n
+  </g>\n
+  <g  stroke="#A00" stroke-width="15" fill="none">\n
+   <line x1="168" y1="24" x2="210" y2="150"/>\n
+   <line x1="210" y1="24" x2="168" y2="150"/>\n
+  </g>\n
+ </g>\n
+</svg>\n
+</g>\n
+\n
+<g id="svg_eof"/>\n
+</svg>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1507</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

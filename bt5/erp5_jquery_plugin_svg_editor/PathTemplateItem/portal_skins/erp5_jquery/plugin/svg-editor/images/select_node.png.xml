@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80005899.91</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>select_node.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAAt5JREFUeNqklk9Ik3EYx593/93UJluWFyMINqI8uGHgpYgm4aVDNw9Z
+QXQRS8pjsDoLttihQ3SJdYgOIgZh0mGi4EUCp7QQhHYQBWVu794/+/f0/b2lTJvi3v3Gd+/v97zP
++3ze53l+vzFiZqqn51F20nW+TSGewnUMa+9xvidJEl+1I7VG1qsP6S6VKUSMK9FFKA99Izt9WnlP
+n69cpsMPnTSOEs/e4j7q5VW6zyqluEoyjKvQMOYhzpyP8M1GMji0SC6yBUGiFGGdNBjKzJOqxsEK
+5joUAaSXJ+cXWTotwFKbTXpdpERWiqBANswloqcuJ81qCl0Q64iwUPjnOjlOW6FDgMAlI2jFqLlk
+wIxiv45GaQ6Qc27DzQfZTQEOMpijEj5GBiLNyYkJ+hiL0eyAQv4O0owXaaLJA6jzbzTZaG65WmWL
+xSIS4dibt5z6Jefg5zHVZKGVVTT6Gj8CZApSSqUKW61WAyBJEicSCTWXy83D12EKsK/xl9xBN3gc
+gKrNZuO/HSEDNjMzUwDkC/yspgH7KmPY7fYDgJDD4eBkMinn8/kEfKSmASJgLUDI4/Hw8vKyXCgU
+4s0CSk6n8z+AkNfr5XQ6LSCvTANKGC6Xqy5AqLOzkzOZjKxp2hOzgGJLS8uxAKHu7m7e3t6Wke29
+hgFFDLfbXTew3+/nrq4u9vl8HA6HGTtLwTN3GgXooqFHg4vture3V9R1XUF5FOFXqVTKgCw0CtBa
+W1uNoP39/Tw6OqrtQ+LxuIaAH5raRXhDra2tjYPBIGezWQVrXeweAWhvb+fd3d0C/PqaAgQCAd7c
+3CygicMI+H1oaOigVJhXkcUafC1mAerGxoaCvf7in+3B9PR0vrYfS0tLOdT/sSkAeoAXzL2rsfkV
+RdFqD19PTw+rqprHvTMNA0TAo+nv7Oz8GBwcZHE+RkZGqltbWzJKt1DvF5bM/BXB4XuWSqWKoukI
+/BW20HG+fwQYANs5OOUM6VNHAAAAAElFTkSuQmCC</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>828</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>24</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

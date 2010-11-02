@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80061380.7</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>helloworld-icon.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<svg xmlns="http://www.w3.org/2000/svg">\n
+<!-- \n
+\tSample icons file. This file looks like an SVG file with groups as its\n
+\tchildren. Each group element has an ID that must match the ID of the button given\n
+\tin the extension. The SVG inside the group makes up the actual icon, and\n
+\tneeds use a viewBox instead of width/height for it to scale\tproperly.\n
+\t\n
+\tMultiple icons can be included, each within their own group.\n
+-->\n
+\t<g id="hello_world">\n
+\t\t<svg width="102" height="102" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\n
+\t\t <!-- Created with SVG-edit - http://svg-edit.googlecode.com/ -->\n
+\t\t <g>\n
+\t\t  <title>Layer 1</title>\n
+\t\t  <rect ry="30" rx="30" x="2.5" y="2.5" width="97" height="97" id="svg_3" fill="#008000" stroke="#000000" stroke-width="5"/>\n
+\t\t  <text x="52.668" y="42.5" id="svg_1" fill="#ffffff" stroke="#000000" stroke-width="0" font-size="24" font-family="Monospace" text-anchor="middle" xml:space="preserve">Hello</text>\n
+\t\t  <text x="52.668" y="71.5" fill="#ffffff" stroke="#000000" stroke-width="0" font-size="24" font-family="Monospace" text-anchor="middle" xml:space="preserve" id="svg_2">World!</text>\n
+\t\t </g>\n
+\t\t</svg>\n
+\t</g>\n
+</svg>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1175</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

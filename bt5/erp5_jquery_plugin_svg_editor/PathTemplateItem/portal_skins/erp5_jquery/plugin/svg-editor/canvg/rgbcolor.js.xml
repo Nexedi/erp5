@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80002935.08</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>rgbcolor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/**\n
+ * A class to parse color values\n
+ * @author Stoyan Stefanov <sstoo@gmail.com>\n
+ * @link   http://www.phpied.com/rgb-color-parser-in-javascript/\n
+ * @license Use it if you like it\n
+ */\n
+function RGBColor(color_string)\n
+{\n
+    this.ok = false;\n
+\n
+    // strip any leading #\n
+    if (color_string.charAt(0) == \'#\') { // remove # if any\n
+        color_string = color_string.substr(1,6);\n
+    }\n
+\n
+    color_string = color_string.replace(/ /g,\'\');\n
+    color_string = color_string.toLowerCase();\n
+\n
+    // before getting into regexps, try simple matches\n
+    // and overwrite the input\n
+    var simple_colors = {\n
+        aliceblue: \'f0f8ff\',\n
+        antiquewhite: \'faebd7\',\n
+        aqua: \'00ffff\',\n
+        aquamarine: \'7fffd4\',\n
+        azure: \'f0ffff\',\n
+        beige: \'f5f5dc\',\n
+        bisque: \'ffe4c4\',\n
+        black: \'000000\',\n
+        blanchedalmond: \'ffebcd\',\n
+        blue: \'0000ff\',\n
+        blueviolet: \'8a2be2\',\n
+        brown: \'a52a2a\',\n
+        burlywood: \'deb887\',\n
+        cadetblue: \'5f9ea0\',\n
+        chartreuse: \'7fff00\',\n
+        chocolate: \'d2691e\',\n
+        coral: \'ff7f50\',\n
+        cornflowerblue: \'6495ed\',\n
+        cornsilk: \'fff8dc\',\n
+        crimson: \'dc143c\',\n
+        cyan: \'00ffff\',\n
+        darkblue: \'00008b\',\n
+        darkcyan: \'008b8b\',\n
+        darkgoldenrod: \'b8860b\',\n
+        darkgray: \'a9a9a9\',\n
+        darkgreen: \'006400\',\n
+        darkkhaki: \'bdb76b\',\n
+        darkmagenta: \'8b008b\',\n
+        darkolivegreen: \'556b2f\',\n
+        darkorange: \'ff8c00\',\n
+        darkorchid: \'9932cc\',\n
+        darkred: \'8b0000\',\n
+        darksalmon: \'e9967a\',\n
+        darkseagreen: \'8fbc8f\',\n
+        darkslateblue: \'483d8b\',\n
+        darkslategray: \'2f4f4f\',\n
+        darkturquoise: \'00ced1\',\n
+        darkviolet: \'9400d3\',\n
+        deeppink: \'ff1493\',\n
+        deepskyblue: \'00bfff\',\n
+        dimgray: \'696969\',\n
+        dodgerblue: \'1e90ff\',\n
+        feldspar: \'d19275\',\n
+        firebrick: \'b22222\',\n
+        floralwhite: \'fffaf0\',\n
+        forestgreen: \'228b22\',\n
+        fuchsia: \'ff00ff\',\n
+        gainsboro: \'dcdcdc\',\n
+        ghostwhite: \'f8f8ff\',\n
+        gold: \'ffd700\',\n
+        goldenrod: \'daa520\',\n
+        gray: \'808080\',\n
+        green: \'008000\',\n
+        greenyellow: \'adff2f\',\n
+        honeydew: \'f0fff0\',\n
+        hotpink: \'ff69b4\',\n
+        indianred : \'cd5c5c\',\n
+        indigo : \'4b0082\',\n
+        ivory: \'fffff0\',\n
+        khaki: \'f0e68c\',\n
+        lavender: \'e6e6fa\',\n
+        lavenderblush: \'fff0f5\',\n
+        lawngreen: \'7cfc00\',\n
+        lemonchiffon: \'fffacd\',\n
+        lightblue: \'add8e6\',\n
+        lightcoral: \'f08080\',\n
+        lightcyan: \'e0ffff\',\n
+        lightgoldenrodyellow: \'fafad2\',\n
+        lightgrey: \'d3d3d3\',\n
+        lightgreen: \'90ee90\',\n
+        lightpink: \'ffb6c1\',\n
+        lightsalmon: \'ffa07a\',\n
+        lightseagreen: \'20b2aa\',\n
+        lightskyblue: \'87cefa\',\n
+        lightslateblue: \'8470ff\',\n
+        lightslategray: \'778899\',\n
+        lightsteelblue: \'b0c4de\',\n
+        lightyellow: \'ffffe0\',\n
+        lime: \'00ff00\',\n
+        limegreen: \'32cd32\',\n
+        linen: \'faf0e6\',\n
+        magenta: \'ff00ff\',\n
+        maroon: \'800000\',\n
+        mediumaquamarine: \'66cdaa\',\n
+        mediumblue: \'0000cd\',\n
+        mediumorchid: \'ba55d3\',\n
+        mediumpurple: \'9370d8\',\n
+        mediumseagreen: \'3cb371\',\n
+        mediumslateblue: \'7b68ee\',\n
+        mediumspringgreen: \'00fa9a\',\n
+        mediumturquoise: \'48d1cc\',\n
+        mediumvioletred: \'c71585\',\n
+        midnightblue: \'191970\',\n
+        mintcream: \'f5fffa\',\n
+        mistyrose: \'ffe4e1\',\n
+        moccasin: \'ffe4b5\',\n
+        navajowhite: \'ffdead\',\n
+        navy: \'000080\',\n
+        oldlace: \'fdf5e6\',\n
+        olive: \'808000\',\n
+        olivedrab: \'6b8e23\',\n
+        orange: \'ffa500\',\n
+        orangered: \'ff4500\',\n
+        orchid: \'da70d6\',\n
+        palegoldenrod: \'eee8aa\',\n
+        palegreen: \'98fb98\',\n
+        paleturquoise: \'afeeee\',\n
+        palevioletred: \'d87093\',\n
+        papayawhip: \'ffefd5\',\n
+        peachpuff: \'ffdab9\',\n
+        peru: \'cd853f\',\n
+        pink: \'ffc0cb\',\n
+        plum: \'dda0dd\',\n
+        powderblue: \'b0e0e6\',\n
+        purple: \'800080\',\n
+        red: \'ff0000\',\n
+        rosybrown: \'bc8f8f\',\n
+        royalblue: \'4169e1\',\n
+        saddlebrown: \'8b4513\',\n
+        salmon: \'fa8072\',\n
+        sandybrown: \'f4a460\',\n
+        seagreen: \'2e8b57\',\n
+        seashell: \'fff5ee\',\n
+        sienna: \'a0522d\',\n
+        silver: \'c0c0c0\',\n
+        skyblue: \'87ceeb\',\n
+        slateblue: \'6a5acd\',\n
+        slategray: \'708090\',\n
+        snow: \'fffafa\',\n
+        springgreen: \'00ff7f\',\n
+        steelblue: \'4682b4\',\n
+        tan: \'d2b48c\',\n
+        teal: \'008080\',\n
+        thistle: \'d8bfd8\',\n
+        tomato: \'ff6347\',\n
+        turquoise: \'40e0d0\',\n
+        violet: \'ee82ee\',\n
+        violetred: \'d02090\',\n
+        wheat: \'f5deb3\',\n
+        white: \'ffffff\',\n
+        whitesmoke: \'f5f5f5\',\n
+        yellow: \'ffff00\',\n
+        yellowgreen: \'9acd32\'\n
+    };\n
+    for (var key in simple_colors) {\n
+        if (color_string == key) {\n
+            color_string = simple_colors[key];\n
+        }\n
+    }\n
+    // emd of simple type-in colors\n
+\n
+    // array of color definition objects\n
+    var color_defs = [\n
+        {\n
+            re: /^rgb\\((\\d{1,3}),\\s*(\\d{1,3}),\\s*(\\d{1,3})\\)$/,\n
+            example: [\'rgb(123, 234, 45)\', \'rgb(255,234,245)\'],\n
+            process: function (bits){\n
+                return [\n
+                    parseInt(bits[1]),\n
+                    parseInt(bits[2]),\n
+                    parseInt(bits[3])\n
+];\n
+            }\n
+        },\n
+        {\n
+            re: /^(\\w{2})(\\w{2})(\\w{2})$/,\n
+            example: [\'#00ff00\', \'336699\'],\n
+            process: function (bits){\n
+                return [\n
+                    parseInt(bits[1], 16),\n
+                    parseInt(bits[2], 16),\n
+                    parseInt(bits[3], 16)\n
+];\n
+            }\n
+        },\n
+        {\n
+            re: /^(\\w{1})(\\w{1})(\\w{1})$/,\n
+            example: [\'#fb0\', \'f0f\'],\n
+            process: function (bits){\n
+                return [\n
+                    parseInt(bits[1] + bits[1], 16),\n
+                    parseInt(bits[2] + bits[2], 16),\n
+                    parseInt(bits[3] + bits[3], 16)\n
+];\n
+            }\n
+        }\n
+];\n
+\n
+    // search through the definitions to find a match\n
+    for (var i = 0; i < color_defs.length; i++) {\n
+        var re = color_defs[i].re;\n
+        var processor = color_defs[i].process;\n
+        var bits = re.exec(color_string);\n
+        if (bits) {\n
+            channels = processor(bits);\n
+            this.r = channels[0];\n
+            this.g = channels[1];\n
+            this.b = channels[2];\n
+            this.ok = true;\n
+        }\n
+\n
+    }\n
+\n
+    // validate/cleanup values\n
+    this.r = (this.r < 0 || isNaN(this.r)) ? 0 : ((this.r > 255) ? 255 : this.r);\n
+    this.g = (this.g < 0 || isNaN(this.g)) ? 0 : ((this.g > 255) ? 255 : this.g);\n
+    this.b = (this.b < 0 || isNaN(this.b)) ? 0 : ((this.b > 255) ? 255 : this.b);\n
+\n
+    // some getters\n
+    this.toRGB = function () {\n
+        return \'rgb(\' + this.r + \', \' + this.g + \', \' + this.b + \')\';\n
+    }\n
+    this.toHex = function () {\n
+        var r = this.r.toString(16);\n
+        var g = this.g.toString(16);\n
+        var b = this.b.toString(16);\n
+        if (r.length == 1) r = \'0\' + r;\n
+        if (g.length == 1) g = \'0\' + g;\n
+        if (b.length == 1) b = \'0\' + b;\n
+        return \'#\' + r + g + b;\n
+    }\n
+\n
+    // help\n
+    this.getHelpXML = function () {\n
+\n
+        var examples = new Array();\n
+        // add regexps\n
+        for (var i = 0; i < color_defs.length; i++) {\n
+            var example = color_defs[i].example;\n
+            for (var j = 0; j < example.length; j++) {\n
+                examples[examples.length] = example[j];\n
+            }\n
+        }\n
+        // add type-in colors\n
+        for (var sc in simple_colors) {\n
+            examples[examples.length] = sc;\n
+        }\n
+\n
+        var xml = document.createElement(\'ul\');\n
+        xml.setAttribute(\'id\', \'rgbcolor-examples\');\n
+        for (var i = 0; i < examples.length; i++) {\n
+            try {\n
+                var list_item = document.createElement(\'li\');\n
+                var list_color = new RGBColor(examples[i]);\n
+                var example_div = document.createElement(\'div\');\n
+                example_div.style.cssText =\n
+                        \'margin: 3px; \'\n
+                        + \'border: 1px solid black; \'\n
+                        + \'background:\' + list_color.toHex() + \'; \'\n
+                        + \'color:\' + list_color.toHex()\n
+                ;\n
+                example_div.appendChild(document.createTextNode(\'test\'));\n
+                var list_item_value = document.createTextNode(\n
+                    \' \' + examples[i] + \' -> \' + list_color.toRGB() + \' -> \' + list_color.toHex()\n
+                );\n
+                list_item.appendChild(example_div);\n
+                list_item.appendChild(list_item_value);\n
+                xml.appendChild(list_item);\n
+\n
+            } catch(e){}\n
+        }\n
+        return xml;\n
+\n
+    }\n
+\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8753</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

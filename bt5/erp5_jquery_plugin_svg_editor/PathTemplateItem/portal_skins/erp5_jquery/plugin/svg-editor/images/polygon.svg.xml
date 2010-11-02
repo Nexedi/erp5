@@ -1,0 +1,267 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts80047915.13</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>polygon.svg</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/svg+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n
+<!-- Created with Inkscape (http://www.inkscape.org/) -->\n
+<svg\n
+   xmlns:dc="http://purl.org/dc/elements/1.1/"\n
+   xmlns:cc="http://web.resource.org/cc/"\n
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n
+   xmlns:svg="http://www.w3.org/2000/svg"\n
+   xmlns="http://www.w3.org/2000/svg"\n
+   xmlns:xlink="http://www.w3.org/1999/xlink"\n
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"\n
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"\n
+   sodipodi:docname="draw-polygon.svg"\n
+   sodipodi:docbase="/home/andreas/projekt/tango/22"\n
+   inkscape:version="0.42"\n
+   id="svg8728"\n
+   height="22.000000px"\n
+   width="22.000000px"\n
+   inkscape:export-filename="/home/andreas/projekt/tango/22/draw-polygon.png"\n
+   inkscape:export-xdpi="90.000000"\n
+   inkscape:export-ydpi="90.000000">\n
+  <defs\n
+     id="defs3">\n
+    <linearGradient\n
+       inkscape:collect="always"\n
+       id="linearGradient3941">\n
+      <stop\n
+         style="stop-color:#000000;stop-opacity:1;"\n
+         offset="0"\n
+         id="stop3943" />\n
+      <stop\n
+         style="stop-color:#000000;stop-opacity:0;"\n
+         offset="1"\n
+         id="stop3945" />\n
+    </linearGradient>\n
+    <linearGradient\n
+       id="linearGradient6581">\n
+      <stop\n
+         style="stop-color:#eeeeec;stop-opacity:1;"\n
+         offset="0"\n
+         id="stop6583" />\n
+      <stop\n
+         style="stop-color:#e0e0de;stop-opacity:1.0000000;"\n
+         offset="1.0000000"\n
+         id="stop6585" />\n
+    </linearGradient>\n
+    <linearGradient\n
+       id="linearGradient14920">\n
+      <stop\n
+         id="stop14922"\n
+         offset="0"\n
+         style="stop-color:#5a7aa4;stop-opacity:1;" />\n
+      <stop\n
+         id="stop14924"\n
+         offset="1.0000000"\n
+         style="stop-color:#1f2b3a;stop-opacity:1.0000000;" />\n
+    </linearGradient>\n
+    <linearGradient\n
+       id="linearGradient13390">\n
+      <stop\n
+         id="stop13392"\n
+         offset="0.0000000"\n
+         style="stop-color:#81a2cd;stop-opacity:1.0000000;" />\n
+      <stop\n
+         id="stop13394"\n
+         offset="1.0000000"\n
+         style="stop-color:#2a415f;stop-opacity:1.0000000;" />\n
+    </linearGradient>\n
+    <linearGradient\n
+       id="linearGradient10325">\n
+      <stop\n
+         id="stop10327"\n
+         offset="0"\n
+         style="stop-color:#5a7aa4;stop-opacity:1;" />\n
+      <stop\n
+         id="stop10329"\n
+         offset="1.0000000"\n
+         style="stop-color:#455e7e;stop-opacity:1.0000000;" />\n
+    </linearGradient>\n
+    <linearGradient\n
+       gradientUnits="userSpaceOnUse"\n
+       y2="39.486301"\n
+       x2="37.746555"\n
+       y1="23.992306"\n
+       x1="23.598076"\n
+       gradientTransform="matrix(0.363308,0,0,0.363571,1.976073,1.180651)"\n
+       id="linearGradient13217"\n
+       xlink:href="#linearGradient6581"\n
+       inkscape:collect="always" />\n
+    <radialGradient\n
+       inkscape:collect="always"\n
+       xlink:href="#linearGradient3941"\n
+       id="radialGradient3947"\n
+       cx="2.25"\n
+       cy="16"\n
+       fx="2.25"\n
+       fy="16"\n
+       r="16.875"\n
+       gradientTransform="matrix(1.000000,0.000000,0.000000,0.333333,-5.774893e-15,10.66667)"\n
+       gradientUnits="userSpaceOnUse" />\n
+    <linearGradient\n
+       inkscape:collect="always"\n
+       xlink:href="#linearGradient6581"\n
+       id="linearGradient2398"\n
+       x1="10.769515"\n
+       y1="8.7196503"\n
+       x2="15.923767"\n
+       y2="15.039417"\n
+       gradientUnits="userSpaceOnUse" />\n
+    <linearGradient\n
+       inkscape:collect="always"\n
+       xlink:href="#linearGradient6581"\n
+       id="linearGradient2403"\n
+       gradientUnits="userSpaceOnUse"\n
+       x1="10.769515"\n
+       y1="8.7196503"\n
+       x2="15.923767"\n
+       y2="15.039417"\n
+       gradientTransform="matrix(0.874941,0.000000,0.000000,0.868551,1.339139,1.349650)" />\n
+    <linearGradient\n
+       inkscape:collect="always"\n
+       xlink:href="#linearGradient6581"\n
+       id="linearGradient2405"\n
+       gradientUnits="userSpaceOnUse"\n
+       x1="10.769515"\n
+       y1="8.7196503"\n
+       x2="15.923767"\n
+       y2="15.039417"\n
+       gradientTransform="matrix(1.001575,0.000000,0.000000,1.000000,-3.040037e-3,0.000000)" />\n
+  </defs>\n
+  <sodipodi:namedview\n
+     inkscape:window-y="25"\n
+     inkscape:window-x="0"\n
+     inkscape:window-height="949"\n
+     inkscape:window-width="1280"\n
+     inkscape:document-units="px"\n
+     inkscape:grid-bbox="true"\n
+     showgrid="false"\n
+     inkscape:current-layer="layer1"\n
+     inkscape:cy="10.249014"\n
+     inkscape:cx="16.435231"\n
+     inkscape:zoom="15.999999"\n
+     inkscape:pageshadow="2"\n
+     inkscape:pageopacity="0.0"\n
+     borderopacity="0.08235294"\n
+     bordercolor="#666666"\n
+     pagecolor="#ffffff"\n
+     id="base"\n
+     showguides="true"\n
+     inkscape:guide-bbox="true"\n
+     inkscape:showpageshadow="false"\n
+     stroke="#888a85" />\n
+  <metadata\n
+     id="metadata4">\n
+    <rdf:RDF>\n
+      <cc:Work\n
+         rdf:about="">\n
+        <dc:format>image/svg+xml</dc:format>\n
+        <dc:type\n
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />\n
+        <dc:title>Draw Rectangle</dc:title>\n
+        <dc:date>2005-10-10</dc:date>\n
+        <dc:creator>\n
+          <cc:Agent>\n
+            <dc:title>Andreas Nilsson</dc:title>\n
+          </cc:Agent>\n
+        </dc:creator>\n
+        <dc:subject>\n
+          <rdf:Bag>\n
+            <rdf:li>draw</rdf:li>\n
+            <rdf:li>rectangle</rdf:li>\n
+            <rdf:li>square</rdf:li>\n
+          </rdf:Bag>\n
+        </dc:subject>\n
+        <cc:license\n
+           rdf:resource="http://creativecommons.org/licenses/by-sa/2.0/" />\n
+      </cc:Work>\n
+      <cc:License\n
+         rdf:about="http://creativecommons.org/licenses/by-sa/2.0/">\n
+        <cc:permits\n
+           rdf:resource="http://web.resource.org/cc/Reproduction" />\n
+        <cc:permits\n
+           rdf:resource="http://web.resource.org/cc/Distribution" />\n
+        <cc:requires\n
+           rdf:resource="http://web.resource.org/cc/Notice" />\n
+        <cc:requires\n
+           rdf:resource="http://web.resource.org/cc/Attribution" />\n
+        <cc:permits\n
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />\n
+        <cc:requires\n
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />\n
+      </cc:License>\n
+    </rdf:RDF>\n
+  </metadata>\n
+  <g\n
+     inkscape:groupmode="layer"\n
+     inkscape:label="Layer 1"\n
+     id="layer1">\n
+    <path\n
+       sodipodi:type="arc"\n
+       style="opacity:0.60000000;color:#000000;fill:url(#radialGradient3947);fill-opacity:1.0000000;fill-rule:evenodd;stroke:none;stroke-width:1.0000000;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4.0000000;stroke-dasharray:none;stroke-dashoffset:0.0000000;stroke-opacity:1.0000000;visibility:visible;display:block;overflow:visible"\n
+       id="path2193"\n
+       sodipodi:cx="2.2500000"\n
+       sodipodi:cy="16.000000"\n
+       sodipodi:rx="16.875000"\n
+       sodipodi:ry="5.6250000"\n
+       d="M 19.125000 16.000000 A 16.875000 5.6250000 0 1 1  -14.625000,16.000000 A 16.875000 5.6250000 0 1 1  19.125000 16.000000 z"\n
+       transform="matrix(0.503704,0.000000,0.000000,0.349014,9.366667,12.45257)" />\n
+    <path\n
+       style="fill:url(#linearGradient2405);fill-opacity:1.0000000;fill-rule:evenodd;stroke:#888a85;stroke-width:1.0000002px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"\n
+       d="M 10.376363,3.6237647 L 18.439333,9.5822222 L 15.644242,18.503298 L 5.3933717,18.503298 L 2.5694122,9.5814367 L 10.376363,3.6237647 z "\n
+       id="path1661"\n
+       sodipodi:nodetypes="cccccc" />\n
+    <path\n
+       style="fill:url(#linearGradient2403);fill-opacity:1.0000000;fill-rule:evenodd;stroke:#fdfdfb;stroke-width:0.99999976px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000"\n
+       d="M 10.383801,4.6223366 L 17.428917,9.8682235 L 14.894231,17.502140 L 6.1335005,17.494329 L 3.6135882,9.9131875 L 10.383801,4.6223366 z "\n
+       id="path2401"\n
+       sodipodi:nodetypes="cccccc" />\n
+  </g>\n
+</svg>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>7865</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
