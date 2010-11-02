@@ -33,7 +33,6 @@ import inspect
 from types import ModuleType
 
 from dynamic_module import registerDynamicModule
-from lazy_class import generateLazyPortalTypeClass
 
 from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Globals import InitializeClass
@@ -182,6 +181,7 @@ def generatePortalTypeClass(portal_type_name):
 
   return tuple(baseclasses), dict(portal_type=portal_type_name)
 
+from lazy_class import generateLazyPortalTypeClass
 def initializeDynamicModules():
   """
   Create erp5 module and its submodules
@@ -201,13 +201,6 @@ def initializeDynamicModules():
   XXX: there should be only one accessor_holder once the code is
        stable and all the Property Sheets have been migrated
   """
-  def loadPortalTypeClass(portal_type_name):
-    """
-    Returns a lazily-loaded "portal-type as a class"
-    """
-    return generateLazyPortalTypeClass(portal_type_name,
-                                       generatePortalTypeClass)
-
   erp5 = ModuleType("erp5")
   sys.modules["erp5"] = erp5
   erp5.document = ModuleType("erp5.document")
@@ -219,7 +212,7 @@ def initializeDynamicModules():
   sys.modules["erp5.filesystem_accessor_holder"] = erp5.filesystem_accessor_holder
 
   portal_type_container = registerDynamicModule('erp5.portal_type',
-                                                loadPortalTypeClass)
+                                                generateLazyPortalTypeClass)
 
   erp5.portal_type = portal_type_container
 
@@ -302,13 +295,7 @@ def synchronizeDynamicModules(context, force=False):
 
   for class_name, klass in inspect.getmembers(erp5.portal_type,
                                               inspect.isclass):
-    ghostbase = getattr(klass, '__ghostbase__', None)
-    if ghostbase is not None:
-      for attr in klass.__dict__.keys():
-        if attr != '__module__':
-          delattr(klass, attr)
-      klass.__bases__ = ghostbase
-      klass.resetAcquisitionAndSecurity()
+    klass.restoreGhostState()
 
   # Clear accessor holders of ZODB Property Sheets
   _clearAccessorHolderModule(erp5.zodb_accessor_holder)
