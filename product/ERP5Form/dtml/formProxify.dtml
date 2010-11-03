@@ -27,6 +27,7 @@ Keep empty values <input type="checkbox" name="keep_empty_value"> <br/>
 </tr>
 
 <dtml-in objectValues sort=id>
+<dtml-if "_['sequence-item'].meta_type != 'ProxyField'">
 <dtml-let temp="getProxyableFieldList(_['sequence-item'], form_field_list)"
           form_order="temp[0]"
           matched="temp[1]">
@@ -61,6 +62,7 @@ Keep empty values <input type="checkbox" name="keep_empty_value"> <br/>
 </tr>
 
 </dtml-let>
+</dtml-if>
 </dtml-in>
 </table>
 
