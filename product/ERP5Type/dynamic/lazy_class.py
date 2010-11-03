@@ -5,7 +5,7 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
 from ExtensionClass import ExtensionClass, pmc_init_of
 from ZODB.broken import Broken, PersistentBroken
-from zLOG import LOG, ERROR, BLATHER
+from zLOG import LOG, WARNING, BLATHER
 
 from portal_type_class import generatePortalTypeClass
 
@@ -122,7 +122,7 @@ class PortalTypeMetaClass(ExtensionClass):
     try:
       baseclasses, attributes = generatePortalTypeClass(portal_type)
     except AttributeError:
-      LOG("ERP5Type.Dynamic", ERROR,
+      LOG("ERP5Type.Dynamic", WARNING,
           "Could not access Portal Type Object for type %r"
           % portal_type, error=sys.exc_info())
       baseclasses = (ERP5BaseBroken, )
