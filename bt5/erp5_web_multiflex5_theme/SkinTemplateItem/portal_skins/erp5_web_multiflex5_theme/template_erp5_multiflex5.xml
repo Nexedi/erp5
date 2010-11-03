@@ -98,7 +98,7 @@
                            footer_area python:aggregate.get(\'footer\', []);\n
                            bottom_area python:aggregate.get(\'bottom\', []);\n
                            global header_title python:\'%s | %s\' % (here.getTranslatedTitleOrId(), website.getTranslatedTitleOrId());\n
-                           global description python:here.getDescription() or here.getLayoutProperty(\'description\');\n
+                           global description python:here.getDescription() or here.getLayoutProperty(\'description\') or \'\';\n
                            global subject_list python:here.getSubjectList() or here.getLayoutProperty(\'subject_list\') or [];\n
                            global css_list_template python:[\n
                                   \'%s/erp5_web_toolbar.css\' % portal_path,\n
