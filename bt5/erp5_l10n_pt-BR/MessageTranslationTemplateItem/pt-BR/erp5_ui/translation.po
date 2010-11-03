@@ -3599,9 +3599,6 @@ msgstr "Explica o qual é o resultado esperado para esta linha de projeto."
 msgid "Export XMI File"
 msgstr "Exportar Arquivo XMI"
 
-msgid "Expired [state in event_workflow]"
-msgstr "Expirado"
-
 msgid "Expired [state in category_publication_workflow]"
 msgstr ""
 
@@ -9565,9 +9562,6 @@ msgstr ""
 msgid "You can log in with another user name or <a href=\"javascript:history.back();\">go back</a>."
 msgstr "Você pode acessar com outro usuário ou  <a href=\"javascript:history.back();\">voltar</a>."
 
-msgid "You don't have enough permissions to access this page"
-msgstr "Você não tem permissão suficiente para acessar essa página."
-
 msgid "You can login with another user name or ${go_back}."
 msgstr ""
 
@@ -9599,7 +9593,7 @@ msgid "You do not have the permissions to edit the object."
 msgstr ""
 
 msgid "You don't have enough permissions to access this page"
-msgstr ""
+msgstr "Você não tem permissão suficiente para acessar essa página."
 
 msgid "You don't have the permissions to edit the object."
 msgstr ""
