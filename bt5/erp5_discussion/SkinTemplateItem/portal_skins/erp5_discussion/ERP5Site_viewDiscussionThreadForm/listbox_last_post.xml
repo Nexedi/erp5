@@ -140,7 +140,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/DiscussionThread_viewLastPostWidget</string> </value>
+            <value> <string>python: cell.getParentValue().DiscussionThread_viewLastPostWidget()</string> </value>
         </item>
       </dictionary>
     </pickle>

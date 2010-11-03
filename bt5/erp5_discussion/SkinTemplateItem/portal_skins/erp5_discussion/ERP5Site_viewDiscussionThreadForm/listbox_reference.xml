@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_author</string> </value>
+            <value> <string>listbox_reference</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -121,7 +121,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Post Author</string> </value>
+                    <value> <string>Reference</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -140,7 +140,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getParentValue().DiscussionThread_viewAuthorWidget()</string> </value>
+            <value> <string>python: cell.getParentValue().getReference()</string> </value>
         </item>
       </dictionary>
     </pickle>

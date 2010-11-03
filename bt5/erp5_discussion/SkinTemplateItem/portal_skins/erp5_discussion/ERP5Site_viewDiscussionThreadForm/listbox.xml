@@ -20,8 +20,11 @@
                 <string>list_method</string>
                 <string>portal_types</string>
                 <string>search</string>
+                <string>search_columns</string>
                 <string>sort</string>
+                <string>sort_columns</string>
                 <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -115,8 +118,16 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>author</string>
                           <string>Author</string>
+                        </tuple>
+                        <tuple>
+                          <string>response_count</string>
+                          <string>Responses</string>
                         </tuple>
                         <tuple>
                           <string>last_post</string>
@@ -131,9 +142,7 @@
                 </item>
                 <item>
                     <key> <string>count_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -171,7 +180,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -179,8 +188,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Discussion Thread</string>
-                          <string>Discussion Thread</string>
+                          <string>Discussion Post</string>
+                          <string>Discussion Post</string>
                         </tuple>
                       </list>
                     </value>
@@ -188,6 +197,17 @@
                 <item>
                     <key> <string>search</string> </key>
                     <value> <int>1</int> </value>
+                </item>
+                <item>
+                    <key> <string>search_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
@@ -201,12 +221,46 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>sort_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Discussion Threads</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>reference</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>response_count</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>ListBox_getDiscussionThreadUrl</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>
@@ -225,23 +279,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>portal_catalog</string> </value>
+            <value> <string>ERP5Site_getDiscussionPostList</string> </value>
         </item>
       </dictionary>
     </pickle>

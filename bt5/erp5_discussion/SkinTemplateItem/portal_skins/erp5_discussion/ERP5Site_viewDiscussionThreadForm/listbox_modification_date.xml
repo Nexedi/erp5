@@ -60,6 +60,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>date_only</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -67,6 +71,10 @@
                 </item>
                 <item>
                     <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -79,6 +87,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
