@@ -217,7 +217,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden_label</string> </value>
+                    <value> <string>hidden_label add_new_blog_post</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>

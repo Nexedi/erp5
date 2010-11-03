@@ -96,8 +96,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>add_new_article</string>
                         <string>listbox</string>
+                        <string>add_new_article</string>
                       </list>
                     </value>
                 </item>
