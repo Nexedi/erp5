@@ -1,2 +1,5 @@
+2010-11-03 nicolas.dumazet
+* add empty plugin folder so plugin bts can use it
+
 2010-11-01 kazuhiko
 * refactored version of erp5_jquery that only contains jQuery Core 1.4.3.
