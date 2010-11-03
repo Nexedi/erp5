@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2010-10-29 20:10+BRT\n"
-"PO-Revision-Date: 2010-11-03 15:31-0200\n"
+"PO-Revision-Date: 2010-11-03 17:38-0200\n"
 "Last-Translator: Rafael Monnerat <rafael@nexedi.com>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -97,7 +97,7 @@ msgid "-- User --"
 msgstr "-- Usuário --"
 
 msgid "-- Workflows --"
-msgstr "-- Fluxos de Trabalho --"
+msgstr "-- Workflows --"
 
 msgid "-- Your Instances --"
 msgstr "-- Suas Instâncias --"
@@ -320,7 +320,7 @@ msgid "Account Type must be set"
 msgstr "Tipo da Conta precisa ser definida"
 
 msgid "Account Workflow"
-msgstr ""
+msgstr "Workflow de Contas"
 
 msgid "Account does not have account_type category."
 msgstr ""
@@ -416,7 +416,7 @@ msgid "Accounting View"
 msgstr ""
 
 msgid "Accounting Workflow"
-msgstr ""
+msgstr "Workflow de Contabilidade"
 
 msgid "Accounting periods created."
 msgstr "Exercícios Contábeis criados"
@@ -644,10 +644,10 @@ msgid "Answer"
 msgstr "Resposta"
 
 msgid "Answer Query Action [transition in query_workflow]"
-msgstr ""
+msgstr "Responder Pergunta"
 
 msgid "Answer Query [transition in query_workflow]"
-msgstr ""
+msgstr "Responder Pergunta"
 
 msgid "Answered"
 msgstr "Respondido"
@@ -1109,10 +1109,10 @@ msgid "Base Category"
 msgstr ""
 
 msgid "Base Contribution"
-msgstr ""
+msgstr "Base de Contribuição"
 
 msgid "Base Contribution must be defined"
-msgstr ""
+msgstr "Base de Contribuição precisa ser definida"
 
 msgid "Base Domain"
 msgstr ""
@@ -1259,7 +1259,7 @@ msgid "Budget Variations"
 msgstr "Variações do Orçamento"
 
 msgid "Budget Workflow"
-msgstr ""
+msgstr "Workflow de Orçamento"
 
 msgid "Budget title"
 msgstr ""
@@ -1289,7 +1289,7 @@ msgid "Bug Module"
 msgstr ""
 
 msgid "Bug Workflow"
-msgstr ""
+msgstr "Workflow de Bugs"
 
 msgid "Bugs"
 msgstr "Bugs"
@@ -1445,13 +1445,13 @@ msgid "Cancel Budget Action"
 msgstr "Cancelar Orçamento"
 
 msgid "Cancel Career Step"
-msgstr ""
+msgstr "Cancelar Passo da Carreira"
 
 msgid "Cancel Career Step Action [transition in career_workflow]"
-msgstr ""
+msgstr "Cancelar Passo da Carreira"
 
 msgid "Cancel Career Step [transition in career_workflow]"
-msgstr ""
+msgstr "Cancelar Passo da Carreira"
 
 msgid "Cancel Document Publication"
 msgstr "Cancelar Publicação do Documento"
@@ -1514,10 +1514,10 @@ msgid "Cancel Packing List [transition in packing_list_workflow]"
 msgstr "Cancelar Entrega"
 
 msgid "Cancel Query Action [transition in query_workflow]"
-msgstr ""
+msgstr "Cancelar Pergunta"
 
 msgid "Cancel Query [transition in query_workflow]"
-msgstr ""
+msgstr "Cancelar Pergunta"
 
 msgid "Cancel Sale Opportunity Action [transition in sale_opportunity_workflow]"
 msgstr "Cancelar Oportunidade de Venda"
@@ -1526,16 +1526,16 @@ msgid "Cancel Sale Opportunity [transition in sale_opportunity_workflow]"
 msgstr "Cancelar Oportunidade de Venda"
 
 msgid "Cancel Ticket"
-msgstr ""
+msgstr "Cancelar"
 
 msgid "Cancel Ticket Action"
-msgstr ""
+msgstr "Cancelar"
 
 msgid "Cancel Ticket Action [transition in ticket_workflow]"
-msgstr ""
+msgstr "Cancelar"
 
 msgid "Cancel Ticket [transition in ticket_workflow]"
-msgstr ""
+msgstr "Cancelar"
 
 msgid "Cancel Transaction"
 msgstr "Cancelar Transação"
@@ -1649,10 +1649,10 @@ msgid "Career Start Date"
 msgstr ""
 
 msgid "Career Step"
-msgstr ""
+msgstr "Passo da Carreira"
 
 msgid "Career Steps"
-msgstr ""
+msgstr "Passos da Carreira"
 
 msgid "Career Title"
 msgstr "Nome da Carreira"
@@ -1895,7 +1895,7 @@ msgid "Client must be validated"
 msgstr "Cliente precisa ser validado"
 
 msgid "Clients Roles"
-msgstr ""
+msgstr "Papéis dos Clientes"
 
 msgid "Clock"
 msgstr "Relógio"
@@ -1937,16 +1937,16 @@ msgid "Close Task"
 msgstr "Fechar Tarefa"
 
 msgid "Close Ticket"
-msgstr ""
+msgstr "Fechar"
 
 msgid "Close Ticket Action"
-msgstr ""
+msgstr "Fechar"
 
 msgid "Close Ticket Action [transition in ticket_workflow]"
-msgstr ""
+msgstr "Fechar"
 
 msgid "Close Ticket [transition in ticket_workflow]"
-msgstr ""
+msgstr "Fechar"
 
 msgid "Close action will close either an accounting period, a transaction or an account. Those documents cannot be modified anymore, except the accounting period that can be reopened,"
 msgstr ""
@@ -2519,7 +2519,7 @@ msgid "Current salary level"
 msgstr ""
 
 msgid "Current skills"
-msgstr ""
+msgstr "Habilidades Atuais"
 
 msgid "Customer"
 msgstr "Cliente"
@@ -2750,10 +2750,10 @@ msgid "Delete Preference [transition in preference_workflow]"
 msgstr "Apagar Preferência"
 
 msgid "Delete Query Action [transition in query_workflow]"
-msgstr ""
+msgstr "Apagar Pergunta"
 
 msgid "Delete Query [transition in query_workflow]"
-msgstr ""
+msgstr "Apagar Pergunta"
 
 msgid "Delete Sale Opportunity Action [transition in sale_opportunity_workflow]"
 msgstr "Apagar Oportunidade de Venda"
@@ -2765,10 +2765,10 @@ msgid "Delete The Objects"
 msgstr "Apagar os Objetos"
 
 msgid "Delete Ticket Action [transition in ticket_workflow]"
-msgstr ""
+msgstr "Apagar"
 
 msgid "Delete Ticket [transition in ticket_workflow]"
-msgstr ""
+msgstr "Apagar"
 
 msgid "Delete Transaction Action [transition in accounting_workflow]"
 msgstr ""
@@ -3162,7 +3162,7 @@ msgid "Discounts"
 msgstr "Descontos"
 
 msgid "Display Default Page"
-msgstr ""
+msgstr "Mostrar Página Padrão"
 
 msgid "Display Method ID"
 msgstr ""
@@ -3237,7 +3237,7 @@ msgid "Document Properties"
 msgstr "Propriedades do Documento"
 
 msgid "Document Publication Workflow"
-msgstr ""
+msgstr "Workflow de Publicação de Documentos"
 
 msgid "Document Reference"
 msgstr "Referência do Documento"
@@ -4323,7 +4323,7 @@ msgid "HTML Representation"
 msgstr ""
 
 msgid "Handled Project"
-msgstr ""
+msgstr "Projeto de Controle"
 
 msgid "Handler"
 msgstr ""
@@ -5087,19 +5087,19 @@ msgid "Meeting"
 msgstr "Reunião"
 
 msgid "Meeting Detailed Report"
-msgstr ""
+msgstr "Relatório de Detalhado da Reunião"
 
 msgid "Meeting Module"
-msgstr ""
+msgstr "Módulos de Reunião"
 
 msgid "Meeting Status"
-msgstr ""
+msgstr "Status da Reunião"
 
 msgid "Meeting Type"
-msgstr ""
+msgstr "Tipo de Reunião"
 
 msgid "Meeting Types"
-msgstr ""
+msgstr "Tipos de Reunião"
 
 msgid "Meetings"
 msgstr "Reuniões"
@@ -5363,7 +5363,7 @@ msgid "New [state in event_workflow]"
 msgstr "Novo"
 
 msgid "New default Web Page for section ${web_section}."
-msgstr ""
+msgstr "Nova Página Web Padrão para Seção ${web_section}."
 
 msgid "New event created."
 msgstr "Novo evento criado."
@@ -5526,7 +5526,7 @@ msgid "Notification Message Module"
 msgstr "Módulo de Mensagem de Notificação"
 
 msgid "Notification Message Workflow"
-msgstr ""
+msgstr "Workflow de Mensagens de Notificação"
 
 msgid "Notification Messages"
 msgstr "Mensagens de notificação"
@@ -5595,16 +5595,16 @@ msgid "Offered Sale Orders to Follow"
 msgstr "Pedidos de Venda Oferecidos para Seguir"
 
 msgid "Offered [state in open_order_workflow]"
-msgstr ""
+msgstr "Oferecido"
 
 msgid "Offered [state in order_workflow]"
-msgstr ""
+msgstr "Oferecido"
 
 msgid "Offered [state in sale_opportunity_workflow]"
-msgstr ""
+msgstr "Oferecido"
 
 msgid "Offers to Send"
-msgstr ""
+msgstr "Ofertas para Enviar"
 
 msgid "Office Document"
 msgstr "Documento de Escritório"
@@ -5655,13 +5655,13 @@ msgid "Open Support Requests"
 msgstr ""
 
 msgid "Open Ticket"
-msgstr ""
+msgstr "Abrir"
 
 msgid "Open Ticket Action"
-msgstr ""
+msgstr "Abrir"
 
 msgid "Open Ticket Action [transition in ticket_workflow]"
-msgstr ""
+msgstr "Abrir"
 
 msgid "Open Ticket [transition in ticket_workflow]"
 msgstr "Abrir"
@@ -5706,7 +5706,7 @@ msgid "Operations"
 msgstr ""
 
 msgid "Operations Manager"
-msgstr ""
+msgstr "Gerente de Operação"
 
 msgid "Operator"
 msgstr "Operador"
@@ -5778,7 +5778,7 @@ msgid "Order Type"
 msgstr ""
 
 msgid "Order Workflow"
-msgstr ""
+msgstr "Workflow de Pedidos"
 
 msgid "Order date"
 msgstr ""
@@ -5907,7 +5907,7 @@ msgid "Packing List Movement"
 msgstr ""
 
 msgid "Packing List Workflow"
-msgstr ""
+msgstr "Workflow de Entrega"
 
 msgid "Packing List updated."
 msgstr ""
@@ -6080,7 +6080,7 @@ msgid "Pending Events"
 msgstr "Eventos Pendentes"
 
 msgid "Pending Offers"
-msgstr ""
+msgstr "Ofertas Pendentes"
 
 msgid "Pending [state in document_staging_workflow]"
 msgstr ""
@@ -6317,13 +6317,13 @@ msgid "Post Event [transition in event_workflow]"
 msgstr "Postar Evento"
 
 msgid "Post Query"
-msgstr ""
+msgstr "Enviar Pergunta"
 
 msgid "Post Query Action [transition in query_workflow]"
-msgstr ""
+msgstr "Enviar Pergunta"
 
 msgid "Post Query [transition in query_workflow]"
-msgstr ""
+msgstr "Enviar Pergunta"
 
 msgid "Post Transaction Action [transition in accounting_workflow]"
 msgstr ""
@@ -6341,7 +6341,7 @@ msgid "Post [transition in bug_event_workflow]"
 msgstr "Postar"
 
 msgid "Post a Query"
-msgstr ""
+msgstr "Enviar uma Pergunta"
 
 msgid "Post to Ledger"
 msgstr ""
@@ -6362,7 +6362,7 @@ msgid "Posted [state in event_workflow]"
 msgstr "Postado"
 
 msgid "Posted [state in query_workflow]"
-msgstr ""
+msgstr "Enviado"
 
 msgid "Posted to General Ledger"
 msgstr ""
@@ -6584,7 +6584,7 @@ msgid "Project Cell"
 msgstr ""
 
 msgid "Project Constraints"
-msgstr ""
+msgstr "Restrições do Projeto"
 
 msgid "Project ID"
 msgstr "Projeto (ID)"
@@ -6602,10 +6602,10 @@ msgid "Project Mapping"
 msgstr ""
 
 msgid "Project Milestone"
-msgstr ""
+msgstr "Marco do Projeto"
 
 msgid "Project Milestones"
-msgstr ""
+msgstr "Marcos do Projeto"
 
 msgid "Project Module"
 msgstr ""
@@ -6629,10 +6629,10 @@ msgid "Project Reports"
 msgstr ""
 
 msgid "Project Title"
-msgstr ""
+msgstr "Título do Projeto"
 
 msgid "Project Workflow"
-msgstr ""
+msgstr "Workflow de Projetos"
 
 msgid "Project to Open"
 msgstr "Projeto para Abrir"
@@ -6995,7 +6995,7 @@ msgid "Quantity step"
 msgstr ""
 
 msgid "Quantity unit"
-msgstr ""
+msgstr "Unidade (Quantidade)"
 
 msgid "Quarterly"
 msgstr ""
@@ -7007,16 +7007,16 @@ msgid "Queries to Answer"
 msgstr "Consultas para Responder"
 
 msgid "Query"
-msgstr "Consulta"
+msgstr "Pergunta"
 
 msgid "Query Module"
-msgstr ""
+msgstr "Módulo de Perguntas"
 
 msgid "Query Type"
-msgstr "Tipo de Consulta"
+msgstr "Tipo de Pergunta"
 
 msgid "Query Workflow"
-msgstr ""
+msgstr "Workflow de Perguntas"
 
 msgid "Query was answered."
 msgstr "Consulta foi respondida."
@@ -7571,7 +7571,7 @@ msgid "Request Translation [transition in document_publication_workflow]"
 msgstr "Solicitar Tradução"
 
 msgid "Requested Project"
-msgstr ""
+msgstr "Projeto Solicitante"
 
 msgid "Requester"
 msgstr "Solicitante"
@@ -7766,7 +7766,7 @@ msgid "Role Definition"
 msgstr ""
 
 msgid "Roles"
-msgstr ""
+msgstr "Papéis"
 
 msgid "Rule"
 msgstr "Regra"
@@ -7835,7 +7835,7 @@ msgid "Sale Opportunities"
 msgstr "Oportunidades de Venda"
 
 msgid "Sale Opportunities to Qualify"
-msgstr ""
+msgstr "Oportunidade de Venda para Qualificar"
 
 msgid "Sale Opportunities to Validate"
 msgstr "Oportunidades de Venda para Validar"
@@ -7844,16 +7844,16 @@ msgid "Sale Opportunity"
 msgstr "Oportunidade de Venda"
 
 msgid "Sale Opportunity Detailed Report"
-msgstr ""
+msgstr "Relatório detalahdo da Oportunidade de Venda"
 
 msgid "Sale Opportunity Module"
-msgstr ""
+msgstr "Módulo da Oportunidade de Venda"
 
 msgid "Sale Opportunity Status"
-msgstr ""
+msgstr "Status da Oportunidade de Venda"
 
 msgid "Sale Opportunity Type"
-msgstr ""
+msgstr "Tipo de Oportunidade de Venda"
 
 msgid "Sale Opportunity converted into Sale"
 msgstr "Oportunidade de Venda é convertido para uma Venda"
@@ -8351,7 +8351,7 @@ msgid "Skill"
 msgstr ""
 
 msgid "Skills"
-msgstr ""
+msgstr "Habilidades"
 
 msgid "Skin Folders"
 msgstr "Pastas de Skin"
@@ -8657,13 +8657,13 @@ msgid "Start Assignment [transition in assignment_workflow]"
 msgstr "Iniciar Designação"
 
 msgid "Start Career Step"
-msgstr ""
+msgstr "Iniciar Passo da Carreira"
 
 msgid "Start Career Step Action [transition in career_workflow]"
-msgstr ""
+msgstr "Iniciar Passo da Carreira"
 
 msgid "Start Career Step [transition in career_workflow]"
-msgstr ""
+msgstr "Iniciar Passo na Carreira"
 
 msgid "Start Date"
 msgstr "Data Inicial"
@@ -8738,7 +8738,7 @@ msgid "States"
 msgstr "Estados"
 
 msgid "State of the query after being deleted"
-msgstr ""
+msgstr "Estado da pergunta depois de ser apagada"
 
 msgid "Statistics"
 msgstr "Estatística"
@@ -8783,10 +8783,10 @@ msgid "Stop Career Step"
 msgstr "Parar Carreira"
 
 msgid "Stop Career Step Action [transition in career_workflow]"
-msgstr ""
+msgstr "Parar Passo da Carreira"
 
 msgid "Stop Career Step [transition in career_workflow]"
-msgstr ""
+msgstr "Parar Passo da Carreira"
 
 msgid "Stop Date"
 msgstr "Data Final"
@@ -8888,7 +8888,7 @@ msgid "Submitted"
 msgstr "Submetido"
 
 msgid "Submitted Campaigns"
-msgstr ""
+msgstr "Campanha Enviada para Aprovação"
 
 msgid "Submitted Date"
 msgstr ""
@@ -9116,7 +9116,7 @@ msgid "Task Report State"
 msgstr ""
 
 msgid "Task Report Workflow"
-msgstr ""
+msgstr "Workflow de Relatórios de Tarefas"
 
 msgid "Task Reports"
 msgstr "Relatórios de Tarefas"
@@ -9140,7 +9140,7 @@ msgid "Task Title"
 msgstr "Título"
 
 msgid "Task Workflow"
-msgstr ""
+msgstr "Workflow de Tarefas"
 
 msgid "Tasks"
 msgstr "Tarefas"
@@ -9805,7 +9805,7 @@ msgid "Unit Base Price"
 msgstr ""
 
 msgid "Unit Price"
-msgstr ""
+msgstr "Preço Unitário"
 
 msgid "Unknown"
 msgstr "Desconhecido"
@@ -9970,7 +9970,7 @@ msgid "User ${user} does not exist."
 msgstr "Usuário ${user} não existe."
 
 msgid "User Account Workflow"
-msgstr ""
+msgstr "Workflow de Contas de Usuários"
 
 msgid "User ID is not specified."
 msgstr "ID do Usuário não esta especificado."
@@ -10078,7 +10078,7 @@ msgid "Validate Transaction"
 msgstr "Validar Transação"
 
 msgid "Validate Workflow Action"
-msgstr ""
+msgstr "Validar Ação de Workflow"
 
 msgid "Validate [transition in rule_validation_workflow]"
 msgstr "Validar"
