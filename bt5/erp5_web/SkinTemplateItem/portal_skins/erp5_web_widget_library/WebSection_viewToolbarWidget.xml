@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
-        <tuple/>
-      </tuple>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -37,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <!-- Floating Panel -->\n
 \n
@@ -301,12 +298,11 @@
       </ul>\n
     </div>\n
   </li>\n
-  <script type="text/javascript" src="erp5_web_toolbar.js" tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
 </ul>\n
-</tal:block>\n
+<script type="text/javascript" src="erp5_web_toolbar.js" tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
+</tal:block>
 
-
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -321,8 +317,12 @@
             <value> <string>WebSection_viewToolbarWidget</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
