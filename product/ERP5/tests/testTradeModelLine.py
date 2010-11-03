@@ -36,7 +36,6 @@ import transaction
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import simple_decorator
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
@@ -1093,7 +1092,7 @@ return lambda *args, **kw: 1""")
     amount, = order.getAggregatedAmountList(rounding=False)
     self.assertEqual(3333*0.05+171*0.05, amount.getTotalPrice()) # 175.2
     # check the result with rounding
-    expectedFailure(order.getAggregatedAmountList)(rounding=True)
+    amount_list = order.getAggregatedAmountList(rounding=True)
     self.assertEqual(2, len(amount_list)) # XXX 1 or 2 ???
     self.assertEqual(174, getTotalAmount(amount_list))
 

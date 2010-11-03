@@ -349,20 +349,21 @@ class AmountGeneratorMixin:
     generated_amount_list = self.getGeneratedAmountList(
       amount_list=amount_list, rounding=rounding,
       amount_generator_type_list=amount_generator_type_list)
-    aggregated_amount_dict = {}
+    # XXX: Do we handle rounding correctly ?
+    #      What to do if only total price is rounded ??
+    aggregate_dict = {}
     result_list = AggregatedAmountList()
     for amount in generated_amount_list:
       key = (amount.getPrice(), amount.getEfficiency(),
              amount.getReference(), amount.categories)
-      aggregated_amount = aggregated_amount_dict.get(key)
-      if aggregated_amount is None:
-        aggregated_amount_dict[key] = amount
+      aggregate = aggregate_dict.get(key)
+      if aggregate is None:
+        aggregate_dict[key] = [amount, amount.getQuantity()]
         result_list.append(amount)
       else:
-        # XXX How to aggregate rounded amounts ?
-        #     What to do if the total price is rounded ??
-        assert not rounding, "TODO"
-        aggregated_amount.quantity += amount.quantity
+        aggregate[1] += amount.getQuantity()
+    for amount, quantity in aggregate_dict.itervalues():
+      amount._setQuantity(quantity)
     if 0:
       print 'getAggregatedAmountList(%r) -> (%s)' % (
         self.getRelativeUrl(),
