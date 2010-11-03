@@ -59,7 +59,8 @@ if at_date is None:\n
 \n
 last_affectation_list = context.portal_simulation.getCurrentTrackingList(\n
                             item=context.getRelativeUrl())\n
-\n
+if not last_affectation_list:\n
+  return None\n
 last_affectation_date_list = [x.getDate() for x in last_affectation_list]\n
 last_affectation_date_list.sort()\n
 first_affectation_list = context.portal_simulation.getCurrentTrackingList(\n
