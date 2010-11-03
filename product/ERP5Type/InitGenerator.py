@@ -56,12 +56,16 @@ def InitializeInteractor(interactor_class, interactor_path=None):
 
 def initializeProductDocumentRegistry():
   from Utils import importLocalDocument
+  count = len(product_document_registry)
   for (class_id, class_path) in product_document_registry.iteritems():
     importLocalDocument(class_id, class_path=class_path)
     #from Testing import ZopeTestCase
     #ZopeTestCase._print('Added product document to ERP5Type repository: %s (%s) \n' % (class_id, document_path))
     #LOG('Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path), 0, '')
     #print 'Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path)
+  # make sure all products are imported before we import document classes
+  # (FIXME: is it true ?)
+  assert count == len(product_document_registry)
 
 def initializeProductInteractorRegistry():
   from Utils import importLocalInteractor
