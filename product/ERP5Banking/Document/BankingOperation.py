@@ -30,14 +30,23 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5.Document.Delivery import Delivery
 from Products.ERP5.Document.InventoryLine import InventoryLine
-from Products.ERP5Type.Document.DeliveryCell import DeliveryCell
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5.Document.Container import Container
 from Products.ERP5.Document.AccountingTransaction import AccountingTransaction
 from AccessControl.PermissionRole import PermissionRole
 from Products.ERP5Type.Utils import convertToMixedCase, convertToUpperCase
 from Products.ERP5Banking.BaobabMixin import BaobabMixin
-from Products.ERP5Type.Document.Currency import Currency
+
+# Import classes to monkey-patch
+# XXX All patches must be moved in a Business Template !!
+try:
+  from Products.ERP5Type import dynamic
+except ImportError:
+  from Products.ERP5Type.Document.Currency import Currency
+  from Products.ERP5Type.Document.DeliveryCell import DeliveryCell
+else:
+  from Products.ERP5.Document.Currency import Currency
+  from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
 
 class BankingOperation(BaobabMixin, AccountingTransaction):
