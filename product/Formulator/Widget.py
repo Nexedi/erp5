@@ -424,7 +424,7 @@ class CheckBoxWidget(Widget):
       return render_element("input",
                             type="checkbox",
                             css_class=field.get_value('css_class'),
-                            checked=1,
+                            checked='checked',
                             extra=field.get_value('extra'),
                             disabled='disabled')
     else:
