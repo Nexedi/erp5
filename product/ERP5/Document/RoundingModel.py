@@ -98,84 +98,63 @@ class RoundingModel(Predicate):
     Return a rounding proxy object which getter methods returns rounded
     value by following the rounding model definition.
     """
-    rounding_model = self
-    rounded_property_getter_method_name_list = []
-    rounded_property_special_property_name_list = []
+    if not isinstance(document, RoundingProxy):
+      document = RoundingProxy(document.asContext())
+    document._applyRoundingModel(self)
+    return document
 
-    if isinstance(document, RoundingProxy):
-      temp_document = document._getOriginalDocument()
-      original_document = document
-    else:
-      temp_document = document.asContext()
-      original_document = temp_document
-
-    for property_id in rounding_model.getRoundedPropertyIdList():
-      getter_name = 'get%s' % UpperCase(property_id)
-      getter = getattr(temp_document, getter_name, None)
-      setter_name = 'set%s' % UpperCase(property_id)
-      setter = getattr(temp_document, setter_name, None)
-
-      if getter is not None and setter is not None:
-        # round the property value itself
-        setter(self.roundValue(getter()))
-      else:
-        # cannot round the property value so that the return value of getter
-        # will be rounded
-        rounded_property_getter_method_name_list.append(getter_name)
-        if getter is not None and setter is None:
-          rounded_property_special_property_name_list.append(property_id)
-
-    class _RoundingProxy(RoundingProxy):
-
-      def _getOriginalDocument(self):
-        if isinstance(original_document, RoundingProxy):
-          return original_document._getOriginalDocument()
-        else:
-          return original_document
-
-      def getRoundingModelPrecision(self, property_id):
-        """
-        Return precision value of rounding model. This is useful for
-        float field.
-        """
-        if property_id in rounding_model.getRoundedPropertyIdList():
-          return rounding_model.getPrecision()
-        elif isinstance(original_document, RoundingProxy):
-          return original_document.getRoundingModelPrecision(property_id)
-        else:
-          return None
-
-      def getProperty(self, key, *args, **kw):
-        result = original_document.getProperty(key, *args, **kw)
-        if key in rounded_property_special_property_name_list:
-          return rounding_model.roundValue(result)
-        else:
-          return result
-
-      # XXX not sure why but getObject may return original_document
-      # unless it is overridden here.
-      def getObject(self, *args, **kw):
-        return self
-
-      def __getattr__(self, name):
-        attribute = getattr(original_document, name)
-        if getattr(attribute, 'DUMMY_ROUNDING_METHOD_MARK', None) is DUMMY_ROUNDING_METHOD_MARK:
-          return attribute
-        if name in rounded_property_getter_method_name_list:
-          def dummyMethod(*args, **kw):
-            return rounding_model.roundValue(attribute(*args, **kw))
-          dummyMethod.DUMMY_ROUNDING_METHOD_MARK = DUMMY_ROUNDING_METHOD_MARK
-          return dummyMethod
-        else:
-          return attribute
-    return _RoundingProxy()
-
-DUMMY_ROUNDING_METHOD_MARK = object()
 
 # Use the Extension Class only because it is necessary to allow an instance
 # of this class to be wrapped in an acquisition wrapper.
 class RoundingProxy(ExtensionClass.Base):
-  """Super class of _RoundingProxy class defined above. Use this class for
-  isinstance method to check if object is a real instance or a rounding proxy
-  instance.
-  """
+
+  def __init__(self, ob):
+    super(RoundingProxy, self).__init__()
+    self._ob = ob
+    self._rounded_value_set = set()
+    self._rounding_model_dict = {}
+
+  def __getattr__(self, name):
+    # do not do 'self._ob' to avoid acquisition wrapping
+    return getattr(self.__dict__['_ob'], name)
+
+  def _applyRoundingModel(self, rounding_model):
+    document = self.__dict__['_ob']
+    roundValue = rounding_model.roundValue
+    def decorate(original_getter):
+      return lambda *args, **kw: roundValue(original_getter(*args, **kw))
+    for property_id in rounding_model.getRoundedPropertyIdList():
+      assert property_id not in self._rounding_model_dict
+      self._rounding_model_dict[property_id] = rounding_model
+      getter_name = 'get%s' % UpperCase(property_id)
+      getter = getattr(document, getter_name, None)
+      setter_name = '_set%s' % UpperCase(property_id)
+      setter = getattr(document, setter_name, None)
+      if setter is not None:
+        # round the property value itself
+        setter(roundValue(getter()))
+        # tell getProperty not to round it again
+        self._rounded_value_set.add(property_id)
+      elif getter is not None:
+        # cannot round the property value now so do it dynamically
+        setattr(self, getter_name, decorate(getter))
+
+  def getRoundingModelPrecision(self, property_id):
+    """
+    Return precision value of rounding model. This is useful for
+    float field.
+    """
+    rounding_model = self._rounding_model_dict.get(property_id)
+    if rounding_model is not None:
+      return rounding_model.getPrecision()
+
+  def getProperty(self, key, *args, **kw):
+    result = self.__dict__['_ob'].getProperty(key, *args, **kw)
+    if key not in self._rounded_value_set:
+      rounding_model = self._rounding_model_dict.get(key)
+      if rounding_model is not None:
+        return rounding_model.roundValue(result)
+    return result
+
+  def getObject(self, *args, **kw):
+    return self
