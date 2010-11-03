@@ -925,7 +925,7 @@ def importLocalDocument(class_id, path=None):
   import Permissions
 
   from Products.ERP5Type import document_class_registry
-  if path and '/Products/' in path:
+  if path and 'products' in path.lower(): # XXX
     classpath = document_class_registry[class_id]
     module_path = classpath.rsplit('.', 1)[0]
     module = __import__(module_path, {}, {}, (module_path,))
