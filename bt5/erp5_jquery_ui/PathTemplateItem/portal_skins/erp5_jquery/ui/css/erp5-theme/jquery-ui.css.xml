@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>__name__</string> </key>
-            <value> <string>jquery-ui-1.8.6.custom.css</string> </value>
+            <value> <string>jquery-ui.css</string> </value>
         </item>
         <item>
             <key> <string>_vars</string> </key>
