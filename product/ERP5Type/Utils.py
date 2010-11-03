@@ -87,7 +87,7 @@ def simple_decorator(decorator):
   return new_decorator
 
 from Products.ERP5Type import Permissions
-
+from Products.ERP5Type import document_class_registry
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
     PropertyConstantGetter
 from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
@@ -470,7 +470,6 @@ def updateGlobals(this_module, global_hook,
     for module_id in module_id_list:
       import_method(module_id, path=path, is_erp5_type=is_erp5_type)
 
-  from Products.ERP5Type import document_class_registry
   module_name = this_module.__name__
   # Return core document_class list (for ERP5Type only)
   # this was introduced to permit overriding ERP5Type Document classes
@@ -478,14 +477,12 @@ def updateGlobals(this_module, global_hook,
   path, core_module_id_list = getModuleIdList(product_path, 'Core')
   for document in core_module_id_list:
     module_path = '.'.join((module_name, 'Core', document, document))
-    document_class_registry[document] = module_path
-    InitializeDocument(document, document_path=path)
+    InitializeDocument(document, module_path)
   # Return document_class list
   path, module_id_list = getModuleIdList(product_path, 'Document')
   for document in module_id_list:
     module_path = '.'.join((module_name, 'Document', document, document))
-    document_class_registry[document] = module_path
-    InitializeDocument(document, document_path=path)
+    InitializeDocument(document, module_path)
 
   # Return interactor_class list
   path, interactor_id_list = getModuleIdList(product_path, 'Interactor')
@@ -803,6 +800,14 @@ def removeLocalDocument(class_id):
     f = os.path.join(path, "%s.%s" % (class_id, ext))
     if os.path.exists(f):
       os.remove(f)
+  if document_class_registry.pop(class_id, None):
+    # restore original class (from product) if any
+    from Products.ERP5Type.InitGenerator import product_document_registry
+    product_path = product_document_registry.get(class_id)
+    if product_path:
+      importLocalDocument(class_id, class_path=product_path)
+    else:
+      pass # XXX Do we need to clean up ?
 
 def readLocalDocument(class_id):
   instance_home = getConfiguration().instancehome
@@ -826,21 +831,13 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
   if create:
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
+  # check there is no syntax error (that's the most we can do at this time)
+  compile(text, path, 'exec')
   f = open(path, 'w')
   try:
     f.write(text)
   finally:
     f.close()
-
-  module_path = "erp5.document"
-  classpath = "%s.%s" % (module_path, class_id)
-  module = imp.load_source(classpath, path)
-  import erp5.document
-  setattr(erp5.document, class_id, getattr(module, class_id))
-
-  # and register correctly the new document
-  from Products.ERP5Type import document_class_registry
-  document_class_registry[class_id] = classpath
 
 def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.
@@ -917,17 +914,16 @@ class PersistentMigrationMixin(object):
 
 from Globals import Persistent, PersistentMapping
 
-def importLocalDocument(class_id, path=None):
+def importLocalDocument(class_id, path=None, class_path=None):
   """Imports a document class and registers it in ERP5Type Document
   repository ( Products.ERP5Type.Document )
   """
   import Products.ERP5Type.Document
   import Permissions
 
-  from Products.ERP5Type import document_class_registry
-  if path and 'products' in path.lower(): # XXX
-    classpath = document_class_registry[class_id]
-    module_path = classpath.rsplit('.', 1)[0]
+  if class_path:
+    assert path is None
+    module_path = class_path.rsplit('.', 1)[0]
     module = __import__(module_path, {}, {}, (module_path,))
   else:
     # local document in INSTANCE_HOME/Document/
@@ -937,11 +933,11 @@ def importLocalDocument(class_id, path=None):
       path = os.path.join(instance_home, "Document")
     path = os.path.join(path, "%s.py" % class_id)
     module_path = "erp5.document"
-    classpath = "%s.%s" % (module_path, class_id)
-    module = imp.load_source(classpath, path)
+    class_path = "%s.%s" % (module_path, class_id)
+    module = imp.load_source(class_path, path)
     import erp5.document
     setattr(erp5.document, class_id, getattr(module, class_id))
-    document_class_registry[class_id] = classpath
+  document_class_registry[class_id] = class_path
 
   ### Migration
   module_name = "Products.ERP5Type.Document.%s" % class_id
@@ -985,7 +981,6 @@ def importLocalDocument(class_id, path=None):
 
   # XXX really?
   return klass, tuple()
-
 
 def initializeLocalRegistry(directory_name, import_local_method):
   """
@@ -1049,7 +1044,6 @@ def initializeProduct( context,
   """
   module_name = this_module.__name__
 
-  from Products.ERP5Type import document_class_registry
   # Content classes are exceptions and should be registered here.
   # other products were all already registered in updateGlobals()
   # because getModuleIdList works fine for Document/ and Core/

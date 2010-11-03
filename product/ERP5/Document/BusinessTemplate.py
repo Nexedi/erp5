@@ -3380,6 +3380,21 @@ class DocumentTemplateItem(BaseTemplateItem):
                 {path : ['Removed', self.__class__.__name__[:-12]]})
     return modified_object_list
 
+  def _resetDynamicModules(self):
+    # before any import, flush all ZODB caches to force a DB reload
+    # otherwise we could have objects trying to get commited while
+    # holding reference to a class that is no longer the same one as
+    # the class in its import location and pickle doesn't tolerate it.
+    # First we do a savepoint to dump dirty objects to temporary
+    # storage, so that all references to them can be freed.
+    transaction.savepoint(optimistic=True)
+    # Then we need to flush from all caches, not only the one from this
+    # connection
+    portal = self.getPortalObject()
+    portal._p_jar.db().cacheMinimize()
+    synchronizeDynamicModules(portal, force=True)
+    gc.collect()
+
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
@@ -3393,7 +3408,6 @@ class DocumentTemplateItem(BaseTemplateItem):
               continue
           text = self._objects[id]
           path, name = posixpath.split(id)
-          # This raises an exception if the file already exists.
           try:
             self.local_file_writer_name(name, text, create=0)
           except IOError, error:
@@ -3405,19 +3419,7 @@ class DocumentTemplateItem(BaseTemplateItem):
           if self.local_file_importer_name is None:
             continue
           if need_reset:
-            # before any import, flush all ZODB caches to force a DB reload
-            # otherwise we could have objects trying to get commited while
-            # holding reference to a class that is no longer the same one as
-            # the class in its import location and pickle doesn't tolerate it.
-            # First we do a savepoint to dump dirty objects to temporary
-            # storage, so that all references to them can be freed.
-            transaction.savepoint(optimistic=True)
-            # Then we need to flush from all caches, not only the one from this
-            # connection
-            portal = self.getPortalObject()
-            portal._p_jar.db().cacheMinimize()
-            synchronizeDynamicModules(portal, force=True)
-            gc.collect()
+            self._resetDynamicModules()
             need_reset = False
           self.local_file_importer_name(name)
     else:
@@ -3435,8 +3437,11 @@ class DocumentTemplateItem(BaseTemplateItem):
       object_keys = [object_path]
     else:
       object_keys = self._archive.keys()
-    for key in object_keys:
-      self.local_file_remover_name(key)
+    if object_keys:
+      if isinstance(self, DocumentTemplateItem):
+        self._resetDynamicModules()
+      for key in object_keys:
+        self.local_file_remover_name(key)
     BaseTemplateItem.uninstall(self, context, **kw)
 
   def export(self, context, bta, **kw):

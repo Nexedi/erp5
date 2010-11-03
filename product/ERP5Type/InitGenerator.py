@@ -30,46 +30,39 @@
 
 
 import os, re, string, sys
+from Products.ERP5Type import document_class_registry
 from Products.ERP5Type.Globals import package_home, InitializeClass
 
 from zLOG import LOG
 
-global product_document_registry
-product_document_registry = []
-global product_interactor_registry
+product_document_registry = {}
 product_interactor_registry = []
-global interactor_class_id_registry 
 interactor_class_id_registry = {}
 
 def getProductDocumentPathList():
-  result = product_document_registry
-  result.sort()
-  return result
+  return sorted((k, os.path.dirname(sys.modules[v.rsplit('.', 1)[0]].__file__))
+                for k,v in product_document_registry.iteritems())
 
-def InitializeDocument(document_class, document_path=None):
-  global product_document_registry
+def InitializeDocument(class_id, class_path):
   # Register class in ERP5Type.Document
-  product_document_registry.append(((document_class, document_path)))
+  product_document_registry[class_id] = class_path
 
 def getProductInteractorPathList():
-  result = product_interactor_registry
-  result.sort()
-  return result
+  return sorted(product_interactor_registry)
 
 def InitializeInteractor(interactor_class, interactor_path=None):
-  global product_interactor_registry
   # Register class in ERP5Type.Interactor
   product_interactor_registry.append(((interactor_class, interactor_path)))
 
 def initializeProductDocumentRegistry():
   from Utils import importLocalDocument
-  for (class_id, document_path) in product_document_registry:
-    importLocalDocument(class_id, path=document_path)
+  for (class_id, class_path) in product_document_registry.iteritems():
+    importLocalDocument(class_id, class_path=class_path)
     #from Testing import ZopeTestCase
     #ZopeTestCase._print('Added product document to ERP5Type repository: %s (%s) \n' % (class_id, document_path))
     #LOG('Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path), 0, '')
     #print 'Added product document to ERP5Type repository: %s (%s)' % (class_id, document_path)
-    
+
 def initializeProductInteractorRegistry():
   from Utils import importLocalInteractor
   for (class_id, interactor_path) in product_interactor_registry:
@@ -77,10 +70,8 @@ def initializeProductInteractorRegistry():
       importLocalInteractor(class_id, path=interactor_path)
 
 def registerInteractorClass(class_id, klass):
-  global interactor_class_id_registry
   interactor_class_id_registry[class_id] = klass
 
 def installInteractorClassRegistry():
-  global interactor_class_id_registry
-  for class_id, klass in interactor_class_id_registry.items():
+  for klass in interactor_class_id_registry.itervalues():
     klass().install()
