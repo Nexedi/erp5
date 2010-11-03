@@ -318,7 +318,7 @@ python:"<a class=\\"button button-submit\\" href=\\"%s/WebSection_viewAddBlogMes
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.getPortalObject().portal_membership.checkPermission("Add portal content", here)</string> </value>
+            <value> <string>python:here.getPortalObject().portal_membership.checkPermission("Add portal content", here.getPortalObject().getDefaultModule("Web Page"))</string> </value>
         </item>
       </dictionary>
     </pickle>
