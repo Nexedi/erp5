@@ -321,8 +321,24 @@ class BusinessTemplateArchive:
   def addFolder(self, **kw):
     pass
 
-  def addObject(self, *kw):
-    pass
+  def addObject(self, obj, name, path=None, ext='.xml'):
+    name = name.replace('\\', '/')
+    name = quote(name)
+    name = os.path.normpath(name)
+    if path is None:
+      object_path = os.path.join(self.path, name)
+    else:
+      if '%' not in path:
+        tail, path = os.path.splitdrive(path)
+        path = path.replace('\\', '/')
+        path = tail + quote(path)
+      path = os.path.normpath(path)
+      object_path = os.path.join(path, name)
+    f = open(object_path+ext, 'wb')
+    try:
+      f.write(str(obj))
+    finally:
+      f.close()
 
   def finishCreation(self, name=None, **kw):
     pass
@@ -347,25 +363,6 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
       if not os.path.exists(path):
         os.makedirs(path)
       return path
-
-  def addObject(self, obj, name, path=None, ext='.xml'):
-    name = name.replace('\\', '/')
-    name = quote(name)
-    name = os.path.normpath(name)
-    if path is None:
-      object_path = os.path.join(self.path, name)
-    else:
-      if '%' not in path:
-        tail, path = os.path.splitdrive(path)
-        path = path.replace('\\', '/')
-        path = tail + quote(path)
-      path = os.path.normpath(path)
-      object_path = os.path.join(path, name)
-    f = open(object_path+ext, 'wb')
-    try:
-      f.write(str(obj))
-    finally:
-      f.close()
 
   def _initImport(self, file=None, path=None, **kw):
     # Normalize the paths to eliminate the effect of double-slashes.
@@ -428,25 +425,6 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
     name = os.path.normpath(name)
     if not os.path.exists(name):
       os.makedirs(name)
-
-  def addObject(self, obj, name, path=None, ext='.xml'):
-    name = name.replace('\\', '/')
-    name = quote(name)
-    name = os.path.normpath(name)
-    if path is None:
-      object_path = os.path.join(self.path, name)
-    else:
-      if '%' not in path:
-        tail, path = os.path.splitdrive(path)
-        path = path.replace('\\', '/')
-        path = tail + quote(path)
-      path = os.path.normpath(path)
-      object_path = os.path.join(path, name)
-    f = open(object_path+ext, 'wb')
-    try:
-      f.write(str(obj))
-    finally:
-      f.close()
 
   def finishCreation(self, name):
     self.tar.add(name)
