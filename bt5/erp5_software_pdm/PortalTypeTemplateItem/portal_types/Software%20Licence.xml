@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>document_icon.gif</string> </value>
+            <value> <string>software_licence_icon.png</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -83,6 +83,12 @@
         <item>
             <key> <string>type_class</string> </key>
             <value> <string>SoftwareLicence</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>type_mixin</string> </key>
