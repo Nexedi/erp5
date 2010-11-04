@@ -544,8 +544,6 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
   from Products.ERP5Type.Cache import initializePortalCachingProperties
   initializePortalCachingProperties(portal)
 
-  id = ''
-  #LOG('before aq_portal_type %s' % id, 0, str(ptype))
   if aq_key not in Base.aq_portal_type:
     # Mark as generated
     prop_holder = PropertyHolder()
