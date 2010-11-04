@@ -311,6 +311,14 @@ class BusinessTemplateArchive:
   """
     This is the base class for all Business Template archives
   """
+  def _initCreation(self, path):
+    self.path = path
+    try:
+      os.makedirs(self.path)
+    except OSError:
+      # folder already exists, remove it
+      shutil.rmtree(self.path)
+      os.makedirs(self.path)
 
   def __init__(self, creation=0, importing=0, file=None, path=None, **kw):
     if creation:
@@ -347,15 +355,6 @@ class BusinessTemplateFolder(BusinessTemplateArchive):
   """
     Class archiving business template into a folder tree
   """
-  def _initCreation(self, path):
-    self.path = path
-    try:
-      os.makedirs(self.path)
-    except OSError:
-      # folder already exists, remove it
-      shutil.rmtree(self.path)
-      os.makedirs(self.path)
-
   def addFolder(self, name=''):
     if name != '':
       name = os.path.normpath(name)
@@ -409,14 +408,9 @@ class BusinessTemplateTarball(BusinessTemplateArchive):
   """
 
   def _initCreation(self, path):
+    BusinessTemplateArchive._initCreation(self, path)
+
     # make tmp dir, must use stringIO instead
-    self.path = path
-    try:
-      os.makedirs(self.path)
-    except OSError:
-      # folder already exists, remove it
-      shutil.rmtree(self.path)
-      os.makedirs(self.path)
     # init tarfile obj
     self.fobj = StringIO()
     self.tar = tarfile.open('', 'w:gz', self.fobj)
