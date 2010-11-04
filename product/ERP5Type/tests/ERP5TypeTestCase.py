@@ -1297,7 +1297,7 @@ def optimize():
   #     'func_defaults' properties, so make sure we always export them.
   #     This compatibility code is not required for normal ERP5 instances
   #     because scripts are compiled at BT installation.
-  from Products.ERP5Type.Document.BusinessTemplate import BaseTemplateItem
+  from Products.ERP5.Document.BusinessTemplate import BaseTemplateItem
   BaseTemplateItem_removeProperties = BaseTemplateItem.removeProperties
   def removeProperties(self, obj, export):
     if export and isinstance(obj, PythonScript):
