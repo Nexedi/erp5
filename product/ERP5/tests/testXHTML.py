@@ -255,10 +255,19 @@ class TestXHTML(ERP5TypeTestCase):
     for script_path, script in skins_tool.ZopeFind(
               skins_tool, obj_metatypes=['Script (Python)'], search_sub=1):
       if script.errors!=():
-	# we need to add script id as well in test failure
+        # we need to add script id as well in test failure
         self.assertEquals('%s : %s' %(script_path, script.errors), ())
-        
-    
+
+  def test_SkinItemId(self):
+    """ 
+    Check that skin item id is acquiring is correct.
+    """
+    skins_tool = self.portal.portal_skins
+    for skin_folder in skins_tool.objectValues('Folder'):
+      for skin_item in skin_folder.objectValues():
+        if skin_item.meta_type not in ('File', 'Image', 'DTML Document', 'DTML Method',):
+          skin_item_id = skin_item.id
+          self.assertEqual(skin_item_id, skin_folder[skin_item_id].id)
 
   def test_callableListMethodInListbox(self):
     # check all list_method in listboxes
