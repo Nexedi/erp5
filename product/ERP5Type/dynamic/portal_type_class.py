@@ -29,7 +29,6 @@
 
 import sys
 import inspect
-
 from types import ModuleType
 
 from dynamic_module import registerDynamicModule
@@ -39,6 +38,8 @@ from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
 from Products.ERP5Type import PropertySheet as FilesystemPropertySheet
+
+from zope.interface import classImplements
 from zLOG import LOG, ERROR, INFO
 
 def _importClass(classpath):
@@ -175,11 +176,19 @@ def generatePortalTypeClass(portal_type_name):
 
   baseclasses = [klass] + accessor_holder_list + mixin_class_list
 
+  interface_class_list = []
+  if interface_list:
+    from Products.ERP5Type import interfaces
+    interface_class_list = [getattr(interfaces, name)
+                            for name in interface_list]
+
   #LOG("ERP5Type.dynamic", INFO,
   #    "Portal type %s loaded with bases %s" \
   #        % (portal_type_name, repr(baseclasses)))
 
-  return tuple(baseclasses), dict(portal_type=portal_type_name)
+  return (tuple(baseclasses),
+         interface_class_list,
+         dict(portal_type=portal_type_name))
 
 from lazy_class import generateLazyPortalTypeClass
 def initializeDynamicModules():

@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import sys
+
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
 from ExtensionClass import ExtensionClass, pmc_init_of
+
+from zope.interface import classImplements
 from ZODB.broken import Broken, PersistentBroken
 from zLOG import LOG, WARNING, BLATHER
 
@@ -120,22 +123,28 @@ class PortalTypeMetaClass(ExtensionClass):
 
     portal_type = klass.__name__
     try:
-      baseclasses, attributes = generatePortalTypeClass(portal_type)
+      class_definition = generatePortalTypeClass(portal_type)
     except AttributeError:
       LOG("ERP5Type.Dynamic", WARNING,
           "Could not access Portal Type Object for type %r"
           % portal_type, error=sys.exc_info())
-      baseclasses = (ERP5BaseBroken, )
-      attributes = {}
+      base_list = (ERP5BaseBroken, )
+      attribute_dict = {}
+      interface_list = []
+    else:
+      base_list, interface_list, attribute_dict = class_definition
+
 
     # save the old bases to be able to restore a ghost state later
     klass.__ghostbase__ = klass.__bases__
-    klass.__bases__ = baseclasses
+    klass.__bases__ = base_list
 
-    for key, value in attributes.iteritems():
+    for key, value in attribute_dict.iteritems():
       setattr(klass, key, value)
 
     klass.resetAcquisitionAndSecurity()
+    for interface in interface_list:
+      classImplements(klass, interface)
 
 def generateLazyPortalTypeClass(portal_type_name):
   return PortalTypeMetaClass(portal_type_name, (GhostPortalType,), {})

@@ -35,6 +35,8 @@ from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModule
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
 
+from zope.interface import Interface, implementedBy
+
 class TestPortalTypeClass(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return 'erp5_base',
@@ -204,6 +206,40 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     self.failIfEqual(accessor, None)
     self.assertEquals(accessor(), 'foobar')
     self.assertEquals(temp.__class__.__module__, 'erp5.temp_portal_type')
+
+  def testInterfaces(self):
+    types_tool = self.portal.portal_types
+
+    # a new interface
+    class IForTest(Interface):
+      pass
+    from Products.ERP5Type import interfaces
+    interfaces.IForTest = IForTest
+
+
+    # one new type
+    dummy_type = types_tool.newContent('InterfaceTestType',
+                                       'Base Type')
+    # implementing IForTest
+    dummy_type.edit(type_class='Person',
+                    type_interface_list=['IForTest',],)
+    transaction.commit()
+
+    from erp5.portal_type import InterfaceTestType
+
+    # it's necessary to load the class
+    # to have a correct list of interfaces
+    implemented_by = list(implementedBy(InterfaceTestType))
+    self.failIf(IForTest in implemented_by)
+    InterfaceTestType.loadClass()
+
+    implemented_by = list(implementedBy(InterfaceTestType))
+    self.assertTrue(IForTest in implemented_by,
+                    'IForTest not in %s' % implemented_by)
+
+    InterfaceTestType.restoreGhostState()
+    implemented_by = list(implementedBy(InterfaceTestType))
+    self.failIf(IForTest in implemented_by)
 
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
