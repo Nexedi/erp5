@@ -190,6 +190,20 @@ class TestPortalTypeClass(ERP5TypeTestCase):
                                        type_class='Folder')
     newDocument(portal_type='Folder')
 
+  def testPropertyGenerationOnTempPortalType(self):
+    portal = self.portal
+    temp = portal.organisation_module.newContent('temp_portal_type',
+                                                 'Organisation',
+                                                 temp_object=True)
+    temp.setCorporateName('foobar')
+    synchronizeDynamicModules(portal, force=True)
+
+    # check what is happening if aq_dynamic is called on the
+    # temp portal type first
+    accessor = temp._aq_dynamic('getCorporateName')
+    self.failIfEqual(accessor, None)
+    self.assertEquals(accessor(), 'foobar')
+    self.assertEquals(temp.__class__.__module__, 'erp5.temp_portal_type')
 
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
