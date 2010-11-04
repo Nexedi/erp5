@@ -964,7 +964,7 @@ class Base( CopyContainer,
 
   # XXX This is necessary to override getId which is also defined in SimpleItem.
   security.declareProtected( Permissions.AccessContentsInformation, 'getId' )
-  BaseAccessor.Getter('getId', 'id', 'string')
+  getId = BaseAccessor.Getter('getId', 'id', 'string')
 
   # Debug
   def getOid(self):
