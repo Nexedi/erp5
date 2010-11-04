@@ -433,6 +433,9 @@ table.listbox tr.listbox-stat-line{\n
   border-top: 1px solid #3D6474;\n
 }\n
 \n
+table.listbox tr.listbox-search-line {\n
+  background-color: #DAE6F6;\n
+}\n
 \n
 div.listbox-head{\n
   color:#9D968D;\n
