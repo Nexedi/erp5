@@ -50,9 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Log import log\n
-log(\'Depracated usage of Item_getQuantityUnit, please use Item_getQuantityUnitItemList instead\')\n
-return context.Item_getQuantityUnitItemList()\n
+            <value> <string>resource_value = context.Item_getResourceValue()\n
+movement_value = context.getAggregateRelatedValue()\n
+\n
+result_item_list = [(\'\', \'\')]\n
+if resource_value is not None:\n
+  result_item_list.extend([(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in resource_value.getQuantityUnitValueList()])\n
+elif movement_value is not None:\n
+  result_item_list.extend([(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in movement_value.getQuantityUnitValueList()])\n
+\n
+return result_item_list\n
 </string> </value>
         </item>
         <item>
@@ -89,10 +96,16 @@ return context.Item_getQuantityUnitItemList()\n
                         <key> <string>co_varnames</string> </key>
                         <value>
                           <tuple>
-                            <string>Products.ERP5Type.Log</string>
-                            <string>log</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>resource_value</string>
+                            <string>movement_value</string>
+                            <string>result_item_list</string>
+                            <string>None</string>
+                            <string>append</string>
+                            <string>$append0</string>
+                            <string>_getiter_</string>
+                            <string>x</string>
                           </tuple>
                         </value>
                     </item>
@@ -109,7 +122,7 @@ return context.Item_getQuantityUnitItemList()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Item_getQuantityUnit</string> </value>
+            <value> <string>Item_getQuantityUnitItemList</string> </value>
         </item>
         <item>
             <key> <string>warnings</string> </key>
