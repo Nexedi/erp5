@@ -964,11 +964,7 @@ class Base( CopyContainer,
 
   # XXX This is necessary to override getId which is also defined in SimpleItem.
   security.declareProtected( Permissions.AccessContentsInformation, 'getId' )
-  for prop in PropertySheet.Base._properties:
-    if prop['id'] == 'id':
-      getId = BaseAccessor.Getter('getId', 'id', prop['type'],
-                                  default = prop.get('default'), storage_id = prop.get('storage_id'))
-      break
+  BaseAccessor.Getter('getId', 'id', 'string')
 
   # Debug
   def getOid(self):
