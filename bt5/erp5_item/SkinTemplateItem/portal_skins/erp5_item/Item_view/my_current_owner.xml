@@ -79,7 +79,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_current_owner</string> </value>
+                    <value> <string>my_view_mode_current_owner</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

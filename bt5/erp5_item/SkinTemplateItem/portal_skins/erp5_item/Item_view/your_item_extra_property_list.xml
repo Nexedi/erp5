@@ -71,7 +71,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>your_item_extra_property_list</string> </value>
+                    <value> <string>my_dialog_mode_item_extra_property_list</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

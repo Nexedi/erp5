@@ -71,7 +71,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>listbox_item_quantity</string> </value>
+                    <value> <string>my_view_mode_listbox_item_quantity</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

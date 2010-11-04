@@ -77,7 +77,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_reference</string> </value>
+                    <value> <string>my_view_mode_reference</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

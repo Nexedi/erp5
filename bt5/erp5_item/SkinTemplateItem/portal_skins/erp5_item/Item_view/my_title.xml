@@ -71,7 +71,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_title</string> </value>
+                    <value> <string>my_view_mode_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>

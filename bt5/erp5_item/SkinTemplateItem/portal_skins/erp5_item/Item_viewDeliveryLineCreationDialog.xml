@@ -95,8 +95,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_quantity</string>
-                        <string>my_quantity_unit</string>
+                        <string>your_quantity</string>
+                        <string>your_quantity_unit</string>
                       </list>
                     </value>
                 </item>

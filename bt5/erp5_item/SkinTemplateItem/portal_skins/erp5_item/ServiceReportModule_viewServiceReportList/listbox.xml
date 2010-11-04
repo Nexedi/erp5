@@ -10,13 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>sort</string>
                 <string>title</string>
                 <string>columns</string>
-                <string>all_columns</string>
-                <string>search_columns</string>
-                <string>sort</string>
                 <string>selection_name</string>
+                <string>search_columns</string>
                 <string>portal_types</string>
+                <string>all_columns</string>
               </list>
             </value>
         </item>
@@ -78,10 +78,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>Base_viewSearchResultList</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>all_columns</string> </key>
                     <value>
                       <list>
@@ -98,12 +94,6 @@
                           <string>State</string>
                         </tuple>
                       </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>all_editable_columns</string> </key>
-                    <value>
-                      <list/>
                     </value>
                 </item>
                 <item>
@@ -127,30 +117,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_list_mode_listbox</string> </value>
+                    <value> <string>my_view_mode_module_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
-                </item>
-                <item>
-                    <key> <string>height</string> </key>
-                    <value> <int>5</int> </value>
-                </item>
-                <item>
-                    <key> <string>list_cookie</string> </key>
-                    <value> <string>PERSON_LIST</string> </value>
-                </item>
-                <item>
-                    <key> <string>more_columns</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>path</string>
-                          <string>Path</string>
-                        </tuple>
-                      </list>
-                    </value>
+                    <value> <string>Base_viewItemFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
@@ -162,10 +133,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>reverse</string> </key>
-                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>
@@ -208,10 +175,6 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Service Reports</string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
                 </item>
               </dictionary>
             </value>
