@@ -50,12 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context.Item_getResourceValue() != None:\n
-  result = context.Item_getResourceValue() and context.Item_getResourceValue().getQuantityUnitList() and [(\'\', \'\')] + [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in context.Item_getResourceValue().getQuantityUnitValueList()] or [(\'\', \'\')]\n
+            <value> <string>resource_value = context.Item_getResourceValue()\n
+movement_value = context.getAggregateRelatedValue()\n
 \n
-else:\n
-  result = [(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in context.getAggregateRelatedValue().getQuantityUnitValueList()] or [(\'\', \'\')]\n
-return result\n
+result_item_list = [(\'\', \'\')]\n
+if resource_value is not None:\n
+  result_item_list.extend([(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in resource_value.getQuantityUnitValueList()])\n
+elif movement_value is not None:\n
+  result_item_list.extend([(x.getTranslatedLogicalPath(), x.getCategoryRelativeUrl(base=0)) for x in movement_value.getQuantityUnitValueList()])\n
+\n
+return result_item_list\n
 </string> </value>
         </item>
         <item>
@@ -94,12 +98,14 @@ return result\n
                           <tuple>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>resource_value</string>
+                            <string>movement_value</string>
+                            <string>result_item_list</string>
                             <string>None</string>
                             <string>append</string>
                             <string>$append0</string>
                             <string>_getiter_</string>
                             <string>x</string>
-                            <string>result</string>
                           </tuple>
                         </value>
                     </item>
