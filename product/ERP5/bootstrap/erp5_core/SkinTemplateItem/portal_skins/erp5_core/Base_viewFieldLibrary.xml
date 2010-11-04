@@ -183,6 +183,7 @@
                         <string>listbox_creation_date</string>
                         <string>listbox_owner_title</string>
                         <string>your_form_box_field</string>
+                        <string>my_dialog_mode_reference</string>
                       </list>
                     </value>
                 </item>
