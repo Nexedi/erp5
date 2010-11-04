@@ -116,7 +116,12 @@ def editListBox(listbox_field, listbox):\n
         gv[k] = getattr(request, k, None)\n
     for url, v in listbox.items():\n
       v.update(gv)\n
-      context.restrictedTraverse(url).edit(edit_order=edit_order, **v)\n
+      # Form: \'\' -> ERP5: None\n
+      cleaned_v = v.copy()\n
+      for key, value in cleaned_v.items():\n
+        if value == \'\':\n
+          cleaned_v[key] = None\n
+      context.restrictedTraverse(url).edit(edit_order=edit_order, **cleaned_v)\n
 \n
 def editMatrixBox(matrixbox_field, matrixbox):\n
   """ Function called to edit a Matrix box\n
@@ -208,7 +213,12 @@ def editMatrixBox(matrixbox_field, matrixbox):\n
                 # XXX May require some changes with Sets\n
                 key = gv[\'mapped_value_property_list\'][0]\n
                 v[key] = value\n
-            c.edit(edit_order=edit_order, **v) # and update the cell specific values\n
+            # Form: \'\' -> ERP5: None\n
+            cleaned_v = v.copy()\n
+            for key, value in cleaned_v.items():\n
+              if value == \'\':\n
+                cleaned_v[key] = None\n
+            c.edit(edit_order=edit_order, **cleaned_v) # and update the cell specific values\n
           else:\n
             return "Could not create cell %s" % str(k)\n
         else:\n
