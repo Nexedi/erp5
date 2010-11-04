@@ -185,6 +185,7 @@
                         <string>your_form_box_field</string>
                         <string>my_dialog_mode_reference</string>
                         <string>my_amount_generator_quantity</string>
+                        <string>my_dialog_mode_category</string>
                       </list>
                     </value>
                 </item>
