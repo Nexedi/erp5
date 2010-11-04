@@ -35,6 +35,10 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import _dtmldir
 
+class ConnectionError(Exception):
+  pass
+
+
 connection_plugin_registry = {}
 
 def registerConnectionPlugin(name, klass, ignore_duplicate=False):
