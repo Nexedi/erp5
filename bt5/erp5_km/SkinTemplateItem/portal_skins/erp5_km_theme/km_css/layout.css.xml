@@ -68,9 +68,14 @@ body,html {\n
 \n
 }\n
 \n
-br, .clear{ clear:both; }\n
+fieldset, form {\n
 \n
-.hidden {  display:none;  }\n
+\tborder:none;\n
+\tmargin:0;\n
+\tpadding:0;\n
+}\n
+\n
+br, .clear{ clear:both; }\n
 \n
 div {\n
 \n
@@ -92,6 +97,14 @@ div {\n
   color:white;\n
   text-indent:4px;\n
   margin-bottom:10px;\n
+}\n
+\n
+/* Generic styles used in all ERP5 KM Styles */\n
+.hidden,\n
+.hiddenLabel label,\n
+.hidden_label label,\n
+fieldset.hidden_fieldset { \n
+  display: none;\n
 }\n
 \n
 \n
@@ -136,7 +149,6 @@ div {\n
 \n
 \tclear:both;\n
 \tposition: relative;\n
-/*\toverflow: hidden; */\n
 \tpadding-bottom:35px;\n
 \n
 }\n
@@ -186,23 +198,6 @@ width:30%;\n
 \n
 }\n
 \n
-/*.column-1, .column-2 {\n
-\n
-\twidth:100%;\n
-\tclear:both;\n
-\tmargin-top:10px;\n
-\n
-}\n
-\n
-.column-2 {\n
-\n
-\tmargin:0 10px;\n
-\tfloat: none;\n
-\twidth:auto;\n
-\n
-\n
-}*/\n
-\n
 fieldset.left,\n
 fieldset.right {\n
 \toverflow: hidden;\n
@@ -232,26 +227,6 @@ fieldset.right {\n
 \n
 \twidth:33%;\n
 \tfloat:left;\n
-\n
-}\n
-\n
-/*.column-2 .left {\n
-\n
-\twidth:32%;\n
-\tmargin-right:10px;\n
-\n
-}\n
-\n
-.column-2 .right {\n
-\n
-\twidth:32%;\n
-\tmargin-left:10px;\n
-\n
-}*/\n
-\n
-a img {\n
-\n
-\tborder:none;\n
 \n
 }\n
 \n
@@ -318,7 +293,7 @@ div#wrapper_headline div.file p{\n
 }\n
 \n
 div.input > input {\n
-max-width:320px;\n
+  max-width:320px;\n
 }\n
 \n
 button, select, input {\n
@@ -605,12 +580,6 @@ width: auto;\n
 \n
 .align-right {  text-align:right;  }\n
 \n
-img.float-left {\n
-\n
-\tmargin: 0 10px 10px 0;\n
-\n
-}\n
-\n
 \n
 /* ## layout elements ################################# end ### */\n
 \n
@@ -681,15 +650,6 @@ table .left {\n
 table .right {\n
 \n
   float: right;\n
-\n
-}\n
-\n
-.gadget .inner .table-b{\n
-}\n
-\n
-.gadget .inner .table-b tr td{\n
-\n
-  padding: 3px;\n
 \n
 }\n
 \n
@@ -774,13 +734,6 @@ text-align: right;\n
 \n
 /* ## forms ########################################## start # */\n
 \n
-fieldset, form {\n
-\n
-\tborder:none;\n
-\tmargin:0;\n
-\tpadding:0;\n
-\n
-}\n
 \n
 table tr.thead th input {\n
 \n
@@ -788,7 +741,7 @@ table tr.thead th input {\n
 \n
 }\n
 \n
-input { width:98%; }\n
+/*input { width:98%; }*/\n
 \n
 form p,\n
 .bottom_actions{\n
@@ -798,10 +751,11 @@ form p,\n
 }\n
 \n
 /* ERP5 form listbox bottom */\n
-.bottom{\n
+/*.bottom{\n
   float:left;\n
   width:100%;\n
 }\n
+*/\n
 \n
 .meta {\n
 \n
@@ -1050,8 +1004,6 @@ button.bt-med span img {\n
 \n
 }\n
 \n
-\n
-\n
 #km_left {\n
 \n
   float: left;\n
@@ -1263,28 +1215,6 @@ div.web-toolbar div.menu div.field input, div.web-toolbar div.menu div.field sel
 #clone_action_button{\n
   width: 80%;\n
 }\n
-/* Generic styles used in all ERP5 KM Styles */\n
-.doNotDisplay, \n
-.do_not_display  {\n
-  display: none\n
-}\n
-\n
-.hiddenLabel label,\n
-.hidden_label label { \n
-  display: none;\n
-}\n
-\n
-fieldset.hidden_fieldset {\n
-  display: none;\n
-}\n
-\n
-input#hidden_button {\n
-  width: 0;\n
-  height: 0;\n
-  display: inline;\n
-  border-width: 0;\n
-  float: left;\n
-}\n
 \n
 /* Save button styling */\n
 div.actions button {\n
@@ -1305,11 +1235,6 @@ div.search_popup {\n
   top: 130px;\n
   width: 150px;\n
   z-index: 100;\n
-}\n
-\n
-\n
-div.centeredInner {\n
-  text-align: center;\n
 }\n
 \n
 /* Search listbox styling */\n
