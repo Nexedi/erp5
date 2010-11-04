@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="WebServiceTool" module="Products.ERP5Type.Tool.WebServiceTool"/>
-        <tuple/>
-      </tuple>
+      <global name="WebServiceTool" module="Products.ERP5Type.Tool.WebServiceTool"/>
     </pickle>
     <pickle>
       <dictionary>

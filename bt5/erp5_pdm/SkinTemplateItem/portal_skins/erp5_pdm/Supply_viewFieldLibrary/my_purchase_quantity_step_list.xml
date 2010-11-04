@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="LinesField" module="Products.Formulator.StandardFields"/>
-        <tuple/>
-      </tuple>
+      <global name="LinesField" module="Products.Formulator.StandardFields"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -323,10 +320,7 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>

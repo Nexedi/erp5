@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="IntrospectionTool" module="Products.ERP5.Tool.IntrospectionTool"/>
-        <tuple/>
-      </tuple>
+      <global name="IntrospectionTool" module="Products.ERP5.Tool.IntrospectionTool"/>
     </pickle>
     <pickle>
       <dictionary>
