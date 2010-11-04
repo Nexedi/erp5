@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import sys
 import transaction
 
 from AccessControl import ClassSecurityInfo
@@ -185,14 +186,12 @@ class PropertySheetTool(BaseTool):
     try:
       setDefaultProperties(property_holder, portal=self.getPortalObject())
     except:
-      import traceback
       LOG("Tool.PropertySheetTool", ERROR,
-          "Could not generate accessor holder class for %s (module=%s): %s" %\
-          (property_sheet_id,
-           accessor_holder_module_name,
-           traceback.format_exc()))
+          "Could not generate accessor holder class for %s (module=%s)" % \
+          (property_sheet_id, accessor_holder_module_name),
+          error=sys.exc_info())
 
-      return None
+      raise
 
     # Create the new accessor holder class and set its module properly
     accessor_holder_class = type(property_sheet_id, (object,), dict(
