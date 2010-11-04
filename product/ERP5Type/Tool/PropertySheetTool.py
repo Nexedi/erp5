@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+import transaction
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -36,7 +38,7 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.Base import Base, PropertyHolder
 from Products.ERP5Type.Utils import setDefaultClassProperties, setDefaultProperties
 
-from zLOG import LOG, ERROR, BLATHER
+from zLOG import LOG, ERROR, INFO
 
 class PropertySheetTool(BaseTool):
   """
@@ -109,7 +111,7 @@ class PropertySheetTool(BaseTool):
 
   security.declareProtected(Permissions.ManagePortal,
                             'createAllPropertySheetsFromFilesystem')
-  def createAllPropertySheetsFromFilesystem(self):
+  def createAllPropertySheetsFromFilesystem(self, REQUEST=None):
     """
     Create Property Sheets in portal_property_sheets from _all_
     filesystem Property Sheets
@@ -123,15 +125,21 @@ class PropertySheetTool(BaseTool):
       if name[0] == '_':
         continue
 
-      if name not in self.portal_property_sheets:
-        LOG("Tool.PropertySheetTool", BLATHER,
-            "Creating %s in portal_property_sheets" % repr(name))
+      if name in self.portal_property_sheets:
+        self.portal_property_sheets.deleteContent(name)
+        transaction.commit()
 
-        self.createPropertySheetFromFilesystemClass(klass)
+      LOG("Tool.PropertySheetTool", INFO,
+          "Creating %s in portal_property_sheets" % repr(name))
 
-      else:
-        LOG("Tool.PropertySheetTool", BLATHER,
-            "%s already exists in portal_property_sheets" % repr(name))
+      self.createPropertySheetFromFilesystemClass(klass)
+      transaction.commit()
+
+    if REQUEST is not None:
+      return self.REQUEST.RESPONSE.redirect(
+        '%s/view?portal_status_message=' \
+        'Property Sheets successfully imported from filesystem to ZODB.' % \
+        self.absolute_url())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportPropertySheetToFilesystemDefinitionTuple')
