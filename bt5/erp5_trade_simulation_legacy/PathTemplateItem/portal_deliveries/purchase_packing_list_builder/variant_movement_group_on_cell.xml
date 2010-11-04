@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="VariantMovementGroup" module="Products.ERP5Type.Document.VariantMovementGroup"/>
-        <tuple/>
-      </tuple>
+      <global name="VariantMovementGroup" module="Products.ERP5Type.Document.VariantMovementGroup"/>
     </pickle>
     <pickle>
       <dictionary>

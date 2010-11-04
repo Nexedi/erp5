@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PropertyDivergenceTester" module="Products.ERP5Type.Document.PropertyDivergenceTester"/>
-        <tuple/>
-      </tuple>
+      <global name="PropertyDivergenceTester" module="Products.ERP5Type.Document.PropertyDivergenceTester"/>
     </pickle>
     <pickle>
       <dictionary>

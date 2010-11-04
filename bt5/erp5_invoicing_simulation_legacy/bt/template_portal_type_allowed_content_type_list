@@ -1,7 +1,7 @@
 Invoice Simulation Rule | Category Divergence Tester
+Invoice Simulation Rule | Composed Divergence Tester
 Invoice Simulation Rule | Property Divergence Tester
 Invoice Simulation Rule | Quantity Divergence Tester
-Invoice Simulation Rule | Composed Divergence Tester
 Invoice Transaction Rule | Accounting Rule Cell
 Invoice Transaction Rule | Category Divergence Tester
 Invoice Transaction Rule | Composed Divergence Tester
@@ -9,8 +9,8 @@ Invoice Transaction Rule | Predicate
 Invoice Transaction Rule | Property Divergence Tester
 Invoice Transaction Rule | Quantity Divergence Tester
 Invoice Transaction Simulation Rule | Category Divergence Tester
-Invoice Transaction Simulation Rule | Property Divergence Tester
 Invoice Transaction Simulation Rule | Composed Divergence Tester
+Invoice Transaction Simulation Rule | Property Divergence Tester
 Invoice Transaction Simulation Rule | Quantity Divergence Tester
 Invoicing Rule | Category Divergence Tester
 Invoicing Rule | Composed Divergence Tester

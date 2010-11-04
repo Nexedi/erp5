@@ -25,8 +25,8 @@
  </portal_type>
  <portal_type id="Payment Simulation Rule">
   <item>Category Divergence Tester</item>
-  <item>Property Divergence Tester</item>
   <item>Composed Divergence Tester</item>
+  <item>Property Divergence Tester</item>
   <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Rule Tool">

@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="CausalityMovementGroup" module="Products.ERP5Type.Document.CausalityMovementGroup"/>
-        <tuple/>
-      </tuple>
+      <global name="CausalityMovementGroup" module="Products.ERP5Type.Document.CausalityMovementGroup"/>
     </pickle>
     <pickle>
       <dictionary>
