@@ -183,7 +183,9 @@ class SolverProcess(XMLObject, ActiveProcess):
     for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
       if solver.isTempObject():
         solver_type = solver.getPortalTypeValue()
-        solver_type.activate(activate_kw=activate_kw).solve(
+        # Since multiple documents may need the same solver, activity must be
+        # executed individually. Thus SQLQueue is needed.
+        solver_type.activate(activity='SQLQueue', activate_kw=activate_kw).solve(
           activate_kw=activate_kw,
           delivery_list=solver.getDeliveryList(),
           configuration_dict=solver.getConfigurationPropertyDict()
@@ -191,7 +193,8 @@ class SolverProcess(XMLObject, ActiveProcess):
       else:
         if isTransitionPossible(solver, 'start_solving'):
           solver.startSolving()
-        solver.activate(active_process=self, activate_kw=activate_kw).solve(
+        # SQLQueue is needed for the same reason.
+        solver.activate(activity='SQLQueue', active_process=self, activate_kw=activate_kw).solve(
           activate_kw=activate_kw)
 
   # API
