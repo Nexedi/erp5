@@ -16,6 +16,7 @@
 ##############################################################################
 
 import imp, sys, warnings
+import inspect
 from itertools import chain
 import zope.interface
 from Acquisition import aq_base
@@ -201,10 +202,18 @@ class TypesTool(TypeProvider):
   security.declareProtected(Permissions.AccessContentsInformation, 'getMixinTypeList')
   def getMixinTypeList(self):
     """
-    Return a list of classes names that can be used as Mixins
+    Return a list of class names that can be used as Mixins
     """
     from Products.ERP5Type import mixin_class_registry
     return sorted(mixin_class_registry)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getInterfaceTypeList')
+  def getInterfaceTypeList(self):
+    """
+    Return a list of class names that can be used as Interfaces
+    """
+    from Products.ERP5Type import interfaces
+    return [name for name, cls in inspect.getmembers(interfaces, inspect.isclass)]
 
   security.declareProtected(Permissions.AddPortalContent, 'listDefaultTypeInformation')
   def listDefaultTypeInformation(self):
