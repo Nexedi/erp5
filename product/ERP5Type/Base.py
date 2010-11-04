@@ -554,11 +554,12 @@ def initializePortalTypeDynamicProperties(self, klass, ptype, aq_key, portal):
     parent_klass = parent_object.__class__
     parent_type = parent_object.portal_type
     if getattr(parent_klass, 'isRADContent', 0) and \
-       (ptype != parent_type or klass != parent_klass) and \
-       not Base.aq_portal_type.has_key(parent_type):
-      initializePortalTypeDynamicProperties(parent_object, parent_klass,
-                                            parent_type,
-                                            parent_object._aq_key(), portal)
+        (ptype != parent_type or klass != parent_klass):
+      parent_aq_key = parent_object._aq_key()
+      if parent_aq_key not in Base.aq_portal_type:
+        initializePortalTypeDynamicProperties(parent_object, parent_klass,
+                                              parent_type,
+                                              parent_aq_key, portal)
 
     prop_list = list(getattr(klass, '_properties', []))
     cat_list = list(getattr(klass, '_categories', []))
