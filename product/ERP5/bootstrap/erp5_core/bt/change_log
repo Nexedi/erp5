@@ -1,3 +1,6 @@
+2010-11-04 nicolas.dumazet
+* provide field in BaseType_view to set up interfaces on portal type classes
+
 2010-11-01 nicolas.dumazet
 * remove my_type_factory_method_id from BaseType_view as type_class is replacing this field with portal type classes code
 * export migrated portal types with new type_class property
