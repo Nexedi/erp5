@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors. 
+# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
 # All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
 #
@@ -47,10 +47,10 @@ class TestERP5Discussion(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_core', 'erp5_base', 
-            'erp5_xhtml_style', 'erp5_ingestion', 
-            'erp5_web', 'erp5_dms', 
-            'erp5_knowledge_pad', 'erp5_rss_style', 
+    return ('erp5_core', 'erp5_base',
+            'erp5_xhtml_style', 'erp5_ingestion',
+            'erp5_web', 'erp5_dms',
+            'erp5_knowledge_pad', 'erp5_rss_style',
             'erp5_discussion', )
 
   def login(self):
@@ -71,22 +71,22 @@ class TestERP5Discussion(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  
+
   def stepCreateThread(self):
-    
+
     module =  self.portal.getDefaultModule("Discussion Thread")
     return module.newContent(portal_type="Discussion Thread")
-    
+
   def stepCreatePost(self,thread):
     return thread.newContent(portal_type="Discussion Post")
 
   def test_01_createDiscussionThread(self):
     """Create a new discussion thread"""
-        
+
     self.stepCreateThread();
     self.stepTic()
-    
-  @expectedFailure
+
+  #@expectedFailure
   def test_02_createDiscussionPost(self):
     """Create a disucssion post inscite a discussion thread"""
 
