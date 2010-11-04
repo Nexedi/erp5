@@ -175,6 +175,7 @@
           <div class="input">\n
             <input class="input" size="12" \n
                     type="text" name="clone_title"\n
+                    onkeypress="submitFormOnEnter(event, this.form, \'Base_cloneContent\');"\n
                     tal:attributes="value here/getTitle | nothing"/>\n
           </div>\n
         </div>\n
@@ -184,6 +185,7 @@
           <div class="input">\n
             <input class="input" size="12" \n
                     type="text" name="clone_reference"\n
+                    onkeypress="submitFormOnEnter(event, this.form, \'Base_cloneContent\');"\n
                     tal:attributes="value here/getReference | nothing"/>\n
           </div>\n
         </div>\n
@@ -193,6 +195,7 @@
           <div class="input">\n
             <input class="input" size="5" \n
                     type="text" name="clone_version"\n
+                    onkeypress="submitFormOnEnter(event, this.form, \'Base_cloneContent\');"\n
                     tal:attributes="value here/getVersion | nothing"/>\n
           </div>\n
         </div>\n
@@ -202,6 +205,7 @@
           <div class="input">\n
             <input class="input" size="5"  \n
                     type="text" name="clone_language"\n
+                    onkeypress="submitFormOnEnter(event, this.form, \'Base_cloneContent\');"\n
                     tal:attributes="value here/getLanguage | nothing"/>\n
           </div>\n
         </div>\n
