@@ -245,7 +245,20 @@ class TestXHTML(ERP5TypeTestCase):
     described in SkinsTool_getDuplicateSelectionNameDict
     """
     duplicating_selection_name_dict = self.portal.portal_skins.SkinsTool_getDuplicateSelectionNameDict()
-    self.assertEquals(duplicating_selection_name_dict, {})    
+    self.assertEquals(duplicating_selection_name_dict, {})
+    
+  def test_PythonScriptSyntax(self):
+    """ 
+    Check that Python Scripts syntax is correct.
+    """
+    skins_tool = self.portal.portal_skins
+    for script_path, script in skins_tool.ZopeFind(
+              skins_tool, obj_metatypes=['Script (Python)'], search_sub=1):
+      if script.errors!=():
+	# we need to add script id as well in test failure
+        self.assertEquals('%s : %s' %(script_path, script.errors), ())
+        
+    
 
   def test_callableListMethodInListbox(self):
     # check all list_method in listboxes
