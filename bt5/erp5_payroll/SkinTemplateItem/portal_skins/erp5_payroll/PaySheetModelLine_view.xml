@@ -103,7 +103,6 @@
                         <string>my_title</string>
                         <string>my_reference</string>
                         <string>my_resource_title</string>
-                        <string>my_calculation_script_id</string>
                         <string>my_price</string>
                         <string>my_quantity</string>
                         <string>my_trade_phase</string>
@@ -118,7 +117,6 @@
                         <string>my_variation_category_list</string>
                         <string>my_base_contribution_list</string>
                         <string>my_base_application_list</string>
-                        <string>my_create_line</string>
                       </list>
                     </value>
                 </item>

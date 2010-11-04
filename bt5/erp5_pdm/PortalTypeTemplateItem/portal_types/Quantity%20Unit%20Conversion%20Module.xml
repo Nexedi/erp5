@@ -57,7 +57,7 @@
   An ERP5 Binder document class will eventually be defined\r\n
   in order to implement a binder of documents which can itself\r\n
   be categorized.\r\n
-  </string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

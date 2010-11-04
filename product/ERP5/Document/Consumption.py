@@ -33,9 +33,10 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.XMLMatrix import XMLMatrix
-from Products.ERP5.Variated import Variated
+from Products.ERP5.mixin.variated import VariatedMixin
 
-class Consumption(XMLObject, XMLMatrix, Variated):
+
+class Consumption(XMLObject, XMLMatrix, VariatedMixin):
     """
       A matrix which provides default quantities
       for a given quantity
@@ -66,7 +67,7 @@ class Consumption(XMLObject, XMLMatrix, Variated):
       self._setCategoryMembership(self.getVariationRangeBaseCategoryList(),
                                   value, base=1)
       # XXX Must use in futur this method, but it failed today 
-      #Variated._setVariationCategoryList(self, value)
+      #VariatedMixin._setVariationCategoryList(self, value)
       # XXX FIXME: Use a interaction workflow instead
       # Kept for compatibility.
       self.updateCellRange(base_id='quantity')

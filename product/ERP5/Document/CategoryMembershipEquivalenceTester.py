@@ -26,11 +26,9 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type.Core.Predicate import Predicate
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
 class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
@@ -56,8 +54,9 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
                       , PropertySheet.SolverSelection
                      )
 
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IEquivalenceTester, )
+  @staticmethod
+  def _getTestedPropertyValue(movement, property):
+    return movement.getPropertyList(property)
 
   def _compare(self, prevision_movement, decision_movement):
     """
@@ -69,8 +68,10 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      decision_value = decision_movement.getPropertyList(tested_property)
-    prevision_value = prevision_movement.getPropertyList(tested_property)
+      decision_value = self._getTestedPropertyValue(decision_movement,
+                                                    tested_property)
+    prevision_value = self._getTestedPropertyValue(prevision_movement,
+                                                   tested_property)
 
     # XXX do we have configurable parameter for this divergence tester ?
     # like ambiguity...
@@ -80,34 +81,3 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
         'The values of ${property_name} category are different between decision and prevision.',
         dict(property_name=tested_property))
     return None
-
-  def generateHashKey(self, movement):
-    """
-    Returns a hash key which can be used to optimise the
-    matching algorithm between movements. The purpose
-    of this hash key is to reduce the size of lists of
-    movements which need to be compared using the compare
-    method (quadratic complexity).
-
-    If decision_movement is a simulation movement, use
-    the recorded properties instead of the native ones.
-    """
-    tested_property = self.getTestedProperty()
-    if movement.isPropertyRecorded(tested_property):
-      value = movement.getRecordedProperty(tested_property)
-    else:
-      value = movement.getPropertyList(tested_property)
-    return '%s/%r' % (tested_property, value)
-
-  def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
-    """
-    Returns a list of properties to update on decision_movement
-    prevision_movement so that next call to compare returns True.
-
-    prevision_movement -- a simulation movement (prevision)
-
-    decision_movement -- a delivery movement (decision)
-    """
-    tested_property = self.getTestedProperty()
-    prevision_value = prevision_movement.getPropertyList(tested_property)
-    return {tested_property:prevision_value}

@@ -57,7 +57,7 @@ class TestBPMEvaluationMixin(TestBPMMixin):
 
   def getBusinessTemplateList(self):
     return TestBPMMixin.getBusinessTemplateList(self) + ('erp5_bpm',
-        'erp5_administration', 'erp5_simulation',)
+        'erp5_administration')
 
   def afterSetUp(self):
     TestBPMMixin.afterSetUp(self)
@@ -400,13 +400,12 @@ class TestBPMEvaluationMixin(TestBPMMixin):
     self.destination, self.destination_section = self._createNode() \
         , self._createNode()
 
-  def _createBusinessStateList(self):
+  def _setTradeStateList(self):
     """Creates list of defaults states, set them on self as name_state property"""
+    tool = self.getCategoryTool()
     for state_name in ('ordered', 'delivered', 'invoiced', 'accounted',
         'paid'):
-      state_document = self.createBusinessState(self.business_process,
-        title=state_name)
-      setattr(self,'%s_state' % state_name, state_document)
+      setattr(self,'%s_state' % state_name, tool.trade_state._getOb(state_name))
 
   def _createRootDocument(self):
     self.root_document = self._createDocument(self.root_document_portal_type,
@@ -504,9 +503,9 @@ class TestBPMEvaluationDefaultProcessMixin:
   def _createBusinessProcess(self):
     self.business_process = self.createBusinessProcess(title=self.id(),
         referential_date='start_date')
-    self._createBusinessStateList()
+    self._setTradeStateList()
 
-    self.order_path = self.createBusinessPath(self.business_process,
+    self.order_path = self.createBusinessLink(self.business_process,
         successor_value=self.ordered_state,
         trade_phase='default/order',
         deliverable=1,
@@ -514,7 +513,7 @@ class TestBPMEvaluationDefaultProcessMixin:
         frozen_state_list=['confirmed'],
         )
 
-    self.delivery_path = self.createBusinessPath(self.business_process,
+    self.delivery_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.ordered_state,
         successor_value=self.delivered_state,
         trade_phase='default/delivery',
@@ -524,7 +523,7 @@ class TestBPMEvaluationDefaultProcessMixin:
         delivery_builder='portal_deliveries/bpm_sale_packing_list_builder',
         )
 
-    self.invoice_path = self.createBusinessPath(self.business_process,
+    self.invoice_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.delivered_state,
         successor_value=self.invoiced_state,
         completed_state_list=['delivered'],
@@ -532,14 +531,14 @@ class TestBPMEvaluationDefaultProcessMixin:
         delivery_builder='portal_deliveries/bpm_sale_invoice_builder',
         trade_phase='default/invoicing')
 
-    self.account_path = self.createBusinessPath(self.business_process,
+    self.account_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.invoiced_state,
         successor_value=self.accounted_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/accounting')
 
-    self.pay_path = self.createBusinessPath(self.business_process,
+    self.pay_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.invoiced_state,
         successor_value=self.accounted_state,
         completed_state_list=['delivered'],
@@ -552,9 +551,9 @@ class TestBPMEvaluationDifferentProcessMixin:
   def _createBusinessProcess(self):
     self.business_process = self.createBusinessProcess(title=self.id(),
         referential_date='start_date')
-    self._createBusinessStateList()
+    self._setTradeStateList()
 
-    self.order_path = self.createBusinessPath(self.business_process,
+    self.order_path = self.createBusinessLink(self.business_process,
         successor_value=self.ordered_state,
         trade_phase='default/order',
         deliverable=1,
@@ -562,28 +561,28 @@ class TestBPMEvaluationDifferentProcessMixin:
         frozen_state_list=['confirmed'],
         )
 
-    self.invoice_path = self.createBusinessPath(self.business_process,
+    self.invoice_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.ordered_state,
         successor_value=self.invoiced_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/invoicing')
 
-    self.account_path = self.createBusinessPath(self.business_process,
+    self.account_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.invoiced_state,
         successor_value=self.accounted_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/accounting')
 
-    self.pay_path = self.createBusinessPath(self.business_process,
+    self.pay_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.accounted_state,
         successor_value=self.paid_state,
         completed_state_list=['delivered'],
         frozen_state_list=['stopped', 'delivered'],
         trade_phase='default/payment')
 
-    self.delivery_path = self.createBusinessPath(self.business_process,
+    self.delivery_path = self.createBusinessLink(self.business_process,
         predecessor_value=self.paid_state,
         successor_value=self.delivered_state,
         trade_phase='default/delivery',

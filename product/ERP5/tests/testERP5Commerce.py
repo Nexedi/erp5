@@ -103,9 +103,15 @@ class TestCommerce(ERP5TypeTestCase):
     """
     return ('erp5_base',
             'erp5_web',
-            'erp5_trade',
             'erp5_pdm',
-            'erp5_commerce',)
+            'erp5_simulation',
+            'erp5_trade',
+            'erp5_commerce',
+            'erp5_simulation_test')
+
+  def getRule(self, **kw):
+    return self.portal.portal_rules.searchFolder(
+          sort_on='version', sort_order='descending', **kw)[0].getObject()
 
   def afterSetUp(self):
     uf = self.getPortal().acl_users
@@ -158,9 +164,9 @@ class TestCommerce(ERP5TypeTestCase):
     shipping.publish()
 
     # validate default order rule
-    default_order_rule = self.portal.portal_rules.default_order_rule
-    if default_order_rule.getValidationState() != 'validated':
-      self.portal.portal_rules.default_order_rule.validate()
+    rule = self.getRule(reference='default_order_rule')
+    if rule.getValidationState() != 'validated':
+      rule.validate()
 
     self.website = self.setupWebSite()
     self.website.setProperty('ecommerce_base_currency',

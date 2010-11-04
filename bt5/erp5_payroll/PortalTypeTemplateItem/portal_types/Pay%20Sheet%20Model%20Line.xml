@@ -56,6 +56,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
+                <string>amount_generator_line</string>
                 <string>model_path</string>
               </tuple>
             </value>

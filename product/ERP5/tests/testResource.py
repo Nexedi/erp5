@@ -63,7 +63,8 @@ class TestResource(ERP5TypeTestCase):
       Install needed business template
     """
     # Trade is needeed for pricing
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_apparel', )
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+            'erp5_apparel', 'erp5_simulation_test')
 
   def getTitle(self):
     return "Resource"
@@ -631,7 +632,8 @@ class TestResource(ERP5TypeTestCase):
     # Fill the PDM preferences
     preference = self.portal.portal_preferences.default_site_preference
     preference.setPreferredProductOptionalVariationBaseCategoryList(['industrial_phase'])
-    preference.enable()
+    if preference.getPreferenceState() == 'disabled':
+      preference.enable()
     transaction.commit()
     self.tic()
     # Create another product/supply, in order to be sure that the

@@ -34,7 +34,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testInvoice import TestSaleInvoiceMixin
+from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 
 class TestItemMixin(TestSaleInvoiceMixin):
   item_portal_type = 'Item'
@@ -986,7 +986,8 @@ class TestItemScripts(ERP5TypeTestCase):
   """Test scripts from erp5_item.
   """
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_item',)
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+            'erp5_item', 'erp5_simulation_test')
 
   def afterSetUp(self):
     self.validateRules()

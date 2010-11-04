@@ -26,8 +26,8 @@
 #
 ##############################################################################
 
-from testProductionOrder import TestProductionOrderMixin
-from testInventoryAPI import BaseTestUnitConversion
+from Products.ERP5.tests.testProductionOrder import TestProductionOrderMixin
+from Products.ERP5.tests.testInventoryAPI import BaseTestUnitConversion
 import transaction
 
 class TestTransformationMixin(TestProductionOrderMixin):
@@ -108,8 +108,8 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_mrp', 'erp5_apparel',
-            'erp5_dummy_movement', 'erp5_project')
+    return TestTransformationMixin.getBusinessTemplateList(self) + (
+      'erp5_apparel', 'erp5_dummy_movement', 'erp5_project')
 
   def test_01_getAggregatedAmountListSimple(self):
     """
@@ -134,8 +134,13 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     """
     # Only for testing purpose, use a property sheet that has nothing to
     # do with component. It would have been possible to create a new
-    # property sheet for this test
+    # property sheet for this test.
+    # When one do that, the property sheet should be added to many other types
+    # like movements, order lines and so on.
+    self._addPropertySheet('Amount', 'Bug')
     self._addPropertySheet(self.transformed_resource_portal_type, 'Bug')
+    # XXX 'tested' works here because 'storage_id' does not differ
+    #     (see also MappedValue.__doc__)
     variation_property_list = ['tested']
 
     transformation = self.createTransformation()
@@ -146,15 +151,7 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
         resource_value=component,
         quantity=1)
     transformed_resource.setTested(True)
-    from Products.ERP5Type.Document import newTempAmount
-    amount = newTempAmount(transformation, "foobar")
-    amount.edit(
-        quantity = 1.0,
-        resource = component.getRelativeUrl(),
-    )
-    aggregated_amount_list = transformation.getAggregatedAmountList(amount)
-    self.assertEquals(len(aggregated_amount_list), 1)
-    aggregated_amount = aggregated_amount_list[0]
+    aggregated_amount, = transformation.getAggregatedAmountList()
     # Make sure that the isTested method is working properly on the
     # temp object
     self.assertTrue(aggregated_amount.isTested())

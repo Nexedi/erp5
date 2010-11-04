@@ -5,11 +5,6 @@
  <portal_type id="Bank Account">
   <item>Agent</item>
  </portal_type>
- <portal_type id="Composed Divergence Tester">
-  <item>Category Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
  <portal_type id="Currency">
   <item>Currency Exchange Line</item>
  </portal_type>
@@ -123,18 +118,5 @@
  </portal_type>
  <portal_type id="Rounding Tool">
   <item>Rounding Model</item>
- </portal_type>
- <portal_type id="Solver Process">
-  <item>Solver Decision</item>
- </portal_type>
- <portal_type id="Solver Process Tool">
-  <item>Solver Process</item>
- </portal_type>
- <portal_type id="Solver Tool">
-  <item>Solver Type</item>
- </portal_type>
- <portal_type id="Solver Type">
-  <item>Action Information</item>
-  <item>Role Information</item>
  </portal_type>
 </allowed_content_type_list>

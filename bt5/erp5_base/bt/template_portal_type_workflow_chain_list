@@ -5,9 +5,7 @@ Assignment | edit_workflow
 Bank Account | edit_workflow
 Bank Account | validation_workflow
 Career | career_workflow
-Category Divergence Tester | edit_workflow
 Chat Address | edit_workflow
-Composed Divergence Tester | edit_workflow
 Credit Card | edit_workflow
 Credit Card | validation_workflow
 Currency Exchange Line | currency_exchange_line_interaction_workflow
@@ -35,15 +33,10 @@ Person | edit_workflow
 Person | person_interaction_workflow
 Person | user_account_workflow
 Person | validation_workflow
-Property Divergence Tester | edit_workflow
-Quantity Divergence Tester | edit_workflow
 Query | edit_workflow
 Query | query_workflow
 Role Definition | edit_workflow
 Role Definition | local_permission_interaction_workflow
 Rounding Model | validation_workflow
 Simulation Movement | simulation_movement_causality_interaction_workflow
-Solver Process | solver_process_workflow
-Solver Type | edit_workflow
-Solver Type | validation_workflow
 Telephone | edit_workflow

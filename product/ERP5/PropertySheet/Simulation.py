@@ -29,20 +29,24 @@
 
 class Simulation:
   """
-      Attributes used in the optimisation of the simulation
+  Attributes used in the optimisation of the simulation
+
+  TODO:
+    - should all categories which are propagatable in simulation
+      be defined here or elsewhere (movement, another property sheets) 
   """
 
   _properties = (
         # Change of dates and quantities
-        {   'id'          : 'quantity_frozen',
+        {   'id'          : 'quantity_frozen',        # XXX-JPS Legacy ideas, not used
             'description' : 'If set to 1, the quantity can not be changed',
             'type'        : 'boolean',
             'mode'        : 'w' },
-        {   'id'          : 'start_date_frozen',
+        {   'id'          : 'start_date_frozen',        # XXX-JPS Legacy ideas, not used
             'description' : 'If set to 1, the start date can not be changed',
             'type'        : 'boolean',
             'mode'        : 'w' },
-        {   'id'          : 'stop_date_frozen',
+        {   'id'          : 'stop_date_frozen',        # XXX-JPS Legacy ideas, not used
             'description' : 'If set to 1, the stop date can not be changed',
             'type'        : 'boolean',
             'mode'        : 'w' },
@@ -52,7 +56,7 @@ class Simulation:
             'default'     : 1.,
             'type'        : 'float',
             'mode'        : 'w' },
-        {   'id'          : 'order_ratio',
+        {   'id'          : 'order_ratio',        # XXX-JPS Legacy ideas, not used
             'description' : 'ratio to apply on the quantity property of the' \
                             'corresponding order to obtain the current quantity',
             'default'     : 1.,
@@ -65,4 +69,11 @@ class Simulation:
             'mode'        : 'w' },
   )
 
-  _categories = ('order', 'delivery', 'delivery_mode', 'incoterm', 'payment_mode', 'solver', 'specialise', 'property_mapping')
+  _categories = ('order', 'delivery', 'delivery_mode', 'incoterm',
+                 'payment_mode', 'solver', 'specialise',
+                 # XXX-JPS I doubt that this is really required (here)
+                 'property_mapping',
+                 # used to link to Business Links and Trade Model Paths
+                 # (but this is redundant with Amount property sheet)
+                 'causality',
+                )

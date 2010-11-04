@@ -1,16 +1,12 @@
-Accept Solver
-Adopt Solver
 Category Membership Divergence Tester
 DateTime Divergence Tester
-FIFO Delivery Solver
 Float Divergence Tester
-LIFO Delivery Solver
-Minimise Price Delivery Solver
 Net Converted Quantity Divergence Tester
-Production Reduction Solver
-Quantity Cancel Solver
-Quantity Split Solver
+Solver Decision
+Solver Process
+Solver Process Tool
+Solver Tool
+Solver Type
+Specialise Divergence Tester
 String Divergence Tester
-Trade Model Solver
-Unify Solver
 Variation Divergence Tester

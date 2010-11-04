@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5.Document.BusinessProcess import BusinessProcess
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 
@@ -47,7 +48,7 @@ def _getEffectiveModel(self, start_date, stop_date):
   XXX Should we moved this function to a class ? Which one ?
       What about reusing IVersionable ?
   """
-  reference = self.getReference()
+  reference = self.getProperty('reference')
   if not reference:
     return self
 
@@ -78,6 +79,11 @@ def _getEffectiveModel(self, start_date, stop_date):
   return model_list[0].getObject()
 
 
+# We do have clever caching here, since container_list does not contain objects
+# with no subobject.
+# After evaluation of asComposedDocument() on a SO and all its SOL,
+# _findPredicateList's cache has at most 1 entry per specialise value found
+# on SO/SOL.
 @transactional_cached()
 def _findPredicateList(container_list, portal_type):
   predicate_list = []
@@ -103,25 +109,31 @@ class asComposedDocument(object):
   effective models (specialise values) is stored in a private attribute.
   Collecting predicates (from effective models) is done lazily. Predicates can
   be accessed through contentValues/objectValues.
+
+  This class should be seen as a function, and it is named accordingly.
+  It is out of CompositionMixin class to avoid excessive indentation.
   """
   # Cache created classes to make other caches (like Base.aq_portal_type)
   # useful and avoid memory leaks.
   __class_cache = {}
 
   def __new__(cls, orig_self, portal_type_list=None):
-    self = orig_self.asContext(_portal_type_list=portal_type_list)
+    self = orig_self.asContext(_portal_type_list=portal_type_list) # XXX-JPS orig_self -> original_self - please follow conventions
     base_class = self.__class__
     try:
       self.__class__ = cls.__class_cache[base_class]
     except KeyError:
       cls.__class_cache[base_class] = self.__class__ = \
-        type(base_class.__name__, (cls, base_class), {})
-    self._effective_model_list = \
-      orig_self._findEffectiveSpecialiseValueList(portal_type_list)
+        type(base_class.__name__, (cls, base_class, BusinessProcess), {})
+              # here we could inherit many "useful" classes dynamically - héhé
+              # that would be a "real" abstract composition system
+    self._effective_model_list, specialise_value_list = \
+      orig_self._findEffectiveAndInitialModelList(portal_type_list)
+    self._setValueList('specialise', specialise_value_list)
     return self
 
   def __init__(self, orig_self, portal_type_list=None):
-    # __new__ does not call __init__ because returned object
+    # __init__ is not called automatically after __new__ because returned object
     # is wrapped in an acquisition context.
     assert False
 
@@ -153,6 +165,9 @@ class asComposedDocument(object):
                            object_list)
     return sortValueList(object_list, sort_on, sort_order, **kw)
 
+# XXX Legacy simulation allows model lines on deliveries.
+#     Enabled if erp5_simulation_legacy BT is installed.
+_LEGACY_SIMULATION = False
 
 class CompositionMixin:
   """
@@ -179,31 +194,58 @@ class CompositionMixin:
 
     This algorithm uses Breadth First Search.
     """
+    return self._findEffectiveAndInitialModelList(specialise_type_list)[0]
+
+  def _findEffectiveAndInitialModelList(self, specialise_type_list):
     start_date = self.getStartDate()
     stop_date = self.getStopDate()
-    def getEffectiveModel(model):
-      return _getEffectiveModel(model, start_date, stop_date)
-    model_list = [self]
-    model_set = set(model_list)
-    model_index = 0
-    while model_index < len(model_list):
-      model = model_list[model_index]
-      model_index += 1
-      # we don't use getSpecialiseValueList to avoid acquisition on the parent
-      for model in map(getEffectiveModel, model.getValueList('specialise',
-                                      portal_type=specialise_type_list or ())):
-        if model not in model_set:
-          model_set.add(model)
+    effective_list = []
+    effective_set = set()
+    effective_index = -1
+    model_list = self.getInheritedSpecialiseValueList(specialise_type_list)
+    specialise_value_list = model_list
+    while effective_index < len(effective_list):
+      if effective_index >= 0:
+        # we don't use getSpecialiseValueList to avoid acquisition on the parent
+        model_list = effective_list[effective_index].getValueList('specialise',
+                                        portal_type=specialise_type_list or ())
+      elif _LEGACY_SIMULATION:
+        parent = self
+        while isinstance(parent, CompositionMixin):
+          effective_list.append(parent)
+          parent = parent.getParentValue()
+        effective_index += len(effective_list)
+      effective_index += 1
+      for model in model_list:
+        model = _getEffectiveModel(model, start_date, stop_date)
+        if model not in effective_set:
+          effective_set.add(model)
           if 1: #model.test(self): # XXX
-            model_list.append(model)
-    try:
-      parent_asComposedDocument = self.getParentValue().asComposedDocument
-    except AttributeError:
-      pass
-    else:
-      model_list += [model for model in parent_asComposedDocument(
-                             specialise_type_list)._effective_model_list
-                           if model not in model_set]
-    return model_list
+            effective_list.append(model)
+    return effective_list, specialise_value_list
 
-del asComposedDocument
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getInheritedSpecialiseValueList')
+  def getInheritedSpecialiseValueList(self, specialise_type_list=None,
+                                      exclude_specialise_type_list=()):
+    """Get inherited specialise values
+
+    Values are inherited from parent only if portal types differ,
+    so that a child can override.
+    """
+    portal_type_set = set()
+    specialise_list = []
+    for value in self.getValueList('specialise'):
+      portal_type = value.getPortalType()
+      if not (portal_type in exclude_specialise_type_list or
+          specialise_type_list and portal_type not in specialise_type_list):
+        portal_type_set.add(portal_type)
+        specialise_list.append(value)
+    parent = self.getParentValue()
+    if isinstance(parent, CompositionMixin):
+      portal_type_set.update(exclude_specialise_type_list)
+      specialise_list += parent.getInheritedSpecialiseValueList(
+        specialise_type_list, portal_type_set)
+    return specialise_list
+
+del asComposedDocument # to be unhidden (and renamed ?) if needed

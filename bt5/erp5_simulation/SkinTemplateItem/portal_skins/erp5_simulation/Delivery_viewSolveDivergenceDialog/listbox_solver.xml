@@ -155,7 +155,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(\'Do Nothing\', \'\')] + [(x.getSolverActionTitle() or x.getTitleOrId(), x.getRelativeUrl()) for x in cell.getCausalityValue().getSolverValueList()]</string> </value>
+            <value> <string>python:[(context.Base_translateString(\'Do Nothing\'), \'\')] + [(context.Base_translateString(x.getSolverActionTitle()) or x.getTranslatedTitle(), x.getRelativeUrl()) for x in cell.getCausalityValue().getSolverValueList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

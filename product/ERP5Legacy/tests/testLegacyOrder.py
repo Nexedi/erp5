@@ -40,7 +40,7 @@ from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.CMFCore.utils import getToolByName
 
-class TestOrderMixin:
+class TestOrderMixin(object):
 
   default_quantity = 99
   default_price = 555
@@ -60,8 +60,10 @@ class TestOrderMixin:
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',
-            'erp5_project', 'erp5_administration')
+    return ('erp5_base', 'erp5_simulation', 'erp5_simulation_legacy',
+            'erp5_pdm', 'erp5_trade', 'erp5_apparel', 'erp5_project',
+            'erp5_trade_simulation_legacy', 'erp5_project_simulation_legacy',
+            'erp5_administration')
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users

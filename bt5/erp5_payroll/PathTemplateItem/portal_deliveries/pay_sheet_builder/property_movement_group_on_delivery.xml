@@ -39,10 +39,7 @@
         <item>
             <key> <string>tested_property</string> </key>
             <value>
-              <tuple>
-                <string>start_date</string>
-                <string>stop_date</string>
-              </tuple>
+              <none/>
             </value>
         </item>
         <item>

@@ -42,6 +42,7 @@ from Acquisition import aq_base
 
 from Products.ERP5.Document.AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
 from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
+from Products.ERP5.mixin.explainable import ExplainableMixin
 
 # XXX Do we need to create groups ? (ie. confirm group include confirmed, getting_ready and ready
 
@@ -60,7 +61,7 @@ parent_to_movement_simulation_state = {
   'invoiced'         : 'planned',
 }
 
-class SimulationMovement(Movement, PropertyRecordableMixin):
+class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   """
       Simulation movements belong to a simulation workflow which includes
       the following steps
@@ -197,10 +198,33 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isCompleted')
   def isCompleted(self):
-    """Zope publisher docstring. Documentation in ISimulationMovement"""
+    """Lookup business path and, if any, return True whenever
+    simulation_state is in of completed state list defined on business path
+    """
     # only available in BPM, so fail totally in case of working without BPM
-    return self.getSimulationState() in self.getCausalityValue(
-        portal_type='Business Path').getCompletedStateList()
+    business_link =  self.getCausalityValue(
+                         portal_type=self.getPortalBusinessLinkTypeList())
+    if business_link is None:
+      return False
+    return self.getSimulationState() in business_link.getCompletedStateList()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isFrozen')
+  def isFrozen(self):
+    """Lookup business path and, if any, return True whenever
+    simulation_state is in one of the frozen states defined on business path
+    """
+    business_link =  self.getCausalityValue(
+                         portal_type=self.getPortalBusinessLinkTypeList())
+    if business_link is None:
+      # Legacy support - this should never happen
+      # XXX-JPS ADD WARNING
+      if self.getSimulationState() in ('stopped', 'delivered', 'cancelled'):
+        return True
+      if self._baseIsFrozen() == 0:
+        self._baseSetFrozen(None)
+      return self._baseGetFrozen() or False
+    return self.getSimulationState() in business_link.getFrozenStateList()
 
   security.declareProtected( Permissions.AccessContentsInformation,
                             'isAccountable')
@@ -305,26 +329,6 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
             explanation_value = explanation_value.getParentValue()
       if explanation_value != portal:
         return explanation_value
-
-  def asComposedDocument(self, *args, **kw):
-    # XXX: What delivery should be used to find amount generator lines ?
-    #      With the currently enabled code, entire branches in the simulation
-    #      tree get (temporary) deleted when new delivery lines are being built
-    #      (and don't have yet a specialise value).
-    #      With the commented code, changing the STC on a SIT generated from a
-    #      SPL/SO would have no impact (and would never make the SIT divergent).
-    #return self.getRootSimulationMovement() \
-    #           .getDeliveryValue() \
-    #           .asComposedDocument(*args, **kw)
-    while 1:
-      delivery_value = self.getDeliveryValue()
-      if delivery_value is not None:
-        return delivery_value.asComposedDocument(*args, **kw)
-      # below code is for compatibility with old rules
-      grand_parent = self.getParentValue().getParentValue()
-      if grand_parent.getPortalType() == 'Simulation Tool':
-        return self.getOrderValue().asComposedDocument(*args, **kw)
-      self = grand_parent
 
   # Deliverability / orderability
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -560,12 +564,162 @@ class SimulationMovement(Movement, PropertyRecordableMixin):
       return False
 
     # might be buildable - business path dependent
-    business_path = self.getCausalityValue(portal_type='Business Path')
+    business_link = self.getCausalityValue(portal_type='Business Link')
     explanation_value = self.getExplanationValue()
-    if business_path is None or explanation_value is None:
+    if business_link is None or explanation_value is None:
       return True
 
-    return len(business_path.filterBuildableMovementList([self])) == 1
+    ## XXX Code below following line has been moved to BusinessPath (cf r37116)
+    #return len(business_path.filterBuildableMovementList([self])) == 1
+
+    predecessor_state = business_link.getPredecessorValue()
+    if predecessor_state is None:
+      # first one, can be built
+      return True # XXX-JPS wrong cause root is marked
+
+    # movement is not built, and corresponding business path
+    # has predecessors: check movements related to those predecessors!
+    predecessor_path_list = predecessor_state.getSuccessorRelatedValueList()
+
+    def isBuiltAndCompleted(simulation, path):
+      return simulation.getCausalityValue() is not None and \
+          simulation.getSimulationState() in path.getCompletedStateList()
+
+    ### Step 1:
+    ## Explore ancestors in ZODB (cheap)
+    #
+
+    # store a causality -> causality_related_movement_list mapping
+    causality_dict = {}
+    current = self.getParentValue().getParentValue()
+    while current.getPortalType() == "Simulation Movement":
+      causality_dict[current.getCausality(portal_type='Business Link')] = \
+        current
+      current = current.getParentValue().getParentValue()
+
+    remaining_path_set = set()
+    for path in predecessor_path_list:
+      related_simulation = causality_dict.get(path.getRelativeUrl())
+      if related_simulation is None:
+        remaining_path_set.add(path)
+        continue
+      # XXX assumption is made here that if we find ONE completed ancestor
+      # movement of self that is related to a predecessor path, then
+      # that predecessor path is completed. Is it True? (aka when
+      # Business Process goes downwards, is the maximum movements per
+      # predecessor 1 or can we have more?)
+      if not isBuiltAndCompleted(related_simulation, path):
+        return False
+
+    # in 90% of cases, Business Path goes downward and this is enough
+    if not remaining_path_set:
+      return True
+
+    # But sometimes we have to dig deeper
+
+    ### Step 2:
+    ## Try catalog to find descendant movements, knowing
+    # that it can be incomplete
+
+    class treeNode(dict):
+      """
+      Used to cache accesses to ZODB objects.
+      The idea is to put in visited_movement_dict the objects we've already
+      loaded from ZODB in Step #2 to avoid loading them again in Step #3.
+
+      - self represents a single ZODB container c
+      - self.visited_movement_dict contains an id->(ZODB obj) cache for
+        subobjects of c
+      - self[id] contains the treeNode representing c[id]
+      """
+      def __init__(self):
+        dict.__init__(self)
+        self.visited_movement_dict = dict()
+
+    path_tree = treeNode()
+    def updateTree(simulation_movement, path):
+      tree_node = path_tree
+      movement_path = simulation_movement.getPhysicalPath()
+      simulation_movement_id = movement_path[-1]
+      # find container
+      for path_id in movement_path[:-1]:
+        tree_node = tree_node.setdefault(path_id, treeNode())
+      # and mark the object as visited
+      tree_node.visited_movement_dict[simulation_movement_id] = (simulation_movement, path)
+
+    portal_catalog = self.getPortalObject().portal_catalog
+    catalog_simulation_movement_list = portal_catalog(
+      portal_type='Simulation Movement',
+      causality_uid=[p.getUid() for p in remaining_path_set],
+      path='%s/%%' % self.getPath())
+
+    for movement in catalog_simulation_movement_list:
+      path = movement.getCausalityValue()
+      if not isBuiltAndCompleted(movement, path):
+        return False
+      updateTree(movement, path)
+
+    ### Step 3:
+    ## We had no luck, we have to explore descendant movements in ZODB
+    #
+    def descendantGenerator(document, tree_node, path_set_to_check):
+      """
+      generator yielding Simulation Movement descendants of document.
+      It does _not_ explore the whole subtree if iteration is stopped.
+
+      It uses the tree we built previously to avoid loading again ZODB
+      objects that we already loaded during catalog querying
+
+      path_set_to_check contains a set of Business Paths that we are
+      interested in. A branch is only explored if this set is not
+      empty; a movement is only yielded if its causality value is in this set
+      """
+      object_id_list = document.objectIds()
+      for id in object_id_list:
+        if id not in tree_node.visited_movement_dict:
+          # we had not visited it in step #2
+          subdocument = document._getOb(id)
+          if subdocument.getPortalType() == "Simulation Movement":
+            path = subdocument.getCausalityValue()
+            t = (subdocument, path)
+            tree_node.visited_movement_dict[id] = t
+            if path in path_set_to_check:
+              yield t
+          else:
+            # it must be an Applied Rule
+            subtree = tree_node.get(id, treeNode())
+            for d in descendantGenerator(subdocument,
+                                         subtree,
+                                         path_set_to_check):
+              yield d
+
+      for id, t in tree_node.visited_movement_dict.iteritems():
+        subdocument, path = t
+        to_check = path_set_to_check
+        # do we need to change/copy the set?
+        if path in to_check:
+          if len(to_check) == 1:
+            # no more paths to check in this branch
+            continue
+          to_check = to_check.copy()
+          to_check.remove(path)
+        subtree = tree_node.get(id, treeNode())
+        for d in descendantGenerator(subdocument, subtree, to_check):
+          yield d
+
+    # descend in the tree to find self:
+    tree_node = path_tree
+    for path_id in self.getPhysicalPath():
+      tree_node = tree_node.get(path_id, treeNode())
+
+    # explore subobjects of self
+    for descendant, path in descendantGenerator(self,
+                                                tree_node,
+                                                remaining_path_set):
+      if not isBuiltAndCompleted(descendant, path):
+        return False
+
+    return True
 
   def getSolverProcessValueList(self, movement=None, validation_state=None):
     """

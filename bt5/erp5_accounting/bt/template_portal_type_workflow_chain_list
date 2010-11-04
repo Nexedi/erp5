@@ -19,10 +19,6 @@ Cash Register | validation_workflow
 Internal Invoice Transaction | accounting_workflow
 Invoice Root Simulation Rule | edit_workflow
 Invoice Root Simulation Rule | rule_validation_workflow
-Invoice Rule | edit_workflow
-Invoice Rule | rule_validation_workflow
-Payment Rule | edit_workflow
-Payment Rule | rule_validation_workflow
 Payment Simulation Rule | edit_workflow
 Payment Simulation Rule | rule_interaction_workflow
 Payment Simulation Rule | rule_validation_workflow

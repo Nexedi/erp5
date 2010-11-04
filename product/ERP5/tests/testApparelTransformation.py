@@ -66,6 +66,11 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
   def getTitle(self):
     return "Transformation"
 
+  def getBusinessTemplateList(self):
+    """
+    """
+    return list(TestOrderMixin.getBusinessTemplateList(self)) + ['erp5_mrp']
+
   def enableLightInstall(self):
     """
     You can override this. 
@@ -150,7 +155,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     portal = self.getPortal()
     operation_dict = {}
     for operation_name in ('piquage', 'taillage'):
-      operation = portal.portal_categories.operation.newContent(id=operation_name)
+      operation = portal.portal_categories.operation.newContent(operation_name,
+        quantity_unit='time/min')
       operation_dict[operation_name] = operation
     sequence.edit(operation_dict=operation_dict)
     
@@ -197,6 +203,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         title = tr_resource_name,
         quantity = 2.,
         resource_value = component_dict[tr_resource_name],
+        int_index=1,
         )
     transformed_resource.edit(
        categories = transformed_resource.getCategoryList() + ['variation/' + component_dict[tr_resource_name]['1'].getRelativeUrl()])
@@ -212,7 +219,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     transformed_resource.edit(
         title = tr_resource_name,
         quantity = 1.,
-        resource_value = component_dict[tr_resource_name]
+        resource_value = component_dict[tr_resource_name],
+        int_index=2,
         )
     base_category_list = ['size']
     transformed_resource.setVariationBaseCategoryList(base_category_list)
@@ -277,7 +285,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     transformed_resource = transformation.newContent(portal_type=self.transformed_resource_portal_type)
     transformed_resource.edit(
         title = tr_resource_name,
-        resource_value = component_dict[tr_resource_name]
+        resource_value = component_dict[tr_resource_name],
+        int_index=3,
         )
     base_category_list = ['size', 'colour', 'morphology']
     transformed_resource.setVariationBaseCategoryList(base_category_list)
@@ -323,8 +332,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     operation.edit(
         title = op_name,
         quantity = 10.,
-        categories = operation.getCategoryList() + [ 'resource/' + operation_dict[op_name].getRelativeUrl(),
-                                                     'quantity_unit/time/min' ]
+        resource_value=operation_dict[op_name],
+        int_index=4,
         )
 
     # Operation 2 : 1 variation axis
@@ -337,8 +346,8 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     operation = transformation.newContent(portal_type=self.operation_portal_type)
     operation.edit(
         title = op_name,
-        categories = operation.getCategoryList() + [ 'resource/' + operation_dict[op_name].getRelativeUrl(),
-                                                     'quantity_unit/time/min' ]
+        resource_value=operation_dict[op_name],
+        int_index=5,
         )
     base_category_list = ['size']
     operation.setVariationBaseCategoryList(base_category_list)
@@ -365,6 +374,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     transformed_resource.edit(
         title = tr_resource_name,
         resource_value = component_dict[tr_resource_name],
+        int_index=6,
         )
     transformed_resource.edit(
        categories = transformed_resource.getCategoryList() + ['variation/' + component_dict[tr_resource_name]['1'].getRelativeUrl()])
@@ -615,17 +625,20 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
     """
       Verify aggregated data according to an expected structure
     """
-    from Products.ERP5Type.Document import newTempAmount
     produced_resource = transformation.getResource()
-
+    production_order_module = self.portal.getDefaultModule("Production Order")
+    production_order = production_order_module.newContent(
+                                      portal_type="Production Order",
+                                      temp_object=1,
+                                      specialise_value=transformation)
     for i, expected in enumerate(expected_list):
-      context = newTempAmount(transformation, "temp_amount_%s" % i)
-      context.edit(
-          quantity = 1.0,
-          variation_category_list = expected['id'],
-          resource = produced_resource,
+      context = production_order.newContent(
+          portal_type="Production Order Line",
+          quantity=1,
+          variation_category_list=expected['id'],
+          resource=produced_resource,
       )
-      aggregated_amount_list = transformation.getAggregatedAmountList(context)
+      aggregated_amount_list = context.getAggregatedAmountList()
       expected_amount_list = expected['amount']
       
       expected_amount_list_len = len(expected_amount_list)

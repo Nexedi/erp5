@@ -33,9 +33,10 @@ Products.ERP5.interfaces.simulation_movement
 from Products.ERP5.interfaces.property_recordable import IPropertyRecordable
 from Products.ERP5.interfaces.movement import IMovement
 from Products.ERP5.interfaces.divergence_controller import IDivergenceController
-from Products.ERP5.interfaces.business_completable import IBusinessCompletable
+from Products.ERP5.interfaces.explainable import IExplainable
+from zope.interface import Interface
 
-class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController, IBusinessCompletable):
+class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController, IExplainable):
   """Simulation Movement interface specification
 
   The ISimulationMovement interface introduces in addition
@@ -82,15 +83,42 @@ class ISimulationMovement(IMovement, IPropertyRecordable, IDivergenceController,
     """
 
   def getDeliveryQuantity():
-    """
-    Returns quantity which was actually shipped, taking
+    """ Returns quantity which was actually shipped, taking
     into account the errors of the simulation fixed by
     the delivery:
-      quantity + delivery_error
+
+       quantity + delivery_error
     """
 
   def isDeletable():
+    """Returns True if this simulation movement can be deleted, False
+    else. A simulation movement can be deleted if it is not frozen,
+    and if all its children can be deleted or if it has no child.
     """
-    Returns True is this simumlation can be deleted, False
-    else.
+
+  def isCompleted():
+    """Returns True if the simulation state of this simulation movement
+    is considered as completed by the business path which this simulation 
+    movement relates to through causality base category.
+
+    NOTE: simulation movements can be completed (ex. in started state) but
+    not yet frozen (ex. in delivered state). This is the case for example
+    of accounting movements which are completed as soon as they are posted 
+    (to allow next steps in the business process) but can still be modified
+    are thus not yet frozen.
+    """
+
+  def isFrozen():
+    """Returns True if the simulation state of this simulation movement
+    is considered as frozen by the business path which this simulation 
+    movement relates to through causality base category.
+
+    Frozen means that simulation movement cannot be modified anylonger.
+
+    NOTE: simulation movements can be frozen (ex. in stopped state) but
+    not yet completed (ex. in delivered state). This is the case of 
+    sales purchase movements which are frozen as soon they are received
+    because they should not be modified any longer but are only completed
+    once some extra steps bring them to delivered state, thus allowing the
+    generation of planned purchase invoice.
     """

@@ -53,6 +53,7 @@ class TestTaskMixin:
   task_report_line_portal_type = 'Task Report Line'
   datetime = DateTime()
   task_workflow_id='task_workflow'
+  business_process = 'business_process_module/erp5_default_business_process'
 
   default_task_sequence = '\
                        stepLogin \
@@ -117,7 +118,8 @@ class TestTaskMixin:
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_project',)
+    return ('erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade',
+            'erp5_project', 'erp5_simulation_test')
 
 #  def stepLogin(self, **kw):
 #    portal = self.getPortal()
@@ -235,15 +237,15 @@ class TestTaskMixin:
     """
       Create a task and fill it with dummy data.
     """
-    portal = self.getPortal()
-    task_module = portal.getDefaultModule(portal_type=self.task_portal_type)
-    task = task_module.newContent(portal_type=self.task_portal_type)
+    task_module = self.portal.getDefaultModule(
+        portal_type=self.task_portal_type)
+    task = task_module.newContent(
+        portal_type=self.task_portal_type,
+        title=str(self),
+        description="This is a very simple task. You can do it quickly.",
+        specialise=self.business_process)
     # Check if no task lines are created at the start
     self.assertEquals(len(task.contentValues()), 0)
-    task.edit(
-      title = "Task",
-      description = "This is a very simple task. You can do it quickly."
-    )
     sequence.edit(task=task)
 
   def stepCreateCurrency(self, sequence, **kw) :
@@ -310,16 +312,14 @@ class TestTaskMixin:
     """
       Create a task report.
     """
-    portal = self.getPortal()
-    task_report_module = portal.getDefaultModule(
-                                    portal_type=self.task_report_portal_type)
+    task_report_module = self.portal.getDefaultModule(
+        portal_type=self.task_report_portal_type)
     task_report = task_report_module.newContent(
-                                    portal_type=self.task_report_portal_type)
+        portal_type=self.task_report_portal_type,
+        title=str(self),
+        specialise=self.business_process)
     # Check if no task lines are created at the start
     self.assertEquals(len(task_report.contentValues()), 0)
-    task_report.edit(
-      title = "Task Report",
-    )
     sequence.edit(task_report = task_report)
 
   def stepFillTaskReportWithData(self, sequence=None, sequence_list=None, **kw):
@@ -574,7 +574,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \
-                       '
+                       stepTic'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
  
@@ -592,7 +592,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \
-                       '
+                       stepTic'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -608,7 +608,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \
-                       '
+                       stepTic'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -625,7 +625,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \
-                       '
+                       stepTic'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -654,7 +654,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \
-                       '
+                       stepTic'
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
@@ -669,7 +669,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \
-                       '
+                       stepTic'
     sequence_list.addSequenceString(sequence_string)
 
     simulation_tool = self.getPortal().portal_simulation
@@ -691,9 +691,10 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
     """Tests that task reference is set upon creation and coping"""
     if not run: return
     self.stepLogin()
-    portal = self.getPortal()
-    task_module = portal.getDefaultModule(portal_type=self.task_portal_type)
-    task = task_module.newContent(portal_type=self.task_portal_type)
+    task_module = self.portal.getDefaultModule(
+      portal_type=self.task_portal_type)
+    task = task_module.newContent(portal_type=self.task_portal_type,
+                                  specialise=self.business_process)
 
     self.assertEqual(
       task.getReference(),

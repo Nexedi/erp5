@@ -217,24 +217,26 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
                                   base_category_list=base_category_list)
       # Get the transformation to use
       transformation = self.getTransformation(applied_rule)
-      # Generate the fake context 
-      tmp_context = parent_movement.asContext(
-                   context=parent_movement, 
-                   REQUEST={'categories':category_list})
+      # Generate the fake context
+      tmp_context = parent_movement.asContext(categories=category_list)
       # Calculate the industrial phase list
       previous_ind_phase_list = supply_chain.\
           getPreviousPackingListIndustrialPhaseList(current_supply_link)
-      ind_phase_id_list = [x.getRelativeUrl() for x in previous_ind_phase_list]
+      ind_phase_url_list = [x.getCategoryRelativeUrl()
+                        for x in previous_ind_phase_list]
       # Call getAggregatedAmountList
       # XXX expand failed if transformation is not defined.
       # Do we need to catch the exception ?
-      amount_list = transformation.getAggregatedAmountList(
-                   tmp_context,
-                   ind_phase_url_list=ind_phase_id_list)
+      amount_list = transformation.getAggregatedAmountList((tmp_context,))
       # Add entries in the consumed_movement_dict
       consumed_movement_dict = {}
       for amount in amount_list:
-        consumed_mvt_id = "%s_%s" % ("cr", amount.getId())
+        model_line = amount.getCausalityValue()
+        if model_line.getIndustrialPhase() not in ind_phase_url_list:
+          continue
+        consumed_mvt_id = "cr_%s_%s_%s" % (model_line.getParentId(),
+                                           model_line.getId(),
+                                           tmp_context.getId())
         stop_date = parent_movement.getStartDate()
         resource_price = amount.getResourcePrice()
         price = None
@@ -248,7 +250,7 @@ class TransformationRule(TransformationSourcingRuleMixin, Rule):
                         amount.getVariationCategoryList(),
           "variation_property_dict": \
                         amount.getVariationPropertyDict(),
-          "quantity": amount.getNetQuantity(), # getNetQuantity to support efficency from transformation
+          "quantity": amount.getNetQuantity(), # getNetQuantity to support efficency from <
           "price": price,
           "quantity_unit": amount.getQuantityUnit(),
           "destination_list": (),

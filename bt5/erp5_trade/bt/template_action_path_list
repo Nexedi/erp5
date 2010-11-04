@@ -1,17 +1,13 @@
-Business Path | predicate_view
-Business Path | profile
-Business Path | view
-Business Path | view_advanced
+Business Link | predicate_view
+Business Link | view
 Business Process Module | view
+Business Process | trade_model_path_view
 Business Process | view
-Business Process | view_supply_state_list
-Business State | view
 Container Line | view
 Container Line | view_quantity
 Container | view
 Delivery Cell | view
 Delivery Root Simulation Rule | view
-Delivery Rule | view
 Delivery Simulation Rule | view
 First Causality Movement Group | view
 Internal Order Cell | view
@@ -52,7 +48,6 @@ Inventory | fast_input
 Inventory | fast_input_update
 Inventory | view
 Order Root Simulation Rule | view
-Order Rule | view
 Organisation | jump_to_purchase_order
 Organisation | jump_to_purchase_packing_list
 Organisation | jump_to_sale_order
@@ -83,10 +78,7 @@ Purchase Order | reset_movement_price_list
 Purchase Order | view
 Purchase Order | view_stock
 Purchase Order | view_trade_model
-Purchase Order | view_trade_model_line_list
-Purchase Packing List Cell | apparel_fabric_item_fast_input
 Purchase Packing List Cell | view
-Purchase Packing List Line | apparel_fabric_item_fast_input
 Purchase Packing List Line | profile_view
 Purchase Packing List Line | quantity_view
 Purchase Packing List Line | view
@@ -163,7 +155,6 @@ Sale Order | sale_order_planning
 Sale Order | view
 Sale Order | view_stock
 Sale Order | view_trade_model
-Sale Order | view_trade_model_line_list
 Sale Packing List Cell | view
 Sale Packing List Line | price_view
 Sale Packing List Line | profile_view
@@ -191,4 +182,8 @@ Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
 Sale Trade Condition | view_trade_model_line_list
 System Preference | trade_preference
+Trade Model Line | predicate_view
 Trade Model Line | view
+Trade Model Path | predicate_view
+Trade Model Path | profile
+Trade Model Path | view

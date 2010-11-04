@@ -35,11 +35,9 @@ from Products.ERP5Type.XMLMatrix import XMLMatrix
 from Products.ERP5Type.XMLObject import XMLObject
 
 from Products.ERP5.Document.Movement import Movement
-from Products.ERP5.Variated import Variated
 from Products.ERP5.Document.ImmobilisationMovement import ImmobilisationMovement
 
-class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
-                   ImmobilisationMovement):
+class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
     """
       A DeliveryLine object allows to implement lines in
       Deliveries (packing list, order, invoice, etc.)
@@ -410,12 +408,12 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, Variated,
       simulation_movement_list = self.getDeliveryRelatedValueList(
                                       portal_type="Simulation Movement")
 
-      business_path = simulation_movement_list[0].getCausalityValue()
+      business_link = simulation_movement_list[0].getCausalityValue()
       delivery = self.getExplanationValue()
       delivery_portal_type = delivery.getPortalType()
       delivery_line_portal_type = self.getPortalType()
       # we need to find only one matching delivery builder
-      for delivery_builder in business_path.getDeliveryBuilderValueList():
+      for delivery_builder in business_link.getDeliveryBuilderValueList():
         if delivery_builder.getDeliveryPortalType() == \
              delivery_portal_type and \
            delivery_builder.getDeliveryLinePortalType() == \

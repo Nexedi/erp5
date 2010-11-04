@@ -1,15 +1,11 @@
 <workflow_chain>
  <chain>
-  <type>Business Path</type>
+  <type>Business Link</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Business Process</type>
   <workflow>edit_workflow, validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Business State</type>
-  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>Container</type>
@@ -29,10 +25,6 @@
  </chain>
  <chain>
   <type>Delivery Root Simulation Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Delivery Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
@@ -77,10 +69,6 @@
  </chain>
  <chain>
   <type>Order Root Simulation Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Order Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
  <chain>
@@ -170,5 +158,9 @@
  <chain>
   <type>Trade Model Line</type>
   <workflow>edit_workflow, trade_model_line_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Trade Model Path</type>
+  <workflow>edit_workflow</workflow>
  </chain>
 </workflow_chain>

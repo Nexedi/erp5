@@ -139,7 +139,7 @@ class SupplyLink(Path, XMLObject):
               supply_chain.getNextProductionIndustrialPhaseList(self)
           # XXX GetRelativeUrl copy/paste from transformation
           # Code duplication
-          ind_phase_url_list = [x.getRelativeUrl() \
+          ind_phase_url_list = [x.getCategoryRelativeUrl()
                                for x in next_industrial_phase_list]
 
           # Get the transformation to use
@@ -147,10 +147,10 @@ class SupplyLink(Path, XMLObject):
           rule = applied_rule.getSpecialiseValue()
           transformation = rule.getTransformation(movement)
           # Call getAggregatedAmountList
-          amount_list = transformation.getAggregatedAmountList(
-                       movement.getParentValue().getParentValue(),
-                       ind_phase_url_list=ind_phase_url_list)
-          resource_list = [x.getResourceValue() for x in amount_list]
+          input_amount = applied_rule.getParentValue()
+          resource_list = [x.getResourceValue()
+            for x in transformation.getAggregatedAmountList((input_amount,))
+            if x.getCausalityValue().getIndustrialPhase() in ind_phase_url_list]
           current_resource = movement.getResourceValue()
           if current_resource not in resource_list:
             # We can delivered this resource

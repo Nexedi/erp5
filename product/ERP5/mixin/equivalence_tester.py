@@ -91,6 +91,13 @@ class EquivalenceTesterMixin:
         mapping=mapping
         )
 
+  @staticmethod
+  def _getTestedPropertyValue(movement, property):
+    """
+    Getter returning the value for the given tested property
+    """
+    return movement.getProperty(property)
+
   def generateHashKey(self, movement):
     """
     Returns a hash key which can be used to optimise the
@@ -106,7 +113,7 @@ class EquivalenceTesterMixin:
     if movement.isPropertyRecorded(tested_property):
       value = movement.getRecordedProperty(tested_property)
     else:
-      value = movement.getProperty(tested_property)
+      value = self._getTestedPropertyValue(movement, tested_property)
     return '%s/%r' % (tested_property, value)
 
   def compare(self, prevision_movement, decision_movement):
@@ -193,7 +200,7 @@ class EquivalenceTesterMixin:
     """
     raise NotImplementedError
 
-  def getUpdatablePropertyDict(prevision_movement, decision_movement):
+  def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
     Returns a list of properties to update on decision_movement
     prevision_movement so that next call to compare returns True.
@@ -202,4 +209,6 @@ class EquivalenceTesterMixin:
 
     decision_movement -- a delivery movement (decision)
     """
-    raise NotImplementedError
+    tested_property = self.getTestedProperty()
+    return {tested_property: self._getTestedPropertyValue(prevision_movement,
+                                                          tested_property)}

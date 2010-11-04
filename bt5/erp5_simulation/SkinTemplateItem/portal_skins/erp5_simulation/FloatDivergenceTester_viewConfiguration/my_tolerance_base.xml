@@ -235,12 +235,32 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Quantity</string>
-                          <string>Quantity</string>
+                          <string></string>
+                          <string></string>
                         </tuple>
                         <tuple>
-                          <string>Currency Precision</string>
-                          <string>Currency Precision</string>
+                          <string>Resource Base Unit</string>
+                          <string>resource_quantity_precision</string>
+                        </tuple>
+                        <tuple>
+                          <string>Resource Price Precision</string>
+                          <string>resource_price_precision</string>
+                        </tuple>
+                        <tuple>
+                          <string>Price Currency Precision</string>
+                          <string>price_currency_precision</string>
+                        </tuple>
+                        <tuple>
+                          <string>Source Section Accounting Currency Precision</string>
+                          <string>source_section_currency_precision</string>
+                        </tuple>
+                        <tuple>
+                          <string>Destination Section Accounting Currency Precision</string>
+                          <string>destination_section_currency_precision</string>
+                        </tuple>
+                        <tuple>
+                          <string>Value of Tested Property</string>
+                          <string>tested_property</string>
                         </tuple>
                       </list>
                     </value>

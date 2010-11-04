@@ -26,15 +26,20 @@
 #
 ##############################################################################
 
+import os
 import unittest
-
 from DateTime import DateTime
-
+from Products.ERP5.mixin.builder import DuplicatedPropertyDictKeysError
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class MovementGroupTestCase(ERP5TypeTestCase):
+
+  def getPortalName(self):
+    """ID of the portal. """
+    return os.environ.get('erp5_tests_portal_id') or 'movement_group_test'
+
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade')
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade')
 
   def afterSetUp(self):
     self.builder = self.portal.portal_deliveries.newContent(
@@ -338,7 +343,6 @@ class TestDuplicatedKeyRaiseException(MovementGroupTestCase):
   same key during building process"""
   document_portal_type = 'Sale Order'
   def test(self):
-    from Products.ERP5.Document.OrderBuilder import DuplicatedPropertyDictKeysError
     order = self.portal.getDefaultModule(self.document_portal_type) \
       .newContent(portal_type=self.document_portal_type)
     applied_rule = self.portal.portal_simulation.newContent(
@@ -433,7 +437,7 @@ class TestCategoryMovementGroup(MovementGroupTestCase):
                                        source_list=['2'])]))
 
 
-class TestMovementGroupCommonAPI(unittest.TestCase):
+class TestMovementGroupCommonAPI(MovementGroupTestCase):
 
   def test_separateMethod(self):
     """Make sure that _separate method works if argument is an empty list."""

@@ -842,33 +842,6 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
            self._getPortalConfiguration('portal_supply_path_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBusinessProcessTypeList')
-  def getPortalBusinessProcessTypeList(self):
-    """
-      Return business process types.
-    """
-    return self._getPortalGroupedTypeList('business_process') or \
-           self._getPortalConfiguration('portal_business_process_type_list')
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBusinessStateTypeList')
-  def getPortalBusinessStateTypeList(self):
-    """
-      Return business state types.
-    """
-    return self._getPortalGroupedTypeList('business_state') or \
-           self._getPortalConfiguration('portal_business_state_type_list')
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getPortalBusinessPathTypeList')
-  def getPortalBusinessPathTypeList(self):
-    """
-      Return business path types.
-    """
-    return self._getPortalGroupedTypeList('business_path') or \
-           self._getPortalConfiguration('portal_business_path_type_list')
-
-  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalAcquisitionMovementTypeList')
   def getPortalAcquisitionMovementTypeList(self):
     """
@@ -1215,6 +1188,31 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     Return amount generator cell types.
     """
     return self._getPortalGroupedTypeList('amount_generator_cell')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalBusinessProcessTypeList')
+  def getPortalBusinessProcessTypeList(self):
+    """
+    Return amount generator types.
+    """
+    return self._getPortalGroupedTypeList('business_process')
+
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalBusinessLinkTypeList')
+  def getPortalBusinessLinkTypeList(self):
+    """
+      Return business link types.
+    """
+    return self._getPortalGroupedTypeList('business_link')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalTradeModelPathTypeList')
+  def getPortalTradeModelPathTypeList(self):
+    """
+      Return trade model path types.
+    """
+    return self._getPortalGroupedTypeList('trade_model_path')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalCalendarPeriodTypeList')

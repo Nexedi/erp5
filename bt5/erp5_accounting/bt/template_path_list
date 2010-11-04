@@ -1,12 +1,2 @@
 portal_categories/account_type/**
 portal_categories/financial_section/*
-portal_rules/default_accounting_transaction_root_simulation_rule
-portal_rules/default_accounting_transaction_root_simulation_rule/**
-portal_rules/default_invoice_root_simulation_rule
-portal_rules/default_invoice_root_simulation_rule/**
-portal_rules/default_invoice_rule
-portal_rules/default_invoice_rule/**
-portal_rules/default_payment_rule
-portal_rules/default_payment_rule/**
-portal_rules/default_payment_simulation_rule
-portal_rules/default_payment_simulation_rule/**

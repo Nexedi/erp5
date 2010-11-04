@@ -1,7 +1,7 @@
 <allowed_content_type_list>
  <portal_type id="Business Process">
-  <item>Business Path</item>
-  <item>Business State</item>
+  <item>Business Link</item>
+  <item>Trade Model Path</item>
  </portal_type>
  <portal_type id="Business Process Module">
   <item>Business Process</item>
@@ -17,22 +17,22 @@
   <item>First Causality Movement Group</item>
  </portal_type>
  <portal_type id="Delivery Root Simulation Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
- <portal_type id="Delivery Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Delivery Simulation Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Internal Order">
   <item>Internal Order Line</item>
@@ -65,16 +65,13 @@
   <item>Inventory</item>
  </portal_type>
  <portal_type id="Order Root Simulation Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
- <portal_type id="Order Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Preference">
   <item>Sale Order</item>
@@ -82,7 +79,6 @@
  <portal_type id="Purchase Order">
   <item>Payment Condition</item>
   <item>Purchase Order Line</item>
-  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Purchase Order Line">
   <item>Purchase Order Cell</item>
@@ -131,15 +127,12 @@
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Delivery Root Simulation Rule</item>
-  <item>Delivery Rule</item>
   <item>Delivery Simulation Rule</item>
   <item>Order Root Simulation Rule</item>
-  <item>Order Rule</item>
  </portal_type>
  <portal_type id="Sale Order">
   <item>Payment Condition</item>
   <item>Sale Order Line</item>
-  <item>Trade Model Line</item>
  </portal_type>
  <portal_type id="Sale Order Line">
   <item>Sale Order Cell</item>

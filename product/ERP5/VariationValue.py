@@ -29,8 +29,7 @@
 from Products.ERP5Type import interfaces
 from Products.ERP5Type.Context import Context
 from Products.ERP5Type.Globals import InitializeClass
-from Products.ERP5.Variated import Variated
-
+from Products.ERP5.mixin.variated import VariatedMixin
 from zope.interface import implements
 
 def newVariationValue(context=None, REQUEST=None, **kw):
@@ -42,7 +41,7 @@ def newVariationValue(context=None, REQUEST=None, **kw):
     else:
       return context_obj
 
-class VariationValue(Context, Variated):
+class VariationValue(Context, VariatedMixin):
   """
     Embodies a variation value. Implements discrete variations.
   """

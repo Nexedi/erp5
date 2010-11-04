@@ -97,7 +97,7 @@ if not invoice.contentValues(portal_type=\'Payment Condition\'):\n
       clipboard = related_order.manage_copyObjects(ids=payment_condition_copy_id_list)\n
       invoice.manage_pasteObjects(clipboard)\n
 \n
-if related_order is not None:\n
+if related_order is not None and context.portal_skins.hasObject(\'erp5_simulation_legacy\'):\n
   # copy trade condition:\n
   if not context.getSpecialise():\n
     context.edit(specialise=related_order.getSpecialise())\n

@@ -4,54 +4,40 @@
   <item>Invoice Line</item>
  </portal_type>
  <portal_type id="Invoice Simulation Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
   <item>Mapped Property</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
- <portal_type id="Invoice Transaction Rule">
-  <item>Accounting Rule Cell</item>
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Predicate</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Invoice Transaction Simulation Rule">
   <item>Accounting Rule Cell</item>
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
   <item>Mapped Property</item>
+  <item>Net Converted Quantity Divergence Tester</item>
   <item>Predicate</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
- <portal_type id="Invoicing Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
  </portal_type>
  <portal_type id="Rule Tool">
   <item>Invoice Simulation Rule</item>
-  <item>Invoice Transaction Rule</item>
   <item>Invoice Transaction Simulation Rule</item>
-  <item>Invoicing Rule</item>
-  <item>Trade Model Rule</item>
   <item>Trade Model Simulation Rule</item>
  </portal_type>
- <portal_type id="Trade Model Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
  <portal_type id="Trade Model Simulation Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
+  <item>Category Membership Divergence Tester</item>
+  <item>DateTime Divergence Tester</item>
+  <item>Float Divergence Tester</item>
   <item>Mapped Property</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
+  <item>Net Converted Quantity Divergence Tester</item>
+  <item>Specialise Divergence Tester</item>
+  <item>String Divergence Tester</item>
+  <item>Variation Divergence Tester</item>
  </portal_type>
 </allowed_content_type_list>

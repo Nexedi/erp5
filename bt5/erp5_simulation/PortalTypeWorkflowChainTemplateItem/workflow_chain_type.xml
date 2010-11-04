@@ -1,13 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Accept Solver</type>
-  <workflow>solver_workflow</workflow>
- </chain>
- <chain>
-  <type>Adopt Solver</type>
-  <workflow>solver_workflow</workflow>
- </chain>
- <chain>
   <type>Category Membership Divergence Tester</type>
   <workflow>edit_workflow</workflow>
  </chain>
@@ -24,28 +16,20 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Production Reduction Solver</type>
-  <workflow>solver_workflow</workflow>
+  <type>Solver Process</type>
+  <workflow>solver_process_workflow</workflow>
  </chain>
  <chain>
-  <type>Quantity Cancel Solver</type>
-  <workflow>solver_workflow</workflow>
+  <type>Solver Type</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
-  <type>Quantity Split Solver</type>
-  <workflow>solver_workflow</workflow>
+  <type>Specialise Divergence Tester</type>
+  <workflow>edit_workflow</workflow>
  </chain>
  <chain>
   <type>String Divergence Tester</type>
   <workflow>edit_workflow</workflow>
- </chain>
- <chain>
-  <type>Trade Model Solver</type>
-  <workflow>solver_workflow</workflow>
- </chain>
- <chain>
-  <type>Unify Solver</type>
-  <workflow>solver_workflow</workflow>
  </chain>
  <chain>
   <type>Variation Divergence Tester</type>

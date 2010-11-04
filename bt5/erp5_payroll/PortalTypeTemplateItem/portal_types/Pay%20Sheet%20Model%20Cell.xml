@@ -29,7 +29,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addTradeModelCell</string> </value>
+            <value> <string>addPaySheetModelCell</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -39,6 +39,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
+                <string>amount_generator_cell</string>
                 <string>model_path</string>
               </tuple>
             </value>

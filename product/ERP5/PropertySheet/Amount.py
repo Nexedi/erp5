@@ -104,7 +104,9 @@ class Amount:
   )
 
   _categories = ('resource', 'quantity_unit',
-                 'base_application', 'base_contribution', 'use', 'trade_phase', 
+                 'base_application', 'base_contribution', 'use', 'trade_phase',
+                 # used to link to amount generator line/cells
+                 'causality',
                  # Acquired categories
-                 'product_line', )
-  
+                 'product_line',
+                )

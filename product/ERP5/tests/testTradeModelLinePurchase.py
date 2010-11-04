@@ -39,6 +39,9 @@ class TestTradeModelLinePurchase(TestTradeModelLine):
   packing_list_portal_type = 'Purchase Packing List'
   trade_condition_portal_type = 'Purchase Trade Condition'
 
+  def packPackingList(self, packing_list):
+    self.assertEqual(getattr(packing_list, 'getContainerState', None), None)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestTradeModelLinePurchase))

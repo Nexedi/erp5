@@ -50,6 +50,7 @@ from Products.ERP5Type.Base import _aq_reset
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
   """
+  business_process = 'business_process_module/erp5_default_business_process'
 
   GROUP_CATEGORIES = ( 'group/test_group/A1/B1/C1',
                        'group/test_group/A1/B1/C2',
@@ -122,36 +123,18 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     self.other_item = self.getItemModule().newContent(title='Other Item')
     self.getInventory = self.getSimulationTool().getInventory
 
-  def _safeTic(self):
-    """Like tic, but swallowing errors, usefull for teardown"""
-    try:
-      transaction.commit()
-      self.tic()
-    except RuntimeError:
-      pass
-
   def beforeTearDown(self):
     """Clear everything for next test."""
-    self._safeTic()
     for module in [ 'organisation_module',
                     'person_module',
                     'product_module',
                     'portal_simulation',
                     'inventory_module',
                     self.folder.getId() ]:
-      folder = getattr(self.getPortal(), module, None)
-      if folder:
-        [x.unindexObject() for x in folder.objectValues()]
-        self._safeTic()
-        folder.manage_delObjects([x.getId() for x in folder.objectValues()])
-    self._safeTic()
-    # cancel remaining messages
-    activity_tool = self.getPortal().portal_activities
-    for message in activity_tool.getMessageList():
-      activity_tool.manageCancel(message.object_path, message.method_id)
-      ZopeTestCase._print('\nCancelling active message %s.%s()\n'
-                          % (message.object_path, message.method_id) )
+      folder = self.portal[module]
+      folder.manage_delObjects(list(folder.objectIds()))
     transaction.commit()
+    self.tic()
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
@@ -198,8 +181,13 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """ erp5_trade is required for transit_simulation_state
         erp5_apparel is required for item
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_trade',
-            'erp5_apparel', 'erp5_project')
+    return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_simulation',
+            'erp5_trade', 'erp5_apparel', 'erp5_project',
+            'erp5_simulation_test')
+
+  def getRule(self, **kw):
+    return self.portal.portal_rules.searchFolder(
+          sort_on='version', sort_order='descending', **kw)[0].getObject()
 
   # TODO: move this to a base class {{{
   @reindex
@@ -213,27 +201,26 @@ class InventoryAPITestCase(ERP5TypeTestCase):
   @reindex
   def _makeProject(self, **kw):
     """Creates an project."""
-    prj = self.getPortal().project_module.newContent(
+    return self.portal.project_module.newContent(
           portal_type='Project',
           **kw)
-    return prj
 
   @reindex
   def _makeSalePackingList(self, **kw):
     """Creates a sale packing list."""
-    spl = self.getPortal().sale_packing_list_module.newContent(
-          portal_type='Sale Packing List',)
-    spl.edit(**kw)
-    return spl
+    return self.portal.sale_packing_list_module.newContent(
+          portal_type='Sale Packing List',
+          specialise=self.business_process,
+          **kw)
   
   @reindex
   def _makeSaleInvoice(self, created_by_builder=0, **kw):
     """Creates a sale invoice."""
-    sit = self.getPortal().accounting_module.newContent(
+    return self.portal.accounting_module.newContent(
           portal_type='Sale Invoice Transaction',
-          created_by_builder=created_by_builder)
-    sit.edit(**kw)
-    return sit
+          created_by_builder=created_by_builder,
+          specialise=self.business_process,
+          **kw)
 
   @reindex
   def _makeProduct(self, **kw):
@@ -263,9 +250,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
   def _makeSimulationMovement(self, **kw):
     """Creates a simulation movement.
     """
-    ar = self.getSimulationTool().newContent(portal_type='Applied Rule')
-    # we created a default_order_rule in setUp
-    ar.setSpecialise('portal_rules/default_order_rule')
+    ar = self.getSimulationTool().newContent(portal_type='Applied Rule',
+      specialise_value=self.getRule(reference='default_delivery_rule'))
     mvt = ar.newContent(portal_type='Simulation Movement')
     kw.setdefault('destination_section_value', self.section)
     kw.setdefault('source_section_value', self.mirror_section)
@@ -1164,7 +1150,6 @@ class TestInventoryList(InventoryAPITestCase):
                          price=m[3],
                          )
 
-    self._safeTic()
     simulation_tool = self.getSimulationTool()
     def valuate(method):
       r = simulation_tool.getInventoryAssetPrice(
@@ -1233,8 +1218,6 @@ class TestInventoryList(InventoryAPITestCase):
       for mov in value['movement_list']:
         d = DateTime('%s/15 15:00 UTC' % month)
         self._makeMovement(start_date=d, resource_uid=resource_uid, **mov)
-
-    self._safeTic()
 
     # and check
     for cur in sorted(data)[1:]:
@@ -2721,7 +2704,8 @@ class BaseTestUnitConversion(InventoryAPITestCase):
     InventoryAPITestCase.afterSetUp(self)
 
     self.setUpUnitDefinition()
-    self._safeTic()
+    transaction.commit()
+    self.tic()
 
   @reindex
   def makeMovement(self, quantity, resource, *variation, **kw):
@@ -2811,7 +2795,8 @@ class TestUnitConversion(BaseTestUnitConversion):
       m.newContent(portal_type='Measure Cell', quantity=quantity) \
        ._setMembershipCriterionCategory('colour/' + colour)
 
-    self._safeTic()
+    transaction.commit()
+    self.tic()
 
   def testConvertedInventoryList(self):
     self.makeMovement(2, self.resource, 'colour/green', 'size/big')
@@ -2877,8 +2862,6 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
     self.resource_byunit.setQuantityUnit('unit/unit')
 
 
-    self._safeTic()
-
     base_unit = self.resource_bylot_overriding.newContent(
                   portal_type='Quantity Unit Conversion Group',
                   quantity_unit='unit/unit',)
@@ -2892,7 +2875,8 @@ class TestUnitConversionDefinition(BaseTestUnitConversion):
             quantity=1.0/50,)
     unit.validate()
 
-    self._safeTic()
+    transaction.commit()
+    self.tic()
 
   def beforeTearDown(self):
     # invalidating definitions is enough
@@ -3067,8 +3051,7 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
     self.portal.portal_caches.clearCache(('erp5_content_long',))
 
   def testBackwardCompatibility(self):
-    delivery_rule = self.getRuleTool().default_delivery_rule
-    delivery_rule.validate()
+    self.getRule(reference='default_delivery_rule').validate()
 
     resource = self.portal.product_module.newContent(
                       portal_type='Product',
@@ -3078,6 +3061,7 @@ class TestUnitConversionBackwardCompatibility(BaseTestUnitConversion):
                       portal_type='Organisation')
     delivery = self.portal.purchase_packing_list_module.newContent(
                       portal_type='Purchase Packing List',
+                      specialise=self.business_process,
                       start_date='2010-01-26',
                       price_currency='currency_module/EUR',
                       destination_value=node,

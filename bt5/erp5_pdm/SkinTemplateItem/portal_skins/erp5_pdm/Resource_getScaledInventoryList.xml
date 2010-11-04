@@ -82,7 +82,7 @@ variation_list = kwargs.get(\'variation_list\')\n
 variation_text = \'\'\n
 \n
 if variation_list is not None and len(variation_list) > 0:\n
-  # imitate behaviour from ERP5/Variated.py:getVariationText\n
+  # imitate behaviour from VariatedMixin.getVariationText\n
   # to create text\n
   variation_list.sort()\n
   variation_text = \'\\n\'.join(variation_list)\n

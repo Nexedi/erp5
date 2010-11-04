@@ -10,8 +10,14 @@
 2010-09-30 nicolas.dumazet
 * Add abstract Order portal type to be able to create temporary documents of Order portal type.
 
+2010-08-07 JPS
+* make the terms match payment condition and capacity property sheets in TradeModelPath_view
+
 2010-07-15 yusei
 * Add source_carrier, source_referral, source_function, destination_carrier, destination_referral, destination_function to copied category list of trade condition.
+
+2010-06-22 JPS
+* Business Path now split into Business Link and Trade Model Path
 
 2010-06-21 yo
 * Specify the inventory group to the portal type Inventory.

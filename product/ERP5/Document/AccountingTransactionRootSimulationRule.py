@@ -28,7 +28,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.DeliveryRootSimulationRule \
-     import DeliveryRootSimulationRule
+     import DeliveryRootSimulationRule, DeliveryRuleMovementGenerator
 
 class AccountingTransactionRootSimulationRule(DeliveryRootSimulationRule):
   """
@@ -43,18 +43,14 @@ class AccountingTransactionRootSimulationRule(DeliveryRootSimulationRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def _getInputMovementList(self, applied_rule):
-    """Return list of movements from delivery"""
-    delivery = applied_rule.getDefaultCausalityValue()
-    movement_list = []
-    delivery_movement_type_list = self.getPortalAccountingMovementTypeList()
-    if delivery is not None:
-      existing_movement_list = applied_rule.objectValues()
-      for movement in delivery.getMovementList(
-        portal_type=delivery_movement_type_list):
-        simulation_movement = self._getDeliveryRelatedSimulationMovement(
-          movement)
-        if simulation_movement is None or \
-               simulation_movement in existing_movement_list:
-          movement_list.append(movement)
-    return movement_list
+  def _getMovementGenerator(self, context):
+    """
+    Return the movement generator to use in the expand process
+    """
+    return AccountingTransactionRuleMovementGenerator(applied_rule=context,
+                                                      rule=self)
+
+class AccountingTransactionRuleMovementGenerator(DeliveryRuleMovementGenerator):
+
+  def _getPortalDeliveryMovementTypeList(self):
+    return self._rule.getPortalObject().getPortalAccountingMovementTypeList()

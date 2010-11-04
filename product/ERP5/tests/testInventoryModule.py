@@ -26,10 +26,11 @@
 #
 ##############################################################################
 
+import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
-from testOrder import TestOrderMixin
+from Products.ERP5.tests.testOrder import TestOrderMixin
 
 class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
   """
@@ -74,6 +75,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     for month in range(1, 11):
       ppl = pplm.newContent(
                       portal_type='Purchase Packing List',
+                      specialise=self.business_process,
                       source_value = sequence.get('organisation2'),
                       destination_value = sequence.get('organisation1'),
                       start_date=DateTime(2005, month, 1),
@@ -86,6 +88,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
 
       spl = splm.newContent(
                       portal_type='Sale Packing List',
+                      specialise=self.business_process,
                       source_value = sequence.get('organisation1'),
                       destination_value = sequence.get('organisation2'),
                       start_date=DateTime(2005, month, 1),
@@ -97,6 +100,7 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
 
       ipl = iplm.newContent(
                       portal_type='Internal Packing List',
+                      specialise=self.business_process,
                       source_value = sequence.get('organisation1'),
                       destination_value = sequence.get('organisation1'),
                       start_date=DateTime(2005, month, 1),
@@ -548,3 +552,9 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self)
+
+
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestInventoryModule))
+  return suite

@@ -191,6 +191,11 @@ class ERP5TypeInformation(XMLObject,
     database, etc.). This allows combining multiple attribute sources
     in a single object. This feature will be in reality implemented
     through PropertySheet classes (TALES expressions)
+
+    TODO:
+    - add a warning for legacy groups which are no longer used
+    - move groups of portal types to categories
+      (now that we have portal types of portal types)
     """
 
     portal_type = 'Base Type'
@@ -243,12 +248,12 @@ class ERP5TypeInformation(XMLObject,
       'abstract',
       # Trade
       'discount', 'payment_condition', 'payment_node',
-      'supply', 'supply_path', 'inventory_movement', 'tax_movement',
+      'supply', 'supply_path', 'inventory_movement', 
       'delivery', 'delivery_movement',
       'order', 'order_movement',
       'container', 'container_line',
       'inventory',
-      # Different Aspects
+      # Different Aspects of Supplier-Customer relation
       'sale', 'purchase', 'internal',
       # PDM
       'transformation', 'variation', 'sub_variation',
@@ -265,6 +270,8 @@ class ERP5TypeInformation(XMLObject,
       # Solvers and simulation
       'divergence_tester', 'target_solver', 'delivery_solver',
       'amount_generator',  'amount_generator_line', 'amount_generator_cell',
+      # Business Processes
+      'trade_model_path', 'business_link', 'business_process',
       # Movement Group
       'movement_group',
       # Calendar
@@ -275,6 +282,8 @@ class ERP5TypeInformation(XMLObject,
       'budget_variation',
       # Module
       'module',
+      # LEGACY - needs a warning - XXX-JPS
+      'tax_movement',
     )
     group_list = ()
 

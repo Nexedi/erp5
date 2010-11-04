@@ -184,6 +184,7 @@
                         <string>listbox_owner_title</string>
                         <string>your_form_box_field</string>
                         <string>my_dialog_mode_reference</string>
+                        <string>my_amount_generator_quantity</string>
                       </list>
                     </value>
                 </item>

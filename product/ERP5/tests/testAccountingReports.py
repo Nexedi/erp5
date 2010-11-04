@@ -3709,12 +3709,9 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
 
 class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
 
-  def setUp(self):
-    # FIXME: use afterSetUp, and fix AccountingTestCase to use afterSetUp
-    AccountingTestCase.setUp(self)
-    if os.environ.get('erp5_save_data_fs'):
-      return
-    self.login('ERP5TypeTestCase')
+  def afterSetUp(self):
+    AccountingTestCase.afterSetUp(self)
+    self.login()
     # create some functions
     function = self.portal.portal_categories.function
     if function._getOb('a', None) is None:
@@ -3739,7 +3736,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                           title='Project 2')
 
     preference = self.portal.portal_preferences.getActivePreference()
-    preference.edit(
+    preference._edit(
         preferred_accounting_transaction_line_function_base_category='function',
         preferred_accounting_transaction_line_analytic_base_category_list=(
                                               'product_line', ),)
@@ -3777,13 +3774,14 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                           product_line_value=None,
                           source_credit=700.0),
                      ))
+    transaction.commit()
+    self.tic()
     self.login(self.username)
 
   def beforeTearDown(self):
-    self.login('ERP5TypeTestCase')
-    transaction.abort()
+    AccountingTestCase.beforeTearDown(self)
     preference = self.portal.portal_preferences.getActivePreference()
-    preference.edit(
+    preference._edit(
         preferred_accounting_transaction_line_function_base_category=None,
         preferred_accounting_transaction_line_analytic_base_category_list=())
     transaction.commit()

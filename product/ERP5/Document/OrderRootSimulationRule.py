@@ -1,14 +1,13 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
-#                    Romain Courteaud <romain@nexedi.com>
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -23,15 +22,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5Legacy.Document.OrderRule import OrderRule
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
+from Products.ERP5.mixin.movement_collection_updater import \
+     MovementCollectionUpdaterMixin
 
-class OrderRootSimulationRule(OrderRule):
+class OrderRootSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
   Order Rule object make sure an Order in the simulation
   is consistent with the real order
@@ -46,9 +49,64 @@ class OrderRootSimulationRule(OrderRule):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def _getExpandablePropertyUpdateDict(self, applied_rule, movement,
-      business_path, current_property_dict):
-    """Order rule specific update dictionary"""
-    return {
-      'delivery': movement.getRelativeUrl(),
-    }
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IRule,
+                            interfaces.IDivergenceController,
+                            interfaces.IMovementCollectionUpdater,)
+
+  # Default Properties
+  property_sheets = (
+    PropertySheet.Base,
+    PropertySheet.XMLObject,
+    PropertySheet.CategoryCore,
+    PropertySheet.DublinCore,
+    PropertySheet.Task,
+    PropertySheet.Predicate,
+    PropertySheet.Reference,
+    PropertySheet.Version,
+    PropertySheet.Rule
+    )
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self, movement):
+    """Tells wether generated movement needs to be accounted or not.
+
+    Order movement are never accountable, so simulation movement for
+    order movements should not be accountable either.
+    """
+    return False
+
+  def _getMovementGenerator(self, context):
+    """
+    Return the movement generator to use in the expand process
+    """
+    return OrderRuleMovementGenerator(applied_rule=context, rule=self)
+
+  def _getMovementGeneratorContext(self, context):
+    """
+    Return the movement generator context to use for expand
+    """
+    return context
+
+  def _getMovementGeneratorMovementList(self, context):
+    """
+    Return the movement lists to provide to the movement generator
+    """
+    return []
+
+  def _isProfitAndLossMovement(self, movement):
+    # For a kind of trade rule, a profit and loss movement lacks source
+    # or destination.
+    return (movement.getSource() is None or movement.getDestination() is None)
+
+class OrderRuleMovementGenerator(MovementGeneratorMixin):
+
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    """Input movement list comes from order"""
+    order = self._applied_rule.getDefaultCausalityValue()
+    if order is None:
+      return []
+    else:
+      return order.getMovementList(
+        portal_type=order.getPortalOrderMovementTypeList())

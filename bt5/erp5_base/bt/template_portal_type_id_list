@@ -5,12 +5,10 @@ Assignment
 Bank Account
 Base Variant Movement Group
 Career
-Category Divergence Tester
 Category Movement Group
 Causality Assignment Movement Group
 Causality Movement Group
 Chat Address
-Composed Divergence Tester
 Credit Card
 Currency
 Currency Exchange Cell
@@ -44,10 +42,8 @@ Parent Explanation Movement Group
 Person
 Person Module
 Property Assignment Movement Group
-Property Divergence Tester
 Property Grouping Movement Group
 Property Movement Group
-Quantity Divergence Tester
 Quantity Sign Movement Group
 Query
 Query Module
@@ -56,11 +52,6 @@ Role Definition
 Root Applied Rule Causality Movement Group
 Rounding Model
 Rounding Tool
-Solver Decision
-Solver Process
-Solver Process Tool
-Solver Tool
-Solver Type
 Split Movement Group
 Tax Line Delivery Movement Group
 Telephone

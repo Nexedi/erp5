@@ -42,10 +42,8 @@ from Acquisition import aq_parent
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testPackingList import TestPackingListMixin
-from testAccountingRules import TestAccountingRulesMixin
 
-class TestInvoiceMixin(TestPackingListMixin,
-                       TestAccountingRulesMixin,):
+class TestInvoiceMixin(TestPackingListMixin):
   """Test methods for invoices
   """
   default_region = "europe/west/france"
@@ -81,9 +79,8 @@ class TestInvoiceMixin(TestPackingListMixin,
     return "Invoices"
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_simplified_invoicing', 'erp5_apparel',
-            'erp5_project', 'erp5_administration')
+    return super(TestInvoiceMixin, self).getBusinessTemplateList() + (
+      'erp5_accounting', 'erp5_invoicing', 'erp5_simplified_invoicing')
 
   @UnrestrictedMethod
   def createCategories(self):
@@ -121,21 +118,12 @@ class TestInvoiceMixin(TestPackingListMixin,
   def afterSetUp(self):
     self.createCategories()
     self.validateRules()
+    self.createBusinessProcess()
     self.login()
-    self.oldMailHost = getattr(self.portal, 'MailHost', None)
-    if self.oldMailHost is not None:
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
-    transaction.commit()
-    self.tic()
 
   def beforeTearDown(self):
     transaction.abort()
-    self.tic()
-    # restore the original MailHost
-    if self.oldMailHost is not None:
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+    super(TestInvoiceMixin, self).beforeTearDown()
     for folder in (self.portal.accounting_module,
                    self.portal.organisation_module,
                    self.portal.sale_order_module,
@@ -143,9 +131,7 @@ class TestInvoiceMixin(TestPackingListMixin,
                    self.portal.sale_packing_list_module,
                    self.portal.purchase_packing_list_module,
                    self.portal.portal_simulation,):
-      
       folder.manage_delObjects([x for x in folder.objectIds() if x not in ('organisation_1','organisation_2','ppl_1','ppl_2')])
-     
     transaction.commit()
     self.tic()
 
@@ -158,67 +144,51 @@ class TestInvoiceMixin(TestPackingListMixin,
     newSecurityManager(None, user)
 
   def stepCreateSaleInvoiceTransactionRule(self, sequence, **kw) :
-    """Create the rule for accounting. """
-    self.createInvoiceTransactionRule(resource=sequence.get('resource'))
+    pass # see createBusinessProcess
 
-  @UnrestrictedMethod
-  def createInvoiceTransactionRule(self, resource=None):
-    """Create a sale invoice transaction rule with only one cell for
-    product_line/apparel and default_region
-    The accounting rule cell will have the provided resource, but this his more
-    or less optional (as long as price currency is set correctly on order)
-    """
+  ## XXX move this to "Sequence class"
+  def playSequence(self, sequence_string, quiet=0) :
+    sequence_list = SequenceList()
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
+
+  def createBusinessProcess(self):
     portal = self.portal
-    account_module = portal.account_module
-    for account_id, account_gap, account_type \
-               in self.account_definition_list:
-      if not account_id in account_module.objectIds():
-        account = account_module.newContent(id=account_id)
-        account.setGap(account_gap)
-        account.setAccountType(account_type)
-        portal.portal_workflow.doActionFor(account, 'validate_action')
-
-    invoice_rule = portal.portal_rules.default_invoice_transaction_simulation_rule
-    if invoice_rule.getValidationState() == 'validated':
-      invoice_rule.invalidate()
-    invoice_rule.deleteContent(list(invoice_rule.objectIds()))
-    transaction.commit()
-    self.tic()
-    region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
-    product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
-    region_predicate.edit(
-      membership_criterion_base_category_list = ['destination_region'],
-      membership_criterion_category_list =
-                   ['destination_region/region/%s' % self.default_region ],
-      int_index = 1,
-      string_index = 'region'
-    )
-    product_line_predicate.edit(
-      membership_criterion_base_category_list = ['product_line'],
-      membership_criterion_category_list =
-                            ['product_line/apparel'],
-      int_index = 1,
-      string_index = 'product'
-    )
-    product_line_predicate.immediateReindexObject()
-    region_predicate.immediateReindexObject()
-
-    invoice_rule.updateMatrix()
-    cell_list = invoice_rule.getCellValueList(base_id='movement')
-    self.assertEquals(len(cell_list),1)
-    cell = cell_list[0]
-
-    for line_id, line_source_id, line_destination_id, line_ratio in \
-        self.transaction_line_definition_list:
-      line = cell.newContent(id=line_id,
-          portal_type='Accounting Transaction Line', quantity=line_ratio,
-          resource_value=resource,
+    business_process_id = self.__class__.__name__
+    try:
+      business_process = portal.business_process_module[business_process_id]
+    except KeyError:
+      business_process = portal.business_process_module.newContent(
+        business_process_id, 'Business Process',
+        specialise=self.__class__.business_process)
+      kw = dict(portal_type='Trade Model Path',
+                trade_phase='default/accounting',
+                trade_date='trade_phase/default/invoicing',
+                membership_criterion_base_category_list=('destination_region',
+                                                         'product_line'),
+                membership_criterion_category=(
+                  'destination_region/region/' + self.default_region,
+                  'product_line/apparel'))
+      account_module = portal.account_module
+      for account_id, account_gap, account_type in self.account_definition_list:
+        if not account_module.has_key(account_id):
+          account = account_module.newContent(account_id, gap=account_gap,
+                                              account_type=account_type)
+          portal.portal_workflow.doActionFor(account, 'validate_action')
+      for line_id, line_source_id, line_destination_id, line_ratio in \
+          self.transaction_line_definition_list:
+        trade_model_path = business_process.newContent(
+          reference='accounting_' + line_id,
+          efficiency=line_ratio,
           source_value=account_module[line_source_id],
-          destination_value=account_module[line_destination_id])
-
-    invoice_rule.validate()
-    transaction.commit()
-    self.tic()
+          destination_value=account_module[line_destination_id],
+          **kw)
+        # A trade model path already exist for root simulation movements
+        # (Accounting Transaction Root Simulation Rule).
+        # The ones we are creating are for Invoice Transaction Simulation Rule.
+        trade_model_path._setCriterionPropertyList(('portal_type',))
+        trade_model_path.setCriterion('portal_type', 'Simulation Movement')
+    self.business_process = business_process.getRelativeUrl()
 
   def stepCreateEntities(self, sequence, **kw) :
     """Create a vendor and two clients. """
@@ -728,7 +698,7 @@ class TestInvoiceMixin(TestPackingListMixin,
         portal_type=self.invoice_transaction_line_portal_type)))
     self.assertEquals(3,len(new_invoice.objectValues(
         portal_type=self.invoice_transaction_line_portal_type)))
-    account_module = self.getAccountModule()
+    account_module = self.portal.account_module
     found_dict = {}
     for line in invoice.objectValues(
         portal_type=self.invoice_transaction_line_portal_type):
@@ -762,7 +732,7 @@ class TestInvoiceMixin(TestPackingListMixin,
                                            sequence_list=None, **kw):
     """Rebuilds with sale_invoice_builder and checks nothing more is
     created. """
-    accounting_module = self.getAccountingModule()
+    accounting_module = self.portal.accounting_module
     portal_type_list = ('Sale Invoice Transaction', 'Purchase Invoice Transaction')
     sale_invoice_transaction_count = len(accounting_module.objectValues(
       portal_type=portal_type_list))
@@ -964,12 +934,12 @@ class TestInvoiceMixin(TestPackingListMixin,
   def stepUnifyStartDateWithDecisionInvoice(self, sequence=None,
                                             sequence_list=None):
     invoice = sequence.get('invoice')
-    self._solveDeliveryGroupDivergence(invoice, 'start_date',
-                                       invoice.getRelativeUrl())
+    self._solveDivergence(invoice, 'start_date', 'Unify Solver',
+                          value=invoice.getStartDate())
 
   def stepAcceptDecisionQuantityInvoice(self,sequence=None, sequence_list=None):
     invoice = sequence.get('invoice')
-    self._solveDivergence(invoice, 'quantity', 'accept')
+    self._solveDivergence(invoice, 'quantity', 'Accept Solver')
 
   def stepAcceptDecisionInvoice(self, sequence=None, sequence_list=None,
       **kw):
@@ -1196,8 +1166,6 @@ class TestInvoice(TestInvoiceMixin):
                                 portal_type='Currency',
                                 title='Currency',
                                 base_unit_quantity=0.01)
-    self.createInvoiceTransactionRule(currency)
-
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client',
@@ -1210,6 +1178,7 @@ class TestInvoice(TestInvoiceMixin):
                             default_address_region=self.default_region)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1267,6 +1236,7 @@ class TestInvoice(TestInvoiceMixin):
                             price_currency= currency.getRelativeUrl())
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1458,8 +1428,6 @@ class TestInvoice(TestInvoiceMixin):
                                 portal_type='Currency',
                                 title='Currency',
                                 base_unit_quantity=0.01)
-    self.createInvoiceTransactionRule(currency)
-
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client',
@@ -1470,6 +1438,7 @@ class TestInvoice(TestInvoiceMixin):
                             default_address_region=self.default_region)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1676,6 +1645,7 @@ class TestInvoice(TestInvoiceMixin):
                               portal_type=self.invoice_portal_type,
                               start_date=DateTime(2008, 12, 31),
                               title='Invoice',
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1715,6 +1685,7 @@ class TestInvoice(TestInvoiceMixin):
                               portal_type=self.invoice_portal_type,
                               start_date=DateTime(2008, 12, 31),
                               title='Invoice',
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1766,6 +1737,7 @@ class TestInvoice(TestInvoiceMixin):
                               portal_type=self.invoice_portal_type,
                               start_date=DateTime(2008, 12, 31),
                               title='Invoice',
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1805,6 +1777,7 @@ class TestInvoice(TestInvoiceMixin):
                             title='Vendor')
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1901,6 +1874,7 @@ class TestInvoice(TestInvoiceMixin):
     no_order_packing_list = \
 self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                               portal_type=self.packing_list_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -1993,6 +1967,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                             title='Vendor')
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2089,6 +2064,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                             title='Vendor')
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2174,7 +2150,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                                 portal_type='Currency',
                                 title='euro')
     currency.setBaseUnitQuantity(0.01)
-    self.createInvoiceTransactionRule(currency)
     transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
@@ -2187,6 +2162,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                             default_address_region=self.default_region)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2251,6 +2227,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                             default_address_region=self.default_region)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2314,11 +2291,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
  
 
   def _acceptDivergenceOnInvoice(self, invoice, divergence_list):
-    builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
-    for builder in builder_list:
-      builder.solveDivergence(invoice.getRelativeUrl(),
-                              divergence_to_accept_list=divergence_list)
+    print invoice, divergence_list
+    self._solveDivergence(invoice, 'quantity', 'Accept Solver')
 
   def test_accept_quantity_divergence_on_invoice_with_stopped_packing_list(
                 self, quiet=quiet):
@@ -2374,11 +2348,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEquals('solved', packing_list.getCausalityState())
  
   def _adoptDivergenceOnInvoice(self, invoice, divergence_list):
-    builder_list = invoice.getBuilderList()
-    self.assertEquals(2, len(builder_list))
-    for builder in builder_list:
-      builder.solveDivergence(invoice.getRelativeUrl(),
-                              divergence_to_adopt_list=divergence_list)
+    print invoice, divergence_list
+    self._solveDivergence(invoice, 'quantity', 'Adopt Solver')
 
   def test_adopt_quantity_divergence_on_invoice_line_with_stopped_packing_list(
                 self, quiet=quiet):
@@ -2477,7 +2448,6 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
   PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateEntities
       stepCreateCurrency
-      stepCreateSaleInvoiceTransactionRule
       stepCreateOrder
       stepSetOrderProfile
       stepSetOrderPriceCurrency
@@ -2505,7 +2475,6 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
   PACKING_LIST_TWO_LINES_DEFAULT_SEQUENCE = """
       stepCreateEntities
       stepCreateCurrency
-      stepCreateSaleInvoiceTransactionRule
       stepCreateOrder
       stepSetOrderProfile
       stepSetOrderPriceCurrency
@@ -2539,7 +2508,6 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
   TWO_PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateEntities
       stepCreateCurrency
-      stepCreateSaleInvoiceTransactionRule
       stepCreateOrder
       stepSetOrderProfile
       stepSetOrderPriceCurrency
@@ -2672,6 +2640,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepEditInvoice
         stepCheckInvoiceRuleNotAppliedOnInvoiceEdit
         stepCheckInvoicesConsistency
+        stepTic
       """)
     sequence_list.play(self, quiet=quiet)
 
@@ -2690,6 +2659,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepEditPackingList
         stepCheckDeliveryRuleNotAppliedOnPackingListEdit
         stepCheckInvoicesConsistency
+        stepTic
       """)
     sequence_list.play(self, quiet=quiet)
 
@@ -2738,6 +2708,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
       stepCheckInvoicesConsistency
+      stepTic
     """)
     sequence_list.play(self, quiet=quiet)
 
@@ -2811,10 +2782,12 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """
     Change the start_date of a Invoice Line,
     check that the invoice is divergent,
-    then accept decision, and check Packing list is divergent
+    then accept decision, and check Packing list is *not* divergent,
+    because Unify Solver does not propagage the change to the upper
+    simulation movement.
     """
     if not quiet:
-      self.logMessage('Invoice Change Sart Date')
+      self.logMessage('Invoice Change Start Date')
     sequence = self.PACKING_LIST_DEFAULT_SEQUENCE + \
     """
     stepSetReadyPackingList
@@ -2837,7 +2810,12 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepCheckInvoiceIsNotDivergent
     stepCheckInvoiceIsSolved
 
-    stepCheckPackingListIsDivergent
+    stepCheckPackingListIsNotDivergent
+    stepCheckPackingListIsSolved
+    stepCheckInvoiceTransactionRule
+
+    stepRebuildAndCheckNothingIsCreated
+    stepCheckInvoicesConsistency
     """
     self.playSequence(sequence, quiet=quiet)
 
@@ -3511,7 +3489,6 @@ class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
   PACKING_LIST_DEFAULT_SEQUENCE = """
       stepCreateEntities
       stepCreateCurrency
-      stepCreateSaleInvoiceTransactionRule
       stepCreateOrder
       stepSetOrderProfile
       stepSetOrderPriceCurrency

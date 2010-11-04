@@ -28,24 +28,23 @@
 #
 ##############################################################################
 
-import zope.interface
 from math import log
 from warnings import warn
 
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Base import Base
 
 from Products.ERP5Type.Utils import cartesianProduct
-
-from Products.ERP5.Variated import Variated
+from Products.ERP5.mixin.variated import VariatedMixin
 from Products.CMFCategory.Renderer import Renderer
 
 from zLOG import LOG, WARNING
 
-class Resource(XMLMatrix, Variated):
+class Resource(XMLObject, XMLMatrix, VariatedMixin):
     """
       A Resource
     """
@@ -58,20 +57,13 @@ class Resource(XMLMatrix, Variated):
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative interfaces
-    zope.interface.implements( interfaces.IVariated, )
-
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
+    property_sheets = ( PropertySheet.DublinCore
                       , PropertySheet.Price
                       , PropertySheet.Resource
                       , PropertySheet.Reference
                       , PropertySheet.Comment
                       , PropertySheet.FlowCapacity
-                      , PropertySheet.VariationRange
                       , PropertySheet.DefaultSupply
                       , PropertySheet.Aggregated
                       )
@@ -147,8 +139,8 @@ class Resource(XMLMatrix, Variated):
             other_base_category_dict.iteritems() if y == 1]
         # Get category variation
         if other_base_category_list:
-          result.extend(Variated.getVariationRangeCategoryItemList(
-              self, base_category_list=other_base_category_list,
+          result.extend(super(Resource, self).getVariationRangeCategoryItemList(
+              base_category_list=other_base_category_list,
               base=base, display_base_category=display_base_category, **kw))
         # Return result
         return result
@@ -187,7 +179,7 @@ class Resource(XMLMatrix, Variated):
               if not x in optional_bc_list]
 
 
-      result = Variated.getVariationCategoryItemList(self,
+      result = super(Resource, self).getVariationCategoryItemList(
                             base_category_list=other_bc_list,
                             display_base_category=display_base_category,
                             display_id=display_id, base=base, **kw)
@@ -666,21 +658,19 @@ class Resource(XMLMatrix, Variated):
       Get all pricing parameters from Predicate.
       """
       # Search all categories context
-      new_category_list = []
-      if context is not None:
-        new_category_list += context.getCategoryList()
+      if context is None:
+        new_category_list = []
+      else:
+        new_category_list = context.getCategoryList()
       #XXX This should be 'category_list' instead of 'categories' to respect
       # the naming convention. Must take care of side effects when fixing
-      if kw.has_key('categories'):
-        new_category_list.extend(kw['categories'])
-        del kw['categories']
+      new_category_list += kw.pop('categories', ())
       resource_category = 'resource/' + self.getRelativeUrl()
       if not resource_category in new_category_list:
-        new_category_list += (resource_category, )
+        new_category_list.append(resource_category)
       # Generate the predicate mapped value
       # to get some price values.
       portal = self.getPortalObject()
-      domain_tool = portal.portal_domains
       if supply_path_type is None:
         portal_type_list = kw.pop('portal_type',
                                   portal.getPortalSupplyPathTypeList())
@@ -689,17 +679,23 @@ class Resource(XMLMatrix, Variated):
       else:
         portal_type_list = (supply_path_type,)
 
+      sort_method = kw.pop('sort_method', self._pricingSortMethod)
       # Generate the fake context
-      tmp_context = self.asContext(context=context, 
+      tmp_context = self.asContext(context=context,
                                    categories=new_category_list,
                                    REQUEST=REQUEST, **kw)
-      tmp_kw = kw.copy()
-      if 'sort_method' not in tmp_kw:
-        tmp_kw['sort_method'] = self._pricingSortMethod
-      mapped_value = domain_tool.generateMultivaluedMappedValue(
+      # XXX When called for a generated amount, base_application may point
+      #     to nonexistant base_amount (e.g. "produced_quantity" for
+      #     transformations), which would make domain tool return nothing.
+      #     Following hack cleans up a category we don't want to test anyway.
+      #     Also, do not use '_setBaseApplication' to bypass interactions.
+      portal.portal_categories._setCategoryMembership(tmp_context,
+        ('base_application',), ())
+      mapped_value = portal.portal_domains.generateMultivaluedMappedValue(
                                              tmp_context,
                                              portal_type=portal_type_list,
-                                             has_cell_content=0, **tmp_kw)
+                                             has_cell_content=0,
+                                             sort_method=sort_method, **kw)
       # Get price parameters
       price_parameter_dict = {
         'base_price': None,

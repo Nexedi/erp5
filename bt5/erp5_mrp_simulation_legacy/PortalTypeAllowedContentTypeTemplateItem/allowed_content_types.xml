@@ -1,0 +1,26 @@
+<allowed_content_type_list>
+ <portal_type id="Transformation Model Rule">
+  <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
+ <portal_type id="Transformation Rule">
+  <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
+ <portal_type id="Transformation Sourcing Model Rule">
+  <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
+ <portal_type id="Transformation Sourcing Rule">
+  <item>Category Divergence Tester</item>
+  <item>Composed Divergence Tester</item>
+  <item>Property Divergence Tester</item>
+  <item>Quantity Divergence Tester</item>
+ </portal_type>
+</allowed_content_type_list>

@@ -37,7 +37,7 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Type.tests.Sequence import Sequence
 
 REGION_FRANCE_PATH = 'region/europe/western_europe/france'
 REGION_GERMANY_PATH = 'region/europe/western_europe/germany'
@@ -65,13 +65,14 @@ class TestPredicateMixIn(ERP5TypeTestCase):
   def afterSetUp(self) :
     self.createCategories()
     self.login()
-    
-  # XXX ... this method is a copy / paste
+
   def playSequence(self, sequence_string, quiet=QUIET) :
-    sequence_list = SequenceList()
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=QUIET)
-  
+    # don't commit between steps
+    sequence = Sequence()
+    sequence.setSequenceString(sequence_string)
+    for step in sequence._step_list:
+      step.play(self, sequence, quiet)
+
   # XXX ... this method is a copy / paste
   def createCategories(self):
     """Create the list of categories returned by the

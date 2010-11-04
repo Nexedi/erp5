@@ -37,9 +37,13 @@ class TradeConditionTestCase(ERP5TypeTestCase):
   """Tests for Trade Conditions and Tax
   """
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
+    return ('erp5_base', 'erp5_simulation', 'erp5_simulation_legacy',
+            'erp5_pdm', 'erp5_trade', 'erp5_accounting',
             'erp5_invoicing', 'erp5_tax_resource', 'erp5_discount_resource',
-            'erp5_legacy_tax_system', 'erp5_simplified_invoicing',)
+            'erp5_legacy_tax_system', 'erp5_simplified_invoicing',
+            'erp5_trade_simulation_legacy',
+            'erp5_accounting_simulation_legacy',
+            'erp5_invoicing_simulation_legacy')
 
   def validateRules(self):
     """

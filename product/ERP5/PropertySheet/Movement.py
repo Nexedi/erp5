@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -74,5 +75,7 @@ class Movement:
             'mode'        : 'w' },
     )
 
-    _categories = ('order', 'specialise', Expression('python: portal.getPortalVariationBaseCategoryList()'))
+    _categories = ('order', 'specialise', 'aggregate',
+                    Expression('python: portal.getPortalVariationBaseCategoryList()'),
+                   )
                    # XXX Please check if it is meaningful to add order cat to all movemements ?

@@ -28,11 +28,9 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type.Core.Predicate import Predicate
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
 class StringEquivalenceTester(Predicate, EquivalenceTesterMixin):
@@ -58,10 +56,6 @@ class StringEquivalenceTester(Predicate, EquivalenceTesterMixin):
                       , PropertySheet.SolverSelection
                      )
 
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IEquivalenceTester, )
-
-
   def _compare(self, prevision_movement, decision_movement):
     """
     If prevision_movement and decision_movement don't match, it returns a
@@ -72,8 +66,10 @@ class StringEquivalenceTester(Predicate, EquivalenceTesterMixin):
                lambda x:False)(tested_property):
       decision_value = decision_movement.getRecordedProperty(tested_property)
     else:
-      decision_value = decision_movement.getProperty(tested_property)
-    prevision_value = prevision_movement.getProperty(tested_property)
+      decision_value = self._getTestedPropertyValue(decision_movement,
+                                                    tested_property)
+    prevision_value = self._getTestedPropertyValue(prevision_movement,
+                                                   tested_property)
 
     # XXX do we have configurable parameter for this divergence tester ?
     # like ambiguity...
@@ -83,16 +79,3 @@ class StringEquivalenceTester(Predicate, EquivalenceTesterMixin):
         'The value of ${property_name} is different between decision and prevision.',
         dict(property_name=tested_property))
     return None
-
-  def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
-    """
-    Returns a list of properties to update on decision_movement
-    prevision_movement so that next call to compare returns True.
-
-    prevision_movement -- a simulation movement (prevision)
-
-    decision_movement -- a delivery movement (decision)
-    """
-    tested_property = self.getTestedProperty()
-    prevision_value = prevision_movement.getProperty(tested_property)
-    return {tested_property:prevision_value}

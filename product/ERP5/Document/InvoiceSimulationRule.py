@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -25,20 +26,88 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
-from Products.ERP5Legacy.Document.InvoicingRule import InvoicingRule
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5.mixin.rule import RuleMixin, MovementGeneratorMixin
+from Products.ERP5.mixin.movement_collection_updater import \
+     MovementCollectionUpdaterMixin
 
-class InvoiceSimulationRule(InvoicingRule):
+class InvoiceSimulationRule(RuleMixin, MovementCollectionUpdaterMixin, Predicate):
   """
-    Invoice Simulation Rule expand simulation created by a order or delivery rule.
+  Invoicing Rule expand simulation created by a order or delivery rule.
   """
-
   # CMF Type Definition
   meta_type = 'ERP5 Invoice Simulation Rule'
   portal_type = 'Invoice Simulation Rule'
-  add_permission = Permissions.AddPortalContent
 
   # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IRule,
+                            interfaces.IDivergenceController,
+                            interfaces.IMovementCollectionUpdater,)
+
+  # Default Properties
+  property_sheets = (
+    PropertySheet.Base,
+    PropertySheet.XMLObject,
+    PropertySheet.CategoryCore,
+    PropertySheet.DublinCore,
+    PropertySheet.Task,
+    PropertySheet.Predicate,
+    PropertySheet.Reference,
+    PropertySheet.Version,
+    PropertySheet.Rule
+    )
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isAccountable')
+  def isAccountable(self, movement):
+    """
+    Tells whether generated movement needs to be accounted or not.
+
+    Invoice movement are never accountable, so simulation movement for
+    invoice movements should not be accountable either.
+    """
+    return False
+
+  def _getMovementGenerator(self, context):
+    """
+    Return the movement generator to use in the expand process
+    """
+    return InvoicingRuleMovementGenerator(applied_rule=context, rule=self)
+
+  def _getMovementGeneratorContext(self, context):
+    """
+    Return the movement generator context to use for expand
+    """
+    return context
+
+  def _getMovementGeneratorMovementList(self, context, movement_list=None, rounding=None):
+    """
+    Return the movement lists to provide to the movement generator
+    """
+    return []
+
+  def _isProfitAndLossMovement(self, movement):
+    # For a kind of trade rule, a profit and loss movement lacks source
+    # or destination.
+    return (movement.getSource() is None or movement.getDestination() is None)
+
+class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
+
+  def _getUpdatePropertyDict(self, input_movement):
+    # Filter out specialise values we don't want, like transformations
+    # XXX Should there be a configurable property on the rule ?
+    specialise_list = [x.getRelativeUrl()
+      for x in input_movement.getSpecialiseValueList()
+      if x.providesIBusinessProcess() or
+         x.getPortalType().endswith('Trade Condition')]
+    return {'delivery': None, 'specialise': specialise_list}
+
+  def _getInputMovementList(self, movement_list=None, rounding=None):
+    return [self._applied_rule.getParentValue(),]

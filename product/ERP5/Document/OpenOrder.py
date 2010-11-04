@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -31,11 +32,15 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5.Document.Delivery import Delivery
+from Products.ERP5.Document.Supply import Supply
 
-class OpenOrder(Delivery):
+class OpenOrder(Supply):
   """
     An OpenOrder is a collection of Open Order Lines
+
+    TODO:
+    - make sure that this should be (or not) a subclass
+      of Order
   """
   meta_type = 'ERP5 Open Order'
   portal_type = 'Open Order'
@@ -46,7 +51,7 @@ class OpenOrder(Delivery):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IExpandable, interfaces.IOpenOrderExpander)
+  zope.interface.implements(interfaces.IExpandable)
 
   # Declarative properties
   property_sheets = ( PropertySheet.Base
@@ -72,11 +77,9 @@ class OpenOrder(Delivery):
       SubscriptionItem
 
       Others are expanded by their Item
+
+      NOTE-JPS: not sure if it is really necessary to keep this
+                since only used by one client and tiolive. For tiolive
+                it will be dropped out
     """
     
-  security.declarePrivate('expandOpenOrderRule')
-  def expandOpenOrderRule(self, applied_rule_id=None, force=0, **kw):
-    """
-      Provides the default implementation of expand for Open Orders
-    """
-

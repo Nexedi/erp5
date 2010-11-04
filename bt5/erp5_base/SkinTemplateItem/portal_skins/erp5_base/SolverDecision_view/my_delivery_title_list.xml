@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>title</string>
-                <string>catalog_index</string>
-                <string>portal_type</string>
-                <string>height</string>
                 <string>base_category</string>
+                <string>catalog_index</string>
+                <string>description</string>
+                <string>height</string>
+                <string>portal_type</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -61,6 +61,18 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>base_category</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>catalog_index</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -69,13 +81,15 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>portal_type</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key> <string>height</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -95,7 +109,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The lines which are impacted by the solver.</string> </value>
+                    <value> <string>The simulation movements which are impacted by the solver.</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -114,8 +128,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Movement</string>
-                          <string>Movement</string>
+                          <string>Simulation Movement</string>
+                          <string>Simulation Movement</string>
                         </tuple>
                       </list>
                     </value>
@@ -126,26 +140,10 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Delivery Lines</string> </value>
+                    <value> <string>Simulation Movement</string> </value>
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: [(x, x) for x in context.getPortalMovementTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -26,30 +27,22 @@
 #
 ##############################################################################
 
+import zope.interface
 from AccessControl import ClassSecurityInfo
-
-from Products.ERP5Type import Permissions, PropertySheet
-
+from Acquisition import aq_base
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Core.Predicate import Predicate
-from Products.ERP5.Document.Amount import Amount
 
-class MappedValue(Predicate, Amount):
+TRANSFORMATION_FIX = True
+_MARKER = []
+
+class MappedValue(Predicate):
   """
-    A MappedValue allows to associate a value to a domain
+    A MappedValue allows to associate a value to a predicate
 
-    Although MappedValue are supposed to be independent of any
-    design choice, we have to implement them as subclasses of
-    Amount in order to make sure they provide a complete
-    variation interface. In particular, we want to be able
-    to call getVariationValue / setVariationValue on a
-    MappedValue.
-
-    XXX - Amount should be remove from here
-    
-    
-    Interesting Idea: properties and categories of the mapped value
-    (not of the predicate) could be handled through additional matrix
-    dimensions rather than through ad-hoc definition.    
+  XXX Why do we redefine xxxProperty methods ?
+      When a property is defined by a property sheet with a specific storage_id,
+      they break accessors of this property when a value is mapped to it.
   """
   meta_type = 'ERP5 Mapped Value'
   portal_type = 'Mapped Value'
@@ -60,12 +53,89 @@ class MappedValue(Predicate, Amount):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   # Declarative properties
-  property_sheets = ( PropertySheet.Base
+  property_sheets = (   PropertySheet.Base
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
                       , PropertySheet.Predicate
                       , PropertySheet.MappedValue
                     )
+  # Declarative interfaces
+  zope.interface.implements(interfaces.IMappedValue,
+                           )
+  security.declareProtected(Permissions.AccessContentsInformation, 'getMappedValueBaseCategoryList')
+  def getMappedValueBaseCategoryList(self, d=_MARKER):
+    if TRANSFORMATION_FIX:
+      # Fix Mapped Value Objects which forgot to define their Mapped Base Categories
+      if not self._baseGetMappedValueBaseCategoryList():
+        if self.getParentValue().getParentValue().getPortalType() == 'Transformation':
+          base_category_dict = {}
+          for category in self.getCategoryList():
+            # XXX-JPS additional test required to prevent taking too much ?
+            base_category_dict[category.split('/')[0]] = None
+          self._setMappedValueBaseCategoryList(base_category_dict.keys())
+    if d is _MARKER:
+      return self._baseGetMappedValueBaseCategoryList(d=d)
+    return self._baseGetMappedValueBaseCategoryList()
+
+  security.declareProtected( Permissions.AccessContentsInformation, 'getProperty' )
+  def getProperty(self, key, d=_MARKER, **kw):
+    """
+    Use local property instead of calling (acquired) accessor
+    whenever key is provided by the mapped value.
+
+    TODO:
+    - handle list properties (key ends with _list)
+    - add unit tests
+    """
+    if key in self.getMappedValuePropertyList():
+      result = getattr(aq_base(self), key, _MARKER)
+      if result is not _MARKER:
+        return result
+    if d is _MARKER:
+      return Predicate.getProperty(self, key, **kw) # XXX-JPS I would prefer to use always getProperty
+                                                    # Is there any reason to overload ?
+    return Predicate.getProperty(self, key, d=d, **kw)
+
+  def getPropertyList(self, key, d=None):
+    """
+    Use local property instead of calling (acquired) accessor
+    whenever key is provided by the mapped value.
+
+    TODO:
+    - add unit tests
+    """
+    if key in self.getMappedValuePropertyList():
+      result = getattr(aq_base(self), key, _MARKER)
+      if result is not _MARKER:
+        return result
+    if d is None:
+      return Predicate.getPropertyList(self, key)
+    return Predicate.getPropertyList(self, key, d=d)
+
+  def _setProperty(self, key, value, type=None, **kw):
+    """
+    Use local property instead of calling (acquired) accessor
+    whenever key is provided by the mapped value.
+
+    TODO:
+    - handle type
+    - add unit tests
+    """
+    if key in self.getMappedValuePropertyList():
+      return setattr(self, key, value)
+    return Predicate._setProperty(self, key, value, type=type, **kw)
+
+  # Check is this method should also be overriden
+  #def _setPropValue(self, key, value, **kw):
+
+  def hasProperty(self, key):
+    """
+    Use local property instead of calling (acquired) accessor
+    whenever key is provided by the mapped value.
+    """
+    if key in self.getMappedValuePropertyList():
+      return getattr(self, key, _MARKER) is not _MARKER
+    return Predicate.hasProperty(self, key)
 
   def _edit(self, **kw):
     # We must first prepare the mapped value before we do the edit

@@ -1,0 +1,18 @@
+<workflow_chain>
+ <chain>
+  <type>Transformation Model Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Sourcing Model Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Transformation Sourcing Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+</workflow_chain>

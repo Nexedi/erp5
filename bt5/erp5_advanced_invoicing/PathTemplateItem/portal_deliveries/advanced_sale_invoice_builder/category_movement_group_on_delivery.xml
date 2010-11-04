@@ -40,6 +40,7 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
+                <string>specialise</string>
                 <string>delivery_mode</string>
                 <string>incoterm</string>
                 <string>source</string>

@@ -10,12 +10,10 @@ Bank Account | view
 Base Variant Movement Group | view
 Career | change_function
 Career | view
-Category Divergence Tester | view
 Category Movement Group | view
 Causality Assignment Movement Group | view
 Causality Movement Group | view
 Chat Address | view
-Composed Divergence Tester | view
 Credit Card | view
 Currency Exchange Line | view
 Currency Module | view
@@ -73,10 +71,8 @@ Person | terminate_career
 Person | view
 Preference | base_preference
 Property Assignment Movement Group | view
-Property Divergence Tester | view
 Property Grouping Movement Group | view
 Property Movement Group | view
-Quantity Divergence Tester | view
 Quantity Sign Movement Group | view
 Query Module | view
 Query | view
@@ -86,18 +82,6 @@ Root Applied Rule Causality Movement Group | view
 Rounding Model | predicate_view
 Rounding Model | view
 Rounding Tool | view
-Solver Decision | configuration
-Solver Decision | view
-Solver Process Tool | view
-Solver Process | view
-Solver Tool | view
-Solver Type | action_view
-Solver Type | predicate_view
-Solver Type | role_view
-Solver Type | solver_view
-Solver Type | translation_view
-Solver Type | update_local_roles
-Solver Type | view
 Split Movement Group | view
 Tax Line Delivery Movement Group | view
 Telephone | change_function

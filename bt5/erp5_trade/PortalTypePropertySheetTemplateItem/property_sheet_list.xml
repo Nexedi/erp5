@@ -1,8 +1,4 @@
 <property_sheet_list>
- <portal_type id="Business Path">
-  <item>PaymentCondition</item>
-  <item>SupplyPath</item>
- </portal_type>
  <portal_type id="Business Process">
   <item>Reference</item>
   <item>Version</item>
@@ -12,5 +8,9 @@
  </portal_type>
  <portal_type id="Sale Trade Condition">
   <item>PaymentCondition</item>
+ </portal_type>
+ <portal_type id="Trade Model Path">
+  <item>PaymentCondition</item>
+  <item>SupplyPath</item>
  </portal_type>
 </property_sheet_list>

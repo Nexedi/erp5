@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
@@ -33,19 +34,24 @@ class PaymentCondition:
   """
 
   _properties = (
-        {   'id'          : 'payment_term',
+        {   'id'          : 'calculation_script_id',
+            'description' : 'If a script is defined on trade model Line, this '
+                            'script will be used for calculation',
+            'type'        : 'string',
+            'mode'        : 'w' },
+        {   'id'          : 'payment_term', # XXX-JPS rename to business_term or trade_term
             'description' : 'payment term in a number of days',
             'type'        : 'int',
             'mode'        : 'w' },
-        {   'id'          : 'payment_date',
+        {   'id'          : 'payment_date', # XXX-JPS rename to business_date or trade_due_date
             'description' : 'An absolute payment date',
             'type'        : 'date',
             'mode'        : 'w' },
-        {   'id'          : 'payment_end_of_month',
+        {   'id'          : 'payment_end_of_month', # XXX-JPS rename to business_end_of_month or trade_end_of_month
             'description' : 'is the payment required on the end of month',
             'type'        : 'boolean',
             'mode'        : 'w' },
-        {   'id'          : 'payment_additional_term',
+        {   'id'          : 'payment_additional_term', # XXX-JPS rename to business_additional_term or trade_additional_term
             'description' : 'additionnal term in a number of days',
             'type'        : 'int',
             'mode'        : 'w' },

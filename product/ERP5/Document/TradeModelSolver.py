@@ -32,7 +32,10 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.AcceptSolver import AcceptSolver
 
 class TradeModelSolver(AcceptSolver):
-  """
+  """Solve Divergences on Invoice Lines, and dependant trade model lines.
+
+  It consist in accepting decision from invoice lines, and adopting prevision
+  on trade model lines.
   """
   meta_type = 'ERP5 Trade Model Solver'
   portal_type = 'Trade Model Solver'

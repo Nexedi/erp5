@@ -70,6 +70,14 @@ class TradePreference:
       'default'     : [],
       'write_permission': 'Manage properties',
       'mode'        : '' },
+    { 'id'          : 'preferred_price_ratio_use',
+      'description' : 'Uses of movements for which the price will be a ratio'
+                      ' applied to the base instead of an unit price',
+      'type'        : 'lines',
+      'preference'  : 1,
+      'default'     : [],
+      'write_permission': 'Manage properties',
+      'mode'        : '' },
 
     # base_amount
     { 'id'          : 'preferred_trade_base_amount',

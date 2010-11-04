@@ -53,6 +53,7 @@ class Supply(Path, XMLObject):
                       , PropertySheet.DublinCore
                       , PropertySheet.Task
                       , PropertySheet.Arrow
+                      , PropertySheet.Price
                       , PropertySheet.Movement
                       , PropertySheet.Delivery
                       , PropertySheet.Path

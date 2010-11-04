@@ -30,11 +30,10 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5.mixin.variated import VariatedMixin
 
-from Products.ERP5.Variated import Variated
 
-
-class Budget(Predicate, Variated):
+class Budget(Predicate, VariatedMixin):
     """
     Budget means a kind of budget stock.
     """

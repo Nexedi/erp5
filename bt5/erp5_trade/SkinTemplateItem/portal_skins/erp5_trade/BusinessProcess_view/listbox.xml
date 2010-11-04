@@ -13,12 +13,12 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>columns</string>
                 <string>editable_columns</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
-                <string>columns</string>
               </list>
             </value>
         </item>
@@ -111,10 +111,6 @@
                           <string>trade_phase_title</string>
                           <string>Trade Phase</string>
                         </tuple>
-                        <tuple>
-                          <string>deliverable</string>
-                          <string>Root Explanation</string>
-                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -122,10 +118,6 @@
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>deliverable</string>
-                          <string>deliverable</string>
-                        </tuple>
                         <tuple>
                           <string>int_index</string>
                           <string>int_index</string>
@@ -146,8 +138,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Business Path</string>
-                          <string>Business Path</string>
+                          <string>Business Link</string>
+                          <string>Business Link</string>
                         </tuple>
                       </list>
                     </value>
@@ -173,7 +165,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Business Paths</string> </value>
+                    <value> <string>Business Links</string> </value>
                 </item>
               </dictionary>
             </value>

@@ -26,11 +26,9 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
-
 from Products.ERP5Type.Core.Predicate import Predicate
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
 class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
@@ -56,9 +54,6 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
                       , PropertySheet.SolverSelection
                      )
 
-  # Declarative interfaces
-  zope.interface.implements( interfaces.IEquivalenceTester, )
-
   def _compare(self, prevision_movement, decision_movement):
     """
     If prevision_movement and decision_movement don't match, it returns a
@@ -70,8 +65,10 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
                  lambda x:False)(tested_property):
         decision_value = decision_movement.getRecordedProperty(tested_property)
       else:
-        decision_value = decision_movement.getProperty(tested_property)
-      prevision_value = prevision_movement.getProperty(tested_property)
+        decision_value = self._getTestedPropertyValue(decision_movement,
+                                                      tested_property)
+      prevision_value = self._getTestedPropertyValue(prevision_movement,
+                                                     tested_property)
 
       if isinstance(prevision_value, (list, tuple)):
         result = sorted(decision_value) == sorted(prevision_value)
@@ -105,7 +102,8 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
       if movement.isPropertyRecorded(tested_property):
         value_list.append(movement.getRecordedProperty(tested_property))
       else:
-        value_list.append(movement.getProperty(tested_property))
+        value_list.append(self._getTestedPropertyValue(movement,
+                                                       tested_property))
     return 'variation/%r' % (value_list)
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
@@ -117,9 +115,7 @@ class VariationEquivalenceTester(Predicate, EquivalenceTesterMixin):
 
     decision_movement -- a delivery movement (decision)
     """
-    property_dict = {}
-    for tested_property in ('variation_category_list',
-                            'variation_property_dict'):
-      prevision_value = prevision_movement.getProperty(tested_property)
-      property_dict[tested_property] = prevision_value
-    return property_dict
+    get = self._getTestedPropertyValue
+    return dict((tested_property, get(prevision_movement, tested_property))
+                for tested_property in ('variation_category_list',
+                                        'variation_property_dict'))

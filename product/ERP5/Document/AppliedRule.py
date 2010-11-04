@@ -34,12 +34,13 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-from Products.ERP5Legacy.Document.Rule import Rule
+from Products.ERP5.mixin.explainable import ExplainableMixin
+from Products.ERP5.mixin.rule import RuleMixin
 
 TREE_DELIVERED_CACHE_KEY = 'AppliedRule._isTreeDelivered_cache'
 TREE_DELIVERED_CACHE_ENABLED = 'TREE_DELIVERED_CACHE_ENABLED'
 
-class AppliedRule(XMLObject):
+class AppliedRule(XMLObject, ExplainableMixin):
     """
       An applied rule holds a list of simulation movements.
 
@@ -189,56 +190,6 @@ class AppliedRule(XMLObject):
         return self
       return self.getParentValue().getRootAppliedRule()
 
-    def _getExplanationSpecialiseValue(self, portal_type_list):
-      """Returns first found specialise value of delivery or order
-      In case if self is root Applied Rule uses causality
-      Otherwise uses delivery, than order of parent movements
-      Recurses to parents"""
-      def findSpecialiseValueBySimulation(movement):
-        specialise_value = None
-        if movement.getPortalType() != 'Simulation Movement':
-          return None
-        delivery, order = movement.getDeliveryValue(), movement.getOrderValue()
-
-        if delivery is not None:
-          specialise_value = delivery.getExplanationValue() \
-              .getRootSpecialiseValue(portal_type_list)
-          if specialise_value is not None:
-            return specialise_value
-        # 'order' category is deprecated. it is kept for compatibility.
-        if order is not None:
-          specialise_value = order.getExplanationValue() \
-              .getRootSpecialiseValue(portal_type_list)
-          if specialise_value is not None:
-            return specialise_value
-        return findSpecialiseValueBySimulation(movement.getParentValue() \
-            .getParentValue())
-
-      if self.getRootAppliedRule() == self:
-        return self.getCausalityValue() \
-            .getRootSpecialiseValue(portal_type_list)
-      movement = self.getParentValue()
-      return findSpecialiseValueBySimulation(movement)
-
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                             'getTradeConditionValue')
-    def getTradeConditionValue(self):
-      """Return the trade condition that has been used in this
-      simulation, or None if none has been used.
-      """
-      return self._getExplanationSpecialiseValue(
-          ('Purchase Trade Condition', 'Sale Trade Condition'))
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                             'getBusinessProcessValue')
-    def getBusinessProcessValue(self):
-      """Return the business process model that has been used in this
-      simulation, or None if none  has been used.
-      """
-      return self._getExplanationSpecialiseValue(
-          ('Business Process',))
-
     def _isTreeDelivered(self):
       """
       Checks if submovements of this applied rule (going down the complete
@@ -274,7 +225,7 @@ class AppliedRule(XMLObject):
       """
        Return a list of movements.
       """
-      return self.objectValues(portal_type=Rule.movement_type)
+      return self.objectValues(portal_type=RuleMixin.movement_type)
 
     security.declareProtected(Permissions.AccessContentsInformation,
             'getIndexableChildSimulationMovementValueList')

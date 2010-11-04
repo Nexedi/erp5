@@ -62,7 +62,7 @@ method_id = portal_preferences.getPreference(\'preferred_category_child_item_lis
 item_list = getattr(portal_categories.base_amount, method_id)(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\', base=1)\n
 preferred_list = portal_preferences.getPreferredTradeBaseAmountList()\n
 \n
-if not preferred_list:\n
+if not preferred_list and preferred_list != [\'\']:\n
   return item_list\n
 else:\n
   return [item for item in item_list if item[1] in preferred_list]\n

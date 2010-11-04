@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.CMFActivity.ActiveProcess import ActiveProcess
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5.interfaces.movement import IMovement
 
 class SolverProcess(XMLObject, ActiveProcess):
   """
@@ -221,11 +222,12 @@ class SolverProcess(XMLObject, ActiveProcess):
     if not isinstance(delivery_or_movement, (tuple, list)):
       delivery_or_movement = [delivery_or_movement]
     movement_list = []
+    isMovement = IMovement.providedBy
     for x in delivery_or_movement:
-      if x.isDelivery():
-        movement_list.extend(x.getMovementList())
-      else:
+      if isMovement(x):
         movement_list.append(x)
+      else:
+        movement_list.extend(x.getMovementList())
 
     # We suppose here that movement_list is a list of
     # delivery movements. Let us group decisions in such way
@@ -252,6 +254,7 @@ class SolverProcess(XMLObject, ActiveProcess):
     # Now build the solver decision instances based on the previous
     # grouping
     solver_decision_list = self.objectValues(portal_type='Solver Decision')
+    unmatched_solver_decision_list = set(solver_decision_list)
     for solver_decision_key, movement_dict in solver_decision_dict.items():
       causality, delivery_list, solver_list = solver_decision_key
       movement_url_list = [x.getRelativeUrl() for x in movement_dict.keys()]
@@ -260,6 +263,7 @@ class SolverProcess(XMLObject, ActiveProcess):
         x for x in solver_decision_list \
         if sorted(x.getDeliveryList()) == movement_url_list and \
         x.getCausality() == causality]
+      unmatched_solver_decision_list.difference_update(matched_solver_decision_list)
       if len(matched_solver_decision_list) > 0:
         solver_decision_list.remove(matched_solver_decision_list[0])
       else:
@@ -285,8 +289,13 @@ class SolverProcess(XMLObject, ActiveProcess):
         #   if self not in solver_list:
         #     simulation_movement.setSolverValueList(
         #       solver_list + [self])
-    # XXX what should we do for non-matched existing solver decisions?
-    # do we need to cancel them by using an appropriate workflow?
+
+
+    # delete non-matched existing solver decisions, unless they have been
+    # solved already (we detect this by the fact that the solver decision is
+    # associated to a target solver)
+    self.manage_delObjects(ids=[x.getId() for x in
+          unmatched_solver_decision_list if not x.getCausality()])
 
   def _generateRandomId(self):
     # call ActiveProcess._generateRandomId() explicitly otherwise

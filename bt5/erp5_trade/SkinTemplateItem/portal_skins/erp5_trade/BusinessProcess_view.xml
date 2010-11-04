@@ -94,7 +94,6 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_deliverable</string>
                         <string>listbox_int_index</string>
                         <string>listbox_order_builder_title_list</string>
                         <string>listbox_delivery_builder_title_list</string>
@@ -108,7 +107,6 @@
                         <string>my_title</string>
                         <string>my_version</string>
                         <string>my_specialise_title_list</string>
-                        <string>my_referential_date</string>
                       </list>
                     </value>
                 </item>

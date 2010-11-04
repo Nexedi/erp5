@@ -67,12 +67,11 @@ class MovementCollectionUpdaterMixin:
     # We suppose here that we have an IMovementCollection in hand
     decision_movement_list = context.getMovementList()
     prevision_movement_list = movement_generator.getGeneratedMovementList(
-      self._getMovementGeneratorContext(context),
-      movement_list=self._getMovementGeneratorMovementList(), rounding=rounding)
+      movement_list=self._getMovementGeneratorMovementList(context), rounding=rounding) # XXX-JPS This mixin is not self-contained
 
     # Get divergence testers
     tester_list = self._getMatchingTesterList()
-    if len(tester_list) == 0 and len(prevision_movement_list) > 2:
+    if not tester_list and len(prevision_movement_list) > 1:
       raise ValueError("It is not possible to match movements without divergence testers")
 
     # Create small groups of movements per hash keys

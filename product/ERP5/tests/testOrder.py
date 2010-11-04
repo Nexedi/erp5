@@ -51,18 +51,21 @@ class TestOrderMixin(SubcontentReindexingWrapper):
   order_line_portal_type = 'Sale Order Line'
   order_cell_portal_type = 'Sale Order Cell'
   applied_rule_portal_type = 'Applied Rule'
+  simulation_movement_portal_type = 'Simulation Movement'
   datetime = DateTime()
   packing_list_portal_type = 'Sale Packing List'
   packing_list_line_portal_type = 'Sale Packing List Line'
   packing_list_cell_portal_type = 'Sale Packing List Cell'
   delivery_builder_id = 'sale_packing_list_builder'
   size_list = ['Baby','Child/32','Child/34','Man','Woman']
+  business_process = 'business_process_module/erp5_default_business_process'
 
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_trade', 'erp5_apparel',
-            'erp5_project', 'erp5_administration')
+    return ('erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade',
+            'erp5_apparel', 'erp5_project', 'erp5_simulation_test',
+            'erp5_administration')
 
   def login(self, quiet=0, run=1):
     uf = self.getPortal().acl_users
@@ -269,6 +272,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       title = "Order%s" % order.getId(),
       start_date = self.datetime + 10,
       stop_date = self.datetime + 20,
+      specialise = self.business_process,
     )
     if organisation is not None:
       order.edit(source_value=organisation,
@@ -2077,8 +2081,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     portal = self.getPortal()
     order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
-    order = order_module.newContent(portal_type=self.order_portal_type)
-
+    order = order_module.newContent(portal_type=self.order_portal_type,
+                                    specialise=self.business_process)
     # No line, no movement
     self.assertEquals(0, len(order.getMovementList()))
 
@@ -2180,8 +2184,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     base_id = 'movement'
     order_line_vcl=['size/Baby']
     order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
-    order = order_module.newContent(portal_type=self.order_portal_type)
-
+    order = order_module.newContent(portal_type=self.order_portal_type,
+                                    specialise=self.business_process)
     # No line, no movement
     self.assertEquals(order.getTotalQuantity(fast=0), 0)
     self.assertEquals(order.getTotalQuantity(fast=1), 0)
@@ -2522,6 +2526,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
 
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               title='Order')
     line = order.newContent(portal_type=self.order_line_portal_type,
                             resource_value=resource,
@@ -2582,7 +2587,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type='Organisation', title='Vendor')
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2617,7 +2624,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type='Organisation', title='Vendor')
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2653,7 +2662,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type='Organisation', title='Vendor')
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2690,7 +2701,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               default_image_file=image)
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2730,7 +2743,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     self.assertTrue(isinstance(vendor.getDefaultImageValue().data, Pdata))
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2772,7 +2787,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               default_address_city='Vïllà')
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               title='Ordàr',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2812,7 +2829,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type='Organisation', title='Vendor')
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
                               portal_type=self.order_portal_type,
+                              specialise=self.business_process,
                               title='Order',
+                              start_date=self.datetime,
                               source_value=vendor,
                               source_section_value=vendor,
                               destination_value=client,
@@ -2845,10 +2864,12 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
     """Tests, that modification on Order are propagated to lines and cells
     during reindxation"""
     order = self.portal.getDefaultModule(self.order_portal_type).newContent(
-                              portal_type=self.order_portal_type)
+                              portal_type=self.order_portal_type,
+                              specialise=self.business_process)
     order_line = order.newContent(portal_type=self.order_line_portal_type)
     inner_order_line = order_line.newContent(
-            portal_type=self.order_line_portal_type)
+            portal_type=self.order_line_portal_type,
+            start_date=self.datetime)
     order_cell = order_line.newContent(
         portal_type=self.order_cell_portal_type)
     self._testSubContentReindexing(order, [order_line, inner_order_line,

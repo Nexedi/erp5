@@ -29,11 +29,10 @@ import unittest
 
 import transaction
 from DateTime import DateTime
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 
-class CurrencyExchangeTestCase(AccountingTestCase, ERP5TypeTestCase):
+class CurrencyExchangeTestCase(AccountingTestCase):
 
   username = 'username'
 
@@ -45,7 +44,7 @@ class CurrencyExchangeTestCase(AccountingTestCase, ERP5TypeTestCase):
     module.manage_delObjects([x for x in module.objectIds()
                         if x not in currency_list])
     for currency_id in currency_list:
-      currency = self.currency_module._getOb(currency_id, None)
+      currency = module._getOb(currency_id, None)
       if currency is not None:
         currency.manage_delObjects([x.getId() for x in
                 currency.objectValues(
@@ -518,8 +517,9 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
           int_index=2)
     
   def test_CreateCurrencyExchangeCell(self):
-    euro = self.currency_module.euro
-    usd = self.currency_module.usd
+    module = self.portal.currency_module
+    euro = module.euro
+    usd = module.usd
     euro_to_usd = euro.newContent(portal_type='Currency Exchange Line')
     self.assertEquals(0, len(euro_to_usd.contentValues()))
     # when we set the target currency, currency exchange cells will be added
@@ -562,8 +562,9 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
 
 
   def test_ConvertUsingCurrencyExchangeCell(self):
-    euro = self.currency_module.euro
-    usd = self.currency_module.usd
+    module = self.portal.currency_module
+    euro = module.euro
+    usd = module.usd
     euro_to_usd = euro.newContent(portal_type='Currency Exchange Line')
     euro_to_usd.setPriceCurrencyValue(usd)
     euro_to_usd.validate()

@@ -30,7 +30,8 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
-from Products.ERP5Legacy.Document.Rule import Rule
+from Products.ERP5Legacy.Document.Rule import Rule, \
+  AppliedRule_getExplanationSpecialiseValue
 
 class TradeModelRule(Rule):
   """
@@ -59,8 +60,10 @@ class TradeModelRule(Rule):
     """Generates list of movements (as dicts), and let parent class to decide
     which is to add, modify or delete"""
     movement_list = []
-    trade_condition = applied_rule.getTradeConditionValue()
-    business_process = applied_rule.getBusinessProcessValue()
+    trade_condition = AppliedRule_getExplanationSpecialiseValue(applied_rule,
+        ('Purchase Trade Condition', 'Sale Trade Condition'))
+    business_process = AppliedRule_getExplanationSpecialiseValue(applied_rule,
+        ('Business Process',))
 
     if trade_condition is None or business_process is None:
       return movement_list

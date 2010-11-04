@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2006,2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -31,7 +32,7 @@
 from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5.Document.Alarm import PeriodicityMixin
+from Products.ERP5.mixin.periodicity import PeriodicityMixin
 from Products.ERP5.Document.Movement import Movement
 from Products.ERP5Type.DateUtils import addToDate
 

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
@@ -147,6 +148,28 @@ class PaySheetTransaction(Invoice):
         sub_object_list.extend([model._getOb(x) for x in id_list])
     return sub_object_list
 
+  security.declarePrivate('updateAggregatedAmountList')
+  def updateAggregatedAmountList(self, *args, **kw):
+    amount_dict = dict(((x.getReference(),
+                         tuple(x.getVariationCategoryList())), x)
+                       for x in self.getAggregatedAmountList(*args, **kw)
+                       if x.getResource())
+    movement_to_delete_list = []
+    for movement in self.getMovementList():
+      if movement.getBaseApplication():
+        amount = amount_dict.pop((movement.getReference(),
+                                  tuple(movement.getVariationCategoryList())),
+                                 None)
+        if amount is None:
+          movement_to_delete_list.append(movement)
+        else:
+          movement.edit(**dict((x, amount.getProperty(x))
+              for x in ('price', 'resource', 'quantity',
+                        'base_application_list', 'base_contribution_list')))
+
+    return {'movement_to_delete_list': movement_to_delete_list,
+            'movement_to_add_list': amount_dict.values()}
+
   security.declareProtected(Permissions.ModifyPortalContent,
                             'applyTransformation')
   def applyTransformation(self):
@@ -155,7 +178,7 @@ class PaySheetTransaction(Invoice):
     '''
     portal = self.getPortalObject()
     paysheet_model = self.getSpecialiseValue()
-    movement_dict = paysheet_model.updateAggregatedAmountList(context=self)
+    movement_dict = self.updateAggregatedAmountList()
     for movement in movement_dict['movement_to_delete_list']:
       parent = movement.getParentValue()
       if parent.getPortalType() == 'Pay Sheet Line':
@@ -178,13 +201,17 @@ class PaySheetTransaction(Invoice):
           if not movement_list_trade_phase_dic.has_key(trade_phase):
             movement_list_trade_phase_dic[trade_phase] = []
           movement_list_trade_phase_dic[trade_phase].append(movement)
-
       for trade_phase in movement_list_trade_phase_dic.keys():
-        business_path_list = business_process.getPathValueList(trade_phase=\
+        business_link_list = business_process.getPathValueList(trade_phase=\
             trade_phase)
-        for business_path in business_path_list:
+        # XXX-Aurel
+        # must convert amount into simulation movement
+        # by calling method BusinessProcess.getTradePhaseMovementList
+        # for now delivery builder will fail because it calls setDeliveryValue
+        # which does not exists on amount
+        for business_link in business_link_list:
           builder_list = [portal.restrictedTraverse(url) for url in\
-                          business_path.getDeliveryBuilderList()]
+                          business_link.getDeliveryBuilderList()]
           for builder in builder_list:
             builder.build(delivery_relative_url_list=[self.getRelativeUrl(),],
                       movement_list = movement_list_trade_phase_dic[trade_phase])

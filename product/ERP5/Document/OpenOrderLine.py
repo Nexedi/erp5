@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
@@ -29,11 +30,16 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.SupplyLine import SupplyLine
+from Products.ERP5.Document.OrderLine import OrderLine
 
-class OpenOrderLine(SupplyLine):
+class OpenOrderLine(SupplyLine, OrderLine):
     """
       An Open Order Line is a Supply Line with additional
       properties to define repeatability
+
+      TODO:
+      - make sure that this should be (or not) a subclass
+        of OrderLine
     """
     meta_type = 'ERP5 Open Order Line'
     portal_type = 'Open Order Line'

@@ -31,11 +31,12 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLMatrix import XMLMatrix
+from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.Document.Path import Path
 from Products.ERP5Type.Utils import convertToUpperCase
 
 
-class SupplyLine(Path, XMLMatrix):
+class SupplyLine(Path, Amount, XMLMatrix):
     """A Supply Line is a path to define price 
     """
 

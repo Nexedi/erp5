@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>factory</string> </key>
-            <value> <string>addOrderBuilder</string> </value>
+            <value> <string>addSimulatedDeliveryBuilder</string> </value>
         </item>
         <item>
             <key> <string>filter_content_types</string> </key>
@@ -79,11 +79,15 @@
         </item>
         <item>
             <key> <string>init_script</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>permission</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

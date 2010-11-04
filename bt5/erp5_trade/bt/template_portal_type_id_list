@@ -1,13 +1,11 @@
-Business Path
+Business Link
 Business Process
 Business Process Module
-Business State
 Container
 Container Cell
 Container Line
 Delivery Cell
 Delivery Root Simulation Rule
-Delivery Rule
 Delivery Simulation Rule
 First Causality Movement Group
 Internal Order
@@ -24,7 +22,6 @@ Inventory Line
 Inventory Module
 Order
 Order Root Simulation Rule
-Order Rule
 Payment Condition
 Purchase Order
 Purchase Order Cell
@@ -56,3 +53,4 @@ Sale Trade Condition
 Sale Trade Condition Module
 Trade Model Cell
 Trade Model Line
+Trade Model Path

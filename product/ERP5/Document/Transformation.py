@@ -3,9 +3,10 @@
 #
 # Copyright (c) 2002 Coramy SAS and Contributors. All Rights Reserved.
 #                    Thierry_Faucher <Thierry_Faucher@coramy.com>
-# Copyright (c) 2004-2009 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2004-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Romain Courteaud <romain@nexedi.com>
 #                    Łukasz Nowak <luke@nexedi.com>
+#                    Jean-Paul Smets <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,25 +30,23 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-
-import zope.interface
-
+from zLOG import LOG, WARNING
 from warnings import warn
 from AccessControl import ClassSecurityInfo
 
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.CMFCategory.Renderer import Renderer
+from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5.Document.Amount import Amount
+from Products.ERP5.Document.MappedValue import MappedValue
+
+from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
+from Products.ERP5.mixin.variated import VariatedMixin
+from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5Type.XMLObject import XMLObject
 
-from Products.ERP5.Variated import Variated
-
-from Products.ERP5Type.Core.Predicate import Predicate
-
-from Products.CMFCategory.Renderer import Renderer
-from Products.ERP5.AggregatedAmountList import AggregatedAmountList
-
-from zLOG import LOG, WARNING
-
-class Transformation(XMLObject, Predicate, Variated):
+# XXX Give priority to VariatedMixin (over Amount) due to conflicting
+#     implementations of getVariationBaseCategoryList
+class Transformation(MappedValue, VariatedMixin, Amount, AmountGeneratorMixin):
     """
       Build of material - contains a list of transformed resources
 
@@ -66,28 +65,57 @@ class Transformation(XMLObject, Predicate, Variated):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.VariationRange
-                      , PropertySheet.Predicate
-                      , PropertySheet.Comment
-                      , PropertySheet.Reference
+    property_sheets = ( PropertySheet.Comment
                       , PropertySheet.Version
                       #, PropertySheet.Resource
                       , PropertySheet.TransformedResource
-                      , PropertySheet.Path
                       , PropertySheet.Transformation
+                      , PropertySheet.Order
+                      , PropertySheet.Task
                       )
 
-    # Declarative interfaces
-    zope.interface.implements(interfaces.IVariated, 
-                              interfaces.IAmountGenerator
-                              )
+    def getAggregatedAmountList(self, *args, **kw):
+      """
+      """
+      getAggregatedAmountList = \
+        super(Transformation, self).getAggregatedAmountList
+      # Detect old use of getAggregatedAmountList
+      if 'context' in kw:
+        context = kw.pop('context')
+      else:
+        if not args or isinstance(args[0], (list, tuple)):
+          return getAggregatedAmountList(*args, **kw)
+        context, args = args[0], args[1:]
+      warn("The API of getAggregatedAmountList has changed:"
+           " it must be called on the context instead of passing"
+           " the context as first parameter", DeprecationWarning)
+      # XXX add a 'transformation_amount_generator' group type
+      kw['amount_generator_type_list'] = ('Transformation',
+                                          'Transformed Resource',
+                                          'Transformation Operation',
+                                          'Assorted Resource')
+      if context is not None:
+        context = (context,)
+      return getAggregatedAmountList(context, *args, **kw)
 
+    def getQuantity(self, default=None):
+      # Used for amount generation
+      # (Transformation is defined for 1 unit of target resource)
+      return 1
 
+    # Predicate Value implementation
+    #   asPredicate takes into account the resource
+    # XXX-JPS not Impl.
 
+    # Mapped Value implementation
+    #  Transformation itself provides no properties or categories
+    def getMappedValuePropertyList(self):
+      return ()
+
+    def getMappedValueBaseCategoryList(self):
+      return ()
+
+    # IVariationRange and IVariated Implementation
     security.declareProtected(Permissions.AccessContentsInformation,
                               'updateVariationCategoryList')
     def updateVariationCategoryList(self):
@@ -179,7 +207,7 @@ class Transformation(XMLObject, Predicate, Variated):
                                      **kw):
       """
         Returns the list of possible variations
-        XXX Copied and modified from Variated
+        XXX Copied and modified from VariatedMixin
         Result is left display.
       """
       variation_category_item_list = []
@@ -216,92 +244,3 @@ class Transformation(XMLObject, Predicate, Variated):
                                display_id=display_id,**kw).\
                                                  render(object_list))
       return variation_category_item_list
-
-    def updateAggregatedAmountList(self, context, **kw):
-      raise NotImplementedError, 'need?'
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getAggregatedAmountList')
-    def getAggregatedAmountList(self, context=None, REQUEST=None,
-                                trade_phase_list=None,
-                                # obsolete, use trade_phase_list instead
-                                ind_phase_url_list=None,
-                                rejected_resource_uid_list=None,
-                                **kw):
-      """
-        getAggregatedAmountList returns an AggregatedAmountList which
-        can be used either to do some calculation (ex. price, BOM)
-        or to display a detailed view of a transformation.
-      """
-      if context is None:
-        warn("Calling Transformation.getAggregatedAmountList without context " \
-             "is wrong. Context should be an Amount defining the resource to " \
-             "produce", DeprecationWarning)
-        from Products.ERP5Type.Document import newTempAmount
-        context = newTempAmount(self, "deprecated_usage")
-        context.setResourceValue(self.getResourceValue())
-        context.setQuantity(1.0)
-
-
-      # A list of functions taking a transformation_line as sole argument
-      # and returning True iif the line should be kept in the result
-      filter_list = []
-
-      # Get only lines related to a precise trade_phase
-      if trade_phase_list is not None:
-        def trade_phase_filter(line):
-          return line.getTradePhase() in trade_phase_list
-
-        filter_list.append(trade_phase_filter)
-
-      # Get only lines related to a precise industrial_phase
-      if ind_phase_url_list is not None:
-        LOG("Transformation", WARNING, "ind_phase_list is obsolete")
-        def industrial_phase_filter(line):
-          ind_ph = line.getIndustrialPhaseValue()
-          if ind_ph is not None:
-            return ind_ph.getRelativeUrl() in ind_phase_url_list
-          return False
-
-        filter_list.append(industrial_phase_filter)
-
-      # Filter lines with resource we do not want to see
-      if rejected_resource_uid_list is not None:
-        def rejected_uid_filter(line):
-          return line.getResourceUid() not in rejected_resource_uid_list
-
-        filter_list.append(rejected_uid_filter)
-
-      def line_is_included(line):
-        # XXX > 2.5 : all(f(line) for f in filter_list)
-        for filterr in filter_list:
-          if not filterr(line):
-            return False
-        return True
-
-      # First we need to get the list of transformations which this
-      # transformation depends on
-      # At this moment, we only consider 1 dependency
-      template_transformation_list = self.getSpecialiseValueList()
-
-      # Browse all involved transformations and create one line per
-      # line of transformation
-      # Currently, we do not consider abstractions, we just add
-      # whatever we find in all transformations
-      result = AggregatedAmountList()
-      for transformation in ([self] + template_transformation_list):
-        for transformation_line in transformation.objectValues():
-          # Browse each transformed or assorted resource of the current
-          # transformation
-          if line_is_included(transformation_line):
-            try:
-              line_result = transformation_line.getAggregatedAmountList(context)
-            except KeyError:
-              # KeyError is raised by TransformedResource.getAggregatedAmountList
-              # in case of misconfiguration of a Cell.
-              # Just ignore the line
-              pass
-            else:
-              result.extend(line_result)
-
-      return result

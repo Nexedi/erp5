@@ -34,32 +34,23 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.configurable import ConfigurableMixin
 
 class SolverDecision(ConfigurableMixin, XMLObject):
-  """
-    The goal of Solver Decision is to record the fact that
-    "the user decided to solve a list of divergent delivery lines
-    - which are divergent because of given divergence tester -
-    by applying specific heuristic (target solver) and storing
-    properties at a given level (ex. delivery vs. delivery line)."
+  """Solver Decision
+
+    The goal of Solver Decision is to record the fact that "the user decided to
+    solve a list of divergent simulation movement - which are divergent because
+    of given divergence tester - by applying specific heuristic (target
+    solver)."
 
     Every Solver Decision has a relation (delivery category) to a list of
-    accountable Delivery Line or Cell (ie. not to an enclosing
-    Delivery Line). Solver Decision specifies the heuristic to use
-    through a relation to a single target solver portal type 
-    (target_solver pgroup) using the "solver" base category.
+    simulation movements.
+    Solver Decision specifies the heuristic to use through a relation to a
+    single target solver portal type (target_solver pgroup) using the "solver"
+    base category.
 
-    Every Solver Decision acquires the configuration properties
-    of its related Target Solver. Configuration properties may include
-    the choice of a Delivery Solver each time divergence is related
-    to suantity.
+    Every Solver Decision acquires the configuration properties of its related
+    Target Solver. Configuration properties may include the choice of a
+    Delivery Solver each time divergence is related to quantity.
 
-    The level of application of the resolution is specified by specifying
-    a relation to a list of "non accountable" movements (ex. delivery lines,
-    deliveries) which enclose divergent accountable movements, using 
-    base category XXX. (to be defined)
-
-    TODO:
-    - which base category is used to specify resolution application level ?
-      (delivery ?)
   """
   meta_type = 'ERP5 Solver Decision'
   portal_type = 'Solver Decision'
