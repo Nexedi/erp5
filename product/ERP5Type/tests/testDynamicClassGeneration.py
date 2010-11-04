@@ -41,7 +41,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
   def testImportNonMigratedPerson(self):
     """
-    Import a .zexp containing a Person created with an old
+    Import a .xml containing a Person created with an old
     Products.ERP5Type.Document.Person.Person type
     """
     person_module = self.portal.person_module
@@ -50,8 +50,26 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
     non_migrated_person = person_module.non_migrated_person
     # check that object unpickling instanciated a new style object
-    from erp5.portal_type import Person as erp5_document_person
-    self.assertEquals(non_migrated_person.__class__, erp5_document_person)
+    person_class = self.portal.portal_types.getPortalTypeClass('Person')
+    self.assertEquals(non_migrated_person.__class__, person_class)
+
+  @expectedFailure
+  def testImportNonMigratedDocumentUsingContentClass(self):
+    """
+    Import a .xml containing a Base Type with old Document path
+    Products.ERP5Type.ERP5Type.ERP5TypeInformation
+
+    This Document class is different because it's a content_class,
+    i.e. it was not in Products.ERP5Type.Document.** but was
+    imported directly as such.
+    """
+    self.importObjectFromFile(self.portal, 'Category.xml')
+    transaction.commit()
+
+    non_migrated_type = self.portal.Category
+    # check that object unpickling instanciated a new style object
+    base_type_class = self.portal.portal_types.getPortalTypeClass('Base Type')
+    self.assertEquals(non_migrated_type.__class__, base_type_class)
 
   def testMigrateOldObjectFromZODB(self):
     """
