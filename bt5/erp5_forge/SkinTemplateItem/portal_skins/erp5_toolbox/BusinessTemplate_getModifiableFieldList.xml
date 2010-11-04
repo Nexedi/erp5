@@ -50,8 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># vim:ft=python:\n
-from Products.ERP5Type.Document import newTempBase\n
+            <value> <string>from Products.ERP5Type.Document import newTempBase\n
+portal = context.getPortalObject()\n
 field_list = []\n
 \n
 action_title_item_list = [\n
@@ -97,7 +97,7 @@ if skin_id_list:\n
   elif skin_id_list:\n
     main_skin_id = skin_id_list[0]\n
   form_path = \'%s/%s\' % (main_skin_id, field_library_id)\n
-  form = getForm(context.portal_skins[main_skin_id], field_library_id)\n
+  form = getForm(portal.portal_skins[main_skin_id], field_library_id)\n
   if form is None:\n
     # Field library has to be created\n
     modified_object_dict[form_path] = \'1_create_form\'\n
@@ -134,11 +134,17 @@ if skin_id_list:\n
 \n
 for skin_folder_id in skin_id_list:\n
   skin_folder = context.portal_skins[skin_folder_id]\n
-\n
+  # like erp5_project_trade\n
+  alternate_skin_folder_id = skin_folder_id.replace(\n
+                                     \'_\'.join(main_skin_id.split(\'_\')[1:]), \'\')\n
+  # like erp5_trade\n
+  alternate_field_library_id = calculateFieldLibraryID(alternate_skin_folder_id)\n
+  # like Base_viewTradeFieldLibrary\n
   # Find old field library to delete\n
   for object_id in skin_folder.objectIds():\n
     if (object_id.endswith(\'FieldLibrary\') and \\\n
-        (object_id not in (field_library_id, \'Base_viewFieldLibrary\'))):\n
+        (object_id not in (field_library_id, \'Base_viewFieldLibrary\',\n
+                           alternate_field_library_id))):\n
       obj = getForm(skin_folder, object_id)\n
       if obj is None:\n
         raise KeyError, \'%s/%s\' % (skin_folder_id, object_id)\n
@@ -148,6 +154,11 @@ for skin_folder_id in skin_id_list:\n
       else:\n
         # Not an ERP5 Form, so, do nothing\n
         pass\n
+    elif object_id == alternate_field_library_id:\n
+      form_path = \'%s/%s\' % (skin_folder_id, object_id)\n
+      form = getForm(portal.portal_skins[skin_folder_id], object_id)\n
+      field_library_dict = dict((\'%s/%s\' % (form_path, field.getId()), [])\n
+                              for field in form.objectValues())\n
 \n
   # Check all existing fields\n
   for form in skin_folder.objectValues():\n
@@ -163,7 +174,8 @@ for skin_folder_id in skin_id_list:\n
         else:\n
           raise KeyError, \'Unexpected form handling %s for %s\' % \\\n
               (modified_object_dict[form_path], form_path)\n
-      elif form_id != field_library_id:\n
+      elif form_id not in (field_library_id, alternate_field_library_id,\n
+                           \'Base_viewFieldLibrary\',):\n
         # Check that proxy field are proxified to field library\n
         for field in form.objectValues():\n
           field_path = \'%s/%s/%s\' % (skin_folder_id, form_id, field.getId())\n
@@ -176,13 +188,15 @@ for skin_folder_id in skin_id_list:\n
                                                   template_id)\n
             else:\n
               # XXX Only consider standard bt5 for now\n
-              if template_form_id != field_library_id:\n
+              if template_form_id not in (field_library_id,\n
+                                          alternate_field_library_id,\n
+                                          \'Base_viewFieldLibrary\',):\n
                 modified_object_dict[field_path] = (\'2_unproxify_field\',\n
                                                     template_id)\n
                 # XXX Should proxify to a library\'s field\n
               else:\n
-                field_library_dict[\'%s/%s\' % (main_skin_id, template_id)] \\\n
-                .append(field_path)\n
+                key = \'%s/%s\' % (skin_folder_id, template_id)\n
+                field_library_dict.setdefault(key, []).append(field_path)\n
                 # Check that there is no delegated values\n
                 if field.delegated_list:\n
                   # Found some delegated list\n
@@ -261,6 +275,9 @@ return field_list\n
                             <string>kw</string>
                             <string>Products.ERP5Type.Document</string>
                             <string>newTempBase</string>
+                            <string>_getattr_</string>
+                            <string>context</string>
+                            <string>portal</string>
                             <string>field_list</string>
                             <string>action_title_item_list</string>
                             <string>dict</string>
@@ -269,8 +286,6 @@ return field_list\n
                             <string>modified_object_dict</string>
                             <string>calculateFieldLibraryID</string>
                             <string>getForm</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
                             <string>bt_title</string>
                             <string>field_library_id</string>
                             <string>field_library_dict</string>
@@ -288,13 +303,15 @@ return field_list\n
                             <string>template_id</string>
                             <string>skin_folder_id</string>
                             <string>skin_folder</string>
+                            <string>alternate_skin_folder_id</string>
+                            <string>alternate_field_library_id</string>
                             <string>object_id</string>
                             <string>obj</string>
                             <string>KeyError</string>
                             <string>form_id</string>
+                            <string>key</string>
                             <string>proxy_field_list</string>
                             <string>i</string>
-                            <string>key</string>
                             <string>value</string>
                             <string>str</string>
                             <string>line</string>
