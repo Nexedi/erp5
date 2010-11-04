@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"\n
  "DTD/xhtml1-strict.dtd">\n
@@ -109,11 +109,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 </html>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>Base_viewConsistencyReport</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-1</string> </value>
         </item>
       </dictionary>
     </pickle>

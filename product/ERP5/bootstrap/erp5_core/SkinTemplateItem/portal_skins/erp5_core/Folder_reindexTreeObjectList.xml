@@ -191,8 +191,7 @@ if tree_id_list is not None:\n
                             <string>BUNDLE_ITEM_COUNT</string>
                             <string>folder_id</string>
                             <string>Folder_reindexObjectList</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>x</string>
                             <string>id_list</string>
                             <string>id_list_list</string>

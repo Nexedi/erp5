@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'application/javascript;; charset=utf-8\')"/>\n
 var loading_deferred = undefined;\n
@@ -126,7 +126,7 @@ function addOnClickEventsToTabs(e) {\n
 \n
 connect(window, \'onload\', addOnClickEventsToTabs);
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -141,8 +141,12 @@ connect(window, \'onload\', addOnClickEventsToTabs);
             <value> <string>erp5_tabber.js</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

@@ -115,8 +115,7 @@ return portal_catalog(portal_type=portal_type, **kw)\n
                             <string>follow_up_related_document_list</string>
                             <string>_write_</string>
                             <string>_getitem_</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                           </tuple>

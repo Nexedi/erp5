@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <!--\n
  * FCKeditor - The text editor for internet\n
@@ -99,11 +99,15 @@ window.onload = function()\n
 </html>\n
 
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>frmresourcetype.html</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
       </dictionary>
     </pickle>

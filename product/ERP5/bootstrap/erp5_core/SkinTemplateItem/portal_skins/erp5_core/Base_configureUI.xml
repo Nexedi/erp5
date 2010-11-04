@@ -192,8 +192,7 @@ request[ \'RESPONSE\' ].redirect( redirect_url )\n
                             <string>columns_dict</string>
                             <string>field</string>
                             <string>columns</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>all_columns</string>
                             <string>k</string>
                             <string>v</string>

@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="baseHrefUrl        here/absolute_url;\n
                        cleaninput         python: inputvalue;\n
@@ -99,7 +99,7 @@ oFCKeditor.Create();\n
 --&gt;"></script>\n
 </tal:block>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -114,8 +114,12 @@ oFCKeditor.Create();\n
             <value> <string>fckeditor_wysiwyg_support</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string>XXX contain hard-coded variables</string> </value>
+            <value> <unicode>XXX contain hard-coded variables</unicode> </value>
         </item>
       </dictionary>
     </pickle>

@@ -210,8 +210,7 @@ return [\'_\'.join(x) for x in cartesianProduct(list_of_list) if x]\n
                             <string>user_name</string>
                             <string>category_code</string>
                             <string>_inplacevar_</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>x</string>
                           </tuple>
                         </value>

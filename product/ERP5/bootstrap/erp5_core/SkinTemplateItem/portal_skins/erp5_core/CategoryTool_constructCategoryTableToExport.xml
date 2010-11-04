@@ -168,8 +168,7 @@ return result\n
                             <string>table_dict</string>
                             <string>row_list</string>
                             <string>header_dict</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>property_id</string>
                             <string>row</string>
                           </tuple>

@@ -15,12 +15,6 @@
             <value> <string>3</string> </value>
         </item>
         <item>
-            <key> <string>last_id_dict</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>ZODB Continuous Increasing Id Generator</string> </value>
         </item>

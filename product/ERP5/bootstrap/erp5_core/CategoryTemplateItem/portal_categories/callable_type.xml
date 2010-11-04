@@ -111,7 +111,7 @@ We will have several callable types, like python scripts, page templates, etc.</
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>
@@ -119,7 +119,7 @@ We will have several callable types, like python scripts, page templates, etc.</
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
-      <global name="OOBTree" module="BTrees._OOBTree"/>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
       <none/>

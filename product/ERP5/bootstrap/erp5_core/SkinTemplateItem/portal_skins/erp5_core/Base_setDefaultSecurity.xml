@@ -147,8 +147,7 @@ return "finished"\n
                             <string>permission_list</string>
                             <string>_getiter_</string>
                             <string>permission</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>p</string>
                             <string>common_permission_list</string>
                             <string>author_permission_list</string>

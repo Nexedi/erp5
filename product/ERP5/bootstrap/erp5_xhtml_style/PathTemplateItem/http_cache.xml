@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="AcceleratedHTTPCacheManager" module="Products.StandardCacheManagers.AcceleratedHTTPCacheManager"/>
-        <tuple/>
-      </tuple>
+      <global name="AcceleratedHTTPCacheManager" module="Products.StandardCacheManagers.AcceleratedHTTPCacheManager"/>
     </pickle>
     <pickle>
       <dictionary>

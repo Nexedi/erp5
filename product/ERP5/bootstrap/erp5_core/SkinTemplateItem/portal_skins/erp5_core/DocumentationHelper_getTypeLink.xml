@@ -34,14 +34,14 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="class_id python: context.getObject().getType()">\n
   <a tal:content="class_id"\n
      tal:attributes="href python: \'Base_viewClassInspectionReport?class_id=%s\' % (class_id,)"/>\n
 </tal:block>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -56,8 +56,12 @@
             <value> <string>DocumentationHelper_getTypeLink</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

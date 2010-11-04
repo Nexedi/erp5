@@ -234,8 +234,7 @@ return REQUEST.RESPONSE.redirect("%s%s" % (ret_url, qs))\n
                             <string>message</string>
                             <string>None</string>
                             <string>object_used</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>object_list</string>

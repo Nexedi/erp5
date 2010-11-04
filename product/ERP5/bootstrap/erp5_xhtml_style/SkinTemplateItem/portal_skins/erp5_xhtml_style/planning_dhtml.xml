@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -128,8 +125,7 @@ return \'<script type="text/javascript">SET_DHTML(%s,\' \\\n
                           <tuple>
                             <string>planning</string>
                             <string>_getattr_</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>block</string>
                             <string>context</string>

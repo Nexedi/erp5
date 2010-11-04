@@ -126,8 +126,7 @@ return category_list\n
                             <string>fallback_category_id</string>
                             <string>None</string>
                             <string>fallback_category</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>x</string>
                           </tuple>
                         </value>

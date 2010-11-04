@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block tal:define="inheritance_list python: context.getObject().getInheritanceList()">\n
   <tal:block tal:condition="inheritance_list">\n
@@ -48,7 +48,7 @@
   </tal:block>\n
 </tal:block>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -63,8 +63,12 @@
             <value> <string>DocumentationHelper_viewInheritanceList</string> </value>
         </item>
         <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

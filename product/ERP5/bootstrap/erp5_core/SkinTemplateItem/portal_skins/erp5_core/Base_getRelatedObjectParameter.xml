@@ -140,8 +140,7 @@ return result\n
                             <string>proxied_listbox</string>
                             <string>relation_field_proxy_listbox</string>
                             <string>proxied_listbox_portal_type</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>_getitem_</string>

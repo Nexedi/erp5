@@ -225,8 +225,7 @@ else:  \n
                             <string>tree_id_list</string>
                             <string>NotImplementedError</string>
                             <string>AttributeError</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>x</string>
                             <string>id_list</string>
                             <string>id_list_list</string>

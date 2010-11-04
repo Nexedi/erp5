@@ -211,8 +211,7 @@ return context.REQUEST[ \'RESPONSE\' ].redirect(redirect_url)\n
                             <string>checkPerm</string>
                             <string>None</string>
                             <string>relation</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>_getiter_</string>
                             <string>x</string>
                             <string>getter_base_name</string>

@@ -135,8 +135,7 @@ else:\n
                             <string>k</string>
                             <string>v</string>
                             <string>_write_</string>
-                            <string>append</string>
-                            <string>$append0</string>
+                            <string>$list0</string>
                             <string>part</string>
                             <string>accessor_name</string>
                             <string>jump_reference_list</string>

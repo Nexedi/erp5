@@ -34,7 +34,7 @@
         </item>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
+            <value> <unicode encoding="cdata"><![CDATA[
 
 <div class="listbox-tree-mode-selection"\n
      metal:define-macro="listbox_tree_mode_selection">\n
@@ -197,11 +197,15 @@
 \n
 </div>
 
-]]></string> </value>
+]]></unicode> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>ListBox_asHTMLLibrary</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
         </item>
       </dictionary>
     </pickle>
