@@ -340,9 +340,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self.tic()
 
     # Ensure that erp5.acessor_holder is empty
-    from Products.ERP5Type.dynamic.portal_type_class import \
-        synchronizeDynamicModules
-
     synchronizeDynamicModules(portal, force=True)
 
     # Make sure there is no pending transaction which could interfere
