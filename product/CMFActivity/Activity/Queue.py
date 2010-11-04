@@ -30,7 +30,10 @@ import cPickle, sys
 from DateTime import DateTime
 from zLOG import LOG, WARNING, ERROR
 from ZODB.POSException import ConflictError
-import sha
+try:
+  from hashlib import sha1 as sha_new
+except ImportError:
+  from sha import new as sha_new
 from cStringIO import StringIO
 
 import transaction
@@ -261,7 +264,7 @@ class Queue:
       # is true in Python. This is important, because dtml-if assumes that an empty
       # string is false, so we must use a non-empty string for this.
       return 'none'
-    return sha.new(repr(order_validation_item_list)).hexdigest()
+    return sha_new(repr(order_validation_item_list)).hexdigest()
 
   def getMessageList(self, activity_tool, processing_node=None,**kw):
     return []
