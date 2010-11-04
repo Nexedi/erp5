@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88689125.22</string> </value>
+            <value> <string>ts88882837.45</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -36,6 +36,15 @@
 div.portal-column {\n
   width:32.9%; \n
   margin-right:3px;\n
+}\n
+\n
+.front_pad { /* This class is used to display gadgets in front page */\n
+  margin: 0;\n
+  padding-top: 0px;\n
+  padding-bottom: 0px;\n
+  padding-left: 7px;\n
+  padding-right: 7px;\n
+  width: 936px; /* XXX-JPS Related to front splash and page width - should become dynamic */\n
 }\n
 \n
 /* column gadget in bottom */\n
@@ -75,13 +84,75 @@ div.border_bottom0px{\n
   border-bottom: none;\n
 }\n
 \n
-#tabs_switcher{\n
-  font-weight: normal;\n
+/* front page gadget tabs switcher */\n
+#tabs {\n
+  overflow: hidden;\n
+  width:99%;\n
+  border-bottom: none;\n
+  height: 35px;\n
 }\n
 \n
-#tabs_switcher,\n
-#tabs ul li.tab {\n
-  border: none;\n
+#tabs ul {\n
+\n
+\tlist-style-type: none;\n
+\tmargin:0;\n
+\tpadding:10px 0 18px 0;\n
+\theight:22px;\n
+\tdisplay: block;\n
+\toverflow:hidden;\n
+\n
+}\n
+\n
+#tabs ul li {\n
+\n
+\tfloat:left;\n
+\toverflow: hidden;\n
+\tmargin: 0;\n
+\tpadding: 0 0 0 10px;\n
+\theight:22px;\n
+\twidth:auto;\n
+\tbackground: url(../km_img/tabs.png) no-repeat transparent;\n
+\n
+}\n
+\n
+#tabs ul li span {\n
+\n
+\tdisplay: block;\n
+\toverflow: hidden;\n
+\tmargin: 0;\n
+\twidth:auto;\n
+\theight:22px;\n
+\tline-height:24px;\n
+\tpadding-right:40px;\n
+\tpadding-top: 0em;\n
+\tposition: relative;\n
+\n
+}\n
+\n
+#tabs ul li span a.icon {\n
+\n
+\tfloat:right;\n
+\twidth:10px;\n
+\theight:10px;\n
+\ttext-indent:-999999px;\n
+\tposition: absolute;\n
+\ttop:5px;\n
+\n
+}\n
+\n
+\n
+#tabs ul li span a.edit { right:24px; }\n
+#tabs ul li span a.close { right:9px; }\n
+\n
+\n
+a#tabs-add:link, a#tabs-add:active, a#tabs-add:visited,\n
+a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10px; }\n
+\n
+#tabs_switcher {\n
+  padding-top: 15px;\n
+  height:35px;\n
+  font-weight: normal;\n
+   border: none;\n
 }\n
 \n
 /* Gadget Navigation table */\n
@@ -196,6 +267,84 @@ a.block-edit-form{\n
 div.block-hover {\n
   border: 2px dashed #f00;\n
 }\n
+\n
+\n
+/* Gadget layout */\n
+.block h3.handle{\n
+  margin:0;\n
+  padding:3px 0;\n
+  display: block;\n
+}\n
+\n
+.block h3.handle span{\n
+  padding: 0;\n
+  padding-left: 15px;\n
+}\n
+\n
+.block h3.handle span.gadget_title{\n
+  float:left;\n
+  left:12px;\n
+  position:absolute;\n
+}\n
+\n
+.block .box_inner_content, \n
+.block .minimize_wrapper, \n
+.block .content {\n
+  width: auto;\n
+}\n
+\n
+.gadget {\n
+\tmargin:0;\n
+\tpadding:0;\n
+\tborder:none;\n
+}\n
+\n
+.gadget .inner .table-b{\n
+  table-layout: fixed;\n
+  overflow: scroll;\n
+}\n
+\n
+.gadget h3 small {\n
+\twidth:50px;\n
+\tfloat:right;\n
+\tposition: absolute;\n
+\tright:0;\n
+\ttop:5px;\n
+\n
+}\n
+\n
+.gadget h3.handle a{\n
+\twidth: 11px;\n
+\theight: 11px;\n
+\ttext-indent: -999999px;\n
+\tmargin: 2px 5px 0 0;\n
+}\n
+\n
+.gadget .inner {\n
+\tpadding:10px;\n
+\twidth:auto;\n
+}\n
+\n
+.gadget .inner .post {\n
+\tpadding: 0 0 10px 0;\n
+}\n
+\n
+.gadget h4 {\n
+\tmargin:0;\n
+\tpadding: 0;\n
+}\n
+\n
+\n
+.gadget .inner .feed {\n
+\tmargin:0 0 0 20px;\n
+\tpadding:0;\n
+}\n
+\n
+.gadget p { \n
+  margin:0; \n
+}\n
+\n
+/* eof gadgets */\n
 \n
 /* Gadget content */\n
 div.block {\n
@@ -470,7 +619,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8392</int> </value>
+            <value> <int>10492</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -141,15 +141,6 @@ div {\n
 \n
 }\n
 \n
-.front_pad { /* This class is used to display gadgets in front page */\n
-  margin: 0;\n
-  padding-top: 0px;\n
-  padding-bottom: 0px;\n
-  padding-left: 7px;\n
-  padding-right: 7px;\n
-  width: 936px; /* XXX-JPS Related to front splash and page width - should become dynamic */\n
-}\n
-\n
 div.document div.content fieldset.bottom div.input {\n
 \n
   margin-left:0;\n
@@ -195,7 +186,7 @@ width:30%;\n
 \n
 }\n
 \n
-.column-1, .column-2 {\n
+/*.column-1, .column-2 {\n
 \n
 \twidth:100%;\n
 \tclear:both;\n
@@ -210,7 +201,7 @@ width:30%;\n
 \twidth:auto;\n
 \n
 \n
-}\n
+}*/\n
 \n
 fieldset.left,\n
 fieldset.right {\n
@@ -244,7 +235,7 @@ fieldset.right {\n
 \n
 }\n
 \n
-.column-2 .left {\n
+/*.column-2 .left {\n
 \n
 \twidth:32%;\n
 \tmargin-right:10px;\n
@@ -256,7 +247,7 @@ fieldset.right {\n
 \twidth:32%;\n
 \tmargin-left:10px;\n
 \n
-}\n
+}*/\n
 \n
 a img {\n
 \n
@@ -598,73 +589,7 @@ width: auto;\n
 \n
 }\n
 \n
-#tabs {\n
-  overflow: hidden;\n
-  width:99%;\n
-  border-bottom: none;\n
-  height: 35px;\n
-}\n
 \n
-#tabs ul {\n
-\n
-\tlist-style-type: none;\n
-\tmargin:0;\n
-\tpadding:10px 0 18px 0;\n
-\theight:22px;\n
-\tdisplay: block;\n
-\toverflow:hidden;\n
-\n
-}\n
-\n
-#tabs ul li {\n
-\n
-\tfloat:left;\n
-\toverflow: hidden;\n
-\tmargin: 0;\n
-\tpadding: 0 0 0 10px;\n
-\theight:22px;\n
-\twidth:auto;\n
-\tbackground: url(../km_img/tabs.png) no-repeat transparent;\n
-\n
-}\n
-\n
-#tabs ul li span {\n
-\n
-\tdisplay: block;\n
-\toverflow: hidden;\n
-\tmargin: 0;\n
-\twidth:auto;\n
-\theight:22px;\n
-\tline-height:24px;\n
-\tpadding-right:40px;\n
-\tpadding-top: 0em;\n
-\tposition: relative;\n
-\n
-}\n
-\n
-#tabs ul li span a.icon {\n
-\n
-\tfloat:right;\n
-\twidth:10px;\n
-\theight:10px;\n
-\ttext-indent:-999999px;\n
-\tposition: absolute;\n
-\ttop:5px;\n
-\n
-}\n
-\n
-\n
-#tabs ul li span a.edit { right:24px; }\n
-#tabs ul li span a.close { right:9px; }\n
-\n
-\n
-a#tabs-add:link, a#tabs-add:active, a#tabs-add:visited,\n
-a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10px; }\n
-\n
-#tabs_switcher {\n
-  padding-top: 15px;\n
-  height:35px;\n
-}\n
 \n
 /* ## navigation ###################################### end ### */\n
 \n
@@ -691,83 +616,6 @@ img.float-left {\n
 \n
 /* ## element "boxes" ################################# start # */\n
 \n
-\n
-/* Gadget layout */\n
-.block h3.handle{\n
-  margin:0;\n
-  padding:3px 0;\n
-  display: block;\n
-}\n
-\n
-.block h3.handle span{\n
-  padding: 0;\n
-  padding-left: 15px;\n
-}\n
-\n
-.block h3.handle span.gadget_title{\n
-  float:left;\n
-  left:12px;\n
-  position:absolute;\n
-}\n
-\n
-.block .box_inner_content, \n
-.block .minimize_wrapper, \n
-.block .content {\n
-  width: auto;\n
-}\n
-\n
-.gadget {\n
-\tmargin:0;\n
-\tpadding:0;\n
-\tborder:none;\n
-}\n
-\n
-.gadget .inner .table-b{\n
-  table-layout: fixed;\n
-  overflow: scroll;\n
-}\n
-\n
-.gadget h3 small {\n
-\twidth:50px;\n
-\tfloat:right;\n
-\tposition: absolute;\n
-\tright:0;\n
-\ttop:5px;\n
-\n
-}\n
-\n
-.gadget h3.handle a{\n
-\twidth: 11px;\n
-\theight: 11px;\n
-\ttext-indent: -999999px;\n
-\tmargin: 2px 5px 0 0;\n
-}\n
-\n
-.gadget .inner {\n
-\tpadding:10px;\n
-\twidth:auto;\n
-}\n
-\n
-.gadget .inner .post {\n
-\tpadding: 0 0 10px 0;\n
-}\n
-\n
-.gadget h4 {\n
-\tmargin:0;\n
-\tpadding: 0;\n
-}\n
-\n
-\n
-.gadget .inner .feed {\n
-\tmargin:0 0 0 20px;\n
-\tpadding:0;\n
-}\n
-\n
-.gadget p { \n
-  margin:0; \n
-}\n
-\n
-/* eof gadgets */\n
 \n
 div#mainwrapper div#wrapper_right{\n
   float:left;\n
@@ -1227,6 +1075,14 @@ button.bt-med span img {\n
 }\n
 \n
 /* Login form  CSS */\n
+fieldset.registration {\n
+  float:left;\n
+  width:49.5%;\n
+  background-color: #FFFFFF;\n
+  margin-right: 0.5%;\n
+  height: 775px;\n
+}\n
+\n
 fieldset.left_registration, \n
 fieldset.right_registration {\n
   width:50%;\n
@@ -1304,32 +1160,7 @@ fieldset.right_registration select {\n
 \n
 /* ## screen sizes #################################### end ### */\n
 \n
-.listbox input {\n
-\n
-  width: auto;\n
-  float:left;\n
-\n
-}\n
-\n
-/* Listbox page navigation */\n
-td.pageNavigation{\n
-  padding-bottom:0.5em;\n
-  padding-right:0.5em;\n
-  padding-top:1em;\n
-}\n
-\n
-.pageNavigation .input input[type="image"] {\n
-\n
-  vertical-align: middle;\n
-\n
-}\n
-\n
-.pageNavigation input {\n
-\n
-  width: auto;\n
-\n
-}\n
-\n
+/* Splash section */\n
 #wrapper_splash .input img{\n
 \n
   border: none;\n
@@ -1338,29 +1169,13 @@ td.pageNavigation{\n
 \n
 }\n
 \n
-\n
-/* gadget management block */\n
-div.gadget-management{\n
-}\n
-\n
 div.required label{\n
   background-image:url("km_img/required_mark.png");\n
   background-position:left center;\n
   background-repeat:no-repeat;\n
   padding-left: 10px;\n
-\n
-/*  padding-top: 4px;\n
-  background:  url("../km_img/required_mark.png") no-repeat;*/\n
 }\n
 \n
-/* login form */\n
-fieldset.registration {\n
-  float:left;\n
-  width:49.5%;\n
-  background-color: #FFFFFF;\n
-  margin-right: 0.5%;\n
-  height: 775px;\n
-}\n
 \n
 /* Content formatting */\n
 div.document div.content div.text h1, h2, h3, h4, h5, h6, p{\n
@@ -1393,8 +1208,7 @@ div.web-toolbar h3{\n
 #wrapper_footer div.web-toolbar li.toolboxSection h3:hover {\n
   background:#A8A799;\n
 }\n
-\n
-  \n
+ \n
 div.web-toolbar div.menu{\n
   background:#818364;\n
   padding: 0em;\n
@@ -1493,21 +1307,6 @@ div.search_popup {\n
   z-index: 100;\n
 }\n
 \n
-/* Search Bar */\n
-div.searchBar{\n
-  margin-bottom: 2em;\n
-  text-align: center;\n
-}\n
-\n
-div.extendedSearchBar{\n
-  margin-top: 1em;\n
-  padding: 0.2em;\n
-  text-align: center;\n
-}\n
-\n
-div.searchBar input, div.extendedSearchBar input {\n
-  width: auto;\n
-}\n
 \n
 div.centeredInner {\n
   text-align: center;\n
@@ -1518,7 +1317,7 @@ div.searchDetails, span.found{\n
   padding-top: 5px;\n
 }\n
 \n
-/* Download widget */\n
+/* Download Document in various format widget */\n
 div.download-document-format-list-container{\n
   color:#000000;\n
   left:0px;\n
