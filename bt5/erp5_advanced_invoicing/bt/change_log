@@ -1,3 +1,6 @@
+2010-11-04 tatuya
+* Fix stop_action on invoice_workflow. The settings were missing.
+
 2010-10-27 yusei
 * Fix invoice_workflow. Some user-action transitions were missing. Permission settings on started and stopped states were missing.
 
