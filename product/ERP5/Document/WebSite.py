@@ -174,7 +174,7 @@ class WebSite(WebSection):
             request['AcceptLanguage'].set(name, 100)
             request.set(WEBSITE_LANGUAGE_KEY, name)
           return self.asContext(id=name)
-      return WebSection._getExtensibleContent(self, request, name)
+      return WebSection.getExtensibleContent(self, request, name)
 
     # Virtual Hosting Support
     security.declarePrivate( 'manage_beforeDelete' )
