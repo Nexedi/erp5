@@ -163,6 +163,29 @@
 \t<td>field_my_language</td>\n
 \t<td></td>\n
 </tr>\n
+<!-- Submit form by Enter -->\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>clone_document_title</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>clone_reference</td>\n
+\t<td>reference-z</td>\n
+</tr>\n
+<tr>\n
+  <td>keyPressAndWait</td>\n
+  <td>clone_reference</td>\n
+  <td>\\13</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_my_reference</td>\n
+\t<td>reference-z</td>\n
+</tr>\n
+\n
+\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
