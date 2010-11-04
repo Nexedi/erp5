@@ -1,8 +1,9 @@
 ##############################################################################
 #
-# Copyright (c) 2004, 2005, 2006 Nexedi SARL and Contributors.
+# Copyright (c) 2010 Nexedi SA and Contributors.
 # All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
+#          Fabien MORIN <fabien@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -47,10 +48,14 @@ class TestERP5Discussion(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_core', 'erp5_base',
-            'erp5_xhtml_style', 'erp5_ingestion',
-            'erp5_web', 'erp5_dms',
-            'erp5_knowledge_pad', 'erp5_rss_style',
+    return ('erp5_core',
+            'erp5_base',
+            'erp5_xhtml_style',
+            'erp5_ingestion',
+            'erp5_web',
+            'erp5_dms',
+            'erp5_knowledge_pad',
+            'erp5_rss_style',
             'erp5_discussion', )
 
   def login(self):
@@ -70,7 +75,6 @@ class TestERP5Discussion(ERP5TypeTestCase):
       module.manage_delObjects(list(module.objectIds()))
     transaction.commit()
     self.tic()
-
 
   def stepCreateThread(self):
 
@@ -98,4 +102,3 @@ def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Discussion))
   return suite
-
