@@ -444,15 +444,14 @@ def updateGlobals(this_module, global_hook,
     # Add _dtmldir
     this_module._dtmldir = os.path.join( product_path, 'dtml' )
 
+    module_list = (
+        ('PropertySheet', importLocalPropertySheet),
+        ('interfaces', importLocalInterface),
+        ('Constraint', importLocalConstraint),
+    )
     # Update PropertySheet Registry
-    for module_id in ('PropertySheet', 'interfaces', 'Constraint'):
+    for module_id, import_method in module_list:
       path, module_id_list = getModuleIdList(product_path, module_id)
-      if module_id == 'PropertySheet':
-        import_method = importLocalPropertySheet
-      elif module_id == 'interfaces':
-        import_method = importLocalInterface
-      elif module_id == 'Constraint':
-        import_method = importLocalConstraint
       for module_id in module_id_list:
         import_method(module_id, path=path)
 
