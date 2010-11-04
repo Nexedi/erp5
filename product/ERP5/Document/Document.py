@@ -42,7 +42,6 @@ from Products.ERP5Type.DateUtils import convertDateToHour,\
                                 number_of_hours_in_day, number_of_hours_in_year
 from Products.ERP5Type.Utils import convertToUpperCase, fill_args_from_request
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.ExtensibleTraversable import ExtensibleTraversableMixIn
 from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 from Products.ERP5.Document.Url import UrlMixIn
 from Products.ERP5.Tool.ContributionTool import MAX_REPEAT
@@ -892,7 +891,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     """
     try:
       method = self._getTypeBasedMethod('getMetadataMappingDict')
-    except KeyError, AttributeError:
+    except (KeyError, AttributeError):
       method = None
     if method is not None:
       return method()
@@ -915,7 +914,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixIn, CachedCo
     """
     try:
       method = self._getTypeBasedMethod('populateContent')
-    except KeyError, AttributeError:
+    except (KeyError, AttributeError):
       method = None
     if method is not None: method()
 
