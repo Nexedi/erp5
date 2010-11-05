@@ -58,6 +58,8 @@ except ImportError:
 import cgi
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
+DEFAULT_LISTBOX_PAGE_NAVIGATION_TEMPLATE = 'ListBox_viewSliderPageNavigationRenderer'
+DEFAULT_LISTBOX_PAGE_TEMPLATE = 'ListBox_asHTML'
 
 class MethodWrapper:
   def __init__(self, context, method_name):
@@ -420,12 +422,12 @@ class ListBoxWidget(Widget.Widget):
                                 required=0)
     property_names.append('global_search_column')
 
-    page_navigation_mode = fields.StringField('page_navigation_mode',
-                                title="Page navigation mode",
-                                description=("Page navigation mode like 'slider' - controls for 'next' / 'last' & 'previous' / 'first' or 'text' - direct page selections."),
-                                default='slider',
+    page_navigation_template = fields.StringField('page_navigation_template',
+                                title="Page Navigation Template",
+                                description=("Page Navigation Template used to render listbox page navigation."),
+                                default=DEFAULT_LISTBOX_PAGE_NAVIGATION_TEMPLATE,
                                 required=0)
-    property_names.append('page_navigation_mode')
+    property_names.append('page_navigation_template')
 
     list_action = fields.StringField('list_action',
                                  title='List Action',
@@ -992,11 +994,13 @@ class ListBoxRenderer:
   getFullTextSearchKey=getGlobalSearchColumn
   getFullTextSearchKeyScript=getGlobalSearchColumnScript
 
-  def getPageNavigationMode(self):
-    """Return the list box page navigation mode."""
-    return self.field.get_value('page_navigation_mode')
+  def getPageNavigationTemplate(self):
+    """Return the list box page navigation template."""
+    return self.field.get_value('page_navigation_template')
 
-  getPageNavigationMode = lazyMethod(getPageNavigationMode)
+  getPageNavigationTemplate = lazyMethod(getPageNavigationTemplate)
+  # backwards compatability
+  getPageNavigationMode = getPageNavigationTemplate
 
   def getSearchColumnIdSet(self):
     """Return the set of the ids of the search columns. Fall back to the catalog schema, if not defined.
@@ -2580,7 +2584,7 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
     """
     return self.getContext().getPhysicalRoot()
 
-  asHTML = PageTemplateFile('www/ListBox_asHTML', globals())
+  asHTML = PageTemplateFile('www/%s' %DEFAULT_LISTBOX_PAGE_TEMPLATE, globals())
 
   def getPageTemplate(self):
     """Return a Page Template to render.
@@ -2597,10 +2601,10 @@ class ListBoxHTMLRenderer(ListBoxRenderer):
       return aq_base(getattr(self.getContext(), method_id)).__of__(context)
     # Try to get a page template from acquisition context then portal object
     # and fallback on default page template.
-    page_template = getattr(self.getContext(), 'ListBox_asHTML', None)
+    page_template = getattr(self.getContext(), DEFAULT_LISTBOX_PAGE_TEMPLATE, None)
     if page_template is None:
         portal_object = context.getPortalObject()
-        page_template = getattr(portal_object, 'ListBox_asHTML', context.asHTML)
+        page_template = getattr(portal_object, DEFAULT_LISTBOX_PAGE_TEMPLATE, context.asHTML)
     return page_template.__of__(context)
 
   def render(self, **kw):
