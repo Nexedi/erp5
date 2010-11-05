@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -54,16 +51,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
+portal = context.getPortalObject()\n
 \n
-\n
-if context.getPortalType() in context.getPortalSaleTypeList():\n
+if context.getPortalType() in portal.getPortalSaleTypeList():\n
   use_list = context.portal_preferences.getPreferredSaleUseList()\n
-elif context.getPortalType() in context.getPortalPurchaseTypeList():\n
-  use_list = context.portal_preferences.getPreferredPurchaseUseList()\n
+elif context.getPortalType() in portal.getPortalPurchaseTypeList():\n
+  use_list = portal.portal_preferences.getPreferredPurchaseUseList()\n
 else:\n
-  use_list = context.portal_preferences.getPreferredPurchaseUseList() + context.portal_preferences.getPreferredSaleUseList()\n
+  use_list = portal.portal_preferences.getPreferredPurchaseUseList() + portal.portal_preferences.getPreferredSaleUseList()\n
 \n
-if len(use_list) == 0:\n
+if not use_list:\n
   return []\n
 \n
 sql_kw = {}\n
@@ -162,14 +159,15 @@ return getResourceItemList(sql_kw)\n
                             <string>CachingMethod</string>
                             <string>_getattr_</string>
                             <string>context</string>
+                            <string>portal</string>
                             <string>use_list</string>
-                            <string>len</string>
                             <string>sql_kw</string>
                             <string>resource_title</string>
                             <string>AttributeError</string>
                             <string>None</string>
                             <string>reference</string>
                             <string>_write_</string>
+                            <string>len</string>
                             <string>getResourceItemList</string>
                             <string>append</string>
                             <string>$append0</string>
