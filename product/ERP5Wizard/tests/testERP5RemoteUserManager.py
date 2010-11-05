@@ -117,6 +117,7 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.password = self.login + 'password'
     self.portal = self.getPortalObject()
     self.createDummyWitchTool()
+    self.was_sso_enable = self.portal.portal_wizard.isSingleSignOnEnabled()
     self.setUpRemoteUserManager()
     self.person_module = self.portal.person_module
     acl_users = self.portal.acl_users
@@ -394,6 +395,14 @@ class TestERP5RemoteUserManager(ERP5TypeTestCase):
     self.checkLogin(None, {'login':kw['login'], 'password':'wrong_password'})
     self.assertFalse(self.login in \
         self.erp5_remote_manager.remote_authentication_cache)
+
+  def test_is_single_sign_on_enable(self):
+    """ Check if isSingleSignOn is Enabled """
+    self.assertTrue(self.portal.portal_wizard.isSingleSignOnEnabled())
+    # Make sure single_sign_on_enable was not enabled before
+    # start the setup was made.
+    self.assertFalse(self.was_sso_enable)
+
 
 def test_suite():
   suite = unittest.TestSuite()
