@@ -68,7 +68,7 @@ body,html {\n
 \n
 }\n
 \n
-fieldset, form {\n
+fieldset, form, img {\n
 \n
 \tborder:none;\n
 \tmargin:0;\n
