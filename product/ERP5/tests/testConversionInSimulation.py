@@ -34,6 +34,7 @@ from zLOG import LOG
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Testing import ZopeTestCase
 from Products.ERP5.tests.testAccounting import AccountingTestCase
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 from AccessControl.SecurityManagement import newSecurityManager
 QUIET = False
 run_all_test = True
@@ -390,7 +391,7 @@ class TestConversionInSimulation(AccountingTestCase):
         (invoice_transaction_movement.getDestinationTotalAssetPrice(),
         None)
 
-
+  @newSimulationExpectedFailure
   def test_01_destination_total_asset_price_on_accounting_lines(self,quiet=0,
           run=run_all_test):
     """
@@ -479,8 +480,7 @@ class TestConversionInSimulation(AccountingTestCase):
        self.assertEquals(line.getDestinationTotalAssetPrice(),
               round(655.957*delivery_movement.getTotalPrice()))
 
-
-
+  @newSimulationExpectedFailure
   def test_01_diverged_sale_packing_list_destination_total_asset_price(
           self,quiet=0,run=run_all_test):
     """
@@ -687,6 +687,7 @@ class TestConversionInSimulation(AccountingTestCase):
         getSourceTotalAssetPrice(),
         old_source_asset_price *(3.0/5.0))
 
+  @newSimulationExpectedFailure
   def test_01_delivery_mode_on_sale_packing_list_and_invoice(
           self,quiet=0,run=run_all_test):
     """
@@ -774,6 +775,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.assertEquals(related_invoice.getIncoterm(),
                          order.getIncoterm())
 
+  @newSimulationExpectedFailure
   def test_01_quantity_unit_on_sale_packing_list(
       self,quiet=0,run=run_all_test):
     """

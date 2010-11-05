@@ -31,6 +31,7 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testPackingList import TestPackingListMixin
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
   """
@@ -148,6 +149,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     rule = sequence.get('rule')
     rule.newContent(portal_type='Quantity Divergence Tester')
 
+  @newSimulationExpectedFailure
   def test_01_QuantityDivergenceTester(self, quiet=quiet, run=run_all_test):
     """
     Test the quantity divergence tester
@@ -203,6 +205,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     packing_list.setSource(sim_mvt.getSource())
 
+  @newSimulationExpectedFailure
   def test_02_CategoryDivergenceTester(self, quiet=quiet, run=run_all_test):
     """
     Test the category divergence tester
@@ -260,6 +263,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     packing_list.setStartDate(sim_mvt.getStartDate())
 
+  @newSimulationExpectedFailure
   def test_03_PropertyDivergenceTester(self, quiet=quiet, run=run_all_test):
     """
     Test the property divergence tester
@@ -309,6 +313,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     movement = sequence.get('movement')
     movement.setAggregate(None)
 
+  @newSimulationExpectedFailure
   def test_04_CategoryDivergenceTester(self, quiet=quiet, run=run_all_test):
     """
     Test the category divergence tester
@@ -332,6 +337,7 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=self.quiet)
 
+  @newSimulationExpectedFailure
   def test_QuantityDivergenceTesterCompareMethod(self):
     rule = self.portal.portal_rules.newContent(portal_type='Delivery Rule')
     divergence_tester = rule.newContent(portal_type='Quantity Divergence Tester')

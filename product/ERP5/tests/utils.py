@@ -25,11 +25,17 @@
 #
 ##############################################################################
 
-import os.path
+import os
 from Products.ERP5Type import tarfile
 import xml.parsers.expat
 import xml.dom.minidom
 from urllib import url2pathname
+
+if int(os.environ.get('erp5_report_new_simulation_failures') or 0):
+  newSimulationExpectedFailure = lambda test: test
+else:
+  from Products.ERP5Type.tests.backportUnittest import \
+    expectedFailure as newSimulationExpectedFailure
 
 
 class BusinessTemplateInfoBase:

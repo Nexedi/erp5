@@ -39,3 +39,6 @@ def Legacy_getBusinessTemplateList(cls):
           bt_list.append(bt +  '_simulation_legacy')
     return tuple(bt_list)
   cls.getBusinessTemplateList = Legacy_getBusinessTemplateList
+
+from Products.ERP5.tests import utils
+utils.newSimulationExpectedFailure = lambda test: test

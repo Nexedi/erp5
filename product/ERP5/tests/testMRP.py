@@ -37,6 +37,7 @@ from Products.ERP5Type.tests.utils import reindex
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5Type.tests.backportUnittest import skip
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestMRPMixin(TestBPMMixin):
   transformation_portal_type = 'Transformation'
@@ -247,6 +248,7 @@ class TestMRPImplementation(TestMRPMixin):
     self.assertEquals(set([business_process.p2, business_process.p3]),
                       set(rule.getHeadProductionPathList(transformation, business_process)))
 
+  @newSimulationExpectedFailure
   def test_TransformationRule_expand(self):
     # mock order
     order = self.createDefaultOrder()

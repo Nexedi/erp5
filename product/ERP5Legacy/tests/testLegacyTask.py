@@ -25,13 +25,14 @@
 #
 ##############################################################################
 
+from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
+
 test_suite_list = []
 from Products.ERP5.tests.testTask import *
 test_suite_list.append(test_suite)
 from Products.ERP5.tests.testTaskReportDivergence import *
 test_suite_list.append(test_suite)
 
-from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
 TestTaskMixin.business_process = None
 Legacy_getBusinessTemplateList(TestTaskMixin)
 

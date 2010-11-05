@@ -32,6 +32,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testTask import TestTaskMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestTaskReportDivergenceMixin(TestTaskMixin):
   """
@@ -149,7 +150,8 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     Return if we should create (1) or not (0) an activity tool.
     """
     return 1
-  
+
+  @newSimulationExpectedFailure
   def test_01_TestReportLineChangeQuantity(self, quiet=quiet, run=run_all_test):
     """
       Change the quantity on an delivery line, then
@@ -172,6 +174,7 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
     sequence_list.play(self, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_02_TestReportListChangeDestination(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
@@ -195,6 +198,7 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
     sequence_list.play(self, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_03_TaskReportChangeStartDate(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list

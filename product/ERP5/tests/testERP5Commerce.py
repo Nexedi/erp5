@@ -34,6 +34,7 @@ import urllib
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 SESSION_ID = "12345678"
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
@@ -590,6 +591,7 @@ class TestCommerce(ERP5TypeTestCase):
     # Check if the Shopping Cart is empty
     self.assertEquals(0, len(self.website.SaleOrder_getShoppingCartItemList()))
 
+  @newSimulationExpectedFailure
   def test_11_finalizeShopping(self):
     """
       Test the SaleOrder_finalizeShopping script
@@ -681,6 +683,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.assertEquals(currency.getShortTitle(),
                  self.website.WebSite_getShoppingCartDefaultCurrencySymbol())
 
+  @newSimulationExpectedFailure
   def test_16_simulatePaypalPayment(self):
     """
       Test all the scripts related to paypal
@@ -919,6 +922,7 @@ class TestCommerce(ERP5TypeTestCase):
     self.assertEquals(product.Resource_getShopUrl(),
                  '%s/%s' % (product.getRelativeUrl(), 'Resource_viewAsShop'))
 
+  @newSimulationExpectedFailure
   def test_28_finalizeShoppingWithComment(self):
     """
       Testing if the comment added during the checkout will be set on the sale

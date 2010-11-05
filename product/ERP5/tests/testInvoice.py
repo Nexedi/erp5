@@ -42,6 +42,7 @@ from Acquisition import aq_parent
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from testPackingList import TestPackingListMixin
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestInvoiceMixin(TestPackingListMixin):
   """Test methods for invoices
@@ -1210,7 +1211,7 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(currency,
           delivery_movement.getPriceCurrencyValue())
 
-    
+  @newSimulationExpectedFailure
   def test_modify_planned_order_invoicing_rule(self):
     """
     tests that modifying a planned order affects movements from invoicing
@@ -1414,6 +1415,7 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(DateTime(2002, 03, 04),
                  invoice_movement.getStopDate())
 
+  @newSimulationExpectedFailure
   def test_modify_planned_order_invoice_transaction_rule(self):
     """
     tests that modifying a planned order affects movements from invoice
@@ -2712,6 +2714,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """)
     sequence_list.play(self, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_07_InvoiceAddPackingListLine(self, quiet=quiet):
     """
     Checks that adding a Packing List Line still creates a correct
@@ -2778,6 +2781,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """
     self.playSequence(sequence, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_09_InvoiceChangeStartDateFail(self, quiet=quiet):
     """
     Change the start_date of a Invoice Line,
@@ -2819,6 +2823,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """
     self.playSequence(sequence, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_09b_InvoiceChangeStartDateSucceed(self, quiet=quiet):
     """
     Change the start_date of a Invoice Line,

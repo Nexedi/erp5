@@ -30,6 +30,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
 import transaction
 from DateTime import DateTime
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestTaskReporting(ERP5ReportTestCase):
   """Test Task Reporting
@@ -163,6 +164,7 @@ class TestTaskReporting(ERP5ReportTestCase):
     transaction.commit()
     self.tic()
 
+  @newSimulationExpectedFailure
   def testProjectMontlyReport(self):
     """
     Check monthly report available on project

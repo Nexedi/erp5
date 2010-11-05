@@ -38,6 +38,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   """Test methods for sale and purchase invoice.
@@ -299,7 +300,8 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     packing_list = sequence.get('packing_list')
     self.assertEquals([], packing_list.getDivergenceList())
     self.assertEquals('solved', packing_list.getCausalityState())
- 
+
+  @newSimulationExpectedFailure
   def test_AdoptQuantityDivergenceOnInvoiceLineWithStoppedPackingList(self, quiet=quiet,
                                                                       run=RUN_ALL_TESTS):
     """Adopt quantity with stopped packing list"""
@@ -557,6 +559,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     """
     self.playSequence(sequence, quiet=quiet)
 
+  @newSimulationExpectedFailure
   def test_04_InvoiceChangeStartDateFail(self, quiet=quiet, run=RUN_ALL_TESTS):
     """
     Change the start_date of a Invoice Line,
@@ -992,7 +995,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
       """)
     sequence_list.play(self, quiet=quiet)
 
-
+  @newSimulationExpectedFailure
   def test_13_acceptQuantityDivergenceOnInvoiceWithStartedPackingList(
     self, quiet=quiet, run=RUN_ALL_TESTS):
     if not run: return

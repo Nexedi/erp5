@@ -34,6 +34,7 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import createZODBPythonScript, reindex
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestBPMMixin(ERP5TypeTestCase):
   """Skeletons for tests which depend on BPM"""
@@ -193,6 +194,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
 class TestBPMImplementation(TestBPMMixin):
   """Business Process implementation tests"""
+  @newSimulationExpectedFailure
   def test_BusinessProcess_getPathValueList(self):
     business_process = self.createBusinessProcess()
 
@@ -247,6 +249,7 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals('something',
         business_link.getSource(default='something'))
 
+  @newSimulationExpectedFailure
   def test_BuinessPathDynamicCategoryAccessProvider(self):
     source_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
@@ -266,6 +269,7 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals(source_node.getRelativeUrl(),
       business_link.getSource(context=context_movement, default='something'))
 
+  @newSimulationExpectedFailure
   def test_BuinessPathDynamicCategoryAccessProviderBusinessLinkPrecedence(self):
     movement_node = self.portal.organisation_module.newContent(
                     portal_type='Organisation')
@@ -283,6 +287,7 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals([path_node],
                       business_link.getSourceValueList(context=context_movement))
 
+  @newSimulationExpectedFailure
   def test_BuinessPathDynamicCategoryAccessProviderEmptyMovement(self):
     business_link = self.createBusinessLink()
     business_link.setSourceMethodId('BusinessLink_getDefaultSourceList')
@@ -296,6 +301,7 @@ class TestBPMImplementation(TestBPMMixin):
     self.assertEquals('something',
       business_link.getSource(context=context_movement, default='something'))
 
+  @newSimulationExpectedFailure
   def test_BusinessState_getRemainingTradePhaseList(self):
     """
     This test case is described for what trade_phase is remaining after the state.
@@ -419,6 +425,7 @@ class TestBPMImplementation(TestBPMMixin):
                                                       trade_phase_list=['default/delivery',
                                                                         'default/accounting'])))
 
+  @newSimulationExpectedFailure
   def test_BusinessLink_calculateExpectedDate(self):
     """
     This test case is described for what start/stop date is expected on
@@ -865,6 +872,7 @@ class TestBPMisBuildableImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEquals(compensated_simulation_movement.isBuildable(), False)
 
 class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
+  @newSimulationExpectedFailure
   def test_isCompleted_OrderedDeliveredInvoiced(self):
     """Test isCompleted for ordered, delivered and invoiced sequence"""
     self._createOrderedDeliveredInvoicedBusinessProcess()
@@ -968,6 +976,7 @@ class TestBPMisCompletedImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual(self.invoice_path.isCompleted(delivery), False)
     self.assertEqual(self.invoice_path.isPartiallyCompleted(delivery), False)
 
+  @newSimulationExpectedFailure
   def test_isCompleted_OrderedInvoicedDelivered(self):
     """Test isCompleted for ordered, invoiced and invoiced sequence"""
     self._createOrderedInvoicedDeliveredBusinessProcess()
