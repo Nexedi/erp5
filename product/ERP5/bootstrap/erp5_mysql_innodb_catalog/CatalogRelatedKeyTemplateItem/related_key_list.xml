@@ -1,5 +1,4 @@
 <key_list>
- <key>allowedRolesAndUsers | roles_and_users/allowedRolesAndUsers/z_related_security</key>
  <key>base_category_id | category,catalog/id/z_related_base_category_id</key>
  <key>career_skill_id | category,catalog,catalog/id/z_related_career_skill</key>
  <key>career_skill_title | category,catalog,catalog/title/z_related_career_skill</key>

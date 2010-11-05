@@ -1,3 +1,6 @@
+2010-11-05 Kazuhiko
+* remove 'z_related_security' method and 'allowedRolesAndUsers' related key, that are not used because of the conflict with existing 'allowedRolesAndUsers' column.
+
 2010-09-28 yusei
 * Add grand_grand_grand_grand_parent_specialise_portal_type and grand_grand_grand_grand_parent_specialise_reference.
 
