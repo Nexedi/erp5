@@ -92,7 +92,6 @@
                     <value>
                       <list>
                         <string>listbox_quantity</string>
-                        <string>listbox_variation_category_list</string>
                         <string>listbox_quantity_unit</string>
                         <string>matrixbox_quantity</string>
                       </list>
@@ -106,6 +105,7 @@
                         <string>my_quantity_unit</string>
                         <string>my_total_quantity</string>
                         <string>my_simulation_quantity</string>
+                        <string>listbox_variation_category_list</string>
                       </list>
                     </value>
                 </item>
