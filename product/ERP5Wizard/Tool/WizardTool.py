@@ -50,6 +50,8 @@ from DateTime import DateTime
 from Products.PluggableAuthService.interfaces.plugins import \
     IAuthenticationPlugin
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Wizard.PAS.ERP5RemoteUserManager import ERP5RemoteUserManager
+from Products.PluggableAuthService.PluggableAuthService import PluggableAuthService as PluggableAuthServiceTool
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
@@ -953,3 +955,22 @@ class WizardTool(BaseTool):
     portal_preferences = getToolByName(self, 'portal_preferences')
     if portal_preferences.getActivePreference() is not None:
       portal_preferences.setPreference(preference_id, value)
+
+  security.declarePublic(Permissions.AccessContentsInformation,
+                         'isSingleSignOnEnabled')  
+  def isSingleSignOnEnabled(self):
+    """
+      Check that a ERP5 Remote User manager is 
+      present as authentication plugin
+    """
+    acl_users = getattr(self.getPortalObject(), 'acl_users')
+    if isinstance(acl_users , PluggableAuthServiceTool):
+      # List plugin which make authentication
+      plugin_list = acl_users.plugins.listPlugins(IAuthenticationPlugin)
+      for plugin_name, plugin_value in plugin_list:
+        # Try to find an ERP5RemoteUserManager
+        if isinstance(plugin_value, ERP5RemoteUserManager):
+          # ERP5RemoteUserManager was found but remains verify if 
+          # the plugin is enabled or not.
+          return True
+    return False
