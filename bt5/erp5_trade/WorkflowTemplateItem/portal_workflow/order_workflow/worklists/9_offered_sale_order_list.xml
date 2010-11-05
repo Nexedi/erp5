@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="WorklistDefinition" module="Products.DCWorkflow.Worklists"/>
-        <tuple/>
-      </tuple>
+      <global name="WorklistDefinition" module="Products.DCWorkflow.Worklists"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -50,10 +47,7 @@ sale_order_module/view?simulation_state=offered&portal_type=Sale+Order&local_rol
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Guard" module="Products.DCWorkflow.Guard"/>
-        <tuple/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,10 +65,7 @@ sale_order_module/view?simulation_state=offered&portal_type=Sale+Order&local_rol
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
