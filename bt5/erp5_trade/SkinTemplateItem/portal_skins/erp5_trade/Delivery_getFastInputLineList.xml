@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -75,33 +72,12 @@ if read_document_lines:\n
 else:\n
   line_list = []\n
 \n
-use_list = []\n
-# Check if the section and use preference are defined\n
 if line_portal_type in context.getPortalSaleTypeList():\n
   section_uid = context.getSourceSectionUid()\n
-  use_list = context.portal_preferences.getPreferredSaleUseList()\n
 elif line_portal_type in context.getPortalPurchaseTypeList():\n
   section_uid = context.getDestinationSectionUid()\n
-  use_list = context.portal_preferences.getPreferredPurchaseUseList()\n
 elif line_portal_type in context.getPortalInternalTypeList() + context.getPortalInventoryMovementTypeList():\n
-  section_uid = ""\n
-  use_list = context.portal_preferences.getPreferredPurchaseUseList() + \\\n
-             context.portal_preferences.getPreferredSaleUseList()\n
-else:\n
-  from Products.ERP5Type.Message import translateString\n
-  return context.Base_redirect(\'view\', keep_items=dict(\n
-    portal_status_message=translateString(\'Type of document not known to retrieve section.\')))\n
-\n
-if len(use_list) == 0:\n
-  from Products.ERP5Type.Message import translateString\n
-  return context.Base_redirect(\'view\', keep_items=dict(\n
-    portal_status_message=translateString(\'Use preference must be defined.\')))\n
-  \n
-if section_uid is None:\n
-  from Products.ERP5Type.Message import translateString\n
-  return context.Base_redirect(\'view\', keep_items=dict(\n
-    portal_status_message=translateString(\'Section must be defined.\')))\n
-\n
+  section_uid = None\n
 len_line_list = len(line_list)\n
 used_id = [] # list use to make sure we do not generate two line with same id/uid\n
 used_id_append = used_id.append\n
@@ -289,13 +265,9 @@ return result\n
                             <string>_getitem_</string>
                             <string>line_portal_type</string>
                             <string>line_list</string>
-                            <string>use_list</string>
                             <string>section_uid</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>translateString</string>
-                            <string>dict</string>
-                            <string>len</string>
                             <string>None</string>
+                            <string>len</string>
                             <string>len_line_list</string>
                             <string>used_id</string>
                             <string>used_id_append</string>
