@@ -62,6 +62,7 @@ Property Existence Constraint | predicate
 Property Existence Constraint | view
 Property Sheet Tool | view
 Property Sheet | view
+Python Script | proxy_role_view
 Python Script | repository_history_view
 Python Script | view
 Ram Cache | statistics
