@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>cell/getVariationRangeCategoryList</string> </value>
+            <value> <string>cell/getVariationRangeCategoryItemList</string> </value>
         </item>
       </dictionary>
     </pickle>
