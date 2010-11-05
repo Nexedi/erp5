@@ -77,8 +77,8 @@
               show_listbox_tree_mode_selection python: not is_gadget_mode and \n
                                                        (is_domain_tree_supported or is_report_tree_supported);\n
               show_list_action_link python: here.field.get_value(\'list_action\');\n
-              page_navigation_mode python: request.get(\'page_navigation_mode\', here.getPageNavigationMode());\n
-              is_slider_mode python: page_navigation_mode in (\'\', \'slider\');\n
+              page_navigation_template python: request.get(\'page_navigation_template\', here.getPageNavigationTemplate());\n
+              is_slider_mode python:  \'Slider\' in page_navigation_template;\n
               is_default_listbox_field python: field_id==\'listbox\';">\n
 \n
   <!-- Define hidden input.  -->\n
@@ -364,9 +364,9 @@
             <!--Select cell -->\n
             <th tal:condition="show_select_column"\n
                 class="listbox-table-select-cell">\n
-              <input id="listbox_select" type="image"\n
+              <input class="listbox-select-action" type="image"\n
                     title="Action" alt="Action" name="Base_doSelect:method"\n
-                    tal:attributes="id string:${field_id}_select;\n
+                    tal:attributes="class string:${field_id}-select-action;\n
                                     src string:${portal_url_string}/images/exec16.png"\n
                     i18n:domain="ui" i18n:attributes="title" />\n
             </th>\n

@@ -729,6 +729,12 @@ table.listbox input{\n
   float:none;\n
 }\n
 \n
+table.listbox input.listbox-check-all,\n
+table.listbox input.listbox-uncheck-all,\n
+table.listbox input.listbox-select-action{\n
+  width:auto;\n
+}\n
+\n
 .listbox-table-data-cell > .figure{\n
   float:right;\n
   display:block;\n
