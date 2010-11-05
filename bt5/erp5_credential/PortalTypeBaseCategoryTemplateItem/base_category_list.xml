@@ -1,0 +1,35 @@
+<base_category_list>
+ <portal_type id="Credential Recovery Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Credential Request">
+  <item>activity</item>
+  <item>destination_decision</item>
+  <item>function</item>
+  <item>gender</item>
+  <item>group</item>
+  <item>nationality</item>
+  <item>question</item>
+  <item>role</item>
+  <item>site</item>
+  <item>skill</item>
+ </portal_type>
+ <portal_type id="Credential Request Module">
+  <item>business_application</item>
+ </portal_type>
+ <portal_type id="Credential Update">
+  <item>activity</item>
+  <item>destination_decision</item>
+  <item>function</item>
+  <item>gender</item>
+  <item>group</item>
+  <item>nationality</item>
+  <item>question</item>
+  <item>role</item>
+  <item>site</item>
+  <item>skill</item>
+ </portal_type>
+ <portal_type id="Credential Update Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>

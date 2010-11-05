@@ -1,0 +1,23 @@
+Credential Recovery Module | business_application
+Credential Request Module | business_application
+Credential Request | activity
+Credential Request | destination_decision
+Credential Request | function
+Credential Request | gender
+Credential Request | group
+Credential Request | nationality
+Credential Request | question
+Credential Request | role
+Credential Request | site
+Credential Request | skill
+Credential Update Module | business_application
+Credential Update | activity
+Credential Update | destination_decision
+Credential Update | function
+Credential Update | gender
+Credential Update | group
+Credential Update | nationality
+Credential Update | question
+Credential Update | role
+Credential Update | site
+Credential Update | skill

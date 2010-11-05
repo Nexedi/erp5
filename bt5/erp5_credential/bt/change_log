@@ -1,0 +1,3 @@
+2010-05-27 fabien
+* implement Credential Request, add class, improve forms, ...
+* Rename credential_question base category to question and add sub categories.

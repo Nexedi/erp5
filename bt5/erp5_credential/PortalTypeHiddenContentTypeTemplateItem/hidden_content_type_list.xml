@@ -1,0 +1,24 @@
+<hidden_content_type_list>
+ <portal_type id="Credential Recovery">
+  <item>Credential Question</item>
+  <item>Email</item>
+ </portal_type>
+ <portal_type id="Credential Request">
+  <item>Address</item>
+  <item>Credential Question</item>
+  <item>Email</item>
+  <item>Fax</item>
+  <item>Telephone</item>
+ </portal_type>
+ <portal_type id="Credential Update">
+  <item>Address</item>
+  <item>Credential Question</item>
+  <item>Email</item>
+  <item>Fax</item>
+  <item>Image</item>
+  <item>Telephone</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>Credential Question</item>
+ </portal_type>
+</hidden_content_type_list>

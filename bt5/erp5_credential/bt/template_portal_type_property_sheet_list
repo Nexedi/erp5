@@ -1,0 +1,5 @@
+Credential Question | CredentialQuestion
+Credential Request | CredentialOrganisationProperties
+Credential Request | CredentialRequest
+Credential Update | DefaultImage
+Person | DefaultCredentialQuestion

@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="TextDocument" module="Products.ERP5Type.Document.TextDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>4330596b254b2e74826ac57df08ff14d</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/plain</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>crendential_request-confirmation-without-password</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>20100928-7459</string> </value>
+        </item>
+        <item>
+            <key> <string>language</string> </key>
+            <value> <string>fr</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Notification Message</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content</string> </key>
+            <value> <string>Félicitation, la création de votre nouveau compte ERP5 \'${login_name}\' est terminée.\n
+Vous pouvez dès à présent vous connecter avec ce compte.\n
+\n
+Merci</string> </value>
+        </item>
+        <item>
+            <key> <string>text_content_substitution_mapping_method_id</string> </key>
+            <value> <string>NotificationMessage_getSubstitutionMappingDictFromArgument</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>[ERP5] Compte créé</string> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

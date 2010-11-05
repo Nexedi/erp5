@@ -1,0 +1,15 @@
+<property_sheet_list>
+ <portal_type id="Credential Question">
+  <item>CredentialQuestion</item>
+ </portal_type>
+ <portal_type id="Credential Request">
+  <item>CredentialOrganisationProperties</item>
+  <item>CredentialRequest</item>
+ </portal_type>
+ <portal_type id="Credential Update">
+  <item>DefaultImage</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>DefaultCredentialQuestion</item>
+ </portal_type>
+</property_sheet_list>

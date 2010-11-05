@@ -1,0 +1,90 @@
+##############################################################################
+#
+# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+#                    Fabien MORIN <fabien@nexedi.com>
+#                    Francois-Xaiver Algrain <fxalgrain@tiolive.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+##############################################################################
+
+from Products.CMFCore.utils import getToolByName 
+from Products import PluggableAuthService
+from Products.ERP5Security.ERP5UserManager import ERP5UserManager
+try:
+  from Products.ERP5Wizard.PAS.ERP5RemoteUserManager import ERP5RemoteUserManager
+except  ImportError:
+  #Wizard tool can not be present
+  ERP5RemoteUserManager = None
+
+PluggableAuthServiceTool = PluggableAuthService.PluggableAuthService.PluggableAuthService
+IUserEnumerationPlugin = PluggableAuthService.interfaces.plugins.IUserEnumerationPlugin
+IAuthenticationPlugin = PluggableAuthService.interfaces.plugins.IAuthenticationPlugin
+ZODBUserManager = PluggableAuthService.plugins.ZODBUserManager.ZODBUserManager
+
+def isLocalLoginAvailable(self, login):
+  """
+  Check for login avaibility. 
+  Use activated user enumeration plugin which are ERP5 or ZODB user manager
+  Returned Values : 
+  True : Login is available
+  False : Login is already used
+  None : No founded PluggableAuthServiceTool with id 'acl_users'
+  """
+  if not login:
+    return False
+  portal = self.getPortalObject()
+  acl_users = getToolByName(portal, 'acl_users')
+
+  if isinstance(acl_users,PluggableAuthServiceTool):
+    #List plugin which make user enumeration user enumeration
+    plugin_list = acl_users.plugins.listPlugins(IUserEnumerationPlugin)
+    for plugin_name, plugin_value in plugin_list:
+      #we check with instance of ERP5UserManager and ZODBUserManager
+      if isinstance(plugin_value, (ERP5UserManager,ZODBUserManager,)):
+        user_list = plugin_value.enumerateUsers(id=login,
+            exact_match=True)
+        if len(user_list) > 0:
+          return False
+        
+    return True
+  return None
+
+def isSingleSignOnEnable(self):
+  """
+  Check that a ERP5 Remote User manager is present as authentication plugin
+  """
+  if ERP5RemoteUserManager is None:
+    return False
+  
+  portal = self.getPortalObject()
+  acl_users = getToolByName(portal, 'acl_users')
+
+  if isinstance(acl_users,PluggableAuthServiceTool):
+     #List plugin which make authentication
+    plugin_list = acl_users.plugins.listPlugins(IAuthenticationPlugin)
+    for plugin_name, plugin_value in plugin_list:
+      #Try to find an ERP5RemoteUserManager
+      if isinstance(plugin_value,ERP5RemoteUserManager):
+        #SSO is enable
+        return True
+  return False

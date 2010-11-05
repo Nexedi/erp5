@@ -1,0 +1,33 @@
+<allowed_content_type_list>
+ <portal_type id="Credential Recovery">
+  <item>Credential Question</item>
+  <item>Email</item>
+ </portal_type>
+ <portal_type id="Credential Recovery Module">
+  <item>Credential Recovery</item>
+ </portal_type>
+ <portal_type id="Credential Request">
+  <item>Address</item>
+  <item>Credential Question</item>
+  <item>Email</item>
+  <item>Fax</item>
+  <item>Telephone</item>
+ </portal_type>
+ <portal_type id="Credential Request Module">
+  <item>Credential Request</item>
+ </portal_type>
+ <portal_type id="Credential Update">
+  <item>Address</item>
+  <item>Credential Question</item>
+  <item>Email</item>
+  <item>Fax</item>
+  <item>Image</item>
+  <item>Telephone</item>
+ </portal_type>
+ <portal_type id="Credential Update Module">
+  <item>Credential Update</item>
+ </portal_type>
+ <portal_type id="Person">
+  <item>Credential Question</item>
+ </portal_type>
+</allowed_content_type_list>
