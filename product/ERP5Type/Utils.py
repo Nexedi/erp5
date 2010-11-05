@@ -1514,9 +1514,17 @@ def setDefaultProperties(property_holder, object=None, portal=None):
       # Unnecessary to create these accessors more than once.
       base_category_dict.clear()
 
+    from Products.ERP5Type.mixin.constraint import ConstraintMixin
     property_holder.constraints = []
     for const in constraint_list:
-      createConstraintList(property_holder, constraint_definition=const)
+      # ZODB Property Sheets constraints are no longer defined by a
+      # dictionnary but by a ConstraintMixin, thus just append it to
+      # the list of constraints
+      if isinstance(const, ConstraintMixin):
+        property_holder.constraints.append(const)
+      else:
+        createConstraintList(property_holder, constraint_definition=const)
+
     # ERP5 _properties and Zope _properties are somehow different
     # The id is converted to the Zope standard - we keep the original id
     # as base_id
@@ -1567,7 +1575,7 @@ def setDefaultProperties(property_holder, object=None, portal=None):
 
     # Create for every portal type group an accessor (like isPortalDeliveryType)
     # In the future, this should probalby use categories
-    if portal is not None: # we can not do anything without portal
+    if portal is not None and object is not None: # we can not do anything without portal
       # import lately in order to avoid circular dependency
       from Products.ERP5Type.ERP5Type import ERP5TypeInformation
       portal_type = object.portal_type
