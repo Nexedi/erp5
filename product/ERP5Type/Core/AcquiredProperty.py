@@ -28,9 +28,10 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
-
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Core.StandardProperty import StandardProperty
+from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
+from Products.ERP5Type.Accessor.List import ListGetter
 
 class AcquiredProperty(StandardProperty):
   """
@@ -62,16 +63,61 @@ class AcquiredProperty(StandardProperty):
       StandardProperty._expression_attribute_tuple + \
       ('acquisition_portal_type', 'content_portal_type')
 
-  @staticmethod
-  def _convertValueToTalesExpression(value):
-    """
-    Convert a string value to a TALES expression for attributes listed
-    in '_expression_attribute_tuple'
-    """
-    if value is None:
-      return None
+  # Define getters for the property. This is necessary for bootstrap
+  # as a Standard Property uses SimpleItem, defined with Acquired
+  # Properties
+  #
+  # There is no need to define the setter as this static definition of
+  # the getter is only meaningful for the Acquired Properties defined
+  # within an Acquired Property.
+  getAcquisitionBaseCategoryList = ListGetter(
+    'getAcquisitionBaseCategoryList',
+    'acquisition_base_category',
+    'lines')
 
-    return Expression(value)
+  getAcquisitionObjectIdList = ListGetter('getAcquisitionObjectIdList',
+                                          'acquisition_object_id',
+                                          'lines')
+
+  # Use a tales type here, so the TALES expression instance is created
+  # when actually calling the function
+  getAcquisitionPortalType = BaseGetter('getAcquisitionPortalType',
+                                        'acquisition_portal_type',
+                                        'tales')
+
+  getAcquisitionAccessorId = BaseGetter('getAcquisitionAccessorId',
+                                        'acquisition_accessor_id',
+                                        'string')
+
+  getAltAccessorIdList = ListGetter('getAltAccessorIdList',
+                                    'alt_accessor_id',
+                                    'lines')
+
+  getAcquisitionCopyValue = BaseGetter('getAcquisitionCopyValue',
+                                       'acquisition_copy_value',
+                                       'boolean',
+                                       default=False)
+
+  getAcquisitionMaskValue = BaseGetter('getAcquisitionMaskValue',
+                                       'acquisition_mask_value',
+                                       'boolean',
+                                       default=False)
+
+  # Use a tales type here, so the TALES expression instance is created
+  # when actually calling the function
+  getContentPortalType = BaseGetter('getContentPortalType',
+                                    'content_portal_type',
+                                    'tales')
+
+  getContentAcquiredPropertyIdList = ListGetter(
+    'getContentAcquiredPropertyIdList',
+    'content_acquired_property_id',
+    'lines')
+
+  getContentTranslationAcquiredPropertyIdList = ListGetter(
+    'getContentTranslationAcquiredPropertyIdList',
+    'content_translation_acquired_property_id',
+    'lines')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
@@ -85,12 +131,12 @@ class AcquiredProperty(StandardProperty):
     filesystem_property_dict.update(
       {'acquisition_base_category': self.getAcquisitionBaseCategoryList(),
        'acquisition_object_id': self.getAcquisitionObjectIdList(),
-       'acquisition_portal_type': self._convertValueToTalesExpression(self.getAcquisitionPortalType()),
+       'acquisition_portal_type': self.getAcquisitionPortalType(),
        'acquisition_accessor_id': self.getAcquisitionAccessorId(),
        'alt_accessor_id': self.getAltAccessorIdList(),
        'acquisition_copy_value': self.getAcquisitionCopyValue(),
        'acquisition_mask_value': self.getAcquisitionMaskValue(),
-       'portal_type': self._convertValueToTalesExpression(self.getContentPortalType()),
+       'portal_type': self.getContentPortalType(),
        'acquired_property_id': self.getContentAcquiredPropertyIdList(),
        'translation_acquired_property_id': self.getContentTranslationAcquiredPropertyIdList()})
 

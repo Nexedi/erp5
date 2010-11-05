@@ -29,6 +29,7 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
 
 class CategoryProperty(XMLObject):
   """
@@ -43,6 +44,9 @@ class CategoryProperty(XMLObject):
 
   property_sheets = (PropertySheet.SimpleItem,
                      PropertySheet.Reference)
+
+  getReference = BaseGetter('getReference', 'reference', 'string',
+                            storage_id='default_reference')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')

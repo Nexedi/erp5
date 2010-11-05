@@ -28,9 +28,9 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
-
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Accessor.Base import Getter as BaseGetter
 
 class StandardProperty(XMLObject):
   """
@@ -57,6 +57,61 @@ class StandardProperty(XMLObject):
   # ZODB name of attributes whose value is a TALES Expression string
   _expression_attribute_tuple = ('property_default',)
 
+  # Define getters for the property. This is necessary for bootstrap
+  # as a Standard Property is defined by Standard Properties which
+  # also depends on Property Sheets defined by Standard Properties.
+  #
+  # There is no need to define the setter as this static definition of
+  # the getter is only meaningful for the Standard Properties defined
+  # within an Standard Property.
+  getReference = BaseGetter('getReference', 'reference', 'string',
+                            storage_id='default_reference')
+
+  getDescription = BaseGetter('getDescription', 'description', 'string',
+                              default='')
+
+  def getElementaryType(self):
+    """
+    Define this getter manually as it is not possible to rely on
+    CategoryTool during the bootstrap
+    """
+    for category in self.__dict__.get('categories', ()):
+      if category.startswith('elementary_type/'):
+        return category.split('elementary_type/')[1]
+
+    raise AttributeError("%s: Could not get elementary_type" % self)
+
+  getStorageId = BaseGetter('getStorageId', 'storage_id', 'string')
+
+  getMultivalued = BaseGetter('getMultivalued', 'multivalued', 'boolean',
+                              default=False)
+
+  # Use a tales type here, so the TALES expression instance is created
+  # when actually calling the function
+  getPropertyDefault = BaseGetter('getPropertyDefault', 'property_default',
+                                  'tales')
+
+  getRange = BaseGetter('getRange', 'range', 'boolean', default=False)
+
+  getPreference = BaseGetter('getPreference', 'preference', 'boolean',
+                             default=False)
+
+  getReadPermission = BaseGetter(
+    'getReadPermission', 'read_permission', 'string',
+    default=Permissions.AccessContentsInformation)
+
+  getWritePermission = BaseGetter('getWritePermission',
+                                  'write_permission',
+                                  'string',
+                                  default=Permissions.ModifyPortalContent)
+
+  getTranslatable = BaseGetter('getTranslatable', 'translatable', 'boolean',
+                               default=False)
+
+  getTranslationDomain = BaseGetter('getTranslationDomain',
+                                    'translation_domain',
+                                    'string')
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'exportToFilesystemDefinition')
   def exportToFilesystemDefinition(self):
@@ -68,7 +123,7 @@ class StandardProperty(XMLObject):
             'type': self.getElementaryType(),
             'storage_id': self.getStorageId(),
             'multivalued': self.getMultivalued(),
-            'default': Expression(self.getPropertyDefault()),
+            'default': self.getPropertyDefault(),
             'range': self.getRange(),
             'preference': self.getPreference(),
             'read_permission': self.getReadPermission(),
