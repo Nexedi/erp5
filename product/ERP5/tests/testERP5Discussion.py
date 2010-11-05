@@ -90,6 +90,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.stepCreateThread();
     self.stepTic()
 
+  @expectedFailure
   def test_02_createDiscussionPost(self):
     """Create a disucssion post inscite a discussion thread"""
 
