@@ -102,6 +102,13 @@ class PythonScript(XMLObject, ZopePythonScript):
       """
       self.write(value)
 
+    def _setProxyRoleList(self, value):
+      """
+      override to call ZopePythonScript methods
+      """
+      self._baseSetProxyRoleList(value)
+      self.manage_proxy(roles=value)
+
     __call__ = ZopePythonScript.__call__
 
     def edit(self, **kw):

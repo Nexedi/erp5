@@ -41,6 +41,11 @@ class PythonScript:
           'type'        : 'string',
           'storage_id'  : '_params',
           'mode'        : '' },
+      {   'id'          : 'proxy_role',
+          'description' : 'A local property description',
+          'type'        : 'tokens',
+          'storage_id'  : '_proxy_roles',
+          'mode'        : '' },
   )
 
   _categories = ('callable_type',)
