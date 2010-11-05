@@ -57,7 +57,7 @@ type_definition = context.getTypeInfo()\n
 \n
 short_portal_type = type_definition.getShortTitle()\n
 if not short_portal_type:\n
-  short_portal_type = \'\'.join([s for s in portal_type if s.isupper()])\n
+  short_portal_type = \'\'.join(s for s in type_definition.getId() if s.isupper())\n
 \n
 id_group = (\'reference\', short_portal_type)\n
 default = 1\n
@@ -115,11 +115,7 @@ context.edit(content_type=context.portal_preferences.getPreferredTextFormat(),\n
                             <string>context</string>
                             <string>type_definition</string>
                             <string>short_portal_type</string>
-                            <string>append</string>
-                            <string>$append0</string>
                             <string>_getiter_</string>
-                            <string>portal_type</string>
-                            <string>s</string>
                             <string>id_group</string>
                             <string>default</string>
                             <string>new_id</string>
