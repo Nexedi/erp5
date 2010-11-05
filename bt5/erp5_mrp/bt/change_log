@@ -1,3 +1,6 @@
+2010-11-05 yusei
+* Modify variation category list in the field library and stop showing base category name.
+
 2010-10-09 yusei
 * Fix a typo in production_order_workflow/scripts/Order_buildPackingList.
 
