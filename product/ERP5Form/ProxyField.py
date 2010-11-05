@@ -35,7 +35,6 @@ from Products.Formulator.Errors import ValidationError
 from Products.Formulator import MethodField
 from Products.ERP5Type.Utils import convertToUpperCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.CMFCore.utils import getToolByName
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -430,7 +429,7 @@ class ProxyField(ZMIField):
           pass
 
     portal = self.getPortalObject()
-    portal_skins = getToolByName(portal, 'portal_skins')
+    portal_skins = portal.portal_skins
     form = self.aq_parent
     object = form.aq_parent
 
