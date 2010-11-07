@@ -34,6 +34,7 @@ from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Type.Errors import SimulationError
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
@@ -765,8 +766,8 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         # Re expand the rule if possible
         my_applied_rule = my_applied_rule_list[0]
       else:
-        raise "SimulationError", 'Delivery %s has more than one applied'\
-            ' rule.' % self.getRelativeUrl()
+        raise SimulationError('Delivery %s has more than one applied'
+                              ' rule.' % self.getRelativeUrl())
 
       my_applied_rule_id = None
       expand_activate_kw = {}
@@ -917,8 +918,8 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       if method is not None:
         return method()
       else:
-        raise 'SimulationError', '%s_getRuleReference script is missing.' \
-              % self.getPortalType().replace(' ', '')
+        raise SimulationError('%s_getRuleReference script is missing.'
+                              % self.getPortalType().replace(' ', ''))
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootSpecialiseValue')

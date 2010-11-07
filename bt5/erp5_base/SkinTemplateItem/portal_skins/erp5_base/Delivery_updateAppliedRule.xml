@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery = context\n
+            <value> <string>from Products.ERP5Type.Errors import SimulationError\n
+\n
+delivery = context\n
 delivery_type = context.getPortalType()\n
 \n
 # XXX The following dict is only for backward compatibility.\n
@@ -80,7 +82,7 @@ applied_rule_dict = {\n
 \n
 try:\n
   applied_rule = delivery.getRuleReference()\n
-except \'SimulationError\':\n
+except SimulationError:\n
   marker = []\n
   applied_rule = applied_rule_dict.get(delivery_type, marker)\n
   if applied_rule is marker:\n
@@ -133,6 +135,8 @@ elif applied_rule:\n
                           <tuple>
                             <string>activate_kw</string>
                             <string>kw</string>
+                            <string>Products.ERP5Type.Errors</string>
+                            <string>SimulationError</string>
                             <string>context</string>
                             <string>delivery</string>
                             <string>_getattr_</string>

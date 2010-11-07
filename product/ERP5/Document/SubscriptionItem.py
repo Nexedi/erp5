@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Errors import SimulationError
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.mixin.rule import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
@@ -119,8 +120,8 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
         rule_value_list = portal_rules.searchRuleList(self, 
                  tested_base_category_list=tested_base_category_list)
         if len(rule_value_list) > 1:
-          raise "SimulationError", 'Expandable Document %s has more than one matching'\
-                                   ' rule.' % self.getRelativeUrl()
+          raise SimulationError('Expandable Document %s has more than one'
+                                ' matching rule.' % self.getRelativeUrl())
         if len(rule_value_list):
           rule_value = rule_value_list[0]
           my_applied_rule = rule_value.constructNewAppliedRule(portal_simulation,
@@ -134,8 +135,8 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
       # Re expand the rule if possible
       my_applied_rule = my_applied_rule_list[0]
     else:
-      raise "SimulationError", 'Expandable Document %s has more than one root applied'\
-          ' rule.' % self.getRelativeUrl()
+      raise SimulationError('Expandable Document %s has more than one root'
+                            ' applied rule.' % self.getRelativeUrl())
 
     return my_applied_rule
 

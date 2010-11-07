@@ -42,6 +42,7 @@ class UnsupportedWorkflowMethod(WorkflowException):
 class ImmobilisationValidityError(Exception):pass
 class ImmobilisationCalculationError(Exception):pass
 class TransformationRuleError(Exception):pass
+class SimulationError(Exception):pass
 
 
 allow_class(DeferredCatalogError)
@@ -51,3 +52,4 @@ allow_class(ImmobilisationCalculationError)
 allow_class(WorkflowException)
 allow_class(UnsupportedWorkflowMethod)
 allow_class(TransformationRuleError)
+allow_class(SimulationError)
