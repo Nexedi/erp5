@@ -200,21 +200,17 @@ return context.getPortalObject().portal_catalog(portal_type='Sale Invoice Transa
     delivery_builder = getattr(self.portal.portal_deliveries, self.delivery_builder_id)
     delivery_builder.delivery_cell_separate_order = ('calculateAddQuantity',)
 
-  def stepAdoptPrevisionPackingListQuantity(self,sequence=None, sequence_list=None):
-    document = sequence.get('packing_list')
-    self._solveDivergence(document, 'quantity', 'adopt')
+  stepAdoptPrevisionPackingListQuantity = \
+    TestSaleInvoiceMixin.stepAdoptPrevisionQuantity
 
-  def stepAcceptDecisionPackingListQuantity(self,sequence=None, sequence_list=None):
-    document = sequence.get('packing_list')
-    self._solveDivergence(document, 'quantity', 'accept')
+  stepAcceptDecisionPackingListQuantity = \
+    TestSaleInvoiceMixin.stepAcceptDecisionQuantity
 
-  def stepAdoptPrevisionInvoiceQuantity(self,sequence=None, sequence_list=None):
-    document = sequence.get('invoice')
-    self._solveDivergence(document, 'quantity', 'adopt')
+  stepAdoptPrevisionInvoiceQuantity = \
+    TestSaleInvoiceMixin.stepAdoptPrevisionQuantityInvoice
 
-  def stepAcceptDecisionInvoiceQuantity(self,sequence=None, sequence_list=None):
-    document = sequence.get('invoice')
-    self._solveDivergence(document, 'quantity', 'accept')
+  stepAcceptDecisionInvoiceQuantity = \
+    TestSaleInvoiceMixin.stepAcceptDecisionQuantityInvoice
 
 
 class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
