@@ -35,7 +35,6 @@ import unittest
 # manually and treated as reference to what implements what
 implements_tuple_list = [
   (('Products.ERP5Type.Document.RoleDefinition', 'RoleDefinition'), 'ILocalRoleGenerator'),
-  (('Products.ERP5Type.Document.BusinessLink','BusinessLink'), 'IArrowBase'),
   (('Products.ERP5Type.Document.BusinessLink','BusinessLink'), 'IBusinessLink'),
   (('Products.ERP5Type.Document.BusinessLink','BusinessLink'), 'ICategoryAccessProvider'),
   (('Products.ERP5Type.Document.TradeCondition','TradeCondition'), 'IAmountGenerator'),
@@ -43,6 +42,7 @@ implements_tuple_list = [
   (('Products.ERP5Type.Document.TradeModelCell','TradeModelCell'), 'IVariated'),
   (('Products.ERP5Type.Document.TradeModelLine','TradeModelLine'), 'IAmountGenerator'),
   (('Products.ERP5Type.Document.TradeModelLine','TradeModelLine'), 'IVariated'),
+  (('Products.ERP5Type.Document.TradeModelPath','TradeModelPath'), 'IArrowBase'),
   (('Products.ERP5Type.Document.TradeModelRule','TradeModelRule'), 'IPredicate'),
   (('Products.ERP5Type.Document.TradeModelRule','TradeModelRule'), 'IRule'),
   (('Products.ERP5Type.Document.Transformation','Transformation'), 'IAmountGenerator'),
@@ -86,14 +86,10 @@ for failing_method in [
     'test_Products.ERP5.AggregatedAmountList_AggregatedAmountList_implements_IAmountList',
     'test_Products.ERP5Type.Document.BusinessLink_BusinessLink_implements_IBusinessLink',
     'test_Products.ERP5Type.Document.BusinessLink_BusinessLink_implements_ICategoryAccessProvider',
-    'test_Products.ERP5Type.Document.TradeCondition_TradeCondition_implements_IAmountGenerator',
-    'test_Products.ERP5Type.Document.TradeModelCell_TradeModelCell_implements_IAmountGenerator',
     'test_Products.ERP5Type.Document.TradeModelCell_TradeModelCell_implements_IVariated',
-    'test_Products.ERP5Type.Document.TradeModelLine_TradeModelLine_implements_IAmountGenerator',
     'test_Products.ERP5Type.Document.TradeModelLine_TradeModelLine_implements_IVariated',
     'test_Products.ERP5Type.Document.TradeModelRule_TradeModelRule_implements_IRule',
     'test_Products.ERP5Type.Document.TransformationRule_TransformationRule_implements_IRule',
-    'test_Products.ERP5Type.Document.Transformation_Transformation_implements_IAmountGenerator',
     'test_Products.ERP5Type.Document.Transformation_Transformation_implements_IVariated',
     'test_Products.ERP5Type.Document.TransformedResource_TransformedResource_implements_IVariated',
   ]:
