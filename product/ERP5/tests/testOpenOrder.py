@@ -42,16 +42,17 @@ class TestOpenOrder(ERP5TypeTestCase):
 
     return ('erp5_base',
             'erp5_pdm',
+            'erp5_simulation',
             'erp5_trade',
             'erp5_open_trade',
-            )
+            'erp5_simulation_test')
 
   def afterSetUp(self):
     if getattr(self.portal, '_run_after_setup', None) is not None:
       return
 
-    self.portal.portal_rules.default_open_order_rule.validate()
-    self.portal.portal_rules.default_order_rule.validate()
+    self.getRule(reference='default_open_order_rule').validate()
+    self.getRule(reference='default_order_rule').validate()
 
     self.portal.portal_categories.base_amount.newContent(
       id='taxable',
@@ -267,7 +268,8 @@ class TestOpenOrder(ERP5TypeTestCase):
     applied_rule = open_sale_order.getCausalityRelatedValue(portal_type='Applied Rule')
     self.assertEqual(len(applied_rule.objectIds()), 0)
 
-    self.portal.portal_rules.default_open_order_rule.expand(
+    open_order_rule = self.getRule(reference='default_open_order_rule')
+    open_order_rule.expand(
       applied_rule,
       calculation_base_date=DateTime(3000,2,9))
 
@@ -279,7 +281,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     self.assertEqual(applied_rule['1'].getStopDate(), DateTime(3000,2,11,10,0))
 
     open_sale_order.setForecastingTermDayCount(10)
-    self.portal.portal_rules.default_open_order_rule.expand(
+    open_order_rule.expand(
       applied_rule,
       calculation_base_date=DateTime(3000,2,9))
 
@@ -290,7 +292,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     self.assertEqual(applied_rule['2'].getStartDate(), DateTime(3000,2,17,10,0))
     self.assertEqual(applied_rule['2'].getStopDate(), DateTime(3000,2,18,10,0))
 
-    self.portal.portal_rules.default_open_order_rule.expand(
+    open_order_rule.expand(
       applied_rule,
       calculation_base_date=DateTime(3000,3,1))
 
@@ -307,7 +309,7 @@ class TestOpenOrder(ERP5TypeTestCase):
                       (DateTime(3000,3,10,10,0), DateTime(3000,3,11,10,0))
                       ])
 
-    self.portal.portal_rules.default_open_order_rule.expand(
+    open_order_rule.expand(
       applied_rule,
       calculation_base_date=DateTime(3000,3,1))
 
@@ -317,7 +319,7 @@ class TestOpenOrder(ERP5TypeTestCase):
     self.assertEqual(len(applied_rule.objectIds()), 5)
 
     self.portal.sale_trade_condition_module.main_trade_condition.setExpirationDate(DateTime(3000,3,22))
-    self.portal.portal_rules.default_open_order_rule.expand(
+    open_order_rule.expand(
       applied_rule,
       calculation_base_date=DateTime(3000,3,30))
 

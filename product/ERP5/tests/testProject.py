@@ -32,28 +32,33 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import transaction
 from DateTime import DateTime
+from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestProject(ERP5TypeTestCase):
   """ Test for Project API and scripts and forms 
       used for Project Document.
   """
+  business_process = 'business_process_module/erp5_default_business_process'
+  rule_id_list = ('new_order_root_simulation_rule',
+                  'new_delivery_simulation_rule')
+
   def getTitle(self):
     return "Project"
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base', 
-            'erp5_pdm', 
-            'erp5_trade', 
-            'erp5_project',)
+    return ('erp5_base',
+            'erp5_pdm',
+            'erp5_simulation',
+            'erp5_trade',
+            'erp5_project',
+            'erp5_simulation_test')
 
   def afterSetUp(self):
     """Setup the fixture.
     """
-    self.portal = self.getPortal()
-
-    for rule_id in ['default_order_rule', 'default_delivery_rule']:
-      rule = getattr(self.portal.portal_rules, rule_id)
+    for rule_id in self.rule_id_list:
+      rule = self.portal.portal_rules[rule_id]
       if rule.getValidationState() == 'draft':
         rule.validate()
 
@@ -107,6 +112,7 @@ class TestProject(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
+  @newSimulationExpectedFailure
   def testProject_getSourceProjectRelatedTaskReportList(self):
     """
      Basic Test if the script behaviour as expected.
@@ -117,6 +123,7 @@ class TestProject(ERP5TypeTestCase):
 
     task = task_module.newContent(portal_type='Task',
               title='Task 1',
+              specialise=self.business_process,
               task_line_quantity=3,
               resource='product_module/development',
               source='organisation_module/Organisation_1',

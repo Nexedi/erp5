@@ -28,10 +28,17 @@
 from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
 
 test_suite_list = []
+from Products.ERP5.tests.testProject import *
+test_suite_list.append(test_suite)
 from Products.ERP5.tests.testTask import *
 test_suite_list.append(test_suite)
 from Products.ERP5.tests.testTaskReportDivergence import *
 test_suite_list.append(test_suite)
+
+# WARNING: TestProject is tested with rules using 'order' category
+TestProject.rule_id_list = 'default_order_rule', 'default_delivery_rule'
+TestProject.business_process = None
+Legacy_getBusinessTemplateList(TestProject)
 
 TestTaskMixin.business_process = None
 Legacy_getBusinessTemplateList(TestTaskMixin)
