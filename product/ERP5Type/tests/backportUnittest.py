@@ -253,6 +253,10 @@ class _TextTestResult(unittest._TextTestResult, TestResult):
         # and we do not display them here.
         self.printErrorList('ERROR', filter(None, self.errors))
         self.printErrorList('FAIL', self.failures)
+        if self.unexpectedSuccesses:
+          self.stream.writeln(self.separator1)
+          for test in self.unexpectedSuccesses:
+            self.stream.writeln("SUCCESS: %s" % self.getDescription(test))
 
 class TextTestRunner(unittest.TextTestRunner):
     def _makeResult(self):
